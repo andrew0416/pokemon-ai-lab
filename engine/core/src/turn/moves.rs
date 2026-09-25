@@ -978,7 +978,25 @@ fn spread_move_hit<const N: usize>(
             }
         }
     }
+    // AfterHit: the move's other `onAfterHit` handlers, per damaged target (Champions runs
+    // them even if the user fainted).
+    for result in &results {
+        if let Hit::Damage(_) = result {
+            handlers::on_after_hit(b, mv);
+        }
+    }
     Ok(results)
+}
+
+/// Showdown `field.clearTerrain()`: the terrain ends at once. Its `FieldEnd` only logs, and
+/// the `TerrainChange` event it runs has no implemented handler (seeds, Mimicry and Quark
+/// Drive are refused on the field). Returns whether there was a terrain.
+pub(crate) fn clear_terrain<const N: usize>(b: &mut Battle<'_, N>) -> bool {
+    if b.terrain() == Terrain::None {
+        return false;
+    }
+    b.set_field(FieldEffect::Terrain, Effect::NONE);
+    true
 }
 
 // ---- damage -------------------------------------------------------------------------------------

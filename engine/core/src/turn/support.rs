@@ -62,6 +62,9 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::EXPANDING_FORCE, &["onBasePower", "onModifyMove"]),
     (moves::WEATHER_BALL, &["onModifyMove", "onModifyType"]),
     (moves::TERRAIN_PULSE, &["onModifyMove", "onModifyType"]),
+    // `onAfterSubDamage` needs a substitute, which is refused.
+    (moves::ICE_SPINNER, &["onAfterHit", "onAfterSubDamage"]),
+    (moves::STEEL_ROLLER, &["onAfterSubDamage", "onHit", "onTry"]),
     (moves::RISING_VOLTAGE, &["basePowerCallback"]),
     (moves::PSYBLADE, &["onBasePower"]),
     (moves::BLIZZARD, &["onModifyMove"]),

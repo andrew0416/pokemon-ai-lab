@@ -141,7 +141,19 @@ pub(super) fn on_try<const N: usize>(
         // Poltergeist: `return !!target.item;` (the held item, even if suppressed). Its
         // `onTryHit` only logs the item.
         moves::POLTERGEIST => b.slot_mon(first_target).is_some_and(|m| !m.item.is_none()),
+        // Steel Roller: `return !this.field.isTerrain('');` (no `TryTerrain` handler exists).
+        moves::STEEL_ROLLER => b.terrain() != Terrain::None,
         _ => true,
+    }
+}
+
+/// The move's `onAfterHit`, once per damaged target (`spreadMoveHit`, after `DamagingHit`).
+/// Knock Off's is in `moves.rs`. `onAfterSubDamage` (the same effect against a substitute) is
+/// unreachable: substitutes are refused.
+pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, mv: &ActiveMove) {
+    // Ice Spinner: `this.field.clearTerrain();`
+    if mv.id == moves::ICE_SPINNER {
+        super::clear_terrain(b);
     }
 }
 
@@ -279,6 +291,11 @@ pub(super) fn on_hit<const N: usize>(
             set_boosts(b, user, to_user);
             set_boosts(b, target, to_target);
             HitResult::Success
+        }
+        // Steel Roller: `this.field.clearTerrain();` (returns nothing: no effect on success).
+        moves::STEEL_ROLLER => {
+            super::clear_terrain(b);
+            return Ok(None);
         }
         _ => return Ok(None),
     };

@@ -30,3 +30,13 @@ fn o4_terrain_pulse_electric_and_weather_ball_rock_in_sand() {
 fn o4_terrain_pulse_ungrounded_and_weather_ball_water_in_rain() {
     assert_exact_parity("o4-rain-ungrounded");
 }
+
+#[test]
+fn o6_ice_spinner_clears_grassy_terrain_after_the_hit() {
+    assert_exact_parity("o6-ice-spinner");
+}
+
+#[test]
+fn o6_steel_roller_clears_the_terrain_then_fails_without_one() {
+    assert_exact_parity("o6-steel-roller");
+}
