@@ -246,6 +246,21 @@ fn o32_glaive_rush_drawback_ends_at_the_next_move_attempt() {
     assert_exact_parity("o32-glaive-rush-faster");
 }
 
+#[test]
+fn o33_sparkling_aria_cures_the_burn_of_its_only_target() {
+    assert_exact_parity("o33-sparkling-aria");
+}
+
+#[test]
+fn o33_sparkling_aria_cures_several_targets_through_shield_dust() {
+    assert_exact_parity("o33-sparkling-aria-shield-dust");
+}
+
+#[test]
+fn o33_sparkling_aria_with_sheer_force_cures_nothing() {
+    assert_exact_parity("o33-sparkling-aria-sheer-force");
+}
+
 /// Stealth Rock could knock out a newcomer that Toxic Spikes also poisons: Showdown's result
 /// depends on the order the hazards were set, which the state does not keep.
 #[test]

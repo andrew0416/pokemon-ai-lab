@@ -10,7 +10,7 @@ use crate::dex::{
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
-use crate::state::{Pokemon, SideId, SlotRef, Status, BOOST_COUNT};
+use crate::state::{Pokemon, PokemonRef, SideId, SlotRef, Status, BOOST_COUNT};
 use crate::volatile::Volatile;
 
 use super::super::abilities::{Handler, SUB_CONDITION};
@@ -221,6 +221,45 @@ pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef,
     // partial trapping, which it also ends, are not implemented).
     if mv.id == moves::RAPID_SPIN && !mv.has_sheer_force {
         remove_side_effects(b, user.side, &HAZARDS);
+    }
+}
+
+/// The move's own `onAfterMove` (`runMove`, after `useMove`). Sparkling Aria: if the user
+/// fainted (processed), or the move has Sheer Force's `hasSheerForce`, every active Pokémon just
+/// loses the `sparklingaria` volatile; otherwise each hit target but the user that is still
+/// active loses it, and is cured of a burn if it had it or the move hit several targets.
+pub(super) fn on_after_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    pokemon: PokemonRef,
+    mv: &ActiveMove,
+) {
+    if mv.id != moves::SPARKLING_ARIA {
+        return;
+    }
+    if b.occupant(user) != Some(pokemon) || mv.has_sheer_force {
+        for side in [SideId::One, SideId::Two] {
+            for slot in Battle::<N>::slots(side) {
+                if b.occupant(slot).is_some() {
+                    b.delete_volatile(slot, Volatile::SparklingAria);
+                }
+            }
+        }
+        return;
+    }
+    let targets = super::hit_target_slots::<N>(mv.hit_targets);
+    let several = targets.len() > 1;
+    for target in targets {
+        let Some(hit) = b.alive(target) else {
+            continue;
+        };
+        if target == user {
+            continue;
+        }
+        let had = b.remove_volatile(target, Volatile::SparklingAria);
+        if (had || several) && b.mon(hit).status == Status::Burn {
+            b.cure_status(hit);
+        }
     }
 }
 

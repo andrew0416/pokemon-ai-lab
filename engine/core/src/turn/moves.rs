@@ -59,6 +59,9 @@ struct ActiveMove {
     move_type: Type,
     /// Base power after ModifyMove (Showdown `move.basePower`), before `basePowerCallback`.
     base_power: i32,
+    /// Showdown `move.hitTargets`: the targets left after the hit steps, as a bit per slot
+    /// ([`target_bit`]); empty when every hit failed.
+    hit_targets: u8,
 }
 
 impl PartialEq for ActiveMove {
@@ -74,6 +77,7 @@ impl PartialEq for ActiveMove {
             && self.target == other.target
             && self.move_type == other.move_type
             && self.base_power == other.base_power
+            && self.hit_targets == other.hit_targets
     }
 }
 
@@ -92,6 +96,7 @@ impl std::hash::Hash for ActiveMove {
         self.target.hash(state);
         self.move_type.hash(state);
         self.base_power.hash(state);
+        self.hit_targets.hash(state);
     }
 }
 
@@ -174,6 +179,7 @@ pub(crate) fn run_move<const N: usize>(
             target: MoveId::NONE.data().target,
             move_type: MoveId::NONE.data().move_type,
             base_power: 0,
+            hit_targets: 0,
         };
         before_move(b, user, &recharge);
         return Ok(MoveStep::Done);
@@ -210,10 +216,14 @@ pub(crate) fn resume_move<const N: usize>(
         HitOutcome::Suspended(progress) => return Ok(MoveStep::Suspended(progress)),
         HitOutcome::Finished { ok, total_damage } => {
             mv.total_damage = total_damage;
+            if !ok {
+                mv.hit_targets = 0;
+            }
             ok
         }
     };
     use_move_tail(b, user, &mv, result, main_target);
+    handlers::on_after_move(b, user, pokemon, &mv);
     run_move_tail(b, user);
     b.active_move = None;
     Ok(MoveStep::Done)
@@ -269,6 +279,7 @@ fn run_move_inner<const N: usize>(
         target: id.data().target,
         move_type: id.data().move_type,
         base_power: i32::from(id.data().base_power),
+        hit_targets: 0,
     };
 
     if !before_move(b, user, &mv) {
@@ -294,6 +305,8 @@ fn run_move_inner<const N: usize>(
     if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
         return Ok(MoveStep::Suspended(progress));
     }
+    // `singleEvent('AfterMove', move)`, then the rest of `runMove`.
+    handlers::on_after_move(b, user, pokemon, &mv);
     run_move_tail(b, user);
     Ok(MoveStep::Done)
 }
@@ -724,6 +737,9 @@ fn use_move<const N: usize>(
         match try_spread_move_hit(b, user, mv, targets, will_act)? {
             HitOutcome::Finished { ok, total_damage } => {
                 mv.total_damage = total_damage;
+                if !ok {
+                    mv.hit_targets = 0;
+                }
                 ok
             }
             HitOutcome::Suspended(mut progress) => {
@@ -972,7 +988,8 @@ fn try_spread_move_hit<const N: usize>(
             total_damage: 0,
         });
     }
-    // 7. The hit loop.
+    // 7. The hit loop, on the targets left (`move.hitTargets` unless every hit fails).
+    mv.hit_targets = hit.iter().fold(0, |bits, &t| bits | target_bit::<N>(t));
     let progress = MoveProgress {
         user,
         pokemon: b.occupant(user).expect("checked"),
@@ -986,6 +1003,20 @@ fn try_spread_move_hit<const N: usize>(
         ignore_ability: b.active_move.is_some_and(|a| a.ignore_ability),
     };
     hit_loop(b, user, mv, Some(progress))
+}
+
+/// A slot's bit in [`ActiveMove::hit_targets`].
+fn target_bit<const N: usize>(slot: SlotRef) -> u8 {
+    1 << (slot.side.index() * N + usize::from(slot.slot))
+}
+
+/// The slots in a [`ActiveMove::hit_targets`] bit set, side one first, in slot order.
+fn hit_target_slots<const N: usize>(bits: u8) -> Vec<SlotRef> {
+    [SideId::One, SideId::Two]
+        .into_iter()
+        .flat_map(Battle::<N>::slots)
+        .filter(|&s| bits & target_bit::<N>(s) != 0)
+        .collect()
 }
 
 /// How many times the move hits (`hitStepMoveHitLoop`): 1, a fixed count, or for 2–5 hit

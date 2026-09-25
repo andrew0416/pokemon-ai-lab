@@ -74,9 +74,12 @@ pub enum Volatile {
     /// Glaive Rush's drawback on its user until its next move attempt (no duration): moves
     /// against it cannot miss and deal double damage.
     GlaiveRush,
+    /// Sparkling Aria's secondary effect on a target it hit (no duration): the move's
+    /// `onAfterMove` removes it again, curing a burn.
+    SparklingAria,
 }
 
-pub const VOLATILE_COUNT: usize = 23;
+pub const VOLATILE_COUNT: usize = 24;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -103,6 +106,7 @@ impl Volatile {
         Volatile::Torment,
         Volatile::Imprison,
         Volatile::GlaiveRush,
+        Volatile::SparklingAria,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -131,6 +135,7 @@ impl Volatile {
             Volatile::Torment => conditions::TORMENT,
             Volatile::Imprison => conditions::IMPRISON,
             Volatile::GlaiveRush => conditions::GLAIVERUSH,
+            Volatile::SparklingAria => conditions::SPARKLINGARIA,
             Volatile::PerishSong | Volatile::ProteanUsed => ConditionId::NONE,
         }
     }
@@ -161,6 +166,7 @@ impl Volatile {
             Volatile::Torment => "torment",
             Volatile::Imprison => "imprison",
             Volatile::GlaiveRush => "glaiverush",
+            Volatile::SparklingAria => "sparklingaria",
         }
     }
 
@@ -195,7 +201,8 @@ impl Volatile {
             | Volatile::ProteanUsed
             | Volatile::Torment
             | Volatile::Imprison
-            | Volatile::GlaiveRush => 0,
+            | Volatile::GlaiveRush
+            | Volatile::SparklingAria => 0,
         }
     }
 

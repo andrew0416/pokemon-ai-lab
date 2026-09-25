@@ -182,6 +182,9 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "condition.onStart",
         ],
     ),
+    // Sparkling Aria: its secondary adds the `sparklingaria` volatile, its `onAfterMove`
+    // (`handlers::on_after_move`) removes it and cures burns.
+    (moves::SPARKLING_ARIA, &["onAfterMove"]),
     (moves::GRASSY_GLIDE, &["onModifyPriority"]),
     (moves::LOW_KICK, &["basePowerCallback", "onTryHit"]),
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),
