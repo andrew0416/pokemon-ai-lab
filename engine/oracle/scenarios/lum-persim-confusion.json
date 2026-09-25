@@ -1,0 +1,72 @@
+{
+ "description": "Lum Berry and Persim Berry cure confusion: the faster holders Harden first, Confuse Ray confuses them, and the Update after each hit eats the berry (onUpdate: volatiles.confusion) and removes the confusion, so no confused turn follows.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Jolteon",
+    "item": "Lum Berry",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Starmie",
+    "item": "Persim Berry",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Confuse Ray"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Dusclops",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Confuse Ray"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move harden, move harden",
+  "p2": "move confuseray 1, move confuseray 2"
+ }
+}

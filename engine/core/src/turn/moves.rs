@@ -1683,8 +1683,9 @@ fn spread_move_hit<const N: usize>(
     if !damaged.is_empty() {
         damaging_hit(b, user, mv, &damaged, total_before);
     }
-    // AfterHit: Knock Off removes the item of every damaged target.
-    if mv.id == moves::KNOCK_OFF && b.alive(user).is_some() {
+    // AfterHit: Knock Off removes the item of every damaged target (`takeItem` in its
+    // `onAfterHit`, which Champions runs even if the user fainted from Rocky Helmet).
+    if mv.id == moves::KNOCK_OFF {
         for (i, &t) in targets.iter().enumerate() {
             if let Hit::Damage(_) = results[i] {
                 b.take_item(t);

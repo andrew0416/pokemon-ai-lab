@@ -1,0 +1,80 @@
+{
+ "description": "Knock Off by a user that faints from the target's Rocky Helmet: the DamagingHit event (Rocky Helmet, 1/6) knocks Scrafty out at 5 HP, and Champions still runs Knock Off's onAfterHit, so Snorlax loses the helmet. 16 damage rolls x crit.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Scrafty",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Knock Off",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Dragonite",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "Rocky Helmet",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "def": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Emolga",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Scrafty": {
+    "hp": 5
+   }
+  }
+ },
+ "turn": {
+  "p1": "move knockoff 1, move harden",
+  "p2": "move harden, move harden"
+ }
+}

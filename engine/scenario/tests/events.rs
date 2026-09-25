@@ -24,3 +24,10 @@ fn damaging_hit_handlers_match_showdown_exactly() {
 fn contrary_simple_and_unaware_match_showdown_exactly() {
     assert_exact_parity("unaware-contrary");
 }
+
+/// Knock Off's `onAfterHit` runs after the DamagingHit event even when Rocky Helmet knocked the
+/// user out there: the target still loses its item.
+#[test]
+fn knock_off_by_a_fainting_user_matches_showdown_exactly() {
+    assert_exact_parity("knock-off-fainted-user");
+}

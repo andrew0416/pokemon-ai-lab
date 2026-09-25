@@ -49,7 +49,7 @@ const STATUS_BERRIES: [(ItemId, &[Status]); 6] = [
     (items::PECHA_BERRY, &[Status::Poison, Status::Toxic]),
     (items::RAWST_BERRY, &[Status::Burn]),
     (items::ASPEAR_BERRY, &[Status::Freeze]),
-    // Persim cures confusion, which the engine has no volatile for: it never fires.
+    // Persim cures confusion (a volatile: `item_wants_eating` and `eat_item` special-case it).
     (items::PERSIM_BERRY, &[]),
 ];
 
@@ -115,7 +115,9 @@ fn item_wants_eating<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
         pinch
     } else if item == items::LUM_BERRY {
         // `pokemon.status || pokemon.volatiles['confusion']`.
-        mon.status != Status::None
+        mon.status != Status::None || b.volatile(slot, Volatile::Confusion).active
+    } else if item == items::PERSIM_BERRY {
+        b.volatile(slot, Volatile::Confusion).active
     } else if let Some(&(_, cured)) = STATUS_BERRIES.iter().find(|&&(i, _)| i == item) {
         cured.contains(&mon.status)
     } else if item == items::LEPPA_BERRY {
@@ -163,7 +165,11 @@ pub(crate) fn eat_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> 
         up[index] = 1;
         b.boost_by(slot, &up, Some(slot), BoostEffect::Item(item));
     } else if item == items::LUM_BERRY {
+        // `cureStatus()` then `removeVolatile('confusion')`.
         b.cure_status(pokemon);
+        b.remove_volatile(slot, Volatile::Confusion);
+    } else if item == items::PERSIM_BERRY {
+        b.remove_volatile(slot, Volatile::Confusion);
     } else if let Some(&(_, cured)) = STATUS_BERRIES.iter().find(|&&(i, _)| i == item) {
         if cured.contains(&status) {
             b.cure_status(pokemon);
