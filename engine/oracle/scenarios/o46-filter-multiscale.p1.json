@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Perrserker",
+  "item": "",
+  "ability": "Ball Fetch",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "def": 2
+  },
+  "moves": [
+   "Smart Strike",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Dragonite",
+  "item": "",
+  "ability": "Multiscale",
+  "nature": "Careful",
+  "evs": {
+   "hp": 32,
+   "spd": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

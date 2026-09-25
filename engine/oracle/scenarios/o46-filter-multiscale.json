@@ -1,0 +1,7 @@
+{
+ "description": "O46: Perrserker Smart Strike (super effective) into Mr. Mime (Filter: 0.75x); Mr. Mime Draining Kiss (super effective) into full-HP Dragonite (Multiscale: 0.5x). Dragonite and Snorlax use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o46-filter-multiscale.p1.json", "order": "12"},
+ "p2": {"team": "o46-filter-multiscale.p2.json", "order": "12"},
+ "turn": {"p1": "move smartstrike 1, move swordsdance", "p2": "move drainingkiss 2, move swordsdance"}
+}

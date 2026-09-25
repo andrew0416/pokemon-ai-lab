@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Mr. Mime",
+  "item": "",
+  "ability": "Filter",
+  "nature": "Modest",
+  "evs": {
+   "hp": 32,
+   "spa": 32,
+   "spd": 2
+  },
+  "moves": [
+   "Draining Kiss",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Snorlax",
+  "item": "",
+  "ability": "Honey Gather",
+  "nature": "Careful",
+  "evs": {
+   "hp": 32,
+   "spd": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

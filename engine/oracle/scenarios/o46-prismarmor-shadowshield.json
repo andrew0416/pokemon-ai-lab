@@ -1,0 +1,7 @@
+{
+ "description": "O46: abilities that moves ignoring abilities cannot skip (not breakable). Solgaleo Sunsteel Strike into full-HP Lunala (Shadow Shield: 0.5x); Lunala Moongeist Beam (super effective) into Necrozma (Prism Armor: 0.75x). Necrozma and Snorlax use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o46-prismarmor-shadowshield.p1.json", "order": "12"},
+ "p2": {"team": "o46-prismarmor-shadowshield.p2.json", "order": "12"},
+ "turn": {"p1": "move sunsteelstrike 1, move swordsdance", "p2": "move moongeistbeam 2, move swordsdance"}
+}

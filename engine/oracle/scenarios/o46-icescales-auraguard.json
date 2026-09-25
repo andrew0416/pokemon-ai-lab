@@ -1,0 +1,7 @@
+{
+ "description": "O46: Clawitzer Dragon Pulse (special) into Frosmoth (Ice Scales: 0.5x); Charizard Bitter Blade (contact, super effective) into Lucario (Aura Guard: 0.5x for contact). Lucario and Frosmoth use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o46-icescales-auraguard.p1.json", "order": "12"},
+ "p2": {"team": "o46-icescales-auraguard.p2.json", "order": "12"},
+ "turn": {"p1": "move dragonpulse 1, move swordsdance", "p2": "move swordsdance, move bitterblade 2"}
+}

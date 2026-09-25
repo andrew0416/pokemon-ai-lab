@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Frosmoth",
+  "item": "",
+  "ability": "Ice Scales",
+  "nature": "Calm",
+  "evs": {
+   "hp": 32,
+   "spd": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Charizard",
+  "item": "",
+  "ability": "Ball Fetch",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "spe": 2
+  },
+  "moves": [
+   "Bitter Blade",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

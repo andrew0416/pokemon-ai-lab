@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Rhyperior",
+  "item": "",
+  "ability": "Solid Rock",
+  "nature": "Impish",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Dusknoir",
+  "item": "",
+  "ability": "Ball Fetch",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "def": 2
+  },
+  "moves": [
+   "Shadow Claw",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

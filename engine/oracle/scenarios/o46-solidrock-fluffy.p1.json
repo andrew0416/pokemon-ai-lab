@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Blastoise",
+  "item": "",
+  "ability": "Ball Fetch",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "spe": 2
+  },
+  "moves": [
+   "Crabhammer",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Houndstone",
+  "item": "",
+  "ability": "Fluffy",
+  "nature": "Impish",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

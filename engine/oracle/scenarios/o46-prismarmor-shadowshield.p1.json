@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Solgaleo",
+  "item": "",
+  "ability": "Ball Fetch",
+  "nature": "Brave",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "def": 2
+  },
+  "moves": [
+   "Sunsteel Strike",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Necrozma",
+  "item": "",
+  "ability": "Prism Armor",
+  "nature": "Careful",
+  "evs": {
+   "hp": 32,
+   "spd": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

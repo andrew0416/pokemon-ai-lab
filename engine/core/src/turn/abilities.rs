@@ -13,7 +13,7 @@
 
 use crate::damage::{
     chain_modifiers, MOD_DOUBLE, MOD_HALF, MOD_ONE, MOD_ONE_POINT_FIVE, MOD_ONE_POINT_THREE,
-    MOD_ONE_POINT_TWO,
+    MOD_ONE_POINT_TWO, MOD_THREE_QUARTERS,
 };
 use crate::dex::{
     abilities, items, AbilityFlags, AbilityId, MoveCategory, MoveData, MoveFlags, Stat, Type,
@@ -385,21 +385,48 @@ pub(crate) fn modify_stab(ability: AbilityId, stab: bool) -> u32 {
     }
 }
 
-/// `ModifyDamage` handlers of abilities: the target's `onSourceModifyDamage`.
+/// `ModifyDamage` handlers of abilities: the target's `onSourceModifyDamage`. `type_mod` is
+/// the hit's clamped effectiveness exponent (`getMoveHitData(move).typeMod`).
 pub(crate) fn modify_damage_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
     data: &MoveData,
+    type_mod: i32,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
+    let Some(defender) = b.slot_mon(target) else {
+        return out;
+    };
+    let contact = data.flags.contains(MoveFlags::CONTACT);
+    let full_hp = defender.hp >= defender.max_hp;
     let ability = ability_for_move(b, target, user, data);
     let modifier = match ability {
         a if a == abilities::PUNK_ROCK => data.flags.contains(MoveFlags::SOUND).then_some(MOD_HALF),
+        a if a == abilities::SOLID_ROCK
+            || a == abilities::FILTER
+            || a == abilities::PRISM_ARMOR =>
+        {
+            (type_mod > 0).then_some(MOD_THREE_QUARTERS)
+        }
+        a if a == abilities::MULTISCALE || a == abilities::SHADOW_SHIELD => {
+            full_hp.then_some(MOD_HALF)
+        }
+        // `mod = 1; Fire: mod *= 2; contact: mod /= 2; chainModify(mod)`.
+        a if a == abilities::FLUFFY => match (data.move_type == Type::Fire, contact) {
+            (true, false) => Some(MOD_DOUBLE),
+            (false, true) => Some(MOD_HALF),
+            _ => None,
+        },
+        a if a == abilities::ICE_SCALES => {
+            (data.category == MoveCategory::Special).then_some(MOD_HALF)
+        }
+        a if a == abilities::AURA_GUARD => contact.then_some(MOD_HALF),
         _ => None,
     };
     if let Some(modifier) = modifier {
-        out.push(Handler::of(b, target, 0, SUB_ABILITY, modifier));
+        let p = priority(ability.data().event_orders, "onSourceModifyDamagePriority");
+        out.push(Handler::of(b, target, p, SUB_ABILITY, modifier));
     }
     out
 }

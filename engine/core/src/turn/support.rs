@@ -242,6 +242,14 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         abilities::DRY_SKIN,
         &["onSourceBasePower", "onTryHit", "onWeather"],
     ),
+    (abilities::SOLID_ROCK, &["onSourceModifyDamage"]),
+    (abilities::FILTER, &["onSourceModifyDamage"]),
+    (abilities::PRISM_ARMOR, &["onSourceModifyDamage"]),
+    (abilities::MULTISCALE, &["onSourceModifyDamage"]),
+    (abilities::SHADOW_SHIELD, &["onSourceModifyDamage"]),
+    (abilities::FLUFFY, &["onSourceModifyDamage"]),
+    (abilities::ICE_SCALES, &["onSourceModifyDamage"]),
+    (abilities::AURA_GUARD, &["onSourceModifyDamage"]),
     // `order.rs` (Speed, and paralysis's Quick Feet exception).
     (abilities::QUICK_FEET, &["onModifySpe"]),
 ];

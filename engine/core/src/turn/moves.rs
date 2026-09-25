@@ -864,7 +864,7 @@ fn get_damage<const N: usize>(
     };
     // ModifyDamage (all priority 0, so in Speed order): Life Orb, screens (side conditions,
     // Speed 0), the target's abilities.
-    let mut final_mods = abilities::modify_damage_handlers(b, user, target, data);
+    let mut final_mods = abilities::modify_damage_handlers(b, user, target, data, type_mod);
     if attacker.item == items::LIFE_ORB {
         final_mods.push(Handler::of(b, user, 0, SUB_ITEM, 5324));
     }

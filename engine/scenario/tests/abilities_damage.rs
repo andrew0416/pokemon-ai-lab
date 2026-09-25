@@ -101,3 +101,25 @@ fn dry_skin_in_rain_matches_showdown() {
 fn dry_skin_in_sun_matches_showdown() {
     assert_exact_parity("o45-dryskin-sun");
 }
+
+// O46: final damage reductions (onSourceModifyDamage).
+
+#[test]
+fn filter_and_multiscale_match_showdown() {
+    assert_exact_parity("o46-filter-multiscale");
+}
+
+#[test]
+fn solid_rock_and_fluffy_match_showdown() {
+    assert_exact_parity("o46-solidrock-fluffy");
+}
+
+#[test]
+fn prism_armor_and_shadow_shield_against_ability_ignoring_moves_match_showdown() {
+    assert_exact_parity("o46-prismarmor-shadowshield");
+}
+
+#[test]
+fn ice_scales_and_aura_guard_match_showdown() {
+    assert_exact_parity("o46-icescales-auraguard");
+}
