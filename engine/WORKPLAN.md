@@ -222,6 +222,17 @@
 | O87·O88 | 완료 2026-09-26 (Opus) | `f724261` | `o87-o88-grounding`, `o88-lagging-tail-quick-claw` | 접지 순서(검은철구·풍선), 느림보꼬리·풀향로 −0.1, 선제공격손톱 1/5(첫 단계에서 추첨, `Pending.fractional_drawn`). 풍선 파열은 병합 시 F15 `damaging_hit`에 구현(`air-balloon-pop` 정확 일치). 커스탭열매 거부 |
 | O90 | 완료 2026-09-26 (Opus) | `af789be` | `o90-safety-goggles`, `o90-covert-cloak`, `o90-covert-cloak-self-secondary` | 방진고글, 은폐망토(`keeps_secondary`), 방어패드·튼튼한부츠는 무동작 허용. 클리어아뮬렛(F16 뒤 미구현)·우산 거부 |
 | (병합) | 2026-09-26 | `2cecf16` | | Opus 브랜치 `worktree-agent-a009b2b8c48836e66` 병합. 충돌 9개 파일: 휘발 표(ChoiceLock, 12종), 큐 비트셋 → `queue.rs`, 풍선 파열 → F15, 부가효과 루프(우격다짐/인분/은폐망토/왕의징표석 순서), `HitOutcome`에 총피해(조개껍질방울) |
+| O1 | 완료 2026-09-26 (Opus) | `4ba5a2b` | `o1-expanding-force`, `o1-expanding-force-ungrounded` / `tests/moves_field.rs` | `ActiveMove.target`; 대상 종류가 바뀌면 새 대상 무작위 |
+| O4 | 완료 2026-09-26 (Opus) | `ca85a64` | `o4-weather-ball-sun`, `o4-terrain-pulse-sand`, `o4-rain-ungrounded` | `ActiveMove.move_type`·`base_power`; 기술 타입을 읽는 모든 자리 교체(`on_modify_type`) |
+| O6 | 완료 2026-09-26 (Opus) | `642ba59` | `o6-ice-spinner`, `o6-steel-roller` | `moves::clear_terrain`, `on_after_hit` |
+| O8 | 완료 2026-09-26 (Opus) | `f9f45aa` | `o8-ally-support`, `o8-pollen-puff` | `AdjacentAlly`·`AdjacentAllyOrSelf`·`Allies` 대상 허용, `on_try_hit`(기술 자체 TryHit) |
+| O9 | 완료 2026-09-26 (Opus) | `9384df3` | `o9-foul-play-body-press` | 탁쳐서떨구기... 아님: 속임수(상대 공격·랭크), 바디프레스 확인 |
+| O16 | 완료 2026-09-26 (Opus) | `43c41f3` | `o16-trick`, `o16-trick-fail` | `on_try_immunity`(점착), 메가스톤 양방향 검사. Start/End/TakeItem 핸들러가 있는 도구(구애 포함) 이동은 거부 |
+| O18·O69 | 완료 2026-09-26 (Opus) | `2dbf496` | `o18-roost`, `o69-protean`, `o69-protean-once` | 새 파일 `turn/conditions.rs`; 루스트(`SetTypes`, 이전 타입은 `counter`에 숨김, 잔여 순서 25), 변환자재·리베로(`ProteanUsed` 엔진 전용 휘발, 정규 출력 제외) |
+| O20·O19 | 완료 2026-09-26 (Opus) | `7aae9b0` | `o20-yawn`, `o19-perish-song` | 하품(다음 턴 끝 수면, 일렉트릭필드 차단), 멸망의노래(`onHitField`, 방음·사이코필드의 `null` TryHit), `Battle::faint` |
+| O27 | 완료 2026-09-26 (Opus) | `4ab5672` | `o27-endure`, `o27-endure-stall` | `Endure` 휘발, `Battle::damage` 순서(옹골참·기합의띠 앞), 방어 스톨 카운터 공유 |
+| O21·O23 | 완료 2026-09-26 (Opus) | `8005c30` | `o21-wide-guard`, `o21-quick-guard`, `o23-safeguard-mist`, `o23-lucky-chant` | 진영 조건 5종(`SideEffect::LuckyChant` 추가), 신비의부적(`try_set_status_from` 출처), 흰안개(병합 시 `boost_by` TryBoost로 이동), 행운의축복(급소 차단) |
+| (병합) | 2026-09-26 | `c0992da` | | Opus 브랜치 `worktree-agent-a2e6d0a74832d5666` 병합. 충돌 6개 파일: 휘발 17종으로 합침(`residual_order`에 앵콜 16 추가), `boost_by` 4인자 유지(흰안개 편입), 잔여 단계의 기절 처리 규칙(E)·잠긴 기술 onEnd(`conditions::volatile_end`)·`ActiveMove` 필드 합집합(`move_type`·`target`·`base_power`), 속임수+천진, 급소(초점렌즈+행운의축복), 도구·특성 보정 체인 합침 |
 | O40 | 완료 2026-09-26 (Opus) | `ce5de4f` | `o40-*` 6개 / `tests/abilities_damage.rs` | `onBasePower` 8종, 펑크록 `onSourceModifyDamage`, 강철정신 `onAllyBasePower`. 새 파일 `core/src/turn/abilities.rs`: 보정 핸들러를 Showdown `speedSort` 순(우선도→subOrder→속도, 인수가 다를 때만 동률 분기)으로 연쇄하는 `Handler`/`chain` |
 | O41 | 완료 2026-09-26 (Opus) | `5d403dd` | `o41-adaptability` | `onModifySTAB` |
 | O42 | 완료 2026-09-26 (Opus) | `a5647fe` | `o42-blaze-torrent`, `o42-overgrow-swarm` | 1/3 정확 경계 |

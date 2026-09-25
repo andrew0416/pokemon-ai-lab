@@ -4,49 +4,37 @@
 
 ## 기술
 
-- 전체 938개 중 지원 488개, 등장 효과만 미지원 0개, 미지원 450개.
-- 라이브러리 사용 206개 중 지원 141개 (68%).
+- 전체 938개 중 지원 512개, 등장 효과만 미지원 0개, 미지원 426개.
+- 라이브러리 사용 206개 중 지원 154개 (75%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
 
 | 이름 | 사용 | 상태 | 이유 |
 |---|---:|---|---|
 | U-turn | 33 | 미지원 | switching |
-| Expanding Force | 18 | 미지원 | callbacks ["onBasePower", "onModifyMove"] are not implemented |
 | Taunt | 16 | 미지원 | callbacks ["condition.onBeforeMove", "condition.onDisableMove", "condition.onEnd", "condition.onStart"] are not implemented |
 | Helping Hand | 13 | 미지원 | callbacks ["condition.onBasePower", "condition.onRestart", "condition.onStart", "onTryHit"] are not implemented |
 | Parting Shot | 13 | 미지원 | callbacks ["onHit"] are not implemented |
 | Throat Chop | 13 | 미지원 | callbacks ["condition.onBeforeMove", "condition.onDisableMove", "condition.onEnd", "condition.onModifyMove", "condition.onStart", "secondaries.onHit", "secondary.onHit"] are not implemented |
-| Weather Ball | 13 | 미지원 | callbacks ["onModifyMove", "onModifyType"] are not implemented |
 | Last Respects | 12 | 미지원 | callbacks ["basePowerCallback"] are not implemented |
 | Stealth Rock | 12 | 미지원 | callbacks ["condition.onSideStart", "condition.onSwitchIn"] are not implemented |
-| Roost | 11 | 미지원 | callbacks ["condition.onStart", "condition.onType"] are not implemented |
 | Flip Turn | 9 | 미지원 | switching |
 | Glaive Rush | 9 | 미지원 | callbacks ["condition.onAccuracy", "condition.onBeforeMove", "condition.onSourceModifyDamage", "condition.onStart"] are not implemented |
-| Ice Spinner | 9 | 미지원 | callbacks ["onAfterHit", "onAfterSubDamage"] are not implemented |
-| Yawn | 9 | 미지원 | callbacks ["condition.onEnd", "condition.onStart", "onTryHit"] are not implemented |
 | Solar Beam | 8 | 미지원 | callbacks ["onBasePower", "onTryMove"] are not implemented |
 | Volt Switch | 5 | 미지원 | switching |
-| Wide Guard | 5 | 미지원 | callbacks ["condition.onSideStart", "condition.onTryHit", "onHitSide", "onTry"] are not implemented |
-| Perish Song | 4 | 미지원 | callbacks ["condition.onEnd", "condition.onResidual", "onHitField"] are not implemented |
 | Sparkling Aria | 4 | 미지원 | callbacks ["onAfterMove"] are not implemented |
 | Stomping Tantrum | 4 | 미지원 | callbacks ["basePowerCallback"] are not implemented |
 | Substitute | 4 | 미지원 | callbacks ["condition.onEnd", "condition.onStart", "condition.onTryPrimaryHit", "onHit", "onTryHit"] are not implemented |
-| Trick | 4 | 미지원 | callbacks ["onHit", "onTryImmunity"] are not implemented |
 | Ceaseless Edge | 3 | 미지원 | callbacks ["onAfterHit", "onAfterSubDamage"] are not implemented |
-| Coaching | 3 | 미지원 | target AdjacentAlly |
 | Disable | 3 | 미지원 | callbacks ["condition.onBeforeMove", "condition.onDisableMove", "condition.onEnd", "condition.onStart", "onTryHit"] are not implemented |
 | Double Shock | 3 | 미지원 | callbacks ["onTryMove", "self.onHit"] are not implemented |
 | Electro Shot | 3 | 미지원 | callbacks ["onTryMove"] are not implemented |
 | Healing Wish | 3 | 미지원 | callbacks ["condition.onSwap", "condition.onSwitchIn", "onTryHit"] are not implemented |
 | Imprison | 3 | 미지원 | callbacks ["condition.onFoeBeforeMove", "condition.onFoeDisableMove", "condition.onStart"] are not implemented |
-| Life Dew | 3 | 미지원 | target Allies |
 | Revival Blessing | 3 | 미지원 | callbacks ["onTryHit"] are not implemented |
-| Terrain Pulse | 3 | 미지원 | callbacks ["onModifyMove", "onModifyType"] are not implemented |
 | Whirlwind | 3 | 미지원 | switching |
 | Destiny Bond | 2 | 미지원 | callbacks ["condition.onBeforeMove", "condition.onFaint", "condition.onMoveAborted", "condition.onStart", "onPrepareHit"] are not implemented |
 | Dragon Tail | 2 | 미지원 | switching |
-| Endure | 2 | 미지원 | callbacks ["condition.onDamage", "condition.onStart", "onHit", "onPrepareHit"] are not implemented |
 | Feint | 2 | 미지원 | a special mechanic |
 | Hex | 2 | 미지원 | callbacks ["basePowerCallback"] are not implemented |
 | Infestation | 2 | 미지원 | volatile partiallytrapped |
@@ -61,7 +49,6 @@
 | Belly Drum | 1 | 미지원 | callbacks ["onHit"] are not implemented |
 | Endeavor | 1 | 미지원 | callbacks ["damageCallback", "onTryImmunity"] are not implemented |
 | Fissure | 1 | 미지원 | OHKO |
-| Foul Play | 1 | 미지원 | a special mechanic |
 | Gigaton Hammer | 1 | 미지원 | can't use twice |
 | High Jump Kick | 1 | 미지원 | callbacks ["onMoveFail"] are not implemented |
 | King's Shield | 1 | 미지원 | callbacks ["condition.onHit", "condition.onStart", "condition.onTryHit", "onHit", "onPrepareHit"] are not implemented |
@@ -79,7 +66,7 @@
 
 ### 라이브러리에서 쓰이고 지원됨
 
-Protect (201), Fake Out (57), Encore (42), Gravity (37), Heat Wave (34), Hypnosis (32), Close Combat (29), Grassy Glide (29), Earthquake (28), Ice Beam (27), Recover (27), Hyper Voice (26), Hydro Pump (25), Wood Hammer (25), Rock Slide (24), Trick Room (24), Bite (22), Bullet Seed (22), Population Bomb (22), Quash (22), Dire Claw (21), Swords Dance (21), Fire Blast (19), Flare Blitz (19), Sunny Day (18), Iron Head (17), Moonblast (17), Shadow Ball (17), Dragon Dance (15), Focus Blast (15), High Horsepower (15), Aqua Jet (14), Liquidation (14), Tailwind (14), Wave Crash (14), Sucker Punch (13), Ice Shard (11), Psychic (11), Dazzling Gleam (10), Follow Me (10), Nasty Plot (10), Aurora Veil (9), Draco Meteor (9), Dragon Rush (9), Dual Wingbeat (9), Grav Apple (9), Icicle Crash (9), Make It Rain (9), Thunderbolt (9), Blizzard (8), Calm Mind (8), Dragon Claw (8), Knock Off (8), Kowtow Cleave (8), Leech Life (8), Double-Edge (7), Hurricane (7), Zap Cannon (7), Armor Cannon (6), Flamethrower (6), Flash Cannon (6), Head Smash (6), Low Kick (6), Sludge Bomb (6), Body Press (5), Dark Pulse (5), Dragon Pulse (5), Extreme Speed (5), Ice Punch (5), Icy Wind (5), Mystical Fire (5), Ancient Power (4), Aura Sphere (4), Earth Power (4), Sacred Sword (4), Scale Shot (4), Shadow Claw (4), Shadow Sneak (4), Brave Bird (3), Drain Punch (3), First Impression (3), Freeze-Dry (3), Giga Drain (3), Leaf Storm (3), Play Rough (3), Power Gem (3), Reflect (3), Rock Tomb (3), Scald (3), Slack Off (3), Sleep Powder (3), Will-O-Wisp (3), Acrobatics (2), Body Slam (2), Bullet Punch (2), Darkest Lariat (2), Detect (2), Drill Run (2), Drum Beating (2), Flower Trick (2), Hyper Beam (2), Light Screen (2), Light of Ruin (2), Matcha Gotcha (2), Muddy Water (2), Overheat (2), Quick Attack (2), Rage Powder (2), Razor Shell (2), Sludge Wave (2), Surf (2), Thunder Wave (2), Toxic (2), Air Slash (1), Bulk Up (1), Fiery Dance (1), Grass Knot (1), Gunk Shot (1), Hammer Arm (1), Haze (1), Ice Hammer (1), Icicle Spear (1), Iron Defense (1), Lumina Crash (1), Mach Punch (1), Misty Terrain (1), Morning Sun (1), Psycho Cut (1), Psyshock (1), Pyro Ball (1), Quiver Dance (1), Rising Voltage (1), Scorching Sands (1), Shell Smash (1), Snarl (1), Synthesis (1), Thunder (1), Torch Song (1), Twin Beam (1), Vacuum Wave (1), Volt Tackle (1)
+Protect (201), Fake Out (57), Encore (42), Gravity (37), Heat Wave (34), Hypnosis (32), Close Combat (29), Grassy Glide (29), Earthquake (28), Ice Beam (27), Recover (27), Hyper Voice (26), Hydro Pump (25), Wood Hammer (25), Rock Slide (24), Trick Room (24), Bite (22), Bullet Seed (22), Population Bomb (22), Quash (22), Dire Claw (21), Swords Dance (21), Fire Blast (19), Flare Blitz (19), Expanding Force (18), Sunny Day (18), Iron Head (17), Moonblast (17), Shadow Ball (17), Dragon Dance (15), Focus Blast (15), High Horsepower (15), Aqua Jet (14), Liquidation (14), Tailwind (14), Wave Crash (14), Sucker Punch (13), Weather Ball (13), Ice Shard (11), Psychic (11), Roost (11), Dazzling Gleam (10), Follow Me (10), Nasty Plot (10), Aurora Veil (9), Draco Meteor (9), Dragon Rush (9), Dual Wingbeat (9), Grav Apple (9), Ice Spinner (9), Icicle Crash (9), Make It Rain (9), Thunderbolt (9), Yawn (9), Blizzard (8), Calm Mind (8), Dragon Claw (8), Knock Off (8), Kowtow Cleave (8), Leech Life (8), Double-Edge (7), Hurricane (7), Zap Cannon (7), Armor Cannon (6), Flamethrower (6), Flash Cannon (6), Head Smash (6), Low Kick (6), Sludge Bomb (6), Body Press (5), Dark Pulse (5), Dragon Pulse (5), Extreme Speed (5), Ice Punch (5), Icy Wind (5), Mystical Fire (5), Wide Guard (5), Ancient Power (4), Aura Sphere (4), Earth Power (4), Perish Song (4), Sacred Sword (4), Scale Shot (4), Shadow Claw (4), Shadow Sneak (4), Trick (4), Brave Bird (3), Coaching (3), Drain Punch (3), First Impression (3), Freeze-Dry (3), Giga Drain (3), Leaf Storm (3), Life Dew (3), Play Rough (3), Power Gem (3), Reflect (3), Rock Tomb (3), Scald (3), Slack Off (3), Sleep Powder (3), Terrain Pulse (3), Will-O-Wisp (3), Acrobatics (2), Body Slam (2), Bullet Punch (2), Darkest Lariat (2), Detect (2), Drill Run (2), Drum Beating (2), Endure (2), Flower Trick (2), Hyper Beam (2), Light Screen (2), Light of Ruin (2), Matcha Gotcha (2), Muddy Water (2), Overheat (2), Quick Attack (2), Rage Powder (2), Razor Shell (2), Sludge Wave (2), Surf (2), Thunder Wave (2), Toxic (2), Air Slash (1), Bulk Up (1), Fiery Dance (1), Foul Play (1), Grass Knot (1), Gunk Shot (1), Hammer Arm (1), Haze (1), Ice Hammer (1), Icicle Spear (1), Iron Defense (1), Lumina Crash (1), Mach Punch (1), Misty Terrain (1), Morning Sun (1), Psycho Cut (1), Psyshock (1), Pyro Ball (1), Quiver Dance (1), Rising Voltage (1), Scorching Sands (1), Shell Smash (1), Snarl (1), Synthesis (1), Thunder (1), Torch Song (1), Twin Beam (1), Vacuum Wave (1), Volt Tackle (1)
 
 ### 나머지 미지원 (이유별)
 
@@ -124,7 +111,6 @@ Protect (201), Fake Out (57), Encore (42), Gravity (37), Heat Wave (34), Hypnosi
 - **미지원: callbacks ["onModifyType", "onPrepareHit"] are not implemented** (2): Ivy Cudgel, Natural Gift
 - **미지원: self effect** (2): Baddy Bad, Glitzy Glow
 - **미지원: self-destruct** (2): Explosion, Self-Destruct
-- **미지원: target AdjacentAlly** (2): Aromatic Mist, Hold Hands
 - **미지원: callbacks ["basePowerCallback", "beforeTurnCallback", "condition.onFoeBeforeSwitchOut", "onModifyMove"] are not implemented** (1): Pursuit
 - **미지원: callbacks ["basePowerCallback", "condition.onFieldRestart", "condition.onFieldStart", "onTryMove"] are not implemented** (1): Echoed Voice
 - **미지원: callbacks ["basePowerCallback", "condition.onModifyMove", "condition.onSideEnd", "condition.onSideStart", "onModifyMove", "onPrepareHit"] are not implemented** (1): Water Pledge
@@ -140,7 +126,6 @@ Protect (201), Fake Out (57), Encore (42), Gravity (37), Heat Wave (34), Hypnosi
 - **미지원: callbacks ["condition.durationCallback", "condition.onBeforeMove", "condition.onDisableMove", "condition.onEnd", "condition.onModifyMove", "condition.onRestart", "condition.onStart", "condition.onTryHeal"] are not implemented** (1): Heal Block
 - **미지원: callbacks ["condition.durationCallback", "condition.onFieldEnd", "condition.onFieldRestart", "condition.onFieldStart", "condition.onModifyMove"] are not implemented** (1): Wonder Room
 - **미지원: callbacks ["condition.durationCallback", "condition.onFieldEnd", "condition.onFieldRestart", "condition.onFieldStart"] are not implemented** (1): Magic Room
-- **미지원: callbacks ["condition.durationCallback", "condition.onSetStatus", "condition.onSideEnd", "condition.onSideStart", "condition.onTryAddVolatile"] are not implemented** (1): Safeguard
 - **미지원: callbacks ["condition.onAccuracy", "condition.onEnd", "condition.onImmunity", "condition.onStart", "condition.onUpdate", "onTry"] are not implemented** (1): Telekinesis
 - **미지원: callbacks ["condition.onAccuracy", "condition.onRestart", "condition.onSourceModifyDamage"] are not implemented** (1): Minimize
 - **미지원: callbacks ["condition.onAfterMove", "condition.onBasePower", "condition.onEnd", "condition.onMoveAborted", "condition.onRestart", "condition.onStart"] are not implemented** (1): Charge
@@ -176,11 +161,8 @@ Protect (201), Fake Out (57), Encore (42), Gravity (37), Heat Wave (34), Hypnosi
 - **미지원: callbacks ["condition.onRestart", "condition.onStart", "onHit", "onPrepareHit"] are not implemented** (1): Ally Switch
 - **미지원: callbacks ["condition.onRestart", "condition.onStart"] are not implemented** (1): Smack Down
 - **미지원: callbacks ["condition.onRestart"] are not implemented** (1): Defense Curl
-- **미지원: callbacks ["condition.onSideEnd", "condition.onSideStart", "condition.onTryBoost"] are not implemented** (1): Mist
-- **미지원: callbacks ["condition.onSideEnd", "condition.onSideStart"] are not implemented** (1): Lucky Chant
 - **미지원: callbacks ["condition.onSideStart", "condition.onSwitchIn", "self.onHit"] are not implemented** (1): G-Max Steelsurge
 - **미지원: callbacks ["condition.onSideStart", "condition.onSwitchIn"] are not implemented** (1): Sticky Web
-- **미지원: callbacks ["condition.onSideStart", "condition.onTryHit", "onHitSide", "onTry"] are not implemented** (1): Quick Guard
 - **미지원: callbacks ["condition.onSourceAccuracy", "condition.onSourceInvulnerability", "onHit", "onTryHit"] are not implemented** (1): Lock-On
 - **미지원: callbacks ["condition.onStart", "condition.onTrapPokemon", "onTry"] are not implemented** (1): No Retreat
 - **미지원: callbacks ["condition.onStart", "condition.onTryHit", "onHit", "onPrepareHit"] are not implemented** (1): Max Guard
@@ -190,13 +172,10 @@ Protect (201), Fake Out (57), Encore (42), Gravity (37), Heat Wave (34), Hypnosi
 - **미지원: callbacks ["damageCallback", "onModifyTarget", "onTry"] are not implemented** (1): Comeuppance
 - **미지원: callbacks ["onAfterHit", "onAfterSubDamage"] are not implemented** (1): Stone Axe
 - **미지원: callbacks ["onAfterSubDamage", "onHit", "onModifyMove", "onPrepareHit"] are not implemented** (1): Shell Side Arm
-- **미지원: callbacks ["onAfterSubDamage", "onHit", "onTry"] are not implemented** (1): Steel Roller
 - **미지원: callbacks ["onBasePower", "onTryMove"] are not implemented** (1): Solar Blade
 - **미지원: callbacks ["onEffectiveness"] are not implemented** (1): Thousand Arrows
 - **미지원: callbacks ["onHit", "onTryHit", "onTryImmunity"] are not implemented** (1): Worry Seed
-- **미지원: callbacks ["onHit", "onTryHit", "onTryMove"] are not implemented** (1): Pollen Puff
 - **미지원: callbacks ["onHit", "onTryHit", "self.onHit"] are not implemented** (1): Shed Tail
-- **미지원: callbacks ["onHit", "onTryImmunity"] are not implemented** (1): Switcheroo
 - **미지원: callbacks ["onHit", "self.onHit"] are not implemented** (1): Baton Pass
 - **미지원: callbacks ["onModifyMove", "onModifyType"] are not implemented** (1): Tera Starstorm
 - **미지원: callbacks ["onModifyMove", "onUseMoveMessage"] are not implemented** (1): Magnitude
@@ -210,13 +189,11 @@ Protect (201), Fake Out (57), Encore (42), Gravity (37), Heat Wave (34), Hypnosi
 - **미지원: field effect iondeluge** (1): Plasma Fists
 - **미지원: secondary volatile healblock** (1): Psychic Noise
 - **미지원: switching** (1): Circle Throw
-- **미지원: target AdjacentAllyOrSelf** (1): Milk Drink
-- **미지원: target Allies** (1): Howl
 
 ## 특성
 
-- 전체 321개 중 지원 121개, 등장 효과만 미지원 16개, 미지원 184개.
-- 라이브러리 사용 66개 중 지원 42개 (64%).
+- 전체 321개 중 지원 123개, 등장 효과만 미지원 16개, 미지원 182개.
+- 라이브러리 사용 66개 중 지원 44개 (67%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
 
@@ -232,7 +209,6 @@ Protect (201), Fake Out (57), Encore (42), Gravity (37), Heat Wave (34), Hypnosi
 | Flower Veil | 7 | 미지원 | callbacks ["onAllySetStatus", "onAllyTryAddVolatile", "onAllyTryBoost"] are not implemented |
 | Stamina | 6 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
 | Disguise | 4 | 미지원 | callbacks ["onCriticalHit", "onDamage", "onEffectiveness", "onUpdate"] are not implemented |
-| Protean | 4 | 미지원 | callbacks ["onPrepareHit"] are not implemented |
 | Pixilate | 3 | 미지원 | callbacks ["onBasePower", "onModifyType"] are not implemented |
 | Weak Armor | 3 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
 | Hospitality | 2 | 등장 효과 미구현 | ["onStart"] |
@@ -240,7 +216,6 @@ Protect (201), Fake Out (57), Encore (42), Gravity (37), Heat Wave (34), Hypnosi
 | Electromorphosis | 1 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
 | Flame Body | 1 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
 | Gooey | 1 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
-| Libero | 1 | 미지원 | callbacks ["onPrepareHit"] are not implemented |
 | Magic Bounce | 1 | 미지원 | callbacks ["onAllyTryHitSide", "onTryHit"] are not implemented |
 | Poison Touch | 1 | 미지원 | callbacks ["onSourceDamagingHit"] are not implemented |
 | Seed Sower | 1 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
@@ -249,7 +224,7 @@ Protect (201), Fake Out (57), Encore (42), Gravity (37), Heat Wave (34), Hypnosi
 
 ### 라이브러리에서 쓰이고 지원됨
 
-Intimidate (30), Grassy Surge (28), Competitive (26), Prankster (25), Technician (23), Psychic Surge (16), Adaptability (12), Rough Skin (12), Blaze (9), Defiant (9), Good as Gold (9), Hustle (9), Lightning Rod (9), Drizzle (8), Torrent (8), Rock Head (6), Sand Stream (6), Flash Fire (5), Snow Warning (5), Chlorophyll (4), Inner Focus (4), Levitate (4), Sharpness (4), Armor Tail (3), Clear Body (3), Iron Fist (2), Magic Guard (2), Mold Breaker (2), Pressure (2), Sand Rush (2), Sturdy (2), Bulletproof (1), Gale Wings (1), Hyper Cutter (1), Rain Dish (1), Solar Power (1), Solid Rock (1), Speed Boost (1), Swift Swim (1), Thick Fat (1), Unaware (1), Volt Absorb (1)
+Intimidate (30), Grassy Surge (28), Competitive (26), Prankster (25), Technician (23), Psychic Surge (16), Adaptability (12), Rough Skin (12), Blaze (9), Defiant (9), Good as Gold (9), Hustle (9), Lightning Rod (9), Drizzle (8), Torrent (8), Rock Head (6), Sand Stream (6), Flash Fire (5), Snow Warning (5), Chlorophyll (4), Inner Focus (4), Levitate (4), Protean (4), Sharpness (4), Armor Tail (3), Clear Body (3), Iron Fist (2), Magic Guard (2), Mold Breaker (2), Pressure (2), Sand Rush (2), Sturdy (2), Bulletproof (1), Gale Wings (1), Hyper Cutter (1), Libero (1), Rain Dish (1), Solar Power (1), Solid Rock (1), Speed Boost (1), Swift Swim (1), Thick Fat (1), Unaware (1), Volt Absorb (1)
 
 ### 나머지 미지원 (이유별)
 
