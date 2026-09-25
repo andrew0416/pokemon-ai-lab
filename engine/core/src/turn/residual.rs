@@ -289,7 +289,14 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
             sort_by_speed(b, &mut actives);
             for (slot, _) in actives {
                 if b.alive(slot).is_some() {
-                    weather_event(b, slot, weather);
+                    // The abilities' `onWeather` read `target.effectiveWeather()` (Utility
+                    // Umbrella hides sun and rain); sandstorm's damage does not.
+                    let seen = if weather == Weather::Sand {
+                        weather
+                    } else {
+                        b.weather_for(slot)
+                    };
+                    weather_event(b, slot, seen);
                 }
             }
             // `eachEvent('Weather')` ends with an Update (gen 7+).
@@ -438,9 +445,9 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
                 // Champions).
                 b.rng.chance(33, 100)
             } else {
-                // Hydration: `pokemon.effectiveWeather()` is rain (Utility Umbrella and
-                // Primordial Sea are not supported).
-                b.effective_weather() == Weather::Rain
+                // Hydration: `pokemon.effectiveWeather()` is rain (Utility Umbrella hides it;
+                // Primordial Sea is not supported).
+                b.weather_for(slot) == Weather::Rain
             };
             if cure {
                 b.cure_status(pokemon);

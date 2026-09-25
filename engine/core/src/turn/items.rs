@@ -10,9 +10,6 @@
 //! - Metronome: its condition keeps `lastMove` and `numConsecutive` and reads
 //!   `moveLastTurnResult` (work plan F13); the item's `onStart` adds it at switch-in.
 //! - Clear Amulet: `onTryBoost` needs the boost events (F16).
-//! - Utility Umbrella: its effect is `pokemon.effectiveWeather()`, read at many sites (weather
-//!   damage modifier, Chlorophyll / Swift Swim, Solar Power, Rain Dish, Dry Skin, Hydration,
-//!   Leaf Guard, ...); only the freeze immunity and the move handlers read it so far.
 //! - Air Balloon's pop is refused at the hit ([`on_damaging_hit`], F15); grounding is done.
 
 use crate::damage::{MOD_HALF, MOD_ONE_POINT_FIVE};
@@ -20,7 +17,7 @@ use crate::dex::{
     abilities, conditions, items, moves, ItemId, MoveCategory, MoveData, MoveFlags, MoveId,
     Secondary, Stat, Type, TypeImmunities, NO_BOOSTS,
 };
-use crate::field::FieldEffect;
+use crate::field::{FieldEffect, Weather};
 use crate::instruction::Instruction;
 use crate::state::{Pokemon, PokemonRef, SlotRef, State, Status, BOOST_COUNT};
 use crate::volatile::{Volatile, VolatileState};
@@ -77,9 +74,35 @@ pub(crate) fn held_item_problem(mon: &Pokemon) -> Option<String> {
 
 /// Whether an item's `onStart` does nothing when its holder switches in (Showdown runs item
 /// `onStart` handlers in the `SwitchIn` event): the Choice items only remove a `choicelock`
-/// the newcomer cannot have yet; Air Balloon only announces itself.
+/// the newcomer cannot have yet; Air Balloon only announces itself; Utility Umbrella only
+/// acts for a holder ignoring its item (then WeatherChange, which has no implemented
+/// handler).
 pub(crate) fn inert_start(item: ItemId) -> bool {
-    item.data().is_choice || item == items::AIR_BALLOON
+    item.data().is_choice || item == items::AIR_BALLOON || item == items::UTILITY_UMBRELLA
+}
+
+impl<const N: usize> Battle<'_, N> {
+    /// Showdown `pokemon.effectiveWeather()` for the Pokémon in `slot`: the field's
+    /// [`Battle::effective_weather`], except that Utility Umbrella hides sun and rain (and
+    /// their primal forms) from its holder. Sandstorm and snow are unaffected. (Mega Sol, which
+    /// makes its holder's moves see sun, is refused on the field.) Every per-Pokémon weather
+    /// effect reads this: the damage modifier (the defender's), Chlorophyll / Swift Swim, Solar
+    /// Power, Rain Dish, Dry Skin, Hydration, Leaf Guard, sun's freeze immunity and the move
+    /// handlers (Weather Ball, Thunder, Hurricane, Morning Sun...); effects that read the field
+    /// (`field.isWeather`: Sand Rush, Slush Rush, Blizzard, Aurora Veil, Shore Up, sandstorm
+    /// damage) read [`Battle::effective_weather`].
+    pub fn weather_for(&self, slot: SlotRef) -> Weather {
+        let weather = self.effective_weather();
+        let hidden = matches!(
+            weather,
+            Weather::Sun | Weather::Rain | Weather::HarshSun | Weather::HeavyRain
+        ) && self.item(slot) == items::UTILITY_UMBRELLA;
+        if hidden {
+            Weather::None
+        } else {
+            weather
+        }
+    }
 }
 
 /// Whether `handler`, one of the item's handlers that can fire around a switch-in, is

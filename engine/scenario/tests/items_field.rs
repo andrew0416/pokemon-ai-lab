@@ -101,6 +101,22 @@ fn wonder_room_body_press_and_expiry_match_showdown() {
     assert_exact_parity("o101-body-press");
 }
 
+// ---- O103 Utility Umbrella ----------------------------------------------------------------------
+
+/// In sun: Weather Ball, Solar Power (SpA and residual), Chlorophyll and Dry Skin of Umbrella
+/// holders see no sun.
+#[test]
+fn utility_umbrella_in_sun_matches_showdown() {
+    assert_exact_parity("o103-umbrella-sun");
+}
+
+/// In rain: the damage modifier follows the defender's Umbrella; Rain Dish and Hydration of
+/// Umbrella holders see no rain.
+#[test]
+fn utility_umbrella_in_rain_matches_showdown() {
+    assert_exact_parity("o103-umbrella-rain");
+}
+
 // ---- O95 White Herb, Mirror Herb, Adrenaline Orb, Room Service ----------------------------------
 
 /// White Herb restores its holder's drops at the AfterMove of the move that caused them (a

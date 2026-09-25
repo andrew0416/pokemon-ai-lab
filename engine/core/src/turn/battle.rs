@@ -272,8 +272,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         if immunity == TypeImmunities::FRZ {
             // Harsh sunlight (`sunnyday.onImmunity`, hidden by Utility Umbrella) and Magma
             // Armor (breakable).
-            return (matches!(self.effective_weather(), Weather::Sun | Weather::HarshSun)
-                && mon.item != items::UTILITY_UMBRELLA)
+            return matches!(self.weather_for(slot), Weather::Sun | Weather::HarshSun)
                 || self.ability_unless_broken(slot) == abilities::MAGMA_ARMOR;
         }
         // Ice Body's `onImmunity('hail')`: hail is not a supported weather.
@@ -584,8 +583,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             }
             a if a == abilities::LIMBER => status == Status::Paralyze,
             a if a == abilities::COMATOSE || a == abilities::PURIFYING_SALT => true,
-            // `target.effectiveWeather()`: Utility Umbrella is not supported.
-            a if a == abilities::LEAF_GUARD => self.effective_weather() == Weather::Sun,
+            // `target.effectiveWeather()` (Utility Umbrella hides the sun).
+            a if a == abilities::LEAF_GUARD => self.weather_for(target) == Weather::Sun,
             _ => false,
         };
         if blocked_by_own {
@@ -643,7 +642,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             {
                 yawn
             }
-            a if a == abilities::LEAF_GUARD => yawn && self.effective_weather() == Weather::Sun,
+            a if a == abilities::LEAF_GUARD => yawn && self.weather_for(target) == Weather::Sun,
             // Inner Focus: `if (status.id === 'flinch') return null;`
             a if a == abilities::INNER_FOCUS => condition == conditions::FLINCH,
             _ => false,

@@ -1,0 +1,28 @@
+{
+ "description": "O103 Utility Umbrella in sun (patched): Charizard (Solar Power, Umbrella) sees no sun: its Weather Ball stays Normal/50, no SpA boost, no Solar Power damage. Venusaur (Chlorophyll, Umbrella) is not doubled, so Kangaskhan's Seismic Toss KOs it first. Snorlax (Dry Skin) takes 1/8 at the end of the turn; Kangaskhan (Dry Skin, Umbrella) does not.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Charizard", "item": "Utility Umbrella", "ability": "Solar Power", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Weather Ball", "Protect"], "level": 50},
+   {"species": "Venusaur", "item": "Utility Umbrella", "ability": "Chlorophyll", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Seismic Toss", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Dry Skin", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Kangaskhan", "item": "Utility Umbrella", "ability": "Dry Skin", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Seismic Toss", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Venusaur": {"hp": 40}},
+  "p2": {"Kangaskhan": {"hp": 40}},
+  "field": {"weather": "sunnyday", "weatherDuration": 3}
+ },
+ "turn": {"p1": "move weatherball 1, move seismictoss 2", "p2": "move harden, move seismictoss 2"}
+}

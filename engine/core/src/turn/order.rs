@@ -49,7 +49,9 @@ impl<const N: usize> Battle<'_, N> {
         if self.side_effect_active(slot.side, SideEffect::Tailwind) {
             chain.push(2 * MOD_ONE);
         }
-        let weather = self.effective_weather();
+        // `pokemon.effectiveWeather()` (Chlorophyll, Swift Swim); Sand Rush and Slush Rush read
+        // `field.isWeather`, which Utility Umbrella does not touch either way.
+        let weather = self.weather_for(slot);
         let doubled = match mon.ability {
             a if a == abilities::SAND_RUSH => weather == Weather::Sand,
             a if a == abilities::CHLOROPHYLL => weather == Weather::Sun,

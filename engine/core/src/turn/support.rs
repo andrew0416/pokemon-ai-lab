@@ -440,6 +440,11 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     ),
     // AfterBoost (`Battle::boost_by` → `items::after_boost`).
     (items::ADRENALINE_ORB, &["onAfterBoost"]),
+    // `Battle::weather_for` at every per-Pokémon weather read. The callbacks only run
+    // WeatherChange (when the item starts being ignored, stops being ignored, or ends), which
+    // has no implemented handler (`field_events`); `onStart` returns at once for a holder that
+    // does not ignore its item.
+    (items::UTILITY_UMBRELLA, &["onEnd", "onStart", "onUpdate"]),
     // `onStart` at switch-in (priority -1) and PseudoWeatherChange (`moves::add_pseudo_weather`).
     (
         items::ROOM_SERVICE,
