@@ -250,6 +250,7 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::FLUFFY, &["onSourceModifyDamage"]),
     (abilities::ICE_SCALES, &["onSourceModifyDamage"]),
     (abilities::AURA_GUARD, &["onSourceModifyDamage"]),
+    (abilities::FRIEND_GUARD, &["onAnyModifyDamage"]),
     // `order.rs` (Speed, and paralysis's Quick Feet exception).
     (abilities::QUICK_FEET, &["onModifySpe"]),
 ];

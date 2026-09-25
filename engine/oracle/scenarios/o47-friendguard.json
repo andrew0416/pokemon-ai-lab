@@ -1,0 +1,10 @@
+{
+ "description": "O47: Life Orb Gardevoir Dazzling Gleam (spread) under Light Screen into Maushold (Friend Guard does not reduce its holder's own damage) and Snorlax (0.75x from Maushold's Friend Guard, chained with Life Orb and the screen in Speed order). The others use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o47-friendguard.p1.json", "order": "12"},
+ "p2": {"team": "o47-friendguard.p2.json", "order": "12"},
+ "patch": {
+  "sides": {"p2": {"lightscreen": 5}}
+ },
+ "turn": {"p1": "move dazzlinggleam, move swordsdance", "p2": "move swordsdance, move swordsdance"}
+}

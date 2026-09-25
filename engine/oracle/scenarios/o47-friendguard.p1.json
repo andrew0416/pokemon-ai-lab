@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Gardevoir",
+  "item": "Life Orb",
+  "ability": "Ball Fetch",
+  "nature": "Modest",
+  "evs": {
+   "hp": 32,
+   "spa": 32,
+   "spd": 2
+  },
+  "moves": [
+   "Dazzling Gleam",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Clefairy",
+  "item": "",
+  "ability": "Friend Guard",
+  "nature": "Bold",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

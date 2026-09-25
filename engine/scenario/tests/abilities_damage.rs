@@ -123,3 +123,15 @@ fn prism_armor_and_shadow_shield_against_ability_ignoring_moves_match_showdown()
 fn ice_scales_and_aura_guard_match_showdown() {
     assert_exact_parity("o46-icescales-auraguard");
 }
+
+// O47: Friend Guard (onAnyModifyDamage).
+
+#[test]
+fn friend_guard_on_a_spread_move_matches_showdown() {
+    assert_exact_parity("o47-friendguard");
+}
+
+#[test]
+fn friend_guard_of_the_user_matches_showdown() {
+    assert_exact_parity("o47-friendguard-ally");
+}

@@ -385,8 +385,9 @@ pub(crate) fn modify_stab(ability: AbilityId, stab: bool) -> u32 {
     }
 }
 
-/// `ModifyDamage` handlers of abilities: the target's `onSourceModifyDamage`. `type_mod` is
-/// the hit's clamped effectiveness exponent (`getMoveHitData(move).typeMod`).
+/// `ModifyDamage` handlers of abilities: the target's `onSourceModifyDamage` and every active
+/// Pokémon's `onAnyModifyDamage`. `type_mod` is the hit's clamped effectiveness exponent
+/// (`getMoveHitData(move).typeMod`).
 pub(crate) fn modify_damage_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
@@ -427,6 +428,18 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
     if let Some(modifier) = modifier {
         let p = priority(ability.data().event_orders, "onSourceModifyDamagePriority");
         out.push(Handler::of(b, target, p, SUB_ABILITY, modifier));
+    }
+    // Friend Guard: `onAnyModifyDamage` of every active Pokémon, 0.75x when the target is an
+    // ally other than the holder itself (the holder may be the user hitting its own ally).
+    for holder in b.alive_slots(target.side) {
+        if holder == target {
+            continue;
+        }
+        let ability = ability_for_move(b, holder, user, data);
+        if ability == abilities::FRIEND_GUARD {
+            let p = priority(ability.data().event_orders, "onAnyModifyDamagePriority");
+            out.push(Handler::of(b, holder, p, SUB_ABILITY, MOD_THREE_QUARTERS));
+        }
     }
     out
 }
