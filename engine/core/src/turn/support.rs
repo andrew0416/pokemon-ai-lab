@@ -940,6 +940,18 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         &["onResidual", "onSetStatus", "onStart", "onTryAddVolatile"],
     ),
     (abilities::HUNGER_SWITCH, &["onResidual"]),
+    // Zen Mode: `onResidual` and its condition's `onStart` / `onEnd` in `forme::zen_mode`
+    // (`Volatile::ZenMode`); its `onEnd` on leaving the field gives what `clearVolatile` does
+    // (`forme::revert_on_leave`), and no supported ability change can end it on the field.
+    (
+        abilities::ZEN_MODE,
+        &[
+            "condition.onEnd",
+            "condition.onStart",
+            "onEnd",
+            "onResidual",
+        ],
+    ),
     // Mimicry: `onStart` in `switching::start_ability`, `onTerrainChange` in
     // `field_events::terrain_changed` (`forme::mimicry`).
     (abilities::MIMICRY, &["onStart", "onTerrainChange"]),

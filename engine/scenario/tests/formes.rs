@@ -169,6 +169,33 @@ fn mimicry_returns_to_the_base_types() {
     assert_exact_parity("mimicry-ice-spinner");
 }
 
+// ---- Zen Mode ---------------------------------------------------------------------------------
+
+/// At or below half HP the residual adds the `zenmode` volatile and the Zen forme
+/// (Fire/Psychic).
+#[test]
+fn zen_mode_starts_at_half_hp() {
+    assert_exact_parity("zen-mode-residual");
+}
+
+/// The Galarian Darmanitan takes the Galar-Zen forme (Ice/Fire).
+#[test]
+fn zen_mode_galar_takes_its_own_zen_forme() {
+    assert_exact_parity("zen-mode-galar");
+}
+
+/// Above half HP in the Zen forme the residual removes the volatile and the forme.
+#[test]
+fn zen_mode_ends_above_half_hp() {
+    assert_exact_parity("zen-mode-recover");
+}
+
+/// The Zen forme is temporary: Darmanitan on the bench, the volatile gone.
+#[test]
+fn zen_mode_reverts_on_switch_out() {
+    assert_exact_parity("zen-mode-switch-out");
+}
+
 // ---- Battle Bond ------------------------------------------------------------------------------
 
 /// Battle Bond on plain Greninja is inert: a KO gives no boosts (only Greninja-Bond's does,

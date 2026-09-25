@@ -55,6 +55,8 @@ pub fn temporary_forme_base(forme: SpeciesId) -> Option<SpeciesId> {
         f if f == species::WISHIWASHI_SCHOOL => Some(species::WISHIWASHI),
         f if f == species::MINIOR_METEOR => Some(species::MINIOR),
         f if f == species::MORPEKO_HANGRY => Some(species::MORPEKO),
+        f if f == species::DARMANITAN_ZEN => Some(species::DARMANITAN),
+        f if f == species::DARMANITAN_GALAR_ZEN => Some(species::DARMANITAN_GALAR),
         _ => None,
     }
 }
@@ -434,18 +436,69 @@ fn hunger_switch<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     forme_change(b, slot, target, Change::Temporary);
 }
 
+/// Zen Mode's `onResidual` for a Darmanitan (`baseSpecies.baseSpecies`) in `slot`: at or below
+/// half its max HP outside a Zen forme it gets the `zenmode` volatile, whose `onStart` changes
+/// it to Darmanitan-Zen (Darmanitan-Galar-Zen for a Galarian one) temporarily; above half in a
+/// Zen forme the volatile is removed (`addVolatile` first does nothing: the volatile exists
+/// exactly while the Pokémon is in a Zen forme, the loader refusing a Zen forme as a set's
+/// species), and its `onEnd` changes it back to its `battleOnly` forme. Nothing blocks the
+/// volatile (no `TryAddVolatile` handler names it).
+///
+/// Leaving the field, the ability's `onEnd` (a healthy Pokémon: delete the volatile, back to
+/// the `battleOnly` forme) and `clearVolatile` (the volatiles go, `setSpecies(baseSpecies)`)
+/// give the same as [`revert_on_leave`].
+fn zen_mode<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let Some((forme, hp, max_hp)) = b
+        .alive(slot)
+        .map(|p| b.mon(p))
+        .map(|m| (m.species, m.hp, m.max_hp))
+    else {
+        return;
+    };
+    if forme.data().base_species != species::DARMANITAN {
+        return;
+    }
+    let zen = [species::DARMANITAN_ZEN, species::DARMANITAN_GALAR_ZEN].contains(&forme);
+    // `pokemon.hp <= pokemon.maxhp / 2`.
+    let low = 2 * i32::from(hp) <= i32::from(max_hp);
+    if low && !zen {
+        // `condition.onStart`: `pokemon.species.name.includes('Galar')`.
+        let galar = forme == species::DARMANITAN_GALAR;
+        b.set_volatile_state(
+            slot,
+            Volatile::ZenMode,
+            VolatileState {
+                active: true,
+                ..VolatileState::NONE
+            },
+        );
+        let target = if galar {
+            species::DARMANITAN_GALAR_ZEN
+        } else {
+            species::DARMANITAN_ZEN
+        };
+        forme_change(b, slot, target, Change::Temporary);
+    } else if !low && zen {
+        // `condition.onEnd`: `formeChange(pokemon.species.battleOnly)`.
+        b.set_volatile_state(slot, Volatile::ZenMode, VolatileState::NONE);
+        let base = temporary_forme_base(forme).expect("a Zen forme");
+        forme_change(b, slot, base, Change::Temporary);
+    }
+}
+
 /// Whether `ability` has a forme-changing `onResidual` ([`residual`]).
 pub(crate) fn has_residual(ability: AbilityId) -> bool {
     [
         abilities::SCHOOLING,
         abilities::SHIELDS_DOWN,
         abilities::HUNGER_SWITCH,
+        abilities::ZEN_MODE,
     ]
     .contains(&ability)
 }
 
 /// The ability's `onResidual` (`residual.rs`, order 29, ability sub-order) for its holder in
-/// `slot`: Schooling, Shields Down, Hunger Switch. Each only changes its holder.
+/// `slot`: Schooling, Shields Down, Hunger Switch, Zen Mode. Each only changes its holder.
 pub(crate) fn residual<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
@@ -455,6 +508,7 @@ pub(crate) fn residual<const N: usize>(
         a if a == abilities::SCHOOLING => schooling(b, slot),
         a if a == abilities::SHIELDS_DOWN => shields_down(b, slot)?,
         a if a == abilities::HUNGER_SWITCH => hunger_switch(b, slot),
+        a if a == abilities::ZEN_MODE => zen_mode(b, slot),
         _ => {}
     }
     Ok(())
@@ -570,8 +624,9 @@ mod tests {
         }
     }
 
-    /// Every temporary forme is a battle-only forme of its base with the same types and base HP
-    /// (a temporary change keeps max HP, and `revert_on_leave` restores the base's types).
+    /// Every temporary forme is a battle-only forme of its base with the same base HP (a
+    /// temporary change keeps max HP and the ability; `revert_on_leave` restores the base's
+    /// types).
     #[test]
     fn temporary_formes_match_the_dex() {
         for id in SpeciesId::all() {
@@ -581,7 +636,6 @@ mod tests {
             let (forme, base_data) = (id.data(), base.data());
             assert_eq!(forme.battle_only, [base], "{id:?}");
             assert_eq!(forme.base_stats[0], base_data.base_stats[0], "{id:?}");
-            assert_eq!(forme.abilities[0], base_data.abilities[0], "{id:?}");
         }
         assert_eq!(
             temporary_forme_base(species::AEGISLASH_BLADE),
@@ -610,6 +664,16 @@ mod tests {
                 Some(-1),
             ),
             (abilities::HUNGER_SWITCH, &["onResidual"][..], None),
+            (
+                abilities::ZEN_MODE,
+                &[
+                    "condition.onEnd",
+                    "condition.onStart",
+                    "onEnd",
+                    "onResidual",
+                ][..],
+                None,
+            ),
         ] {
             let data = ability.data();
             assert!(has_residual(ability));
@@ -630,9 +694,12 @@ mod tests {
             (species::WISHIWASHI_SCHOOL, species::WISHIWASHI),
             (species::MINIOR_METEOR, species::MINIOR),
             (species::MORPEKO_HANGRY, species::MORPEKO),
+            (species::DARMANITAN_ZEN, species::DARMANITAN),
+            (species::DARMANITAN_GALAR_ZEN, species::DARMANITAN_GALAR),
         ] {
             assert_eq!(temporary_forme_base(forme), Some(base));
         }
+        assert_eq!(crate::volatile::Volatile::ZenMode.id(), "zenmode");
     }
 
     /// Mimicry's handlers (not breakable: the TerrainChange event reads `b.ability`).
@@ -650,18 +717,13 @@ mod tests {
     ///   `updateMaxHp`, and it recomputes `canMegaEvo`;
     /// - Gulp Missile: its `onSourceTryPrimaryHit` (Surf) needs the TryPrimaryHit step, and Dive's
     ///   `onTryMove` changes the forme on the charging turn; left for after the Substitute work,
-    ///   which builds that step;
-    /// - Zen Mode: its `zenmode` volatile is part of the canonical state (a new volatile kind).
+    ///   which builds that step.
     ///
     /// Battle Bond is supported only where it is inert ([`field_problem`]).
     #[test]
     fn unimplemented_forme_abilities_stay_refused() {
         use crate::turn::support::ability_supported_on_field;
-        for ability in [
-            abilities::POWER_CONSTRUCT,
-            abilities::GULP_MISSILE,
-            abilities::ZEN_MODE,
-        ] {
+        for ability in [abilities::POWER_CONSTRUCT, abilities::GULP_MISSILE] {
             assert!(!ability_supported_on_field(ability), "{ability:?}");
         }
         assert_eq!(

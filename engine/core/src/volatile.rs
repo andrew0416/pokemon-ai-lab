@@ -156,9 +156,13 @@ pub enum Volatile {
     Dive,
     PhantomForce,
     ShadowForce,
+    /// Zen Mode's own condition (`zenmode`, no duration; WORKPLAN F19): its start changes the
+    /// holder to its Zen forme and its end back (`turn/forme.rs`). It exists exactly while the
+    /// holder is in a Zen forme.
+    ZenMode,
 }
 
-pub const VOLATILE_COUNT: usize = 54;
+pub const VOLATILE_COUNT: usize = 55;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -216,6 +220,7 @@ impl Volatile {
         Volatile::Dive,
         Volatile::PhantomForce,
         Volatile::ShadowForce,
+        Volatile::ZenMode,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -236,7 +241,8 @@ impl Volatile {
             Volatile::FlashFire
             | Volatile::Unburden
             | Volatile::Protosynthesis
-            | Volatile::QuarkDrive => ConditionId::NONE,
+            | Volatile::QuarkDrive
+            | Volatile::ZenMode => ConditionId::NONE,
             Volatile::ChoiceLock => conditions::CHOICELOCK,
             Volatile::Roost => conditions::ROOST,
             Volatile::Yawn => conditions::YAWN,
@@ -338,6 +344,7 @@ impl Volatile {
             Volatile::Dive => "dive",
             Volatile::PhantomForce => "phantomforce",
             Volatile::ShadowForce => "shadowforce",
+            Volatile::ZenMode => "zenmode",
         }
     }
 
@@ -407,7 +414,8 @@ impl Volatile {
             | Volatile::SolarBlade
             | Volatile::MeteorBeam
             | Volatile::ElectroShot
-            | Volatile::SkyAttack => 0,
+            | Volatile::SkyAttack
+            | Volatile::ZenMode => 0,
         }
     }
 
@@ -600,6 +608,7 @@ mod tests {
                         | Volatile::Dive
                         | Volatile::PhantomForce
                         | Volatile::ShadowForce
+                        | Volatile::ZenMode
                 ));
                 continue;
             }
