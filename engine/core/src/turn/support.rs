@@ -299,6 +299,16 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "condition.onModifyMove",
         ],
     ),
+    // Magic Room (F17): `items::ignoring_item`; End messages only at its start.
+    (
+        moves::MAGIC_ROOM,
+        &[
+            "condition.durationCallback",
+            "condition.onFieldEnd",
+            "condition.onFieldRestart",
+            "condition.onFieldStart",
+        ],
+    ),
     (
         moves::TAILWIND,
         &[
@@ -1169,7 +1179,7 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         return why(&format!("side condition {}", m.side_condition.id()));
     }
     if !m.pseudo_weather.is_none()
-        && !["gravity", "trickroom", "wonderroom"].contains(&m.pseudo_weather.id())
+        && !["gravity", "trickroom", "wonderroom", "magicroom"].contains(&m.pseudo_weather.id())
     {
         return why(&format!("field effect {}", m.pseudo_weather.id()));
     }
@@ -1262,7 +1272,8 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
             x if x == FieldEffect::Terrain as usize => true,
             x if x == FieldEffect::Gravity as usize
                 || x == FieldEffect::TrickRoom as usize
-                || x == FieldEffect::WonderRoom as usize =>
+                || x == FieldEffect::WonderRoom as usize
+                || x == FieldEffect::MagicRoom as usize =>
             {
                 true
             }
@@ -1323,9 +1334,6 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
                 ));
             }
             if let Some(why) = super::update::berry_problem(mon) {
-                return Err(why);
-            }
-            if let Some(why) = super::items::held_item_problem(mon) {
                 return Err(why);
             }
             if !mon.species.data().handlers.is_empty() {

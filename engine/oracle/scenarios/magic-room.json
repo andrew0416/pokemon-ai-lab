@@ -1,0 +1,78 @@
+{
+ "description": "F17 Magic Room: Alakazam sets it first; then Hariyama's Life Orb takes no recoil from Seismic Toss, Snorlax's Rocky Helmet does not hurt Hariyama, and Swampert's Leftovers do not heal at the end of the turn (Magic Room has 4 turns left). Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Alakazam",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Magic Room"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hariyama",
+    "item": "Life Orb",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Seismic Toss"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Swampert",
+    "item": "Leftovers",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "Rocky Helmet",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {
+   "Swampert": {
+    "hp": 150
+   }
+  }
+ },
+ "turn": {
+  "p1": "move magicroom, move seismictoss 2",
+  "p2": "move harden, move harden"
+ }
+}

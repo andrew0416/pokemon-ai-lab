@@ -296,6 +296,9 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onEnd", "onFoeTryEatItem", "onStart"],
         StartEffect::None,
     ),
+    // Klutz (`onSwitchInPriority: 1`): `onStart` runs the item's End, which only logs; the
+    // suppression is `items::ignoring_item` (F17).
+    (abilities::KLUTZ, &["onStart"], StartEffect::None),
     // Pastel Veil: its `onAnySwitchIn` replaces the `onStart` fallback in the SwitchIn event and
     // runs for every active holder whenever anyone switches in (`run_switch_in`).
     (
@@ -459,9 +462,6 @@ fn switch_in_problem<const N: usize>(
             mon.item.data().handlers
         ));
     }
-    if let Some(why) = super::items::held_item_problem(mon) {
-        return Some(why);
-    }
     if let Some(handler) = item_start_handler(mon.item) {
         return Some(format!(
             "{name}: item {} switch-in handler {handler}",
@@ -591,14 +591,17 @@ pub(crate) fn run_switch_in<const N: usize>(
             SUB_ABILITY,
             SwitchInHandler::Ability(mon.ability),
         ));
-        if let Some(priority) = super::items::switch_in_priority(mon.item) {
-            handlers.push((priority, slot, SUB_ITEM, SwitchInHandler::Item(mon.item)));
+        // The effective item: `singleEvent('SwitchIn')` skips a suppressed item's handler.
+        let item = b.item(slot);
+        if let Some(priority) = super::items::switch_in_priority(item) {
+            handlers.push((priority, slot, SUB_ITEM, SwitchInHandler::Item(item)));
         }
     }
     for slot in b.all_alive() {
         let mon = b.slot_mon(slot).expect("alive");
-        if let Some(priority) = super::items::any_switch_in_priority(mon.item) {
-            handlers.push((priority, slot, SUB_ITEM, SwitchInHandler::Item(mon.item)));
+        let item = b.item(slot);
+        if let Some(priority) = super::items::any_switch_in_priority(item) {
+            handlers.push((priority, slot, SUB_ITEM, SwitchInHandler::Item(item)));
         }
         if !newcomers.contains(&slot) && mon.ability == abilities::PASTEL_VEIL {
             handlers.push((0, slot, SUB_ABILITY, SwitchInHandler::PastelVeilAny));

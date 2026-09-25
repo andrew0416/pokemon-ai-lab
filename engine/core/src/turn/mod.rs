@@ -992,9 +992,7 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
                     ActionKind::Move {
                         index,
                         target,
-                        fractional_tenths: items::fractional_priority_tenths(
-                            state.pokemon(pokemon),
-                        ),
+                        fractional_tenths: items::fractional_priority_tenths(state, slot),
                     }
                 }
                 SlotAction::Switch { party_index } => ActionKind::Switch { party_index },
@@ -1035,7 +1033,9 @@ fn run_stage<const N: usize>(
                 fractional_tenths, ..
             } = &mut action.kind
             {
-                if let Some(t) = items::quick_claw(b, action.pokemon, *fractional_tenths) {
+                if let Some(t) =
+                    items::quick_claw(b, action.slot, action.pokemon, *fractional_tenths)
+                {
                     *fractional_tenths = t;
                 }
                 if let Some(t) = items::custap(b, action.slot, action.pokemon, *fractional_tenths) {

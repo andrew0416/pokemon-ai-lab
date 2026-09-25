@@ -4,7 +4,7 @@
 
 ## 기술
 
-- 전체 938개 중 지원 548개, 등장 효과만 미지원 0개, 미지원 390개.
+- 전체 938개 중 지원 549개, 등장 효과만 미지원 0개, 미지원 389개.
 - 라이브러리 사용 206개 중 지원 175개 (85%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
@@ -103,7 +103,6 @@ Protect (201), Fake Out (57), Encore (42), Gravity (37), Heat Wave (34), U-turn 
 - **미지원: callbacks ["beforeMoveCallback", "condition.onBeforeMove", "condition.onDamage", "condition.onEnd", "condition.onMoveAborted", "condition.onStart"] are not implemented** (1): Bide
 - **미지원: callbacks ["beforeMoveCallback", "condition.onHit", "condition.onStart", "condition.onTryAddVolatile", "priorityChargeCallback"] are not implemented** (1): Focus Punch
 - **미지원: callbacks ["condition.durationCallback", "condition.onBeforeMove", "condition.onDisableMove", "condition.onEnd", "condition.onModifyMove", "condition.onRestart", "condition.onStart", "condition.onTryHeal"] are not implemented** (1): Heal Block
-- **미지원: callbacks ["condition.durationCallback", "condition.onFieldEnd", "condition.onFieldRestart", "condition.onFieldStart"] are not implemented** (1): Magic Room
 - **미지원: callbacks ["condition.onAccuracy", "condition.onEnd", "condition.onImmunity", "condition.onStart", "condition.onUpdate", "onTry"] are not implemented** (1): Telekinesis
 - **미지원: callbacks ["condition.onAccuracy", "condition.onRestart", "condition.onSourceModifyDamage"] are not implemented** (1): Minimize
 - **미지원: callbacks ["condition.onAfterMove", "condition.onBasePower", "condition.onEnd", "condition.onMoveAborted", "condition.onRestart", "condition.onStart"] are not implemented** (1): Charge
@@ -166,7 +165,7 @@ Protect (201), Fake Out (57), Encore (42), Gravity (37), Heat Wave (34), U-turn 
 
 ## 특성
 
-- 전체 321개 중 지원 199개, 등장 효과만 미지원 1개, 미지원 121개.
+- 전체 321개 중 지원 200개, 등장 효과만 미지원 0개, 미지원 121개.
 - 라이브러리 사용 66개 중 지원 63개 (95%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
@@ -205,7 +204,6 @@ Intimidate (30), Grassy Surge (28), Competitive (26), Prankster (25), Technician
 - **미지원: callbacks ["onModifySpA"] are not implemented** (2): Minus, Plus
 - **미지원: callbacks ["onModifyWeight"] are not implemented** (2): Heavy Metal, Light Metal
 - **미지원: callbacks ["onSwitchIn"] are not implemented** (2): Imposter, Tera Shift
-- **등장 효과 미구현: ["onStart"]** (1): Klutz
 - **미지원: callbacks ["condition.onEnd", "condition.onStart", "onEnd", "onResidual"] are not implemented** (1): Zen Mode
 - **미지원: callbacks ["onAfterMoveSecondarySelf"] are not implemented** (1): Magician
 - **미지원: callbacks ["onAfterTerastallization"] are not implemented** (1): Teraform Zero

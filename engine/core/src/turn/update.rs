@@ -101,7 +101,8 @@ fn item_wants_eating<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
     let Some(mon) = b.slot_mon(slot) else {
         return false;
     };
-    let item = mon.item;
+    // The effective item: a suppressed berry (Magic Room, Klutz) is never eaten by `onUpdate`.
+    let item = b.item(slot);
     let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
     // `pokemon.hp <= pokemon.maxhp / 2` and `/ 4`, in integers.
     let half = 2 * hp <= max_hp;

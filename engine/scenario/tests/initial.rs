@@ -210,10 +210,12 @@ fn state_without_a_canonical_form_is_an_error() {
     s.side_mut(SideId::Two).effects[SideEffect::StealthRock as usize] =
         Effect { value: 0, turns: 5 };
     assert!(unrepresentable(&s, meta).contains("stealthrock with a duration"));
-
+    // Every pseudo-weather has a canonical form (F17 added Magic Room).
     let mut s = loaded.state.clone();
     s.field[FieldEffect::MagicRoom as usize] = Effect { value: 0, turns: 5 };
-    assert!(unrepresentable(&s, meta).contains("pseudo-weather"));
+    assert!(canonical_json(&s, meta)
+        .unwrap()
+        .contains(r#""magicroom":{"duration":5}"#));
 
     let mut s = loaded.state.clone();
     s.field[FieldEffect::Weather as usize] = sand(Effect::PERMANENT);
@@ -260,8 +262,8 @@ fn unsupported_start_handlers_are_rejected() {
     };
 
     let mut s = loaded.state.clone();
-    // Klutz's onStart (ending the item's effects) is not implemented.
-    s.active_mut(rillaboom).unwrap().ability = abilities::KLUTZ;
+    // Supreme Overlord's onStart is not implemented.
+    s.active_mut(rillaboom).unwrap().ability = abilities::SUPREME_OVERLORD;
     match expand_switch_ins(&s) {
         Err(SwitchInError::UnsupportedAbility {
             slot,
@@ -269,7 +271,7 @@ fn unsupported_start_handlers_are_rejected() {
             handler: "onStart",
         }) => {
             assert_eq!(slot, rillaboom);
-            assert_eq!(ability, abilities::KLUTZ);
+            assert_eq!(ability, abilities::SUPREME_OVERLORD);
         }
         other => panic!("{other:?}"),
     }

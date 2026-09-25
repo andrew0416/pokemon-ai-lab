@@ -1953,10 +1953,11 @@ fn damaging_hit<const N: usize>(
         } else if let Some(order) = ability_hooks::damaging_hit_order(ability) {
             handlers.push((order, index, Kind::Ability(ability)));
         }
-        if mon.item == items::ROCKY_HELMET {
-            handlers.push((2, index, Kind::Item(mon.item)));
-        } else if mon.item == items::AIR_BALLOON || item_events::has_damaging_hit(mon.item) {
-            handlers.push((LAST, index, Kind::Item(mon.item)));
+        let item = b.item(target);
+        if item == items::ROCKY_HELMET {
+            handlers.push((2, index, Kind::Item(item)));
+        } else if item == items::AIR_BALLOON || item_events::has_damaging_hit(item) {
+            handlers.push((LAST, index, Kind::Item(item)));
         }
         // The attacker's own ability is never suppressed by its own move.
         let source_ability = b.ability(user);
@@ -2021,7 +2022,7 @@ fn damaging_hit<const N: usize>(
             // Weakness Policy, the absorbing items, Jaboca / Rowap Berry. The item may have
             // gone since the handlers were collected (a Jaboca Berry is eaten once).
             Kind::Item(i) => {
-                if b.mon(pokemon).item == i {
+                if b.item(target) == i {
                     item_events::on_damaging_hit(
                         b,
                         user,
@@ -2119,7 +2120,7 @@ fn get_damage<const N: usize>(
         ability_events::base_power_handlers(b, user, target, data, mv.move_type, base_power);
     // The type changers' `onBasePower`, the auras' `onAnyBasePower`.
     power_mods.extend(ability_hooks::base_power_handlers(b, user, target, mv));
-    if type_boost_item(attacker.item) == Some(mv.move_type) {
+    if type_boost_item(b.item(user)) == Some(mv.move_type) {
         power_mods.push(Handler::of(b, user, 15, SUB_ITEM, MOD_ONE_POINT_TWO));
     }
     let attacker_grounded = b.is_grounded(user);
@@ -2424,19 +2425,24 @@ pub(crate) fn set_terrain<const N: usize>(
     true
 }
 
-/// Showdown `addPseudoWeather`: Gravity fails if up; Trick Room and Wonder Room end
-/// themselves on restart (`onFieldRestart`, no PseudoWeatherChange); a new one (5 turns:
-/// Persistent, which makes Trick Room and Wonder Room last 7, is refused) runs
-/// `PseudoWeatherChange`.
+/// Showdown `addPseudoWeather`: Gravity fails if up; Trick Room, Wonder Room and Magic Room
+/// end themselves on restart (`onFieldRestart`, no PseudoWeatherChange); a new one (5 turns:
+/// Persistent, which makes the rooms last 7, is refused) runs `PseudoWeatherChange`. Magic
+/// Room's `onFieldStart` runs every active item's End, which only logs; its suppression is
+/// `items::ignoring_item`.
 fn add_pseudo_weather<const N: usize>(b: &mut Battle<'_, N>, id: &str) -> bool {
     let effect = match id {
         "gravity" => FieldEffect::Gravity,
         "trickroom" => FieldEffect::TrickRoom,
         "wonderroom" => FieldEffect::WonderRoom,
+        "magicroom" => FieldEffect::MagicRoom,
         _ => unreachable!("checked by support"),
     };
     if b.field_active(effect) {
-        if effect == FieldEffect::TrickRoom || effect == FieldEffect::WonderRoom {
+        if matches!(
+            effect,
+            FieldEffect::TrickRoom | FieldEffect::WonderRoom | FieldEffect::MagicRoom
+        ) {
             b.set_field(effect, Effect::NONE);
             return true;
         }

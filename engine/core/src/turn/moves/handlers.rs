@@ -300,7 +300,7 @@ pub(super) fn base_power_callback<const N: usize>(
             base_power * 2
         }
         // Acrobatics: `if (!pokemon.item) return move.basePower * 2;` (the held item).
-        moves::ACROBATICS if b.item(user).is_none() => base_power * 2,
+        moves::ACROBATICS if b.raw_item(user).is_none() => base_power * 2,
         // Assurance: `if (target.hurtThisTurn) return move.basePower * 2;` (the HP left after
         // the latest damage this turn; 0 is falsy).
         moves::ASSURANCE
@@ -662,7 +662,7 @@ fn instruct<const N: usize>(
     if b.item(target) == items::QUICK_CLAW {
         return Err(b.unsupported("Instruct on a Quick Claw holder"));
     }
-    let fractional_tenths = super::super::items::fractional_priority_tenths(b.mon(pokemon));
+    let fractional_tenths = super::super::items::fractional_priority_tenths(b.state, target);
     b.queue.push(Action {
         slot: target,
         pokemon,
@@ -700,7 +700,8 @@ fn trick<const N: usize>(
     user: SlotRef,
     target: SlotRef,
 ) -> Result<HitResult, TurnError> {
-    let (yours, mine) = (b.item(target), b.item(user));
+    // `target.item` / `source.item`: the raw items, suppressed or not.
+    let (yours, mine) = (b.raw_item(target), b.raw_item(user));
     for item in [yours, mine] {
         let data = item.data();
         let other_take_item = data.mega_stone.is_empty() && data.handlers.contains(&"onTakeItem");

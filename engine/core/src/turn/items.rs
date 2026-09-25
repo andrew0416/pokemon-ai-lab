@@ -19,7 +19,7 @@ use crate::dex::{
 };
 use crate::field::{FieldEffect, Weather};
 use crate::instruction::Instruction;
-use crate::state::{Pokemon, PokemonRef, SlotRef, State, Status, SwitchFlag, BOOST_COUNT};
+use crate::state::{PokemonRef, SlotRef, State, Status, SwitchFlag, BOOST_COUNT};
 use crate::volatile::{Volatile, VolatileState};
 
 use super::abilities::{Handler, SUB_ITEM};
@@ -58,18 +58,17 @@ pub(crate) fn resist_berry(item: ItemId) -> Option<Type> {
         .map(|&(_, t)| t)
 }
 
-/// Why a Pokémon's item cannot be simulated with its ability, if it cannot. Klutz makes the
-/// holder ignore its item (`ignoringItem`) except for `ignoreKlutz` items; no item effect here
-/// checks that yet (work plan F17), so a Klutz holder with any other item is refused.
-pub(crate) fn held_item_problem(mon: &Pokemon) -> Option<String> {
-    if mon.ability == abilities::KLUTZ && !mon.item.is_none() && !mon.item.data().ignore_klutz {
-        return Some(format!(
-            "{}: Klutz ignoring {} (ignoringItem, work plan F17)",
-            mon.species.data().name,
-            mon.item.data().name
-        ));
-    }
-    None
+/// Showdown `pokemon.ignoringItem()` (WORKPLAN F17): under Magic Room, or with Klutz and an
+/// item that is not `ignoreKlutz`. While it holds, item handlers do not run and `hasItem` is
+/// false ([`Battle::item`] is `NONE`); `pokemon.item` itself is unaffected (Knock Off, Trick,
+/// Acrobatics, Unburden, Mega Evolution: [`Battle::raw_item`]). Embargo and the Primal Orbs are
+/// not implemented.
+pub(crate) fn ignoring_item<const N: usize>(state: &State<N>, slot: SlotRef) -> bool {
+    let Some(mon) = state.active(slot) else {
+        return false;
+    };
+    state.field[FieldEffect::MagicRoom as usize].is_active()
+        || (mon.ability == abilities::KLUTZ && !mon.item.is_none() && !mon.item.data().ignore_klutz)
 }
 
 /// Whether an item's `onStart` does nothing when its holder switches in (Showdown runs item
@@ -378,8 +377,16 @@ pub(crate) fn constant_fractional_tenths(item: ItemId) -> i8 {
 /// The constant handlers of `runEvent('FractionalPriority')` for a move action, in tenths:
 /// the ability's (Stall, sub-order 7) and then the item's (sub-order 8) replace the value, so
 /// the item's wins. Quick Claw's random handler runs after them ([`quick_claw`]).
-pub(crate) fn fractional_priority_tenths(mon: &Pokemon) -> i8 {
-    match constant_fractional_tenths(mon.item) {
+pub(crate) fn fractional_priority_tenths<const N: usize>(state: &State<N>, slot: SlotRef) -> i8 {
+    let Some(mon) = state.active(slot) else {
+        return 0;
+    };
+    let item = if ignoring_item(state, slot) {
+        ItemId::NONE
+    } else {
+        mon.item
+    };
+    match constant_fractional_tenths(item) {
         0 => super::order::fractional_priority_tenths(mon.ability),
         item => item,
     }
@@ -392,10 +399,15 @@ pub(crate) fn fractional_priority_tenths(mon: &Pokemon) -> i8 {
 /// refused by `support`).
 pub(crate) fn quick_claw<const N: usize>(
     b: &mut Battle<'_, N>,
+    slot: SlotRef,
     pokemon: PokemonRef,
     current: i8,
 ) -> Option<i8> {
-    (b.mon(pokemon).item == items::QUICK_CLAW && current <= 0 && b.rng.chance(1, 5)).then_some(1)
+    (b.occupant(slot) == Some(pokemon)
+        && b.item(slot) == items::QUICK_CLAW
+        && current <= 0
+        && b.rng.chance(1, 5))
+    .then_some(1)
 }
 
 /// Custap Berry's `onFractionalPriority` (priority -2, like Quick Claw, which a holder of it
@@ -410,7 +422,7 @@ pub(crate) fn custap<const N: usize>(
     pokemon: PokemonRef,
     current: i8,
 ) -> Option<i8> {
-    if b.occupant(slot) != Some(pokemon) || b.mon(pokemon).item != items::CUSTAP_BERRY {
+    if b.occupant(slot) != Some(pokemon) || b.item(slot) != items::CUSTAP_BERRY {
         return None;
     }
     let mon = b.mon(pokemon);
@@ -458,7 +470,7 @@ pub(crate) fn defense_handlers<const N: usize>(
     let Some(mon) = b.slot_mon(target) else {
         return out;
     };
-    let item = mon.item;
+    let item = b.item(target);
     let event = match defense_stat {
         Stat::Def => "onModifyDefPriority",
         _ => "onModifySpDPriority",
@@ -506,7 +518,8 @@ pub(crate) fn before_move<const N: usize>(
     if !lock.active {
         return true;
     }
-    if !b.item(user).data().is_choice {
+    // `pokemon.getItem().isChoice`: the raw item (a suppressed Choice item keeps the lock).
+    if !b.raw_item(user).data().is_choice {
         b.remove_volatile(user, Volatile::ChoiceLock);
         return true;
     }
@@ -520,7 +533,7 @@ pub(crate) fn end_turn_disable_move<const N: usize>(b: &mut Battle<'_, N>) {
     for slot in State::<N>::slot_refs() {
         if b.alive(slot).is_some()
             && b.volatile(slot, Volatile::ChoiceLock).active
-            && !b.item(slot).data().is_choice
+            && !b.raw_item(slot).data().is_choice
         {
             b.remove_volatile(slot, Volatile::ChoiceLock);
         }
@@ -536,7 +549,9 @@ pub(crate) fn disabled_move<const N: usize>(
     id: MoveId,
 ) -> Option<String> {
     let mon = state.active(slot)?;
-    if mon.item == items::ASSAULT_VEST
+    let ignoring = ignoring_item(state, slot);
+    if !ignoring
+        && mon.item == items::ASSAULT_VEST
         && id.data().category == MoveCategory::Status
         && id != moves::ME_FIRST
     {
@@ -545,8 +560,10 @@ pub(crate) fn disabled_move<const N: usize>(
             mon.species.data().name
         ));
     }
+    // `choicelock.onDisableMove`: `getItem().isChoice` (raw) keeps the lock; the disabling
+    // itself needs `!pokemon.ignoringItem()`.
     let lock = state.slot(slot).volatiles.get(Volatile::ChoiceLock);
-    if lock.active && mon.item.data().is_choice && id.0 != lock.counter {
+    if lock.active && mon.item.data().is_choice && !ignoring && id.0 != lock.counter {
         return Some(format!(
             "{} is locked into {} by {}",
             mon.species.data().name,
@@ -628,7 +645,7 @@ pub(crate) fn on_damage<const N: usize>(
     if source != DamageSource::Move || amount < hp {
         return amount;
     }
-    let survives = match mon.item {
+    let survives = match b.item(target) {
         i if i == items::FOCUS_SASH => mon.hp == mon.max_hp && b.use_item(target),
         i if i == items::FOCUS_BAND => b.rng.chance(1, 10),
         _ => false,
@@ -699,7 +716,7 @@ pub(crate) fn after_move_secondary_self<const N: usize>(
         return;
     };
     let max_hp = f64::from(mon.max_hp);
-    match mon.item {
+    match b.item(user) {
         i if i == items::LIFE_ORB && data.category != MoveCategory::Status && target != user => {
             b.damage(user, max_hp / 10.0, DamageSource::Indirect);
         }
@@ -887,7 +904,7 @@ pub(crate) fn on_hit<const N: usize>(
     }
     if user == target
         || b.item(target) != items::STICKY_BARB
-        || !b.item(user).is_none()
+        || !b.raw_item(user).is_none()
         || !data.flags.contains(MoveFlags::CONTACT)
     {
         return;

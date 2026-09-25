@@ -1,0 +1,78 @@
+{
+ "description": "F17 Klutz: Lopunny's Life Orb gives no recoil (Snorlax's Rocky Helmet still hurts it), and Klutz Golduck, taken below half by Hariyama's Seismic Toss, does not eat its Sitrus Berry. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Lopunny",
+    "item": "Life Orb",
+    "ability": "Klutz",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Seismic Toss"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hariyama",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Seismic Toss"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "Rocky Helmet",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Golduck",
+    "item": "Sitrus Berry",
+    "ability": "Klutz",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {
+   "Golduck": {
+    "hp": 100
+   }
+  }
+ },
+ "turn": {
+  "p1": "move seismictoss 1, move seismictoss 2",
+  "p2": "move harden, move harden"
+ }
+}

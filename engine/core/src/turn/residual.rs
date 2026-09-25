@@ -98,6 +98,9 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
     if b.field_active(FieldEffect::WonderRoom) {
         out.push(field(27, 5, Kind::FieldDuration(FieldEffect::WonderRoom)));
     }
+    if b.field_active(FieldEffect::MagicRoom) {
+        out.push(field(27, 6, Kind::FieldDuration(FieldEffect::MagicRoom)));
+    }
     for side in [SideId::One, SideId::Two] {
         for (effect, order, sub_order) in [
             (SideEffect::Reflect, 26, 1),
@@ -153,15 +156,17 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                     kind: Kind::GrassyHeal(pokemon, slot),
                 });
             }
-            if let Some((order, sub_order)) = item_events::residual_order(mon.item) {
+            // The effective item: a suppressed one (Magic Room, Klutz) has no residual.
+            let item = b.item(slot);
+            if let Some((order, sub_order)) = item_events::residual_order(item) {
                 out.push(Handler {
                     order,
                     speed,
                     sub_order,
-                    kind: Kind::Item(pokemon, slot, mon.item),
+                    kind: Kind::Item(pokemon, slot, item),
                 });
             }
-            if mon.item == items::LEFTOVERS {
+            if item == items::LEFTOVERS {
                 out.push(Handler {
                     order: 5,
                     speed,
@@ -404,14 +409,14 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
             }
         }
         Kind::Leftovers(pokemon, slot) => {
-            if !still_active(b, pokemon, slot) || b.mon(pokemon).item != items::LEFTOVERS {
+            if !still_active(b, pokemon, slot) || b.item(slot) != items::LEFTOVERS {
                 return Ok(true);
             }
             let max_hp = f64::from(b.mon(pokemon).max_hp);
             b.heal(slot, max_hp / 16.0);
         }
         Kind::Item(pokemon, slot, item) => {
-            if !still_active(b, pokemon, slot) || b.mon(pokemon).item != item {
+            if !still_active(b, pokemon, slot) || b.item(slot) != item {
                 return Ok(true);
             }
             item_events::on_residual(b, slot, item);

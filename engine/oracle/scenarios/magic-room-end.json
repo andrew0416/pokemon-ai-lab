@@ -1,0 +1,88 @@
+{
+ "description": "F17 Magic Room ends on reuse: under Magic Room (setup turn) Seismic Toss takes Snorlax below half but its Sitrus Berry stays; slower Bronzong's second Magic Room ends the room, the Update after that action eats the berry, and Swampert's Leftovers heal at the end of the turn. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Bronzong",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Magic Room",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hariyama",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Seismic Toss",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "Sitrus Berry",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Swampert",
+    "item": "Leftovers",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move magicroom, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "patch": {
+  "p2": {
+   "Snorlax": {
+    "hp": 150
+   },
+   "Swampert": {
+    "hp": 150
+   }
+  }
+ },
+ "turn": {
+  "p1": "move magicroom, move seismictoss 1",
+  "p2": "move harden, move harden"
+ }
+}

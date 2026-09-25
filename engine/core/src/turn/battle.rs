@@ -169,7 +169,18 @@ impl<'a, const N: usize> Battle<'a, N> {
         }
     }
 
+    /// The item whose effects apply (`hasItem`, item handlers): `NONE` while the holder is
+    /// ignoring its item (`items::ignoring_item`: Magic Room, Klutz).
     pub fn item(&self, slot: SlotRef) -> ItemId {
+        if super::items::ignoring_item(self.state, slot) {
+            return ItemId::NONE;
+        }
+        self.raw_item(slot)
+    }
+
+    /// Showdown `pokemon.item` itself, suppressed or not (Knock Off, Trick, Acrobatics,
+    /// Unburden, Mega Evolution).
+    pub fn raw_item(&self, slot: SlotRef) -> ItemId {
         self.slot_mon(slot).map_or(ItemId::NONE, |m| m.item)
     }
 
