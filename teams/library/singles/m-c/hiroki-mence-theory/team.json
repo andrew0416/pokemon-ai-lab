@@ -1,0 +1,129 @@
+[
+  {
+    "species": "Salamence",
+    "item": "Salamencite",
+    "ability": "Intimidate",
+    "nature": "Adamant",
+    "moves": [
+      "Double-Edge",
+      "Earthquake",
+      "Dragon Dance",
+      "Roost"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 5,
+      "def": 19,
+      "spa": 0,
+      "spd": 0,
+      "spe": 10
+    },
+    "level": 50
+  },
+  {
+    "species": "Rotom-Wash",
+    "item": "Leftovers",
+    "ability": "Levitate",
+    "nature": "Modest",
+    "moves": [
+      "Hydro Pump",
+      "Thunderbolt",
+      "Will-O-Wisp",
+      "Substitute"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 32,
+      "spa": 2,
+      "spd": 0,
+      "spe": 0
+    },
+    "level": 50,
+    "gender": "N"
+  },
+  {
+    "species": "Corviknight",
+    "item": "Sitrus Berry",
+    "ability": "Pressure",
+    "nature": "Impish",
+    "moves": [
+      "Iron Head",
+      "Bulk Up",
+      "U-turn",
+      "Roost"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 32,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "level": 50
+  },
+  {
+    "species": "Meowscarada",
+    "item": "Choice Scarf",
+    "ability": "Protean",
+    "nature": "Jolly",
+    "moves": [
+      "Flower Trick",
+      "Knock Off",
+      "Triple Axel",
+      "U-turn"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50
+  },
+  {
+    "species": "Garchomp",
+    "item": "Focus Sash",
+    "ability": "Rough Skin",
+    "nature": "Adamant",
+    "moves": [
+      "Scale Shot",
+      "Earthquake",
+      "Stealth Rock",
+      "Swords Dance"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50
+  },
+  {
+    "species": "Samurott-Hisui",
+    "item": "Black Glasses",
+    "ability": "Sharpness",
+    "nature": "Adamant",
+    "moves": [
+      "Ceaseless Edge",
+      "Razor Shell",
+      "Sacred Sword",
+      "Sucker Punch"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50
+  }
+]

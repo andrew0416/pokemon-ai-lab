@@ -1,0 +1,60 @@
+Goodra-Hisui @ Leftovers  
+Ability: Gooey  
+Level: 50  
+EVs: 31 HP / 15 Def / 20 SpA  
+Modest Nature  
+- Flamethrower  
+- Flash Cannon  
+- Ice Beam  
+- Thunderbolt  
+
+Rillaboom @ Focus Sash  
+Ability: Grassy Surge  
+Level: 50  
+EVs: 32 HP / 32 Atk / 1 Def / 1 SpD  
+Brave Nature  
+- Grassy Glide  
+- Drum Beating  
+- U-turn  
+- Endeavor  
+
+Baxcalibur @ Baxcalibrite  
+Ability: Thermal Exchange  
+Level: 50  
+EVs: 32 HP / 30 Atk / 4 Spe  
+Adamant Nature  
+- Earthquake  
+- Ice Shard  
+- Glaive Rush  
+- Dragon Dance  
+
+Indeedee (M) @ Life Orb  
+Ability: Psychic Surge  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Modest Nature  
+- Expanding Force  
+- Mystical Fire  
+- Healing Wish  
+- Encore  
+
+Skeledirge @ Sitrus Berry  
+Ability: Unaware  
+Level: 50  
+EVs: 32 HP / 20 Def / 7 SpA / 1 SpD / 6 Spe  
+Bold Nature  
+- Torch Song  
+- Slack Off  
+- Will-O-Wisp  
+- Hex  
+
+Salamence @ Salamencite  
+Ability: Intimidate  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Adamant Nature  
+- Double-Edge  
+- Earthquake  
+- Dragon Dance  
+- Roost  
+

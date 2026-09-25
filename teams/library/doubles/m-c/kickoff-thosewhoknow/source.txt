@@ -1,0 +1,47 @@
+Floette @ Floettite
+Ability: Flower Veil
+Modest Nature
+- Moonblast
+- Dazzling Gleam
+- Light of Ruin
+- Protect
+
+Sneasler @ Psychic Seed
+Ability: Unburden
+Adamant Nature
+- Dire Claw
+- Close Combat
+- Rock Slide
+- Protect
+
+Indeedee @ Focus Sash
+Ability: Psychic Surge
+Timid Nature
+- Expanding Force
+- Helping Hand
+- Imprison
+- Trick Room
+
+Basculegion @ choice scarf
+Ability: Adaptability
+Adamant Nature
+- Wave Crash
+- Last Respects
+- Aqua Jet
+- flip turn
+
+Dragonite @ Dragoninite
+Ability: Inner Focus
+Modest Nature
+- Dragon Pulse
+- Heat Wave
+- Thunderbolt
+- Protect
+
+Garchomp @ Life Orb
+Ability: Rough Skin
+Jolly Nature
+- Earthquake
+- Rock Slide
+- Dragon Claw
+- Protect

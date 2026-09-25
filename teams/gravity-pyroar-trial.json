@@ -1,0 +1,170 @@
+[
+  {
+    "species": "Sableye",
+    "ability": "Prankster",
+    "item": "Roseli Berry",
+    "moves": [
+      "Gravity",
+      "Quash",
+      "Encore",
+      "Sunny Day"
+    ],
+    "nature": "Bold",
+    "evs": {
+      "hp": 32,
+      "def": 32,
+      "spd": 2
+    },
+    "level": 50,
+    "gender": "F",
+    "name": "Sableye",
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Milotic",
+    "ability": "Competitive",
+    "item": "Sitrus Berry",
+    "moves": [
+      "Hydro Pump",
+      "Recover",
+      "Hypnosis",
+      "Ice Beam"
+    ],
+    "nature": "Bold",
+    "evs": {
+      "hp": 32,
+      "def": 32,
+      "spd": 2
+    },
+    "level": 50,
+    "gender": "M",
+    "name": "Milotic",
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Starmie",
+    "ability": "Natural Cure",
+    "item": "Starminite",
+    "nature": "Jolly",
+    "level": 50,
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "spe": 32
+    },
+    "moves": [
+      "Liquidation",
+      "Ice Spinner",
+      "Gravity",
+      "Protect"
+    ],
+    "name": "Starmie",
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "gender": "N"
+  },
+  {
+    "species": "Pyroar",
+    "ability": "Unnerve",
+    "item": "Pyroarite",
+    "nature": "Timid",
+    "level": 50,
+    "evs": {
+      "hp": 2,
+      "spa": 32,
+      "spe": 32
+    },
+    "moves": [
+      "Heat Wave",
+      "Hyper Voice",
+      "Solar Beam",
+      "Protect"
+    ],
+    "name": "Pyroar",
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "gender": ""
+  },
+  {
+    "species": "Flapple",
+    "ability": "Hustle",
+    "item": "Choice Scarf",
+    "moves": [
+      "U-turn",
+      "Grav Apple",
+      "Dragon Rush",
+      "Dual Wingbeat"
+    ],
+    "nature": "Adamant",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "gender": "M",
+    "name": "Flapple",
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Maushold",
+    "ability": "Technician",
+    "item": "Life Orb",
+    "moves": [
+      "Protect",
+      "Population Bomb",
+      "Bullet Seed",
+      "Bite"
+    ],
+    "nature": "Jolly",
+    "evs": {
+      "hp": 1,
+      "atk": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "name": "Maushold",
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "gender": "N"
+  }
+]

@@ -1,0 +1,4 @@
+{
+  "experiments": ["experiments/paired-team-screen.json","experiments/paired-sand-screen.json"],
+  "interpretation": "Report each matchup separately. This two-team panel is not a representative metagame estimate."
+}

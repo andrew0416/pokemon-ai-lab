@@ -1,0 +1,38 @@
+{
+  "ruleset": "champions",
+  "attacker": {
+    "species": "Armarouge",
+    "ability": "Flash Fire",
+    "item": "Life Orb",
+    "moves": [],
+    "nature": "Modest",
+    "evs": {
+      "hp": 32,
+      "spa": 32,
+      "spd": 2
+    },
+    "level": 50
+  },
+  "defender": {
+    "species": "Rillaboom",
+    "ability": "Grassy Surge",
+    "item": "Miracle Seed",
+    "moves": [
+      "Fake Out",
+      "Grassy Glide",
+      "Wood Hammer",
+      "U-turn"
+    ],
+    "nature": "Adamant",
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "spd": 2
+    },
+    "level": 50
+  },
+  "move": "Armor Cannon",
+  "field": {
+    "gameType": "Doubles"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "title": "【M-6シングル】雑にHDメガマンダ構築を組んでみた",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": "m-6",
+  "publishedAt": "2026-09-11T17:42:02.464000+00:00",
+  "updatedAt": "2026-09-14T09:10:50.836000+00:00",
+  "source": "https://pokesol.app/u/tama_poke0216/articles/9d0b9790b3a18738",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "validated",
+  "card_count": 6,
+  "body_sha256": "463908522db57081854f649d7320f8734c69b428b6e3aaa8ce9aa5bae722cdd1",
+  "normalization": [
+    "Normalize displayed Salamence-Mega to Salamence with Mega stone.",
+    "Normalize displayed Pyroar-Mega to Pyroar with Mega stone."
+  ],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [],
+  "evidence_note": "작성자 시험 구성·상위권 실적 확인 안 됨",
+  "tags": [
+    "screens",
+    "revival-blessing",
+    "bulky-setup"
+  ],
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults. Pre-Mega ability choices/assumptions appear in normalization."
+}

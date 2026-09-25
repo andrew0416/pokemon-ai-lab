@@ -1,0 +1,47 @@
+Salamence @ Salamencite
+Ability: Intimidate
+Timid Nature
+- Hyper Voice
+- Hurricane
+- Draco Meteor
+- Tailwind
+
+Sneasler @ Life Orb
+Ability: Poison Touch
+Jolly Nature
+- Fake Out
+- Close Combat
+- Dire Claw
+- Protect
+
+Politoed @ Sitrus Berry
+Ability: Drizzle
+Jolly Nature
+- Weather Ball
+- Muddy Water
+- Ice Beam
+- Protect
+
+Archaludon @ Leftovers
+Ability: Stamina
+Modest Nature
+- Electro Shot
+- Dragon Pulse
+- Flash Cannon
+- Protect
+
+Rillaboom @ Miracle Seed
+Ability: Grassy Surge
+Adamant Nature
+- Fake Out
+- Wood Hammer
+- Grassy Glide
+- Protect
+
+Swampert @ Swampertite
+Ability: Torrent
+Adamant Nature
+- Wave Crash
+- High Horsepower
+- Protect
+- Ice Punch

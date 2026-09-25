@@ -1,0 +1,12 @@
+[package]
+name = "lab-engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Slot-generic Pokémon battle engine for search (N = 1 singles, N = 2 doubles)."
+
+[lib]
+name = "lab_engine"
+path = "src/lib.rs"
+
+[dependencies]

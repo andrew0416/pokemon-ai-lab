@@ -1,0 +1,47 @@
+Charizard @ Charizardite Y
+Ability: Blaze
+Modest Nature
+- Heat Wave
+- Weather Ball
+- Ancient Power
+- Protect
+
+Garchomp @ Choice Scarf
+Ability: Rough Skin
+Adamant Nature
+- Earthquake
+- Dragon Claw
+- Stomping Tantrum
+- Rock Slide
+
+Incineroar @ Sitrus Berry
+Ability: Intimidate
+Impish Nature
+- Flare Blitz
+- Darkest Lariat
+- Fake Out
+- Parting Shot
+
+Venusaur @ Focus Sash
+Ability: Chlorophyll
+Timid Nature
+- Leaf Storm
+- Sludge Bomb
+- Sleep Powder
+- Protect
+
+Toxapex @ Leftovers
+Ability: Regenerator
+Bold Nature
+- Infestation
+- Toxic
+- Wide Guard
+- Baneful Bunker
+
+Kingambit @ Life Orb
+Ability: Defiant
+Adamant Nature
+- Protect
+- Swords Dance
+- Sucker Punch
+- Kowtow Cleave

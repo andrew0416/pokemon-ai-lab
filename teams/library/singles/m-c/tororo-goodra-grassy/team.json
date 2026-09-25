@@ -1,0 +1,129 @@
+[
+  {
+    "species": "Goodra-Hisui",
+    "item": "Leftovers",
+    "ability": "Gooey",
+    "nature": "Modest",
+    "moves": [
+      "Flamethrower",
+      "Flash Cannon",
+      "Ice Beam",
+      "Thunderbolt"
+    ],
+    "evs": {
+      "hp": 31,
+      "atk": 0,
+      "def": 15,
+      "spa": 20,
+      "spd": 0,
+      "spe": 0
+    },
+    "level": 50
+  },
+  {
+    "species": "Rillaboom",
+    "item": "Focus Sash",
+    "ability": "Grassy Surge",
+    "nature": "Brave",
+    "moves": [
+      "Grassy Glide",
+      "Drum Beating",
+      "U-turn",
+      "Endeavor"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "def": 1,
+      "spa": 0,
+      "spd": 1,
+      "spe": 0
+    },
+    "level": 50
+  },
+  {
+    "species": "Baxcalibur",
+    "item": "Baxcalibrite",
+    "ability": "Thermal Exchange",
+    "nature": "Adamant",
+    "moves": [
+      "Earthquake",
+      "Ice Shard",
+      "Glaive Rush",
+      "Dragon Dance"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 30,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 4
+    },
+    "level": 50
+  },
+  {
+    "species": "Indeedee",
+    "item": "Life Orb",
+    "ability": "Psychic Surge",
+    "nature": "Modest",
+    "moves": [
+      "Expanding Force",
+      "Mystical Fire",
+      "Healing Wish",
+      "Encore"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50,
+    "gender": "M"
+  },
+  {
+    "species": "Skeledirge",
+    "item": "Sitrus Berry",
+    "ability": "Unaware",
+    "nature": "Bold",
+    "moves": [
+      "Torch Song",
+      "Slack Off",
+      "Will-O-Wisp",
+      "Hex"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 20,
+      "spa": 7,
+      "spd": 1,
+      "spe": 6
+    },
+    "level": 50
+  },
+  {
+    "species": "Salamence",
+    "item": "Salamencite",
+    "ability": "Intimidate",
+    "nature": "Adamant",
+    "moves": [
+      "Double-Edge",
+      "Earthquake",
+      "Dragon Dance",
+      "Roost"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50
+  }
+]

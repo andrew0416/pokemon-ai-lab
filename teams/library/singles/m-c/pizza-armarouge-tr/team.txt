@@ -1,0 +1,60 @@
+Indeedee-F (F) @ Terrain Extender  
+Ability: Psychic Surge  
+Level: 50  
+EVs: 32 HP / 32 Def / 2 Spe  
+Bold Nature  
+- Psychic  
+- Mystical Fire  
+- Healing Wish  
+- Trick Room  
+
+Armarouge @ Iron Ball  
+Ability: Flash Fire  
+Level: 50  
+EVs: 27 HP / 32 SpA / 7 SpD  
+Modest Nature  
+- Armor Cannon  
+- Expanding Force  
+- Destiny Bond  
+- Trick Room  
+
+Aggron @ Aggronite  
+Ability: Sturdy  
+Level: 50  
+EVs: 32 HP / 32 SpD / 2 Spe  
+Impish Nature  
+- Metal Burst  
+- Body Press  
+- Trick Room  
+- Stealth Rock  
+
+Mimikyu @ Life Orb  
+Ability: Disguise  
+Level: 50  
+EVs: 3 HP / 32 Atk / 31 Spe  
+Adamant Nature  
+- Shadow Claw  
+- Shadow Sneak  
+- Wood Hammer  
+- Swords Dance  
+
+Ninetales-Alola @ Light Clay  
+Ability: Snow Warning  
+Level: 50  
+EVs: 1 HP / 1 Def / 32 SpA / 32 Spe  
+Timid Nature  
+- Freeze-Dry  
+- Moonblast  
+- Aurora Veil  
+- Encore  
+
+Baxcalibur @ Baxcalibrite  
+Ability: Thermal Exchange  
+Level: 50  
+EVs: 1 HP / 32 Atk / 1 Def / 32 Spe  
+Jolly Nature  
+- Ice Shard  
+- Glaive Rush  
+- Earthquake  
+- Dragon Dance  
+

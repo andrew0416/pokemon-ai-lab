@@ -1,0 +1,128 @@
+[
+  {
+    "species": "Garchomp",
+    "item": "Garchompite Z",
+    "ability": "Rough Skin",
+    "nature": "Timid",
+    "moves": [
+      "Draco Meteor",
+      "Earth Power",
+      "Flamethrower",
+      "Surf"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 0,
+      "def": 6,
+      "spa": 32,
+      "spd": 1,
+      "spe": 25
+    },
+    "level": 50
+  },
+  {
+    "species": "Scizor",
+    "item": "Leftovers",
+    "ability": "Technician",
+    "nature": "Adamant",
+    "moves": [
+      "Bullet Punch",
+      "Close Combat",
+      "Knock Off",
+      "Swords Dance"
+    ],
+    "evs": {
+      "hp": 30,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 4
+    },
+    "level": 50
+  },
+  {
+    "species": "Mimikyu",
+    "item": "Life Orb",
+    "ability": "Disguise",
+    "nature": "Adamant",
+    "moves": [
+      "Play Rough",
+      "Shadow Claw",
+      "Shadow Sneak",
+      "Swords Dance"
+    ],
+    "evs": {
+      "hp": 13,
+      "atk": 30,
+      "def": 1,
+      "spa": 0,
+      "spd": 0,
+      "spe": 22
+    },
+    "level": 50
+  },
+  {
+    "species": "Greninja",
+    "item": "Focus Sash",
+    "ability": "Protean",
+    "nature": "Timid",
+    "moves": [
+      "Water Shuriken",
+      "Dark Pulse",
+      "Ice Beam",
+      "Sludge Wave"
+    ],
+    "evs": {
+      "hp": 8,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 0,
+      "spe": 26
+    },
+    "level": 50
+  },
+  {
+    "species": "Salamence",
+    "item": "Salamencite",
+    "ability": "Intimidate",
+    "nature": "Adamant",
+    "moves": [
+      "Double-Edge",
+      "Earthquake",
+      "Roost",
+      "Dragon Dance"
+    ],
+    "evs": {
+      "hp": 27,
+      "atk": 25,
+      "def": 5,
+      "spa": 0,
+      "spd": 0,
+      "spe": 9
+    },
+    "level": 50
+  },
+  {
+    "species": "Hippowdon",
+    "item": "Sitrus Berry",
+    "ability": "Sand Stream",
+    "nature": "Impish",
+    "moves": [
+      "Earthquake",
+      "Yawn",
+      "Stealth Rock",
+      "Slack Off"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 15,
+      "spa": 0,
+      "spd": 19,
+      "spe": 0
+    },
+    "level": 50
+  }
+]

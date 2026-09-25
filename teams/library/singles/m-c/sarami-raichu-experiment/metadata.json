@@ -1,0 +1,30 @@
+{
+  "title": "【M-C】シードオオニューラをメガライチュウXで起動するのはやめよう",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": null,
+  "publishedAt": "2026-09-11T10:07:00.213Z",
+  "updatedAt": "2026-09-11T10:32:04.653Z",
+  "source": "https://pokesol.app/u/sarami120/articles/96df6ceb6b59bac7",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "validated",
+  "card_count": 6,
+  "body_sha256": "b051e8e17e859b0f924116dbe49bf17dc65b15c4a97f2540d7d659b950bcc807",
+  "normalization": [
+    "Normalize displayed Raichu-Mega-X to Raichu with Mega stone.",
+    "Normalize displayed Pyroar-Mega to Pyroar with Mega stone."
+  ],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [],
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults, not publicly verified IVs. Missing SP must not be treated as an authored zero-investment spread.",
+  "tags": [
+    "snow-or-froslass"
+  ],
+  "evidence_note": "Author retrospective/experimental team; not a proven meta template."
+}

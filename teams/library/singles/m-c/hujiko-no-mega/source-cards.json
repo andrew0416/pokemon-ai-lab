@@ -1,0 +1,713 @@
+[
+  {
+    "pokemon": {
+      "id": 908,
+      "name": "マスカーニャ",
+      "type1": "GRASS",
+      "type2": "DARK",
+      "icon": "pokemons/0908.png",
+      "poketetsuUrl": "https://yakkun.com/ch/zukan/n908",
+      "baseStatHp": 76,
+      "baseStatAttack": 110,
+      "baseStatDefense": 70,
+      "baseStatSpecialAttack": 81,
+      "baseStatSpecialDefense": 70,
+      "baseStatSpeed": 123,
+      "weight": 31.2,
+      "filterHits": [
+        "ますか-にゃ"
+      ]
+    },
+    "nature": {
+      "id": 2,
+      "name": "いじっぱり",
+      "attack": 1.1,
+      "defense": 1,
+      "specialAttack": 0.9,
+      "specialDefense": 1,
+      "speed": 1
+    },
+    "abilities": [
+      {
+        "id": 168,
+        "name": "へんげんじざい",
+        "isCalculable": true,
+        "filterHits": [
+          "へんげんじざい"
+        ]
+      }
+    ],
+    "item": {
+      "id": 37,
+      "name": "こだわりスカーフ",
+      "icon": "items/choicescarf.png",
+      "filterHits": [
+        "こだわりすか-ふ",
+        "すか-ふ"
+      ]
+    },
+    "moves": [
+      {
+        "id": 870,
+        "name": "トリックフラワー",
+        "type": "GRASS",
+        "damageClass": "PHYSICAL",
+        "power": 70,
+        "isCalculable": true,
+        "filterHits": [
+          "とりっくふらわ-",
+          "とりふら"
+        ]
+      },
+      {
+        "id": 282,
+        "name": "はたきおとす",
+        "type": "DARK",
+        "damageClass": "PHYSICAL",
+        "power": 65,
+        "isCalculable": true,
+        "filterHits": [
+          "はたきおとす",
+          "おとす",
+          "kのcこっf"
+        ]
+      },
+      {
+        "id": 813,
+        "name": "トリプルアクセル",
+        "type": "ICE",
+        "damageClass": "PHYSICAL",
+        "power": 20,
+        "isCalculable": true,
+        "filterHits": [
+          "とりぷるあくせる",
+          "とりあく",
+          "あくせる"
+        ]
+      },
+      {
+        "id": 369,
+        "name": "とんぼがえり",
+        "type": "BUG",
+        "damageClass": "PHYSICAL",
+        "power": 70,
+        "isCalculable": true,
+        "filterHits": [
+          "とんぼがえり",
+          "tb",
+          "ぼがえり"
+        ]
+      }
+    ],
+    "evs": {
+      "hp": 0,
+      "attack": 32,
+      "defense": 2,
+      "specialAttack": 0,
+      "specialDefense": 0,
+      "speed": 32
+    },
+    "attributes": {
+      "data-type": "pokemon-card",
+      "data-pokemon-id": "908",
+      "data-nature-id": "2",
+      "data-ability-ids": "[168]",
+      "data-item-id": "37",
+      "data-move-ids": "[870,282,813,369]",
+      "data-evs": "{\"hp\":0,\"attack\":32,\"defense\":2,\"specialAttack\":0,\"specialDefense\":0,\"speed\":32}"
+    }
+  },
+  {
+    "pokemon": {
+      "id": 823,
+      "name": "アーマーガア",
+      "type1": "FLYING",
+      "type2": "STEEL",
+      "icon": "pokemons/0823.png",
+      "poketetsuUrl": "https://yakkun.com/ch/zukan/n823",
+      "baseStatHp": 98,
+      "baseStatAttack": 87,
+      "baseStatDefense": 105,
+      "baseStatSpecialAttack": 53,
+      "baseStatSpecialDefense": 85,
+      "baseStatSpeed": 67,
+      "weight": 75,
+      "filterHits": [
+        "あ-ま-があ",
+        "あまが",
+        "があ"
+      ]
+    },
+    "nature": {
+      "id": 6,
+      "name": "わんぱく",
+      "attack": 1,
+      "defense": 1.1,
+      "specialAttack": 0.9,
+      "specialDefense": 1,
+      "speed": 1
+    },
+    "abilities": [
+      {
+        "id": 46,
+        "name": "プレッシャー",
+        "isCalculable": false,
+        "filterHits": [
+          "ぷれっしゃ-"
+        ]
+      }
+    ],
+    "item": {
+      "id": 135,
+      "name": "オボンのみ",
+      "icon": "items/sitrusberry.png",
+      "filterHits": [
+        "おぼんのみ"
+      ]
+    },
+    "moves": [
+      {
+        "id": 369,
+        "name": "とんぼがえり",
+        "type": "BUG",
+        "damageClass": "PHYSICAL",
+        "power": 70,
+        "isCalculable": true,
+        "filterHits": [
+          "とんぼがえり",
+          "tb",
+          "ぼがえり"
+        ]
+      },
+      {
+        "id": 776,
+        "name": "ボディプレス",
+        "type": "FIGHTING",
+        "damageClass": "PHYSICAL",
+        "power": 80,
+        "isCalculable": true,
+        "filterHits": [
+          "ぼでぃぷれす",
+          "ぷれす"
+        ]
+      },
+      {
+        "id": 334,
+        "name": "てっぺき",
+        "type": "STEEL",
+        "damageClass": "STATUS",
+        "power": 0,
+        "isCalculable": false,
+        "filterHits": [
+          "てっぺき"
+        ]
+      },
+      {
+        "id": 355,
+        "name": "はねやすめ",
+        "type": "FLYING",
+        "damageClass": "STATUS",
+        "power": 0,
+        "isCalculable": false,
+        "filterHits": [
+          "はねやすめ",
+          "やすめ"
+        ]
+      }
+    ],
+    "evs": {
+      "hp": 32,
+      "attack": 0,
+      "defense": 32,
+      "specialAttack": 0,
+      "specialDefense": 2,
+      "speed": 0
+    },
+    "attributes": {
+      "data-type": "pokemon-card",
+      "data-pokemon-id": "823",
+      "data-nature-id": "6",
+      "data-ability-ids": "[46]",
+      "data-item-id": "135",
+      "data-move-ids": "[369,776,334,355]",
+      "data-evs": "{\"hp\":32,\"attack\":0,\"defense\":32,\"specialAttack\":0,\"specialDefense\":2,\"speed\":0}"
+    }
+  },
+  {
+    "pokemon": {
+      "id": 941,
+      "name": "ハラバリー",
+      "type1": "ELECTRIC",
+      "type2": null,
+      "icon": "pokemons/0939.png",
+      "poketetsuUrl": "https://yakkun.com/ch/zukan/n941",
+      "baseStatHp": 109,
+      "baseStatAttack": 64,
+      "baseStatDefense": 91,
+      "baseStatSpecialAttack": 103,
+      "baseStatSpecialDefense": 83,
+      "baseStatSpeed": 45,
+      "weight": 113,
+      "filterHits": [
+        "はらばり-",
+        "ばり-"
+      ]
+    },
+    "nature": {
+      "id": 13,
+      "name": "おだやか",
+      "attack": 0.9,
+      "defense": 1,
+      "specialAttack": 1,
+      "specialDefense": 1.1,
+      "speed": 1
+    },
+    "abilities": [
+      {
+        "id": 280,
+        "name": "でんきにかえる",
+        "isCalculable": false,
+        "filterHits": [
+          "でんきにかえる"
+        ]
+      }
+    ],
+    "item": {
+      "id": 59,
+      "name": "たべのこし",
+      "icon": "items/leftovers.png",
+      "filterHits": [
+        "たべのこし",
+        "ざんぱん"
+      ]
+    },
+    "moves": [
+      {
+        "id": 521,
+        "name": "ボルトチェンジ",
+        "type": "ELECTRIC",
+        "damageClass": "SPECIAL",
+        "power": 70,
+        "isCalculable": true,
+        "filterHits": [
+          "ぼるとちぇんじ",
+          "ぼるちぇん",
+          "vc",
+          "vs"
+        ]
+      },
+      {
+        "id": 487,
+        "name": "みずびたし",
+        "type": "WATER",
+        "damageClass": "STATUS",
+        "power": 0,
+        "isCalculable": false,
+        "filterHits": [
+          "みずびたし",
+          "びたし"
+        ]
+      },
+      {
+        "id": 92,
+        "name": "どくどく",
+        "type": "POISON",
+        "damageClass": "STATUS",
+        "power": 0,
+        "isCalculable": false,
+        "filterHits": [
+          "どくどく"
+        ]
+      },
+      {
+        "id": 303,
+        "name": "なまける",
+        "type": "NORMAL",
+        "damageClass": "STATUS",
+        "power": 0,
+        "isCalculable": false,
+        "filterHits": [
+          "なまける"
+        ]
+      }
+    ],
+    "evs": {
+      "hp": 31,
+      "attack": 0,
+      "defense": 0,
+      "specialAttack": 0,
+      "specialDefense": 32,
+      "speed": 3
+    },
+    "attributes": {
+      "data-type": "pokemon-card",
+      "data-pokemon-id": "941",
+      "data-nature-id": "13",
+      "data-ability-ids": "[280]",
+      "data-item-id": "59",
+      "data-move-ids": "[521,487,92,303]",
+      "data-evs": "{\"hp\":31,\"attack\":0,\"defense\":0,\"specialAttack\":0,\"specialDefense\":32,\"speed\":3}"
+    }
+  },
+  {
+    "pokemon": {
+      "id": 10236,
+      "name": "ダイケンキ(ヒスイ)",
+      "type1": "WATER",
+      "type2": "DARK",
+      "icon": "pokemons/0503_01.png",
+      "poketetsuUrl": "https://yakkun.com/ch/zukan/n503h",
+      "baseStatHp": 90,
+      "baseStatAttack": 108,
+      "baseStatDefense": 80,
+      "baseStatSpecialAttack": 100,
+      "baseStatSpecialDefense": 65,
+      "baseStatSpeed": 85,
+      "weight": 58.2,
+      "filterHits": [
+        "だいけんき(ひすい)"
+      ]
+    },
+    "nature": {
+      "id": 2,
+      "name": "いじっぱり",
+      "attack": 1.1,
+      "defense": 1,
+      "specialAttack": 0.9,
+      "specialDefense": 1,
+      "speed": 1
+    },
+    "abilities": [
+      {
+        "id": 292,
+        "name": "きれあじ",
+        "isCalculable": true,
+        "filterHits": [
+          "きれあじ"
+        ]
+      }
+    ],
+    "item": {
+      "id": 32,
+      "name": "くろいメガネ",
+      "icon": "items/blackglasses.png",
+      "filterHits": [
+        "くろいめがね",
+        "めがね",
+        "あく"
+      ]
+    },
+    "moves": [
+      {
+        "id": 845,
+        "name": "ひけん・ちえなみ",
+        "type": "DARK",
+        "damageClass": "PHYSICAL",
+        "power": 65,
+        "isCalculable": true,
+        "filterHits": [
+          "ひけん・ちえなみ",
+          "ちえなみ"
+        ]
+      },
+      {
+        "id": 533,
+        "name": "せいなるつるぎ",
+        "type": "FIGHTING",
+        "damageClass": "PHYSICAL",
+        "power": 90,
+        "isCalculable": true,
+        "filterHits": [
+          "せいなるつるぎ",
+          "せいけん"
+        ]
+      },
+      {
+        "id": 389,
+        "name": "ふいうち",
+        "type": "DARK",
+        "damageClass": "PHYSICAL",
+        "power": 70,
+        "isCalculable": true,
+        "filterHits": [
+          "ふいうち",
+          "sp",
+          "さかぱん"
+        ]
+      },
+      {
+        "id": 14,
+        "name": "つるぎのまい",
+        "type": "NORMAL",
+        "damageClass": "STATUS",
+        "power": 0,
+        "isCalculable": false,
+        "filterHits": [
+          "つるぎのまい",
+          "sd",
+          "sをrdsだんせ",
+          "つるぶ",
+          "つるまい",
+          "けんまい",
+          "けんぶ"
+        ]
+      }
+    ],
+    "evs": {
+      "hp": 20,
+      "attack": 32,
+      "defense": 0,
+      "specialAttack": 0,
+      "specialDefense": 2,
+      "speed": 12
+    },
+    "attributes": {
+      "data-type": "pokemon-card",
+      "data-pokemon-id": "10236",
+      "data-nature-id": "2",
+      "data-ability-ids": "[292]",
+      "data-item-id": "32",
+      "data-move-ids": "[845,533,389,14]",
+      "data-evs": "{\"hp\":20,\"attack\":32,\"defense\":0,\"specialAttack\":0,\"specialDefense\":2,\"speed\":12}"
+    }
+  },
+  {
+    "pokemon": {
+      "id": 778,
+      "name": "ミミッキュ",
+      "type1": "GHOST",
+      "type2": "FAIRY",
+      "icon": "pokemons/0778.png",
+      "poketetsuUrl": "https://yakkun.com/ch/zukan/n778",
+      "baseStatHp": 55,
+      "baseStatAttack": 90,
+      "baseStatDefense": 80,
+      "baseStatSpecialAttack": 50,
+      "baseStatSpecialDefense": 105,
+      "baseStatSpeed": 96,
+      "weight": 0.7,
+      "filterHits": [
+        "みみっきゅ"
+      ]
+    },
+    "nature": {
+      "id": 2,
+      "name": "いじっぱり",
+      "attack": 1.1,
+      "defense": 1,
+      "specialAttack": 0.9,
+      "specialDefense": 1,
+      "speed": 1
+    },
+    "abilities": [
+      {
+        "id": 209,
+        "name": "ばけのかわ",
+        "isCalculable": false,
+        "filterHits": [
+          "ばけのかわ"
+        ]
+      }
+    ],
+    "item": {
+      "id": 9,
+      "name": "いのちのたま",
+      "icon": "items/lifeorb.png",
+      "filterHits": [
+        "いのちのたま",
+        "たま"
+      ]
+    },
+    "moves": [
+      {
+        "id": 583,
+        "name": "じゃれつく",
+        "type": "FAIRY",
+        "damageClass": "PHYSICAL",
+        "power": 90,
+        "isCalculable": true,
+        "filterHits": [
+          "じゃれつく",
+          "pr"
+        ]
+      },
+      {
+        "id": 421,
+        "name": "シャドークロー",
+        "type": "GHOST",
+        "damageClass": "PHYSICAL",
+        "power": 70,
+        "isCalculable": true,
+        "filterHits": [
+          "しゃど-くろ-",
+          "しゃどくろ",
+          "くろ-"
+        ]
+      },
+      {
+        "id": 425,
+        "name": "かげうち",
+        "type": "GHOST",
+        "damageClass": "PHYSICAL",
+        "power": 40,
+        "isCalculable": true,
+        "filterHits": [
+          "かげうち"
+        ]
+      },
+      {
+        "id": 14,
+        "name": "つるぎのまい",
+        "type": "NORMAL",
+        "damageClass": "STATUS",
+        "power": 0,
+        "isCalculable": false,
+        "filterHits": [
+          "つるぎのまい",
+          "sd",
+          "sをrdsだんせ",
+          "つるぶ",
+          "つるまい",
+          "けんまい",
+          "けんぶ"
+        ]
+      }
+    ],
+    "evs": {
+      "hp": 1,
+      "attack": 32,
+      "defense": 1,
+      "specialAttack": 0,
+      "specialDefense": 0,
+      "speed": 32
+    },
+    "attributes": {
+      "data-type": "pokemon-card",
+      "data-pokemon-id": "778",
+      "data-nature-id": "2",
+      "data-ability-ids": "[209]",
+      "data-item-id": "9",
+      "data-move-ids": "[583,421,425,14]",
+      "data-evs": "{\"hp\":1,\"attack\":32,\"defense\":1,\"specialAttack\":0,\"specialDefense\":0,\"speed\":32}"
+    }
+  },
+  {
+    "pokemon": {
+      "id": 658,
+      "name": "ゲッコウガ",
+      "type1": "WATER",
+      "type2": "DARK",
+      "icon": "pokemons/0658.png",
+      "poketetsuUrl": "https://yakkun.com/ch/zukan/n658",
+      "baseStatHp": 72,
+      "baseStatAttack": 95,
+      "baseStatDefense": 67,
+      "baseStatSpecialAttack": 103,
+      "baseStatSpecialDefense": 71,
+      "baseStatSpeed": 122,
+      "weight": 40,
+      "filterHits": [
+        "げっこうが",
+        "げこ"
+      ]
+    },
+    "nature": {
+      "id": 9,
+      "name": "ひかえめ",
+      "attack": 0.9,
+      "defense": 1,
+      "specialAttack": 1.1,
+      "specialDefense": 1,
+      "speed": 1
+    },
+    "abilities": [
+      {
+        "id": 168,
+        "name": "へんげんじざい",
+        "isCalculable": true,
+        "filterHits": [
+          "へんげんじざい"
+        ]
+      }
+    ],
+    "item": {
+      "id": 58,
+      "name": "たつじんのおび",
+      "icon": "items/expertbelt.png",
+      "filterHits": [
+        "たつじんのおび",
+        "おび"
+      ]
+    },
+    "moves": [
+      {
+        "id": 58,
+        "name": "れいとうビーム",
+        "type": "ICE",
+        "damageClass": "SPECIAL",
+        "power": 90,
+        "isCalculable": true,
+        "filterHits": [
+          "れいとうび-む",
+          "れいび"
+        ]
+      },
+      {
+        "id": 482,
+        "name": "ヘドロウェーブ",
+        "type": "POISON",
+        "damageClass": "SPECIAL",
+        "power": 95,
+        "isCalculable": true,
+        "filterHits": [
+          "へどろうぇ-ぶ",
+          "へどうぇ",
+          "うぇ-ぶ"
+        ]
+      },
+      {
+        "id": 447,
+        "name": "くさむすび",
+        "type": "GRASS",
+        "damageClass": "SPECIAL",
+        "power": 0,
+        "isCalculable": true,
+        "filterHits": [
+          "くさむすび",
+          "むすび",
+          "gk"
+        ]
+      },
+      {
+        "id": 594,
+        "name": "みずしゅりけん",
+        "type": "WATER",
+        "damageClass": "SPECIAL",
+        "power": 15,
+        "isCalculable": true,
+        "filterHits": [
+          "みずしゅりけん",
+          "しゅりけん",
+          "みずけん"
+        ]
+      }
+    ],
+    "evs": {
+      "hp": 0,
+      "attack": 0,
+      "defense": 2,
+      "specialAttack": 32,
+      "specialDefense": 0,
+      "speed": 32
+    },
+    "attributes": {
+      "data-type": "pokemon-card",
+      "data-pokemon-id": "658",
+      "data-nature-id": "9",
+      "data-ability-ids": "[168]",
+      "data-item-id": "58",
+      "data-move-ids": "[58,482,447,594]",
+      "data-evs": "{\"hp\":0,\"attack\":0,\"defense\":2,\"specialAttack\":32,\"specialDefense\":0,\"speed\":32}"
+    }
+  }
+]

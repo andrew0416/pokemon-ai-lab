@@ -1,0 +1,129 @@
+[
+  {
+    "species": "Baxcalibur",
+    "item": "Baxcalibrite",
+    "ability": "Thermal Exchange",
+    "nature": "Jolly",
+    "moves": [
+      "Glaive Rush",
+      "Dragon Dance",
+      "Ice Shard",
+      "Icicle Spear"
+    ],
+    "evs": {
+      "hp": 1,
+      "atk": 32,
+      "def": 1,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50
+  },
+  {
+    "species": "Venusaur",
+    "item": "Venusaurite",
+    "ability": "Chlorophyll",
+    "nature": "Calm",
+    "moves": [
+      "Giga Drain",
+      "Sludge Bomb",
+      "Earth Power",
+      "Synthesis"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 31,
+      "spe": 3
+    },
+    "level": 50
+  },
+  {
+    "species": "Cinderace",
+    "item": "Focus Sash",
+    "ability": "Libero",
+    "nature": "Jolly",
+    "moves": [
+      "Pyro Ball",
+      "High Jump Kick",
+      "Gunk Shot",
+      "Sucker Punch"
+    ],
+    "evs": {
+      "hp": 4,
+      "atk": 32,
+      "def": 1,
+      "spa": 0,
+      "spd": 1,
+      "spe": 28
+    },
+    "level": 50
+  },
+  {
+    "species": "Skarmory",
+    "item": "Rocky Helmet",
+    "ability": "Sturdy",
+    "nature": "Impish",
+    "moves": [
+      "Stealth Rock",
+      "Roost",
+      "Whirlwind",
+      "Body Press"
+    ],
+    "evs": {
+      "hp": 31,
+      "atk": 0,
+      "def": 30,
+      "spa": 0,
+      "spd": 2,
+      "spe": 3
+    },
+    "level": 50
+  },
+  {
+    "species": "Mimikyu",
+    "item": "Life Orb",
+    "ability": "Disguise",
+    "nature": "Adamant",
+    "moves": [
+      "Play Rough",
+      "Shadow Claw",
+      "Shadow Sneak",
+      "Swords Dance"
+    ],
+    "evs": {
+      "hp": 3,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 31
+    },
+    "level": 50
+  },
+  {
+    "species": "Rotom-Wash",
+    "item": "Choice Scarf",
+    "ability": "Levitate",
+    "nature": "Modest",
+    "moves": [
+      "Hydro Pump",
+      "Thunder",
+      "Volt Switch",
+      "Trick"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50,
+    "gender": "N"
+  }
+]

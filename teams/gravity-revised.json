@@ -1,0 +1,113 @@
+[
+  {
+    "species": "Sableye",
+    "ability": "Prankster",
+    "item": "Roseli Berry",
+    "moves": [
+      "Gravity",
+      "Quash",
+      "Encore",
+      "Fake Out"
+    ],
+    "nature": "Bold",
+    "evs": {
+      "hp": 32,
+      "def": 32,
+      "spd": 2
+    },
+    "level": 50,
+    "gender": "F"
+  },
+  {
+    "species": "Milotic",
+    "ability": "Competitive",
+    "item": "Sitrus Berry",
+    "moves": [
+      "Hydro Pump",
+      "Recover",
+      "Hypnosis",
+      "Ice Beam"
+    ],
+    "nature": "Bold",
+    "evs": {
+      "hp": 32,
+      "def": 32,
+      "spd": 2
+    },
+    "level": 50,
+    "gender": "M"
+  },
+  {
+    "species": "Gardevoir",
+    "ability": "Trace",
+    "item": "Gardevoirite",
+    "moves": [
+      "Hyper Voice",
+      "Psyshock",
+      "Gravity",
+      "Protect"
+    ],
+    "nature": "Modest",
+    "evs": {
+      "hp": 32,
+      "def": 10,
+      "spa": 24
+    },
+    "level": 50,
+    "gender": "F"
+  },
+  {
+    "species": "Incineroar",
+    "ability": "Intimidate",
+    "item": "Chople Berry",
+    "moves": [
+      "Fake Out",
+      "Flare Blitz",
+      "Throat Chop",
+      "Parting Shot"
+    ],
+    "nature": "Careful",
+    "evs": {
+      "hp": 32,
+      "def": 24,
+      "spd": 10
+    },
+    "level": 50
+  },
+  {
+    "species": "Rillaboom",
+    "ability": "Grassy Surge",
+    "item": "Miracle Seed",
+    "moves": [
+      "Fake Out",
+      "Grassy Glide",
+      "Wood Hammer",
+      "U-turn"
+    ],
+    "nature": "Adamant",
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "spd": 2
+    },
+    "level": 50
+  },
+  {
+    "species": "Maushold",
+    "ability": "Technician",
+    "item": "Life Orb",
+    "moves": [
+      "Protect",
+      "Population Bomb",
+      "Bullet Seed",
+      "Bite"
+    ],
+    "nature": "Jolly",
+    "evs": {
+      "hp": 1,
+      "atk": 32,
+      "spe": 32
+    },
+    "level": 50
+  }
+]

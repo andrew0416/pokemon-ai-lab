@@ -1,0 +1,36 @@
+{
+  "title": "Teamlist: thepostmanp - r/VGC Regulation M-C Kickoff Cup | Limitless",
+  "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/thepostmanp/teamlist",
+  "retrieved": "2026-09-20",
+  "format": "doubles",
+  "regulation": "M-C",
+  "source_kind": "tournament OTS",
+  "sp_public": false,
+  "ivs_public": false,
+  "source_warning": "Some Limitless metadata retains M-B label; use event title/date, roster and actual M-C validator; do not silently relabel older events.",
+  "event": "r/VGC Regulation M-C Kickoff Cup",
+  "event_date": "2026-09-09",
+  "placement": "8",
+  "selection": "Top 16 sample of one event, not a usage ranking",
+  "standings_cells": [
+    "8",
+    "thepostmanp",
+    "",
+    "7",
+    "7 - 3 - 0",
+    "",
+    ""
+  ],
+  "normalization": [
+    "Whitespace normalized for Showdown import; source.txt preserved."
+  ],
+  "validation_format": "gen9championsvgc2026regmc",
+  "validation_errors": [],
+  "status": "source-complete-sp-unknown",
+  "simulation_ready": false,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults, not publicly verified IVs. Missing SP must not be treated as an authored zero-investment spread.",
+  "tags": [
+    "snow-or-froslass",
+    "tailwind"
+  ]
+}

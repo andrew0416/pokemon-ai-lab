@@ -1,0 +1,1132 @@
+{
+  "retrieved": "2026-09-20",
+  "teams": [
+    {
+      "id": "balance-ddee",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Floette-Eternal",
+        "Sneasler",
+        "Incineroar",
+        "Rillaboom",
+        "Gholdengo",
+        "Raichu"
+      ],
+      "tags": [
+        "grassy-terrain"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6a6a3192937230b102d48538/player/ddee/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/balance-ddee"
+    },
+    {
+      "id": "coaching-panda",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Rillaboom",
+        "Kingambit",
+        "Sneasler",
+        "Baxcalibur",
+        "Froslass",
+        "Basculegion"
+      ],
+      "tags": [
+        "snow-or-froslass",
+        "grassy-terrain"
+      ],
+      "source": "https://pokepast.es/b4465e52a2df6d1e",
+      "source_kind": "published paste",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "path": "doubles/m-c/coaching-panda"
+    },
+    {
+      "id": "crown-cecil9",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Arcanine-Hisui",
+        "Rillaboom",
+        "Floette-Eternal",
+        "Gholdengo",
+        "Raichu",
+        "Garchomp"
+      ],
+      "tags": [
+        "grassy-terrain"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6a8096b05a30714095571417/player/cecil9/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/crown-cecil9"
+    },
+    {
+      "id": "crown-eternalton",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Raichu",
+        "Gholdengo",
+        "Rillaboom",
+        "Sylveon",
+        "Staraptor",
+        "Arcanine-Hisui"
+      ],
+      "tags": [
+        "grassy-terrain",
+        "tailwind"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6a8096b05a30714095571417/player/eternalton/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/crown-eternalton"
+    },
+    {
+      "id": "crown-ryukeivgc",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Sylveon",
+        "Farigiraf",
+        "Garchomp",
+        "Charizard",
+        "Kingambit",
+        "Rillaboom"
+      ],
+      "tags": [
+        "sun",
+        "grassy-terrain",
+        "trick-room-option"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6a8096b05a30714095571417/player/ryukeivgc/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "needs-review",
+      "validation_errors": [
+        "Rillaboom's item Miracle Berry does not exist in Gen 9."
+      ],
+      "path": "doubles/m-c/crown-ryukeivgc"
+    },
+    {
+      "id": "crown-tachyon112358",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Garchomp",
+        "Rillaboom",
+        "Sneasler",
+        "Gholdengo",
+        "Arcanine-Hisui",
+        "Raichu"
+      ],
+      "tags": [
+        "grassy-terrain"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6a8096b05a30714095571417/player/tachyon112358/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/crown-tachyon112358"
+    },
+    {
+      "id": "kickoff-aveornot",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Charizard",
+        "Venusaur",
+        "Pelipper",
+        "Archaludon",
+        "Sneasler",
+        "Indeedee-F"
+      ],
+      "tags": [
+        "psychic-terrain",
+        "rain",
+        "sun",
+        "trick-room-option",
+        "tailwind"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/aveornot/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-aveornot"
+    },
+    {
+      "id": "kickoff-balmung",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Floette-Eternal",
+        "Charizard",
+        "Kingambit",
+        "Whimsicott",
+        "Basculegion",
+        "Garchomp"
+      ],
+      "tags": [
+        "sun",
+        "tailwind"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/balmung/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-balmung"
+    },
+    {
+      "id": "kickoff-beedrillvgc",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Charizard",
+        "Venusaur",
+        "Sinistcha",
+        "Incineroar",
+        "Floette-Eternal",
+        "Garchomp"
+      ],
+      "tags": [
+        "sun",
+        "trick-room-option"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/beedrillvgc/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-beedrillvgc"
+    },
+    {
+      "id": "kickoff-conkledonk",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Charizard",
+        "Garchomp",
+        "Incineroar",
+        "Venusaur",
+        "Toxapex",
+        "Kingambit"
+      ],
+      "tags": [
+        "sun"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/conkledonk/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-conkledonk"
+    },
+    {
+      "id": "kickoff-gerard",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Baxcalibur",
+        "Ninetales-Alola",
+        "Sneasler",
+        "Basculegion",
+        "Rillaboom",
+        "Incineroar"
+      ],
+      "tags": [
+        "snow-or-froslass",
+        "grassy-terrain"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/gerard/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-gerard"
+    },
+    {
+      "id": "kickoff-gwendolyte",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Salamence",
+        "Sneasler",
+        "Politoed",
+        "Archaludon",
+        "Rillaboom",
+        "Swampert"
+      ],
+      "tags": [
+        "rain",
+        "grassy-terrain",
+        "tailwind"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/gwendolyte/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-gwendolyte"
+    },
+    {
+      "id": "kickoff-hollowedhollowed",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Floette-Eternal",
+        "Raichu",
+        "Gholdengo",
+        "Sneasler",
+        "Incineroar",
+        "Rillaboom"
+      ],
+      "tags": [
+        "grassy-terrain"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/hollowedhollowed/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-hollowedhollowed"
+    },
+    {
+      "id": "kickoff-jhinting",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Salamence",
+        "Incineroar",
+        "Rillaboom",
+        "Raichu",
+        "Farigiraf",
+        "Sneasler"
+      ],
+      "tags": [
+        "grassy-terrain",
+        "trick-room-option"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/jhinting/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-jhinting"
+    },
+    {
+      "id": "kickoff-joshawott",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Froslass",
+        "Charizard",
+        "Incineroar",
+        "Rillaboom",
+        "Milotic",
+        "Chesnaught"
+      ],
+      "tags": [
+        "snow-or-froslass",
+        "grassy-terrain"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/joshawott/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-joshawott"
+    },
+    {
+      "id": "kickoff-karlin22",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Indeedee-F",
+        "Camerupt",
+        "Hatterene",
+        "Armarouge",
+        "Gallade",
+        "Crabominable"
+      ],
+      "tags": [
+        "psychic-terrain",
+        "psyspam",
+        "trick-room-option"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/karlin22/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-karlin22"
+    },
+    {
+      "id": "kickoff-prongs",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Gengar",
+        "Incineroar",
+        "Sableye",
+        "Primarina",
+        "Annihilape",
+        "Tinkaton"
+      ],
+      "tags": [
+        "perish-song"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/prongs/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-prongs"
+    },
+    {
+      "id": "kickoff-sableyevgc",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Salamence",
+        "Rillaboom",
+        "Sneasler",
+        "Arcanine-Hisui",
+        "Kingambit",
+        "Basculegion"
+      ],
+      "tags": [
+        "grassy-terrain",
+        "tailwind"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/sableyevgc/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-sableyevgc"
+    },
+    {
+      "id": "kickoff-shadezero",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Golisopod",
+        "Delphox",
+        "Rillaboom",
+        "Politoed",
+        "Farigiraf",
+        "Pawmot"
+      ],
+      "tags": [
+        "rain",
+        "grassy-terrain",
+        "trick-room-option"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/shadezero/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-shadezero"
+    },
+    {
+      "id": "kickoff-thepostmanp",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Froslass",
+        "Pawmot",
+        "Glimmora",
+        "Talonflame",
+        "Kingambit",
+        "Basculegion"
+      ],
+      "tags": [
+        "snow-or-froslass",
+        "tailwind"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/thepostmanp/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-thepostmanp"
+    },
+    {
+      "id": "kickoff-thosewhoknow",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Floette-Eternal",
+        "Sneasler",
+        "Indeedee",
+        "Basculegion",
+        "Dragonite",
+        "Garchomp"
+      ],
+      "tags": [
+        "psychic-terrain",
+        "psyspam",
+        "trick-room-option"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/thosewhoknow/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-thosewhoknow"
+    },
+    {
+      "id": "kickoff-wolfey",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Golisopod",
+        "Indeedee-F",
+        "Sneasler",
+        "Pelipper",
+        "Gardevoir",
+        "Basculegion"
+      ],
+      "tags": [
+        "psychic-terrain",
+        "psyspam",
+        "rain",
+        "trick-room-option",
+        "tailwind"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/wolfey/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/kickoff-wolfey"
+    },
+    {
+      "id": "perish-mrada",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Gengar",
+        "Snorlax",
+        "Incineroar",
+        "Scrafty",
+        "Dragonite",
+        "Rillaboom"
+      ],
+      "tags": [
+        "grassy-terrain",
+        "perish-song"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6a7f315b5a30714095570103/player/m_rada/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/perish-mrada"
+    },
+    {
+      "id": "psy-cona",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Indeedee-F",
+        "Armarouge",
+        "Staraptor",
+        "Sneasler",
+        "Basculegion",
+        "Golisopod"
+      ],
+      "tags": [
+        "psychic-terrain",
+        "psyspam",
+        "trick-room-option",
+        "tailwind"
+      ],
+      "source": "https://pokepast.es/6b76ea3a9125afd1",
+      "source_kind": "published paste",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "path": "doubles/m-c/psy-cona"
+    },
+    {
+      "id": "psy-lello",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Metagross",
+        "Indeedee",
+        "Sneasler",
+        "Arcanine-Hisui",
+        "Salamence",
+        "Milotic"
+      ],
+      "tags": [
+        "psychic-terrain",
+        "psyspam",
+        "trick-room-option"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6a9c37baa4272c53be647d8a/player/lellocartello/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/psy-lello"
+    },
+    {
+      "id": "psy-nihat",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Baxcalibur",
+        "Indeedee-F",
+        "Swampert",
+        "Golisopod",
+        "Pelipper",
+        "Armarouge"
+      ],
+      "tags": [
+        "psychic-terrain",
+        "psyspam",
+        "rain",
+        "trick-room-option",
+        "tailwind"
+      ],
+      "source": "https://play.limitlesstcg.com/tournament/6a6a3192937230b102d48538/player/nihataglar/teamlist",
+      "source_kind": "tournament OTS",
+      "sp_public": false,
+      "simulation_ready": false,
+      "status": "source-complete-sp-unknown",
+      "validation_errors": [],
+      "path": "doubles/m-c/psy-nihat"
+    },
+    {
+      "id": "psy-sand-udon",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Armarouge",
+        "Indeedee-F",
+        "Salamence",
+        "Sneasler",
+        "Excadrill",
+        "Tyranitar"
+      ],
+      "tags": [
+        "psychic-terrain",
+        "psyspam",
+        "sand",
+        "tailwind"
+      ],
+      "source": "https://pokepast.es/fdc2970699476b2c",
+      "source_kind": "published paste",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "path": "doubles/m-c/psy-sand-udon"
+    },
+    {
+      "id": "sand-owen",
+      "format": "doubles",
+      "regulation": "M-C",
+      "members": [
+        "Salamence",
+        "Indeedee",
+        "Sneasler",
+        "Gholdengo",
+        "Tyranitar",
+        "Excadrill"
+      ],
+      "tags": [
+        "psychic-terrain",
+        "psyspam",
+        "sand",
+        "tailwind"
+      ],
+      "source": "https://pokepast.es/605ab0da3552400d",
+      "source_kind": "published paste",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "path": "doubles/m-c/sand-owen"
+    },
+    {
+      "id": "hina-psychic-sneasler",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Indeedee",
+        "Sneasler",
+        "Armarouge",
+        "Froslass",
+        "Baxcalibur",
+        "Archaludon"
+      ],
+      "tags": [
+        "psychic-terrain",
+        "psyspam",
+        "snow-or-froslass"
+      ],
+      "source": "https://pokesol.app/u/hina/articles/3da3589e9f461806",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "path": "singles/m-c/hina-psychic-sneasler"
+    },
+    {
+      "id": "masagon-lucario-salamence",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Salamence",
+        "Hippowdon",
+        "Gholdengo",
+        "Primarina",
+        "Rillaboom",
+        "Lucario"
+      ],
+      "tags": [
+        "sand",
+        "grassy-terrain"
+      ],
+      "source": "https://pokesol.app/u/masagon_poke/articles/21a8188ae8bfd902",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "path": "singles/m-c/masagon-lucario-salamence"
+    },
+    {
+      "id": "pizza-armarouge-tr",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Indeedee-F",
+        "Armarouge",
+        "Aggron",
+        "Mimikyu",
+        "Ninetales-Alola",
+        "Baxcalibur"
+      ],
+      "tags": [
+        "psychic-terrain",
+        "psyspam",
+        "snow-or-froslass",
+        "trick-room-option"
+      ],
+      "source": "https://pokesol.app/u/pizza_yasan_0329/articles/1f41bcac4f820b78",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": false,
+      "status": "needs-review",
+      "validation_errors": [
+        "Aggron can't learn Trick Room."
+      ],
+      "path": "singles/m-c/pizza-armarouge-tr"
+    },
+    {
+      "id": "robin-blastoise-psychic",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Indeedee",
+        "Blastoise",
+        "Sneasler",
+        "Ninetales-Alola",
+        "Garchomp",
+        "Armarouge"
+      ],
+      "tags": [
+        "psychic-terrain",
+        "psyspam",
+        "snow-or-froslass"
+      ],
+      "source": "https://pokesol.app/u/robin_poke/articles/f8e38fbea9d37e13",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "path": "singles/m-c/robin-blastoise-psychic"
+    },
+    {
+      "id": "sarami-raichu-experiment",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Raichu",
+        "Sneasler",
+        "Ninetales-Alola",
+        "Samurott-Hisui",
+        "Pyroar",
+        "Archaludon"
+      ],
+      "tags": [
+        "snow-or-froslass"
+      ],
+      "source": "https://pokesol.app/u/sarami120/articles/96df6ceb6b59bac7",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "path": "singles/m-c/sarami-raichu-experiment"
+    },
+    {
+      "id": "tomoe-garchomp-golisopod",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Primarina",
+        "Garchomp",
+        "Golisopod",
+        "Rillaboom",
+        "Umbreon",
+        "Rotom-Wash"
+      ],
+      "tags": [
+        "grassy-terrain"
+      ],
+      "source": "https://pokesol.app/u/tomoe_475/articles/40e7a95724bc6013",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "path": "singles/m-c/tomoe-garchomp-golisopod"
+    },
+    {
+      "id": "tororo-goodra-grassy",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Goodra-Hisui",
+        "Rillaboom",
+        "Baxcalibur",
+        "Indeedee",
+        "Skeledirge",
+        "Salamence"
+      ],
+      "tags": [
+        "psychic-terrain",
+        "psyspam",
+        "grassy-terrain"
+      ],
+      "source": "https://pokesol.app/u/tororororo/articles/ac019be84c573b87",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "path": "singles/m-c/tororo-goodra-grassy"
+    },
+    {
+      "id": "alc-hippo-archaludon",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Hippowdon",
+        "Salamence",
+        "Archaludon",
+        "Baxcalibur",
+        "Metagross",
+        "Sylveon"
+      ],
+      "tags": [
+        "bulky-balance",
+        "hippowdon-salamence"
+      ],
+      "source": "https://pokesol.app/u/alc_tomotarou/articles/fd1076f5bf5f36a8",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "evidence_note": "실전 후기·마스터 연승 자체 보고",
+      "path": "singles/m-c/alc-hippo-archaludon"
+    },
+    {
+      "id": "asqkura-bulky-setup",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Salamence",
+        "Baxcalibur",
+        "Gholdengo",
+        "Primarina",
+        "Volcarona",
+        "Hippowdon"
+      ],
+      "tags": [
+        "bulky-setup",
+        "dragon-dance"
+      ],
+      "source": "https://pokesol.app/u/asqkura/articles/c369b17e7dbb6dc5",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "evidence_note": "실전 후기·마스터 도달 자체 보고",
+      "path": "singles/m-c/asqkura-bulky-setup"
+    },
+    {
+      "id": "hiroki-mence-theory",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Salamence",
+        "Rotom-Wash",
+        "Corviknight",
+        "Meowscarada",
+        "Garchomp",
+        "Samurott-Hisui"
+      ],
+      "tags": [
+        "theory",
+        "dragon-dance"
+      ],
+      "source": "https://pokesol.app/u/hiroki_poke/articles/c7bf310026fe1cf7",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "evidence_note": "M-C 개시 전 이론 구성·실적 없음",
+      "path": "singles/m-c/hiroki-mence-theory"
+    },
+    {
+      "id": "hujiko-no-mega",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Meowscarada",
+        "Corviknight",
+        "Bellibolt",
+        "Samurott-Hisui",
+        "Mimikyu",
+        "Greninja"
+      ],
+      "tags": [
+        "no-mega",
+        "balance"
+      ],
+      "source": "https://pokesol.app/u/hujiko/articles/4225cdecaf52efec",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "evidence_note": "노메가 제약 구성·마스터 도달 자체 보고; M-C 태그와 M-5/게시일이 혼재",
+      "path": "singles/m-c/hujiko-no-mega"
+    },
+    {
+      "id": "kurotama-baxcalibur",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Baxcalibur",
+        "Venusaur",
+        "Cinderace",
+        "Skarmory",
+        "Mimikyu",
+        "Rotom-Wash"
+      ],
+      "tags": [
+        "baxcalibur-setup",
+        "hazards"
+      ],
+      "source": "https://pokesol.app/u/kurotama_887/articles/ead268ad572c8062",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "evidence_note": "실전 후기·마스터 도달 자체 보고",
+      "path": "singles/m-c/kurotama-baxcalibur"
+    },
+    {
+      "id": "mutsu-baxcalibur",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Baxcalibur",
+        "Charizard",
+        "Empoleon",
+        "Toxapex",
+        "Grimmsnarl",
+        "Excadrill"
+      ],
+      "tags": [
+        "screens",
+        "toxic-spikes",
+        "baxcalibur-setup"
+      ],
+      "source": "https://pokesol.app/u/mutsu_0120/articles/68e14a2f6eb6f350",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "evidence_note": "작성자 시험 구성·상위권 실적 확인 안 됨",
+      "path": "singles/m-c/mutsu-baxcalibur"
+    },
+    {
+      "id": "myuto-mence-offense",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Garchomp",
+        "Scizor",
+        "Mimikyu",
+        "Greninja",
+        "Salamence",
+        "Hippowdon"
+      ],
+      "tags": [
+        "offense",
+        "hippowdon-salamence"
+      ],
+      "source": "https://pokesol.app/u/myutopoke123/articles/165b9b930396ac7a",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "evidence_note": "실전 후기·마스터 도달 자체 보고",
+      "path": "singles/m-c/myuto-mence-offense"
+    },
+    {
+      "id": "tama-screens-revival",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Salamence",
+        "Glimmora",
+        "Pawmot",
+        "Pyroar",
+        "Aegislash",
+        "Primarina"
+      ],
+      "tags": [
+        "screens",
+        "revival-blessing",
+        "bulky-setup"
+      ],
+      "source": "https://pokesol.app/u/tama_poke0216/articles/9d0b9790b3a18738",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "evidence_note": "작성자 시험 구성·상위권 실적 확인 안 됨",
+      "path": "singles/m-c/tama-screens-revival"
+    },
+    {
+      "id": "tororo-raichu-electric",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Raichu",
+        "Sneasler",
+        "Basculegion",
+        "Baxcalibur",
+        "Ninetales-Alola",
+        "Garchomp"
+      ],
+      "tags": [
+        "electric-terrain",
+        "seed-sneasler",
+        "snow"
+      ],
+      "source": "https://pokesol.app/u/tororo_poke/articles/027fce2f98316393",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "evidence_note": "실전 후기·마스터 도달 자체 보고",
+      "path": "singles/m-c/tororo-raichu-electric"
+    },
+    {
+      "id": "yuto-rain-perish",
+      "format": "singles",
+      "regulation": "M-C",
+      "members": [
+        "Basculegion",
+        "Archaludon",
+        "Golisopod",
+        "Pelipper",
+        "Gengar",
+        "Arboliva"
+      ],
+      "tags": [
+        "rain",
+        "perish-song"
+      ],
+      "source": "https://pokesol.app/u/070810yuto/articles/9b071422d65222d1",
+      "source_kind": "creator article",
+      "sp_public": true,
+      "simulation_ready": true,
+      "status": "validated",
+      "validation_errors": [],
+      "evidence_note": "작성자 아이디어 구성·실적 없음",
+      "path": "singles/m-c/yuto-rain-perish"
+    }
+  ],
+  "summary": {
+    "doubles": {
+      "count": 28,
+      "simulation_ready": 4,
+      "needs_review": 1
+    },
+    "singles": {
+      "count": 17,
+      "simulation_ready": 16,
+      "needs_review": 1
+    }
+  }
+}

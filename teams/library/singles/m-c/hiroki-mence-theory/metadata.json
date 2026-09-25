@@ -1,0 +1,30 @@
+{
+  "title": "M-C事前考察　龍舞メガマンダスタン",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": null,
+  "publishedAt": "2026-09-02T07:43:12.283000+00:00",
+  "updatedAt": "2026-09-20T03:47:11.945000+00:00",
+  "source": "https://pokesol.app/u/hiroki_poke/articles/c7bf310026fe1cf7",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "validated",
+  "card_count": 6,
+  "body_sha256": "1e1743b8efd51d1d1212a97ac9448f9406bcc6f1267cc55d7847ff17fc6acf3f",
+  "normalization": [
+    "Normalize displayed Salamence-Mega to Salamence with Mega stone."
+  ],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [],
+  "evidence_note": "M-C 개시 전 이론 구성·실적 없음",
+  "tags": [
+    "theory",
+    "dragon-dance"
+  ],
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults. Pre-Mega ability choices/assumptions appear in normalization."
+}

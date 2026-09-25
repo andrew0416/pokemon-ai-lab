@@ -1,0 +1,188 @@
+[
+  {
+    "name": "",
+    "species": "Indeedee-F",
+    "item": "Rocky Helmet",
+    "ability": "Psychic Surge",
+    "gender": "",
+    "nature": "Relaxed",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Trick Room",
+      "Helping Hand",
+      "Follow Me",
+      "Psychic"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Camerupt",
+    "item": "Cameruptite",
+    "ability": "Solid Rock",
+    "gender": "",
+    "nature": "Quiet",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Heat Wave",
+      "Ancient Power",
+      "Earth Power",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Hatterene",
+    "item": "Life Orb",
+    "ability": "Magic Bounce",
+    "gender": "",
+    "nature": "Quiet",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Expanding Force",
+      "Dazzling Gleam",
+      "Trick Room",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Armarouge",
+    "item": "Psychic Seed",
+    "ability": "Flash Fire",
+    "gender": "",
+    "nature": "Quiet",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Trick Room",
+      "Aura Sphere",
+      "Heat Wave",
+      "Expanding Force"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Gallade",
+    "item": "Sitrus Berry",
+    "ability": "Sharpness",
+    "gender": "",
+    "nature": "Brave",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Trick Room",
+      "Wide Guard",
+      "Psycho Cut",
+      "Sacred Sword"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Crabominable",
+    "item": "Crabominite",
+    "ability": "Hyper Cutter",
+    "gender": "",
+    "nature": "Brave",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Ice Hammer",
+      "Drain Punch",
+      "Rock Slide",
+      "Protect"
+    ]
+  }
+]

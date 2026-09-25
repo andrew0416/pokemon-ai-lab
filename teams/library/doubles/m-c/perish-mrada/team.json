@@ -1,0 +1,188 @@
+[
+  {
+    "name": "",
+    "species": "Gengar",
+    "item": "Gengarite",
+    "ability": "Cursed Body",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Perish Song",
+      "Shadow Ball",
+      "Sludge Bomb",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Snorlax",
+    "item": "Leftovers",
+    "ability": "Thick Fat",
+    "gender": "",
+    "nature": "Relaxed",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Yawn",
+      "Encore",
+      "Fissure",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Incineroar",
+    "item": "Sitrus Berry",
+    "ability": "Intimidate",
+    "gender": "",
+    "nature": "Relaxed",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Flare Blitz",
+      "Parting Shot",
+      "Fake Out",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Scrafty",
+    "item": "Focus Sash",
+    "ability": "Intimidate",
+    "gender": "",
+    "nature": "Impish",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Close Combat",
+      "Knock Off",
+      "Fake Out",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Dragonite",
+    "item": "Life Orb",
+    "ability": "Inner Focus",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Dragon Claw",
+      "Low Kick",
+      "Extreme Speed",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Rillaboom",
+    "item": "Eject Button",
+    "ability": "Grassy Surge",
+    "gender": "",
+    "nature": "Sassy",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Grassy Glide",
+      "U-turn",
+      "Fake Out",
+      "Protect"
+    ]
+  }
+]

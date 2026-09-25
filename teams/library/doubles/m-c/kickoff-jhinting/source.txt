@@ -1,0 +1,49 @@
+Salamence @ Salamencite
+Ability: Intimidate
+Timid Nature
+- Protect
+- Hyper Voice
+- Draco Meteor
+- Heat Wave
+
+Incineroar @ Rocky Helmet
+Ability: Intimidate
+Impish Nature
+- Fake Out
+- Flare Blitz
+- Throat Chop
+- Parting Shot
+
+Rillaboom @ Miracle Seed
+Ability: Grassy Surge
+Adamant Nature
+- Fake Out
+- Wood Hammer
+- U-turn
+- Grassy Glide
+
+Raichu @ Raichunite Y
+Ability: Lightning Rod
+Tera Type: Electric
+Timid Nature
+- Zap Cannon
+- Focus Blast
+- Fake Out
+- Protect
+
+Farigiraf @ Sitrus Berry
+Ability: Armor Tail
+Tera Type: Normal
+Modest Nature
+- Psychic
+- Thunderbolt
+- Trick Room
+- Helping Hand
+
+Sneasler @ Grassy Seed
+Ability: Unburden
+Adamant Nature
+- Dire Claw
+- Protect
+- Close Combat
+- Acrobatics

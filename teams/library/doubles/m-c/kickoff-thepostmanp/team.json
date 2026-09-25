@@ -1,0 +1,188 @@
+[
+  {
+    "name": "",
+    "species": "Froslass",
+    "item": "Froslassite",
+    "ability": "Cursed Body",
+    "gender": "",
+    "nature": "Timid",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Protect",
+      "Aurora Veil",
+      "Blizzard",
+      "Shadow Ball"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Pawmot",
+    "item": "Focus Sash",
+    "ability": "Iron Fist",
+    "gender": "",
+    "nature": "Jolly",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Fake Out",
+      "Double Shock",
+      "Close Combat",
+      "Revival Blessing"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Glimmora",
+    "item": "Glimmoranite",
+    "ability": "Adaptability",
+    "gender": "",
+    "nature": "Timid",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Spiky Shield",
+      "Power Gem",
+      "Sludge Bomb",
+      "Earth Power"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Talonflame",
+    "item": "Sharp Beak",
+    "ability": "Gale Wings",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Brave Bird",
+      "Tailwind",
+      "Flare Blitz",
+      "Feint"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Kingambit",
+    "item": "Black Glasses",
+    "ability": "Defiant",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Protect",
+      "Kowtow Cleave",
+      "Sucker Punch",
+      "Iron Head"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Basculegion",
+    "item": "Life Orb",
+    "ability": "Adaptability",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Protect",
+      "Wave Crash",
+      "Aqua Jet",
+      "Last Respects"
+    ]
+  }
+]

@@ -1,0 +1,10 @@
+vendor/
+node_modules/
+.venv*/
+.runtime/
+.cache/
+runs/
+__pycache__/
+engine/target/
+engine/py/dist/
+models/**/*.zip

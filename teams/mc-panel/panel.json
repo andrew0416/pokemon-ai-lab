@@ -1,0 +1,42 @@
+{
+  "format": "gen9championsvgc2026regmc",
+  "variants": [
+    "own-gardevoir",
+    "own-starmie"
+  ],
+  "opponents": [
+    "psy-nihat",
+    "psy-lello",
+    "balance-ddee",
+    "coaching-panda",
+    "psyspam-popular",
+    "sand-owen"
+  ],
+  "initial_seeds": [
+    [
+      9182,
+      7431,
+      5227,
+      11
+    ],
+    [
+      9182,
+      7431,
+      5227,
+      29
+    ],
+    [
+      9182,
+      7431,
+      5227,
+      47
+    ]
+  ],
+  "policy": "Assistant chooses own actions; vgc opponent. Damage matrix is conditional damage, not wins. Full games are recorded separately; unplayed fixtures remain unplayed.",
+  "sources": {
+    "psy-nihat": "https://play.limitlesstcg.com/tournament/6a6a3192937230b102d48538/player/nihataglar/teamlist",
+    "psy-lello": "https://play.limitlesstcg.com/tournament/6a9c37baa4272c53be647d8a/player/lellocartello/teamlist",
+    "balance-ddee": "https://play.limitlesstcg.com/tournament/6a6a3192937230b102d48538/player/ddee/teamlist",
+    "coaching-panda": "https://pokepast.es/b4465e52a2df6d1e"
+  }
+}

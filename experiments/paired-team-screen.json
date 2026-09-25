@@ -1,0 +1,14 @@
+{
+  "hypothesis": "The revised team improves the fixed psyspam matchup under the same policy; not a claim of general strength.",
+  "format": "gen9championsvgc2026regmc",
+  "seed": 20260920,
+  "games_per_arm": 4,
+  "policy": "vgc_myopic",
+  "opponent": "vgc_myopic",
+  "opponent_team": "teams/psyspam-popular.json",
+  "arms": {
+    "original": "teams/gravity-original.json",
+    "revised": "teams/gravity-revised.json"
+  },
+  "required_confirmation": "Use unseen opponent teams, multiple policies, and team-clustered uncertainty before judging team quality."
+}

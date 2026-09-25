@@ -1,0 +1,101 @@
+name: engine
+
+on:
+  push:
+    paths:
+      - "engine/**"
+      - ".github/workflows/engine.yml"
+  pull_request:
+    paths:
+      - "engine/**"
+      - ".github/workflows/engine.yml"
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+  # Singles baseline: pmariglia/poke-engine at the commit the lab reviewed (version 0.0.48,
+  # the version vendor/foul-play pins).
+  POKE_ENGINE_REPO: pmariglia/poke-engine
+  POKE_ENGINE_REF: f4e224c75bf7af885c85c1dcba982b4143ebf582
+
+jobs:
+  core:
+    name: core (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: engine
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: engine
+      - run: cargo fmt --all --check
+      - run: cargo clippy -p lab-engine --all-targets
+      # The py crate is a cdylib with extension-module; it is built by the wheels job.
+      - run: cargo test -p lab-engine --release
+
+  wheels:
+    name: lab-engine wheel (${{ matrix.os }})
+    needs: core
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: PyO3/maturin-action@v1
+        with:
+          working-directory: engine/py
+          args: --release --out dist
+          manylinux: auto
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab-engine-${{ matrix.os }}
+          path: engine/py/dist/*.whl
+
+  poke-engine-baseline:
+    name: poke-engine ${{ matrix.feature }} (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        # terastallization = gen9 singles (what foul-play installs by default);
+        # bss = Champions BSS (implies the champions feature).
+        feature: [terastallization, bss]
+        include:
+          - os: ubuntu-latest
+            interpreter: python3.12
+          - os: windows-latest
+            interpreter: python
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.POKE_ENGINE_REPO }}
+          ref: ${{ env.POKE_ENGINE_REF }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: PyO3/maturin-action@v1
+        with:
+          working-directory: poke-engine-py
+          args: >-
+            --release --out dist -i ${{ matrix.interpreter }}
+            --no-default-features --features poke-engine/${{ matrix.feature }}
+          manylinux: auto
+      - uses: actions/upload-artifact@v4
+        with:
+          name: poke-engine-${{ matrix.feature }}-${{ matrix.os }}
+          path: poke-engine-py/dist/*.whl

@@ -1,0 +1,30 @@
+{
+  "title": "【王道を征く】ルカマンダスタン【M-C シングル】",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": "m-6",
+  "publishedAt": "2026-09-17T14:34:34.260Z",
+  "updatedAt": "2026-09-19T18:20:11.013Z",
+  "source": "https://pokesol.app/u/masagon_poke/articles/21a8188ae8bfd902",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "validated",
+  "card_count": 6,
+  "body_sha256": "34b97b7685582fe84be5a8b658298954e012fe89097a813f88788e39f877077e",
+  "normalization": [
+    "Normalize displayed Salamence-Mega to Salamence with Mega stone.",
+    "Normalize displayed Lucario-Mega-Z to Lucario with Mega stone."
+  ],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [],
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults, not publicly verified IVs. Missing SP must not be treated as an authored zero-investment spread.",
+  "tags": [
+    "sand",
+    "grassy-terrain"
+  ]
+}

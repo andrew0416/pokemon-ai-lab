@@ -1,0 +1,30 @@
+{
+  "title": "カメイエッサン対面",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": "m-6",
+  "publishedAt": "2026-09-12T17:40:25.490Z",
+  "updatedAt": "2026-09-15T09:50:46.812Z",
+  "source": "https://pokesol.app/u/robin_poke/articles/f8e38fbea9d37e13",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "validated",
+  "card_count": 6,
+  "body_sha256": "a7df27d2d947cb0fbbd78256d666f1d60b1f4659dbf8ff2da4072b04370b9ac6",
+  "normalization": [
+    "Normalize displayed Blastoise-Mega to Blastoise with Mega stone."
+  ],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [],
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults, not publicly verified IVs. Missing SP must not be treated as an authored zero-investment spread.",
+  "tags": [
+    "psychic-terrain",
+    "psyspam",
+    "snow-or-froslass"
+  ]
+}

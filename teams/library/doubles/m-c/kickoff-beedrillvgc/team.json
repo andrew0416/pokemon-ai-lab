@@ -1,0 +1,188 @@
+[
+  {
+    "name": "",
+    "species": "Charizard",
+    "item": "Charizardite Y",
+    "ability": "Blaze",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Heat Wave",
+      "Protect",
+      "Ancient Power",
+      "Weather Ball"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Venusaur",
+    "item": "Focus Sash",
+    "ability": "Chlorophyll",
+    "gender": "",
+    "nature": "Timid",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Sludge Bomb",
+      "Leaf Storm",
+      "Protect",
+      "Sleep Powder"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Sinistcha",
+    "item": "Colbur Berry",
+    "ability": "Hospitality",
+    "gender": "",
+    "nature": "Relaxed",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Trick Room",
+      "Protect",
+      "Matcha Gotcha",
+      "Rage Powder"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Incineroar",
+    "item": "Sitrus Berry",
+    "ability": "Intimidate",
+    "gender": "",
+    "nature": "Careful",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Flare Blitz",
+      "Fake Out",
+      "Throat Chop",
+      "Parting Shot"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Floette-Eternal",
+    "item": "Floettite",
+    "ability": "Flower Veil",
+    "gender": "",
+    "nature": "Timid",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Moonblast",
+      "Calm Mind",
+      "Dazzling Gleam",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Garchomp",
+    "item": "Choice Scarf",
+    "ability": "Rough Skin",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Earthquake",
+      "Rock Slide",
+      "Dragon Claw",
+      "Stomping Tantrum"
+    ]
+  }
+]

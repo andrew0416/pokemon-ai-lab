@@ -1,0 +1,188 @@
+[
+  {
+    "name": "",
+    "species": "Gengar",
+    "item": "Gengarite",
+    "ability": "Cursed Body",
+    "gender": "",
+    "nature": "Timid",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Protect",
+      "Perish Song",
+      "Disable",
+      "Shadow Ball"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Incineroar",
+    "item": "Lum Berry",
+    "ability": "Intimidate",
+    "gender": "",
+    "nature": "Sassy",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Protect",
+      "Parting Shot",
+      "Fake Out",
+      "Throat Chop"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Sableye",
+    "item": "Sitrus Berry",
+    "ability": "Prankster",
+    "gender": "",
+    "nature": "Careful",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Detect",
+      "Disable",
+      "Encore",
+      "Fake Out"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Primarina",
+    "item": "Leftovers",
+    "ability": "Torrent",
+    "gender": "",
+    "nature": "Sassy",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Protect",
+      "Perish Song",
+      "Flip Turn",
+      "Moonblast"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Annihilape",
+    "item": "Kasib Berry",
+    "ability": "Defiant",
+    "gender": "",
+    "nature": "Sassy",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Protect",
+      "Encore",
+      "Rage Fist",
+      "Drain Punch"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Tinkaton",
+    "item": "Occa Berry",
+    "ability": "Mold Breaker",
+    "gender": "",
+    "nature": "Impish",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Protect",
+      "Fake Out",
+      "Encore",
+      "Gigaton Hammer"
+    ]
+  }
+]

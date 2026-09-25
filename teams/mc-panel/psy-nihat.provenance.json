@@ -1,0 +1,39 @@
+{
+  "retrieved": "2026-09-20",
+  "source": "https://play.limitlesstcg.com/tournament/6a6a3192937230b102d48538/player/nihataglar/teamlist",
+  "published": "Species, items, abilities, natures, moves; SP also published only for coaching-panda",
+  "assumptions": "All IVs 31, level 50. SP explicitly assumed for the three OTS teams; not claimed as player spreads.",
+  "sp": {
+    "Baxcalibur": {
+      "hp": 2,
+      "atk": 32,
+      "spe": 32
+    },
+    "Indeedee-F": {
+      "hp": 32,
+      "spd": 2,
+      "def": 32
+    },
+    "Swampert": {
+      "hp": 2,
+      "atk": 32,
+      "spe": 32
+    },
+    "Golisopod": {
+      "hp": 32,
+      "atk": 32,
+      "spd": 2
+    },
+    "Pelipper": {
+      "hp": 2,
+      "spa": 32,
+      "spe": 32
+    },
+    "Armarouge": {
+      "hp": 32,
+      "spa": 32,
+      "spd": 2
+    }
+  },
+  "notes": "Tournament OTS, no public SP."
+}

@@ -1,0 +1,48 @@
+Charizard @ Charizardite Y  
+Ability: Blaze  
+Modest Nature  
+- Heat Wave  
+- Protect  
+- Ancient Power  
+- Weather Ball  
+
+Venusaur @ Focus Sash  
+Ability: Chlorophyll  
+Timid Nature  
+- Sludge Bomb  
+- Leaf Storm  
+- Protect  
+- Sleep Powder  
+
+Sinistcha @ Colbur Berry  
+Ability: Hospitality  
+Relaxed Nature  
+- Trick Room  
+- Protect  
+- Matcha Gotcha  
+- Rage Powder  
+
+Incineroar @ Sitrus Berry  
+Ability: Intimidate  
+Careful Nature  
+- Flare Blitz  
+- Fake Out  
+- Throat Chop  
+- Parting Shot  
+
+Floette-Eternal @ Floettite  
+Ability: Flower Veil  
+Timid Nature  
+- Moonblast  
+- Calm Mind  
+- Dazzling Gleam  
+- Protect  
+
+Garchomp @ Choice Scarf  
+Ability: Rough Skin  
+Adamant Nature  
+- Earthquake  
+- Rock Slide  
+- Dragon Claw  
+- Stomping Tantrum  
+

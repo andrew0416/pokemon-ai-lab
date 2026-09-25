@@ -1,0 +1,170 @@
+[
+  {
+    "name": "",
+    "species": "Golisopod",
+    "item": "Golisopite",
+    "ability": "Emergency Exit",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "spd": 2
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Protect",
+      "Swords Dance",
+      "Iron Head",
+      "Leech Life"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Indeedee-F",
+    "item": "Colbur Berry",
+    "ability": "Psychic Surge",
+    "gender": "",
+    "nature": "Calm",
+    "evs": {
+      "hp": 32,
+      "def": 32,
+      "spd": 2
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Follow Me",
+      "Helping Hand",
+      "Trick Room",
+      "Psychic"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Sneasler",
+    "item": "Psychic Seed",
+    "ability": "Unburden",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Protect",
+      "Close Combat",
+      "Dire Claw",
+      "Rock Slide"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Pelipper",
+    "item": "Focus Sash",
+    "ability": "Drizzle",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+      "hp": 2,
+      "spa": 32,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Protect",
+      "Tailwind",
+      "Weather Ball",
+      "Hurricane"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Gardevoir",
+    "item": "Gardevoirite",
+    "ability": "Trace",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+      "hp": 32,
+      "spa": 32,
+      "spd": 2
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Protect",
+      "Expanding Force",
+      "Hyper Voice",
+      "Trick Room"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Basculegion",
+    "item": "Choice Scarf",
+    "ability": "Adaptability",
+    "gender": "",
+    "nature": "Jolly",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Flip Turn",
+      "Wave Crash",
+      "Last Respects",
+      "Aqua Jet"
+    ]
+  }
+]

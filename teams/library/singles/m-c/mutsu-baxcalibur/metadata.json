@@ -1,0 +1,34 @@
+{
+  "title": "メガセグレイブパーティのすヽめ",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": "m-6",
+  "publishedAt": "2026-09-12T10:55:42.907000+00:00",
+  "updatedAt": "2026-09-12T11:38:20.342000+00:00",
+  "source": "https://pokesol.app/u/mutsu_0120/articles/68e14a2f6eb6f350",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "validated",
+  "card_count": 7,
+  "body_sha256": "1ed7b702b6ec8f98d4bc780876c7643fc8dbb8bcea0965f69f1dc9a945926714",
+  "normalization": [
+    "Corviknight card is an opposing wall example under weaknesses; excluded from the authored six. Source cards preserved.",
+    "Normalize displayed Baxcalibur-Mega to Baxcalibur with Mega stone.",
+    "Source lists multiple pre-Mega abilities for Baxcalibur; first published choice used: Thermal Exchange",
+    "Normalize displayed Charizard-Mega-Y to Charizard with Mega stone."
+  ],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [],
+  "evidence_note": "작성자 시험 구성·상위권 실적 확인 안 됨",
+  "tags": [
+    "screens",
+    "toxic-spikes",
+    "baxcalibur-setup"
+  ],
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults. Pre-Mega ability choices/assumptions appear in normalization."
+}

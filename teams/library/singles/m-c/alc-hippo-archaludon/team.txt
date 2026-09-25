@@ -1,0 +1,60 @@
+Hippowdon @ Leftovers  
+Ability: Sand Stream  
+Level: 50  
+EVs: 32 HP / 2 Def / 32 SpD  
+Careful Nature  
+- Earthquake  
+- Yawn  
+- Protect  
+- Stealth Rock  
+
+Salamence @ Salamencite  
+Ability: Intimidate  
+Level: 50  
+EVs: 27 HP / 17 Atk / 5 Def / 2 SpD / 15 Spe  
+Adamant Nature  
+- Body Slam  
+- Earthquake  
+- Dragon Dance  
+- Roost  
+
+Archaludon @ Chesto Berry  
+Ability: Stamina  
+Level: 50  
+EVs: 32 HP / 9 Def / 25 SpD  
+Calm Nature  
+- Flash Cannon  
+- Thunderbolt  
+- Draco Meteor  
+- Rest  
+
+Baxcalibur @ Life Orb  
+Ability: Thermal Exchange  
+Level: 50  
+EVs: 31 HP / 32 Atk / 3 SpD  
+Adamant Nature  
+- Ice Shard  
+- Icicle Crash  
+- Earthquake  
+- Scale Shot  
+
+Metagross @ Metagrossite  
+Ability: Clear Body  
+Level: 50  
+EVs: 32 HP / 32 Atk / 2 Spe  
+Adamant Nature  
+- Bullet Punch  
+- Ice Punch  
+- Earthquake  
+- Hammer Arm  
+
+Sylveon @ Sitrus Berry  
+Ability: Pixilate  
+Level: 50  
+EVs: 31 HP / 10 Def / 25 SpA  
+Modest Nature  
+- Hyper Voice  
+- Mystical Fire  
+- Protect  
+- Yawn  
+

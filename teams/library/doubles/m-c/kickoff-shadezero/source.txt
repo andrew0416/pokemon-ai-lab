@@ -1,0 +1,47 @@
+Golisopod @ Golisopite
+Ability: Emergency Exit
+Adamant Nature
+- First Impression
+- Leech Life
+- Iron Head
+- Liquidation
+
+Delphox @ Delphoxite
+Ability: Levitate
+Timid Nature
+- Heat Wave
+- Psychic
+- Encore
+- Protect
+
+Rillaboom @ Miracle Seed
+Ability: Grassy Surge
+Jolly Nature
+- Fake Out
+- Wood Hammer
+- Grassy Glide
+- U-turn
+
+Politoed @ Mystic Water
+Ability: Drizzle
+Modest Nature
+- Protect
+- Muddy Water
+- Weather Ball
+- Ice Beam
+
+Farigiraf @ Grassy Seed
+Ability: Armor Tail
+Bold Nature
+- Thunderbolt
+- Twin Beam
+- Helping Hand
+- Trick Room
+
+Pawmot @ Focus Sash
+Ability: Volt Absorb
+Jolly Nature
+- Close Combat
+- Double Shock
+- Fake Out
+- Revival Blessing

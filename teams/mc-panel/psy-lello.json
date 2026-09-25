@@ -1,0 +1,164 @@
+[
+  {
+    "species": "Metagross",
+    "name": "Metagross",
+    "item": "Metagrossite",
+    "ability": "Clear Body",
+    "nature": "Adamant",
+    "moves": [
+      "Iron Head",
+      "Psychic Fangs",
+      "Body Press",
+      "Protect"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Indeedee",
+    "name": "Indeedee",
+    "item": "Choice Scarf",
+    "ability": "Psychic Surge",
+    "nature": "Timid",
+    "moves": [
+      "Expanding Force",
+      "Imprison",
+      "Trick",
+      "Trick Room"
+    ],
+    "evs": {
+      "hp": 2,
+      "spa": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Sneasler",
+    "name": "Sneasler",
+    "item": "Psychic Seed",
+    "ability": "Unburden",
+    "nature": "Jolly",
+    "moves": [
+      "Close Combat",
+      "Dire Claw",
+      "Rock Slide",
+      "Protect"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Arcanine-Hisui",
+    "name": "Arcanine-Hisui",
+    "item": "Focus Sash",
+    "ability": "Rock Head",
+    "nature": "Jolly",
+    "moves": [
+      "Flare Blitz",
+      "Head Smash",
+      "Rock Slide",
+      "Protect"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Salamence",
+    "name": "Salamence",
+    "item": "Salamencite",
+    "ability": "Intimidate",
+    "nature": "Modest",
+    "moves": [
+      "Hyper Voice",
+      "Dragon Pulse",
+      "Heat Wave",
+      "Protect"
+    ],
+    "evs": {
+      "hp": 2,
+      "spa": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Milotic",
+    "name": "Milotic",
+    "item": "Leftovers",
+    "ability": "Competitive",
+    "nature": "Bold",
+    "moves": [
+      "Scald",
+      "Icy Wind",
+      "Recover",
+      "Protect"
+    ],
+    "evs": {
+      "hp": 32,
+      "spd": 2,
+      "def": 32
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  }
+]

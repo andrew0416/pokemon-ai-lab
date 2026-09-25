@@ -1,0 +1,43 @@
+{
+  "ruleset": "champions",
+  "attacker": {
+    "species": "Sneasler",
+    "ability": "Unburden",
+    "item": "",
+    "moves": [],
+    "nature": "Adamant",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "boosts": {
+      "atk": -1,
+      "spd": 1
+    }
+  },
+  "defender": {
+    "species": "Incineroar",
+    "ability": "Intimidate",
+    "item": "Chople Berry",
+    "moves": [
+      "Fake Out",
+      "Flare Blitz",
+      "Throat Chop",
+      "Parting Shot"
+    ],
+    "nature": "Careful",
+    "evs": {
+      "hp": 32,
+      "def": 24,
+      "spd": 10
+    },
+    "level": 50
+  },
+  "move": "Close Combat",
+  "field": {
+    "gameType": "Doubles",
+    "terrain": "Psychic"
+  }
+}

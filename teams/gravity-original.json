@@ -1,0 +1,115 @@
+[
+  {
+    "species": "Sableye",
+    "ability": "Prankster",
+    "item": "Roseli Berry",
+    "moves": [
+      "Gravity",
+      "Quash",
+      "Encore",
+      "Fake Out"
+    ],
+    "nature": "Bold",
+    "evs": {
+      "hp": 32,
+      "def": 32,
+      "spd": 2
+    },
+    "level": 50,
+    "gender": "F"
+  },
+  {
+    "species": "Milotic",
+    "ability": "Competitive",
+    "item": "Sitrus Berry",
+    "moves": [
+      "Hydro Pump",
+      "Recover",
+      "Hypnosis",
+      "Ice Beam"
+    ],
+    "nature": "Bold",
+    "evs": {
+      "hp": 32,
+      "def": 32,
+      "spd": 2
+    },
+    "level": 50,
+    "gender": "M"
+  },
+  {
+    "species": "Gardevoir",
+    "ability": "Trace",
+    "item": "Gardevoirite",
+    "moves": [
+      "Hyper Voice",
+      "Gravity",
+      "Hypnosis",
+      "Focus Blast"
+    ],
+    "nature": "Modest",
+    "evs": {
+      "hp": 32,
+      "def": 10,
+      "spa": 24
+    },
+    "level": 50,
+    "gender": "F"
+  },
+  {
+    "species": "Charizard",
+    "ability": "Blaze",
+    "item": "Charizardite Y",
+    "moves": [
+      "Heat Wave",
+      "Solar Beam",
+      "Fire Blast",
+      "Protect"
+    ],
+    "nature": "Modest",
+    "evs": {
+      "hp": 2,
+      "spa": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "gender": "M"
+  },
+  {
+    "species": "Flapple",
+    "ability": "Hustle",
+    "item": "Choice Scarf",
+    "moves": [
+      "U-turn",
+      "Grav Apple",
+      "Dragon Rush",
+      "Dual Wingbeat"
+    ],
+    "nature": "Adamant",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "gender": "M"
+  },
+  {
+    "species": "Maushold",
+    "ability": "Technician",
+    "item": "Life Orb",
+    "moves": [
+      "Protect",
+      "Population Bomb",
+      "Bullet Seed",
+      "Bite"
+    ],
+    "nature": "Jolly",
+    "evs": {
+      "hp": 1,
+      "atk": 32,
+      "spe": 32
+    },
+    "level": 50
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "title": "【M-6マスター到達】ガブグソクで一旦マスター乗りましたよ構築【カオス環境】",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": "m-6",
+  "publishedAt": "2026-09-10T14:06:06.004Z",
+  "updatedAt": "2026-09-10T14:06:06.004Z",
+  "source": "https://pokesol.app/u/tomoe_475/articles/40e7a95724bc6013",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "validated",
+  "card_count": 6,
+  "body_sha256": "9902dd05c1439eb121f4d04c8426a3510bda9ce40db59720acd85159aaefa970",
+  "normalization": [
+    "Normalize displayed Garchomp-Mega-Z to Garchomp with Mega stone.",
+    "Normalize displayed Golisopod-Mega to Golisopod with Mega stone."
+  ],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [],
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults, not publicly verified IVs. Missing SP must not be treated as an authored zero-investment spread.",
+  "tags": [
+    "grassy-terrain"
+  ]
+}

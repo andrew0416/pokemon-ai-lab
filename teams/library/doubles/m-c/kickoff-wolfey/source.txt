@@ -1,0 +1,47 @@
+Golisopod @ Golisopite
+Ability: Emergency Exit
+Adamant Nature
+- Protect
+- Swords Dance
+- Iron Head
+- Leech Life
+
+Indeedee-F @ Colbur Berry
+Ability: Psychic Surge
+Calm Nature
+- Follow Me
+- Helping Hand
+- Trick Room
+- Psychic
+
+Sneasler @ Psychic Seed
+Ability: Unburden
+Adamant Nature
+- Protect
+- Close Combat
+- Dire Claw
+- Rock Slide
+
+Pelipper @ Focus Sash
+Ability: Drizzle
+Modest Nature
+- Protect
+- Tailwind
+- Weather Ball
+- Hurricane
+
+Gardevoir @ Gardevoirite
+Ability: Trace
+Modest Nature
+- Protect
+- Expanding Force
+- Hyper Voice
+- Trick Room
+
+Basculegion @ Choice Scarf
+Ability: Adaptability
+Jolly Nature
+- Flip Turn
+- Wave Crash
+- Last Respects
+- Aqua Jet

@@ -1,0 +1,129 @@
+[
+  {
+    "species": "Indeedee",
+    "item": "Terrain Extender",
+    "ability": "Psychic Surge",
+    "nature": "Timid",
+    "moves": [
+      "Expanding Force",
+      "Mystical Fire",
+      "Substitute",
+      "Encore"
+    ],
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 17,
+      "spa": 25,
+      "spd": 0,
+      "spe": 24
+    },
+    "level": 50,
+    "gender": "M"
+  },
+  {
+    "species": "Blastoise",
+    "item": "Blastoisinite",
+    "ability": "Rain Dish",
+    "nature": "Modest",
+    "moves": [
+      "Terrain Pulse",
+      "Aura Sphere",
+      "Dark Pulse",
+      "Shell Smash"
+    ],
+    "evs": {
+      "hp": 21,
+      "atk": 0,
+      "def": 1,
+      "spa": 26,
+      "spd": 0,
+      "spe": 18
+    },
+    "level": 50
+  },
+  {
+    "species": "Sneasler",
+    "item": "Psychic Seed",
+    "ability": "Unburden",
+    "nature": "Adamant",
+    "moves": [
+      "Dire Claw",
+      "Close Combat",
+      "Throat Chop",
+      "Swords Dance"
+    ],
+    "evs": {
+      "hp": 12,
+      "atk": 32,
+      "def": 17,
+      "spa": 0,
+      "spd": 0,
+      "spe": 5
+    },
+    "level": 50
+  },
+  {
+    "species": "Ninetales-Alola",
+    "item": "Light Clay",
+    "ability": "Snow Warning",
+    "nature": "Timid",
+    "moves": [
+      "Aurora Veil",
+      "Freeze-Dry",
+      "Encore",
+      "Misty Terrain"
+    ],
+    "evs": {
+      "hp": 27,
+      "atk": 0,
+      "def": 7,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50
+  },
+  {
+    "species": "Garchomp",
+    "item": "Focus Sash",
+    "ability": "Rough Skin",
+    "nature": "Jolly",
+    "moves": [
+      "Earthquake",
+      "Dragon Tail",
+      "Rock Tomb",
+      "Stealth Rock"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50
+  },
+  {
+    "species": "Armarouge",
+    "item": "Shuca Berry",
+    "ability": "Weak Armor",
+    "nature": "Modest",
+    "moves": [
+      "Armor Cannon",
+      "Expanding Force",
+      "Destiny Bond",
+      "Endure"
+    ],
+    "evs": {
+      "hp": 1,
+      "atk": 0,
+      "def": 1,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50
+  }
+]

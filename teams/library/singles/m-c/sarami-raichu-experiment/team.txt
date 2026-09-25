@@ -1,0 +1,60 @@
+Raichu @ Raichunite X  
+Ability: Lightning Rod  
+Level: 50  
+EVs: 24 HP / 6 Atk / 8 Def / 28 Spe  
+Jolly Nature  
+- Volt Tackle  
+- Volt Switch  
+- Knock Off  
+- Encore  
+
+Sneasler @ Electric Seed  
+Ability: Unburden  
+Level: 50  
+EVs: 32 HP / 15 Atk / 17 Def / 2 Spe  
+Adamant Nature  
+- Dire Claw  
+- Close Combat  
+- Throat Chop  
+- Swords Dance  
+
+Ninetales-Alola @ Light Clay  
+Ability: Snow Warning  
+Level: 50  
+EVs: 3 HP / 25 Def / 12 SpA / 26 Spe  
+Timid Nature  
+- Blizzard  
+- Aurora Veil  
+- Encore  
+- Pain Split  
+
+Samurott-Hisui @ Choice Scarf  
+Ability: Sharpness  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Jolly Nature  
+- Ceaseless Edge  
+- Razor Shell  
+- Sacred Sword  
+- Flip Turn  
+
+Pyroar @ Pyroarite  
+Ability: Unnerve  
+Level: 50  
+EVs: 14 HP / 2 Def / 20 SpA / 30 Spe  
+Timid Nature  
+- Flamethrower  
+- Overheat  
+- Dark Pulse  
+- Yawn  
+
+Archaludon @ Sitrus Berry  
+Ability: Stamina  
+Level: 50  
+EVs: 32 HP / 15 Def / 1 SpA / 18 SpD  
+Bold Nature  
+- Draco Meteor  
+- Thunderbolt  
+- Roar  
+- Stealth Rock  
+

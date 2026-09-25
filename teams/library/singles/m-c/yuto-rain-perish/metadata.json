@@ -1,0 +1,31 @@
+{
+  "title": "やりたいだけ",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": null,
+  "publishedAt": "2026-09-19T16:25:09.019000+00:00",
+  "updatedAt": "2026-09-19T16:25:09.019000+00:00",
+  "source": "https://pokesol.app/u/070810yuto/articles/9b071422d65222d1",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "validated",
+  "card_count": 6,
+  "body_sha256": "0eb162864b8e1d8cb4474e82dc3ae80a52ab92f62fb59266fed1227219add90c",
+  "normalization": [
+    "Source internal move ID 907 differs from canonical ID; Electro Shot resolved by published Japanese name/type/power.",
+    "Normalize displayed Gengar-Mega to Gengar with Mega stone."
+  ],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [],
+  "evidence_note": "작성자 아이디어 구성·실적 없음",
+  "tags": [
+    "rain",
+    "perish-song"
+  ],
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults. Pre-Mega ability choices/assumptions appear in normalization."
+}

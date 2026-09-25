@@ -1,0 +1,47 @@
+Metagross @ Metagrossite
+Ability: Clear Body
+Adamant Nature
+- Iron Head
+- Psychic Fangs
+- Body Press
+- Protect
+
+Indeedee @ Choice Scarf
+Ability: Psychic Surge
+Timid Nature
+- Expanding Force
+- Imprison
+- Trick
+- Trick Room
+
+Sneasler @ Psychic Seed
+Ability: Unburden
+Jolly Nature
+- Close Combat
+- Dire Claw
+- Rock Slide
+- Protect
+
+Arcanine-Hisui @ Focus Sash
+Ability: Rock Head
+Jolly Nature
+- Flare Blitz
+- Head Smash
+- Rock Slide
+- Protect
+
+Salamence @ Salamencite
+Ability: Intimidate
+Modest Nature
+- Hyper Voice
+- Dragon Pulse
+- Heat Wave
+- Protect
+
+Milotic @ Leftovers
+Ability: Competitive
+Bold Nature
+- Scald
+- Icy Wind
+- Recover
+- Protect

@@ -1,0 +1,11 @@
+{
+  "hypothesis": "Compare original and revised gravity teams against a published sand roster under the same policy.",
+  "format": "gen9championsvgc2026regmc",
+  "seed": 20260920,
+  "games_per_arm": 4,
+  "policy": "vgc_myopic",
+  "opponent": "vgc_myopic",
+  "opponent_team": "teams/sand-owen.txt",
+  "arms": {"original":"teams/gravity-original.json","revised":"teams/gravity-revised.json"},
+  "required_confirmation": "Small diagnostic sample, not evidence of general team strength. Own-team allocations remain assumptions."
+}

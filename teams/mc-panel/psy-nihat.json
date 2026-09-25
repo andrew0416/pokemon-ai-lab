@@ -1,0 +1,164 @@
+[
+  {
+    "species": "Baxcalibur",
+    "name": "Baxcalibur",
+    "item": "Life Orb",
+    "ability": "Thermal Exchange",
+    "nature": "Adamant",
+    "moves": [
+      "Glaive Rush",
+      "Protect",
+      "Icicle Crash",
+      "Dragon Dance"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Indeedee-F",
+    "name": "Indeedee-F",
+    "item": "Psychic Seed",
+    "ability": "Psychic Surge",
+    "nature": "Relaxed",
+    "moves": [
+      "Trick Room",
+      "Follow Me",
+      "Helping Hand",
+      "Psychic"
+    ],
+    "evs": {
+      "hp": 32,
+      "spd": 2,
+      "def": 32
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Swampert",
+    "name": "Swampert",
+    "item": "Swampertite",
+    "ability": "Torrent",
+    "nature": "Adamant",
+    "moves": [
+      "Ice Punch",
+      "Wave Crash",
+      "High Horsepower",
+      "Protect"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Golisopod",
+    "name": "Golisopod",
+    "item": "Golisopite",
+    "ability": "Emergency Exit",
+    "nature": "Adamant",
+    "moves": [
+      "Liquidation",
+      "Protect",
+      "Iron Head",
+      "Leech Life"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "spd": 2
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Pelipper",
+    "name": "Pelipper",
+    "item": "Sitrus Berry",
+    "ability": "Drizzle",
+    "nature": "Modest",
+    "moves": [
+      "Tailwind",
+      "Wide Guard",
+      "Weather Ball",
+      "Hurricane"
+    ],
+    "evs": {
+      "hp": 2,
+      "spa": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Armarouge",
+    "name": "Armarouge",
+    "item": "Focus Sash",
+    "ability": "Flash Fire",
+    "nature": "Quiet",
+    "moves": [
+      "Armor Cannon",
+      "Expanding Force",
+      "Protect",
+      "Trick Room"
+    ],
+    "evs": {
+      "hp": 32,
+      "spa": 32,
+      "spd": 2
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  }
+]

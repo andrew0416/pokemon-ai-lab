@@ -1,0 +1,128 @@
+[
+  {
+    "species": "Raichu",
+    "item": "Raichunite X",
+    "ability": "Lightning Rod",
+    "nature": "Jolly",
+    "moves": [
+      "Volt Tackle",
+      "Volt Switch",
+      "Knock Off",
+      "Encore"
+    ],
+    "evs": {
+      "hp": 24,
+      "atk": 6,
+      "def": 8,
+      "spa": 0,
+      "spd": 0,
+      "spe": 28
+    },
+    "level": 50
+  },
+  {
+    "species": "Sneasler",
+    "item": "Electric Seed",
+    "ability": "Unburden",
+    "nature": "Adamant",
+    "moves": [
+      "Dire Claw",
+      "Close Combat",
+      "Throat Chop",
+      "Swords Dance"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 15,
+      "def": 17,
+      "spa": 0,
+      "spd": 0,
+      "spe": 2
+    },
+    "level": 50
+  },
+  {
+    "species": "Ninetales-Alola",
+    "item": "Light Clay",
+    "ability": "Snow Warning",
+    "nature": "Timid",
+    "moves": [
+      "Blizzard",
+      "Aurora Veil",
+      "Encore",
+      "Pain Split"
+    ],
+    "evs": {
+      "hp": 3,
+      "atk": 0,
+      "def": 25,
+      "spa": 12,
+      "spd": 0,
+      "spe": 26
+    },
+    "level": 50
+  },
+  {
+    "species": "Samurott-Hisui",
+    "item": "Choice Scarf",
+    "ability": "Sharpness",
+    "nature": "Jolly",
+    "moves": [
+      "Ceaseless Edge",
+      "Razor Shell",
+      "Sacred Sword",
+      "Flip Turn"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50
+  },
+  {
+    "species": "Pyroar",
+    "item": "Pyroarite",
+    "ability": "Unnerve",
+    "nature": "Timid",
+    "moves": [
+      "Flamethrower",
+      "Overheat",
+      "Dark Pulse",
+      "Yawn"
+    ],
+    "evs": {
+      "hp": 14,
+      "atk": 0,
+      "def": 2,
+      "spa": 20,
+      "spd": 0,
+      "spe": 30
+    },
+    "level": 50
+  },
+  {
+    "species": "Archaludon",
+    "item": "Sitrus Berry",
+    "ability": "Stamina",
+    "nature": "Bold",
+    "moves": [
+      "Draco Meteor",
+      "Thunderbolt",
+      "Roar",
+      "Stealth Rock"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 15,
+      "spa": 1,
+      "spd": 18,
+      "spe": 0
+    },
+    "level": 50
+  }
+]

@@ -1,0 +1,60 @@
+Basculegion (M) @ Life Orb  
+Ability: Swift Swim  
+Level: 50  
+EVs: 32 Atk / 2 Def / 32 Spe  
+Jolly Nature  
+- Wave Crash  
+- Last Respects  
+- Aqua Jet  
+- Flip Turn  
+
+Archaludon @ Leftovers  
+Ability: Stamina  
+Level: 50  
+EVs: 32 HP / 2 Def / 32 SpA  
+Modest Nature  
+- Draco Meteor  
+- Flash Cannon  
+- Electro Shot  
+- Aura Sphere  
+
+Golisopod @ Golisopite  
+Ability: Emergency Exit  
+Level: 50  
+EVs: 32 HP / 32 Atk / 2 SpD  
+Adamant Nature  
+- First Impression  
+- Leech Life  
+- Liquidation  
+- Drill Run  
+
+Pelipper @ Damp Rock  
+Ability: Drizzle  
+Level: 50  
+EVs: 32 HP / 32 Def / 2 SpA  
+Bold Nature  
+- Surf  
+- Hurricane  
+- Ice Beam  
+- U-turn  
+
+Gengar @ Gengarite  
+Ability: Cursed Body  
+Level: 50  
+EVs: 32 HP / 32 Def / 2 SpA  
+Timid Nature  
+- Shadow Ball  
+- Protect  
+- Disable  
+- Perish Song  
+
+Arboliva @ Eject Button  
+Ability: Seed Sower  
+Level: 50  
+EVs: 32 HP / 32 Def / 2 SpD  
+Bold Nature  
+- Giga Drain  
+- Strength Sap  
+- Leech Seed  
+- Protect  
+

@@ -1,0 +1,48 @@
+Charizard @ Charizardite Y  
+Ability: Blaze  
+Modest Nature  
+- Weather Ball  
+- Heat Wave  
+- Helping Hand  
+- Protect  
+
+Venusaur @ Life Orb  
+Ability: Chlorophyll  
+Modest Nature  
+- Leaf Storm  
+- Sleep Powder  
+- Sludge Bomb  
+- Protect  
+
+Pelipper @ Focus Sash  
+Ability: Drizzle  
+Modest Nature  
+- Weather Ball  
+- Hurricane  
+- Wide Guard  
+- Tailwind  
+
+Archaludon @ Leftovers  
+Ability: Stamina  
+Modest Nature  
+- Electro Shot  
+- Draco Meteor  
+- Snarl  
+- Protect  
+
+Sneasler @ Psychic Seed  
+Ability: Unburden  
+Adamant Nature  
+- Close Combat  
+- Rock Slide  
+- Swords Dance  
+- Protect  
+
+Indeedee-F @ Rocky Helmet  
+Ability: Psychic Surge  
+Relaxed Nature  
+- Follow Me  
+- Trick Room  
+- Helping Hand  
+- Terrain Pulse  
+

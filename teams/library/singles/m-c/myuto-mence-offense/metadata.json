@@ -1,0 +1,28 @@
+{
+  "title": "【M-6】マスター到達パーティー解説",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": "m-6",
+  "publishedAt": "2026-09-11T14:40:25.163000+00:00",
+  "updatedAt": "2026-09-11T15:03:34.834000+00:00",
+  "source": "https://pokesol.app/u/myutopoke123/articles/165b9b930396ac7a",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "validated",
+  "card_count": 6,
+  "body_sha256": "927b8a5c46894e77fd285c906a6802b1ad1a5824ab5f0e9628b94bb0ab93711a",
+  "normalization": [],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [],
+  "evidence_note": "실전 후기·마스터 도달 자체 보고",
+  "tags": [
+    "offense",
+    "hippowdon-salamence"
+  ],
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults. Pre-Mega ability choices/assumptions appear in normalization."
+}

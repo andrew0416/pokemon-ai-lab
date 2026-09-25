@@ -1,0 +1,29 @@
+{
+  "retrieved_date": "2026-09-20",
+  "format": "gen9championsvgc2026regmc",
+  "selection": "Popular rain + Mega Gardevoir psyspam archetype, selected independently of the user's proposed Armarouge core",
+  "popularity_source": "https://agentrotom.com/",
+  "composition_source": "https://agentrotom.com/meta/gardevoir",
+  "observed": {"composition_lists": 66, "composition_sightings": 1152, "composition_page_date_range": ["2026-09-09", "2026-09-20"], "homepage_popularity_rank": 1},
+  "scope": "Popularity within the cited site's sample/scoring, not an official worldwide ranked-ladder usage census. Different pages refresh at different times.",
+  "roster": ["Golisopod", "Indeedee-F", "Sneasler", "Pelipper", "Gardevoir", "Basculegion"],
+  "set_source": "https://play.limitlesstcg.com/tournament/6aa00639a4272c53be64abbd/player/wolfey/teamlist",
+  "player": "Wolfey",
+  "event": "r/VGC Regulation M-C Kickoff Cup",
+  "placement": 6,
+  "record": "7-3-0",
+  "source_file": "psyspam-wolfe-ots.txt",
+  "verified_fields": ["species", "item", "ability", "nature", "moves"],
+  "unpublished_fields": ["Stat Points"],
+  "simulation_file": "psyspam-popular.json",
+  "simulation_assumptions": {
+    "level": 50,
+    "Golisopod": {"hp":32,"atk":32,"spd":2},
+    "Indeedee-F": {"hp":32,"def":32,"spd":2},
+    "Sneasler": {"hp":2,"atk":32,"spe":32},
+    "Pelipper": {"hp":2,"spa":32,"spe":32},
+    "Gardevoir": {"hp":32,"spa":32,"spd":2},
+    "Basculegion": {"hp":2,"atk":32,"spe":32}
+  },
+  "limitation": "These are explicitly assumed simulation allocations, NOT Wolfe's published spreads. No claim that this exact allocation is most popular. Confirm robustness across allocations before accepting matchup conclusions."
+}

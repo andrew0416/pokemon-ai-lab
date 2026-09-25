@@ -1,0 +1,129 @@
+[
+  {
+    "species": "Baxcalibur",
+    "item": "Baxcalibrite",
+    "ability": "Thermal Exchange",
+    "nature": "Adamant",
+    "moves": [
+      "Glaive Rush",
+      "Icicle Crash",
+      "Ice Shard",
+      "Dragon Dance"
+    ],
+    "evs": {
+      "hp": 1,
+      "atk": 32,
+      "def": 25,
+      "spa": 0,
+      "spd": 1,
+      "spe": 7
+    },
+    "level": 50
+  },
+  {
+    "species": "Charizard",
+    "item": "Charizardite Y",
+    "ability": "Blaze",
+    "nature": "Timid",
+    "moves": [
+      "Weather Ball",
+      "Solar Beam",
+      "Air Slash",
+      "Roost"
+    ],
+    "evs": {
+      "hp": 4,
+      "atk": 0,
+      "def": 11,
+      "spa": 19,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50
+  },
+  {
+    "species": "Empoleon",
+    "item": "Sitrus Berry",
+    "ability": "Competitive",
+    "nature": "Relaxed",
+    "moves": [
+      "Ice Beam",
+      "Flip Turn",
+      "Yawn",
+      "Stealth Rock"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 32,
+      "spa": 2,
+      "spd": 0,
+      "spe": 0
+    },
+    "level": 50
+  },
+  {
+    "species": "Toxapex",
+    "item": "Leftovers",
+    "ability": "Regenerator",
+    "nature": "Careful",
+    "moves": [
+      "Recover",
+      "Toxic Spikes",
+      "Haze",
+      "Infestation"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 14,
+      "spa": 0,
+      "spd": 20,
+      "spe": 0
+    },
+    "level": 50
+  },
+  {
+    "species": "Grimmsnarl",
+    "item": "Light Clay",
+    "ability": "Prankster",
+    "nature": "Impish",
+    "moves": [
+      "Sucker Punch",
+      "Parting Shot",
+      "Reflect",
+      "Light Screen"
+    ],
+    "evs": {
+      "hp": 29,
+      "atk": 1,
+      "def": 18,
+      "spa": 0,
+      "spd": 18,
+      "spe": 0
+    },
+    "level": 50,
+    "gender": "M"
+  },
+  {
+    "species": "Excadrill",
+    "item": "Life Orb",
+    "ability": "Mold Breaker",
+    "nature": "Jolly",
+    "moves": [
+      "Earthquake",
+      "Iron Head",
+      "Rock Slide",
+      "Rapid Spin"
+    ],
+    "evs": {
+      "hp": 0,
+      "atk": 32,
+      "def": 2,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50
+  }
+]

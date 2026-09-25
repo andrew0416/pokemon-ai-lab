@@ -1,0 +1,47 @@
+Garchomp @ Garchompite Z
+Ability: Rough Skin
+Modest Nature
+- Dragon Pulse
+- Fire Blast
+- Power Gem
+- Protect
+
+Rillaboom @ Miracle Seed
+Ability: Grassy Surge
+Adamant Nature
+- Grassy Glide
+- Wood Hammer
+- Fake Out
+- High Horsepower
+
+Sneasler @ Grassy Seed
+Ability: Unburden
+Adamant Nature
+- Dire Claw
+- Close Combat
+- Throat Chop
+- Protect
+
+Gholdengo @ Life Orb
+Ability: Good as Gold
+Timid Nature
+- Shadow Ball
+- Make It Rain
+- Nasty Plot
+- Protect
+
+Arcanine-Hisui @ Focus Sash
+Ability: Rock Head
+Jolly Nature
+- Head Smash
+- Flare Blitz
+- Extreme Speed
+- Protect
+
+Raichu @ Raichunite Y
+Ability: Lightning Rod
+Timid Nature
+- Zap Cannon
+- Focus Blast
+- Protect
+- Fake Out

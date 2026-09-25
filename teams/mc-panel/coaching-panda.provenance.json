@@ -1,0 +1,45 @@
+{
+  "retrieved": "2026-09-20",
+  "source": "https://pokepast.es/b4465e52a2df6d1e",
+  "published": "Species, items, abilities, natures, moves; SP also published only for coaching-panda",
+  "assumptions": "All IVs 31, level 50. SP explicitly assumed for the three OTS teams; not claimed as player spreads.",
+  "sp": {
+    "Rillaboom": {
+      "hp": 14,
+      "atk": 32,
+      "spd": 1,
+      "spe": 18,
+      "def": 1
+    },
+    "Kingambit": {
+      "hp": 32,
+      "atk": 32,
+      "spe": 1,
+      "def": 1
+    },
+    "Sneasler": {
+      "atk": 32,
+      "spe": 32,
+      "def": 2
+    },
+    "Baxcalibur": {
+      "hp": 32,
+      "atk": 16,
+      "spd": 4,
+      "spe": 13,
+      "def": 1
+    },
+    "Froslass": {
+      "hp": 25,
+      "spd": 14,
+      "spe": 27
+    },
+    "Basculegion": {
+      "hp": 4,
+      "atk": 28,
+      "spe": 21,
+      "def": 13
+    }
+  },
+  "notes": "Panda paste footer labels M-B, but dated M-C creator listing and M-C legality validation used; base forms normalized from Mega labels."
+}

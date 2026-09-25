@@ -1,0 +1,60 @@
+Garchomp @ Garchompite Z  
+Ability: Rough Skin  
+Level: 50  
+EVs: 2 HP / 6 Def / 32 SpA / 1 SpD / 25 Spe  
+Timid Nature  
+- Draco Meteor  
+- Earth Power  
+- Flamethrower  
+- Surf  
+
+Scizor @ Leftovers  
+Ability: Technician  
+Level: 50  
+EVs: 30 HP / 32 Atk / 4 Spe  
+Adamant Nature  
+- Bullet Punch  
+- Close Combat  
+- Knock Off  
+- Swords Dance  
+
+Mimikyu @ Life Orb  
+Ability: Disguise  
+Level: 50  
+EVs: 13 HP / 30 Atk / 1 Def / 22 Spe  
+Adamant Nature  
+- Play Rough  
+- Shadow Claw  
+- Shadow Sneak  
+- Swords Dance  
+
+Greninja @ Focus Sash  
+Ability: Protean  
+Level: 50  
+EVs: 8 HP / 32 SpA / 26 Spe  
+Timid Nature  
+- Water Shuriken  
+- Dark Pulse  
+- Ice Beam  
+- Sludge Wave  
+
+Salamence @ Salamencite  
+Ability: Intimidate  
+Level: 50  
+EVs: 27 HP / 25 Atk / 5 Def / 9 Spe  
+Adamant Nature  
+- Double-Edge  
+- Earthquake  
+- Roost  
+- Dragon Dance  
+
+Hippowdon @ Sitrus Berry  
+Ability: Sand Stream  
+Level: 50  
+EVs: 32 HP / 15 Def / 19 SpD  
+Impish Nature  
+- Earthquake  
+- Yawn  
+- Stealth Rock  
+- Slack Off  
+

@@ -1,0 +1,32 @@
+{
+  "title": "M-6マスター8連勝構築　　マンスリー6連勝",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": "m-6",
+  "publishedAt": "2026-09-17T12:39:17.668Z",
+  "updatedAt": "2026-09-19T23:29:05.182Z",
+  "source": "https://pokesol.app/u/tororororo/articles/ac019be84c573b87",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "validated",
+  "card_count": 6,
+  "body_sha256": "b1e898b2f5b6f4ae83e164fe2806bad0dbeaa95226252ca90bca93c9f925c3e6",
+  "normalization": [
+    "Normalize displayed Baxcalibur-Mega to Baxcalibur with Mega stone.",
+    "Source lists multiple pre-Mega abilities for Baxcalibur; first published choice used: Thermal Exchange",
+    "Normalize displayed Salamence-Mega to Salamence with Mega stone."
+  ],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [],
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults, not publicly verified IVs. Missing SP must not be treated as an authored zero-investment spread.",
+  "tags": [
+    "psychic-terrain",
+    "psyspam",
+    "grassy-terrain"
+  ]
+}

@@ -1,0 +1,129 @@
+[
+  {
+    "species": "Primarina",
+    "item": "Chesto Berry",
+    "ability": "Torrent",
+    "nature": "Modest",
+    "moves": [
+      "Sparkling Aria",
+      "Moonblast",
+      "Calm Mind",
+      "Rest"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 30,
+      "spa": 4,
+      "spd": 0,
+      "spe": 0
+    },
+    "level": 50
+  },
+  {
+    "species": "Garchomp",
+    "item": "Garchompite Z",
+    "ability": "Rough Skin",
+    "nature": "Modest",
+    "moves": [
+      "Draco Meteor",
+      "Scorching Sands",
+      "Flamethrower",
+      "Power Gem"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50
+  },
+  {
+    "species": "Golisopod",
+    "item": "Golisopite",
+    "ability": "Emergency Exit",
+    "nature": "Adamant",
+    "moves": [
+      "Leech Life",
+      "Iron Head",
+      "Sucker Punch",
+      "First Impression"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "level": 50
+  },
+  {
+    "species": "Rillaboom",
+    "item": "Miracle Seed",
+    "ability": "Grassy Surge",
+    "nature": "Adamant",
+    "moves": [
+      "Wood Hammer",
+      "Grassy Glide",
+      "U-turn",
+      "Fake Out"
+    ],
+    "evs": {
+      "hp": 29,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 5,
+      "spe": 0
+    },
+    "level": 50
+  },
+  {
+    "species": "Umbreon",
+    "item": "Leftovers",
+    "ability": "Inner Focus",
+    "nature": "Bold",
+    "moves": [
+      "Foul Play",
+      "Yawn",
+      "Protect",
+      "Wish"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 30,
+      "spa": 0,
+      "spd": 3,
+      "spe": 1
+    },
+    "level": 50
+  },
+  {
+    "species": "Rotom-Wash",
+    "item": "Sitrus Berry",
+    "ability": "Levitate",
+    "nature": "Bold",
+    "moves": [
+      "Hydro Pump",
+      "Thunderbolt",
+      "Volt Switch",
+      "Will-O-Wisp"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 23,
+      "spa": 0,
+      "spd": 11,
+      "spe": 0
+    },
+    "level": 50,
+    "gender": "N"
+  }
+]

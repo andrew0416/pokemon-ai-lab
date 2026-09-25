@@ -1,0 +1,60 @@
+Salamence @ Salamencite  
+Ability: Intimidate  
+Level: 50  
+EVs: 32 HP / 5 Atk / 19 Def / 10 Spe  
+Adamant Nature  
+- Double-Edge  
+- Earthquake  
+- Dragon Dance  
+- Roost  
+
+Rotom-Wash @ Leftovers  
+Ability: Levitate  
+Level: 50  
+EVs: 32 HP / 32 Def / 2 SpA  
+Modest Nature  
+- Hydro Pump  
+- Thunderbolt  
+- Will-O-Wisp  
+- Substitute  
+
+Corviknight @ Sitrus Berry  
+Ability: Pressure  
+Level: 50  
+EVs: 32 HP / 32 Def / 2 SpD  
+Impish Nature  
+- Iron Head  
+- Bulk Up  
+- U-turn  
+- Roost  
+
+Meowscarada @ Choice Scarf  
+Ability: Protean  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Jolly Nature  
+- Flower Trick  
+- Knock Off  
+- Triple Axel  
+- U-turn  
+
+Garchomp @ Focus Sash  
+Ability: Rough Skin  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Adamant Nature  
+- Scale Shot  
+- Earthquake  
+- Stealth Rock  
+- Swords Dance  
+
+Samurott-Hisui @ Black Glasses  
+Ability: Sharpness  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Adamant Nature  
+- Ceaseless Edge  
+- Razor Shell  
+- Sacred Sword  
+- Sucker Punch  
+

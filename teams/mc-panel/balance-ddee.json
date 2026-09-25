@@ -1,0 +1,164 @@
+[
+  {
+    "species": "Floette-Eternal",
+    "name": "Floette-Eternal",
+    "item": "Floettite",
+    "ability": "Flower Veil",
+    "nature": "Modest",
+    "moves": [
+      "Moonblast",
+      "Dazzling Gleam",
+      "Calm Mind",
+      "Protect"
+    ],
+    "evs": {
+      "hp": 2,
+      "spa": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Sneasler",
+    "name": "Sneasler",
+    "item": "Grassy Seed",
+    "ability": "Unburden",
+    "nature": "Adamant",
+    "moves": [
+      "Close Combat",
+      "Dire Claw",
+      "Rock Slide",
+      "Protect"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Incineroar",
+    "name": "Incineroar",
+    "item": "Sitrus Berry",
+    "ability": "Intimidate",
+    "nature": "Impish",
+    "moves": [
+      "Flare Blitz",
+      "Throat Chop",
+      "Fake Out",
+      "Parting Shot"
+    ],
+    "evs": {
+      "hp": 32,
+      "spd": 2,
+      "def": 32
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Rillaboom",
+    "name": "Rillaboom",
+    "item": "Miracle Seed",
+    "ability": "Grassy Surge",
+    "nature": "Adamant",
+    "moves": [
+      "Wood Hammer",
+      "Grassy Glide",
+      "High Horsepower",
+      "Fake Out"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "spd": 2
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Gholdengo",
+    "name": "Gholdengo",
+    "item": "Life Orb",
+    "ability": "Good as Gold",
+    "nature": "Modest",
+    "moves": [
+      "Make It Rain",
+      "Shadow Ball",
+      "Nasty Plot",
+      "Protect"
+    ],
+    "evs": {
+      "hp": 2,
+      "spa": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Raichu",
+    "name": "Raichu",
+    "item": "Raichunite Y",
+    "ability": "Lightning Rod",
+    "nature": "Timid",
+    "moves": [
+      "Zap Cannon",
+      "Focus Blast",
+      "Encore",
+      "Protect"
+    ],
+    "evs": {
+      "hp": 2,
+      "spa": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  }
+]

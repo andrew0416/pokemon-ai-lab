@@ -1,0 +1,129 @@
+[
+  {
+    "species": "Basculegion",
+    "item": "Life Orb",
+    "ability": "Swift Swim",
+    "nature": "Jolly",
+    "moves": [
+      "Wave Crash",
+      "Last Respects",
+      "Aqua Jet",
+      "Flip Turn"
+    ],
+    "evs": {
+      "hp": 0,
+      "atk": 32,
+      "def": 2,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50,
+    "gender": "M"
+  },
+  {
+    "species": "Archaludon",
+    "item": "Leftovers",
+    "ability": "Stamina",
+    "nature": "Modest",
+    "moves": [
+      "Draco Meteor",
+      "Flash Cannon",
+      "Electro Shot",
+      "Aura Sphere"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 2,
+      "spa": 32,
+      "spd": 0,
+      "spe": 0
+    },
+    "level": 50
+  },
+  {
+    "species": "Golisopod",
+    "item": "Golisopite",
+    "ability": "Emergency Exit",
+    "nature": "Adamant",
+    "moves": [
+      "First Impression",
+      "Leech Life",
+      "Liquidation",
+      "Drill Run"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "level": 50
+  },
+  {
+    "species": "Pelipper",
+    "item": "Damp Rock",
+    "ability": "Drizzle",
+    "nature": "Bold",
+    "moves": [
+      "Surf",
+      "Hurricane",
+      "Ice Beam",
+      "U-turn"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 32,
+      "spa": 2,
+      "spd": 0,
+      "spe": 0
+    },
+    "level": 50
+  },
+  {
+    "species": "Gengar",
+    "item": "Gengarite",
+    "ability": "Cursed Body",
+    "nature": "Timid",
+    "moves": [
+      "Shadow Ball",
+      "Protect",
+      "Disable",
+      "Perish Song"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 32,
+      "spa": 2,
+      "spd": 0,
+      "spe": 0
+    },
+    "level": 50
+  },
+  {
+    "species": "Arboliva",
+    "item": "Eject Button",
+    "ability": "Seed Sower",
+    "nature": "Bold",
+    "moves": [
+      "Giga Drain",
+      "Strength Sap",
+      "Leech Seed",
+      "Protect"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 32,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "level": 50
+  }
+]

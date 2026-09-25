@@ -1,0 +1,168 @@
+[
+  {
+    "species": "Sableye",
+    "ability": "Prankster",
+    "item": "Roseli Berry",
+    "moves": [
+      "Gravity",
+      "Quash",
+      "Encore",
+      "Sunny Day"
+    ],
+    "nature": "Bold",
+    "evs": {
+      "hp": 32,
+      "def": 32,
+      "spd": 2
+    },
+    "level": 50,
+    "gender": "F",
+    "name": "Sableye",
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Milotic",
+    "ability": "Competitive",
+    "item": "Sitrus Berry",
+    "moves": [
+      "Hydro Pump",
+      "Recover",
+      "Hypnosis",
+      "Ice Beam"
+    ],
+    "nature": "Bold",
+    "evs": {
+      "hp": 32,
+      "def": 32,
+      "spd": 2
+    },
+    "level": 50,
+    "gender": "M",
+    "name": "Milotic",
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Baxcalibur",
+    "ability": "Thermal Exchange",
+    "item": "Baxcalibrite",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 32,
+      "atk": 16,
+      "def": 1,
+      "spd": 4,
+      "spe": 13
+    },
+    "moves": [
+      "Icicle Crash",
+      "Ice Shard",
+      "High Horsepower",
+      "Protect"
+    ],
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Pyroar",
+    "ability": "Unnerve",
+    "item": "Pyroarite",
+    "nature": "Timid",
+    "level": 50,
+    "evs": {
+      "hp": 2,
+      "spa": 32,
+      "spe": 32
+    },
+    "moves": [
+      "Heat Wave",
+      "Fire Blast",
+      "Taunt",
+      "Protect"
+    ],
+    "name": "Pyroar",
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "gender": ""
+  },
+  {
+    "species": "Rillaboom",
+    "ability": "Grassy Surge",
+    "item": "Miracle Seed",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "spd": 2
+    },
+    "moves": [
+      "Fake Out",
+      "Grassy Glide",
+      "Wood Hammer",
+      "U-turn"
+    ],
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Maushold",
+    "ability": "Technician",
+    "item": "Life Orb",
+    "moves": [
+      "Protect",
+      "Population Bomb",
+      "Bullet Seed",
+      "Bite"
+    ],
+    "nature": "Jolly",
+    "evs": {
+      "hp": 1,
+      "atk": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "name": "Maushold",
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "gender": "N"
+  }
+]

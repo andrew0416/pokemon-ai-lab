@@ -1,0 +1,60 @@
+Salamence @ Salamencite  
+Ability: Intimidate  
+Level: 50  
+EVs: 21 HP / 5 Atk / 30 SpD / 10 Spe  
+Careful Nature  
+- Body Slam  
+- Earthquake  
+- Roost  
+- Dragon Dance  
+
+Glimmora @ Light Clay  
+Ability: Toxic Debris  
+Level: 50  
+EVs: 32 HP / 2 Atk / 32 Spe  
+Jolly Nature  
+- Mortal Spin  
+- Reflect  
+- Light Screen  
+- Memento  
+
+Pawmot @ Focus Sash  
+Ability: Iron Fist  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Jolly Nature  
+- Double Shock  
+- Mach Punch  
+- Ice Punch  
+- Revival Blessing  
+
+Pyroar @ Pyroarite  
+Ability: Unnerve  
+Level: 50  
+EVs: 14 HP / 21 SpA / 31 Spe  
+Modest Nature  
+- Flamethrower  
+- Overheat  
+- Hyper Voice  
+- Substitute  
+
+Aegislash @ Leftovers  
+Ability: Stance Change  
+Level: 50  
+EVs: 24 HP / 32 SpA / 10 SpD  
+Calm Nature  
+- King's Shield  
+- Flash Cannon  
+- Shadow Ball  
+- Substitute  
+
+Primarina @ Sitrus Berry  
+Ability: Torrent  
+Level: 50  
+EVs: 20 HP / 32 Def / 14 SpA  
+Bold Nature  
+- Sparkling Aria  
+- Flip Turn  
+- Moonblast  
+- Encore  
+

@@ -1,0 +1,48 @@
+Floette-Eternal @ Floettite  
+Ability: Flower Veil  
+Timid Nature  
+- Protect  
+- Light of Ruin  
+- Moonblast  
+- Dazzling Gleam  
+
+Charizard @ Charizardite Y  
+Ability: Blaze  
+Modest Nature  
+- Solar Beam  
+- Heat Wave  
+- Weather Ball  
+- Protect  
+
+Kingambit @ Black Glasses  
+Ability: Defiant  
+Adamant Nature  
+- Iron Head  
+- Protect  
+- Kowtow Cleave  
+- Sucker Punch  
+
+Whimsicott @ Focus Sash  
+Ability: Prankster  
+Timid Nature  
+- Moonblast  
+- Tailwind  
+- Encore  
+- Protect  
+
+Basculegion @ Mystic Water  
+Ability: Adaptability  
+Adamant Nature  
+- Wave Crash  
+- Protect  
+- Last Respects  
+- Aqua Jet  
+
+Garchomp @ Life Orb  
+Ability: Rough Skin  
+Jolly Nature  
+- Earthquake  
+- Rock Slide  
+- Protect  
+- Dragon Claw  
+

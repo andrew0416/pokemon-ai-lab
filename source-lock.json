@@ -1,0 +1,6 @@
+{
+  "pokemon-showdown": {"url":"https://github.com/smogon/pokemon-showdown.git","commit":"9e317a666d9fd250f36f494778e843141f09bdba"},
+  "pokemon-vgc-ai": {"url":"https://github.com/Nolelle/pokemon-vgc-ai.git","commit":"564cf9c12be6dca5adecf80c98a92280a2cd8bc7"},
+  "foul-play": {"url":"https://github.com/pmariglia/foul-play.git","commit":"6c467c081e862fb321adb405355beb41aba8e226"},
+  "vgc-bench": {"url":"https://github.com/cameronangliss/VGC-Bench.git","commit":"d79f9532947ac114dce1dda2456a590afcd375b2"}
+}

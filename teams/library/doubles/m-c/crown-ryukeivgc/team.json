@@ -1,0 +1,188 @@
+[
+  {
+    "name": "",
+    "species": "Sylveon",
+    "item": "Fairy Feather",
+    "ability": "Pixilate",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Protect",
+      "Hyper Beam",
+      "Quick Attack",
+      "Hyper Voice"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Farigiraf",
+    "item": "Sitrus Berry",
+    "ability": "Armor Tail",
+    "gender": "",
+    "nature": "Relaxed",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Psychic",
+      "Thunderbolt",
+      "Trick Room",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Garchomp",
+    "item": "Choice Scarf",
+    "ability": "Rough Skin",
+    "gender": "",
+    "nature": "Jolly",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Dragon Claw",
+      "Stomping Tantrum",
+      "Rock Tomb",
+      "Rock Slide"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Charizard",
+    "item": "Charizardite Y",
+    "ability": "Solar Power",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Heat Wave",
+      "Protect",
+      "Weather Ball",
+      "Ancient Power"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Kingambit",
+    "item": "Focus Sash",
+    "ability": "Defiant",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Kowtow Cleave",
+      "Sucker Punch",
+      "Low Kick",
+      "Iron Head"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Rillaboom",
+    "item": "Miracle Berry",
+    "ability": "Grassy Surge",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Fake Out",
+      "Wood Hammer",
+      "Grassy Glide",
+      "U-turn"
+    ]
+  }
+]

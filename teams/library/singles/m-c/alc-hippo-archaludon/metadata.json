@@ -1,0 +1,31 @@
+{
+  "title": "【M-Cマスター到達】10連勝中構築カバマンダジュラス",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": "m-6",
+  "publishedAt": "2026-09-12T13:01:03.725000+00:00",
+  "updatedAt": "2026-09-13T10:09:27.804000+00:00",
+  "source": "https://pokesol.app/u/alc_tomotarou/articles/fd1076f5bf5f36a8",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "validated",
+  "card_count": 6,
+  "body_sha256": "ecce918fa96a098d35d9315485b7772cd4e9b01c3ea3dfe3aa135ac713ba5d2d",
+  "normalization": [
+    "Normalize displayed Salamence-Mega to Salamence with Mega stone.",
+    "Normalize displayed Metagross-Mega to Metagross with Mega stone."
+  ],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [],
+  "evidence_note": "실전 후기·마스터 연승 자체 보고",
+  "tags": [
+    "bulky-balance",
+    "hippowdon-salamence"
+  ],
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults. Pre-Mega ability choices/assumptions appear in normalization."
+}

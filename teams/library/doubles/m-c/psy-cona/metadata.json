@@ -1,0 +1,25 @@
+{
+  "source": "https://pokepast.es/6b76ea3a9125afd1",
+  "retrieved": "2026-09-20",
+  "format": "doubles",
+  "regulation": "M-C",
+  "source_kind": "published paste",
+  "sp_public": true,
+  "ivs_public": false,
+  "source_warning": "Preserve original footer labels; compare dated M-C listing and legality.",
+  "listing": "https://www.championsdex.app/teams/community-mc29",
+  "normalization": [
+    "Whitespace normalized for Showdown import; source.txt preserved."
+  ],
+  "validation_format": "gen9championsvgc2026regmc",
+  "validation_errors": [],
+  "status": "validated",
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults, not publicly verified IVs. Missing SP must not be treated as an authored zero-investment spread.",
+  "tags": [
+    "psychic-terrain",
+    "psyspam",
+    "trick-room-option",
+    "tailwind"
+  ]
+}

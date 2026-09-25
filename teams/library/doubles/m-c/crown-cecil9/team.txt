@@ -1,0 +1,48 @@
+Arcanine-Hisui @ Focus Sash  
+Ability: Rock Head  
+Adamant Nature  
+- Protect  
+- Extreme Speed  
+- Head Smash  
+- Flare Blitz  
+
+Rillaboom @ Miracle Seed  
+Ability: Grassy Surge  
+Adamant Nature  
+- Fake Out  
+- U-turn  
+- Grassy Glide  
+- Wood Hammer  
+
+Floette-Eternal @ Floettite  
+Ability: Flower Veil  
+Modest Nature  
+- Protect  
+- Calm Mind  
+- Moonblast  
+- Dazzling Gleam  
+
+Gholdengo @ Grassy Seed  
+Ability: Good as Gold  
+Modest Nature  
+- Make It Rain  
+- Shadow Ball  
+- Nasty Plot  
+- Protect  
+
+Raichu @ Raichunite Y  
+Ability: Lightning Rod  
+Timid Nature  
+- Zap Cannon  
+- Focus Blast  
+- Fake Out  
+- Protect  
+
+Garchomp @ Choice Scarf  
+Ability: Rough Skin  
+Adamant Nature  
+- Rock Slide  
+- Stomping Tantrum  
+- Dragon Claw  
+- Earthquake  
+

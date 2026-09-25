@@ -1,0 +1,43 @@
+{
+  "ruleset": "champions",
+  "attacker": {
+    "species": "Gardevoir-Mega",
+    "ability": "Pixilate",
+    "item": "Gardevoirite",
+    "moves": [
+      "Hyper Voice",
+      "Gravity",
+      "Hypnosis",
+      "Focus Blast"
+    ],
+    "nature": "Modest",
+    "evs": {
+      "hp": 32,
+      "def": 10,
+      "spa": 24
+    },
+    "level": 50,
+    "gender": "F"
+  },
+  "defender": {
+    "species": "Sneasler",
+    "ability": "Unburden",
+    "item": "",
+    "moves": [],
+    "nature": "Adamant",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "spe": 32
+    },
+    "level": 50,
+    "boosts": {
+      "spd": 1
+    }
+  },
+  "move": "Psyshock",
+  "field": {
+    "gameType": "Doubles",
+    "terrain": "Psychic"
+  }
+}

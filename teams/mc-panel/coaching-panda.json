@@ -1,0 +1,172 @@
+[
+  {
+    "species": "Rillaboom",
+    "name": "Rillaboom",
+    "item": "Miracle Seed",
+    "ability": "Grassy Surge",
+    "nature": "Adamant",
+    "moves": [
+      "Fake Out",
+      "Wood Hammer",
+      "High Horsepower",
+      "Grassy Glide"
+    ],
+    "evs": {
+      "hp": 14,
+      "atk": 32,
+      "spd": 1,
+      "spe": 18,
+      "def": 1
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Kingambit",
+    "name": "Kingambit",
+    "item": "Black Glasses",
+    "ability": "Defiant",
+    "nature": "Adamant",
+    "moves": [
+      "Swords Dance",
+      "Kowtow Cleave",
+      "Sucker Punch",
+      "Protect"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "spe": 1,
+      "def": 1
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Sneasler",
+    "name": "Sneasler",
+    "item": "Focus Sash",
+    "ability": "Unburden",
+    "nature": "Naive",
+    "moves": [
+      "Fake Out",
+      "Close Combat",
+      "Dire Claw",
+      "Coaching"
+    ],
+    "evs": {
+      "atk": 32,
+      "spe": 32,
+      "def": 2
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Baxcalibur",
+    "name": "Baxcalibur",
+    "item": "Baxcalibrite",
+    "ability": "Thermal Exchange",
+    "nature": "Adamant",
+    "moves": [
+      "Scale Shot",
+      "Icicle Crash",
+      "Ice Shard",
+      "Protect"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 16,
+      "spd": 4,
+      "spe": 13,
+      "def": 1
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    }
+  },
+  {
+    "species": "Froslass",
+    "name": "Froslass",
+    "item": "Froslassite",
+    "ability": "Cursed Body",
+    "nature": "Timid",
+    "moves": [
+      "Blizzard",
+      "Aurora Veil",
+      "Shadow Ball",
+      "Protect"
+    ],
+    "evs": {
+      "hp": 25,
+      "spd": 14,
+      "spe": 27
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "gender": "F"
+  },
+  {
+    "species": "Basculegion",
+    "name": "Basculegion",
+    "item": "Life Orb",
+    "ability": "Adaptability",
+    "nature": "Adamant",
+    "moves": [
+      "Wave Crash",
+      "Last Respects",
+      "Aqua Jet",
+      "Protect"
+    ],
+    "evs": {
+      "hp": 4,
+      "atk": 28,
+      "spe": 21,
+      "def": 13
+    },
+    "level": 50,
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "gender": "M"
+  }
+]

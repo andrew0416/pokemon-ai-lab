@@ -1,0 +1,15 @@
+{
+  "source": "User-supplied party and stats screenshots, 2026-09-20",
+  "images": ["codex-clipboard-68e1a619-28d6-4b36-b6cf-783c873353cb.png","codex-clipboard-9c67b342-d56e-4f03-9f56-e3b2871f45f9.png"],
+  "verified_fields": ["species","gender","ability","item","moves","nature modifiers","Stat Points","displayed stats"],
+  "stat_order": ["hp","atk","def","spa","spd","spe"],
+  "expected_stats": {
+    "Sableye":[157,85,139,85,87,70],
+    "Milotic":[202,72,144,120,147,101],
+    "Gardevoir":[175,76,95,185,135,100],
+    "Charizard":[155,93,98,177,105,152],
+    "Flapple":[147,178,100,103,80,122],
+    "Maushold":[150,127,90,76,95,179]
+  },
+  "notes": ["Natures inferred unambiguously from raised/lowered stat arrows.","Stats are pre-Mega and exclude in-battle Choice Scarf multiplier.","Maushold uses 65 SP: HP 1, Attack 32, Speed 32; preserved rather than silently adding the spare point.","Latest screenshot shows Ice Beam. Earlier Icy Wind request is preserved as gravity-icy-wind.json comparison variant.","Earlier gravity-original runs used assumed allocations. Their manifests retain exact packed teams; they are not results for this screenshot-accurate baseline."]
+}

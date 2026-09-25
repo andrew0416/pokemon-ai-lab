@@ -1,0 +1,12 @@
+{
+  "doubles": {
+    "count": 28,
+    "simulation_ready": 4,
+    "needs_review": 1
+  },
+  "singles": {
+    "count": 17,
+    "simulation_ready": 16,
+    "needs_review": 1
+  }
+}

@@ -1,0 +1,48 @@
+Gengar @ Gengarite  
+Ability: Cursed Body  
+Timid Nature  
+- Protect  
+- Perish Song  
+- Disable  
+- Shadow Ball  
+
+Incineroar @ Lum Berry  
+Ability: Intimidate  
+Sassy Nature  
+- Protect  
+- Parting Shot  
+- Fake Out  
+- Throat Chop  
+
+Sableye @ Sitrus Berry  
+Ability: Prankster  
+Careful Nature  
+- Detect  
+- Disable  
+- Encore  
+- Fake Out  
+
+Primarina @ Leftovers  
+Ability: Torrent  
+Sassy Nature  
+- Protect  
+- Perish Song  
+- Flip Turn  
+- Moonblast  
+
+Annihilape @ Kasib Berry  
+Ability: Defiant  
+Sassy Nature  
+- Protect  
+- Encore  
+- Rage Fist  
+- Drain Punch  
+
+Tinkaton @ Occa Berry  
+Ability: Mold Breaker  
+Impish Nature  
+- Protect  
+- Fake Out  
+- Encore  
+- Gigaton Hammer  
+

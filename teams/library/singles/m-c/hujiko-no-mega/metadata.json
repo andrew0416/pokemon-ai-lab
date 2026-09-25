@@ -1,0 +1,28 @@
+{
+  "title": "マスターⅲ達成　メガ禁止構築",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": "m-5",
+  "publishedAt": "2026-09-07T11:47:30.579000+00:00",
+  "updatedAt": "2026-09-10T20:17:05.994000+00:00",
+  "source": "https://pokesol.app/u/hujiko/articles/4225cdecaf52efec",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "validated",
+  "card_count": 6,
+  "body_sha256": "f44e8850b912c128459e14d39316c8e3f427e56d634980a3ec5b2a96614e0c98",
+  "normalization": [],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [],
+  "evidence_note": "노메가 제약 구성·마스터 도달 자체 보고; M-C 태그와 M-5/게시일이 혼재",
+  "tags": [
+    "no-mega",
+    "balance"
+  ],
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults. Pre-Mega ability choices/assumptions appear in normalization."
+}

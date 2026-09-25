@@ -1,0 +1,18 @@
+{
+  "retrieved_date": "2026-09-20",
+  "format": "gen9championsvgc2026regmc",
+  "name": "Owen's Salamence Sand Team",
+  "creator": "Owen",
+  "published_by": "VGCPastes",
+  "published_date": "2026-09-09",
+  "replica_code": "QLYBXTEE22",
+  "set_source": "https://pokepast.es/605ab0da3552400d",
+  "catalog_source": "https://www.championsdex.app/teams/community-mc32",
+  "composition_source": "https://agentrotom.com/meta/tyranitar",
+  "composition_observation": {"lists":19,"sightings":193,"date_range":["2026-09-09","2026-09-18"]},
+  "selection": "A documented, used sand + male Indeedee variant with fully published allocations. Not a claim of being the most common sand roster.",
+  "source_file": "sand-owen.txt",
+  "verified_fields": ["species","gender where specified","item","ability","level","nature","moves","Stat Points"],
+  "simulation_assumptions": [],
+  "notes": "Preserves source roster, order, sets and allocations. EVs in this Champions paste are Stat Points; no 252-EV conversion. IVs/genders not specified by the source use format defaults."
+}

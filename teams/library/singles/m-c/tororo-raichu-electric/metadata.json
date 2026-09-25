@@ -1,0 +1,31 @@
+{
+  "title": "【マスター到達】メガライチュウＸ1メガ展開構築",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": "m-6",
+  "publishedAt": "2026-09-13T00:16:15.870000+00:00",
+  "updatedAt": "2026-09-13T10:39:58.072000+00:00",
+  "source": "https://pokesol.app/u/tororo_poke/articles/027fce2f98316393",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "validated",
+  "card_count": 6,
+  "body_sha256": "e24ff95394bd2b3aada2efcdbf850b1e7c66deb98c7137759bea2fbff2f488c5",
+  "normalization": [
+    "Normalize displayed Raichu-Mega-X to Raichu with Mega stone."
+  ],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [],
+  "evidence_note": "실전 후기·마스터 도달 자체 보고",
+  "tags": [
+    "electric-terrain",
+    "seed-sneasler",
+    "snow"
+  ],
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults. Pre-Mega ability choices/assumptions appear in normalization."
+}

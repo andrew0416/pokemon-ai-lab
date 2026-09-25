@@ -1,0 +1,48 @@
+Raichu @ Raichunite Y  
+Ability: Lightning Rod  
+Timid Nature  
+- Zap Cannon  
+- Focus Blast  
+- Fake Out  
+- Protect  
+
+Gholdengo @ Life Orb  
+Ability: Good as Gold  
+Timid Nature  
+- Shadow Ball  
+- Make It Rain  
+- Nasty Plot  
+- Protect  
+
+Rillaboom @ Miracle Seed  
+Ability: Grassy Surge  
+Adamant Nature  
+- Fake Out  
+- Drum Beating  
+- Grassy Glide  
+- High Horsepower  
+
+Sylveon @ Fairy Feather  
+Ability: Pixilate  
+Modest Nature  
+- Detect  
+- Quick Attack  
+- Hyper Beam  
+- Hyper Voice  
+
+Staraptor @ Staraptite  
+Ability: Intimidate  
+Jolly Nature  
+- Protect  
+- Tailwind  
+- Brave Bird  
+- Close Combat  
+
+Arcanine-Hisui @ Focus Sash  
+Ability: Rock Head  
+Jolly Nature  
+- Protect  
+- Extreme Speed  
+- Head Smash  
+- Flare Blitz  
+

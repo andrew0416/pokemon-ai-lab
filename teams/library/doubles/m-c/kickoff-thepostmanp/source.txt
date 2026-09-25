@@ -1,0 +1,47 @@
+Froslass @ Froslassite
+Ability: Cursed Body
+Timid Nature
+- Protect
+- Aurora Veil
+- Blizzard
+- Shadow Ball
+
+Pawmot @ Focus Sash
+Ability: Iron Fist
+Jolly Nature
+- Fake Out
+- Double Shock
+- Close Combat
+- Revival Blessing
+
+Glimmora @ Glimmoranite
+Ability: Adaptability
+Timid Nature
+- Spiky Shield
+- Power Gem
+- Sludge Bomb
+- Earth Power
+
+Talonflame @ Sharp Beak
+Ability: Gale Wings
+Adamant Nature
+- Brave Bird
+- Tailwind
+- Flare Blitz
+- Feint
+
+Kingambit @ Black Glasses
+Ability: Defiant
+Adamant Nature
+- Protect
+- Kowtow Cleave
+- Sucker Punch
+- Iron Head
+
+Basculegion @ Life Orb
+Ability: Adaptability
+Adamant Nature
+- Protect
+- Wave Crash
+- Aqua Jet
+- Last Respects

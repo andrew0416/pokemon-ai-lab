@@ -1,0 +1,31 @@
+[
+  {
+    "id": "incineroar",
+    "errors": null
+  },
+  {
+    "id": "rillaboom",
+    "errors": null
+  },
+  {
+    "id": "sinistcha",
+    "errors": null
+  },
+  {
+    "id": "clefable",
+    "errors": null
+  },
+  {
+    "id": "hitmontop",
+    "errors": [
+      "Hitmontop does not exist in Gen 9."
+    ]
+  },
+  {
+    "id": "clefairy",
+    "errors": [
+      "Clefairy does not exist in Gen 9.",
+      "Clefairy's item Eviolite does not exist in Gen 9."
+    ]
+  }
+]

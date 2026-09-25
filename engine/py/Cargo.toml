@@ -1,0 +1,13 @@
+[package]
+name = "lab-engine-py"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+name = "lab_engine"
+crate-type = ["cdylib"]
+
+[dependencies]
+lab-engine = { path = "../core" }
+pyo3 = { version = "0.29.0", features = ["extension-module", "abi3-py312"] }

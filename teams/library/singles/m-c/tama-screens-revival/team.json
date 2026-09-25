@@ -1,0 +1,128 @@
+[
+  {
+    "species": "Salamence",
+    "item": "Salamencite",
+    "ability": "Intimidate",
+    "nature": "Careful",
+    "moves": [
+      "Body Slam",
+      "Earthquake",
+      "Roost",
+      "Dragon Dance"
+    ],
+    "evs": {
+      "hp": 21,
+      "atk": 5,
+      "def": 0,
+      "spa": 0,
+      "spd": 30,
+      "spe": 10
+    },
+    "level": 50
+  },
+  {
+    "species": "Glimmora",
+    "item": "Light Clay",
+    "ability": "Toxic Debris",
+    "nature": "Jolly",
+    "moves": [
+      "Mortal Spin",
+      "Reflect",
+      "Light Screen",
+      "Memento"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 2,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50
+  },
+  {
+    "species": "Pawmot",
+    "item": "Focus Sash",
+    "ability": "Iron Fist",
+    "nature": "Jolly",
+    "moves": [
+      "Double Shock",
+      "Mach Punch",
+      "Ice Punch",
+      "Revival Blessing"
+    ],
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "level": 50
+  },
+  {
+    "species": "Pyroar",
+    "item": "Pyroarite",
+    "ability": "Unnerve",
+    "nature": "Modest",
+    "moves": [
+      "Flamethrower",
+      "Overheat",
+      "Hyper Voice",
+      "Substitute"
+    ],
+    "evs": {
+      "hp": 14,
+      "atk": 0,
+      "def": 0,
+      "spa": 21,
+      "spd": 0,
+      "spe": 31
+    },
+    "level": 50
+  },
+  {
+    "species": "Aegislash",
+    "item": "Leftovers",
+    "ability": "Stance Change",
+    "nature": "Calm",
+    "moves": [
+      "King's Shield",
+      "Flash Cannon",
+      "Shadow Ball",
+      "Substitute"
+    ],
+    "evs": {
+      "hp": 24,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 10,
+      "spe": 0
+    },
+    "level": 50
+  },
+  {
+    "species": "Primarina",
+    "item": "Sitrus Berry",
+    "ability": "Torrent",
+    "nature": "Bold",
+    "moves": [
+      "Sparkling Aria",
+      "Flip Turn",
+      "Moonblast",
+      "Encore"
+    ],
+    "evs": {
+      "hp": 20,
+      "atk": 0,
+      "def": 32,
+      "spa": 14,
+      "spd": 0,
+      "spe": 0
+    },
+    "level": 50
+  }
+]

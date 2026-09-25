@@ -1,0 +1,47 @@
+Sylveon @ Fairy Feather
+Ability: Pixilate
+Modest Nature
+- Protect
+- Hyper Beam
+- Quick Attack
+- Hyper Voice
+
+Farigiraf @ Sitrus Berry
+Ability: Armor Tail
+Relaxed Nature
+- Psychic
+- Thunderbolt
+- Trick Room
+- Protect
+
+Garchomp @ Choice Scarf
+Ability: Rough Skin
+Jolly Nature
+- Dragon Claw
+- Stomping Tantrum
+- Rock Tomb
+- Rock Slide
+
+Charizard @ Charizardite Y
+Ability: Solar Power
+Modest Nature
+- Heat Wave
+- Protect
+- Weather Ball
+- Ancient Power
+
+Kingambit @ Focus Sash
+Ability: Defiant
+Adamant Nature
+- Kowtow Cleave
+- Sucker Punch
+- Low Kick
+- Iron Head
+
+Rillaboom @ Miracle Berry
+Ability: Grassy Surge
+Adamant Nature
+- Fake Out
+- Wood Hammer
+- Grassy Glide
+- U-turn

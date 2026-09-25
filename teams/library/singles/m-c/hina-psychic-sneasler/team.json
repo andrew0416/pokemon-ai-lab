@@ -1,0 +1,130 @@
+[
+  {
+    "species": "Indeedee",
+    "item": "Terrain Extender",
+    "ability": "Psychic Surge",
+    "nature": "Timid",
+    "moves": [
+      "Expanding Force",
+      "Mystical Fire",
+      "Encore",
+      "Healing Wish"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 0,
+      "spa": 9,
+      "spd": 2,
+      "spe": 23
+    },
+    "level": 50,
+    "gender": "M"
+  },
+  {
+    "species": "Sneasler",
+    "item": "Psychic Seed",
+    "ability": "Unburden",
+    "nature": "Adamant",
+    "moves": [
+      "Close Combat",
+      "Acrobatics",
+      "Swords Dance",
+      "Rock Slide"
+    ],
+    "evs": {
+      "hp": 20,
+      "atk": 32,
+      "def": 12,
+      "spa": 0,
+      "spd": 0,
+      "spe": 2
+    },
+    "level": 50
+  },
+  {
+    "species": "Armarouge",
+    "item": "Focus Sash",
+    "ability": "Weak Armor",
+    "nature": "Modest",
+    "moves": [
+      "Armor Cannon",
+      "Expanding Force",
+      "Endure",
+      "Calm Mind"
+    ],
+    "evs": {
+      "hp": 1,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 1,
+      "spe": 32
+    },
+    "level": 50
+  },
+  {
+    "species": "Froslass",
+    "item": "Froslassite",
+    "ability": "Cursed Body",
+    "nature": "Timid",
+    "moves": [
+      "Blizzard",
+      "Thunder Wave",
+      "Hex",
+      "Taunt"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 0,
+      "spa": 9,
+      "spd": 10,
+      "spe": 15
+    },
+    "level": 50,
+    "gender": "F"
+  },
+  {
+    "species": "Baxcalibur",
+    "item": "Sitrus Berry",
+    "ability": "Thermal Exchange",
+    "nature": "Jolly",
+    "moves": [
+      "Earthquake",
+      "Glaive Rush",
+      "Dragon Dance",
+      "Icicle Crash"
+    ],
+    "evs": {
+      "hp": 17,
+      "atk": 18,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 31
+    },
+    "level": 50
+  },
+  {
+    "species": "Archaludon",
+    "item": "Leftovers",
+    "ability": "Stamina",
+    "nature": "Bold",
+    "moves": [
+      "Stealth Rock",
+      "Roar",
+      "Thunder Wave",
+      "Rock Tomb"
+    ],
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 24,
+      "spa": 0,
+      "spd": 10,
+      "spe": 0
+    },
+    "level": 50
+  }
+]

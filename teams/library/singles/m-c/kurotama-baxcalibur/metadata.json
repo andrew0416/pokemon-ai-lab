@@ -1,0 +1,28 @@
+{
+  "title": "【M-C　シングル　マスター到達構築】メガセグレイブ展開構築",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": "m-6",
+  "publishedAt": "2026-09-17T07:07:58.494000+00:00",
+  "updatedAt": "2026-09-17T07:07:58.494000+00:00",
+  "source": "https://pokesol.app/u/kurotama_887/articles/ead268ad572c8062",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "validated",
+  "card_count": 6,
+  "body_sha256": "b66186a6acbc827335fce318dac411e528e2c67be45a6a7a9ac29ca1b82ec113",
+  "normalization": [],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [],
+  "evidence_note": "실전 후기·마스터 도달 자체 보고",
+  "tags": [
+    "baxcalibur-setup",
+    "hazards"
+  ],
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults. Pre-Mega ability choices/assumptions appear in normalization."
+}

@@ -1,0 +1,35 @@
+{
+  "title": "【マスター7連勝】黒鉄グレンアルマ＆イエッサン(♀)【1800到達記念】",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": null,
+  "publishedAt": "2026-09-13T20:20:40.038Z",
+  "updatedAt": "2026-09-14T06:15:28.066Z",
+  "source": "https://pokesol.app/u/pizza_yasan_0329/articles/1f41bcac4f820b78",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "needs-review",
+  "card_count": 6,
+  "body_sha256": "bf0c46ec4b9b1f2c5eaaf1da5361928aa062349abfeda31753abad219b458fb9",
+  "normalization": [
+    "Normalize displayed Aggron-Mega to Aggron with Mega stone.",
+    "Normalize displayed Baxcalibur-Mega to Baxcalibur with Mega stone.",
+    "Source lists multiple pre-Mega abilities for Baxcalibur; first published choice used: Thermal Exchange"
+  ],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [
+    "Aggron can't learn Trick Room."
+  ],
+  "simulation_ready": false,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults, not publicly verified IVs. Missing SP must not be treated as an authored zero-investment spread.",
+  "tags": [
+    "psychic-terrain",
+    "psyspam",
+    "snow-or-froslass",
+    "trick-room-option"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "title": "【爆速マスター】イエカシラニューラのカシラ抜き",
+  "battleFormat": "single",
+  "regulation": "mc",
+  "season": null,
+  "publishedAt": "2026-09-12T11:14:19.737Z",
+  "updatedAt": "2026-09-12T11:14:19.737Z",
+  "source": "https://pokesol.app/u/hina/articles/3da3589e9f461806",
+  "retrieved": "2026-09-20",
+  "source_kind": "creator article",
+  "claims": "Author-reported result only; not independently verified ladder rank.",
+  "status": "validated",
+  "card_count": 6,
+  "body_sha256": "4b99d94d54dea8724a1b458d649317793356cf78f3e7faef89018ddad37097ee",
+  "normalization": [
+    "Normalize displayed Froslass-Mega to Froslass with Mega stone."
+  ],
+  "format": "singles",
+  "sp_public": true,
+  "ivs_public": false,
+  "validation_format": "gen9championsbssregmc",
+  "validation_errors": [],
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults, not publicly verified IVs. Missing SP must not be treated as an authored zero-investment spread.",
+  "tags": [
+    "psychic-terrain",
+    "psyspam",
+    "snow-or-froslass"
+  ]
+}

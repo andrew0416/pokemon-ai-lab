@@ -1,0 +1,48 @@
+Froslass @ Froslassite  
+Ability: Cursed Body  
+Modest Nature  
+- Protect  
+- Blizzard  
+- Shadow Ball  
+- Aurora Veil  
+
+Charizard @ Charizardite X  
+Ability: Blaze  
+Adamant Nature  
+- Protect  
+- Flare Blitz  
+- Dragon Claw  
+- Dragon Dance  
+
+Incineroar @ Passho Berry  
+Ability: Intimidate  
+Impish Nature  
+- Fake Out  
+- Flare Blitz  
+- Throat Chop  
+- Parting Shot  
+
+Rillaboom @ Occa Berry  
+Ability: Grassy Surge  
+Adamant Nature  
+- Fake Out  
+- Wood Hammer  
+- Grassy Glide  
+- U-turn  
+
+Milotic @ Leftovers  
+Ability: Competitive  
+Bold Nature  
+- Protect  
+- Scald  
+- Icy Wind  
+- Hypnosis  
+
+Chesnaught @ Sitrus Berry  
+Ability: Bulletproof  
+Jolly Nature  
+- Spiky Shield  
+- Drain Punch  
+- Grassy Glide  
+- Belly Drum  
+

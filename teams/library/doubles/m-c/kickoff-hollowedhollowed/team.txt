@@ -1,0 +1,48 @@
+Floette-Eternal @ Floettite  
+Ability: Flower Veil  
+Timid Nature  
+- Moonblast  
+- Dazzling Gleam  
+- Calm Mind  
+- Protect  
+
+Raichu @ Raichunite Y  
+Ability: Lightning Rod  
+Timid Nature  
+- Zap Cannon  
+- Focus Blast  
+- Encore  
+- Protect  
+
+Gholdengo @ Life Orb  
+Ability: Good as Gold  
+Modest Nature  
+- Make It Rain  
+- Shadow Ball  
+- Nasty Plot  
+- Protect  
+
+Sneasler @ Grassy Seed  
+Ability: Unburden  
+Adamant Nature  
+- Close Combat  
+- Dire Claw  
+- Rock Slide  
+- Protect  
+
+Incineroar @ Sitrus Berry  
+Ability: Intimidate  
+Adamant Nature  
+- Fake Out  
+- Flare Blitz  
+- Throat Chop  
+- Parting Shot  
+
+Rillaboom @ Yache Berry  
+Ability: Grassy Surge  
+Adamant Nature  
+- Fake Out  
+- Grassy Glide  
+- Wood Hammer  
+- High Horsepower  
+

@@ -1,0 +1,188 @@
+[
+  {
+    "name": "",
+    "species": "Golisopod",
+    "item": "Golisopite",
+    "ability": "Emergency Exit",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "First Impression",
+      "Leech Life",
+      "Iron Head",
+      "Liquidation"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Delphox",
+    "item": "Delphoxite",
+    "ability": "Levitate",
+    "gender": "",
+    "nature": "Timid",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Heat Wave",
+      "Psychic",
+      "Encore",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Rillaboom",
+    "item": "Miracle Seed",
+    "ability": "Grassy Surge",
+    "gender": "",
+    "nature": "Jolly",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Fake Out",
+      "Wood Hammer",
+      "Grassy Glide",
+      "U-turn"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Politoed",
+    "item": "Mystic Water",
+    "ability": "Drizzle",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Protect",
+      "Muddy Water",
+      "Weather Ball",
+      "Ice Beam"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Farigiraf",
+    "item": "Grassy Seed",
+    "ability": "Armor Tail",
+    "gender": "",
+    "nature": "Bold",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Thunderbolt",
+      "Twin Beam",
+      "Helping Hand",
+      "Trick Room"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Pawmot",
+    "item": "Focus Sash",
+    "ability": "Volt Absorb",
+    "gender": "",
+    "nature": "Jolly",
+    "evs": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 100,
+    "moves": [
+      "Close Combat",
+      "Double Shock",
+      "Fake Out",
+      "Revival Blessing"
+    ]
+  }
+]
