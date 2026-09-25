@@ -137,6 +137,37 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "condition.onStart",
         ],
     ),
+    // Entry hazards: `onSideStart`/`onSideRestart` in `conditions::add_hazard`, `onSwitchIn`
+    // in `conditions::entry_hazards` (run by `switching::run_switch_in`).
+    (
+        moves::STEALTH_ROCK,
+        &["condition.onSideStart", "condition.onSwitchIn"],
+    ),
+    (
+        moves::SPIKES,
+        &[
+            "condition.onSideRestart",
+            "condition.onSideStart",
+            "condition.onSwitchIn",
+        ],
+    ),
+    (
+        moves::TOXIC_SPIKES,
+        &[
+            "condition.onSideRestart",
+            "condition.onSideStart",
+            "condition.onSwitchIn",
+        ],
+    ),
+    (
+        moves::STICKY_WEB,
+        &["condition.onSideStart", "condition.onSwitchIn"],
+    ),
+    // Hazard removal: Defog `onHit`, Rapid Spin `onAfterHit` (`onAfterSubDamage` needs a
+    // substitute, which is refused), Court Change `onHitField`.
+    (moves::DEFOG, &["onHit"]),
+    (moves::RAPID_SPIN, &["onAfterHit", "onAfterSubDamage"]),
+    (moves::COURT_CHANGE, &["onHitField"]),
     (moves::GRASSY_GLIDE, &["onModifyPriority"]),
     (moves::LOW_KICK, &["basePowerCallback", "onTryHit"]),
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),
@@ -676,8 +707,8 @@ const CORE_CHECKED_ABILITIES: &[AbilityId] = &[
 ];
 
 /// Items without callbacks that Showdown's core checks by name, not implemented here.
-/// Weather rocks, Light Clay and Terrain Extender (durations) are implemented; Heavy-Duty
-/// Boots and Protective Pads only affect unsupported hazards and contact abilities.
+/// Weather rocks, Light Clay and Terrain Extender (durations), Heavy-Duty Boots (entry hazards)
+/// and Protective Pads (contact) are implemented.
 const CORE_CHECKED_ITEMS: &[ItemId] = &[
     items::BLUNDER_POLICY,
     items::GRIP_CLAW,
@@ -825,12 +856,16 @@ pub(crate) fn side_effect_of(condition: &str) -> Option<SideEffect> {
         "luckychant" => SideEffect::LuckyChant,
         "wideguard" => SideEffect::WideGuard,
         "quickguard" => SideEffect::QuickGuard,
+        "stealthrock" => SideEffect::StealthRock,
+        "spikes" => SideEffect::Spikes,
+        "toxicspikes" => SideEffect::ToxicSpikes,
+        "stickyweb" => SideEffect::StickyWeb,
         _ => return None,
     })
 }
 
 /// The implemented side effects.
-const SUPPORTED_SIDE_EFFECTS: [SideEffect; 9] = [
+const SUPPORTED_SIDE_EFFECTS: [SideEffect; 13] = [
     SideEffect::Reflect,
     SideEffect::LightScreen,
     SideEffect::AuroraVeil,
@@ -840,6 +875,10 @@ const SUPPORTED_SIDE_EFFECTS: [SideEffect; 9] = [
     SideEffect::LuckyChant,
     SideEffect::WideGuard,
     SideEffect::QuickGuard,
+    SideEffect::StealthRock,
+    SideEffect::Spikes,
+    SideEffect::ToxicSpikes,
+    SideEffect::StickyWeb,
 ];
 
 /// Checks everything on the field before a turn.
@@ -871,6 +910,22 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
             if s.effects[i].is_active() && !SUPPORTED_SIDE_EFFECTS.iter().any(|&e| e as usize == i)
             {
                 return Err(format!("side effect #{i}"));
+            }
+        }
+        // Hazards have no duration and 1..=max layers (0 for Stealth Rock and Sticky Web).
+        for hazard in super::conditions::HAZARDS {
+            let effect = s.effects[hazard as usize];
+            if !effect.is_active() {
+                continue;
+            }
+            let max = super::conditions::hazard_layers(hazard);
+            let layers_ok = if max == 1 {
+                effect.value == 0
+            } else {
+                (1..=max).contains(&effect.value)
+            };
+            if effect.turns != crate::field::Effect::PERMANENT || !layers_ok {
+                return Err(format!("{hazard:?} with {effect:?}"));
             }
         }
         for slot in 0..N as u8 {

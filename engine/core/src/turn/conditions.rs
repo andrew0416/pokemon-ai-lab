@@ -1,12 +1,13 @@
 //! Callbacks of the conditions moves create (`condition` in `data/moves.ts`): what happens
 //! when a volatile starts and when its duration runs out in the residual.
 
-use crate::dex::{moves, MoveCategory, MoveFlags, MoveId, Type};
+use crate::dex::{abilities, items, moves, MoveCategory, MoveFlags, MoveId, Type, TypeRelation};
+use crate::field::{Effect, SideEffect};
 use crate::instruction::Instruction;
-use crate::state::{PokemonRef, SlotRef, State, Status};
+use crate::state::{PokemonRef, SideId, SlotRef, State, Status, BOOST_COUNT};
 use crate::volatile::{decode_types, encode_types, Volatile, VolatileState};
 
-use super::battle::Battle;
+use super::battle::{Battle, BoostEffect, DamageSource};
 use super::TurnError;
 
 /// Roost's `onType` from the moment the volatile starts: Flying is filtered out of the types
@@ -207,4 +208,215 @@ pub(crate) fn disabled_move<const N: usize>(
         return Some(format!("{} is disabled by Imprison", data.name));
     }
     None
+}
+
+// ---- entry hazards ------------------------------------------------------------------------------
+
+/// The entry hazards, in the order the engine runs their `onSwitchIn`. Showdown runs them in the
+/// order they were set (`effectOrder`), which the state does not keep; [`entry_hazards`] refuses
+/// the switch-ins where the order would show.
+pub(crate) const HAZARDS: [SideEffect; 4] = [
+    SideEffect::StealthRock,
+    SideEffect::Spikes,
+    SideEffect::ToxicSpikes,
+    SideEffect::StickyWeb,
+];
+
+/// Most layers a hazard stacks to (its `onSideRestart`); Stealth Rock and Sticky Web have no
+/// restart handler, so a second use fails.
+pub(crate) fn hazard_layers(effect: SideEffect) -> u8 {
+    match effect {
+        SideEffect::Spikes => 3,
+        SideEffect::ToxicSpikes => 2,
+        _ => 1,
+    }
+}
+
+/// Showdown `addSideCondition` for a hazard: a new one has no duration (`Effect::PERMANENT`)
+/// and, for Spikes and Toxic Spikes, `layers = 1` (`Effect.value`; 0 for the others); an
+/// existing one runs `onSideRestart`: one more layer below the maximum, otherwise it fails.
+pub(crate) fn add_hazard<const N: usize>(
+    b: &mut Battle<'_, N>,
+    side: SideId,
+    effect: SideEffect,
+) -> bool {
+    let current = b.state.side(side).effects[effect as usize];
+    let layered = matches!(effect, SideEffect::Spikes | SideEffect::ToxicSpikes);
+    if current.is_active() {
+        if !layered || current.value >= hazard_layers(effect) {
+            return false;
+        }
+        let more = Effect {
+            value: current.value + 1,
+            ..current
+        };
+        b.set_side_effect(side, effect, more);
+        return true;
+    }
+    let new = Effect {
+        value: u8::from(layered),
+        turns: Effect::PERMANENT,
+    };
+    b.set_side_effect(side, effect, new);
+    true
+}
+
+/// `dex.getEffectiveness('Rock', type)` summed over the holder's types, each passed through its
+/// item's `onEffectiveness` (`runEffectiveness` of Stealth Rock's active move), clamped to
+/// -6..6.
+fn stealth_rock_type_mod<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> i32 {
+    let Some(mon) = b.slot_mon(slot) else {
+        return 0;
+    };
+    mon.types
+        .iter()
+        .filter(|&&t| t != Type::None)
+        .map(|&t| {
+            let chart = match Type::Rock.against(t) {
+                TypeRelation::Super => 1,
+                TypeRelation::Resist => -1,
+                _ => 0,
+            };
+            super::items::on_effectiveness(b, slot, Type::Rock, chart)
+        })
+        .sum::<i32>()
+        .clamp(-6, 6)
+}
+
+/// The HP Stealth Rock or Spikes would take from the newcomer in `slot`, before the Damage
+/// handlers (0 when the hazard does not apply).
+fn hazard_damage<const N: usize>(b: &Battle<'_, N>, slot: SlotRef, effect: SideEffect) -> f64 {
+    let Some(mon) = b.slot_mon(slot) else {
+        return 0.0;
+    };
+    let max_hp = f64::from(mon.max_hp);
+    let boots = mon.item == items::HEAVY_DUTY_BOOTS;
+    let layers = b.state.side(slot.side).effects[effect as usize].value;
+    match effect {
+        // `if (pokemon.hasItem('heavydutyboots')) return; ... this.damage(pokemon.maxhp *
+        // 2 ** typeMod / 8);`
+        SideEffect::StealthRock if !boots => {
+            max_hp * 2f64.powi(stealth_rock_type_mod(b, slot)) / 8.0
+        }
+        // `if (!pokemon.isGrounded() || pokemon.hasItem('heavydutyboots')) return;
+        // const damageAmounts = [0, 3, 4, 6]; this.damage(damageAmounts[layers] * maxhp / 24);`
+        SideEffect::Spikes if !boots && b.is_grounded(slot) => {
+            f64::from([0u8, 3, 4, 6][usize::from(layers.min(3))]) * max_hp / 24.0
+        }
+        _ => 0.0,
+    }
+}
+
+/// The entry hazards' `onSwitchIn` for the newcomer in `slot` (`fieldEvent('SwitchIn')`: the
+/// side conditions of its side, sub-order 4, run before its ability, 7), each followed by
+/// `faintMessages`. Stealth Rock: Rock-effectiveness damage (none with Heavy-Duty Boots);
+/// Spikes: 1/8, 1/6, 1/4 to a grounded holder without Boots; Toxic Spikes: a grounded Poison
+/// type removes them, a grounded non-Steel holder without Boots is poisoned (badly with two
+/// layers) with the foe in slot 0 (`pokemon.side.foe.active[0]`) as the source, which Safeguard
+/// stops; Sticky Web: -1 Speed to a grounded holder without Boots, from the foe in slot 0
+/// (Defiant and Mirror Armor react).
+///
+/// Showdown runs several hazards in the order they were set. The order only shows when a
+/// damaging hazard can knock the newcomer out and Toxic Spikes (status or absorption) or Sticky
+/// Web against Mirror Armor (the reflected drop) also act on it; that case is unsupported, and
+/// so is Toxic Spikes poisoning a Synchronize holder (Synchronize ignores Toxic Spikes, which
+/// `Battle::try_set_status_from` cannot tell).
+pub(crate) fn entry_hazards<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+) -> Result<(), TurnError> {
+    let side = slot.side;
+    let present: Vec<SideEffect> = HAZARDS
+        .into_iter()
+        .filter(|&h| b.side_effect_active(side, h))
+        .collect();
+    let Some(pokemon) = b.alive(slot) else {
+        return Ok(());
+    };
+    if present.is_empty() {
+        return Ok(());
+    }
+    let mon = b.mon(pokemon);
+    let grounded = b.is_grounded(slot);
+    let boots = mon.item == items::HEAVY_DUTY_BOOTS;
+    let toxic_spikes_act = present.contains(&SideEffect::ToxicSpikes) && grounded;
+    let poisons = toxic_spikes_act
+        && !mon.types.contains(&Type::Poison)
+        && !mon.types.contains(&Type::Steel)
+        && !boots;
+    let web_reflects = present.contains(&SideEffect::StickyWeb)
+        && grounded
+        && !boots
+        && mon.ability == abilities::MIRROR_ARMOR;
+    let damage: f64 = present
+        .iter()
+        .map(|&h| hazard_damage(b, slot, h))
+        .filter(|&d| d > 0.0)
+        .map(|d| d.floor().max(1.0))
+        .sum();
+    let can_faint = mon.ability != abilities::MAGIC_GUARD && damage >= f64::from(mon.hp);
+    if can_faint && (toxic_spikes_act || web_reflects) {
+        return Err(b.unsupported(format!(
+            "{} switching into hazards whose order (Showdown effectOrder) decides the outcome",
+            mon.species.data().name
+        )));
+    }
+    if poisons && mon.ability == abilities::SYNCHRONIZE {
+        return Err(b.unsupported(
+            "Toxic Spikes poisoning a Synchronize holder (Synchronize ignores Toxic Spikes)",
+        ));
+    }
+    let foe_lead = SlotRef {
+        side: side.other(),
+        slot: 0,
+    };
+    for hazard in present {
+        if b.alive(slot) != Some(pokemon) {
+            break;
+        }
+        // A hazard removed since the handlers were gathered (Toxic Spikes absorbed by an
+        // earlier newcomer) no longer acts.
+        if !b.side_effect_active(side, hazard) {
+            continue;
+        }
+        match hazard {
+            SideEffect::StealthRock | SideEffect::Spikes => {
+                let amount = hazard_damage(b, slot, hazard);
+                if amount > 0.0 {
+                    b.damage(slot, amount, DamageSource::Indirect);
+                }
+            }
+            SideEffect::ToxicSpikes if b.is_grounded(slot) => {
+                if b.has_type(slot, Type::Poison) {
+                    b.set_side_effect(side, hazard, Effect::NONE);
+                } else if !b.has_type(slot, Type::Steel) && b.item(slot) != items::HEAVY_DUTY_BOOTS
+                {
+                    let layers = b.state.side(side).effects[hazard as usize].value;
+                    let status = if layers >= 2 {
+                        Status::Toxic
+                    } else {
+                        Status::Poison
+                    };
+                    b.try_set_status_from(slot, status, Some(foe_lead));
+                }
+            }
+            SideEffect::StickyWeb
+                if b.is_grounded(slot) && b.item(slot) != items::HEAVY_DUTY_BOOTS =>
+            {
+                let mut drop = [0i8; BOOST_COUNT];
+                drop[4] = -1;
+                b.boost_by(
+                    slot,
+                    &drop,
+                    Some(foe_lead),
+                    BoostEffect::Move(moves::STICKY_WEB),
+                );
+            }
+            _ => {}
+        }
+        if b.faint_messages(true) {
+            break;
+        }
+    }
+    Ok(())
 }

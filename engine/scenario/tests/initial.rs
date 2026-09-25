@@ -204,12 +204,12 @@ fn state_without_a_canonical_form_is_an_error() {
     s.slot_mut(GARDEVOIR).substitute_hp = 30;
     assert!(unrepresentable(&s, meta).contains("substitute"));
 
+    // Every side effect has a canonical form (O22 added the hazards), but a hazard has no
+    // duration.
     let mut s = loaded.state.clone();
-    s.side_mut(SideId::Two).effects[SideEffect::StealthRock as usize] = Effect {
-        value: 1,
-        turns: Effect::PERMANENT,
-    };
-    assert!(unrepresentable(&s, meta).contains("side effect"));
+    s.side_mut(SideId::Two).effects[SideEffect::StealthRock as usize] =
+        Effect { value: 0, turns: 5 };
+    assert!(unrepresentable(&s, meta).contains("stealthrock with a duration"));
 
     let mut s = loaded.state.clone();
     s.field[FieldEffect::MagicRoom as usize] = Effect { value: 0, turns: 5 };

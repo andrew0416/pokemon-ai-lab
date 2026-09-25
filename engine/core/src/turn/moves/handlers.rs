@@ -5,14 +5,17 @@
 //! handled here gets the event's neutral result.
 
 use crate::damage::MOD_ONE_POINT_FIVE;
-use crate::dex::{abilities, items, moves, ItemId, MoveId, MoveTarget, Type, TypeRelation};
-use crate::field::{FieldEffect, Terrain, Weather};
+use crate::dex::{
+    abilities, items, moves, ItemId, MoveId, MoveTarget, Type, TypeRelation, NO_BOOSTS,
+};
+use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{Pokemon, SideId, SlotRef, Status, BOOST_COUNT};
 use crate::volatile::Volatile;
 
 use super::super::abilities::{Handler, SUB_CONDITION};
-use super::super::battle::Battle;
+use super::super::battle::{Battle, BoostEffect};
+use super::super::conditions::HAZARDS;
 use super::super::order::modify;
 use super::super::TurnError;
 use super::ActiveMove;
@@ -202,14 +205,36 @@ pub(super) fn on_try_hit<const N: usize>(
     }
 }
 
-/// The move's `onAfterHit`, once per damaged target (`spreadMoveHit`, after `DamagingHit`).
-/// Knock Off's is in `moves.rs`. `onAfterSubDamage` (the same effect against a substitute) is
-/// unreachable: substitutes are refused.
-pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, mv: &ActiveMove) {
+/// The move's `onAfterHit`, once per damaged target (`spreadMoveHit`, after `DamagingHit`;
+/// Champions runs it even if the user fainted). Knock Off's is in `moves.rs`.
+/// `onAfterSubDamage` (the same effect against a substitute) is unreachable: substitutes are
+/// refused.
+pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
     // Ice Spinner: `this.field.clearTerrain();`
     if mv.id == moves::ICE_SPINNER {
         super::clear_terrain(b);
     }
+    // Rapid Spin: `if (!move.hasSheerForce)` the user's side loses its hazards (Leech Seed and
+    // partial trapping, which it also ends, are not implemented).
+    if mv.id == moves::RAPID_SPIN && !mv.has_sheer_force {
+        remove_side_effects(b, user.side, &HAZARDS);
+    }
+}
+
+/// `side.removeSideCondition` for each of `effects`; whether any was there.
+fn remove_side_effects<const N: usize>(
+    b: &mut Battle<'_, N>,
+    side: SideId,
+    effects: &[SideEffect],
+) -> bool {
+    let mut removed = false;
+    for &effect in effects {
+        if b.side_effect_active(side, effect) {
+            b.set_side_effect(side, effect, Effect::NONE);
+            removed = true;
+        }
+    }
+    removed
 }
 
 /// The move's `basePowerCallback` (`getDamage`, before the critical hit roll).
@@ -373,6 +398,33 @@ pub(super) fn on_hit<const N: usize>(
             return Ok(None);
         }
         moves::TRICK | moves::SWITCHEROO => trick(b, user, target)?,
+        // Defog: `this.boost({evasion: -1})` on the target (success if a stage changed); the
+        // target's side loses its screens, Safeguard and Mist (no success) and its hazards, the
+        // user's side its hazards (success); then `this.field.clearTerrain()`.
+        moves::DEFOG => {
+            let mut drop = NO_BOOSTS;
+            drop[6] = -1;
+            let mut success = b.boost_by(target, &drop, Some(user), BoostEffect::Move(mv.id));
+            remove_side_effects(
+                b,
+                target.side,
+                &[
+                    SideEffect::Reflect,
+                    SideEffect::LightScreen,
+                    SideEffect::AuroraVeil,
+                    SideEffect::Safeguard,
+                    SideEffect::Mist,
+                ],
+            );
+            success |= remove_side_effects(b, target.side, &HAZARDS);
+            success |= remove_side_effects(b, user.side, &HAZARDS);
+            super::clear_terrain(b);
+            if success {
+                HitResult::Success
+            } else {
+                HitResult::Failure
+            }
+        }
         // Pollen Puff: an ally is healed `Math.floor(target.baseMaxhp * 0.5)`; `NOT_FAIL` if
         // nothing is healed. A foe gets nothing more (`undefined`).
         moves::POLLEN_PUFF => {
@@ -474,6 +526,34 @@ pub(super) fn on_hit_field<const N: usize>(
                 }
             }
             Some(result)
+        }
+        // Court Change: the listed side conditions of both sides trade places, with their
+        // durations and layers; fails when neither side has one. (The Pledge and G-Max
+        // conditions on the list are not implemented.)
+        moves::COURT_CHANGE => {
+            const SWAPPED: [SideEffect; 11] = [
+                SideEffect::Mist,
+                SideEffect::LightScreen,
+                SideEffect::Reflect,
+                SideEffect::Spikes,
+                SideEffect::Safeguard,
+                SideEffect::Tailwind,
+                SideEffect::ToxicSpikes,
+                SideEffect::StealthRock,
+                SideEffect::StickyWeb,
+                SideEffect::AuroraVeil,
+                SideEffect::LuckyChant,
+            ];
+            let (mine, theirs) = (user.side, user.side.other());
+            let mut success = false;
+            for effect in SWAPPED {
+                let a = b.state.side(mine).effects[effect as usize];
+                let c = b.state.side(theirs).effects[effect as usize];
+                success |= a.is_active() || c.is_active();
+                b.set_side_effect(mine, effect, c);
+                b.set_side_effect(theirs, effect, a);
+            }
+            Some(success)
         }
         // Haze: `for (const pokemon of this.getAllActive()) pokemon.clearBoosts();`
         moves::HAZE => {

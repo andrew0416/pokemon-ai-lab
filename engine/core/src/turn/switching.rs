@@ -352,9 +352,10 @@ pub(crate) fn switch_in<const N: usize>(
     Ok(())
 }
 
-/// Showdown `runSwitch` for the Pokémon that just switched in: their abilities' start handlers
-/// in Speed order (raw stat; equal Speeds uniformly at random), each skipped if the holder's
-/// ability changed before its turn came.
+/// Showdown `runSwitch` for the Pokémon that just switched in: for each in Speed order (raw
+/// stat; equal Speeds uniformly at random), the entry hazards on its side
+/// (`conditions::entry_hazards`), then its ability's start handler, skipped if the holder fainted
+/// or its ability changed before its turn came.
 pub(crate) fn run_switch_in<const N: usize>(
     b: &mut Battle<'_, N>,
     newcomers: &[SlotRef],
@@ -378,6 +379,12 @@ pub(crate) fn run_switch_in<const N: usize>(
             tied[b.rng.uniform(tied.len())]
         };
         let (slot, ability, _) = pending.remove(pick);
+        // The side's entry hazards (side-condition sub-order 4) before the ability (7), each
+        // followed by `faintMessages`; the event stops once the battle is over.
+        super::conditions::entry_hazards(b, slot)?;
+        if b.is_over() {
+            return Ok(());
+        }
         if b.alive(slot).is_none() || b.ability(slot) != ability {
             continue;
         }

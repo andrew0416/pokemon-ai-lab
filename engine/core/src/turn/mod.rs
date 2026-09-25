@@ -298,7 +298,13 @@ fn run_replacements<const N: usize>(
         newcomers.push(slot);
     }
     switching::run_switch_in(b, &newcomers)?;
-    // The Update after the batched `runSwitch`, then `endTurn`.
+    if b.is_over() {
+        return Ok(());
+    }
+    // `runAction`'s tail with nothing left in the queue: `checkFainted` (a newcomer that fainted
+    // to entry hazards gets `fnt`), the Update, then `endTurn` (which waits for another
+    // replacement if one is needed).
+    residual::check_fainted(b);
     update::update_event(b)?;
     residual::end_turn(b);
     Ok(())

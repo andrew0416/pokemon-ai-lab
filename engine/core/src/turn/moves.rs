@@ -1481,7 +1481,7 @@ fn spread_move_hit<const N: usize>(
     // them even if the user fainted).
     for result in &results {
         if let Hit::Damage(_) = result {
-            handlers::on_after_hit(b, mv);
+            handlers::on_after_hit(b, user, mv);
         }
     }
     Ok(results)
@@ -1942,13 +1942,17 @@ fn add_pseudo_weather<const N: usize>(b: &mut Battle<'_, N>, id: &str) -> bool {
 
 /// Showdown `addSideCondition` (fails if already up; none of these has `onSideRestart`):
 /// Tailwind 4 turns, the screens 5 (Light Clay 8), Safeguard 5 (Persistent, which makes it 7,
-/// is refused), Mist and Lucky Chant 5, Wide Guard and Quick Guard 1.
+/// is refused), Mist and Lucky Chant 5, Wide Guard and Quick Guard 1. Hazards:
+/// `conditions::add_hazard`.
 fn add_side_condition<const N: usize>(
     b: &mut Battle<'_, N>,
     source: SlotRef,
     side: SideId,
     effect: SideEffect,
 ) -> bool {
+    if conditions::HAZARDS.contains(&effect) {
+        return conditions::add_hazard(b, side, effect);
+    }
     if b.side_effect_active(side, effect) {
         return false;
     }

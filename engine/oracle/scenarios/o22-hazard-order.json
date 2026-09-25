@@ -1,0 +1,29 @@
+{
+ "description": "O22 refused case (no fixture): Tyranitar (patched to 10 HP) switches into Stealth Rock (25) and Toxic Spikes. Showdown runs the hazards in the order they were set (effectOrder): poisoned then knocked out, or knocked out first. The engine does not keep that order and refuses the switch-in.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 2, "atk": 32, "def": 32}, "moves": ["Stealth Rock", "Protect"], "level": 50},
+   {"species": "Hitmontop", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Toxic Spikes", "Bulk Up"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50},
+   {"species": "Tyranitar", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Rock Slide", "Protect"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "setupTurns": [
+  ["move stealthrock, move toxicspikes", "move swordsdance, move calmmind"]
+ ],
+ "patch": {"p2": {"Tyranitar": {"hp": 10}}},
+ "turn": {"p1": "move protect, move bulkup", "p2": "switch 3, move calmmind"}
+}

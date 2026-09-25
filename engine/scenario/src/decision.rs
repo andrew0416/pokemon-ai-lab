@@ -76,6 +76,25 @@ pub fn apply_patch<const N: usize>(
             other => return Err(format!("unknown side {other:?}")),
         };
         for (id, duration) in conditions {
+            // Entry hazards: `addSideCondition` once (1 layer); a duration would make them
+            // expire, which the engine does not model.
+            let hazard = match id.as_str() {
+                "stealthrock" => Some((SideEffect::StealthRock, 0)),
+                "spikes" => Some((SideEffect::Spikes, 1)),
+                "toxicspikes" => Some((SideEffect::ToxicSpikes, 1)),
+                "stickyweb" => Some((SideEffect::StickyWeb, 0)),
+                _ => None,
+            };
+            if let Some((effect, layers)) = hazard {
+                if duration.is_some() {
+                    return Err(format!("side condition {id}: hazards take no duration"));
+                }
+                state.side_mut(side).effects[effect as usize] = Effect {
+                    value: layers,
+                    turns: Effect::PERMANENT,
+                };
+                continue;
+            }
             let (effect, natural) = match id.as_str() {
                 "tailwind" => (SideEffect::Tailwind, 4),
                 "reflect" => (SideEffect::Reflect, 5),

@@ -1,0 +1,88 @@
+{
+ "description": "O22 Court Change (setup: Stealth Rock and Light Screen on p2's side, Tailwind and Spikes on p1's side): Garchomp swaps them with their durations and layers; with Tailwind now on p2's side, Clefable moves before Hitmontop.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 2,
+     "atk": 32,
+     "def": 32
+    },
+    "moves": [
+     "Stealth Rock",
+     "Court Change"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hitmontop",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Tailwind",
+     "Bulk Up"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Weavile",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Spikes",
+     "Swords Dance"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Light Screen",
+     "Calm Mind"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move stealthrock, move tailwind",
+   "move spikes, move lightscreen"
+  ]
+ ],
+ "turn": {
+  "p1": "move courtchange, move bulkup",
+  "p2": "move swordsdance, move calmmind"
+ }
+}

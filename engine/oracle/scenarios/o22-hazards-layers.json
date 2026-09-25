@@ -1,0 +1,96 @@
+{
+ "description": "O22 layers (setup: o22-hazards-set's turn): two more Spikes make 3 layers, a second Toxic Spikes makes 2, a second Sticky Web fails (no onSideRestart).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 2,
+     "atk": 32,
+     "def": 32
+    },
+    "moves": [
+     "Stealth Rock",
+     "Spikes",
+     "Defog",
+     "Court Change"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hitmontop",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Spikes",
+     "Toxic Spikes",
+     "Stealth Rock",
+     "Bulk Up"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Weavile",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Toxic Spikes",
+     "Sticky Web",
+     "Spikes",
+     "Rapid Spin"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Sticky Web",
+     "Spikes",
+     "Reflect",
+     "Calm Mind"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move stealthrock, move spikes",
+   "move toxicspikes, move stickyweb"
+  ]
+ ],
+ "turn": {
+  "p1": "move spikes, move spikes",
+  "p2": "move toxicspikes, move stickyweb"
+ }
+}

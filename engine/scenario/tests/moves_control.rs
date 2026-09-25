@@ -9,7 +9,9 @@ use lab_engine::action::{Gimmick, SlotAction};
 use lab_engine::rules::Ruleset;
 use lab_engine::turn::{enumerate_turn, TurnError};
 use lab_engine::Doubles;
-use lab_scenario::scenario_choices;
+use lab_scenario::{
+    load_scenario_file, run_decision, scenario_choices, scenario_decision, scenario_positions,
+};
 
 /// Runs the scenario's turn with one slot's choice replaced and expects an `InvalidChoice`
 /// whose reason contains `expected`.
@@ -32,6 +34,21 @@ fn move_choice(index: u8, target: i8) -> SlotAction {
         index,
         target,
         gimmick: Gimmick::None,
+    }
+}
+
+/// Runs a scenario without an oracle fixture (its first position) and expects the engine to
+/// refuse it with an `Unsupported` naming `expected`.
+fn assert_unsupported(name: &str, expected: &str) {
+    let loaded =
+        load_scenario_file(common::engine_dir().join(format!("oracle/scenarios/{name}.json")))
+            .unwrap();
+    let position = scenario_positions(&loaded).unwrap().remove(0);
+    let mut state = position.state.clone();
+    let decision = scenario_decision(&loaded, &position).unwrap();
+    match run_decision(&mut state, &decision) {
+        Err(TurnError::Unsupported(what)) => assert!(what.contains(expected), "{what}"),
+        other => panic!("expected Unsupported, got {other:?}"),
     }
 }
 
@@ -127,4 +144,71 @@ fn o15_imprison_disables_the_moves_its_holder_knows() {
         move_choice(2, 0),
         "Imprison",
     );
+}
+
+#[test]
+fn o22_hazards_are_set_without_duration() {
+    assert_exact_parity("o22-hazards-set");
+}
+
+#[test]
+fn o22_spikes_and_toxic_spikes_stack_layers() {
+    assert_exact_parity("o22-hazards-layers");
+}
+
+#[test]
+fn o22_hazards_fail_at_their_layer_limits() {
+    assert_exact_parity("o22-hazards-full");
+}
+
+#[test]
+fn o22_entry_hazards_on_mid_turn_switches() {
+    assert_exact_parity("o22-entry");
+}
+
+#[test]
+fn o22_stealth_rock_effectiveness_and_ungrounded_spikes() {
+    assert_exact_parity("o22-entry-sr");
+}
+
+#[test]
+fn o22_entry_hazard_knock_out_mid_turn() {
+    assert_exact_parity("o22-entry-ko");
+}
+
+#[test]
+fn o22_entry_hazard_knock_out_on_a_replacement() {
+    assert_exact_parity("o22-replace-ko");
+}
+
+#[test]
+fn o22_defog_and_rapid_spin_remove_hazards() {
+    assert_exact_parity("o22-defog-spin");
+}
+
+#[test]
+fn o22_toxic_spikes_absorbed_first_on_a_double_replacement() {
+    assert_exact_parity("o22-replace-toxic-spikes");
+}
+
+#[test]
+fn o22_toxic_spikes_badly_poison_then_get_absorbed_on_a_double_replacement() {
+    assert_exact_parity("o22-replace-toxic");
+}
+
+#[test]
+fn o22_three_spikes_layers_mirror_armor_and_magic_guard() {
+    assert_exact_parity("o22-entry-web");
+}
+
+/// Stealth Rock could knock out a newcomer that Toxic Spikes also poisons: Showdown's result
+/// depends on the order the hazards were set, which the state does not keep.
+#[test]
+fn o22_hazard_order_that_shows_is_unsupported() {
+    assert_unsupported("o22-hazard-order", "effectOrder");
+}
+
+#[test]
+fn o22_court_change_swaps_side_conditions() {
+    assert_exact_parity("o22-court-change");
 }
