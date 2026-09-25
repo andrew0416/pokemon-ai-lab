@@ -17,6 +17,23 @@ fn speed_boost_shed_skin_and_hydration_match_showdown() {
     assert_exact_parity("o50-residual-abilities");
 }
 
+// ---- O51 weather abilities -------------------------------------------------------------------
+
+#[test]
+fn rain_dish_and_dry_skin_in_rain_match_showdown() {
+    assert_exact_parity("o51-rain");
+}
+
+#[test]
+fn solar_power_and_dry_skin_in_sun_match_showdown() {
+    assert_exact_parity("o51-sun");
+}
+
+#[test]
+fn ice_body_in_snow_matches_showdown() {
+    assert_exact_parity("o51-snow");
+}
+
 // ---- O52 Rock Head / Magic Guard -------------------------------------------------------------
 
 #[test]

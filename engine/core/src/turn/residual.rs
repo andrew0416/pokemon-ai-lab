@@ -208,20 +208,32 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
                 return Ok(());
             }
             b.set_field(FieldEffect::Weather, effect);
-            if b.weather() == Weather::Sand {
-                // eachEvent('Weather'): actives in Speed order, ties shuffled.
-                let mut actives: Vec<(SlotRef, i32)> = b
-                    .all_alive()
-                    .into_iter()
-                    .map(|s| (s, b.action_speed(s)))
-                    .collect();
-                sort_by_speed(b, &mut actives);
-                for (slot, _) in actives {
-                    if b.alive(slot).is_none() || b.status_immune(slot, TypeImmunities::SANDSTORM) {
-                        continue;
-                    }
-                    let max_hp = f64::from(b.slot_mon(slot).expect("alive").max_hp);
-                    b.damage(slot, max_hp / 16.0, DamageSource::Indirect);
+            // `onFieldResidual` of every supported weather: eachEvent('Weather'), actives in
+            // Speed order, ties shuffled.
+            let weather = b.weather();
+            let mut actives: Vec<(SlotRef, i32)> = b
+                .all_alive()
+                .into_iter()
+                .map(|s| (s, b.action_speed(s)))
+                .collect();
+            // Without a handler that acts, the order (and its random tie-breaks) is moot.
+            let acts = weather == Weather::Sand
+                || actives.iter().any(|&(s, _)| {
+                    [
+                        abilities::RAIN_DISH,
+                        abilities::ICE_BODY,
+                        abilities::SOLAR_POWER,
+                        abilities::DRY_SKIN,
+                    ]
+                    .contains(&b.ability(s))
+                });
+            if !acts {
+                return Ok(());
+            }
+            sort_by_speed(b, &mut actives);
+            for (slot, _) in actives {
+                if b.alive(slot).is_some() {
+                    weather_event(b, slot, weather);
                 }
             }
         }
@@ -343,6 +355,38 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
     }
     let _ = Type::None;
     Ok(())
+}
+
+/// `runEvent('Weather', pokemon)` during the weather's residual: the sandstorm's own
+/// `onWeather` (1/16 damage unless immune) and the ability's `onWeather` (they never both act on
+/// one Pokémon, so their order does not matter). `effectiveWeather()` is the weather:
+/// Utility Umbrella, Air Lock and the primal weathers are not supported.
+/// - Rain Dish: heal 1/16 in rain; Ice Body: heal 1/16 in snow;
+/// - Solar Power: 1/8 damage in sun (`this.damage(maxhp / 8, target, target)`);
+/// - Dry Skin: heal 1/8 in rain, 1/8 damage in sun.
+fn weather_event<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, weather: Weather) {
+    let max_hp = f64::from(b.slot_mon(slot).expect("alive").max_hp);
+    if weather == Weather::Sand {
+        if !b.status_immune(slot, TypeImmunities::SANDSTORM) {
+            b.damage(slot, max_hp / 16.0, DamageSource::Indirect);
+        }
+        return;
+    }
+    match (b.ability(slot), weather) {
+        (a, Weather::Rain) if a == abilities::RAIN_DISH => {
+            b.heal(slot, max_hp / 16.0);
+        }
+        (a, Weather::Snow) if a == abilities::ICE_BODY => {
+            b.heal(slot, max_hp / 16.0);
+        }
+        (a, Weather::Rain) if a == abilities::DRY_SKIN => {
+            b.heal(slot, max_hp / 8.0);
+        }
+        (a, Weather::Sun) if a == abilities::DRY_SKIN || a == abilities::SOLAR_POWER => {
+            b.damage(slot, max_hp / 8.0, DamageSource::Indirect);
+        }
+        _ => {}
+    }
 }
 
 /// `speedSort` of Pokémon by `pokemon.speed`, ties shuffled.

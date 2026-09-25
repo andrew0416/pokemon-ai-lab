@@ -1,5 +1,5 @@
-//! Using a move: Showdown `runMove` → `useMove` → `trySpreadMoveHit` / `tryMoveHit` → the
-//! hit steps → `spreadMoveHit` (damage, effects, secondaries) → recoil and after-move
+//! Using a move: Showdown `runMove` ??`useMove` ??`trySpreadMoveHit` / `tryMoveHit` ??the
+//! hit steps ??`spreadMoveHit` (damage, effects, secondaries) ??recoil and after-move
 //! effects, for the implemented moves (see [`super::support`]).
 
 use crate::damage::{
@@ -204,7 +204,7 @@ pub fn takes_target(n: usize, target: MoveTarget) -> bool {
         )
 }
 
-/// Showdown `getTarget`. The returned slot may hold a fainted Pokémon (Showdown returns
+/// Showdown `getTarget`. The returned slot may hold a fainted Pok챕mon (Showdown returns
 /// the fainted object; the move then fails).
 fn get_target<const N: usize>(
     b: &mut Battle<'_, N>,
@@ -377,10 +377,10 @@ fn use_move<const N: usize>(
     Ok(true)
 }
 
-/// The extra PP of Showdown `useMoveInner`: `runEvent('DeductPP')` for every Pokémon in
+/// The extra PP of Showdown `useMoveInner`: `runEvent('DeductPP')` for every Pok챕mon in
 /// `getMoveTargets`'s `pressureTargets`, then one `deductPP(move, extraPP)` on the used move
 /// (clamped at 0). Pressure (`onDeductPP`, not breakable) adds 1 unless the target is the user's
-/// ally. `pressureTargets` are the move's targets, except: every active Pokémon for `all` moves
+/// ally. `pressureTargets` are the move's targets, except: every active Pok챕mon for `all` moves
 /// (only foes can count), nobody for `foeSide` moves, only allies for `allySide`, and all foes
 /// for `mustpressure` moves. `targets` are the resolved targets of a non-field move.
 fn deduct_pressure_pp<const N: usize>(
@@ -422,7 +422,7 @@ fn deduct_pressure_pp<const N: usize>(
     }
 }
 
-/// Showdown `tryMoveHit` → `moveHit` for field and side moves.
+/// Showdown `tryMoveHit` ??`moveHit` for field and side moves.
 fn try_move_hit_field<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -474,8 +474,15 @@ fn try_spread_move_hit<const N: usize>(
         return Ok(false);
     }
 
-    // 1. TryHit: Psychic Terrain (priority 4), then Protect (3).
-    targets.retain(|&t| !blocked_by_try_hit(b, user, mv, t));
+    // 1. TryHit: Psychic Terrain (priority 4), Protect (3), the target's ability (0). Each
+    //    target's handlers only affect that target, so targets can be taken one at a time.
+    let mut kept = Vec::with_capacity(targets.len());
+    for t in targets {
+        if try_hit(b, user, mv, t) {
+            kept.push(t);
+        }
+    }
+    targets = kept;
     if targets.is_empty() {
         return Ok(false);
     }
@@ -524,6 +531,29 @@ fn stall_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> bool {
         b.remove_volatile(user, Volatile::Stall);
     }
     success
+}
+
+/// The TryHit handlers for one target; `false` = the move fails on it.
+fn try_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    if blocked_by_try_hit(b, user, mv, target) {
+        return false;
+    }
+    // Dry Skin `onTryHit` (breakable): another Pok챕mon's Water move heals the holder by 1/4
+    // of its max HP (nothing at full HP) and fails on it (`return null`).
+    if mv.data.move_type == Type::Water
+        && target != user
+        && b.ability_unless_broken(target) == abilities::DRY_SKIN
+    {
+        let max_hp = f64::from(b.slot_mon(target).expect("a target").max_hp);
+        b.heal(target, max_hp / 4.0);
+        return false;
+    }
+    true
 }
 
 fn blocked_by_try_hit<const N: usize>(
@@ -806,7 +836,7 @@ fn get_damage<const N: usize>(
         return Ok(Planned::NoDamage);
     }
 
-    // Critical hit: ratio 1..4 → 1/24, 1/8, 1/2, always. `CriticalHit` handlers: Battle Armor
+    // Critical hit: ratio 1..4 ??1/24, 1/8, 1/2, always. `CriticalHit` handlers: Battle Armor
     // and Shell Armor (`onCriticalHit: false`, breakable). Showdown rolls first and then
     // cancels; not rolling gives the same distribution.
     let crit_ratio = data.crit_ratio.min(4);
@@ -821,8 +851,12 @@ fn get_damage<const N: usize>(
                 _ => true,
             });
 
-    // BasePower handlers, by priority: type items (15), terrain (6), the move (0).
+    // BasePower handlers, by priority: the target's Dry Skin (`onSourceBasePower`, 17,
+    // breakable: Fire 1.25x), type items (15), terrain (6), the move (0).
     let mut power_mods = Vec::new();
+    if data.move_type == Type::Fire && b.ability_unless_broken(target) == abilities::DRY_SKIN {
+        power_mods.push(5120);
+    }
     if type_boost_item(attacker.item) == Some(data.move_type) {
         power_mods.push(4915);
     }
@@ -872,10 +906,22 @@ fn get_damage<const N: usize>(
     if data.ignore_defensive || (ignore_positive_defensive && def_boost > 0) {
         def_boost = 0;
     }
-    let attack = boosted_stat(
+    let mut attack = boosted_stat(
         i32::from(attacker.stats[stat_index(attack_stat)]),
         atk_boost,
     );
+    // ModifyAtk / ModifySpA (by the category, not the stat used), chained then applied once:
+    // Solar Power (`onModifySpA`, priority 5) 1.5x in harsh sunlight.
+    let mut attack_mods = Vec::new();
+    if data.category == MoveCategory::Special
+        && attacker.ability == abilities::SOLAR_POWER
+        && b.weather() == Weather::Sun
+    {
+        attack_mods.push(MOD_ONE_POINT_FIVE);
+    }
+    if !attack_mods.is_empty() {
+        attack = modify(attack, chain_modifiers(&attack_mods, 0, u32::MAX));
+    }
     let mut defense = boosted_stat(
         i32::from(defender.stats[stat_index(defense_stat)]),
         def_boost,

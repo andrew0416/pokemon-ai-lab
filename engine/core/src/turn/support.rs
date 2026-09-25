@@ -193,6 +193,16 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::SPEED_BOOST, &["onResidual"]),
     (abilities::SHED_SKIN, &["onResidual"]),
     (abilities::HYDRATION, &["onResidual"]),
+    // Weather abilities: `onWeather` in `residual::weather_event`; Solar Power's `onModifySpA`
+    // and Dry Skin's `onSourceBasePower`/`onTryHit` in `moves`; Ice Body's `onImmunity` is for
+    // hail, which is not supported.
+    (abilities::RAIN_DISH, &["onWeather"]),
+    (abilities::ICE_BODY, &["onImmunity", "onWeather"]),
+    (abilities::SOLAR_POWER, &["onModifySpA", "onWeather"]),
+    (
+        abilities::DRY_SKIN,
+        &["onSourceBasePower", "onTryHit", "onWeather"],
+    ),
     // Extra PP in `moves::deduct_pressure_pp`; `onStart` only announces the ability.
     (abilities::PRESSURE, &["onDeductPP", "onStart"]),
     // Status immunities (`Battle::set_status_blocked`, `status_immune`,
