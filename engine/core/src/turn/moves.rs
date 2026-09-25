@@ -2,6 +2,8 @@
 //! hit steps → `spreadMoveHit` (damage, effects, secondaries) → recoil and after-move
 //! effects, for the implemented moves (see [`super::support`]).
 
+mod handlers;
+
 use crate::damage::{
     chain_modifiers, damage_rolls, DamageInput, MOD_HALF, MOD_ONE, MOD_ONE_POINT_FIVE,
     MOD_ONE_POINT_THREE,
@@ -777,6 +779,9 @@ fn get_damage<const N: usize>(
     }
     if mv.id == moves::KNOCK_OFF && b.item_can_be_taken(target) {
         power_mods.push(MOD_ONE_POINT_FIVE);
+    }
+    if let Some(modifier) = handlers::on_base_power(b, mv) {
+        power_mods.push(modifier);
     }
     let power_modifier = chain_modifiers(&power_mods, 0, u32::MAX);
 

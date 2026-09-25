@@ -33,6 +33,7 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),
     (moves::FAKE_OUT, &["onDisableMove", "onTry"]),
     (moves::KNOCK_OFF, &["onAfterHit", "onBasePower"]),
+    (moves::GRAV_APPLE, &["onBasePower"]),
     (
         moves::GRAVITY,
         &[
