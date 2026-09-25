@@ -14,7 +14,8 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const root = path.resolve(__dirname, '../..');
+// LAB_ROOT: git worktree 등 vendor/가 없는 체크아웃에서 본 저장소(vendor/pokemon-showdown 포함)를 가리킨다.
+const root = process.env.LAB_ROOT ? path.resolve(process.env.LAB_ROOT) : path.resolve(__dirname, '../..');
 const {Dex} = require(path.join(root, 'vendor/pokemon-showdown/dist/sim'));
 
 const dex = Dex.mod('champions');

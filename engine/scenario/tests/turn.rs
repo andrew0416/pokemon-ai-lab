@@ -1,94 +1,15 @@
 //! Turn engine parity with Showdown: lab-engine's exact outcome distribution for an oracle
 //! scenario must equal the oracle's `full` enumeration (`engine/oracle/expected/*.turn.json`,
 //! made by `enumerate.cjs` + `strip-report.cjs`): the same canonical end states with the same
-//! probabilities.
+//! probabilities. Helpers live in `common/mod.rs`; feature-specific parity tests go in their own
+//! files (one per work unit) so parallel work does not collide here.
 
-use std::collections::HashMap;
-use std::path::PathBuf;
+mod common;
 
-use serde_json::Value;
-
+use common::{assert_exact_parity, distribution, fixture, start};
 use lab_engine::rules::Ruleset;
 use lab_engine::turn::{enumerate_turn, sample_turn};
-use lab_engine::Doubles;
-use lab_scenario::{
-    canonical_json, load_scenario_file, scenario_choices, scenario_states, LoadedScenario,
-};
-
-fn engine_dir() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..")
-}
-
-/// Canonical state as an order-independent key (serde_json sorts object keys).
-fn key(state: &Value) -> String {
-    serde_json::to_string(state).expect("serializable")
-}
-
-fn fixture(name: &str) -> Value {
-    let path = engine_dir().join(format!("oracle/expected/{name}.turn.json"));
-    let text = std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("{path:?}: {e}"));
-    serde_json::from_str(&text).unwrap()
-}
-
-/// The scenario and the initial state matching the fixture's `before`.
-fn start(name: &str, fixture: &Value) -> (LoadedScenario, Doubles) {
-    let loaded =
-        load_scenario_file(engine_dir().join(format!("oracle/scenarios/{name}.json"))).unwrap();
-    let before = key(&fixture["before"]);
-    let state = scenario_states(&loaded)
-        .unwrap()
-        .into_iter()
-        .map(|o| o.state)
-        .find(|s| {
-            let json: Value = serde_json::from_str(&canonical_json(s, &loaded.meta).unwrap())
-                .expect("valid JSON");
-            key(&json) == before
-        })
-        .expect("one initial state matches the oracle's `before`");
-    (loaded, state)
-}
-
-/// Engine outcomes as canonical key → probability.
-fn distribution(
-    loaded: &LoadedScenario,
-    state: &mut Doubles,
-    outcomes: &[lab_engine::instruction::Outcome],
-) -> HashMap<String, f64> {
-    let mut out = HashMap::new();
-    let original = state.clone();
-    for outcome in outcomes {
-        state.apply(&outcome.instructions);
-        let json: Value =
-            serde_json::from_str(&canonical_json(state, &loaded.meta).unwrap()).unwrap();
-        state.reverse(&outcome.instructions);
-        assert_eq!(*state, original, "outcome instructions must reverse");
-        *out.entry(key(&json)).or_insert(0.0) += outcome.probability;
-    }
-    out
-}
-
-fn assert_exact_parity(name: &str) {
-    let fixture = fixture(name);
-    let (loaded, mut state) = start(name, &fixture);
-    let choices = scenario_choices(&loaded, &state).unwrap();
-    let outcomes = enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices).unwrap();
-    let engine = distribution(&loaded, &mut state, &outcomes);
-
-    let mut oracle: HashMap<String, f64> = HashMap::new();
-    for o in fixture["outcomes"].as_array().unwrap() {
-        *oracle.entry(key(&o["state"])).or_insert(0.0) += o["p"].as_f64().unwrap();
-    }
-    assert_eq!(engine.len(), oracle.len(), "{name}: number of outcomes");
-    for (state, p) in &oracle {
-        let q = engine
-            .get(state)
-            .unwrap_or_else(|| panic!("{name}: engine lacks an oracle outcome:\n{state}"));
-        assert!(
-            (p - q).abs() < 1e-12,
-            "{name}: p {p} vs engine {q} for\n{state}"
-        );
-    }
-}
+use lab_scenario::scenario_choices;
 
 #[test]
 fn single_hit_matches_showdown_exactly() {
