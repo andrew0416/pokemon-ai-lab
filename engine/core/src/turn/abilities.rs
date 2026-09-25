@@ -12,7 +12,8 @@
 //! ([`ability_for_move`]).
 
 use crate::damage::{
-    chain_modifiers, MOD_HALF, MOD_ONE, MOD_ONE_POINT_FIVE, MOD_ONE_POINT_THREE, MOD_ONE_POINT_TWO,
+    chain_modifiers, MOD_DOUBLE, MOD_HALF, MOD_ONE, MOD_ONE_POINT_FIVE, MOD_ONE_POINT_THREE,
+    MOD_ONE_POINT_TWO,
 };
 use crate::dex::{abilities, items, AbilityFlags, AbilityId, MoveData, MoveFlags, Type};
 use crate::state::SlotRef;
@@ -170,6 +171,17 @@ pub(crate) fn base_power_handlers<const N: usize>(
         }
     }
     out
+}
+
+/// The STAB modifier after `ModifySTAB` (the user's own ability). Adaptability:
+/// `if (move.forceSTAB || source.hasType(move.type)) return stab === 2 ? 2.25 : 2`, where a
+/// STAB of 2 needs Terastallization (not modelled), so 2.
+pub(crate) fn modify_stab(ability: AbilityId, stab: bool) -> u32 {
+    match (stab, ability) {
+        (false, _) => MOD_ONE,
+        (true, a) if a == abilities::ADAPTABILITY => MOD_DOUBLE,
+        (true, _) => MOD_ONE_POINT_FIVE,
+    }
 }
 
 /// `ModifyDamage` handlers of abilities: the target's `onSourceModifyDamage`.

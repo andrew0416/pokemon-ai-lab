@@ -829,6 +829,7 @@ fn get_damage<const N: usize>(
         _ => MOD_ONE,
     };
     let stab = data.force_stab || attacker.types.contains(&data.move_type);
+    let stab_modifier = abilities::modify_stab(attacker.ability, stab);
     let type_mod: i32 = defender
         .types
         .iter()
@@ -864,7 +865,7 @@ fn get_damage<const N: usize>(
         spread: mv.spread,
         weather_modifier,
         critical,
-        stab_modifier: if stab { MOD_ONE_POINT_FIVE } else { MOD_ONE },
+        stab_modifier,
         type_effectiveness,
         burned: attacker.status == Status::Burn && physical,
         protected: false,

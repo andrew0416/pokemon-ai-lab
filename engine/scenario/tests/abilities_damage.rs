@@ -36,3 +36,10 @@ fn strong_jaw_matches_showdown() {
 fn technician_with_priority_and_weight_power_matches_showdown() {
     assert_exact_parity("o40-technician");
 }
+
+// O41: STAB.
+
+#[test]
+fn adaptability_matches_showdown() {
+    assert_exact_parity("o41-adaptability");
+}

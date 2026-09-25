@@ -194,6 +194,7 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         &["onBasePower", "onSourceModifyDamage"],
     ),
     (abilities::STEELY_SPIRIT, &["onAllyBasePower"]),
+    (abilities::ADAPTABILITY, &["onModifySTAB"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
