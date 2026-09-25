@@ -1,0 +1,26 @@
+{
+ "description": "O83: Setup turn: Choice Specs Hydreigon's Dragon Pulse is blocked by Weavile's Protect (locked). Turn: the faster Weavile's Knock Off takes the Specs first, so choicelock's onBeforeMove ends the lock and Hydreigon's Dragon Pulse hits without the boost.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hydreigon", "item": "Choice Specs", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Dragon Pulse", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "spe": 32, "def": 2}, "moves": ["Protect", "Knock Off"], "level": 50},
+   {"species": "Kingambit", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move dragonpulse 1, move calmmind", "move protect, move swordsdance"]
+ ],
+ "turn": {"p1": "move dragonpulse 1, move calmmind", "p2": "move knockoff 1, move swordsdance"}
+}

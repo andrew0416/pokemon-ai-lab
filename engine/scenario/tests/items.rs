@@ -4,6 +4,8 @@
 mod common;
 
 use common::{assert_exact_parity, fixture, start};
+use lab_engine::action::SlotAction;
+use lab_engine::gimmick::Gimmick;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::{Pokemon, SideId};
 use lab_engine::turn::{enumerate_turn, TurnError};
@@ -55,4 +57,44 @@ fn klutz_holding_an_item_is_refused() {
         mon.ability = lab_engine::dex::abilities::KLUTZ;
     });
     assert!(why.contains("Klutz"), "{why}");
+}
+
+// ---- O83 Choice items --------------------------------------------------------------------------
+
+#[test]
+fn choice_scarf_and_band_match_showdown() {
+    assert_exact_parity("o83-choice-scarf-band");
+}
+
+#[test]
+fn choice_lock_kept_and_ended_at_end_of_turn_matches_showdown() {
+    assert_exact_parity("o83-choice-lock");
+}
+
+#[test]
+fn choice_lock_ended_before_the_move_matches_showdown() {
+    assert_exact_parity("o83-choice-knocked-before-move");
+}
+
+/// A Pokémon locked by its Choice item cannot choose another move (`choicelock`'s
+/// `onDisableMove`).
+#[test]
+fn a_choice_locked_pokemon_cannot_choose_another_move() {
+    let name = "o83-choice-lock";
+    let fixture = fixture(name);
+    let (loaded, position) = start(name, &fixture);
+    let mut state: Doubles = position.state;
+    let mut choices = scenario_choices(&loaded, &state).unwrap();
+    // Hydreigon is locked into Dragon Pulse (move 0); pick Protect (move 1).
+    choices[0][0] = SlotAction::Move {
+        index: 1,
+        target: 0,
+        gimmick: Gimmick::None,
+    };
+    match enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices) {
+        Err(TurnError::InvalidChoice { reason, .. }) => {
+            assert!(reason.contains("locked into Dragon Pulse"), "{reason}")
+        }
+        other => panic!("expected InvalidChoice, got {other:?}"),
+    }
 }

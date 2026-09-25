@@ -15,6 +15,7 @@ use crate::volatile::{Volatile, VolatileState};
 
 use super::abilities as ability_events;
 use super::battle::{Battle, DamageSource};
+use super::items as item_events;
 use super::order::ORDER_DEFAULT;
 use super::TurnError;
 
@@ -440,6 +441,8 @@ pub(crate) fn end_turn<const N: usize>(b: &mut Battle<'_, N>) {
         .into_iter()
         .any(|side| needs_replacement(b, side));
     if !needs_switch {
+        // `endTurn`: the DisableMove handlers of every active Pokémon.
+        item_events::end_turn_disable_move(b);
         let turn = b.state.turn;
         b.apply(Instruction::SetTurn {
             old: turn,

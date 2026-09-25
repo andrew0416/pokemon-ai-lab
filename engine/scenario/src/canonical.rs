@@ -17,12 +17,12 @@
 use std::fmt;
 use std::fmt::Write as _;
 
-use lab_engine::dex::Type;
+use lab_engine::dex::{MoveId, Type};
 use lab_engine::field::{Effect, FieldEffect, SideEffect, Terrain, Weather, FIELD_EFFECT_COUNT};
 use lab_engine::gimmick::Gimmick;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::{BattleResult, Pokemon, SideId, State, Status, PARTY_SIZE};
-use lab_engine::volatile::VolatileState;
+use lab_engine::volatile::{Volatile, VolatileState};
 
 use crate::meta::{ScenarioMeta, SideMeta};
 
@@ -342,9 +342,15 @@ fn status_id(status: Status) -> &'static str {
     }
 }
 
-/// Showdown effect-state fields in `EFFECT_FIELDS` order (`duration`, `counter`).
-fn volatile_fields(out: &mut String, state: VolatileState) {
+/// Showdown effect-state fields in `EFFECT_FIELDS` order (`duration`, `counter`; the Choice
+/// lock's `move`, which the engine keeps in `counter`).
+fn volatile_fields(out: &mut String, volatile: Volatile, state: VolatileState) {
     out.push('{');
+    if volatile == Volatile::ChoiceLock {
+        write!(out, r#""move":"{}""#, MoveId(state.counter).id()).unwrap();
+        out.push('}');
+        return;
+    }
     let mut first = true;
     if state.duration != 0 {
         write!(out, r#""duration":{}"#, state.duration).unwrap();
@@ -419,7 +425,7 @@ fn pokemon(
         for (i, (volatile, state)) in volatiles.into_iter().enumerate() {
             let sep = if i == 0 { "" } else { "," };
             write!(out, r#"{sep}"{}":"#, volatile.id()).unwrap();
-            volatile_fields(out, state);
+            volatile_fields(out, volatile, state);
         }
         out.push('}');
         if !slot.last_move.is_none() {

@@ -6,8 +6,10 @@
 //! neutral result. Items are read straight from the holder: Klutz holding an item is refused
 //! by `support` (Showdown's `ignoringItem`, work plan F17), so no handler here checks it.
 
-use crate::dex::{abilities, items, ItemId, MoveData, Type};
-use crate::state::{Pokemon, SlotRef};
+use crate::damage::{MOD_HALF, MOD_ONE_POINT_FIVE};
+use crate::dex::{abilities, items, ItemId, MoveCategory, MoveData, MoveId, Type};
+use crate::state::{Pokemon, SlotRef, State};
+use crate::volatile::{Volatile, VolatileState};
 
 use super::abilities::{Handler, SUB_ITEM};
 use super::battle::Battle;
@@ -57,6 +59,112 @@ pub(crate) fn held_item_problem(mon: &Pokemon) -> Option<String> {
     None
 }
 
+/// Whether an item's `onStart` does nothing when its holder switches in (Showdown runs item
+/// `onStart` handlers in the `SwitchIn` event): the Choice items only remove a `choicelock`
+/// the newcomer cannot have yet.
+pub(crate) fn inert_start(item: ItemId) -> bool {
+    item.data().is_choice
+}
+
+// ---- Choice items ---------------------------------------------------------------------------
+
+/// `ModifySpe` factor of the holder's item: Choice Scarf `chainModify(1.5)` (skipped while
+/// Dynamaxed, which `support` refuses).
+pub(crate) fn speed_modifier(item: ItemId) -> Option<u32> {
+    (item == items::CHOICE_SCARF).then_some(MOD_ONE_POINT_FIVE)
+}
+
+/// `ModifyAtk` (physical moves) or `ModifySpA` (special moves) handlers of the user's item:
+/// Choice Band / Choice Specs `chainModify(1.5)` at priority 1 (not while Dynamaxed).
+pub(crate) fn attack_handlers<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    data: &MoveData,
+) -> Vec<Handler> {
+    let mut out = Vec::new();
+    let item = b.item(user);
+    let (boosted, event) = match data.category {
+        MoveCategory::Physical => (items::CHOICE_BAND, "onModifyAtkPriority"),
+        _ => (items::CHOICE_SPECS, "onModifySpAPriority"),
+    };
+    if item == boosted {
+        let p = super::abilities::priority(item.data().event_orders, event);
+        out.push(Handler::of(b, user, p, SUB_ITEM, MOD_ONE_POINT_FIVE));
+    }
+    out
+}
+
+/// The user's item `onModifyMove` (`runEvent('ModifyMove')`, after the move's own): a Choice
+/// item adds `choicelock`, whose `onStart` stores the move (`effectState.move`). A lock that
+/// is already there is kept (`addVolatile` without `onRestart`).
+pub(crate) fn on_modify_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, id: MoveId) {
+    if b.item(user).data().is_choice && !b.volatile(user, Volatile::ChoiceLock).active {
+        b.set_volatile_state(
+            user,
+            Volatile::ChoiceLock,
+            VolatileState {
+                active: true,
+                duration: 0,
+                counter: id.0,
+            },
+        );
+    }
+}
+
+/// `choicelock`'s `onBeforeMove` (priority 0, after paralysis): the lock ends once the item is
+/// no longer a Choice item; otherwise another move fails (no PP, no `lastMove`). `false` = the
+/// move is not used. The engine only lets a locked Pokémon choose its move
+/// ([`disabled_move`]), so the failure needs a lock set later in the turn.
+pub(crate) fn before_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+) -> bool {
+    let lock = b.volatile(user, Volatile::ChoiceLock);
+    if !lock.active {
+        return true;
+    }
+    if !b.item(user).data().is_choice {
+        b.remove_volatile(user, Volatile::ChoiceLock);
+        return true;
+    }
+    id.0 == lock.counter
+}
+
+/// The item `DisableMove` handlers `endTurn` runs for every active Pokémon: `choicelock`'s
+/// `onDisableMove` removes the lock once the item is no longer a Choice item (the disabling
+/// itself is [`disabled_move`], read from the state when choices are checked).
+pub(crate) fn end_turn_disable_move<const N: usize>(b: &mut Battle<'_, N>) {
+    for slot in State::<N>::slot_refs() {
+        if b.alive(slot).is_some()
+            && b.volatile(slot, Volatile::ChoiceLock).active
+            && !b.item(slot).data().is_choice
+        {
+            b.remove_volatile(slot, Volatile::ChoiceLock);
+        }
+    }
+}
+
+/// Why the Pokémon in `slot` cannot choose `id` because of its item (Showdown `DisableMove`):
+/// `choicelock` disables every other move while the item is a Choice item.
+pub(crate) fn disabled_move<const N: usize>(
+    state: &State<N>,
+    slot: SlotRef,
+    id: MoveId,
+) -> Option<String> {
+    let mon = state.active(slot)?;
+    let lock = state.slot(slot).volatiles.get(Volatile::ChoiceLock);
+    if lock.active && mon.item.data().is_choice && id.0 != lock.counter {
+        return Some(format!(
+            "{} is locked into {} by {}",
+            mon.species.data().name,
+            MoveId(lock.counter).data().name,
+            mon.item.data().name
+        ));
+    }
+    None
+}
+
 /// Showdown `eatItem` for a held berry: it is consumed and becomes `lastItem`. The events it
 /// runs (`UseItem`, `TryEatItem`, `Eat`, `EatItem`, `AfterUseItem`) have no implemented
 /// handler: Unnerve, As One, Ripen, Cheek Pouch, Cud Chew and Unburden are refused by
@@ -89,7 +197,7 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
     if let Some(ty) = resist_berry(b.item(target)) {
         let applies = data.move_type == ty && (ty == Type::Normal || type_mod > 0);
         if applies {
-            let handler = Handler::of(b, target, 0, SUB_ITEM, crate::damage::MOD_HALF);
+            let handler = Handler::of(b, target, 0, SUB_ITEM, MOD_HALF);
             if eat_item(b, target) {
                 out.push(handler);
             }

@@ -198,9 +198,14 @@ pub fn switch_in_supported(ability: AbilityId) -> bool {
     start_effect(ability).is_some()
 }
 
-/// The first switch-in handler of an item that would fire, if any (none is implemented).
+/// The first switch-in handler of an item that would fire and is not implemented, if any.
+/// `onModifySpe` does not matter (the start order uses the raw Speed stat); an `onStart` that
+/// does nothing on a switch-in (`items::inert_start`) is implemented.
 pub fn item_start_handler(item: ItemId) -> Option<&'static str> {
-    start_handler(item.data().handlers)
+    let handlers = item.data().handlers;
+    (0..handlers.len())
+        .filter_map(|i| start_handler(&handlers[i..=i]))
+        .find(|&h| h != "onModifySpe" && !(h == "onStart" && super::items::inert_start(item)))
 }
 
 /// The first switch-in handler of a species that would fire, if any (none is implemented).

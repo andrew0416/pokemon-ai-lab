@@ -21,9 +21,12 @@ pub enum Volatile {
     RagePowder,
     /// Spotlight: like Follow Me with higher redirect priority (duration 1).
     Spotlight,
+    /// Choice item lock (Showdown `choicelock`, no duration): `counter` holds the locked
+    /// move's `MoveId` (Showdown `effectState.move`).
+    ChoiceLock,
 }
 
-pub const VOLATILE_COUNT: usize = 6;
+pub const VOLATILE_COUNT: usize = 7;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -33,6 +36,7 @@ impl Volatile {
         Volatile::FollowMe,
         Volatile::RagePowder,
         Volatile::Spotlight,
+        Volatile::ChoiceLock,
     ];
 
     /// The Showdown condition this volatile is.
@@ -44,6 +48,7 @@ impl Volatile {
             Volatile::FollowMe => conditions::FOLLOWME,
             Volatile::RagePowder => conditions::RAGEPOWDER,
             Volatile::Spotlight => conditions::SPOTLIGHT,
+            Volatile::ChoiceLock => conditions::CHOICELOCK,
         }
     }
 
@@ -56,6 +61,7 @@ impl Volatile {
             Volatile::FollowMe => "followme",
             Volatile::RagePowder => "ragepowder",
             Volatile::Spotlight => "spotlight",
+            Volatile::ChoiceLock => "choicelock",
         }
     }
 
@@ -75,6 +81,7 @@ impl Volatile {
             | Volatile::RagePowder
             | Volatile::Spotlight => 1,
             Volatile::Stall => 2,
+            Volatile::ChoiceLock => 0,
         }
     }
 }

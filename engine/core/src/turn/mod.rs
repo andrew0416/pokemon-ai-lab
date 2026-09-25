@@ -528,7 +528,7 @@ fn disabled<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> Opti
     {
         return Some(format!("{} is disabled by Gravity", data.name));
     }
-    None
+    items::disabled_move(state, slot, id)
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]

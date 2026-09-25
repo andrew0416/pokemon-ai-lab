@@ -113,7 +113,7 @@ fn run_move_inner<const N: usize>(
 }
 
 /// The BeforeMove handlers, by priority: sleep and freeze (10), flinch (8), Gravity (6),
-/// paralysis (1). `false` = the move is not used (no PP, no `lastMove`).
+/// paralysis (1), the Choice lock (0). `false` = the move is not used (no PP, no `lastMove`).
 fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) -> bool {
     let pokemon = b.occupant(user).expect("checked");
     match b.mon(pokemon).status {
@@ -147,7 +147,8 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
     if b.mon(pokemon).status == Status::Paralyze && b.rng.chance(1, 8) {
         return false;
     }
-    true
+    // The Choice lock (priority 0).
+    item_events::before_move(b, user, mv.id)
 }
 
 // ---- targets --------------------------------------------------------------------------------
@@ -445,6 +446,8 @@ fn use_move<const N: usize>(
     if b.mon(pokemon).status == Status::Freeze && mv.data.flags.contains(MoveFlags::DEFROST) {
         b.cure_status(pokemon);
     }
+    // The item's onModifyMove: the Choice lock.
+    item_events::on_modify_move(b, user, mv.id);
     let Some(target) = target else {
         return Ok(false);
     };
@@ -1080,7 +1083,8 @@ fn get_damage<const N: usize>(
     );
     // ModifyAtk (physical) / ModifySpA (special), whatever stat the move attacks with.
     let attack = ability_events::attack_direct(attacker.ability, data, attack);
-    let attack_mods = ability_events::attack_handlers(b, user, target, data);
+    let mut attack_mods = ability_events::attack_handlers(b, user, target, data);
+    attack_mods.extend(item_events::attack_handlers(b, user, data));
     let attack = modify(attack, ability_events::chain(b, attack_mods));
     let mut defense = boosted_stat(
         i32::from(defender.stats[stat_index(defense_stat)]),

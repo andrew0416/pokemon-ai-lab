@@ -220,6 +220,20 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
         &["onAfterMoveSecondarySelf", "onModifyDamage"],
     ),
     (items::FOCUS_SASH, &["onDamage"]),
+    // Choice items (`items.rs`): the stat in `order.rs`/`moves.rs`, `onModifyMove` adds the
+    // `choicelock` volatile, `onStart` only removes a lock a newcomer cannot have.
+    (
+        items::CHOICE_BAND,
+        &["onModifyAtk", "onModifyMove", "onStart"],
+    ),
+    (
+        items::CHOICE_SCARF,
+        &["onModifyMove", "onModifySpe", "onStart"],
+    ),
+    (
+        items::CHOICE_SPECS,
+        &["onModifyMove", "onModifySpA", "onStart"],
+    ),
 ];
 
 /// Abilities with callbacks that are implemented while the holder is on the field.
