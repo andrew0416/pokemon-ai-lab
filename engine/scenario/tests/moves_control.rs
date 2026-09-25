@@ -261,6 +261,22 @@ fn o33_sparkling_aria_with_sheer_force_cures_nothing() {
     assert_exact_parity("o33-sparkling-aria-sheer-force");
 }
 
+#[test]
+fn o35_sleep_talk_calls_a_random_move_and_fails_after_waking() {
+    assert_exact_parity("o35-sleep-talk");
+}
+
+#[test]
+fn o35_snore_works_asleep_and_fails_awake() {
+    assert_exact_parity("o35-snore");
+}
+
+/// A multi-hit move Sleep Talk could call would suspend Sleep Talk's own hit.
+#[test]
+fn o35_sleep_talk_with_a_multi_hit_move_is_unsupported() {
+    assert_unsupported("o35-sleep-talk-multihit", "Sleep Talk calling Bullet Seed");
+}
+
 /// Stealth Rock could knock out a newcomer that Toxic Spikes also poisons: Showdown's result
 /// depends on the order the hazards were set, which the state does not keep.
 #[test]

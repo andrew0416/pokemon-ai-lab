@@ -6,7 +6,7 @@
 
 use crate::damage::MOD_ONE_POINT_FIVE;
 use crate::dex::{
-    abilities, items, moves, ItemId, MoveId, MoveTarget, Type, TypeRelation, NO_BOOSTS,
+    abilities, items, moves, ItemId, MoveFlags, MoveId, MoveTarget, Type, TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
@@ -151,6 +151,11 @@ pub(super) fn on_try<const N: usize>(
         moves::POLTERGEIST => b.slot_mon(first_target).is_some_and(|m| !m.item.is_none()),
         // Steel Roller: `return !this.field.isTerrain('');` (no `TryTerrain` handler exists).
         moves::STEEL_ROLLER => b.terrain() != Terrain::None,
+        // Sleep Talk, Snore: `return source.status === 'slp' || source.hasAbility('comatose');`
+        moves::SLEEP_TALK | moves::SNORE => {
+            b.slot_mon(user).is_some_and(|m| m.status == Status::Sleep)
+                || b.ability(user) == abilities::COMATOSE
+        }
         _ => true,
     }
 }
@@ -459,6 +464,24 @@ pub(super) fn on_hit<const N: usize>(
             return Ok(None);
         }
         moves::TRICK | moves::SWITCHEROO => trick(b, user, target)?,
+        // Sleep Talk: one of the user's moves Sleep Talk may call, uniformly at random, used
+        // through `useMove` (`moves::call_move`); fails without one. It returns nothing.
+        moves::SLEEP_TALK => {
+            let known = b
+                .slot_mon(user)
+                .map_or([MoveId::NONE; 4], |m| m.moves.map(|s| s.id));
+            let callable: Vec<MoveId> = known
+                .into_iter()
+                .filter(|&id| sleep_talk_calls(id))
+                .collect();
+            if callable.is_empty() {
+                HitResult::Failure
+            } else {
+                let called = callable[b.rng.uniform(callable.len())];
+                super::call_move(b, user, mv, called)?;
+                HitResult::NotFail
+            }
+        }
         // Defog: `this.boost({evasion: -1})` on the target (success if a stage changed); the
         // target's side loses its screens, Safeguard and Mist (no success) and its hazards, the
         // user's side its hazards (success); then `this.field.clearTerrain()`.
@@ -502,6 +525,17 @@ pub(super) fn on_hit<const N: usize>(
         _ => return Ok(None),
     };
     Ok(Some(result))
+}
+
+/// Whether Sleep Talk's `onHit` may pick `id`: not `nosleeptalk` (Sleep Talk itself, Assist,
+/// Metronome, ...), not a charge move, not a Z- or Max move.
+pub(crate) fn sleep_talk_calls(id: MoveId) -> bool {
+    let data = id.data();
+    !id.is_none()
+        && !data.flags.contains(MoveFlags::NOSLEEPTALK)
+        && !data.flags.contains(MoveFlags::CHARGE)
+        && !(data.is_z && data.base_power != 1)
+        && !data.is_max
 }
 
 /// Trick and Switcheroo `onHit`: `target.takeItem(source)` and `source.takeItem()` (`undefined`

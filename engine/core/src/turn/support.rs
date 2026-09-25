@@ -185,6 +185,10 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // Sparkling Aria: its secondary adds the `sparklingaria` volatile, its `onAfterMove`
     // (`handlers::on_after_move`) removes it and cures burns.
     (moves::SPARKLING_ARIA, &["onAfterMove"]),
+    // Sleep Talk: `onTry` and `onHit` (a random callable move through `moves::call_move`);
+    // Snore: `onTry`. Both are `sleepUsable` (`moves::before_move`).
+    (moves::SLEEP_TALK, &["onHit", "onTry"]),
+    (moves::SNORE, &["onTry"]),
     (moves::GRASSY_GLIDE, &["onModifyPriority"]),
     (moves::LOW_KICK, &["basePowerCallback", "onTryHit"]),
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),
@@ -803,10 +807,11 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     if m.selfdestruct != SelfDestruct::No {
         return why("self-destruct");
     }
+    let sleep_moves = id == moves::SLEEP_TALK || id == moves::SNORE;
     if m.breaks_protect
         || m.smart_target
-        || m.calls_move
-        || m.sleep_usable
+        || (m.calls_move && id != moves::SLEEP_TALK)
+        || (m.sleep_usable && !sleep_moves)
         || m.steals_boosts
         || m.has_crash_damage
         || m.mind_blown_recoil
@@ -858,6 +863,25 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     }
     if m.category == MoveCategory::Status && m.base_power != 0 {
         return why("status move with base power");
+    }
+    None
+}
+
+/// Why Sleep Talk cannot be simulated for a Pokémon with these moves: every move it may call
+/// must be supported, hit once (a multi-hit move would suspend Sleep Talk's own hit) and have
+/// no `onAfterMove` (Showdown runs the called move's AfterMove at the end of `runMove`).
+pub(crate) fn sleep_talk_problem(moves: &[MoveId]) -> Option<String> {
+    for &id in moves {
+        if !super::moves::sleep_talk_calls(id) {
+            continue;
+        }
+        let data = id.data();
+        if let Some(why) = move_unsupported(id) {
+            return Some(format!("Sleep Talk could call {why}"));
+        }
+        if data.multihit.is_some() || data.handlers.contains(&"onAfterMove") {
+            return Some(format!("Sleep Talk calling {}", data.name));
+        }
     }
     None
 }

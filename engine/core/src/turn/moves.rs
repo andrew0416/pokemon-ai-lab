@@ -5,6 +5,7 @@
 mod ability_hooks;
 mod handlers;
 
+pub(crate) use handlers::sleep_talk_calls;
 use handlers::HitResult;
 
 use crate::damage::{
@@ -62,6 +63,9 @@ struct ActiveMove {
     /// Showdown `move.hitTargets`: the targets left after the hit steps, as a bit per slot
     /// ([`target_bit`]); empty when every hit failed.
     hit_targets: u8,
+    /// Showdown `move.sourceEffect` for a move another move calls (Sleep Talk), whose PP pays
+    /// Pressure's extra; `NONE` for a move used directly.
+    source_effect: MoveId,
 }
 
 impl PartialEq for ActiveMove {
@@ -78,6 +82,7 @@ impl PartialEq for ActiveMove {
             && self.move_type == other.move_type
             && self.base_power == other.base_power
             && self.hit_targets == other.hit_targets
+            && self.source_effect == other.source_effect
     }
 }
 
@@ -97,6 +102,7 @@ impl std::hash::Hash for ActiveMove {
         self.move_type.hash(state);
         self.base_power.hash(state);
         self.hit_targets.hash(state);
+        self.source_effect.hash(state);
     }
 }
 
@@ -180,6 +186,7 @@ pub(crate) fn run_move<const N: usize>(
             move_type: MoveId::NONE.data().move_type,
             base_power: 0,
             hit_targets: 0,
+            source_effect: MoveId::NONE,
         };
         before_move(b, user, &recharge);
         return Ok(MoveStep::Done);
@@ -280,6 +287,7 @@ fn run_move_inner<const N: usize>(
         move_type: id.data().move_type,
         base_power: i32::from(id.data().base_power),
         hit_targets: 0,
+        source_effect: MoveId::NONE,
     };
 
     if !before_move(b, user, &mv) {
@@ -333,7 +341,8 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
             b.set_status_turns(pokemon, time);
             if time <= 0 {
                 b.cure_status(pokemon);
-            } else {
+            } else if !mv.data.sleep_usable {
+                // Sleep Talk and Snore go on (`if (move.sleepUsable) return;`).
                 return false;
             }
         }
@@ -700,6 +709,11 @@ fn use_move<const N: usize>(
     if mv.target != base_target {
         target = get_random_target(b, user, mv.target);
     }
+    // Gravity's `onModifyMove`: a Gravity-blocked move fails (only reachable for a called move;
+    // BeforeMove stops a chosen one).
+    if b.field_active(FieldEffect::Gravity) && mv.data.flags.contains(MoveFlags::GRAVITY) {
+        return Ok(None);
+    }
     // Freeze `onModifyMove`: a defrosting move thaws the user.
     if b.mon(pokemon).status == Status::Freeze && mv.data.flags.contains(MoveFlags::DEFROST) {
         b.cure_status(pokemon);
@@ -750,6 +764,54 @@ fn use_move<const N: usize>(
     };
     use_move_tail(b, user, mv, result, main_target);
     Ok(None)
+}
+
+/// Showdown `useMove(id, pokemon)` from a move's `onHit` (Sleep Talk): the called move takes
+/// the caller's priority and Prankster boost and ability suppression, its source effect is the
+/// caller (whose PP pays Pressure), its target is drawn afresh, and it runs `useMoveInner`
+/// without BeforeMove, PP or `lastMove`. The called move stays the active move. A multi-hit
+/// called move (it would suspend the caller) is unsupported.
+fn call_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    caller: &ActiveMove,
+    id: MoveId,
+) -> Result<(), TurnError> {
+    let pokemon = b.occupant(user).expect("the caller's user is active");
+    let ignore_ability = b.active_move.is_some_and(|m| m.ignore_ability);
+    b.active_move = Some(ActiveMoveRef {
+        user,
+        pokemon,
+        id,
+        ignore_ability,
+    });
+    let data = id.data();
+    let mut mv = ActiveMove {
+        id,
+        data,
+        priority: caller.priority,
+        prankster_boosted: caller.prankster_boosted,
+        spread: false,
+        accuracy: data.accuracy,
+        has_sheer_force: false,
+        secondary_chance_factor: 1,
+        added_secondary: None,
+        total_damage: 0,
+        target: data.target,
+        move_type: data.move_type,
+        base_power: i32::from(data.base_power),
+        hit_targets: 0,
+        source_effect: caller.id,
+    };
+    let target = get_random_target(b, user, data.target);
+    let will_act = b.will_act();
+    if use_move(b, user, &mut mv, target, will_act)?.is_some() {
+        return Err(b.unsupported(format!(
+            "{} called by {}: a multi-hit called move",
+            data.name, caller.data.name
+        )));
+    }
+    Ok(())
 }
 
 /// The end of Showdown `useMoveInner` after the hits: the `self` boost, then
@@ -809,7 +871,13 @@ fn deduct_pressure_pp<const N: usize>(
         return;
     }
     let pokemon = b.occupant(user).expect("checked");
-    let Some(index) = b.mon(pokemon).moves.iter().position(|m| m.id == mv.id) else {
+    // `deductPP(callerMoveForPressure || move)`: a called move's caller pays (Sleep Talk).
+    let paying = if mv.source_effect.is_none() {
+        mv.id
+    } else {
+        mv.source_effect
+    };
+    let Some(index) = b.mon(pokemon).moves.iter().position(|m| m.id == paying) else {
         return;
     };
     let old = b.mon(pokemon).moves[index].pp;

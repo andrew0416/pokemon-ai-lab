@@ -593,6 +593,12 @@ fn check_turn<const N: usize>(
                     if let Some(why) = support::move_unsupported(id) {
                         return Err(TurnError::Unsupported(why));
                     }
+                    if id == move_ids::SLEEP_TALK {
+                        let known = mon.moves.map(|m| m.id);
+                        if let Some(why) = support::sleep_talk_problem(&known) {
+                            return Err(TurnError::Unsupported(why));
+                        }
+                    }
                 }
             }
         }
