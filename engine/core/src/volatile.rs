@@ -3,8 +3,12 @@
 //! Like field and side effects, volatiles are a table indexed by kind instead of one struct
 //! field each. A variant exists only once the turn engine implements it; moves, abilities and
 //! items that would create any other volatile are rejected before the turn runs.
+//!
+//! A few kinds are slot state Showdown keeps elsewhere (an ability's `abilityState`); they live
+//! here because they reset exactly like volatiles, and [`Volatile::showdown_state`] hides them
+//! from the canonical state.
 
-use crate::dex::{conditions, ConditionId, MoveId};
+use crate::dex::{conditions, ConditionId, MoveId, Type};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 #[repr(u8)]
@@ -36,9 +40,25 @@ pub enum Volatile {
     /// Choice item lock (Showdown `choicelock`, no duration): `counter` holds the locked
     /// move's `MoveId` (Showdown `effectState.move`).
     ChoiceLock,
+    /// Roost: Flying is left out of the holder's types until the end of the turn (duration 1,
+    /// residual order 25). Showdown filters the types in `onType`; the engine changes them with
+    /// `SetTypes` and keeps the types from before in `counter` ([`encode_types`]; 0 = nothing
+    /// was removed) to restore them when Roost ends.
+    Roost,
+    /// Yawn: the holder falls asleep when it ends (duration 2, residual order 23).
+    Yawn,
+    /// Perish Song's count (duration 4, residual order 24): the holder faints when it ends.
+    /// Showdown adds it by name in the move's `onHitField`, so the dex has no condition id.
+    PerishSong,
+    /// Endure: a move's damage leaves the holder at 1 HP at least (duration 1).
+    Endure,
+    /// Not a Showdown volatile: Protean's / Libero's `abilityState.protean` / `.libero` flag
+    /// (the type already changed since switching in). No duration; hidden in the canonical
+    /// state.
+    ProteanUsed,
 }
 
-pub const VOLATILE_COUNT: usize = 12;
+pub const VOLATILE_COUNT: usize = 17;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -54,6 +74,11 @@ impl Volatile {
         Volatile::Encore,
         Volatile::FlashFire,
         Volatile::ChoiceLock,
+        Volatile::Roost,
+        Volatile::Yawn,
+        Volatile::PerishSong,
+        Volatile::Endure,
+        Volatile::ProteanUsed,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -73,6 +98,10 @@ impl Volatile {
             Volatile::Encore => conditions::ENCORE,
             Volatile::FlashFire => ConditionId::NONE,
             Volatile::ChoiceLock => conditions::CHOICELOCK,
+            Volatile::Roost => conditions::ROOST,
+            Volatile::Yawn => conditions::YAWN,
+            Volatile::Endure => conditions::ENDURE,
+            Volatile::PerishSong | Volatile::ProteanUsed => ConditionId::NONE,
         }
     }
 
@@ -91,10 +120,15 @@ impl Volatile {
             Volatile::Encore => "encore",
             Volatile::FlashFire => "flashfire",
             Volatile::ChoiceLock => "choicelock",
+            Volatile::Roost => "roost",
+            Volatile::Yawn => "yawn",
+            Volatile::PerishSong => "perishsong",
+            Volatile::Endure => "endure",
+            Volatile::ProteanUsed => "protean",
         }
     }
 
-    /// The volatile implementing `condition`, if any.
+    /// The volatile implementing `condition`, if any (never for `NONE`).
     pub fn from_condition(condition: ConditionId) -> Option<Volatile> {
         if condition.is_none() {
             return None;
@@ -111,12 +145,59 @@ impl Volatile {
             | Volatile::Flinch
             | Volatile::FollowMe
             | Volatile::RagePowder
-            | Volatile::Spotlight => 1,
-            Volatile::Stall | Volatile::LockedMove | Volatile::MustRecharge => 2,
+            | Volatile::Spotlight
+            | Volatile::Roost
+            | Volatile::Endure => 1,
+            Volatile::Stall | Volatile::LockedMove | Volatile::MustRecharge | Volatile::Yawn => 2,
             Volatile::Encore => 3,
-            Volatile::Confusion | Volatile::FlashFire | Volatile::ChoiceLock => 0,
+            Volatile::PerishSong => 4,
+            Volatile::Confusion
+            | Volatile::FlashFire
+            | Volatile::ChoiceLock
+            | Volatile::ProteanUsed => 0,
         }
     }
+
+    /// The condition's `onResidualOrder` (`None`: Showdown's default, after every ordered
+    /// handler). Its duration is counted down by that residual handler.
+    pub fn residual_order(self) -> Option<u32> {
+        match self {
+            Volatile::Encore => Some(16),
+            Volatile::Yawn => Some(23),
+            Volatile::PerishSong => Some(24),
+            Volatile::Roost => Some(25),
+            _ => None,
+        }
+    }
+
+    /// What Showdown's `pokemon.volatiles` holds for this kind: `None` for engine-only kinds,
+    /// and the effect state without engine-only payload (Roost's saved types).
+    pub fn showdown_state(self, state: VolatileState) -> Option<VolatileState> {
+        match self {
+            Volatile::ProteanUsed => None,
+            Volatile::Roost => Some(VolatileState {
+                counter: 0,
+                ..state
+            }),
+            _ => Some(state),
+        }
+    }
+}
+
+/// Two types in one `counter` (first type in the high byte).
+pub fn encode_types(types: [Type; 2]) -> u16 {
+    (u16::from(types[0] as u8) << 8) | u16::from(types[1] as u8)
+}
+
+/// The types [`encode_types`] stored.
+pub fn decode_types(counter: u16) -> [Type; 2] {
+    let decode = |v: u16| {
+        Type::ALL
+            .into_iter()
+            .find(|&t| u16::from(t as u8) == v)
+            .unwrap_or(Type::None)
+    };
+    [decode(counter >> 8), decode(counter & 0xff)]
 }
 
 /// One volatile's state: Showdown's effect-state fields the canonical output writes
@@ -177,20 +258,64 @@ impl Volatiles {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::dex::moves;
 
     #[test]
     fn ids_match_the_dex_conditions() {
         assert_eq!(Volatile::from_condition(ConditionId::NONE), None);
         for v in Volatile::ALL {
-            if v == Volatile::FlashFire {
-                // The ability's own condition, not exported as a named condition.
-                assert!(v.condition().is_none());
-                let handlers = crate::dex::abilities::FLASH_FIRE.data().handlers;
-                assert!(handlers.contains(&"condition.onStart"));
+            if v.condition().is_none() {
+                // Only kinds the dex never names: an ability's own condition (Flash Fire), Perish
+                // Song (added by name) and engine state.
+                assert!(matches!(
+                    v,
+                    Volatile::FlashFire | Volatile::PerishSong | Volatile::ProteanUsed
+                ));
                 continue;
             }
             assert_eq!(v.condition().id(), v.id());
             assert_eq!(Volatile::from_condition(v.condition()), Some(v));
+        }
+        assert_eq!(Volatile::from_condition(ConditionId::NONE), None);
+        assert_eq!(
+            Volatile::ProteanUsed.showdown_state(VolatileState::NONE),
+            None
+        );
+    }
+
+    /// Durations and residual orders are the dex's (the move's `condition`).
+    #[test]
+    fn durations_and_residual_orders_match_the_moves() {
+        for (volatile, id) in [
+            (Volatile::Roost, moves::ROOST),
+            (Volatile::Yawn, moves::YAWN),
+            (Volatile::PerishSong, moves::PERISH_SONG),
+        ] {
+            let data = id.data();
+            assert_eq!(
+                data.condition_duration,
+                volatile.initial_duration(),
+                "{id:?}"
+            );
+            let order = volatile.residual_order().expect("ordered") as i16;
+            assert!(
+                data.event_orders
+                    .contains(&("condition.onResidualOrder", order)),
+                "{id:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn types_round_trip() {
+        for types in [
+            [Type::Flying, Type::None],
+            [Type::Normal, Type::Flying],
+            [Type::Steel, Type::Flying],
+            [Type::Water, Type::Stellar],
+        ] {
+            assert_eq!(decode_types(encode_types(types)), types);
+            assert_ne!(encode_types(types), 0);
         }
     }
 }

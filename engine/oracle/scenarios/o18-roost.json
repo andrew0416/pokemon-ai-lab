@@ -1,0 +1,27 @@
+{
+ "description": "O18 Grassy Terrain: Skarmory (Steel/Flying) and Tornadus (pure Flying) Roost first, losing Flying for the turn (Steel; Normal), so the slower High Horsepowers of Rhyperior and Hippowdon hit them, and the terrain heals them as grounded Pokemon; Roost ends after that (residual order 25) and their types return.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Skarmory", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 2, "spe": 32}, "moves": ["Roost", "Protect"], "level": 50},
+   {"species": "Tornadus", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Roost", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Rhyperior", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["High Horsepower", "Protect"], "level": 50},
+   {"species": "Hippowdon", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["High Horsepower", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Skarmory": {"hp": 80}, "Tornadus": {"hp": 100}},
+  "field": {"terrain": "grassyterrain", "terrainDuration": 4}
+ },
+ "turn": {"p1": "move roost, move roost", "p2": "move highhorsepower 1, move highhorsepower 2"}
+}

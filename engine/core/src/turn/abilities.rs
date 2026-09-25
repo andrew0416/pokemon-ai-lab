@@ -144,12 +144,14 @@ pub(crate) fn ability_for_move<const N: usize>(
 
 /// `BasePower` handlers of abilities: the user's `onBasePower`, its side's `onAllyBasePower`
 /// (which includes the user), the target's `onSourceBasePower`. `base_power` is the move's
-/// power before the event.
+/// power before the event; `move_type` is the type of the move being used (after
+/// ModifyType), which every type check here reads instead of `data.move_type`.
 pub(crate) fn base_power_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
     data: &MoveData,
+    move_type: Type,
     base_power: i32,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
@@ -182,14 +184,14 @@ pub(crate) fn base_power_handlers<const N: usize>(
     // Steely Spirit: `onAllyBasePower` of every active Pokémon on the user's side.
     for holder in b.alive_slots(user.side) {
         let ability = ability_for_move(b, holder, user, data);
-        if ability == abilities::STEELY_SPIRIT && data.move_type == Type::Steel {
+        if ability == abilities::STEELY_SPIRIT && move_type == Type::Steel {
             let p = priority(ability.data().event_orders, "onAllyBasePowerPriority");
             out.push(Handler::of(b, holder, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
         }
     }
     // Dry Skin: the target's `onSourceBasePower`, Fire moves `chainModify(1.25)`.
     let defending = ability_for_move(b, target, user, data);
-    if defending == abilities::DRY_SKIN && data.move_type == Type::Fire {
+    if defending == abilities::DRY_SKIN && move_type == Type::Fire {
         let p = priority(defending.data().event_orders, "onSourceBasePowerPriority");
         out.push(Handler::of(b, target, p, SUB_ABILITY, 5120));
     }
@@ -203,11 +205,13 @@ pub(crate) fn sheer_force_deletes_secondaries(data: &MoveData) -> bool {
 
 /// `ModifyAtk` (physical moves) or `ModifySpA` (special moves) handlers of abilities: the
 /// user's `onModifyAtk`/`onModifySpA` and the target's `onSourceModifyAtk`/`onSourceModifySpA`.
+/// `move_type` is the type of the move being used.
 pub(crate) fn attack_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
     data: &MoveData,
+    move_type: Type,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
     let physical = data.category == MoveCategory::Physical;
@@ -224,7 +228,7 @@ pub(crate) fn attack_handlers<const N: usize>(
         a if a == abilities::PURIFYING_SALT => &[Type::Ghost],
         _ => &[],
     };
-    if halved.contains(&data.move_type) {
+    if halved.contains(&move_type) {
         let p = priority(defending.data().event_orders, source_event);
         out.push(Handler::of(b, target, p, SUB_ABILITY, MOD_HALF));
     }
@@ -232,7 +236,7 @@ pub(crate) fn attack_handlers<const N: usize>(
         return out;
     };
     // Water Bubble: the user's Water moves `chainModify(2)` (no priority).
-    if attacker.ability == abilities::WATER_BUBBLE && data.move_type == Type::Water {
+    if attacker.ability == abilities::WATER_BUBBLE && move_type == Type::Water {
         let p = priority(attacker.ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_DOUBLE));
     }
@@ -253,7 +257,7 @@ pub(crate) fn attack_handlers<const N: usize>(
     }
     // Guts: `if (pokemon.status) return this.chainModify(1.5)` (Attack only).
     let guts = ability == abilities::GUTS && physical && attacker.status != Status::None;
-    if (pinch_type == Some(data.move_type) && pinch) || guts {
+    if (pinch_type == Some(move_type) && pinch) || guts {
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
     }
@@ -373,12 +377,13 @@ pub(crate) fn modify_stab(ability: AbilityId, stab: bool) -> u32 {
 
 /// `ModifyDamage` handlers of abilities: the target's `onSourceModifyDamage` and every active
 /// Pokémon's `onAnyModifyDamage`. `type_mod` is the hit's clamped effectiveness exponent
-/// (`getMoveHitData(move).typeMod`).
+/// (`getMoveHitData(move).typeMod`); `move_type` is the type of the move being used.
 pub(crate) fn modify_damage_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
     data: &MoveData,
+    move_type: Type,
     type_mod: i32,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
@@ -400,7 +405,7 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
             full_hp.then_some(MOD_HALF)
         }
         // `mod = 1; Fire: mod *= 2; contact: mod /= 2; chainModify(mod)`.
-        a if a == abilities::FLUFFY => match (data.move_type == Type::Fire, contact) {
+        a if a == abilities::FLUFFY => match (move_type == Type::Fire, contact) {
             (true, false) => Some(MOD_DOUBLE),
             (false, true) => Some(MOD_HALF),
             _ => None,

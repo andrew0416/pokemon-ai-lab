@@ -81,9 +81,19 @@ pub fn apply_patch<const N: usize>(
                 "reflect" => (SideEffect::Reflect, 5),
                 "lightscreen" => (SideEffect::LightScreen, 5),
                 "auroraveil" => (SideEffect::AuroraVeil, 5),
+                "safeguard" => (SideEffect::Safeguard, 5),
+                "mist" => (SideEffect::Mist, 5),
+                "luckychant" => (SideEffect::LuckyChant, 5),
+                "wideguard" => (SideEffect::WideGuard, 1),
+                "quickguard" => (SideEffect::QuickGuard, 1),
                 other => return Err(format!("side condition {other:?} is not supported")),
             };
-            if duration.is_none() && effect != SideEffect::Tailwind {
+            // The screens' natural duration depends on the source's Light Clay.
+            let screen = matches!(
+                effect,
+                SideEffect::Reflect | SideEffect::LightScreen | SideEffect::AuroraVeil
+            );
+            if duration.is_none() && screen {
                 return Err(format!(
                     "side condition {id}: give a duration (Light Clay on the source changes it)"
                 ));

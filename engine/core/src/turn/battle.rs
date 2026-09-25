@@ -268,12 +268,12 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// Showdown `spreadDamage` for one target: at least 1, Damage handlers, clamped to the
     /// target's HP, faint queued at 0 HP. Returns the HP removed.
     ///
-    /// Damage handlers by priority: Rock Head and Magic Guard (0), Sturdy (-30), Focus Sash and
-    /// Focus Band (-40, `items::on_damage`). Rock Head (`effect.id === 'recoil'`) and Magic
-    /// Guard (`effect.effectType !== 'Move'`) cancel the damage (neither is breakable). Sturdy
-    /// and Focus Sash leave a full-HP target at 1 HP against a move's damage; Sturdy acts
-    /// first, so the Sash then stays. Sturdy is breakable (ignored by Sunsteel Strike and the
-    /// like).
+    /// Damage handlers by priority: Rock Head and Magic Guard (0), Endure (-10), Sturdy (-30),
+    /// Focus Sash and Focus Band (-40, `items::on_damage`). Rock Head (`effect.id === 'recoil'`)
+    /// and Magic Guard (`effect.effectType !== 'Move'`) cancel the damage (neither is
+    /// breakable). Endure, Sturdy and Focus Sash leave the target at 1 HP against a move's
+    /// damage (Sturdy and the Sash only from full HP; Sturdy acts first, so the Sash then
+    /// stays). Sturdy is breakable (ignored by Sunsteel Strike and the like).
     pub fn damage(&mut self, target: SlotRef, amount: f64, source: DamageSource) -> i32 {
         let Some(pokemon) = self.alive(target) else {
             return 0;
@@ -287,6 +287,14 @@ impl<'a, const N: usize> Battle<'a, N> {
         };
         if cancelled {
             return 0;
+        }
+        // Endure (`onDamagePriority: -10`): a move's damage leaves at least 1 HP; Sturdy and
+        // Focus Sash then see damage below the HP and keep quiet.
+        if source == DamageSource::Move
+            && amount >= i32::from(mon.hp)
+            && self.volatile(target, Volatile::Endure).active
+        {
+            amount = i32::from(mon.hp) - 1;
         }
         if source == DamageSource::Move
             && mon.hp == mon.max_hp
@@ -468,6 +476,10 @@ impl<'a, const N: usize> Battle<'a, N> {
         let Some(pokemon) = self.alive(target) else {
             return false;
         };
+        // Safeguard (`onSetStatus` of the target's side): blocks a status from another Pokémon.
+        if self.safeguarded(target, source) {
+            return false;
+        }
         if self.mon(pokemon).status != Status::None {
             return false;
         }
@@ -581,13 +593,22 @@ impl<'a, const N: usize> Battle<'a, N> {
         false
     }
 
-    /// Showdown `runEvent('TryAddVolatile')` for a new volatile on `target`: Inner Focus on the
-    /// target blocks flinch; the ability handlers of Insomnia, Vital Spirit, Purifying Salt and
-    /// Leaf Guard (in sun) on the target block Yawn; Sweet Veil (Yawn) and Aroma Veil (Attract,
-    /// Disable, Encore, Heal Block, Taunt, Torment) block for the whole side. Apart from flinch
-    /// none of those volatiles is representable yet, so this only guards their future
-    /// implementation. The terrains' `onTryAddVolatile` (Yawn, confusion) belong with those
-    /// volatiles too. Every handler only returns `null`, so their order is irrelevant.
+    /// Safeguard on `target`'s side against an effect from `source` (its `onSetStatus` and
+    /// `onTryAddVolatile`): only another Pokémon's effects are blocked (`target !== source`),
+    /// and nothing without a source (`if (!effect || !source) return;`). Infiltrator, which
+    /// bypasses it, is refused.
+    fn safeguarded(&self, target: SlotRef, source: Option<SlotRef>) -> bool {
+        source.is_some_and(|s| s != target)
+            && self.side_effect_active(target.side, SideEffect::Safeguard)
+    }
+
+    /// Showdown `runEvent('TryAddVolatile')` for a new volatile on `target`: the ability
+    /// handlers of Insomnia, Vital Spirit, Purifying Salt and Leaf Guard (in sun) on the
+    /// target block Yawn; Sweet Veil (Yawn) and Aroma Veil (Attract, Disable, Encore, Heal
+    /// Block, Taunt, Torment) block for the whole side; Electric Terrain blocks Yawn on a
+    /// grounded target; Safeguard blocks Yawn and confusion from another Pokémon. Of those
+    /// volatiles only Yawn is implemented; the others (and Misty Terrain's confusion block)
+    /// guard their future implementation.
     pub fn add_volatile_blocked(&self, target: SlotRef, volatile: Volatile) -> bool {
         let condition = volatile.condition();
         let yawn = condition == conditions::YAWN;
@@ -622,11 +643,29 @@ impl<'a, const N: usize> Battle<'a, N> {
             conditions::TORMENT,
         ]
         .contains(&condition);
-        self.alive_slots(target.side).into_iter().any(|s| {
+        let veiled = self.alive_slots(target.side).into_iter().any(|s| {
             let ability = self.ability_unless_broken(s);
             (ability == abilities::SWEET_VEIL && yawn)
                 || (ability == abilities::AROMA_VEIL && aroma)
-        })
+        });
+        // Electric Terrain's `onTryAddVolatile`: Yawn fails on a grounded target (Misty
+        // Terrain's only blocks confusion). Safeguard: Yawn and confusion from the user of the
+        // move in progress, if that is another Pokémon.
+        let safeguard = (yawn || condition == conditions::CONFUSION)
+            && self.safeguarded(target, self.active_move.map(|m| m.user));
+        veiled
+            || safeguard
+            || (yawn && self.terrain() == Terrain::Electric && self.is_grounded(target))
+    }
+
+    /// Showdown `pokemon.faint()`: HP drops to 0 at once, without Damage handlers (Focus Sash,
+    /// Sturdy and Endure do not apply), and the Pokémon is queued to faint.
+    pub fn faint(&mut self, slot: SlotRef) {
+        let Some(pokemon) = self.alive(slot) else {
+            return;
+        };
+        let hp = i32::from(self.mon(pokemon).hp);
+        self.lose_hp(slot, pokemon, hp);
     }
 
     pub fn set_status_turns(&mut self, pokemon: PokemonRef, turns: i8) {
@@ -843,6 +882,11 @@ impl<'a, const N: usize> Battle<'a, N> {
             && effect == BoostEffect::Ability(abilities::INTIMIDATE)
         {
             boost[0] = 0;
+        }
+        // Mist on the target's side (`onTryBoost`): another Pokémon's drops are blocked
+        // (Infiltrator, which ignores it, is refused).
+        if from_other && self.side_effect_active(target.side, SideEffect::Mist) {
+            boost.iter_mut().filter(|b| **b < 0).for_each(|b| *b = 0);
         }
         // `if (source && target === source) return;` — no source counts as "from another".
         let blocks_drops = source.is_none_or(|s| s != target);

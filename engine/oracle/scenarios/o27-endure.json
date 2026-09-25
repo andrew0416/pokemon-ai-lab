@@ -1,0 +1,26 @@
+{
+ "description": "O27 Endure: Alakazam (full HP, Focus Sash) and Snorlax (30 HP) Endure; Tyranitar's Darkest Lariat and Machamp's Sacred Sword would KO them, but both stay at 1 HP and the Focus Sash is not used.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Alakazam", "item": "Focus Sash", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Endure", "Calm Mind"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Endure", "Swords Dance"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Tyranitar", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 2, "atk": 32, "spd": 32}, "moves": ["Darkest Lariat", "Protect"], "level": 50},
+   {"species": "Machamp", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 2, "atk": 32, "spd": 32}, "moves": ["Sacred Sword", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Snorlax": {"hp": 30}}
+ },
+ "turn": {"p1": "move endure, move endure", "p2": "move darkestlariat 1, move sacredsword 2"}
+}

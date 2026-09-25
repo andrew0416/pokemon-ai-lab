@@ -34,9 +34,11 @@ pub enum SideEffect {
     /// Single-turn protections (doubles).
     WideGuard,
     QuickGuard,
+    /// No critical hits against the side.
+    LuckyChant,
 }
 
-pub const SIDE_EFFECT_COUNT: usize = 12;
+pub const SIDE_EFFECT_COUNT: usize = 13;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 #[repr(u8)]

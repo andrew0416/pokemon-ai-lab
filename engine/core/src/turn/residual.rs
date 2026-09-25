@@ -11,10 +11,11 @@ use crate::dex::{abilities, items, AbilityId, ItemId, Type, TypeImmunities, NO_B
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SideId, SlotRef, State, Status};
-use crate::volatile::Volatile;
+use crate::volatile::{Volatile, VolatileState};
 
 use super::abilities as ability_events;
 use super::battle::{Battle, BoostEffect, DamageSource};
+use super::conditions;
 use super::items as item_events;
 use super::order::ORDER_DEFAULT;
 use super::TurnError;
@@ -62,11 +63,15 @@ pub(crate) fn residual<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), Turn
     let mut handlers = collect(b);
     speed_sort(b, &mut handlers);
     for handler in handlers {
-        run(b, handler)?;
-        if b.faint_messages(true) {
+        // Showdown `fieldEvent`: `faintMessages()` follows every handler except one whose
+        // holder has already fainted (skipped) or whose effect's duration ran out (`End`, then
+        // `continue`): a faint queued by an `End` (Perish Song) waits for the next handler.
+        if run(b, handler)? && b.faint_messages(true) {
             return Ok(());
         }
     }
+    // `runAction`'s `faintMessages()` after the residual action.
+    b.faint_messages(true);
     Ok(())
 }
 
@@ -91,17 +96,22 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
         out.push(field(27, 1, Kind::FieldDuration(FieldEffect::TrickRoom)));
     }
     for side in [SideId::One, SideId::Two] {
-        for (effect, sub_order) in [
-            (SideEffect::Reflect, 1),
-            (SideEffect::LightScreen, 2),
-            (SideEffect::Tailwind, 5),
-            (SideEffect::AuroraVeil, 10),
+        for (effect, order, sub_order) in [
+            (SideEffect::Reflect, 26, 1),
+            (SideEffect::LightScreen, 26, 2),
+            (SideEffect::Safeguard, 26, 3),
+            (SideEffect::Mist, 26, 4),
+            (SideEffect::Tailwind, 26, 5),
+            (SideEffect::LuckyChant, 26, 6),
+            (SideEffect::AuroraVeil, 26, 10),
+            // No `onSideResidualOrder`: Showdown's default order, the side-condition sub-order.
+            (SideEffect::WideGuard, ORDER_DEFAULT, SUB_SIDE_CONDITION),
+            (SideEffect::QuickGuard, ORDER_DEFAULT, SUB_SIDE_CONDITION),
         ] {
             if b.side_effect_active(side, effect) {
-                out.push(field(26, sub_order, Kind::SideDuration(side, effect)));
+                out.push(field(order, sub_order, Kind::SideDuration(side, effect)));
             }
         }
-        let _ = SUB_SIDE_CONDITION;
         for slot in Battle::<N>::slots(side) {
             let Some(pokemon) = b.alive(slot) else {
                 continue;
@@ -124,14 +134,8 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
             }
             for (volatile, state) in b.state.slot(slot).volatiles.iter() {
                 if state.duration > 0 {
-                    // Encore's own handler carries its duration tick (`onResidualOrder: 16`).
-                    let order = if volatile == Volatile::Encore {
-                        16
-                    } else {
-                        ORDER_DEFAULT
-                    };
                     out.push(Handler {
-                        order,
+                        order: volatile.residual_order().unwrap_or(ORDER_DEFAULT),
                         speed,
                         sub_order: SUB_CONDITION,
                         kind: Kind::VolatileDuration(pokemon, slot, volatile),
@@ -213,17 +217,41 @@ fn still_active<const N: usize>(b: &Battle<'_, N>, pokemon: PokemonRef, slot: Sl
     b.alive(slot) == Some(pokemon)
 }
 
-fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), TurnError> {
+impl Kind {
+    /// The Pokémon holding the handler's effect, for handlers of a Pokémon.
+    fn holder(self) -> Option<(PokemonRef, SlotRef)> {
+        match self {
+            Kind::VolatileDuration(p, s, _)
+            | Kind::StatusDamage(p, s)
+            | Kind::GrassyHeal(p, s)
+            | Kind::Leftovers(p, s)
+            | Kind::SpeedBoost(p, s)
+            | Kind::StatusCure(p, s, _)
+            | Kind::Item(p, s, _) => Some((p, s)),
+            Kind::Weather | Kind::FieldDuration(_) | Kind::SideDuration(..) => None,
+        }
+    }
+}
+
+/// Runs one residual handler. Returns whether Showdown's `fieldEvent` calls `faintMessages()`
+/// after it: not when the holder has already fainted (the handler is skipped), nor when the
+/// handler's effect ran out of duration (its `End` runs, then `continue`).
+fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, TurnError> {
+    if let Some((pokemon, slot)) = handler.kind.holder() {
+        if b.occupant(slot) != Some(pokemon) {
+            return Ok(false);
+        }
+    }
     match handler.kind {
         Kind::Weather => {
             let mut effect = b.state.field[FieldEffect::Weather as usize];
             if !effect.is_active() {
-                return Ok(());
+                return Ok(true);
             }
             effect.turns -= 1;
             if effect.turns == 0 {
                 b.set_field(FieldEffect::Weather, Effect::NONE);
-                return Ok(());
+                return Ok(false);
             }
             b.set_field(FieldEffect::Weather, effect);
             // `onFieldResidual` of every supported weather: eachEvent('Weather'), actives in
@@ -232,7 +260,7 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
             // run the event; sun and rain run it with every handler skipped).
             let weather = b.effective_weather();
             if weather == Weather::None {
-                return Ok(());
+                return Ok(true);
             }
             let mut actives: Vec<(SlotRef, i32)> = b
                 .all_alive()
@@ -251,7 +279,7 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
                     .contains(&b.ability(s))
                 });
             if !acts {
-                return Ok(());
+                return Ok(true);
             }
             sort_by_speed(b, &mut actives);
             for (slot, _) in actives {
@@ -265,48 +293,40 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
         Kind::FieldDuration(which) => {
             let mut effect = b.state.field[which as usize];
             if !effect.is_active() {
-                return Ok(());
+                return Ok(true);
             }
             effect.turns -= 1;
-            b.set_field(
-                which,
-                if effect.turns == 0 {
-                    Effect::NONE
-                } else {
-                    effect
-                },
-            );
+            let ended = effect.turns == 0;
+            b.set_field(which, if ended { Effect::NONE } else { effect });
+            return Ok(!ended);
         }
         Kind::SideDuration(side, which) => {
             let mut effect = b.state.side(side).effects[which as usize];
             if !effect.is_active() {
-                return Ok(());
+                return Ok(true);
             }
             effect.turns -= 1;
-            b.set_side_effect(
-                side,
-                which,
-                if effect.turns == 0 {
-                    Effect::NONE
-                } else {
-                    effect
-                },
-            );
+            let ended = effect.turns == 0;
+            b.set_side_effect(side, which, if ended { Effect::NONE } else { effect });
+            return Ok(!ended);
         }
         Kind::VolatileDuration(pokemon, slot, volatile) => {
-            if !still_active(b, pokemon, slot) {
-                return Ok(());
-            }
             let mut state = b.volatile(slot, volatile);
             if !state.active || state.duration == 0 {
-                return Ok(());
+                return Ok(true);
+            }
+            let ended = state.duration == 1;
+            // `removeVolatile` does nothing for a Pokémon at 0 HP (it faints next anyway).
+            if !still_active(b, pokemon, slot) {
+                return Ok(!ended);
+            }
+            if ended {
+                // `removeVolatile`: the condition's `End`, then the volatile is gone.
+                conditions::volatile_end(b, pokemon, slot, volatile)?;
+                b.set_volatile_state(slot, volatile, VolatileState::NONE);
+                return Ok(false);
             }
             state.duration -= 1;
-            if state.duration == 0 {
-                // The condition ends (`onEnd`), and its `onResidual` does not run.
-                b.remove_volatile(slot, volatile);
-                return Ok(());
-            }
             b.set_volatile_state(slot, volatile, state);
             // The condition's own `onResidual`.
             match volatile {
@@ -337,7 +357,7 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
         }
         Kind::StatusDamage(pokemon, slot) => {
             if !still_active(b, pokemon, slot) {
-                return Ok(());
+                return Ok(true);
             }
             let max_hp = f64::from(b.mon(pokemon).max_hp);
             match b.mon(pokemon).status {
@@ -360,7 +380,7 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
         }
         Kind::GrassyHeal(pokemon, slot) => {
             if !still_active(b, pokemon, slot) || b.terrain() != Terrain::Grassy {
-                return Ok(());
+                return Ok(true);
             }
             if b.is_grounded(slot) {
                 let max_hp = f64::from(b.mon(pokemon).max_hp);
@@ -369,21 +389,21 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
         }
         Kind::Leftovers(pokemon, slot) => {
             if !still_active(b, pokemon, slot) || b.mon(pokemon).item != items::LEFTOVERS {
-                return Ok(());
+                return Ok(true);
             }
             let max_hp = f64::from(b.mon(pokemon).max_hp);
             b.heal(slot, max_hp / 16.0);
         }
         Kind::Item(pokemon, slot, item) => {
             if !still_active(b, pokemon, slot) || b.mon(pokemon).item != item {
-                return Ok(());
+                return Ok(true);
             }
             item_events::on_residual(b, slot, item);
         }
         Kind::SpeedBoost(pokemon, slot) => {
             // Skipped if the ability changed since the handlers were collected.
             if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != abilities::SPEED_BOOST {
-                return Ok(());
+                return Ok(true);
             }
             // `if (pokemon.activeTurns) this.boost({spe: 1})`.
             if b.active_since_turn_start(slot) {
@@ -399,10 +419,10 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
         }
         Kind::StatusCure(pokemon, slot, ability) => {
             if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != ability {
-                return Ok(());
+                return Ok(true);
             }
             if b.mon(pokemon).status == Status::None {
-                return Ok(());
+                return Ok(true);
             }
             let cure = if ability == abilities::SHED_SKIN {
                 // `pokemon.hp && pokemon.status && this.randomChance(33, 100)` (not modded in
@@ -419,7 +439,7 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
         }
     }
     let _ = Type::None;
-    Ok(())
+    Ok(true)
 }
 
 /// `runEvent('Weather', pokemon)` during the weather's residual: the sandstorm's own
@@ -535,6 +555,36 @@ pub(crate) fn bench<'b, const N: usize>(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The side-condition residual orders hard-coded in `collect` are the dex's.
+    #[test]
+    fn side_condition_residual_orders_match_the_dex() {
+        use crate::dex::moves;
+        for (id, order) in [
+            (moves::SAFEGUARD, Some((26, 3))),
+            (moves::MIST, Some((26, 4))),
+            (moves::LUCKY_CHANT, Some((26, 6))),
+            (moves::WIDE_GUARD, None),
+            (moves::QUICK_GUARD, None),
+        ] {
+            let orders = id.data().event_orders;
+            let found = orders
+                .iter()
+                .find(|(n, _)| *n == "condition.onSideResidualOrder")
+                .map(|&(_, o)| o);
+            let sub = orders
+                .iter()
+                .find(|(n, _)| *n == "condition.onSideResidualSubOrder")
+                .map(|&(_, o)| o);
+            match order {
+                Some((o, s)) => {
+                    assert_eq!(found, Some(o), "{id:?}");
+                    assert_eq!(sub, Some(s), "{id:?}");
+                }
+                None => assert_eq!((found, sub), (None, None), "{id:?}"),
+            }
+        }
+    }
 
     /// The residual orders hard-coded in `collect` are the dex's.
     #[test]

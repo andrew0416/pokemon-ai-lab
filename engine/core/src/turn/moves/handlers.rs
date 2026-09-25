@@ -5,10 +5,11 @@
 //! handled here gets the event's neutral result.
 
 use crate::damage::MOD_ONE_POINT_FIVE;
-use crate::dex::{abilities, items, moves, MoveId, Type, TypeRelation};
+use crate::dex::{abilities, items, moves, ItemId, MoveId, MoveTarget, Type, TypeRelation};
 use crate::field::{FieldEffect, Terrain, Weather};
 use crate::instruction::Instruction;
-use crate::state::{SideId, SlotRef, Status, BOOST_COUNT};
+use crate::state::{Pokemon, SideId, SlotRef, Status, BOOST_COUNT};
+use crate::volatile::Volatile;
 
 use super::super::battle::Battle;
 use super::super::order::modify;
@@ -34,6 +35,39 @@ fn effective_weather<const N: usize>(
     Ok(if hidden { Weather::None } else { weather })
 }
 
+/// The move's `onModifyType` (`useMoveInner`, right before its `onModifyMove`).
+pub(super) fn on_modify_type<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &mut ActiveMove,
+) -> Result<(), TurnError> {
+    match mv.id {
+        // Weather Ball: `switch (pokemon.effectiveWeather())`: Fire in sun, Water in rain, Rock
+        // in sandstorm, Ice in hail and snow.
+        moves::WEATHER_BALL => {
+            mv.move_type = match effective_weather(b, user, user)? {
+                Weather::Sun | Weather::HarshSun => Type::Fire,
+                Weather::Rain | Weather::HeavyRain => Type::Water,
+                Weather::Sand => Type::Rock,
+                Weather::Snow => Type::Ice,
+                _ => return Ok(()),
+            };
+        }
+        // Terrain Pulse: `if (!pokemon.isGrounded()) return;` then the type of `field.terrain`.
+        moves::TERRAIN_PULSE if b.is_grounded(user) => {
+            mv.move_type = match b.terrain() {
+                Terrain::Electric => Type::Electric,
+                Terrain::Grassy => Type::Grass,
+                Terrain::Misty => Type::Fairy,
+                Terrain::Psychic => Type::Psychic,
+                Terrain::None => return Ok(()),
+            };
+        }
+        _ => {}
+    }
+    Ok(())
+}
+
 /// The move's `onModifyMove` (`useMoveInner`, after the target is chosen and before
 /// `getMoveTargets`). `target` is the chosen target.
 pub(super) fn on_modify_move<const N: usize>(
@@ -43,6 +77,34 @@ pub(super) fn on_modify_move<const N: usize>(
     mv: &mut ActiveMove,
 ) -> Result<(), TurnError> {
     match mv.id {
+        // Weather Ball: `move.basePower *= 2` in sun, rain, sandstorm, hail and snow (the
+        // user's effective weather).
+        moves::WEATHER_BALL => {
+            if matches!(
+                effective_weather(b, user, user)?,
+                Weather::Sun
+                    | Weather::HarshSun
+                    | Weather::Rain
+                    | Weather::HeavyRain
+                    | Weather::Sand
+                    | Weather::Snow
+            ) {
+                mv.base_power *= 2;
+            }
+        }
+        // Terrain Pulse: `if (this.field.terrain && pokemon.isGrounded()) move.basePower *= 2;`
+        moves::TERRAIN_PULSE => {
+            if b.terrain() != Terrain::None && b.is_grounded(user) {
+                mv.base_power *= 2;
+            }
+        }
+        // Expanding Force: `if (this.field.isTerrain('psychicterrain') && source.isGrounded())
+        // move.target = 'allAdjacentFoes';` (the caller then re-picks the target).
+        moves::EXPANDING_FORCE => {
+            if b.terrain() == Terrain::Psychic && b.is_grounded(user) {
+                mv.target = MoveTarget::AllAdjacentFoes;
+            }
+        }
         // Blizzard: `if (this.field.isWeather(['hail', 'snowscape'])) move.accuracy = true;`
         moves::BLIZZARD => {
             if b.effective_weather() == Weather::Snow {
@@ -80,7 +142,59 @@ pub(super) fn on_try<const N: usize>(
         // Poltergeist: `return !!target.item;` (the held item, even if suppressed). Its
         // `onTryHit` only logs the item.
         moves::POLTERGEIST => b.slot_mon(first_target).is_some_and(|m| !m.item.is_none()),
+        // Steel Roller: `return !this.field.isTerrain('');` (no `TryTerrain` handler exists).
+        moves::STEEL_ROLLER => b.terrain() != Terrain::None,
         _ => true,
+    }
+}
+
+/// The move's `onTryImmunity` (`hitStepTryImmunity`, per target). `false` = the target is
+/// immune.
+pub(super) fn on_try_immunity<const N: usize>(
+    b: &Battle<'_, N>,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    match mv.id {
+        // Trick, Switcheroo: `return !target.hasAbility('stickyhold');` (`hasAbility` is not
+        // skipped by Mold Breaker).
+        moves::TRICK | moves::SWITCHEROO => b.ability(target) != abilities::STICKY_HOLD,
+        _ => true,
+    }
+}
+
+/// The move's own `onTryHit` (Champions `spreadMoveHit`: `singleEvent('TryHit', ...)` on the
+/// first target, after accuracy and before the damage). `false` = the move fails. Low Kick's
+/// and Grass Knot's only act on a Dynamaxed target, Poltergeist's only logs.
+pub(super) fn on_try_hit<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    mv: &mut ActiveMove,
+) -> bool {
+    match mv.id {
+        // Pollen Puff: `if (source.isAlly(target)) { move.basePower = 0; move.infiltrates =
+        // true; }` (`infiltrates` only matters against a substitute).
+        moves::POLLEN_PUFF => {
+            if target.side == user.side {
+                mv.base_power = 0;
+            }
+            true
+        }
+        // Yawn: `if (target.status || !target.runStatusImmunity('slp')) return false;` (no type
+        // or implemented `Immunity` handler covers sleep).
+        moves::YAWN => b.slot_mon(target).is_some_and(|m| m.status == Status::None),
+        _ => true,
+    }
+}
+
+/// The move's `onAfterHit`, once per damaged target (`spreadMoveHit`, after `DamagingHit`).
+/// Knock Off's is in `moves.rs`. `onAfterSubDamage` (the same effect against a substitute) is
+/// unreachable: substitutes are refused.
+pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, mv: &ActiveMove) {
+    // Ice Spinner: `this.field.clearTerrain();`
+    if mv.id == moves::ICE_SPINNER {
+        super::clear_terrain(b);
     }
 }
 
@@ -106,12 +220,21 @@ pub(super) fn base_power_callback<const N: usize>(
 
 /// The move's own `onBasePower` modifier (BasePower handler priority 0, after type items and
 /// terrain). Knock Off's is in `get_damage`.
-pub(super) fn on_base_power<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove) -> Option<u32> {
+pub(super) fn on_base_power<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Option<u32> {
     match mv.id {
         // Grav Apple: `if (this.field.getPseudoWeather('gravity')) return this.chainModify(1.5);`
         moves::GRAV_APPLE if b.field_active(FieldEffect::Gravity) => Some(MOD_ONE_POINT_FIVE),
         // Psyblade: `if (this.field.isTerrain('electricterrain')) return this.chainModify(1.5);`
         moves::PSYBLADE if b.terrain() == Terrain::Electric => Some(MOD_ONE_POINT_FIVE),
+        // Expanding Force: `if (this.field.isTerrain('psychicterrain') && source.isGrounded())
+        // return this.chainModify(1.5);`
+        moves::EXPANDING_FORCE if b.terrain() == Terrain::Psychic && b.is_grounded(user) => {
+            Some(MOD_ONE_POINT_FIVE)
+        }
         _ => None,
     }
 }
@@ -210,14 +333,114 @@ pub(super) fn on_hit<const N: usize>(
             set_boosts(b, target, to_target);
             HitResult::Success
         }
+        // Steel Roller: `this.field.clearTerrain();` (returns nothing: no effect on success).
+        moves::STEEL_ROLLER => {
+            super::clear_terrain(b);
+            return Ok(None);
+        }
+        moves::TRICK | moves::SWITCHEROO => trick(b, user, target)?,
+        // Pollen Puff: an ally is healed `Math.floor(target.baseMaxhp * 0.5)`; `NOT_FAIL` if
+        // nothing is healed. A foe gets nothing more (`undefined`).
+        moves::POLLEN_PUFF => {
+            if target.side != user.side {
+                return Ok(None);
+            }
+            let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
+            if b.heal(target, f64::from(max_hp / 2)) > 0 {
+                HitResult::Success
+            } else {
+                HitResult::NotFail
+            }
+        }
         _ => return Ok(None),
     };
     Ok(Some(result))
 }
 
+/// Trick and Switcheroo `onHit`: `target.takeItem(source)` and `source.takeItem()` (`undefined`
+/// without an item, `false` when the item's own TakeItem handler refuses: `onTakeItem: false`,
+/// or a Mega Stone of its holder's species); fail if either refuses or both are empty; then
+/// each item's TakeItem handler again with its new holder (a Mega Stone cannot go to its own
+/// species); then both `setItem`s. Abilities with TakeItem handlers (Sticky Hold, Unburden)
+/// are refused on the field. An item whose `Start`, `End` or other TakeItem handler would run
+/// here is not implemented.
+fn trick<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+) -> Result<HitResult, TurnError> {
+    let (yours, mine) = (b.item(target), b.item(user));
+    for item in [yours, mine] {
+        let data = item.data();
+        let other_take_item = data.mega_stone.is_empty() && data.handlers.contains(&"onTakeItem");
+        if other_take_item
+            || data
+                .handlers
+                .iter()
+                .any(|h| ["onStart", "onEnd"].contains(h))
+        {
+            return Err(b.unsupported(format!("Trick moving {} ({:?})", data.name, data.handlers)));
+        }
+    }
+    let taken = |slot: SlotRef, item: ItemId| item.is_none() || b.item_can_be_taken(slot);
+    if !taken(target, yours) || !taken(user, mine) || (yours.is_none() && mine.is_none()) {
+        return Ok(HitResult::Failure);
+    }
+    let received = |item: ItemId, receiver: SlotRef| {
+        item.is_none() || b.slot_mon(receiver).is_some_and(|m| holds_freely(item, m))
+    };
+    if !received(mine, target) || !received(yours, user) {
+        return Ok(HitResult::Failure);
+    }
+    for (slot, old, new) in [(target, yours, mine), (user, mine, yours)] {
+        let pokemon = b.occupant(slot).expect("an active Pokémon");
+        b.apply(Instruction::SetItem {
+            target: pokemon,
+            old,
+            new,
+        });
+    }
+    Ok(HitResult::Success)
+}
+
+/// Whether `item`'s own TakeItem handler lets `holder` part with it (or, called with the new
+/// holder, receive it): not `onTakeItem: false`, and not a Mega Stone of the holder's species
+/// (`item.megaStone?.[holder.baseSpecies.baseSpecies]`).
+fn holds_freely(item: ItemId, holder: &Pokemon) -> bool {
+    let data = item.data();
+    let base = holder.species.data().base_species;
+    let base = if base.is_none() { holder.species } else { base };
+    !data.cannot_be_taken && !data.mega_stone.iter().any(|&(from, _)| from == base)
+}
+
 /// The move's `onHitField` (moves targeting the whole field). `None` = none.
-pub(super) fn on_hit_field<const N: usize>(b: &mut Battle<'_, N>, mv: &ActiveMove) -> Option<bool> {
+pub(super) fn on_hit_field<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Option<bool> {
     match mv.id {
+        // Perish Song: every active Pokémon (side one first, slot order) gets the `perishsong`
+        // volatile unless `runEvent('TryHit')` returns `null` for it (it still counts as a
+        // success) or it already has one; fails when nobody was affected. No semi-invulnerable
+        // state exists (`Invulnerability`).
+        moves::PERISH_SONG => {
+            let mut result = false;
+            for side in [SideId::One, SideId::Two] {
+                for slot in Battle::<N>::slots(side) {
+                    if b.alive(slot).is_none() {
+                        continue;
+                    }
+                    if perish_song_try_hit_null(b, user, mv, slot) {
+                        result = true;
+                    } else if !b.volatile(slot, Volatile::PerishSong).active {
+                        b.add_volatile(slot, Volatile::PerishSong);
+                        result = true;
+                    }
+                }
+            }
+            Some(result)
+        }
         // Haze: `for (const pokemon of this.getAllActive()) pokemon.clearBoosts();`
         moves::HAZE => {
             for side in [SideId::One, SideId::Two] {
@@ -231,6 +454,24 @@ pub(super) fn on_hit_field<const N: usize>(b: &mut Battle<'_, N>, mv: &ActiveMov
         }
         _ => None,
     }
+}
+
+/// Whether a `TryHit` handler returns `null` for Perish Song on `target` (only `null` spares
+/// it; `false`, e.g. Good as Gold, does not): Psychic Terrain against a Prankster-boosted
+/// Perish Song on a grounded foe, and Soundproof (breakable) on anyone but the user. Any other
+/// `null`-returning TryHit handler added later must be listed here.
+fn perish_song_try_hit_null<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    let psychic_terrain = b.terrain() == Terrain::Psychic
+        && mv.priority > 0
+        && target.side != user.side
+        && b.is_grounded(target);
+    let soundproof = target != user && b.ability_unless_broken(target) == abilities::SOUNDPROOF;
+    psychic_terrain || soundproof
 }
 
 /// Showdown `clearBoosts`.

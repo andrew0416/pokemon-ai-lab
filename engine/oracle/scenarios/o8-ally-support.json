@@ -1,0 +1,27 @@
+{
+ "description": "O8 ally-target status moves: Ribombee Pollen Puffs its ally Alcremie (heal half, no damage); Vaporeon's Life Dew heals both allies (itself at full HP fails, Machamp is healed); Alcremie Decorates its ally Ribombee (+2 Atk/SpA); Machamp Coaches its ally Vaporeon (+1 Atk/Def).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Coaching", "Protect"], "level": 50},
+   {"species": "Vaporeon", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Life Dew", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Alcremie", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Decorate", "Protect"], "level": 50},
+   {"species": "Ribombee", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Pollen Puff", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Machamp": {"hp": 100}},
+  "p2": {"Alcremie": {"hp": 80}}
+ },
+ "turn": {"p1": "move coaching -2, move lifedew", "p2": "move decorate -2, move pollenpuff -1"}
+}

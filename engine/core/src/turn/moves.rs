@@ -23,6 +23,7 @@ use crate::volatile::Volatile;
 use super::abilities as ability_events;
 use super::abilities::{Handler, SUB_FIELD_CONDITION, SUB_ITEM, SUB_MOVE, SUB_SIDE_CONDITION};
 use super::battle::{ActiveMoveRef, Battle, BoostEffect, DamageSource};
+use super::conditions;
 use super::items as item_events;
 use super::order::{boosted_stat, modify};
 use super::support::{side_effect_of, type_boost_item};
@@ -51,6 +52,13 @@ struct ActiveMove {
     added_secondary: Option<Secondary>,
     /// HP taken by the move's hits (Showdown `move.totalDamage`), set once the hits are done.
     total_damage: i32,
+    /// Target type after ModifyMove (Showdown `move.target`; Expanding Force widens it).
+    target: MoveTarget,
+    /// Type after ModifyType (Showdown `move.type`; Weather Ball, Terrain Pulse). Every rule
+    /// that reads the type of the move being used reads this, not `data.move_type`.
+    move_type: Type,
+    /// Base power after ModifyMove (Showdown `move.basePower`), before `basePowerCallback`.
+    base_power: i32,
 }
 
 impl PartialEq for ActiveMove {
@@ -63,6 +71,9 @@ impl PartialEq for ActiveMove {
             && self.has_sheer_force == other.has_sheer_force
             && self.secondary_chance_factor == other.secondary_chance_factor
             && self.total_damage == other.total_damage
+            && self.target == other.target
+            && self.move_type == other.move_type
+            && self.base_power == other.base_power
     }
 }
 
@@ -78,6 +89,9 @@ impl std::hash::Hash for ActiveMove {
         self.has_sheer_force.hash(state);
         self.secondary_chance_factor.hash(state);
         self.total_damage.hash(state);
+        self.target.hash(state);
+        self.move_type.hash(state);
+        self.base_power.hash(state);
     }
 }
 
@@ -157,6 +171,9 @@ pub(crate) fn run_move<const N: usize>(
             secondary_chance_factor: 1,
             added_secondary: None,
             total_damage: 0,
+            target: MoveId::NONE.data().target,
+            move_type: MoveId::NONE.data().move_type,
+            base_power: 0,
         };
         before_move(b, user, &recharge);
         return Ok(MoveStep::Done);
@@ -248,6 +265,9 @@ fn run_move_inner<const N: usize>(
         secondary_chance_factor: 1,
         added_secondary: None,
         total_damage: 0,
+        target: id.data().target,
+        move_type: id.data().move_type,
+        base_power: i32::from(id.data().base_power),
     };
 
     if !before_move(b, user, &mv) {
@@ -500,7 +520,7 @@ fn get_move_targets<const N: usize>(
     mv: &ActiveMove,
     target: SlotRef,
 ) -> Result<Vec<SlotRef>, TurnError> {
-    Ok(match mv.data.target {
+    Ok(match mv.target {
         MoveTarget::All | MoveTarget::FoeSide | MoveTarget::AllySide | MoveTarget::AllyTeam => {
             Vec::new()
         }
@@ -510,10 +530,12 @@ fn get_move_targets<const N: usize>(
             t
         }
         MoveTarget::AllAdjacentFoes => b.alive_slots(user.side.other()),
+        // `alliesAndSelf()`: every active Pokémon on the user's side that has not fainted.
+        MoveTarget::Allies => b.alive_slots(user.side),
         _ => {
             let mut t = target;
             if b.alive(t).is_none() && t.side != user.side {
-                match get_random_target(b, user, mv.data.target) {
+                match get_random_target(b, user, mv.target) {
                     Some(r) => t = r,
                     None => return Ok(Vec::new()),
                 }
@@ -547,8 +569,7 @@ fn redirect_target<const N: usize>(
     let mut handlers: Vec<(i8, i32, SlotRef)> = Vec::new();
     // `breakable`: a Mold Breaker move ignores these handlers too.
     let absorbs = |b: &Battle<'_, N>, s: SlotRef| {
-        b.alive(s).is_some()
-            && absorbing_type(b.ability_unless_broken(s)) == Some(mv.data.move_type)
+        b.alive(s).is_some() && absorbing_type(b.ability_unless_broken(s)) == Some(mv.move_type)
     };
     for s in Battle::<N>::slots(user.side) {
         if absorbs(b, s) {
@@ -580,7 +601,7 @@ fn redirect_target<const N: usize>(
         let loc = loc_of(user, holder);
         if priority == 0 {
             // Lightning Rod / Storm Drain treat `adjacentFoe`/`randomNormal` as `normal`.
-            let kind = match mv.data.target {
+            let kind = match mv.target {
                 MoveTarget::AdjacentFoe | MoveTarget::RandomNormal => MoveTarget::Normal,
                 other => other,
             };
@@ -592,7 +613,7 @@ fn redirect_target<const N: usize>(
         if is_rage_powder && b.status_immune(user, TypeImmunities::POWDER) {
             return false;
         }
-        valid_target_loc(N, user, loc, mv.data.target)
+        valid_target_loc(N, user, loc, mv.target)
     };
     let mut i = 0;
     while i < handlers.len() {
@@ -635,15 +656,20 @@ fn use_move<const N: usize>(
     will_act: bool,
 ) -> Result<Option<MoveProgress>, TurnError> {
     let pokemon = b.occupant(user).expect("checked");
-    let target = if mv.data.target == MoveTarget::User {
+    let base_target = mv.target;
+    let mut target = if matches!(mv.target, MoveTarget::User | MoveTarget::Allies) {
         Some(user)
     } else {
         target
     };
-    // ModifyMove: the move's own handler (`singleEvent`), then `runEvent`: the user's ability
-    // and status.
+    // ModifyType and ModifyMove: the move's own handlers (`singleEvent`), then `runEvent`: the
+    // user's ability and status; a changed target type picks a new target (`getRandomTarget`).
+    handlers::on_modify_type(b, user, mv)?;
     handlers::on_modify_move(b, user, target, mv)?;
     ability_hooks::on_modify_move(b, user, mv)?;
+    if mv.target != base_target {
+        target = get_random_target(b, user, mv.target);
+    }
     // Freeze `onModifyMove`: a defrosting move thaws the user.
     if b.mon(pokemon).status == Status::Freeze && mv.data.flags.contains(MoveFlags::DEFROST) {
         b.cure_status(pokemon);
@@ -657,7 +683,7 @@ fn use_move<const N: usize>(
 
     let mut main_target = target;
     let field_move = matches!(
-        mv.data.target,
+        mv.target,
         MoveTarget::All | MoveTarget::FoeSide | MoveTarget::AllySide
     );
     let targets = if field_move {
@@ -672,7 +698,7 @@ fn use_move<const N: usize>(
         return Ok(None);
     }
     let result = if field_move {
-        try_move_hit_field(b, user, mv, target)?
+        try_move_hit_field(b, user, mv, target, will_act)?
     } else {
         let Some(&last) = targets.last() else {
             return Ok(None);
@@ -736,7 +762,7 @@ fn deduct_pressure_pp<const N: usize>(
     let pressure_targets: Vec<SlotRef> = if mv.data.flags.contains(MoveFlags::MUSTPRESSURE) {
         b.alive_slots(foe)
     } else {
-        match mv.data.target {
+        match mv.target {
             MoveTarget::All => b.alive_slots(foe),
             MoveTarget::FoeSide | MoveTarget::AllySide | MoveTarget::AllyTeam => Vec::new(),
             _ => targets.to_vec(),
@@ -771,11 +797,19 @@ fn try_move_hit_field<const N: usize>(
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
+    will_act: bool,
 ) -> Result<bool, TurnError> {
     let data = mv.data;
+    // Try: the move's onTry (Aurora Veil; Wide Guard and Quick Guard need a later action,
+    // `!!this.queue.willAct()`).
     if mv.id == moves::AURORA_VEIL && b.effective_weather() != Weather::Snow {
         return Ok(false);
     }
+    if [moves::WIDE_GUARD, moves::QUICK_GUARD].contains(&mv.id) && !will_act {
+        return Ok(false);
+    }
+    // PrepareHit: the user's ability (Protean, Libero).
+    prepare_hit_ability(b, user, mv);
     // runMoveEffects on the target: undefined (nothing attempted) counts as success.
     let mut outcome: Option<bool> = None;
     let mut combine = |r: bool| outcome = Some(outcome.unwrap_or(false) || r);
@@ -783,6 +817,11 @@ fn try_move_hit_field<const N: usize>(
         let side = target.side;
         let effect = side_effect_of(data.side_condition.id()).expect("checked by support");
         combine(add_side_condition(b, user, side, effect));
+    }
+    // HitSide: Wide Guard and Quick Guard `onHitSide`: `source.addVolatile('stall')`, even if
+    // the side condition was already up (returns nothing).
+    if [moves::WIDE_GUARD, moves::QUICK_GUARD].contains(&mv.id) {
+        b.add_volatile(user, Volatile::Stall);
     }
     if !data.weather.is_none() {
         let weather = weather_of(data.weather.id()).expect("checked by support");
@@ -796,7 +835,7 @@ fn try_move_hit_field<const N: usize>(
         combine(add_pseudo_weather(b, data.pseudo_weather.id()));
     }
     // HitField: the move's onHitField (Haze).
-    if let Some(r) = handlers::on_hit_field(b, mv) {
+    if let Some(r) = handlers::on_hit_field(b, user, mv) {
         combine(r);
     }
     Ok(outcome.unwrap_or(true))
@@ -846,13 +885,15 @@ fn try_spread_move_hit<const N: usize>(
             total_damage: 0,
         });
     }
-    // PrepareHit: Protect and Detect need a later action and pass the stall check.
+    // PrepareHit: Protect and Detect need a later action and pass the stall check; then the
+    // user's ability (Protean, Libero).
     if mv.data.stalling_move && !(will_act && stall_move(b, user)) {
         return Ok(HitOutcome::Finished {
             ok: false,
             total_damage: 0,
         });
     }
+    prepare_hit_ability(b, user, mv);
 
     // 1. TryHit: Psychic Terrain (priority 4), Protect (3), the target's ability (0). Each
     //    target's handlers only affect that target, so targets can be taken one at a time.
@@ -877,7 +918,7 @@ fn try_spread_move_hit<const N: usize>(
             total_damage: 0,
         });
     }
-    // 3. Move-specific immunities: powder, Prankster vs Dark (`dex.getImmunity`: types only).
+    // 3. Move-specific immunities: powder, the move's `onTryImmunity`, Prankster vs Dark.
     targets.retain(|&t| {
         let powder = mv.data.flags.contains(MoveFlags::POWDER)
             && t != user
@@ -885,7 +926,7 @@ fn try_spread_move_hit<const N: usize>(
         let prankster = mv.prankster_boosted
             && t.side != user.side
             && b.natural_immune(t, TypeImmunities::PRANKSTER);
-        !powder && !prankster
+        !powder && handlers::on_try_immunity(b, mv, t) && !prankster
     });
     if targets.is_empty() {
         return Ok(HitOutcome::Finished {
@@ -901,6 +942,14 @@ fn try_spread_move_hit<const N: usize>(
         }
     }
     if hit.is_empty() {
+        return Ok(HitOutcome::Finished {
+            ok: false,
+            total_damage: 0,
+        });
+    }
+    // The hit's first step is the move's own `onTryHit` (Champions `spreadMoveHit`: on the
+    // first target only; failing fails the move).
+    if !handlers::on_try_hit(b, user, hit[0], mv) {
         return Ok(HitOutcome::Finished {
             ok: false,
             total_damage: 0,
@@ -950,6 +999,35 @@ fn decide_hits<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
     }
 }
 
+/// The user's ability's `onPrepareHit` (`runEvent('PrepareHit')`, after the move's own
+/// PrepareHit). Protean and Libero: once per switch-in (`abilityState.protean` / `.libero`,
+/// kept as [`Volatile::ProteanUsed`], which a switch resets), the user becomes the move's type
+/// (`setType`), unless it already is exactly that type (`getTypes().join() !== type`, no flag
+/// set then) or is Arceus or Silvally (`setType` fails). Terastallization, which also blocks
+/// it, is not modelled; moves that call other moves or bounce are not supported.
+fn prepare_hit_ability<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
+    let ability = b.ability(user);
+    if ability != abilities::PROTEAN && ability != abilities::LIBERO {
+        return;
+    }
+    if b.volatile(user, Volatile::ProteanUsed).active {
+        return;
+    }
+    let pokemon = b.occupant(user).expect("the user is active");
+    let mon = b.mon(pokemon);
+    let new = [mv.move_type, Type::None];
+    if mon.types == new || [493, 773].contains(&mon.species.data().num) {
+        return;
+    }
+    let old = mon.types;
+    b.apply(crate::instruction::Instruction::SetTypes {
+        target: pokemon,
+        old,
+        new,
+    });
+    b.add_volatile(user, Volatile::ProteanUsed);
+}
+
 /// Stall's `onStallMove`: success with probability 1/counter; a failure removes the counter.
 fn stall_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> bool {
     let stall = b.volatile(user, Volatile::Stall);
@@ -980,7 +1058,7 @@ fn try_hit<const N: usize>(
     }
     // Dry Skin `onTryHit` (breakable): another Pok챕mon's Water move heals the holder by 1/4
     // of its max HP (nothing at full HP) and fails on it (`return null`).
-    if mv.data.move_type == Type::Water
+    if mv.move_type == Type::Water
         && target != user
         && b.ability_unless_broken(target) == abilities::DRY_SKIN
     {
@@ -1004,7 +1082,7 @@ fn blocked_by_try_hit<const N: usize>(
 ) -> bool {
     if b.terrain() == Terrain::Psychic
         && mv.priority > 0
-        && mv.data.target != MoveTarget::User
+        && mv.target != MoveTarget::User
         && target.side != user.side
         && b.is_grounded(target)
     {
@@ -1012,6 +1090,22 @@ fn blocked_by_try_hit<const N: usize>(
     }
     if b.volatile(target, Volatile::Protect).active && mv.data.flags.contains(MoveFlags::PROTECT) {
         return true;
+    }
+    // Wide Guard / Quick Guard on the target's side (`onTryHit`, priority 4): spread moves, or
+    // moves with positive priority (after Prankster and the like), that Protect would block
+    // (`checkMoveBypassesProtect`: the `protect` flag; status moves too). They also cover a
+    // move from the target's own ally.
+    if mv.data.flags.contains(MoveFlags::PROTECT) {
+        let spread = matches!(
+            mv.target,
+            MoveTarget::AllAdjacent | MoveTarget::AllAdjacentFoes
+        );
+        if spread && b.side_effect_active(target.side, SideEffect::WideGuard) {
+            return true;
+        }
+        if mv.priority > 0 && b.side_effect_active(target.side, SideEffect::QuickGuard) {
+            return true;
+        }
     }
     // Sturdy `onTryHit`: OHKO moves fail (breakable). OHKO moves are refused by `support`
     // for now; this keeps the immunity when they are added.
@@ -1027,8 +1121,7 @@ fn absorbed_by_ability<const N: usize>(
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
-    if target == user || absorbing_type(b.ability_unless_broken(target)) != Some(mv.data.move_type)
-    {
+    if target == user || absorbing_type(b.ability_unless_broken(target)) != Some(mv.move_type) {
         return false;
     }
     let mut up = NO_BOOSTS;
@@ -1051,7 +1144,7 @@ fn absorbing_type(ability: AbilityId) -> Option<Type> {
 
 /// Showdown `runImmunity(move)`: type chart immunity and Ground vs ungrounded.
 fn type_immune<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove, target: SlotRef) -> bool {
-    let ty = mv.data.move_type;
+    let ty = mv.move_type;
     match mv.data.ignore_immunity {
         IgnoreImmunity::All => return false,
         IgnoreImmunity::Type(t) if t == ty => return false,
@@ -1078,7 +1171,7 @@ fn accuracy_check<const N: usize>(
     let Some(base) = mv.accuracy else {
         return true;
     };
-    if mv.data.target == MoveTarget::User && mv.data.category == MoveCategory::Status {
+    if mv.target == MoveTarget::User && mv.data.category == MoveCategory::Status {
         return true;
     }
     let mut accuracy = i32::from(base);
@@ -1291,17 +1384,20 @@ fn spread_move_hit<const N: usize>(
             results[i] = Hit::Failed;
         }
     }
-    // selfDrops: once, for the first target the move did not fail on. Sheer Force deleted
-    // `self`; Serene Grace doubled its chance.
+    // selfDrops: boosts once, for the first target the move did not fail on; an effect
+    // without boosts (Roost's, Outrage's volatile) is applied to the user for every such
+    // target. Sheer Force deleted `self`; Serene Grace doubled its chance.
     if let Some(effect) = data.self_effect.filter(|_| !mv.has_sheer_force) {
         let chance = u32::from(effect.chance) * mv.secondary_chance_factor;
-        if effect.boosts != NO_BOOSTS && results.iter().any(|r| r.ok()) && b.rng.chance(chance, 100)
-        {
-            b.boost_by(user, &effect.boosts, Some(user), BoostEffect::Move(mv.id));
-        }
-        if let Some(volatile) = Volatile::from_condition(effect.volatile_status) {
-            if results.iter().any(|r| r.ok()) {
-                b.add_volatile_from(user, volatile, mv.id);
+        if effect.boosts != NO_BOOSTS {
+            if results.iter().any(|r| r.ok()) && b.rng.chance(chance, 100) {
+                b.boost_by(user, &effect.boosts, Some(user), BoostEffect::Move(mv.id));
+            }
+        } else if let Some(volatile) = Volatile::from_condition(effect.volatile_status) {
+            for _ in results.iter().filter(|r| r.ok()) {
+                if b.add_volatile_from(user, volatile, mv.id) && volatile == Volatile::Roost {
+                    conditions::roost_start(b, user);
+                }
             }
         }
     }
@@ -1371,6 +1467,13 @@ fn spread_move_hit<const N: usize>(
             }
         }
     }
+    // AfterHit: the move's other `onAfterHit` handlers, per damaged target (Champions runs
+    // them even if the user fainted).
+    for result in &results {
+        if let Hit::Damage(_) = result {
+            handlers::on_after_hit(b, mv);
+        }
+    }
     Ok(results)
 }
 
@@ -1402,7 +1505,7 @@ fn damaging_hit<const N: usize>(
         };
         let mon = b.mon(pokemon);
         if mon.status == Status::Freeze
-            && mv.data.move_type == Type::Fire
+            && mv.move_type == Type::Fire
             && mv.data.category != MoveCategory::Status
         {
             handlers.push((LAST, index, Kind::Thaw));
@@ -1440,7 +1543,7 @@ fn damaging_hit<const N: usize>(
                 }
             }
             Kind::Ability(a) if a == abilities::RATTLED => {
-                if matches!(mv.data.move_type, Type::Dark | Type::Bug | Type::Ghost) {
+                if matches!(mv.move_type, Type::Dark | Type::Bug | Type::Ghost) {
                     let mut up = NO_BOOSTS;
                     up[4] = 1;
                     b.boost_by(target, &up, Some(target), BoostEffect::Ability(a));
@@ -1465,6 +1568,17 @@ fn damaging_hit<const N: usize>(
             Kind::Item(_) => {}
         }
     }
+}
+
+/// Showdown `field.clearTerrain()`: the terrain ends at once. Its `FieldEnd` only logs, and
+/// the `TerrainChange` event it runs has no implemented handler (seeds, Mimicry and Quark
+/// Drive are refused on the field). Returns whether there was a terrain.
+pub(crate) fn clear_terrain<const N: usize>(b: &mut Battle<'_, N>) -> bool {
+    if b.terrain() == Terrain::None {
+        return false;
+    }
+    b.set_field(FieldEffect::Terrain, Effect::NONE);
+    true
 }
 
 // ---- damage -------------------------------------------------------------------------------------
@@ -1493,7 +1607,7 @@ fn get_damage<const N: usize>(
         Some(FixedDamage::Hp(hp)) => return Ok(Planned::Damage(i32::from(hp))),
         None => {}
     }
-    let mut base_power = i32::from(data.base_power);
+    let mut base_power = mv.base_power;
     if mv.id == moves::LOW_KICK || mv.id == moves::GRASS_KNOT {
         base_power = weight_power(defender.species.data().weight_hg);
     }
@@ -1505,10 +1619,12 @@ fn get_damage<const N: usize>(
     // Critical hit: ratio 1..4 ??1/24, 1/8, 1/2, always. `CriticalHit` handlers: Battle Armor
     // and Shell Armor (`onCriticalHit: false`, breakable). Showdown rolls first and then
     // cancels; not rolling gives the same distribution.
-    // ModifyCritRatio: the user's item (Scope Lens, Razor Claw), then clamped to 0..4.
+    // ModifyCritRatio: the user's item (Scope Lens, Razor Claw), then clamped to 0..4. Lucky
+    // Chant on the target's side is a `CriticalHit` handler too (`onCriticalHit: false`).
     let crit_ratio =
         (i32::from(data.crit_ratio) + item_events::crit_ratio_bonus(b.item(user))).clamp(0, 4);
-    let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit;
+    let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit
+        && !b.side_effect_active(target.side, SideEffect::LuckyChant);
     let critical = can_crit
         && (data.will_crit
             || match crit_ratio {
@@ -1521,8 +1637,9 @@ fn get_damage<const N: usize>(
 
     // BasePower handlers: abilities (Technician 30 ... Punk Rock 7), type items (15),
     // terrain (6), the move (0).
-    let mut power_mods = ability_events::base_power_handlers(b, user, target, data, base_power);
-    if type_boost_item(attacker.item) == Some(data.move_type) {
+    let mut power_mods =
+        ability_events::base_power_handlers(b, user, target, data, mv.move_type, base_power);
+    if type_boost_item(attacker.item) == Some(mv.move_type) {
         power_mods.push(Handler::of(b, user, 15, SUB_ITEM, MOD_ONE_POINT_TWO));
     }
     let attacker_grounded = b.is_grounded(user);
@@ -1533,26 +1650,26 @@ fn get_damage<const N: usize>(
                 && defender_grounded
             {
                 MOD_HALF
-            } else if data.move_type == Type::Grass && attacker_grounded {
+            } else if mv.move_type == Type::Grass && attacker_grounded {
                 MOD_ONE_POINT_THREE
             } else {
                 MOD_ONE
             }
         }
-        Terrain::Electric if data.move_type == Type::Electric && attacker_grounded => {
+        Terrain::Electric if mv.move_type == Type::Electric && attacker_grounded => {
             MOD_ONE_POINT_THREE
         }
-        Terrain::Psychic if data.move_type == Type::Psychic && attacker_grounded => {
+        Terrain::Psychic if mv.move_type == Type::Psychic && attacker_grounded => {
             MOD_ONE_POINT_THREE
         }
-        Terrain::Misty if data.move_type == Type::Dragon && defender_grounded => MOD_HALF,
+        Terrain::Misty if mv.move_type == Type::Dragon && defender_grounded => MOD_HALF,
         _ => MOD_ONE,
     };
     power_mods.push(Handler::global(6, SUB_FIELD_CONDITION, terrain_mod));
     if mv.id == moves::KNOCK_OFF && b.item_can_be_taken(target) {
         power_mods.push(Handler::of(b, user, 0, SUB_MOVE, MOD_ONE_POINT_FIVE));
     }
-    if let Some(modifier) = handlers::on_base_power(b, mv) {
+    if let Some(modifier) = handlers::on_base_power(b, user, mv) {
         power_mods.push(Handler::of(b, user, 0, SUB_MOVE, modifier));
     }
     let power_modifier = ability_events::chain(b, power_mods);
@@ -1565,7 +1682,15 @@ fn get_damage<const N: usize>(
     let defense_stat =
         data.override_defensive_stat
             .unwrap_or(if physical { Stat::Def } else { Stat::Spd });
-    let mut atk_boost = b.boost_seen(user, stat_index(attack_stat), target, true);
+    // `overrideOffensivePokemon: 'target'` (Foul Play): the target's stat and stages are used
+    // (`attacker.calculateStat`); the ModifyAtk handlers stay the user's. Unaware
+    // (`boost_seen`) sees the same stages Showdown's `ModifyBoost` would.
+    let (offensive, offensive_mon) = if data.override_offensive_pokemon_target {
+        (target, &defender)
+    } else {
+        (user, &attacker)
+    };
+    let mut atk_boost = b.boost_seen(offensive, stat_index(attack_stat), target, true);
     let mut def_boost = b.boost_seen(target, stat_index(defense_stat), user, false);
     let ignore_negative_offensive = data.ignore_negative_offensive || critical;
     let ignore_positive_defensive = data.ignore_positive_defensive || critical;
@@ -1576,12 +1701,12 @@ fn get_damage<const N: usize>(
         def_boost = 0;
     }
     let attack = boosted_stat(
-        i32::from(attacker.stats[stat_index(attack_stat)]),
+        i32::from(offensive_mon.stats[stat_index(attack_stat)]),
         atk_boost,
     );
     // ModifyAtk (physical) / ModifySpA (special), whatever stat the move attacks with.
     let attack = ability_events::attack_direct(attacker.ability, data, attack);
-    let mut attack_mods = ability_events::attack_handlers(b, user, target, data);
+    let mut attack_mods = ability_events::attack_handlers(b, user, target, data, mv.move_type);
     attack_mods.extend(item_events::attack_handlers(b, user, data));
     let attack = modify(attack, ability_events::chain(b, attack_mods));
     let mut defense = boosted_stat(
@@ -1604,12 +1729,12 @@ fn get_damage<const N: usize>(
     let defense = modify(defense, ability_events::chain(b, defense_mods));
 
     // modifyDamage inputs.
-    let weather_modifier = match (weather, data.move_type) {
+    let weather_modifier = match (weather, mv.move_type) {
         (Weather::Sun, Type::Fire) | (Weather::Rain, Type::Water) => MOD_ONE_POINT_FIVE,
         (Weather::Sun, Type::Water) | (Weather::Rain, Type::Fire) => MOD_HALF,
         _ => MOD_ONE,
     };
-    let stab = data.force_stab || attacker.types.contains(&data.move_type);
+    let stab = data.force_stab || attacker.types.contains(&mv.move_type);
     let stab_modifier = ability_events::modify_stab(attacker.ability, stab);
     // runEffectiveness: per defending type, the chart then the move's onEffectiveness.
     let type_mod: i32 = defender
@@ -1617,9 +1742,9 @@ fn get_damage<const N: usize>(
         .iter()
         .filter(|&&t| t != Type::None)
         .map(|&t| {
-            let chart = handlers::type_effectiveness(data.move_type, t);
+            let chart = handlers::type_effectiveness(mv.move_type, t);
             let by_move = handlers::on_effectiveness(mv.id, t, chart);
-            item_events::on_effectiveness(b, target, data.move_type, by_move)
+            item_events::on_effectiveness(b, target, mv.move_type, by_move)
         })
         .sum::<i32>()
         .clamp(-6, 6);
@@ -1630,7 +1755,8 @@ fn get_damage<const N: usize>(
     };
     // ModifyDamage (all priority 0, so in Speed order): the target's abilities, items (Life
     // Orb, resist berries), screens (side conditions, Speed 0).
-    let mut final_mods = ability_events::modify_damage_handlers(b, user, target, data, type_mod);
+    let mut final_mods =
+        ability_events::modify_damage_handlers(b, user, target, data, mv.move_type, type_mod);
     final_mods.extend(item_events::modify_damage_handlers(
         b, user, target, data, type_mod,
     ));
@@ -1802,7 +1928,9 @@ fn add_pseudo_weather<const N: usize>(b: &mut Battle<'_, N>, id: &str) -> bool {
     true
 }
 
-/// Showdown `addSideCondition` for Tailwind (4 turns) and the screens (5, Light Clay 8).
+/// Showdown `addSideCondition` (fails if already up; none of these has `onSideRestart`):
+/// Tailwind 4 turns, the screens 5 (Light Clay 8), Safeguard 5 (Persistent, which makes it 7,
+/// is refused), Mist and Lucky Chant 5, Wide Guard and Quick Guard 1.
 fn add_side_condition<const N: usize>(
     b: &mut Battle<'_, N>,
     source: SlotRef,
@@ -1814,7 +1942,12 @@ fn add_side_condition<const N: usize>(
     }
     let turns = match effect {
         SideEffect::Tailwind => 4,
-        _ if b.item(source) == items::LIGHT_CLAY => 8,
+        SideEffect::WideGuard | SideEffect::QuickGuard => 1,
+        SideEffect::Reflect | SideEffect::LightScreen | SideEffect::AuroraVeil
+            if b.item(source) == items::LIGHT_CLAY =>
+        {
+            8
+        }
         _ => 5,
     };
     b.set_side_effect(side, effect, Effect { value: 0, turns });

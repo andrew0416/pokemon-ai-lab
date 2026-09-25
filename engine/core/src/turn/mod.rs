@@ -17,6 +17,7 @@
 mod abilities;
 mod battle;
 mod branch;
+mod conditions;
 pub mod coverage;
 mod diff;
 mod items;

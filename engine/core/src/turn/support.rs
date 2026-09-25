@@ -8,7 +8,7 @@
 
 use crate::dex::{
     abilities, items, moves, AbilityId, ItemId, MoveCategory, MoveId, MoveTarget, Ohko,
-    SelfDestruct, SelfSwitch, Type,
+    SelfDestruct, SelfSwitch, Type, NO_BOOSTS,
 };
 use crate::field::{FieldEffect, SideEffect, Weather, FIELD_EFFECT_COUNT, SIDE_EFFECT_COUNT};
 use crate::state::{SideId, SlotRef, State, Status};
@@ -47,6 +47,17 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "condition.onStart",
         ],
     ),
+    // Protect's stall `onPrepareHit` / `onHit`; `condition.onDamage` in `Battle::damage`,
+    // `condition.onStart` only logs.
+    (
+        moves::ENDURE,
+        &[
+            "condition.onDamage",
+            "condition.onStart",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
     (
         moves::FOLLOW_ME,
         &[
@@ -77,6 +88,30 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::FAKE_OUT, &["onDisableMove", "onTry"]),
     (moves::KNOCK_OFF, &["onAfterHit", "onBasePower"]),
     (moves::GRAV_APPLE, &["onBasePower"]),
+    (moves::EXPANDING_FORCE, &["onBasePower", "onModifyMove"]),
+    (moves::WEATHER_BALL, &["onModifyMove", "onModifyType"]),
+    (moves::TERRAIN_PULSE, &["onModifyMove", "onModifyType"]),
+    // `onAfterSubDamage` needs a substitute, which is refused.
+    (moves::ICE_SPINNER, &["onAfterHit", "onAfterSubDamage"]),
+    (moves::STEEL_ROLLER, &["onAfterSubDamage", "onHit", "onTry"]),
+    // `onTryMove` only fails an ally-targeted use under Heal Block, which no supported effect
+    // adds.
+    (moves::POLLEN_PUFF, &["onHit", "onTryHit", "onTryMove"]),
+    (moves::TRICK, &["onHit", "onTryImmunity"]),
+    (moves::SWITCHEROO, &["onHit", "onTryImmunity"]),
+    // `condition.onStart` only fails for a Terastallized user; `onType` is applied as a type
+    // change (`conditions::roost_start`, undone when the volatile ends).
+    (moves::ROOST, &["condition.onStart", "condition.onType"]),
+    // `condition.onStart` only logs; `onEnd` in `conditions::volatile_end`.
+    (
+        moves::YAWN,
+        &["condition.onEnd", "condition.onStart", "onTryHit"],
+    ),
+    // `condition.onResidual` only announces the count; `onEnd` faints the holder.
+    (
+        moves::PERISH_SONG,
+        &["condition.onEnd", "condition.onResidual", "onHitField"],
+    ),
     (moves::RISING_VOLTAGE, &["basePowerCallback"]),
     (moves::PSYBLADE, &["onBasePower"]),
     (moves::BLIZZARD, &["onModifyMove"]),
@@ -157,6 +192,51 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "condition.onSideStart",
             "onTry",
         ],
+    ),
+    // Wide Guard / Quick Guard: `onTry` (a later action), `onHitSide` (the stall counter) and
+    // the side's `onTryHit` in `moves`; `onSideStart` only logs.
+    (
+        moves::WIDE_GUARD,
+        &[
+            "condition.onSideStart",
+            "condition.onTryHit",
+            "onHitSide",
+            "onTry",
+        ],
+    ),
+    (
+        moves::QUICK_GUARD,
+        &[
+            "condition.onSideStart",
+            "condition.onTryHit",
+            "onHitSide",
+            "onTry",
+        ],
+    ),
+    // Safeguard: `onSetStatus` / `onTryAddVolatile` in `Battle` (Persistent, the only
+    // `durationCallback` change, is refused); Mist: `onTryBoost` in `Battle::boost_by`; Lucky
+    // Chant: `onCriticalHit: false` in `moves::get_damage`. The side start/end only log.
+    (
+        moves::SAFEGUARD,
+        &[
+            "condition.durationCallback",
+            "condition.onSetStatus",
+            "condition.onSideEnd",
+            "condition.onSideStart",
+            "condition.onTryAddVolatile",
+        ],
+    ),
+    (
+        moves::MIST,
+        &[
+            "condition.onSideEnd",
+            "condition.onSideStart",
+            "condition.onTryBoost",
+        ],
+    ),
+    (
+        moves::LUCKY_CHANT,
+        &["condition.onSideEnd", "condition.onSideStart"],
     ),
     (
         moves::ELECTRIC_TERRAIN,
@@ -349,6 +429,9 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::RATTLED, &["onAfterBoost", "onDamagingHit"]),
     (abilities::GALE_WINGS, &["onModifyPriority"]),
     (abilities::TRIAGE, &["onModifyPriority"]),
+    // `moves::prepare_hit_ability`.
+    (abilities::PROTEAN, &["onPrepareHit"]),
+    (abilities::LIBERO, &["onPrepareHit"]),
     // Damage handlers (`Battle::damage`).
     (abilities::ROCK_HEAD, &["onDamage"]),
     (abilities::MAGIC_GUARD, &["onDamage"]),
@@ -410,7 +493,7 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
             "onUpdate",
         ],
     ),
-    // `onTryAddVolatile` only reacts to Yawn, which no supported move adds.
+    // `onTryAddVolatile` only reacts to Yawn (`Battle::add_volatile_blocked`).
     (
         abilities::PURIFYING_SALT,
         &[
@@ -591,6 +674,9 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         | MoveTarget::AdjacentFoe
         | MoveTarget::AllAdjacentFoes
         | MoveTarget::AllAdjacent
+        | MoveTarget::AdjacentAlly
+        | MoveTarget::AdjacentAllyOrSelf
+        | MoveTarget::Allies
         | MoveTarget::User
         | MoveTarget::All
         | MoveTarget::AllySide
@@ -625,11 +711,10 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         || m.chloroblast_recoil
         || m.is_z
         || m.is_max
-        || m.override_offensive_pokemon_target
     {
         return why("a special mechanic");
     }
-    if m.stalling_move && id != moves::PROTECT && id != moves::DETECT {
+    if m.stalling_move && ![moves::PROTECT, moves::DETECT, moves::ENDURE].contains(&id) {
         return why("stalling move");
     }
     let flags = m.flags;
@@ -656,10 +741,10 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         return why(&format!("field effect {}", m.pseudo_weather.id()));
     }
     if let Some(s) = m.self_effect {
-        if !s.volatile_status.is_none() && Volatile::from_condition(s.volatile_status).is_none() {
-            return why(&format!("self volatile {}", s.volatile_status.id()));
-        }
-        if !s.side_condition.is_none() || !s.pseudo_weather.is_none() {
+        // A self volatile is implemented without self boosts only (`selfDrops`' two paths).
+        let volatile_ok = s.volatile_status.is_none()
+            || (s.boosts == NO_BOOSTS && Volatile::from_condition(s.volatile_status).is_some());
+        if !volatile_ok || !s.side_condition.is_none() || !s.pseudo_weather.is_none() {
             return why("self effect");
         }
     }
@@ -680,16 +765,26 @@ pub(crate) fn side_effect_of(condition: &str) -> Option<SideEffect> {
         "lightscreen" => SideEffect::LightScreen,
         "auroraveil" => SideEffect::AuroraVeil,
         "tailwind" => SideEffect::Tailwind,
+        "safeguard" => SideEffect::Safeguard,
+        "mist" => SideEffect::Mist,
+        "luckychant" => SideEffect::LuckyChant,
+        "wideguard" => SideEffect::WideGuard,
+        "quickguard" => SideEffect::QuickGuard,
         _ => return None,
     })
 }
 
 /// The implemented side effects.
-const SUPPORTED_SIDE_EFFECTS: [SideEffect; 4] = [
+const SUPPORTED_SIDE_EFFECTS: [SideEffect; 9] = [
     SideEffect::Reflect,
     SideEffect::LightScreen,
     SideEffect::AuroraVeil,
     SideEffect::Tailwind,
+    SideEffect::Safeguard,
+    SideEffect::Mist,
+    SideEffect::LuckyChant,
+    SideEffect::WideGuard,
+    SideEffect::QuickGuard,
 ];
 
 /// Checks everything on the field before a turn.
@@ -855,10 +950,14 @@ mod tests {
         }
     }
 
-    /// Purifying Salt's `onTryAddVolatile` only blocks Yawn, which the engine cannot add.
+    /// Purifying Salt's `onTryAddVolatile` only blocks Yawn, which `Battle::add_volatile_blocked`
+    /// implements now that Yawn is a volatile.
     #[test]
-    fn yawn_is_not_a_supported_volatile() {
-        assert!(Volatile::from_condition(crate::dex::conditions::YAWN).is_none());
+    fn yawn_is_a_supported_volatile() {
+        assert_eq!(
+            Volatile::from_condition(crate::dex::conditions::YAWN),
+            Some(Volatile::Yawn)
+        );
     }
 
     #[test]
