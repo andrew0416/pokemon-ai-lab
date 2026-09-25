@@ -50,3 +50,8 @@ fn o8_coaching_life_dew_decorate_and_pollen_puff_on_allies() {
 fn o8_pollen_puff_damages_foes_and_milk_drink_heals_an_ally() {
     assert_exact_parity("o8-pollen-puff");
 }
+
+#[test]
+fn o9_foul_play_uses_the_target_attack_and_body_press_defense() {
+    assert_exact_parity("o9-foul-play-body-press");
+}

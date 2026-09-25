@@ -1102,7 +1102,14 @@ fn get_damage<const N: usize>(
     let defense_stat =
         data.override_defensive_stat
             .unwrap_or(if physical { Stat::Def } else { Stat::Spd });
-    let mut atk_boost = b.state.slot(user).boosts[stat_index(attack_stat)];
+    // `overrideOffensivePokemon: 'target'` (Foul Play): the target's stat and stages are used
+    // (`attacker.calculateStat`); the ModifyAtk handlers stay the user's.
+    let (offensive, offensive_mon) = if data.override_offensive_pokemon_target {
+        (target, &defender)
+    } else {
+        (user, &attacker)
+    };
+    let mut atk_boost = b.state.slot(offensive).boosts[stat_index(attack_stat)];
     let mut def_boost = b.state.slot(target).boosts[stat_index(defense_stat)];
     let ignore_negative_offensive = data.ignore_negative_offensive || critical;
     let ignore_positive_defensive = data.ignore_positive_defensive || critical;
@@ -1113,7 +1120,7 @@ fn get_damage<const N: usize>(
         def_boost = 0;
     }
     let attack = boosted_stat(
-        i32::from(attacker.stats[stat_index(attack_stat)]),
+        i32::from(offensive_mon.stats[stat_index(attack_stat)]),
         atk_boost,
     );
     // ModifyAtk (physical) / ModifySpA (special), whatever stat the move attacks with.

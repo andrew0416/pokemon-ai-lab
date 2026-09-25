@@ -466,7 +466,6 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         || m.chloroblast_recoil
         || m.is_z
         || m.is_max
-        || m.override_offensive_pokemon_target
     {
         return why("a special mechanic");
     }
