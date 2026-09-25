@@ -1,0 +1,23 @@
+{
+ "description": "Bolt Beak and Fishious Rend double against a target that has not moved yet: Dracozolt's Bolt Beak into the slower Toxapex has 160 power; Dracovish's Fishious Rend into Weavile, which already moved, stays at 80.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Dracozolt", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Bolt Beak", "Calm Mind"], "level": 50},
+   {"species": "Dracovish", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Fishious Rend", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Toxapex", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spe": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move boltbeak 1, move fishiousrend 2", "p2": "move calmmind, move calmmind"}
+}

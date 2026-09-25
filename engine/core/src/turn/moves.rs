@@ -1463,7 +1463,7 @@ fn hit_loop<const N: usize>(
     }
     let mut results = Vec::new();
     if !ended_by_miss {
-        results = spread_move_hit(b, user, mv, &targets, progress.total_damage)?;
+        results = spread_move_hit(b, user, mv, &targets, progress.total_damage, hit)?;
         progress.hit = hit;
         progress.total_damage += results
             .iter()
@@ -1553,13 +1553,14 @@ fn hit_loop<const N: usize>(
 }
 
 /// Showdown `spreadMoveHit` for the move's own hit. `total_before` is `move.totalDamage` so far
-/// (the earlier hits of a multi-hit move).
+/// (the earlier hits of a multi-hit move); `hit` is `move.hit` (1 for the first hit).
 fn spread_move_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     targets: &[SlotRef],
     total_before: i32,
+    hit: u8,
 ) -> Result<Vec<Hit>, TurnError> {
     let data = mv.data;
     // `getMoveHitData(move).typeMod` is (re)computed by this hit's `getDamage`.
@@ -1567,7 +1568,7 @@ fn spread_move_hit<const N: usize>(
     // getSpreadDamage: every target's damage is decided before any is dealt.
     let mut planned = Vec::with_capacity(targets.len());
     for &t in targets {
-        planned.push(get_damage(b, user, mv, t)?);
+        planned.push(get_damage(b, user, mv, t, hit)?);
     }
     // spreadDamage.
     let mut results = Vec::with_capacity(targets.len());
@@ -1904,12 +1905,14 @@ enum Planned {
     Damage(i32),
 }
 
-/// Showdown `getDamage` + `modifyDamage`; the crit and the damage roll are decided here.
+/// Showdown `getDamage` + `modifyDamage`; the crit and the damage roll are decided here. `hit`
+/// is `move.hit` (Triple Axel's power).
 fn get_damage<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
+    hit: u8,
 ) -> Result<Planned, TurnError> {
     let data = mv.data;
     if type_immune(b, mv, target) {
@@ -1935,7 +1938,7 @@ fn get_damage<const N: usize>(
     if mv.id == moves::LOW_KICK || mv.id == moves::GRASS_KNOT {
         base_power = weight_power(defender.species.data().weight_hg);
     }
-    base_power = handlers::base_power_callback(b, user, target, mv, base_power);
+    base_power = handlers::base_power_callback(b, user, target, mv, base_power, hit);
     if base_power == 0 {
         return Ok(Planned::NoDamage);
     }

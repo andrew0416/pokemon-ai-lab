@@ -285,6 +285,31 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         &["condition.onEnd", "condition.onResidual", "onHitField"],
     ),
     (moves::RISING_VOLTAGE, &["basePowerCallback"]),
+    // `handlers::base_power_callback` (Triple Axel / Triple Kick read `move.hit`; Return and
+    // Frustration assume Showdown's default happiness, 255, which the state does not hold).
+    (moves::HEX, &["basePowerCallback"]),
+    (moves::INFERNAL_PARADE, &["basePowerCallback"]),
+    (moves::TRIPLE_AXEL, &["basePowerCallback"]),
+    (moves::TRIPLE_KICK, &["basePowerCallback"]),
+    (moves::WATER_SHURIKEN, &["basePowerCallback"]),
+    (moves::ELECTRO_BALL, &["basePowerCallback"]),
+    (moves::GYRO_BALL, &["basePowerCallback"]),
+    (moves::ERUPTION, &["basePowerCallback"]),
+    (moves::WATER_SPOUT, &["basePowerCallback"]),
+    (moves::DRAGON_ENERGY, &["basePowerCallback"]),
+    (moves::FLAIL, &["basePowerCallback"]),
+    (moves::REVERSAL, &["basePowerCallback"]),
+    (moves::CRUSH_GRIP, &["basePowerCallback"]),
+    (moves::WRING_OUT, &["basePowerCallback"]),
+    (moves::HARD_PRESS, &["basePowerCallback"]),
+    (moves::STORED_POWER, &["basePowerCallback"]),
+    (moves::POWER_TRIP, &["basePowerCallback"]),
+    (moves::PUNISHMENT, &["basePowerCallback"]),
+    (moves::TRUMP_CARD, &["basePowerCallback"]),
+    (moves::RETURN, &["basePowerCallback"]),
+    (moves::FRUSTRATION, &["basePowerCallback"]),
+    (moves::BOLT_BEAK, &["basePowerCallback"]),
+    (moves::FISHIOUS_REND, &["basePowerCallback"]),
     (moves::PSYBLADE, &["onBasePower"]),
     (moves::BLIZZARD, &["onModifyMove"]),
     // Still rejected for its confusion secondary; shares Thunder's handler.
@@ -1416,6 +1441,6 @@ mod tests {
         assert_eq!(move_unsupported(moves::RAGE_POWDER), None);
         assert_eq!(move_unsupported(moves::BULLET_SEED), None);
         assert_eq!(move_unsupported(moves::POPULATION_BOMB), None);
-        assert!(move_unsupported(moves::TRIPLE_AXEL).is_some());
+        assert_eq!(move_unsupported(moves::TRIPLE_AXEL), None);
     }
 }

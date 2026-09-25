@@ -1,0 +1,24 @@
+{
+ "description": "Hex and Reversal: Gengar's Hex doubles (130) against the burned Toxapex; Lucario at 10 of 177 HP (floor(10*48/177) = 2) uses a 150-power Reversal on Slowbro.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 32, "spa": 32, "spe": 2}, "moves": ["Hex", "Calm Mind"], "level": 50},
+   {"species": "Lucario", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Reversal", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Toxapex", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Slowbro", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Lucario": {"hp": 10}}, "p2": {"Toxapex": {"status": "brn"}}},
+ "turn": {"p1": "move hex 1, move reversal 2", "p2": "move calmmind, move calmmind"}
+}

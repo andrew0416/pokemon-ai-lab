@@ -342,15 +342,31 @@ fn remove_side_effects<const N: usize>(
     removed
 }
 
-/// The move's `basePowerCallback` (`getDamage`, before the critical hit roll).
+/// The move's `basePowerCallback` (`getDamage`, before the critical hit roll), then
+/// `clampIntRange(basePower, 1)` (a fraction is floored, and 0 means no damage). `hit` is
+/// `move.hit`, the hit being made (1 for a single hit).
 pub(super) fn base_power_callback<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
     mv: &ActiveMove,
     base_power: i32,
+    hit: u8,
 ) -> i32 {
-    match mv.id {
+    let hp = |s: SlotRef| {
+        b.slot_mon(s)
+            .map_or((0, 1), |m| (i32::from(m.hp), i32::from(m.max_hp)))
+    };
+    let positive_boosts = |s: SlotRef| -> i32 {
+        b.state
+            .slot(s)
+            .boosts
+            .iter()
+            .filter(|&&v| v > 0)
+            .map(|&v| i32::from(v))
+            .sum()
+    };
+    let power = match mv.id {
         // Rising Voltage: `if (this.field.isTerrain('electricterrain') && target.isGrounded())
         // return move.basePower * 2;`
         moves::RISING_VOLTAGE if b.terrain() == Terrain::Electric && b.is_grounded(target) => {
@@ -358,8 +374,116 @@ pub(super) fn base_power_callback<const N: usize>(
         }
         // Acrobatics: `if (!pokemon.item) return move.basePower * 2;` (the held item).
         moves::ACROBATICS if b.item(user).is_none() => base_power * 2,
-        _ => base_power,
-    }
+        // Hex, Infernal Parade: `if (target.status || target.hasAbility('comatose'))` double.
+        moves::HEX | moves::INFERNAL_PARADE => {
+            let statused = b.slot_mon(target).is_some_and(|m| m.status != Status::None)
+                || b.ability(target) == abilities::COMATOSE;
+            if statused {
+                base_power * 2
+            } else {
+                base_power
+            }
+        }
+        // Triple Axel: `20 * move.hit`; Triple Kick: `10 * move.hit`.
+        moves::TRIPLE_AXEL => 20 * i32::from(hit),
+        moves::TRIPLE_KICK => 10 * i32::from(hit),
+        // Water Shuriken: 5 more for an untransformed Greninja-Ash with Battle Bond.
+        moves::WATER_SHURIKEN => {
+            let ash = b
+                .slot_mon(user)
+                .is_some_and(|m| m.species == crate::dex::species::GRENINJA_ASH);
+            if ash && b.ability(user) == abilities::BATTLE_BOND {
+                base_power + 5
+            } else {
+                base_power
+            }
+        }
+        // Electro Ball: `[40, 60, 80, 120, 150][min(floor(user Spe / target Spe), 4)]`
+        // (`getStat('spe')`: stages and modifiers; a 0 divisor gives 0).
+        moves::ELECTRO_BALL => {
+            let (mine, theirs) = (b.speed_stat(user), b.speed_stat(target));
+            let ratio = if theirs == 0 { 0 } else { mine / theirs };
+            [40, 60, 80, 120, 150][ratio.clamp(0, 4) as usize]
+        }
+        // Gyro Ball: `Math.floor(25 * target Spe / user Spe) + 1`, at most 150 (1 against a
+        // user at 0).
+        moves::GYRO_BALL => {
+            let (mine, theirs) = (b.speed_stat(user), b.speed_stat(target));
+            if mine == 0 {
+                1
+            } else {
+                (25 * theirs / mine + 1).min(150)
+            }
+        }
+        // Eruption, Water Spout, Dragon Energy: `move.basePower * pokemon.hp / pokemon.maxhp`.
+        moves::ERUPTION | moves::WATER_SPOUT | moves::DRAGON_ENERGY => {
+            let (current, max) = hp(user);
+            base_power * current / max
+        }
+        // Flail, Reversal: by `max(floor(hp * 48 / maxhp), 1)`.
+        moves::FLAIL | moves::REVERSAL => {
+            let (current, max) = hp(user);
+            match (current * 48 / max).max(1) {
+                r if r < 2 => 200,
+                r if r < 5 => 150,
+                r if r < 10 => 100,
+                r if r < 17 => 80,
+                r if r < 33 => 40,
+                _ => 20,
+            }
+        }
+        // Crush Grip, Wring Out (120), Hard Press (100): `Math.floor(Math.floor((max * (100 *
+        // Math.floor(hp * 4096 / maxHP)) + 2048 - 1) / 4096) / 100) || 1` on the target's HP.
+        moves::CRUSH_GRIP | moves::WRING_OUT | moves::HARD_PRESS => {
+            let (current, max) = hp(target);
+            let top = if mv.id == moves::HARD_PRESS { 100 } else { 120 };
+            let fraction = i64::from(current) * 4096 / i64::from(max);
+            (((top * 100 * fraction + 2047) / 4096) / 100).max(1) as i32
+        }
+        // Stored Power, Power Trip: `move.basePower + 20 * pokemon.positiveBoosts()`.
+        moves::STORED_POWER | moves::POWER_TRIP => base_power + 20 * positive_boosts(user),
+        // Punishment: `60 + 20 * target.positiveBoosts()`, at most 200.
+        moves::PUNISHMENT => (60 + 20 * positive_boosts(target)).min(200),
+        // Trump Card: by the PP left (after this use) in the slot of the move that called it
+        // (`move.sourceEffect`, e.g. Sleep Talk) or its own: 200, 80, 60, 50 for 0–3, else 40
+        // (40 without a slot).
+        moves::TRUMP_CARD => {
+            let caller = if mv.source_effect.is_none() {
+                mv.id
+            } else {
+                mv.source_effect
+            };
+            let pp = b
+                .slot_mon(user)
+                .and_then(|m| m.moves.iter().find(|s| s.id == caller))
+                .map(|s| s.pp);
+            match pp {
+                Some(0) => 200,
+                Some(1) => 80,
+                Some(2) => 60,
+                Some(3) => 50,
+                _ => 40,
+            }
+        }
+        // Return: `Math.floor((pokemon.happiness * 10) / 25) || 1`; Frustration: `(255 -
+        // happiness)`. The state has no happiness: every Pokémon has Showdown's default 255 (the
+        // loader rejects a `happiness` field).
+        moves::RETURN => 255 * 10 / 25,
+        moves::FRUSTRATION => 1,
+        // Bolt Beak, Fishious Rend: double `if (target.newlySwitched ||
+        // this.queue.willMove(target))` (`newlySwitched`: no move action since switching in,
+        // as Helping Hand reads it).
+        moves::BOLT_BEAK | moves::FISHIOUS_REND => {
+            if b.will_move(target).is_some() || b.state.slot(target).move_actions == 0 {
+                base_power * 2
+            } else {
+                base_power
+            }
+        }
+        _ => return base_power,
+    };
+    // `clampIntRange(basePower, 1)` (only a callback can produce a value below 1 here).
+    power.max(1)
 }
 
 /// The move's own `onBasePower` modifier (BasePower handler priority 0, after type items and

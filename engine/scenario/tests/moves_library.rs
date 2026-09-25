@@ -170,6 +170,52 @@ fn recycle_restores_the_last_consumed_item() {
     assert_exact_parity("recycle");
 }
 
+#[test]
+fn hex_doubles_against_a_status_and_reversal_grows_at_low_hp() {
+    assert_exact_parity("hex-reversal");
+}
+
+#[test]
+fn eruption_power_follows_the_users_hp() {
+    assert_exact_parity("eruption");
+}
+
+#[test]
+fn stored_power_and_punishment_count_positive_stages() {
+    assert_exact_parity("stored-power-punishment");
+}
+
+#[test]
+fn electro_ball_and_gyro_ball_compare_modified_speeds() {
+    assert_exact_parity("electro-ball-gyro-ball");
+}
+
+#[test]
+fn crush_grip_and_hard_press_follow_the_targets_hp() {
+    assert_exact_parity("crush-grip-hard-press");
+}
+
+#[test]
+fn trump_card_follows_its_pp_and_return_frustration_use_default_happiness() {
+    assert_exact_parity("trump-card-return");
+}
+
+#[test]
+fn bolt_beak_doubles_before_the_target_moves() {
+    assert_exact_parity("bolt-beak");
+}
+
+#[test]
+fn fishious_rend_doubles_against_a_newcomer() {
+    assert_exact_parity("bolt-beak-newcomer");
+}
+
+/// Triple Axel's power by hit number (Showdown sampled).
+#[test]
+fn triple_axel_and_water_shuriken_hit_by_hit() {
+    common::assert_mc_parity("triple-axel");
+}
+
 /// No Retreat's `onTrapPokemon`: Snorlax cannot switch to the benched Kommo-o.
 #[test]
 fn no_retreat_traps_its_user() {

@@ -1,0 +1,24 @@
+{
+ "description": "Stored Power and Punishment count positive stages (accuracy and evasion too): Espeon (+2 SpA, +1 Def, +1 accuracy, -1 Spe) uses a 100-power Stored Power on Snorlax; Weavile's Punishment against Clefable (+2 SpA, +2 SpD) has 60 + 20 * 4 = 140 power.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Espeon", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Stored Power", "Calm Mind"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Punishment", "Calm Mind"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Espeon": {"boosts": {"spa": 2, "def": 1, "accuracy": 1, "spe": -1}}, "Clefable": {"boosts": {"spa": 2, "spd": 2}}}},
+ "turn": {"p1": "move storedpower 2, move calmmind", "p2": "move punishment 2, move calmmind"}
+}

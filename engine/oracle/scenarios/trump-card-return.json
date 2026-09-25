@@ -1,0 +1,29 @@
+{
+ "description": "Trump Card, Return, Frustration: four setup Trump Cards into Gengar (immune; the PP still goes) leave 4 PP, so the fifth, into Chansey, has 3 left and 50 power; Snorlax's Return has 102 power and Chansey's Frustration 1 (default happiness 255).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "spd": 2}, "moves": ["Trump Card", "Calm Mind"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Return", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 32, "spa": 32, "spe": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Frustration", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move trumpcard 1, move calmmind", "move calmmind, move calmmind"],
+  ["move trumpcard 1, move calmmind", "move calmmind, move calmmind"],
+  ["move trumpcard 1, move calmmind", "move calmmind, move calmmind"],
+  ["move trumpcard 1, move calmmind", "move calmmind, move calmmind"]
+ ],
+ "turn": {"p1": "move trumpcard 2, move return 2", "p2": "move calmmind, move frustration 2"}
+}
