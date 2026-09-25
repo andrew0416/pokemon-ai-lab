@@ -88,6 +88,40 @@ fn life_orb_damage_and_recoil_match_showdown() {
     assert_exact_parity("o84-life-orb");
 }
 
+// ---- O89 Assault Vest / Eviolite ---------------------------------------------------------------
+
+#[test]
+fn assault_vest_and_eviolite_match_showdown() {
+    assert_exact_parity("o89-assault-vest-eviolite");
+}
+
+#[test]
+fn psyshock_ignores_assault_vest_and_eviolite_special_defense_match_showdown() {
+    assert_exact_parity("o89-av-psyshock");
+}
+
+/// Assault Vest's `onDisableMove`: its holder cannot choose a status move.
+#[test]
+fn an_assault_vest_holder_cannot_choose_a_status_move() {
+    let name = "o89-assault-vest-eviolite";
+    let fixture = fixture(name);
+    let (loaded, position) = start(name, &fixture);
+    let mut state: Doubles = position.state;
+    let mut choices = scenario_choices(&loaded, &state).unwrap();
+    // Kingambit (Assault Vest) picks Protect (move 1).
+    choices[1][0] = SlotAction::Move {
+        index: 1,
+        target: 0,
+        gimmick: Gimmick::None,
+    };
+    match enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices) {
+        Err(TurnError::InvalidChoice { reason, .. }) => {
+            assert!(reason.contains("Assault Vest"), "{reason}")
+        }
+        other => panic!("expected InvalidChoice, got {other:?}"),
+    }
+}
+
 /// A Pokémon locked by its Choice item cannot choose another move (`choicelock`'s
 /// `onDisableMove`).
 #[test]

@@ -1101,7 +1101,8 @@ fn get_damage<const N: usize>(
         defense = modify(defense, MOD_ONE_POINT_FIVE);
     }
     // Chained ModifyDef / ModifySpD handlers, applied after the direct weather boosts.
-    let defense_mods = ability_events::defense_handlers(b, user, target, data, defense_stat);
+    let mut defense_mods = ability_events::defense_handlers(b, user, target, data, defense_stat);
+    defense_mods.extend(item_events::defense_handlers(b, target, defense_stat));
     let defense = modify(defense, ability_events::chain(b, defense_mods));
 
     // modifyDamage inputs.

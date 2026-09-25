@@ -221,6 +221,9 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     ),
     (items::FOCUS_SASH, &["onDamage"]),
     (items::EXPERT_BELT, &["onModifyDamage"]),
+    // `onDisableMove` in `mod.rs` `disabled` (via `items::disabled_move`).
+    (items::ASSAULT_VEST, &["onDisableMove", "onModifySpD"]),
+    (items::EVIOLITE, &["onModifyDef", "onModifySpD"]),
     // Choice items (`items.rs`): the stat in `order.rs`/`moves.rs`, `onModifyMove` adds the
     // `choicelock` volatile, `onStart` only removes a lock a newcomer cannot have.
     (

@@ -7,7 +7,7 @@
 //! by `support` (Showdown's `ignoringItem`, work plan F17), so no handler here checks it.
 
 use crate::damage::{MOD_HALF, MOD_ONE_POINT_FIVE};
-use crate::dex::{abilities, items, ItemId, MoveCategory, MoveData, MoveId, Type};
+use crate::dex::{abilities, items, moves, ItemId, MoveCategory, MoveData, MoveId, Stat, Type};
 use crate::state::{Pokemon, SlotRef, State};
 use crate::volatile::{Volatile, VolatileState};
 
@@ -94,6 +94,39 @@ pub(crate) fn attack_handlers<const N: usize>(
     out
 }
 
+// ---- defensive stat items ----------------------------------------------------------------------
+
+/// `ModifyDef` / `ModifySpD` handlers of the target's item (by the stat the move targets):
+/// Assault Vest `onModifySpD` `chainModify(1.5)` (priority 1); Eviolite `onModifyDef` and
+/// `onModifySpD` `chainModify(1.5)` (priority 2) when `pokemon.baseSpecies.nfe` (the species
+/// itself: no forme change the engine makes turns a Pokémon that can evolve into another
+/// species).
+pub(crate) fn defense_handlers<const N: usize>(
+    b: &Battle<'_, N>,
+    target: SlotRef,
+    defense_stat: Stat,
+) -> Vec<Handler> {
+    let mut out = Vec::new();
+    let Some(mon) = b.slot_mon(target) else {
+        return out;
+    };
+    let item = mon.item;
+    let event = match defense_stat {
+        Stat::Def => "onModifyDefPriority",
+        _ => "onModifySpDPriority",
+    };
+    let applies = match item {
+        i if i == items::ASSAULT_VEST => defense_stat == Stat::Spd,
+        i if i == items::EVIOLITE => mon.species.data().nfe,
+        _ => false,
+    };
+    if applies {
+        let p = super::abilities::priority(item.data().event_orders, event);
+        out.push(Handler::of(b, target, p, SUB_ITEM, MOD_ONE_POINT_FIVE));
+    }
+    out
+}
+
 /// The user's item `onModifyMove` (`runEvent('ModifyMove')`, after the move's own): a Choice
 /// item adds `choicelock`, whose `onStart` stores the move (`effectState.move`). A lock that
 /// is already there is kept (`addVolatile` without `onRestart`).
@@ -146,13 +179,23 @@ pub(crate) fn end_turn_disable_move<const N: usize>(b: &mut Battle<'_, N>) {
 }
 
 /// Why the Pokémon in `slot` cannot choose `id` because of its item (Showdown `DisableMove`):
-/// `choicelock` disables every other move while the item is a Choice item.
+/// Assault Vest disables every status move but Me First; `choicelock` disables every other
+/// move while the item is a Choice item.
 pub(crate) fn disabled_move<const N: usize>(
     state: &State<N>,
     slot: SlotRef,
     id: MoveId,
 ) -> Option<String> {
     let mon = state.active(slot)?;
+    if mon.item == items::ASSAULT_VEST
+        && id.data().category == MoveCategory::Status
+        && id != moves::ME_FIRST
+    {
+        return Some(format!(
+            "{} cannot use status moves with Assault Vest",
+            mon.species.data().name
+        ));
+    }
     let lock = state.slot(slot).volatiles.get(Volatile::ChoiceLock);
     if lock.active && mon.item.data().is_choice && id.0 != lock.counter {
         return Some(format!(
