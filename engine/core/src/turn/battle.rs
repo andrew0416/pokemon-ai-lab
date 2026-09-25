@@ -6,8 +6,8 @@
 //! survive the turn (the faint queue, what moved) lives here, not in `State`.
 
 use crate::dex::{
-    abilities, conditions, items, AbilityFlags, AbilityId, ItemId, MoveId, Type, TypeImmunities,
-    NO_BOOSTS,
+    abilities, conditions, items, AbilityFlags, AbilityId, ItemId, MoveFlags, MoveId, Type,
+    TypeImmunities, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
@@ -504,6 +504,13 @@ impl<'a, const N: usize> Battle<'a, N> {
     pub fn add_volatile_blocked(&self, target: SlotRef, volatile: Volatile) -> bool {
         let condition = volatile.condition();
         let yawn = condition == conditions::YAWN;
+        // Misty Terrain: `if (status.id === 'confusion' && target.isGrounded()) return false`.
+        if volatile == Volatile::Confusion
+            && self.terrain() == Terrain::Misty
+            && self.is_grounded(target)
+        {
+            return true;
+        }
         let blocked_by_own = match self.ability_unless_broken(target) {
             a if a == abilities::INSOMNIA
                 || a == abilities::VITAL_SPIRIT
@@ -562,9 +569,21 @@ impl<'a, const N: usize> Battle<'a, N> {
 
     /// Showdown `addVolatile` for the implemented volatiles (with Stall's `onRestart`).
     pub fn add_volatile(&mut self, target: SlotRef, volatile: Volatile) -> bool {
-        if self.alive(target).is_none() {
+        self.add_volatile_from(target, volatile, MoveId::NONE)
+    }
+
+    /// Showdown `addVolatile(status, source, sourceEffect)`: `TryAddVolatile`, then the
+    /// condition's `onStart` (or `onRestart` when it is already up; conditions without one
+    /// fail). `source_move` is the move that adds it (a locked move remembers it).
+    pub fn add_volatile_from(
+        &mut self,
+        target: SlotRef,
+        volatile: Volatile,
+        source_move: MoveId,
+    ) -> bool {
+        let Some(pokemon) = self.alive(target) else {
             return false;
-        }
+        };
         let old = self.volatile(target, volatile);
         let new = if old.active {
             match volatile {
@@ -576,6 +595,12 @@ impl<'a, const N: usize> Battle<'a, N> {
                     } else {
                         old.counter
                     },
+                    ..VolatileState::NONE
+                },
+                // `if (this.effectState.trueDuration >= 2) this.effectState.duration = 2`.
+                Volatile::LockedMove => VolatileState {
+                    duration: if old.hidden >= 2 { 2 } else { old.duration },
+                    ..old
                 },
                 // No onRestart.
                 _ => return false,
@@ -585,11 +610,39 @@ impl<'a, const N: usize> Battle<'a, N> {
             if self.add_volatile_blocked(target, volatile) {
                 return false;
             }
-            VolatileState {
+            let mut new = VolatileState {
                 active: true,
                 duration: volatile.initial_duration(),
                 counter: if volatile == Volatile::Stall { 3 } else { 0 },
+                ..VolatileState::NONE
+            };
+            match volatile {
+                // `this.effectState.time = this.random(2, 6)`.
+                Volatile::Confusion => new.time = 2 + self.rng.uniform(4) as u8,
+                // `trueDuration = this.random(2, 4)`, the move that locked.
+                Volatile::LockedMove => {
+                    new.hidden = 2 + self.rng.uniform(2) as u8;
+                    new.mv = source_move;
+                }
+                // Encore's `onStart`: the target's last move must be usable and encorable;
+                // one more turn if the target already moved.
+                Volatile::Encore => {
+                    let last = self.state.slot(target).last_move;
+                    if last.is_none() || last.data().flags.contains(MoveFlags::FAILENCORE) {
+                        return false;
+                    }
+                    let slot_move = self.mon(pokemon).moves.iter().find(|m| m.id == last);
+                    if !slot_move.is_some_and(|m| m.pp > 0) {
+                        return false;
+                    }
+                    new.mv = last;
+                    if self.will_move(target).is_none() {
+                        new.duration += 1;
+                    }
+                }
+                _ => {}
             }
+            new
         };
         self.apply(Instruction::SetVolatile {
             target,
@@ -600,6 +653,8 @@ impl<'a, const N: usize> Battle<'a, N> {
         true
     }
 
+    /// Showdown `removeVolatile`: the condition's `onEnd` (a locked move that ends by fatigue
+    /// confuses its user), then it is gone.
     pub fn remove_volatile(&mut self, target: SlotRef, volatile: Volatile) -> bool {
         let old = self.volatile(target, volatile);
         if !old.active || self.alive(target).is_none() {
@@ -611,7 +666,24 @@ impl<'a, const N: usize> Battle<'a, N> {
             old,
             new: VolatileState::NONE,
         });
+        // onEnd.
+        if volatile == Volatile::LockedMove && old.hidden <= 1 {
+            self.add_volatile(target, Volatile::Confusion);
+        }
         true
+    }
+
+    /// `delete pokemon.volatiles[id]`: gone without its `onEnd`.
+    pub fn delete_volatile(&mut self, target: SlotRef, volatile: Volatile) {
+        let old = self.volatile(target, volatile);
+        if old.active {
+            self.apply(Instruction::SetVolatile {
+                target,
+                volatile,
+                old,
+                new: VolatileState::NONE,
+            });
+        }
     }
 
     pub fn set_volatile_state(&mut self, target: SlotRef, volatile: Volatile, new: VolatileState) {

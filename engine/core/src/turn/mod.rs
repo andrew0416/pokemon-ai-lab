@@ -19,6 +19,7 @@ mod battle;
 mod branch;
 pub mod coverage;
 mod diff;
+pub mod lock;
 mod mega;
 mod moves;
 mod order;
@@ -39,12 +40,14 @@ use crate::gimmick::Gimmick;
 use crate::instruction::Outcome;
 use crate::rules::{ActionError, Ruleset};
 use crate::state::{PokemonRef, SideId, SlotRef, State};
+use crate::volatile::Volatile;
 
 use battle::Battle;
 use branch::Chooser;
 use order::{ORDER_MEGA, ORDER_MOVE, ORDER_SWITCH};
 use queue::{Action, ActionKind};
 
+pub use lock::{locked_move, Locked, RECHARGE_INDEX};
 pub use moves::{takes_target, valid_target_loc};
 pub use switching::{
     item_start_handler, species_start_handler, start_handler, switch_in_supported,
@@ -93,7 +96,7 @@ pub fn enumerate_turn<const N: usize>(
     ruleset: Ruleset,
     choices: [JointAction<N>; 2],
 ) -> Result<Vec<Outcome>, TurnError> {
-    check_turn(state, ruleset, &choices)?;
+    let choices = check_turn(state, ruleset, &choices)?;
     let start = Pending {
         queue: initial_queue(state, &choices),
         in_progress: None,
@@ -115,7 +118,7 @@ pub fn sample_turn<const N: usize>(
     samples: usize,
     seed: u64,
 ) -> Result<Vec<Outcome>, TurnError> {
-    check_turn(state, ruleset, &choices)?;
+    let choices = check_turn(state, ruleset, &choices)?;
     let start = Pending {
         queue: initial_queue(state, &choices),
         in_progress: None,
@@ -430,12 +433,15 @@ fn sample_stages<const N: usize, P: Clone>(
         .collect())
 }
 
-/// Validates the choices and that everything in play is implemented.
+/// Validates the choices and that everything in play is implemented. Returns the choices as
+/// the turn runs them: a locked Pokémon's move choice becomes its locked move (Showdown
+/// `chooseMove` ignores what was picked), the `recharge` pseudo-move as `RECHARGE_INDEX`.
 fn check_turn<const N: usize>(
     state: &State<N>,
     ruleset: Ruleset,
     choices: &[JointAction<N>; 2],
-) -> Result<(), TurnError> {
+) -> Result<[JointAction<N>; 2], TurnError> {
+    let mut normalized = *choices;
     if state.result.is_over() {
         return Err(TurnError::BattleOver);
     }
@@ -465,6 +471,30 @@ fn check_turn<const N: usize>(
                 reason,
             };
             let occupant = state.active(slot).filter(|p| p.hp > 0);
+            // A locked Pokémon: any move choice stands for the locked move, nothing else is
+            // allowed (`trapped`), no PP is needed.
+            if let (Some(locked), Some(mon)) = (lock::locked_move(state, slot), occupant) {
+                let SlotAction::Move { gimmick, .. } = slot_action else {
+                    return Err(invalid(format!("locked into {locked:?}; cannot switch")));
+                };
+                if !gimmick.is_none() {
+                    return Err(invalid(format!("locked into {locked:?}; no {gimmick:?}")));
+                }
+                let index = match locked {
+                    Locked::Recharge => RECHARGE_INDEX,
+                    Locked::Move(id) => {
+                        mon.moves.iter().position(|m| m.id == id).ok_or_else(|| {
+                            invalid(format!("locked move {} not known", id.data().name))
+                        })? as u8
+                    }
+                };
+                normalized[side.index()][i] = SlotAction::Move {
+                    index,
+                    target: 0,
+                    gimmick: Gimmick::None,
+                };
+                continue;
+            }
             match (slot_action, occupant) {
                 (SlotAction::Pass, None) => {}
                 (SlotAction::Pass, Some(_)) => return Err(invalid("must act".into())),
@@ -532,7 +562,7 @@ fn check_turn<const N: usize>(
         }
     }
     support::check_state(state).map_err(TurnError::Unsupported)?;
-    Ok(())
+    Ok(normalized)
 }
 
 /// Why a move cannot be chosen now (Showdown `DisableMove` handlers that are implemented).
@@ -548,6 +578,16 @@ fn disabled<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> Opti
         && data.flags.contains(MoveFlags::GRAVITY)
     {
         return Some(format!("{} is disabled by Gravity", data.name));
+    }
+    // Encore's `onDisableMove`: only the encored move can be chosen.
+    let encore = state.slot(slot).volatiles.get(Volatile::Encore);
+    if encore.active
+        && encore.mv != id
+        && state
+            .active(slot)
+            .is_some_and(|m| m.moves.iter().any(|s| s.id == encore.mv))
+    {
+        return Some(format!("Encore locks it into {}", encore.mv.data().name));
     }
     None
 }
@@ -570,6 +610,10 @@ impl<const N: usize> Battle<'_, N> {
         let (order, priority) = match action.kind {
             ActionKind::Switch { .. } => (ORDER_SWITCH, 0),
             ActionKind::Mega => (ORDER_MEGA, 0),
+            ActionKind::Move {
+                index: RECHARGE_INDEX,
+                ..
+            } => (ORDER_MOVE, 0),
             ActionKind::Move {
                 index,
                 fractional_tenths,

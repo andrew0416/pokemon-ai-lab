@@ -293,6 +293,7 @@ mod tests {
                 active: true,
                 duration: 1,
                 counter: 3,
+                ..VolatileState::NONE
             },
         );
         to.slot_mut(me).boosts[0] = 1;

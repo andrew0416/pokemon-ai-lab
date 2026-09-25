@@ -4,7 +4,7 @@
 //! field each. A variant exists only once the turn engine implements it; moves, abilities and
 //! items that would create any other volatile are rejected before the turn runs.
 
-use crate::dex::{conditions, ConditionId};
+use crate::dex::{conditions, ConditionId, MoveId};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 #[repr(u8)]
@@ -21,9 +21,18 @@ pub enum Volatile {
     RagePowder,
     /// Spotlight: like Follow Me with higher redirect priority (duration 1).
     Spotlight,
+    /// Confusion: `time` turns (2–5), 33% self-hit before each move.
+    Confusion,
+    /// Outrage / Petal Dance / Thrash: locked into `mv` (duration 2, hidden `trueDuration`
+    /// 2–3), confusion when it ends by fatigue.
+    LockedMove,
+    /// Hyper Beam's recharge turn (duration 2, `recharge` locks the next action).
+    MustRecharge,
+    /// Encore: locked into `mv` (duration 3, one more if the target already moved).
+    Encore,
 }
 
-pub const VOLATILE_COUNT: usize = 6;
+pub const VOLATILE_COUNT: usize = 10;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -33,6 +42,10 @@ impl Volatile {
         Volatile::FollowMe,
         Volatile::RagePowder,
         Volatile::Spotlight,
+        Volatile::Confusion,
+        Volatile::LockedMove,
+        Volatile::MustRecharge,
+        Volatile::Encore,
     ];
 
     /// The Showdown condition this volatile is.
@@ -44,6 +57,10 @@ impl Volatile {
             Volatile::FollowMe => conditions::FOLLOWME,
             Volatile::RagePowder => conditions::RAGEPOWDER,
             Volatile::Spotlight => conditions::SPOTLIGHT,
+            Volatile::Confusion => conditions::CONFUSION,
+            Volatile::LockedMove => conditions::LOCKEDMOVE,
+            Volatile::MustRecharge => conditions::MUSTRECHARGE,
+            Volatile::Encore => conditions::ENCORE,
         }
     }
 
@@ -56,6 +73,10 @@ impl Volatile {
             Volatile::FollowMe => "followme",
             Volatile::RagePowder => "ragepowder",
             Volatile::Spotlight => "spotlight",
+            Volatile::Confusion => "confusion",
+            Volatile::LockedMove => "lockedmove",
+            Volatile::MustRecharge => "mustrecharge",
+            Volatile::Encore => "encore",
         }
     }
 
@@ -74,18 +95,25 @@ impl Volatile {
             | Volatile::FollowMe
             | Volatile::RagePowder
             | Volatile::Spotlight => 1,
-            Volatile::Stall => 2,
+            Volatile::Stall | Volatile::LockedMove | Volatile::MustRecharge => 2,
+            Volatile::Encore => 3,
+            Volatile::Confusion => 0,
         }
     }
 }
 
-/// One volatile's state. `duration` is Showdown's remaining `duration` (0 = no duration);
-/// `counter` is Showdown's `counter` (0 = unset).
+/// One volatile's state: Showdown's effect-state fields the canonical output writes
+/// (`duration`, `counter`, `time`, `move`, 0/none = unset) plus `hidden` for state Showdown
+/// keeps but does not print (a locked move's `trueDuration`; written as `trueDuration` since it
+/// decides later outcomes).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 pub struct VolatileState {
     pub active: bool,
     pub duration: u8,
     pub counter: u16,
+    pub time: u8,
+    pub mv: MoveId,
+    pub hidden: u8,
 }
 
 impl VolatileState {
@@ -93,6 +121,9 @@ impl VolatileState {
         active: false,
         duration: 0,
         counter: 0,
+        time: 0,
+        mv: MoveId::NONE,
+        hidden: 0,
     };
 }
 

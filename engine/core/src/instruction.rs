@@ -361,7 +361,7 @@ mod tests {
                 new: VolatileState {
                     active: true,
                     duration: 1,
-                    counter: 0,
+                    ..VolatileState::NONE
                 },
             },
             Instruction::SetItem {

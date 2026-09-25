@@ -122,8 +122,21 @@ pub(crate) fn run_move<const N: usize>(
     will_act: bool,
 ) -> Result<MoveStep, TurnError> {
     let pokemon = b.occupant(user).expect("the caller checked the user");
-    let id = b.mon(pokemon).moves[move_index as usize].id;
     b.increment_move_actions(user);
+    if move_index == super::lock::RECHARGE_INDEX {
+        // The `recharge` pseudo-move: BeforeMove (`mustrecharge`, priority 11) ends it.
+        let recharge = ActiveMove {
+            id: MoveId::NONE,
+            data: MoveId::NONE.data(),
+            priority: 0,
+            prankster_boosted: false,
+            spread: false,
+            accuracy: None,
+        };
+        before_move(b, user, &recharge);
+        return Ok(MoveStep::Done);
+    }
+    let id = b.mon(pokemon).moves[move_index as usize].id;
     // `setActiveMove`: set for the whole move, cleared when it ends.
     b.active_move = Some(ActiveMoveRef { user, pokemon, id });
     let result = run_move_inner(b, user, move_index, target_loc, will_act);
@@ -150,13 +163,18 @@ pub(crate) fn resume_move<const N: usize>(
         HitOutcome::Finished(ok) => ok,
     };
     use_move_tail(b, user, &mv, result, main_target);
-    run_move_tail(b);
+    run_move_tail(b, user);
     b.active_move = None;
     Ok(MoveStep::Done)
 }
 
-/// The end of Showdown `runMove` after `useMove`.
-fn run_move_tail<const N: usize>(b: &mut Battle<'_, N>) {
+/// The end of Showdown `runMove` after `useMove`: `AfterMove` (a locked move on its last
+/// turn ends and, by fatigue, confuses), then faints.
+fn run_move_tail<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) {
+    let locked = b.volatile(user, Volatile::LockedMove);
+    if locked.active && locked.duration == 1 {
+        b.remove_volatile(user, Volatile::LockedMove);
+    }
     b.faint_messages(true);
     b.check_win(None);
 }
@@ -169,13 +187,27 @@ fn run_move_inner<const N: usize>(
     will_act: bool,
 ) -> Result<MoveStep, TurnError> {
     let pokemon = b.occupant(user).expect("the caller checked the user");
-    let id = b.mon(pokemon).moves[move_index as usize].id;
-    let target = get_target(b, user, id, target_loc);
+    let chosen = b.mon(pokemon).moves[move_index as usize].id;
+    // OverrideAction (Encore): the encored move replaces the chosen one, keeping the chosen
+    // move's priority and Prankster boost; its target is drawn afresh.
+    let encore = b.volatile(user, Volatile::Encore);
+    let (id, move_index, target) = if encore.active && encore.mv != chosen {
+        let index = b
+            .mon(pokemon)
+            .moves
+            .iter()
+            .position(|m| m.id == encore.mv)
+            .ok_or_else(|| b.unsupported("Encore into a move the user no longer has"))?;
+        let target = get_random_target(b, user, encore.mv.data().target);
+        (encore.mv, index as u8, target)
+    } else {
+        (chosen, move_index, get_target(b, user, chosen, target_loc))
+    };
     let mut mv = ActiveMove {
         id,
         data: id.data(),
-        priority: b.move_priority(user, id),
-        prankster_boosted: b.prankster_boosted(user, id),
+        priority: b.move_priority(user, chosen),
+        prankster_boosted: b.prankster_boosted(user, chosen),
         spread: false,
         accuracy: id.data().accuracy,
     };
@@ -184,22 +216,25 @@ fn run_move_inner<const N: usize>(
         return Ok(MoveStep::Done);
     }
 
-    let pp = b.mon(pokemon).moves[move_index as usize].pp;
-    if pp == 0 {
-        return Err(b.unsupported(format!("{}: Struggle", mv.data.name)));
+    // A locked move (Outrage's later turns) costs no PP.
+    if super::lock::locked_move(b.state, user).is_none() {
+        let pp = b.mon(pokemon).moves[move_index as usize].pp;
+        if pp == 0 {
+            return Err(b.unsupported(format!("{}: Struggle", mv.data.name)));
+        }
+        b.apply(crate::instruction::Instruction::SetPp {
+            target: pokemon,
+            move_index,
+            old: pp,
+            new: pp - 1,
+        });
     }
-    b.apply(crate::instruction::Instruction::SetPp {
-        target: pokemon,
-        move_index,
-        old: pp,
-        new: pp - 1,
-    });
     b.set_last_move(user, id);
 
     if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
         return Ok(MoveStep::Suspended(progress));
     }
-    run_move_tail(b);
+    run_move_tail(b, user);
     Ok(MoveStep::Done)
 }
 
@@ -207,6 +242,11 @@ fn run_move_inner<const N: usize>(
 /// paralysis (1). `false` = the move is not used (no PP, no `lastMove`).
 fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) -> bool {
     let pokemon = b.occupant(user).expect("checked");
+    // mustrecharge (priority 11): the turn is spent recharging.
+    if b.volatile(user, Volatile::MustRecharge).active {
+        b.remove_volatile(user, Volatile::MustRecharge);
+        return false;
+    }
     match b.mon(pokemon).status {
         Status::Sleep => {
             let time = b.mon(pokemon).status_turns - 1;
@@ -234,11 +274,42 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
     if b.field_active(FieldEffect::Gravity) && mv.data.flags.contains(MoveFlags::GRAVITY) {
         return false;
     }
+    // Confusion (priority 3): one turn less; over at 0; otherwise a 33% hit on itself.
+    let confusion = b.volatile(user, Volatile::Confusion);
+    if confusion.active {
+        let mut next = confusion;
+        next.time -= 1;
+        if next.time == 0 {
+            b.remove_volatile(user, Volatile::Confusion);
+        } else {
+            b.set_volatile_state(user, Volatile::Confusion, next);
+            if b.rng.chance(33, 100) {
+                let damage = confusion_damage(b, user);
+                b.damage(user, f64::from(damage), DamageSource::Move);
+                return false;
+            }
+        }
+    }
     // Champions paralysis: 1/8.
     if b.mon(pokemon).status == Status::Paralyze && b.rng.chance(1, 8) {
         return false;
     }
     true
+}
+
+/// Showdown `getConfusionDamage(pokemon, 40)`: a 40-power typeless physical hit with the
+/// user's own boosted Attack against its own boosted Defense, truncated to 16 bits, then the
+/// usual 85–100% roll, at least 1.
+fn confusion_damage<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> i32 {
+    let mon = b.slot_mon(user).expect("checked");
+    let boosts = b.state.slot(user).boosts;
+    let attack = boosted_stat(i32::from(mon.stats[0]), boosts[0]);
+    let defense = boosted_stat(i32::from(mon.stats[1]), boosts[1]);
+    let level = i32::from(mon.level);
+    let base = ((2 * level / 5 + 2) * 40 * attack / defense) / 50 + 2;
+    let base = base & 0xffff;
+    let roll = 100 - b.rng.uniform(16) as i32;
+    (base * roll / 100).max(1)
 }
 
 // ---- targets --------------------------------------------------------------------------------
@@ -1139,6 +1210,11 @@ fn spread_move_hit<const N: usize>(
             && b.rng.chance(u32::from(effect.chance), 100)
         {
             b.boost_by(user, &effect.boosts, Some(user), BoostEffect::Move(mv.id));
+        }
+        if let Some(volatile) = Volatile::from_condition(effect.volatile_status) {
+            if results.iter().any(|r| r.ok()) {
+                b.add_volatile_from(user, volatile, mv.id);
+            }
         }
     }
     // secondaries.

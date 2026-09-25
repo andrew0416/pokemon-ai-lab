@@ -11,7 +11,7 @@ use crate::dex::{abilities, items, AbilityId, Type, TypeImmunities, NO_BOOSTS};
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SideId, SlotRef, State, Status};
-use crate::volatile::{Volatile, VolatileState};
+use crate::volatile::Volatile;
 
 use super::abilities as ability_events;
 use super::battle::{Battle, BoostEffect, DamageSource};
@@ -121,8 +121,14 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
             }
             for (volatile, state) in b.state.slot(slot).volatiles.iter() {
                 if state.duration > 0 {
+                    // Encore's own handler carries its duration tick (`onResidualOrder: 16`).
+                    let order = if volatile == Volatile::Encore {
+                        16
+                    } else {
+                        ORDER_DEFAULT
+                    };
                     out.push(Handler {
-                        order: ORDER_DEFAULT,
+                        order,
                         speed,
                         sub_order: SUB_CONDITION,
                         kind: Kind::VolatileDuration(pokemon, slot, volatile),
@@ -281,9 +287,37 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
             }
             state.duration -= 1;
             if state.duration == 0 {
-                state = VolatileState::NONE;
+                // The condition ends (`onEnd`), and its `onResidual` does not run.
+                b.remove_volatile(slot, volatile);
+                return Ok(());
             }
             b.set_volatile_state(slot, volatile, state);
+            // The condition's own `onResidual`.
+            match volatile {
+                Volatile::LockedMove => {
+                    // `if (target.status === 'slp') delete target.volatiles['lockedmove']`
+                    // (no onEnd), then `trueDuration--`.
+                    if b.mon(pokemon).status == Status::Sleep {
+                        b.delete_volatile(slot, volatile);
+                    } else {
+                        state.hidden = state.hidden.saturating_sub(1);
+                        b.set_volatile_state(slot, volatile, state);
+                    }
+                }
+                Volatile::Encore => {
+                    // Over once the encored move has no PP left.
+                    let out_of_pp = b
+                        .mon(pokemon)
+                        .moves
+                        .iter()
+                        .find(|m| m.id == state.mv)
+                        .is_none_or(|m| m.pp == 0);
+                    if out_of_pp {
+                        b.remove_volatile(slot, volatile);
+                    }
+                }
+                _ => {}
+            }
         }
         Kind::StatusDamage(pokemon, slot) => {
             if !still_active(b, pokemon, slot) {

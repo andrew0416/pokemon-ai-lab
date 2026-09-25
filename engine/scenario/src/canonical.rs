@@ -22,7 +22,7 @@ use lab_engine::field::{Effect, FieldEffect, SideEffect, Terrain, Weather, FIELD
 use lab_engine::gimmick::Gimmick;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::{BattleResult, Pokemon, SideId, State, Status, PARTY_SIZE};
-use lab_engine::volatile::VolatileState;
+use lab_engine::volatile::{Volatile, VolatileState};
 
 use crate::meta::{ScenarioMeta, SideMeta};
 
@@ -342,17 +342,32 @@ fn status_id(status: Status) -> &'static str {
     }
 }
 
-/// Showdown effect-state fields in `EFFECT_FIELDS` order (`duration`, `counter`).
-fn volatile_fields(out: &mut String, state: VolatileState) {
+/// Showdown effect-state fields in `EFFECT_FIELDS` order (`duration`, `counter`, `time`,
+/// `move`, then `trueDuration` for a locked move: hidden in Showdown's own state but written
+/// here because it decides later outcomes; `canonical.cjs` lists it too).
+fn volatile_fields(out: &mut String, volatile: Volatile, state: VolatileState) {
     out.push('{');
     let mut first = true;
-    if state.duration != 0 {
-        write!(out, r#""duration":{}"#, state.duration).unwrap();
+    let mut field = |out: &mut String, text: String| {
+        let sep = if first { "" } else { "," };
+        out.push_str(sep);
+        out.push_str(&text);
         first = false;
+    };
+    if state.duration != 0 {
+        field(out, format!(r#""duration":{}"#, state.duration));
     }
     if state.counter != 0 {
-        let sep = if first { "" } else { "," };
-        write!(out, r#"{sep}"counter":{}"#, state.counter).unwrap();
+        field(out, format!(r#""counter":{}"#, state.counter));
+    }
+    if state.time != 0 {
+        field(out, format!(r#""time":{}"#, state.time));
+    }
+    if !state.mv.is_none() {
+        field(out, format!(r#""move":"{}""#, state.mv.id()));
+    }
+    if volatile == Volatile::LockedMove {
+        field(out, format!(r#""trueDuration":{}"#, state.hidden));
     }
     out.push('}');
 }
@@ -419,7 +434,7 @@ fn pokemon(
         for (i, (volatile, state)) in volatiles.into_iter().enumerate() {
             let sep = if i == 0 { "" } else { "," };
             write!(out, r#"{sep}"{}":"#, volatile.id()).unwrap();
-            volatile_fields(out, state);
+            volatile_fields(out, volatile, state);
         }
         out.push('}');
         if !slot.last_move.is_none() {

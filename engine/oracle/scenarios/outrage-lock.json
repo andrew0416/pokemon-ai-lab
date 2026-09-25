@@ -1,0 +1,96 @@
+{
+ "description": "Dragonite's Outrage (random foe) locks it for 2-3 turns: setup turn 1 uses it, the decision turn is the forced second Outrage (any move choice stands for it, no PP charged, random target again); a 2-turn lock ends with confusion (2-5 turns). Tyranitar and Excadrill use Swords Dance, Bronzong Protects. (Showdown's choice parser wants a target even for a locked move; it is ignored.)",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Dragonite",
+    "item": "Leftovers",
+    "ability": "Multiscale",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "spe": 2
+    },
+    "moves": [
+     "Outrage",
+     "Extreme Speed",
+     "Dragon Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Bronzong",
+    "item": "Leftovers",
+    "ability": "Levitate",
+    "nature": "Sassy",
+    "evs": {
+     "hp": 32,
+     "spd": 32,
+     "def": 2
+    },
+    "moves": [
+     "Hypnosis",
+     "Gyro Ball",
+     "Iron Head",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Tyranitar",
+    "item": "Leftovers",
+    "ability": "Sand Stream",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 2,
+     "spe": 32
+    },
+    "moves": [
+     "Stone Edge",
+     "Rock Slide",
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Excadrill",
+    "item": "Leftovers",
+    "ability": "Sand Rush",
+    "nature": "Jolly",
+    "evs": {
+     "hp": 4,
+     "atk": 30,
+     "spe": 32
+    },
+    "moves": [
+     "Iron Head",
+     "High Horsepower",
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move outrage, move protect",
+   "move swordsdance, move swordsdance"
+  ]
+ ],
+ "turn": {
+  "p1": "move outrage 1, move protect",
+  "p2": "move swordsdance, move swordsdance"
+ }
+}

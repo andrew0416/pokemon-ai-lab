@@ -35,6 +35,18 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::UPPER_HAND, &["onTry"]),
     (moves::QUASH, &["onHit"]),
     (moves::AFTER_YOU, &["onHit"]),
+    // Encore: the volatile's start/override/disable/residual/end (`battle.rs`, `lock.rs`,
+    // `residual.rs`, `mod.rs::disabled`).
+    (
+        moves::ENCORE,
+        &[
+            "condition.onDisableMove",
+            "condition.onEnd",
+            "condition.onOverrideAction",
+            "condition.onResidual",
+            "condition.onStart",
+        ],
+    ),
     (
         moves::FOLLOW_ME,
         &[
@@ -479,7 +491,8 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         | MoveTarget::User
         | MoveTarget::All
         | MoveTarget::AllySide
-        | MoveTarget::FoeSide => {}
+        | MoveTarget::FoeSide
+        | MoveTarget::RandomNormal => {}
         other => return why(&format!("target {other:?}")),
     }
     if let Some((low, high)) = m.multihit {
@@ -520,7 +533,6 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     use crate::dex::MoveFlags as F;
     for (flag, what) in [
         (F::CHARGE, "two-turn"),
-        (F::RECHARGE, "recharge"),
         (F::FUTUREMOVE, "future move"),
         (F::CANTUSETWICE, "can't use twice"),
     ] {
@@ -541,10 +553,10 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         return why(&format!("field effect {}", m.pseudo_weather.id()));
     }
     if let Some(s) = m.self_effect {
-        if !s.volatile_status.is_none()
-            || !s.side_condition.is_none()
-            || !s.pseudo_weather.is_none()
-        {
+        if !s.volatile_status.is_none() && Volatile::from_condition(s.volatile_status).is_none() {
+            return why(&format!("self volatile {}", s.volatile_status.id()));
+        }
+        if !s.side_condition.is_none() || !s.pseudo_weather.is_none() {
             return why("self effect");
         }
     }

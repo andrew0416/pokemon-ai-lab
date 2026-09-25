@@ -8,7 +8,9 @@
 const SCHEMA = 1;
 
 // Effect-state fields that carry game state. Everything else in an EffectState is bookkeeping.
-const EFFECT_FIELDS = ['duration', 'counter', 'layers', 'stage', 'time', 'startTime', 'hp', 'move', 'turns'];
+// `trueDuration` (a locked move's real length, 2–3 turns) is not something Showdown reports,
+// but it decides later outcomes, so the canonical state keeps it (additive to schema 1).
+const EFFECT_FIELDS = ['duration', 'counter', 'layers', 'stage', 'time', 'startTime', 'hp', 'move', 'turns', 'trueDuration'];
 
 function effect(state) {
 	const out = {};

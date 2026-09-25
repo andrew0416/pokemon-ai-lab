@@ -340,6 +340,13 @@ pub fn parse_choice<const N: usize>(
             ["switch", n] => SlotAction::Switch {
                 party_index: switch_position(order, n, part)?,
             },
+            // A recharging Pokémon's only choice; the turn engine substitutes the locked
+            // action for whatever move is named, as Showdown does.
+            ["move", "recharge", ..] => SlotAction::Move {
+                index: 0,
+                target: 0,
+                gimmick: Gimmick::None,
+            },
             ["move", mv, rest @ ..] => {
                 let mon = state
                     .active(slot)

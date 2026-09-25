@@ -67,6 +67,10 @@ impl<const N: usize> Battle<'_, N> {
         else {
             return None;
         };
+        if move_index == super::lock::RECHARGE_INDEX {
+            // `recharge` is a status pseudo-move with priority 0.
+            return Some((crate::dex::MoveId::NONE, MoveCategory::Status, 0));
+        }
         let id = self.mon(action.pokemon).moves[move_index as usize].id;
         let priority = self.move_priority(slot, id) * 10 + i32::from(fractional_tenths);
         Some((id, id.data().category, priority))
