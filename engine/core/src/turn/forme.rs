@@ -491,6 +491,24 @@ fn mimicry<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     set_types(b, slot, pokemon, types);
 }
 
+// ---- what stays refused -----------------------------------------------------------------------
+
+/// Why a Pokémon cannot be on the field, if its forme ability makes it unsupported although
+/// the ability is supported for other species (`support::check_state`, and
+/// `switching::switch_in_problem` for a switch-in during a turn):
+/// - Battle Bond acts only for Greninja-Bond (`onSourceAfterFaint`: +1 Atk, SpA and Spe once per
+///   battle, `source.bondTriggered`, which the state does not record) and Greninja-Ash (Water
+///   Shuriken hits 3 times); on any other species (Greninja itself) both handlers do nothing.
+pub(crate) fn field_problem(mon: &crate::state::Pokemon) -> Option<String> {
+    let bond_forme = mon.species == species::GRENINJA_BOND || mon.species == species::GRENINJA_ASH;
+    (mon.ability == abilities::BATTLE_BOND && bond_forme).then(|| {
+        format!(
+            "{}: Battle Bond (its once-per-battle `bondTriggered` is not in the state)",
+            mon.species.data().name
+        )
+    })
+}
+
 // ---- switch-in and field events ---------------------------------------------------------------
 
 /// `singleEvent('Start')` of a forme ability (`switching::StartEffect::Forme`, run in the
@@ -624,6 +642,42 @@ mod tests {
         assert_eq!(data.handlers, ["onStart", "onTerrainChange"]);
         assert!(data.event_orders.contains(&("onSwitchInPriority", -1)));
         assert!(!data.flags.contains(crate::dex::AbilityFlags::BREAKABLE));
+    }
+
+    /// The F19 abilities that stay refused, with the reason pinned here:
+    /// - Power Construct: Zygarde-Complete is permanent but regresses on fainting
+    ///   (`formeRegression`) to the set's species (Zygarde or Zygarde-10%, not in the state) with
+    ///   `updateMaxHp`, and it recomputes `canMegaEvo`;
+    /// - Gulp Missile: its `onSourceTryPrimaryHit` (Surf) needs the TryPrimaryHit step, and Dive's
+    ///   `onTryMove` changes the forme on the charging turn; left for after the Substitute work,
+    ///   which builds that step;
+    /// - Zen Mode: its `zenmode` volatile is part of the canonical state (a new volatile kind).
+    ///
+    /// Battle Bond is supported only where it is inert ([`field_problem`]).
+    #[test]
+    fn unimplemented_forme_abilities_stay_refused() {
+        use crate::turn::support::ability_supported_on_field;
+        for ability in [
+            abilities::POWER_CONSTRUCT,
+            abilities::GULP_MISSILE,
+            abilities::ZEN_MODE,
+        ] {
+            assert!(!ability_supported_on_field(ability), "{ability:?}");
+        }
+        assert_eq!(
+            abilities::BATTLE_BOND.data().handlers,
+            ["onModifyMove", "onSourceAfterFaint"]
+        );
+        let mut greninja = crate::state::Pokemon {
+            species: species::GRENINJA,
+            ability: abilities::BATTLE_BOND,
+            ..Default::default()
+        };
+        assert_eq!(field_problem(&greninja), None);
+        for bond in [species::GRENINJA_BOND, species::GRENINJA_ASH] {
+            greninja.species = bond;
+            assert!(field_problem(&greninja).is_some(), "{bond:?}");
+        }
     }
 
     /// Zero to Hero's permanent change keeps the ability (so `setAbility` has no End or Start to

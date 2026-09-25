@@ -169,6 +169,15 @@ fn mimicry_returns_to_the_base_types() {
     assert_exact_parity("mimicry-ice-spinner");
 }
 
+// ---- Battle Bond ------------------------------------------------------------------------------
+
+/// Battle Bond on plain Greninja is inert: a KO gives no boosts (only Greninja-Bond's does,
+/// and that forme is refused).
+#[test]
+fn battle_bond_is_inert_on_greninja() {
+    assert_exact_parity("battle-bond-greninja");
+}
+
 /// A temporary forme cannot be a set's species (Showdown would keep it as the base species).
 #[test]
 fn temporary_formes_are_refused_as_set_species() {

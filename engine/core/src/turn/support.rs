@@ -943,6 +943,12 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // Mimicry: `onStart` in `switching::start_ability`, `onTerrainChange` in
     // `field_events::terrain_changed` (`forme::mimicry`).
     (abilities::MIMICRY, &["onStart", "onTerrainChange"]),
+    // Battle Bond: both handlers do nothing unless the holder is Greninja-Bond or Greninja-Ash,
+    // which `forme::field_problem` refuses.
+    (
+        abilities::BATTLE_BOND,
+        &["onModifyMove", "onSourceAfterFaint"],
+    ),
     // Damage handlers (`Battle::damage`).
     (abilities::ROCK_HEAD, &["onDamage"]),
     (abilities::MAGIC_GUARD, &["onDamage"]),
@@ -1591,6 +1597,9 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
             }
             if mon.ability == abilities::TRACE {
                 return Err(format!("{name}: Trace still seeking a target"));
+            }
+            if let Some(why) = super::forme::field_problem(mon) {
+                return Err(why);
             }
             if !item_supported_on_field(mon.item) {
                 return Err(format!(

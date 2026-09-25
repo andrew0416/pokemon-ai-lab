@@ -504,6 +504,11 @@ fn switch_in_problem<const N: usize>(
             mon.ability.data().handlers
         ));
     }
+    if on_field {
+        if let Some(why) = super::forme::field_problem(mon) {
+            return Some(why);
+        }
+    }
     if on_field && !item_supported_on_field(mon.item) {
         return Some(format!(
             "{name}: item {} ({:?})",
