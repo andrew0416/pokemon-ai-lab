@@ -97,6 +97,62 @@ fn zero_to_hero_forme_is_permanent() {
     assert_exact_parity("zero-to-hero");
 }
 
+// ---- Schooling, Shields Down, Hunger Switch ------------------------------------------------------
+
+/// School forme at switch-in; at the end of the turn Solo at or below a quarter of max HP
+/// (the boundary included), School above; a fainted Wishiwashi is Solo again.
+#[test]
+fn schooling_follows_hp_at_the_residual() {
+    assert_exact_parity("schooling-residual");
+}
+
+/// The School forme is temporary: Solo on the bench.
+#[test]
+fn schooling_reverts_on_switch_out() {
+    assert_exact_parity("schooling-switch-out");
+}
+
+/// Hangry and back at each residual; the Hangry forme is temporary (Full Belly on the bench).
+#[test]
+fn hunger_switch_toggles_and_reverts() {
+    assert_exact_parity("hunger-switch");
+}
+
+/// Minior-Meteor is immune to every status and to Yawn.
+#[test]
+fn shields_down_meteor_is_status_immune() {
+    assert_exact_parity("shields-down-status");
+}
+
+/// At or below half HP the shields drop at the residual (plain Minior's core).
+#[test]
+fn shields_down_drops_at_half_hp() {
+    assert_exact_parity("shields-down-residual");
+}
+
+/// Shields Down on a core colour other than plain Minior is refused where it would take the
+/// Meteor forme: the colour to come back to (the set's species) is not in the state.
+#[test]
+fn shields_down_refuses_a_core_colour() {
+    let json = r#"{
+      "format": "gen9championsdoublescustomgame",
+      "p1": {"team": [
+        {"species": "Minior-Orange", "item": "", "ability": "Shields Down", "nature": "Hardy",
+         "evs": {"hp": 32}, "moves": ["Calm Mind"], "level": 50},
+        {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+         "evs": {"hp": 32}, "moves": ["Calm Mind"], "level": 50}], "order": "12"},
+      "p2": {"team": [
+        {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Impish",
+         "evs": {"hp": 32}, "moves": ["Calm Mind"], "level": 50},
+        {"species": "Metagross", "item": "", "ability": "Honey Gather", "nature": "Bold",
+         "evs": {"hp": 32}, "moves": ["Calm Mind"], "level": 50}], "order": "12"},
+      "turn": {"p1": "move calmmind, move calmmind", "p2": "move calmmind, move calmmind"}
+    }"#;
+    let loaded = lab_scenario::load_scenario_str(json, &common::engine_dir()).unwrap();
+    let error = lab_scenario::scenario_positions(&loaded).unwrap_err();
+    assert!(error.contains("Shields Down on Minior-Orange"), "{error}");
+}
+
 /// A temporary forme cannot be a set's species (Showdown would keep it as the base species).
 #[test]
 fn temporary_formes_are_refused_as_set_species() {

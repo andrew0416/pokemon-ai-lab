@@ -931,6 +931,15 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // Zero to Hero: `onSwitchOut` in `forme::on_switch_out` (from `switching::switch_in`),
     // `onSwitchIn` only announces.
     (abilities::ZERO_TO_HERO, &["onSwitchIn", "onSwitchOut"]),
+    // Schooling, Shields Down, Hunger Switch: `onResidual` in `residual.rs` (`forme::residual`),
+    // `onStart` in `switching::start_ability` (`forme::on_start`); Shields Down's `onSetStatus`
+    // and `onTryAddVolatile` in `Battle::set_status_blocked` / `add_volatile_blocked`.
+    (abilities::SCHOOLING, &["onResidual", "onStart"]),
+    (
+        abilities::SHIELDS_DOWN,
+        &["onResidual", "onSetStatus", "onStart", "onTryAddVolatile"],
+    ),
+    (abilities::HUNGER_SWITCH, &["onResidual"]),
     // Damage handlers (`Battle::damage`).
     (abilities::ROCK_HEAD, &["onDamage"]),
     (abilities::MAGIC_GUARD, &["onDamage"]),

@@ -1,0 +1,23 @@
+{
+ "description": "Shields Down: Minior takes the Meteor forme at switch-in (above half HP), and Minior-Meteor is immune to every status (onSetStatus: Toxic fails) and to Yawn (onTryAddVolatile).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Toxic", "Calm Mind"], "level": 50},
+   {"species": "Slowbro", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Yawn", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Minior", "item": "", "ability": "Shields Down", "nature": "Hardy",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Metagross", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move toxic 1, move yawn 1", "p2": "move calmmind, move calmmind"}
+}

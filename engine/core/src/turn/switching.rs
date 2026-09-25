@@ -96,7 +96,7 @@ pub(crate) enum StartEffect {
     Paradox,
     /// Wind Rider: Atk +1 if Tailwind is up on the holder's side.
     WindRider,
-    /// The forme abilities' `onStart` (`forme::on_start`): Ice Face.
+    /// The forme abilities' `onStart` (`forme::on_start`): Ice Face, Schooling, Shields Down.
     Forme,
 }
 
@@ -248,6 +248,18 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
             "onUpdate",
             "onWeatherChange",
         ],
+        StartEffect::Forme,
+    ),
+    // F19 Schooling and Shields Down (`onSwitchInPriority: -1`): the forme for the HP
+    // (`forme::on_start`); their `onResidual` is in `residual.rs`.
+    (
+        abilities::SCHOOLING,
+        &["onResidual", "onStart"],
+        StartEffect::Forme,
+    ),
+    (
+        abilities::SHIELDS_DOWN,
+        &["onResidual", "onSetStatus", "onStart", "onTryAddVolatile"],
         StartEffect::Forme,
     ),
     // F19 Zero to Hero: `onSwitchIn` only announces the Hero forme; `onSwitchOut` in

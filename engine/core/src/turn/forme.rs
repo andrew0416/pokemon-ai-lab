@@ -52,6 +52,9 @@ pub(crate) enum Change {
 pub fn temporary_forme_base(forme: SpeciesId) -> Option<SpeciesId> {
     match forme {
         f if f == species::AEGISLASH_BLADE => Some(species::AEGISLASH),
+        f if f == species::WISHIWASHI_SCHOOL => Some(species::WISHIWASHI),
+        f if f == species::MINIOR_METEOR => Some(species::MINIOR),
+        f if f == species::MORPEKO_HANGRY => Some(species::MORPEKO),
         _ => None,
     }
 }
@@ -357,17 +360,121 @@ pub(crate) fn on_switch_out<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef
     }
 }
 
+// ---- HP-dependent formes: Schooling, Shields Down; Hunger Switch ------------------------------
+
+/// Schooling's `onStart` and `onResidual`: a Wishiwashi (`baseSpecies.baseSpecies`, level 20 or
+/// more: always at level 50) above 1/4 of its max HP takes the School forme, at or below it the
+/// Solo forme, temporarily.
+fn schooling<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let Some(mon) = b.alive(slot).map(|p| b.mon(p)) else {
+        return;
+    };
+    if mon.species.data().base_species != species::WISHIWASHI {
+        return;
+    }
+    // `pokemon.hp > pokemon.maxhp / 4`.
+    let school = 4 * i32::from(mon.hp) > i32::from(mon.max_hp);
+    if school && mon.species == species::WISHIWASHI {
+        forme_change(b, slot, species::WISHIWASHI_SCHOOL, Change::Temporary);
+    } else if !school && mon.species == species::WISHIWASHI_SCHOOL {
+        forme_change(b, slot, species::WISHIWASHI, Change::Temporary);
+    }
+}
+
+/// Shields Down's `onStart` and `onResidual`: a Minior (`baseSpecies.baseSpecies`) above half
+/// its max HP takes the Meteor forme, at or below half its core (`pokemon.set.species`),
+/// temporarily. The set's species is not in the state: the engine only follows plain Minior
+/// (whose core is Minior itself); a core of another colour would have to come back from the
+/// Meteor forme, so its change to Meteor is refused.
+fn shields_down<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> Result<(), TurnError> {
+    let Some(mon) = b.alive(slot).map(|p| b.mon(p)) else {
+        return Ok(());
+    };
+    if mon.species.data().base_species != species::MINIOR {
+        return Ok(());
+    }
+    // `pokemon.hp > pokemon.maxhp / 2`.
+    let meteor = 2 * i32::from(mon.hp) > i32::from(mon.max_hp);
+    if meteor && mon.species != species::MINIOR_METEOR {
+        if mon.species != species::MINIOR {
+            return Err(b.unsupported(format!(
+                "Shields Down on {}: the core colour (the set's species) is not in the state",
+                mon.species.data().name
+            )));
+        }
+        forme_change(b, slot, species::MINIOR_METEOR, Change::Temporary);
+    } else if !meteor && mon.species == species::MINIOR_METEOR {
+        forme_change(b, slot, species::MINIOR, Change::Temporary);
+    }
+    Ok(())
+}
+
+/// Shields Down's `onSetStatus` (every status, from any source) and `onTryAddVolatile` (Yawn):
+/// whether the holder in `slot` is protected, i.e. is Minior-Meteor. Not breakable.
+pub(crate) fn shields_up<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
+    b.slot_mon(slot).is_some_and(|m| {
+        m.ability == abilities::SHIELDS_DOWN && m.species == species::MINIOR_METEOR
+    })
+}
+
+/// Hunger Switch's `onResidual`: a Morpeko (`species.baseSpecies`) switches between its Full
+/// Belly and Hangry formes every turn, temporarily (Terastallization, which stops it, is off).
+fn hunger_switch<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let Some(mon) = b.alive(slot).map(|p| b.mon(p)) else {
+        return;
+    };
+    if mon.species.data().base_species != species::MORPEKO {
+        return;
+    }
+    let target = if mon.species == species::MORPEKO {
+        species::MORPEKO_HANGRY
+    } else {
+        species::MORPEKO
+    };
+    forme_change(b, slot, target, Change::Temporary);
+}
+
+/// Whether `ability` has a forme-changing `onResidual` ([`residual`]).
+pub(crate) fn has_residual(ability: AbilityId) -> bool {
+    [
+        abilities::SCHOOLING,
+        abilities::SHIELDS_DOWN,
+        abilities::HUNGER_SWITCH,
+    ]
+    .contains(&ability)
+}
+
+/// The ability's `onResidual` (`residual.rs`, order 29, ability sub-order) for its holder in
+/// `slot`: Schooling, Shields Down, Hunger Switch. Each only changes its holder.
+pub(crate) fn residual<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    ability: AbilityId,
+) -> Result<(), TurnError> {
+    match ability {
+        a if a == abilities::SCHOOLING => schooling(b, slot),
+        a if a == abilities::SHIELDS_DOWN => shields_down(b, slot)?,
+        a if a == abilities::HUNGER_SWITCH => hunger_switch(b, slot),
+        _ => {}
+    }
+    Ok(())
+}
+
 // ---- switch-in and field events ---------------------------------------------------------------
 
 /// `singleEvent('Start')` of a forme ability (`switching::StartEffect::Forme`, run in the
-/// switch-in's `fieldEvent('SwitchIn')` at the ability's `onSwitchInPriority`).
+/// switch-in's `fieldEvent('SwitchIn')` at the ability's `onSwitchInPriority`): Ice Face,
+/// Schooling, Shields Down.
 pub(crate) fn on_start<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
     ability: AbilityId,
 ) -> Result<(), TurnError> {
-    if ability == abilities::ICE_FACE {
-        ice_face_restore(b, slot);
+    match ability {
+        a if a == abilities::ICE_FACE => ice_face_restore(b, slot),
+        a if a == abilities::SCHOOLING => schooling(b, slot),
+        a if a == abilities::SHIELDS_DOWN => shields_down(b, slot)?,
+        _ => {}
     }
     Ok(())
 }
@@ -427,6 +534,47 @@ mod tests {
             .data()
             .event_orders
             .contains(&("onModifyMovePriority", 1)));
+    }
+
+    /// The residual forme abilities' handler lists and orders (order 29, no sub-order: the
+    /// ability's effect-type sub-order in `residual.rs`), and the formes' temporary bases.
+    #[test]
+    fn residual_formes_match_the_dex() {
+        for (ability, handlers, switch_in) in [
+            (
+                abilities::SCHOOLING,
+                &["onResidual", "onStart"][..],
+                Some(-1),
+            ),
+            (
+                abilities::SHIELDS_DOWN,
+                &["onResidual", "onSetStatus", "onStart", "onTryAddVolatile"][..],
+                Some(-1),
+            ),
+            (abilities::HUNGER_SWITCH, &["onResidual"][..], None),
+        ] {
+            let data = ability.data();
+            assert!(has_residual(ability));
+            assert_eq!(data.handlers, handlers, "{ability:?}");
+            assert!(data.event_orders.contains(&("onResidualOrder", 29)));
+            assert!(!data
+                .event_orders
+                .iter()
+                .any(|(name, _)| *name == "onResidualSubOrder"));
+            let priority = data
+                .event_orders
+                .iter()
+                .find(|(name, _)| *name == "onSwitchInPriority")
+                .map(|&(_, p)| p);
+            assert_eq!(priority, switch_in, "{ability:?}");
+        }
+        for (forme, base) in [
+            (species::WISHIWASHI_SCHOOL, species::WISHIWASHI),
+            (species::MINIOR_METEOR, species::MINIOR),
+            (species::MORPEKO_HANGRY, species::MORPEKO),
+        ] {
+            assert_eq!(temporary_forme_base(forme), Some(base));
+        }
     }
 
     /// Zero to Hero's permanent change keeps the ability (so `setAbility` has no End or Start to

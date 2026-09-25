@@ -1,0 +1,23 @@
+{
+ "description": "Shields Down: Lucario's super-effective Smart Strike takes Minior-Meteor to half HP or below, and at the end of the turn (onResidual, order 29) its shields drop to the Core forme (plain Minior); a critical hit can knock it out, and the fainted Minior is its core again.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Lucario", "item": "", "ability": "Honey Gather", "nature": "Hardy",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Smart Strike", "Calm Mind"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Minior", "item": "", "ability": "Shields Down", "nature": "Hardy",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Metagross", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move smartstrike 1, move calmmind", "p2": "move calmmind, move calmmind"}
+}

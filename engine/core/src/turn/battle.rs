@@ -665,7 +665,8 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// - the target's own ability (`onSetStatus`; breakable ones are skipped while an
     ///   ability-ignoring move is in progress): Water Veil (brn), Immunity (psn, tox),
     ///   Insomnia and Vital Spirit (slp), Limber (par), Comatose (everything), Purifying Salt
-    ///   (everything), Leaf Guard (everything in harsh sunlight), Thermal Exchange (brn);
+    ///   (everything), Leaf Guard (everything in harsh sunlight), Thermal Exchange (brn), Shields
+    ///   Down (everything on Minior-Meteor, not breakable);
     /// - Sweet Veil (slp) and Pastel Veil (psn, tox) on the target or an ally
     ///   (`onAllySetStatus`; Pastel Veil's own `onSetStatus` is the same block);
     /// - Misty Terrain (everything) and Electric Terrain (slp) for a grounded target.
@@ -685,6 +686,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             a if a == abilities::COMATOSE || a == abilities::PURIFYING_SALT => true,
             // `target.effectiveWeather()` (Utility Umbrella hides the sun).
             a if a == abilities::LEAF_GUARD => self.weather_for(target) == Weather::Sun,
+            // Shields Down (not breakable): every status on Minior-Meteor.
+            a if a == abilities::SHIELDS_DOWN => super::forme::shields_up(self, target),
             _ => false,
         };
         if blocked_by_own {
@@ -726,8 +729,8 @@ impl<'a, const N: usize> Battle<'a, N> {
     }
 
     /// Showdown `runEvent('TryAddVolatile')` for a new volatile on `target`: the ability
-    /// handlers of Insomnia, Vital Spirit, Purifying Salt and Leaf Guard (in sun) on the
-    /// target block Yawn; Sweet Veil (Yawn) and Aroma Veil (Attract, Disable, Encore, Heal
+    /// handlers of Insomnia, Vital Spirit, Purifying Salt, Leaf Guard (in sun) and Shields Down
+    /// (Minior-Meteor) on the target block Yawn; Sweet Veil (Yawn) and Aroma Veil (Attract, Disable, Encore, Heal
     /// Block, Taunt, Torment) block for the whole side; Electric Terrain blocks Yawn on a
     /// grounded target; Safeguard blocks Yawn and confusion from another Pokémon. Of those
     /// volatiles only Yawn is implemented; the others (and Misty Terrain's confusion block)
@@ -754,6 +757,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             a if a == abilities::INNER_FOCUS => condition == conditions::FLINCH,
             // Own Tempo: `if (status.id === 'confusion') return null;`
             a if a == abilities::OWN_TEMPO => condition == conditions::CONFUSION,
+            // Shields Down: Yawn on Minior-Meteor.
+            a if a == abilities::SHIELDS_DOWN => yawn && super::forme::shields_up(self, target),
             _ => false,
         };
         if blocked_by_own {
