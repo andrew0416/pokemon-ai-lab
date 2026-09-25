@@ -65,3 +65,18 @@ fn o16_trick_and_switcheroo_swap_items() {
 fn o16_trick_fails_on_own_or_receiving_mega_stones() {
     assert_exact_parity("o16-trick-fail");
 }
+
+#[test]
+fn o18_roost_removes_flying_until_the_end_of_the_turn() {
+    assert_exact_parity("o18-roost");
+}
+
+#[test]
+fn o69_protean_and_libero_change_type_before_the_hit() {
+    assert_exact_parity("o69-protean");
+}
+
+#[test]
+fn o69_protean_and_libero_act_once_per_switch_in() {
+    assert_exact_parity("o69-protean-once");
+}

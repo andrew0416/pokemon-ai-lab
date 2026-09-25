@@ -21,6 +21,7 @@ use crate::volatile::Volatile;
 use super::abilities as ability_events;
 use super::abilities::{Handler, SUB_FIELD_CONDITION, SUB_ITEM, SUB_MOVE, SUB_SIDE_CONDITION};
 use super::battle::{ActiveMoveRef, Battle, DamageSource};
+use super::conditions;
 use super::order::{boosted_stat, modify};
 use super::support::{side_effect_of, type_boost_item};
 use super::TurnError;
@@ -557,9 +558,12 @@ fn try_move_hit_field<const N: usize>(
     target: SlotRef,
 ) -> Result<bool, TurnError> {
     let data = mv.data;
+    // Try: the move's onTry (Aurora Veil).
     if mv.id == moves::AURORA_VEIL && b.weather() != Weather::Snow {
         return Ok(false);
     }
+    // PrepareHit: the user's ability (Protean, Libero).
+    prepare_hit_ability(b, user, mv);
     // runMoveEffects on the target: undefined (nothing attempted) counts as success.
     let mut outcome: Option<bool> = None;
     let mut combine = |r: bool| outcome = Some(outcome.unwrap_or(false) || r);
@@ -608,10 +612,12 @@ fn try_spread_move_hit<const N: usize>(
     {
         return Ok(false);
     }
-    // PrepareHit: Protect and Detect need a later action and pass the stall check.
+    // PrepareHit: Protect and Detect need a later action and pass the stall check; then the
+    // user's ability (Protean, Libero).
     if mv.data.stalling_move && !(will_act && stall_move(b, user)) {
         return Ok(false);
     }
+    prepare_hit_ability(b, user, mv);
 
     // 1. TryHit: Psychic Terrain (priority 4), Protect (3), the target's ability (0). Each
     //    target's handlers only affect that target, so targets can be taken one at a time.
@@ -660,6 +666,35 @@ fn try_spread_move_hit<const N: usize>(
     }
     let results = hit_loop(b, user, mv, &hit)?;
     Ok(results.iter().any(|r| r.ok()))
+}
+
+/// The user's ability's `onPrepareHit` (`runEvent('PrepareHit')`, after the move's own
+/// PrepareHit). Protean and Libero: once per switch-in (`abilityState.protean` / `.libero`,
+/// kept as [`Volatile::ProteanUsed`], which a switch resets), the user becomes the move's type
+/// (`setType`), unless it already is exactly that type (`getTypes().join() !== type`, no flag
+/// set then) or is Arceus or Silvally (`setType` fails). Terastallization, which also blocks
+/// it, is not modelled; moves that call other moves or bounce are not supported.
+fn prepare_hit_ability<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
+    let ability = b.ability(user);
+    if ability != abilities::PROTEAN && ability != abilities::LIBERO {
+        return;
+    }
+    if b.volatile(user, Volatile::ProteanUsed).active {
+        return;
+    }
+    let pokemon = b.occupant(user).expect("the user is active");
+    let mon = b.mon(pokemon);
+    let new = [mv.move_type, Type::None];
+    if mon.types == new || [493, 773].contains(&mon.species.data().num) {
+        return;
+    }
+    let old = mon.types;
+    b.apply(crate::instruction::Instruction::SetTypes {
+        target: pokemon,
+        old,
+        new,
+    });
+    b.add_volatile(user, Volatile::ProteanUsed);
 }
 
 /// Stall's `onStallMove`: success with probability 1/counter; a failure removes the counter.
@@ -931,13 +966,19 @@ fn spread_move_hit<const N: usize>(
             results[i] = Hit::Failed;
         }
     }
-    // selfDrops: once, for the first target the move did not fail on.
+    // selfDrops: boosts once, for the first target the move did not fail on; an effect
+    // without boosts (Roost's volatile) is applied to the user for every such target.
     if let Some(effect) = data.self_effect {
-        if effect.boosts != NO_BOOSTS
-            && results.iter().any(|r| r.ok())
-            && b.rng.chance(u32::from(effect.chance), 100)
-        {
-            b.boost(user, &effect.boosts);
+        if effect.boosts != NO_BOOSTS {
+            if results.iter().any(|r| r.ok()) && b.rng.chance(u32::from(effect.chance), 100) {
+                b.boost(user, &effect.boosts);
+            }
+        } else if let Some(volatile) = Volatile::from_condition(effect.volatile_status) {
+            for _ in results.iter().filter(|r| r.ok()) {
+                if b.add_volatile(user, volatile) && volatile == Volatile::Roost {
+                    conditions::roost_start(b, user);
+                }
+            }
         }
     }
     // secondaries.

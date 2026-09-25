@@ -414,7 +414,12 @@ fn pokemon(
             }
         }
         out.push_str(r#"},"volatiles":{"#);
-        let mut volatiles: Vec<_> = slot.volatiles.iter().collect();
+        // Showdown's `pokemon.volatiles` only (engine-only kinds and payload left out).
+        let mut volatiles: Vec<_> = slot
+            .volatiles
+            .iter()
+            .filter_map(|(v, state)| Some((v, v.showdown_state(state)?)))
+            .collect();
         volatiles.sort_by_key(|(v, _)| v.id());
         for (i, (volatile, state)) in volatiles.into_iter().enumerate() {
             let sep = if i == 0 { "" } else { "," };

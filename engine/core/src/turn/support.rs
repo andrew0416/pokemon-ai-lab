@@ -8,7 +8,7 @@
 
 use crate::dex::{
     abilities, items, moves, AbilityId, ItemId, MoveCategory, MoveId, MoveTarget, Ohko,
-    SelfDestruct, SelfSwitch, Type,
+    SelfDestruct, SelfSwitch, Type, NO_BOOSTS,
 };
 use crate::field::{FieldEffect, SideEffect, Weather, FIELD_EFFECT_COUNT, SIDE_EFFECT_COUNT};
 use crate::state::{SideId, SlotRef, State, Status};
@@ -70,6 +70,9 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::POLLEN_PUFF, &["onHit", "onTryHit", "onTryMove"]),
     (moves::TRICK, &["onHit", "onTryImmunity"]),
     (moves::SWITCHEROO, &["onHit", "onTryImmunity"]),
+    // `condition.onStart` only fails for a Terastallized user; `onType` is applied as a type
+    // change (`conditions::roost_start`, undone when the volatile ends).
+    (moves::ROOST, &["condition.onStart", "condition.onType"]),
     (moves::RISING_VOLTAGE, &["basePowerCallback"]),
     (moves::PSYBLADE, &["onBasePower"]),
     (moves::BLIZZARD, &["onModifyMove"]),
@@ -248,6 +251,9 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::STORM_DRAIN, &["onAnyRedirectTarget", "onTryHit"]),
     (abilities::GALE_WINGS, &["onModifyPriority"]),
     (abilities::TRIAGE, &["onModifyPriority"]),
+    // `moves::prepare_hit_ability`.
+    (abilities::PROTEAN, &["onPrepareHit"]),
+    (abilities::LIBERO, &["onPrepareHit"]),
     // Damage handlers (`Battle::damage`).
     (abilities::ROCK_HEAD, &["onDamage"]),
     (abilities::MAGIC_GUARD, &["onDamage"]),
@@ -499,10 +505,10 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         return why(&format!("field effect {}", m.pseudo_weather.id()));
     }
     if let Some(s) = m.self_effect {
-        if !s.volatile_status.is_none()
-            || !s.side_condition.is_none()
-            || !s.pseudo_weather.is_none()
-        {
+        // A self volatile is implemented without self boosts only (`selfDrops`' two paths).
+        let volatile_ok = s.volatile_status.is_none()
+            || (s.boosts == NO_BOOSTS && Volatile::from_condition(s.volatile_status).is_some());
+        if !volatile_ok || !s.side_condition.is_none() || !s.pseudo_weather.is_none() {
             return why("self effect");
         }
     }
