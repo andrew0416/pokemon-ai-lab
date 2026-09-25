@@ -1,0 +1,23 @@
+{
+ "description": "O82: Garchomp's Earthquake hits Heatran (Shuca Berry, 4x: eaten, damage halved) and Milotic (Shuca Berry, neutral: kept); Corviknight is immune. The foes use Calm Mind, Corviknight Iron Defense.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Earthquake", "Protect"], "level": 50},
+   {"species": "Corviknight", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Iron Defense", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Heatran", "item": "Shuca Berry", "ability": "Honey Gather", "nature": "Calm",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Calm Mind", "Protect"], "level": 50},
+   {"species": "Milotic", "item": "Shuca Berry", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move earthquake, move irondefense", "p2": "move calmmind, move calmmind"}
+}

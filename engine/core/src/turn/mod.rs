@@ -19,6 +19,7 @@ mod battle;
 mod branch;
 pub mod coverage;
 mod diff;
+mod items;
 mod mega;
 mod moves;
 mod order;

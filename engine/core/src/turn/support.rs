@@ -406,6 +406,7 @@ pub(crate) fn item_supported_on_field(item: ItemId) -> bool {
     data.handlers.is_empty()
         || listed(ITEMS_WITH_HANDLERS, item)
         || type_boost_item(item).is_some()
+        || super::items::resist_berry(item).is_some()
         // Mega Stones only matter for Knock Off, handled by `item_can_be_taken`.
         || (!data.mega_stone.is_empty() && data.handlers == ["onTakeItem"])
 }
@@ -581,6 +582,9 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
                     mon.item.data().name,
                     mon.item.data().handlers
                 ));
+            }
+            if let Some(why) = super::items::held_item_problem(mon) {
+                return Err(why);
             }
             if !mon.species.data().handlers.is_empty() {
                 return Err(format!("{name}: species callbacks"));

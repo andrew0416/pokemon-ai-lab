@@ -234,6 +234,9 @@ fn switch_in_problem<const N: usize>(
             mon.item.data().handlers
         ));
     }
+    if let Some(why) = super::items::held_item_problem(mon) {
+        return Some(why);
+    }
     if let Some(handler) = item_start_handler(mon.item) {
         return Some(format!(
             "{name}: item {} switch-in handler {handler}",

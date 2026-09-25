@@ -21,6 +21,7 @@ use crate::volatile::Volatile;
 use super::abilities as ability_events;
 use super::abilities::{Handler, SUB_FIELD_CONDITION, SUB_ITEM, SUB_MOVE, SUB_SIDE_CONDITION};
 use super::battle::{ActiveMoveRef, Battle, DamageSource};
+use super::items as item_events;
 use super::order::{boosted_stat, modify};
 use super::support::{side_effect_of, type_boost_item};
 use super::TurnError;
@@ -1123,12 +1124,12 @@ fn get_damage<const N: usize>(
     } else {
         MOD_ONE >> -type_mod
     };
-    // ModifyDamage (all priority 0, so in Speed order): Life Orb, screens (side conditions,
-    // Speed 0), the target's abilities.
+    // ModifyDamage (all priority 0, so in Speed order): the target's abilities, items (Life
+    // Orb, resist berries), screens (side conditions, Speed 0).
     let mut final_mods = ability_events::modify_damage_handlers(b, user, target, data, type_mod);
-    if attacker.item == items::LIFE_ORB {
-        final_mods.push(Handler::of(b, user, 0, SUB_ITEM, 5324));
-    }
+    final_mods.extend(item_events::modify_damage_handlers(
+        b, user, target, data, type_mod,
+    ));
     if !critical && target != user && screen_applies(b, target.side, data.category) {
         let modifier = if N > 1 { 2732 } else { MOD_HALF };
         final_mods.push(Handler::global(0, SUB_SIDE_CONDITION, modifier));
