@@ -735,6 +735,8 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::PETAYA_BERRY, &["onEat", "onUpdate"]),
     (items::APICOT_BERRY, &["onEat", "onUpdate"]),
     (items::LUM_BERRY, &["onAfterSetStatus", "onEat", "onUpdate"]),
+    // Gen 2's Lum Berry without `onAfterSetStatus` (`update.rs`).
+    (items::MIRACLE_BERRY, &["onEat", "onUpdate"]),
     (items::CHERI_BERRY, &["onEat", "onUpdate"]),
     (items::CHESTO_BERRY, &["onEat", "onUpdate"]),
     (items::PECHA_BERRY, &["onEat", "onUpdate"]),

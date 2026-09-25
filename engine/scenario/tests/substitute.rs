@@ -84,3 +84,10 @@ fn substitute_stopped_move_is_no_failure() {
 fn double_shock_leaves_unknown_type() {
     assert_exact_parity("double-shock");
 }
+
+/// Miracle Berry (`onUpdate` / `onEat`: Lum Berry without `onAfterSetStatus`) cures a burn and
+/// confusion at the Update after the move.
+#[test]
+fn miracle_berry_cures_status_and_confusion() {
+    assert_exact_parity("miracle-berry");
+}
