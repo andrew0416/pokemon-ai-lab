@@ -178,19 +178,32 @@ impl<'a, const N: usize> Battle<'a, N> {
         self.state.slot(slot).volatiles.get(volatile)
     }
 
+    /// Showdown `dex.getImmunity(status, pokemon)`: the immunity the Pokémon's types give,
+    /// without `Immunity` handlers (the powder and Prankster checks of `hitStepTryImmunity`).
+    pub fn natural_immune(&self, slot: SlotRef, immunity: TypeImmunities) -> bool {
+        self.slot_mon(slot)
+            .is_none_or(|mon| mon.types.iter().any(|t| t.immunities().contains(immunity)))
+    }
+
     /// Showdown `dex.getImmunity(status, pokemon)` plus the supported `Immunity` handlers
     /// (`runStatusImmunity`).
     pub fn status_immune(&self, slot: SlotRef, immunity: TypeImmunities) -> bool {
         let Some(mon) = self.slot_mon(slot) else {
             return true;
         };
-        if mon.types.iter().any(|t| t.immunities().contains(immunity)) {
+        if self.natural_immune(slot, immunity) {
             return true;
         }
         // Immunity handlers; each returns false for one immunity id, so order is irrelevant.
+        // Overcoat (breakable): `if (type === 'sandstorm' || type === 'hail' || type ===
+        // 'powder') return false;` (hail is not a supported weather).
+        let overcoat = self.ability_unless_broken(slot) == abilities::OVERCOAT;
         if immunity == TypeImmunities::SANDSTORM {
             // Sand Rush: `onImmunity(type) { if (type === 'sandstorm') return false; }`.
-            return mon.ability == abilities::SAND_RUSH;
+            return mon.ability == abilities::SAND_RUSH || overcoat;
+        }
+        if immunity == TypeImmunities::POWDER {
+            return overcoat;
         }
         if immunity == TypeImmunities::FRZ {
             // Harsh sunlight (`sunnyday.onImmunity`, hidden by Utility Umbrella) and Magma

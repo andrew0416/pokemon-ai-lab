@@ -21,9 +21,12 @@ pub enum Volatile {
     RagePowder,
     /// Spotlight: like Follow Me with higher redirect priority (duration 1).
     Spotlight,
+    /// Flash Fire's boost after absorbing a Fire move (the ability's own `condition`, no
+    /// duration; `noCopy`).
+    FlashFire,
 }
 
-pub const VOLATILE_COUNT: usize = 6;
+pub const VOLATILE_COUNT: usize = 7;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -33,9 +36,12 @@ impl Volatile {
         Volatile::FollowMe,
         Volatile::RagePowder,
         Volatile::Spotlight,
+        Volatile::FlashFire,
     ];
 
-    /// The Showdown condition this volatile is.
+    /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
+    /// ability's own `condition` (Flash Fire), which the dex does not export as a named
+    /// condition: no move data can refer to it.
     pub fn condition(self) -> ConditionId {
         match self {
             Volatile::Protect => conditions::PROTECT,
@@ -44,6 +50,7 @@ impl Volatile {
             Volatile::FollowMe => conditions::FOLLOWME,
             Volatile::RagePowder => conditions::RAGEPOWDER,
             Volatile::Spotlight => conditions::SPOTLIGHT,
+            Volatile::FlashFire => ConditionId::NONE,
         }
     }
 
@@ -56,11 +63,15 @@ impl Volatile {
             Volatile::FollowMe => "followme",
             Volatile::RagePowder => "ragepowder",
             Volatile::Spotlight => "spotlight",
+            Volatile::FlashFire => "flashfire",
         }
     }
 
     /// The volatile implementing `condition`, if any.
     pub fn from_condition(condition: ConditionId) -> Option<Volatile> {
+        if condition.is_none() {
+            return None;
+        }
         Volatile::ALL
             .into_iter()
             .find(|v| v.condition() == condition)
@@ -75,6 +86,7 @@ impl Volatile {
             | Volatile::RagePowder
             | Volatile::Spotlight => 1,
             Volatile::Stall => 2,
+            Volatile::FlashFire => 0,
         }
     }
 }
@@ -132,7 +144,15 @@ mod tests {
 
     #[test]
     fn ids_match_the_dex_conditions() {
+        assert_eq!(Volatile::from_condition(ConditionId::NONE), None);
         for v in Volatile::ALL {
+            if v == Volatile::FlashFire {
+                // The ability's own condition, not exported as a named condition.
+                assert!(v.condition().is_none());
+                let handlers = crate::dex::abilities::FLASH_FIRE.data().handlers;
+                assert!(handlers.contains(&"condition.onStart"));
+                continue;
+            }
             assert_eq!(v.condition().id(), v.id());
             assert_eq!(Volatile::from_condition(v.condition()), Some(v));
         }

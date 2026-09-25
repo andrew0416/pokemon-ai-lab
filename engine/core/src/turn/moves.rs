@@ -2,6 +2,7 @@
 //! hit steps ??`spreadMoveHit` (damage, effects, secondaries) ??recoil and after-move
 //! effects, for the implemented moves (see [`super::support`]).
 
+mod ability_hooks;
 mod handlers;
 
 use handlers::HitResult;
@@ -460,6 +461,11 @@ fn use_move<const N: usize>(
         get_move_targets(b, user, mv, target)?
     };
     deduct_pressure_pp(b, user, mv, &targets);
+    // TryMove: Dazzling, Queenly Majesty, Armor Tail (`onFoeTryMove`).
+    let try_move_target = targets.last().copied().unwrap_or(target);
+    if !ability_hooks::on_try_move(b, user, mv, try_move_target) {
+        return Ok(false);
+    }
     if field_move {
         result = try_move_hit_field(b, user, mv, target)?;
     } else {
@@ -613,14 +619,14 @@ fn try_spread_move_hit<const N: usize>(
     if targets.is_empty() {
         return Ok(false);
     }
-    // 3. Move-specific immunities: powder, Prankster vs Dark.
+    // 3. Move-specific immunities: powder, Prankster vs Dark (`dex.getImmunity`: types only).
     targets.retain(|&t| {
         let powder = mv.data.flags.contains(MoveFlags::POWDER)
             && t != user
-            && b.status_immune(t, TypeImmunities::POWDER);
+            && b.natural_immune(t, TypeImmunities::POWDER);
         let prankster = mv.prankster_boosted
             && t.side != user.side
-            && b.status_immune(t, TypeImmunities::PRANKSTER);
+            && b.natural_immune(t, TypeImmunities::PRANKSTER);
         !powder && !prankster
     });
     if targets.is_empty() {
@@ -659,7 +665,7 @@ fn stall_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> bool {
 fn try_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
-    mv: &ActiveMove,
+    mv: &mut ActiveMove,
     target: SlotRef,
 ) -> bool {
     if blocked_by_try_hit(b, user, mv, target) {
@@ -679,7 +685,8 @@ fn try_hit<const N: usize>(
     if absorbed_by_ability(b, user, mv, target) {
         return false;
     }
-    true
+    // The other abilities' `onTryHit` (absorbing and immunity abilities).
+    !ability_hooks::on_try_hit(b, user, mv, target)
 }
 
 fn blocked_by_try_hit<const N: usize>(

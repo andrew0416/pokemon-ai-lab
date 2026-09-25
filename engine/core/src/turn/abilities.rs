@@ -20,12 +20,15 @@ use crate::dex::{
 };
 use crate::field::Weather;
 use crate::state::{Pokemon, SlotRef, Status};
+use crate::volatile::Volatile;
 
 use super::battle::Battle;
 use super::order::modify;
 
 /// Showdown's effect-type sub-orders (`resolvePriority`).
 pub(crate) const SUB_MOVE: u32 = 0;
+/// A Pokémon's volatile or status condition.
+pub(crate) const SUB_CONDITION: u32 = 2;
 pub(crate) const SUB_SIDE_CONDITION: u32 = 4;
 pub(crate) const SUB_FIELD_CONDITION: u32 = 5;
 pub(crate) const SUB_ABILITY: u32 = 7;
@@ -240,6 +243,20 @@ pub(crate) fn attack_handlers<const N: usize>(
     if (pinch_type == Some(data.move_type) && pinch) || guts {
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
+    }
+    // Flash Fire's volatile (a condition, priority 5): `if (move.type === 'Fire' &&
+    // attacker.hasAbility('flashfire')) return this.chainModify(1.5)`.
+    if data.move_type == Type::Fire
+        && ability == abilities::FLASH_FIRE
+        && b.volatile(user, Volatile::FlashFire).active
+    {
+        let name = if physical {
+            "condition.onModifyAtkPriority"
+        } else {
+            "condition.onModifySpAPriority"
+        };
+        let p = priority(ability.data().event_orders, name);
+        out.push(Handler::of(b, user, p, SUB_CONDITION, MOD_ONE_POINT_FIVE));
     }
     out
 }

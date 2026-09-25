@@ -18,6 +18,7 @@ use crate::dex::{abilities, items, AbilityFlags, AbilityId, ItemId, SpeciesId, N
 use crate::field::{FieldEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SlotRef, Status, BOOST_COUNT};
+use crate::volatile::Volatile;
 
 use super::battle::{cured_on_update, Battle};
 use super::moves::{set_terrain, set_weather};
@@ -376,6 +377,28 @@ pub(crate) fn start_ability<const N: usize>(
             }
         }
         StartEffect::Trace => trace(b, slot)?,
+    }
+    Ok(())
+}
+
+/// `singleEvent('End')` of the ability the Pokémon at `slot` loses while staying active
+/// (`setAbility` during a forme change). Flash Fire's `onEnd` removes its volatile; an
+/// ability without `onEnd` does nothing. Any other `onEnd` is unsupported.
+pub(crate) fn end_ability<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    ability: AbilityId,
+) -> Result<(), TurnError> {
+    if ability == abilities::FLASH_FIRE {
+        b.remove_volatile(slot, Volatile::FlashFire);
+        return Ok(());
+    }
+    if ability.data().handlers.contains(&"onEnd") {
+        return Err(b.unsupported(format!(
+            "ability {} ending ({:?})",
+            ability.data().name,
+            ability.data().handlers
+        )));
     }
     Ok(())
 }

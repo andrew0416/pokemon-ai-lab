@@ -348,6 +348,40 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         &["onAllySetStatus", "onAllyTryAddVolatile"],
     ),
     (abilities::AROMA_VEIL, &["onAllyTryAddVolatile"]),
+    // Absorbing and immunity abilities: `onTryHit` in `moves::ability_hooks::on_try_hit`.
+    (abilities::VOLT_ABSORB, &["onTryHit"]),
+    (abilities::WATER_ABSORB, &["onTryHit"]),
+    (abilities::EARTH_EATER, &["onTryHit"]),
+    (abilities::MOTOR_DRIVE, &["onTryHit"]),
+    // `onAllyTryHitSide` only acts on an ally's Grass move aimed at its own side, which no
+    // supported move is (pinned by a test below).
+    (abilities::SAP_SIPPER, &["onAllyTryHitSide", "onTryHit"]),
+    (abilities::WELL_BAKED_BODY, &["onTryHit"]),
+    // The volatile's `onModifyAtk`/`onModifySpA` in `abilities::attack_handlers`; `onEnd`
+    // (drop the volatile) in `switching::end_ability`; `onStart`/`condition.onEnd` only log.
+    (
+        abilities::FLASH_FIRE,
+        &[
+            "condition.onEnd",
+            "condition.onModifyAtk",
+            "condition.onModifySpA",
+            "condition.onStart",
+            "onEnd",
+            "onTryHit",
+        ],
+    ),
+    (abilities::BULLETPROOF, &["onTryHit"]),
+    // `onAllyTryHitSide` only logs.
+    (abilities::SOUNDPROOF, &["onAllyTryHitSide", "onTryHit"]),
+    // `onImmunity` (sandstorm, powder) in `Battle::status_immune`.
+    (abilities::OVERCOAT, &["onImmunity", "onTryHit"]),
+    (abilities::TELEPATHY, &["onTryHit"]),
+    (abilities::WONDER_GUARD, &["onTryHit"]),
+    (abilities::GOOD_AS_GOLD, &["onTryHit"]),
+    // `onFoeTryMove` in `moves::ability_hooks::on_try_move`.
+    (abilities::DAZZLING, &["onFoeTryMove"]),
+    (abilities::QUEENLY_MAJESTY, &["onFoeTryMove"]),
+    (abilities::ARMOR_TAIL, &["onFoeTryMove"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -658,6 +692,23 @@ mod tests {
             for s in m.secondaries {
                 assert_eq!(s.status, crate::state::Status::None, "{id:?}");
             }
+        }
+    }
+
+    /// Sap Sipper's `onAllyTryHitSide` raises the holder's Attack when an ally uses a Grass move
+    /// aimed at their own side (`allySide`/`allyTeam`; TryHitSide is not modelled). No supported
+    /// move is one; this fails when one becomes supported.
+    #[test]
+    fn sap_sipper_ally_side_handler_is_unreachable() {
+        for id in MoveId::all() {
+            let m = id.data();
+            if move_unsupported(id).is_some() || m.move_type != Type::Grass {
+                continue;
+            }
+            assert!(
+                !matches!(m.target, MoveTarget::AllySide | MoveTarget::AllyTeam),
+                "{id:?}"
+            );
         }
     }
 

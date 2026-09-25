@@ -1,0 +1,26 @@
+{
+ "description": "O48 immunities in sand: Telepathy Oranguru ignores its ally's Earthquake; Soundproof Noivern ignores Hyper Voice (Bulletproof Talonflame takes it); Overcoat Mandibuzz blocks Spore and takes no sand damage; Bulletproof Talonflame blocks its ally's Sludge Bomb.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Oranguru", "item": "", "ability": "Telepathy", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Hyper Voice", "Protect"], "level": 50},
+   {"species": "Mandibuzz", "item": "", "ability": "Overcoat", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Earthquake", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Talonflame", "item": "", "ability": "Bulletproof", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Spore", "Protect"], "level": 50},
+   {"species": "Noivern", "item": "", "ability": "Soundproof", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Sludge Bomb", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "field": {"weather": "sandstorm", "weatherDuration": 3}
+ },
+ "turn": {"p1": "move hypervoice, move earthquake", "p2": "move spore 2, move sludgebomb -1"}
+}

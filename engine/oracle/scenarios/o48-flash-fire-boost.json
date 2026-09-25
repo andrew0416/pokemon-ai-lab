@@ -1,0 +1,26 @@
+{
+ "description": "O48 Flash Fire: Arcanine's Fire Blast is absorbed by damaged Ceruledge (flashfire volatile, no accuracy roll); Ceruledge's Bitter Blade then gets the volatile's 1.5x Attack (ModifyAtk priority 5) and drains.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Ceruledge", "item": "", "ability": "Flash Fire", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Bitter Blade", "Protect"], "level": 50},
+   {"species": "Hatterene", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Arcanine", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Fire Blast", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Ceruledge": {"hp": 60}}
+ },
+ "turn": {"p1": "move bitterblade 2, move calmmind", "p2": "move fireblast 1, move calmmind"}
+}
