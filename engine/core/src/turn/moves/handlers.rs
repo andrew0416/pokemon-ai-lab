@@ -781,12 +781,18 @@ fn weather_heal<const N: usize>(
 
 /// The secondary effect's `onHit` (`secondaries` → `moveHit`, after the chance roll):
 /// Dire Claw and Tri Attack draw one of three statuses (`this.sample`) and `trySetStatus` it,
-/// so the draw happens even when the status then fails.
+/// so the draw happens even when the status then fails. Throat Chop: `target.addVolatile(
+/// 'throatchop')` (no `onRestart`: an existing one keeps its duration; a fainted target gets
+/// none).
 pub(super) fn secondary_on_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     target: SlotRef,
     mv: &ActiveMove,
 ) {
+    if mv.id == moves::THROAT_CHOP {
+        b.add_volatile(target, Volatile::ThroatChop);
+        return;
+    }
     let statuses = match mv.id {
         moves::DIRE_CLAW => [Status::Poison, Status::Paralyze, Status::Sleep],
         moves::TRI_ATTACK => [Status::Burn, Status::Paralyze, Status::Freeze],

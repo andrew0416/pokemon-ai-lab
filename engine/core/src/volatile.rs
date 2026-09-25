@@ -95,9 +95,12 @@ pub enum Volatile {
     /// Sparkling Aria's secondary effect on a target it hit (no duration): the move's
     /// `onAfterMove` removes it again, curing a burn.
     SparklingAria,
+    /// Throat Chop's secondary effect (`throatchop`, duration 2, residual order 22): sound moves
+    /// can be neither chosen nor used. Added by name, so the dex has no condition id.
+    ThroatChop,
 }
 
-pub const VOLATILE_COUNT: usize = 29;
+pub const VOLATILE_COUNT: usize = 30;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -130,6 +133,7 @@ impl Volatile {
         Volatile::Imprison,
         Volatile::GlaiveRush,
         Volatile::SparklingAria,
+        Volatile::ThroatChop,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -165,7 +169,8 @@ impl Volatile {
             Volatile::PerishSong
             | Volatile::ProteanUsed
             | Volatile::AngerShellUnchecked
-            | Volatile::MicleBerry => ConditionId::NONE,
+            | Volatile::MicleBerry
+            | Volatile::ThroatChop => ConditionId::NONE,
         }
     }
 
@@ -201,6 +206,7 @@ impl Volatile {
             Volatile::Imprison => "imprison",
             Volatile::GlaiveRush => "glaiverush",
             Volatile::SparklingAria => "sparklingaria",
+            Volatile::ThroatChop => "throatchop",
         }
     }
 
@@ -229,7 +235,8 @@ impl Volatile {
             | Volatile::LockedMove
             | Volatile::MustRecharge
             | Volatile::Yawn
-            | Volatile::MicleBerry => 2,
+            | Volatile::MicleBerry
+            | Volatile::ThroatChop => 2,
             Volatile::Encore | Volatile::Taunt => 3,
             Volatile::PerishSong => 4,
             Volatile::Disable => 5,
@@ -255,6 +262,7 @@ impl Volatile {
             Volatile::Taunt => Some(15),
             Volatile::Encore => Some(16),
             Volatile::Disable => Some(17),
+            Volatile::ThroatChop => Some(22),
             Volatile::Yawn => Some(23),
             Volatile::PerishSong => Some(24),
             Volatile::Roost => Some(25),
@@ -368,6 +376,7 @@ mod tests {
                         | Volatile::ProteanUsed
                         | Volatile::AngerShellUnchecked
                         | Volatile::MicleBerry
+                        | Volatile::ThroatChop
                 ));
                 continue;
             }
@@ -391,6 +400,7 @@ mod tests {
             (Volatile::HelpingHand, moves::HELPING_HAND),
             (Volatile::Taunt, moves::TAUNT),
             (Volatile::Disable, moves::DISABLE),
+            (Volatile::ThroatChop, moves::THROAT_CHOP),
         ] {
             let data = id.data();
             assert_eq!(

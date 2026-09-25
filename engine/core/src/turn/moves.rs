@@ -346,10 +346,9 @@ fn run_move_inner<const N: usize>(
 }
 
 /// The BeforeMove handlers, by priority: Glaive Rush (100), recharge (11), sleep and freeze
-/// (10), flinch (8), Disable (7),
-/// Gravity (6), Taunt (5), a foe's Imprison (4), confusion (3), paralysis (1), the Choice lock
-/// (0). `false` = the move is not used (no
-/// PP, no `lastMove`).
+/// (10), flinch (8), Disable (7), Gravity and Throat Chop (6), Taunt (5), a foe's Imprison (4),
+/// confusion (3), paralysis (1), the Choice lock (0). `false` = the move is not used (no PP, no
+/// `lastMove`).
 fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) -> bool {
     let pokemon = b.occupant(user).expect("checked");
     // Glaive Rush (priority 100): the drawback ends at the holder's next move attempt.
@@ -737,6 +736,12 @@ fn use_move<const N: usize>(
     handlers::on_modify_type(b, user, mv)?;
     handlers::on_modify_move(b, user, target, mv)?;
     ability_hooks::on_modify_move(b, user, mv)?;
+    // Throat Chop's `onModifyMove` (the user's volatile) returns `false` for a sound move: the
+    // move is gone (`if (!move || pokemon.fainted) return false;`). Only a called move gets here
+    // (BeforeMove stops a chosen one); nothing else in runEvent('ModifyMove') changes the state.
+    if conditions::throat_chopped(b.state, user, mv.id) {
+        return Ok(None);
+    }
     if mv.target != base_target {
         target = get_random_target(b, user, mv.target);
     }

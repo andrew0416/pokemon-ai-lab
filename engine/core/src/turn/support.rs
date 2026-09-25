@@ -233,6 +233,22 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::ACROBATICS, &["basePowerCallback"]),
     (moves::FIRST_IMPRESSION, &["onDisableMove", "onTry"]),
     (moves::DIRE_CLAW, &["secondaries.onHit", "secondary.onHit"]),
+    // Throat Chop: the secondary's `onHit` adds the `throatchop` volatile
+    // (`handlers::secondary_on_hit`); its `onBeforeMove`, `onModifyMove` (a called sound move,
+    // `moves::use_move`) and `onDisableMove` in `conditions::throat_chopped`; `onStart` and
+    // `onEnd` only log.
+    (
+        moves::THROAT_CHOP,
+        &[
+            "condition.onBeforeMove",
+            "condition.onDisableMove",
+            "condition.onEnd",
+            "condition.onModifyMove",
+            "condition.onStart",
+            "secondaries.onHit",
+            "secondary.onHit",
+        ],
+    ),
     (moves::TRI_ATTACK, &["secondaries.onHit", "secondary.onHit"]),
     (moves::MORNING_SUN, &["onHit"]),
     (moves::MOONLIGHT, &["onHit"]),

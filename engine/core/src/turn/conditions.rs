@@ -145,10 +145,10 @@ pub(crate) fn before_move_after_flinch<const N: usize>(
     !(disable.active && disable.mv == id && !id.data().flags.contains(MoveFlags::CANTUSETWICE))
 }
 
-/// The condition `onBeforeMove` handlers between Gravity (priority 6) and confusion (3):
-/// the user's Taunt (5) fails a status move other than Me First; a foe's Imprison
-/// (`onFoeBeforeMove`, 4) fails a move its holder knows (not Struggle). `false` = the move is
-/// not used.
+/// The condition `onBeforeMove` handlers from Gravity's priority (6) down to confusion (3):
+/// the user's Throat Chop (6, next to Gravity: both only fail the move) fails a sound move; its
+/// Taunt (5) fails a status move other than Me First; a foe's Imprison (`onFoeBeforeMove`, 4)
+/// fails a move its holder knows (not Struggle). `false` = the move is not used.
 pub(crate) fn before_move_after_gravity<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
@@ -158,7 +158,15 @@ pub(crate) fn before_move_after_gravity<const N: usize>(
     let taunted = b.volatile(user, Volatile::Taunt).active
         && data.category == MoveCategory::Status
         && id != moves::ME_FIRST;
-    !taunted && !imprisoned(b.state, user, id)
+    !throat_chopped(b.state, user, id) && !taunted && !imprisoned(b.state, user, id)
+}
+
+/// Throat Chop's `onBeforeMove` (priority 6), `onModifyMove` and `onDisableMove`: the holder's
+/// sound moves are neither chosen nor used (`if (!move.isZOrMaxPowered &&
+/// move.flags['sound'])`; Z- and Max Moves are off in Champions).
+pub(crate) fn throat_chopped<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> bool {
+    state.slot(slot).volatiles.has(Volatile::ThroatChop)
+        && id.data().flags.contains(MoveFlags::SOUND)
 }
 
 /// Whether an active foe of the Pokémon in `slot` has Imprison and knows `id` (Imprison's
@@ -182,7 +190,7 @@ fn imprisoned<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> bo
 /// Why the Pokémon in `slot` cannot choose `id` because of a condition on it (the conditions'
 /// `DisableMove` handlers that `endTurn` runs): Taunt disables every status move but Me First,
 /// Disable its move, Torment the last move (not Struggle), a foe's Imprison every move its
-/// holder knows.
+/// holder knows, Throat Chop every sound move.
 pub(crate) fn disabled_move<const N: usize>(
     state: &State<N>,
     slot: SlotRef,
@@ -206,6 +214,9 @@ pub(crate) fn disabled_move<const N: usize>(
     }
     if imprisoned(state, slot, id) {
         return Some(format!("{} is disabled by Imprison", data.name));
+    }
+    if throat_chopped(state, slot, id) {
+        return Some(format!("{} is disabled by Throat Chop", data.name));
     }
     None
 }
