@@ -669,6 +669,10 @@ fn run_stage<const N: usize>(
             match action.kind {
                 ActionKind::Move { index, target, .. } => {
                     let will_act = !queue.is_empty();
+                    b.queued_moves = queue
+                        .iter()
+                        .filter(|a| matches!(a.kind, ActionKind::Move { .. }))
+                        .fold(0, |bits, a| bits | Battle::<N>::move_bit(a.pokemon));
                     moves::run_move(b, action.slot, index, target, will_act)?;
                 }
                 ActionKind::Switch { party_index } => {

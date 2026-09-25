@@ -1,0 +1,26 @@
+{
+ "description": "O91: Scope Lens Garchomp's Dragon Claw into Blissey crits 1/8 (critRatio 2); Kingambit's Kowtow Cleave into Focus Band Porygon2 (20 HP) is survived at 1 HP 1/10. Porygon2 uses Calm Mind, Blissey Calm Mind.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Garchomp", "item": "Scope Lens", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Dragon Claw", "Protect"], "level": 50},
+   {"species": "Porygon2", "item": "Focus Band", "ability": "Honey Gather", "nature": "Sassy",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50},
+   {"species": "Kingambit", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Kowtow Cleave", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Porygon2": {"hp": 20}}
+ },
+ "turn": {"p1": "move dragonclaw 1, move calmmind", "p2": "move calmmind, move kowtowcleave 2"}
+}

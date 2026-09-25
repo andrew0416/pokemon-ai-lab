@@ -122,6 +122,28 @@ fn an_assault_vest_holder_cannot_choose_a_status_move() {
     }
 }
 
+// ---- O91 accuracy, critical-hit and flinch items ----------------------------------------------
+
+#[test]
+fn wide_lens_and_zoom_lens_match_showdown() {
+    assert_exact_parity("o91-wide-zoom-lens");
+}
+
+#[test]
+fn zoom_lens_against_a_target_that_moves_later_matches_showdown() {
+    assert_exact_parity("o91-zoom-lens-slower-target");
+}
+
+#[test]
+fn scope_lens_and_focus_band_match_showdown() {
+    assert_exact_parity("o91-scope-lens-focus-band");
+}
+
+#[test]
+fn kings_rock_flinch_matches_showdown() {
+    assert_exact_parity("o91-kings-rock");
+}
+
 /// A Pokémon locked by its Choice item cannot choose another move (`choicelock`'s
 /// `onDisableMove`).
 #[test]

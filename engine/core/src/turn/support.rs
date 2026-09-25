@@ -224,6 +224,14 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     // `onDisableMove` in `mod.rs` `disabled` (via `items::disabled_move`).
     (items::ASSAULT_VEST, &["onDisableMove", "onModifySpD"]),
     (items::EVIOLITE, &["onModifyDef", "onModifySpD"]),
+    // Accuracy, critical hits, flinch (`moves.rs`), Focus Band (`Battle::damage`).
+    (items::WIDE_LENS, &["onSourceModifyAccuracy"]),
+    (items::ZOOM_LENS, &["onSourceModifyAccuracy"]),
+    (items::SCOPE_LENS, &["onModifyCritRatio"]),
+    (items::RAZOR_CLAW, &["onModifyCritRatio"]),
+    (items::FOCUS_BAND, &["onDamage"]),
+    (items::KINGS_ROCK, &["onModifyMove"]),
+    (items::RAZOR_FANG, &["onModifyMove"]),
     // Choice items (`items.rs`): the stat in `order.rs`/`moves.rs`, `onModifyMove` adds the
     // `choicelock` volatile, `onStart` only removes a lock a newcomer cannot have.
     (

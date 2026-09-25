@@ -12,7 +12,8 @@ use crate::damage::{
 };
 use crate::dex::{
     abilities, items, moves, AbilityId, FixedDamage, IgnoreImmunity, MoveCategory, MoveData,
-    MoveFlags, MoveId, MoveTarget, Ohko, Stat, Type, TypeImmunities, TypeRelation, NO_BOOSTS,
+    MoveFlags, MoveId, MoveTarget, Ohko, Secondary, Stat, Type, TypeImmunities, TypeRelation,
+    NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{SideId, SlotRef, Status};
@@ -36,6 +37,8 @@ struct ActiveMove {
     spread: bool,
     /// Accuracy after ModifyMove; `None` never misses (Showdown `accuracy: true`).
     accuracy: Option<u8>,
+    /// A secondary effect ModifyMove appended to the move's own (King's Rock's flinch).
+    added_secondary: Option<Secondary>,
 }
 
 /// Per-target result of a hit (Showdown's `damage[i]`: a number, `true`, or `false`).
@@ -88,6 +91,7 @@ fn run_move_inner<const N: usize>(
         prankster_boosted: b.prankster_boosted(user, id),
         spread: false,
         accuracy: id.data().accuracy,
+        added_secondary: None,
     };
 
     if !before_move(b, user, &mv) {
@@ -446,8 +450,9 @@ fn use_move<const N: usize>(
     if b.mon(pokemon).status == Status::Freeze && mv.data.flags.contains(MoveFlags::DEFROST) {
         b.cure_status(pokemon);
     }
-    // The item's onModifyMove: the Choice lock.
+    // The item's onModifyMove: the Choice lock (priority 0), King's Rock's flinch (-1).
     item_events::on_modify_move(b, user, mv.id);
+    mv.added_secondary = item_events::added_secondary(b.item(user), mv.data);
     let Some(target) = target else {
         return Ok(false);
     };
@@ -771,8 +776,9 @@ fn accuracy_check<const N: usize>(
         return true;
     }
     let mut accuracy = i32::from(base);
-    // ModifyAccuracy: Gravity (6840/4096), the user's Hustle.
+    // ModifyAccuracy: Gravity (6840/4096), the user's Hustle and item (Wide Lens, Zoom Lens).
     let mut accuracy_mods = ability_events::accuracy_handlers(b, user, mv.data);
+    accuracy_mods.extend(item_events::accuracy_handlers(b, user, target));
     if b.field_active(FieldEffect::Gravity) {
         accuracy_mods.push(Handler::global(0, SUB_FIELD_CONDITION, 6840));
     }
@@ -929,7 +935,7 @@ fn spread_move_hit<const N: usize>(
         if !results[i].ok() {
             continue;
         }
-        for secondary in data.secondaries {
+        for secondary in data.secondaries.iter().chain(&mv.added_secondary) {
             if !b.rng.chance(u32::from(secondary.chance), 100) {
                 continue;
             }
@@ -1009,7 +1015,9 @@ fn get_damage<const N: usize>(
     // Critical hit: ratio 1..4 ??1/24, 1/8, 1/2, always. `CriticalHit` handlers: Battle Armor
     // and Shell Armor (`onCriticalHit: false`, breakable). Showdown rolls first and then
     // cancels; not rolling gives the same distribution.
-    let crit_ratio = data.crit_ratio.min(4);
+    // ModifyCritRatio: the user's item (Scope Lens, Razor Claw), then clamped to 0..4.
+    let crit_ratio =
+        (i32::from(data.crit_ratio) + item_events::crit_ratio_bonus(b.item(user))).clamp(0, 4);
     let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit;
     let critical = can_crit
         && (data.will_crit

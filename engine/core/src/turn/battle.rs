@@ -46,6 +46,9 @@ pub(crate) struct Battle<'a, const N: usize> {
     faint_queue: Vec<(PokemonRef, SlotRef)>,
     /// The move in progress, if any (cleared when `runMove` ends).
     pub active_move: Option<ActiveMoveRef>,
+    /// The Pokémon with a move action still in the turn's queue (Showdown `queue.willMove`),
+    /// one bit per `(side, party)`; set by the turn loop before each action.
+    pub queued_moves: u16,
 }
 
 impl<'a, const N: usize> Battle<'a, N> {
@@ -56,7 +59,18 @@ impl<'a, const N: usize> Battle<'a, N> {
             rng,
             faint_queue: Vec::new(),
             active_move: None,
+            queued_moves: 0,
         }
+    }
+
+    /// The bit of `pokemon` in [`Battle::queued_moves`].
+    pub fn move_bit(pokemon: PokemonRef) -> u16 {
+        1 << (pokemon.side.index() * crate::state::PARTY_SIZE + usize::from(pokemon.party))
+    }
+
+    /// Showdown `queue.willMove(pokemon)`: it still has a move action this turn.
+    pub fn will_move(&self, pokemon: PokemonRef) -> bool {
+        self.queued_moves & Self::move_bit(pokemon) != 0 && self.mon(pokemon).hp > 0
     }
 
     pub fn apply(&mut self, instruction: Instruction) {
@@ -208,11 +222,12 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// Showdown `spreadDamage` for one target: at least 1, Damage handlers, clamped to the
     /// target's HP, faint queued at 0 HP. Returns the HP removed.
     ///
-    /// Damage handlers by priority: Rock Head and Magic Guard (0), Sturdy (-30), Focus Sash
-    /// (-40). Rock Head (`effect.id === 'recoil'`) and Magic Guard (`effect.effectType !==
-    /// 'Move'`) cancel the damage (neither is breakable). Sturdy and Focus Sash leave a full-HP
-    /// target at 1 HP against a move's damage; Sturdy acts first, so the Sash then stays.
-    /// Sturdy is breakable (ignored by Sunsteel Strike and the like).
+    /// Damage handlers by priority: Rock Head and Magic Guard (0), Sturdy (-30), Focus Sash and
+    /// Focus Band (-40, `items::on_damage`). Rock Head (`effect.id === 'recoil'`) and Magic
+    /// Guard (`effect.effectType !== 'Move'`) cancel the damage (neither is breakable). Sturdy
+    /// and Focus Sash leave a full-HP target at 1 HP against a move's damage; Sturdy acts
+    /// first, so the Sash then stays. Sturdy is breakable (ignored by Sunsteel Strike and the
+    /// like).
     pub fn damage(&mut self, target: SlotRef, amount: f64, source: DamageSource) -> i32 {
         let Some(pokemon) = self.alive(target) else {
             return 0;
@@ -234,15 +249,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         {
             amount = i32::from(mon.hp) - 1;
         }
-        let mon = self.mon(pokemon);
-        if source == DamageSource::Move
-            && mon.item == items::FOCUS_SASH
-            && mon.hp == mon.max_hp
-            && amount >= i32::from(mon.hp)
-            && self.use_item(target)
-        {
-            amount = i32::from(self.mon(pokemon).hp) - 1;
-        }
+        let amount = super::items::on_damage(self, target, amount, source);
         self.lose_hp(target, pokemon, amount)
     }
 

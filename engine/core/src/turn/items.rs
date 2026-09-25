@@ -7,12 +7,15 @@
 //! by `support` (Showdown's `ignoringItem`, work plan F17), so no handler here checks it.
 
 use crate::damage::{MOD_HALF, MOD_ONE_POINT_FIVE};
-use crate::dex::{abilities, items, moves, ItemId, MoveCategory, MoveData, MoveId, Stat, Type};
-use crate::state::{Pokemon, SlotRef, State};
+use crate::dex::{
+    abilities, conditions, items, moves, ItemId, MoveCategory, MoveData, MoveId, Secondary, Stat,
+    Type, NO_BOOSTS,
+};
+use crate::state::{Pokemon, SlotRef, State, Status};
 use crate::volatile::{Volatile, VolatileState};
 
 use super::abilities::{Handler, SUB_ITEM};
-use super::battle::Battle;
+use super::battle::{Battle, DamageSource};
 
 /// The type-resist berries: `onSourceModifyDamage` halves a super-effective hit of one type
 /// (Chilan Berry: every Normal hit) after eating the berry; their `onEat` does nothing.
@@ -206,6 +209,89 @@ pub(crate) fn disabled_move<const N: usize>(
         ));
     }
     None
+}
+
+// ---- accuracy, critical hits, flinch, Damage ----------------------------------------------------
+
+/// `ModifyAccuracy` handlers of the user's item (`onSourceModifyAccuracy`, priority -2, only for
+/// a numeric accuracy, which is when the engine checks accuracy): Wide Lens 4505/4096; Zoom
+/// Lens 4915/4096 when the target has no move action left in the queue
+/// (`!this.queue.willMove(target)`).
+pub(crate) fn accuracy_handlers<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+) -> Vec<Handler> {
+    let mut out = Vec::new();
+    let item = b.item(user);
+    let modifier = match item {
+        i if i == items::WIDE_LENS => Some(4505),
+        i if i == items::ZOOM_LENS => {
+            let moves_later = b.occupant(target).is_some_and(|p| b.will_move(p));
+            (!moves_later).then_some(4915)
+        }
+        _ => None,
+    };
+    if let Some(modifier) = modifier {
+        let p =
+            super::abilities::priority(item.data().event_orders, "onSourceModifyAccuracyPriority");
+        out.push(Handler::of(b, user, p, SUB_ITEM, modifier));
+    }
+    out
+}
+
+/// `ModifyCritRatio` of the user's item: Scope Lens and Razor Claw `return critRatio + 1`.
+pub(crate) fn crit_ratio_bonus(item: ItemId) -> i32 {
+    i32::from(item == items::SCOPE_LENS || item == items::RAZOR_CLAW)
+}
+
+/// King's Rock / Razor Fang `onModifyMove` (priority -1): a non-status move without a flinch
+/// secondary gets `{chance: 10, volatileStatus: 'flinch'}` appended to its secondaries.
+/// (Serene Grace, priority -2, would double it; it is refused by `support`.)
+pub(crate) fn added_secondary(item: ItemId, data: &MoveData) -> Option<Secondary> {
+    let flinch_item = item == items::KINGS_ROCK || item == items::RAZOR_FANG;
+    let has_flinch = data
+        .secondaries
+        .iter()
+        .any(|s| s.volatile_status == conditions::FLINCH);
+    (flinch_item && data.category != MoveCategory::Status && !has_flinch).then_some(Secondary {
+        chance: 10,
+        status: Status::None,
+        volatile_status: conditions::FLINCH,
+        boosts: NO_BOOSTS,
+        self_boosts: NO_BOOSTS,
+    })
+}
+
+/// The item `Damage` handlers (priority -40, after Sturdy's -30) for `amount` of damage to the
+/// Pokémon in `target`; returns the damage to deal.
+/// - Focus Sash: at full HP, a move's damage that would faint leaves 1 HP (`useItem`).
+/// - Focus Band: `this.randomChance(1, 10) && damage >= target.hp && effect.effectType ===
+///   'Move'` leaves 1 HP. Showdown draws for every damage; drawing only when the rest holds
+///   gives the same distribution.
+pub(crate) fn on_damage<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    amount: i32,
+    source: DamageSource,
+) -> i32 {
+    let Some(mon) = b.slot_mon(target) else {
+        return amount;
+    };
+    let hp = i32::from(mon.hp);
+    if source != DamageSource::Move || amount < hp {
+        return amount;
+    }
+    let survives = match mon.item {
+        i if i == items::FOCUS_SASH => mon.hp == mon.max_hp && b.use_item(target),
+        i if i == items::FOCUS_BAND => b.rng.chance(1, 10),
+        _ => false,
+    };
+    if survives {
+        hp - 1
+    } else {
+        amount
+    }
 }
 
 /// Showdown `eatItem` for a held berry: it is consumed and becomes `lastItem`. The events it
