@@ -86,6 +86,21 @@ fn seeds_with_a_replaced_and_cleared_terrain_match_showdown() {
     assert_exact_parity("o92-seeds-grassy-misty");
 }
 
+// ---- O101 Wonder Room ---------------------------------------------------------------------------
+
+/// Wonder Room starts and swaps the stored Def and SpD for a physical hit and for Psyshock.
+#[test]
+fn wonder_room_matches_showdown() {
+    assert_exact_parity("o101-wonder-room");
+}
+
+/// Body Press under Wonder Room takes the SpD stages on the stored Def; Wonder Room ends in the
+/// residual.
+#[test]
+fn wonder_room_body_press_and_expiry_match_showdown() {
+    assert_exact_parity("o101-body-press");
+}
+
 // ---- O95 White Herb, Mirror Herb, Adrenaline Orb, Room Service ----------------------------------
 
 /// White Herb restores its holder's drops at the AfterMove of the move that caused them (a

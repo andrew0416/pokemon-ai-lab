@@ -156,6 +156,19 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "condition.onFieldStart",
         ],
     ),
+    // Wonder Room: the stored Def/SpD swap and `onModifyMove` in `moves::get_damage` (and the
+    // confusion self-hit), `onFieldRestart` ends it (`add_pseudo_weather`); `durationCallback`
+    // only differs with Persistent (refused); `onFieldStart` / `onFieldEnd` only log.
+    (
+        moves::WONDER_ROOM,
+        &[
+            "condition.durationCallback",
+            "condition.onFieldEnd",
+            "condition.onFieldRestart",
+            "condition.onFieldStart",
+            "condition.onModifyMove",
+        ],
+    ),
     (
         moves::TAILWIND,
         &[
@@ -808,7 +821,9 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     if !m.side_condition.is_none() && side_effect_of(m.side_condition.id()).is_none() {
         return why(&format!("side condition {}", m.side_condition.id()));
     }
-    if !m.pseudo_weather.is_none() && !["gravity", "trickroom"].contains(&m.pseudo_weather.id()) {
+    if !m.pseudo_weather.is_none()
+        && !["gravity", "trickroom", "wonderroom"].contains(&m.pseudo_weather.id())
+    {
         return why(&format!("field effect {}", m.pseudo_weather.id()));
     }
     if let Some(s) = m.self_effect {
@@ -871,7 +886,12 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
                 Weather::Sun | Weather::Rain | Weather::Sand | Weather::Snow
             ),
             x if x == FieldEffect::Terrain as usize => true,
-            x if x == FieldEffect::Gravity as usize || x == FieldEffect::TrickRoom as usize => true,
+            x if x == FieldEffect::Gravity as usize
+                || x == FieldEffect::TrickRoom as usize
+                || x == FieldEffect::WonderRoom as usize =>
+            {
+                true
+            }
             _ => false,
         };
         if !supported {

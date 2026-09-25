@@ -370,7 +370,9 @@ fn confusion_damage<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> i32
     let mon = b.slot_mon(user).expect("checked");
     let boosts = b.state.slot(user).boosts;
     let attack = boosted_stat(i32::from(mon.stats[0]), boosts[0]);
-    let defense = boosted_stat(i32::from(mon.stats[1]), boosts[1]);
+    // `calculateStat('def', boosts.def)`: the stored SpD under Wonder Room.
+    let stored_def = stored_stat_index(Stat::Def, b.field_active(FieldEffect::WonderRoom));
+    let defense = boosted_stat(i32::from(mon.stats[stored_def]), boosts[1]);
     let level = i32::from(mon.level);
     let base = ((2 * level / 5 + 2) * 40 * attack / defense) / 50 + 2;
     let base = base & 0xffff;
@@ -1732,9 +1734,18 @@ fn get_damage<const N: usize>(
 
     // Attack and defense.
     let physical = data.category == MoveCategory::Physical;
-    let attack_stat =
-        data.override_offensive_stat
-            .unwrap_or(if physical { Stat::Atk } else { Stat::Spa });
+    // Wonder Room's `onModifyMove`: a move attacking with Def or SpD (Body Press) takes the
+    // other one's stages (`overrideOffensiveStat` swapped); `calculateStat` then swaps the
+    // stored Def and SpD it reads ([`stored_stat_index`]), while the stages and the Modify*
+    // handlers stay those of the named stat.
+    let wonder_room = b.field_active(FieldEffect::WonderRoom);
+    let attack_stat = match data.override_offensive_stat {
+        Some(Stat::Def) if wonder_room => Stat::Spd,
+        Some(Stat::Spd) if wonder_room => Stat::Def,
+        Some(stat) => stat,
+        None if physical => Stat::Atk,
+        None => Stat::Spa,
+    };
     let defense_stat =
         data.override_defensive_stat
             .unwrap_or(if physical { Stat::Def } else { Stat::Spd });
@@ -1757,7 +1768,7 @@ fn get_damage<const N: usize>(
         def_boost = 0;
     }
     let attack = boosted_stat(
-        i32::from(offensive_mon.stats[stat_index(attack_stat)]),
+        i32::from(offensive_mon.stats[stored_stat_index(attack_stat, wonder_room)]),
         atk_boost,
     );
     // ModifyAtk (physical) / ModifySpA (special), whatever stat the move attacks with.
@@ -1766,7 +1777,7 @@ fn get_damage<const N: usize>(
     attack_mods.extend(item_events::attack_handlers(b, user, data));
     let attack = modify(attack, ability_events::chain(b, attack_mods));
     let mut defense = boosted_stat(
-        i32::from(defender.stats[stat_index(defense_stat)]),
+        i32::from(defender.stats[stored_stat_index(defense_stat, wonder_room)]),
         def_boost,
     );
     // ModifyDef / ModifySpD: sandstorm (Rock SpD) and snow (Ice Def), 1.5x applied directly.
@@ -1866,6 +1877,16 @@ fn screen_applies<const N: usize>(b: &Battle<'_, N>, side: SideId, category: Mov
         MoveCategory::Status => false,
         // Aurora Veil does not stack with the matching screen.
         _ => b.side_effect_active(side, SideEffect::AuroraVeil),
+    }
+}
+
+/// The stored stat `calculateStat(stat)` reads: under Wonder Room Def and SpD trade places
+/// ("Wonder Room swaps defenses before calculating anything else").
+fn stored_stat_index(stat: Stat, wonder_room: bool) -> usize {
+    match stat_index(stat) {
+        1 if wonder_room => 3,
+        3 if wonder_room => 1,
+        i => i,
     }
 }
 
@@ -1969,16 +1990,19 @@ pub(crate) fn set_terrain<const N: usize>(
     true
 }
 
-/// Showdown `addPseudoWeather`: Gravity fails if up; Trick Room ends itself on restart
-/// (`onFieldRestart`, no PseudoWeatherChange); a new one runs `PseudoWeatherChange`.
+/// Showdown `addPseudoWeather`: Gravity fails if up; Trick Room and Wonder Room end
+/// themselves on restart (`onFieldRestart`, no PseudoWeatherChange); a new one (5 turns:
+/// Persistent, which makes Trick Room and Wonder Room last 7, is refused) runs
+/// `PseudoWeatherChange`.
 fn add_pseudo_weather<const N: usize>(b: &mut Battle<'_, N>, id: &str) -> bool {
     let effect = match id {
         "gravity" => FieldEffect::Gravity,
         "trickroom" => FieldEffect::TrickRoom,
+        "wonderroom" => FieldEffect::WonderRoom,
         _ => unreachable!("checked by support"),
     };
     if b.field_active(effect) {
-        if effect == FieldEffect::TrickRoom {
+        if effect == FieldEffect::TrickRoom || effect == FieldEffect::WonderRoom {
             b.set_field(effect, Effect::NONE);
             return true;
         }

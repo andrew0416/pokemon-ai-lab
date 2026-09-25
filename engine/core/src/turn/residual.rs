@@ -95,6 +95,9 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
     if b.field_active(FieldEffect::TrickRoom) {
         out.push(field(27, 1, Kind::FieldDuration(FieldEffect::TrickRoom)));
     }
+    if b.field_active(FieldEffect::WonderRoom) {
+        out.push(field(27, 5, Kind::FieldDuration(FieldEffect::WonderRoom)));
+    }
     for side in [SideId::One, SideId::Two] {
         for (effect, order, sub_order) in [
             (SideEffect::Reflect, 26, 1),
@@ -561,6 +564,16 @@ pub(crate) fn bench<'b, const N: usize>(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Wonder Room's residual order and sub-order hard-coded in `collect` are the dex's.
+    #[test]
+    fn wonder_room_residual_order_matches_the_dex() {
+        use crate::dex::moves;
+        let orders = moves::WONDER_ROOM.data().event_orders;
+        assert!(orders.contains(&("condition.onFieldResidualOrder", 27)));
+        assert!(orders.contains(&("condition.onFieldResidualSubOrder", 5)));
+        assert_eq!(moves::WONDER_ROOM.data().condition_duration, 5);
+    }
 
     /// The side-condition residual orders hard-coded in `collect` are the dex's.
     #[test]
