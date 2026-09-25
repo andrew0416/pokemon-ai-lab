@@ -11,12 +11,14 @@ use crate::dex::{
     abilities, conditions, items, moves, ItemId, MoveCategory, MoveData, MoveFlags, MoveId,
     Secondary, Stat, Type, NO_BOOSTS,
 };
+use crate::field::FieldEffect;
 use crate::instruction::Instruction;
-use crate::state::{Pokemon, SlotRef, State, Status};
+use crate::state::{Pokemon, PokemonRef, SlotRef, State, Status};
 use crate::volatile::{Volatile, VolatileState};
 
 use super::abilities::{Handler, SUB_ITEM};
 use super::battle::{Battle, DamageSource};
+use super::TurnError;
 
 /// The type-resist berries: `onSourceModifyDamage` halves a super-effective hit of one type
 /// (Chilan Berry: every Normal hit) after eating the berry; their `onEat` does nothing.
@@ -65,18 +67,104 @@ pub(crate) fn held_item_problem(mon: &Pokemon) -> Option<String> {
 
 /// Whether an item's `onStart` does nothing when its holder switches in (Showdown runs item
 /// `onStart` handlers in the `SwitchIn` event): the Choice items only remove a `choicelock`
-/// the newcomer cannot have yet.
+/// the newcomer cannot have yet; Air Balloon only announces itself.
 pub(crate) fn inert_start(item: ItemId) -> bool {
-    item.data().is_choice
+    item.data().is_choice || item == items::AIR_BALLOON
+}
+
+// ---- Speed, grounding, effectiveness, action order --------------------------------------------
+
+/// `ModifySpe` factor of the holder's item: Choice Scarf `chainModify(1.5)` (skipped while
+/// Dynamaxed, which `support` refuses); Iron Ball `chainModify(0.5)`.
+pub(crate) fn speed_modifier(item: ItemId) -> Option<u32> {
+    match item {
+        i if i == items::CHOICE_SCARF => Some(MOD_ONE_POINT_FIVE),
+        i if i == items::IRON_BALL => Some(MOD_HALF),
+        _ => None,
+    }
+}
+
+/// `isGrounded`: Iron Ball grounds its holder, checked before the Flying type.
+pub(crate) fn grounds(item: ItemId) -> bool {
+    item == items::IRON_BALL
+}
+
+/// `isGrounded`: Air Balloon lifts its holder, checked last (after Levitate).
+pub(crate) fn lifts(item: ItemId) -> bool {
+    item == items::AIR_BALLOON
+}
+
+/// The target's item `onEffectiveness` for one of its types (`runEffectiveness`, after the
+/// move's own handler), given the type's effectiveness so far: Iron Ball returns 0 for a
+/// Ground move against every type of a Flying holder, unless Gravity is up (Ingrain and Smack
+/// Down are not implemented).
+pub(crate) fn on_effectiveness<const N: usize>(
+    b: &Battle<'_, N>,
+    target: SlotRef,
+    move_type: Type,
+    type_mod: i32,
+) -> i32 {
+    let grounded_flyer = b.item(target) == items::IRON_BALL
+        && !b.field_active(FieldEffect::Gravity)
+        && move_type == Type::Ground
+        && b.has_type(target, Type::Flying);
+    if grounded_flyer {
+        0
+    } else {
+        type_mod
+    }
+}
+
+/// `DamagingHit` of the target's item: Air Balloon pops (`target.item = ''`, not `lastItem`).
+/// The `DamagingHit` event is work plan F15, so a damaging hit on an Air Balloon holder is
+/// refused for now.
+pub(crate) fn on_damaging_hit<const N: usize>(
+    b: &Battle<'_, N>,
+    target: SlotRef,
+) -> Result<(), TurnError> {
+    if b.item(target) == items::AIR_BALLOON {
+        return Err(b.unsupported(format!(
+            "{}: Air Balloon popping (DamagingHit, work plan F15)",
+            b.slot_mon(target).map_or("?", |m| m.species.data().name)
+        )));
+    }
+    Ok(())
+}
+
+/// The constant `onFractionalPriority` of an item, in tenths: Lagging Tail and Full Incense
+/// `-0.1` (the dex's value; 0 for any other item).
+pub(crate) fn constant_fractional_tenths(item: ItemId) -> i8 {
+    if item == items::LAGGING_TAIL || item == items::FULL_INCENSE {
+        item.data().fractional_priority_tenths
+    } else {
+        0
+    }
+}
+
+/// The constant handlers of `runEvent('FractionalPriority')` for a move action, in tenths:
+/// the ability's (Stall, sub-order 7) and then the item's (sub-order 8) replace the value, so
+/// the item's wins. Quick Claw's random handler runs after them ([`quick_claw`]).
+pub(crate) fn fractional_priority_tenths(mon: &Pokemon) -> i8 {
+    match constant_fractional_tenths(mon.item) {
+        0 => super::order::fractional_priority_tenths(mon.ability),
+        item => item,
+    }
+}
+
+/// Quick Claw's `onFractionalPriority` (priority -2, after the constants) for a move action of
+/// `pokemon` whose fractional priority is `current` tenths: `priority <= 0 &&
+/// this.randomChance(1, 5)` makes it +0.1. Showdown draws it when the turn's actions are
+/// queued (`resolveAction`); Mycelium Might's status-move exception is moot (the ability is
+/// refused by `support`).
+pub(crate) fn quick_claw<const N: usize>(
+    b: &mut Battle<'_, N>,
+    pokemon: PokemonRef,
+    current: i8,
+) -> Option<i8> {
+    (b.mon(pokemon).item == items::QUICK_CLAW && current <= 0 && b.rng.chance(1, 5)).then_some(1)
 }
 
 // ---- Choice items ---------------------------------------------------------------------------
-
-/// `ModifySpe` factor of the holder's item: Choice Scarf `chainModify(1.5)` (skipped while
-/// Dynamaxed, which `support` refuses).
-pub(crate) fn speed_modifier(item: ItemId) -> Option<u32> {
-    (item == items::CHOICE_SCARF).then_some(MOD_ONE_POINT_FIVE)
-}
 
 /// `ModifyAtk` (physical moves) or `ModifySpA` (special moves) handlers of the user's item:
 /// Choice Band / Choice Specs `chainModify(1.5)` at priority 1 (not while Dynamaxed).

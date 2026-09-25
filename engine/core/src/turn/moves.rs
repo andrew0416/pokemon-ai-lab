@@ -956,9 +956,10 @@ fn spread_move_hit<const N: usize>(
             }
         }
     }
-    // DamagingHit: a damaging Fire move thaws a frozen target.
+    // DamagingHit: a damaging Fire move thaws a frozen target; Air Balloon would pop.
     for (i, &t) in targets.iter().enumerate() {
         if let Hit::Damage(_) = results[i] {
+            item_events::on_damaging_hit(b, t)?;
             if data.move_type == Type::Fire && data.category != MoveCategory::Status {
                 if let Some(p) = b.alive(t) {
                     if b.mon(p).status == Status::Freeze {
@@ -1130,7 +1131,8 @@ fn get_damage<const N: usize>(
         .filter(|&&t| t != Type::None)
         .map(|&t| {
             let chart = handlers::type_effectiveness(data.move_type, t);
-            handlers::on_effectiveness(mv.id, t, chart)
+            let by_move = handlers::on_effectiveness(mv.id, t, chart);
+            item_events::on_effectiveness(b, target, data.move_type, by_move)
         })
         .sum::<i32>()
         .clamp(-6, 6);

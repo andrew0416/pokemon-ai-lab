@@ -95,6 +95,7 @@ pub fn enumerate_turn<const N: usize>(
     let start = Pending {
         queue: initial_queue(state, &choices),
         done: false,
+        fractional_drawn: false,
     };
     enumerate_stages(state, start, |b, pending| {
         run_stage(b, pending)?;
@@ -116,6 +117,7 @@ pub fn sample_turn<const N: usize>(
     let start = Pending {
         queue: initial_queue(state, &choices),
         done: false,
+        fractional_drawn: false,
     };
     sample_stages(state, samples, seed, start, |b, pending| {
         run_stage(b, pending)?;
@@ -559,6 +561,9 @@ enum ActionKind {
 struct Pending {
     queue: Vec<Action>,
     done: bool,
+    /// Whether the random fractional priorities (Quick Claw) were drawn: Showdown draws them
+    /// when the actions are queued, so the first stage does.
+    fractional_drawn: bool,
 }
 
 impl<const N: usize> Battle<'_, N> {
@@ -628,8 +633,8 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
                     ActionKind::Move {
                         index,
                         target,
-                        fractional_tenths: order::fractional_priority_tenths(
-                            state.pokemon(pokemon).ability,
+                        fractional_tenths: items::fractional_priority_tenths(
+                            state.pokemon(pokemon),
                         ),
                     }
                 }
@@ -651,6 +656,19 @@ fn run_stage<const N: usize>(
     b: &mut Battle<'_, N>,
     pending: &mut Pending,
 ) -> Result<(), TurnError> {
+    if !pending.fractional_drawn {
+        pending.fractional_drawn = true;
+        for action in &mut pending.queue {
+            if let ActionKind::Move {
+                fractional_tenths, ..
+            } = &mut action.kind
+            {
+                if let Some(t) = items::quick_claw(b, action.pokemon, *fractional_tenths) {
+                    *fractional_tenths = t;
+                }
+            }
+        }
+    }
     let queue = &mut pending.queue;
     if !queue.is_empty() {
         // Best action by (order asc, priority desc, speed desc), ties uniformly at random.

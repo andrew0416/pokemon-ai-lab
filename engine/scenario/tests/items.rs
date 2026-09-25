@@ -161,6 +161,28 @@ fn sticky_barb_transfer_shell_bell_and_throat_spray_match_showdown() {
     assert_exact_parity("o93-sticky-barb-shell-bell-throat-spray");
 }
 
+// ---- O87 Air Balloon, O88 Iron Ball / Lagging Tail / Full Incense / Quick Claw ------------------
+
+#[test]
+fn air_balloon_and_iron_ball_grounding_match_showdown() {
+    assert_exact_parity("o87-o88-grounding");
+}
+
+#[test]
+fn lagging_tail_full_incense_and_quick_claw_order_match_showdown() {
+    assert_exact_parity("o88-lagging-tail-quick-claw");
+}
+
+/// Air Balloon pops on a damaging hit (`onDamagingHit`); that event is work plan F15, so the
+/// engine refuses the hit instead of keeping the balloon.
+#[test]
+fn a_damaging_hit_on_an_air_balloon_is_refused() {
+    let why = refused_with("o84-life-orb", SideId::Two, "Kingambit", |mon| {
+        mon.item = lab_engine::dex::items::AIR_BALLOON;
+    });
+    assert!(why.contains("Air Balloon"), "{why}");
+}
+
 /// A Pokémon locked by its Choice item cannot choose another move (`choicelock`'s
 /// `onDisableMove`).
 #[test]

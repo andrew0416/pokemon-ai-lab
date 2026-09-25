@@ -1,0 +1,23 @@
+{
+ "description": "O88: Lagging Tail Garchomp (169) and Full Incense Kingambit (70) move after everyone else at priority 0 (-0.1, then by Speed); Quick Claw Snorlax (50) moves first with probability 1/5 (+0.1, drawn when the actions are queued). Snorlax uses Haze, the others Swords Dance, so the order shows in the boosts.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Garchomp", "item": "Lagging Tail", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "Quick Claw", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Haze", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Kingambit", "item": "Full Incense", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Excadrill", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move swordsdance, move haze", "p2": "move swordsdance, move swordsdance"}
+}

@@ -239,6 +239,17 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::STICKY_BARB, &["onHit", "onResidual"]),
     (items::SHELL_BELL, &["onAfterMoveSecondarySelf"]),
     (items::THROAT_SPRAY, &["onAfterMoveSecondarySelf"]),
+    // Grounding (`Battle::is_grounded`), Speed, effectiveness; Air Balloon's `onStart` only
+    // announces it and its pop (`onDamagingHit`) is refused until F15 (`items::on_damaging_hit`;
+    // `onAfterSubDamage` needs a substitute, which is refused).
+    (
+        items::AIR_BALLOON,
+        &["onAfterSubDamage", "onDamagingHit", "onStart"],
+    ),
+    (items::IRON_BALL, &["onEffectiveness", "onModifySpe"]),
+    // Drawn when the actions are queued (first stage, `mod.rs`); Lagging Tail and Full Incense
+    // have only a constant `onFractionalPriority` (`items::constant_fractional_tenths`).
+    (items::QUICK_CLAW, &["onFractionalPriority"]),
     // Choice items (`items.rs`): the stat in `order.rs`/`moves.rs`, `onModifyMove` adds the
     // `choicelock` volatile, `onStart` only removes a lock a newcomer cannot have.
     (
@@ -433,7 +444,9 @@ pub(crate) fn ability_supported_on_field(ability: AbilityId) -> bool {
 /// Whether an item is inert or implemented while its holder is on the field.
 pub(crate) fn item_supported_on_field(item: ItemId) -> bool {
     let data = item.data();
-    if CORE_CHECKED_ITEMS.contains(&item) || data.fractional_priority_tenths != 0 {
+    if CORE_CHECKED_ITEMS.contains(&item)
+        || data.fractional_priority_tenths != super::items::constant_fractional_tenths(item)
+    {
         return false;
     }
     data.handlers.is_empty()

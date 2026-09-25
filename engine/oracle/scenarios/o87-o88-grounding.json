@@ -1,0 +1,23 @@
+{
+ "description": "O87/O88: Garchomp's Earthquake misses Air Balloon Heatran (ally) and Air Balloon Excadrill (ungrounded) and hits Iron Ball Corviknight (grounded; Iron Ball's onEffectiveness makes Ground neutral against both of its types). Iron Ball halves Corviknight's Speed (130 -> 65), so its Haze comes last and clears Excadrill's Swords Dance and Heatran's Calm Mind.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Earthquake", "Protect"], "level": 50},
+   {"species": "Heatran", "item": "Air Balloon", "ability": "Honey Gather", "nature": "Calm",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Corviknight", "item": "Iron Ball", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "spe": 32, "def": 2}, "moves": ["Haze", "Protect"], "level": 50},
+   {"species": "Excadrill", "item": "Air Balloon", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move earthquake, move calmmind", "p2": "move haze, move swordsdance"}
+}
