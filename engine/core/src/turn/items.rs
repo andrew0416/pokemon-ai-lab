@@ -531,7 +531,8 @@ pub(crate) fn on_residual<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, 
 /// handler: Unnerve, As One, Ripen, Cheek Pouch, Cud Chew and Unburden are refused by
 /// `support`, and the resist berries' `onEat` is empty.
 fn eat_item<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> bool {
-    b.use_item(holder)
+    // TryEatItem: the ability handlers (`abilities::try_eat_item`).
+    super::abilities::try_eat_item(b, holder) && b.use_item(holder)
 }
 
 /// `ModifyDamage` handlers of items (`modifyDamage`, after the burn halving): the user's

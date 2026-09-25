@@ -1,0 +1,28 @@
+{
+ "description": "O55 Aftermath and Innards Out: Talonflame's Seismic Toss faints Pyukumuku (40 HP left), whose Innards Out returns the 40 HP it lost; Machamp (30 HP left) faints Garbodor with contact, whose Aftermath deals Machamp a quarter of its max HP and faints it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Garbodor", "item": "", "ability": "Aftermath", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Pyukumuku", "item": "", "ability": "Innards Out", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Talonflame", "item": "", "ability": "Flame Body", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Blastoise", "item": "", "ability": "Torrent", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {"p1":{"Garbodor":{"hp":1},"Pyukumuku":{"hp":40}},"p2":{"Machamp":{"hp":30}}},
+ "turn": {"p1": "move seismictoss 1, move seismictoss 1", "p2": "move seismictoss 1, move seismictoss 2"}
+}

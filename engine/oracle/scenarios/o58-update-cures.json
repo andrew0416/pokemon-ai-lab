@@ -1,0 +1,23 @@
+{
+ "description": "O58 onUpdate cures after ability-ignoring moves: Mold Breaker Haxorus's Thunder Wave paralyzes Limber Persian (Limber is skipped at the hit's Update, so its Cheri Berry cures it); Mold Breaker Excadrill's Confuse Ray confuses Own Tempo Slowbro, cured at the Update after the action, before Slowbro moves.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Haxorus", "item": "", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Thunder Wave"], "level": 50},
+   {"species": "Excadrill", "item": "", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Confuse Ray"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Persian", "item": "Cheri Berry", "ability": "Limber", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Slowbro", "item": "", "ability": "Own Tempo", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move thunderwave 1, move confuseray 2", "p2": "move seismictoss 1, move seismictoss 2"}
+}

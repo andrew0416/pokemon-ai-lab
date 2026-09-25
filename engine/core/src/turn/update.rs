@@ -8,8 +8,10 @@
 //!
 //! Listeners implemented here: berries with `onUpdate` (Sitrus, Oran, the five Figy-type
 //! berries, the five pinch stat berries, Lum and the six one-status berries, Leppa) and Lum's
-//! `onAfterSetStatus`. Ability `onUpdate` handlers are either unreachable by construction
-//! (`cured_on_update`) or refused (Trace still seeking, Disguise, ...).
+//! `onAfterSetStatus`; the abilities' `onUpdate` cures run first (`abilities::on_update`: the
+//! status cures of `cured_on_update`, Own Tempo's confusion cure). Other ability `onUpdate`
+//! handlers are refused (Trace still seeking, Disguise, ...). A berry is eaten only if the
+//! `TryEatItem` handlers allow it (`abilities::try_eat_item`).
 
 use crate::dex::{abilities, items, ItemId, Stat, NO_BOOSTS};
 use crate::instruction::Instruction;
@@ -79,6 +81,8 @@ pub(crate) fn update_event<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), 
         if b.alive(slot).is_none() {
             continue;
         }
+        // The ability's `onUpdate` (sub-order 7) before the item's (8).
+        super::abilities::on_update(b, slot);
         if item_wants_eating(b, slot) {
             eat_item(b, slot);
         }
@@ -126,6 +130,11 @@ pub(crate) fn eat_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> 
     if !item.data().is_berry {
         return false;
     }
+    // TryEatItem: the eater's and its foes' ability handlers (`abilities::try_eat_item`).
+    if !super::abilities::try_eat_item(b, slot) {
+        return false;
+    }
+    let mon = b.mon(pokemon);
     let max_hp = f64::from(mon.max_hp);
     let status = mon.status;
     if item == items::SITRUS_BERRY {

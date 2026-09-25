@@ -21,7 +21,7 @@ use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SlotRef, Status, BOOST_COUNT};
 use crate::volatile::Volatile;
 
-use super::battle::{cured_on_update, Battle, BoostEffect};
+use super::battle::{Battle, BoostEffect};
 use super::moves::{set_terrain, set_weather};
 use super::support::{ability_supported_on_field, item_supported_on_field};
 use super::TurnError;
@@ -166,8 +166,8 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onModifyMove", "onStart"],
         StartEffect::None,
     ),
-    // Status-curing `onUpdate`: nothing to cure on switch-in, because a holder that already
-    // has the status is refused (`cured_on_update`).
+    // Status-curing `onUpdate`: the cure runs at the Update after the switch-in
+    // (`abilities::on_update`), not at the start.
     (
         abilities::WATER_VEIL,
         &["onSetStatus", "onUpdate"],
@@ -196,6 +196,22 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
     (
         abilities::MAGMA_ARMOR,
         &["onImmunity", "onUpdate"],
+        StartEffect::None,
+    ),
+    (
+        abilities::THERMAL_EXCHANGE,
+        &["onDamagingHit", "onSetStatus", "onUpdate"],
+        StartEffect::None,
+    ),
+    // Own Tempo's confusion cure and Oblivious's (nothing to remove) are Update handlers too.
+    (
+        abilities::OWN_TEMPO,
+        &["onHit", "onTryAddVolatile", "onTryBoost", "onUpdate"],
+        StartEffect::None,
+    ),
+    (
+        abilities::OBLIVIOUS,
+        &["onImmunity", "onTryBoost", "onTryHit", "onUpdate"],
         StartEffect::None,
     ),
     (
@@ -257,9 +273,8 @@ pub fn species_start_handler(species: SpeciesId) -> Option<&'static str> {
 }
 
 /// Why `pokemon` cannot switch in, if it cannot: its ability or item must be implemented on the
-/// field, nothing may fire on its switch-in that is not implemented, and its status must not be
-/// one its ability would cure on the next Update (no Update event yet, see `cured_on_update`).
-/// At battle start `on_field` is false: on-field support is checked before the first turn
+/// field, and nothing may fire on its switch-in that is not implemented. At battle start
+/// `on_field` is false: on-field support is checked before the first turn
 /// (`support::check_state`) so leads with inert-at-start abilities still expand.
 fn switch_in_problem<const N: usize>(
     b: &Battle<'_, N>,
@@ -299,12 +314,6 @@ fn switch_in_problem<const N: usize>(
             "{name}: ability {} switch-in handler {}",
             mon.ability.data().name,
             start_handler(mon.ability.data().handlers).unwrap_or("suppressWeather")
-        ));
-    }
-    if cured_on_update(mon.ability, mon.status) {
-        return Some(format!(
-            "{name}: {} would cure its status on Update",
-            mon.ability.data().name
         ));
     }
     super::update::berry_problem(mon)
@@ -518,13 +527,6 @@ fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), T
             "Trace copying {} ({:?})",
             copied.data().name,
             copied.data().handlers
-        )));
-    }
-    let status = b.mon(pokemon).status;
-    if cured_on_update(copied, status) {
-        return Err(b.unsupported(format!(
-            "Trace copying {} would cure {status:?} on Update",
-            copied.data().name
         )));
     }
     b.apply(Instruction::SetAbility {

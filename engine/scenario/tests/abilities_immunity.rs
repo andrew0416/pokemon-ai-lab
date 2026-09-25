@@ -8,7 +8,7 @@ use common::{assert_exact_parity, fixture, start};
 use lab_engine::dex::abilities;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::SideId;
-use lab_engine::turn::{enumerate_turn, TurnError};
+use lab_engine::turn::enumerate_turn;
 use lab_scenario::scenario_choices;
 
 // ---- O48 absorbing and immunity abilities ------------------------------------------------------
@@ -114,11 +114,11 @@ fn turboblaze_and_mold_breaker_status_match_showdown() {
     assert_exact_parity("o67-turboblaze");
 }
 
-/// Against Water Veil, Mold Breaker's Will-O-Wisp would burn through the suppressed ability
-/// and Showdown's Update after the action would cure the burn; the engine has no Update event,
-/// so it refuses the move instead of leaving the burn.
+/// Against Water Veil, Mold Breaker's Will-O-Wisp burns through the suppressed ability and the
+/// Update after the action cures the burn (`abilities::on_update`; the timing is checked against
+/// Showdown by `o58-update-cures`): no outcome leaves the holder burned.
 #[test]
-fn mold_breaker_status_on_an_update_curing_ability_is_refused() {
+fn mold_breaker_status_on_an_update_curing_ability_is_cured() {
     let fixture = fixture("o67-turboblaze");
     let (loaded, position) = start("o67-turboblaze", &fixture);
     let mut state = position.state;
@@ -132,8 +132,13 @@ fn mold_breaker_status_on_an_update_curing_ability_is_refused() {
     let mon = &mut state.side_mut(SideId::Two).party[garganacl];
     mon.ability = abilities::WATER_VEIL;
     mon.base_ability = abilities::WATER_VEIL;
-    match enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices) {
-        Err(TurnError::Unsupported(why)) => assert!(why.contains("Water Veil"), "{why}"),
-        other => panic!("expected Unsupported, got {other:?}"),
+    let outcomes = enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices).unwrap();
+    for outcome in &outcomes {
+        state.apply(&outcome.instructions);
+        assert_ne!(
+            state.side(SideId::Two).party[garganacl].status,
+            lab_engine::state::Status::Burn
+        );
+        state.reverse(&outcome.instructions);
     }
 }

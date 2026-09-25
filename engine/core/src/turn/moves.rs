@@ -59,6 +59,12 @@ struct ActiveMove {
     move_type: Type,
     /// Base power after ModifyMove (Showdown `move.basePower`), before `basePowerCallback`.
     base_power: i32,
+    /// `move.ignoreEvasion` after ModifyMove (the data flag, or the user's Keen Eye,
+    /// Illuminate, Mind's Eye).
+    ignore_evasion: bool,
+    /// Scrappy / Mind's Eye added Fighting and Normal to `move.ignoreImmunity` in ModifyMove: a
+    /// move of either type ignores type immunity.
+    scrappy: bool,
 }
 
 impl PartialEq for ActiveMove {
@@ -74,6 +80,8 @@ impl PartialEq for ActiveMove {
             && self.target == other.target
             && self.move_type == other.move_type
             && self.base_power == other.base_power
+            && self.ignore_evasion == other.ignore_evasion
+            && self.scrappy == other.scrappy
     }
 }
 
@@ -92,6 +100,8 @@ impl std::hash::Hash for ActiveMove {
         self.target.hash(state);
         self.move_type.hash(state);
         self.base_power.hash(state);
+        self.ignore_evasion.hash(state);
+        self.scrappy.hash(state);
     }
 }
 
@@ -174,6 +184,8 @@ pub(crate) fn run_move<const N: usize>(
             target: MoveId::NONE.data().target,
             move_type: MoveId::NONE.data().move_type,
             base_power: 0,
+            ignore_evasion: false,
+            scrappy: false,
         };
         before_move(b, user, &recharge);
         return Ok(MoveStep::Done);
@@ -214,18 +226,19 @@ pub(crate) fn resume_move<const N: usize>(
         }
     };
     use_move_tail(b, user, &mv, result, main_target);
-    run_move_tail(b, user);
+    run_move_tail(b, user, &mv);
     b.active_move = None;
     Ok(MoveStep::Done)
 }
 
 /// The end of Showdown `runMove` after `useMove`: `AfterMove` (a locked move on its last
-/// turn ends and, by fatigue, confuses), then faints.
-fn run_move_tail<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) {
+/// turn ends and, by fatigue, confuses; an Electric move ends Charge), then faints.
+fn run_move_tail<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
     let locked = b.volatile(user, Volatile::LockedMove);
     if locked.active && locked.duration == 1 {
         b.remove_volatile(user, Volatile::LockedMove);
     }
+    ability_events::charge_after_move(b, user, mv.id, mv.move_type);
     b.faint_messages(true);
     b.check_win(None);
 }
@@ -268,9 +281,13 @@ fn run_move_inner<const N: usize>(
         target: id.data().target,
         move_type: id.data().move_type,
         base_power: i32::from(id.data().base_power),
+        ignore_evasion: id.data().ignore_evasion,
+        scrappy: false,
     };
 
     if !before_move(b, user, &mv) {
+        // MoveAborted (the move's type before ModifyType): Charge ends on an Electric move.
+        ability_events::charge_after_move(b, user, mv.id, mv.move_type);
         return Ok(MoveStep::Done);
     }
 
@@ -292,7 +309,7 @@ fn run_move_inner<const N: usize>(
     if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
         return Ok(MoveStep::Suspended(progress));
     }
-    run_move_tail(b, user);
+    run_move_tail(b, user, &mv);
     Ok(MoveStep::Done)
 }
 
@@ -344,6 +361,9 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
             if b.rng.chance(33, 100) {
                 let damage = confusion_damage(b, user);
                 b.damage(user, f64::from(damage), DamageSource::Move);
+                // The self-hit is a single-hit `Move` effect whatever move was chosen (Anger
+                // Shell / Berserk `onDamage`).
+                ability_events::on_damage(b, user, true, false);
                 return false;
             }
         }
@@ -1150,6 +1170,11 @@ fn type_immune<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove, target: SlotR
         IgnoreImmunity::Type(t) if t == ty => return false,
         _ => {}
     }
+    // Scrappy / Mind's Eye: `move.ignoreImmunity['Fighting'] = move.ignoreImmunity['Normal'] =
+    // true` (keyed by the move's type when immunity is checked).
+    if mv.scrappy && matches!(ty, Type::Fighting | Type::Normal) {
+        return false;
+    }
     if ty == Type::Ground {
         return !b.is_grounded(target);
     }
@@ -1183,7 +1208,7 @@ fn accuracy_check<const N: usize>(
     }
     accuracy = modify(accuracy, ability_events::chain(b, accuracy_mods));
     let mut boost = 0i32;
-    if !mv.data.ignore_evasion {
+    if !mv.ignore_evasion {
         boost -= i32::from(b.boost_seen(target, 6, user, false));
     }
     boost += i32::from(b.boost_seen(user, 5, target, true));
@@ -1223,7 +1248,7 @@ fn hit_loop<const N: usize>(
     }
     let mut results = Vec::new();
     if !ended_by_miss {
-        results = spread_move_hit(b, user, mv, &targets)?;
+        results = spread_move_hit(b, user, mv, &targets, progress.total_damage)?;
         progress.hit = hit;
         progress.total_damage += results
             .iter()
@@ -1275,18 +1300,45 @@ fn hit_loop<const N: usize>(
             }
         }
     }
+    // AfterMoveSecondary of Anger Shell / Berserk on the last hit's targets (Showdown's
+    // `targetsCopy`: those the hit did not fail on; after a later multi-accuracy miss, the
+    // previous hit's, which are the targets kept for this hit). The damage each took is its
+    // last `attackedBy` entry, or `move.totalDamage` for a multi-hit move.
+    if !ability_hooks::sheer_force_skips(b, user, mv) {
+        let last_hit: Vec<(SlotRef, i32)> = if ended_by_miss {
+            progress.targets.iter().map(|&t| (t, 0)).collect()
+        } else {
+            progress
+                .targets
+                .iter()
+                .zip(&results)
+                .filter(|(_, r)| r.ok())
+                .map(|(&t, r)| (t, if let Hit::Damage(d) = r { *d } else { 0 }))
+                .collect()
+        };
+        for (t, damage) in last_hit {
+            let damage = if mv.data.multihit.is_some() {
+                total
+            } else {
+                damage
+            };
+            ability_events::after_move_secondary(b, user, t, damage, total);
+        }
+    }
     Ok(HitOutcome::Finished {
         ok: true,
         total_damage: total,
     })
 }
 
-/// Showdown `spreadMoveHit` for the move's own hit.
+/// Showdown `spreadMoveHit` for the move's own hit. `total_before` is `move.totalDamage` so far
+/// (the earlier hits of a multi-hit move).
 fn spread_move_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     targets: &[SlotRef],
+    total_before: i32,
 ) -> Result<Vec<Hit>, TurnError> {
     let data = mv.data;
     // getSpreadDamage: every target's damage is decided before any is dealt.
@@ -1457,7 +1509,7 @@ fn spread_move_hit<const N: usize>(
         })
         .collect();
     if !damaged.is_empty() {
-        damaging_hit(b, user, mv, &damaged);
+        damaging_hit(b, user, mv, &damaged, total_before);
     }
     // AfterHit: Knock Off removes the item of every damaged target.
     if mv.id == moves::KNOCK_OFF && b.alive(user).is_some() {
@@ -1480,22 +1532,27 @@ fn spread_move_hit<const N: usize>(
 /// Showdown `runEvent('DamagingHit', damagedTargets, pokemon, move, damage)` (WORKPLAN F15):
 /// the damaged targets' handlers sorted by `compareLeftToRightOrder` — `onDamagingHitOrder`
 /// (Rough Skin / Iron Barbs 1, Rocky Helmet 2, the rest last), then target index, then a
-/// Pokémon's own order (status, ability, item). A holder that fainted from the hit still acts
-/// (`faintMessages` runs after the move); a handler is skipped once its holder left the slot or
-/// the attacker it hits fainted earlier in the event. Implemented: the `frz` thaw by a Fire
-/// move, Rough Skin, Iron Barbs, Rattled (the ability half), Rocky Helmet. Other
-/// `onDamagingHit` holders are refused by `support`.
+/// Pokémon's own order (status, ability, item), then the attacker's `onSourceDamagingHit`
+/// (collected once per damaged target, after that target's own handlers). A holder that
+/// fainted from the hit still acts (`faintMessages` runs after the move); a handler is skipped
+/// once its holder left the slot or the attacker it hits fainted earlier in the event.
+/// Implemented: the `frz` thaw by a Fire move, Rough Skin, Iron Barbs, Rattled (the ability
+/// half), Rocky Helmet, and the abilities of `ability_hooks::on_damaging_hit` /
+/// `on_source_damaging_hit`. Other `onDamagingHit` holders are refused by `support`.
 fn damaging_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     damaged: &[(SlotRef, i32)],
+    total_before: i32,
 ) {
     #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
     enum Kind {
         Thaw,
         Ability(AbilityId),
         Item(ItemId),
+        /// The attacker's `onSourceDamagingHit` for this target.
+        Source(AbilityId),
     }
     const LAST: u32 = u32::MAX;
     let mut handlers: Vec<(u32, usize, Kind)> = Vec::new();
@@ -1515,11 +1572,18 @@ fn damaging_hit<const N: usize>(
             handlers.push((1, index, Kind::Ability(ability)));
         } else if ability == abilities::RATTLED {
             handlers.push((LAST, index, Kind::Ability(ability)));
+        } else if let Some(order) = ability_hooks::damaging_hit_order(ability) {
+            handlers.push((order, index, Kind::Ability(ability)));
         }
         if mon.item == items::ROCKY_HELMET {
             handlers.push((2, index, Kind::Item(mon.item)));
         } else if mon.item == items::AIR_BALLOON {
             handlers.push((LAST, index, Kind::Item(mon.item)));
+        }
+        // The attacker's own ability is never suppressed by its own move.
+        let source_ability = b.ability(user);
+        if ability_hooks::has_source_damaging_hit(source_ability) {
+            handlers.push((LAST, index, Kind::Source(source_ability)));
         }
     }
     handlers.sort();
@@ -1549,7 +1613,17 @@ fn damaging_hit<const N: usize>(
                     b.boost_by(target, &up, Some(target), BoostEffect::Ability(a));
                 }
             }
-            Kind::Ability(_) => {}
+            Kind::Ability(a) => ability_hooks::on_damaging_hit(
+                b,
+                a,
+                target,
+                user,
+                mv,
+                damaged[index].1,
+                contact,
+                total_before,
+            ),
+            Kind::Source(a) => ability_hooks::on_source_damaging_hit(b, a, target, user, mv),
             Kind::Item(i) if i == items::ROCKY_HELMET => {
                 if contact && b.alive(user).is_some() {
                     let max_hp = f64::from(b.slot_mon(user).expect("alive").max_hp);
@@ -1951,6 +2025,8 @@ fn add_side_condition<const N: usize>(
         _ => 5,
     };
     b.set_side_effect(side, effect, Effect { value: 0, turns });
+    // `runEvent('SideConditionStart', side, source, condition)` (Wind Power).
+    ability_events::side_condition_start(b, side, effect);
     true
 }
 

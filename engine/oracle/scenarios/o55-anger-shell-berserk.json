@@ -1,0 +1,24 @@
+{
+ "description": "O55 Anger Shell and Berserk (Champions onDamage): Machamp's Seismic Toss takes Klawf below half; its Sitrus Berry waits for Anger Shell's AfterMoveSecondary boosts and is eaten at the Update after the action. Sheer Force Mawile's Ember takes Berserk Drampa below half: no AfterMoveSecondary, so the pending check keeps Drampa's Sitrus Berry uneaten.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Klawf", "item": "Sitrus Berry", "ability": "Anger Shell", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50},
+   {"species": "Drampa", "item": "Sitrus Berry", "ability": "Berserk", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Swords Dance"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Mawile", "item": "", "ability": "Sheer Force", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Ember"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1":{"Klawf":{"hp":120},"Drampa":{"hp":93}}},
+ "turn": {"p1": "move swordsdance, move swordsdance", "p2": "move seismictoss 1, move ember 2"}
+}

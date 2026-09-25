@@ -1,0 +1,23 @@
+{
+ "description": "O55 Sand Spit and Seed Sower: Seismic Tosses set sand (the holder's Smooth Rock: 8 turns) and Grassy Terrain; the residual deals sand damage and Grassy heal.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Sandaconda", "item": "Smooth Rock", "ability": "Sand Spit", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50},
+   {"species": "Arboliva", "item": "", "ability": "Seed Sower", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move swordsdance, move swordsdance", "p2": "move seismictoss 1, move seismictoss 2"}
+}

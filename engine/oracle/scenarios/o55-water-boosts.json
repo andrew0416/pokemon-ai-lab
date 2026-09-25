@@ -1,0 +1,23 @@
+{
+ "description": "O55 Steam Engine and Water Compaction: Water Guns raise Coalossal's Spe by 6 and Palossand's Def by 2 before they act.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Coalossal", "item": "", "ability": "Steam Engine", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50},
+   {"species": "Palossand", "item": "", "ability": "Water Compaction", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Pelipper", "item": "", "ability": "Rain Dish", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Water Gun"], "level": 50},
+   {"species": "Blastoise", "item": "", "ability": "Torrent", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Water Gun"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move swordsdance, move swordsdance", "p2": "move watergun 1, move watergun 2"}
+}

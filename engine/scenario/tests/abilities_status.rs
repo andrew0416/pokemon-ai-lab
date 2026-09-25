@@ -7,7 +7,7 @@ mod common;
 use common::{assert_exact_parity, fixture, start};
 use lab_engine::rules::Ruleset;
 use lab_engine::state::Status;
-use lab_engine::turn::{enumerate_turn, TurnError};
+use lab_engine::turn::enumerate_turn;
 use lab_scenario::scenario_choices;
 
 // ---- O50 residual abilities ----------------------------------------------------------------
@@ -94,23 +94,28 @@ fn leaf_guard_and_sun_freeze_immunity_match_showdown() {
     assert_exact_parity("o65-leaf-guard-sun");
 }
 
-/// Showdown's `Update` event would cure a Water Veil holder's burn after the first action; the
-/// engine has no `Update` event, so it refuses the state instead of running it uncured.
+/// A Water Veil holder that starts the turn burned is cured at the first Update (after the
+/// first action, `abilities::on_update`), so no outcome leaves it burned or burn-damaged.
+/// (Showdown's patch cannot burn a Water Veil holder, so there is no oracle fixture; the
+/// Update timing is checked by `o58-update-cures`.)
 #[test]
-fn status_that_an_ability_would_cure_on_update_is_refused() {
+fn status_that_an_ability_cures_on_update_is_cured() {
     let fixture = fixture("o65-status-block");
     let (loaded, position) = start("o65-status-block", &fixture);
     let mut state = position.state;
     let choices = scenario_choices(&loaded, &state).unwrap();
+    let two = lab_engine::state::SideId::Two;
     let floatzel = state
-        .side(lab_engine::state::SideId::Two)
+        .side(two)
         .party
         .iter()
         .position(|p| p.species.data().name == "Floatzel")
         .unwrap();
-    state.side_mut(lab_engine::state::SideId::Two).party[floatzel].status = Status::Burn;
-    match enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices) {
-        Err(TurnError::Unsupported(why)) => assert!(why.contains("Water Veil"), "{why}"),
-        other => panic!("expected Unsupported, got {other:?}"),
+    state.side_mut(two).party[floatzel].status = Status::Burn;
+    let outcomes = enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices).unwrap();
+    for outcome in &outcomes {
+        state.apply(&outcome.instructions);
+        assert_eq!(state.side(two).party[floatzel].status, Status::None);
+        state.reverse(&outcome.instructions);
     }
 }

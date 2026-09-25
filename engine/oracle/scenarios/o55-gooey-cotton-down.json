@@ -1,0 +1,23 @@
+{
+ "description": "O55 Cotton Down and Gooey: Corviknight hits Cotton Down Eldegoss (every other active Spe -1: Mirror Armor reflects it onto Eldegoss, Defiant Kingambit gains +2 Atk); Eldegoss hits its Gooey ally Goodra (Eldegoss Spe -1); Kingambit's Protective Pads stop Gooey.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Goodra", "item": "", "ability": "Gooey", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Eldegoss", "item": "", "ability": "Cotton Down", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Corviknight", "item": "", "ability": "Mirror Armor", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Kingambit", "item": "Protective Pads", "ability": "Defiant", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move seismictoss 2, move seismictoss -1", "p2": "move seismictoss 2, move seismictoss 1"}
+}

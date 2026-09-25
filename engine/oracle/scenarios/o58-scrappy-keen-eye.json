@@ -1,0 +1,24 @@
+{
+ "description": "O58 Scrappy and Keen Eye: Scrappy Kangaskhan (its Attack kept against Arcanine's Intimidate at the start) Tackles Ghost-type Gengar; Keen Eye Pidgeot ignores Arcanine's +1 evasion (Double Team in the setup turn) and Gengar's Sand Attack cannot lower its accuracy.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Kangaskhan", "item": "", "ability": "Scrappy", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Tackle", "Protect"], "level": 50},
+   {"species": "Pidgeot", "item": "", "ability": "Keen Eye", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Tackle", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Levitate", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Sand Attack", "Swords Dance"], "level": 50},
+   {"species": "Arcanine", "item": "", "ability": "Intimidate", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Double Team", "Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [["move protect, move protect","move swordsdance, move doubleteam"]],
+ "turn": {"p1": "move tackle 1, move tackle 2", "p2": "move sandattack 2, move seismictoss 1"}
+}

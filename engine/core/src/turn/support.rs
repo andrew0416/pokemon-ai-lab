@@ -11,10 +11,10 @@ use crate::dex::{
     SelfDestruct, SelfSwitch, Type, NO_BOOSTS,
 };
 use crate::field::{FieldEffect, SideEffect, Weather, FIELD_EFFECT_COUNT, SIDE_EFFECT_COUNT};
-use crate::state::{SideId, SlotRef, State, Status};
+use crate::state::{SideId, SlotRef, State};
 use crate::volatile::Volatile;
 
-use super::battle::{cured_on_update, weather_from};
+use super::battle::weather_from;
 use super::order::fractional_priority_tenths;
 
 /// Moves with Showdown callbacks that are implemented, with the exact callback list.
@@ -480,8 +480,8 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         abilities::HEATPROOF,
         &["onDamage", "onSourceModifyAtk", "onSourceModifySpA"],
     ),
-    // `onSetStatus` in `Battle::try_set_status`; `onUpdate` (cure a burn) can only act on a
-    // burned holder, which `check_state` rejects and `onSetStatus` prevents.
+    // `onSetStatus` in `Battle::try_set_status`; `onUpdate` (cure a burn) in
+    // `abilities::on_update`.
     (
         abilities::WATER_BUBBLE,
         &[
@@ -522,7 +522,7 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // Extra PP in `moves::deduct_pressure_pp`; `onStart` only announces the ability.
     (abilities::PRESSURE, &["onDeductPP", "onStart"]),
     // Status immunities (`Battle::set_status_blocked`, `status_immune`,
-    // `add_volatile_blocked`). `onUpdate` cures are unreachable: see `cured_on_update`.
+    // `add_volatile_blocked`); the `onUpdate` cures in `abilities::on_update`.
     (abilities::WATER_VEIL, &["onSetStatus", "onUpdate"]),
     (abilities::IMMUNITY, &["onSetStatus", "onUpdate"]),
     (
@@ -583,6 +583,68 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // `onTryAddVolatile` (flinch) in `Battle::add_volatile_blocked`; `onTryBoost` (Intimidate
     // only) in the Intimidate start effect (`switching`).
     (abilities::INNER_FOCUS, &["onTryAddVolatile", "onTryBoost"]),
+    // DamagingHit abilities (`moves::ability_hooks::on_damaging_hit`, O55). Wind Power's
+    // `onSideConditionStart` in `abilities::side_condition_start`; Thermal Exchange's
+    // `onSetStatus` in `Battle::set_status_blocked`, its `onUpdate` cure in
+    // `abilities::on_update`.
+    (abilities::STATIC, &["onDamagingHit"]),
+    (abilities::FLAME_BODY, &["onDamagingHit"]),
+    (abilities::POISON_POINT, &["onDamagingHit"]),
+    (abilities::EFFECT_SPORE, &["onDamagingHit"]),
+    (abilities::STAMINA, &["onDamagingHit"]),
+    (abilities::WEAK_ARMOR, &["onDamagingHit"]),
+    (abilities::COTTON_DOWN, &["onDamagingHit"]),
+    (abilities::GOOEY, &["onDamagingHit"]),
+    (abilities::TANGLING_HAIR, &["onDamagingHit"]),
+    (abilities::SAND_SPIT, &["onDamagingHit"]),
+    (abilities::SEED_SOWER, &["onDamagingHit"]),
+    (abilities::ELECTROMORPHOSIS, &["onDamagingHit"]),
+    (abilities::STEAM_ENGINE, &["onDamagingHit"]),
+    (abilities::JUSTIFIED, &["onDamagingHit"]),
+    (abilities::WATER_COMPACTION, &["onDamagingHit"]),
+    (abilities::AFTERMATH, &["onDamagingHit"]),
+    (abilities::INNARDS_OUT, &["onDamagingHit"]),
+    (
+        abilities::WIND_POWER,
+        &["onDamagingHit", "onSideConditionStart"],
+    ),
+    (
+        abilities::THERMAL_EXCHANGE,
+        &["onDamagingHit", "onSetStatus", "onUpdate"],
+    ),
+    // The attacker's `onSourceDamagingHit` (`moves::ability_hooks::on_source_damaging_hit`, O56).
+    (abilities::POISON_TOUCH, &["onSourceDamagingHit"]),
+    (abilities::TOXIC_CHAIN, &["onSourceDamagingHit"]),
+    // `onDamage` in `Battle::damage`, `onAfterMoveSecondary` in `moves::hit_loop`,
+    // `onTryEatItem` in the berries' eating (`abilities`).
+    (
+        abilities::ANGER_SHELL,
+        &["onAfterMoveSecondary", "onDamage", "onTryEatItem"],
+    ),
+    (
+        abilities::BERSERK,
+        &["onAfterMoveSecondary", "onDamage", "onTryEatItem"],
+    ),
+    // O58. Own Tempo: `onTryAddVolatile` (confusion) in `Battle::add_volatile_blocked`,
+    // `onUpdate` (confusion cure) in `abilities::on_update`, `onTryBoost` (Intimidate) in
+    // `Battle::boost_by`, `onHit` only logs. Oblivious: `onTryHit` in
+    // `moves::ability_hooks::on_try_hit`, `onTryBoost` in `Battle::boost_by`; `onImmunity`
+    // ('attract') and `onUpdate` (attract, taunt) only act on volatiles that do not exist, and an
+    // ability-ignoring Attract / Captivate / Taunt against it is refused
+    // (`ability_hooks::oblivious_bypassed`). Scrappy, Keen Eye, Illuminate, Mind's Eye:
+    // `onModifyMove` in `moves::ability_hooks::on_modify_move`, `onTryBoost` in `Battle::boost_by`.
+    (
+        abilities::OWN_TEMPO,
+        &["onHit", "onTryAddVolatile", "onTryBoost", "onUpdate"],
+    ),
+    (
+        abilities::OBLIVIOUS,
+        &["onImmunity", "onTryBoost", "onTryHit", "onUpdate"],
+    ),
+    (abilities::SCRAPPY, &["onModifyMove", "onTryBoost"]),
+    (abilities::KEEN_EYE, &["onModifyMove", "onTryBoost"]),
+    (abilities::ILLUMINATE, &["onModifyMove", "onTryBoost"]),
+    (abilities::MINDS_EYE, &["onModifyMove", "onTryBoost"]),
     // `moves::ability_hooks`: ModifyMove, ModifySecondaries; Sheer Force's `onBasePower` in
     // `abilities::base_power_handlers`.
     (abilities::SHIELD_DUST, &["onModifySecondaries"]),
@@ -834,12 +896,6 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
             if mon.ability == abilities::TRACE {
                 return Err(format!("{name}: Trace still seeking a target"));
             }
-            if cured_on_update(mon.ability, mon.status) {
-                return Err(format!(
-                    "{name}: {} would cure its status on Update (not implemented)",
-                    mon.ability.data().name
-                ));
-            }
             if !item_supported_on_field(mon.item) {
                 return Err(format!(
                     "{name}: item {} ({:?})",
@@ -859,19 +915,6 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
             let slot_state = state.slot(r);
             if slot_state.substitute_hp != 0 || slot_state.dynamax.is_active() {
                 return Err(format!("{name}: substitute or Dynamax"));
-            }
-        }
-        // Water Bubble's `onUpdate` cures its holder's burn at the next Update (for a bench
-        // member: when it switches in). The Update event is not implemented; its SetStatus
-        // block keeps a holder from being burned during a turn, so only a burned holder at the
-        // start can trigger it.
-        for mon in s.party.iter().filter(|m| m.hp > 0) {
-            let bubble = [mon.ability, mon.base_ability].contains(&abilities::WATER_BUBBLE);
-            if bubble && mon.status == Status::Burn {
-                return Err(format!(
-                    "{}: burned with Water Bubble (onUpdate)",
-                    mon.species.data().name
-                ));
             }
         }
     }
@@ -913,24 +956,6 @@ mod tests {
             moves::DETECT.data().volatile_status,
             moves::PROTECT.data().volatile_status
         );
-    }
-
-    /// No supported move ignores abilities by its data and inflicts a status. Such a move (or a
-    /// Mold Breaker user's) against an ability whose `onUpdate` would cure the status is refused
-    /// in ModifyMove (`moves::ability_hooks`); this keeps the data-flag case from arising
-    /// unnoticed.
-    #[test]
-    fn no_supported_move_ignores_abilities_and_sets_a_status() {
-        for id in MoveId::all() {
-            let m = id.data();
-            if !m.ignore_ability || move_unsupported(id).is_some() {
-                continue;
-            }
-            assert_eq!(m.status, crate::state::Status::None, "{id:?}");
-            for s in m.secondaries {
-                assert_eq!(s.status, crate::state::Status::None, "{id:?}");
-            }
-        }
     }
 
     /// Sap Sipper's `onAllyTryHitSide` raises the holder's Attack when an ally uses a Grass move
