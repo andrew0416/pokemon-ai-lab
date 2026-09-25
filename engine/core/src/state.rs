@@ -200,6 +200,10 @@ impl Forme {
 pub struct Slot {
     /// Index into the side's party; `None` for an empty slot (fainted, not yet replaced).
     pub party_index: Option<u8>,
+    /// The party member that fainted here and has not been replaced (Showdown keeps it in
+    /// `side.active[pos]` with `isActive = false`): it gets `fnt` at the end of the turn and
+    /// its status clears when a replacement switches in. `None` while the slot is occupied.
+    pub fainted_occupant: Option<u8>,
     pub boosts: [i8; BOOST_COUNT],
     pub volatiles: Volatiles,
     /// Showdown `lastMove`: the last move this Pokémon used since switching in.

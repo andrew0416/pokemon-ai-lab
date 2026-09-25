@@ -1,0 +1,55 @@
+[
+ {
+  "species": "Gyarados",
+  "item": "Life Orb",
+  "ability": "Intimidate",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 17,
+   "spe": 17
+  },
+  "moves": [
+   "Waterfall",
+   "Crunch",
+   "Dragon Dance",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Ribombee",
+  "item": "Leftovers",
+  "ability": "Honey Gather",
+  "nature": "Timid",
+  "evs": {
+   "spa": 32,
+   "spe": 32
+  },
+  "moves": [
+   "Rage Powder",
+   "Moonblast",
+   "Quiver Dance",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Pelipper",
+  "item": "Damp Rock",
+  "ability": "Drizzle",
+  "nature": "Modest",
+  "evs": {
+   "hp": 32,
+   "spa": 32,
+   "def": 2
+  },
+  "moves": [
+   "Hurricane",
+   "Surf",
+   "Tailwind",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

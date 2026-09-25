@@ -99,7 +99,8 @@ fn leaf_guard_and_sun_freeze_immunity_match_showdown() {
 #[test]
 fn status_that_an_ability_would_cure_on_update_is_refused() {
     let fixture = fixture("o65-status-block");
-    let (loaded, mut state) = start("o65-status-block", &fixture);
+    let (loaded, position) = start("o65-status-block", &fixture);
+    let mut state = position.state;
     let choices = scenario_choices(&loaded, &state).unwrap();
     let floatzel = state
         .side(lab_engine::state::SideId::Two)

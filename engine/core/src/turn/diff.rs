@@ -205,6 +205,13 @@ fn slot_changes(out: &mut Vec<Instruction>, r: SlotRef, a: &Slot, b: &Slot) {
             new: b.move_actions,
         });
     }
+    if b.fainted_occupant.is_some() {
+        out.push(Instruction::SetFaintedOccupant {
+            slot: r,
+            old: None,
+            new: b.fainted_occupant,
+        });
+    }
     debug_assert!(
         b.substitute_hp == 0 && !b.dynamax.is_active(),
         "no instruction sets these yet"
@@ -275,6 +282,7 @@ mod tests {
         };
         to.active_mut(r).unwrap().hp = 0;
         to.slot_mut(r).party_index = None;
+        to.slot_mut(r).fainted_occupant = Some(1);
         let me = SlotRef {
             side: SideId::One,
             slot: 0,

@@ -44,8 +44,6 @@ pub(crate) struct Battle<'a, const N: usize> {
     pub rng: &'a mut Chooser,
     /// Showdown `faintQueue`: Pokémon at 0 HP not yet processed, in the order they fell.
     faint_queue: Vec<(PokemonRef, SlotRef)>,
-    /// Pokémon that fainted in an active position this turn (`checkFainted` marks them).
-    pub fainted_positions: Vec<(SlotRef, PokemonRef)>,
     /// The move in progress, if any (cleared when `runMove` ends).
     pub active_move: Option<ActiveMoveRef>,
 }
@@ -57,7 +55,6 @@ impl<'a, const N: usize> Battle<'a, N> {
             log: Vec::new(),
             rng,
             faint_queue: Vec::new(),
-            fainted_positions: Vec::new(),
             active_move: None,
         }
     }
@@ -319,7 +316,11 @@ impl<'a, const N: usize> Battle<'a, N> {
                 previous,
                 party_index: None,
             });
-            self.fainted_positions.push((slot, pokemon));
+            self.apply(Instruction::SetFaintedOccupant {
+                slot,
+                old: None,
+                new: Some(pokemon.party),
+            });
             last = Some(pokemon.side);
         }
         check_win && self.check_win(last)

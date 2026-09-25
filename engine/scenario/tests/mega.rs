@@ -32,7 +32,8 @@ fn mega_under_own_sand_matches_showdown_exactly() {
 #[test]
 fn mega_evolution_is_permanent_and_spends_the_side_budget() {
     let fixture = common::fixture("mega-tyranitar");
-    let (loaded, mut state) = common::start("mega-tyranitar", &fixture);
+    let (loaded, position) = common::start("mega-tyranitar", &fixture);
+    let mut state = position.state;
     let choices = scenario_choices(&loaded, &state).unwrap();
     let outcomes = enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices).unwrap();
     assert!(!outcomes.is_empty());

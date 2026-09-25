@@ -33,7 +33,7 @@ use crate::state::{Pokemon, SlotRef};
 
 use super::battle::{cured_on_update, Battle};
 use super::support::ability_supported_on_field;
-use super::switching::{run_start_effect, start_effect, switch_in_supported};
+use super::switching::{start_ability, switch_in_supported};
 use super::TurnError;
 
 /// The Mega forme `mon` evolves into, if the turn engine can simulate the change: the forme
@@ -119,8 +119,7 @@ pub(crate) fn run_mega_evo<const N: usize>(
         gimmick: Gimmick::Mega,
     });
     // setAbility → the new ability's `Start`.
-    let effect = start_effect(new.ability).expect("checked by mega_target");
-    run_start_effect(b, slot, effect);
+    start_ability(b, slot, new.ability)?;
     // AfterMega: no supported handler.
     Ok(())
 }

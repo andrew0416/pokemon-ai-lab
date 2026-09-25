@@ -1,0 +1,56 @@
+[
+ {
+  "species": "Excadrill",
+  "item": "Leftovers",
+  "ability": "Sand Rush",
+  "nature": "Jolly",
+  "evs": {
+   "hp": 4,
+   "atk": 30,
+   "spe": 32
+  },
+  "moves": [
+   "Iron Head",
+   "High Horsepower",
+   "Rock Slide",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Charizard",
+  "item": "Charcoal",
+  "ability": "Solar Power",
+  "nature": "Timid",
+  "evs": {
+   "hp": 4,
+   "spa": 30,
+   "spe": 32
+  },
+  "moves": [
+   "Flamethrower",
+   "Dragon Dance",
+   "Air Slash",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Abomasnow",
+  "item": "Never-Melt Ice",
+  "ability": "Snow Warning",
+  "nature": "Quiet",
+  "evs": {
+   "hp": 32,
+   "spa": 19,
+   "spe": 15
+  },
+  "moves": [
+   "Blizzard",
+   "Wood Hammer",
+   "Ice Shard",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

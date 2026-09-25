@@ -1,0 +1,22 @@
+{
+ "description": "Turn 1 (setup): Excadrill's Iron Head KOs Ribombee (after its Quiver Dance) and Gyarados' Life Orb Waterfall KOs Charizard (after its Dragon Dance), deterministically. The decision is the replacement: Abomasnow (Snow Warning) and Pelipper (Drizzle + Damp Rock) come in at equal raw Speed 85, so their start handlers run in either order (snow or 8-turn rain remains, 1/2 each); the fainted Pokémon lose fnt and the turn counter advances.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "replace.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "replace.p2.json",
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move ironhead 2, move dragondance",
+   "move waterfall 2, move quiverdance"
+  ]
+ ],
+ "turn": {
+  "p1": "switch 3",
+  "p2": "switch 3"
+ }
+}

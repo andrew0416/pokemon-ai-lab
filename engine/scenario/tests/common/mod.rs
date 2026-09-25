@@ -11,11 +11,10 @@ use std::path::PathBuf;
 
 use serde_json::Value;
 
-use lab_engine::rules::Ruleset;
-use lab_engine::turn::enumerate_turn;
 use lab_engine::Doubles;
 use lab_scenario::{
-    canonical_json, load_scenario_file, scenario_choices, scenario_states, LoadedScenario,
+    canonical_json, load_scenario_file, run_decision, scenario_decision, scenario_positions,
+    LoadedScenario, Position,
 };
 
 pub fn engine_dir() -> PathBuf {
@@ -33,22 +32,23 @@ pub fn fixture(name: &str) -> Value {
     serde_json::from_str(&text).unwrap()
 }
 
-/// The scenario and the initial state matching the fixture's `before`.
-pub fn start(name: &str, fixture: &Value) -> (LoadedScenario, Doubles) {
+/// The scenario and the position (after switch-ins, setup turns and patch) matching the
+/// fixture's `before`.
+pub fn start(name: &str, fixture: &Value) -> (LoadedScenario, Position) {
     let loaded =
         load_scenario_file(engine_dir().join(format!("oracle/scenarios/{name}.json"))).unwrap();
     let before = key(&fixture["before"]);
-    let state = scenario_states(&loaded)
+    let position = scenario_positions(&loaded)
         .unwrap()
         .into_iter()
-        .map(|o| o.state)
-        .find(|s| {
-            let json: Value = serde_json::from_str(&canonical_json(s, &loaded.meta).unwrap())
-                .expect("valid JSON");
+        .find(|p| {
+            let json: Value =
+                serde_json::from_str(&canonical_json(&p.state, &loaded.meta).unwrap())
+                    .expect("valid JSON");
             key(&json) == before
         })
-        .expect("one initial state matches the oracle's `before`");
-    (loaded, state)
+        .expect("one position matches the oracle's `before`");
+    (loaded, position)
 }
 
 /// Engine outcomes as canonical key → probability.
@@ -82,9 +82,10 @@ pub fn oracle_distribution(fixture: &Value) -> HashMap<String, f64> {
 /// Exact parity of one scenario's turn with its oracle fixture of the same name.
 pub fn assert_exact_parity(name: &str) {
     let fixture = fixture(name);
-    let (loaded, mut state) = start(name, &fixture);
-    let choices = scenario_choices(&loaded, &state).unwrap();
-    let outcomes = enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices).unwrap();
+    let (loaded, position) = start(name, &fixture);
+    let mut state = position.state.clone();
+    let decision = scenario_decision(&loaded, &position).unwrap();
+    let outcomes = run_decision(&mut state, &decision).unwrap();
     let engine = distribution(&loaded, &mut state, &outcomes);
     let oracle = oracle_distribution(&fixture);
     assert_eq!(engine.len(), oracle.len(), "{name}: number of outcomes");

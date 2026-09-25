@@ -24,7 +24,8 @@ fn hypnosis_under_gravity_matches_showdown_exactly() {
 #[test]
 fn sampling_agrees_with_enumeration() {
     let fixture = fixture("single-hit");
-    let (loaded, mut state) = start("single-hit", &fixture);
+    let (loaded, position) = start("single-hit", &fixture);
+    let mut state = position.state;
     let choices = scenario_choices(&loaded, &state).unwrap();
     let exact = enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices).unwrap();
     let exact = distribution(&loaded, &mut state, &exact);

@@ -27,6 +27,7 @@ mod switching;
 
 use std::collections::HashMap;
 use std::fmt;
+use std::hash::Hash;
 
 use crate::action::{JointAction, SlotAction};
 use crate::dex::{moves as move_ids, MoveFlags, MoveId};
@@ -41,6 +42,9 @@ use branch::Chooser;
 use order::{ORDER_MEGA, ORDER_MOVE, ORDER_SWITCH};
 
 pub use moves::{takes_target, valid_target_loc};
+pub use switching::{
+    item_start_handler, species_start_handler, start_handler, switch_in_supported,
+};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum TurnError {
@@ -86,38 +90,236 @@ pub fn enumerate_turn<const N: usize>(
     choices: [JointAction<N>; 2],
 ) -> Result<Vec<Outcome>, TurnError> {
     check_turn(state, ruleset, &choices)?;
+    let start = Pending {
+        queue: initial_queue(state, &choices),
+        done: false,
+    };
+    enumerate_stages(state, start, |b, pending| {
+        run_stage(b, pending)?;
+        Ok(pending.done)
+    })
+}
 
+/// `samples` random playthroughs of the turn (Monte Carlo), merged by end state; each
+/// outcome's probability is its frequency. For cross-checking turns whose exact distribution
+/// is too large to enumerate. Deterministic for a given `seed`.
+pub fn sample_turn<const N: usize>(
+    state: &mut State<N>,
+    ruleset: Ruleset,
+    choices: [JointAction<N>; 2],
+    samples: usize,
+    seed: u64,
+) -> Result<Vec<Outcome>, TurnError> {
+    check_turn(state, ruleset, &choices)?;
+    let start = Pending {
+        queue: initial_queue(state, &choices),
+        done: false,
+    };
+    sample_stages(state, samples, seed, start, |b, pending| {
+        run_stage(b, pending)?;
+        Ok(pending.done)
+    })
+}
+
+/// Every outcome of the battle start (Showdown `runAction('start')` → `switchIn` for every
+/// lead → one batched `runSwitch`): the leads' start handlers in Speed order, Speed ties
+/// uniformly at random, Trace's target uniformly at random. `state` must hold the leads in
+/// their slots with nothing started yet; it is left unchanged.
+pub fn enumerate_start<const N: usize>(state: &mut State<N>) -> Result<Vec<Outcome>, TurnError> {
+    let leads: Vec<SlotRef> = State::<N>::slot_refs()
+        .filter(|&r| state.active_ref(r).is_some())
+        .collect();
+    enumerate_stages(state, (), |b, _| {
+        for &slot in &leads {
+            let pokemon = b.occupant(slot).expect("a lead");
+            if let Some(why) = switching_problem_at_start(b, pokemon) {
+                return Err(b.unsupported(why));
+            }
+        }
+        switching::run_switch_in(b, &leads)?;
+        Ok(true)
+    })
+}
+
+fn switching_problem_at_start<const N: usize>(
+    b: &Battle<'_, N>,
+    pokemon: PokemonRef,
+) -> Option<String> {
+    let mon = b.mon(pokemon);
+    let name = mon.species.data().name;
+    if let Some(handler) = switching::item_start_handler(mon.item) {
+        return Some(format!(
+            "{name}: item {} switch-in handler {handler}",
+            mon.item.data().name
+        ));
+    }
+    if let Some(handler) = switching::species_start_handler(mon.species) {
+        return Some(format!("{name}: species switch-in handler {handler}"));
+    }
+    if !switching::switch_in_supported(mon.ability) {
+        return Some(format!(
+            "{name}: ability {} switch-in handler ({:?})",
+            mon.ability.data().name,
+            mon.ability.data().handlers
+        ));
+    }
+    None
+}
+
+/// The replacement decision after faints (Showdown `request: switch` → `instaswitch` actions →
+/// one batched `runSwitch` → `endTurn`): every outcome of both sides sending in `choices`
+/// (for each side, per active slot, the party index that fills it, `None` where nothing
+/// changes). A side that must replace gives exactly as many switches as it can (empty slots,
+/// bounded by its bench); a side that need not gives none. The fainted occupants lose `fnt`,
+/// the newcomers' start handlers run in Speed order (ties uniformly at random), and the turn
+/// counter advances. `state` is left unchanged.
+pub fn enumerate_replacements<const N: usize>(
+    state: &mut State<N>,
+    choices: [[Option<u8>; N]; 2],
+) -> Result<Vec<Outcome>, TurnError> {
+    check_replacements(state, &choices)?;
+    enumerate_stages(state, (), |b, _| {
+        run_replacements(b, &choices)?;
+        Ok(true)
+    })
+}
+
+/// Validates a replacement decision (see [`enumerate_replacements`]).
+fn check_replacements<const N: usize>(
+    state: &State<N>,
+    choices: &[[Option<u8>; N]; 2],
+) -> Result<(), TurnError> {
+    if state.result.is_over() {
+        return Err(TurnError::BattleOver);
+    }
+    let mut any = false;
+    for (side, choice) in [SideId::One, SideId::Two].into_iter().zip(choices) {
+        let s = state.side(side);
+        let bench: Vec<u8> = (0..s.party.len() as u8)
+            .filter(|&i| {
+                s.party[i as usize].hp > 0
+                    && !s.slots.iter().any(|slot| slot.party_index == Some(i))
+            })
+            .collect();
+        let empty = s
+            .slots
+            .iter()
+            .filter(|slot| slot.party_index.is_none())
+            .count();
+        let required = empty.min(bench.len());
+        let mut given = Vec::new();
+        for (i, &c) in choice.iter().enumerate() {
+            let invalid = |reason: String| TurnError::InvalidChoice {
+                side,
+                slot: i as u8,
+                reason,
+            };
+            let Some(party_index) = c else {
+                continue;
+            };
+            if s.slots[i].party_index.is_some() {
+                return Err(invalid("the slot is occupied".into()));
+            }
+            if !bench.contains(&party_index) || given.contains(&party_index) {
+                return Err(invalid(format!("cannot switch to party {party_index}")));
+            }
+            given.push(party_index);
+        }
+        if given.len() != required {
+            return Err(TurnError::InvalidChoice {
+                side,
+                slot: 0,
+                reason: format!("{required} replacements needed, {} given", given.len()),
+            });
+        }
+        any |= required > 0;
+    }
+    if !any {
+        return Err(TurnError::InvalidChoice {
+            side: SideId::One,
+            slot: 0,
+            reason: "no replacement is pending".into(),
+        });
+    }
+    Ok(())
+}
+
+/// The replacement stage: `instaswitch` actions in order (the fainted occupant's Speed,
+/// ties uniformly at random), then the newcomers' batched `runSwitch`, then `endTurn`.
+fn run_replacements<const N: usize>(
+    b: &mut Battle<'_, N>,
+    choices: &[[Option<u8>; N]; 2],
+) -> Result<(), TurnError> {
+    let mut switches: Vec<(SlotRef, u8, i32)> = Vec::new();
+    for (side, choice) in [SideId::One, SideId::Two].into_iter().zip(choices) {
+        for (i, &c) in choice.iter().enumerate() {
+            let Some(party_index) = c else {
+                continue;
+            };
+            let slot = SlotRef {
+                side,
+                slot: i as u8,
+            };
+            let speed = match b.state.slot(slot).fainted_occupant {
+                Some(party) => switching::fainted_action_speed(b, PokemonRef { side, party }),
+                // An empty slot with no fainted occupant (a scenario built by hand): speed 1
+                // like Showdown's pokemon-less actions.
+                None => 1,
+            };
+            switches.push((slot, party_index, speed));
+        }
+    }
+    let mut newcomers = Vec::with_capacity(switches.len());
+    while !switches.is_empty() {
+        let best = switches.iter().map(|s| s.2).max().expect("non-empty");
+        let tied: Vec<usize> = (0..switches.len())
+            .filter(|&i| switches[i].2 == best)
+            .collect();
+        let pick = if tied.len() == 1 {
+            tied[0]
+        } else {
+            tied[b.rng.uniform(tied.len())]
+        };
+        let (slot, party_index, _) = switches.remove(pick);
+        switching::switch_in(b, slot, party_index, true)?;
+        newcomers.push(slot);
+    }
+    switching::run_switch_in(b, &newcomers)?;
+    residual::end_turn(b);
+    Ok(())
+}
+
+/// Runs `stage` repeatedly from `start` until it reports completion, merging identical
+/// (state, pending) pairs after every stage and enumerating every random path within a stage
+/// by replay. Returns the merged end states as outcomes; `state` is left unchanged.
+fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
+    state: &mut State<N>,
+    start: P,
+    mut stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<bool, TurnError>,
+) -> Result<Vec<Outcome>, TurnError> {
     // The turn runs in stages (one action, or the end of turn). After every stage identical
     // (state, remaining turn) pairs merge, so the work grows with the number of distinct
     // intermediate positions, not with the number of random paths. Within a stage every
     // random path is enumerated by replay.
-    let start = Pending {
-        queue: initial_queue(state, &choices),
-        fainted: Vec::new(),
-        done: false,
-    };
-    let mut frontier: Vec<(State<N>, Pending, f64)> = vec![(state.clone(), start, 1.0)];
+    let mut frontier: Vec<(State<N>, P, f64)> = vec![(state.clone(), start, 1.0)];
     let mut finished: Vec<(State<N>, f64)> = Vec::new();
     let mut finished_index: HashMap<State<N>, usize> = HashMap::new();
-    let mut chooser = Chooser::new();
     while !frontier.is_empty() {
         // Value: (first-reached index, probability); keeps the output order deterministic.
-        let mut next: HashMap<(State<N>, Pending), (usize, f64)> = HashMap::new();
+        let mut next: HashMap<(State<N>, P), (usize, f64)> = HashMap::new();
         for (mut work, pending, probability) in frontier {
-            chooser = Chooser::new();
+            let mut chooser = Chooser::new();
             loop {
                 chooser.begin_run();
                 let mut after = pending.clone();
                 let (result, log) = {
                     let mut b = Battle::new(&mut work, &mut chooser);
-                    b.fainted_positions = std::mem::take(&mut after.fainted);
-                    let result = run_stage(&mut b, &mut after);
-                    after.fainted = std::mem::take(&mut b.fainted_positions);
+                    let result = stage(&mut b, &mut after);
                     (result, std::mem::take(&mut b.log))
                 };
-                result?;
+                let done = result?;
                 let p = probability * chooser.probability();
-                if after.done {
+                if done {
                     match finished_index.get(&work) {
                         Some(&i) => finished[i].1 += p,
                         None => {
@@ -149,7 +351,6 @@ pub fn enumerate_turn<const N: usize>(
             .map(|((s, q), (_, p))| (s, q, p))
             .collect();
     }
-    drop(chooser);
 
     Ok(finished
         .into_iter()
@@ -160,36 +361,27 @@ pub fn enumerate_turn<const N: usize>(
         .collect())
 }
 
-/// `samples` random playthroughs of the turn (Monte Carlo), merged by end state; each
-/// outcome's probability is its frequency. For cross-checking turns whose exact distribution
-/// is too large to enumerate. Deterministic for a given `seed`.
-pub fn sample_turn<const N: usize>(
+/// Monte Carlo counterpart of [`enumerate_stages`].
+fn sample_stages<const N: usize, P: Clone>(
     state: &mut State<N>,
-    ruleset: Ruleset,
-    choices: [JointAction<N>; 2],
     samples: usize,
     seed: u64,
+    start: P,
+    mut stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<bool, TurnError>,
 ) -> Result<Vec<Outcome>, TurnError> {
-    check_turn(state, ruleset, &choices)?;
     let mut chooser = Chooser::sampler(seed);
     let mut finished: Vec<(State<N>, f64)> = Vec::new();
     let mut index: HashMap<State<N>, usize> = HashMap::new();
     let weight = 1.0 / samples as f64;
-    let start = state.clone();
+    let begin = state.clone();
     for _ in 0..samples {
-        let mut pending = Pending {
-            queue: initial_queue(state, &choices),
-            fainted: Vec::new(),
-            done: false,
-        };
+        let mut pending = start.clone();
         let mut log = Vec::new();
-        let mut result = Ok(());
-        while !pending.done && result.is_ok() {
+        let mut result = Ok(false);
+        while matches!(result, Ok(false)) {
             chooser.begin_run();
             let mut b = Battle::new(state, &mut chooser);
-            b.fainted_positions = std::mem::take(&mut pending.fainted);
-            result = run_stage(&mut b, &mut pending);
-            pending.fainted = std::mem::take(&mut b.fainted_positions);
+            result = stage(&mut b, &mut pending);
             log.append(&mut b.log);
         }
         if let Err(error) = result {
@@ -205,12 +397,12 @@ pub fn sample_turn<const N: usize>(
         }
         state.reverse(&log);
     }
-    debug_assert_eq!(*state, start);
+    debug_assert_eq!(*state, begin);
     Ok(finished
         .into_iter()
         .map(|(end, probability)| Outcome {
             probability,
-            instructions: diff::instructions(&start, &end),
+            instructions: diff::instructions(&begin, &end),
         })
         .collect())
 }
@@ -359,13 +551,11 @@ enum ActionKind {
     Mega,
 }
 
-/// The rest of a turn between stages: the actions not yet run, the Pokémon that fainted in
-/// an active position so far (`checkFainted` marks them at the end), and whether the turn
-/// is over.
+/// The rest of a turn between stages: the actions not yet run and whether the turn is over.
+/// (Fainted Pokémon still holding a position are in the state: `Slot::fainted_occupant`.)
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 struct Pending {
     queue: Vec<Action>,
-    fainted: Vec<(SlotRef, PokemonRef)>,
     done: bool,
 }
 

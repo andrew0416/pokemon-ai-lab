@@ -40,6 +40,8 @@
 
 **메가진화 (2026-09-26, WORKPLAN F1~F3 완료):** `Instruction::SetForme`/`SetTypes`(F1), `Pokemon { nature, stat_points }`(F2), `turn/mega.rs`의 `megaEvo` 행동(F3). 시나리오 `mega-tyranitar`(메가 마기라스의 모래날림이 눈을 덮음, 속도 113→123으로 갸라도스 118을 추월)·`mega-tyranitar-sand`(자기 모래 아래 메가: 같은 날씨라 지속 3이 유지)가 Showdown `full`과 정확 일치(`scenario/tests/mega.rs`). 메가 대상 종의 특성이 미지원이면 `TurnError::Unsupported`(예: 메가가디안 픽시레이트, 메가보만다 스카이스킨). 첫 등장 펼치기(`scenario/switch_in.rs`)는 이제 날씨 4종·필드 4종·위협도 처리한다(F4에서 `turn/switching.rs`와 통합 예정).
 
+**등장 통합·기절 후 교체 (2026-09-26, WORKPLAN F4·F5 완료):** 등장 처리는 `core/src/turn/switching.rs` 하나다: `switch_in`(Showdown `switchIn`: 퇴장자 특성·타입 복귀, 기절 점유자 `fnt` 해제, 슬롯 배치), `run_switch_in`(일괄 `runSwitch`: 등장자들의 시작 핸들러를 **저장 속도(원시 스탯)** 내림차순, 동률은 균등 무작위, 특성이 바뀐 핸들러는 건너뜀), `start_ability`(날씨·필드·위협·트레이스). 첫 등장(`scenario/switch_in.rs`)은 상태 검증 뒤 `turn::enumerate_start`에 위임한다. 기절한 포켓몬은 `Slot::fainted_occupant`로 자리를 지키고(`checkFainted`가 `fnt`를 찍는 근거), 교체 결정은 `turn::enumerate_replacements(state, [[Option<party>; N]; 2])`: instaswitch(기절자 속도순, 동률 무작위) → 일괄 runSwitch → `endTurn`(턴 증가). 로더는 `setupTurns`를 엔진으로 재생하고(`scenario_positions`: 등장 → 설정 턴들 → 패치), Showdown의 `side.pokemon` 순서를 교체마다 갱신해 `switch N`을 해석한다(`advance_order`). `scenario_decision`이 `Decision::Turn`/`Replacement`를 고르고 `run_decision`이 실행한다. 시나리오 `ko-replace`(더블 KO → 양쪽 교체, 등장자 속도 동률로 2결과)가 정확 일치(`tests/replacement.rs`).
+
 **대상 유도 (2026-09-26, WORKPLAN F7 완료):** `moves.rs::redirect_target`가 Showdown `priorityEvent('RedirectTarget')`를 재현한다. 후보는 상대의 날따름·분노가루·스포트라이트 휘발(`onFoeRedirectTarget`, 우선도 1·1·2)과 아군·상대의 피뢰침·저수(`onAnyRedirectTarget`, 우선도 0; 전기/물 기술만). 우선도 내림차순 → 보유자 속도(`action_speed`, 트릭룸이면 음수) 내림차순으로 정렬해 기술의 대상 종류에 유효한 첫 보유자로 바꾼다(분노가루는 공격자가 가루 면역이면 건너뜀). 피뢰침·저수의 `onTryHit`는 방어·사이코필드 뒤에 판정해 기술을 무효화하고 특공을 1 올린다. 같은 우선도·속도의 유효 후보가 둘이면 Showdown은 `effectOrder`(등장·특성 변경 순서)로 가르는데 상태에 없으므로 `TurnError::Unsupported`. 시나리오 4개(`followme-hypnosis`, `ragepowder-grass`, `lightningrod-foe`, `lightningrod-ally`)가 정확 일치(`scenario/tests/redirect.rs`). 로더의 기본 표시 이름은 Showdown처럼 **기본종 이름**이다(`Indeedee-F` → `Indeedee`; 닉네임이 종 문자열과 같아도 기본종).
 
 **턴 엔진 검증(2026-09-25):** `single-hit` 정확 분포 271개 결과가 Showdown `full`과 TV 0으로 일치(엔진 약 10ms, Showdown 7.8초). `hypnosis-gravity`(중력 패치) 2개 결과 정확 일치. 두 fixture는 `oracle/expected/*.turn.json`(`strip-report.cjs`로 생성)이고 `scenario/tests/turn.rs`가 정확 비교한다. `spread-damage`는 정확 분포가 너무 커서(세 번째 단계에 중간 상태 14,260개, 네 번째 단계는 수백만) 끝까지 열거하지 못했다. 대신 엔진 표본 200,000회(2.4초)와 Showdown 표본 20,000회(90초)의 주변분포 69개가 모두 잡음(4σ 기준) 안에 있음을 확인했다(`marginals.cjs`). 테스트: `lab-engine` 36개, `lab-scenario` 18개, fmt·clippy(-D warnings)·dex 최신 검사 통과(MSVC).
@@ -113,7 +115,7 @@ cd engine/py && ../../.venv-doubles/Scripts/maturin.exe build --release -i ../..
 - **등장 펼치기의 특성 경계:** 동작 구현 = 트레이스(Trace), 날씨 4종(가뭄·잔비·모래날림·눈퍼뜨리기; 바위 도구로 8턴), 필드 4종(일렉트릭·그래스·미스트·사이코메이커; 필드확장 8턴), 위협(인접 상대 공격 -1, 랭크 이벤트 없음). 시작 시 무동작 확인 = 모래헤치기(Sand Rush). 나머지는 dex `handlers`에 시작 구간 이벤트가 없을 때만 무동작으로 받고, 있으면 `SwitchInError::UnsupportedAbility/Item/Species`로 거부한다(에어록, 쓱쓱(`onModifySpe`)·구애스카프, 씨앗류·부스트에너지·풍선처럼 시작 시 발동하는 도구 등).
 - `Effect.turns`는 Showdown의 남은 `duration`과 같은 값으로 정했다(정규 출력 `weatherDuration` 등). `Effect::PERMANENT`는 정규 출력에서 아직 거부한다.
 - `can_mega`: 정규 출력의 `canMega`는 개체 메가 자격 ∩ `format_ruleset(meta.format)` − 진영 메가 사용이다. M-C 메가 전용 잠금과 꺼 둔 기믹 구조는 바꾸지 않았다.
-- 로더는 `hypnosis-gravity.json`을 **거부한다**(중력 `patch`가 있음). `single-hit`, `spread-damage`는 불러온다. 패치를 무시하고 불러오면 다른 국면이 되므로 일부러 막았다.
+- 패치가 있는 시나리오(`hypnosis-gravity.json` 등)는 `scenario_positions`가 등장·설정 턴 뒤에 패치를 적용한다(`enumerate.cjs`와 같은 순서). 설정 턴은 결과가 하나로 수렴하도록(확정 KO 등) 설계한다. 여러 위치가 나오면 fixture의 `before`가 그중 하나를 고른다.
 - Champions PP는 단순 상한이 아니다. 방어는 Champions 기본 PP가 5라서 최대 8이다(10이 아님). 기본 PP가 5의 배수가 아닌 기술은 모두 PP 증가 불가(Z/다이맥스기)이고, 이를 `state.rs` 테스트가 확인한다.
 - 메가 자격은 Champions `canMegaEvo`처럼 `item.megaStone[species.name]`, 즉 정확한 종 일치로만 준다. `Gardevoir-Mega`가 가디안나이트를 들어도 자격이 없다. 레쿠쟈의 화룡점정 경로는 past/future 태그 규칙이 필요해서 모델링하지 않았다. `teraType`은 사이드카에만 보관하고 자격으로 주지 않는다(`Pokemon`에 테라 필드가 아직 없음).
 - 로더가 받는 형식은 `gen9championsdoublescustomgame`뿐이다(모든 멤버 선출). `gen9championsvgc2026regmc`의 4마리 선출은 아직 없어서 거부한다. IV는 0–31 범위만 검사하고 버린다(Champions 공식에 IV 항이 없음). 이름은 Showdown처럼 20자로 자르고 편마다 유일해야 한다.
@@ -131,9 +133,9 @@ cd engine/py && ../../.venv-doubles/Scripts/maturin.exe build --release -i ../..
 ## 다음 할 일 (순서대로)
 
 1. [완료 2026-09-25] `data/champions.json` → Rust 정적 테이블 (`core/src/dex/`).
-2. [로더·초기 분포·canonical·patch 완료 2026-09-25] 남은 것: 초기 등장의 다른 특성·도구(`switch_in.rs`는 아직 트레이스·모래날림·그래스메이커만; 턴 중 교체는 `turn/switching.rs`가 날씨·필드 특성·위협까지), `setupTurns`(이제 턴 엔진으로 재생 가능), VGC 4마리 선출. 두 등장 코드(`scenario/switch_in.rs`, `core/turn/switching.rs`)는 합쳐야 한다.
+2. [로더·초기 분포·canonical·patch 완료 2026-09-25, 등장 통합·setupTurns 재생 완료 2026-09-26] 남은 것: VGC 4마리 선출(O104).
 3. [원시 연산·턴 연결 완료 2026-09-25] 데미지 코어가 턴 엔진에 연결됨.
-4. [턴 엔진 골격 완료 2026-09-25, 메가진화 완료 2026-09-26] 남은 것: 기절 후 교체 결정(`request: switch` 다음 단계, Showdown `instaswitch`; 교체된 기절 포켓몬의 status는 `''`로 바뀜), 연속기(multihit), 교체기(유턴 등), 혼란·도발·앵콜 등 휘발, 구애 도구, 열매(오봉 등 `onUpdate`), 급소 랭크 보정 도구/특성. 진행 상황은 `WORKPLAN.md` §4.
+4. [턴 엔진 골격 완료 2026-09-25, 메가진화·유도·등장 통합·기절 후 교체 완료 2026-09-26] 남은 것: 연속기(multihit), 교체기(유턴 등), 혼란·도발·앵콜 등 휘발, 구애 도구, 열매(오봉 등 `onUpdate`), 급소 랭크 보정 도구/특성. 진행 상황은 `WORKPLAN.md` §4.
 5. 기술 이식: 날따름, 분노가루, 위협 이외 등장 특성, 메가진화를 먼저 한다. 우선순위는 `teams/library` 더블 사용 빈도 × `support.rs` 미지원 여부로 정한다. 추가할 때마다 oracle 시나리오와 `*.turn.json` fixture를 만든다.
 6. 분포 열거 성능: 광역기 두 개가 겹치는 턴은 정확 분포가 수백만 결과다. 후보: 이미 행동한 대상에 대한 풀죽음 분기 생략(분포 동치), 턴 종료에 사라지는 중간 상태 차이(풀죽음·lastMove 없는 교환 등)를 병합 전에 정규화, HP 구간 대신 정확 값 유지하되 결과 수 상한/근사 모드 도입. PokaiEngine 목표(턴당 약 0.08ms)와 같은 자릿수.
 7. 목표 지표: 시나리오 모음에서 정확 일치 99% 이상.

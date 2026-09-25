@@ -18,8 +18,11 @@ use std::time::Instant;
 use serde_json::{json, Value};
 
 use lab_engine::rules::Ruleset;
-use lab_engine::turn::{enumerate_turn, sample_turn};
-use lab_scenario::{canonical_json, load_scenario_file, scenario_choices, scenario_states};
+use lab_engine::turn::sample_turn;
+use lab_scenario::{
+    canonical_json, load_scenario_file, run_decision, scenario_decision, scenario_positions,
+    Decision,
+};
 
 fn main() -> ExitCode {
     match run() {
@@ -74,7 +77,7 @@ fn run() -> Result<(), String> {
         scenario.ok_or("usage: lab-turn <scenario.json> [--before report.json] [--out file]")?;
 
     let loaded = load_scenario_file(&scenario).map_err(|e| e.to_string())?;
-    let states = scenario_states(&loaded)?;
+    let states = scenario_positions(&loaded)?;
     let wanted = match &before {
         Some(path) => {
             let text = std::fs::read_to_string(path).map_err(|e| format!("{path}: {e}"))?;
@@ -88,25 +91,31 @@ fn run() -> Result<(), String> {
         let key = canonical_json(&outcome.state, &loaded.meta).map_err(|e| e.to_string())?;
         let value: Value = serde_json::from_str(&key).expect("valid JSON");
         match &wanted {
-            Some(w) if *w == value => start = Some(outcome.state.clone()),
-            None if states.len() == 1 => start = Some(outcome.state.clone()),
+            Some(w) if *w == value => start = Some(outcome.clone()),
+            None if states.len() == 1 => start = Some(outcome.clone()),
             _ => {}
         }
     }
-    let mut state = start.ok_or_else(|| match &wanted {
+    let position = start.ok_or_else(|| match &wanted {
         Some(_) => "no initial state matches the report's `before`".to_owned(),
         None => format!(
             "{} initial states; pass --before <oracle report> to pick one",
             states.len()
         ),
     })?;
+    let decision = scenario_decision(&loaded, &position)?;
+    let mut state = position.state;
     let before_json = canonical_json(&state, &loaded.meta).map_err(|e| e.to_string())?;
 
-    let choices = scenario_choices(&loaded, &state)?;
     let started = Instant::now();
-    let outcomes = match samples {
-        Some(n) => sample_turn(&mut state, Ruleset::CHAMPIONS_MC, choices, n, seed),
-        None => enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices),
+    let outcomes = match (samples, &decision) {
+        (Some(n), Decision::Turn(choices)) => {
+            sample_turn(&mut state, Ruleset::CHAMPIONS_MC, *choices, n, seed)
+        }
+        (Some(_), Decision::Replacement(_)) => {
+            return Err("--mc is not implemented for a replacement decision".into())
+        }
+        (None, decision) => run_decision(&mut state, decision),
     }
     .map_err(|e| e.to_string())?;
     let elapsed = started.elapsed();

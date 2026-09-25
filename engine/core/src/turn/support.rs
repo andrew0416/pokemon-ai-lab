@@ -541,6 +541,9 @@ mod tests {
         for &(id, expected) in ABILITIES_WITH_HANDLERS {
             assert_eq!(id.data().handlers, expected, "{id:?}");
         }
+        for &(id, expected, _) in crate::turn::switching::START_HANDLERS {
+            assert_eq!(id.data().handlers, expected, "{id:?}");
+        }
         for &(id, _) in TYPE_BOOST_ITEMS {
             let data = id.data();
             assert_eq!(data.handlers, ["onBasePower"], "{id:?}");

@@ -13,6 +13,7 @@ use serde::Deserialize;
 use lab_engine::action::{Gimmick, JointAction, SlotAction};
 use lab_engine::dex::{to_id, ItemId, MoveId, NO_BOOSTS};
 use lab_engine::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
+use lab_engine::instruction::Instruction;
 use lab_engine::state::{SideId, SlotRef, State, Status, BOOST_COUNT};
 
 use crate::meta::ScenarioMeta;
@@ -220,15 +221,107 @@ fn patch_field<const N: usize>(state: &mut State<N>, f: &FieldPatch) -> Result<(
     Ok(())
 }
 
+/// Showdown's `side.pokemon` order as party indices: the party order at the start, then every
+/// switch swaps the newcomer's position with the one it replaces (`switchIn`). Choice strings
+/// (`switch N`) count positions in this order.
+pub type PartyOrder = Vec<u8>;
+
+/// The party order at the start of the battle: the party itself.
+pub fn initial_order<const N: usize>(state: &State<N>, side: SideId) -> PartyOrder {
+    let party = &state.side(side).party;
+    (0..party.len() as u8)
+        .filter(|&i| !party[i as usize].species.is_none())
+        .collect()
+}
+
+/// Updates both sides' party orders for the switches in `instructions` (an outcome's, in
+/// order): a `Switch` that brings in a Pokémon swaps its position with the one leaving (an
+/// occupant, or the fainted occupant a replacement relieves). A slot that emptied by a faint
+/// swaps nothing; a slot that changed hands and then emptied brought in the Pokémon that its
+/// following `SetFaintedOccupant` names.
+pub fn advance_order(order: &mut [PartyOrder; 2], instructions: &[Instruction]) {
+    for (i, instruction) in instructions.iter().enumerate() {
+        let Instruction::Switch {
+            slot,
+            previous,
+            party_index,
+        } = instruction
+        else {
+            continue;
+        };
+        let outgoing = previous.party_index.or(previous.fainted_occupant);
+        let incoming = party_index.or_else(|| {
+            instructions[i + 1..].iter().find_map(|later| match later {
+                Instruction::SetFaintedOccupant { slot: s, new, .. } if s == slot => *new,
+                _ => None,
+            })
+        });
+        let (Some(outgoing), Some(incoming)) = (outgoing, incoming) else {
+            continue;
+        };
+        if outgoing == incoming {
+            continue;
+        }
+        let order = &mut order[slot.side.index()];
+        let a = order.iter().position(|&p| p == outgoing);
+        let b = order.iter().position(|&p| p == incoming);
+        if let (Some(a), Some(b)) = (a, b) {
+            order.swap(a, b);
+        }
+    }
+}
+
+/// The party index `switch N` (1-based position in `order`) names.
+fn switch_position(order: &[u8], n: &str, part: &str) -> Result<u8, String> {
+    let n: usize = n.parse().map_err(|_| format!("{part:?}: bad switch"))?;
+    if n == 0 {
+        return Err(format!("{part:?}: switch positions start at 1"));
+    }
+    order
+        .get(n - 1)
+        .copied()
+        .ok_or_else(|| format!("{part:?}: no Pokémon in position {n}"))
+}
+
+/// Parses one side's replacement choice after faints (`"switch 3"`, `"switch 3, switch 4"`,
+/// `""` for a side that waits): the switches fill the side's empty slots in slot order;
+/// `pass` leaves one empty. Returns the party index per active slot.
+pub fn parse_replacement<const N: usize>(
+    state: &State<N>,
+    side: SideId,
+    order: &[u8],
+    text: &str,
+) -> Result<[Option<u8>; N], String> {
+    let mut out = [None; N];
+    let text = text.trim();
+    if text.is_empty() {
+        return Ok(out);
+    }
+    let mut empty = (0..N).filter(|&i| state.side(side).slots[i].party_index.is_none());
+    for part in text.split(',').map(str::trim) {
+        let words: Vec<&str> = part.split_whitespace().collect();
+        let Some(slot) = empty.next() else {
+            return Err(format!("{part:?}: no empty slot left to fill"));
+        };
+        match words.as_slice() {
+            ["pass"] => {}
+            ["switch", n] => out[slot] = Some(switch_position(order, n, part)?),
+            _ => return Err(format!("{part:?}: not a replacement choice")),
+        }
+    }
+    Ok(out)
+}
+
 /// Parses one side's Showdown choice string (`"move protect, move grassyglide 1"`,
 /// `"switch 3"`, `"pass"`, `"move 2 -1 mega"`) against `state`.
 ///
 /// A move is its id, name or 1-based slot; the target is Showdown's (positive = foe,
-/// negative = ally). `switch N` is the Nth party member in the state's party order, which is
-/// Showdown's order until the first switch.
+/// negative = ally). `switch N` is the Nth Pokémon in `order`, Showdown's current party order
+/// (see [`advance_order`]).
 pub fn parse_choice<const N: usize>(
     state: &State<N>,
     side: SideId,
+    order: &[u8],
     text: &str,
 ) -> Result<JointAction<N>, String> {
     let parts: Vec<&str> = text.split(',').map(str::trim).collect();
@@ -244,13 +337,9 @@ pub fn parse_choice<const N: usize>(
         let words: Vec<&str> = part.split_whitespace().collect();
         out[i] = match words.as_slice() {
             ["pass"] => SlotAction::Pass,
-            ["switch", n] => {
-                let n: u8 = n.parse().map_err(|_| format!("{part:?}: bad switch"))?;
-                if n == 0 {
-                    return Err(format!("{part:?}: switch positions start at 1"));
-                }
-                SlotAction::Switch { party_index: n - 1 }
-            }
+            ["switch", n] => SlotAction::Switch {
+                party_index: switch_position(order, n, part)?,
+            },
             ["move", mv, rest @ ..] => {
                 let mon = state
                     .active(slot)

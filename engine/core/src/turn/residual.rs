@@ -10,7 +10,7 @@
 use crate::dex::{abilities, items, AbilityId, Type, TypeImmunities, NO_BOOSTS};
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
-use crate::state::{PokemonRef, SideId, SlotRef, Status};
+use crate::state::{PokemonRef, SideId, SlotRef, State, Status};
 use crate::volatile::{Volatile, VolatileState};
 
 use super::battle::{Battle, DamageSource};
@@ -416,8 +416,15 @@ pub(crate) fn sort_by_speed<const N: usize>(b: &mut Battle<'_, N>, list: &mut [(
 /// `checkFainted` and `endTurn`: fainted Pokémon in active positions get `fnt`; if a side
 /// must replace one, the turn waits for that decision, otherwise it advances.
 pub(crate) fn end_turn<const N: usize>(b: &mut Battle<'_, N>) {
-    let fainted = std::mem::take(&mut b.fainted_positions);
-    for &(_, pokemon) in &fainted {
+    // checkFainted: a fainted Pokémon still holding an active position gets `fnt`.
+    for slot in State::<N>::slot_refs() {
+        let Some(party) = b.state.slot(slot).fainted_occupant else {
+            continue;
+        };
+        let pokemon = PokemonRef {
+            side: slot.side,
+            party,
+        };
         let old = b.mon(pokemon).status;
         if old != Status::Fainted {
             b.apply(Instruction::ChangeStatus {

@@ -151,7 +151,8 @@ fn o24_topsy_turvy_fails_without_stages() {
 fn o11_first_impression_is_disabled_after_the_first_action() {
     let name = "o11-first-impression";
     let fixture = fixture(name);
-    let (loaded, mut state) = start(name, &fixture);
+    let (loaded, position) = start(name, &fixture);
+    let mut state = position.state;
     let choices = scenario_choices(&loaded, &state).unwrap();
     let user = SlotRef {
         side: SideId::One,

@@ -11,7 +11,7 @@
 //! anything else that could act is rejected); one of those is Showdown's `before` snapshot.
 //! [`canonical::canonical_json`] writes a state in the oracle's canonical form (schema 1).
 //! [`decision`] applies the oracle's `patch` after the switch-ins ([`scenario_states`]) and
-//! parses the `turn` choice strings. `setupTurns` needs replaying turns and is rejected,
+//! parses the `turn` choice strings. `setupTurns` are replayed with the turn engine,
 //! never skipped.
 
 pub mod canonical;
@@ -27,11 +27,17 @@ use std::path::Path;
 use serde_json::Value;
 
 use lab_engine::action::JointAction;
+use lab_engine::instruction::Outcome;
+use lab_engine::rules::Ruleset;
 use lab_engine::state::{SideId, State};
+use lab_engine::turn::{enumerate_replacements, enumerate_turn, TurnError};
 use lab_engine::Doubles;
 
 pub use canonical::{canonical_json, canonical_value, CanonicalError};
-pub use decision::{apply_patch, parse_choice, PatchJson};
+pub use decision::{
+    advance_order, apply_patch, initial_order, parse_choice, parse_replacement, PartyOrder,
+    PatchJson,
+};
 pub use error::{LoadError, SetProblem, TeamProblem};
 pub use json::{ScenarioJson, TeamSet};
 pub use meta::{MemberMeta, ScenarioMeta, SideMeta};
@@ -48,8 +54,28 @@ const FIRST_TURN: u16 = 1;
 pub struct LoadedScenario {
     pub state: Doubles,
     pub meta: ScenarioMeta,
-    /// Applied after the switch-ins, by [`scenario_states`].
+    /// Turns played before the decision (`[p1 choice, p2 choice]` each), replayed by
+    /// [`scenario_positions`] after the switch-ins and before the patch, as `enumerate.cjs`
+    /// does.
+    pub setup_turns: Vec<(String, String)>,
+    /// Applied after the setup turns, by [`scenario_positions`].
     pub patch: Option<PatchJson>,
+}
+
+/// A position the scenario's decision can be made in, with Showdown's party order per side
+/// (what `switch N` in a choice string counts).
+#[derive(Clone, Debug, PartialEq)]
+pub struct Position {
+    pub probability: f64,
+    pub state: Doubles,
+    pub order: [PartyOrder; 2],
+}
+
+/// A scenario's decision: a turn, or the replacement of fainted Pokémon.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Decision {
+    Turn([JointAction<2>; 2]),
+    Replacement([[Option<u8>; 2]; 2]),
 }
 
 /// Loads a scenario file; team paths resolve relative to its directory.
@@ -71,13 +97,17 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
     if scenario.format != DOUBLES_FORMAT {
         return Err(LoadError::UnsupportedFormat(scenario.format));
     }
-    if !is_empty(scenario.setup_turns.as_ref()) {
-        return Err(LoadError::Unsupported {
-            field: "setupTurns",
-            reason: "replaying turns needs the turn engine; describe the position as an \
-                     initial state instead",
-        });
-    }
+    let setup_turns = match scenario.setup_turns {
+        Some(value) if !is_empty(Some(&value)) => {
+            let turns: Vec<(String, String)> =
+                serde_json::from_value(value).map_err(|error| LoadError::Json {
+                    what: "setupTurns".into(),
+                    error,
+                })?;
+            turns
+        }
+        _ => Vec::new(),
+    };
     let patch = match scenario.patch {
         Some(value) if !is_empty(Some(&value)) => Some(serde_json::from_value(value).map_err(
             |error| LoadError::Json {
@@ -106,23 +136,127 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
             sides,
             turn: scenario.turn,
         },
+        setup_turns,
         patch,
     })
 }
 
-/// The position the scenario's decision is made in: every initial outcome (the leads'
-/// switch-in effects) with the patch applied.
-pub fn scenario_states(loaded: &LoadedScenario) -> Result<Vec<InitialOutcome<2>>, String> {
-    let mut outcomes = initial_outcomes(loaded).map_err(|e| e.to_string())?;
-    if let Some(patch) = &loaded.patch {
-        for outcome in &mut outcomes {
-            apply_patch(&mut outcome.state, &loaded.meta, patch)?;
-        }
-    }
-    Ok(outcomes)
+/// Whether `side` must send in a replacement (Showdown `request: switch` for it): an empty
+/// active slot and a healthy bench member.
+pub fn side_must_replace<const N: usize>(state: &State<N>, side: SideId) -> bool {
+    let s = state.side(side);
+    let empty = s.slots.iter().any(|slot| slot.party_index.is_none());
+    let bench = (0..s.party.len() as u8).any(|i| {
+        s.party[i as usize].hp > 0 && !s.slots.iter().any(|slot| slot.party_index == Some(i))
+    });
+    empty && bench
 }
 
-/// The scenario's `turn` choices, parsed against `state`.
+/// Parses both sides' choice strings for the decision `state` is waiting for: replacements
+/// if either side must replace a fainted Pokémon, a turn otherwise.
+pub fn parse_decision(
+    state: &Doubles,
+    order: &[PartyOrder; 2],
+    p1: &str,
+    p2: &str,
+) -> Result<Decision, String> {
+    let replacing = [SideId::One, SideId::Two]
+        .into_iter()
+        .any(|side| side_must_replace(state, side));
+    if replacing {
+        Ok(Decision::Replacement([
+            parse_replacement(state, SideId::One, &order[0], p1)?,
+            parse_replacement(state, SideId::Two, &order[1], p2)?,
+        ]))
+    } else {
+        Ok(Decision::Turn([
+            parse_choice(state, SideId::One, &order[0], p1)?,
+            parse_choice(state, SideId::Two, &order[1], p2)?,
+        ]))
+    }
+}
+
+/// Every outcome of `decision` from `state` (left unchanged).
+pub fn run_decision(state: &mut Doubles, decision: &Decision) -> Result<Vec<Outcome>, TurnError> {
+    match decision {
+        Decision::Turn(choices) => enumerate_turn(state, Ruleset::CHAMPIONS_MC, *choices),
+        Decision::Replacement(choices) => enumerate_replacements(state, *choices),
+    }
+}
+
+/// The positions the scenario's decision is made in: every initial outcome (the leads'
+/// switch-in effects), then every outcome of the setup turns, then the patch. Positions
+/// with the same state and party order merge.
+pub fn scenario_positions(loaded: &LoadedScenario) -> Result<Vec<Position>, String> {
+    let mut positions: Vec<Position> = initial_outcomes(loaded)
+        .map_err(|e| e.to_string())?
+        .into_iter()
+        .map(|o| Position {
+            order: [
+                initial_order(&o.state, SideId::One),
+                initial_order(&o.state, SideId::Two),
+            ],
+            probability: o.probability,
+            state: o.state,
+        })
+        .collect();
+    for (n, (p1, p2)) in loaded.setup_turns.iter().enumerate() {
+        let mut next: Vec<Position> = Vec::new();
+        for position in &positions {
+            let decision = parse_decision(&position.state, &position.order, p1, p2)
+                .map_err(|e| format!("setup turn {}: {e}", n + 1))?;
+            let mut state = position.state.clone();
+            let outcomes = run_decision(&mut state, &decision)
+                .map_err(|e| format!("setup turn {}: {e}", n + 1))?;
+            for outcome in outcomes {
+                let mut end = state.clone();
+                end.apply(&outcome.instructions);
+                let mut order = position.order.clone();
+                advance_order(&mut order, &outcome.instructions);
+                let p = position.probability * outcome.probability;
+                match next.iter_mut().find(|q| q.state == end && q.order == order) {
+                    Some(existing) => existing.probability += p,
+                    None => next.push(Position {
+                        probability: p,
+                        state: end,
+                        order,
+                    }),
+                }
+            }
+        }
+        positions = next;
+    }
+    if let Some(patch) = &loaded.patch {
+        for position in &mut positions {
+            apply_patch(&mut position.state, &loaded.meta, patch)?;
+        }
+    }
+    Ok(positions)
+}
+
+/// The scenario's `turn` choices parsed for `position`.
+pub fn scenario_decision(loaded: &LoadedScenario, position: &Position) -> Result<Decision, String> {
+    let turn = loaded
+        .meta
+        .turn
+        .as_ref()
+        .ok_or("the scenario has no turn")?;
+    parse_decision(&position.state, &position.order, &turn.p1, &turn.p2)
+}
+
+/// [`scenario_positions`] without the party orders.
+pub fn scenario_states(loaded: &LoadedScenario) -> Result<Vec<InitialOutcome<2>>, String> {
+    Ok(scenario_positions(loaded)?
+        .into_iter()
+        .map(|p| InitialOutcome {
+            probability: p.probability,
+            state: p.state,
+        })
+        .collect())
+}
+
+/// The scenario's `turn` choices as a turn decision, parsed against `state` with the initial
+/// party order (valid for scenarios without setup turns).
 pub fn scenario_choices(
     loaded: &LoadedScenario,
     state: &Doubles,
@@ -132,9 +266,13 @@ pub fn scenario_choices(
         .turn
         .as_ref()
         .ok_or("the scenario has no turn")?;
+    let order = [
+        initial_order(state, SideId::One),
+        initial_order(state, SideId::Two),
+    ];
     Ok([
-        parse_choice(state, SideId::One, &turn.p1)?,
-        parse_choice(state, SideId::Two, &turn.p2)?,
+        parse_choice(state, SideId::One, &order[0], &turn.p1)?,
+        parse_choice(state, SideId::Two, &order[1], &turn.p2)?,
     ])
 }
 

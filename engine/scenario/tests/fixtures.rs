@@ -131,7 +131,7 @@ fn single_hit_scenario_loads_the_hypnosis_gravity_teams() {
 }
 
 #[test]
-fn patches_load_and_setup_turns_are_rejected() {
+fn patches_and_setup_turns_load() {
     let loaded = load_scenario_file(scenarios().join("hypnosis-gravity.json")).unwrap();
     let patch = loaded.patch.as_ref().expect("hypnosis-gravity has a patch");
     assert_eq!(patch.field.pseudo_weather.get("gravity"), Some(&Some(4)));
@@ -144,17 +144,12 @@ fn patches_load_and_setup_turns_are_rejected() {
                 "p2": {{"team": "hypnosis-gravity.p2.json", "order": "12"}}{extra}}}"#
         )
     };
+    // Setup turns are kept for `scenario_positions` to replay.
     let setup = with(r#", "setupTurns": [["move protect", "move protect"]]"#);
-    let err = load_scenario_str(&setup, &base).unwrap_err();
-    assert!(
-        matches!(
-            err,
-            LoadError::Unsupported {
-                field: "setupTurns",
-                ..
-            }
-        ),
-        "{err}"
+    let loaded = load_scenario_str(&setup, &base).unwrap();
+    assert_eq!(
+        loaded.setup_turns,
+        vec![("move protect".to_owned(), "move protect".to_owned())]
     );
     // Empty setup and patch are no-ops, as in enumerate.cjs.
     load_scenario_str(&with(r#", "setupTurns": [], "patch": {}"#), &base).unwrap();

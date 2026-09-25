@@ -316,10 +316,10 @@ fn trace_with_only_untraceable_foes_is_rejected() {
     for mon in &mut s.side_mut(SideId::Two).party[..2] {
         mon.ability = abilities::TRACE;
     }
-    assert_eq!(
-        expand_switch_ins(&s),
-        Err(SwitchInError::TraceWithoutTarget { slot: GARDEVOIR })
-    );
+    match expand_switch_ins(&s) {
+        Err(SwitchInError::Unsupported { what }) => assert!(what.contains("Trace"), "{what}"),
+        other => panic!("{other:?}"),
+    }
 }
 
 #[test]

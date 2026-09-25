@@ -79,6 +79,12 @@ pub enum Instruction {
         previous: Slot,
         party_index: Option<u8>,
     },
+    /// Records (or clears) which fainted party member an empty slot still holds.
+    SetFaintedOccupant {
+        slot: SlotRef,
+        old: Option<u8>,
+        new: Option<u8>,
+    },
     SetVolatile {
         target: SlotRef,
         volatile: Volatile,
@@ -176,6 +182,9 @@ impl<const N: usize> State<N> {
                     ..Slot::default()
                 }
             }
+            Instruction::SetFaintedOccupant { slot, new, .. } => {
+                self.slot_mut(slot).fainted_occupant = new
+            }
             Instruction::SetVolatile {
                 target,
                 volatile,
@@ -229,6 +238,9 @@ impl<const N: usize> State<N> {
             Instruction::Switch {
                 slot, ref previous, ..
             } => *self.slot_mut(slot) = previous.clone(),
+            Instruction::SetFaintedOccupant { slot, old, .. } => {
+                self.slot_mut(slot).fainted_occupant = old
+            }
             Instruction::SetVolatile {
                 target,
                 volatile,
@@ -288,6 +300,10 @@ mod tests {
         };
         let me = SlotRef {
             side: SideId::One,
+            slot: 0,
+        };
+        let foe_lead = SlotRef {
+            side: SideId::Two,
             slot: 0,
         };
         let mut boosted = Slot {
@@ -358,6 +374,20 @@ mod tests {
                 previous: boosted,
                 party_index: Some(3),
             },
+            // The foe's lead faints: its slot empties but remembers it.
+            Instruction::Switch {
+                slot: foe_lead,
+                previous: Slot {
+                    party_index: Some(0),
+                    ..Slot::default()
+                },
+                party_index: None,
+            },
+            Instruction::SetFaintedOccupant {
+                slot: foe_lead,
+                old: None,
+                new: Some(0),
+            },
             Instruction::SetField {
                 effect: FieldEffect::Weather,
                 old: Effect::NONE,
@@ -396,6 +426,8 @@ mod tests {
             .contains(Gimmick::Mega));
         assert!(state.side(SideId::Two).gimmicks_used.is_empty());
         assert_eq!(state.slot(me).party_index, Some(3));
+        assert_eq!(state.slot(foe_lead).party_index, None);
+        assert_eq!(state.slot(foe_lead).fainted_occupant, Some(0));
         assert!(state.field[FieldEffect::Gravity as usize].is_active());
         assert_eq!(state.result, BattleResult::Win(SideId::One));
 
