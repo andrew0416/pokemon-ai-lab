@@ -97,6 +97,40 @@ fn cursed_body_multihit_matches_showdown() {
     assert_mc_parity("cursed-body-multihit");
 }
 
+// ---- O72 / O98 Protosynthesis, Quark Drive, Booster Energy -------------------------------------
+
+/// Sun at the battle start: the attacker's best Attack and the defender's best Defense.
+#[test]
+fn protosynthesis_in_sun_matches_showdown() {
+    assert_exact_parity("o72-protosynthesis-sun");
+}
+
+/// The best stat is picked with the stat stages Intimidate left (switch-in priority -2).
+#[test]
+fn protosynthesis_best_stat_after_intimidate_matches_showdown() {
+    assert_exact_parity("o72-best-stat-intimidate");
+}
+
+/// Electric Surge's terrain for Quark Drive; Booster Energy used at once without sun, Speed as
+/// the best stat (1.5x) changes the action order.
+#[test]
+fn quark_drive_and_booster_energy_match_showdown() {
+    assert_exact_parity("o72-quark-drive-booster");
+}
+
+/// Rain replaces the sun: the condition ends, then Booster Energy starts it again.
+#[test]
+fn protosynthesis_ends_with_the_sun_matches_showdown() {
+    assert_exact_parity("o72-sun-ends");
+}
+
+/// Knock Off cannot take Booster Energy from a Paradox Pokémon (and gets no boost), but can
+/// from anyone else.
+#[test]
+fn booster_energy_knock_off_matches_showdown() {
+    assert_exact_parity("o98-booster-knock-off");
+}
+
 // ---- Magic Bounce ------------------------------------------------------------------------------
 
 /// A Prankster status move bounces back without the Prankster boost; a spread status move

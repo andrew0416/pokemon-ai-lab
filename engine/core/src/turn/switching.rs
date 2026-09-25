@@ -91,6 +91,9 @@ pub(crate) enum StartEffect {
     /// Pastel Veil: the holder's and its allies' poison is cured (also whenever anyone switches
     /// in, `onAnySwitchIn`).
     PastelVeil,
+    /// Protosynthesis / Quark Drive: `singleEvent('WeatherChange' / 'TerrainChange')` on the
+    /// holder (`abilities::paradox_change`).
+    Paradox,
 }
 
 /// Abilities with an implemented start, with the exact handler lists they were implemented
@@ -343,6 +346,39 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onAnyTryPrimaryHit", "onStart"],
         StartEffect::None,
     ),
+    // `onSwitchInPriority: -2`; the condition's handlers act later (`abilities`).
+    (
+        abilities::PROTOSYNTHESIS,
+        &[
+            "condition.onEnd",
+            "condition.onModifyAtk",
+            "condition.onModifyDef",
+            "condition.onModifySpA",
+            "condition.onModifySpD",
+            "condition.onModifySpe",
+            "condition.onStart",
+            "onEnd",
+            "onStart",
+            "onWeatherChange",
+        ],
+        StartEffect::Paradox,
+    ),
+    (
+        abilities::QUARK_DRIVE,
+        &[
+            "condition.onEnd",
+            "condition.onModifyAtk",
+            "condition.onModifyDef",
+            "condition.onModifySpA",
+            "condition.onModifySpD",
+            "condition.onModifySpe",
+            "condition.onStart",
+            "onEnd",
+            "onStart",
+            "onTerrainChange",
+        ],
+        StartEffect::Paradox,
+    ),
 ];
 
 /// What `ability` does when it starts, or `None` if it has a switch-in handler that is not
@@ -432,6 +468,22 @@ fn switch_in_problem<const N: usize>(
             mon.ability.data().name,
             start_handler(mon.ability.data().handlers).unwrap_or("suppressWeather")
         ));
+    }
+    // The newcomer next to the Pokémon it would be refused with (`abilities`).
+    let suppresses = mon.ability.data().suppress_weather;
+    let paradox = mon.ability == abilities::PROTOSYNTHESIS;
+    if suppresses || paradox {
+        let clash = b.all_alive().into_iter().any(|s| {
+            let other = b.ability(s);
+            (suppresses && other == abilities::PROTOSYNTHESIS)
+                || (paradox && other.data().suppress_weather)
+        });
+        if clash {
+            return Some(format!(
+                "{name}: Protosynthesis next to Air Lock / Cloud Nine (the suppressor's End \
+                 WeatherChange)"
+            ));
+        }
     }
     super::update::berry_problem(mon)
 }
@@ -719,6 +771,7 @@ pub(crate) fn start_ability<const N: usize>(
             }
         }
         StartEffect::PastelVeil => pastel_veil_cure(b, slot),
+        StartEffect::Paradox => super::abilities::paradox_change(b, slot),
     }
     Ok(())
 }
@@ -835,6 +888,12 @@ pub(crate) fn end_ability<const N: usize>(
     }
     if ability == abilities::FLASH_FIRE {
         b.remove_volatile(slot, Volatile::FlashFire);
+        return Ok(());
+    }
+    // Protosynthesis / Quark Drive: `delete pokemon.volatiles[...]` (no condition `onEnd`).
+    if ability == abilities::PROTOSYNTHESIS || ability == abilities::QUARK_DRIVE {
+        b.delete_volatile(slot, Volatile::Protosynthesis);
+        b.delete_volatile(slot, Volatile::QuarkDrive);
         return Ok(());
     }
     if ability == abilities::AIR_LOCK || ability == abilities::CLOUD_NINE {

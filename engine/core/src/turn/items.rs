@@ -126,7 +126,9 @@ pub(crate) fn start_handler_implemented(item: ItemId, handler: &str) -> bool {
 /// in the batched `fieldEvent('SwitchIn')`, after the abilities' priority-0 handlers): the
 /// Seeds and Room Service (-1).
 pub(crate) fn switch_in_priority(item: ItemId) -> Option<i32> {
-    let acts = super::field_events::seed_terrain(item).is_some() || item == items::ROOM_SERVICE;
+    let acts = super::field_events::seed_terrain(item).is_some()
+        || item == items::ROOM_SERVICE
+        || item == items::BOOSTER_ENERGY;
     acts.then(|| super::abilities::priority(item.data().event_orders, "onSwitchInPriority"))
 }
 
@@ -159,6 +161,8 @@ pub(crate) fn switch_in_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRe
         }
         i if i == items::WHITE_HERB => white_herb(b, slot),
         i if i == items::MIRROR_HERB => mirror_herb_use(b, slot, slot),
+        // Booster Energy's `onStart`: `started = true`, then its `onUpdate`.
+        i if i == items::BOOSTER_ENERGY => super::abilities::booster_energy(b, slot),
         _ => {}
     }
 }

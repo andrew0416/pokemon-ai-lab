@@ -1,0 +1,23 @@
+{
+ "description": "O72 Protosynthesis's bestStat reads stat stages: at the battle start Incineroar's Intimidate (priority 0) lowers Great Tusk's Attack (153 -> 102) before Protosynthesis (priority -2) picks Defense (151) in Drought's sun, so Incineroar's Strength meets a 5325/4096 Defense and Great Tusk's own Strength gets no boost. Torkoal and Snorlax Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Incineroar", "item": "", "ability": "Intimidate", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Strength"], "level": 50},
+   {"species": "Torkoal", "item": "", "ability": "Drought", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Great Tusk", "item": "", "ability": "Protosynthesis", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 2}, "moves": ["Strength"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move strength 1, move harden", "p2": "move strength 1, move harden"}
+}

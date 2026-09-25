@@ -1144,6 +1144,10 @@ impl<'a, const N: usize> Battle<'a, N> {
         if mon.item.is_none() || item.cannot_be_taken {
             return false;
         }
+        // Booster Energy stays with a Paradox Pokémon (its `onTakeItem`).
+        if mon.item == items::BOOSTER_ENERGY && super::abilities::booster_energy_kept(mon.species) {
+            return false;
+        }
         // Mega Stones: `onTakeItem(item, source) { return !item.megaStone?.[source.baseSpecies.baseSpecies]; }`
         let base = mon.species.data().base_species;
         let base = if base.is_none() { mon.species } else { base };

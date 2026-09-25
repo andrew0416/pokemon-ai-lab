@@ -4,14 +4,14 @@
 //! `clearTerrain` / `clearWeather`. `eachEvent` visits every active Pokémon in Speed order
 //! (ties shuffled).
 //!
-//! Implemented handlers: the four Seeds' `onTerrainChange` (O92). No `onWeatherChange`
-//! handler is implemented (Forecast, Flower Gift, Ice Face, Protosynthesis), and no other
-//! `onTerrainChange` (Mimicry, Quark Drive): their holders are refused on the field and at
-//! switch-in, which a test below pins, so these events cannot meet an unimplemented handler.
-//! Every implemented handler only changes its own holder, so the Speed order (and its random
-//! tie-breaks) cannot change the outcome and is not drawn.
+//! Implemented handlers: the four Seeds' `onTerrainChange` (O92), Quark Drive's
+//! `onTerrainChange` and Protosynthesis's `onWeatherChange` (O72). The other `onWeatherChange`
+//! (Forecast, Flower Gift, Ice Face) and `onTerrainChange` (Mimicry) holders are refused on the
+//! field and at switch-in, which a test below pins, so these events cannot meet an
+//! unimplemented handler. Every implemented handler only changes its own holder, so the Speed
+//! order (and its random tie-breaks) cannot change the outcome and is not drawn.
 
-use crate::dex::{items, ItemId};
+use crate::dex::{abilities, items, ItemId};
 use crate::field::Terrain;
 use crate::state::SlotRef;
 
@@ -40,16 +40,26 @@ pub(crate) fn seed_check<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     }
 }
 
-/// Showdown `eachEvent('TerrainChange')`.
+/// Showdown `eachEvent('TerrainChange')`: per Pokémon, Quark Drive's `onTerrainChange` (an
+/// ability, sub-order 7) before its Seed's (an item, 8), which matters for the same holder: the
+/// Seed's boost comes after Quark Drive picked its best stat.
 pub(crate) fn terrain_changed<const N: usize>(b: &mut Battle<'_, N>) {
     for slot in b.all_alive() {
+        if b.ability(slot) == abilities::QUARK_DRIVE {
+            super::abilities::paradox_change(b, slot);
+        }
         seed_check(b, slot);
     }
 }
 
-/// Showdown `eachEvent('WeatherChange')`: no implemented handler (see the module docs), so it
-/// does nothing; kept as the event's single call site for when one is added.
-pub(crate) fn weather_changed<const N: usize>(_b: &mut Battle<'_, N>) {}
+/// Showdown `eachEvent('WeatherChange')`: Protosynthesis's `onWeatherChange`.
+pub(crate) fn weather_changed<const N: usize>(b: &mut Battle<'_, N>) {
+    for slot in b.all_alive() {
+        if b.ability(slot) == abilities::PROTOSYNTHESIS {
+            super::abilities::paradox_change(b, slot);
+        }
+    }
+}
 
 #[cfg(test)]
 mod tests {
@@ -79,7 +89,8 @@ mod tests {
             }
         }
         for id in AbilityId::all() {
-            if reacts(id.data().handlers) {
+            let implemented = id == abilities::PROTOSYNTHESIS || id == abilities::QUARK_DRIVE;
+            if reacts(id.data().handlers) && !implemented {
                 assert!(
                     !ability_supported_on_field(id) && !switch_in_supported(id),
                     "{id:?}"

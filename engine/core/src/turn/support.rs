@@ -550,9 +550,10 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     // AfterBoost (`Battle::boost_by` → `items::after_boost`).
     (items::ADRENALINE_ORB, &["onAfterBoost"]),
     // `Battle::weather_for` at every per-Pokémon weather read. The callbacks only run
-    // WeatherChange (when the item starts being ignored, stops being ignored, or ends), which
-    // has no implemented handler (`field_events`); `onStart` returns at once for a holder that
-    // does not ignore its item.
+    // WeatherChange on the holder (when the item starts being ignored, stops being ignored, or
+    // ends in sun or rain), whose only implemented handler, Protosynthesis's, then changes
+    // nothing: Utility Umbrella does not hide the sun from it, so it already has its condition;
+    // `onStart` returns at once for a holder that does not ignore its item.
     (items::UTILITY_UMBRELLA, &["onEnd", "onStart", "onUpdate"]),
     // `onStart` at switch-in (priority -1) and PseudoWeatherChange (`moves::add_pseudo_weather`).
     (
@@ -591,6 +592,12 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     // `onTrapPokemon` (priority -10) in `abilities::trapped`; `onMaybeTrapPokemon` only clears
     // a display flag.
     (items::SHED_SHELL, &["onMaybeTrapPokemon", "onTrapPokemon"]),
+    // O98: `onStart` (switch-in, priority -2) and `onUpdate` in `abilities::booster_energy`,
+    // `onTakeItem` in `Battle::item_can_be_taken` (`abilities::booster_energy_kept`).
+    (
+        items::BOOSTER_ENERGY,
+        &["onStart", "onTakeItem", "onUpdate"],
+    ),
 ];
 
 /// Abilities with callbacks that are implemented while the holder is on the field.
@@ -935,6 +942,42 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         abilities::MAGNET_PULL,
         &["onFoeMaybeTrapPokemon", "onFoeTrapPokemon"],
     ),
+    // O72: `onStart` / `onWeatherChange` / `onTerrainChange` in `abilities::paradox_change`
+    // (`field_events`, `switching::start_ability`), `onEnd` in `switching::end_ability`; the
+    // condition's `onStart` stores `bestStat` / `fromBooster`, its Modify* handlers are in
+    // `abilities::attack_handlers` / `defense_handlers` and `order.rs`, its `onEnd` only
+    // announces. Next to Air Lock / Cloud Nine Protosynthesis is refused
+    // (`abilities::paradox_suppressor_problem`).
+    (
+        abilities::PROTOSYNTHESIS,
+        &[
+            "condition.onEnd",
+            "condition.onModifyAtk",
+            "condition.onModifyDef",
+            "condition.onModifySpA",
+            "condition.onModifySpD",
+            "condition.onModifySpe",
+            "condition.onStart",
+            "onEnd",
+            "onStart",
+            "onWeatherChange",
+        ],
+    ),
+    (
+        abilities::QUARK_DRIVE,
+        &[
+            "condition.onEnd",
+            "condition.onModifyAtk",
+            "condition.onModifyDef",
+            "condition.onModifySpA",
+            "condition.onModifySpD",
+            "condition.onModifySpe",
+            "condition.onStart",
+            "onEnd",
+            "onStart",
+            "onTerrainChange",
+        ],
+    ),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -1246,6 +1289,9 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
                 return Err(format!("{name}: substitute or Dynamax"));
             }
         }
+    }
+    if let Some(why) = super::abilities::paradox_suppressor_problem(state) {
+        return Err(why);
     }
     Ok(())
 }
