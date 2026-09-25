@@ -7,7 +7,7 @@
 //! abilities skips them like Showdown's `runEvent` does.
 
 use crate::dex::{
-    abilities, items, moves, AbilityId, MoveCategory, MoveFlags, MoveTarget, Secondary, Type,
+    abilities, items, moves, AbilityId, MoveCategory, MoveFlags, MoveTarget, Ohko, Secondary, Type,
     TypeImmunities, NO_BOOSTS,
 };
 use crate::field::{Terrain, Weather};
@@ -128,6 +128,43 @@ pub(super) fn base_power_handlers<const N: usize>(
     let p = priority(aura.data().event_orders, "onAnyBasePowerPriority");
     out.push(Handler::of(b, booster, p, SUB_ABILITY, modifier));
     out
+}
+
+/// `runEvent('Accuracy', target, user, move, accuracy)` (`hitStepAccuracy`) for the implemented
+/// handlers, all priority 0:
+/// - No Guard (`onAnyAccuracy`, not breakable) of an active Pokémon that is the move's user or
+///   target returns `true`;
+/// - the target's Glaive Rush drawback (`onAccuracy`) returns `true`;
+/// - Micle Berry's volatile on the user (`onSourceAccuracy`): `if (!move.ohko)` the volatile
+///   ends, and while the accuracy is still a number it chains 4915/4096.
+///
+/// A `true` stays `true` whatever handler runs after it, and Micle's handler ends its volatile
+/// whether or not the accuracy is still a number (oracle `micle-accuracy-true`,
+/// `micle-glaive-rush`), so the handlers' Speed order never shows. `None`: the move hits;
+/// `Some(modifier)`: the chained modifier on the numeric accuracy (4096 without Micle). Callers
+/// with `accuracy === true` ignore the result.
+///
+/// No Guard's other callback, `onAnyInvulnerability`, only answers a semi-invulnerable target
+/// (two-turn moves, Sky Drop, Commander), which nothing supported creates (pinned by a test in
+/// `support`).
+pub(super) fn accuracy_event<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> Option<u32> {
+    let mut modifier = crate::damage::MOD_ONE;
+    if mv.data.ohko == Ohko::No && b.volatile(user, Volatile::MicleBerry).active {
+        b.remove_volatile(user, Volatile::MicleBerry);
+        modifier = 4915;
+    }
+    let no_guard = [user, target]
+        .into_iter()
+        .any(|s| b.alive(s).is_some() && b.ability(s) == abilities::NO_GUARD);
+    if no_guard || handlers::always_hit(b, target) {
+        return None;
+    }
+    Some(modifier)
 }
 
 /// The user's ability `onModifyMove` (`runEvent('ModifyMove')`, after the move's own):

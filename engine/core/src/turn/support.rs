@@ -906,6 +906,13 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         abilities::FLOWER_VEIL,
         &["onAllySetStatus", "onAllyTryAddVolatile", "onAllyTryBoost"],
     ),
+    // `onAnyAccuracy` in `moves::ability_hooks::accuracy_event`; `onAnyInvulnerability` only
+    // answers a semi-invulnerable target, which nothing supported creates (pinned by
+    // `no_semi_invulnerable_state_is_supported`).
+    (
+        abilities::NO_GUARD,
+        &["onAnyAccuracy", "onAnyInvulnerability"],
+    ),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -1273,6 +1280,26 @@ mod tests {
                 "{id:?}"
             );
         }
+    }
+
+    /// No Guard's `onAnyInvulnerability` (and the Invulnerability event as a whole) only acts on
+    /// a semi-invulnerable target: the two-turn moves (`charge` flag: Fly, Bounce, Dig, Dive,
+    /// Phantom Force, Shadow Force, Sky Drop) and Commander. None is supported; this fails when
+    /// one becomes supported.
+    #[test]
+    fn no_semi_invulnerable_state_is_supported() {
+        use crate::dex::MoveFlags;
+        for id in MoveId::all() {
+            let data = id.data();
+            let semi_invulnerable = data.flags.contains(MoveFlags::CHARGE)
+                || data.handlers.iter().any(|&h| {
+                    h == "condition.onInvulnerability" || h == "condition.onAnyInvulnerability"
+                });
+            if semi_invulnerable {
+                assert!(move_unsupported(id).is_some(), "{id:?}");
+            }
+        }
+        assert!(!ability_supported_on_field(abilities::COMMANDER));
     }
 
     /// Purifying Salt's `onTryAddVolatile` only blocks Yawn, which `Battle::add_volatile_blocked`

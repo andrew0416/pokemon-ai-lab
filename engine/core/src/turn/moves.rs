@@ -1344,9 +1344,9 @@ fn accuracy_check<const N: usize>(
         return true;
     }
     let Some(base) = mv.accuracy else {
-        // `accuracy === true`: the `Accuracy` event still runs, but Micle Berry's handler keeps
-        // its volatile for a non-numeric accuracy and Glaive Rush's answer changes nothing.
-        // (OHKO moves, which Micle Berry also skips, are refused.)
+        // `accuracy === true`: the `Accuracy` event still runs (Micle Berry's handler ends its
+        // volatile), and nothing it does can make the move miss.
+        ability_hooks::accuracy_event(b, user, mv, target);
         return true;
     };
     let mut accuracy = i32::from(base);
@@ -1368,31 +1368,12 @@ fn accuracy_check<const N: usize>(
     } else if boost < 0 {
         accuracy = accuracy * 3 / (3 - boost);
     }
-    // `runEvent('Accuracy')`: the target's Glaive Rush drawback (`onAccuracy`: true) and Micle
-    // Berry's `onSourceAccuracy` on the user (ends its volatile, 4915/4096 onto a numeric
-    // accuracy), both volatiles, in their holders' Speed order (a tie uniformly at random).
-    // Once Glaive Rush has answered, Micle Berry sees a non-numeric accuracy and keeps its
-    // volatile.
-    let glaive_rush = handlers::always_hit(b, target);
-    let micle = b.volatile(user, Volatile::MicleBerry).active;
-    if glaive_rush {
-        if micle && user != target {
-            let user_first = match b.action_speed(user).cmp(&b.action_speed(target)) {
-                std::cmp::Ordering::Greater => true,
-                std::cmp::Ordering::Less => false,
-                std::cmp::Ordering::Equal => b.rng.uniform(2) == 0,
-            };
-            if user_first {
-                b.remove_volatile(user, Volatile::MicleBerry);
-            }
-        }
-        return true;
+    // `runEvent('Accuracy')` (`ability_hooks::accuracy_event`): No Guard and Glaive Rush make the
+    // move hit, Micle Berry chains 4915/4096.
+    match ability_hooks::accuracy_event(b, user, mv, target) {
+        None => true,
+        Some(modifier) => b.rng.chance(modify(accuracy, modifier).max(0) as u32, 100),
     }
-    if micle {
-        b.remove_volatile(user, Volatile::MicleBerry);
-        accuracy = modify(accuracy, 4915);
-    }
-    b.rng.chance(accuracy.max(0) as u32, 100)
 }
 
 /// Showdown `hitStepMoveHitLoop` for a single hit.

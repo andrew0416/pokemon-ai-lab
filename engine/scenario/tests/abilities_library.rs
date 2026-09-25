@@ -61,3 +61,19 @@ fn flower_veil_against_mirror_armor_matches_showdown() {
     assert_exact_parity("flower-veil-mirror-armor");
     assert_exact_parity("flower-veil-mirror-armor-faster");
 }
+
+// ---- No Guard and the Accuracy event -----------------------------------------------------------
+
+/// Moves by and against a No Guard holder never miss.
+#[test]
+fn no_guard_matches_showdown() {
+    assert_exact_parity("no-guard");
+}
+
+/// Micle Berry's Accuracy handler ends its volatile whatever the accuracy: for a move that
+/// never misses, and after a Glaive Rush drawback (a faster holder) already answered `true`.
+#[test]
+fn micle_berry_ends_on_every_accuracy_event() {
+    assert_exact_parity("micle-accuracy-true");
+    assert_exact_parity("micle-glaive-rush");
+}
