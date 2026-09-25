@@ -227,6 +227,8 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     ),
     (items::FOCUS_SASH, &["onDamage"]),
     (items::ROCKY_HELMET, &["onDamagingHit"]),
+    // `moves::decide_hits` (and no accuracy re-rolls for multi-accuracy moves).
+    (items::LOADED_DICE, &["onModifyMove"]),
     // Berries eaten on `Update` (`update.rs`).
     (items::SITRUS_BERRY, &["onEat", "onTryEatItem", "onUpdate"]),
     (items::ORAN_BERRY, &["onEat", "onTryEatItem", "onUpdate"]),
@@ -281,6 +283,8 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::ROUGH_SKIN, &["onDamagingHit"]),
     // Both handlers only set the flag the pinch berries read (`update.rs`).
     (abilities::GLUTTONY, &["onDamage", "onStart"]),
+    // `moves::decide_hits`.
+    (abilities::SKILL_LINK, &["onModifyMove"]),
     (abilities::IRON_BARBS, &["onDamagingHit"]),
     (abilities::RATTLED, &["onAfterBoost", "onDamagingHit"]),
     (abilities::GALE_WINGS, &["onModifyPriority"]),
@@ -478,8 +482,12 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         | MoveTarget::FoeSide => {}
         other => return why(&format!("target {other:?}")),
     }
-    if m.multihit.is_some() {
-        return why("multi-hit");
+    if let Some((low, high)) = m.multihit {
+        // Fixed counts and the 2–5 draw are implemented (`moves::decide_hits`); other ranges
+        // and hit-count dependent callbacks are not.
+        if low != high && (low, high) != (2, 5) {
+            return why("multi-hit range");
+        }
     }
     if m.ohko != Ohko::No {
         return why("OHKO");
@@ -492,7 +500,6 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     }
     if m.breaks_protect
         || m.smart_target
-        || m.multiaccuracy
         || m.calls_move
         || m.sleep_usable
         || m.steals_boosts
@@ -737,6 +744,8 @@ mod tests {
         assert!(move_unsupported(moves::U_TURN).is_some());
         assert_eq!(move_unsupported(moves::FOLLOW_ME), None);
         assert_eq!(move_unsupported(moves::RAGE_POWDER), None);
-        assert!(move_unsupported(moves::BULLET_SEED).is_some());
+        assert_eq!(move_unsupported(moves::BULLET_SEED), None);
+        assert_eq!(move_unsupported(moves::POPULATION_BOMB), None);
+        assert!(move_unsupported(moves::TRIPLE_AXEL).is_some());
     }
 }

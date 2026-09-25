@@ -1,0 +1,90 @@
+{
+ "description": "A fixed two-hit move: Corviknight's Dual Wingbeat into Tyranitar (Swords Dance), each hit rolled separately. Bronzong and Excadrill Protect.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Corviknight",
+    "item": "Leftovers",
+    "ability": "Mirror Armor",
+    "nature": "Impish",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Dual Wingbeat",
+     "Iron Head",
+     "Roost",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Bronzong",
+    "item": "Leftovers",
+    "ability": "Levitate",
+    "nature": "Sassy",
+    "evs": {
+     "hp": 32,
+     "spd": 32,
+     "def": 2
+    },
+    "moves": [
+     "Hypnosis",
+     "Gyro Ball",
+     "Iron Head",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Tyranitar",
+    "item": "Leftovers",
+    "ability": "Sand Stream",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 2,
+     "spe": 32
+    },
+    "moves": [
+     "Stone Edge",
+     "Rock Slide",
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Excadrill",
+    "item": "Leftovers",
+    "ability": "Sand Rush",
+    "nature": "Jolly",
+    "evs": {
+     "hp": 4,
+     "atk": 30,
+     "spe": 32
+    },
+    "moves": [
+     "Iron Head",
+     "High Horsepower",
+     "Rock Slide",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move dualwingbeat 1, move protect",
+  "p2": "move swordsdance, move protect"
+ }
+}

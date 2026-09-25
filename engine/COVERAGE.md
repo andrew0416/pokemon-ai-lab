@@ -4,8 +4,8 @@
 
 ## 기술
 
-- 전체 938개 중 지원 429개, 등장 효과만 미지원 0개, 미지원 509개.
-- 라이브러리 사용 206개 중 지원 132개 (64%).
+- 전체 938개 중 지원 456개, 등장 효과만 미지원 0개, 미지원 482개.
+- 라이브러리 사용 206개 중 지원 138개 (67%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
 
@@ -13,8 +13,6 @@
 |---|---:|---|---|
 | Encore | 42 | 미지원 | callbacks ["condition.onDisableMove", "condition.onEnd", "condition.onOverrideAction", "condition.onResidual", "condition.onStart"] are not implemented |
 | U-turn | 33 | 미지원 | switching |
-| Bullet Seed | 22 | 미지원 | multi-hit |
-| Population Bomb | 22 | 미지원 | multi-hit |
 | Expanding Force | 18 | 미지원 | callbacks ["onBasePower", "onModifyMove"] are not implemented |
 | Taunt | 16 | 미지원 | callbacks ["condition.onBeforeMove", "condition.onDisableMove", "condition.onEnd", "condition.onStart"] are not implemented |
 | Helping Hand | 13 | 미지원 | callbacks ["condition.onBasePower", "condition.onRestart", "condition.onStart", "onTryHit"] are not implemented |
@@ -24,7 +22,6 @@
 | Last Respects | 12 | 미지원 | callbacks ["basePowerCallback"] are not implemented |
 | Stealth Rock | 12 | 미지원 | callbacks ["condition.onSideStart", "condition.onSwitchIn"] are not implemented |
 | Roost | 11 | 미지원 | callbacks ["condition.onStart", "condition.onType"] are not implemented |
-| Dual Wingbeat | 9 | 미지원 | multi-hit |
 | Flip Turn | 9 | 미지원 | switching |
 | Glaive Rush | 9 | 미지원 | callbacks ["condition.onAccuracy", "condition.onBeforeMove", "condition.onSourceModifyDamage", "condition.onStart"] are not implemented |
 | Ice Spinner | 9 | 미지원 | callbacks ["onAfterHit", "onAfterSubDamage"] are not implemented |
@@ -34,7 +31,6 @@
 | Volt Switch | 5 | 미지원 | switching |
 | Wide Guard | 5 | 미지원 | callbacks ["condition.onSideStart", "condition.onTryHit", "onHitSide", "onTry"] are not implemented |
 | Perish Song | 4 | 미지원 | callbacks ["condition.onEnd", "condition.onResidual", "onHitField"] are not implemented |
-| Scale Shot | 4 | 미지원 | multi-hit |
 | Sparkling Aria | 4 | 미지원 | callbacks ["onAfterMove"] are not implemented |
 | Stomping Tantrum | 4 | 미지원 | callbacks ["basePowerCallback"] are not implemented |
 | Substitute | 4 | 미지원 | callbacks ["condition.onEnd", "condition.onStart", "condition.onTryPrimaryHit", "onHit", "onTryHit"] are not implemented |
@@ -71,7 +67,6 @@
 | Foul Play | 1 | 미지원 | a special mechanic |
 | Gigaton Hammer | 1 | 미지원 | can't use twice |
 | High Jump Kick | 1 | 미지원 | callbacks ["onMoveFail"] are not implemented |
-| Icicle Spear | 1 | 미지원 | multi-hit |
 | King's Shield | 1 | 미지원 | callbacks ["condition.onHit", "condition.onStart", "condition.onTryHit", "onHit", "onPrepareHit"] are not implemented |
 | Leech Seed | 1 | 미지원 | callbacks ["condition.onResidual", "condition.onStart", "onTryImmunity"] are not implemented |
 | Memento | 1 | 미지원 | self-destruct |
@@ -83,20 +78,18 @@
 | Soak | 1 | 미지원 | callbacks ["onHit"] are not implemented |
 | Spikes | 1 | 미지원 | callbacks ["condition.onSideRestart", "condition.onSideStart", "condition.onSwitchIn"] are not implemented |
 | Toxic Spikes | 1 | 미지원 | callbacks ["condition.onSideRestart", "condition.onSideStart", "condition.onSwitchIn"] are not implemented |
-| Twin Beam | 1 | 미지원 | multi-hit |
 | Wish | 1 | 미지원 | callbacks ["condition.onEnd", "condition.onResidual", "condition.onStart"] are not implemented |
 
 ### 라이브러리에서 쓰이고 지원됨
 
-Protect (201), Fake Out (57), Gravity (37), Heat Wave (34), Hypnosis (32), Close Combat (29), Grassy Glide (29), Earthquake (28), Ice Beam (27), Recover (27), Hyper Voice (26), Hydro Pump (25), Wood Hammer (25), Rock Slide (24), Trick Room (24), Bite (22), Quash (22), Dire Claw (21), Swords Dance (21), Fire Blast (19), Flare Blitz (19), Sunny Day (18), Iron Head (17), Moonblast (17), Shadow Ball (17), Dragon Dance (15), Focus Blast (15), High Horsepower (15), Aqua Jet (14), Liquidation (14), Tailwind (14), Wave Crash (14), Sucker Punch (13), Ice Shard (11), Psychic (11), Dazzling Gleam (10), Follow Me (10), Nasty Plot (10), Aurora Veil (9), Draco Meteor (9), Dragon Rush (9), Grav Apple (9), Icicle Crash (9), Make It Rain (9), Thunderbolt (9), Blizzard (8), Calm Mind (8), Dragon Claw (8), Knock Off (8), Kowtow Cleave (8), Leech Life (8), Double-Edge (7), Zap Cannon (7), Armor Cannon (6), Flamethrower (6), Flash Cannon (6), Head Smash (6), Low Kick (6), Sludge Bomb (6), Body Press (5), Dark Pulse (5), Dragon Pulse (5), Extreme Speed (5), Ice Punch (5), Icy Wind (5), Mystical Fire (5), Ancient Power (4), Aura Sphere (4), Earth Power (4), Sacred Sword (4), Shadow Claw (4), Shadow Sneak (4), Brave Bird (3), Drain Punch (3), First Impression (3), Freeze-Dry (3), Giga Drain (3), Leaf Storm (3), Play Rough (3), Power Gem (3), Reflect (3), Rock Tomb (3), Scald (3), Slack Off (3), Sleep Powder (3), Will-O-Wisp (3), Acrobatics (2), Body Slam (2), Bullet Punch (2), Darkest Lariat (2), Detect (2), Drill Run (2), Drum Beating (2), Flower Trick (2), Light Screen (2), Light of Ruin (2), Matcha Gotcha (2), Muddy Water (2), Overheat (2), Quick Attack (2), Rage Powder (2), Razor Shell (2), Sludge Wave (2), Surf (2), Thunder Wave (2), Toxic (2), Air Slash (1), Bulk Up (1), Fiery Dance (1), Grass Knot (1), Gunk Shot (1), Hammer Arm (1), Haze (1), Ice Hammer (1), Iron Defense (1), Lumina Crash (1), Mach Punch (1), Misty Terrain (1), Morning Sun (1), Psycho Cut (1), Psyshock (1), Pyro Ball (1), Quiver Dance (1), Rising Voltage (1), Scorching Sands (1), Shell Smash (1), Snarl (1), Synthesis (1), Thunder (1), Torch Song (1), Vacuum Wave (1), Volt Tackle (1)
+Protect (201), Fake Out (57), Gravity (37), Heat Wave (34), Hypnosis (32), Close Combat (29), Grassy Glide (29), Earthquake (28), Ice Beam (27), Recover (27), Hyper Voice (26), Hydro Pump (25), Wood Hammer (25), Rock Slide (24), Trick Room (24), Bite (22), Bullet Seed (22), Population Bomb (22), Quash (22), Dire Claw (21), Swords Dance (21), Fire Blast (19), Flare Blitz (19), Sunny Day (18), Iron Head (17), Moonblast (17), Shadow Ball (17), Dragon Dance (15), Focus Blast (15), High Horsepower (15), Aqua Jet (14), Liquidation (14), Tailwind (14), Wave Crash (14), Sucker Punch (13), Ice Shard (11), Psychic (11), Dazzling Gleam (10), Follow Me (10), Nasty Plot (10), Aurora Veil (9), Draco Meteor (9), Dragon Rush (9), Dual Wingbeat (9), Grav Apple (9), Icicle Crash (9), Make It Rain (9), Thunderbolt (9), Blizzard (8), Calm Mind (8), Dragon Claw (8), Knock Off (8), Kowtow Cleave (8), Leech Life (8), Double-Edge (7), Zap Cannon (7), Armor Cannon (6), Flamethrower (6), Flash Cannon (6), Head Smash (6), Low Kick (6), Sludge Bomb (6), Body Press (5), Dark Pulse (5), Dragon Pulse (5), Extreme Speed (5), Ice Punch (5), Icy Wind (5), Mystical Fire (5), Ancient Power (4), Aura Sphere (4), Earth Power (4), Sacred Sword (4), Scale Shot (4), Shadow Claw (4), Shadow Sneak (4), Brave Bird (3), Drain Punch (3), First Impression (3), Freeze-Dry (3), Giga Drain (3), Leaf Storm (3), Play Rough (3), Power Gem (3), Reflect (3), Rock Tomb (3), Scald (3), Slack Off (3), Sleep Powder (3), Will-O-Wisp (3), Acrobatics (2), Body Slam (2), Bullet Punch (2), Darkest Lariat (2), Detect (2), Drill Run (2), Drum Beating (2), Flower Trick (2), Light Screen (2), Light of Ruin (2), Matcha Gotcha (2), Muddy Water (2), Overheat (2), Quick Attack (2), Rage Powder (2), Razor Shell (2), Sludge Wave (2), Surf (2), Thunder Wave (2), Toxic (2), Air Slash (1), Bulk Up (1), Fiery Dance (1), Grass Knot (1), Gunk Shot (1), Hammer Arm (1), Haze (1), Ice Hammer (1), Icicle Spear (1), Iron Defense (1), Lumina Crash (1), Mach Punch (1), Misty Terrain (1), Morning Sun (1), Psycho Cut (1), Psyshock (1), Pyro Ball (1), Quiver Dance (1), Rising Voltage (1), Scorching Sands (1), Shell Smash (1), Snarl (1), Synthesis (1), Thunder (1), Torch Song (1), Twin Beam (1), Vacuum Wave (1), Volt Tackle (1)
 
 ### 나머지 미지원 (이유별)
 
 - **미지원: callbacks ["onHit"] are not implemented** (47): Acupressure, Aromatherapy, Assist, Bestow, Block, Bug Bite, Camouflage, Conversion, Conversion 2, Copycat, Corrosive Gas, Defog, Doodle, Floral Healing, Forest's Curse, Freezy Frost, Guard Split, Heal Bell, Heal Pulse, Incinerate, Instruct, Jaw Lock, Jungle Healing, Lunar Blessing, Magic Powder, Mean Look, Metronome, Mimic, Pluck, Power Split, Psych Up, Purify, Recycle, Reflect Type, Refresh, Sappy Seed, Sketch, Skill Swap, Speed Swap, Spider Web, Spite, Take Heart, Thousand Waves, Tidy Up, Transform, Trick-or-Treat, Venom Drench
-- **미지원: a special mechanic** (41): 10,000,000 Volt Thunderbolt, Acid Downpour, All-Out Pummeling, Black Hole Eclipse, Bloom Doom, Breakneck Blitz, Catastropika, Chloroblast, Clangorous Soulblaze, Continental Crush, Corkscrew Crash, Devastating Drake, Extreme Evoboost, Gigavolt Havoc, G-Max Drum Solo, G-Max Fireball, G-Max Gravitas, G-Max Hydrosnipe, G-Max One Blow, G-Max Rapid Flow, G-Max Resonance, Hydro Vortex, Hyperspace Hole, Inferno Overdrive, Let's Snuggle Forever, Malicious Moonsault, Menacing Moonraze Maelstrom, Never-Ending Nightmare, Oceanic Operetta, Pulverizing Pancake, Savage Spin-Out, Searing Sunraze Smash, Shattered Psyche, Sinister Arrow Raid, Soul-Stealing 7-Star Strike, Spectral Thief, Stoked Sparksurfer, Subzero Slammer, Supersonic Skystrike, Tectonic Rage, Twinkle Tackle
+- **미지원: a special mechanic** (42): 10,000,000 Volt Thunderbolt, Acid Downpour, All-Out Pummeling, Black Hole Eclipse, Bloom Doom, Breakneck Blitz, Catastropika, Chloroblast, Clangorous Soulblaze, Continental Crush, Corkscrew Crash, Devastating Drake, Dragon Darts, Extreme Evoboost, Gigavolt Havoc, G-Max Drum Solo, G-Max Fireball, G-Max Gravitas, G-Max Hydrosnipe, G-Max One Blow, G-Max Rapid Flow, G-Max Resonance, Hydro Vortex, Hyperspace Hole, Inferno Overdrive, Let's Snuggle Forever, Malicious Moonsault, Menacing Moonraze Maelstrom, Never-Ending Nightmare, Oceanic Operetta, Pulverizing Pancake, Savage Spin-Out, Searing Sunraze Smash, Shattered Psyche, Sinister Arrow Raid, Soul-Stealing 7-Star Strike, Spectral Thief, Stoked Sparksurfer, Subzero Slammer, Supersonic Skystrike, Tectonic Rage, Twinkle Tackle
 - **미지원: callbacks ["self.onHit"] are not implemented** (38): G-Max Befuddle, G-Max Centiferno, G-Max Cuddle, G-Max Depletion, G-Max Finale, G-Max Foam Burst, G-Max Gold Rush, G-Max Malodor, G-Max Meltdown, G-Max Replenish, G-Max Sandblast, G-Max Smite, G-Max Stonesurge, G-Max Stun Shock, G-Max Sweetness, G-Max Tartness, G-Max Terror, G-Max Volt Crash, G-Max Wind Rage, Max Airstream, Max Darkness, Max Flare, Max Flutterby, Max Geyser, Max Hailstorm, Max Knuckle, Max Lightning, Max Mindstorm, Max Ooze, Max Overgrowth, Max Phantasm, Max Quake, Max Rockfall, Max Starfall, Max Steelspike, Max Strike, Max Wyrmwind, Sparkly Swirl
 - **미지원: callbacks ["basePowerCallback"] are not implemented** (27): Assurance, Avalanche, Bolt Beak, Crush Grip, Dragon Energy, Electro Ball, Eruption, Fishious Rend, Flail, Frustration, Gyro Ball, Hard Press, Infernal Parade, Payback, Pika Papow, Power Trip, Punishment, Return, Revenge, Reversal, Stored Power, Temper Flare, Triple Kick, Trump Card, Veevee Volley, Water Spout, Wring Out
-- **미지원: multi-hit** (22): Arm Thrust, Barrage, Bonemerang, Bone Rush, Comet Punch, Double Hit, Double Iron Bash, Double Kick, Double Slap, Dragon Darts, Dual Chop, Fury Attack, Fury Swipes, Gear Grind, Pin Missile, Rock Blast, Spike Cannon, Surging Strikes, Tachyon Cutter, Tail Slap, Triple Dive, Twineedle
 - **미지원: callbacks ["onBasePower"] are not implemented** (12): Barb Barrage, Brine, Collision Course, Electro Drift, Facade, Fickle Beam, Fusion Bolt, Fusion Flare, Lash Out, Misty Explosion, Retaliate, Venoshock
 - **미지원: secondary volatile confusion** (10): Chatter, Confusion, Dizzy Punch, Dynamic Punch, Magical Torque, Psybeam, Rock Climb, Signal Beam, Strange Steam, Water Pulse
 - **미지원: callbacks ["onModifyMove"] are not implemented** (9): Bleakwind Storm, Growth, Light That Burns the Sky, Photon Geyser, Present, Sandsear Storm, Secret Power, Struggle, Wildbolt Storm
@@ -229,7 +222,7 @@ Protect (201), Fake Out (57), Gravity (37), Heat Wave (34), Hypnosis (32), Close
 
 ## 특성
 
-- 전체 321개 중 지원 94개, 등장 효과만 미지원 16개, 미지원 211개.
+- 전체 321개 중 지원 95개, 등장 효과만 미지원 16개, 미지원 210개.
 - 라이브러리 사용 66개 중 지원 35개 (53%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
@@ -277,8 +270,8 @@ Intimidate (30), Grassy Surge (28), Competitive (26), Prankster (25), Technician
 - **미지원: callbacks ["onDamagingHit"] are not implemented** (17): Aftermath, Cotton Down, Cute Charm, Effect Spore, Innards Out, Justified, Lingering Aroma, Mummy, Perish Body, Poison Point, Sand Spit, Spicy Spray, Static, Steam Engine, Tangling Hair, Wandering Spirit, Water Compaction
 - **등장 효과 미구현: ["onStart"]** (15): Anticipation, Costar, Curious Medicine, Dauntless Shield, Download, Embody Aspect (Cornerstone), Embody Aspect (Hearthflame), Embody Aspect (Teal), Embody Aspect (Wellspring), Forewarn, Frisk, Intrepid Sword, Klutz, Screen Cleaner, Supersweet Syrup
 - **미지원: callbacks ["onModifyAtk", "onModifySpA"] are not implemented** (7): Defeatist, Dragon's Maw, Fire Mane, Rocky Payload, Stakeout, Steelworker, Transistor
-- **미지원: callbacks ["onModifyMove"] are not implemented** (7): Infiltrator, Long Reach, Propeller Tail, Serene Grace, Skill Link, Stalwart, Stench
 - **미지원: callbacks ["onResidual"] are not implemented** (7): Bad Dreams, Harvest, Healer, Hunger Switch, Moody, Pickup, Power Construct
+- **미지원: callbacks ["onModifyMove"] are not implemented** (6): Infiltrator, Long Reach, Propeller Tail, Serene Grace, Stalwart, Stench
 - **미지원: callbacks ["onTryHit"] are not implemented** (6): Earth Eater, Motor Drive, Telepathy, Water Absorb, Well-Baked Body, Wonder Guard
 - **미지원: callbacks [] are not implemented** (6): Corrosion, Dancer, Early Bird, Multitype, Persistent, RKS System
 - **미지원: callbacks ["onBasePower", "onModifyType"] are not implemented** (5): Aerilate, Dragonize, Galvanize, Normalize, Refrigerate
@@ -375,7 +368,7 @@ Intimidate (30), Grassy Surge (28), Competitive (26), Prankster (25), Technician
 
 ## 도구
 
-- 전체 583개 중 지원 391개, 등장 효과만 미지원 0개, 미지원 192개.
+- 전체 583개 중 지원 392개, 등장 효과만 미지원 0개, 미지원 191개.
 - 라이브러리 사용 60개 중 지원 42개 (70%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
@@ -417,13 +410,13 @@ Life Orb (52), Sitrus Berry (51), Focus Sash (31), Leftovers (23), Miracle Seed 
 - **미지원: callbacks [] are not implemented** (6): Binding Band, Blunder Policy, Full Incense, Grip Claw, Lagging Tail, Ultranecrozium Z
 - **미지원: callbacks ["onDamagingHit"] are not implemented** (5): Absorb Bulb, Cell Battery, Luminous Moss, Snowball, Weakness Policy
 - **미지원: callbacks ["onModifyCritRatio"] are not implemented** (5): Leek, Lucky Punch, Razor Claw, Scope Lens, Stick
-- **미지원: callbacks ["onModifyMove"] are not implemented** (3): King's Rock, Loaded Dice, Razor Fang
 - **미지원: callbacks ["onResidual"] are not implemented** (3): Black Sludge, Flame Orb, Toxic Orb
 - **미지원: callbacks ["onAfterMoveSecondary", "onEat"] are not implemented** (2): Kee Berry, Maranga Berry
 - **미지원: callbacks ["onAfterMoveSecondarySelf"] are not implemented** (2): Shell Bell, Throat Spray
 - **미지원: callbacks ["onDamagingHit", "onEat"] are not implemented** (2): Jaboca Berry, Rowap Berry
 - **미지원: callbacks ["onEat", "onResidual", "onTryEatItem"] are not implemented** (2): Berry, Gold Berry
 - **미지원: callbacks ["onModifyAccuracy"] are not implemented** (2): Bright Powder, Lax Incense
+- **미지원: callbacks ["onModifyMove"] are not implemented** (2): King's Rock, Razor Fang
 - **미지원: callbacks ["onSourceModifyAccuracy"] are not implemented** (2): Wide Lens, Zoom Lens
 - **미지원: callbacks ["onSwitchIn", "onTakeItem"] are not implemented** (2): Blue Orb, Red Orb
 - **미지원: callbacks ["onUpdate"] are not implemented** (2): Berry Juice, Berserk Gene

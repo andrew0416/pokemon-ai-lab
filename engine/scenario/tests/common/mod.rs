@@ -79,6 +79,46 @@ pub fn oracle_distribution(fixture: &Value) -> HashMap<String, f64> {
     oracle
 }
 
+/// Parity with a Monte Carlo oracle fixture (`oracle/expected/<name>.mc.json`, `enumerate.cjs
+/// --mode mc`): the engine's exact distribution against Showdown's sampled one, within
+/// sampling noise (`sqrt(k / 2πn)` for `k` outcomes and `n` samples), and no sampled outcome
+/// the engine does not produce. For turns whose exact enumeration is out of Showdown's reach
+/// (multi-hit moves).
+pub fn assert_mc_parity(name: &str) {
+    let path = engine_dir().join(format!("oracle/expected/{name}.mc.json"));
+    let text = std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("{path:?}: {e}"));
+    let fixture: Value = serde_json::from_str(&text).unwrap();
+    let samples = fixture["branches"]
+        .as_u64()
+        .expect("mc reports count samples") as f64;
+    let (loaded, position) = start(name, &fixture);
+    let mut state = position.state.clone();
+    let decision = scenario_decision(&loaded, &position).unwrap();
+    let outcomes = run_decision(&mut state, &decision).unwrap();
+    let engine = distribution(&loaded, &mut state, &outcomes);
+    let oracle = oracle_distribution(&fixture);
+    let mut tv = 0.0;
+    for (k, p) in &engine {
+        tv += (p - oracle.get(k).copied().unwrap_or(0.0)).abs() / 2.0;
+    }
+    for k in oracle.keys() {
+        assert!(
+            engine.contains_key(k),
+            "{name}: Showdown sampled an outcome the engine lacks:
+{k}"
+        );
+        if !engine.contains_key(k) {
+            tv += oracle[k] / 2.0;
+        }
+    }
+    let noise = (engine.len() as f64 / (2.0 * std::f64::consts::PI * samples)).sqrt();
+    assert!(
+        tv < 3.0 * noise,
+        "{name}: TV {tv} vs noise {noise} ({} outcomes)",
+        engine.len()
+    );
+}
+
 /// Exact parity of one scenario's turn with its oracle fixture of the same name.
 pub fn assert_exact_parity(name: &str) {
     let fixture = fixture(name);

@@ -96,6 +96,7 @@ pub fn enumerate_turn<const N: usize>(
     check_turn(state, ruleset, &choices)?;
     let start = Pending {
         queue: initial_queue(state, &choices),
+        in_progress: None,
         done: false,
     };
     enumerate_stages(state, start, |b, pending| {
@@ -117,6 +118,7 @@ pub fn sample_turn<const N: usize>(
     check_turn(state, ruleset, &choices)?;
     let start = Pending {
         queue: initial_queue(state, &choices),
+        in_progress: None,
         done: false,
     };
     sample_stages(state, samples, seed, start, |b, pending| {
@@ -292,6 +294,21 @@ fn run_replacements<const N: usize>(
     // The Update after the batched `runSwitch`, then `endTurn`.
     update::update_event(b)?;
     residual::end_turn(b);
+    Ok(())
+}
+
+/// The end of Showdown `runAction` for a move, switch or Mega Evolution: faints (the turn ends
+/// if the battle does), then `eachEvent('Update')`.
+fn after_action<const N: usize>(
+    b: &mut Battle<'_, N>,
+    pending: &mut Pending,
+) -> Result<(), TurnError> {
+    if b.faint_messages(true) {
+        pending.done = true;
+        b.queue.clear();
+    } else {
+        update::update_event(b)?;
+    }
     Ok(())
 }
 
@@ -535,11 +552,13 @@ fn disabled<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> Opti
     None
 }
 
-/// The rest of a turn between stages: the actions not yet run and whether the turn is over.
-/// (Fainted Pokémon still holding a position are in the state: `Slot::fainted_occupant`.)
+/// The rest of a turn between stages: the actions not yet run, a multi-hit move suspended
+/// between two hits, and whether the turn is over. (Fainted Pokémon still holding a position
+/// are in the state: `Slot::fainted_occupant`.)
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 struct Pending {
     queue: Vec<Action>,
+    in_progress: Option<moves::MoveProgress>,
     done: bool,
 }
 
@@ -646,6 +665,14 @@ fn run_stage_inner<const N: usize>(
     b: &mut Battle<'_, N>,
     pending: &mut Pending,
 ) -> Result<(), TurnError> {
+    // A multi-hit move continues with its next hit before anything else.
+    if let Some(progress) = pending.in_progress.take() {
+        match moves::resume_move(b, progress)? {
+            moves::MoveStep::Suspended(progress) => pending.in_progress = Some(progress),
+            moves::MoveStep::Done => after_action(b, pending)?,
+        }
+        return Ok(());
+    }
     if !b.queue.is_empty() {
         // Best action by (order asc, priority desc, speed desc), ties uniformly at random.
         let keys: Vec<(u32, i32, i32)> = b.queue.iter().map(|a| b.action_key(a)).collect();
@@ -663,7 +690,12 @@ fn run_stage_inner<const N: usize>(
             match action.kind {
                 ActionKind::Move { index, target, .. } => {
                     let will_act = b.will_act();
-                    moves::run_move(b, action.slot, index, target, will_act)?;
+                    if let moves::MoveStep::Suspended(progress) =
+                        moves::run_move(b, action.slot, index, target, will_act)?
+                    {
+                        pending.in_progress = Some(progress);
+                        return Ok(());
+                    }
                 }
                 ActionKind::Switch { party_index } => {
                     switching::run_switch(b, action.slot, party_index)?;
@@ -672,13 +704,7 @@ fn run_stage_inner<const N: usize>(
                     mega::run_mega_evo(b, action.slot)?;
                 }
             }
-            if b.faint_messages(true) {
-                pending.done = true;
-                b.queue.clear();
-            } else {
-                // `eachEvent('Update')` after every action.
-                update::update_event(b)?;
-            }
+            after_action(b, pending)?;
         }
         return Ok(());
     }

@@ -16,7 +16,7 @@ use crate::dex::{
     NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
-use crate::state::{SideId, SlotRef, Status};
+use crate::state::{PokemonRef, SideId, SlotRef, Status};
 use crate::volatile::Volatile;
 
 use super::abilities as ability_events;
@@ -26,7 +26,10 @@ use super::order::{boosted_stat, modify};
 use super::support::{side_effect_of, type_boost_item};
 use super::TurnError;
 
-/// The move being used, with what is decided when it is used.
+/// The move being used, with what is decided when it is used. It is part of a suspended
+/// multi-hit move's progress (`MoveProgress`), so it is comparable: `data` is implied by `id`
+/// and left out of the comparison (keep the manual impls below in step with new fields).
+#[derive(Clone, Debug)]
 struct ActiveMove {
     id: MoveId,
     data: &'static MoveData,
@@ -36,6 +39,61 @@ struct ActiveMove {
     spread: bool,
     /// Accuracy after ModifyMove; `None` never misses (Showdown `accuracy: true`).
     accuracy: Option<u8>,
+}
+
+impl PartialEq for ActiveMove {
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id
+            && self.priority == other.priority
+            && self.prankster_boosted == other.prankster_boosted
+            && self.spread == other.spread
+            && self.accuracy == other.accuracy
+    }
+}
+
+impl Eq for ActiveMove {}
+
+impl std::hash::Hash for ActiveMove {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.id.hash(state);
+        self.priority.hash(state);
+        self.prankster_boosted.hash(state);
+        self.spread.hash(state);
+        self.accuracy.hash(state);
+    }
+}
+
+/// A multi-hit move suspended between two hits (WORKPLAN F10): the turn engine runs each hit
+/// as its own stage so identical positions merge between hits instead of multiplying every
+/// hit's damage rolls into one enumeration. Everything `hitStepMoveHitLoop` keeps across hits
+/// plus what the move's tail (`useMoveInner`, `runMove`) needs.
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+pub(crate) struct MoveProgress {
+    user: SlotRef,
+    pokemon: PokemonRef,
+    mv: ActiveMove,
+    /// Targets still standing (Showdown keeps hitting until every target fainted).
+    targets: Vec<SlotRef>,
+    main_target: SlotRef,
+    /// Hits to make and hits made so far.
+    hits: u8,
+    hit: u8,
+    /// `move.totalDamage`.
+    total_damage: i32,
+    /// Whether any hit so far did something (the move's success).
+    any_ok: bool,
+}
+
+/// How far a move got: finished, or suspended before its next hit.
+pub(crate) enum MoveStep {
+    Done,
+    Suspended(MoveProgress),
+}
+
+/// A hit loop's result within `use_move`.
+enum HitOutcome {
+    Finished(bool),
+    Suspended(MoveProgress),
 }
 
 /// Per-target result of a hit (Showdown's `damage[i]`: a number, `true`, or `false`).
@@ -53,22 +111,54 @@ impl Hit {
     }
 }
 
-/// Showdown `runMove` for the move in `move_index`. `will_act` is `queue.willAct()`.
+/// Showdown `runMove` for the move in `move_index`. `will_act` is `queue.willAct()`. A
+/// multi-hit move returns `MoveStep::Suspended` after its first hit; the turn engine resumes
+/// it with [`resume_move`] as its own stage.
 pub(crate) fn run_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     move_index: u8,
     target_loc: i8,
     will_act: bool,
-) -> Result<(), TurnError> {
+) -> Result<MoveStep, TurnError> {
     let pokemon = b.occupant(user).expect("the caller checked the user");
     let id = b.mon(pokemon).moves[move_index as usize].id;
     b.increment_move_actions(user);
     // `setActiveMove`: set for the whole move, cleared when it ends.
     b.active_move = Some(ActiveMoveRef { user, pokemon, id });
     let result = run_move_inner(b, user, move_index, target_loc, will_act);
-    b.active_move = None;
+    if !matches!(result, Ok(MoveStep::Suspended(_))) {
+        b.active_move = None;
+    }
     result
+}
+
+/// The next hit of a suspended multi-hit move, then the move's tail once the hits are done.
+pub(crate) fn resume_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    progress: MoveProgress,
+) -> Result<MoveStep, TurnError> {
+    let (user, pokemon, main_target) = (progress.user, progress.pokemon, progress.main_target);
+    b.active_move = Some(ActiveMoveRef {
+        user,
+        pokemon,
+        id: progress.mv.id,
+    });
+    let mv = progress.mv.clone();
+    let result = match hit_loop(b, user, &mv, Some(progress))? {
+        HitOutcome::Suspended(progress) => return Ok(MoveStep::Suspended(progress)),
+        HitOutcome::Finished(ok) => ok,
+    };
+    use_move_tail(b, user, &mv, result, main_target);
+    run_move_tail(b);
+    b.active_move = None;
+    Ok(MoveStep::Done)
+}
+
+/// The end of Showdown `runMove` after `useMove`.
+fn run_move_tail<const N: usize>(b: &mut Battle<'_, N>) {
+    b.faint_messages(true);
+    b.check_win(None);
 }
 
 fn run_move_inner<const N: usize>(
@@ -77,7 +167,7 @@ fn run_move_inner<const N: usize>(
     move_index: u8,
     target_loc: i8,
     will_act: bool,
-) -> Result<(), TurnError> {
+) -> Result<MoveStep, TurnError> {
     let pokemon = b.occupant(user).expect("the caller checked the user");
     let id = b.mon(pokemon).moves[move_index as usize].id;
     let target = get_target(b, user, id, target_loc);
@@ -91,7 +181,7 @@ fn run_move_inner<const N: usize>(
     };
 
     if !before_move(b, user, &mv) {
-        return Ok(());
+        return Ok(MoveStep::Done);
     }
 
     let pp = b.mon(pokemon).moves[move_index as usize].pp;
@@ -106,10 +196,11 @@ fn run_move_inner<const N: usize>(
     });
     b.set_last_move(user, id);
 
-    use_move(b, user, &mut mv, target, will_act)?;
-    b.faint_messages(true);
-    b.check_win(None);
-    Ok(())
+    if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
+        return Ok(MoveStep::Suspended(progress));
+    }
+    run_move_tail(b);
+    Ok(MoveStep::Done)
 }
 
 /// The BeforeMove handlers, by priority: sleep and freeze (10), flinch (8), Gravity (6),
@@ -432,7 +523,7 @@ fn use_move<const N: usize>(
     mv: &mut ActiveMove,
     target: Option<SlotRef>,
     will_act: bool,
-) -> Result<bool, TurnError> {
+) -> Result<Option<MoveProgress>, TurnError> {
     let pokemon = b.occupant(user).expect("checked");
     let target = if mv.data.target == MoveTarget::User {
         Some(user)
@@ -446,10 +537,9 @@ fn use_move<const N: usize>(
         b.cure_status(pokemon);
     }
     let Some(target) = target else {
-        return Ok(false);
+        return Ok(None);
     };
 
-    let result;
     let mut main_target = target;
     let field_move = matches!(
         mv.data.target,
@@ -461,15 +551,34 @@ fn use_move<const N: usize>(
         get_move_targets(b, user, mv, target)?
     };
     deduct_pressure_pp(b, user, mv, &targets);
-    if field_move {
-        result = try_move_hit_field(b, user, mv, target)?;
+    let result = if field_move {
+        try_move_hit_field(b, user, mv, target)?
     } else {
         let Some(&last) = targets.last() else {
-            return Ok(false);
+            return Ok(None);
         };
         main_target = last;
-        result = try_spread_move_hit(b, user, mv, targets, will_act)?;
-    }
+        match try_spread_move_hit(b, user, mv, targets, will_act)? {
+            HitOutcome::Finished(ok) => ok,
+            HitOutcome::Suspended(mut progress) => {
+                progress.main_target = main_target;
+                return Ok(Some(progress));
+            }
+        }
+    };
+    use_move_tail(b, user, mv, result, main_target);
+    Ok(None)
+}
+
+/// The end of Showdown `useMoveInner` after the hits: the `self` boost, then
+/// AfterMoveSecondarySelf (Life Orb).
+fn use_move_tail<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    result: bool,
+    main_target: SlotRef,
+) {
     if result && mv.data.self_boost != NO_BOOSTS {
         b.boost_by(
             user,
@@ -479,18 +588,17 @@ fn use_move<const N: usize>(
         );
     }
     if !result {
-        return Ok(false);
+        return;
     }
-    // AfterMoveSecondarySelf: Life Orb.
-    if b.item(user) == items::LIFE_ORB
-        && mv.data.category != MoveCategory::Status
-        && main_target != user
-        && b.alive(user).is_some()
-    {
-        let max_hp = f64::from(b.mon(pokemon).max_hp);
-        b.damage(user, max_hp / 10.0, DamageSource::Indirect);
+    if let Some(pokemon) = b.alive(user) {
+        if b.item(user) == items::LIFE_ORB
+            && mv.data.category != MoveCategory::Status
+            && main_target != user
+        {
+            let max_hp = f64::from(b.mon(pokemon).max_hp);
+            b.damage(user, max_hp / 10.0, DamageSource::Indirect);
+        }
     }
-    Ok(true)
 }
 
 /// The extra PP of Showdown `useMoveInner`: `runEvent('DeductPP')` for every Pok챕mon in
@@ -582,7 +690,7 @@ fn try_spread_move_hit<const N: usize>(
     mv: &mut ActiveMove,
     mut targets: Vec<SlotRef>,
     will_act: bool,
-) -> Result<bool, TurnError> {
+) -> Result<HitOutcome, TurnError> {
     mv.spread = targets.len() > 1;
 
     // Try: the move's onTry (Fake Out, First Impression, Poltergeist), on the first target.
@@ -596,11 +704,11 @@ fn try_spread_move_hit<const N: usize>(
             None => false,
         };
         if !ok {
-            return Ok(false);
+            return Ok(HitOutcome::Finished(false));
         }
     }
     if !handlers::on_try(b, user, mv, targets[0]) {
-        return Ok(false);
+        return Ok(HitOutcome::Finished(false));
     }
     // Follow Me / Rage Powder `onTry` and Spotlight `onTryHit`: doubles only.
     if matches!(
@@ -608,11 +716,11 @@ fn try_spread_move_hit<const N: usize>(
         m if m == moves::FOLLOW_ME || m == moves::RAGE_POWDER || m == moves::SPOTLIGHT
     ) && N == 1
     {
-        return Ok(false);
+        return Ok(HitOutcome::Finished(false));
     }
     // PrepareHit: Protect and Detect need a later action and pass the stall check.
     if mv.data.stalling_move && !(will_act && stall_move(b, user)) {
-        return Ok(false);
+        return Ok(HitOutcome::Finished(false));
     }
 
     // 1. TryHit: Psychic Terrain (priority 4), Protect (3), the target's ability (0). Each
@@ -625,12 +733,12 @@ fn try_spread_move_hit<const N: usize>(
     }
     targets = kept;
     if targets.is_empty() {
-        return Ok(false);
+        return Ok(HitOutcome::Finished(false));
     }
     // 2. Type immunity.
     targets.retain(|&t| !type_immune(b, mv, t));
     if targets.is_empty() {
-        return Ok(false);
+        return Ok(HitOutcome::Finished(false));
     }
     // 3. Move-specific immunities: powder, Prankster vs Dark.
     targets.retain(|&t| {
@@ -643,7 +751,7 @@ fn try_spread_move_hit<const N: usize>(
         !powder && !prankster
     });
     if targets.is_empty() {
-        return Ok(false);
+        return Ok(HitOutcome::Finished(false));
     }
     // 4. Accuracy.
     let mut hit = Vec::with_capacity(targets.len());
@@ -653,11 +761,49 @@ fn try_spread_move_hit<const N: usize>(
         }
     }
     if hit.is_empty() {
-        return Ok(false);
+        return Ok(HitOutcome::Finished(false));
     }
-    // 7. The hit (single-hit moves only).
-    let results = hit_loop(b, user, mv, &hit)?;
-    Ok(results.iter().any(|r| r.ok()))
+    // 7. The hit loop.
+    let progress = MoveProgress {
+        user,
+        pokemon: b.occupant(user).expect("checked"),
+        mv: mv.clone(),
+        targets: hit,
+        main_target: user,
+        hits: decide_hits(b, user, mv),
+        hit: 0,
+        total_damage: 0,
+        any_ok: false,
+    };
+    hit_loop(b, user, mv, Some(progress))
+}
+
+/// How many times the move hits (`hitStepMoveHitLoop`): 1, a fixed count, or for 2–5 hit
+/// moves Showdown's 35/35/15/15 draw (Skill Link: always the maximum; Loaded Dice: 4 or 5
+/// evenly, and 4–10 evenly for a 10-hit move).
+fn decide_hits<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) -> u8 {
+    let Some((low, high)) = mv.data.multihit else {
+        return 1;
+    };
+    let skill_link = b.ability(user) == abilities::SKILL_LINK;
+    let loaded_dice = b.item(user) == items::LOADED_DICE;
+    let hits = if low == high || skill_link {
+        high
+    } else if (low, high) == (2, 5) {
+        let drawn = [2, 3, 4, 5][b.rng.weighted(&[0.35, 0.35, 0.15, 0.15])];
+        if drawn < 4 && loaded_dice {
+            5 - b.rng.uniform(2) as u8
+        } else {
+            drawn
+        }
+    } else {
+        low + b.rng.uniform(usize::from(high - low + 1)) as u8
+    };
+    if hits == 10 && loaded_dice {
+        hits - b.rng.uniform(7) as u8
+    } else {
+        hits
+    }
 }
 
 /// Stall's `onStallMove`: success with probability 1/counter; a failure removes the counter.
@@ -808,22 +954,57 @@ fn accuracy_check<const N: usize>(
 }
 
 /// Showdown `hitStepMoveHitLoop` for a single hit.
+/// Showdown `hitStepMoveHitLoop`, one hit per call for a multi-hit move: the next hit
+/// (`multiaccuracy` moves re-roll accuracy from the second hit), then either a suspension
+/// (more hits to come, the user standing, a target standing) or the loop's tail: faints,
+/// recoil on the total damage, and AfterMoveSecondary.
 fn hit_loop<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
-    targets: &[SlotRef],
-) -> Result<Vec<Hit>, TurnError> {
-    let results = spread_move_hit(b, user, mv, targets)?;
-    // `eachEvent('Update')` after the hit's damage (berries eat before faints are processed).
-    super::update::update_event(b)?;
+    progress: Option<MoveProgress>,
+) -> Result<HitOutcome, TurnError> {
+    let mut progress = progress.expect("a hit loop starts with its progress");
+    let hit = progress.hit + 1;
+    let mut targets = progress.targets.clone();
+    // A later hit of a multi-accuracy move (Population Bomb) can miss and end the loop.
+    let mut ended_by_miss = false;
+    let rerolls = mv.data.multiaccuracy
+        && b.ability(user) != abilities::SKILL_LINK
+        && b.item(user) != items::LOADED_DICE;
+    if hit > 1 && rerolls && !targets.is_empty() {
+        let first = targets[0];
+        if !accuracy_check(b, user, mv, first) {
+            ended_by_miss = true;
+        }
+    }
+    let mut results = Vec::new();
+    if !ended_by_miss {
+        results = spread_move_hit(b, user, mv, &targets)?;
+        progress.hit = hit;
+        progress.total_damage += results
+            .iter()
+            .map(|r| if let Hit::Damage(d) = r { *d } else { 0 })
+            .sum::<i32>();
+        let hit_ok = results.iter().any(|r| r.ok());
+        progress.any_ok |= hit_ok;
+        // `eachEvent('Update')` after the hit's damage (berries eat before faints are
+        // processed).
+        super::update::update_event(b)?;
+        targets.retain(|&t| b.alive(t).is_some());
+        let single = progress.targets.len() == 1;
+        let user_standing = b.alive(user).is_some();
+        // `if (!pokemon.hp && targets.length === 1) break;` — a fainted user stops a
+        // single-target move; every target fainted stops any.
+        if hit_ok && hit < progress.hits && !targets.is_empty() && (user_standing || !single) {
+            progress.targets = targets;
+            return Ok(HitOutcome::Suspended(progress));
+        }
+    }
+    // The loop ended: `faintMessages(false, false, !pokemon.hp)`, recoil, AfterMoveSecondary.
     let user_fainted = b.alive(user).is_none();
     b.faint_messages(user_fainted);
-
-    let total: i32 = results
-        .iter()
-        .map(|r| if let Hit::Damage(d) = r { *d } else { 0 })
-        .sum();
+    let total = progress.total_damage;
     if total > 0 {
         if let Some(recoil) = mv.data.recoil {
             let amount = (f64::from(total) * f64::from(recoil.0) / f64::from(recoil.1))
@@ -832,12 +1013,12 @@ fn hit_loop<const N: usize>(
             b.damage(user, amount, DamageSource::Recoil);
         }
     }
-    if !results.iter().any(|r| r.ok()) {
-        return Ok(results);
+    if !progress.any_ok {
+        return Ok(HitOutcome::Finished(false));
     }
-    // AfterMoveSecondary: a thawing move thaws a frozen target.
+    // AfterMoveSecondary: a thawing move thaws a frozen target (of the last hit).
     if mv.data.thaws_target {
-        for (&t, r) in targets.iter().zip(&results) {
+        for (&t, r) in progress.targets.iter().zip(&results) {
             if r.ok() {
                 if let Some(p) = b.alive(t) {
                     if b.mon(p).status == Status::Freeze {
@@ -847,7 +1028,7 @@ fn hit_loop<const N: usize>(
             }
         }
     }
-    Ok(results)
+    Ok(HitOutcome::Finished(true))
 }
 
 /// Showdown `spreadMoveHit` for the move's own hit.
