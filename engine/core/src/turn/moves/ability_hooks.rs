@@ -62,7 +62,8 @@ pub(super) fn on_modify_move<const N: usize>(
 /// the status in `onUpdate` (Water Veil, Water Bubble, Immunity, Insomnia, Vital Spirit,
 /// Limber, Magma Armor: `cured_on_update`), Showdown cures it at the `Update` after the action,
 /// once the ability is no longer suppressed; the engine has no Update event, so the move is
-/// refused while a Pokémon it could hit that way is active. The statuses a move can set: its
+/// refused while any other active Pokémon has such an ability for a status the move can set
+/// (conservative: targets are not resolved yet in ModifyMove). The statuses a move can set: its
 /// primary status, its secondaries' (unless Sheer Force deleted them), and Dire Claw's and Tri
 /// Attack's `secondary.onHit` draws; a new status-setting handler must be added here.
 fn status_cure_bypassed<const N: usize>(
