@@ -116,6 +116,12 @@ pub enum Instruction {
         old: SideHistory,
         new: SideHistory,
     },
+    /// `Slot::switch_flag` (F6).
+    SetSwitchFlag {
+        target: SlotRef,
+        old: bool,
+        new: bool,
+    },
     SetField {
         effect: FieldEffect,
         old: Effect,
@@ -143,11 +149,15 @@ pub enum Instruction {
     },
 }
 
-/// One weighted result of a turn (or of a single action while a turn is being built).
+/// One weighted result of a turn (or of a single action while a turn is being built). With
+/// `suspension`, the turn stopped for a mid-turn switch decision (Showdown's `request:
+/// switch` while actions remain: U-turn, Parting Shot, ...) and `crate::turn::resume_turn`
+/// continues it from the state the instructions lead to.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Outcome {
     pub probability: f64,
     pub instructions: Vec<Instruction>,
+    pub suspension: Option<crate::turn::Suspension>,
 }
 
 impl<const N: usize> State<N> {
@@ -212,6 +222,9 @@ impl<const N: usize> State<N> {
             }
             Instruction::SetSlotHistory { target, new, .. } => self.slot_mut(target).history = new,
             Instruction::SetSideHistory { side, new, .. } => self.side_mut(side).history = new,
+            Instruction::SetSwitchFlag { target, new, .. } => {
+                self.slot_mut(target).switch_flag = new
+            }
             Instruction::SetField { effect, new, .. } => self.field[effect as usize] = new,
             Instruction::SetSideEffect {
                 side, effect, new, ..
@@ -270,6 +283,9 @@ impl<const N: usize> State<N> {
             }
             Instruction::SetSlotHistory { target, old, .. } => self.slot_mut(target).history = old,
             Instruction::SetSideHistory { side, old, .. } => self.side_mut(side).history = old,
+            Instruction::SetSwitchFlag { target, old, .. } => {
+                self.slot_mut(target).switch_flag = old
+            }
             Instruction::SetField { effect, old, .. } => self.field[effect as usize] = old,
             Instruction::SetSideEffect {
                 side, effect, old, ..

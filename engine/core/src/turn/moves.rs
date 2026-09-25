@@ -14,8 +14,8 @@ use crate::damage::{
 };
 use crate::dex::{
     abilities, items, moves, AbilityId, FixedDamage, IgnoreImmunity, ItemId, MoveCategory,
-    MoveData, MoveFlags, MoveId, MoveTarget, Ohko, Secondary, Stat, Type, TypeImmunities,
-    TypeRelation, NO_BOOSTS,
+    MoveData, MoveFlags, MoveId, MoveTarget, Ohko, Secondary, SelfSwitch, Stat, Type,
+    TypeImmunities, TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{MoveResult, PokemonRef, SideId, SlotRef, Status};
@@ -72,6 +72,9 @@ struct ActiveMove {
     /// Showdown `move.sourceEffect` for a move another move calls (Sleep Talk), whose PP pays
     /// Pressure's extra; `NONE` for a move used directly.
     source_effect: MoveId,
+    /// `move.selfSwitch` (U-turn, Parting Shot, ...): the user switches out once the move
+    /// landed (F6). Baton Pass and Shed Tail are refused.
+    self_switch: bool,
 }
 
 impl PartialEq for ActiveMove {
@@ -91,6 +94,7 @@ impl PartialEq for ActiveMove {
             && self.scrappy == other.scrappy
             && self.hit_targets == other.hit_targets
             && self.source_effect == other.source_effect
+            && self.self_switch == other.self_switch
     }
 }
 
@@ -113,6 +117,7 @@ impl std::hash::Hash for ActiveMove {
         self.scrappy.hash(state);
         self.hit_targets.hash(state);
         self.source_effect.hash(state);
+        self.self_switch.hash(state);
     }
 }
 
@@ -203,6 +208,7 @@ pub(crate) fn run_move<const N: usize>(
             scrappy: false,
             hit_targets: 0,
             source_effect: MoveId::NONE,
+            self_switch: false,
         };
         before_move(b, user, &recharge);
         return Ok(MoveStep::Done);
@@ -317,6 +323,7 @@ fn run_move_inner<const N: usize>(
         scrappy: false,
         hit_targets: 0,
         source_effect: MoveId::NONE,
+        self_switch: id.data().self_switch == SelfSwitch::Yes,
     };
 
     // `pokemon.moveThisTurnResult = willTryMove`: `false` from every BeforeMove handler
@@ -743,6 +750,7 @@ fn use_move<const N: usize>(
     // `pokemon.moveThisTurnResult = undefined` (`useMove`); every early return below is a
     // failure (`false`).
     b.set_move_result(user, MoveResult::Undefined);
+    b.move_self_switch = mv.self_switch;
     let base_target = mv.target;
     let mut target = if matches!(mv.target, MoveTarget::User | MoveTarget::Allies) {
         Some(user)
@@ -819,6 +827,12 @@ fn use_move<const N: usize>(
             }
         }
     };
+    // `moveHit`: `if (move.selfSwitch && source.hp) source.switchFlag = move.id` once the move
+    // did something (Parting Shot's `onHit` withdrew it if its drops failed). The request is
+    // made, or the flag dropped for a side without a bench, after the action.
+    if result && b.move_self_switch && b.alive(user).is_some() {
+        b.set_switch_flag(user);
+    }
     b.finish_move_result(user, result);
     use_move_tail(b, user, mv, result, main_target);
     Ok(None)
@@ -862,6 +876,7 @@ fn call_move<const N: usize>(
         scrappy: false,
         hit_targets: 0,
         source_effect: caller.id,
+        self_switch: data.self_switch == SelfSwitch::Yes,
     };
     let target = get_random_target(b, user, data.target);
     let will_act = b.will_act();
@@ -1640,6 +1655,11 @@ fn spread_move_hit<const N: usize>(
                     continue;
                 }
             }
+        }
+        // `if (moveData.selfSwitch) { if (canSwitch(source.side)) didSomething = true; else
+        // didSomething = combineResults(didSomething, false); }`
+        if data.self_switch != SelfSwitch::No {
+            note(super::residual::bench(b, user.side).next().is_some());
         }
         // The move's own onHit; NOT_FAIL neither succeeds nor fails.
         match handlers::on_hit(b, user, t, mv)? {

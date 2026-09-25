@@ -250,6 +250,8 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         moves::COMEUPPANCE,
         &["damageCallback", "onModifyTarget", "onTry"],
     ),
+    // Parting Shot: `onHit` drops Atk and SpA and withdraws the switch if that failed (F6).
+    (moves::PARTING_SHOT, &["onHit"]),
     (moves::FIRST_IMPRESSION, &["onDisableMove", "onTry"]),
     (moves::DIRE_CLAW, &["secondaries.onHit", "secondary.onHit"]),
     (moves::TRI_ATTACK, &["secondaries.onHit", "secondary.onHit"]),
@@ -1004,7 +1006,15 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     if m.ohko != Ohko::No {
         return why("OHKO");
     }
-    if m.self_switch != SelfSwitch::No || m.force_switch {
+    // Self-switching moves suspend the turn for a decision (F6); the volatile-passing ones
+    // (Baton Pass, Shed Tail) and phazing are not implemented.
+    if matches!(
+        m.self_switch,
+        SelfSwitch::CopyVolatile | SelfSwitch::ShedTail
+    ) {
+        return why("switching with volatiles");
+    }
+    if m.force_switch {
         return why("switching");
     }
     if m.selfdestruct != SelfDestruct::No {
@@ -1300,7 +1310,9 @@ mod tests {
         ] {
             assert_eq!(move_unsupported(id), None, "{id:?}");
         }
-        assert!(move_unsupported(moves::U_TURN).is_some());
+        assert_eq!(move_unsupported(moves::U_TURN), None);
+        assert!(move_unsupported(moves::BATON_PASS).is_some());
+        assert!(move_unsupported(moves::WHIRLWIND).is_some());
         assert_eq!(move_unsupported(moves::FOLLOW_ME), None);
         assert_eq!(move_unsupported(moves::RAGE_POWDER), None);
         assert_eq!(move_unsupported(moves::BULLET_SEED), None);

@@ -20,8 +20,8 @@ use serde_json::{json, Value};
 use lab_engine::rules::Ruleset;
 use lab_engine::turn::sample_turn;
 use lab_scenario::{
-    canonical_json, load_scenario_file, run_decision, scenario_decision, scenario_positions,
-    Decision,
+    canonical_json, load_scenario_file, run_decision_mid_turn, scenario_decision,
+    scenario_positions, Decision,
 };
 
 fn main() -> ExitCode {
@@ -108,16 +108,19 @@ fn run() -> Result<(), String> {
     let before_json = canonical_json(&state, &loaded.meta).map_err(|e| e.to_string())?;
 
     let started = Instant::now();
+    // Sampling leaves a turn suspended by a mid-turn switch as it is (no `midTurn` replay).
     let outcomes = match (samples, &decision) {
         (Some(n), Decision::Turn(choices)) => {
             sample_turn(&mut state, Ruleset::CHAMPIONS_MC, *choices, n, seed)
+                .map_err(|e| e.to_string())?
         }
         (Some(_), Decision::Replacement(_)) => {
             return Err("--mc is not implemented for a replacement decision".into())
         }
-        (None, decision) => run_decision(&mut state, decision),
-    }
-    .map_err(|e| e.to_string())?;
+        (None, decision) => {
+            run_decision_mid_turn(&mut state, &position.order, decision, &loaded.mid_turn)?
+        }
+    };
     let elapsed = started.elapsed();
 
     // Engine states that differ only in data the canonical form leaves out merge here.

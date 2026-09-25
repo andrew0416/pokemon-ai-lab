@@ -124,7 +124,10 @@ function buildSnapshot(scenario, baseDir) {
 	if (battle.requestState === 'teampreview') {
 		battle.makeChoices(`team ${scenario.p1.order || '123456'}`, `team ${scenario.p2.order || '123456'}`);
 	}
-	for (const [c1, c2] of scenario.setupTurns || []) battle.makeChoices(c1, c2);
+	for (const [c1, c2, midTurn] of scenario.setupTurns || []) {
+		battle.makeChoices(c1, c2);
+		applyMidTurn(battle, midTurn);
+	}
 	applyPatch(battle, scenario.patch);
 	if (battle.ended) throw new Error('battle ended during setup');
 	return {snapshot: JSON.stringify(battle.toJSON()), before: canonical(battle)};
@@ -201,7 +204,28 @@ function restore(snapshot) {
 function runTurn(battle, scenario) {
 	const logStart = battle.log.length;
 	battle.makeChoices(scenario.turn.p1, scenario.turn.p2);
+	applyMidTurn(battle, scenario.midTurn);
 	return {state: canonical(battle), log: turnLog(battle.log.slice(logStart))};
+}
+
+// A mid-turn switch request (U-turn, Parting Shot, Eject Button, ...) pauses the battle while
+// actions remain in its queue. Every requesting side gets its next `midTurn` choice
+// (`{p1: ["switch 3"], p2: []}`); if one has none left the battle stays paused there and the
+// paused state (its `request` is `switch`) is the outcome. An end-of-turn replacement request
+// leaves the queue empty and is the next decision, not handled here.
+function applyMidTurn(battle, midTurn) {
+	const used = {p1: 0, p2: 0};
+	while (battle.requestState === 'switch' && battle.queue.list.length) {
+		const requesting = battle.sides.filter(side => side.requestState === 'switch');
+		const choices = requesting.map(side => ((midTurn && midTurn[side.id]) || [])[used[side.id]]);
+		if (!requesting.length || choices.some(choice => choice === undefined)) return;
+		requesting.forEach((side, i) => {
+			used[side.id]++;
+			if (!battle.choose(side.id, choices[i])) {
+				throw new Error(`${side.id}: mid-turn choice "${choices[i]}" rejected: ${battle.log.slice(-1)}`);
+			}
+		});
+	}
 }
 
 // Showdown picks a random foe as the nominal target of a doubles spread move (Rock Slide,

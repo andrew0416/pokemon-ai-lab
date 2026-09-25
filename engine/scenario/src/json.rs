@@ -81,6 +81,20 @@ pub struct ScenarioJson {
     pub patch: Option<Value>,
     #[serde(default)]
     pub turn: Option<TurnJson>,
+    /// Mid-turn switch choices per side (U-turn, Parting Shot, ...), each list consumed in
+    /// order as the turn asks that side; a missing one leaves the turn suspended.
+    #[serde(default, rename = "midTurn")]
+    pub mid_turn: Option<MidTurnJson>,
+}
+
+/// Per-side mid-turn switch choices (`"switch 3"`), in the order the requests come.
+#[derive(Clone, Debug, Default, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct MidTurnJson {
+    #[serde(default)]
+    pub p1: Vec<String>,
+    #[serde(default)]
+    pub p2: Vec<String>,
 }
 
 #[derive(Clone, Debug, Deserialize)]

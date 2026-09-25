@@ -31,13 +31,13 @@ use lab_engine::action::JointAction;
 use lab_engine::instruction::Outcome;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::{SideId, State, PARTY_SIZE};
-use lab_engine::turn::{enumerate_replacements, enumerate_turn, TurnError};
+use lab_engine::turn::{enumerate_replacements, enumerate_turn, resume_turn, TurnError};
 use lab_engine::Doubles;
 
 pub use canonical::{canonical_json, canonical_value, CanonicalError};
 pub use decision::{
-    advance_order, apply_patch, initial_order, parse_choice, parse_replacement, PartyOrder,
-    PatchJson,
+    advance_order, apply_patch, initial_order, parse_choice, parse_mid_turn, parse_replacement,
+    PartyOrder, PatchJson,
 };
 pub use error::{LoadError, SetProblem, TeamProblem};
 pub use json::{ScenarioJson, TeamSet};
@@ -75,12 +75,44 @@ const FIRST_TURN: u16 = 1;
 pub struct LoadedScenario {
     pub state: Doubles,
     pub meta: ScenarioMeta,
-    /// Turns played before the decision (`[p1 choice, p2 choice]` each), replayed by
-    /// [`scenario_positions`] after the switch-ins and before the patch, as `enumerate.cjs`
-    /// does.
-    pub setup_turns: Vec<(String, String)>,
+    /// Turns played before the decision (`[p1 choice, p2 choice]` or `[p1, p2, {"p1": [...],
+    /// "p2": [...]}]` with mid-turn switch choices), replayed by [`scenario_positions`] after
+    /// the switch-ins and before the patch, as `enumerate.cjs` does.
+    pub setup_turns: Vec<SetupTurn>,
     /// Applied after the setup turns, by [`scenario_positions`].
     pub patch: Option<PatchJson>,
+    /// The decision turn's mid-turn switch choices per side (`midTurn`), consumed in order as
+    /// the turn asks that side (see [`run_decision_mid_turn`]).
+    pub mid_turn: [Vec<String>; 2],
+}
+
+/// A turn played before the decision: both sides' choices and the mid-turn switch choices
+/// the turn asks for (U-turn, Parting Shot, ...).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SetupTurn {
+    pub p1: String,
+    pub p2: String,
+    pub mid_turn: [Vec<String>; 2],
+}
+
+fn parse_setup_turn(value: serde_json::Value) -> Result<SetupTurn, LoadError> {
+    if let Ok((p1, p2)) = serde_json::from_value::<(String, String)>(value.clone()) {
+        return Ok(SetupTurn {
+            p1,
+            p2,
+            mid_turn: [Vec::new(), Vec::new()],
+        });
+    }
+    let (p1, p2, mid): (String, String, crate::json::MidTurnJson) =
+        serde_json::from_value(value).map_err(|error| LoadError::Json {
+            what: "setupTurns".into(),
+            error,
+        })?;
+    Ok(SetupTurn {
+        p1,
+        p2,
+        mid_turn: [mid.p1, mid.p2],
+    })
 }
 
 /// A position the scenario's decision can be made in, with Showdown's party order per side
@@ -120,12 +152,15 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
     };
     let setup_turns = match scenario.setup_turns {
         Some(value) if !is_empty(Some(&value)) => {
-            let turns: Vec<(String, String)> =
+            let turns: Vec<serde_json::Value> =
                 serde_json::from_value(value).map_err(|error| LoadError::Json {
                     what: "setupTurns".into(),
                     error,
                 })?;
             turns
+                .into_iter()
+                .map(parse_setup_turn)
+                .collect::<Result<Vec<_>, _>>()?
         }
         _ => Vec::new(),
     };
@@ -155,6 +190,7 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
     }
     state.turn = FIRST_TURN;
 
+    let mid_turn = scenario.mid_turn.unwrap_or_default();
     Ok(LoadedScenario {
         state,
         meta: ScenarioMeta {
@@ -165,6 +201,7 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
         },
         setup_turns,
         patch,
+        mid_turn: [mid_turn.p1, mid_turn.p2],
     })
 }
 
@@ -203,12 +240,82 @@ pub fn parse_decision(
     }
 }
 
-/// Every outcome of `decision` from `state` (left unchanged).
+/// Every outcome of `decision` from `state` (left unchanged). A turn's outcome can be
+/// suspended for a mid-turn switch (`Outcome::suspension`); see [`run_decision_mid_turn`].
 pub fn run_decision(state: &mut Doubles, decision: &Decision) -> Result<Vec<Outcome>, TurnError> {
     match decision {
         Decision::Turn(choices) => enumerate_turn(state, Ruleset::CHAMPIONS_MC, *choices),
         Decision::Replacement(choices) => enumerate_replacements(state, *choices),
     }
+}
+
+/// Whether `side` must send in a mid-turn switch (Showdown `request: switch` with actions
+/// still queued): a living occupant with `Slot::switch_flag`.
+pub fn side_must_switch<const N: usize>(state: &State<N>, side: SideId) -> bool {
+    state
+        .side(side)
+        .slots
+        .iter()
+        .any(|slot| slot.switch_flag && slot.party_index.is_some())
+}
+
+/// [`run_decision`], then every suspended outcome is resumed with the next `mid_turn` choice
+/// of each side it asks (`"switch N"` against Showdown's party order at that point), as
+/// `enumerate.cjs` does with `midTurn`. A turn asking a side that has no choice left stays
+/// suspended in the result. The outcomes' instructions run from `state`.
+pub fn run_decision_mid_turn(
+    state: &mut Doubles,
+    order: &[PartyOrder; 2],
+    decision: &Decision,
+    mid_turn: &[Vec<String>; 2],
+) -> Result<Vec<Outcome>, String> {
+    let outcomes = run_decision(state, decision).map_err(|e| e.to_string())?;
+    let mut done = Vec::new();
+    let mut work: Vec<(Outcome, [usize; 2])> = outcomes.into_iter().map(|o| (o, [0, 0])).collect();
+    while let Some((outcome, used)) = work.pop() {
+        let Some(suspension) = outcome.suspension.clone() else {
+            done.push(outcome);
+            continue;
+        };
+        let mut paused = state.clone();
+        paused.apply(&outcome.instructions);
+        let mut order = order.clone();
+        advance_order(&mut order, &outcome.instructions);
+        let mut choices = [[None; 2]; 2];
+        let mut next_used = used;
+        let mut missing = false;
+        for side in [SideId::One, SideId::Two] {
+            if !side_must_switch(&paused, side) {
+                continue;
+            }
+            match mid_turn[side.index()].get(used[side.index()]) {
+                Some(text) => {
+                    choices[side.index()] =
+                        parse_mid_turn(&paused, side, &order[side.index()], text)?;
+                    next_used[side.index()] += 1;
+                }
+                None => missing = true,
+            }
+        }
+        if missing {
+            done.push(outcome);
+            continue;
+        }
+        let resumed = resume_turn(&mut paused, &suspension, choices).map_err(|e| e.to_string())?;
+        for r in resumed {
+            let mut instructions = outcome.instructions.clone();
+            instructions.extend(r.instructions);
+            work.push((
+                Outcome {
+                    probability: outcome.probability * r.probability,
+                    instructions,
+                    suspension: r.suspension,
+                },
+                next_used,
+            ));
+        }
+    }
+    Ok(done)
 }
 
 /// The positions the scenario's decision is made in: every initial outcome (the leads'
@@ -227,14 +334,15 @@ pub fn scenario_positions(loaded: &LoadedScenario) -> Result<Vec<Position>, Stri
             state: o.state,
         })
         .collect();
-    for (n, (p1, p2)) in loaded.setup_turns.iter().enumerate() {
+    for (n, turn) in loaded.setup_turns.iter().enumerate() {
         let mut next: Vec<Position> = Vec::new();
         for position in &positions {
-            let decision = parse_decision(&position.state, &position.order, p1, p2)
+            let decision = parse_decision(&position.state, &position.order, &turn.p1, &turn.p2)
                 .map_err(|e| format!("setup turn {}: {e}", n + 1))?;
             let mut state = position.state.clone();
-            let outcomes = run_decision(&mut state, &decision)
-                .map_err(|e| format!("setup turn {}: {e}", n + 1))?;
+            let outcomes =
+                run_decision_mid_turn(&mut state, &position.order, &decision, &turn.mid_turn)
+                    .map_err(|e| format!("setup turn {}: {e}", n + 1))?;
             for outcome in outcomes {
                 let mut end = state.clone();
                 end.apply(&outcome.instructions);

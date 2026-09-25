@@ -67,6 +67,9 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// them only within a stage and refuses a stage that ends with one pending
     /// (`items::stage_end_check`).
     pub mirror_herb: Vec<(PokemonRef, [i8; BOOST_COUNT])>,
+    /// Whether the move in flight switches its user out (`move.selfSwitch`); Parting Shot's
+    /// `onHit` withdraws it (`delete move.selfSwitch`) when its drops failed.
+    pub move_self_switch: bool,
 }
 
 impl<'a, const N: usize> Battle<'a, N> {
@@ -81,6 +84,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             battle_start: false,
             hit_type_mod: [[None; N]; 2],
             mirror_herb: Vec::new(),
+            move_self_switch: false,
         }
     }
 
@@ -1173,6 +1177,28 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// skipped action while staying in) must replace this with a real counter.
     pub fn active_since_turn_start(&self, slot: SlotRef) -> bool {
         self.state.slot(slot).move_actions > 0
+    }
+
+    /// `pokemon.switchFlag = true` (F6): the occupant must switch out at the next request.
+    pub fn set_switch_flag(&mut self, slot: SlotRef) {
+        if !self.state.slot(slot).switch_flag {
+            self.apply(Instruction::SetSwitchFlag {
+                target: slot,
+                old: false,
+                new: true,
+            });
+        }
+    }
+
+    /// `pokemon.switchFlag = false`.
+    pub fn clear_switch_flag(&mut self, slot: SlotRef) {
+        if self.state.slot(slot).switch_flag {
+            self.apply(Instruction::SetSwitchFlag {
+                target: slot,
+                old: true,
+                new: false,
+            });
+        }
     }
 
     pub fn set_last_move(&mut self, slot: SlotRef, id: MoveId) {

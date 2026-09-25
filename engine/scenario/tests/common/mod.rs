@@ -13,8 +13,8 @@ use serde_json::Value;
 
 use lab_engine::Doubles;
 use lab_scenario::{
-    canonical_json, load_scenario_file, run_decision, scenario_decision, scenario_positions,
-    LoadedScenario, Position,
+    canonical_json, load_scenario_file, run_decision_mid_turn, scenario_decision,
+    scenario_positions, LoadedScenario, Position,
 };
 
 pub fn engine_dir() -> PathBuf {
@@ -94,7 +94,8 @@ pub fn assert_mc_parity(name: &str) {
     let (loaded, position) = start(name, &fixture);
     let mut state = position.state.clone();
     let decision = scenario_decision(&loaded, &position).unwrap();
-    let outcomes = run_decision(&mut state, &decision).unwrap();
+    let outcomes =
+        run_decision_mid_turn(&mut state, &position.order, &decision, &loaded.mid_turn).unwrap();
     let engine = distribution(&loaded, &mut state, &outcomes);
     let oracle = oracle_distribution(&fixture);
     let mut tv = 0.0;
@@ -125,7 +126,8 @@ pub fn assert_exact_parity(name: &str) {
     let (loaded, position) = start(name, &fixture);
     let mut state = position.state.clone();
     let decision = scenario_decision(&loaded, &position).unwrap();
-    let outcomes = run_decision(&mut state, &decision).unwrap();
+    let outcomes =
+        run_decision_mid_turn(&mut state, &position.order, &decision, &loaded.mid_turn).unwrap();
     let engine = distribution(&loaded, &mut state, &outcomes);
     let oracle = oracle_distribution(&fixture);
     assert_eq!(engine.len(), oracle.len(), "{name}: number of outcomes");

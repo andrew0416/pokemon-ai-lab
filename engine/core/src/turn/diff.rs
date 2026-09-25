@@ -226,6 +226,13 @@ fn slot_changes(out: &mut Vec<Instruction>, r: SlotRef, a: &Slot, b: &Slot) {
             new: b.history,
         });
     }
+    if b.switch_flag {
+        out.push(Instruction::SetSwitchFlag {
+            target: r,
+            old: false,
+            new: true,
+        });
+    }
     debug_assert!(
         b.substitute_hp == 0 && !b.dynamax.is_active(),
         "no instruction sets these yet"
@@ -329,6 +336,7 @@ mod tests {
         to.slot_mut(me).history.times_attacked = 2;
         to.slot_mut(me).history.newly_switched = false;
         to.side_mut(SideId::Two).history.total_fainted = 1;
+        to.slot_mut(me).switch_flag = true;
 
         let ins = instructions(&from, &to);
         let mut s = from.clone();

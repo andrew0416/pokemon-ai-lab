@@ -293,6 +293,11 @@ pub struct Slot {
     pub move_actions: u8,
     /// Damage history (F13); hidden from the canonical output.
     pub history: SlotHistory,
+    /// Showdown `switchFlag`: the occupant must be switched out by a mid-turn decision
+    /// (U-turn, Parting Shot, ...). Set when the move lands, cleared by the switch (the slot
+    /// resets) or when the side has no bench to switch to. While set on a living occupant the
+    /// side's canonical `request` is `switch` (F6).
+    pub switch_flag: bool,
     pub substitute_hp: i16,
     pub dynamax: DynamaxState,
 }

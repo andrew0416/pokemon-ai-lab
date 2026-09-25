@@ -481,6 +481,19 @@ pub(super) fn on_hit<const N: usize>(
     mv: &ActiveMove,
 ) -> Result<Option<HitResult>, TurnError> {
     let result = match mv.id {
+        // Parting Shot: `const success = this.boost({atk: -1, spa: -1}, target, source); if
+        // (!success && !target.hasAbility('mirrorarmor')) delete move.selfSwitch;` (the
+        // callback returns nothing: neither success nor failure).
+        moves::PARTING_SHOT => {
+            let mut drop = NO_BOOSTS;
+            drop[0] = -1;
+            drop[2] = -1;
+            let success = b.boost_by(target, &drop, Some(user), BoostEffect::Move(mv.id));
+            if !success && b.ability(target) != abilities::MIRROR_ARMOR {
+                b.move_self_switch = false;
+            }
+            HitResult::NotFail
+        }
         // Morning Sun, Moonlight, Synthesis: `this.modify(pokemon.maxhp, factor)`, factor
         // 0.667 in sun, 0.25 in rain, sand, hail and snow, 0.5 otherwise (effective weather).
         moves::MORNING_SUN | moves::MOONLIGHT | moves::SYNTHESIS => {

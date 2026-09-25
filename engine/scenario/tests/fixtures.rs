@@ -149,7 +149,11 @@ fn patches_and_setup_turns_load() {
     let loaded = load_scenario_str(&setup, &base).unwrap();
     assert_eq!(
         loaded.setup_turns,
-        vec![("move protect".to_owned(), "move protect".to_owned())]
+        vec![lab_scenario::SetupTurn {
+            p1: "move protect".to_owned(),
+            p2: "move protect".to_owned(),
+            mid_turn: [Vec::new(), Vec::new()],
+        }]
     );
     // Empty setup and patch are no-ops, as in enumerate.cjs.
     load_scenario_str(&with(r#", "setupTurns": [], "patch": {}"#), &base).unwrap();

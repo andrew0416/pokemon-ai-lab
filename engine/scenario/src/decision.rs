@@ -342,6 +342,33 @@ pub fn parse_replacement<const N: usize>(
     Ok(out)
 }
 
+/// Parses one side's mid-turn switch choice (`"switch 3"`, `"switch 3, switch 4"`): the
+/// switches fill the side's slots whose occupant must switch out (`Slot::switch_flag`), in
+/// slot order. Returns the party index per active slot.
+pub fn parse_mid_turn<const N: usize>(
+    state: &State<N>,
+    side: SideId,
+    order: &[u8],
+    text: &str,
+) -> Result<[Option<u8>; N], String> {
+    let mut out = [None; N];
+    let mut flagged = (0..N).filter(|&i| {
+        let slot = &state.side(side).slots[i];
+        slot.switch_flag && slot.party_index.is_some()
+    });
+    for part in text.split(',').map(str::trim).filter(|p| !p.is_empty()) {
+        let words: Vec<&str> = part.split_whitespace().collect();
+        let Some(slot) = flagged.next() else {
+            return Err(format!("{part:?}: no slot left that must switch out"));
+        };
+        match words.as_slice() {
+            ["switch", n] => out[slot] = Some(switch_position(order, n, part)?),
+            _ => return Err(format!("{part:?}: not a mid-turn switch choice")),
+        }
+    }
+    Ok(out)
+}
+
 /// Parses one side's Showdown choice string (`"move protect, move grassyglide 1"`,
 /// `"switch 3"`, `"pass"`, `"move 2 -1 mega"`) against `state`.
 ///

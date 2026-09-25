@@ -136,6 +136,18 @@ fn requests<const N: usize>(state: &State<N>) -> [&'static str; 2] {
     if state.result.is_over() {
         return ["", ""];
     }
+    // A mid-turn switch request (`Slot::switch_flag`, F6): `switch` for the requesting sides,
+    // `wait` (an empty `requestState`) for the others.
+    let flagged = [SideId::One, SideId::Two].map(|side| {
+        state
+            .side(side)
+            .slots
+            .iter()
+            .any(|slot| slot.switch_flag && slot.party_index.is_some())
+    });
+    if flagged.iter().any(|&f| f) {
+        return flagged.map(|f| if f { "switch" } else { "" });
+    }
     let needs = [SideId::One, SideId::Two].map(|side| {
         let s = state.side(side);
         let empty = s.slots.iter().any(|slot| slot.party_index.is_none());

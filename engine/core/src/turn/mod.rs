@@ -101,16 +101,94 @@ pub fn enumerate_turn<const N: usize>(
     choices: [JointAction<N>; 2],
 ) -> Result<Vec<Outcome>, TurnError> {
     let choices = check_turn(state, ruleset, &choices)?;
-    let start = Pending {
-        queue: initial_queue(state, &choices),
-        in_progress: None,
-        done: false,
-        fractional_drawn: false,
-    };
-    enumerate_stages(state, start, |b, pending| {
-        run_stage(b, pending)?;
-        Ok(pending.done)
-    })
+    let start = Pending::new(initial_queue(state, &choices));
+    let endings = enumerate_stages(state, start, run_stage)?;
+    Ok(outcomes(state, endings, Suspension))
+}
+
+/// Continues a turn that stopped for a mid-turn switch decision (`Outcome::suspension`):
+/// `choices[side][slot]` is the party index switching into each slot whose
+/// [`Slot::switch_flag`] is set (as many as the side has bench members; `None` elsewhere).
+/// `state` is the state the suspended outcome's instructions lead to; it is left unchanged
+/// and the outcomes' instructions start from it. Showdown: the `instaswitch` actions in the
+/// outgoing Pokémon's action-Speed order (ties uniformly at random), the newcomers' batched
+/// `runSwitch`, then the rest of the queue; the turn can suspend again.
+pub fn resume_turn<const N: usize>(
+    state: &mut State<N>,
+    suspension: &Suspension,
+    choices: [[Option<u8>; N]; 2],
+) -> Result<Vec<Outcome>, TurnError> {
+    let switches = check_mid_turn_switches(state, &choices)?;
+    let mut start = suspension.0.clone();
+    start.switches = switches;
+    let endings = enumerate_stages(state, start, run_stage)?;
+    Ok(outcomes(state, endings, Suspension))
+}
+
+/// Validates a mid-turn switch decision (see [`resume_turn`]) and lists the switches.
+fn check_mid_turn_switches<const N: usize>(
+    state: &State<N>,
+    choices: &[[Option<u8>; N]; 2],
+) -> Result<Vec<(SlotRef, u8)>, TurnError> {
+    if state.result.is_over() {
+        return Err(TurnError::BattleOver);
+    }
+    let mut out = Vec::new();
+    let mut any = false;
+    for (side, choice) in [SideId::One, SideId::Two].into_iter().zip(choices) {
+        let s = state.side(side);
+        let bench: Vec<u8> = (0..s.party.len() as u8)
+            .filter(|&i| {
+                s.party[i as usize].hp > 0
+                    && !s.slots.iter().any(|slot| slot.party_index == Some(i))
+            })
+            .collect();
+        let flagged: Vec<usize> = (0..N)
+            .filter(|&i| s.slots[i].switch_flag && s.slots[i].party_index.is_some())
+            .collect();
+        let required = flagged.len().min(bench.len());
+        let mut given = Vec::new();
+        for (i, &c) in choice.iter().enumerate() {
+            let invalid = |reason: String| TurnError::InvalidChoice {
+                side,
+                slot: i as u8,
+                reason,
+            };
+            let Some(party_index) = c else {
+                continue;
+            };
+            if !flagged.contains(&i) {
+                return Err(invalid("the slot is not switching out".into()));
+            }
+            if !bench.contains(&party_index) || given.contains(&party_index) {
+                return Err(invalid(format!("cannot switch to party {party_index}")));
+            }
+            given.push(party_index);
+            out.push((
+                SlotRef {
+                    side,
+                    slot: i as u8,
+                },
+                party_index,
+            ));
+        }
+        if given.len() != required {
+            return Err(TurnError::InvalidChoice {
+                side,
+                slot: 0,
+                reason: format!("{required} mid-turn switches needed, {} given", given.len()),
+            });
+        }
+        any |= required > 0;
+    }
+    if !any {
+        return Err(TurnError::InvalidChoice {
+            side: SideId::One,
+            slot: 0,
+            reason: "no mid-turn switch is pending".into(),
+        });
+    }
+    Ok(out)
 }
 
 /// `samples` random playthroughs of the turn (Monte Carlo), merged by end state; each
@@ -124,16 +202,11 @@ pub fn sample_turn<const N: usize>(
     seed: u64,
 ) -> Result<Vec<Outcome>, TurnError> {
     let choices = check_turn(state, ruleset, &choices)?;
-    let start = Pending {
-        queue: initial_queue(state, &choices),
-        in_progress: None,
-        done: false,
-        fractional_drawn: false,
-    };
-    sample_stages(state, samples, seed, start, |b, pending| {
-        run_stage(b, pending)?;
-        Ok(pending.done)
-    })
+    let start = Pending::new(initial_queue(state, &choices));
+    let endings = sample_stages(state, samples, seed, start, |b, pending| {
+        run_stage(b, pending)
+    })?;
+    Ok(outcomes(state, endings, Suspension))
 }
 
 /// Every outcome of the battle start (Showdown `runAction('start')` → `switchIn` for every
@@ -144,7 +217,7 @@ pub fn enumerate_start<const N: usize>(state: &mut State<N>) -> Result<Vec<Outco
     let leads: Vec<SlotRef> = State::<N>::slot_refs()
         .filter(|&r| state.active_ref(r).is_some())
         .collect();
-    enumerate_stages(state, (), |b, _| {
+    let endings = enumerate_stages(state, (), |b, _| {
         for &slot in &leads {
             let pokemon = b.occupant(slot).expect("a lead");
             if let Some(why) = switching_problem_at_start(b, pokemon) {
@@ -157,8 +230,11 @@ pub fn enumerate_start<const N: usize>(state: &mut State<N>) -> Result<Vec<Outco
         // `runAction('runSwitch')` ends with `eachEvent('Update')`.
         update::update_event(b)?;
         items::stage_end_check(b)?;
-        Ok(true)
-    })
+        Ok(StageEnd::Finished)
+    })?;
+    Ok(outcomes(state, endings, |()| {
+        unreachable!("a start never suspends")
+    }))
 }
 
 fn switching_problem_at_start<const N: usize>(
@@ -198,11 +274,14 @@ pub fn enumerate_replacements<const N: usize>(
     choices: [[Option<u8>; N]; 2],
 ) -> Result<Vec<Outcome>, TurnError> {
     check_replacements(state, &choices)?;
-    enumerate_stages(state, (), |b, _| {
+    let endings = enumerate_stages(state, (), |b, _| {
         run_replacements(b, &choices)?;
         items::stage_end_check(b)?;
-        Ok(true)
-    })
+        Ok(StageEnd::Finished)
+    })?;
+    Ok(outcomes(state, endings, |()| {
+        unreachable!("a replacement never suspends")
+    }))
 }
 
 /// Validates a replacement decision (see [`enumerate_replacements`]).
@@ -212,6 +291,13 @@ fn check_replacements<const N: usize>(
 ) -> Result<(), TurnError> {
     if state.result.is_over() {
         return Err(TurnError::BattleOver);
+    }
+    if let Some(slot) = pending_mid_turn_switch(state) {
+        return Err(TurnError::InvalidChoice {
+            side: slot.side,
+            slot: slot.slot,
+            reason: "a mid-turn switch is pending (resume_turn)".into(),
+        });
     }
     let mut any = false;
     for (side, choice) in [SideId::One, SideId::Two].into_iter().zip(choices) {
@@ -323,31 +409,131 @@ fn run_replacements<const N: usize>(
 fn after_action<const N: usize>(
     b: &mut Battle<'_, N>,
     pending: &mut Pending,
-) -> Result<(), TurnError> {
+) -> Result<StageEnd, TurnError> {
     if b.faint_messages(true) {
         pending.done = true;
         b.queue.clear();
-    } else {
-        update::update_event(b)?;
+        return Ok(StageEnd::Finished);
     }
-    Ok(())
+    update::update_event(b)?;
+    if request_switches(b) {
+        Ok(StageEnd::Suspended)
+    } else {
+        Ok(StageEnd::Continue)
+    }
+}
+
+/// The end of Showdown `runAction` after the Update: a side whose active Pokémon has
+/// `switchFlag` gets a switch request if it can switch (`canSwitch`: a healthy bench member);
+/// otherwise its flags are cleared. `BeforeSwitchOut` has no implemented handler. Returns
+/// whether the turn must wait for a decision ([`resume_turn`]).
+fn request_switches<const N: usize>(b: &mut Battle<'_, N>) -> bool {
+    let mut any = false;
+    for side in [SideId::One, SideId::Two] {
+        let flagged: Vec<SlotRef> = (0..N as u8)
+            .map(|slot| SlotRef { side, slot })
+            .filter(|&slot| b.state.slot(slot).switch_flag && b.alive(slot).is_some())
+            .collect();
+        if flagged.is_empty() {
+            continue;
+        }
+        if residual::bench(b, side).next().is_none() {
+            for slot in flagged {
+                b.clear_switch_flag(slot);
+            }
+        } else {
+            any = true;
+        }
+    }
+    any
+}
+
+/// A slot whose living occupant has `switch_flag` set: the state is a suspended turn.
+fn pending_mid_turn_switch<const N: usize>(state: &State<N>) -> Option<SlotRef> {
+    State::<N>::slot_refs().find(|&r| state.slot(r).switch_flag && state.active_ref(r).is_some())
+}
+
+/// The mid-turn switch stage (`resume_turn`): the `instaswitch` actions by the outgoing
+/// Pokémon's action Speed (ties uniformly at random; Showdown runs no Update between them),
+/// then the newcomers' one `runSwitch`, then `runAction`'s tail (faints, Update, switch
+/// requests).
+fn run_mid_turn_switches<const N: usize>(
+    b: &mut Battle<'_, N>,
+    switches: Vec<(SlotRef, u8)>,
+    pending: &mut Pending,
+) -> Result<StageEnd, TurnError> {
+    let mut switches: Vec<(SlotRef, u8, i32)> = switches
+        .into_iter()
+        .map(|(slot, party_index)| (slot, party_index, b.action_speed(slot)))
+        .collect();
+    let mut newcomers = Vec::with_capacity(switches.len());
+    while !switches.is_empty() {
+        let best = switches.iter().map(|s| s.2).max().expect("non-empty");
+        let tied: Vec<usize> = (0..switches.len())
+            .filter(|&i| switches[i].2 == best)
+            .collect();
+        let pick = if tied.len() == 1 {
+            tied[0]
+        } else {
+            tied[b.rng.uniform(tied.len())]
+        };
+        let (slot, party_index, _) = switches.remove(pick);
+        switching::switch_in(b, slot, party_index, true)?;
+        newcomers.push(slot);
+    }
+    switching::run_switch_in(b, &newcomers)?;
+    after_action(b, pending)
 }
 
 /// Runs `stage` repeatedly from `start` until it reports completion, merging identical
 /// (state, pending) pairs after every stage and enumerating every random path within a stage
 /// by replay. Returns the merged end states as outcomes; `state` is left unchanged.
+/// How a stage ended: more stages follow; the turn is over; or the turn waits for a mid-turn
+/// switch decision ([`resume_turn`]) with its remaining work kept.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum StageEnd {
+    Continue,
+    Finished,
+    Suspended,
+}
+
+/// A final position of a staged enumeration: the end state, the remaining work if the turn
+/// suspended there, and the probability.
+struct Ending<const N: usize, P> {
+    end: State<N>,
+    pending: Option<P>,
+    probability: f64,
+}
+
+/// The outcomes of `endings` from `start`; `suspend` wraps the remaining work of a suspended
+/// one.
+fn outcomes<const N: usize, P>(
+    start: &State<N>,
+    endings: Vec<Ending<N, P>>,
+    suspend: impl Fn(P) -> Suspension,
+) -> Vec<Outcome> {
+    endings
+        .into_iter()
+        .map(|ending| Outcome {
+            probability: ending.probability,
+            instructions: diff::instructions(start, &ending.end),
+            suspension: ending.pending.map(&suspend),
+        })
+        .collect()
+}
+
 fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
     state: &mut State<N>,
     start: P,
-    mut stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<bool, TurnError>,
-) -> Result<Vec<Outcome>, TurnError> {
+    mut stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<StageEnd, TurnError>,
+) -> Result<Vec<Ending<N, P>>, TurnError> {
     // The turn runs in stages (one action, or the end of turn). After every stage identical
     // (state, remaining turn) pairs merge, so the work grows with the number of distinct
     // intermediate positions, not with the number of random paths. Within a stage every
     // random path is enumerated by replay.
     let mut frontier: Vec<(State<N>, P, f64)> = vec![(state.clone(), start, 1.0)];
-    let mut finished: Vec<(State<N>, f64)> = Vec::new();
-    let mut finished_index: HashMap<State<N>, usize> = HashMap::new();
+    let mut finished: Vec<Ending<N, P>> = Vec::new();
+    let mut finished_index: HashMap<(State<N>, Option<P>), usize> = HashMap::new();
     while !frontier.is_empty() {
         // Value: (first-reached index, probability); keeps the output order deterministic.
         let mut next: HashMap<(State<N>, P), (usize, f64)> = HashMap::new();
@@ -361,19 +547,28 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
                     let result = stage(&mut b, &mut after);
                     (result, std::mem::take(&mut b.log))
                 };
-                let done = result?;
+                let end = result?;
                 let p = probability * chooser.probability();
-                if done {
-                    match finished_index.get(&work) {
-                        Some(&i) => finished[i].1 += p,
-                        None => {
-                            finished_index.insert(work.clone(), finished.len());
-                            finished.push((work.clone(), p));
+                match end {
+                    StageEnd::Continue => {
+                        let order = next.len();
+                        next.entry((work.clone(), after)).or_insert((order, 0.0)).1 += p;
+                    }
+                    StageEnd::Finished | StageEnd::Suspended => {
+                        let kept = (end == StageEnd::Suspended).then_some(after);
+                        let key = (work.clone(), kept);
+                        match finished_index.get(&key) {
+                            Some(&i) => finished[i].probability += p,
+                            None => {
+                                finished_index.insert(key.clone(), finished.len());
+                                finished.push(Ending {
+                                    end: work.clone(),
+                                    pending: key.1,
+                                    probability: p,
+                                });
+                            }
                         }
                     }
-                } else {
-                    let order = next.len();
-                    next.entry((work.clone(), after)).or_insert((order, 0.0)).1 += p;
                 }
                 work.reverse(&log);
                 if !chooser.advance() {
@@ -395,60 +590,58 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
             .map(|((s, q), (_, p))| (s, q, p))
             .collect();
     }
-
-    Ok(finished
-        .into_iter()
-        .map(|(end, probability)| Outcome {
-            probability,
-            instructions: diff::instructions(state, &end),
-        })
-        .collect())
+    Ok(finished)
 }
 
 /// Monte Carlo counterpart of [`enumerate_stages`].
-fn sample_stages<const N: usize, P: Clone>(
+fn sample_stages<const N: usize, P: Clone + Eq + Hash>(
     state: &mut State<N>,
     samples: usize,
     seed: u64,
     start: P,
-    mut stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<bool, TurnError>,
-) -> Result<Vec<Outcome>, TurnError> {
+    mut stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<StageEnd, TurnError>,
+) -> Result<Vec<Ending<N, P>>, TurnError> {
     let mut chooser = Chooser::sampler(seed);
-    let mut finished: Vec<(State<N>, f64)> = Vec::new();
-    let mut index: HashMap<State<N>, usize> = HashMap::new();
+    let mut finished: Vec<Ending<N, P>> = Vec::new();
+    let mut index: HashMap<(State<N>, Option<P>), usize> = HashMap::new();
     let weight = 1.0 / samples as f64;
     let begin = state.clone();
     for _ in 0..samples {
         let mut pending = start.clone();
         let mut log = Vec::new();
-        let mut result = Ok(false);
-        while matches!(result, Ok(false)) {
+        let mut result = Ok(StageEnd::Continue);
+        while matches!(result, Ok(StageEnd::Continue)) {
             chooser.begin_run();
             let mut b = Battle::new(state, &mut chooser);
             result = stage(&mut b, &mut pending);
             log.append(&mut b.log);
         }
-        if let Err(error) = result {
-            state.reverse(&log);
-            return Err(error);
-        }
-        match index.get(state) {
-            Some(&i) => finished[i].1 += weight,
+        let end = match result {
+            Ok(end) => end,
+            Err(error) => {
+                state.reverse(&log);
+                return Err(error);
+            }
+        };
+        let key = (
+            state.clone(),
+            (end == StageEnd::Suspended).then_some(pending),
+        );
+        match index.get(&key) {
+            Some(&i) => finished[i].probability += weight,
             None => {
-                index.insert(state.clone(), finished.len());
-                finished.push((state.clone(), weight));
+                index.insert(key.clone(), finished.len());
+                finished.push(Ending {
+                    end: key.0,
+                    pending: key.1,
+                    probability: weight,
+                });
             }
         }
         state.reverse(&log);
     }
     debug_assert_eq!(*state, begin);
-    Ok(finished
-        .into_iter()
-        .map(|(end, probability)| Outcome {
-            probability,
-            instructions: diff::instructions(&begin, &end),
-        })
-        .collect())
+    Ok(finished)
 }
 
 /// Validates the choices and that everything in play is implemented. Returns the choices as
@@ -462,6 +655,13 @@ fn check_turn<const N: usize>(
     let mut normalized = *choices;
     if state.result.is_over() {
         return Err(TurnError::BattleOver);
+    }
+    if let Some(slot) = pending_mid_turn_switch(state) {
+        return Err(TurnError::InvalidChoice {
+            side: slot.side,
+            slot: slot.slot,
+            reason: "a mid-turn switch is pending (resume_turn)".into(),
+        });
     }
     for side in [SideId::One, SideId::Two] {
         let s = state.side(side);
@@ -657,7 +857,29 @@ struct Pending {
     /// Whether the random fractional priorities (Quick Claw) were drawn: Showdown draws them
     /// when the actions are queued, so the first stage does.
     fractional_drawn: bool,
+    /// Mid-turn switches decided for a suspended turn (`resume_turn`): the slot switching
+    /// out and the party member coming in. Run by the next stage before anything else.
+    switches: Vec<(SlotRef, u8)>,
 }
+
+impl Pending {
+    fn new(queue: Vec<Action>) -> Pending {
+        Pending {
+            queue,
+            in_progress: None,
+            done: false,
+            fractional_drawn: false,
+            switches: Vec::new(),
+        }
+    }
+}
+
+/// A turn stopped for a mid-turn switch decision (F6; Showdown `request: switch` while the
+/// action queue is not empty: U-turn, Parting Shot, ...): the remaining turn, opaque to the
+/// caller, which [`resume_turn`] continues once the switching side has chosen.
+/// [`Slot::switch_flag`] marks the slots that must switch.
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+pub struct Suspension(Pending);
 
 impl<const N: usize> Battle<'_, N> {
     /// Showdown's sort key of a queued action: (order, priority in tenths including the
@@ -754,7 +976,17 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
 fn run_stage<const N: usize>(
     b: &mut Battle<'_, N>,
     pending: &mut Pending,
-) -> Result<(), TurnError> {
+) -> Result<StageEnd, TurnError> {
+    // A resumed turn: the decided mid-turn switches first.
+    if !pending.switches.is_empty() {
+        let switches = std::mem::take(&mut pending.switches);
+        b.queue = std::mem::take(&mut pending.queue);
+        let result = run_mid_turn_switches(b, switches, pending);
+        pending.queue = std::mem::take(&mut b.queue);
+        let end = result?;
+        items::stage_end_check(b)?;
+        return Ok(end);
+    }
     // Quick Claw's 1/5 is drawn, and Custap Berry eaten, when the actions are queued (first
     // stage).
     if !pending.fractional_drawn {
@@ -777,21 +1009,24 @@ fn run_stage<const N: usize>(
     b.queue = std::mem::take(&mut pending.queue);
     let result = run_stage_inner(b, pending);
     pending.queue = std::mem::take(&mut b.queue);
-    result?;
-    items::stage_end_check(b)
+    let end = result?;
+    items::stage_end_check(b)?;
+    Ok(end)
 }
 
 fn run_stage_inner<const N: usize>(
     b: &mut Battle<'_, N>,
     pending: &mut Pending,
-) -> Result<(), TurnError> {
+) -> Result<StageEnd, TurnError> {
     // A multi-hit move continues with its next hit before anything else.
     if let Some(progress) = pending.in_progress.take() {
-        match moves::resume_move(b, progress)? {
-            moves::MoveStep::Suspended(progress) => pending.in_progress = Some(progress),
-            moves::MoveStep::Done => after_action(b, pending)?,
-        }
-        return Ok(());
+        return match moves::resume_move(b, progress)? {
+            moves::MoveStep::Suspended(progress) => {
+                pending.in_progress = Some(progress);
+                Ok(StageEnd::Continue)
+            }
+            moves::MoveStep::Done => after_action(b, pending),
+        };
     }
     if !b.queue.is_empty() {
         // Best action by (order asc, priority desc, speed desc), ties uniformly at random.
@@ -814,7 +1049,7 @@ fn run_stage_inner<const N: usize>(
                         moves::run_move(b, action.slot, index, target, will_act)?
                     {
                         pending.in_progress = Some(progress);
-                        return Ok(());
+                        return Ok(StageEnd::Continue);
                     }
                 }
                 ActionKind::Switch { party_index } => {
@@ -824,9 +1059,9 @@ fn run_stage_inner<const N: usize>(
                     mega::run_mega_evo(b, action.slot)?;
                 }
             }
-            after_action(b, pending)?;
+            return after_action(b, pending);
         }
-        return Ok(());
+        return Ok(StageEnd::Continue);
     }
 
     residual::residual(b)?;
@@ -836,5 +1071,5 @@ fn run_stage_inner<const N: usize>(
         residual::end_turn(b);
     }
     pending.done = true;
-    Ok(())
+    Ok(StageEnd::Finished)
 }
