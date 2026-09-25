@@ -1,0 +1,23 @@
+{
+ "description": "Toxic Debris (onDamagingHit): Machamp's physical Strength on Glimmora lays Toxic Spikes on Machamp's side; its ally Snorlax's Strength lays the second layer on the foes' side (not Snorlax's own). Chansey Hardens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Glimmora", "item": "", "ability": "Toxic Debris", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Strength"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Strength"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move strength -1", "p2": "move strength 1, move harden"}
+}

@@ -7,15 +7,17 @@
 //! abilities skips them like Showdown's `runEvent` does.
 
 use crate::dex::{
-    abilities, items, moves, AbilityId, MoveCategory, MoveFlags, MoveTarget, Ohko, Secondary, Type,
-    TypeImmunities, NO_BOOSTS,
+    abilities, items, moves, AbilityFlags, AbilityId, MoveCategory, MoveFlags, MoveTarget, Ohko,
+    Secondary, Type, TypeImmunities, NO_BOOSTS,
 };
-use crate::field::{Terrain, Weather};
+use crate::field::{SideEffect, Terrain, Weather};
+use crate::instruction::Instruction;
 use crate::state::{SlotRef, Status};
 use crate::volatile::Volatile;
 
 use super::super::abilities::{priority, sheer_force_deletes_secondaries, Handler, SUB_ABILITY};
 use super::super::battle::{Battle, BoostEffect, DamageSource};
+use super::super::conditions;
 use super::super::TurnError;
 use super::{handlers, type_immune, ActiveMove};
 
@@ -396,6 +398,15 @@ pub(super) fn on_try_hit<const N: usize>(
             [moves::ATTRACT, moves::CAPTIVATE, moves::TAUNT].contains(&mv.id)
         }
         a if a == abilities::GOOD_AS_GOLD => other && category == MoveCategory::Status,
+        // Wind Rider: another Pokémon's wind move: `this.boost({atk: 1}, target, target)` (the
+        // immunity message if nothing changed), then `return null`.
+        a if a == abilities::WIND_RIDER => {
+            if other && data.flags.contains(MoveFlags::WIND) {
+                super::super::abilities::wind_rider_boost(b, target);
+                return true;
+            }
+            false
+        }
         a if a == abilities::WONDER_GUARD => {
             if !other || category == MoveCategory::Status || mv.id == moves::STRUGGLE {
                 return false;
@@ -410,8 +421,12 @@ pub(super) fn on_try_hit<const N: usize>(
 /// [`on_damaging_hit`] (`u32::MAX`: no order, after every ordered handler), or `None`. Rough
 /// Skin, Iron Barbs and Rattled are handled by `moves::damaging_hit` itself.
 pub(super) fn damaging_hit_order(ability: AbilityId) -> Option<u32> {
-    const HANDLED: [AbilityId; 20] = [
+    const HANDLED: [AbilityId; 24] = [
         abilities::CURSED_BODY,
+        abilities::TOXIC_DEBRIS,
+        abilities::PERISH_BODY,
+        abilities::MUMMY,
+        abilities::LINGERING_AROMA,
         abilities::STATIC,
         abilities::FLAME_BODY,
         abilities::POISON_POINT,
@@ -463,7 +478,7 @@ pub(super) fn on_damaging_hit<const N: usize>(
     damage: i32,
     contact: bool,
     total_before: i32,
-) {
+) -> Result<(), TurnError> {
     let boost_holder = |b: &mut Battle<'_, N>, stat: usize, amount: i8| {
         let mut boosts = NO_BOOSTS;
         boosts[stat] = amount;
@@ -503,7 +518,7 @@ pub(super) fn on_damaging_hit<const N: usize>(
                     0 => Status::Sleep,
                     1 => Status::Paralyze,
                     2 => Status::Poison,
-                    _ => return,
+                    _ => return Ok(()),
                 };
                 b.try_set_status_from(attacker, status, Some(holder));
             }
@@ -620,8 +635,50 @@ pub(super) fn on_damaging_hit<const N: usize>(
                 DamageSource::Indirect,
             );
         }
+        // Toxic Debris: a physical move adds a layer of Toxic Spikes (`addSideCondition`, below
+        // two layers) to the attacker's side, or to the holder's foes' side when an ally hit it.
+        a if a == abilities::TOXIC_DEBRIS => {
+            if mv.data.category == MoveCategory::Physical {
+                let side = if attacker.side == holder.side {
+                    holder.side.other()
+                } else {
+                    attacker.side
+                };
+                let spikes = b.state.side(side).effects[SideEffect::ToxicSpikes as usize];
+                if !spikes.is_active() || spikes.value < 2 {
+                    conditions::add_hazard(b, side, SideEffect::ToxicSpikes);
+                }
+            }
+        }
+        // Perish Body: contact, and the attacker has no `perishsong` yet: both the attacker and
+        // the holder get it (`addVolatile`: nothing on a Pokémon at 0 HP).
+        a if a == abilities::PERISH_BODY => {
+            if contact && !b.volatile(attacker, Volatile::PerishSong).active {
+                b.add_volatile(attacker, Volatile::PerishSong);
+                b.add_volatile(holder, Volatile::PerishSong);
+            }
+        }
+        // Mummy, Lingering Aroma: unless the attacker's ability is `cantsuppress` or already
+        // this one, contact: `source.setAbility(this ability, target)` (nothing on an attacker at
+        // 0 HP; no implemented SetAbility handler: Ability Shield is refused on the field): the
+        // old ability's `End` (`switching::end_ability`), then the new one, which has no start.
+        a if a == abilities::MUMMY || a == abilities::LINGERING_AROMA => {
+            let old = b.ability(attacker);
+            let locked = old.data().flags.contains(AbilityFlags::CANTSUPPRESS) || old == a;
+            if !locked && contact {
+                if let Some(pokemon) = b.alive(attacker) {
+                    super::super::switching::end_ability(b, attacker, old)?;
+                    b.apply(Instruction::SetAbility {
+                        target: pokemon,
+                        old,
+                        new: a,
+                    });
+                }
+            }
+        }
         _ => {}
     }
+    Ok(())
 }
 
 /// Whether the attacker's ability has an implemented `onSourceDamagingHit`

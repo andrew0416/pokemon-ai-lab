@@ -224,9 +224,10 @@ pub(crate) fn charge_after_move<const N: usize>(
 }
 
 /// `runEvent('SideConditionStart', side, source, condition)` after a side condition starts on
-/// `side` (`side.addSideCondition`): Wind Power (`onSideConditionStart`, every active Pokémon
-/// of that side) gets `charge` when it is Tailwind. Wind Rider, the other handler, is refused
-/// on the field.
+/// `side` (`side.addSideCondition`), for every active Pokémon of that side when it is
+/// Tailwind: Wind Power gets `charge`; Wind Rider (breakable: a Mold Breaker user's Tailwind
+/// skips its allies' handler) `this.boost({atk: 1}, pokemon, pokemon)`. Each only changes its
+/// holder.
 pub(crate) fn side_condition_start<const N: usize>(
     b: &mut Battle<'_, N>,
     side: SideId,
@@ -239,7 +240,22 @@ pub(crate) fn side_condition_start<const N: usize>(
         if b.ability(holder) == abilities::WIND_POWER {
             b.add_volatile(holder, Volatile::Charge);
         }
+        if b.ability_unless_broken(holder) == abilities::WIND_RIDER {
+            wind_rider_boost(b, holder);
+        }
     }
+}
+
+/// Wind Rider's `this.boost({atk: 1}, pokemon, pokemon)`; whether a stage changed.
+pub(crate) fn wind_rider_boost<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> bool {
+    let mut up = NO_BOOSTS;
+    up[0] = 1;
+    b.boost_by(
+        holder,
+        &up,
+        Some(holder),
+        BoostEffect::Ability(abilities::WIND_RIDER),
+    )
 }
 
 /// Anger Shell and Berserk (Champions): `onDamage` sets `abilityState.checked*` to

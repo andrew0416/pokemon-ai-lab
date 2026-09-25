@@ -814,6 +814,18 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::INNARDS_OUT, &["onDamagingHit"]),
     // Cursed Body: 30% `disable` on the attacker (`conditions::volatile_start`).
     (abilities::CURSED_BODY, &["onDamagingHit"]),
+    // Toxic Debris (Toxic Spikes layer), Perish Body (`perishsong` on both), Mummy and Lingering
+    // Aroma (`Instruction::SetAbility` on the attacker after its old ability's End).
+    (abilities::TOXIC_DEBRIS, &["onDamagingHit"]),
+    (abilities::PERISH_BODY, &["onDamagingHit"]),
+    (abilities::MUMMY, &["onDamagingHit"]),
+    (abilities::LINGERING_AROMA, &["onDamagingHit"]),
+    // Wind Rider: `onTryHit` in `moves::ability_hooks::on_try_hit`, `onSideConditionStart` in
+    // `abilities::side_condition_start`, `onStart` in `switching::start_ability`.
+    (
+        abilities::WIND_RIDER,
+        &["onSideConditionStart", "onStart", "onTryHit"],
+    ),
     (
         abilities::WIND_POWER,
         &["onDamagingHit", "onSideConditionStart"],

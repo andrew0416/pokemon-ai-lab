@@ -94,6 +94,8 @@ pub(crate) enum StartEffect {
     /// Protosynthesis / Quark Drive: `singleEvent('WeatherChange' / 'TerrainChange')` on the
     /// holder (`abilities::paradox_change`).
     Paradox,
+    /// Wind Rider: Atk +1 if Tailwind is up on the holder's side.
+    WindRider,
 }
 
 /// Abilities with an implemented start, with the exact handler lists they were implemented
@@ -378,6 +380,11 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
             "onTerrainChange",
         ],
         StartEffect::Paradox,
+    ),
+    (
+        abilities::WIND_RIDER,
+        &["onSideConditionStart", "onStart", "onTryHit"],
+        StartEffect::WindRider,
     ),
 ];
 
@@ -774,6 +781,11 @@ pub(crate) fn start_ability<const N: usize>(
         }
         StartEffect::PastelVeil => pastel_veil_cure(b, slot),
         StartEffect::Paradox => super::abilities::paradox_change(b, slot),
+        StartEffect::WindRider => {
+            if b.side_effect_active(slot.side, SideEffect::Tailwind) {
+                super::abilities::wind_rider_boost(b, slot);
+            }
+        }
     }
     Ok(())
 }

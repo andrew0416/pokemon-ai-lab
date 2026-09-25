@@ -145,6 +145,32 @@ fn trace_on_a_turn_switch_skips_untraceable_foes() {
     assert_exact_parity("o71-trace-switch-notrace");
 }
 
+// ---- Toxic Debris, Perish Body, Mummy, Lingering Aroma, Wind Rider -----------------------------
+
+/// A physical hit lays Toxic Spikes on the attacker's side, an ally's hit on the foes' side.
+#[test]
+fn toxic_debris_matches_showdown() {
+    assert_exact_parity("toxic-debris");
+}
+
+/// Perish Body counts both down; Mummy replaces a contact attacker's ability.
+#[test]
+fn perish_body_and_mummy_match_showdown() {
+    assert_exact_parity("perish-body-mummy");
+}
+
+/// Lingering Aroma replaces the abilities of two contact attackers in turn.
+#[test]
+fn lingering_aroma_matches_showdown() {
+    assert_exact_parity("lingering-aroma");
+}
+
+/// Tailwind on the holder's side and an absorbed wind move each raise its Attack.
+#[test]
+fn wind_rider_matches_showdown() {
+    assert_exact_parity("wind-rider");
+}
+
 // ---- Magic Bounce ------------------------------------------------------------------------------
 
 /// A Prankster status move bounces back without the Prankster boost; a spread status move

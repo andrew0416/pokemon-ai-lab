@@ -1777,7 +1777,7 @@ fn spread_move_hit<const N: usize>(
         })
         .collect();
     if !damaged.is_empty() {
-        damaging_hit(b, user, mv, &damaged, total_before);
+        damaging_hit(b, user, mv, &damaged, total_before)?;
     }
     // AfterHit: Knock Off removes the item of every damaged target (`takeItem` in its
     // `onAfterHit`, which Champions runs even if the user fainted from Rocky Helmet).
@@ -1814,7 +1814,7 @@ fn damaging_hit<const N: usize>(
     mv: &ActiveMove,
     damaged: &[(SlotRef, i32)],
     total_before: i32,
-) {
+) -> Result<(), TurnError> {
     #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
     enum Kind {
         Thaw,
@@ -1891,7 +1891,7 @@ fn damaging_hit<const N: usize>(
                 damaged[index].1,
                 contact,
                 total_before,
-            ),
+            )?,
             Kind::Source(a) => ability_hooks::on_source_damaging_hit(b, a, target, user, mv),
             Kind::Item(i) if i == items::ROCKY_HELMET => {
                 if contact && b.alive(user).is_some() {
@@ -1925,6 +1925,7 @@ fn damaging_hit<const N: usize>(
             }
         }
     }
+    Ok(())
 }
 
 /// Showdown `field.clearTerrain()`: the terrain ends at once (its `FieldEnd` only logs), then
