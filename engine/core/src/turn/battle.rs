@@ -400,11 +400,30 @@ impl<'a, const N: usize> Battle<'a, N> {
 
     /// Showdown `trySetStatus` → `setStatus` for the supported handlers: fails on a fainted
     /// target, an existing status, status immunity (`runStatusImmunity`), and the `SetStatus`
-    /// handlers (see [`Battle::set_status_blocked`]).
+    /// handlers (see [`Battle::set_status_blocked`], and Safeguard). The source is the user of
+    /// the move in progress, none outside a move (Yawn's sleep, residual effects); a status an
+    /// ability or item inflicts during a move must name its own source with
+    /// [`Battle::try_set_status_from`].
     pub fn try_set_status(&mut self, target: SlotRef, status: Status) -> bool {
+        let source = self.active_move.map(|m| m.user);
+        self.try_set_status_from(target, status, source)
+    }
+
+    /// [`Battle::try_set_status`] with an explicit source Pokémon (`None`: no source, or the
+    /// status is not blocked by Safeguard, like Yawn's).
+    pub fn try_set_status_from(
+        &mut self,
+        target: SlotRef,
+        status: Status,
+        source: Option<SlotRef>,
+    ) -> bool {
         let Some(pokemon) = self.alive(target) else {
             return false;
         };
+        // Safeguard (`onSetStatus` of the target's side): blocks a status from another Pokémon.
+        if self.safeguarded(target, source) {
+            return false;
+        }
         if self.mon(pokemon).status != Status::None {
             return false;
         }
@@ -497,12 +516,22 @@ impl<'a, const N: usize> Battle<'a, N> {
         false
     }
 
+    /// Safeguard on `target`'s side against an effect from `source` (its `onSetStatus` and
+    /// `onTryAddVolatile`): only another Pokémon's effects are blocked (`target !== source`),
+    /// and nothing without a source (`if (!effect || !source) return;`). Infiltrator, which
+    /// bypasses it, is refused.
+    fn safeguarded(&self, target: SlotRef, source: Option<SlotRef>) -> bool {
+        source.is_some_and(|s| s != target)
+            && self.side_effect_active(target.side, SideEffect::Safeguard)
+    }
+
     /// Showdown `runEvent('TryAddVolatile')` for a new volatile on `target`: the ability
     /// handlers of Insomnia, Vital Spirit, Purifying Salt and Leaf Guard (in sun) on the
     /// target block Yawn; Sweet Veil (Yawn) and Aroma Veil (Attract, Disable, Encore, Heal
     /// Block, Taunt, Torment) block for the whole side; Electric Terrain blocks Yawn on a
-    /// grounded target. Of those volatiles only Yawn is implemented; the others (and Misty
-    /// Terrain's confusion block) guard their future implementation.
+    /// grounded target; Safeguard blocks Yawn and confusion from another Pokémon. Of those
+    /// volatiles only Yawn is implemented; the others (and Misty Terrain's confusion block)
+    /// guard their future implementation.
     pub fn add_volatile_blocked(&self, target: SlotRef, volatile: Volatile) -> bool {
         let condition = volatile.condition();
         let yawn = condition == conditions::YAWN;
@@ -534,8 +563,13 @@ impl<'a, const N: usize> Battle<'a, N> {
                 || (ability == abilities::AROMA_VEIL && aroma)
         });
         // Electric Terrain's `onTryAddVolatile`: Yawn fails on a grounded target (Misty
-        // Terrain's only blocks confusion).
-        veiled || (yawn && self.terrain() == Terrain::Electric && self.is_grounded(target))
+        // Terrain's only blocks confusion). Safeguard: Yawn and confusion from the user of the
+        // move in progress, if that is another Pokémon.
+        let safeguard = (yawn || condition == conditions::CONFUSION)
+            && self.safeguarded(target, self.active_move.map(|m| m.user));
+        veiled
+            || safeguard
+            || (yawn && self.terrain() == Terrain::Electric && self.is_grounded(target))
     }
 
     /// Showdown `pokemon.faint()`: HP drops to 0 at once, without Damage handlers (Focus Sash,
@@ -643,8 +677,27 @@ impl<'a, const N: usize> Battle<'a, N> {
 
     // ---- boosts ----------------------------------------------------------------------------
 
+    /// Showdown `battle.boost` with `source` the Pokémon causing it: Mist on the target's side
+    /// (`onTryBoost`) drops the negative stages when the source is another Pokémon (Infiltrator,
+    /// which ignores it, is refused). Returns whether any stage changed.
+    pub fn boost_by(
+        &mut self,
+        target: SlotRef,
+        boosts: &[i8; BOOST_COUNT],
+        source: SlotRef,
+    ) -> bool {
+        let mut boosts = *boosts;
+        if source != target && self.side_effect_active(target.side, SideEffect::Mist) {
+            for stage in boosts.iter_mut() {
+                *stage = (*stage).max(0);
+            }
+        }
+        self.boost(target, &boosts)
+    }
+
     /// Showdown `battle.boost` without boost-modifying abilities (those are rejected up
-    /// front). Returns whether any stage changed.
+    /// front) and without a source (so Mist does not apply: see [`Battle::boost_by`]). Returns
+    /// whether any stage changed.
     pub fn boost(&mut self, target: SlotRef, boosts: &[i8; BOOST_COUNT]) -> bool {
         if self.alive(target).is_none() {
             return false;

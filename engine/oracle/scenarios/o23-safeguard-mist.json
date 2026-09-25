@@ -1,0 +1,28 @@
+{
+ "description": "O23 Setup turn: Clefable sets Safeguard and Cloyster Mist. This turn Gyarados switches in and its Intimidate is stopped by Mist; Dunsparce's Glare on Clefable is stopped by Safeguard; Cloyster's own Shell Smash drops still apply.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Safeguard", "Calm Mind"], "level": 50},
+   {"species": "Cloyster", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Mist", "Shell Smash"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Dunsparce", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Glare", "Calm Mind"], "level": 50},
+   {"species": "Gyarados", "item": "", "ability": "Intimidate", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Dragon Dance", "Protect"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "setupTurns": [
+  ["move safeguard, move mist", "move swordsdance, move calmmind"]
+ ],
+ "turn": {"p1": "move calmmind, move shellsmash", "p2": "switch 3, move glare 1"}
+}

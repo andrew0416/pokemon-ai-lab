@@ -100,3 +100,23 @@ fn o27_endure_leaves_1_hp_before_focus_sash() {
 fn o27_endure_shares_the_stall_counter_with_protect() {
     assert_exact_parity("o27-endure-stall");
 }
+
+#[test]
+fn o21_wide_guard_blocks_spread_moves_on_its_side() {
+    assert_exact_parity("o21-wide-guard");
+}
+
+#[test]
+fn o21_quick_guard_blocks_priority_moves_on_its_side() {
+    assert_exact_parity("o21-quick-guard");
+}
+
+#[test]
+fn o23_safeguard_stops_glare_and_mist_stops_intimidate() {
+    assert_exact_parity("o23-safeguard-mist");
+}
+
+#[test]
+fn o23_lucky_chant_stops_critical_hits() {
+    assert_exact_parity("o23-lucky-chant");
+}

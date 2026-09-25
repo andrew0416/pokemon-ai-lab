@@ -479,7 +479,7 @@ fn use_move<const N: usize>(
     };
     deduct_pressure_pp(b, user, mv, &targets);
     if field_move {
-        result = try_move_hit_field(b, user, mv, target)?;
+        result = try_move_hit_field(b, user, mv, target, will_act)?;
     } else {
         let Some(&last) = targets.last() else {
             return Ok(false);
@@ -556,10 +556,15 @@ fn try_move_hit_field<const N: usize>(
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
+    will_act: bool,
 ) -> Result<bool, TurnError> {
     let data = mv.data;
-    // Try: the move's onTry (Aurora Veil).
+    // Try: the move's onTry (Aurora Veil; Wide Guard and Quick Guard need a later action,
+    // `!!this.queue.willAct()`).
     if mv.id == moves::AURORA_VEIL && b.weather() != Weather::Snow {
+        return Ok(false);
+    }
+    if [moves::WIDE_GUARD, moves::QUICK_GUARD].contains(&mv.id) && !will_act {
         return Ok(false);
     }
     // PrepareHit: the user's ability (Protean, Libero).
@@ -571,6 +576,11 @@ fn try_move_hit_field<const N: usize>(
         let side = target.side;
         let effect = side_effect_of(data.side_condition.id()).expect("checked by support");
         combine(add_side_condition(b, user, side, effect));
+    }
+    // HitSide: Wide Guard and Quick Guard `onHitSide`: `source.addVolatile('stall')`, even if
+    // the side condition was already up (returns nothing).
+    if [moves::WIDE_GUARD, moves::QUICK_GUARD].contains(&mv.id) {
+        b.add_volatile(user, Volatile::Stall);
     }
     if !data.weather.is_none() {
         let weather = weather_of(data.weather.id()).expect("checked by support");
@@ -755,6 +765,22 @@ fn blocked_by_try_hit<const N: usize>(
     if b.volatile(target, Volatile::Protect).active && mv.data.flags.contains(MoveFlags::PROTECT) {
         return true;
     }
+    // Wide Guard / Quick Guard on the target's side (`onTryHit`, priority 4): spread moves, or
+    // moves with positive priority (after Prankster and the like), that Protect would block
+    // (`checkMoveBypassesProtect`: the `protect` flag; status moves too). They also cover a
+    // move from the target's own ally.
+    if mv.data.flags.contains(MoveFlags::PROTECT) {
+        let spread = matches!(
+            mv.target,
+            MoveTarget::AllAdjacent | MoveTarget::AllAdjacentFoes
+        );
+        if spread && b.side_effect_active(target.side, SideEffect::WideGuard) {
+            return true;
+        }
+        if mv.priority > 0 && b.side_effect_active(target.side, SideEffect::QuickGuard) {
+            return true;
+        }
+    }
     // Sturdy `onTryHit`: OHKO moves fail (breakable). OHKO moves are refused by `support`
     // for now; this keeps the immunity when they are added.
     mv.data.ohko != Ohko::No && b.ability_unless_broken(target) == abilities::STURDY
@@ -924,7 +950,7 @@ fn spread_move_hit<const N: usize>(
         let mut did: Option<bool> = None;
         let mut note = |r: bool| did = Some(did.unwrap_or(false) || r);
         if data.boosts != NO_BOOSTS && b.alive(t).is_some() {
-            note(b.boost(t, &data.boosts));
+            note(b.boost_by(t, &data.boosts, user));
         }
         if let Some(heal) = data.heal {
             let target_mon = b.occupant(t).map(|p| b.mon(p));
@@ -991,7 +1017,7 @@ fn spread_move_hit<const N: usize>(
                 continue;
             }
             if secondary.boosts != NO_BOOSTS && b.alive(t).is_some() {
-                b.boost(t, &secondary.boosts);
+                b.boost_by(t, &secondary.boosts, user);
             }
             if secondary.status != Status::None {
                 b.try_set_status(t, secondary.status);
@@ -1084,8 +1110,10 @@ fn get_damage<const N: usize>(
     // Critical hit: ratio 1..4 ??1/24, 1/8, 1/2, always. `CriticalHit` handlers: Battle Armor
     // and Shell Armor (`onCriticalHit: false`, breakable). Showdown rolls first and then
     // cancels; not rolling gives the same distribution.
+    // Lucky Chant on the target's side is a `CriticalHit` handler too (`onCriticalHit: false`).
     let crit_ratio = data.crit_ratio.min(4);
-    let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit;
+    let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit
+        && !b.side_effect_active(target.side, SideEffect::LuckyChant);
     let critical = can_crit
         && (data.will_crit
             || match crit_ratio {
@@ -1385,7 +1413,9 @@ fn add_pseudo_weather<const N: usize>(b: &mut Battle<'_, N>, id: &str) -> bool {
     true
 }
 
-/// Showdown `addSideCondition` for Tailwind (4 turns) and the screens (5, Light Clay 8).
+/// Showdown `addSideCondition` (fails if already up; none of these has `onSideRestart`):
+/// Tailwind 4 turns, the screens 5 (Light Clay 8), Safeguard 5 (Persistent, which makes it 7,
+/// is refused), Mist and Lucky Chant 5, Wide Guard and Quick Guard 1.
 fn add_side_condition<const N: usize>(
     b: &mut Battle<'_, N>,
     source: SlotRef,
@@ -1397,7 +1427,12 @@ fn add_side_condition<const N: usize>(
     }
     let turns = match effect {
         SideEffect::Tailwind => 4,
-        _ if b.item(source) == items::LIGHT_CLAY => 8,
+        SideEffect::WideGuard | SideEffect::QuickGuard => 1,
+        SideEffect::Reflect | SideEffect::LightScreen | SideEffect::AuroraVeil
+            if b.item(source) == items::LIGHT_CLAY =>
+        {
+            8
+        }
         _ => 5,
     };
     b.set_side_effect(side, effect, Effect { value: 0, turns });

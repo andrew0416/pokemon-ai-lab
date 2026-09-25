@@ -239,11 +239,16 @@ fn field(out: &mut String, effects: &[Effect; FIELD_EFFECT_COUNT]) -> Result<(),
 }
 
 /// Side conditions the schema can write, in id order.
-const SIDE_CONDITIONS: [(SideEffect, &str); 4] = [
+const SIDE_CONDITIONS: [(SideEffect, &str); 9] = [
     (SideEffect::AuroraVeil, "auroraveil"),
     (SideEffect::LightScreen, "lightscreen"),
+    (SideEffect::LuckyChant, "luckychant"),
+    (SideEffect::Mist, "mist"),
+    (SideEffect::QuickGuard, "quickguard"),
     (SideEffect::Reflect, "reflect"),
+    (SideEffect::Safeguard, "safeguard"),
     (SideEffect::Tailwind, "tailwind"),
+    (SideEffect::WideGuard, "wideguard"),
 ];
 
 fn side_json<const N: usize>(
@@ -452,4 +457,15 @@ fn types_string(types: [Type; 2]) -> Result<String, String> {
         return Err("no types (Showdown `???`)".into());
     }
     Ok(names.join("/"))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// `effects()` in `canonical.cjs` writes side conditions sorted by id.
+    #[test]
+    fn side_conditions_are_in_id_order() {
+        assert!(SIDE_CONDITIONS.windows(2).all(|w| w[0].1 < w[1].1));
+    }
 }

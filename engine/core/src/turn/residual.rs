@@ -93,17 +93,22 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
         out.push(field(27, 1, Kind::FieldDuration(FieldEffect::TrickRoom)));
     }
     for side in [SideId::One, SideId::Two] {
-        for (effect, sub_order) in [
-            (SideEffect::Reflect, 1),
-            (SideEffect::LightScreen, 2),
-            (SideEffect::Tailwind, 5),
-            (SideEffect::AuroraVeil, 10),
+        for (effect, order, sub_order) in [
+            (SideEffect::Reflect, 26, 1),
+            (SideEffect::LightScreen, 26, 2),
+            (SideEffect::Safeguard, 26, 3),
+            (SideEffect::Mist, 26, 4),
+            (SideEffect::Tailwind, 26, 5),
+            (SideEffect::LuckyChant, 26, 6),
+            (SideEffect::AuroraVeil, 26, 10),
+            // No `onSideResidualOrder`: Showdown's default order, the side-condition sub-order.
+            (SideEffect::WideGuard, ORDER_DEFAULT, SUB_SIDE_CONDITION),
+            (SideEffect::QuickGuard, ORDER_DEFAULT, SUB_SIDE_CONDITION),
         ] {
             if b.side_effect_active(side, effect) {
-                out.push(field(26, sub_order, Kind::SideDuration(side, effect)));
+                out.push(field(order, sub_order, Kind::SideDuration(side, effect)));
             }
         }
-        let _ = SUB_SIDE_CONDITION;
         for slot in Battle::<N>::slots(side) {
             let Some(pokemon) = b.alive(slot) else {
                 continue;
@@ -490,6 +495,36 @@ pub(crate) fn bench<'b, const N: usize>(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The side-condition residual orders hard-coded in `collect` are the dex's.
+    #[test]
+    fn side_condition_residual_orders_match_the_dex() {
+        use crate::dex::moves;
+        for (id, order) in [
+            (moves::SAFEGUARD, Some((26, 3))),
+            (moves::MIST, Some((26, 4))),
+            (moves::LUCKY_CHANT, Some((26, 6))),
+            (moves::WIDE_GUARD, None),
+            (moves::QUICK_GUARD, None),
+        ] {
+            let orders = id.data().event_orders;
+            let found = orders
+                .iter()
+                .find(|(n, _)| *n == "condition.onSideResidualOrder")
+                .map(|&(_, o)| o);
+            let sub = orders
+                .iter()
+                .find(|(n, _)| *n == "condition.onSideResidualSubOrder")
+                .map(|&(_, o)| o);
+            match order {
+                Some((o, s)) => {
+                    assert_eq!(found, Some(o), "{id:?}");
+                    assert_eq!(sub, Some(s), "{id:?}");
+                }
+                None => assert_eq!((found, sub), (None, None), "{id:?}"),
+            }
+        }
+    }
 
     /// The residual orders hard-coded in `collect` are the dex's.
     #[test]

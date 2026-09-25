@@ -372,7 +372,7 @@ pub(crate) fn start_ability<const N: usize>(
             drop[0] = -1;
             debug_assert_eq!(drop.len(), BOOST_COUNT);
             for foe in b.alive_slots(slot.side.other()) {
-                b.boost(foe, &drop);
+                b.boost_by(foe, &drop, slot);
             }
         }
         StartEffect::Trace => trace(b, slot)?,

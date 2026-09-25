@@ -238,6 +238,7 @@ fn side_effect(i: usize) -> crate::field::SideEffect {
         StickyWeb,
         WideGuard,
         QuickGuard,
+        LuckyChant,
     ][i]
 }
 

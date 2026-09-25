@@ -175,6 +175,51 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "onTry",
         ],
     ),
+    // Wide Guard / Quick Guard: `onTry` (a later action), `onHitSide` (the stall counter) and
+    // the side's `onTryHit` in `moves`; `onSideStart` only logs.
+    (
+        moves::WIDE_GUARD,
+        &[
+            "condition.onSideStart",
+            "condition.onTryHit",
+            "onHitSide",
+            "onTry",
+        ],
+    ),
+    (
+        moves::QUICK_GUARD,
+        &[
+            "condition.onSideStart",
+            "condition.onTryHit",
+            "onHitSide",
+            "onTry",
+        ],
+    ),
+    // Safeguard: `onSetStatus` / `onTryAddVolatile` in `Battle` (Persistent, the only
+    // `durationCallback` change, is refused); Mist: `onTryBoost` in `Battle::boost_by`; Lucky
+    // Chant: `onCriticalHit: false` in `moves::get_damage`. The side start/end only log.
+    (
+        moves::SAFEGUARD,
+        &[
+            "condition.durationCallback",
+            "condition.onSetStatus",
+            "condition.onSideEnd",
+            "condition.onSideStart",
+            "condition.onTryAddVolatile",
+        ],
+    ),
+    (
+        moves::MIST,
+        &[
+            "condition.onSideEnd",
+            "condition.onSideStart",
+            "condition.onTryBoost",
+        ],
+    ),
+    (
+        moves::LUCKY_CHANT,
+        &["condition.onSideEnd", "condition.onSideStart"],
+    ),
     (
         moves::ELECTRIC_TERRAIN,
         &[
@@ -550,16 +595,26 @@ pub(crate) fn side_effect_of(condition: &str) -> Option<SideEffect> {
         "lightscreen" => SideEffect::LightScreen,
         "auroraveil" => SideEffect::AuroraVeil,
         "tailwind" => SideEffect::Tailwind,
+        "safeguard" => SideEffect::Safeguard,
+        "mist" => SideEffect::Mist,
+        "luckychant" => SideEffect::LuckyChant,
+        "wideguard" => SideEffect::WideGuard,
+        "quickguard" => SideEffect::QuickGuard,
         _ => return None,
     })
 }
 
 /// The implemented side effects.
-const SUPPORTED_SIDE_EFFECTS: [SideEffect; 4] = [
+const SUPPORTED_SIDE_EFFECTS: [SideEffect; 9] = [
     SideEffect::Reflect,
     SideEffect::LightScreen,
     SideEffect::AuroraVeil,
     SideEffect::Tailwind,
+    SideEffect::Safeguard,
+    SideEffect::Mist,
+    SideEffect::LuckyChant,
+    SideEffect::WideGuard,
+    SideEffect::QuickGuard,
 ];
 
 /// Checks everything on the field before a turn.

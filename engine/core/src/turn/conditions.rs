@@ -67,7 +67,7 @@ pub(crate) fn volatile_end<const N: usize>(
         // as the effect: Safeguard lets it through, the sleep blocks (abilities, Sweet Veil,
         // Electric and Misty Terrain) apply.
         Volatile::Yawn => {
-            b.try_set_status(slot, Status::Sleep);
+            b.try_set_status_from(slot, Status::Sleep, None);
         }
         // Perish Song: `target.faint()`.
         Volatile::PerishSong => b.faint(slot),
