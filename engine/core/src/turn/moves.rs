@@ -2243,7 +2243,8 @@ fn get_damage<const N: usize>(
         (i32::from(data.crit_ratio) + item_events::crit_ratio_bonus(b.item(user)) + focus_energy)
             .clamp(0, 4);
     let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit
-        && !b.side_effect_active(target.side, SideEffect::LuckyChant);
+        && !b.side_effect_active(target.side, SideEffect::LuckyChant)
+        && !super::forme::shields_hit(b, user, target, mv.id);
     let critical = can_crit
         && (data.will_crit
             || match crit_ratio {
@@ -2373,7 +2374,9 @@ fn get_damage<const N: usize>(
     let stab =
         data.force_stab || (mv.move_type != Type::None && attacker.types.contains(&mv.move_type));
     let stab_modifier = ability_events::modify_stab(attacker.ability, stab);
-    // runEffectiveness: per defending type, the chart then the move's onEffectiveness.
+    // runEffectiveness: per defending type, the chart then the move's onEffectiveness, then
+    // the target's ability (Disguise returns 0, which ends the event) and item.
+    let neutral = super::forme::shields_hit(b, user, target, mv.id);
     let type_mod: i32 = defender
         .types
         .iter()
@@ -2381,6 +2384,9 @@ fn get_damage<const N: usize>(
         .map(|&t| {
             let chart = handlers::type_effectiveness(mv.move_type, t);
             let by_move = handlers::on_effectiveness(mv.id, t, chart);
+            if neutral {
+                return 0;
+            }
             item_events::on_effectiveness(b, target, mv.move_type, by_move)
         })
         .sum::<i32>()

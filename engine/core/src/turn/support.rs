@@ -907,6 +907,12 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // `moves::prepare_hit_ability`.
     (abilities::PROTEAN, &["onPrepareHit"]),
     (abilities::LIBERO, &["onPrepareHit"]),
+    // F19 formes (`forme.rs`). Disguise: `onDamage` in `Battle::damage`, `onCriticalHit` and
+    // `onEffectiveness` in `moves::get_damage`, `onUpdate` in `update::update_event`.
+    (
+        abilities::DISGUISE,
+        &["onCriticalHit", "onDamage", "onEffectiveness", "onUpdate"],
+    ),
     // Damage handlers (`Battle::damage`).
     (abilities::ROCK_HEAD, &["onDamage"]),
     (abilities::MAGIC_GUARD, &["onDamage"]),

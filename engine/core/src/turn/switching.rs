@@ -228,6 +228,13 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onDamagingHit", "onSetStatus", "onUpdate"],
         StartEffect::None,
     ),
+    // F19 Disguise: its `onUpdate` only acts on a Mimikyu whose ability absorbed a move's damage
+    // (`forme::on_update`), never right after a switch-in.
+    (
+        abilities::DISGUISE,
+        &["onCriticalHit", "onDamage", "onEffectiveness", "onUpdate"],
+        StartEffect::None,
+    ),
     // O68 switch-in abilities (`start_ability`).
     (abilities::DOWNLOAD, &["onStart"], StartEffect::Download),
     (

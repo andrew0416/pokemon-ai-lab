@@ -10,8 +10,9 @@
 //! Listeners implemented here: berries with `onUpdate` (Sitrus, Oran, the five Figy-type
 //! berries, the five pinch stat berries, Lansat, Starf, Lum and the six one-status berries,
 //! Leppa) and Lum's `onAfterSetStatus`; the abilities' `onUpdate` cures run first
-//! (`abilities::on_update`: the status cures of `cured_on_update`, Own Tempo's confusion cure).
-//! Other ability `onUpdate` handlers are refused (Trace still seeking, Disguise, ...). A berry
+//! (`abilities::on_update`: the status cures of `cured_on_update`, Own Tempo's confusion cure;
+//! `forme::on_update`: Disguise). Other ability `onUpdate` handlers are refused (Trace still
+//! seeking, ...). A berry
 //! is eaten only if the `TryEatItem` handlers allow it (`abilities::try_eat_item`). [`eat_item`]
 //! also runs the `onEat` of the berries eaten elsewhere (Kee, Maranga, Jaboca, Rowap, Micle,
 //! Custap, Enigma).
@@ -85,8 +86,10 @@ pub(crate) fn update_event<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), 
         if b.alive(slot).is_none() {
             continue;
         }
-        // The ability's `onUpdate` (sub-order 7) before the item's (8).
+        // The ability's `onUpdate` (sub-order 7) before the item's (8); a Pokémon has one
+        // ability, so the two ability calls never both act.
         super::abilities::on_update(b, slot);
+        super::forme::on_update(b, slot);
         if item_wants_eating(b, slot) {
             eat_item(b, slot);
         }
