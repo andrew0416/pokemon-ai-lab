@@ -118,6 +118,25 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "onTryHit",
         ],
     ),
+    // Torment: `onDisableMove` in `conditions::disabled_move`; `onStart` only fails for a
+    // Dynamaxed target (refused), `onEnd` only logs.
+    (
+        moves::TORMENT,
+        &[
+            "condition.onDisableMove",
+            "condition.onEnd",
+            "condition.onStart",
+        ],
+    ),
+    // Imprison: `onFoeDisableMove` and `onFoeBeforeMove` in `conditions`; `onStart` only logs.
+    (
+        moves::IMPRISON,
+        &[
+            "condition.onFoeBeforeMove",
+            "condition.onFoeDisableMove",
+            "condition.onStart",
+        ],
+    ),
     (moves::GRASSY_GLIDE, &["onModifyPriority"]),
     (moves::LOW_KICK, &["basePowerCallback", "onTryHit"]),
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),

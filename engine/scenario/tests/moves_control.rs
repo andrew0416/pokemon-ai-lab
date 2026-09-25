@@ -86,3 +86,45 @@ fn o14_disable_counts_down_on_the_next_turn() {
 fn o14_a_disabled_move_cannot_be_chosen() {
     assert_invalid_choice("o14-disable-next", 1, 0, move_choice(0, 0), "Disable");
 }
+
+#[test]
+fn o15_torment_and_imprison_block_a_shared_move() {
+    assert_exact_parity("o15-torment-imprison");
+}
+
+#[test]
+fn o15_torment_and_imprison_two_turns_later() {
+    assert_exact_parity("o15-torment-imprison-next");
+}
+
+/// Torment's `onDisableMove`: Clefable cannot repeat its last move, Draining Kiss.
+#[test]
+fn o15_a_tormented_pokemon_cannot_repeat_its_last_move() {
+    assert_invalid_choice(
+        "o15-torment-imprison-next",
+        1,
+        0,
+        move_choice(1, 1),
+        "Torment",
+    );
+}
+
+/// Imprison's `onFoeDisableMove`: Hitmontop knows Calm Mind and Protect, so neither foe can
+/// choose them.
+#[test]
+fn o15_imprison_disables_the_moves_its_holder_knows() {
+    assert_invalid_choice(
+        "o15-torment-imprison-next",
+        1,
+        0,
+        move_choice(0, 0),
+        "Imprison",
+    );
+    assert_invalid_choice(
+        "o15-torment-imprison-next",
+        1,
+        1,
+        move_choice(2, 0),
+        "Imprison",
+    );
+}

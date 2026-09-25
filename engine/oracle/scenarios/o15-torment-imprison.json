@@ -1,0 +1,23 @@
+{
+ "description": "O15 Torment and Imprison on turn 1: Weavile torments Clefable (torment {} stays); Hitmontop's Imprison shares Calm Mind and Protect with the foes, so Clefable's later Calm Mind fails (onFoeBeforeMove, priority 4) while Garchomp's earlier Swords Dance (not known to Hitmontop) works.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Torment", "Swords Dance", "Protect"], "level": 50},
+   {"species": "Hitmontop", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Imprison", "Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Draining Kiss", "Dazzling Gleam", "Protect"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 2, "atk": 32, "def": 32}, "moves": ["Swords Dance", "Dragon Claw", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move torment 1, move imprison", "p2": "move calmmind, move swordsdance"}
+}

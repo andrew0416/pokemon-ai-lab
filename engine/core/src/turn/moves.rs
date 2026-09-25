@@ -297,7 +297,8 @@ fn run_move_inner<const N: usize>(
 }
 
 /// The BeforeMove handlers, by priority: sleep and freeze (10), flinch (8), Disable (7),
-/// Gravity (6), Taunt (5), confusion (3), paralysis (1), the Choice lock (0). `false` = the move is not used (no
+/// Gravity (6), Taunt (5), a foe's Imprison (4), confusion (3), paralysis (1), the Choice lock
+/// (0). `false` = the move is not used (no
 /// PP, no `lastMove`).
 fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) -> bool {
     let pokemon = b.occupant(user).expect("checked");
@@ -337,7 +338,7 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
     if b.field_active(FieldEffect::Gravity) && mv.data.flags.contains(MoveFlags::GRAVITY) {
         return false;
     }
-    // Taunt (priority 5).
+    // Taunt (priority 5), a foe's Imprison (4).
     if !conditions::before_move_after_gravity(b, user, mv.id) {
         return false;
     }

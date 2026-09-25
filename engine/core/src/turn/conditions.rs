@@ -144,8 +144,10 @@ pub(crate) fn before_move_after_flinch<const N: usize>(
     !(disable.active && disable.mv == id && !id.data().flags.contains(MoveFlags::CANTUSETWICE))
 }
 
-/// The user's condition `onBeforeMove` handlers between Gravity (priority 6) and confusion
-/// (3): Taunt (5) fails a status move other than Me First. `false` = the move is not used.
+/// The condition `onBeforeMove` handlers between Gravity (priority 6) and confusion (3):
+/// the user's Taunt (5) fails a status move other than Me First; a foe's Imprison
+/// (`onFoeBeforeMove`, 4) fails a move its holder knows (not Struggle). `false` = the move is
+/// not used.
 pub(crate) fn before_move_after_gravity<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
@@ -155,12 +157,31 @@ pub(crate) fn before_move_after_gravity<const N: usize>(
     let taunted = b.volatile(user, Volatile::Taunt).active
         && data.category == MoveCategory::Status
         && id != moves::ME_FIRST;
-    !taunted
+    !taunted && !imprisoned(b.state, user, id)
+}
+
+/// Whether an active foe of the Pokémon in `slot` has Imprison and knows `id` (Imprison's
+/// `onFoeDisableMove` / `onFoeBeforeMove`: `this.effectState.source` is the holder itself).
+fn imprisoned<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> bool {
+    if id == moves::STRUGGLE {
+        return false;
+    }
+    (0..N as u8).any(|i| {
+        let foe = SlotRef {
+            side: slot.side.other(),
+            slot: i,
+        };
+        state.slot(foe).volatiles.has(Volatile::Imprison)
+            && state
+                .active(foe)
+                .is_some_and(|m| m.hp > 0 && m.moves.iter().any(|s| s.id == id))
+    })
 }
 
 /// Why the Pokémon in `slot` cannot choose `id` because of a condition on it (the conditions'
 /// `DisableMove` handlers that `endTurn` runs): Taunt disables every status move but Me First,
-/// Disable its move.
+/// Disable its move, Torment the last move (not Struggle), a foe's Imprison every move its
+/// holder knows.
 pub(crate) fn disabled_move<const N: usize>(
     state: &State<N>,
     slot: SlotRef,
@@ -177,6 +198,13 @@ pub(crate) fn disabled_move<const N: usize>(
     let disable = volatiles.get(Volatile::Disable);
     if disable.active && disable.mv == id {
         return Some(format!("{} is disabled by Disable", data.name));
+    }
+    let last = state.slot(slot).last_move;
+    if volatiles.has(Volatile::Torment) && last == id && id != moves::STRUGGLE {
+        return Some(format!("{} is disabled by Torment", data.name));
+    }
+    if imprisoned(state, slot, id) {
+        return Some(format!("{} is disabled by Imprison", data.name));
     }
     None
 }

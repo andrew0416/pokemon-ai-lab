@@ -66,9 +66,14 @@ pub enum Volatile {
     /// Disable: `mv` (the holder's last move when it started) can be neither chosen nor used
     /// (duration 5, one less if the holder still has a move to come; residual order 17).
     Disable,
+    /// Torment: the holder's last move cannot be chosen (no duration).
+    Torment,
+    /// Imprison, on its user: the user's foes can neither choose nor use a move the user knows
+    /// (no duration).
+    Imprison,
 }
 
-pub const VOLATILE_COUNT: usize = 20;
+pub const VOLATILE_COUNT: usize = 22;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -92,6 +97,8 @@ impl Volatile {
         Volatile::HelpingHand,
         Volatile::Taunt,
         Volatile::Disable,
+        Volatile::Torment,
+        Volatile::Imprison,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -117,6 +124,8 @@ impl Volatile {
             Volatile::HelpingHand => conditions::HELPINGHAND,
             Volatile::Taunt => conditions::TAUNT,
             Volatile::Disable => conditions::DISABLE,
+            Volatile::Torment => conditions::TORMENT,
+            Volatile::Imprison => conditions::IMPRISON,
             Volatile::PerishSong | Volatile::ProteanUsed => ConditionId::NONE,
         }
     }
@@ -144,6 +153,8 @@ impl Volatile {
             Volatile::HelpingHand => "helpinghand",
             Volatile::Taunt => "taunt",
             Volatile::Disable => "disable",
+            Volatile::Torment => "torment",
+            Volatile::Imprison => "imprison",
         }
     }
 
@@ -175,7 +186,9 @@ impl Volatile {
             Volatile::Confusion
             | Volatile::FlashFire
             | Volatile::ChoiceLock
-            | Volatile::ProteanUsed => 0,
+            | Volatile::ProteanUsed
+            | Volatile::Torment
+            | Volatile::Imprison => 0,
         }
     }
 
