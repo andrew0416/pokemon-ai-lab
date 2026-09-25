@@ -131,12 +131,10 @@ fn single_hit_scenario_loads_the_hypnosis_gravity_teams() {
 }
 
 #[test]
-fn patches_and_setup_turns_are_rejected() {
-    let err = load_scenario_file(scenarios().join("hypnosis-gravity.json")).unwrap_err();
-    assert!(
-        matches!(err, LoadError::Unsupported { field: "patch", .. }),
-        "{err}"
-    );
+fn patches_load_and_setup_turns_are_rejected() {
+    let loaded = load_scenario_file(scenarios().join("hypnosis-gravity.json")).unwrap();
+    let patch = loaded.patch.as_ref().expect("hypnosis-gravity has a patch");
+    assert_eq!(patch.field.pseudo_weather.get("gravity"), Some(&Some(4)));
 
     let base = scenarios();
     let with = |extra: &str| {
@@ -162,6 +160,10 @@ fn patches_and_setup_turns_are_rejected() {
     load_scenario_str(&with(r#", "setupTurns": [], "patch": {}"#), &base).unwrap();
 
     let err = load_scenario_str(&with(r#", "seedx": 1"#), &base).unwrap_err();
+    assert!(matches!(err, LoadError::Json { .. }), "{err}");
+    // Unknown patch fields could change the position: rejected, not dropped.
+    let err =
+        load_scenario_str(&with(r#", "patch": {"field": {"gravityx": 1}}"#), &base).unwrap_err();
     assert!(matches!(err, LoadError::Json { .. }), "{err}");
 
     let vgc = with("").replace(DOUBLES_FORMAT, "gen9championsvgc2026regmc");

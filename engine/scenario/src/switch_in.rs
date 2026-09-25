@@ -320,7 +320,9 @@ fn validate<const N: usize>(state: &State<N>) -> Result<(), SwitchInError> {
         }
         *side_seen = true;
         if slot.boosts != [0; BOOST_COUNT]
-            || slot.volatiles != 0
+            || !slot.volatiles.is_empty()
+            || !slot.last_move.is_none()
+            || slot.move_actions != 0
             || slot.substitute_hp != 0
             || slot.dynamax.is_active()
         {

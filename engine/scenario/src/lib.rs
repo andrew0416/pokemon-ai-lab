@@ -10,10 +10,12 @@
 //! after the leads' start effects (the implemented subset: Trace, Sand Stream, Grassy Surge;
 //! anything else that could act is rejected); one of those is Showdown's `before` snapshot.
 //! [`canonical::canonical_json`] writes a state in the oracle's canonical form (schema 1).
-//! Scenario features that need rules the engine does not have (`setupTurns`, `patch`) are
-//! rejected, never skipped.
+//! [`decision`] applies the oracle's `patch` after the switch-ins ([`scenario_states`]) and
+//! parses the `turn` choice strings. `setupTurns` needs replaying turns and is rejected,
+//! never skipped.
 
 pub mod canonical;
+pub mod decision;
 pub mod error;
 pub mod json;
 pub mod meta;
@@ -24,10 +26,12 @@ use std::path::Path;
 
 use serde_json::Value;
 
+use lab_engine::action::JointAction;
 use lab_engine::state::{SideId, State};
 use lab_engine::Doubles;
 
 pub use canonical::{canonical_json, canonical_value, CanonicalError};
+pub use decision::{apply_patch, parse_choice, PatchJson};
 pub use error::{LoadError, SetProblem, TeamProblem};
 pub use json::{ScenarioJson, TeamSet};
 pub use meta::{MemberMeta, ScenarioMeta, SideMeta};
@@ -44,6 +48,8 @@ const FIRST_TURN: u16 = 1;
 pub struct LoadedScenario {
     pub state: Doubles,
     pub meta: ScenarioMeta,
+    /// Applied after the switch-ins, by [`scenario_states`].
+    pub patch: Option<PatchJson>,
 }
 
 /// Loads a scenario file; team paths resolve relative to its directory.
@@ -72,13 +78,15 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
                      initial state instead",
         });
     }
-    if !is_empty(scenario.patch.as_ref()) {
-        return Err(LoadError::Unsupported {
-            field: "patch",
-            reason: "HP, status, boost, side and field patches are not applied yet; \
-                     loading without them would silently change the position",
-        });
-    }
+    let patch = match scenario.patch {
+        Some(value) if !is_empty(Some(&value)) => Some(serde_json::from_value(value).map_err(
+            |error| LoadError::Json {
+                what: "patch".into(),
+                error,
+            },
+        )?),
+        _ => None,
+    };
 
     let mut state = Doubles::default();
     let mut sides: [SideMeta; 2] = Default::default();
@@ -98,7 +106,36 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
             sides,
             turn: scenario.turn,
         },
+        patch,
     })
+}
+
+/// The position the scenario's decision is made in: every initial outcome (the leads'
+/// switch-in effects) with the patch applied.
+pub fn scenario_states(loaded: &LoadedScenario) -> Result<Vec<InitialOutcome<2>>, String> {
+    let mut outcomes = initial_outcomes(loaded).map_err(|e| e.to_string())?;
+    if let Some(patch) = &loaded.patch {
+        for outcome in &mut outcomes {
+            apply_patch(&mut outcome.state, &loaded.meta, patch)?;
+        }
+    }
+    Ok(outcomes)
+}
+
+/// The scenario's `turn` choices, parsed against `state`.
+pub fn scenario_choices(
+    loaded: &LoadedScenario,
+    state: &Doubles,
+) -> Result<[JointAction<2>; 2], String> {
+    let turn = loaded
+        .meta
+        .turn
+        .as_ref()
+        .ok_or("the scenario has no turn")?;
+    Ok([
+        parse_choice(state, SideId::One, &turn.p1)?,
+        parse_choice(state, SideId::Two, &turn.p2)?,
+    ])
 }
 
 /// Parses a team JSON array.

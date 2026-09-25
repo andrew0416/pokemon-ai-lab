@@ -138904,6 +138904,62 @@
     "onFieldResidual",
     "onFieldStart"
    ]
+  },
+  "stall": {
+   "name": "stall",
+   "id": "stall",
+   "num": 0,
+   "isNonstandard": null,
+   "duration": 2,
+   "affectsFainted": false,
+   "counterMax": 729,
+   "handlers": [
+    "onRestart",
+    "onStallMove",
+    "onStart"
+   ]
+  },
+  "choicelock": {
+   "name": "choicelock",
+   "id": "choicelock",
+   "num": 0,
+   "isNonstandard": null,
+   "affectsFainted": false,
+   "handlers": [
+    "onBeforeMove",
+    "onDisableMove",
+    "onStart"
+   ]
+  },
+  "lockedmove": {
+   "name": "lockedmove",
+   "id": "lockedmove",
+   "num": 0,
+   "isNonstandard": null,
+   "duration": 2,
+   "affectsFainted": false,
+   "handlers": [
+    "onAfterMove",
+    "onEnd",
+    "onLockMove",
+    "onResidual",
+    "onRestart",
+    "onStart"
+   ]
+  },
+  "twoturnmove": {
+   "name": "twoturnmove",
+   "id": "twoturnmove",
+   "num": 0,
+   "isNonstandard": null,
+   "duration": 2,
+   "affectsFainted": false,
+   "handlers": [
+    "onEnd",
+    "onLockMove",
+    "onMoveAborted",
+    "onStart"
+   ]
   }
  }
 }

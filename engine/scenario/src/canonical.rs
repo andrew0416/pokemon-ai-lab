@@ -5,19 +5,23 @@
 //! data the `State` does not hold is derived from the dex and the sidecar ([`ScenarioMeta`]):
 //! display names from the meta, species names and item/ability/move ids from the dex.
 //!
+//! Derived fields follow Showdown: `request` is `switch` for a side that must replace a
+//! fainted Pokémon (the other side waits, `""`), `""` for both once the battle ended, and
+//! `move` otherwise; `winner` is the side's player name (`p1`/`p2`, as the oracle names
+//! them).
+//!
 //! State the engine can hold but whose canonical form is not settled yet is an error
-//! ([`CanonicalError`]), never dropped: volatile bits, substitutes, Dynamax, side effects,
-//! pseudo-weathers, sleep/toxic counters, type changes, disabled moves, fainted Pokémon.
-//! `lastMove`, `lastItem`, `statusTime`/`statusStage`, and non-empty `volatiles`/`conditions`
-//! are therefore never written.
+//! ([`CanonicalError`]), never dropped: substitutes, Dynamax, Magic/Wonder Room, primal
+//! weathers, permanent effects, type changes, disabled moves.
 
 use std::fmt;
 use std::fmt::Write as _;
 
-use lab_engine::field::{Effect, FieldEffect, Terrain, Weather, FIELD_EFFECT_COUNT};
+use lab_engine::field::{Effect, FieldEffect, SideEffect, Terrain, Weather, FIELD_EFFECT_COUNT};
 use lab_engine::gimmick::Gimmick;
 use lab_engine::rules::Ruleset;
-use lab_engine::state::{Pokemon, SideId, State, Status, PARTY_SIZE};
+use lab_engine::state::{BattleResult, Pokemon, SideId, State, Status, PARTY_SIZE};
+use lab_engine::volatile::VolatileState;
 
 use crate::meta::{ScenarioMeta, SideMeta};
 
@@ -85,20 +89,33 @@ pub fn canonical_json<const N: usize>(
     meta: &ScenarioMeta,
 ) -> Result<String, CanonicalError> {
     let ruleset = format_ruleset(&meta.format)?;
+    let (ended, winner) = match state.result {
+        BattleResult::Ongoing => (false, ""),
+        BattleResult::Tie => (true, ""),
+        BattleResult::Win(side) => (true, side_name(side)),
+    };
     let mut out = String::new();
     write!(
         out,
-        r#"{{"schema":{SCHEMA},"turn":{},"ended":false,"winner":"","field":"#,
+        r#"{{"schema":{SCHEMA},"turn":{},"ended":{ended},"winner":"{winner}","field":"#,
         state.turn
     )
     .unwrap();
     field(&mut out, &state.field)?;
+    let requests = requests(state);
     out.push_str(r#","sides":["#);
     for (i, side) in [SideId::One, SideId::Two].into_iter().enumerate() {
         if i > 0 {
             out.push(',');
         }
-        side_json(&mut out, state, side, &meta.sides[side.index()], ruleset)?;
+        side_json(
+            &mut out,
+            state,
+            side,
+            &meta.sides[side.index()],
+            ruleset,
+            requests[i],
+        )?;
     }
     out.push_str("]}");
     Ok(out)
@@ -111,6 +128,26 @@ pub fn canonical_value<const N: usize>(
 ) -> Result<serde_json::Value, CanonicalError> {
     let text = canonical_json(state, meta)?;
     Ok(serde_json::from_str(&text).expect("canonical_json writes valid JSON"))
+}
+
+/// Showdown `side.requestState` after the position was reached.
+fn requests<const N: usize>(state: &State<N>) -> [&'static str; 2] {
+    if state.result.is_over() {
+        return ["", ""];
+    }
+    let needs = [SideId::One, SideId::Two].map(|side| {
+        let s = state.side(side);
+        let empty = s.slots.iter().any(|slot| slot.party_index.is_none());
+        let bench = (0..s.party.len() as u8).any(|i| {
+            s.party[i as usize].hp > 0 && !s.slots.iter().any(|slot| slot.party_index == Some(i))
+        });
+        empty && bench
+    });
+    if needs.iter().any(|&n| n) {
+        needs.map(|n| if n { "switch" } else { "" })
+    } else {
+        ["move", "move"]
+    }
 }
 
 fn string(out: &mut String, s: &str) {
@@ -139,13 +176,8 @@ fn terrain_id(value: u8) -> Result<&'static str, CanonicalError> {
     })
 }
 
-/// A weather or terrain slot: `(id, duration)` where `Effect::turns` is Showdown's remaining
-/// `duration`.
-fn timed(
-    effect: Effect,
-    name: &str,
-    id: fn(u8) -> Result<&'static str, CanonicalError>,
-) -> Result<Option<(&'static str, u8)>, CanonicalError> {
+/// A timed effect: `Some(duration)` where `Effect::turns` is Showdown's remaining `duration`.
+fn timed(effect: Effect, name: &str) -> Result<Option<u8>, CanonicalError> {
     if !effect.is_active() {
         if effect != Effect::NONE {
             return Err(unrepresentable(format!(
@@ -158,19 +190,33 @@ fn timed(
     if effect.turns == Effect::PERMANENT {
         return Err(unrepresentable(format!("{name} without a duration")));
     }
-    Ok(Some((id(effect.value)?, effect.turns)))
+    Ok(Some(effect.turns))
 }
 
 fn field(out: &mut String, effects: &[Effect; FIELD_EFFECT_COUNT]) -> Result<(), CanonicalError> {
-    let weather = FieldEffect::Weather as usize;
-    let terrain = FieldEffect::Terrain as usize;
+    // Pseudo-weathers the schema can write, in id order.
+    const PSEUDO: [(FieldEffect, &str); 2] = [
+        (FieldEffect::Gravity, "gravity"),
+        (FieldEffect::TrickRoom, "trickroom"),
+    ];
     for (i, effect) in effects.iter().enumerate() {
-        if i != weather && i != terrain && *effect != Effect::NONE {
+        let known = i == FieldEffect::Weather as usize
+            || i == FieldEffect::Terrain as usize
+            || PSEUDO.iter().any(|&(e, _)| e as usize == i);
+        if !known && *effect != Effect::NONE {
             return Err(unrepresentable(format!("pseudo-weather field effect #{i}")));
         }
     }
-    let weather = timed(effects[weather], "weather", weather_id)?;
-    let terrain = timed(effects[terrain], "terrain", terrain_id)?;
+    let weather = effects[FieldEffect::Weather as usize];
+    let terrain = effects[FieldEffect::Terrain as usize];
+    let weather = match timed(weather, "weather")? {
+        Some(turns) => Some((weather_id(weather.value)?, turns)),
+        None => None,
+    };
+    let terrain = match timed(terrain, "terrain")? {
+        Some(turns) => Some((terrain_id(terrain.value)?, turns)),
+        None => None,
+    };
     for (sep, key, value) in [('{', "weather", weather), (',', "terrain", terrain)] {
         let written = match value {
             Some((id, turns)) => write!(out, r#"{sep}"{key}":"{id}","{key}Duration":{turns}"#),
@@ -178,9 +224,26 @@ fn field(out: &mut String, effects: &[Effect; FIELD_EFFECT_COUNT]) -> Result<(),
         };
         written.unwrap();
     }
-    out.push_str(r#","pseudoWeather":{}}"#);
+    out.push_str(r#","pseudoWeather":{"#);
+    let mut first = true;
+    for (effect, id) in PSEUDO {
+        if let Some(turns) = timed(effects[effect as usize], id)? {
+            let sep = if first { "" } else { "," };
+            write!(out, r#"{sep}"{id}":{{"duration":{turns}}}"#).unwrap();
+            first = false;
+        }
+    }
+    out.push_str("}}");
     Ok(())
 }
+
+/// Side conditions the schema can write, in id order.
+const SIDE_CONDITIONS: [(SideEffect, &str); 4] = [
+    (SideEffect::AuroraVeil, "auroraveil"),
+    (SideEffect::LightScreen, "lightscreen"),
+    (SideEffect::Reflect, "reflect"),
+    (SideEffect::Tailwind, "tailwind"),
+];
 
 fn side_json<const N: usize>(
     out: &mut String,
@@ -188,6 +251,7 @@ fn side_json<const N: usize>(
     side_id: SideId,
     meta: &SideMeta,
     ruleset: Ruleset,
+    request: &str,
 ) -> Result<(), CanonicalError> {
     let side = state.side(side_id);
     let meta_error = |reason: String| CanonicalError::Meta {
@@ -205,34 +269,26 @@ fn side_json<const N: usize>(
             )));
         }
     }
-    if let Some(i) = side.effects.iter().position(|e| *e != Effect::NONE) {
-        return Err(unrepresentable(format!(
-            "{} side effect #{i}",
-            side_name(side_id)
-        )));
+    for (i, effect) in side.effects.iter().enumerate() {
+        if *effect != Effect::NONE && !SIDE_CONDITIONS.iter().any(|&(e, _)| e as usize == i) {
+            return Err(unrepresentable(format!(
+                "{} side effect #{i}",
+                side_name(side_id)
+            )));
+        }
     }
 
     // Active slot of each party member.
     let mut slot_of: [Option<u8>; PARTY_SIZE] = [None; PARTY_SIZE];
     for (slot, s) in side.slots.iter().enumerate() {
         let Some(index) = s.party_index else {
-            return Err(unrepresentable(format!(
-                "{} slot {slot} is empty (a switch request)",
-                side_name(side_id)
-            )));
+            continue;
         };
         let index = index as usize;
         if index >= members || slot_of[index].is_some() {
             return Err(meta_error(format!("slot {slot} holds party[{index}]")));
         }
         slot_of[index] = Some(slot as u8);
-        if s.volatiles != 0 {
-            return Err(unrepresentable(format!(
-                "{} slot {slot} volatile bits {:#x}",
-                side_name(side_id),
-                s.volatiles
-            )));
-        }
         if s.substitute_hp != 0 || s.dynamax.is_active() {
             return Err(unrepresentable(format!(
                 "{} slot {slot} substitute or Dynamax",
@@ -244,7 +300,16 @@ fn side_json<const N: usize>(
     // canMegaEvo is cleared for the whole side once it Mega Evolves.
     let mega_open = ruleset.allows(Gimmick::Mega) && !side.gimmicks_used.contains(Gimmick::Mega);
 
-    out.push_str(r#"{"request":"move","conditions":{},"slotConditions":["#);
+    write!(out, r#"{{"request":"{request}","conditions":{{"#).unwrap();
+    let mut first = true;
+    for (effect, id) in SIDE_CONDITIONS {
+        if let Some(turns) = timed(side.effects[effect as usize], id)? {
+            let sep = if first { "" } else { "," };
+            write!(out, r#"{sep}"{id}":{{"duration":{turns}}}"#).unwrap();
+            first = false;
+        }
+    }
+    out.push_str(r#"},"slotConditions":["#);
     for slot in 0..N {
         out.push_str(if slot == 0 { "{}" } else { ",{}" });
     }
@@ -255,49 +320,50 @@ fn side_json<const N: usize>(
         }
         let index = index as usize;
         let name = &meta.members[index].name;
-        let boosts = slot_of[index].map(|slot| &side.slots[slot as usize].boosts);
-        pokemon(
-            out,
-            &side.party[index],
-            name,
-            slot_of[index],
-            boosts,
-            mega_open,
-        )
-        .map_err(|what| unrepresentable(format!("{} {name:?}: {what}", side_name(side_id))))?;
+        let active = slot_of[index].map(|slot| (slot, &side.slots[slot as usize]));
+        pokemon(out, &side.party[index], name, active, mega_open)
+            .map_err(|what| unrepresentable(format!("{} {name:?}: {what}", side_name(side_id))))?;
     }
     out.push_str("]}");
     Ok(())
 }
 
-fn status_id(status: Status) -> Result<&'static str, String> {
-    Ok(match status {
+fn status_id(status: Status) -> &'static str {
+    match status {
         Status::None => "",
         Status::Burn => "brn",
         Status::Freeze => "frz",
         Status::Paralyze => "par",
         Status::Poison => "psn",
-        // `statusTime` / `statusStage` need a settled meaning of `status_turns`.
-        Status::Sleep | Status::Toxic => return Err(format!("status {status:?}")),
-    })
+        Status::Toxic => "tox",
+        Status::Sleep => "slp",
+        Status::Fainted => "fnt",
+    }
+}
+
+/// Showdown effect-state fields in `EFFECT_FIELDS` order (`duration`, `counter`).
+fn volatile_fields(out: &mut String, state: VolatileState) {
+    out.push('{');
+    let mut first = true;
+    if state.duration != 0 {
+        write!(out, r#""duration":{}"#, state.duration).unwrap();
+        first = false;
+    }
+    if state.counter != 0 {
+        let sep = if first { "" } else { "," };
+        write!(out, r#"{sep}"counter":{}"#, state.counter).unwrap();
+    }
+    out.push('}');
 }
 
 fn pokemon(
     out: &mut String,
     mon: &Pokemon,
     name: &str,
-    slot: Option<u8>,
-    boosts: Option<&[i8; 7]>,
+    active: Option<(u8, &lab_engine::state::Slot)>,
     mega_open: bool,
 ) -> Result<(), String> {
-    if !mon.is_alive() {
-        return Err("fainted (needs `fnt` and switch requests)".into());
-    }
-    let status = status_id(mon.status)?;
-    if mon.status_turns != 0 {
-        return Err(format!("status counter {}", mon.status_turns));
-    }
-    if slot.is_some() && mon.types != mon.species.data().types {
+    if active.is_some() && mon.types != mon.species.data().types {
         return Err(format!("types {:?} differ from the species", mon.types));
     }
     if let Some(m) = mon.moves.iter().find(|m| m.disabled) {
@@ -310,15 +376,16 @@ fn pokemon(
     string(out, mon.species.data().name);
     write!(
         out,
-        r#","hp":{},"maxhp":{},"status":"{status}","item":"{}","ability":"{}","slot":"#,
+        r#","hp":{},"maxhp":{},"status":"{}","item":"{}","ability":"{}","slot":"#,
         mon.hp,
         mon.max_hp,
+        status_id(mon.status),
         mon.item.id(),
         mon.ability.id()
     )
     .unwrap();
-    match slot {
-        Some(slot) => write!(out, "{slot}").unwrap(),
+    match active {
+        Some((slot, _)) => write!(out, "{slot}").unwrap(),
         None => out.push_str("null"),
     }
     out.push_str(r#","pp":{"#);
@@ -327,20 +394,39 @@ fn pokemon(
         write!(out, r#"{sep}"{}":{}"#, m.id.id(), m.pp).unwrap();
     }
     out.push('}');
+    match mon.status {
+        Status::Sleep => write!(out, r#","statusTime":{}"#, mon.status_turns).unwrap(),
+        Status::Toxic => write!(out, r#","statusStage":{}"#, mon.status_turns).unwrap(),
+        _ => {}
+    }
+    if !mon.last_item.is_none() {
+        write!(out, r#","lastItem":"{}""#, mon.last_item.id()).unwrap();
+    }
     if mega_open && mon.gimmicks.contains(Gimmick::Mega) {
         out.push_str(r#","canMega":true"#);
     }
-    if let Some(boosts) = boosts {
+    if let Some((_, slot)) = active {
         out.push_str(r#","boosts":{"#);
         let mut first = true;
-        for (name, &stage) in BOOST_NAMES.iter().zip(boosts) {
+        for (name, &stage) in BOOST_NAMES.iter().zip(&slot.boosts) {
             if stage != 0 {
                 let sep = if first { "" } else { "," };
                 write!(out, r#"{sep}"{name}":{stage}"#).unwrap();
                 first = false;
             }
         }
-        out.push_str(r#"},"volatiles":{}"#);
+        out.push_str(r#"},"volatiles":{"#);
+        let mut volatiles: Vec<_> = slot.volatiles.iter().collect();
+        volatiles.sort_by_key(|(v, _)| v.id());
+        for (i, (volatile, state)) in volatiles.into_iter().enumerate() {
+            let sep = if i == 0 { "" } else { "," };
+            write!(out, r#"{sep}"{}":"#, volatile.id()).unwrap();
+            volatile_fields(out, state);
+        }
+        out.push('}');
+        if !slot.last_move.is_none() {
+            write!(out, r#","lastMove":"{}""#, slot.last_move.id()).unwrap();
+        }
     }
     out.push('}');
     Ok(())

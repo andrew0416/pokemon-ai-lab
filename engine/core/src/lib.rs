@@ -20,6 +20,8 @@ pub mod instruction;
 pub mod rules;
 pub mod state;
 pub mod stats;
+pub mod turn;
+pub mod volatile;
 
 pub type Singles = state::State<1>;
 pub type Doubles = state::State<2>;

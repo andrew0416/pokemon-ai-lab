@@ -513,6 +513,8 @@ pub struct ConditionData {
     /// (most volatiles) have their behaviour in the referring move's handlers.
     pub exported: bool,
     pub duration: u8,
+    /// Showdown `counterMax` (Protect's stall counter cap).
+    pub counter_max: u16,
     pub event_orders: &'static [(&'static str, i16)],
     pub handlers: &'static [&'static str],
 }

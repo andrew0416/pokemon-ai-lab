@@ -15,7 +15,8 @@
 
 | 항목 | 상태 |
 |---|---|
-| `core/` Rust 골격 | `State<N>`, 되돌릴 수 있는 `Instruction`(apply/reverse), 필드·진영 효과 테이블, `SlotAction`, `Evaluator`. **턴 진행과 기술 효과 연결은 아직 없다.** |
+| `core/` Rust 골격 | `State<N>`, 되돌릴 수 있는 `Instruction`(apply/reverse), 필드·진영 효과 테이블, `SlotAction`, `Evaluator`. 2026-09-25 확장: `Slot`에 `Volatiles`(`volatile.rs`, 종류별 `{active, duration, counter}` 표)·`last_move`·`move_actions`, `Pokemon`에 `base_ability`·`last_item`, `Status::Fainted`(fnt), `State.result`(`BattleResult`), 파티 주소 `PokemonRef`. 명령은 상태·도구·특성·PP·휘발·턴·결과까지 되돌릴 수 있다. `State`는 `Eq + Hash`(결과 병합 키) |
+| `core/src/turn/` 턴 엔진 | **2026-09-25 착수, oracle 정확 일치 확인.** `enumerate_turn(state, ruleset, [JointAction;2]) → Vec<Outcome{probability: f64, instructions}>`(정확 분포), `sample_turn(…, samples, seed)`(몬테카를로). 행동 하나 또는 턴 종료를 한 단계로 보고, 단계 안의 난수는 재실행 열거(`branch.rs`), 단계마다 같은 (상태, 남은 행동)을 병합한다. 결과 명령은 시작·끝 상태의 차이(`diff.rs`). 구현: 행동 순서(우선도·스피드·동속 무작위, 행동마다 재정렬, 쓰러진 포켓몬의 대기 행동 포함), `runMove`(수면·얼음·풀죽음·중력·마비 순의 BeforeMove, PP, lastMove), 대상 해석(재지정 포함, 유도 없음), 방어/판별(연속 사용 카운터, willAct), 속이기, 사이코필드·타입 면역·가루·짓궂은마음 악 면역, 명중(중력 6840/4096, 랭크), 데미지(급소 1/24 등, 타입 강화 도구, 필드 보정, 모래 특방·설경 방어, 날씨, STAB, 상성, 화상, 생명의구슬, 벽), 기합의띠, 흡수·반동, 상태이상·휘발·랭크 효과, 부가효과, 탁쳐서떨구기, 날씨·필드·중력·트릭룸·순풍·벽 설정, 교체(날씨·필드 특성·위협), 기절 처리·승패(`checkWin`), 턴 종료(`fieldEvent('Residual')` 정렬: 날씨 피해·지속 감소, 그래스필드 회복, 먹다남은음식, 화상·독·맹독, 휘발 지속), `checkFainted`(fnt)·교체 요청 대기. **지원 검사(`support.rs`)**: 선택한 기술, 필드의 특성·도구·종·휘발·필드/진영 효과 중 구현 안 된 것은 `TurnError::Unsupported`로 거부한다(콜백 목록을 표로 고정하고 dex와 다르면 테스트 실패) |
 | `core/` 능력치·데미지 원시 연산 | `stats.rs`에 Champions SP 제한/능력치 공식, `damage.rs`에 4096 고정소수점 보정·16개 정수 데미지 롤. Rillaboom의 Grassy Glide → Tyranitar 오라클 롤 `[146..174]`과 정확 일치. 아직 기술·특성·도구 훅 및 턴 진행에는 연결하지 않았다. |
 | `core/` 기믹·규칙셋 | `gimmick.rs`(`Gimmick` 6종, 1바이트 `GimmickSet`, `DynamaxState`), `rules.rs`(`Ruleset::CHAMPIONS_MC` = 메가만, 슬롯·진영 행동 검증 `ActionError`, 기믹을 붙인 합법 행동 생성 `joint_actions`), `Side.gimmicks_used`, 되돌릴 수 있는 `Instruction::UseGimmick`. 기믹의 실제 효과는 미구현. 테스트 11개 통과(GNU, 2026-09-25) |
 | `oracle/enumerate.cjs` | Showdown 정답 분포 추출기. `full` / `extremes` / `mc` 모드. 동작 확인함 |
@@ -25,14 +26,17 @@
 | `data/export.cjs` → `data/champions.json` | Champions 모드 dex 전체(종 1518, 기술 938, 도구 583, 특성 321, 타입, 성격, 주요 상태). `isNonstandard`는 태그로만 남기고, 콜백으로 구현된 동작은 `handlers`에 이름만 남긴다(= 직접 구현할 목록) |
 | `data/gen-rust.cjs` → `core/src/dex/generated.rs` | **Rust 정적 테이블(2026-09-25).** 종 1517(MissingNo. 제외: Bird 타입이 상성표에 없음), 기술 938, 도구 583, 특성 321, 타입 19+상성표·타입 면역, 성격 25, 이름으로 참조되는 조건 110. 모르는 필드·값 형태·이름 참조가 나오면 생성이 실패한다. 생성 파일은 직접 고치지 않는다 |
 | `core/src/dex/mod.rs` | 테이블 타입과 조회 API. `SpeciesId`·`MoveId`·`ItemId`·`AbilityId`·`ConditionId`(인덱스 0 = 없음), `from_id`(이진 탐색)·`from_name`, 항목별 상수(`species::GARDEVOIR_MEGA`, `moves::HYPNOSIS`, `conditions::GRAVITY`). `Pokemon`의 종·도구·특성·타입·기술 필드도 이 ID 타입으로 바꿨다. 테스트 21개 통과(GNU), fmt·clippy 통과 |
-| `scenario/` (`lab-scenario`) | **시나리오·팀 JSON → `State<2>` 로더(2026-09-25, 검증 완료).** serde/serde_json은 이 크레이트에만 있고 `lab-engine`은 의존성 없음 그대로다. 종·기술·도구·특성·성격은 dex API로 찾고 모르는 이름은 편·팀 위치·이름을 붙인 오류로 거부한다. 능력치는 `stats::champions_stats`(SP 검증 포함). 레벨·타입·HP·5능력치·상태·도구·특성·기술 4칸·PP를 채운다. 파티 순서 = 팀 프리뷰 순서(Showdown `chooseTeam`처럼 순서 문자열을 팀 크기로 자르고 빠진 멤버는 원래 순서로 뒤에 붙임), 앞 N마리가 선두. 표시 이름·팀 위치·성격·SP·성별·테라 타입은 `State` 밖 사이드카(`ScenarioMeta`/`SideMeta`)에 둔다. `setupTurns`·`patch`(비어 있지 않을 때)·custom game 외 형식·레벨 50 외·모르는 JSON 필드는 거부한다 |
+| `scenario/` (`lab-scenario`) | **시나리오·팀 JSON → `State<2>` 로더(2026-09-25, 검증 완료).** serde/serde_json은 이 크레이트에만 있고 `lab-engine`은 의존성 없음 그대로다. 종·기술·도구·특성·성격은 dex API로 찾고 모르는 이름은 편·팀 위치·이름을 붙인 오류로 거부한다. 능력치는 `stats::champions_stats`(SP 검증 포함). 레벨·타입·HP·5능력치·상태·도구·특성·기술 4칸·PP를 채운다. 파티 순서 = 팀 프리뷰 순서(Showdown `chooseTeam`처럼 순서 문자열을 팀 크기로 자르고 빠진 멤버는 원래 순서로 뒤에 붙임), 앞 N마리가 선두. 표시 이름·팀 위치·성격·SP·성별·테라 타입은 `State` 밖 사이드카(`ScenarioMeta`/`SideMeta`)에 둔다. `setupTurns`·custom game 외 형식·레벨 50 외·모르는 JSON 필드는 거부한다. 2026-09-25: `patch`는 `decision.rs`가 `enumerate.cjs` `applyPatch` 의미로 적용한다(`scenario_states` = 등장 펼치기 + 패치; 수면 패치는 `statusTime` 필수, 날씨·필드 패치는 지속 턴 필수). `parse_choice`/`scenario_choices`가 Showdown 선택 문자열을 `JointAction`으로 바꾼다. 정규 출력은 휘발·lastMove·lastItem·statusTime/Stage·중력/트릭룸·순풍/벽·기절(fnt, slot null)·request(move/switch/"")·ended/winner를 쓴다 |
+| `scenario/src/bin/lab-turn.rs` | 시나리오를 엔진으로 돌려 oracle과 같은 형식의 보고서를 쓴다(`--before <oracle 보고서>`로 시작 상태 선택, `--mc N --seed S`로 표본 모드). `oracle/compare.cjs`(결합 분포 TV)·`oracle/marginals.cjs`(특징별 주변분포, 큰 분포용)로 비교 |
 | `core/` 로더 지원 | `state::champions_max_pp`/`MoveSlot::full`(Champions PP: `(pp/5+1)*4`, PP 증가 불가 기술은 기본값), `gimmick::mega_evolution`/`structural_gimmicks`(메가스톤의 `mega_stone` 표에서 정확한 종 일치로 메가 자격만 도출). 다른 기믹 자격은 도출하지 않고, 규칙셋도 M-C에서 막는다 |
 | `scenario/src/switch_in.rs` | **첫 등장 펼치기(2026-09-25, 검증 완료).** `initial_outcomes(&LoadedScenario)`/`expand_switch_ins(&State<N>)` → `Vec<InitialOutcome { probability, state }>`. Showdown `runSwitch` 순서(저장 S 내림차순, 동속 균등 분기), 트레이스 균등 대상 분기(`NOTRACE`), 복사 특성 즉시 시작, 모래날림·그래스메이커(5턴, 보송보송바위/그라운드코트 8턴). 구현 목록 밖의 시작 핸들러는 오류로 거부. `State`와 `lab-engine`은 바꾸지 않았다 |
 | `scenario/src/canonical.rs` | **정규 상태 schema 1 출력(2026-09-25, 검증 완료).** `canonical_json`(canonicalKey와 같은 바이트열)·`canonical_value`. 표현 못 하는 상태는 `CanonicalError::Unrepresentable` |
 | `oracle/initial.cjs` → `oracle/expected/single-hit.initial.json` | 초기 분포 oracle(팀 프리뷰→첫 결정 열거 + 고정 시드 `before`). Showdown 고정 커밋에서 재생성 완료: 2분기·2결과, 각 1/2 |
 | `DESIGN.md` | 범위, oracle, 데이터, 빌드, 로더, 등장 펼치기·정규 출력, 로드맵 갱신 |
 
-**커밋하지 않았다.** `engine/` 아래 변경 전부(`core/src/dex/`, `scenario/`, `oracle/initial.cjs`, `oracle/expected/` 포함)와 `.github/workflows/engine.yml`(생성 파일 최신 여부 검사, `lab-scenario` clippy·test 추가)이 미커밋 상태다. 사용자 승인 없이 커밋하지 않는다.
+**커밋:** 2026-09-25 사용자 지시로 브랜치 `lab-engine`에 커밋한다(원격 없음, `main`은 `e38207f`). 이후 커밋도 사용자 지시가 있을 때만 한다.
+
+**턴 엔진 검증(2026-09-25):** `single-hit` 정확 분포 271개 결과가 Showdown `full`과 TV 0으로 일치(엔진 약 10ms, Showdown 7.8초). `hypnosis-gravity`(중력 패치) 2개 결과 정확 일치. 두 fixture는 `oracle/expected/*.turn.json`(`strip-report.cjs`로 생성)이고 `scenario/tests/turn.rs`가 정확 비교한다. `spread-damage`는 정확 분포가 너무 커서(세 번째 단계에 중간 상태 14,260개, 네 번째 단계는 수백만) 끝까지 열거하지 못했다. 대신 엔진 표본 200,000회(2.4초)와 Showdown 표본 20,000회(90초)의 주변분포 69개가 모두 잡음(4σ 기준) 안에 있음을 확인했다(`marginals.cjs`). 테스트: `lab-engine` 36개, `lab-scenario` 18개, fmt·clippy(-D warnings)·dex 최신 검사 통과(MSVC).
 
 **로더 검증(2026-09-25):** serde 의존성과 `Cargo.lock`을 갱신했고, GNU에서 `lab-engine` 28개 + `lab-scenario` fixture 6개 테스트가 통과했다. rustfmt, GNU Clippy(`-D warnings`), dex 생성 최신 검사도 통과했다.
 
@@ -54,6 +58,13 @@ node engine/oracle/enumerate.cjs engine/oracle/scenarios/single-hit.json --mode 
 node engine/oracle/compare.cjs "$TEMP/full.json" "$TEMP/mc.json"
 node engine/data/export.cjs
 node engine/data/gen-rust.cjs            # champions.json → core/src/dex/generated.rs (--check: CI용 최신 여부 검사)
+# 턴 엔진 대 Showdown (엔진 쪽은 cargo build -p lab-scenario --release 후)
+D:/cargo-target/release/lab-turn.exe engine/oracle/scenarios/single-hit.json --before "$TEMP/full.json" --out "$TEMP/engine.json"
+node engine/oracle/compare.cjs "$TEMP/full.json" "$TEMP/engine.json"          # 정확 분포: TV 0이어야 함
+D:/cargo-target/release/lab-turn.exe <scenario> --before <mc 보고서> --mc 200000 --out "$TEMP/engine-mc.json"
+node engine/oracle/marginals.cjs <showdown mc 보고서> "$TEMP/engine-mc.json"   # 큰 분포: 주변분포 비교
+node engine/oracle/strip-report.cjs "$TEMP/full.json" engine/oracle/expected/<이름>.turn.json   # fixture 갱신
+LAB_ENGINE_STATS=1 …                                                       # 단계별 프런티어 크기 출력
 # 로컬 빌드 (2026-09-25 이후: 기본 MSVC 툴체인, 산출물은 D:\cargo-target)
 cd engine && cargo fmt --all --check
 cd engine && cargo clippy --workspace --all-targets -- -D warnings
@@ -104,11 +115,12 @@ cd engine/py && ../../.venv-doubles/Scripts/maturin.exe build --release -i ../..
 ## 다음 할 일 (순서대로)
 
 1. [완료 2026-09-25] `data/champions.json` → Rust 정적 테이블 (`core/src/dex/`).
-2. [로더·초기 분포·canonical 완료 2026-09-25] 시나리오 JSON → `State<2>` 로더, 정규 상태 출력(`canonical.rs`), 첫 등장 펼치기(`switch_in.rs`: 트레이스·모래날림·그래스메이커). 남은 것: 다른 등장 특성·도구(위협, 날씨·필드 특성 전부, 씨앗류), `patch` 적용(HP·상태·수면 턴·랭크·진영·필드), `setupTurns`(턴 엔진 이후), VGC 4마리 선출.
-3. [원시 연산 완료 2026-09-25] Champions 능력치 공식과 16롤 데미지 코어. 남은 것: 타입 상성·날씨·필드·도구·특성 훅을 `State<2>`와 연결하고 여러 오라클 시나리오로 검증한다.
-4. 턴 진행: 우선도 → 스피드 → 동속 분기(행동마다 재정렬), 대상 해석과 유도, 방어, 속이기, 교체, 기절 후 교체, 턴 종료 순서. 턴 입력은 `Ruleset::validate_joint_action`을 통과한 행동만 받는다. 슬롯별 후보는 `Ruleset::joint_actions`로 넘긴다.
-5. 기술 이식: 중력, 최면술, 수면, 날따름, 분노가루, 트릭룸, 날씨, 필드, 위협, 메가진화를 먼저 한다. 우선순위는 `teams/library` 더블 사용 빈도 × `handlers` 미구현 여부로 정한다.
-6. 목표 지표: 시나리오 모음에서 정확 일치 99% 이상, 턴당 분포 열거 속도는 PokaiEngine 보고치(약 0.08ms)와 같은 자릿수.
+2. [로더·초기 분포·canonical·patch 완료 2026-09-25] 남은 것: 초기 등장의 다른 특성·도구(`switch_in.rs`는 아직 트레이스·모래날림·그래스메이커만; 턴 중 교체는 `turn/switching.rs`가 날씨·필드 특성·위협까지), `setupTurns`(이제 턴 엔진으로 재생 가능), VGC 4마리 선출. 두 등장 코드(`scenario/switch_in.rs`, `core/turn/switching.rs`)는 합쳐야 한다.
+3. [원시 연산·턴 연결 완료 2026-09-25] 데미지 코어가 턴 엔진에 연결됨.
+4. [턴 엔진 골격 완료 2026-09-25] 남은 것: 기절 후 교체 결정(`request: switch` 다음 단계, Showdown `instaswitch`; 교체된 기절 포켓몬의 status는 `''`로 바뀜), 날따름·분노가루 유도, 메가진화 효과(폼·특성·능력치 재계산을 위해 `Pokemon`에 성격·SP가 필요), 연속기(multihit), 교체기(유턴 등), 혼란·도발·앵콜 등 휘발, 구애 도구, 열매(오봉 등 `onUpdate`), 급소 랭크 보정 도구/특성.
+5. 기술 이식: 날따름, 분노가루, 위협 이외 등장 특성, 메가진화를 먼저 한다. 우선순위는 `teams/library` 더블 사용 빈도 × `support.rs` 미지원 여부로 정한다. 추가할 때마다 oracle 시나리오와 `*.turn.json` fixture를 만든다.
+6. 분포 열거 성능: 광역기 두 개가 겹치는 턴은 정확 분포가 수백만 결과다. 후보: 이미 행동한 대상에 대한 풀죽음 분기 생략(분포 동치), 턴 종료에 사라지는 중간 상태 차이(풀죽음·lastMove 없는 교환 등)를 병합 전에 정규화, HP 구간 대신 정확 값 유지하되 결과 수 상한/근사 모드 도입. PokaiEngine 목표(턴당 약 0.08ms)와 같은 자릿수.
+7. 목표 지표: 시나리오 모음에서 정확 일치 99% 이상.
 
 ## 참고 자료
 

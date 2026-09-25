@@ -8,7 +8,7 @@ use serde_json::Value;
 use lab_engine::dex::{abilities, items, AbilityId};
 use lab_engine::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use lab_engine::gimmick::GimmickSet;
-use lab_engine::state::{SideId, SlotRef, State, Status};
+use lab_engine::state::{SideId, SlotRef, State};
 use lab_engine::Doubles;
 use lab_scenario::{
     canonical_json, canonical_value, expand_switch_ins, initial_outcomes, load_scenario_file,
@@ -180,34 +180,23 @@ fn state_without_a_canonical_form_is_an_error() {
     let meta = &loaded.meta;
 
     let mut s = loaded.state.clone();
-    s.slot_mut(GARDEVOIR).volatiles = 1 << 5;
-    assert!(unrepresentable(&s, meta).contains("volatile"));
+    s.slot_mut(GARDEVOIR).substitute_hp = 30;
+    assert!(unrepresentable(&s, meta).contains("substitute"));
 
     let mut s = loaded.state.clone();
-    let mon = s.active_mut(GARDEVOIR).unwrap();
-    mon.status = Status::Sleep;
-    mon.status_turns = 2;
-    assert!(unrepresentable(&s, meta).contains("Sleep"));
-
-    let mut s = loaded.state.clone();
-    s.side_mut(SideId::Two).effects[SideEffect::Tailwind as usize] = Effect { value: 0, turns: 4 };
+    s.side_mut(SideId::Two).effects[SideEffect::StealthRock as usize] = Effect {
+        value: 1,
+        turns: Effect::PERMANENT,
+    };
     assert!(unrepresentable(&s, meta).contains("side effect"));
 
     let mut s = loaded.state.clone();
-    s.field[FieldEffect::Gravity as usize] = Effect { value: 0, turns: 5 };
+    s.field[FieldEffect::MagicRoom as usize] = Effect { value: 0, turns: 5 };
     assert!(unrepresentable(&s, meta).contains("pseudo-weather"));
 
     let mut s = loaded.state.clone();
     s.field[FieldEffect::Weather as usize] = sand(Effect::PERMANENT);
     assert!(unrepresentable(&s, meta).contains("duration"));
-
-    let mut s = loaded.state.clone();
-    s.active_mut(GARDEVOIR).unwrap().hp = 0;
-    assert!(unrepresentable(&s, meta).contains("fainted"));
-
-    let mut s = loaded.state.clone();
-    s.slot_mut(GARDEVOIR).party_index = None;
-    assert!(unrepresentable(&s, meta).contains("empty"));
 
     let mut other = meta.clone();
     other.format = "gen9championsvgc2026regmc".into();

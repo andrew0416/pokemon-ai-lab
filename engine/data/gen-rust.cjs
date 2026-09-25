@@ -126,7 +126,7 @@ const DEFAULTS = {
 		suppress_weather: 'false', cannot_be_crit: 'false', fractional_priority_tenths: '0', event_orders: '&[]',
 		handlers: '&[]',
 	},
-	ConditionData: {id: '""', exported: 'false', duration: '0', event_orders: '&[]', handlers: '&[]'},
+	ConditionData: {id: '""', exported: 'false', duration: '0', counter_max: '0', event_orders: '&[]', handlers: '&[]'},
 };
 
 // One table entry from `name: expr` strings, omitting default-valued fields.
@@ -361,13 +361,13 @@ function genConditions() {
 	CONDITIONS.forEach((id, i) => out.push(`    pub const ${id.toUpperCase()}: ConditionId = ConditionId(${i + 1});`));
 	out.push('}');
 	out.push('');
-	const handled = new Set(['name', 'id', 'num', 'isNonstandard', 'affectsFainted', 'handlers', 'duration']);
+	const handled = new Set(['name', 'id', 'num', 'isNonstandard', 'affectsFainted', 'handlers', 'duration', 'counterMax']);
 	out.push(`pub static CONDITIONS: [ConditionData; ${CONDITIONS.length + 1}] = [`);
 	out.push('    ConditionData::NONE,');
 	for (const id of CONDITIONS) {
 		const c = data.conditions[id];
 		if (c) checkKeys(c, handled, new Set(), `condition ${id}`);
-		out.push(record('ConditionData', [`id: ${str(id)}`, `exported: ${bool(!!c)}`, `duration: ${int(c?.duration ?? 0, 0, 255, id)}`,
+		out.push(record('ConditionData', [`id: ${str(id)}`, `exported: ${bool(!!c)}`, `duration: ${int(c?.duration ?? 0, 0, 255, id)}`, `counter_max: ${int(c?.counterMax ?? 0, 0, 65535, id)}`,
 			`event_orders: ${list(c ? eventOrders(c) : [])}`, `handlers: ${list((c?.handlers ?? []).map(str))}`]));
 	}
 	out.push('];');

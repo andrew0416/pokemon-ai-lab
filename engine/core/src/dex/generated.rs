@@ -170,6 +170,7 @@ impl ConditionData {
         id: "",
         exported: false,
         duration: 0,
+        counter_max: 0,
         event_orders: &[],
         handlers: &[],
     };
@@ -457,111 +458,114 @@ pub mod conditions {
     pub const BRN: ConditionId = ConditionId(6);
     pub const BURNINGBULWARK: ConditionId = ConditionId(7);
     pub const CHARGE: ConditionId = ConditionId(8);
-    pub const CONFUSION: ConditionId = ConditionId(9);
-    pub const CRAFTYSHIELD: ConditionId = ConditionId(10);
-    pub const CURSE: ConditionId = ConditionId(11);
-    pub const DEFENSECURL: ConditionId = ConditionId(12);
-    pub const DELTASTREAM: ConditionId = ConditionId(13);
-    pub const DESOLATELAND: ConditionId = ConditionId(14);
-    pub const DESTINYBOND: ConditionId = ConditionId(15);
-    pub const DISABLE: ConditionId = ConditionId(16);
-    pub const DRAGONCHEER: ConditionId = ConditionId(17);
-    pub const ELECTRICTERRAIN: ConditionId = ConditionId(18);
-    pub const ELECTRIFY: ConditionId = ConditionId(19);
-    pub const EMBARGO: ConditionId = ConditionId(20);
-    pub const ENCORE: ConditionId = ConditionId(21);
-    pub const ENDURE: ConditionId = ConditionId(22);
-    pub const FAIRYLOCK: ConditionId = ConditionId(23);
-    pub const FLINCH: ConditionId = ConditionId(24);
-    pub const FOCUSENERGY: ConditionId = ConditionId(25);
-    pub const FOLLOWME: ConditionId = ConditionId(26);
-    pub const FORESIGHT: ConditionId = ConditionId(27);
-    pub const FRZ: ConditionId = ConditionId(28);
-    pub const GASTROACID: ConditionId = ConditionId(29);
-    pub const GLAIVERUSH: ConditionId = ConditionId(30);
-    pub const GRASSYTERRAIN: ConditionId = ConditionId(31);
-    pub const GRAVITY: ConditionId = ConditionId(32);
-    pub const GRUDGE: ConditionId = ConditionId(33);
-    pub const HAIL: ConditionId = ConditionId(34);
-    pub const HEALBLOCK: ConditionId = ConditionId(35);
-    pub const HEALINGWISH: ConditionId = ConditionId(36);
-    pub const HELPINGHAND: ConditionId = ConditionId(37);
-    pub const IMPRISON: ConditionId = ConditionId(38);
-    pub const INGRAIN: ConditionId = ConditionId(39);
-    pub const IONDELUGE: ConditionId = ConditionId(40);
-    pub const KINGSSHIELD: ConditionId = ConditionId(41);
-    pub const LASERFOCUS: ConditionId = ConditionId(42);
-    pub const LEECHSEED: ConditionId = ConditionId(43);
-    pub const LIGHTSCREEN: ConditionId = ConditionId(44);
-    pub const LOCKEDMOVE: ConditionId = ConditionId(45);
-    pub const LUCKYCHANT: ConditionId = ConditionId(46);
-    pub const LUNARDANCE: ConditionId = ConditionId(47);
-    pub const MAGICCOAT: ConditionId = ConditionId(48);
-    pub const MAGICROOM: ConditionId = ConditionId(49);
-    pub const MAGNETRISE: ConditionId = ConditionId(50);
-    pub const MATBLOCK: ConditionId = ConditionId(51);
-    pub const MAXGUARD: ConditionId = ConditionId(52);
-    pub const MINIMIZE: ConditionId = ConditionId(53);
-    pub const MIRACLEEYE: ConditionId = ConditionId(54);
-    pub const MIST: ConditionId = ConditionId(55);
-    pub const MISTYTERRAIN: ConditionId = ConditionId(56);
-    pub const MUDSPORT: ConditionId = ConditionId(57);
-    pub const MUSTRECHARGE: ConditionId = ConditionId(58);
-    pub const NIGHTMARE: ConditionId = ConditionId(59);
-    pub const NORETREAT: ConditionId = ConditionId(60);
-    pub const OBSTRUCT: ConditionId = ConditionId(61);
-    pub const OCTOLOCK: ConditionId = ConditionId(62);
-    pub const PAR: ConditionId = ConditionId(63);
-    pub const PARTIALLYTRAPPED: ConditionId = ConditionId(64);
-    pub const POWDER: ConditionId = ConditionId(65);
-    pub const POWERSHIFT: ConditionId = ConditionId(66);
-    pub const POWERTRICK: ConditionId = ConditionId(67);
-    pub const PRIMORDIALSEA: ConditionId = ConditionId(68);
-    pub const PROTECT: ConditionId = ConditionId(69);
-    pub const PSN: ConditionId = ConditionId(70);
-    pub const PSYCHICTERRAIN: ConditionId = ConditionId(71);
-    pub const QUICKGUARD: ConditionId = ConditionId(72);
-    pub const RAGE: ConditionId = ConditionId(73);
-    pub const RAGEPOWDER: ConditionId = ConditionId(74);
-    pub const RAINDANCE: ConditionId = ConditionId(75);
-    pub const REFLECT: ConditionId = ConditionId(76);
-    pub const REVIVALBLESSING: ConditionId = ConditionId(77);
-    pub const ROOST: ConditionId = ConditionId(78);
-    pub const SAFEGUARD: ConditionId = ConditionId(79);
-    pub const SALTCURE: ConditionId = ConditionId(80);
-    pub const SANDSTORM: ConditionId = ConditionId(81);
-    pub const SILKTRAP: ConditionId = ConditionId(82);
-    pub const SLP: ConditionId = ConditionId(83);
-    pub const SMACKDOWN: ConditionId = ConditionId(84);
-    pub const SNATCH: ConditionId = ConditionId(85);
-    pub const SNOWSCAPE: ConditionId = ConditionId(86);
-    pub const SPARKLINGARIA: ConditionId = ConditionId(87);
-    pub const SPIKES: ConditionId = ConditionId(88);
-    pub const SPIKYSHIELD: ConditionId = ConditionId(89);
-    pub const SPOTLIGHT: ConditionId = ConditionId(90);
-    pub const STEALTHROCK: ConditionId = ConditionId(91);
-    pub const STICKYWEB: ConditionId = ConditionId(92);
-    pub const STOCKPILE: ConditionId = ConditionId(93);
-    pub const SUBSTITUTE: ConditionId = ConditionId(94);
-    pub const SUNNYDAY: ConditionId = ConditionId(95);
-    pub const SYRUPBOMB: ConditionId = ConditionId(96);
-    pub const TAILWIND: ConditionId = ConditionId(97);
-    pub const TARSHOT: ConditionId = ConditionId(98);
-    pub const TAUNT: ConditionId = ConditionId(99);
-    pub const TELEKINESIS: ConditionId = ConditionId(100);
-    pub const TORMENT: ConditionId = ConditionId(101);
-    pub const TOX: ConditionId = ConditionId(102);
-    pub const TOXICSPIKES: ConditionId = ConditionId(103);
-    pub const TRICKROOM: ConditionId = ConditionId(104);
-    pub const UPROAR: ConditionId = ConditionId(105);
-    pub const WATERSPORT: ConditionId = ConditionId(106);
-    pub const WIDEGUARD: ConditionId = ConditionId(107);
-    pub const WISH: ConditionId = ConditionId(108);
-    pub const WONDERROOM: ConditionId = ConditionId(109);
-    pub const YAWN: ConditionId = ConditionId(110);
+    pub const CHOICELOCK: ConditionId = ConditionId(9);
+    pub const CONFUSION: ConditionId = ConditionId(10);
+    pub const CRAFTYSHIELD: ConditionId = ConditionId(11);
+    pub const CURSE: ConditionId = ConditionId(12);
+    pub const DEFENSECURL: ConditionId = ConditionId(13);
+    pub const DELTASTREAM: ConditionId = ConditionId(14);
+    pub const DESOLATELAND: ConditionId = ConditionId(15);
+    pub const DESTINYBOND: ConditionId = ConditionId(16);
+    pub const DISABLE: ConditionId = ConditionId(17);
+    pub const DRAGONCHEER: ConditionId = ConditionId(18);
+    pub const ELECTRICTERRAIN: ConditionId = ConditionId(19);
+    pub const ELECTRIFY: ConditionId = ConditionId(20);
+    pub const EMBARGO: ConditionId = ConditionId(21);
+    pub const ENCORE: ConditionId = ConditionId(22);
+    pub const ENDURE: ConditionId = ConditionId(23);
+    pub const FAIRYLOCK: ConditionId = ConditionId(24);
+    pub const FLINCH: ConditionId = ConditionId(25);
+    pub const FOCUSENERGY: ConditionId = ConditionId(26);
+    pub const FOLLOWME: ConditionId = ConditionId(27);
+    pub const FORESIGHT: ConditionId = ConditionId(28);
+    pub const FRZ: ConditionId = ConditionId(29);
+    pub const GASTROACID: ConditionId = ConditionId(30);
+    pub const GLAIVERUSH: ConditionId = ConditionId(31);
+    pub const GRASSYTERRAIN: ConditionId = ConditionId(32);
+    pub const GRAVITY: ConditionId = ConditionId(33);
+    pub const GRUDGE: ConditionId = ConditionId(34);
+    pub const HAIL: ConditionId = ConditionId(35);
+    pub const HEALBLOCK: ConditionId = ConditionId(36);
+    pub const HEALINGWISH: ConditionId = ConditionId(37);
+    pub const HELPINGHAND: ConditionId = ConditionId(38);
+    pub const IMPRISON: ConditionId = ConditionId(39);
+    pub const INGRAIN: ConditionId = ConditionId(40);
+    pub const IONDELUGE: ConditionId = ConditionId(41);
+    pub const KINGSSHIELD: ConditionId = ConditionId(42);
+    pub const LASERFOCUS: ConditionId = ConditionId(43);
+    pub const LEECHSEED: ConditionId = ConditionId(44);
+    pub const LIGHTSCREEN: ConditionId = ConditionId(45);
+    pub const LOCKEDMOVE: ConditionId = ConditionId(46);
+    pub const LUCKYCHANT: ConditionId = ConditionId(47);
+    pub const LUNARDANCE: ConditionId = ConditionId(48);
+    pub const MAGICCOAT: ConditionId = ConditionId(49);
+    pub const MAGICROOM: ConditionId = ConditionId(50);
+    pub const MAGNETRISE: ConditionId = ConditionId(51);
+    pub const MATBLOCK: ConditionId = ConditionId(52);
+    pub const MAXGUARD: ConditionId = ConditionId(53);
+    pub const MINIMIZE: ConditionId = ConditionId(54);
+    pub const MIRACLEEYE: ConditionId = ConditionId(55);
+    pub const MIST: ConditionId = ConditionId(56);
+    pub const MISTYTERRAIN: ConditionId = ConditionId(57);
+    pub const MUDSPORT: ConditionId = ConditionId(58);
+    pub const MUSTRECHARGE: ConditionId = ConditionId(59);
+    pub const NIGHTMARE: ConditionId = ConditionId(60);
+    pub const NORETREAT: ConditionId = ConditionId(61);
+    pub const OBSTRUCT: ConditionId = ConditionId(62);
+    pub const OCTOLOCK: ConditionId = ConditionId(63);
+    pub const PAR: ConditionId = ConditionId(64);
+    pub const PARTIALLYTRAPPED: ConditionId = ConditionId(65);
+    pub const POWDER: ConditionId = ConditionId(66);
+    pub const POWERSHIFT: ConditionId = ConditionId(67);
+    pub const POWERTRICK: ConditionId = ConditionId(68);
+    pub const PRIMORDIALSEA: ConditionId = ConditionId(69);
+    pub const PROTECT: ConditionId = ConditionId(70);
+    pub const PSN: ConditionId = ConditionId(71);
+    pub const PSYCHICTERRAIN: ConditionId = ConditionId(72);
+    pub const QUICKGUARD: ConditionId = ConditionId(73);
+    pub const RAGE: ConditionId = ConditionId(74);
+    pub const RAGEPOWDER: ConditionId = ConditionId(75);
+    pub const RAINDANCE: ConditionId = ConditionId(76);
+    pub const REFLECT: ConditionId = ConditionId(77);
+    pub const REVIVALBLESSING: ConditionId = ConditionId(78);
+    pub const ROOST: ConditionId = ConditionId(79);
+    pub const SAFEGUARD: ConditionId = ConditionId(80);
+    pub const SALTCURE: ConditionId = ConditionId(81);
+    pub const SANDSTORM: ConditionId = ConditionId(82);
+    pub const SILKTRAP: ConditionId = ConditionId(83);
+    pub const SLP: ConditionId = ConditionId(84);
+    pub const SMACKDOWN: ConditionId = ConditionId(85);
+    pub const SNATCH: ConditionId = ConditionId(86);
+    pub const SNOWSCAPE: ConditionId = ConditionId(87);
+    pub const SPARKLINGARIA: ConditionId = ConditionId(88);
+    pub const SPIKES: ConditionId = ConditionId(89);
+    pub const SPIKYSHIELD: ConditionId = ConditionId(90);
+    pub const SPOTLIGHT: ConditionId = ConditionId(91);
+    pub const STALL: ConditionId = ConditionId(92);
+    pub const STEALTHROCK: ConditionId = ConditionId(93);
+    pub const STICKYWEB: ConditionId = ConditionId(94);
+    pub const STOCKPILE: ConditionId = ConditionId(95);
+    pub const SUBSTITUTE: ConditionId = ConditionId(96);
+    pub const SUNNYDAY: ConditionId = ConditionId(97);
+    pub const SYRUPBOMB: ConditionId = ConditionId(98);
+    pub const TAILWIND: ConditionId = ConditionId(99);
+    pub const TARSHOT: ConditionId = ConditionId(100);
+    pub const TAUNT: ConditionId = ConditionId(101);
+    pub const TELEKINESIS: ConditionId = ConditionId(102);
+    pub const TORMENT: ConditionId = ConditionId(103);
+    pub const TOX: ConditionId = ConditionId(104);
+    pub const TOXICSPIKES: ConditionId = ConditionId(105);
+    pub const TRICKROOM: ConditionId = ConditionId(106);
+    pub const TWOTURNMOVE: ConditionId = ConditionId(107);
+    pub const UPROAR: ConditionId = ConditionId(108);
+    pub const WATERSPORT: ConditionId = ConditionId(109);
+    pub const WIDEGUARD: ConditionId = ConditionId(110);
+    pub const WISH: ConditionId = ConditionId(111);
+    pub const WONDERROOM: ConditionId = ConditionId(112);
+    pub const YAWN: ConditionId = ConditionId(113);
 }
 
-pub static CONDITIONS: [ConditionData; 111] = [
+pub static CONDITIONS: [ConditionData; 114] = [
     ConditionData::NONE,
     ConditionData { id: "aquaring", ..ConditionData::NONE },
     ConditionData { id: "attract", ..ConditionData::NONE },
@@ -571,6 +575,7 @@ pub static CONDITIONS: [ConditionData; 111] = [
     ConditionData { id: "brn", exported: true, event_orders: &[("onResidualOrder", 10)], handlers: &["onResidual", "onStart"], ..ConditionData::NONE },
     ConditionData { id: "burningbulwark", ..ConditionData::NONE },
     ConditionData { id: "charge", ..ConditionData::NONE },
+    ConditionData { id: "choicelock", exported: true, handlers: &["onBeforeMove", "onDisableMove", "onStart"], ..ConditionData::NONE },
     ConditionData { id: "confusion", exported: true, event_orders: &[("onBeforeMovePriority", 3)], handlers: &["onBeforeMove", "onEnd", "onStart"], ..ConditionData::NONE },
     ConditionData { id: "craftyshield", ..ConditionData::NONE },
     ConditionData { id: "curse", ..ConditionData::NONE },
@@ -586,7 +591,7 @@ pub static CONDITIONS: [ConditionData; 111] = [
     ConditionData { id: "encore", ..ConditionData::NONE },
     ConditionData { id: "endure", ..ConditionData::NONE },
     ConditionData { id: "fairylock", ..ConditionData::NONE },
-    ConditionData { id: "flinch", exported: true, duration: 1, event_orders: &[("onBeforeMovePriority", 8)], handlers: &["onBeforeMove"] },
+    ConditionData { id: "flinch", exported: true, duration: 1, event_orders: &[("onBeforeMovePriority", 8)], handlers: &["onBeforeMove"], ..ConditionData::NONE },
     ConditionData { id: "focusenergy", ..ConditionData::NONE },
     ConditionData { id: "followme", ..ConditionData::NONE },
     ConditionData { id: "foresight", ..ConditionData::NONE },
@@ -607,7 +612,7 @@ pub static CONDITIONS: [ConditionData; 111] = [
     ConditionData { id: "laserfocus", ..ConditionData::NONE },
     ConditionData { id: "leechseed", ..ConditionData::NONE },
     ConditionData { id: "lightscreen", ..ConditionData::NONE },
-    ConditionData { id: "lockedmove", ..ConditionData::NONE },
+    ConditionData { id: "lockedmove", exported: true, duration: 2, handlers: &["onAfterMove", "onEnd", "onLockMove", "onResidual", "onRestart", "onStart"], ..ConditionData::NONE },
     ConditionData { id: "luckychant", ..ConditionData::NONE },
     ConditionData { id: "lunardance", ..ConditionData::NONE },
     ConditionData { id: "magiccoat", ..ConditionData::NONE },
@@ -626,7 +631,7 @@ pub static CONDITIONS: [ConditionData; 111] = [
     ConditionData { id: "obstruct", ..ConditionData::NONE },
     ConditionData { id: "octolock", ..ConditionData::NONE },
     ConditionData { id: "par", exported: true, event_orders: &[("onModifySpePriority", -101), ("onBeforeMovePriority", 1)], handlers: &["onBeforeMove", "onModifySpe", "onStart"], ..ConditionData::NONE },
-    ConditionData { id: "partiallytrapped", exported: true, duration: 5, event_orders: &[("onResidualOrder", 13)], handlers: &["durationCallback", "onEnd", "onResidual", "onStart", "onTrapPokemon"] },
+    ConditionData { id: "partiallytrapped", exported: true, duration: 5, event_orders: &[("onResidualOrder", 13)], handlers: &["durationCallback", "onEnd", "onResidual", "onStart", "onTrapPokemon"], ..ConditionData::NONE },
     ConditionData { id: "powder", ..ConditionData::NONE },
     ConditionData { id: "powershift", ..ConditionData::NONE },
     ConditionData { id: "powertrick", ..ConditionData::NONE },
@@ -637,27 +642,28 @@ pub static CONDITIONS: [ConditionData; 111] = [
     ConditionData { id: "quickguard", ..ConditionData::NONE },
     ConditionData { id: "rage", ..ConditionData::NONE },
     ConditionData { id: "ragepowder", ..ConditionData::NONE },
-    ConditionData { id: "raindance", exported: true, duration: 5, event_orders: &[("onFieldResidualOrder", 1)], handlers: &["durationCallback", "onFieldEnd", "onFieldResidual", "onFieldStart", "onWeatherModifyDamage"] },
+    ConditionData { id: "raindance", exported: true, duration: 5, event_orders: &[("onFieldResidualOrder", 1)], handlers: &["durationCallback", "onFieldEnd", "onFieldResidual", "onFieldStart", "onWeatherModifyDamage"], ..ConditionData::NONE },
     ConditionData { id: "reflect", ..ConditionData::NONE },
     ConditionData { id: "revivalblessing", ..ConditionData::NONE },
     ConditionData { id: "roost", ..ConditionData::NONE },
     ConditionData { id: "safeguard", ..ConditionData::NONE },
     ConditionData { id: "saltcure", ..ConditionData::NONE },
-    ConditionData { id: "sandstorm", exported: true, duration: 5, event_orders: &[("onModifySpDPriority", 10), ("onFieldResidualOrder", 1)], handlers: &["durationCallback", "onFieldEnd", "onFieldResidual", "onFieldStart", "onModifySpD", "onWeather"] },
+    ConditionData { id: "sandstorm", exported: true, duration: 5, event_orders: &[("onModifySpDPriority", 10), ("onFieldResidualOrder", 1)], handlers: &["durationCallback", "onFieldEnd", "onFieldResidual", "onFieldStart", "onModifySpD", "onWeather"], ..ConditionData::NONE },
     ConditionData { id: "silktrap", ..ConditionData::NONE },
     ConditionData { id: "slp", exported: true, event_orders: &[("onBeforeMovePriority", 10)], handlers: &["onBeforeMove", "onStart"], ..ConditionData::NONE },
     ConditionData { id: "smackdown", ..ConditionData::NONE },
     ConditionData { id: "snatch", ..ConditionData::NONE },
-    ConditionData { id: "snowscape", exported: true, duration: 5, event_orders: &[("onModifyDefPriority", 10), ("onFieldResidualOrder", 1)], handlers: &["durationCallback", "onFieldEnd", "onFieldResidual", "onFieldStart", "onModifyDef"] },
+    ConditionData { id: "snowscape", exported: true, duration: 5, event_orders: &[("onModifyDefPriority", 10), ("onFieldResidualOrder", 1)], handlers: &["durationCallback", "onFieldEnd", "onFieldResidual", "onFieldStart", "onModifyDef"], ..ConditionData::NONE },
     ConditionData { id: "sparklingaria", ..ConditionData::NONE },
     ConditionData { id: "spikes", ..ConditionData::NONE },
     ConditionData { id: "spikyshield", ..ConditionData::NONE },
     ConditionData { id: "spotlight", ..ConditionData::NONE },
+    ConditionData { id: "stall", exported: true, duration: 2, counter_max: 729, handlers: &["onRestart", "onStallMove", "onStart"], ..ConditionData::NONE },
     ConditionData { id: "stealthrock", ..ConditionData::NONE },
     ConditionData { id: "stickyweb", ..ConditionData::NONE },
     ConditionData { id: "stockpile", ..ConditionData::NONE },
     ConditionData { id: "substitute", ..ConditionData::NONE },
-    ConditionData { id: "sunnyday", exported: true, duration: 5, event_orders: &[("onFieldResidualOrder", 1)], handlers: &["durationCallback", "onFieldEnd", "onFieldResidual", "onFieldStart", "onImmunity", "onWeatherModifyDamage"] },
+    ConditionData { id: "sunnyday", exported: true, duration: 5, event_orders: &[("onFieldResidualOrder", 1)], handlers: &["durationCallback", "onFieldEnd", "onFieldResidual", "onFieldStart", "onImmunity", "onWeatherModifyDamage"], ..ConditionData::NONE },
     ConditionData { id: "syrupbomb", ..ConditionData::NONE },
     ConditionData { id: "tailwind", ..ConditionData::NONE },
     ConditionData { id: "tarshot", ..ConditionData::NONE },
@@ -667,6 +673,7 @@ pub static CONDITIONS: [ConditionData; 111] = [
     ConditionData { id: "tox", exported: true, event_orders: &[("onResidualOrder", 9)], handlers: &["onResidual", "onStart", "onSwitchIn"], ..ConditionData::NONE },
     ConditionData { id: "toxicspikes", ..ConditionData::NONE },
     ConditionData { id: "trickroom", ..ConditionData::NONE },
+    ConditionData { id: "twoturnmove", exported: true, duration: 2, handlers: &["onEnd", "onLockMove", "onMoveAborted", "onStart"], ..ConditionData::NONE },
     ConditionData { id: "uproar", ..ConditionData::NONE },
     ConditionData { id: "watersport", ..ConditionData::NONE },
     ConditionData { id: "wideguard", ..ConditionData::NONE },

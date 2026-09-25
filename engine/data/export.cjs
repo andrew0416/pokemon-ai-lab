@@ -87,11 +87,13 @@ function main() {
 		.map(k => `${k} ${count(k)} (${nonstandard(k)} nonstandard)`).join(', '));
 }
 
-// Status and field conditions (slp, par, sandstorm, gravity, ...). Their behaviour is all
+// Status, weather and callback-created volatile conditions (slp, sandstorm, stall, ...). Their behaviour is all
 // callbacks, but durations and the handler list are still useful.
 function conditions() {
 	const ids = ['brn', 'par', 'slp', 'frz', 'psn', 'tox', 'confusion', 'flinch', 'partiallytrapped',
-		'sunnyday', 'raindance', 'sandstorm', 'snowscape', 'desolateland', 'primordialsea', 'deltastream'];
+		'sunnyday', 'raindance', 'sandstorm', 'snowscape', 'desolateland', 'primordialsea', 'deltastream',
+		// Volatiles that moves create in callbacks, not through a `volatileStatus` field.
+		'stall', 'choicelock', 'lockedmove', 'twoturnmove'];
 	const out = {};
 	for (const id of ids) {
 		const c = dex.conditions.get(id);
