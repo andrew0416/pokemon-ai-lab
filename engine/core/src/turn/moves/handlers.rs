@@ -5,12 +5,64 @@
 //! handled here gets the event's neutral result.
 
 use crate::damage::MOD_ONE_POINT_FIVE;
-use crate::dex::moves;
-use crate::field::{FieldEffect, Terrain};
+use crate::dex::{abilities, items, moves};
+use crate::field::{FieldEffect, Terrain, Weather};
 use crate::state::SlotRef;
 
 use super::super::battle::Battle;
+use super::super::TurnError;
 use super::ActiveMove;
+
+/// Showdown `pokemon.effectiveWeather()` of `holder` while `user` is the Pokémon using a
+/// move: Utility Umbrella hides sun and rain from its holder. Mega Sol (every move of its
+/// holder sees sun) is not implemented.
+fn effective_weather<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    holder: SlotRef,
+) -> Result<Weather, TurnError> {
+    if b.ability(user) == abilities::MEGA_SOL {
+        return Err(b.unsupported("Mega Sol's weather for moves"));
+    }
+    let weather = b.weather();
+    let hidden = matches!(
+        weather,
+        Weather::Sun | Weather::Rain | Weather::HarshSun | Weather::HeavyRain
+    ) && b.item(holder) == items::UTILITY_UMBRELLA;
+    Ok(if hidden { Weather::None } else { weather })
+}
+
+/// The move's `onModifyMove` (`useMoveInner`, after the target is chosen and before
+/// `getMoveTargets`). `target` is the chosen target.
+pub(super) fn on_modify_move<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    target: Option<SlotRef>,
+    mv: &mut ActiveMove,
+) -> Result<(), TurnError> {
+    match mv.id {
+        // Blizzard: `if (this.field.isWeather(['hail', 'snowscape'])) move.accuracy = true;`
+        moves::BLIZZARD => {
+            if b.weather() == Weather::Snow {
+                mv.accuracy = None;
+            }
+        }
+        // Thunder, Hurricane: `switch (target?.effectiveWeather())`: never misses in rain,
+        // accuracy 50 in sun.
+        moves::THUNDER | moves::HURRICANE => {
+            let Some(target) = target else {
+                return Ok(());
+            };
+            match effective_weather(b, user, target)? {
+                Weather::Rain | Weather::HeavyRain => mv.accuracy = None,
+                Weather::Sun | Weather::HarshSun => mv.accuracy = Some(50),
+                _ => {}
+            }
+        }
+        _ => {}
+    }
+    Ok(())
+}
 
 /// The move's `basePowerCallback` (`getDamage`, before the critical hit roll).
 pub(super) fn base_power_callback<const N: usize>(

@@ -29,6 +29,8 @@ struct ActiveMove {
     priority: i32,
     prankster_boosted: bool,
     spread: bool,
+    /// Accuracy after ModifyMove; `None` never misses (Showdown `accuracy: true`).
+    accuracy: Option<u8>,
 }
 
 /// Per-target result of a hit (Showdown's `damage[i]`: a number, `true`, or `false`).
@@ -64,6 +66,7 @@ pub(crate) fn run_move<const N: usize>(
         priority: b.move_priority(user, id),
         prankster_boosted: b.prankster_boosted(user, id),
         spread: false,
+        accuracy: id.data().accuracy,
     };
 
     if !before_move(b, user, &mv) {
@@ -316,6 +319,8 @@ fn use_move<const N: usize>(
     } else {
         target
     };
+    // ModifyMove: the move's own handler, then the user's status.
+    handlers::on_modify_move(b, user, target, mv)?;
     // Freeze `onModifyMove`: a defrosting move thaws the user.
     if b.mon(pokemon).status == Status::Freeze && mv.data.flags.contains(MoveFlags::DEFROST) {
         b.cure_status(pokemon);
@@ -504,7 +509,7 @@ fn accuracy_check<const N: usize>(
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
-    let Some(base) = mv.data.accuracy else {
+    let Some(base) = mv.accuracy else {
         return true;
     };
     if mv.data.target == MoveTarget::User && mv.data.category == MoveCategory::Status {

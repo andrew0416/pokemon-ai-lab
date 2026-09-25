@@ -1,0 +1,26 @@
+{
+ "description": "O5 Snow: Glaceon Blizzard (spread) never misses; Excadrill Protects, Snorlax takes it (10% freeze) and then Swords Dances (a frozen Snorlax thaws 1/4). Gardevoir Protects.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Glaceon", "item": "Leftovers", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "spd": 2}, "moves": ["Blizzard", "Protect"], "level": 50},
+   {"species": "Gardevoir", "item": "Focus Sash", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Protect", "Hyper Voice"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Leftovers", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Excadrill", "item": "Life Orb", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Protect", "Iron Head"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "field": {"weather": "snowscape", "weatherDuration": 4}
+ },
+ "turn": {"p1": "move blizzard, move protect", "p2": "move swordsdance, move protect"}
+}

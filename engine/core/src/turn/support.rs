@@ -36,6 +36,10 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::GRAV_APPLE, &["onBasePower"]),
     (moves::RISING_VOLTAGE, &["basePowerCallback"]),
     (moves::PSYBLADE, &["onBasePower"]),
+    (moves::BLIZZARD, &["onModifyMove"]),
+    // Still rejected for its confusion secondary; shares Thunder's handler.
+    (moves::HURRICANE, &["onModifyMove"]),
+    (moves::THUNDER, &["onModifyMove"]),
     (
         moves::GRAVITY,
         &[

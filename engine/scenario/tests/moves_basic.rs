@@ -20,3 +20,18 @@ fn o3_rising_voltage_and_psyblade_in_electric_terrain() {
 fn o3_rising_voltage_by_and_into_ungrounded() {
     assert_exact_parity("o3-rising-voltage-ungrounded");
 }
+
+#[test]
+fn o5_thunder_never_misses_in_rain() {
+    assert_exact_parity("o5-thunder-rain");
+}
+
+#[test]
+fn o5_thunder_accuracy_50_in_sun_then_gravity() {
+    assert_exact_parity("o5-thunder-sun-gravity");
+}
+
+#[test]
+fn o5_blizzard_never_misses_in_snow() {
+    assert_exact_parity("o5-blizzard-snow");
+}
