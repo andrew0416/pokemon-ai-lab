@@ -1,0 +1,26 @@
+{
+ "description": "Micle Berry's volatile and a move that never misses: the setup turn leaves Voltorb at 25/115 and it eats the berry (micleberry). In the scenario turn Voltorb's Shock Wave (accuracy true) still runs the Accuracy event, whose Micle handler ends the volatile (`if (!move.ohko)`, whatever the accuracy). Emolga Hardens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Seismic Toss", "Bulk Up"], "level": 50},
+   {"species": "Dragonite", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Dragon Rage", "Dragon Dance"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Voltorb", "item": "Micle Berry", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 0, "def": 32, "spd": 32}, "moves": ["Shock Wave", "Harden"], "level": 50},
+   {"species": "Emolga", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spa": 2}, "moves": ["Hydro Pump", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move seismictoss 1, move dragonrage 1", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move bulkup, move dragondance", "p2": "move shockwave 1, move harden"}
+}

@@ -95,9 +95,16 @@ pub enum Volatile {
     /// Sparkling Aria's secondary effect on a target it hit (no duration): the move's
     /// `onAfterMove` removes it again, curing a burn.
     SparklingAria,
+    /// Protosynthesis's own condition (no duration, `noCopy`): the holder's best stat
+    /// (`effectState.bestStat`, kept in `counter`: 0 Atk, 1 Def, 2 SpA, 3 SpD, 4 Spe) is raised
+    /// 5325/4096 (Speed 1.5x). `hidden` = 1 for `effectState.fromBooster` (from Booster Energy:
+    /// it outlasts the sun). Neither field is in Showdown's canonical state.
+    Protosynthesis,
+    /// Quark Drive's own condition: as [`Volatile::Protosynthesis`], for Electric Terrain.
+    QuarkDrive,
 }
 
-pub const VOLATILE_COUNT: usize = 29;
+pub const VOLATILE_COUNT: usize = 31;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -130,6 +137,8 @@ impl Volatile {
         Volatile::Imprison,
         Volatile::GlaiveRush,
         Volatile::SparklingAria,
+        Volatile::Protosynthesis,
+        Volatile::QuarkDrive,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -147,7 +156,10 @@ impl Volatile {
             Volatile::LockedMove => conditions::LOCKEDMOVE,
             Volatile::MustRecharge => conditions::MUSTRECHARGE,
             Volatile::Encore => conditions::ENCORE,
-            Volatile::FlashFire | Volatile::Unburden => ConditionId::NONE,
+            Volatile::FlashFire
+            | Volatile::Unburden
+            | Volatile::Protosynthesis
+            | Volatile::QuarkDrive => ConditionId::NONE,
             Volatile::ChoiceLock => conditions::CHOICELOCK,
             Volatile::Roost => conditions::ROOST,
             Volatile::Yawn => conditions::YAWN,
@@ -201,6 +213,8 @@ impl Volatile {
             Volatile::Imprison => "imprison",
             Volatile::GlaiveRush => "glaiverush",
             Volatile::SparklingAria => "sparklingaria",
+            Volatile::Protosynthesis => "protosynthesis",
+            Volatile::QuarkDrive => "quarkdrive",
         }
     }
 
@@ -244,7 +258,9 @@ impl Volatile {
             | Volatile::Torment
             | Volatile::Imprison
             | Volatile::GlaiveRush
-            | Volatile::SparklingAria => 0,
+            | Volatile::SparklingAria
+            | Volatile::Protosynthesis
+            | Volatile::QuarkDrive => 0,
         }
     }
 
@@ -270,6 +286,12 @@ impl Volatile {
             Volatile::ProteanUsed | Volatile::AngerShellUnchecked => None,
             Volatile::Roost | Volatile::HelpingHand => Some(VolatileState {
                 counter: 0,
+                ..state
+            }),
+            // `bestStat` and `fromBooster` are not canonical fields.
+            Volatile::Protosynthesis | Volatile::QuarkDrive => Some(VolatileState {
+                counter: 0,
+                hidden: 0,
                 ..state
             }),
             _ => Some(state),
@@ -364,6 +386,8 @@ mod tests {
                     v,
                     Volatile::FlashFire
                         | Volatile::Unburden
+                        | Volatile::Protosynthesis
+                        | Volatile::QuarkDrive
                         | Volatile::PerishSong
                         | Volatile::ProteanUsed
                         | Volatile::AngerShellUnchecked

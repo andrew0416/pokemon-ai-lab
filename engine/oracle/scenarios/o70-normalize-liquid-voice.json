@@ -1,0 +1,24 @@
+{
+ "description": "O70 Normalize / Liquid Voice: Delcatty's Normalize Dragon Pulse becomes Normal (STAB, 4915/4096) against Machamp; Primarina's Liquid Voice Sing becomes Water and Water Absorb Vaporeon (at 150 HP) absorbs it before the accuracy check (heals 1/4, not asleep). Machamp and Vaporeon only Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Delcatty", "item": "", "ability": "Normalize", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Dragon Pulse"], "level": 50},
+   {"species": "Primarina", "item": "", "ability": "Liquid Voice", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Sing"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Vaporeon", "item": "", "ability": "Water Absorb", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Vaporeon": {"hp": 150}}},
+ "turn": {"p1": "move dragonpulse 1, move sing 2", "p2": "move harden, move harden"}
+}

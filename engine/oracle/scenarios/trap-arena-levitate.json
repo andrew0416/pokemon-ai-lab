@@ -1,0 +1,27 @@
+{
+ "description": "Arena Trap only traps grounded foes: Levitate Bronzong and Air Balloon Heatran are not trapped, and Bronzong switches out to Snorlax.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Dugtrio", "item": "", "ability": "Arena Trap", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Gravity", "Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Bronzong", "item": "", "ability": "Levitate", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Heatran", "item": "Air Balloon", "ability": "Flash Fire", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "switch 3, move harden"}
+}

@@ -1,0 +1,23 @@
+{
+ "description": "Fairy Aura / Dark Aura (onAnyBasePower 5448/4096): Clefable's Fairy Wind is boosted once although both Xerneas (its ally) and the foe Florges have Fairy Aura; Yveltal's Darkest Lariat is boosted by its own Dark Aura. Xerneas and Florges only Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Xerneas", "item": "", "ability": "Fairy Aura", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 1}, "moves": ["Harden"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Magic Guard", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Fairy Wind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Yveltal", "item": "", "ability": "Dark Aura", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Darkest Lariat"], "level": 50},
+   {"species": "Florges", "item": "", "ability": "Fairy Aura", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move fairywind 1", "p2": "move darkestlariat 2, move harden"}
+}

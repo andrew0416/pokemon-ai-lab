@@ -1,0 +1,23 @@
+{
+ "description": "O72/O98 the sun ends: Great Tusk and Roaring Moon start with Protosynthesis from Drought's sun (Roaring Moon keeps its Booster Energy). Torkoal's Rain Dance runs WeatherChange: both lose the condition; at the Update after the move Roaring Moon's Booster Energy is used and adds it again with fromBooster. Everyone else Hardens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Torkoal", "item": "", "ability": "Drought", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Rain Dance"], "level": 50},
+   {"species": "Great Tusk", "item": "", "ability": "Protosynthesis", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Roaring Moon", "item": "Booster Energy", "ability": "Protosynthesis", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move raindance, move harden", "p2": "move harden, move harden"}
+}

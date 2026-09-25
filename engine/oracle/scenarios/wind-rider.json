@@ -1,0 +1,23 @@
+{
+ "description": "Wind Rider (breakable): Tornadus's Prankster Tailwind starts on Brambleghast's side (onSideConditionStart: Atk +1); Articuno's Icy Wind is absorbed by Brambleghast (onTryHit: Atk +1 again, no damage) and still hits Tornadus. Chansey Hardens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Brambleghast", "item": "", "ability": "Wind Rider", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Tornadus", "item": "", "ability": "Prankster", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Tailwind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Articuno", "item": "", "ability": "Pressure", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Icy Wind"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move tailwind", "p2": "move icywind, move harden"}
+}

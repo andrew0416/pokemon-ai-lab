@@ -574,9 +574,10 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     // AfterBoost (`Battle::boost_by` → `items::after_boost`).
     (items::ADRENALINE_ORB, &["onAfterBoost"]),
     // `Battle::weather_for` at every per-Pokémon weather read. The callbacks only run
-    // WeatherChange (when the item starts being ignored, stops being ignored, or ends), which
-    // has no implemented handler (`field_events`); `onStart` returns at once for a holder that
-    // does not ignore its item.
+    // WeatherChange on the holder (when the item starts being ignored, stops being ignored, or
+    // ends in sun or rain), whose only implemented handler, Protosynthesis's, then changes
+    // nothing: Utility Umbrella does not hide the sun from it, so it already has its condition;
+    // `onStart` returns at once for a holder that does not ignore its item.
     (items::UTILITY_UMBRELLA, &["onEnd", "onStart", "onUpdate"]),
     // `onStart` at switch-in (priority -1) and PseudoWeatherChange (`moves::add_pseudo_weather`).
     (
@@ -611,6 +612,15 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (
         items::CHOICE_SPECS,
         &["onModifyMove", "onModifySpA", "onStart"],
+    ),
+    // `onTrapPokemon` (priority -10) in `abilities::trapped`; `onMaybeTrapPokemon` only clears
+    // a display flag.
+    (items::SHED_SHELL, &["onMaybeTrapPokemon", "onTrapPokemon"]),
+    // O98: `onStart` (switch-in, priority -2) and `onUpdate` in `abilities::booster_energy`,
+    // `onTakeItem` in `Battle::item_can_be_taken` (`abilities::booster_energy_kept`).
+    (
+        items::BOOSTER_ENERGY,
+        &["onStart", "onTakeItem", "onUpdate"],
     ),
 ];
 
@@ -831,6 +841,20 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::WATER_COMPACTION, &["onDamagingHit"]),
     (abilities::AFTERMATH, &["onDamagingHit"]),
     (abilities::INNARDS_OUT, &["onDamagingHit"]),
+    // Cursed Body: 30% `disable` on the attacker (`conditions::volatile_start`).
+    (abilities::CURSED_BODY, &["onDamagingHit"]),
+    // Toxic Debris (Toxic Spikes layer), Perish Body (`perishsong` on both), Mummy and Lingering
+    // Aroma (`Instruction::SetAbility` on the attacker after its old ability's End).
+    (abilities::TOXIC_DEBRIS, &["onDamagingHit"]),
+    (abilities::PERISH_BODY, &["onDamagingHit"]),
+    (abilities::MUMMY, &["onDamagingHit"]),
+    (abilities::LINGERING_AROMA, &["onDamagingHit"]),
+    // Wind Rider: `onTryHit` in `moves::ability_hooks::on_try_hit`, `onSideConditionStart` in
+    // `abilities::side_condition_start`, `onStart` in `switching::start_ability`.
+    (
+        abilities::WIND_RIDER,
+        &["onSideConditionStart", "onStart", "onTryHit"],
+    ),
     (
         abilities::WIND_POWER,
         &["onDamagingHit", "onSideConditionStart"],
@@ -914,6 +938,87 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::MOLD_BREAKER, &["onModifyMove", "onStart"]),
     (abilities::TERAVOLT, &["onModifyMove", "onStart"]),
     (abilities::TURBOBLAZE, &["onModifyMove", "onStart"]),
+    // O70 type changers: `onModifyType` in `moves::ability_hooks::on_modify_type`, `onBasePower`
+    // (`move.typeChangerBoosted`) in `ability_hooks::base_power_handlers`.
+    (abilities::PIXILATE, &["onBasePower", "onModifyType"]),
+    (abilities::AERILATE, &["onBasePower", "onModifyType"]),
+    (abilities::REFRIGERATE, &["onBasePower", "onModifyType"]),
+    (abilities::GALVANIZE, &["onBasePower", "onModifyType"]),
+    (abilities::DRAGONIZE, &["onBasePower", "onModifyType"]),
+    (abilities::NORMALIZE, &["onBasePower", "onModifyType"]),
+    (abilities::LIQUID_VOICE, &["onModifyType"]),
+    // Fairy Aura / Dark Aura `onAnyBasePower` and Aura Break's `onAnyTryPrimaryHit`
+    // (`move.hasAuraBreak`) in `ability_hooks::base_power_handlers`; `onStart` only announces.
+    (abilities::FAIRY_AURA, &["onAnyBasePower", "onStart"]),
+    (abilities::DARK_AURA, &["onAnyBasePower", "onStart"]),
+    (abilities::AURA_BREAK, &["onAnyTryPrimaryHit", "onStart"]),
+    // `abilities::flower_veil_holder`: `onAllyTryBoost` in `Battle::boost_by` (ordered with
+    // Mirror Armor, `abilities::flower_veil_first`), `onAllySetStatus` in
+    // `Battle::try_set_status_from`, `onAllyTryAddVolatile` in `Battle::add_volatile_blocked`.
+    (
+        abilities::FLOWER_VEIL,
+        &["onAllySetStatus", "onAllyTryAddVolatile", "onAllyTryBoost"],
+    ),
+    // `onAnyAccuracy` in `moves::ability_hooks::accuracy_event`; `onAnyInvulnerability` only
+    // answers a semi-invulnerable target, which nothing supported creates (pinned by
+    // `no_semi_invulnerable_state_is_supported`).
+    (
+        abilities::NO_GUARD,
+        &["onAnyAccuracy", "onAnyInvulnerability"],
+    ),
+    // `onTryHit` in `moves::try_hit`, `onAllyTryHitSide` in `moves::try_move_hit_field`; the
+    // bounce is `moves::bounce_move` (`ActiveMove.has_bounced`).
+    (abilities::MAGIC_BOUNCE, &["onAllyTryHitSide", "onTryHit"]),
+    // `onFoeTrapPokemon` in `abilities::trapped` (a trapped Pokémon cannot choose to switch:
+    // `Ruleset::validate_slot_action`); `onFoeMaybeTrapPokemon` only sets a display flag.
+    (
+        abilities::SHADOW_TAG,
+        &["onFoeMaybeTrapPokemon", "onFoeTrapPokemon"],
+    ),
+    (
+        abilities::ARENA_TRAP,
+        &["onFoeMaybeTrapPokemon", "onFoeTrapPokemon"],
+    ),
+    (
+        abilities::MAGNET_PULL,
+        &["onFoeMaybeTrapPokemon", "onFoeTrapPokemon"],
+    ),
+    // O72: `onStart` / `onWeatherChange` / `onTerrainChange` in `abilities::paradox_change`
+    // (`field_events`, `switching::start_ability`), `onEnd` in `switching::end_ability`; the
+    // condition's `onStart` stores `bestStat` / `fromBooster`, its Modify* handlers are in
+    // `abilities::attack_handlers` / `defense_handlers` and `order.rs`, its `onEnd` only
+    // announces. Next to Air Lock / Cloud Nine Protosynthesis is refused
+    // (`abilities::paradox_suppressor_problem`).
+    (
+        abilities::PROTOSYNTHESIS,
+        &[
+            "condition.onEnd",
+            "condition.onModifyAtk",
+            "condition.onModifyDef",
+            "condition.onModifySpA",
+            "condition.onModifySpD",
+            "condition.onModifySpe",
+            "condition.onStart",
+            "onEnd",
+            "onStart",
+            "onWeatherChange",
+        ],
+    ),
+    (
+        abilities::QUARK_DRIVE,
+        &[
+            "condition.onEnd",
+            "condition.onModifyAtk",
+            "condition.onModifyDef",
+            "condition.onModifySpA",
+            "condition.onModifySpD",
+            "condition.onModifySpe",
+            "condition.onStart",
+            "onEnd",
+            "onStart",
+            "onTerrainChange",
+        ],
+    ),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -1232,6 +1337,9 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
             }
         }
     }
+    if let Some(why) = super::abilities::paradox_suppressor_problem(state) {
+        return Err(why);
+    }
     Ok(())
 }
 
@@ -1287,6 +1395,26 @@ mod tests {
                 "{id:?}"
             );
         }
+    }
+
+    /// No Guard's `onAnyInvulnerability` (and the Invulnerability event as a whole) only acts on
+    /// a semi-invulnerable target: the two-turn moves (`charge` flag: Fly, Bounce, Dig, Dive,
+    /// Phantom Force, Shadow Force, Sky Drop) and Commander. None is supported; this fails when
+    /// one becomes supported.
+    #[test]
+    fn no_semi_invulnerable_state_is_supported() {
+        use crate::dex::MoveFlags;
+        for id in MoveId::all() {
+            let data = id.data();
+            let semi_invulnerable = data.flags.contains(MoveFlags::CHARGE)
+                || data.handlers.iter().any(|&h| {
+                    h == "condition.onInvulnerability" || h == "condition.onAnyInvulnerability"
+                });
+            if semi_invulnerable {
+                assert!(move_unsupported(id).is_some(), "{id:?}");
+            }
+        }
+        assert!(!ability_supported_on_field(abilities::COMMANDER));
     }
 
     /// Purifying Salt's `onTryAddVolatile` only blocks Yawn, which `Battle::add_volatile_blocked`

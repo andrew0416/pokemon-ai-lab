@@ -1,0 +1,26 @@
+{
+ "description": "Micle Berry against a Glaive Rush drawback: in the setup turn Voltorb drops to 25/115 and eats the berry, and Dragonite uses Glaive Rush on its ally Hariyama. In the scenario turn Voltorb (Speed 120) hits the faster Dragonite (145, still under the drawback) first with Aqua Jet (+1): the Accuracy event runs Glaive Rush's handler (Dragonite's, faster) before Micle's, and Micle's still ends its volatile (`if (!move.ohko)`, whatever the accuracy).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Seismic Toss", "Bulk Up"], "level": 50},
+   {"species": "Dragonite", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Glaive Rush", "Dragon Dance"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Voltorb", "item": "Micle Berry", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 0, "def": 32, "spd": 32}, "moves": ["Aqua Jet", "Harden"], "level": 50},
+   {"species": "Emolga", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spa": 2}, "moves": ["Dragon Rage", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move seismictoss 1, move glaiverush -1", "move harden, move dragonrage -1"]
+ ],
+ "turn": {"p1": "move bulkup, move dragondance", "p2": "move aquajet 2, move harden"}
+}

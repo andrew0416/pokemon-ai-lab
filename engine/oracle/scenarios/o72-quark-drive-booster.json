@@ -1,0 +1,23 @@
+{
+ "description": "O72/O98 Quark Drive and Booster Energy at the battle start: Tapu Koko's Electric Surge gives Iron Hands and Iron Valiant Quark Drive (Attack); Flutter Mane (Protosynthesis, no sun) uses its Booster Energy (fromBooster) with Speed as its best stat (156 > 155 SpA), so its Speed is 1.5x (234) and its Harden comes before Tapu Koko's (182) Wild Charge. Iron Hands's boosted Strength hits Iron Valiant.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Tapu Koko", "item": "", "ability": "Electric Surge", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Wild Charge"], "level": 50},
+   {"species": "Iron Hands", "item": "", "ability": "Quark Drive", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Strength"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Flutter Mane", "item": "Booster Energy", "ability": "Protosynthesis", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 1}, "moves": ["Harden"], "level": 50},
+   {"species": "Iron Valiant", "item": "", "ability": "Quark Drive", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move wildcharge 1, move strength 2", "p2": "move harden, move harden"}
+}

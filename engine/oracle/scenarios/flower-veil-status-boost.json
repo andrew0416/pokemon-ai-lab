@@ -1,0 +1,23 @@
+{
+ "description": "Flower Veil (Floette, not Grass itself) protects its Grass ally Venusaur: Jolteon's Thunder Wave on Venusaur is blocked (onAllySetStatus), Arcanine's Growl lowers only Floette (onAllyTryBoost). Floette and Venusaur Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Floette", "item": "", "ability": "Flower Veil", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Venusaur", "item": "", "ability": "Overgrow", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Jolteon", "item": "", "ability": "Volt Absorb", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Thunder Wave"], "level": 50},
+   {"species": "Arcanine", "item": "", "ability": "Flash Fire", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Growl"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "move thunderwave 2, move growl"}
+}

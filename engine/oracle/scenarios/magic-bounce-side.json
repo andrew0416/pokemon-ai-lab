@@ -1,0 +1,23 @@
+{
+ "description": "Magic Bounce's onAllyTryHitSide: Probopass's Stealth Rock aimed at Hatterene's side is bounced onto Probopass's own side; Mold Breaker Haxorus's Taunt ignores Magic Bounce and taunts Hatterene, whose Harden then fails. Snorlax Hardens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hatterene", "item": "", "ability": "Magic Bounce", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Probopass", "item": "", "ability": "Sturdy", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Stealth Rock"], "level": 50},
+   {"species": "Haxorus", "item": "", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Taunt"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "move stealthrock, move taunt 1"}
+}

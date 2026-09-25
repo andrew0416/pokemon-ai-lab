@@ -1,0 +1,23 @@
+{
+ "description": "Magic Bounce (onTryHit, priority 1): Sableye's Prankster Thunder Wave on Hatterene is bounced back at Sableye with the original +1 priority but without the Prankster boost, so the Dark type is not immune (90% accuracy rolls again); Jolteon's Growl is bounced back at both foes by Hatterene and still lowers Snorlax. Hatterene and Snorlax Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hatterene", "item": "", "ability": "Magic Bounce", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Sableye", "item": "", "ability": "Prankster", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Thunder Wave"], "level": 50},
+   {"species": "Jolteon", "item": "", "ability": "Volt Absorb", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Growl"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "move thunderwave 1, move growl"}
+}

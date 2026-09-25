@@ -1,0 +1,23 @@
+{
+ "description": "Lingering Aroma (onDamagingHit, contact): Machamp's Strength on Oinkologne turns Machamp's Guts into Lingering Aroma; Garchomp's Strength on Oinkologne comes after, from a Pokémon whose Rough Skin also becomes Lingering Aroma. Oinkologne and Chansey Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Oinkologne", "item": "", "ability": "Lingering Aroma", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Strength"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Strength"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "move strength 1, move strength 1"}
+}

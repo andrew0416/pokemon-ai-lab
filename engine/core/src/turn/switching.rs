@@ -91,6 +91,11 @@ pub(crate) enum StartEffect {
     /// Pastel Veil: the holder's and its allies' poison is cured (also whenever anyone switches
     /// in, `onAnySwitchIn`).
     PastelVeil,
+    /// Protosynthesis / Quark Drive: `singleEvent('WeatherChange' / 'TerrainChange')` on the
+    /// holder (`abilities::paradox_change`).
+    Paradox,
+    /// Wind Rider: Atk +1 if Tailwind is up on the holder's side.
+    WindRider,
 }
 
 /// Abilities with an implemented start, with the exact handler lists they were implemented
@@ -327,6 +332,60 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         ],
         StartEffect::None,
     ),
+    // The auras and Aura Break only announce themselves on start.
+    (
+        abilities::FAIRY_AURA,
+        &["onAnyBasePower", "onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::DARK_AURA,
+        &["onAnyBasePower", "onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::AURA_BREAK,
+        &["onAnyTryPrimaryHit", "onStart"],
+        StartEffect::None,
+    ),
+    // `onSwitchInPriority: -2`; the condition's handlers act later (`abilities`).
+    (
+        abilities::PROTOSYNTHESIS,
+        &[
+            "condition.onEnd",
+            "condition.onModifyAtk",
+            "condition.onModifyDef",
+            "condition.onModifySpA",
+            "condition.onModifySpD",
+            "condition.onModifySpe",
+            "condition.onStart",
+            "onEnd",
+            "onStart",
+            "onWeatherChange",
+        ],
+        StartEffect::Paradox,
+    ),
+    (
+        abilities::QUARK_DRIVE,
+        &[
+            "condition.onEnd",
+            "condition.onModifyAtk",
+            "condition.onModifyDef",
+            "condition.onModifySpA",
+            "condition.onModifySpD",
+            "condition.onModifySpe",
+            "condition.onStart",
+            "onEnd",
+            "onStart",
+            "onTerrainChange",
+        ],
+        StartEffect::Paradox,
+    ),
+    (
+        abilities::WIND_RIDER,
+        &["onSideConditionStart", "onStart", "onTryHit"],
+        StartEffect::WindRider,
+    ),
 ];
 
 /// What `ability` does when it starts, or `None` if it has a switch-in handler that is not
@@ -384,7 +443,9 @@ fn switch_in_problem<const N: usize>(
 ) -> Option<String> {
     let mon = b.mon(pokemon);
     let name = mon.species.data().name;
-    if on_field && !ability_supported_on_field(mon.ability) {
+    // Trace is replaced by the ability it copies as it starts (`trace` checks that one; one that
+    // keeps seeking is refused there).
+    if on_field && !ability_supported_on_field(mon.ability) && mon.ability != abilities::TRACE {
         return Some(format!(
             "{name}: ability {} ({:?})",
             mon.ability.data().name,
@@ -416,6 +477,22 @@ fn switch_in_problem<const N: usize>(
             mon.ability.data().name,
             start_handler(mon.ability.data().handlers).unwrap_or("suppressWeather")
         ));
+    }
+    // The newcomer next to the Pokémon it would be refused with (`abilities`).
+    let suppresses = mon.ability.data().suppress_weather;
+    let paradox = mon.ability == abilities::PROTOSYNTHESIS;
+    if suppresses || paradox {
+        let clash = b.all_alive().into_iter().any(|s| {
+            let other = b.ability(s);
+            (suppresses && other == abilities::PROTOSYNTHESIS)
+                || (paradox && other.data().suppress_weather)
+        });
+        if clash {
+            return Some(format!(
+                "{name}: Protosynthesis next to Air Lock / Cloud Nine (the suppressor's End \
+                 WeatherChange)"
+            ));
+        }
     }
     super::update::berry_problem(mon)
 }
@@ -703,6 +780,12 @@ pub(crate) fn start_ability<const N: usize>(
             }
         }
         StartEffect::PastelVeil => pastel_veil_cure(b, slot),
+        StartEffect::Paradox => super::abilities::paradox_change(b, slot),
+        StartEffect::WindRider => {
+            if b.side_effect_active(slot.side, SideEffect::Tailwind) {
+                super::abilities::wind_rider_boost(b, slot);
+            }
+        }
     }
     Ok(())
 }
@@ -821,6 +904,12 @@ pub(crate) fn end_ability<const N: usize>(
         b.remove_volatile(slot, Volatile::FlashFire);
         return Ok(());
     }
+    // Protosynthesis / Quark Drive: `delete pokemon.volatiles[...]` (no condition `onEnd`).
+    if ability == abilities::PROTOSYNTHESIS || ability == abilities::QUARK_DRIVE {
+        b.delete_volatile(slot, Volatile::Protosynthesis);
+        b.delete_volatile(slot, Volatile::QuarkDrive);
+        return Ok(());
+    }
     if ability == abilities::AIR_LOCK || ability == abilities::CLOUD_NINE {
         return weather_change(b);
     }
@@ -864,7 +953,10 @@ fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), T
             copied.data().name
         )));
     }
-    if start_effect(copied).is_none() {
+    // After a switch during the battle the copied ability is on the field for the rest of the
+    // turn, so it must be supported there too (at the battle start `support::check_state` checks
+    // it before the first turn).
+    if start_effect(copied).is_none() || (!b.battle_start && !ability_supported_on_field(copied)) {
         return Err(b.unsupported(format!(
             "Trace copying {} ({:?})",
             copied.data().name,

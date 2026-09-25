@@ -73,8 +73,14 @@ impl<const N: usize> Battle<'_, N> {
         if mon.item.is_none() && self.volatile(slot, Volatile::Unburden).active {
             chain.push(2 * MOD_ONE);
         }
-        // The item (Choice Scarf). The factors are all powers of two times 1.5, so the chain
-        // is exact in any order.
+        // Protosynthesis / Quark Drive's condition: `chainModify(1.5)` when Speed is the best
+        // stat.
+        if super::abilities::paradox_volatile_of(self, slot).is_some_and(|(_, best)| best == 4) {
+            chain.push(MOD_ONE_POINT_FIVE);
+        }
+        // The item (Choice Scarf). The factors are powers of two times at most two 1.5s (Quick
+        // Feet or a paradox condition, and Choice Scarf: 6144 * 6144 / 4096 = 9216 exactly), so
+        // the chain is exact in any order.
         chain.extend(item_events::speed_modifier(mon.item));
         if !chain.is_empty() {
             spe = modify(spe, chain_modifiers(&chain, 0, u32::MAX));

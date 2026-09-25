@@ -20,7 +20,7 @@ use crate::dex::{
     MoveId, Stat, Type, NO_BOOSTS,
 };
 use crate::field::{SideEffect, Weather};
-use crate::state::{Pokemon, SideId, SlotRef, Status};
+use crate::state::{Pokemon, SideId, SlotRef, State, Status};
 use crate::volatile::{Volatile, VolatileState};
 
 use super::battle::{cured_on_update, Battle, BoostEffect};
@@ -224,9 +224,10 @@ pub(crate) fn charge_after_move<const N: usize>(
 }
 
 /// `runEvent('SideConditionStart', side, source, condition)` after a side condition starts on
-/// `side` (`side.addSideCondition`): Wind Power (`onSideConditionStart`, every active Pokémon
-/// of that side) gets `charge` when it is Tailwind. Wind Rider, the other handler, is refused
-/// on the field.
+/// `side` (`side.addSideCondition`), for every active Pokémon of that side when it is
+/// Tailwind: Wind Power gets `charge`; Wind Rider (breakable: a Mold Breaker user's Tailwind
+/// skips its allies' handler) `this.boost({atk: 1}, pokemon, pokemon)`. Each only changes its
+/// holder.
 pub(crate) fn side_condition_start<const N: usize>(
     b: &mut Battle<'_, N>,
     side: SideId,
@@ -239,7 +240,22 @@ pub(crate) fn side_condition_start<const N: usize>(
         if b.ability(holder) == abilities::WIND_POWER {
             b.add_volatile(holder, Volatile::Charge);
         }
+        if b.ability_unless_broken(holder) == abilities::WIND_RIDER {
+            wind_rider_boost(b, holder);
+        }
     }
+}
+
+/// Wind Rider's `this.boost({atk: 1}, pokemon, pokemon)`; whether a stage changed.
+pub(crate) fn wind_rider_boost<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> bool {
+    let mut up = NO_BOOSTS;
+    up[0] = 1;
+    b.boost_by(
+        holder,
+        &up,
+        Some(holder),
+        BoostEffect::Ability(abilities::WIND_RIDER),
+    )
 }
 
 /// Anger Shell and Berserk (Champions): `onDamage` sets `abilityState.checked*` to
@@ -398,6 +414,256 @@ pub(crate) fn try_eat_item<const N: usize>(b: &Battle<'_, N>, eater: SlotRef) ->
     !pending && !unnerved
 }
 
+/// The active Pokémon whose Flower Veil (breakable) protects `target`: `target` must be a Grass
+/// type, and the holder is the target itself or an ally not at 0 HP (`onAlly*` handlers come from
+/// `alliesAndSelf()`). The handlers only block, so which holder answers does not matter.
+/// - `onAllyTryBoost`: every drop from another Pokémon (or from no source) is deleted
+///   (`Battle::boost_by`, with [`flower_veil_first`]).
+/// - `onAllySetStatus`: a status from another Pokémon is blocked unless the effect is Yawn
+///   (`Battle::try_set_status_from`; Yawn's own end passes no source).
+/// - `onAllyTryAddVolatile`: Yawn is blocked (`Battle::add_volatile_blocked`).
+pub(crate) fn flower_veil_holder<const N: usize>(
+    b: &Battle<'_, N>,
+    target: SlotRef,
+) -> Option<SlotRef> {
+    if !b.has_type(target, Type::Grass) {
+        return None;
+    }
+    b.alive_slots(target.side)
+        .into_iter()
+        .find(|&s| b.ability_unless_broken(s) == abilities::FLOWER_VEIL)
+}
+
+/// Whether Flower Veil's `onAllyTryBoost` deletes the drops in `boost` before the target's own
+/// Mirror Armor (`onTryBoost`) can reflect them: both have priority 0, so their holders' Speed
+/// orders them (a tie at random), and whichever runs first leaves the other no drop. `false`
+/// when no Flower Veil protects the target; `true` when Mirror Armor would not reflect anything
+/// (the caller zeroes the remaining drops after the other TryBoost handlers either way). Guard
+/// Dog (priority 2) runs before both; the other TryBoost handlers only delete.
+pub(crate) fn flower_veil_first<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    boost: &[i8; crate::state::BOOST_COUNT],
+    source: Option<SlotRef>,
+    effect: BoostEffect,
+) -> bool {
+    let Some(holder) = flower_veil_holder(b, target) else {
+        return false;
+    };
+    let stages = b.state.slot(target).boosts;
+    let mirror_armor = b.ability_unless_broken(target) == abilities::MIRROR_ARMOR
+        && source.is_some_and(|s| s != target)
+        && effect != BoostEffect::Ability(abilities::MIRROR_ARMOR)
+        && (0..boost.len()).any(|i| boost[i] < 0 && stages[i] > -6);
+    if !mirror_armor {
+        return true;
+    }
+    match b.action_speed(holder).cmp(&b.action_speed(target)) {
+        std::cmp::Ordering::Greater => true,
+        std::cmp::Ordering::Less => false,
+        std::cmp::Ordering::Equal => b.rng.uniform(2) == 0,
+    }
+}
+
+/// Whether the active Pokémon in `slot` is trapped, so it cannot choose to switch: Showdown's
+/// `pokemon.trapped` as `endTurn` sets it before the choices (`runEvent('TrapPokemon')`). The
+/// state between turns is the state `endTurn` saw (after the replacements), so it is derived
+/// here instead of stored. Implemented handlers:
+/// - the foes' `onFoeTrapPokemon` (every foe not at 0 HP is adjacent in singles and doubles):
+///   Shadow Tag traps a Pokémon without Shadow Tag, Arena Trap a grounded one, Magnet Pull a
+///   Steel type, each through `tryTrap`, which the Ghost type's `trapped` immunity stops (no
+///   `Immunity` handler covers `trapped`);
+/// - Shed Shell's `onTrapPokemon` (priority -10, after every other): `pokemon.trapped = false`.
+///
+/// `onFoeMaybeTrapPokemon` only sets the `maybeTrapped` display flag. Other trapping effects
+/// (Mean Look, partial trapping, Ingrain, Fairy Lock, ...) are not implemented. A switch the
+/// move request forbids is rejected by `Ruleset::validate_slot_action` (`ActionError::Trapped`),
+/// so `Ruleset::joint_actions` never generates it; forced switches (replacements) ignore it.
+pub fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> bool {
+    let foe_traps = State::<N>::slot_refs().any(|s| {
+        s.side != slot.side
+            && state.active(s).is_some_and(|m| {
+                m.hp > 0
+                    && [
+                        abilities::SHADOW_TAG,
+                        abilities::ARENA_TRAP,
+                        abilities::MAGNET_PULL,
+                    ]
+                    .contains(&m.ability)
+            })
+    });
+    if !foe_traps {
+        return false;
+    }
+    // Grounding needs the battle's view of the state (no move in progress between turns).
+    let mut copy = state.clone();
+    let mut chooser = super::branch::Chooser::new();
+    let b = Battle::new(&mut copy, &mut chooser);
+    trapped_in(&b, slot)
+}
+
+fn trapped_in<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
+    let Some(mon) = b.alive(slot).map(|p| b.mon(p)) else {
+        return false;
+    };
+    let immune = b.natural_immune(slot, crate::dex::TypeImmunities::TRAPPED);
+    let trapped = !immune
+        && b.alive_slots(slot.side.other())
+            .into_iter()
+            .any(|foe| match b.ability(foe) {
+                a if a == abilities::SHADOW_TAG => mon.ability != abilities::SHADOW_TAG,
+                a if a == abilities::ARENA_TRAP => b.is_grounded(slot),
+                a if a == abilities::MAGNET_PULL => mon.types.contains(&Type::Steel),
+                _ => false,
+            });
+    trapped && mon.item != items::SHED_SHELL
+}
+
+// ---- Protosynthesis / Quark Drive / Booster Energy (WORKPLAN O72, O98) ------------------------
+
+/// The condition a paradox ability adds, and whether its field state holds now: Protosynthesis
+/// reads `this.field.isWeather('sunnyday')` (the field's effective weather: Cloud Nine and Air
+/// Lock hide it, Utility Umbrella does not), Quark Drive `isTerrain('electricterrain')`.
+fn paradox<const N: usize>(b: &Battle<'_, N>, ability: AbilityId) -> Option<(Volatile, bool)> {
+    match ability {
+        a if a == abilities::PROTOSYNTHESIS => Some((
+            Volatile::Protosynthesis,
+            b.effective_weather() == Weather::Sun,
+        )),
+        a if a == abilities::QUARK_DRIVE => Some((
+            Volatile::QuarkDrive,
+            b.terrain() == crate::field::Terrain::Electric,
+        )),
+        _ => None,
+    }
+}
+
+/// Showdown `pokemon.getBestStat(false, true)`: the first of Atk, Def, SpA, SpD, Spe with the
+/// highest stored stat after its stage (no modifiers; under Wonder Room Def and SpD keep their
+/// stored values but take the other's stage, as Download does).
+fn best_stat<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> u16 {
+    let Some(mon) = b.slot_mon(slot) else {
+        return 0;
+    };
+    let boosts = b.state.slot(slot).boosts;
+    let wonder_room = b.field_active(crate::field::FieldEffect::WonderRoom);
+    let mut best = (0u16, 0);
+    for stat in 0..5usize {
+        let stage = match stat {
+            1 if wonder_room => boosts[3],
+            3 if wonder_room => boosts[1],
+            _ => boosts[stat],
+        };
+        let value = super::order::boosted_stat(i32::from(mon.stats[stat]), stage);
+        if value > best.1 {
+            best = (stat as u16, value);
+        }
+    }
+    best.0
+}
+
+/// `pokemon.addVolatile('protosynthesis' / 'quarkdrive')`: nothing on a fainted Pokémon or when
+/// it is up (no `onRestart`); the condition's `onStart` stores `bestStat` and, when Booster
+/// Energy added it, `fromBooster`.
+fn add_paradox<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    volatile: Volatile,
+    from_booster: bool,
+) {
+    if b.alive(slot).is_none() || b.volatile(slot, volatile).active {
+        return;
+    }
+    let state = VolatileState {
+        active: true,
+        counter: best_stat(b, slot),
+        hidden: u8::from(from_booster),
+        ..VolatileState::NONE
+    };
+    b.set_volatile_state(slot, volatile, state);
+}
+
+/// Protosynthesis's `onWeatherChange` / Quark Drive's `onTerrainChange` for the Pokémon in
+/// `slot` (also their `onStart`, which runs the same handler): while the weather / terrain
+/// holds, `addVolatile`; otherwise the condition ends (`removeVolatile`: its `onEnd` only
+/// announces it) unless Booster Energy added it. Each only changes its holder, so the event's
+/// Speed order does not matter.
+pub(crate) fn paradox_change<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.alive(slot).is_none() {
+        return;
+    }
+    let Some((volatile, holds)) = paradox(b, b.ability(slot)) else {
+        return;
+    };
+    if holds {
+        add_paradox(b, slot, volatile, false);
+    } else if b.volatile(slot, volatile).hidden == 0 {
+        b.remove_volatile(slot, volatile);
+    }
+}
+
+/// Booster Energy's `onUpdate` (every Update, and from its `onStart` at switch-in; an active
+/// holder has always started: the item cannot be given mid-battle by a supported effect): a
+/// Protosynthesis holder outside sun or a Quark Drive holder outside Electric Terrain uses the
+/// item (`useItem`: `lastItem`, Unburden), then `addVolatile` with `fromBooster`.
+pub(crate) fn booster_energy<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.item(slot) != items::BOOSTER_ENERGY || b.alive(slot).is_none() {
+        return;
+    }
+    let Some((volatile, holds)) = paradox(b, b.ability(slot)) else {
+        return;
+    };
+    if !holds && b.use_item(slot) {
+        add_paradox(b, slot, volatile, true);
+    }
+}
+
+/// Booster Energy's `onTakeItem`: `if (source.baseSpecies.tags.includes("Paradox")) return
+/// false` (the parameter is the holder). The Paradox tag is in the dex export's species `tags`,
+/// which the Rust tables leave out; these are the species tagged in `data/champions.json`.
+pub(crate) fn booster_energy_kept(species: crate::dex::SpeciesId) -> bool {
+    use crate::dex::species;
+    const PARADOX: [crate::dex::SpeciesId; 16] = [
+        species::GREAT_TUSK,
+        species::SCREAM_TAIL,
+        species::BRUTE_BONNET,
+        species::FLUTTER_MANE,
+        species::SLITHER_WING,
+        species::SANDY_SHOCKS,
+        species::IRON_TREADS,
+        species::IRON_BUNDLE,
+        species::IRON_HANDS,
+        species::IRON_JUGULIS,
+        species::IRON_MOTH,
+        species::IRON_THORNS,
+        species::ROARING_MOON,
+        species::IRON_VALIANT,
+        species::WALKING_WAKE,
+        species::IRON_LEAVES,
+    ];
+    let base = species.data().base_species;
+    let base = if base.is_none() { species } else { base };
+    PARADOX.contains(&base)
+}
+
+/// Why a Protosynthesis holder and a weather-suppressing ability (Air Lock, Cloud Nine) cannot
+/// be on the field together: the suppressor leaving (fainting, switching out) runs its `onEnd`
+/// `WeatherChange`, which would start Protosynthesis in sun, and the engine does not run an
+/// ability's `End` there.
+pub(crate) fn paradox_suppressor_problem<const N: usize>(state: &State<N>) -> Option<String> {
+    let actives: Vec<&Pokemon> = State::<N>::slot_refs()
+        .filter_map(|s| state.active(s))
+        .filter(|m| m.hp > 0)
+        .collect();
+    let paradox = actives
+        .iter()
+        .any(|m| m.ability == abilities::PROTOSYNTHESIS);
+    let suppressor = actives.iter().any(|m| m.ability.data().suppress_weather);
+    (paradox && suppressor).then(|| {
+        "Protosynthesis next to Air Lock / Cloud Nine (the suppressor's End WeatherChange)".into()
+    })
+}
+
 /// Sheer Force's `onModifyMove` condition: `move.secondaries && !move.hasSheerForceBoost`.
 pub(crate) fn sheer_force_deletes_secondaries(data: &MoveData) -> bool {
     !data.secondaries.is_empty() && !data.has_sheer_force_boost
@@ -462,8 +728,9 @@ pub(crate) fn attack_handlers<const N: usize>(
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
     }
     // Flash Fire's volatile (a condition, priority 5): `if (move.type === 'Fire' &&
-    // attacker.hasAbility('flashfire')) return this.chainModify(1.5)`.
-    if data.move_type == Type::Fire
+    // attacker.hasAbility('flashfire')) return this.chainModify(1.5)` (`move.type`: after
+    // ModifyType).
+    if move_type == Type::Fire
         && ability == abilities::FLASH_FIRE
         && b.volatile(user, Volatile::FlashFire).active
     {
@@ -475,7 +742,36 @@ pub(crate) fn attack_handlers<const N: usize>(
         let p = priority(ability.data().event_orders, name);
         out.push(Handler::of(b, user, p, SUB_CONDITION, MOD_ONE_POINT_FIVE));
     }
+    // Protosynthesis / Quark Drive's condition (priority 5): 5325/4096 when the best stat is
+    // the one the event is for (`ModifyAtk` for physical moves, `ModifySpA` for special ones,
+    // whatever stat the move attacks with). A volatile, so no ability-ignoring move skips it.
+    let wanted = if physical { 0 } else { 2 };
+    if let Some(v) = paradox_volatile_of(b, user).filter(|&(_, best)| best == wanted) {
+        let name = if physical {
+            "condition.onModifyAtkPriority"
+        } else {
+            "condition.onModifySpAPriority"
+        };
+        let p = priority(v.0.data().event_orders, name);
+        out.push(Handler::of(b, user, p, SUB_CONDITION, 5325));
+    }
     out
+}
+
+/// The paradox ability whose condition the Pokémon in `slot` has, with the condition's best
+/// stat (0 Atk, 1 Def, 2 SpA, 3 SpD, 4 Spe; the condition's handlers are in the ability's data).
+pub(crate) fn paradox_volatile_of<const N: usize>(
+    b: &Battle<'_, N>,
+    slot: SlotRef,
+) -> Option<(AbilityId, u16)> {
+    let proto = b.volatile(slot, Volatile::Protosynthesis);
+    if proto.active {
+        return Some((abilities::PROTOSYNTHESIS, proto.counter));
+    }
+    let quark = b.volatile(slot, Volatile::QuarkDrive);
+    quark
+        .active
+        .then_some((abilities::QUARK_DRIVE, quark.counter))
 }
 
 /// `ModifyDef` or `ModifySpD` handlers of abilities (by the stat the move targets): the
@@ -499,6 +795,17 @@ pub(crate) fn defense_handlers<const N: usize>(
     {
         let p = priority(ability.data().event_orders, "onModifyDefPriority");
         out.push(Handler::of(b, target, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
+    }
+    // Protosynthesis / Quark Drive's condition (priority 6): 5325/4096 on the best stat.
+    let wanted = if defense_stat == Stat::Def { 1 } else { 3 };
+    if let Some(v) = paradox_volatile_of(b, target).filter(|&(_, best)| best == wanted) {
+        let name = if defense_stat == Stat::Def {
+            "condition.onModifyDefPriority"
+        } else {
+            "condition.onModifySpDPriority"
+        };
+        let p = priority(v.0.data().event_orders, name);
+        out.push(Handler::of(b, target, p, SUB_CONDITION, 5325));
     }
     out
 }

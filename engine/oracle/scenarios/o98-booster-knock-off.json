@@ -1,0 +1,23 @@
+{
+ "description": "O98 Booster Energy's onTakeItem: in Drought's sun Great Tusk keeps its unused Booster Energy, which Knock Off cannot take from a Paradox Pokémon (no 1.5x either); Snorlax's Booster Energy (no paradox ability, never used) is knocked off with the 1.5x boost.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Torkoal", "item": "", "ability": "Drought", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Knock Off"], "level": 50},
+   {"species": "Weavile", "item": "", "ability": "Pressure", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Knock Off"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Great Tusk", "item": "Booster Energy", "ability": "Protosynthesis", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "Booster Energy", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move knockoff 2, move knockoff 1", "p2": "move harden, move harden"}
+}

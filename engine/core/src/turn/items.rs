@@ -126,7 +126,9 @@ pub(crate) fn start_handler_implemented(item: ItemId, handler: &str) -> bool {
 /// in the batched `fieldEvent('SwitchIn')`, after the abilities' priority-0 handlers): the
 /// Seeds and Room Service (-1).
 pub(crate) fn switch_in_priority(item: ItemId) -> Option<i32> {
-    let acts = super::field_events::seed_terrain(item).is_some() || item == items::ROOM_SERVICE;
+    let acts = super::field_events::seed_terrain(item).is_some()
+        || item == items::ROOM_SERVICE
+        || item == items::BOOSTER_ENERGY;
     acts.then(|| super::abilities::priority(item.data().event_orders, "onSwitchInPriority"))
 }
 
@@ -159,6 +161,8 @@ pub(crate) fn switch_in_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRe
         }
         i if i == items::WHITE_HERB => white_herb(b, slot),
         i if i == items::MIRROR_HERB => mirror_herb_use(b, slot, slot),
+        // Booster Energy's `onStart`: `started = true`, then its `onUpdate`.
+        i if i == items::BOOSTER_ENERGY => super::abilities::booster_energy(b, slot),
         _ => {}
     }
 }
@@ -986,7 +990,7 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
-    data: &MoveData,
+    move_type: Type,
     type_mod: i32,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
@@ -998,7 +1002,8 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
         _ => {}
     }
     if let Some(ty) = resist_berry(b.item(target)) {
-        let applies = data.move_type == ty && (ty == Type::Normal || type_mod > 0);
+        // `move.type`: the type after ModifyType (a Pixilate Normal move is Fairy).
+        let applies = move_type == ty && (ty == Type::Normal || type_mod > 0);
         if applies {
             let handler = Handler::of(b, target, 0, SUB_ITEM, MOD_HALF);
             if eat_item(b, target) {

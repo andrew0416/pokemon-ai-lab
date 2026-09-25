@@ -7,17 +7,167 @@
 //! abilities skips them like Showdown's `runEvent` does.
 
 use crate::dex::{
-    abilities, items, moves, AbilityId, MoveCategory, MoveFlags, MoveTarget, Secondary, Type,
-    TypeImmunities, NO_BOOSTS,
+    abilities, items, moves, AbilityFlags, AbilityId, MoveCategory, MoveFlags, MoveTarget, Ohko,
+    Secondary, Type, TypeImmunities, NO_BOOSTS,
 };
-use crate::field::{Terrain, Weather};
+use crate::field::{SideEffect, Terrain, Weather};
+use crate::instruction::Instruction;
 use crate::state::{SlotRef, Status};
 use crate::volatile::Volatile;
 
-use super::super::abilities::{priority, sheer_force_deletes_secondaries};
+use super::super::abilities::{priority, sheer_force_deletes_secondaries, Handler, SUB_ABILITY};
 use super::super::battle::{Battle, BoostEffect, DamageSource};
+use super::super::conditions;
 use super::super::TurnError;
 use super::{handlers, type_immune, ActiveMove};
+
+/// The moves the type-changing abilities leave alone (`noModifyType`); Normalize also leaves
+/// Hidden Power and Struggle.
+const ATE_UNCHANGED: [&str; 7] = [
+    "judgment",
+    "multiattack",
+    "naturalgift",
+    "revelationdance",
+    "technoblast",
+    "terrainpulse",
+    "weatherball",
+];
+
+/// The user's ability `onModifyType` (`runEvent('ModifyType')`, after the move's own
+/// ModifyType and ModifyMove, before the ability's ModifyMove; WORKPLAN O70). A Pokémon has one
+/// ability, so the handlers' priorities (Normalize 1, the rest -1) never compete, and no other
+/// ModifyType handler (Electrify, Ion Deluge) is implemented.
+/// - Pixilate, Aerilate, Refrigerate, Galvanize, Dragonize: a Normal move (not in
+///   [`ATE_UNCHANGED`], not a damaging Z-Move) becomes Fairy / Flying / Ice / Electric / Dragon,
+///   and `move.typeChangerBoosted` is set to the ability.
+/// - Normalize: every move but those and Hidden Power and Struggle becomes Normal, boosted too.
+/// - Liquid Voice: a sound move of a Pokémon that is not Dynamaxed becomes Water (no boost).
+///
+/// Status moves change type too (a Galvanize Glare is Electric for Volt Absorb). Tera Blast's
+/// exception needs Terastallization, which is off.
+pub(super) fn on_modify_type<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &mut ActiveMove,
+) {
+    let ability = b.ability(user);
+    let data = mv.data;
+    let damaging_z = data.is_z && data.category != MoveCategory::Status;
+    let new_type = match ability {
+        a if a == abilities::PIXILATE => Type::Fairy,
+        a if a == abilities::AERILATE => Type::Flying,
+        a if a == abilities::REFRIGERATE => Type::Ice,
+        a if a == abilities::GALVANIZE => Type::Electric,
+        a if a == abilities::DRAGONIZE => Type::Dragon,
+        a if a == abilities::NORMALIZE => {
+            let unchanged =
+                ATE_UNCHANGED.contains(&data.id) || ["hiddenpower", "struggle"].contains(&data.id);
+            if !damaging_z && !unchanged {
+                mv.move_type = Type::Normal;
+                mv.type_changer = ability;
+            }
+            return;
+        }
+        a if a == abilities::LIQUID_VOICE => {
+            if data.flags.contains(MoveFlags::SOUND) && !b.state.slot(user).dynamax.is_active() {
+                mv.move_type = Type::Water;
+            }
+            return;
+        }
+        _ => return,
+    };
+    if mv.move_type == Type::Normal && !ATE_UNCHANGED.contains(&data.id) && !damaging_z {
+        mv.move_type = new_type;
+        mv.type_changer = ability;
+    }
+}
+
+/// BasePower handlers of abilities that read the active move (called from `get_damage` next to
+/// `abilities::base_power_handlers`):
+/// - the type changers' `onBasePower` (priority 23): `if (move.typeChangerBoosted ===
+///   this.effect) return this.chainModify([4915, 4096])`, the user's current ability being the
+///   one that changed the type;
+/// - Fairy Aura / Dark Aura `onAnyBasePower` (priority 20) of every active Pokémon not at 0 HP
+///   (`onAny` handlers come from `alliesAndSelf()` / `foes()`), for a non-status move of the
+///   aura's type against another Pokémon: the first holder in handler order becomes
+///   `move.auraBooster` and only it boosts, so there is one factor however many holders there
+///   are: 5448/4096, or 3072/4096 with `move.hasAuraBreak`. No other BasePower handler has
+///   priority 20, so the holder's Speed never decides the factor's place in the chain.
+///
+/// Aura Break's `onAnyTryPrimaryHit` (TryPrimaryHit runs for every target before the hit's
+/// `getDamage`) sets `move.hasAuraBreak` for a non-status move on a target other than its user
+/// while an active Pokémon has Aura Break; it is breakable, so an ability-ignoring move skips it
+/// unless the holder is the user. Nothing else reads the flag, and the holders cannot change
+/// between TryPrimaryHit and the damage, so it is decided here.
+pub(super) fn base_power_handlers<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    mv: &ActiveMove,
+) -> Vec<Handler> {
+    let mut out = Vec::new();
+    let ability = b.ability(user);
+    if !mv.type_changer.is_none() && ability == mv.type_changer {
+        let p = priority(ability.data().event_orders, "onBasePowerPriority");
+        out.push(Handler::of(b, user, p, SUB_ABILITY, 4915));
+    }
+    let aura = match mv.move_type {
+        Type::Fairy => abilities::FAIRY_AURA,
+        Type::Dark => abilities::DARK_AURA,
+        _ => AbilityId::NONE,
+    };
+    if aura.is_none() || target == user || mv.data.category == MoveCategory::Status {
+        return out;
+    }
+    let actives = b.all_alive();
+    let Some(&booster) = actives.iter().find(|&&s| b.ability(s) == aura) else {
+        return out;
+    };
+    let aura_break = actives
+        .iter()
+        .any(|&s| b.ability_unless_broken(s) == abilities::AURA_BREAK);
+    let modifier = if aura_break { 3072 } else { 5448 };
+    let p = priority(aura.data().event_orders, "onAnyBasePowerPriority");
+    out.push(Handler::of(b, booster, p, SUB_ABILITY, modifier));
+    out
+}
+
+/// `runEvent('Accuracy', target, user, move, accuracy)` (`hitStepAccuracy`) for the implemented
+/// handlers, all priority 0:
+/// - No Guard (`onAnyAccuracy`, not breakable) of an active Pokémon that is the move's user or
+///   target returns `true`;
+/// - the target's Glaive Rush drawback (`onAccuracy`) returns `true`;
+/// - Micle Berry's volatile on the user (`onSourceAccuracy`): `if (!move.ohko)` the volatile
+///   ends, and while the accuracy is still a number it chains 4915/4096.
+///
+/// A `true` stays `true` whatever handler runs after it, and Micle's handler ends its volatile
+/// whether or not the accuracy is still a number (oracle `micle-accuracy-true`,
+/// `micle-glaive-rush`), so the handlers' Speed order never shows. `None`: the move hits;
+/// `Some(modifier)`: the chained modifier on the numeric accuracy (4096 without Micle). Callers
+/// with `accuracy === true` ignore the result.
+///
+/// No Guard's other callback, `onAnyInvulnerability`, only answers a semi-invulnerable target
+/// (two-turn moves, Sky Drop, Commander), which nothing supported creates (pinned by a test in
+/// `support`).
+pub(super) fn accuracy_event<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> Option<u32> {
+    let mut modifier = crate::damage::MOD_ONE;
+    if mv.data.ohko == Ohko::No && b.volatile(user, Volatile::MicleBerry).active {
+        b.remove_volatile(user, Volatile::MicleBerry);
+        modifier = 4915;
+    }
+    let no_guard = [user, target]
+        .into_iter()
+        .any(|s| b.alive(s).is_some() && b.ability(s) == abilities::NO_GUARD);
+    if no_guard || handlers::always_hit(b, target) {
+        return None;
+    }
+    Some(modifier)
+}
 
 /// The user's ability `onModifyMove` (`runEvent('ModifyMove')`, after the move's own):
 /// - Mold Breaker, Teravolt, Turboblaze: `move.ignoreAbility = true` (the Battle's active move,
@@ -191,7 +341,8 @@ pub(super) fn on_try_hit<const N: usize>(
         return false;
     }
     let data = mv.data;
-    let ty = data.move_type;
+    // `move.type`: the type after ModifyType (Weather Ball, a Galvanize Normal move).
+    let ty = mv.move_type;
     let other = target != user;
     let heal_type = match ability {
         a if a == abilities::VOLT_ABSORB => Some(Type::Electric),
@@ -247,6 +398,15 @@ pub(super) fn on_try_hit<const N: usize>(
             [moves::ATTRACT, moves::CAPTIVATE, moves::TAUNT].contains(&mv.id)
         }
         a if a == abilities::GOOD_AS_GOLD => other && category == MoveCategory::Status,
+        // Wind Rider: another Pokémon's wind move: `this.boost({atk: 1}, target, target)` (the
+        // immunity message if nothing changed), then `return null`.
+        a if a == abilities::WIND_RIDER => {
+            if other && data.flags.contains(MoveFlags::WIND) {
+                super::super::abilities::wind_rider_boost(b, target);
+                return true;
+            }
+            false
+        }
         a if a == abilities::WONDER_GUARD => {
             if !other || category == MoveCategory::Status || mv.id == moves::STRUGGLE {
                 return false;
@@ -261,7 +421,12 @@ pub(super) fn on_try_hit<const N: usize>(
 /// [`on_damaging_hit`] (`u32::MAX`: no order, after every ordered handler), or `None`. Rough
 /// Skin, Iron Barbs and Rattled are handled by `moves::damaging_hit` itself.
 pub(super) fn damaging_hit_order(ability: AbilityId) -> Option<u32> {
-    const HANDLED: [AbilityId; 19] = [
+    const HANDLED: [AbilityId; 24] = [
+        abilities::CURSED_BODY,
+        abilities::TOXIC_DEBRIS,
+        abilities::PERISH_BODY,
+        abilities::MUMMY,
+        abilities::LINGERING_AROMA,
         abilities::STATIC,
         abilities::FLAME_BODY,
         abilities::POISON_POINT,
@@ -313,7 +478,7 @@ pub(super) fn on_damaging_hit<const N: usize>(
     damage: i32,
     contact: bool,
     total_before: i32,
-) {
+) -> Result<(), TurnError> {
     let boost_holder = |b: &mut Battle<'_, N>, stat: usize, amount: i8| {
         let mut boosts = NO_BOOSTS;
         boosts[stat] = amount;
@@ -353,7 +518,7 @@ pub(super) fn on_damaging_hit<const N: usize>(
                     0 => Status::Sleep,
                     1 => Status::Paralyze,
                     2 => Status::Poison,
-                    _ => return,
+                    _ => return Ok(()),
                 };
                 b.try_set_status_from(attacker, status, Some(holder));
             }
@@ -397,6 +562,24 @@ pub(super) fn on_damaging_hit<const N: usize>(
         // Seed Sower: `this.field.setTerrain('grassyterrain')` (the holder's Terrain Extender).
         a if a == abilities::SEED_SOWER => {
             super::set_terrain(b, holder, Terrain::Grassy);
+        }
+        // Cursed Body (not breakable): `if (source.volatiles['disable']) return;` then, for a move
+        // that is not a Max Move, a future move or Struggle, 30%:
+        // `source.addVolatile('disable', this.effectState.target)` (Disable's `onStart`: the
+        // attacker's last move, one turn less as the attacker is using a move). The draw is
+        // skipped when the attacker has fainted (`addVolatile` fails on it).
+        a if a == abilities::CURSED_BODY => {
+            let data = mv.data;
+            let eligible = !data.is_max
+                && !data.flags.contains(MoveFlags::FUTUREMOVE)
+                && mv.id != moves::STRUGGLE;
+            if eligible
+                && b.alive(attacker).is_some()
+                && !b.volatile(attacker, Volatile::Disable).active
+                && b.rng.chance(3, 10)
+            {
+                b.add_volatile(attacker, Volatile::Disable);
+            }
         }
         // Electromorphosis: `target.addVolatile('charge')` (nothing on a fainted holder or when
         // it is up: its `onRestart` only logs).
@@ -452,8 +635,50 @@ pub(super) fn on_damaging_hit<const N: usize>(
                 DamageSource::Indirect,
             );
         }
+        // Toxic Debris: a physical move adds a layer of Toxic Spikes (`addSideCondition`, below
+        // two layers) to the attacker's side, or to the holder's foes' side when an ally hit it.
+        a if a == abilities::TOXIC_DEBRIS => {
+            if mv.data.category == MoveCategory::Physical {
+                let side = if attacker.side == holder.side {
+                    holder.side.other()
+                } else {
+                    attacker.side
+                };
+                let spikes = b.state.side(side).effects[SideEffect::ToxicSpikes as usize];
+                if !spikes.is_active() || spikes.value < 2 {
+                    conditions::add_hazard(b, side, SideEffect::ToxicSpikes);
+                }
+            }
+        }
+        // Perish Body: contact, and the attacker has no `perishsong` yet: both the attacker and
+        // the holder get it (`addVolatile`: nothing on a Pokémon at 0 HP).
+        a if a == abilities::PERISH_BODY => {
+            if contact && !b.volatile(attacker, Volatile::PerishSong).active {
+                b.add_volatile(attacker, Volatile::PerishSong);
+                b.add_volatile(holder, Volatile::PerishSong);
+            }
+        }
+        // Mummy, Lingering Aroma: unless the attacker's ability is `cantsuppress` or already
+        // this one, contact: `source.setAbility(this ability, target)` (nothing on an attacker at
+        // 0 HP; no implemented SetAbility handler: Ability Shield is refused on the field): the
+        // old ability's `End` (`switching::end_ability`), then the new one, which has no start.
+        a if a == abilities::MUMMY || a == abilities::LINGERING_AROMA => {
+            let old = b.ability(attacker);
+            let locked = old.data().flags.contains(AbilityFlags::CANTSUPPRESS) || old == a;
+            if !locked && contact {
+                if let Some(pokemon) = b.alive(attacker) {
+                    super::super::switching::end_ability(b, attacker, old)?;
+                    b.apply(Instruction::SetAbility {
+                        target: pokemon,
+                        old,
+                        new: a,
+                    });
+                }
+            }
+        }
         _ => {}
     }
+    Ok(())
 }
 
 /// Whether the attacker's ability has an implemented `onSourceDamagingHit`
@@ -517,7 +742,7 @@ fn effectiveness<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove, target: Slo
         .iter()
         .filter(|&&t| t != Type::None)
         .map(|&t| {
-            let chart = handlers::type_effectiveness(mv.data.move_type, t);
+            let chart = handlers::type_effectiveness(mv.move_type, t);
             handlers::on_effectiveness(mv.id, t, chart)
         })
         .sum()

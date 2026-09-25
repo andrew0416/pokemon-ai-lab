@@ -1,0 +1,23 @@
+{
+ "description": "Aura Break (onAnyTryPrimaryHit, breakable): Xerneas's Fairy Wind into Aura Break Zygarde is weakened (3072/4096 instead of Fairy Aura's 5448/4096); Mold Breaker Haxorus's Fairy Wind skips Aura Break and gets the full Fairy Aura boost from its ally. Zygarde and Florges only Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Xerneas", "item": "", "ability": "Fairy Aura", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Fairy Wind"], "level": 50},
+   {"species": "Haxorus", "item": "", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Fairy Wind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Zygarde", "item": "", "ability": "Aura Break", "nature": "Serious",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Florges", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move fairywind 1, move fairywind 1", "p2": "move harden, move harden"}
+}

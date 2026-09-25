@@ -90,6 +90,8 @@ pub(crate) fn update_event<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), 
         if item_wants_eating(b, slot) {
             eat_item(b, slot);
         }
+        // Booster Energy's `onUpdate`.
+        super::abilities::booster_energy(b, slot);
     }
     Ok(())
 }

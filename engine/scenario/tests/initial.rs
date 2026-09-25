@@ -285,13 +285,17 @@ fn unsupported_start_handlers_are_rejected() {
         }
     }
 
-    // Booster Energy's `onStart` is not implemented (the Seeds' are since O92).
+    // The Metronome item's `onStart` (it adds its counting condition) is not implemented (the
+    // Seeds' are since O92, Booster Energy's since O98).
     let mut s = loaded.state.clone();
-    s.active_mut(rillaboom).unwrap().item = items::BOOSTER_ENERGY;
+    s.active_mut(rillaboom).unwrap().item = items::METRONOME;
     assert!(matches!(
         expand_switch_ins(&s),
         Err(SwitchInError::UnsupportedItem { .. })
     ));
+    let mut s = loaded.state.clone();
+    s.active_mut(rillaboom).unwrap().item = items::BOOSTER_ENERGY;
+    assert!(expand_switch_ins(&s).is_ok());
     let mut s = loaded.state.clone();
     s.active_mut(rillaboom).unwrap().item = items::PSYCHIC_SEED;
     assert!(expand_switch_ins(&s).is_ok());

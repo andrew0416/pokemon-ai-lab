@@ -1,0 +1,23 @@
+{
+ "description": "No Guard (onAnyAccuracy): Machamp's Stone Edge (accuracy 80) never misses, and neither does Starmie's Hydro Pump (80) aimed at Machamp. Snorlax and Chansey only Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "No Guard", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Stone Edge"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Starmie", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Hydro Pump"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move stoneedge 1, move harden", "p2": "move hydropump 1, move harden"}
+}
