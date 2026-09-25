@@ -35,6 +35,8 @@ struct ActiveMove {
     spread: bool,
     /// Accuracy after ModifyMove; `None` never misses (Showdown `accuracy: true`).
     accuracy: Option<u8>,
+    /// Target type after ModifyMove (Showdown `move.target`; Expanding Force widens it).
+    target: MoveTarget,
 }
 
 /// Per-target result of a hit (Showdown's `damage[i]`: a number, `true`, or `false`).
@@ -87,6 +89,7 @@ fn run_move_inner<const N: usize>(
         prankster_boosted: b.prankster_boosted(user, id),
         spread: false,
         accuracy: id.data().accuracy,
+        target: id.data().target,
     };
 
     if !before_move(b, user, &mv) {
@@ -298,7 +301,7 @@ fn get_move_targets<const N: usize>(
     mv: &ActiveMove,
     target: SlotRef,
 ) -> Result<Vec<SlotRef>, TurnError> {
-    Ok(match mv.data.target {
+    Ok(match mv.target {
         MoveTarget::All | MoveTarget::FoeSide | MoveTarget::AllySide | MoveTarget::AllyTeam => {
             Vec::new()
         }
@@ -311,7 +314,7 @@ fn get_move_targets<const N: usize>(
         _ => {
             let mut t = target;
             if b.alive(t).is_none() && t.side != user.side {
-                match get_random_target(b, user, mv.data.target) {
+                match get_random_target(b, user, mv.target) {
                     Some(r) => t = r,
                     None => return Ok(Vec::new()),
                 }
@@ -378,7 +381,7 @@ fn redirect_target<const N: usize>(
         let loc = loc_of(user, holder);
         if priority == 0 {
             // Lightning Rod / Storm Drain treat `adjacentFoe`/`randomNormal` as `normal`.
-            let kind = match mv.data.target {
+            let kind = match mv.target {
                 MoveTarget::AdjacentFoe | MoveTarget::RandomNormal => MoveTarget::Normal,
                 other => other,
             };
@@ -390,7 +393,7 @@ fn redirect_target<const N: usize>(
         if is_rage_powder && b.status_immune(user, TypeImmunities::POWDER) {
             return false;
         }
-        valid_target_loc(N, user, loc, mv.data.target)
+        valid_target_loc(N, user, loc, mv.target)
     };
     let mut i = 0;
     while i < handlers.len() {
@@ -433,13 +436,18 @@ fn use_move<const N: usize>(
     will_act: bool,
 ) -> Result<bool, TurnError> {
     let pokemon = b.occupant(user).expect("checked");
-    let target = if mv.data.target == MoveTarget::User {
+    let base_target = mv.target;
+    let mut target = if mv.target == MoveTarget::User {
         Some(user)
     } else {
         target
     };
-    // ModifyMove: the move's own handler, then the user's status.
+    // ModifyMove: the move's own handler; a changed target type picks a new target
+    // (`getRandomTarget`); then the user's status.
     handlers::on_modify_move(b, user, target, mv)?;
+    if mv.target != base_target {
+        target = get_random_target(b, user, mv.target);
+    }
     // Freeze `onModifyMove`: a defrosting move thaws the user.
     if b.mon(pokemon).status == Status::Freeze && mv.data.flags.contains(MoveFlags::DEFROST) {
         b.cure_status(pokemon);
@@ -451,7 +459,7 @@ fn use_move<const N: usize>(
     let result;
     let mut main_target = target;
     let field_move = matches!(
-        mv.data.target,
+        mv.target,
         MoveTarget::All | MoveTarget::FoeSide | MoveTarget::AllySide
     );
     let targets = if field_move {
@@ -503,7 +511,7 @@ fn deduct_pressure_pp<const N: usize>(
     let pressure_targets: Vec<SlotRef> = if mv.data.flags.contains(MoveFlags::MUSTPRESSURE) {
         b.alive_slots(foe)
     } else {
-        match mv.data.target {
+        match mv.target {
             MoveTarget::All => b.alive_slots(foe),
             MoveTarget::FoeSide | MoveTarget::AllySide | MoveTarget::AllyTeam => Vec::new(),
             _ => targets.to_vec(),
@@ -690,7 +698,7 @@ fn blocked_by_try_hit<const N: usize>(
 ) -> bool {
     if b.terrain() == Terrain::Psychic
         && mv.priority > 0
-        && mv.data.target != MoveTarget::User
+        && mv.target != MoveTarget::User
         && target.side != user.side
         && b.is_grounded(target)
     {
@@ -763,7 +771,7 @@ fn accuracy_check<const N: usize>(
     let Some(base) = mv.accuracy else {
         return true;
     };
-    if mv.data.target == MoveTarget::User && mv.data.category == MoveCategory::Status {
+    if mv.target == MoveTarget::User && mv.data.category == MoveCategory::Status {
         return true;
     }
     let mut accuracy = i32::from(base);
@@ -1050,7 +1058,7 @@ fn get_damage<const N: usize>(
     if mv.id == moves::KNOCK_OFF && b.item_can_be_taken(target) {
         power_mods.push(Handler::of(b, user, 0, SUB_MOVE, MOD_ONE_POINT_FIVE));
     }
-    if let Some(modifier) = handlers::on_base_power(b, mv) {
+    if let Some(modifier) = handlers::on_base_power(b, user, mv) {
         power_mods.push(Handler::of(b, user, 0, SUB_MOVE, modifier));
     }
     let power_modifier = ability_events::chain(b, power_mods);

@@ -5,7 +5,7 @@
 //! handled here gets the event's neutral result.
 
 use crate::damage::MOD_ONE_POINT_FIVE;
-use crate::dex::{abilities, items, moves, MoveId, Type, TypeRelation};
+use crate::dex::{abilities, items, moves, MoveId, MoveTarget, Type, TypeRelation};
 use crate::field::{FieldEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{SideId, SlotRef, Status, BOOST_COUNT};
@@ -43,6 +43,13 @@ pub(super) fn on_modify_move<const N: usize>(
     mv: &mut ActiveMove,
 ) -> Result<(), TurnError> {
     match mv.id {
+        // Expanding Force: `if (this.field.isTerrain('psychicterrain') && source.isGrounded())
+        // move.target = 'allAdjacentFoes';` (the caller then re-picks the target).
+        moves::EXPANDING_FORCE => {
+            if b.terrain() == Terrain::Psychic && b.is_grounded(user) {
+                mv.target = MoveTarget::AllAdjacentFoes;
+            }
+        }
         // Blizzard: `if (this.field.isWeather(['hail', 'snowscape'])) move.accuracy = true;`
         moves::BLIZZARD => {
             if b.weather() == Weather::Snow {
@@ -106,12 +113,21 @@ pub(super) fn base_power_callback<const N: usize>(
 
 /// The move's own `onBasePower` modifier (BasePower handler priority 0, after type items and
 /// terrain). Knock Off's is in `get_damage`.
-pub(super) fn on_base_power<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove) -> Option<u32> {
+pub(super) fn on_base_power<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Option<u32> {
     match mv.id {
         // Grav Apple: `if (this.field.getPseudoWeather('gravity')) return this.chainModify(1.5);`
         moves::GRAV_APPLE if b.field_active(FieldEffect::Gravity) => Some(MOD_ONE_POINT_FIVE),
         // Psyblade: `if (this.field.isTerrain('electricterrain')) return this.chainModify(1.5);`
         moves::PSYBLADE if b.terrain() == Terrain::Electric => Some(MOD_ONE_POINT_FIVE),
+        // Expanding Force: `if (this.field.isTerrain('psychicterrain') && source.isGrounded())
+        // return this.chainModify(1.5);`
+        moves::EXPANDING_FORCE if b.terrain() == Terrain::Psychic && b.is_grounded(user) => {
+            Some(MOD_ONE_POINT_FIVE)
+        }
         _ => None,
     }
 }
