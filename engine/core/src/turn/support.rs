@@ -588,6 +588,9 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
         items::CHOICE_SPECS,
         &["onModifyMove", "onModifySpA", "onStart"],
     ),
+    // `onTrapPokemon` (priority -10) in `abilities::trapped`; `onMaybeTrapPokemon` only clears
+    // a display flag.
+    (items::SHED_SHELL, &["onMaybeTrapPokemon", "onTrapPokemon"]),
 ];
 
 /// Abilities with callbacks that are implemented while the holder is on the field.
@@ -918,6 +921,20 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // `onTryHit` in `moves::try_hit`, `onAllyTryHitSide` in `moves::try_move_hit_field`; the
     // bounce is `moves::bounce_move` (`ActiveMove.has_bounced`).
     (abilities::MAGIC_BOUNCE, &["onAllyTryHitSide", "onTryHit"]),
+    // `onFoeTrapPokemon` in `abilities::trapped` (a trapped Pokémon cannot choose to switch:
+    // `Ruleset::validate_slot_action`); `onFoeMaybeTrapPokemon` only sets a display flag.
+    (
+        abilities::SHADOW_TAG,
+        &["onFoeMaybeTrapPokemon", "onFoeTrapPokemon"],
+    ),
+    (
+        abilities::ARENA_TRAP,
+        &["onFoeMaybeTrapPokemon", "onFoeTrapPokemon"],
+    ),
+    (
+        abilities::MAGNET_PULL,
+        &["onFoeMaybeTrapPokemon", "onFoeTrapPokemon"],
+    ),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

@@ -92,6 +92,11 @@ impl Ruleset {
                         party_index,
                     });
                 }
+                // A trapped Pokémon cannot choose to switch (Shadow Tag, Arena Trap, Magnet
+                // Pull; `turn::trapped`).
+                if crate::turn::trapped(state, slot) {
+                    return Err(ActionError::Trapped { slot: s });
+                }
                 Ok(())
             }
             SlotAction::Move {
@@ -270,6 +275,11 @@ pub enum ActionError {
         slot: u8,
         gimmick: Gimmick,
     },
+    /// The Pokémon is trapped (a foe's Shadow Tag, Arena Trap or Magnet Pull) and cannot
+    /// choose to switch.
+    Trapped {
+        slot: u8,
+    },
 }
 
 impl fmt::Display for ActionError {
@@ -300,6 +310,9 @@ impl fmt::Display for ActionError {
                     f,
                     "slot {slot}: {gimmick:?} requested by two slots this turn"
                 )
+            }
+            ActionError::Trapped { slot } => {
+                write!(f, "slot {slot}: the Pokémon is trapped and cannot switch")
             }
         }
     }

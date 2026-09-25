@@ -20,7 +20,7 @@ use crate::dex::{
     MoveId, Stat, Type, NO_BOOSTS,
 };
 use crate::field::{SideEffect, Weather};
-use crate::state::{Pokemon, SideId, SlotRef, Status};
+use crate::state::{Pokemon, SideId, SlotRef, State, Status};
 use crate::volatile::{Volatile, VolatileState};
 
 use super::battle::{cured_on_update, Battle, BoostEffect};
@@ -447,6 +447,60 @@ pub(crate) fn flower_veil_first<const N: usize>(
         std::cmp::Ordering::Less => false,
         std::cmp::Ordering::Equal => b.rng.uniform(2) == 0,
     }
+}
+
+/// Whether the active Pokémon in `slot` is trapped, so it cannot choose to switch: Showdown's
+/// `pokemon.trapped` as `endTurn` sets it before the choices (`runEvent('TrapPokemon')`). The
+/// state between turns is the state `endTurn` saw (after the replacements), so it is derived
+/// here instead of stored. Implemented handlers:
+/// - the foes' `onFoeTrapPokemon` (every foe not at 0 HP is adjacent in singles and doubles):
+///   Shadow Tag traps a Pokémon without Shadow Tag, Arena Trap a grounded one, Magnet Pull a
+///   Steel type, each through `tryTrap`, which the Ghost type's `trapped` immunity stops (no
+///   `Immunity` handler covers `trapped`);
+/// - Shed Shell's `onTrapPokemon` (priority -10, after every other): `pokemon.trapped = false`.
+///
+/// `onFoeMaybeTrapPokemon` only sets the `maybeTrapped` display flag. Other trapping effects
+/// (Mean Look, partial trapping, Ingrain, Fairy Lock, ...) are not implemented. A switch the
+/// move request forbids is rejected by `Ruleset::validate_slot_action` (`ActionError::Trapped`),
+/// so `Ruleset::joint_actions` never generates it; forced switches (replacements) ignore it.
+pub fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> bool {
+    let foe_traps = State::<N>::slot_refs().any(|s| {
+        s.side != slot.side
+            && state.active(s).is_some_and(|m| {
+                m.hp > 0
+                    && [
+                        abilities::SHADOW_TAG,
+                        abilities::ARENA_TRAP,
+                        abilities::MAGNET_PULL,
+                    ]
+                    .contains(&m.ability)
+            })
+    });
+    if !foe_traps {
+        return false;
+    }
+    // Grounding needs the battle's view of the state (no move in progress between turns).
+    let mut copy = state.clone();
+    let mut chooser = super::branch::Chooser::new();
+    let b = Battle::new(&mut copy, &mut chooser);
+    trapped_in(&b, slot)
+}
+
+fn trapped_in<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
+    let Some(mon) = b.alive(slot).map(|p| b.mon(p)) else {
+        return false;
+    };
+    let immune = b.natural_immune(slot, crate::dex::TypeImmunities::TRAPPED);
+    let trapped = !immune
+        && b.alive_slots(slot.side.other())
+            .into_iter()
+            .any(|foe| match b.ability(foe) {
+                a if a == abilities::SHADOW_TAG => mon.ability != abilities::SHADOW_TAG,
+                a if a == abilities::ARENA_TRAP => b.is_grounded(slot),
+                a if a == abilities::MAGNET_PULL => mon.types.contains(&Type::Steel),
+                _ => false,
+            });
+    trapped && mon.item != items::SHED_SHELL
 }
 
 /// Sheer Force's `onModifyMove` condition: `move.secondaries && !move.hasSheerForceBoost`.

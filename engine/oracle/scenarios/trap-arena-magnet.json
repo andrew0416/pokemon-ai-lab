@@ -1,0 +1,27 @@
+{
+ "description": "Arena Trap and Magnet Pull (onFoeTrapPokemon): Skarmory is not grounded (Arena Trap misses it) but is a Steel type, so Magnet Pull traps it; Gholdengo is Steel but a Ghost, immune to trapping, and switches out to Snorlax. The p1 side is not trapped (no trapping foe).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Dugtrio", "item": "", "ability": "Arena Trap", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Magnezone", "item": "", "ability": "Magnet Pull", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Skarmory", "item": "", "ability": "Sturdy", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Gholdengo", "item": "", "ability": "Good as Gold", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "move harden, switch 3"}
+}

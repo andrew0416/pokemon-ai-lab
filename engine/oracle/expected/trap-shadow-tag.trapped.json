@@ -1,0 +1,134 @@
+{
+ "scenario": "trap-shadow-tag.json",
+ "before": {
+  "schema": 1,
+  "turn": 1,
+  "ended": false,
+  "winner": "",
+  "field": {
+   "weather": "",
+   "weatherDuration": null,
+   "terrain": "",
+   "terrainDuration": null,
+   "pseudoWeather": {}
+  },
+  "sides": [
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Blissey",
+      "species": "Blissey",
+      "hp": 362,
+      "maxhp": 362,
+      "status": "",
+      "item": "",
+      "ability": "naturalcure",
+      "slot": null,
+      "pp": {
+       "harden": 20
+      }
+     },
+     {
+      "name": "Chansey",
+      "species": "Chansey",
+      "hp": 357,
+      "maxhp": 357,
+      "status": "",
+      "item": "",
+      "ability": "naturalcure",
+      "slot": 1,
+      "pp": {
+       "harden": 20
+      },
+      "boosts": {},
+      "volatiles": {}
+     },
+     {
+      "name": "Gothitelle",
+      "species": "Gothitelle",
+      "hp": 177,
+      "maxhp": 177,
+      "status": "",
+      "item": "",
+      "ability": "shadowtag",
+      "slot": 0,
+      "pp": {
+       "harden": 20
+      },
+      "boosts": {},
+      "volatiles": {}
+     }
+    ]
+   },
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Munchlax",
+      "species": "Munchlax",
+      "hp": 242,
+      "maxhp": 242,
+      "status": "",
+      "item": "",
+      "ability": "thickfat",
+      "slot": null,
+      "pp": {
+       "harden": 20
+      }
+     },
+     {
+      "name": "Snorlax",
+      "species": "Snorlax",
+      "hp": 267,
+      "maxhp": 267,
+      "status": "",
+      "item": "shedshell",
+      "ability": "thickfat",
+      "slot": 1,
+      "pp": {
+       "harden": 20
+      },
+      "boosts": {},
+      "volatiles": {}
+     },
+     {
+      "name": "Wobbuffet",
+      "species": "Wobbuffet",
+      "hp": 297,
+      "maxhp": 297,
+      "status": "",
+      "item": "",
+      "ability": "shadowtag",
+      "slot": 0,
+      "pp": {
+       "harden": 20
+      },
+      "boosts": {},
+      "volatiles": {}
+     }
+    ]
+   }
+  ]
+ },
+ "trapped": {
+  "p1": {
+   "Gothitelle": false,
+   "Chansey": true
+  },
+  "p2": {
+   "Wobbuffet": false,
+   "Snorlax": false
+  }
+ }
+}
