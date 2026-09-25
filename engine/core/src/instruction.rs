@@ -2,6 +2,7 @@
 //! never clones the state: apply on the way down, reverse on the way up.
 
 use crate::field::{Effect, FieldEffect, SideEffect};
+use crate::gimmick::Gimmick;
 use crate::state::{SideId, Slot, SlotRef, State, Status};
 
 #[derive(Clone, Debug, PartialEq)]
@@ -11,12 +12,36 @@ pub enum Instruction {
     /// `amount` is the HP actually restored (already clamped to max HP).
     Heal { target: SlotRef, amount: i16 },
     /// `amount` is the stage change actually applied (already clamped to -6..=6).
-    Boost { target: SlotRef, stat: u8, amount: i8 },
-    ChangeStatus { target: SlotRef, old: Status, new: Status },
+    Boost {
+        target: SlotRef,
+        stat: u8,
+        amount: i8,
+    },
+    ChangeStatus {
+        target: SlotRef,
+        old: Status,
+        new: Status,
+    },
     /// Replaces the slot wholesale; `previous` restores boosts/volatiles on reverse.
-    Switch { slot: SlotRef, previous: Slot, party_index: Option<u8> },
-    SetField { effect: FieldEffect, old: Effect, new: Effect },
-    SetSideEffect { side: SideId, effect: SideEffect, old: Effect, new: Effect },
+    Switch {
+        slot: SlotRef,
+        previous: Slot,
+        party_index: Option<u8>,
+    },
+    SetField {
+        effect: FieldEffect,
+        old: Effect,
+        new: Effect,
+    },
+    SetSideEffect {
+        side: SideId,
+        effect: SideEffect,
+        old: Effect,
+        new: Effect,
+    },
+    /// Spends `side`'s once-per-battle budget for `gimmick`. The budget was unspent before
+    /// (validation rejects a second use), so reverse just clears the bit.
+    UseGimmick { side: SideId, gimmick: Gimmick },
 }
 
 /// One weighted result of a turn (or of a single action while a turn is being built).
@@ -43,19 +68,28 @@ impl<const N: usize> State<N> {
         match instruction {
             Instruction::Damage { target, amount } => self.active_hp_mut(*target, -amount),
             Instruction::Heal { target, amount } => self.active_hp_mut(*target, *amount),
-            Instruction::Boost { target, stat, amount } => {
-                self.slot_mut(*target).boosts[*stat as usize] += amount
-            }
+            Instruction::Boost {
+                target,
+                stat,
+                amount,
+            } => self.slot_mut(*target).boosts[*stat as usize] += amount,
             Instruction::ChangeStatus { target, new, .. } => self.set_status(*target, *new),
-            Instruction::Switch { slot, party_index, .. } => {
+            Instruction::Switch {
+                slot, party_index, ..
+            } => {
                 *self.slot_mut(*slot) = Slot {
                     party_index: *party_index,
                     ..Slot::default()
                 }
             }
             Instruction::SetField { effect, new, .. } => self.field[*effect as usize] = *new,
-            Instruction::SetSideEffect { side, effect, new, .. } => {
-                self.side_mut(*side).effects[*effect as usize] = *new
+            Instruction::SetSideEffect {
+                side, effect, new, ..
+            } => self.side_mut(*side).effects[*effect as usize] = *new,
+            Instruction::UseGimmick { side, gimmick } => {
+                let used = &mut self.side_mut(*side).gimmicks_used;
+                debug_assert!(!gimmick.is_none() && !used.contains(*gimmick));
+                *used = used.with(*gimmick);
             }
         }
     }
@@ -64,14 +98,20 @@ impl<const N: usize> State<N> {
         match instruction {
             Instruction::Damage { target, amount } => self.active_hp_mut(*target, *amount),
             Instruction::Heal { target, amount } => self.active_hp_mut(*target, -amount),
-            Instruction::Boost { target, stat, amount } => {
-                self.slot_mut(*target).boosts[*stat as usize] -= amount
-            }
+            Instruction::Boost {
+                target,
+                stat,
+                amount,
+            } => self.slot_mut(*target).boosts[*stat as usize] -= amount,
             Instruction::ChangeStatus { target, old, .. } => self.set_status(*target, *old),
             Instruction::Switch { slot, previous, .. } => *self.slot_mut(*slot) = previous.clone(),
             Instruction::SetField { effect, old, .. } => self.field[*effect as usize] = *old,
-            Instruction::SetSideEffect { side, effect, old, .. } => {
-                self.side_mut(*side).effects[*effect as usize] = *old
+            Instruction::SetSideEffect {
+                side, effect, old, ..
+            } => self.side_mut(*side).effects[*effect as usize] = *old,
+            Instruction::UseGimmick { side, gimmick } => {
+                let used = &mut self.side_mut(*side).gimmicks_used;
+                *used = used.without(*gimmick);
             }
         }
     }
@@ -94,13 +134,14 @@ impl<const N: usize> State<N> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::dex::SpeciesId;
     use crate::field::Weather;
 
     fn doubles_with_leads() -> State<2> {
         let mut state = State::<2>::default();
         for side in [SideId::One, SideId::Two] {
             for (i, pokemon) in state.side_mut(side).party.iter_mut().enumerate() {
-                pokemon.species = i as u16 + 1;
+                pokemon.species = SpeciesId(i as u16 + 1);
                 pokemon.max_hp = 200;
                 pokemon.hp = 200;
             }
@@ -115,8 +156,14 @@ mod tests {
     fn apply_then_reverse_restores_state() {
         let original = doubles_with_leads();
         let mut state = original.clone();
-        let foe = SlotRef { side: SideId::Two, slot: 1 };
-        let me = SlotRef { side: SideId::One, slot: 0 };
+        let foe = SlotRef {
+            side: SideId::Two,
+            slot: 1,
+        };
+        let me = SlotRef {
+            side: SideId::One,
+            slot: 0,
+        };
         let mut boosted = Slot {
             party_index: Some(0),
             ..Slot::default()
@@ -124,24 +171,51 @@ mod tests {
         boosted.boosts[0] = 2;
 
         let instructions = vec![
-            Instruction::Damage { target: foe, amount: 120 },
-            Instruction::Boost { target: me, stat: 0, amount: 2 },
-            Instruction::ChangeStatus { target: foe, old: Status::None, new: Status::Sleep },
-            Instruction::Switch { slot: me, previous: boosted, party_index: Some(3) },
+            Instruction::Damage {
+                target: foe,
+                amount: 120,
+            },
+            Instruction::Boost {
+                target: me,
+                stat: 0,
+                amount: 2,
+            },
+            Instruction::ChangeStatus {
+                target: foe,
+                old: Status::None,
+                new: Status::Sleep,
+            },
+            Instruction::Switch {
+                slot: me,
+                previous: boosted,
+                party_index: Some(3),
+            },
             Instruction::SetField {
                 effect: FieldEffect::Weather,
                 old: Effect::NONE,
-                new: Effect { value: Weather::Sand as u8, turns: 5 },
+                new: Effect {
+                    value: Weather::Sand as u8,
+                    turns: 5,
+                },
             },
             Instruction::SetField {
                 effect: FieldEffect::Gravity,
                 old: Effect::NONE,
                 new: Effect { value: 0, turns: 5 },
             },
+            Instruction::UseGimmick {
+                side: SideId::One,
+                gimmick: Gimmick::Mega,
+            },
         ];
 
         state.apply(&instructions);
         assert_eq!(state.active(foe).unwrap().hp, 80);
+        assert!(state
+            .side(SideId::One)
+            .gimmicks_used
+            .contains(Gimmick::Mega));
+        assert!(state.side(SideId::Two).gimmicks_used.is_empty());
         assert_eq!(state.slot(me).party_index, Some(3));
         assert!(state.field[FieldEffect::Gravity as usize].is_active());
 

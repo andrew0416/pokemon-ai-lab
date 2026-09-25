@@ -1,0 +1,38 @@
+[
+ {
+  "species": "Tyranitar",
+  "item": "Leftovers",
+  "ability": "Sand Stream",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "spd": 2
+  },
+  "moves": [
+   "Rock Slide",
+   "Knock Off",
+   "Protect",
+   "Low Kick"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Excadrill",
+  "item": "Life Orb",
+  "ability": "Sand Rush",
+  "nature": "Jolly",
+  "evs": {
+   "hp": 2,
+   "atk": 32,
+   "spe": 32
+  },
+  "moves": [
+   "High Horsepower",
+   "Iron Head",
+   "Protect",
+   "Rock Slide"
+  ],
+  "level": 50
+ }
+]

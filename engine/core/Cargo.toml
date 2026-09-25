@@ -10,3 +10,7 @@ name = "lab_engine"
 path = "src/lib.rs"
 
 [dependencies]
+
+[[bench]]
+name = "damage"
+harness = false

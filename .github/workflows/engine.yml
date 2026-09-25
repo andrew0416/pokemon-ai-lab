@@ -37,10 +37,13 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: engine
+      # core/src/dex/generated.rs must match engine/data/champions.json.
+      - run: node data/gen-rust.cjs --check
       - run: cargo fmt --all --check
-      - run: cargo clippy -p lab-engine --all-targets
+      - run: cargo clippy -p lab-engine -p lab-scenario --all-targets -- -D warnings
       # The py crate is a cdylib with extension-module; it is built by the wheels job.
-      - run: cargo test -p lab-engine --release
+      # lab-scenario's tests read engine/oracle/scenarios and teams/gravity-original.json.
+      - run: cargo test -p lab-engine -p lab-scenario --release
 
   wheels:
     name: lab-engine wheel (${{ matrix.os }})

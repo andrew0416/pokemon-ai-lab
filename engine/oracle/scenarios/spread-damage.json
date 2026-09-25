@@ -1,0 +1,7 @@
+{
+ "description": "No protection: Gardevoir Hyper Voice (spread) + Rillaboom Grassy Glide into Tyranitar; Tyranitar Rock Slide (spread, flinch), Excadrill High Horsepower into Rillaboom.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "hypnosis-gravity.p1.json", "order": "12"},
+ "p2": {"team": "hypnosis-gravity.p2.json", "order": "12"},
+ "turn": {"p1": "move hypervoice, move grassyglide 1", "p2": "move rockslide, move highhorsepower 2"}
+}

@@ -1,0 +1,23 @@
+{
+ "description": "Gravity up; Gardevoir Hypnosis into Tyranitar while Rillaboom Fake Outs Excadrill. Tyranitar Rock Slides (spread), Excadrill Protects.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "hypnosis-gravity.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "hypnosis-gravity.p2.json",
+  "order": "12"
+ },
+ "patch": {
+  "field": {
+   "pseudoWeather": {
+    "gravity": 4
+   }
+  }
+ },
+ "turn": {
+  "p1": "move hypnosis 1, move fakeout 2",
+  "p2": "move rockslide, move protect"
+ }
+}

@@ -1,0 +1,16 @@
+[package]
+name = "lab-scenario"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Loads oracle scenario/team JSON into lab-engine states (off the search hot path)."
+
+[lib]
+name = "lab_scenario"
+path = "src/lib.rs"
+
+# serde lives here, not in lab-engine: the search crate stays dependency-free.
+[dependencies]
+lab-engine = { path = "../core" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

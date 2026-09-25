@@ -1,0 +1,38 @@
+[
+ {
+  "species": "Gardevoir",
+  "item": "Focus Sash",
+  "ability": "Trace",
+  "nature": "Modest",
+  "evs": {
+   "hp": 2,
+   "spa": 32,
+   "spe": 32
+  },
+  "moves": [
+   "Hypnosis",
+   "Hyper Voice",
+   "Protect",
+   "Focus Blast"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Rillaboom",
+  "item": "Miracle Seed",
+  "ability": "Grassy Surge",
+  "nature": "Brave",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "def": 2
+  },
+  "moves": [
+   "Fake Out",
+   "Grassy Glide",
+   "Wood Hammer",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

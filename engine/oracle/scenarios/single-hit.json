@@ -1,0 +1,7 @@
+{
+ "description": "One attack: Rillaboom Grassy Glide into Tyranitar (sand, Grassy Terrain priority). Everyone else Protects.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "hypnosis-gravity.p1.json", "order": "12"},
+ "p2": {"team": "hypnosis-gravity.p2.json", "order": "12"},
+ "turn": {"p1": "move protect, move grassyglide 1", "p2": "move lowkick 2, move protect"}
+}

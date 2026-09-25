@@ -6,12 +6,20 @@
 //!
 //! Search works by make/unmake: a turn produces weighted outcomes, each a list of reversible
 //! [`instruction::Instruction`]s that are applied on the way down and reversed on the way up.
+//!
+//! Format rules that restrict what the engine can represent (e.g. which gimmicks a
+//! regulation enables) live in [`rules::Ruleset`], not in the state types.
 
 pub mod action;
+pub mod damage;
+pub mod dex;
 pub mod eval;
 pub mod field;
+pub mod gimmick;
 pub mod instruction;
+pub mod rules;
 pub mod state;
+pub mod stats;
 
 pub type Singles = state::State<1>;
 pub type Doubles = state::State<2>;
