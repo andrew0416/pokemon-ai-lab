@@ -1,0 +1,90 @@
+{
+ "description": "Togekiss' After You lets its slow partner Bronzong act next: Bronzong's Hypnosis reaches Tyranitar before Tyranitar's Stone Edge (Tyranitar would otherwise move first). Excadrill Protects.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Togekiss",
+    "item": "Leftovers",
+    "ability": "Hustle",
+    "nature": "Timid",
+    "evs": {
+     "hp": 32,
+     "spa": 2,
+     "spe": 32
+    },
+    "moves": [
+     "After You",
+     "Air Slash",
+     "Dazzling Gleam",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Bronzong",
+    "item": "Leftovers",
+    "ability": "Levitate",
+    "nature": "Sassy",
+    "evs": {
+     "hp": 32,
+     "spd": 32,
+     "def": 2
+    },
+    "moves": [
+     "Hypnosis",
+     "Gyro Ball",
+     "Iron Head",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Tyranitar",
+    "item": "Leftovers",
+    "ability": "Sand Stream",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 2,
+     "spe": 32
+    },
+    "moves": [
+     "Stone Edge",
+     "Rock Slide",
+     "Crunch",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Excadrill",
+    "item": "Leftovers",
+    "ability": "Sand Rush",
+    "nature": "Jolly",
+    "evs": {
+     "hp": 4,
+     "atk": 30,
+     "spe": 32
+    },
+    "moves": [
+     "Iron Head",
+     "High Horsepower",
+     "Rock Slide",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move afteryou -2, move hypnosis 1",
+  "p2": "move stoneedge 2, move protect"
+ }
+}

@@ -47,6 +47,8 @@ pub(crate) struct Battle<'a, const N: usize> {
     faint_queue: Vec<(PokemonRef, SlotRef)>,
     /// The move in progress, if any (cleared when `runMove` ends).
     pub active_move: Option<ActiveMoveRef>,
+    /// The actions of the turn not yet run (Showdown `queue.list`), see `queue.rs`.
+    pub queue: Vec<super::queue::Action>,
 }
 
 impl<'a, const N: usize> Battle<'a, N> {
@@ -57,6 +59,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             rng,
             faint_queue: Vec::new(),
             active_move: None,
+            queue: Vec::new(),
         }
     }
 

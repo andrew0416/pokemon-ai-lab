@@ -1,0 +1,90 @@
+{
+ "description": "Sableye's Prankster Quash sends Rillaboom's Grassy Glide (+1 on Grassy Terrain) to the back of the turn, so Tyranitar's Stone Edge hits Rillaboom first. Excadrill Protects.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Rillaboom",
+    "item": "Miracle Seed",
+    "ability": "Grassy Surge",
+    "nature": "Brave",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Grassy Glide",
+     "Wood Hammer",
+     "Fake Out",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Excadrill",
+    "item": "Leftovers",
+    "ability": "Sand Rush",
+    "nature": "Jolly",
+    "evs": {
+     "hp": 4,
+     "atk": 30,
+     "spe": 32
+    },
+    "moves": [
+     "Iron Head",
+     "High Horsepower",
+     "Rock Slide",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Sableye",
+    "item": "Leftovers",
+    "ability": "Prankster",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Quash",
+     "Will-O-Wisp",
+     "Recover",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Tyranitar",
+    "item": "Leftovers",
+    "ability": "Sand Stream",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 2,
+     "spe": 32
+    },
+    "moves": [
+     "Stone Edge",
+     "Rock Slide",
+     "Crunch",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move grassyglide 2, move protect",
+  "p2": "move quash 1, move stoneedge 1"
+ }
+}

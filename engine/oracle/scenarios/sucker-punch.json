@@ -1,0 +1,90 @@
+{
+ "description": "Kingambit's Sucker Punch hits Tyranitar, which still has Stone Edge queued; Raichu's Thunderclap fails against Excadrill, which chose Protect. Stone Edge then hits Kingambit.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Kingambit",
+    "item": "Leftovers",
+    "ability": "Defiant",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Sucker Punch",
+     "Kowtow Cleave",
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Raichu",
+    "item": "Life Orb",
+    "ability": "Lightning Rod",
+    "nature": "Timid",
+    "evs": {
+     "hp": 2,
+     "spa": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Thunderclap",
+     "Thunderbolt",
+     "Nasty Plot",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Tyranitar",
+    "item": "Leftovers",
+    "ability": "Sand Stream",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 2,
+     "spe": 32
+    },
+    "moves": [
+     "Stone Edge",
+     "Rock Slide",
+     "Crunch",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Excadrill",
+    "item": "Leftovers",
+    "ability": "Sand Rush",
+    "nature": "Jolly",
+    "evs": {
+     "hp": 4,
+     "atk": 30,
+     "spe": 32
+    },
+    "moves": [
+     "Iron Head",
+     "High Horsepower",
+     "Rock Slide",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move suckerpunch 1, move thunderclap 2",
+  "p2": "move stoneedge 1, move protect"
+ }
+}

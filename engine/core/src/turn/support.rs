@@ -29,6 +29,12 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         ],
     ),
     (moves::DETECT, &["onHit", "onPrepareHit"]),
+    // Queue readers (`queue.rs`).
+    (moves::SUCKER_PUNCH, &["onTry"]),
+    (moves::THUNDERCLAP, &["onTry"]),
+    (moves::UPPER_HAND, &["onTry"]),
+    (moves::QUASH, &["onHit"]),
+    (moves::AFTER_YOU, &["onHit"]),
     (
         moves::FOLLOW_ME,
         &[

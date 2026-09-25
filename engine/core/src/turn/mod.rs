@@ -22,6 +22,7 @@ mod diff;
 mod mega;
 mod moves;
 mod order;
+mod queue;
 mod residual;
 mod support;
 mod switching;
@@ -42,6 +43,7 @@ use crate::state::{PokemonRef, SideId, SlotRef, State};
 use battle::Battle;
 use branch::Chooser;
 use order::{ORDER_MEGA, ORDER_MOVE, ORDER_SWITCH};
+use queue::{Action, ActionKind};
 
 pub use moves::{takes_target, valid_target_loc};
 pub use switching::{
@@ -533,28 +535,6 @@ fn disabled<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> Opti
     None
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-struct Action {
-    slot: SlotRef,
-    pokemon: PokemonRef,
-    kind: ActionKind,
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-enum ActionKind {
-    Move {
-        index: u8,
-        target: i8,
-        /// Showdown `action.fractionalPriority`, fixed when the action is queued.
-        fractional_tenths: i8,
-    },
-    Switch {
-        party_index: u8,
-    },
-    /// Showdown `megaEvo`, queued before the Pokémon's move.
-    Mega,
-}
-
 /// The rest of a turn between stages: the actions not yet run and whether the turn is over.
 /// (Fainted Pokémon still holding a position are in the state: `Slot::fainted_occupant`.)
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
@@ -597,7 +577,7 @@ impl<const N: usize> Battle<'_, N> {
                 spe
             }
         };
-        (order, priority, speed)
+        (action.order.unwrap_or(order), priority, speed)
     }
 }
 
@@ -625,6 +605,7 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
                             slot,
                             pokemon,
                             kind: ActionKind::Mega,
+                            order: None,
                         });
                     }
                     ActionKind::Move {
@@ -641,6 +622,7 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
                 slot,
                 pokemon,
                 kind,
+                order: None,
             });
         }
     }
@@ -653,24 +635,34 @@ fn run_stage<const N: usize>(
     b: &mut Battle<'_, N>,
     pending: &mut Pending,
 ) -> Result<(), TurnError> {
-    let queue = &mut pending.queue;
-    if !queue.is_empty() {
+    // The remaining queue is visible to handlers through the Battle while the stage runs.
+    b.queue = std::mem::take(&mut pending.queue);
+    let result = run_stage_inner(b, pending);
+    pending.queue = std::mem::take(&mut b.queue);
+    result
+}
+
+fn run_stage_inner<const N: usize>(
+    b: &mut Battle<'_, N>,
+    pending: &mut Pending,
+) -> Result<(), TurnError> {
+    if !b.queue.is_empty() {
         // Best action by (order asc, priority desc, speed desc), ties uniformly at random.
-        let keys: Vec<(u32, i32, i32)> = queue.iter().map(|a| b.action_key(a)).collect();
+        let keys: Vec<(u32, i32, i32)> = b.queue.iter().map(|a| b.action_key(a)).collect();
         let best = keys
             .iter()
             .copied()
             .min_by(|x, y| x.0.cmp(&y.0).then(y.1.cmp(&x.1)).then(y.2.cmp(&x.2)))
             .expect("non-empty");
-        let tied: Vec<usize> = (0..queue.len()).filter(|&i| keys[i] == best).collect();
+        let tied: Vec<usize> = (0..b.queue.len()).filter(|&i| keys[i] == best).collect();
         let pick = tied[b.rng.uniform(tied.len())];
-        let action = queue.remove(pick);
+        let action = b.queue.remove(pick);
 
         // `runAction` skips a Pokémon that is no longer active or has fainted.
         if b.alive(action.slot) == Some(action.pokemon) {
             match action.kind {
                 ActionKind::Move { index, target, .. } => {
-                    let will_act = !queue.is_empty();
+                    let will_act = b.will_act();
                     moves::run_move(b, action.slot, index, target, will_act)?;
                 }
                 ActionKind::Switch { party_index } => {
@@ -682,7 +674,7 @@ fn run_stage<const N: usize>(
             }
             if b.faint_messages(true) {
                 pending.done = true;
-                queue.clear();
+                b.queue.clear();
             } else {
                 // `eachEvent('Update')` after every action.
                 update::update_event(b)?;

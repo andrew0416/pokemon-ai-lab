@@ -586,6 +586,19 @@ fn try_spread_move_hit<const N: usize>(
     mv.spread = targets.len() > 1;
 
     // Try: the move's onTry (Fake Out, First Impression, Poltergeist), on the first target.
+    // Sucker Punch / Thunderclap / Upper Hand `onTry`: the target must still have an attack
+    // queued (Upper Hand: a priority move above +0.1).
+    if [moves::SUCKER_PUNCH, moves::THUNDERCLAP, moves::UPPER_HAND].contains(&mv.id) {
+        let ok = match b.queued_move(targets[0]) {
+            Some((_, category, priority)) => {
+                category != MoveCategory::Status && (mv.id != moves::UPPER_HAND || priority > 1)
+            }
+            None => false,
+        };
+        if !ok {
+            return Ok(false);
+        }
+    }
     if !handlers::on_try(b, user, mv, targets[0]) {
         return Ok(false);
     }
@@ -909,6 +922,24 @@ fn spread_move_hit<const N: usize>(
         // Protect / Detect `onHit`: the stall counter.
         if data.stalling_move {
             b.add_volatile(t, Volatile::Stall);
+        }
+        // Quash / After You `onHit`: reorder the target's pending move (fail in singles or
+        // without one).
+        if mv.id == moves::QUASH || mv.id == moves::AFTER_YOU {
+            match b.will_move(t).filter(|_| N > 1) {
+                Some(index) if mv.id == moves::QUASH => {
+                    b.quash_action(index);
+                    note(true);
+                }
+                Some(index) => {
+                    b.prioritize_action(index);
+                    note(true);
+                }
+                None => {
+                    results[i] = Hit::Failed;
+                    continue;
+                }
+            }
         }
         // The move's own onHit; NOT_FAIL neither succeeds nor fails.
         match handlers::on_hit(b, user, t, mv)? {
