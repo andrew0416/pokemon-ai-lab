@@ -926,6 +926,41 @@ pub(super) fn charge_try_move<const N: usize>(
     false
 }
 
+/// The move's own `onTryMove` of moves that stop with `null` (not a failure: `useMove` leaves
+/// `moveThisTurnResult` `null`). Double Shock: `if (pokemon.hasType('Electric')) return;`,
+/// otherwise `-fail` and `return null`. `false` = the move stops here.
+pub(super) fn null_try_move<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> bool {
+    mv.id != moves::DOUBLE_SHOCK || b.has_type(user, Type::Electric)
+}
+
+/// The move's `self.onHit` (`selfDrops` → `moveHit(source, source, move, move.self)`, once per
+/// target the move did not fail on). Double Shock: `pokemon.setType(pokemon.getTypes(true).map(
+/// type => type === "Electric" ? "???" : type))` (Arceus and Silvally keep their types:
+/// `setType` refuses).
+pub(super) fn self_on_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
+    if mv.id != moves::DOUBLE_SHOCK {
+        return;
+    }
+    let Some(mon) = b.slot_mon(user) else {
+        return;
+    };
+    if [493, 773].contains(&mon.species.data().num) {
+        return;
+    }
+    let types = mon.types.map(|t| {
+        if t == Type::Electric {
+            Type::Unknown
+        } else {
+            t
+        }
+    });
+    set_types(b, user, types);
+}
+
 /// `hitStepInvulnerabilityEvent` for one target: a semi-invulnerable target is not hit unless
 /// the move is one its state lets through, No Guard (`onAnyInvulnerability`, priority 1) is the
 /// user's or the target's ability, or the move is Toxic from a Poison type.
@@ -1270,7 +1305,8 @@ pub(super) fn on_hit<const N: usize>(
         }
         // Reflect Type: fails for Arceus and Silvally users; the user takes the target's types
         // (`getTypes(true)`: without an added type, which the engine never has; Roost's filter
-        // is already in the stored types), `setType` then clears the user's added type.
+        // is already in the stored types) without `???` (`filter(type => type !== '???')`),
+        // failing if none is left; `setType` then clears the user's added type.
         moves::REFLECT_TYPE => {
             let Some(mon) = b.slot_mon(user) else {
                 return Ok(Some(HitResult::Failure));
@@ -1279,6 +1315,13 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::Failure
             } else {
                 let types = b.slot_mon(target).map_or([Type::None; 2], |m| m.types);
+                let mut kept = types
+                    .into_iter()
+                    .filter(|&t| t != Type::Unknown && t != Type::None);
+                let types = [
+                    kept.next().unwrap_or(Type::None),
+                    kept.next().unwrap_or(Type::None),
+                ];
                 if types[0] == Type::None {
                     HitResult::Failure
                 } else {

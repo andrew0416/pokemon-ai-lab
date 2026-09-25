@@ -503,9 +503,11 @@ pub fn encode_types(types: [Type; 2]) -> u16 {
 
 /// The types [`encode_types`] stored.
 pub fn decode_types(counter: u16) -> [Type; 2] {
+    // `Type::ALL` plus Double Shock's `???` (`Type::Unknown`, not in `ALL`).
     let decode = |v: u16| {
         Type::ALL
             .into_iter()
+            .chain([Type::Unknown])
             .find(|&t| u16::from(t as u8) == v)
             .unwrap_or(Type::None)
     };
@@ -721,6 +723,7 @@ mod tests {
             [Type::Normal, Type::Flying],
             [Type::Steel, Type::Flying],
             [Type::Water, Type::Stellar],
+            [Type::Unknown, Type::Flying],
         ] {
             assert_eq!(decode_types(encode_types(types)), types);
             assert_ne!(encode_types(types), 0);

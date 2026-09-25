@@ -400,6 +400,9 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "onTryHit",
         ],
     ),
+    // Double Shock: `onTryMove` (`handlers::null_try_move`: no Electric type, `null`) and
+    // `self.onHit` (`handlers::self_on_hit`: Electric becomes `???`, `Type::Unknown`).
+    (moves::DOUBLE_SHOCK, &["onTryMove", "self.onHit"]),
     // Belly Drum `onHit`; Clangorous Soul and Fillet Away: `onTry` (HP), `onTryHit` (the boosts,
     // then deleted: `handlers::boosts_applied_in_try_hit`), `onHit` (the HP cost); No Retreat:
     // `onTry`, the volatile's `onTrapPokemon` in `conditions::trapped` (`onStart` only logs).

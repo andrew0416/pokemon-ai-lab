@@ -881,6 +881,14 @@ fn use_move<const N: usize>(
         b.finish_move_result(user, false);
         return Ok(None);
     }
+    // Double Shock's TryMove returns `null`: the move stops, and `useMove` stores that `null`
+    // as the move's result (no failure for Stomping Tantrum).
+    if !handlers::null_try_move(b, user, mv) {
+        if b.slot_history(user).move_this_turn_result == MoveResult::Undefined {
+            b.set_move_result(user, MoveResult::Null);
+        }
+        return Ok(None);
+    }
     // TryMove: Dazzling, Queenly Majesty, Armor Tail (`onFoeTryMove`).
     let try_move_target = targets.last().copied().unwrap_or(target);
     if !ability_hooks::on_try_move(b, user, mv, try_move_target) {
@@ -2019,6 +2027,11 @@ fn spread_move_hit<const N: usize>(
                 if b.add_volatile_from(user, volatile, mv.id) && volatile == Volatile::Roost {
                     conditions::roost_start(b, user);
                 }
+            }
+        } else {
+            // A `self` effect with only an `onHit` (Double Shock).
+            for _ in results.iter().filter(|r| r.in_targets()) {
+                handlers::self_on_hit(b, user, mv);
             }
         }
     }

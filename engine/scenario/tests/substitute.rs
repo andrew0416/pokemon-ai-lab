@@ -1,5 +1,6 @@
 //! Substitute (WORKPLAN F11): the move, the volatile with its HP (`Slot::substitute_hp`,
-//! canonical `volatiles.substitute.hp`) and the substitute's `onTryPrimaryHit` routing. Each
+//! canonical `volatiles.substitute.hp`) and the substitute's `onTryPrimaryHit` routing; and
+//! Double Shock with Showdown's `???` type (`Type::Unknown`), from the same session. Each
 //! scenario's exact outcome distribution must equal its oracle fixture
 //! (`engine/oracle/expected/<name>.turn.json`).
 
@@ -74,4 +75,12 @@ fn substitute_bypass() {
 #[test]
 fn substitute_stopped_move_is_no_failure() {
     assert_exact_parity("substitute-blocked-result");
+}
+
+/// Double Shock turns the user's Electric type into `???` (neutral both ways, no paralysis
+/// immunity; canonical `???` / `???/Flying`) and fails with `null` without an Electric type
+/// (Stomping Tantrum next turn is not doubled).
+#[test]
+fn double_shock_leaves_unknown_type() {
+    assert_exact_parity("double-shock");
 }

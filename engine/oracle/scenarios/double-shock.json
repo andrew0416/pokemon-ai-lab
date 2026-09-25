@@ -1,0 +1,26 @@
+{
+ "description": "Double Shock: in the setup turn Jolteon's Double Shock hits Blissey and Jolteon's Electric type becomes `???` (`self.onHit`); Blissey's own Double Shock fails without an Electric type (`onTryMove` returns null). In the scenario turn Jolteon's second Double Shock fails; Zapdos's hits Snorlax and leaves it `???/Flying`; Blissey's Stomping Tantrum keeps its base power (a `null` last turn is no failure) and is neutral on the `???` Jolteon; Snorlax's Thunder Wave can paralyze Jolteon, no longer Electric.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Jolteon", "item": "", "ability": "Honey Gather", "nature": "Hardy",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Double Shock", "Harden"], "level": 50},
+   {"species": "Zapdos", "item": "", "ability": "Honey Gather", "nature": "Hardy",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Double Shock", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Double Shock", "Stomping Tantrum"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Thunder Wave", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move doubleshock 1, move harden", "move doubleshock 1, move harden"]
+ ],
+ "turn": {"p1": "move doubleshock 1, move doubleshock 2", "p2": "move stompingtantrum 1, move thunderwave 1"}
+}
