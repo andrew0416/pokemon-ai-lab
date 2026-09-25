@@ -30,13 +30,18 @@ pub enum Volatile {
     /// `SetTypes` and keeps the types from before in `counter` ([`encode_types`]; 0 = nothing
     /// was removed) to restore them when Roost ends.
     Roost,
+    /// Yawn: the holder falls asleep when it ends (duration 2, residual order 23).
+    Yawn,
+    /// Perish Song's count (duration 4, residual order 24): the holder faints when it ends.
+    /// Showdown adds it by name in the move's `onHitField`, so the dex has no condition id.
+    PerishSong,
     /// Not a Showdown volatile: Protean's / Libero's `abilityState.protean` / `.libero` flag
     /// (the type already changed since switching in). No duration; hidden in the canonical
     /// state.
     ProteanUsed,
 }
 
-pub const VOLATILE_COUNT: usize = 8;
+pub const VOLATILE_COUNT: usize = 10;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -47,6 +52,8 @@ impl Volatile {
         Volatile::RagePowder,
         Volatile::Spotlight,
         Volatile::Roost,
+        Volatile::Yawn,
+        Volatile::PerishSong,
         Volatile::ProteanUsed,
     ];
 
@@ -60,7 +67,8 @@ impl Volatile {
             Volatile::RagePowder => conditions::RAGEPOWDER,
             Volatile::Spotlight => conditions::SPOTLIGHT,
             Volatile::Roost => conditions::ROOST,
-            Volatile::ProteanUsed => ConditionId::NONE,
+            Volatile::Yawn => conditions::YAWN,
+            Volatile::PerishSong | Volatile::ProteanUsed => ConditionId::NONE,
         }
     }
 
@@ -74,6 +82,8 @@ impl Volatile {
             Volatile::RagePowder => "ragepowder",
             Volatile::Spotlight => "spotlight",
             Volatile::Roost => "roost",
+            Volatile::Yawn => "yawn",
+            Volatile::PerishSong => "perishsong",
             Volatile::ProteanUsed => "protean",
         }
     }
@@ -97,7 +107,8 @@ impl Volatile {
             | Volatile::RagePowder
             | Volatile::Spotlight
             | Volatile::Roost => 1,
-            Volatile::Stall => 2,
+            Volatile::Stall | Volatile::Yawn => 2,
+            Volatile::PerishSong => 4,
             Volatile::ProteanUsed => 0,
         }
     }
@@ -106,6 +117,8 @@ impl Volatile {
     /// handler). Its duration is counted down by that residual handler.
     pub fn residual_order(self) -> Option<u32> {
         match self {
+            Volatile::Yawn => Some(23),
+            Volatile::PerishSong => Some(24),
             Volatile::Roost => Some(25),
             _ => None,
         }
@@ -197,24 +210,41 @@ mod tests {
     fn ids_match_the_dex_conditions() {
         for v in Volatile::ALL {
             if v.condition().is_none() {
-                assert_eq!(v.showdown_state(VolatileState::NONE), None, "{v:?}");
+                // Only kinds the dex never names: Perish Song (added by name) and engine state.
+                assert!(matches!(v, Volatile::PerishSong | Volatile::ProteanUsed));
                 continue;
             }
             assert_eq!(v.condition().id(), v.id());
             assert_eq!(Volatile::from_condition(v.condition()), Some(v));
         }
         assert_eq!(Volatile::from_condition(ConditionId::NONE), None);
+        assert_eq!(
+            Volatile::ProteanUsed.showdown_state(VolatileState::NONE),
+            None
+        );
     }
 
-    /// Durations and residual orders are the dex's (`condition.duration` of the move).
+    /// Durations and residual orders are the dex's (the move's `condition`).
     #[test]
     fn durations_and_residual_orders_match_the_moves() {
-        let roost = moves::ROOST.data();
-        assert_eq!(roost.condition_duration, Volatile::Roost.initial_duration());
-        assert!(roost
-            .event_orders
-            .contains(&("condition.onResidualOrder", 25)));
-        assert_eq!(Volatile::Roost.residual_order(), Some(25));
+        for (volatile, id) in [
+            (Volatile::Roost, moves::ROOST),
+            (Volatile::Yawn, moves::YAWN),
+            (Volatile::PerishSong, moves::PERISH_SONG),
+        ] {
+            let data = id.data();
+            assert_eq!(
+                data.condition_duration,
+                volatile.initial_duration(),
+                "{id:?}"
+            );
+            let order = volatile.residual_order().expect("ordered") as i16;
+            assert!(
+                data.event_orders
+                    .contains(&("condition.onResidualOrder", order)),
+                "{id:?}"
+            );
+        }
     }
 
     #[test]

@@ -73,6 +73,16 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // `condition.onStart` only fails for a Terastallized user; `onType` is applied as a type
     // change (`conditions::roost_start`, undone when the volatile ends).
     (moves::ROOST, &["condition.onStart", "condition.onType"]),
+    // `condition.onStart` only logs; `onEnd` in `conditions::volatile_end`.
+    (
+        moves::YAWN,
+        &["condition.onEnd", "condition.onStart", "onTryHit"],
+    ),
+    // `condition.onResidual` only announces the count; `onEnd` faints the holder.
+    (
+        moves::PERISH_SONG,
+        &["condition.onEnd", "condition.onResidual", "onHitField"],
+    ),
     (moves::RISING_VOLTAGE, &["basePowerCallback"]),
     (moves::PSYBLADE, &["onBasePower"]),
     (moves::BLIZZARD, &["onModifyMove"]),
@@ -315,7 +325,7 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
             "onUpdate",
         ],
     ),
-    // `onTryAddVolatile` only reacts to Yawn, which no supported move adds.
+    // `onTryAddVolatile` only reacts to Yawn (`Battle::add_volatile_blocked`).
     (
         abilities::PURIFYING_SALT,
         &[
@@ -680,10 +690,14 @@ mod tests {
         }
     }
 
-    /// Purifying Salt's `onTryAddVolatile` only blocks Yawn, which the engine cannot add.
+    /// Purifying Salt's `onTryAddVolatile` only blocks Yawn, which `Battle::add_volatile_blocked`
+    /// implements now that Yawn is a volatile.
     #[test]
-    fn yawn_is_not_a_supported_volatile() {
-        assert!(Volatile::from_condition(crate::dex::conditions::YAWN).is_none());
+    fn yawn_is_a_supported_volatile() {
+        assert_eq!(
+            Volatile::from_condition(crate::dex::conditions::YAWN),
+            Some(Volatile::Yawn)
+        );
     }
 
     #[test]

@@ -9,6 +9,7 @@ use crate::dex::{abilities, items, moves, ItemId, MoveId, MoveTarget, Type, Type
 use crate::field::{FieldEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{Pokemon, SideId, SlotRef, Status, BOOST_COUNT};
+use crate::volatile::Volatile;
 
 use super::super::battle::Battle;
 use super::super::order::modify;
@@ -171,13 +172,20 @@ pub(super) fn on_try_hit<const N: usize>(
     target: SlotRef,
     mv: &mut ActiveMove,
 ) -> bool {
-    // Pollen Puff: `if (source.isAlly(target)) { move.basePower = 0; move.infiltrates = true; }`
-    // (`infiltrates` only matters against a substitute).
-    if mv.id == moves::POLLEN_PUFF && target.side == user.side {
-        mv.base_power = 0;
+    match mv.id {
+        // Pollen Puff: `if (source.isAlly(target)) { move.basePower = 0; move.infiltrates =
+        // true; }` (`infiltrates` only matters against a substitute).
+        moves::POLLEN_PUFF => {
+            if target.side == user.side {
+                mv.base_power = 0;
+            }
+            true
+        }
+        // Yawn: `if (target.status || !target.runStatusImmunity('slp')) return false;` (no type
+        // or implemented `Immunity` handler covers sleep).
+        moves::YAWN => b.slot_mon(target).is_some_and(|m| m.status == Status::None),
+        _ => true,
     }
-    let _ = b;
-    true
 }
 
 /// The move's `onAfterHit`, once per damaged target (`spreadMoveHit`, after `DamagingHit`).
@@ -406,8 +414,33 @@ fn holds_freely(item: ItemId, holder: &Pokemon) -> bool {
 }
 
 /// The move's `onHitField` (moves targeting the whole field). `None` = none.
-pub(super) fn on_hit_field<const N: usize>(b: &mut Battle<'_, N>, mv: &ActiveMove) -> Option<bool> {
+pub(super) fn on_hit_field<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Option<bool> {
     match mv.id {
+        // Perish Song: every active Pokémon (side one first, slot order) gets the `perishsong`
+        // volatile unless `runEvent('TryHit')` returns `null` for it (it still counts as a
+        // success) or it already has one; fails when nobody was affected. No semi-invulnerable
+        // state exists (`Invulnerability`).
+        moves::PERISH_SONG => {
+            let mut result = false;
+            for side in [SideId::One, SideId::Two] {
+                for slot in Battle::<N>::slots(side) {
+                    if b.alive(slot).is_none() {
+                        continue;
+                    }
+                    if perish_song_try_hit_null(b, user, mv, slot) {
+                        result = true;
+                    } else if !b.volatile(slot, Volatile::PerishSong).active {
+                        b.add_volatile(slot, Volatile::PerishSong);
+                        result = true;
+                    }
+                }
+            }
+            Some(result)
+        }
         // Haze: `for (const pokemon of this.getAllActive()) pokemon.clearBoosts();`
         moves::HAZE => {
             for side in [SideId::One, SideId::Two] {
@@ -421,6 +454,24 @@ pub(super) fn on_hit_field<const N: usize>(b: &mut Battle<'_, N>, mv: &ActiveMov
         }
         _ => None,
     }
+}
+
+/// Whether a `TryHit` handler returns `null` for Perish Song on `target` (only `null` spares
+/// it; `false`, e.g. Good as Gold, does not): Psychic Terrain against a Prankster-boosted
+/// Perish Song on a grounded foe, and Soundproof (breakable) on anyone but the user. Any other
+/// `null`-returning TryHit handler added later must be listed here.
+fn perish_song_try_hit_null<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    let psychic_terrain = b.terrain() == Terrain::Psychic
+        && mv.priority > 0
+        && target.side != user.side
+        && b.is_grounded(target);
+    let soundproof = target != user && b.ability_unless_broken(target) == abilities::SOUNDPROOF;
+    psychic_terrain || soundproof
 }
 
 /// Showdown `clearBoosts`.

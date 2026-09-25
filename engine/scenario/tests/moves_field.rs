@@ -80,3 +80,13 @@ fn o69_protean_and_libero_change_type_before_the_hit() {
 fn o69_protean_and_libero_act_once_per_switch_in() {
     assert_exact_parity("o69-protean-once");
 }
+
+#[test]
+fn o20_yawn_puts_to_sleep_at_the_end_of_the_next_turn() {
+    assert_exact_parity("o20-yawn");
+}
+
+#[test]
+fn o19_perish_song_faints_everyone_and_the_last_faint_wins() {
+    assert_exact_parity("o19-perish-song");
+}

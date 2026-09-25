@@ -1,0 +1,29 @@
+{
+ "description": "O20 Yawn. Setup turn: Snorlax's Electric Surge terrain blocks Blissey's Yawn on grounded Snorlax; Clefable's Yawn lands on Corviknight (Flying). This turn: Snorlax's Yawn fails on burned Clefable (onTryHit), Corviknight's Yawn lands on Levitate Blissey (not grounded); at the end Corviknight falls asleep (2 or 3 turns) and Blissey's Yawn counts down.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Levitate", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Yawn", "Calm Mind"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Yawn", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Electric Surge", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Yawn", "Swords Dance"], "level": 50},
+   {"species": "Corviknight", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Yawn", "Iron Defense"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move yawn 1, move yawn 2", "move swordsdance, move irondefense"]
+ ],
+ "patch": {
+  "p1": {"Clefable": {"status": "brn"}}
+ },
+ "turn": {"p1": "move calmmind, move calmmind", "p2": "move yawn 2, move yawn 1"}
+}

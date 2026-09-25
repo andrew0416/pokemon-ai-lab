@@ -3,7 +3,7 @@
 
 use crate::dex::Type;
 use crate::instruction::Instruction;
-use crate::state::{PokemonRef, SlotRef};
+use crate::state::{PokemonRef, SlotRef, Status};
 use crate::volatile::{decode_types, encode_types, Volatile, VolatileState};
 
 use super::battle::Battle;
@@ -53,14 +53,25 @@ pub(crate) fn volatile_end<const N: usize>(
     volatile: Volatile,
 ) -> Result<(), TurnError> {
     let state = b.volatile(slot, volatile);
-    if volatile == Volatile::Roost && state.counter != 0 {
+    match volatile {
         // Roost ends: the types are read without its filter again.
-        let old = b.mon(pokemon).types;
-        b.apply(Instruction::SetTypes {
-            target: pokemon,
-            old,
-            new: decode_types(state.counter),
-        });
+        Volatile::Roost if state.counter != 0 => {
+            let old = b.mon(pokemon).types;
+            b.apply(Instruction::SetTypes {
+                target: pokemon,
+                old,
+                new: decode_types(state.counter),
+            });
+        }
+        // Yawn: `target.trySetStatus('slp', this.effectState.source)` with the Yawn condition
+        // as the effect: Safeguard lets it through, the sleep blocks (abilities, Sweet Veil,
+        // Electric and Misty Terrain) apply.
+        Volatile::Yawn => {
+            b.try_set_status(slot, Status::Sleep);
+        }
+        // Perish Song: `target.faint()`.
+        Volatile::PerishSong => b.faint(slot),
+        _ => {}
     }
     Ok(())
 }

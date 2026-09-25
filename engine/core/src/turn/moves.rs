@@ -584,7 +584,7 @@ fn try_move_hit_field<const N: usize>(
         combine(add_pseudo_weather(b, data.pseudo_weather.id()));
     }
     // HitField: the move's onHitField (Haze).
-    if let Some(r) = handlers::on_hit_field(b, mv) {
+    if let Some(r) = handlers::on_hit_field(b, user, mv) {
         combine(r);
     }
     Ok(outcome.unwrap_or(true))

@@ -492,9 +492,9 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// Showdown `runEvent('TryAddVolatile')` for a new volatile on `target`: the ability
     /// handlers of Insomnia, Vital Spirit, Purifying Salt and Leaf Guard (in sun) on the
     /// target block Yawn; Sweet Veil (Yawn) and Aroma Veil (Attract, Disable, Encore, Heal
-    /// Block, Taunt, Torment) block for the whole side. None of those volatiles is
-    /// representable yet, so this only guards their future implementation. The terrains'
-    /// `onTryAddVolatile` (Yawn, confusion) belong with those volatiles too.
+    /// Block, Taunt, Torment) block for the whole side; Electric Terrain blocks Yawn on a
+    /// grounded target. Of those volatiles only Yawn is implemented; the others (and Misty
+    /// Terrain's confusion block) guard their future implementation.
     pub fn add_volatile_blocked(&self, target: SlotRef, volatile: Volatile) -> bool {
         let condition = volatile.condition();
         let yawn = condition == conditions::YAWN;
@@ -520,11 +520,24 @@ impl<'a, const N: usize> Battle<'a, N> {
             conditions::TORMENT,
         ]
         .contains(&condition);
-        self.alive_slots(target.side).into_iter().any(|s| {
+        let veiled = self.alive_slots(target.side).into_iter().any(|s| {
             let ability = self.ability_unless_broken(s);
             (ability == abilities::SWEET_VEIL && yawn)
                 || (ability == abilities::AROMA_VEIL && aroma)
-        })
+        });
+        // Electric Terrain's `onTryAddVolatile`: Yawn fails on a grounded target (Misty
+        // Terrain's only blocks confusion).
+        veiled || (yawn && self.terrain() == Terrain::Electric && self.is_grounded(target))
+    }
+
+    /// Showdown `pokemon.faint()`: HP drops to 0 at once, without Damage handlers (Focus Sash,
+    /// Sturdy and Endure do not apply), and the Pokémon is queued to faint.
+    pub fn faint(&mut self, slot: SlotRef) {
+        let Some(pokemon) = self.alive(slot) else {
+            return;
+        };
+        let hp = i32::from(self.mon(pokemon).hp);
+        self.lose_hp(slot, pokemon, hp);
     }
 
     pub fn set_status_turns(&mut self, pokemon: PokemonRef, turns: i8) {
