@@ -894,6 +894,11 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::DRAGONIZE, &["onBasePower", "onModifyType"]),
     (abilities::NORMALIZE, &["onBasePower", "onModifyType"]),
     (abilities::LIQUID_VOICE, &["onModifyType"]),
+    // Fairy Aura / Dark Aura `onAnyBasePower` and Aura Break's `onAnyTryPrimaryHit`
+    // (`move.hasAuraBreak`) in `ability_hooks::base_power_handlers`; `onStart` only announces.
+    (abilities::FAIRY_AURA, &["onAnyBasePower", "onStart"]),
+    (abilities::DARK_AURA, &["onAnyBasePower", "onStart"]),
+    (abilities::AURA_BREAK, &["onAnyTryPrimaryHit", "onStart"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

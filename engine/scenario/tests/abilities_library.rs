@@ -26,3 +26,17 @@ fn galvanize_and_refrigerate_match_showdown() {
 fn normalize_and_liquid_voice_match_showdown() {
     assert_exact_parity("o70-normalize-liquid-voice");
 }
+
+// ---- Fairy Aura / Dark Aura / Aura Break -------------------------------------------------------
+
+/// Two Fairy Aura holders boost a Fairy move once (`move.auraBooster`); Dark Aura its own move.
+#[test]
+fn fairy_and_dark_aura_match_showdown() {
+    assert_exact_parity("aura-fairy-dark");
+}
+
+/// Aura Break reverses the aura (3072/4096) unless a Mold Breaker move skips it.
+#[test]
+fn aura_break_matches_showdown() {
+    assert_exact_parity("aura-break");
+}

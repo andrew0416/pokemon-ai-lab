@@ -84,11 +84,23 @@ pub(super) fn on_modify_type<const N: usize>(
 /// `abilities::base_power_handlers`):
 /// - the type changers' `onBasePower` (priority 23): `if (move.typeChangerBoosted ===
 ///   this.effect) return this.chainModify([4915, 4096])`, the user's current ability being the
-///   one that changed the type.
+///   one that changed the type;
+/// - Fairy Aura / Dark Aura `onAnyBasePower` (priority 20) of every active Pokémon not at 0 HP
+///   (`onAny` handlers come from `alliesAndSelf()` / `foes()`), for a non-status move of the
+///   aura's type against another Pokémon: the first holder in handler order becomes
+///   `move.auraBooster` and only it boosts, so there is one factor however many holders there
+///   are: 5448/4096, or 3072/4096 with `move.hasAuraBreak`. No other BasePower handler has
+///   priority 20, so the holder's Speed never decides the factor's place in the chain.
+///
+/// Aura Break's `onAnyTryPrimaryHit` (TryPrimaryHit runs for every target before the hit's
+/// `getDamage`) sets `move.hasAuraBreak` for a non-status move on a target other than its user
+/// while an active Pokémon has Aura Break; it is breakable, so an ability-ignoring move skips it
+/// unless the holder is the user. Nothing else reads the flag, and the holders cannot change
+/// between TryPrimaryHit and the damage, so it is decided here.
 pub(super) fn base_power_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
-    _target: SlotRef,
+    target: SlotRef,
     mv: &ActiveMove,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
@@ -97,6 +109,24 @@ pub(super) fn base_power_handlers<const N: usize>(
         let p = priority(ability.data().event_orders, "onBasePowerPriority");
         out.push(Handler::of(b, user, p, SUB_ABILITY, 4915));
     }
+    let aura = match mv.move_type {
+        Type::Fairy => abilities::FAIRY_AURA,
+        Type::Dark => abilities::DARK_AURA,
+        _ => AbilityId::NONE,
+    };
+    if aura.is_none() || target == user || mv.data.category == MoveCategory::Status {
+        return out;
+    }
+    let actives = b.all_alive();
+    let Some(&booster) = actives.iter().find(|&&s| b.ability(s) == aura) else {
+        return out;
+    };
+    let aura_break = actives
+        .iter()
+        .any(|&s| b.ability_unless_broken(s) == abilities::AURA_BREAK);
+    let modifier = if aura_break { 3072 } else { 5448 };
+    let p = priority(aura.data().event_orders, "onAnyBasePowerPriority");
+    out.push(Handler::of(b, booster, p, SUB_ABILITY, modifier));
     out
 }
 

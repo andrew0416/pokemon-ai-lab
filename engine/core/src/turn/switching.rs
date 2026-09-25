@@ -327,6 +327,22 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         ],
         StartEffect::None,
     ),
+    // The auras and Aura Break only announce themselves on start.
+    (
+        abilities::FAIRY_AURA,
+        &["onAnyBasePower", "onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::DARK_AURA,
+        &["onAnyBasePower", "onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::AURA_BREAK,
+        &["onAnyTryPrimaryHit", "onStart"],
+        StartEffect::None,
+    ),
 ];
 
 /// What `ability` does when it starts, or `None` if it has a switch-in handler that is not
