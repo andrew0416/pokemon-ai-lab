@@ -45,7 +45,11 @@ fn outrage_positions_are_locked() {
     };
     let mut lengths = std::collections::BTreeSet::new();
     for position in &positions {
-        let locked = position.state.slot(dragonite).volatiles.get(Volatile::LockedMove);
+        let locked = position
+            .state
+            .slot(dragonite)
+            .volatiles
+            .get(Volatile::LockedMove);
         assert!(locked.active, "Outrage did not lock");
         assert_eq!(locked.duration, 1, "one turn of the lock was spent");
         lengths.insert(locked.hidden);
