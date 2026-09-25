@@ -35,13 +35,15 @@ pub enum Volatile {
     /// Perish Song's count (duration 4, residual order 24): the holder faints when it ends.
     /// Showdown adds it by name in the move's `onHitField`, so the dex has no condition id.
     PerishSong,
+    /// Endure: a move's damage leaves the holder at 1 HP at least (duration 1).
+    Endure,
     /// Not a Showdown volatile: Protean's / Libero's `abilityState.protean` / `.libero` flag
     /// (the type already changed since switching in). No duration; hidden in the canonical
     /// state.
     ProteanUsed,
 }
 
-pub const VOLATILE_COUNT: usize = 10;
+pub const VOLATILE_COUNT: usize = 11;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -54,6 +56,7 @@ impl Volatile {
         Volatile::Roost,
         Volatile::Yawn,
         Volatile::PerishSong,
+        Volatile::Endure,
         Volatile::ProteanUsed,
     ];
 
@@ -68,6 +71,7 @@ impl Volatile {
             Volatile::Spotlight => conditions::SPOTLIGHT,
             Volatile::Roost => conditions::ROOST,
             Volatile::Yawn => conditions::YAWN,
+            Volatile::Endure => conditions::ENDURE,
             Volatile::PerishSong | Volatile::ProteanUsed => ConditionId::NONE,
         }
     }
@@ -84,6 +88,7 @@ impl Volatile {
             Volatile::Roost => "roost",
             Volatile::Yawn => "yawn",
             Volatile::PerishSong => "perishsong",
+            Volatile::Endure => "endure",
             Volatile::ProteanUsed => "protean",
         }
     }
@@ -106,7 +111,8 @@ impl Volatile {
             | Volatile::FollowMe
             | Volatile::RagePowder
             | Volatile::Spotlight
-            | Volatile::Roost => 1,
+            | Volatile::Roost
+            | Volatile::Endure => 1,
             Volatile::Stall | Volatile::Yawn => 2,
             Volatile::PerishSong => 4,
             Volatile::ProteanUsed => 0,

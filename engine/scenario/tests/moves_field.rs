@@ -90,3 +90,13 @@ fn o20_yawn_puts_to_sleep_at_the_end_of_the_next_turn() {
 fn o19_perish_song_faints_everyone_and_the_last_faint_wins() {
     assert_exact_parity("o19-perish-song");
 }
+
+#[test]
+fn o27_endure_leaves_1_hp_before_focus_sash() {
+    assert_exact_parity("o27-endure");
+}
+
+#[test]
+fn o27_endure_shares_the_stall_counter_with_protect() {
+    assert_exact_parity("o27-endure-stall");
+}

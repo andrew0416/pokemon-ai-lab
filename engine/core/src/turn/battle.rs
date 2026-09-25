@@ -208,8 +208,8 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// Showdown `spreadDamage` for one target: at least 1, Damage handlers, clamped to the
     /// target's HP, faint queued at 0 HP. Returns the HP removed.
     ///
-    /// Damage handlers by priority: Rock Head and Magic Guard (0), Sturdy (-30), Focus Sash
-    /// (-40). Rock Head (`effect.id === 'recoil'`) and Magic Guard (`effect.effectType !==
+    /// Damage handlers by priority: Rock Head and Magic Guard (0), Endure (-10), Sturdy (-30),
+    /// Focus Sash (-40). Rock Head (`effect.id === 'recoil'`) and Magic Guard (`effect.effectType !==
     /// 'Move'`) cancel the damage (neither is breakable). Sturdy and Focus Sash leave a full-HP
     /// target at 1 HP against a move's damage; Sturdy acts first, so the Sash then stays.
     /// Sturdy is breakable (ignored by Sunsteel Strike and the like).
@@ -226,6 +226,14 @@ impl<'a, const N: usize> Battle<'a, N> {
         };
         if cancelled {
             return 0;
+        }
+        // Endure (`onDamagePriority: -10`): a move's damage leaves at least 1 HP; Sturdy and
+        // Focus Sash then see damage below the HP and keep quiet.
+        if source == DamageSource::Move
+            && amount >= i32::from(mon.hp)
+            && self.volatile(target, Volatile::Endure).active
+        {
+            amount = i32::from(mon.hp) - 1;
         }
         if source == DamageSource::Move
             && mon.hp == mon.max_hp

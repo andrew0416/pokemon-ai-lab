@@ -29,6 +29,17 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         ],
     ),
     (moves::DETECT, &["onHit", "onPrepareHit"]),
+    // Protect's stall `onPrepareHit` / `onHit`; `condition.onDamage` in `Battle::damage`,
+    // `condition.onStart` only logs.
+    (
+        moves::ENDURE,
+        &[
+            "condition.onDamage",
+            "condition.onStart",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
     (
         moves::FOLLOW_ME,
         &[
@@ -487,7 +498,7 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     {
         return why("a special mechanic");
     }
-    if m.stalling_move && id != moves::PROTECT && id != moves::DETECT {
+    if m.stalling_move && ![moves::PROTECT, moves::DETECT, moves::ENDURE].contains(&id) {
         return why("stalling move");
     }
     let flags = m.flags;
