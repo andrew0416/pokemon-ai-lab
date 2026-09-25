@@ -5,7 +5,7 @@
 //! `speedSort` shuffles ties uniformly. Picking the best remaining action each time, uniform
 //! among ties, gives the same distribution of orders.
 
-use crate::damage::{chain_modifiers, MOD_ONE};
+use crate::damage::{chain_modifiers, MOD_ONE, MOD_ONE_POINT_FIVE};
 use crate::dex::{abilities, moves, MoveCategory, MoveId};
 use crate::field::{FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{SlotRef, Status};
@@ -57,11 +57,17 @@ impl<const N: usize> Battle<'_, N> {
         if doubled {
             chain.push(2 * MOD_ONE);
         }
+        // Quick Feet: `if (pokemon.status) return this.chainModify(1.5)`.
+        let quick_feet = mon.ability == abilities::QUICK_FEET;
+        if quick_feet && mon.status != Status::None {
+            chain.push(MOD_ONE_POINT_FIVE);
+        }
         if !chain.is_empty() {
             spe = modify(spe, chain_modifiers(&chain, 0, u32::MAX));
         }
-        // Paralysis (priority -101): after every other modifier, `floor(spe * 50 / 100)`.
-        if mon.status == Status::Paralyze {
+        // Paralysis (priority -101): after every other modifier, `floor(spe * 50 / 100)`
+        // unless the Pokémon has Quick Feet.
+        if mon.status == Status::Paralyze && !quick_feet {
             spe = spe * 50 / 100;
         }
         spe.min(10000)

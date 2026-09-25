@@ -16,7 +16,7 @@
 //!    the source holds Smooth Rock (sand) / Terrain Extender (terrain).
 //!
 //! Only the abilities in `IMPLEMENTED` have behaviour here (Trace, Sand Stream, Grassy Surge,
-//! and Sand Rush as verified inert). Any other ability, item or species handler that can fire
+//! and Sand Rush and Quick Feet as verified inert). Any other ability, item or species handler that can fire
 //! during this sequence is rejected with an error naming it; nothing that can change state is
 //! skipped silently. Random calls that cannot change the outcome (speed-tie shuffles in
 //! `eachEvent` with no listeners) are not branched on. Format/rule handlers (`onBegin`,
@@ -193,7 +193,7 @@ fn start_handler(handlers: &'static [&'static str]) -> Option<&'static str> {
 }
 
 /// Implemented abilities with the exact handler lists they were implemented against.
-const IMPLEMENTED: [(AbilityId, &[&str], StartBehavior); 4] = [
+const IMPLEMENTED: [(AbilityId, &[&str], StartBehavior); 5] = [
     (
         abilities::TRACE,
         &["onStart", "onUpdate"],
@@ -214,6 +214,12 @@ const IMPLEMENTED: [(AbilityId, &[&str], StartBehavior); 4] = [
     (
         abilities::SAND_RUSH,
         &["onImmunity", "onModifySpe"],
+        StartBehavior::Inert,
+    ),
+    // `onModifySpe` needs a status, and no lead has one at the start (`validate`).
+    (
+        abilities::QUICK_FEET,
+        &["onModifySpe"],
         StartBehavior::Inert,
     ),
 ];

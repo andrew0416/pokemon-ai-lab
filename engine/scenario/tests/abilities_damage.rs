@@ -62,3 +62,15 @@ fn overgrow_and_swarm_match_showdown() {
 fn hustle_matches_showdown() {
     assert_exact_parity("o43-hustle");
 }
+
+// O44: status-boosted stats.
+
+#[test]
+fn guts_and_marvel_scale_match_showdown() {
+    assert_exact_parity("o44-guts-marvelscale");
+}
+
+#[test]
+fn quick_feet_under_paralysis_matches_showdown() {
+    assert_exact_parity("o44-quickfeet");
+}

@@ -203,6 +203,10 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         abilities::HUSTLE,
         &["onModifyAtk", "onSourceModifyAccuracy"],
     ),
+    (abilities::GUTS, &["onModifyAtk"]),
+    (abilities::MARVEL_SCALE, &["onModifyDef"]),
+    // `order.rs` (Speed, and paralysis's Quick Feet exception).
+    (abilities::QUICK_FEET, &["onModifySpe"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

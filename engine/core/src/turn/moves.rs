@@ -827,6 +827,9 @@ fn get_damage<const N: usize>(
     {
         defense = modify(defense, MOD_ONE_POINT_FIVE);
     }
+    // Chained ModifyDef / ModifySpD handlers, applied after the direct weather boosts.
+    let defense_mods = abilities::defense_handlers(b, user, target, data, defense_stat);
+    let defense = modify(defense, abilities::chain(b, defense_mods));
 
     // modifyDamage inputs.
     let weather_modifier = match (weather, data.move_type) {
@@ -873,7 +876,7 @@ fn get_damage<const N: usize>(
         critical,
         stab_modifier,
         type_effectiveness,
-        burned: attacker.status == Status::Burn && physical,
+        burned: abilities::burn_halves(&attacker, data),
         protected: false,
         final_modifier,
     };

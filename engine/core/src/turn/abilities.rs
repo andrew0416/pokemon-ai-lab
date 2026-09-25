@@ -16,9 +16,9 @@ use crate::damage::{
     MOD_ONE_POINT_TWO,
 };
 use crate::dex::{
-    abilities, items, AbilityFlags, AbilityId, MoveCategory, MoveData, MoveFlags, Type,
+    abilities, items, AbilityFlags, AbilityId, MoveCategory, MoveData, MoveFlags, Stat, Type,
 };
-use crate::state::SlotRef;
+use crate::state::{Pokemon, SlotRef, Status};
 
 use super::battle::Battle;
 use super::order::modify;
@@ -203,11 +203,46 @@ pub(crate) fn attack_handlers<const N: usize>(
         _ => None,
     };
     let pinch = 3 * i32::from(attacker.hp) <= i32::from(attacker.max_hp);
-    if pinch_type == Some(data.move_type) && pinch {
+    // Guts: `if (pokemon.status) return this.chainModify(1.5)` (Attack only).
+    let guts = ability == abilities::GUTS && physical && attacker.status != Status::None;
+    if (pinch_type == Some(data.move_type) && pinch) || guts {
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
     }
     out
+}
+
+/// `ModifyDef` or `ModifySpD` handlers of abilities (by the stat the move targets): the
+/// target's `onModifyDef`/`onModifySpD`.
+pub(crate) fn defense_handlers<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    data: &MoveData,
+    defense_stat: Stat,
+) -> Vec<Handler> {
+    let mut out = Vec::new();
+    let Some(defender) = b.slot_mon(target) else {
+        return out;
+    };
+    let ability = ability_for_move(b, target, user, data);
+    // Marvel Scale: `if (pokemon.status) return this.chainModify(1.5)` (Defense only).
+    if ability == abilities::MARVEL_SCALE
+        && defense_stat == Stat::Def
+        && defender.status != Status::None
+    {
+        let p = priority(ability.data().event_orders, "onModifyDefPriority");
+        out.push(Handler::of(b, target, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
+    }
+    out
+}
+
+/// Whether a burned user's physical damage is halved: Showdown skips it for Guts
+/// (`!pokemon.hasAbility('guts')`).
+pub(crate) fn burn_halves(attacker: &Pokemon, data: &MoveData) -> bool {
+    attacker.status == Status::Burn
+        && data.category == MoveCategory::Physical
+        && attacker.ability != abilities::GUTS
 }
 
 /// The attacking stat after the handlers of the `ModifyAtk` event that return a new value
