@@ -34,6 +34,8 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::FAKE_OUT, &["onDisableMove", "onTry"]),
     (moves::KNOCK_OFF, &["onAfterHit", "onBasePower"]),
     (moves::GRAV_APPLE, &["onBasePower"]),
+    (moves::RISING_VOLTAGE, &["basePowerCallback"]),
+    (moves::PSYBLADE, &["onBasePower"]),
     (
         moves::GRAVITY,
         &[

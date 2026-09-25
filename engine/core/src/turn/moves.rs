@@ -732,6 +732,7 @@ fn get_damage<const N: usize>(
     if mv.id == moves::LOW_KICK || mv.id == moves::GRASS_KNOT {
         base_power = weight_power(defender.species.data().weight_hg);
     }
+    base_power = handlers::base_power_callback(b, target, mv, base_power);
     if base_power == 0 {
         return Ok(Planned::NoDamage);
     }
