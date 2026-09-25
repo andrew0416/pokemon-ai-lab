@@ -6,7 +6,7 @@
 use crate::dex::{AbilityId, ItemId, MoveId};
 
 use super::support::{ability_supported_on_field, item_supported_on_field, move_unsupported};
-use super::switching::switch_in_supported;
+use super::switching::{item_start_handler, switch_in_supported};
 
 /// How far one dex entry is supported.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -55,7 +55,7 @@ pub fn item_support(id: ItemId) -> Support {
             reason: format!("callbacks {:?} are not implemented", data.handlers),
         };
     }
-    if data.handlers.contains(&"onStart") {
+    if item_start_handler(id).is_some() {
         return Support::NoSwitchIn {
             handlers: data.handlers,
         };

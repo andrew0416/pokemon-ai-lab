@@ -47,7 +47,16 @@ const START_EVENTS: [&str; 10] = [
 /// The first handler in `handlers` that can fire during a switch-in. Handlers of an effect's
 /// own condition (`condition.on*`) belong to a volatile that does not exist yet.
 pub fn start_handler(handlers: &'static [&'static str]) -> Option<&'static str> {
-    start_handler_of(handlers)
+    handlers.iter().copied().find(|h| {
+        let Some(event) = h.strip_prefix("on") else {
+            return false;
+        };
+        let event = ["Ally", "Foe", "Any", "Source"]
+            .iter()
+            .find_map(|p| event.strip_prefix(*p).filter(|e| START_EVENTS.contains(e)))
+            .unwrap_or(event);
+        START_EVENTS.contains(&event)
+    })
 }
 
 /// What an ability does when it starts (switch-in, Trace copy, or `setAbility` after a forme
@@ -227,35 +236,19 @@ pub fn switch_in_supported(ability: AbilityId) -> bool {
     start_effect(ability).is_some()
 }
 
-/// The first switch-in handler of an item that would fire and is not implemented. An
-/// `onUpdate` of an item the engine supports on the field (berries, `update.rs`) is
-/// implemented and does not count.
+/// The first switch-in handler of an item that would fire and is not implemented, if any.
+/// `onModifySpe` does not matter (the start order uses the raw Speed stat); an `onStart` that
+/// does nothing on a switch-in (`items::inert_start`) and the `onUpdate` of an item the engine
+/// supports on the field (berries, `update.rs`) are implemented.
 pub fn item_start_handler(item: ItemId) -> Option<&'static str> {
     let handlers = item.data().handlers;
-    match start_handler(handlers) {
-        Some("onUpdate") if item_supported_on_field(item) => {
-            let rest: Vec<&'static str> = handlers
-                .iter()
-                .copied()
-                .filter(|h| *h != "onUpdate")
-                .collect();
-            start_handler_of(&rest)
-        }
-        other => other,
-    }
-}
-
-fn start_handler_of(handlers: &[&'static str]) -> Option<&'static str> {
-    handlers.iter().copied().find(|h| {
-        let Some(event) = h.strip_prefix("on") else {
-            return false;
-        };
-        let event = ["Ally", "Foe", "Any", "Source"]
-            .iter()
-            .find_map(|p| event.strip_prefix(*p).filter(|e| START_EVENTS.contains(e)))
-            .unwrap_or(event);
-        START_EVENTS.contains(&event)
-    })
+    (0..handlers.len())
+        .filter_map(|i| start_handler(&handlers[i..=i]))
+        .find(|&h| {
+            h != "onModifySpe"
+                && !(h == "onStart" && super::items::inert_start(item))
+                && !(h == "onUpdate" && item_supported_on_field(item))
+        })
 }
 
 /// The first switch-in handler of a species that would fire, if any (none is implemented).
@@ -288,6 +281,9 @@ fn switch_in_problem<const N: usize>(
             mon.item.data().name,
             mon.item.data().handlers
         ));
+    }
+    if let Some(why) = super::items::held_item_problem(mon) {
+        return Some(why);
     }
     if let Some(handler) = item_start_handler(mon.item) {
         return Some(format!(

@@ -19,6 +19,7 @@ mod battle;
 mod branch;
 pub mod coverage;
 mod diff;
+mod items;
 pub mod lock;
 mod mega;
 mod moves;
@@ -101,6 +102,7 @@ pub fn enumerate_turn<const N: usize>(
         queue: initial_queue(state, &choices),
         in_progress: None,
         done: false,
+        fractional_drawn: false,
     };
     enumerate_stages(state, start, |b, pending| {
         run_stage(b, pending)?;
@@ -123,6 +125,7 @@ pub fn sample_turn<const N: usize>(
         queue: initial_queue(state, &choices),
         in_progress: None,
         done: false,
+        fractional_drawn: false,
     };
     sample_stages(state, samples, seed, start, |b, pending| {
         run_stage(b, pending)?;
@@ -589,7 +592,7 @@ fn disabled<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> Opti
     {
         return Some(format!("Encore locks it into {}", encore.mv.data().name));
     }
-    None
+    items::disabled_move(state, slot, id)
 }
 
 /// The rest of a turn between stages: the actions not yet run, a multi-hit move suspended
@@ -600,6 +603,9 @@ struct Pending {
     queue: Vec<Action>,
     in_progress: Option<moves::MoveProgress>,
     done: bool,
+    /// Whether the random fractional priorities (Quick Claw) were drawn: Showdown draws them
+    /// when the actions are queued, so the first stage does.
+    fractional_drawn: bool,
 }
 
 impl<const N: usize> Battle<'_, N> {
@@ -674,8 +680,8 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
                     ActionKind::Move {
                         index,
                         target,
-                        fractional_tenths: order::fractional_priority_tenths(
-                            state.pokemon(pokemon).ability,
+                        fractional_tenths: items::fractional_priority_tenths(
+                            state.pokemon(pokemon),
                         ),
                     }
                 }
@@ -698,6 +704,20 @@ fn run_stage<const N: usize>(
     b: &mut Battle<'_, N>,
     pending: &mut Pending,
 ) -> Result<(), TurnError> {
+    // Quick Claw's 1/5 is drawn when the actions are queued (first stage).
+    if !pending.fractional_drawn {
+        pending.fractional_drawn = true;
+        for action in &mut pending.queue {
+            if let ActionKind::Move {
+                fractional_tenths, ..
+            } = &mut action.kind
+            {
+                if let Some(t) = items::quick_claw(b, action.pokemon, *fractional_tenths) {
+                    *fractional_tenths = t;
+                }
+            }
+        }
+    }
     // The remaining queue is visible to handlers through the Battle while the stage runs.
     b.queue = std::mem::take(&mut pending.queue);
     let result = run_stage_inner(b, pending);

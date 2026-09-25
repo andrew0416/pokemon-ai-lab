@@ -11,6 +11,7 @@ use crate::field::{FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{SlotRef, Status};
 
 use super::battle::Battle;
+use super::items as item_events;
 
 /// Showdown action `order` values.
 pub(crate) const ORDER_SWITCH: u32 = 103;
@@ -64,6 +65,9 @@ impl<const N: usize> Battle<'_, N> {
         if quick_feet && mon.status != Status::None {
             chain.push(MOD_ONE_POINT_FIVE);
         }
+        // The item (Choice Scarf). The factors are all powers of two times 1.5, so the chain
+        // is exact in any order.
+        chain.extend(item_events::speed_modifier(mon.item));
         if !chain.is_empty() {
             spe = modify(spe, chain_modifiers(&chain, 0, u32::MAX));
         }

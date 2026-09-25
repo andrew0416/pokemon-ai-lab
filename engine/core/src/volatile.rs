@@ -33,9 +33,12 @@ pub enum Volatile {
     /// Flash Fire's boost after absorbing a Fire move (the ability's own `condition`, no
     /// duration; `noCopy`).
     FlashFire,
+    /// Choice item lock (Showdown `choicelock`, no duration): `counter` holds the locked
+    /// move's `MoveId` (Showdown `effectState.move`).
+    ChoiceLock,
 }
 
-pub const VOLATILE_COUNT: usize = 11;
+pub const VOLATILE_COUNT: usize = 12;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -50,6 +53,7 @@ impl Volatile {
         Volatile::MustRecharge,
         Volatile::Encore,
         Volatile::FlashFire,
+        Volatile::ChoiceLock,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -68,6 +72,7 @@ impl Volatile {
             Volatile::MustRecharge => conditions::MUSTRECHARGE,
             Volatile::Encore => conditions::ENCORE,
             Volatile::FlashFire => ConditionId::NONE,
+            Volatile::ChoiceLock => conditions::CHOICELOCK,
         }
     }
 
@@ -85,6 +90,7 @@ impl Volatile {
             Volatile::MustRecharge => "mustrecharge",
             Volatile::Encore => "encore",
             Volatile::FlashFire => "flashfire",
+            Volatile::ChoiceLock => "choicelock",
         }
     }
 
@@ -108,7 +114,7 @@ impl Volatile {
             | Volatile::Spotlight => 1,
             Volatile::Stall | Volatile::LockedMove | Volatile::MustRecharge => 2,
             Volatile::Encore => 3,
-            Volatile::Confusion | Volatile::FlashFire => 0,
+            Volatile::Confusion | Volatile::FlashFire | Volatile::ChoiceLock => 0,
         }
     }
 }

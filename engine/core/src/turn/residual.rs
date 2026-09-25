@@ -7,7 +7,7 @@
 //! the effect instead of running. Handlers of fainted Pokémon and of effects that ended
 //! earlier in the residual are skipped. Faints are processed after every handler.
 
-use crate::dex::{abilities, items, AbilityId, Type, TypeImmunities, NO_BOOSTS};
+use crate::dex::{abilities, items, AbilityId, ItemId, Type, TypeImmunities, NO_BOOSTS};
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SideId, SlotRef, State, Status};
@@ -15,6 +15,7 @@ use crate::volatile::Volatile;
 
 use super::abilities as ability_events;
 use super::battle::{Battle, BoostEffect, DamageSource};
+use super::items as item_events;
 use super::order::ORDER_DEFAULT;
 use super::TurnError;
 
@@ -32,6 +33,8 @@ enum Kind {
     SpeedBoost(PokemonRef, SlotRef),
     /// Shed Skin and Hydration `onResidual` (order 5, sub-order 3).
     StatusCure(PokemonRef, SlotRef, AbilityId),
+    /// An item's `onResidual` (`items::on_residual`).
+    Item(PokemonRef, SlotRef, ItemId),
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -141,6 +144,14 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                     speed,
                     sub_order: 2,
                     kind: Kind::GrassyHeal(pokemon, slot),
+                });
+            }
+            if let Some((order, sub_order)) = item_events::residual_order(mon.item) {
+                out.push(Handler {
+                    order,
+                    speed,
+                    sub_order,
+                    kind: Kind::Item(pokemon, slot, mon.item),
                 });
             }
             if mon.item == items::LEFTOVERS {
@@ -363,6 +374,12 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
             let max_hp = f64::from(b.mon(pokemon).max_hp);
             b.heal(slot, max_hp / 16.0);
         }
+        Kind::Item(pokemon, slot, item) => {
+            if !still_active(b, pokemon, slot) || b.mon(pokemon).item != item {
+                return Ok(());
+            }
+            item_events::on_residual(b, slot, item);
+        }
         Kind::SpeedBoost(pokemon, slot) => {
             // Skipped if the ability changed since the handlers were collected.
             if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != abilities::SPEED_BOOST {
@@ -488,6 +505,8 @@ pub(crate) fn end_turn<const N: usize>(b: &mut Battle<'_, N>) {
         .into_iter()
         .any(|side| needs_replacement(b, side));
     if !needs_switch {
+        // `endTurn`: the DisableMove handlers of every active Pokémon.
+        item_events::end_turn_disable_move(b);
         let turn = b.state.turn;
         b.apply(Instruction::SetTurn {
             old: turn,

@@ -1,0 +1,26 @@
+{
+ "description": "O83: Setup turn: Choice Specs Hydreigon's Dragon Pulse is blocked by Weavile's Protect and Choice Scarf Incineroar uses Protect, so both are locked (choicelock move). Turn: Hydreigon repeats Dragon Pulse (Specs) into Weavile (Calm Mind); Incineroar's second Protect succeeds 1/3; Kingambit's Knock Off takes the Scarf when it lands, and endTurn's DisableMove then ends the lock.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hydreigon", "item": "Choice Specs", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Dragon Pulse", "Protect"], "level": 50},
+   {"species": "Incineroar", "item": "Choice Scarf", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Protect", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "spe": 32, "def": 2}, "moves": ["Protect", "Calm Mind"], "level": 50},
+   {"species": "Kingambit", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Knock Off", "Swords Dance"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move dragonpulse 1, move protect", "move protect, move swordsdance"]
+ ],
+ "turn": {"p1": "move dragonpulse 1, move protect", "p2": "move calmmind, move knockoff 2"}
+}

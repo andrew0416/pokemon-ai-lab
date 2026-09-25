@@ -284,11 +284,16 @@ fn unsupported_start_handlers_are_rejected() {
     }
 
     let mut s = loaded.state.clone();
-    s.active_mut(rillaboom).unwrap().item = items::CHOICE_SCARF;
+    s.active_mut(rillaboom).unwrap().item = items::PSYCHIC_SEED;
     assert!(matches!(
         expand_switch_ins(&s),
         Err(SwitchInError::UnsupportedItem { .. })
     ));
+
+    // A Choice item's `onStart` only removes a lock a newcomer cannot have (O83, 2026-09-26).
+    let mut s = loaded.state.clone();
+    s.active_mut(rillaboom).unwrap().item = items::CHOICE_SCARF;
+    assert!(expand_switch_ins(&s).is_ok());
 
     // Air Lock is implemented (O49): its start only runs `WeatherChange`, which has no
     // implemented handler; the sand it suppresses is still set.

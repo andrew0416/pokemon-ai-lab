@@ -1,0 +1,26 @@
+{
+ "description": "O93: Shell Bell Garchomp (100 HP) heals 1/8 of its Dragon Claw's damage to Kingambit; Throat Spray Primarina's Growl (sound) raises its SpA and uses the spray; itemless Kingambit's Kowtow Cleave (contact) into Sticky Barb Snorlax takes the barb, which hurts it 1/8 at the end of the turn. Snorlax uses Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "Sticky Barb", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Garchomp", "item": "Shell Bell", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Dragon Claw", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Kingambit", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Kowtow Cleave", "Protect"], "level": 50},
+   {"species": "Primarina", "item": "Throat Spray", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Growl", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Garchomp": {"hp": 100}}
+ },
+ "turn": {"p1": "move swordsdance, move dragonclaw 1", "p2": "move kowtowcleave 1, move growl"}
+}

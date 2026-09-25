@@ -1,0 +1,26 @@
+{
+ "description": "O83: Choice Scarf Garchomp (Speed 122 -> 183) outspeeds Gengar (178) and KOs it at 1 HP with Dragon Claw before its Nasty Plot; Choice Band Tyranitar's Stone Edge (80%) hits Blastoise, which uses Calm Mind. Both Choice users get choicelock, also on a miss.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Garchomp", "item": "Choice Scarf", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Dragon Claw", "Protect"], "level": 50},
+   {"species": "Blastoise", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Nasty Plot", "Protect"], "level": 50},
+   {"species": "Tyranitar", "item": "Choice Band", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Stone Edge", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {"Gengar": {"hp": 1}}
+ },
+ "turn": {"p1": "move dragonclaw 1, move calmmind", "p2": "move nastyplot, move stoneedge 2"}
+}

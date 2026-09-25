@@ -17,7 +17,7 @@
 use std::fmt;
 use std::fmt::Write as _;
 
-use lab_engine::dex::Type;
+use lab_engine::dex::{MoveId, Type};
 use lab_engine::field::{Effect, FieldEffect, SideEffect, Terrain, Weather, FIELD_EFFECT_COUNT};
 use lab_engine::gimmick::Gimmick;
 use lab_engine::rules::Ruleset;
@@ -344,9 +344,15 @@ fn status_id(status: Status) -> &'static str {
 
 /// Showdown effect-state fields in `EFFECT_FIELDS` order (`duration`, `counter`, `time`,
 /// `move`, then `trueDuration` for a locked move: hidden in Showdown's own state but written
-/// here because it decides later outcomes; `canonical.cjs` lists it too).
+/// here because it decides later outcomes; `canonical.cjs` lists it too). The Choice lock's
+/// `move` is kept in `counter` and written as `move`.
 fn volatile_fields(out: &mut String, volatile: Volatile, state: VolatileState) {
     out.push('{');
+    if volatile == Volatile::ChoiceLock {
+        write!(out, r#""move":"{}""#, MoveId(state.counter).id()).unwrap();
+        out.push('}');
+        return;
+    }
     let mut first = true;
     let mut field = |out: &mut String, text: String| {
         let sep = if first { "" } else { "," };

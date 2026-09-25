@@ -13,8 +13,8 @@ use crate::damage::{
 };
 use crate::dex::{
     abilities, items, moves, AbilityId, FixedDamage, IgnoreImmunity, ItemId, MoveCategory,
-    MoveData, MoveFlags, MoveId, MoveTarget, Ohko, Stat, Type, TypeImmunities, TypeRelation,
-    NO_BOOSTS,
+    MoveData, MoveFlags, MoveId, MoveTarget, Ohko, Secondary, Stat, Type, TypeImmunities,
+    TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{PokemonRef, SideId, SlotRef, Status};
@@ -23,6 +23,7 @@ use crate::volatile::Volatile;
 use super::abilities as ability_events;
 use super::abilities::{Handler, SUB_FIELD_CONDITION, SUB_ITEM, SUB_MOVE, SUB_SIDE_CONDITION};
 use super::battle::{ActiveMoveRef, Battle, BoostEffect, DamageSource};
+use super::items as item_events;
 use super::order::{boosted_stat, modify};
 use super::support::{side_effect_of, type_boost_item};
 use super::TurnError;
@@ -45,6 +46,11 @@ struct ActiveMove {
     has_sheer_force: bool,
     /// Serene Grace's ModifyMove doubles every secondary chance and `self.chance` (1 or 2).
     secondary_chance_factor: u32,
+    /// A secondary effect ModifyMove appended to the move's own (King's Rock's flinch). Not
+    /// part of the comparison: it follows from the user's item.
+    added_secondary: Option<Secondary>,
+    /// HP taken by the move's hits (Showdown `move.totalDamage`), set once the hits are done.
+    total_damage: i32,
 }
 
 impl PartialEq for ActiveMove {
@@ -56,6 +62,7 @@ impl PartialEq for ActiveMove {
             && self.accuracy == other.accuracy
             && self.has_sheer_force == other.has_sheer_force
             && self.secondary_chance_factor == other.secondary_chance_factor
+            && self.total_damage == other.total_damage
     }
 }
 
@@ -70,6 +77,7 @@ impl std::hash::Hash for ActiveMove {
         self.accuracy.hash(state);
         self.has_sheer_force.hash(state);
         self.secondary_chance_factor.hash(state);
+        self.total_damage.hash(state);
     }
 }
 
@@ -102,9 +110,10 @@ pub(crate) enum MoveStep {
     Suspended(MoveProgress),
 }
 
-/// A hit loop's result within `use_move`.
+/// A hit loop's result within `use_move`: finished (whether it succeeded, and the HP its
+/// hits took), or suspended before its next hit.
 enum HitOutcome {
-    Finished(bool),
+    Finished { ok: bool, total_damage: i32 },
     Suspended(MoveProgress),
 }
 
@@ -146,6 +155,8 @@ pub(crate) fn run_move<const N: usize>(
             accuracy: None,
             has_sheer_force: false,
             secondary_chance_factor: 1,
+            added_secondary: None,
+            total_damage: 0,
         };
         before_move(b, user, &recharge);
         return Ok(MoveStep::Done);
@@ -177,10 +188,13 @@ pub(crate) fn resume_move<const N: usize>(
         id: progress.mv.id,
         ignore_ability: progress.ignore_ability,
     });
-    let mv = progress.mv.clone();
+    let mut mv = progress.mv.clone();
     let result = match hit_loop(b, user, &mv, Some(progress))? {
         HitOutcome::Suspended(progress) => return Ok(MoveStep::Suspended(progress)),
-        HitOutcome::Finished(ok) => ok,
+        HitOutcome::Finished { ok, total_damage } => {
+            mv.total_damage = total_damage;
+            ok
+        }
     };
     use_move_tail(b, user, &mv, result, main_target);
     run_move_tail(b, user);
@@ -232,6 +246,8 @@ fn run_move_inner<const N: usize>(
         accuracy: id.data().accuracy,
         has_sheer_force: false,
         secondary_chance_factor: 1,
+        added_secondary: None,
+        total_damage: 0,
     };
 
     if !before_move(b, user, &mv) {
@@ -261,7 +277,7 @@ fn run_move_inner<const N: usize>(
 }
 
 /// The BeforeMove handlers, by priority: sleep and freeze (10), flinch (8), Gravity (6),
-/// paralysis (1). `false` = the move is not used (no PP, no `lastMove`).
+/// paralysis (1), the Choice lock (0). `false` = the move is not used (no PP, no `lastMove`).
 fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) -> bool {
     let pokemon = b.occupant(user).expect("checked");
     // mustrecharge (priority 11): the turn is spent recharging.
@@ -316,7 +332,8 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
     if b.mon(pokemon).status == Status::Paralyze && b.rng.chance(1, 8) {
         return false;
     }
-    true
+    // The Choice lock (priority 0).
+    item_events::before_move(b, user, mv.id)
 }
 
 /// Showdown `getConfusionDamage(pokemon, 40)`: a 40-power typeless physical hit with the
@@ -631,6 +648,9 @@ fn use_move<const N: usize>(
     if b.mon(pokemon).status == Status::Freeze && mv.data.flags.contains(MoveFlags::DEFROST) {
         b.cure_status(pokemon);
     }
+    // The item's onModifyMove: the Choice lock (priority 0), King's Rock's flinch (-1).
+    item_events::on_modify_move(b, user, mv.id);
+    mv.added_secondary = item_events::added_secondary(b.item(user), mv.data);
     let Some(target) = target else {
         return Ok(None);
     };
@@ -659,7 +679,10 @@ fn use_move<const N: usize>(
         };
         main_target = last;
         match try_spread_move_hit(b, user, mv, targets, will_act)? {
-            HitOutcome::Finished(ok) => ok,
+            HitOutcome::Finished { ok, total_damage } => {
+                mv.total_damage = total_damage;
+                ok
+            }
             HitOutcome::Suspended(mut progress) => {
                 progress.main_target = main_target;
                 return Ok(Some(progress));
@@ -690,17 +713,10 @@ fn use_move_tail<const N: usize>(
     if !result {
         return;
     }
-    // AfterMoveSecondarySelf (skipped for a Sheer Force-boosted move): Life Orb.
+    // AfterMoveSecondarySelf (skipped for a Sheer Force-boosted move): the user's item (Life
+    // Orb, Shell Bell, Throat Spray).
     if !ability_hooks::sheer_force_skips(b, user, mv) {
-        if let Some(pokemon) = b.alive(user) {
-            if b.item(user) == items::LIFE_ORB
-                && mv.data.category != MoveCategory::Status
-                && main_target != user
-            {
-                let max_hp = f64::from(b.mon(pokemon).max_hp);
-                b.damage(user, max_hp / 10.0, DamageSource::Indirect);
-            }
-        }
+        item_events::after_move_secondary_self(b, user, main_target, mv.data, mv.total_damage);
     }
 }
 
@@ -807,11 +823,17 @@ fn try_spread_move_hit<const N: usize>(
             None => false,
         };
         if !ok {
-            return Ok(HitOutcome::Finished(false));
+            return Ok(HitOutcome::Finished {
+                ok: false,
+                total_damage: 0,
+            });
         }
     }
     if !handlers::on_try(b, user, mv, targets[0]) {
-        return Ok(HitOutcome::Finished(false));
+        return Ok(HitOutcome::Finished {
+            ok: false,
+            total_damage: 0,
+        });
     }
     // Follow Me / Rage Powder `onTry` and Spotlight `onTryHit`: doubles only.
     if matches!(
@@ -819,11 +841,17 @@ fn try_spread_move_hit<const N: usize>(
         m if m == moves::FOLLOW_ME || m == moves::RAGE_POWDER || m == moves::SPOTLIGHT
     ) && N == 1
     {
-        return Ok(HitOutcome::Finished(false));
+        return Ok(HitOutcome::Finished {
+            ok: false,
+            total_damage: 0,
+        });
     }
     // PrepareHit: Protect and Detect need a later action and pass the stall check.
     if mv.data.stalling_move && !(will_act && stall_move(b, user)) {
-        return Ok(HitOutcome::Finished(false));
+        return Ok(HitOutcome::Finished {
+            ok: false,
+            total_damage: 0,
+        });
     }
 
     // 1. TryHit: Psychic Terrain (priority 4), Protect (3), the target's ability (0). Each
@@ -836,12 +864,18 @@ fn try_spread_move_hit<const N: usize>(
     }
     targets = kept;
     if targets.is_empty() {
-        return Ok(HitOutcome::Finished(false));
+        return Ok(HitOutcome::Finished {
+            ok: false,
+            total_damage: 0,
+        });
     }
     // 2. Type immunity.
     targets.retain(|&t| !type_immune(b, mv, t));
     if targets.is_empty() {
-        return Ok(HitOutcome::Finished(false));
+        return Ok(HitOutcome::Finished {
+            ok: false,
+            total_damage: 0,
+        });
     }
     // 3. Move-specific immunities: powder, Prankster vs Dark (`dex.getImmunity`: types only).
     targets.retain(|&t| {
@@ -854,7 +888,10 @@ fn try_spread_move_hit<const N: usize>(
         !powder && !prankster
     });
     if targets.is_empty() {
-        return Ok(HitOutcome::Finished(false));
+        return Ok(HitOutcome::Finished {
+            ok: false,
+            total_damage: 0,
+        });
     }
     // 4. Accuracy.
     let mut hit = Vec::with_capacity(targets.len());
@@ -864,7 +901,10 @@ fn try_spread_move_hit<const N: usize>(
         }
     }
     if hit.is_empty() {
-        return Ok(HitOutcome::Finished(false));
+        return Ok(HitOutcome::Finished {
+            ok: false,
+            total_damage: 0,
+        });
     }
     // 7. The hit loop.
     let progress = MoveProgress {
@@ -932,6 +972,10 @@ fn try_hit<const N: usize>(
     target: SlotRef,
 ) -> bool {
     if blocked_by_try_hit(b, user, mv, target) {
+        return false;
+    }
+    // The target's item `onTryHit` (Safety Goggles against powder).
+    if item_events::try_hit_blocks(b, user, mv.data, target) {
         return false;
     }
     // Dry Skin `onTryHit` (breakable): another Pok챕mon's Water move heals the holder by 1/4
@@ -1038,8 +1082,9 @@ fn accuracy_check<const N: usize>(
         return true;
     }
     let mut accuracy = i32::from(base);
-    // ModifyAccuracy: Gravity (6840/4096), the user's Hustle.
+    // ModifyAccuracy: Gravity (6840/4096), the user's Hustle and item (Wide Lens, Zoom Lens).
     let mut accuracy_mods = ability_events::accuracy_handlers(b, user, mv.data);
+    accuracy_mods.extend(item_events::accuracy_handlers(b, user, target));
     if b.field_active(FieldEffect::Gravity) {
         accuracy_mods.push(Handler::global(0, SUB_FIELD_CONDITION, 6840));
     }
@@ -1119,7 +1164,10 @@ fn hit_loop<const N: usize>(
         }
     }
     if !progress.any_ok {
-        return Ok(HitOutcome::Finished(false));
+        return Ok(HitOutcome::Finished {
+            ok: false,
+            total_damage: total,
+        });
     }
     // AfterMoveSecondary (skipped for a Sheer Force-boosted move): a thawing move thaws a
     // frozen target (of the last hit).
@@ -1134,7 +1182,10 @@ fn hit_loop<const N: usize>(
             }
         }
     }
-    Ok(HitOutcome::Finished(true))
+    Ok(HitOutcome::Finished {
+        ok: true,
+        total_damage: total,
+    })
 }
 
 /// Showdown `spreadMoveHit` for the move's own hit.
@@ -1234,6 +1285,8 @@ fn spread_move_hit<const N: usize>(
             Some(HitResult::Failure) => note(false),
             Some(HitResult::NotFail) | None => {}
         }
+        // `runEvent('Hit')`: the target's item (Sticky Barb).
+        item_events::on_hit(b, user, t, data);
         if let (Hit::Done, Some(false)) = (results[i], did) {
             results[i] = Hit::Failed;
         }
@@ -1258,8 +1311,23 @@ fn spread_move_hit<const N: usize>(
         if !results[i].ok() {
             continue;
         }
-        for secondary in ability_hooks::secondaries(b, mv, t) {
-            let chance = u32::from(secondary.chance) * mv.secondary_chance_factor;
+        // Secondaries: Sheer Force / Shield Dust (`ability_hooks::secondaries`) decide the
+        // move's own, Serene Grace doubles their chance, Covert Cloak (`ModifySecondaries`)
+        // drops some, and King's Rock's added flinch comes last (ModifyMove priority -1: after
+        // Serene Grace, and even through Sheer Force).
+        let own: Vec<(&Secondary, u32)> = ability_hooks::secondaries(b, mv, t)
+            .into_iter()
+            .map(|s| (s, u32::from(s.chance) * mv.secondary_chance_factor))
+            .collect();
+        let added: Vec<(&Secondary, u32)> = mv
+            .added_secondary
+            .iter()
+            .map(|s| (s, u32::from(s.chance)))
+            .collect();
+        for (secondary, chance) in own.into_iter().chain(added) {
+            if !item_events::keeps_secondary(b, t, secondary) {
+                continue;
+            }
             if !b.rng.chance(chance, 100) {
                 continue;
             }
@@ -1347,6 +1415,8 @@ fn damaging_hit<const N: usize>(
         }
         if mon.item == items::ROCKY_HELMET {
             handlers.push((2, index, Kind::Item(mon.item)));
+        } else if mon.item == items::AIR_BALLOON {
+            handlers.push((LAST, index, Kind::Item(mon.item)));
         }
     }
     handlers.sort();
@@ -1382,6 +1452,15 @@ fn damaging_hit<const N: usize>(
                     let max_hp = f64::from(b.slot_mon(user).expect("alive").max_hp);
                     b.damage(user, max_hp / 6.0, DamageSource::Indirect);
                 }
+            }
+            Kind::Item(i) if i == items::AIR_BALLOON => {
+                // `target.item = ''` without `useItem`: no `lastItem`; AfterUseItem
+                // (Unburden) is not implemented.
+                b.apply(crate::instruction::Instruction::SetItem {
+                    target: pokemon,
+                    old: items::AIR_BALLOON,
+                    new: ItemId::NONE,
+                });
             }
             Kind::Item(_) => {}
         }
@@ -1426,7 +1505,9 @@ fn get_damage<const N: usize>(
     // Critical hit: ratio 1..4 ??1/24, 1/8, 1/2, always. `CriticalHit` handlers: Battle Armor
     // and Shell Armor (`onCriticalHit: false`, breakable). Showdown rolls first and then
     // cancels; not rolling gives the same distribution.
-    let crit_ratio = data.crit_ratio.min(4);
+    // ModifyCritRatio: the user's item (Scope Lens, Razor Claw), then clamped to 0..4.
+    let crit_ratio =
+        (i32::from(data.crit_ratio) + item_events::crit_ratio_bonus(b.item(user))).clamp(0, 4);
     let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit;
     let critical = can_crit
         && (data.will_crit
@@ -1500,7 +1581,8 @@ fn get_damage<const N: usize>(
     );
     // ModifyAtk (physical) / ModifySpA (special), whatever stat the move attacks with.
     let attack = ability_events::attack_direct(attacker.ability, data, attack);
-    let attack_mods = ability_events::attack_handlers(b, user, target, data);
+    let mut attack_mods = ability_events::attack_handlers(b, user, target, data);
+    attack_mods.extend(item_events::attack_handlers(b, user, data));
     let attack = modify(attack, ability_events::chain(b, attack_mods));
     let mut defense = boosted_stat(
         i32::from(defender.stats[stat_index(defense_stat)]),
@@ -1517,7 +1599,8 @@ fn get_damage<const N: usize>(
         defense = modify(defense, MOD_ONE_POINT_FIVE);
     }
     // Chained ModifyDef / ModifySpD handlers, applied after the direct weather boosts.
-    let defense_mods = ability_events::defense_handlers(b, user, target, data, defense_stat);
+    let mut defense_mods = ability_events::defense_handlers(b, user, target, data, defense_stat);
+    defense_mods.extend(item_events::defense_handlers(b, target, defense_stat));
     let defense = modify(defense, ability_events::chain(b, defense_mods));
 
     // modifyDamage inputs.
@@ -1535,7 +1618,8 @@ fn get_damage<const N: usize>(
         .filter(|&&t| t != Type::None)
         .map(|&t| {
             let chart = handlers::type_effectiveness(data.move_type, t);
-            handlers::on_effectiveness(mv.id, t, chart)
+            let by_move = handlers::on_effectiveness(mv.id, t, chart);
+            item_events::on_effectiveness(b, target, data.move_type, by_move)
         })
         .sum::<i32>()
         .clamp(-6, 6);
@@ -1544,12 +1628,12 @@ fn get_damage<const N: usize>(
     } else {
         MOD_ONE >> -type_mod
     };
-    // ModifyDamage (all priority 0, so in Speed order): Life Orb, screens (side conditions,
-    // Speed 0), the target's abilities.
+    // ModifyDamage (all priority 0, so in Speed order): the target's abilities, items (Life
+    // Orb, resist berries), screens (side conditions, Speed 0).
     let mut final_mods = ability_events::modify_damage_handlers(b, user, target, data, type_mod);
-    if attacker.item == items::LIFE_ORB {
-        final_mods.push(Handler::of(b, user, 0, SUB_ITEM, 5324));
-    }
+    final_mods.extend(item_events::modify_damage_handlers(
+        b, user, target, data, type_mod,
+    ));
     if !critical && target != user && screen_applies(b, target.side, data.category) {
         let modifier = if N > 1 { 2732 } else { MOD_HALF };
         final_mods.push(Handler::global(0, SUB_SIDE_CONDITION, modifier));

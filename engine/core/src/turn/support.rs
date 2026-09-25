@@ -262,6 +262,54 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::ASPEAR_BERRY, &["onEat", "onUpdate"]),
     (items::PERSIM_BERRY, &["onEat", "onUpdate"]),
     (items::LEPPA_BERRY, &["onEat", "onUpdate"]),
+    (items::EXPERT_BELT, &["onModifyDamage"]),
+    // `onDisableMove` in `mod.rs` `disabled` (via `items::disabled_move`).
+    (items::ASSAULT_VEST, &["onDisableMove", "onModifySpD"]),
+    (items::EVIOLITE, &["onModifyDef", "onModifySpD"]),
+    // Accuracy, critical hits, flinch (`moves.rs`), Focus Band (`Battle::damage`).
+    (items::WIDE_LENS, &["onSourceModifyAccuracy"]),
+    (items::ZOOM_LENS, &["onSourceModifyAccuracy"]),
+    (items::SCOPE_LENS, &["onModifyCritRatio"]),
+    (items::RAZOR_CLAW, &["onModifyCritRatio"]),
+    (items::FOCUS_BAND, &["onDamage"]),
+    (items::KINGS_ROCK, &["onModifyMove"]),
+    (items::RAZOR_FANG, &["onModifyMove"]),
+    // Residual (`residual.rs` → `items::on_residual`), after the move (`use_move`), on hit.
+    (items::BLACK_SLUDGE, &["onResidual"]),
+    (items::TOXIC_ORB, &["onResidual"]),
+    (items::FLAME_ORB, &["onResidual"]),
+    (items::STICKY_BARB, &["onHit", "onResidual"]),
+    (items::SHELL_BELL, &["onAfterMoveSecondarySelf"]),
+    (items::THROAT_SPRAY, &["onAfterMoveSecondarySelf"]),
+    // Grounding (`Battle::is_grounded`), Speed, effectiveness; Air Balloon's `onStart` only
+    // announces it and its pop (`onDamagingHit`) is refused until F15 (`items::on_damaging_hit`;
+    // `onAfterSubDamage` needs a substitute, which is refused).
+    (
+        items::AIR_BALLOON,
+        &["onAfterSubDamage", "onDamagingHit", "onStart"],
+    ),
+    (items::IRON_BALL, &["onEffectiveness", "onModifySpe"]),
+    // Drawn when the actions are queued (first stage, `mod.rs`); Lagging Tail and Full Incense
+    // have only a constant `onFractionalPriority` (`items::constant_fractional_tenths`).
+    (items::QUICK_CLAW, &["onFractionalPriority"]),
+    // `onImmunity` in `Battle::status_immune`, `onTryHit` in the move's TryHit step.
+    (items::SAFETY_GOGGLES, &["onImmunity", "onTryHit"]),
+    // `onModifySecondaries` in the secondaries loop (`items::keeps_secondary`).
+    (items::COVERT_CLOAK, &["onModifySecondaries"]),
+    // Choice items (`items.rs`): the stat in `order.rs`/`moves.rs`, `onModifyMove` adds the
+    // `choicelock` volatile, `onStart` only removes a lock a newcomer cannot have.
+    (
+        items::CHOICE_BAND,
+        &["onModifyAtk", "onModifyMove", "onStart"],
+    ),
+    (
+        items::CHOICE_SCARF,
+        &["onModifyMove", "onModifySpe", "onStart"],
+    ),
+    (
+        items::CHOICE_SPECS,
+        &["onModifyMove", "onModifySpA", "onStart"],
+    ),
 ];
 
 /// Abilities with callbacks that are implemented while the holder is on the field.
@@ -516,12 +564,15 @@ pub(crate) fn ability_supported_on_field(ability: AbilityId) -> bool {
 /// Whether an item is inert or implemented while its holder is on the field.
 pub(crate) fn item_supported_on_field(item: ItemId) -> bool {
     let data = item.data();
-    if CORE_CHECKED_ITEMS.contains(&item) || data.fractional_priority_tenths != 0 {
+    if CORE_CHECKED_ITEMS.contains(&item)
+        || data.fractional_priority_tenths != super::items::constant_fractional_tenths(item)
+    {
         return false;
     }
     data.handlers.is_empty()
         || listed(ITEMS_WITH_HANDLERS, item)
         || type_boost_item(item).is_some()
+        || super::items::resist_berry(item).is_some()
         // Mega Stones only matter for Knock Off, handled by `item_can_be_taken`.
         || (!data.mega_stone.is_empty() && data.handlers == ["onTakeItem"])
 }
@@ -702,6 +753,9 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
                 ));
             }
             if let Some(why) = super::update::berry_problem(mon) {
+                return Err(why);
+            }
+            if let Some(why) = super::items::held_item_problem(mon) {
                 return Err(why);
             }
             if !mon.species.data().handlers.is_empty() {

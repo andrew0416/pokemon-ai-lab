@@ -1,0 +1,23 @@
+{
+ "description": "O89: Gardevoir's Psyshock (special, hits Defense) ignores Assault Vest Amoonguss's SpD boost; Amoonguss's Grass Knot hits Eviolite Porygon2 (SpD 1.5x). Porygon2 uses Calm Mind, Kingambit Protect.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gardevoir", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Psyshock", "Protect"], "level": 50},
+   {"species": "Porygon2", "item": "Eviolite", "ability": "Honey Gather", "nature": "Sassy",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Amoonguss", "item": "Assault Vest", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Grass Knot", "Protect"], "level": 50},
+   {"species": "Kingambit", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "spd": 2}, "moves": ["Protect", "Kowtow Cleave"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move psyshock 1, move calmmind", "p2": "move grassknot 2, move protect"}
+}

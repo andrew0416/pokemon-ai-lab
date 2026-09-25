@@ -1,0 +1,23 @@
+{
+ "description": "O93 residual items: Flame Orb cannot burn Heatran (Fire) and Toxic Orb cannot poison Toxapex (Poison); Magic Guard Clefable takes no Black Sludge damage; Sticky Barb hurts Ferrothorn 1/8. Everyone uses a self-targeting status move.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Heatran", "item": "Flame Orb", "ability": "Honey Gather", "nature": "Calm",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Calm Mind", "Protect"], "level": 50},
+   {"species": "Clefable", "item": "Black Sludge", "ability": "Magic Guard", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Toxapex", "item": "Toxic Orb", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Iron Defense", "Protect"], "level": 50},
+   {"species": "Ferrothorn", "item": "Sticky Barb", "ability": "Honey Gather", "nature": "Relaxed",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Iron Defense", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move calmmind, move calmmind", "p2": "move irondefense, move irondefense"}
+}
