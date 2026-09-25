@@ -75,6 +75,21 @@ fn o11_first_impression_blocked_by_psychic_terrain_on_grounded_targets() {
     assert_exact_parity("o11-first-impression-psychic-terrain");
 }
 
+#[test]
+fn o12_dire_claw_poison_paralysis_or_sleep() {
+    assert_exact_parity("o12-dire-claw");
+}
+
+#[test]
+fn o12_tri_attack_burn_paralysis_or_freeze() {
+    assert_exact_parity("o12-tri-attack");
+}
+
+#[test]
+fn o12_tri_attack_cannot_freeze_in_sun() {
+    assert_exact_parity("o12-tri-attack-sun");
+}
+
 /// Champions `onDisableMove`: once the user has acted since switching in, First Impression
 /// cannot be chosen.
 #[test]

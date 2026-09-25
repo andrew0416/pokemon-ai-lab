@@ -45,6 +45,8 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::POLTERGEIST, &["onTry", "onTryHit"]),
     (moves::ACROBATICS, &["basePowerCallback"]),
     (moves::FIRST_IMPRESSION, &["onDisableMove", "onTry"]),
+    (moves::DIRE_CLAW, &["secondaries.onHit", "secondary.onHit"]),
+    (moves::TRI_ATTACK, &["secondaries.onHit", "secondary.onHit"]),
     (
         moves::GRAVITY,
         &[

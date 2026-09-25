@@ -7,7 +7,7 @@
 use crate::damage::MOD_ONE_POINT_FIVE;
 use crate::dex::{abilities, items, moves, MoveId, Type, TypeRelation};
 use crate::field::{FieldEffect, Terrain, Weather};
-use crate::state::SlotRef;
+use crate::state::{SlotRef, Status};
 
 use super::super::battle::Battle;
 use super::super::TurnError;
@@ -134,4 +134,21 @@ pub(super) fn on_effectiveness(id: MoveId, defending: Type, type_mod: i32) -> i3
         moves::FLYING_PRESS => type_mod + type_effectiveness(Type::Flying, defending),
         _ => type_mod,
     }
+}
+
+/// The secondary effect's `onHit` (`secondaries` → `moveHit`, after the chance roll):
+/// Dire Claw and Tri Attack draw one of three statuses (`this.sample`) and `trySetStatus` it,
+/// so the draw happens even when the status then fails.
+pub(super) fn secondary_on_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    mv: &ActiveMove,
+) {
+    let statuses = match mv.id {
+        moves::DIRE_CLAW => [Status::Poison, Status::Paralyze, Status::Sleep],
+        moves::TRI_ATTACK => [Status::Burn, Status::Paralyze, Status::Freeze],
+        _ => return,
+    };
+    let status = statuses[b.rng.uniform(statuses.len())];
+    b.try_set_status(target, status);
 }

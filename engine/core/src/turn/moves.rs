@@ -679,6 +679,7 @@ fn spread_move_hit<const N: usize>(
             if let Some(volatile) = Volatile::from_condition(secondary.volatile_status) {
                 b.add_volatile(t, volatile);
             }
+            handlers::secondary_on_hit(b, t, mv);
             if secondary.self_boosts != NO_BOOSTS {
                 b.boost(user, &secondary.self_boosts);
             }
