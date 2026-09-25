@@ -1,0 +1,23 @@
+{
+ "description": "Flower Veil vs Mirror Armor on a Grass target: Venusaur (Mirror Armor, Speed 100) outspeeds its Flower Veil ally Floette (72), so Mirror Armor's onTryBoost runs first and reflects Arcanine's Growl back at Arcanine; Floette's own Attack drops.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Floette", "item": "", "ability": "Flower Veil", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Venusaur", "item": "", "ability": "Mirror Armor", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Arcanine", "item": "", "ability": "Flash Fire", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Growl"], "level": 50},
+   {"species": "Jolteon", "item": "", "ability": "Volt Absorb", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "move growl, move harden"}
+}

@@ -540,6 +540,13 @@ impl<'a, const N: usize> Battle<'a, N> {
         if super::abilities::blocks_status(self.ability_unless_broken(target), status) {
             return false;
         }
+        // Flower Veil's `onAllySetStatus`: `source && target !== source && effect.id !==
+        // 'yawn'` (Yawn's end passes no source here).
+        if source.is_some_and(|s| s != target)
+            && super::abilities::flower_veil_holder(self, target).is_some()
+        {
+            return false;
+        }
         let turns = match status {
             // Champions `slp`: `sample([2, 3, 3])`.
             Status::Sleep => {
@@ -594,7 +601,7 @@ impl<'a, const N: usize> Battle<'a, N> {
     ///   (`onAllySetStatus`; Pastel Veil's own `onSetStatus` is the same block);
     /// - Misty Terrain (everything) and Electric Terrain (slp) for a grounded target.
     ///
-    /// Flower Veil is refused (`onAllyTryBoost`).
+    /// Flower Veil, which also needs the source, is checked in [`Battle::try_set_status_from`].
     pub fn set_status_blocked(&self, target: SlotRef, status: Status) -> bool {
         let own = self.ability_unless_broken(target);
         let blocked_by_own = match own {
@@ -697,12 +704,15 @@ impl<'a, const N: usize> Battle<'a, N> {
             (ability == abilities::SWEET_VEIL && yawn)
                 || (ability == abilities::AROMA_VEIL && aroma)
         });
+        // Flower Veil's `onAllyTryAddVolatile`: Yawn on a Grass type.
+        let flower_veiled = yawn && super::abilities::flower_veil_holder(self, target).is_some();
         // Electric Terrain's `onTryAddVolatile`: Yawn fails on a grounded target (Misty
         // Terrain's only blocks confusion). Safeguard: Yawn and confusion from the user of the
         // move in progress, if that is another Pokémon.
         let safeguard = (yawn || condition == conditions::CONFUSION)
             && self.safeguarded(target, self.active_move.map(|m| m.user));
         veiled
+            || flower_veiled
             || safeguard
             || (yawn && self.terrain() == Terrain::Electric && self.is_grounded(target))
     }
@@ -967,6 +977,11 @@ impl<'a, const N: usize> Battle<'a, N> {
         // `if (source && target === source) return;` — no source counts as "from another".
         let blocks_drops = source.is_none_or(|s| s != target);
         if blocks_drops {
+            // Flower Veil (`onAllyTryBoost`) deletes a Grass target's drops; it runs before or
+            // after the target's own Mirror Armor by Speed (`abilities::flower_veil_first`).
+            if super::abilities::flower_veil_first(self, target, &boost, source, effect) {
+                boost.iter_mut().filter(|b| **b < 0).for_each(|b| *b = 0);
+            }
             match ability {
                 a if a == abilities::CLEAR_BODY
                     || a == abilities::WHITE_SMOKE
@@ -1006,6 +1021,10 @@ impl<'a, const N: usize> Battle<'a, N> {
                     }
                 }
                 _ => {}
+            }
+            // Flower Veil after Mirror Armor: whatever drop Mirror Armor left (at -6).
+            if super::abilities::flower_veil_holder(self, target).is_some() {
+                boost.iter_mut().filter(|b| **b < 0).for_each(|b| *b = 0);
             }
         }
 

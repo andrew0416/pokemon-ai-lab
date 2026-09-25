@@ -899,6 +899,13 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::FAIRY_AURA, &["onAnyBasePower", "onStart"]),
     (abilities::DARK_AURA, &["onAnyBasePower", "onStart"]),
     (abilities::AURA_BREAK, &["onAnyTryPrimaryHit", "onStart"]),
+    // `abilities::flower_veil_holder`: `onAllyTryBoost` in `Battle::boost_by` (ordered with
+    // Mirror Armor, `abilities::flower_veil_first`), `onAllySetStatus` in
+    // `Battle::try_set_status_from`, `onAllyTryAddVolatile` in `Battle::add_volatile_blocked`.
+    (
+        abilities::FLOWER_VEIL,
+        &["onAllySetStatus", "onAllyTryAddVolatile", "onAllyTryBoost"],
+    ),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

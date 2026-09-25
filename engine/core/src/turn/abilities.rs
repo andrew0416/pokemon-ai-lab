@@ -398,6 +398,57 @@ pub(crate) fn try_eat_item<const N: usize>(b: &Battle<'_, N>, eater: SlotRef) ->
     !pending && !unnerved
 }
 
+/// The active Pokémon whose Flower Veil (breakable) protects `target`: `target` must be a Grass
+/// type, and the holder is the target itself or an ally not at 0 HP (`onAlly*` handlers come from
+/// `alliesAndSelf()`). The handlers only block, so which holder answers does not matter.
+/// - `onAllyTryBoost`: every drop from another Pokémon (or from no source) is deleted
+///   (`Battle::boost_by`, with [`flower_veil_first`]).
+/// - `onAllySetStatus`: a status from another Pokémon is blocked unless the effect is Yawn
+///   (`Battle::try_set_status_from`; Yawn's own end passes no source).
+/// - `onAllyTryAddVolatile`: Yawn is blocked (`Battle::add_volatile_blocked`).
+pub(crate) fn flower_veil_holder<const N: usize>(
+    b: &Battle<'_, N>,
+    target: SlotRef,
+) -> Option<SlotRef> {
+    if !b.has_type(target, Type::Grass) {
+        return None;
+    }
+    b.alive_slots(target.side)
+        .into_iter()
+        .find(|&s| b.ability_unless_broken(s) == abilities::FLOWER_VEIL)
+}
+
+/// Whether Flower Veil's `onAllyTryBoost` deletes the drops in `boost` before the target's own
+/// Mirror Armor (`onTryBoost`) can reflect them: both have priority 0, so their holders' Speed
+/// orders them (a tie at random), and whichever runs first leaves the other no drop. `false`
+/// when no Flower Veil protects the target; `true` when Mirror Armor would not reflect anything
+/// (the caller zeroes the remaining drops after the other TryBoost handlers either way). Guard
+/// Dog (priority 2) runs before both; the other TryBoost handlers only delete.
+pub(crate) fn flower_veil_first<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    boost: &[i8; crate::state::BOOST_COUNT],
+    source: Option<SlotRef>,
+    effect: BoostEffect,
+) -> bool {
+    let Some(holder) = flower_veil_holder(b, target) else {
+        return false;
+    };
+    let stages = b.state.slot(target).boosts;
+    let mirror_armor = b.ability_unless_broken(target) == abilities::MIRROR_ARMOR
+        && source.is_some_and(|s| s != target)
+        && effect != BoostEffect::Ability(abilities::MIRROR_ARMOR)
+        && (0..boost.len()).any(|i| boost[i] < 0 && stages[i] > -6);
+    if !mirror_armor {
+        return true;
+    }
+    match b.action_speed(holder).cmp(&b.action_speed(target)) {
+        std::cmp::Ordering::Greater => true,
+        std::cmp::Ordering::Less => false,
+        std::cmp::Ordering::Equal => b.rng.uniform(2) == 0,
+    }
+}
+
 /// Sheer Force's `onModifyMove` condition: `move.secondaries && !move.hasSheerForceBoost`.
 pub(crate) fn sheer_force_deletes_secondaries(data: &MoveData) -> bool {
     !data.secondaries.is_empty() && !data.has_sheer_force_boost

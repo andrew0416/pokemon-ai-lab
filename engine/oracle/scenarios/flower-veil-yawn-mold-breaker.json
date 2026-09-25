@@ -1,0 +1,23 @@
+{
+ "description": "Flower Veil: Jolteon's Yawn on Grass Venusaur is blocked (onAllyTryAddVolatile); Venusaur's own Leaf Storm still lowers its SpA (a self-inflicted drop); Mold Breaker Haxorus's Growl ignores Flower Veil and lowers both Floette and Venusaur. Floette Hardens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Floette", "item": "", "ability": "Flower Veil", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Venusaur", "item": "", "ability": "Overgrow", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Leaf Storm"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Jolteon", "item": "", "ability": "Volt Absorb", "nature": "Serious",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Yawn"], "level": 50},
+   {"species": "Haxorus", "item": "", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Growl"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move leafstorm 1", "p2": "move yawn 2, move growl"}
+}
