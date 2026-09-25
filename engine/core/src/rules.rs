@@ -47,6 +47,10 @@ impl Ruleset {
     /// Activation modes the Pokémon at `slot` may choose now: enabled by the ruleset,
     /// supported by the Pokémon, and not yet spent by its side. Empty for an empty or
     /// out-of-range slot.
+    ///
+    /// Deliberately independent of item suppression: Showdown's `canMegaEvo`/`runMegaEvo`
+    /// read `pokemon.getItem()` directly, so Magic Room, Embargo and Klutz never block Mega
+    /// Evolution. A future Magic Room must not gate this on `ignoringItem`.
     pub fn available_gimmicks<const N: usize>(
         &self,
         state: &State<N>,

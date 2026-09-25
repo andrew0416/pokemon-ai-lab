@@ -26,7 +26,7 @@
 | `move` | 있음 | |
 | `switch` | 있음 | 등장 효과는 날씨·필드 특성·위협만 |
 | `instaswitch` (기절 후 교체) | **없음** | 턴이 끝나면 `request: switch` 상태로 멈춘다. 교체를 받아 `runSwitch`하고 다음 턴으로 가는 결정 단계가 없다. 교체된 기절 포켓몬의 status가 `''`로 돌아가는 규칙도 없다 |
-| `megaEvo` / `megaEvoX` / `megaEvoY` | **거부** | `Gimmick::Mega` 선택 시 `Unsupported`. 폼 변경·특성 교체·능력치 재계산(성격·SP가 `Pokemon`에 없음), Gen 7식 순서 재계산 없음, `AfterMega` 이벤트 |
+| `megaEvo` / `megaEvoX` / `megaEvoY` | **거부** | `Gimmick::Mega` 선택 시 `Unsupported`. 폼 변경·특성 교체·능력치 재계산(성격·SP가 `Pokemon`에 없음), Gen 7식 순서 재계산 없음, `AfterMega` 이벤트. 구현 시 주의: 메가 자격은 `getItem()` 직접 참조라 매직룸·금제·서투름에 막히지 않는다 |
 | `terastallize` | 거부(규칙셋) | M-C 범위 밖. 구조만 유지 |
 | `runDynamax` | 거부(규칙셋) | 같음 |
 | `beforeTurnMove` (`beforeTurnCallback`: 카운터·미러코트·메탈버스트·속임수 등) | **없음** | 해당 기술이 거부됨 |
