@@ -1,0 +1,23 @@
+{
+ "description": "O70 Pixilate / Aerilate: Sylveon's Strength becomes Fairy (STAB, 4915/4096) and hits Ghost/Poison Gengar (resisted instead of immune); Pinsir's Aerilate Strength becomes Flying (4915/4096, no STAB) and hits Machamp super effectively. Gengar and Machamp only Harden (Gengar before Sylveon, Machamp after Pinsir).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Sylveon", "item": "", "ability": "Pixilate", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Strength"], "level": 50},
+   {"species": "Pinsir", "item": "", "ability": "Aerilate", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Strength"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Levitate", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move strength 1, move strength 2", "p2": "move harden, move harden"}
+}

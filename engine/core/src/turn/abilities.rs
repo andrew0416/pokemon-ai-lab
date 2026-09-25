@@ -462,8 +462,9 @@ pub(crate) fn attack_handlers<const N: usize>(
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
     }
     // Flash Fire's volatile (a condition, priority 5): `if (move.type === 'Fire' &&
-    // attacker.hasAbility('flashfire')) return this.chainModify(1.5)`.
-    if data.move_type == Type::Fire
+    // attacker.hasAbility('flashfire')) return this.chainModify(1.5)` (`move.type`: after
+    // ModifyType).
+    if move_type == Type::Fire
         && ability == abilities::FLASH_FIRE
         && b.volatile(user, Volatile::FlashFire).active
     {

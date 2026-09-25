@@ -885,6 +885,15 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::MOLD_BREAKER, &["onModifyMove", "onStart"]),
     (abilities::TERAVOLT, &["onModifyMove", "onStart"]),
     (abilities::TURBOBLAZE, &["onModifyMove", "onStart"]),
+    // O70 type changers: `onModifyType` in `moves::ability_hooks::on_modify_type`, `onBasePower`
+    // (`move.typeChangerBoosted`) in `ability_hooks::base_power_handlers`.
+    (abilities::PIXILATE, &["onBasePower", "onModifyType"]),
+    (abilities::AERILATE, &["onBasePower", "onModifyType"]),
+    (abilities::REFRIGERATE, &["onBasePower", "onModifyType"]),
+    (abilities::GALVANIZE, &["onBasePower", "onModifyType"]),
+    (abilities::DRAGONIZE, &["onBasePower", "onModifyType"]),
+    (abilities::NORMALIZE, &["onBasePower", "onModifyType"]),
+    (abilities::LIQUID_VOICE, &["onModifyType"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

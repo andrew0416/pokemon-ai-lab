@@ -936,7 +936,7 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
-    data: &MoveData,
+    move_type: Type,
     type_mod: i32,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
@@ -948,7 +948,8 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
         _ => {}
     }
     if let Some(ty) = resist_berry(b.item(target)) {
-        let applies = data.move_type == ty && (ty == Type::Normal || type_mod > 0);
+        // `move.type`: the type after ModifyType (a Pixilate Normal move is Fairy).
+        let applies = move_type == ty && (ty == Type::Normal || type_mod > 0);
         if applies {
             let handler = Handler::of(b, target, 0, SUB_ITEM, MOD_HALF);
             if eat_item(b, target) {

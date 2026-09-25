@@ -72,6 +72,10 @@ struct ActiveMove {
     /// Showdown `move.sourceEffect` for a move another move calls (Sleep Talk), whose PP pays
     /// Pressure's extra; `NONE` for a move used directly.
     source_effect: MoveId,
+    /// Showdown `move.typeChangerBoosted`: the ability whose ModifyType changed the move's type
+    /// (Pixilate, Aerilate, Refrigerate, Galvanize, Dragonize, Normalize), which then boosts it
+    /// in BasePower; `NONE` otherwise.
+    type_changer: AbilityId,
 }
 
 impl PartialEq for ActiveMove {
@@ -91,6 +95,7 @@ impl PartialEq for ActiveMove {
             && self.scrappy == other.scrappy
             && self.hit_targets == other.hit_targets
             && self.source_effect == other.source_effect
+            && self.type_changer == other.type_changer
     }
 }
 
@@ -113,6 +118,7 @@ impl std::hash::Hash for ActiveMove {
         self.scrappy.hash(state);
         self.hit_targets.hash(state);
         self.source_effect.hash(state);
+        self.type_changer.hash(state);
     }
 }
 
@@ -199,6 +205,7 @@ pub(crate) fn run_move<const N: usize>(
             scrappy: false,
             hit_targets: 0,
             source_effect: MoveId::NONE,
+            type_changer: AbilityId::NONE,
         };
         before_move(b, user, &recharge);
         return Ok(MoveStep::Done);
@@ -312,6 +319,7 @@ fn run_move_inner<const N: usize>(
         scrappy: false,
         hit_targets: 0,
         source_effect: MoveId::NONE,
+        type_changer: AbilityId::NONE,
     };
 
     if !before_move(b, user, &mv) {
@@ -736,6 +744,7 @@ fn use_move<const N: usize>(
     // user's ability and status; a changed target type picks a new target (`getRandomTarget`).
     handlers::on_modify_type(b, user, mv)?;
     handlers::on_modify_move(b, user, target, mv)?;
+    ability_hooks::on_modify_type(b, user, mv);
     ability_hooks::on_modify_move(b, user, mv)?;
     if mv.target != base_target {
         target = get_random_target(b, user, mv.target);
@@ -835,6 +844,7 @@ fn call_move<const N: usize>(
         scrappy: false,
         hit_targets: 0,
         source_effect: caller.id,
+        type_changer: AbilityId::NONE,
     };
     let target = get_random_target(b, user, data.target);
     let will_act = b.will_act();
@@ -1907,6 +1917,8 @@ fn get_damage<const N: usize>(
     // terrain (6), the move (0).
     let mut power_mods =
         ability_events::base_power_handlers(b, user, target, data, mv.move_type, base_power);
+    // The type changers' `onBasePower`, the auras' `onAnyBasePower`.
+    power_mods.extend(ability_hooks::base_power_handlers(b, user, target, mv));
     if type_boost_item(attacker.item) == Some(mv.move_type) {
         power_mods.push(Handler::of(b, user, 15, SUB_ITEM, MOD_ONE_POINT_TWO));
     }
@@ -2042,7 +2054,11 @@ fn get_damage<const N: usize>(
     let mut final_mods =
         ability_events::modify_damage_handlers(b, user, target, data, mv.move_type, type_mod);
     final_mods.extend(item_events::modify_damage_handlers(
-        b, user, target, data, type_mod,
+        b,
+        user,
+        target,
+        mv.move_type,
+        type_mod,
     ));
     // The target's volatiles (`onSourceModifyDamage`: Glaive Rush).
     final_mods.extend(handlers::volatile_modify_damage(b, target));

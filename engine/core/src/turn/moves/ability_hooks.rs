@@ -14,10 +14,91 @@ use crate::field::{Terrain, Weather};
 use crate::state::{SlotRef, Status};
 use crate::volatile::Volatile;
 
-use super::super::abilities::{priority, sheer_force_deletes_secondaries};
+use super::super::abilities::{priority, sheer_force_deletes_secondaries, Handler, SUB_ABILITY};
 use super::super::battle::{Battle, BoostEffect, DamageSource};
 use super::super::TurnError;
 use super::{handlers, type_immune, ActiveMove};
+
+/// The moves the type-changing abilities leave alone (`noModifyType`); Normalize also leaves
+/// Hidden Power and Struggle.
+const ATE_UNCHANGED: [&str; 7] = [
+    "judgment",
+    "multiattack",
+    "naturalgift",
+    "revelationdance",
+    "technoblast",
+    "terrainpulse",
+    "weatherball",
+];
+
+/// The user's ability `onModifyType` (`runEvent('ModifyType')`, after the move's own
+/// ModifyType and ModifyMove, before the ability's ModifyMove; WORKPLAN O70). A Pokémon has one
+/// ability, so the handlers' priorities (Normalize 1, the rest -1) never compete, and no other
+/// ModifyType handler (Electrify, Ion Deluge) is implemented.
+/// - Pixilate, Aerilate, Refrigerate, Galvanize, Dragonize: a Normal move (not in
+///   [`ATE_UNCHANGED`], not a damaging Z-Move) becomes Fairy / Flying / Ice / Electric / Dragon,
+///   and `move.typeChangerBoosted` is set to the ability.
+/// - Normalize: every move but those and Hidden Power and Struggle becomes Normal, boosted too.
+/// - Liquid Voice: a sound move of a Pokémon that is not Dynamaxed becomes Water (no boost).
+///
+/// Status moves change type too (a Galvanize Glare is Electric for Volt Absorb). Tera Blast's
+/// exception needs Terastallization, which is off.
+pub(super) fn on_modify_type<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &mut ActiveMove,
+) {
+    let ability = b.ability(user);
+    let data = mv.data;
+    let damaging_z = data.is_z && data.category != MoveCategory::Status;
+    let new_type = match ability {
+        a if a == abilities::PIXILATE => Type::Fairy,
+        a if a == abilities::AERILATE => Type::Flying,
+        a if a == abilities::REFRIGERATE => Type::Ice,
+        a if a == abilities::GALVANIZE => Type::Electric,
+        a if a == abilities::DRAGONIZE => Type::Dragon,
+        a if a == abilities::NORMALIZE => {
+            let unchanged =
+                ATE_UNCHANGED.contains(&data.id) || ["hiddenpower", "struggle"].contains(&data.id);
+            if !damaging_z && !unchanged {
+                mv.move_type = Type::Normal;
+                mv.type_changer = ability;
+            }
+            return;
+        }
+        a if a == abilities::LIQUID_VOICE => {
+            if data.flags.contains(MoveFlags::SOUND) && !b.state.slot(user).dynamax.is_active() {
+                mv.move_type = Type::Water;
+            }
+            return;
+        }
+        _ => return,
+    };
+    if mv.move_type == Type::Normal && !ATE_UNCHANGED.contains(&data.id) && !damaging_z {
+        mv.move_type = new_type;
+        mv.type_changer = ability;
+    }
+}
+
+/// BasePower handlers of abilities that read the active move (called from `get_damage` next to
+/// `abilities::base_power_handlers`):
+/// - the type changers' `onBasePower` (priority 23): `if (move.typeChangerBoosted ===
+///   this.effect) return this.chainModify([4915, 4096])`, the user's current ability being the
+///   one that changed the type.
+pub(super) fn base_power_handlers<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    _target: SlotRef,
+    mv: &ActiveMove,
+) -> Vec<Handler> {
+    let mut out = Vec::new();
+    let ability = b.ability(user);
+    if !mv.type_changer.is_none() && ability == mv.type_changer {
+        let p = priority(ability.data().event_orders, "onBasePowerPriority");
+        out.push(Handler::of(b, user, p, SUB_ABILITY, 4915));
+    }
+    out
+}
 
 /// The user's ability `onModifyMove` (`runEvent('ModifyMove')`, after the move's own):
 /// - Mold Breaker, Teravolt, Turboblaze: `move.ignoreAbility = true` (the Battle's active move,
@@ -191,7 +272,8 @@ pub(super) fn on_try_hit<const N: usize>(
         return false;
     }
     let data = mv.data;
-    let ty = data.move_type;
+    // `move.type`: the type after ModifyType (Weather Ball, a Galvanize Normal move).
+    let ty = mv.move_type;
     let other = target != user;
     let heal_type = match ability {
         a if a == abilities::VOLT_ABSORB => Some(Type::Electric),
@@ -517,7 +599,7 @@ fn effectiveness<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove, target: Slo
         .iter()
         .filter(|&&t| t != Type::None)
         .map(|&t| {
-            let chart = handlers::type_effectiveness(mv.data.move_type, t);
+            let chart = handlers::type_effectiveness(mv.move_type, t);
             handlers::on_effectiveness(mv.id, t, chart)
         })
         .sum()

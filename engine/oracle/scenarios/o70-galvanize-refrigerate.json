@@ -1,0 +1,24 @@
+{
+ "description": "O70 Galvanize / Refrigerate: Alolan Golem's Strength becomes Electric and Volt Absorb Lanturn (at 100 HP) absorbs it (heals 1/4, no damage: Volt Absorb reads the changed type); Aurorus's Refrigerate Strength becomes Ice (STAB, 4915/4096) against Garchomp (4x). Lanturn and Garchomp only Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Golem-Alola", "item": "", "ability": "Galvanize", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Strength"], "level": 50},
+   {"species": "Aurorus", "item": "", "ability": "Refrigerate", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Strength"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Lanturn", "item": "", "ability": "Volt Absorb", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Lanturn": {"hp": 100}}},
+ "turn": {"p1": "move strength 1, move strength 2", "p2": "move harden, move harden"}
+}
