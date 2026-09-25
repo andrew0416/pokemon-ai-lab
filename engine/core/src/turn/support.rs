@@ -330,6 +330,13 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::REFLECT_TYPE, &["onHit"]),
     (moves::SOAK, &["onHit"]),
     (moves::ENDEAVOR, &["damageCallback", "onTryImmunity"]),
+    // Item moves (`handlers::on_hit`): Bug Bite / Pluck (the berry's `onEat` on the user through
+    // `update::berry_on_eat`), Incinerate, Corrosive Gas, Recycle.
+    (moves::BUG_BITE, &["onHit"]),
+    (moves::PLUCK, &["onHit"]),
+    (moves::INCINERATE, &["onHit"]),
+    (moves::CORROSIVE_GAS, &["onHit"]),
+    (moves::RECYCLE, &["onHit"]),
     // Throat Chop: the secondary's `onHit` adds the `throatchop` volatile
     // (`handlers::secondary_on_hit`); its `onBeforeMove`, `onModifyMove` (a called sound move,
     // `moves::use_move`) and `onDisableMove` in `conditions::throat_chopped`; `onStart` and

@@ -850,6 +850,69 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::Success
             }
         }
+        // Bug Bite, Pluck: a user with HP takes the target's berry (`takeItem`, even from a
+        // target the hit knocked out) and eats it itself (`singleEvent('Eat', item, ..., source,
+        // source, move)`: the berry's `onEat` on the user; no `TryEatItem`, no `lastItem`).
+        // Resist berries and berries without handlers have an empty `onEat`. Returns nothing.
+        moves::BUG_BITE | moves::PLUCK => {
+            let item = b.item(target);
+            if let Some(eater) = b.alive(user).filter(|_| item.data().is_berry) {
+                let empty = item.data().handlers.is_empty()
+                    || super::super::items::resist_berry(item).is_some();
+                if b.take_item(target)
+                    && !empty
+                    && !super::super::update::berry_on_eat(b, user, eater, item)
+                {
+                    return Err(b.unsupported(format!(
+                        "{} eating {}",
+                        mv.data.name,
+                        item.data().name
+                    )));
+                }
+            }
+            HitResult::Success
+        }
+        // Incinerate: `if ((item.isBerry || item.isGem) && pokemon.takeItem(source))` (a target
+        // the hit knocked out too). Corrosive Gas: `target.takeItem(source)` (a failure only
+        // logs). Both return nothing.
+        moves::INCINERATE | moves::CORROSIVE_GAS => {
+            let data = b.item(target).data();
+            if mv.id == moves::CORROSIVE_GAS || data.is_berry || data.is_gem {
+                b.take_item(target);
+            }
+            HitResult::Success
+        }
+        // Recycle: fails with an item or without a `lastItem`; otherwise `lastItem` goes back to
+        // being held (`setItem`: its `Start` event runs; an item whose `onStart` acts is refused).
+        moves::RECYCLE => {
+            let Some(pokemon) = b.alive(target) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let (item, last) = (b.mon(pokemon).item, b.mon(pokemon).last_item);
+            if !item.is_none() || last.is_none() {
+                HitResult::Failure
+            } else {
+                if last.data().handlers.contains(&"onStart")
+                    && !super::super::items::inert_start(last)
+                {
+                    return Err(b.unsupported(format!(
+                        "Recycle restoring {} (its onStart)",
+                        last.data().name
+                    )));
+                }
+                b.apply(Instruction::SetLastItem {
+                    target: pokemon,
+                    old: last,
+                    new: ItemId::NONE,
+                });
+                b.apply(Instruction::SetItem {
+                    target: pokemon,
+                    old: ItemId::NONE,
+                    new: last,
+                });
+                HitResult::Success
+            }
+        }
         // Steel Roller: `this.field.clearTerrain();` (returns nothing: no effect on success).
         moves::STEEL_ROLLER => {
             super::clear_terrain(b);

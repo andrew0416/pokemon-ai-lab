@@ -154,6 +154,22 @@ fn endeavor_equalizes_hp_and_fails_against_a_lower_target() {
     assert_exact_parity("endeavor");
 }
 
+#[test]
+fn bug_bite_eats_the_targets_berry_and_corrosive_gas_removes_items() {
+    assert_exact_parity("bug-bite-corrosive-gas");
+}
+
+/// Pluck's user eats a Figy Berry whose flavor its nature dislikes: it is confused.
+#[test]
+fn pluck_eats_a_confusing_berry_and_incinerate_burns_one() {
+    assert_exact_parity("pluck-incinerate");
+}
+
+#[test]
+fn recycle_restores_the_last_consumed_item() {
+    assert_exact_parity("recycle");
+}
+
 /// No Retreat's `onTrapPokemon`: Snorlax cannot switch to the benched Kommo-o.
 #[test]
 fn no_retreat_traps_its_user() {

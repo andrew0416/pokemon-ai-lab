@@ -150,6 +150,22 @@ pub(crate) fn eat_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> 
     if !super::abilities::try_eat_item(b, slot) {
         return false;
     }
+    if !berry_on_eat(b, slot, pokemon, item) {
+        return false;
+    }
+    consume(b, slot, pokemon)
+}
+
+/// The berry's `onEat` for `pokemon` in `slot`: its holder, or the user of Bug Bite / Pluck
+/// eating the target's berry (`singleEvent('Eat', item, ..., source, source, move)`). `false` for
+/// a berry this does not implement (resist berries and effectless berries have an empty `onEat`
+/// but are not eaten through [`eat_item`]).
+pub(crate) fn berry_on_eat<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    pokemon: PokemonRef,
+    item: ItemId,
+) -> bool {
     let mon = b.mon(pokemon);
     let max_hp = f64::from(mon.max_hp);
     let status = mon.status;
@@ -157,9 +173,13 @@ pub(crate) fn eat_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> 
         b.heal(slot, max_hp / 4.0);
     } else if item == items::ORAN_BERRY {
         b.heal(slot, 10.0);
-    } else if FIGY_BERRIES.iter().any(|&(i, _)| i == item) {
-        // The confusing case is refused before the turn (`berry_problem`).
+    } else if let Some(&(_, disliked)) = FIGY_BERRIES.iter().find(|&&(i, _)| i == item) {
+        // `if (pokemon.getNature().minus === stat) pokemon.addVolatile('confusion');` (a holder
+        // with such a nature is refused before the turn: `berry_problem`; a Bug Bite user is not).
         b.heal(slot, max_hp / 3.0);
+        if b.mon(pokemon).nature.modifiers().1 == Some(disliked) {
+            b.add_volatile(slot, Volatile::Confusion);
+        }
     } else if let Some(&(_, index)) = STAT_BERRIES.iter().find(|&&(i, _)| i == item) {
         let mut up = NO_BOOSTS;
         up[index] = 1;
@@ -237,7 +257,7 @@ pub(crate) fn eat_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> 
         // that ate them (damage, +0.1 priority, heal).
         return false;
     }
-    consume(b, slot, pokemon)
+    true
 }
 
 /// The end of `eatItem`: `lastItem = item; item = ''` (at any HP, unlike `useItem`), then
