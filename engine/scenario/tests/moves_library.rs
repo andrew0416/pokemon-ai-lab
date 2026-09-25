@@ -108,6 +108,26 @@ fn no_retreat_fails_again_and_a_ghost_can_still_switch() {
     assert_exact_parity("no-retreat");
 }
 
+#[test]
+fn heal_bell_and_aromatherapy_cure_the_party_but_not_soundproof_or_sap_sipper() {
+    assert_exact_parity("heal-bell-aromatherapy");
+}
+
+#[test]
+fn rest_refresh_and_purify_cure_and_heal() {
+    assert_exact_parity("rest-refresh-purify");
+}
+
+#[test]
+fn purify_after_take_heart_and_rest_failures() {
+    assert_exact_parity("purify-take-heart");
+}
+
+#[test]
+fn jungle_healing_lunar_blessing_and_floral_healing_in_grassy_terrain() {
+    assert_exact_parity("jungle-healing-floral");
+}
+
 /// No Retreat's `onTrapPokemon`: Snorlax cannot switch to the benched Kommo-o.
 #[test]
 fn no_retreat_traps_its_user() {

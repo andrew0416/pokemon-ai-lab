@@ -762,9 +762,11 @@ fn use_move<const N: usize>(
     };
 
     let mut main_target = target;
+    // Showdown `tryMoveHit`: moves aimed at the field or a side, and `allyTeam` moves (Heal
+    // Bell), whose `onHit` covers the whole party.
     let field_move = matches!(
         mv.target,
-        MoveTarget::All | MoveTarget::FoeSide | MoveTarget::AllySide
+        MoveTarget::All | MoveTarget::FoeSide | MoveTarget::AllySide | MoveTarget::AllyTeam
     );
     let targets = if field_move {
         Vec::new()
@@ -949,9 +951,38 @@ fn try_move_hit_field<const N: usize>(
     }
     // PrepareHit: the user's ability (Protean, Libero).
     prepare_hit_ability(b, user, mv);
+    // TryHitSide on a Pokémon of the user's side (`allySide`, `allyTeam`): Sap Sipper's
+    // `onAllyTryHitSide` (breakable) raises the Attack of the user's ally for a Grass move
+    // (`if (source === this.effectState.target || !target.isAlly(source)) return;`; Soundproof's
+    // only logs; Magic Bounce's skips moves aimed at the own side).
+    if matches!(mv.target, MoveTarget::AllySide | MoveTarget::AllyTeam)
+        && mv.move_type == Type::Grass
+    {
+        for ally in adjacent_allies(b, user) {
+            if b.ability_unless_broken(ally) == abilities::SAP_SIPPER {
+                let mut up = NO_BOOSTS;
+                up[0] = 1;
+                b.boost_by(
+                    ally,
+                    &up,
+                    Some(user),
+                    BoostEffect::Ability(abilities::SAP_SIPPER),
+                );
+            }
+        }
+    }
     // runMoveEffects on the target: undefined (nothing attempted) counts as success.
     let mut outcome: Option<bool> = None;
     let mut combine = |r: bool| outcome = Some(outcome.unwrap_or(false) || r);
+    // Hit: an `allyTeam` move's `onHit` (Heal Bell, Aromatherapy) on the first Pokémon of the
+    // user's side (only its side matters).
+    if mv.target == MoveTarget::AllyTeam {
+        match handlers::on_hit(b, user, target, mv)? {
+            Some(HitResult::Success) => combine(true),
+            Some(HitResult::Failure) => combine(false),
+            Some(HitResult::NotFail) | None => {}
+        }
+    }
     if !data.side_condition.is_none() {
         let side = target.side;
         let effect = side_effect_of(data.side_condition.id()).expect("checked by support");

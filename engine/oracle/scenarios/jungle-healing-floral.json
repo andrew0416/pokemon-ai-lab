@@ -1,0 +1,28 @@
+{
+ "description": "Jungle Healing, Lunar Blessing, Floral Healing in Grassy Terrain: Comfey's Floral Healing heals its ally Cresselia by modify(maxhp, 0.667); Rillaboom's Jungle Healing heals itself and Clefable by 1/4 and cures Rillaboom's poison; Cresselia's Lunar Blessing heals itself by 1/4 and cures its burn (Comfey is at full HP); Grassy Terrain heals 1/16 in the residual.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Rillaboom", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Jungle Healing", "Calm Mind"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Comfey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Floral Healing", "Calm Mind"], "level": 50},
+   {"species": "Cresselia", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Lunar Blessing", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Rillaboom": {"hp": 100, "status": "psn"}, "Clefable": {"hp": 100}},
+  "p2": {"Cresselia": {"hp": 60, "status": "brn"}},
+  "field": {"terrain": "grassyterrain", "terrainDuration": 3}
+ },
+ "turn": {"p1": "move junglehealing, move calmmind", "p2": "move floralhealing -2, move lunarblessing"}
+}

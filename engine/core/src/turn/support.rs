@@ -306,6 +306,19 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         moves::NO_RETREAT,
         &["condition.onStart", "condition.onTrapPokemon", "onTry"],
     ),
+    // Status cures and heals (`handlers::on_hit`): Heal Bell / Aromatherapy (`allyTeam`, through
+    // `moves::try_move_hit_field`, whose TryHitSide runs Sap Sipper's `onAllyTryHitSide`),
+    // Refresh, Purify, Take Heart, Jungle Healing / Lunar Blessing (`allies`), Floral Healing;
+    // Rest's `onTry` and `onHit`.
+    (moves::HEAL_BELL, &["onHit"]),
+    (moves::AROMATHERAPY, &["onHit"]),
+    (moves::REFRESH, &["onHit"]),
+    (moves::PURIFY, &["onHit"]),
+    (moves::TAKE_HEART, &["onHit"]),
+    (moves::JUNGLE_HEALING, &["onHit"]),
+    (moves::LUNAR_BLESSING, &["onHit"]),
+    (moves::FLORAL_HEALING, &["onHit"]),
+    (moves::REST, &["onHit", "onTry"]),
     // Throat Chop: the secondary's `onHit` adds the `throatchop` volatile
     // (`handlers::secondary_on_hit`); its `onBeforeMove`, `onModifyMove` (a called sound move,
     // `moves::use_move`) and `onDisableMove` in `conditions::throat_chopped`; `onStart` and
@@ -835,8 +848,8 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::WATER_ABSORB, &["onTryHit"]),
     (abilities::EARTH_EATER, &["onTryHit"]),
     (abilities::MOTOR_DRIVE, &["onTryHit"]),
-    // `onAllyTryHitSide` only acts on an ally's Grass move aimed at its own side, which no
-    // supported move is (pinned by a test below).
+    // `onAllyTryHitSide` (an ally's Grass move aimed at its own side: Aromatherapy) in
+    // `moves::try_move_hit_field`.
     (abilities::SAP_SIPPER, &["onAllyTryHitSide", "onTryHit"]),
     (abilities::WELL_BAKED_BODY, &["onTryHit"]),
     // The volatile's `onModifyAtk`/`onModifySpA` in `abilities::attack_handlers`; `onEnd`
@@ -1059,6 +1072,7 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         | MoveTarget::User
         | MoveTarget::All
         | MoveTarget::AllySide
+        | MoveTarget::AllyTeam
         | MoveTarget::FoeSide
         | MoveTarget::RandomNormal => {}
         other => return why(&format!("target {other:?}")),
@@ -1338,19 +1352,18 @@ mod tests {
     }
 
     /// Sap Sipper's `onAllyTryHitSide` raises the holder's Attack when an ally uses a Grass move
-    /// aimed at their own side (`allySide`/`allyTeam`; TryHitSide is not modelled). No supported
-    /// move is one; this fails when one becomes supported.
+    /// aimed at their own side (`allySide`/`allyTeam`), which `moves::try_move_hit_field` runs
+    /// for the supported ones; Aromatherapy is the only such move.
     #[test]
-    fn sap_sipper_ally_side_handler_is_unreachable() {
+    fn sap_sipper_ally_side_handler_covers_the_supported_moves() {
         for id in MoveId::all() {
             let m = id.data();
             if move_unsupported(id).is_some() || m.move_type != Type::Grass {
                 continue;
             }
-            assert!(
-                !matches!(m.target, MoveTarget::AllySide | MoveTarget::AllyTeam),
-                "{id:?}"
-            );
+            if matches!(m.target, MoveTarget::AllySide | MoveTarget::AllyTeam) {
+                assert_eq!(id, moves::AROMATHERAPY);
+            }
         }
     }
 

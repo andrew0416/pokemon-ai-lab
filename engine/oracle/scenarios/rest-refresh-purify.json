@@ -1,0 +1,27 @@
+{
+ "description": "Rest, Refresh, Purify, Take Heart: the paralyzed Snorlax (100 HP) Rests (paralysis replaced by 3 turns of sleep, full heal) unless fully paralyzed; the burned Blissey's Refresh cures it; Toxapex's Purify cures its paralyzed (slower) ally Azumarill and heals Toxapex (100 HP) by half its max HP; Azumarill's Take Heart then only raises SpA and SpD.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Rest", "Calm Mind"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Refresh", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Toxapex", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Purify", "Calm Mind"], "level": 50},
+   {"species": "Azumarill", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Take Heart", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Snorlax": {"hp": 100, "status": "par"}, "Blissey": {"status": "brn"}},
+  "p2": {"Toxapex": {"hp": 100}, "Azumarill": {"status": "par"}}
+ },
+ "turn": {"p1": "move rest, move refresh", "p2": "move purify -2, move takeheart"}
+}

@@ -167,6 +167,18 @@ pub(super) fn on_try<const N: usize>(
         // No Retreat: `if (source.volatiles['noretreat']) return false;` (its other branch
         // drops the volatile for a `trapped` user; no move that adds `trapped` is implemented).
         moves::NO_RETREAT => !b.volatile(user, Volatile::NoRetreat).active,
+        // Rest: fails asleep or with Comatose, at full HP, and with Insomnia or Vital Spirit
+        // (`hasAbility`: the user's own ability, never suppressed by its own move).
+        moves::REST => b.slot_mon(user).is_some_and(|m| {
+            m.status != Status::Sleep
+                && m.hp != m.max_hp
+                && ![
+                    abilities::COMATOSE,
+                    abilities::INSOMNIA,
+                    abilities::VITAL_SPIRIT,
+                ]
+                .contains(&m.ability)
+        }),
         _ => true,
     }
 }
@@ -614,6 +626,93 @@ pub(super) fn on_hit<const N: usize>(
             b.direct_damage(target, amount.max(1));
             HitResult::Success
         }
+        moves::HEAL_BELL | moves::AROMATHERAPY => party_cure(b, user, target.side, mv.id),
+        // Refresh: `if (['', 'slp', 'frz'].includes(pokemon.status)) return false;` then cure.
+        moves::REFRESH => match b.alive(target) {
+            Some(p)
+                if matches!(
+                    b.mon(p).status,
+                    Status::Burn | Status::Paralyze | Status::Poison | Status::Toxic
+                ) =>
+            {
+                b.cure_status(p);
+                HitResult::Success
+            }
+            _ => HitResult::Failure,
+        },
+        // Purify: `if (!target.cureStatus()) return this.NOT_FAIL;` then the user heals
+        // `Math.ceil(source.maxhp * 0.5)`.
+        moves::PURIFY => {
+            if !cure_status(b, target) {
+                HitResult::NotFail
+            } else {
+                let max_hp = b.slot_mon(user).map_or(0, |m| i32::from(m.max_hp));
+                b.heal(user, f64::from((max_hp + 1) / 2));
+                HitResult::Success
+            }
+        }
+        // Take Heart: `const success = !!this.boost({spa: 1, spd: 1}); return
+        // pokemon.cureStatus() || success;`
+        moves::TAKE_HEART => {
+            let mut up = NO_BOOSTS;
+            up[2] = 1;
+            up[3] = 1;
+            let boosted = b.boost_by(target, &up, Some(user), BoostEffect::Move(mv.id));
+            success(cure_status(b, target) || boosted)
+        }
+        // Jungle Healing, Lunar Blessing (each ally and the user): `const success =
+        // !!this.heal(this.modify(pokemon.maxhp, 0.25)); return pokemon.cureStatus() || success;`
+        moves::JUNGLE_HEALING | moves::LUNAR_BLESSING => {
+            let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
+            let healed = b.heal(target, f64::from(modify(max_hp, 1024))) > 0;
+            success(cure_status(b, target) || healed)
+        }
+        // Floral Healing: `this.modify(target.baseMaxhp, 0.667)` in Grassy Terrain, otherwise
+        // `Math.ceil(target.baseMaxhp * 0.5)`; `NOT_FAIL` when nothing is healed.
+        moves::FLORAL_HEALING => {
+            let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
+            let amount = if b.terrain() == Terrain::Grassy {
+                modify(max_hp, 2732)
+            } else {
+                (max_hp + 1) / 2
+            };
+            if b.heal(target, f64::from(amount)) > 0 {
+                HitResult::Success
+            } else {
+                HitResult::NotFail
+            }
+        }
+        // Rest: `target.setStatus('slp', source, move)` (an existing status is replaced; the
+        // SetStatus handlers still block it: terrains, Sweet Veil, Leaf Guard, Purifying Salt;
+        // Safeguard ignores the user's own effect), then `statusState.time = 3` and
+        // `this.heal(target.maxhp)`. The sleep condition's own draw of 2 or 3 turns is overwritten,
+        // so it is not drawn here; AfterSetStatus: Synchronize ignores sleep, Lum Berry is eaten
+        // at once (the 3 turns then land on no status).
+        moves::REST => {
+            let Some(pokemon) = b.alive(target) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let blocked = b.set_status_blocked(target, Status::Sleep)
+                || super::super::abilities::blocks_status(
+                    b.ability_unless_broken(target),
+                    Status::Sleep,
+                );
+            if blocked {
+                HitResult::Failure
+            } else {
+                let old = b.mon(pokemon).status;
+                b.apply(Instruction::ChangeStatus {
+                    target: pokemon,
+                    old,
+                    new: Status::Sleep,
+                });
+                b.set_status_turns(pokemon, 3);
+                super::super::update::after_set_status(b, target);
+                let max_hp = b.mon(pokemon).max_hp;
+                b.heal(target, f64::from(max_hp));
+                HitResult::Success
+            }
+        }
         // Steel Roller: `this.field.clearTerrain();` (returns nothing: no effect on success).
         moves::STEEL_ROLLER => {
             super::clear_terrain(b);
@@ -922,6 +1021,66 @@ fn set_boosts<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, boosts: [i8;
             });
         }
     }
+}
+
+/// A handler's boolean result.
+fn success(ok: bool) -> HitResult {
+    if ok {
+        HitResult::Success
+    } else {
+        HitResult::Failure
+    }
+}
+
+/// Showdown `pokemon.cureStatus()` on the Pokémon in `slot`: whether it had a status to lose
+/// (not at 0 HP).
+fn cure_status<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> bool {
+    match b.alive(slot) {
+        Some(p) if b.mon(p).status != Status::None => {
+            b.cure_status(p);
+            true
+        }
+        _ => false,
+    }
+}
+
+/// Heal Bell and Aromatherapy `onHit`: every Pokémon of `side`'s party (`side.pokemon`, benched
+/// ones included) loses its status (`cureStatus`: not at 0 HP), except an active one other than
+/// the user whose ability (`hasAbility`: active only; skipped while the move suppresses it) is
+/// Soundproof (Heal Bell), Sap Sipper (Aromatherapy) or Good as Gold. Succeeds if anyone was
+/// cured. (A substitute's protection against Aromatherapy is not modelled: substitutes are
+/// refused.)
+fn party_cure<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    side: SideId,
+    id: MoveId,
+) -> HitResult {
+    let immune_ability = if id == moves::HEAL_BELL {
+        abilities::SOUNDPROOF
+    } else {
+        abilities::SAP_SIPPER
+    };
+    let user_pokemon = b.occupant(user);
+    let mut cured = false;
+    for party in 0..b.state.side(side).party.len() as u8 {
+        let pokemon = PokemonRef { side, party };
+        let active = Battle::<N>::slots(side).find(|&s| b.occupant(s) == Some(pokemon));
+        if let Some(slot) = active {
+            if Some(pokemon) != user_pokemon && !b.suppressing_ability(slot) {
+                let ability = b.ability(slot);
+                if ability == immune_ability || ability == abilities::GOOD_AS_GOLD {
+                    continue;
+                }
+            }
+        }
+        let mon = b.mon(pokemon);
+        if mon.hp > 0 && mon.status != Status::None {
+            b.cure_status(pokemon);
+            cured = true;
+        }
+    }
+    success(cured)
 }
 
 /// `this.heal(this.modify(pokemon.maxhp, factor))` with `factor` as a 4096-based modifier

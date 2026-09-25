@@ -1,0 +1,33 @@
+{
+ "description": "Heal Bell and Aromatherapy cure the whole party: Snorlax is badly poisoned and switched out in the setup turns; Blissey's Heal Bell cures itself and the benched Snorlax but not its Soundproof ally Exploud. Toxapex's Aromatherapy (Grass, allyTeam) cures itself; its Sap Sipper ally Azumarill stays paralyzed but gets +1 Attack (onAllyTryHitSide).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Heal Bell", "Calm Mind"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Exploud", "item": "", "ability": "Soundproof", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Toxapex", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Aromatherapy", "Toxic", "Calm Mind"], "level": 50},
+   {"species": "Azumarill", "item": "", "ability": "Sap Sipper", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move calmmind, move calmmind", "move toxic 2, move calmmind"],
+  ["move calmmind, switch 3", "move calmmind, move calmmind"]
+ ],
+ "patch": {
+  "p1": {"Blissey": {"status": "brn"}, "Exploud": {"status": "par"}},
+  "p2": {"Toxapex": {"status": "brn"}, "Azumarill": {"status": "par"}}
+ },
+ "turn": {"p1": "move healbell, move calmmind", "p2": "move aromatherapy, move calmmind"}
+}
