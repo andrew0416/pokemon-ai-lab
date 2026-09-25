@@ -1,0 +1,23 @@
+{
+ "description": "O81 Enigma / Jaboca Berry: Lucario's super-effective Aura Sphere makes Snorlax eat its Enigma Berry (heal 1/4, in runEvent('Hit')); Weavile's physical Tackle makes Kangaskhan eat its Jaboca Berry, which deals 1/8 of Weavile's max HP. The targets use Harden afterwards.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Lucario", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Aura Sphere", "Protect"], "level": 50},
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Tackle", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Enigma Berry", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Kangaskhan", "item": "Jaboca Berry", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move aurasphere 1, move tackle 2", "p2": "move harden, move harden"}
+}

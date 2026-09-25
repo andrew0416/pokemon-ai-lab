@@ -34,8 +34,9 @@ function startBattle(scenario, baseDir, prng) {
 		seed: scenario.seed || 'sodium,00000000000000000000000000000000',
 		strictChoices: true,
 	});
-	battle.setPlayer('p1', {name: 'p1', team: Teams.pack(loadTeam(scenario.p1.team, baseDir))});
-	battle.setPlayer('p2', {name: 'p2', team: Teams.pack(loadTeam(scenario.p2.team, baseDir))});
+	const adjustLevel = battle.ruleTable.adjustLevel;
+	battle.setPlayer('p1', {name: 'p1', team: Teams.pack(loadTeam(scenario.p1.team, baseDir, adjustLevel))});
+	battle.setPlayer('p2', {name: 'p2', team: Teams.pack(loadTeam(scenario.p2.team, baseDir, adjustLevel))});
 	if (battle.requestState !== 'teampreview') throw new Error('expected team preview');
 	// Everything random from here on (start order ties, Trace, ...) goes through the script.
 	battle.prng = prng;

@@ -219,8 +219,9 @@ fn state_without_a_canonical_form_is_an_error() {
     s.field[FieldEffect::Weather as usize] = sand(Effect::PERMANENT);
     assert!(unrepresentable(&s, meta).contains("duration"));
 
+    // VGC has a ruleset since O104; a singles format does not.
     let mut other = meta.clone();
-    other.format = "gen9championsvgc2026regmc".into();
+    other.format = "gen9championsbssregmc".into();
     assert!(matches!(
         canonical_json(&loaded.state, &other),
         Err(CanonicalError::UnknownFormat(_))
@@ -284,12 +285,16 @@ fn unsupported_start_handlers_are_rejected() {
         }
     }
 
+    // Booster Energy's `onStart` is not implemented (the Seeds' are since O92).
     let mut s = loaded.state.clone();
-    s.active_mut(rillaboom).unwrap().item = items::PSYCHIC_SEED;
+    s.active_mut(rillaboom).unwrap().item = items::BOOSTER_ENERGY;
     assert!(matches!(
         expand_switch_ins(&s),
         Err(SwitchInError::UnsupportedItem { .. })
     ));
+    let mut s = loaded.state.clone();
+    s.active_mut(rillaboom).unwrap().item = items::PSYCHIC_SEED;
+    assert!(expand_switch_ins(&s).is_ok());
 
     // A Choice item's `onStart` only removes a lock a newcomer cannot have (O83, 2026-09-26).
     let mut s = loaded.state.clone();

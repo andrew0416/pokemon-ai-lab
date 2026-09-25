@@ -1,0 +1,26 @@
+{
+ "description": "O81 Rowap / Jaboca Berry: Starmie's Water Gun KOs Snorlax (patched to 5 HP), which still eats its Rowap Berry at 0 HP and deals 1/8 of Starmie's max HP. Clefable (Magic Guard) Tackles Kangaskhan: Jaboca Berry is not eaten. Kangaskhan uses Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Starmie", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Water Gun", "Protect"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Magic Guard", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Tackle", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Rowap Berry", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Kangaskhan", "item": "Jaboca Berry", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {"Snorlax": {"hp": 5}}
+ },
+ "turn": {"p1": "move watergun 1, move tackle 2", "p2": "move harden, move harden"}
+}

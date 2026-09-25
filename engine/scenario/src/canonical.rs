@@ -11,8 +11,8 @@
 //! them).
 //!
 //! State the engine can hold but whose canonical form is not settled yet is an error
-//! ([`CanonicalError`]), never dropped: substitutes, Dynamax, Magic/Wonder Room, primal
-//! weathers, permanent effects, disabled moves.
+//! ([`CanonicalError`]), never dropped: substitutes, Dynamax, Magic Room, primal weathers,
+//! permanent effects, disabled moves.
 
 use std::fmt;
 use std::fmt::Write as _;
@@ -76,7 +76,7 @@ fn unrepresentable(what: String) -> CanonicalError {
 
 /// The gimmick rules of a scenario format (they decide `canMega`).
 pub fn format_ruleset(format: &str) -> Result<Ruleset, CanonicalError> {
-    if format == crate::DOUBLES_FORMAT {
+    if format == crate::DOUBLES_FORMAT || format == crate::VGC_FORMAT {
         // The Champions mod's `canMegaEvo` applies; no other gimmick exists there.
         Ok(Ruleset::CHAMPIONS_MC)
     } else {
@@ -196,9 +196,10 @@ fn timed(effect: Effect, name: &str) -> Result<Option<u8>, CanonicalError> {
 
 fn field(out: &mut String, effects: &[Effect; FIELD_EFFECT_COUNT]) -> Result<(), CanonicalError> {
     // Pseudo-weathers the schema can write, in id order.
-    const PSEUDO: [(FieldEffect, &str); 2] = [
+    const PSEUDO: [(FieldEffect, &str); 3] = [
         (FieldEffect::Gravity, "gravity"),
         (FieldEffect::TrickRoom, "trickroom"),
+        (FieldEffect::WonderRoom, "wonderroom"),
     ];
     for (i, effect) in effects.iter().enumerate() {
         let known = i == FieldEffect::Weather as usize

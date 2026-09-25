@@ -156,6 +156,19 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "condition.onFieldStart",
         ],
     ),
+    // Wonder Room: the stored Def/SpD swap and `onModifyMove` in `moves::get_damage` (and the
+    // confusion self-hit), `onFieldRestart` ends it (`add_pseudo_weather`); `durationCallback`
+    // only differs with Persistent (refused); `onFieldStart` / `onFieldEnd` only log.
+    (
+        moves::WONDER_ROOM,
+        &[
+            "condition.durationCallback",
+            "condition.onFieldEnd",
+            "condition.onFieldRestart",
+            "condition.onFieldStart",
+            "condition.onModifyMove",
+        ],
+    ),
     (
         moves::TAILWIND,
         &[
@@ -361,6 +374,82 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::STICKY_BARB, &["onHit", "onResidual"]),
     (items::SHELL_BELL, &["onAfterMoveSecondarySelf"]),
     (items::THROAT_SPRAY, &["onAfterMoveSecondarySelf"]),
+    // DamagingHit (`moves::damaging_hit` → `items::on_damaging_hit`): boost + `useItem`.
+    (items::WEAKNESS_POLICY, &["onDamagingHit"]),
+    (items::ABSORB_BULB, &["onDamagingHit"]),
+    (items::CELL_BATTERY, &["onDamagingHit"]),
+    (items::LUMINOUS_MOSS, &["onDamagingHit"]),
+    (items::SNOWBALL, &["onDamagingHit"]),
+    // AfterMoveSecondary at the end of the hit loop (`items::after_move_secondary`), `onEat`
+    // in `update::eat_item`.
+    (items::KEE_BERRY, &["onAfterMoveSecondary", "onEat"]),
+    (items::MARANGA_BERRY, &["onAfterMoveSecondary", "onEat"]),
+    // Pinch berries on `Update` (`update.rs`): Lansat adds `focusenergy` (crit ratio +2 in
+    // `moves::get_damage`), Starf raises a random stat by 2.
+    (items::LANSAT_BERRY, &["onEat", "onUpdate"]),
+    (items::STARF_BERRY, &["onEat", "onUpdate"]),
+    // `onResidual` eats it (`items::on_residual`); its condition's `onSourceAccuracy` is the
+    // `Accuracy` event in `moves::accuracy_check` (the `MicleBerry` volatile).
+    (
+        items::MICLE_BERRY,
+        &["condition.onSourceAccuracy", "onEat", "onResidual"],
+    ),
+    // Eaten when the actions are queued (`items::custap`, first stage in `mod.rs`).
+    (items::CUSTAP_BERRY, &["onEat", "onFractionalPriority"]),
+    // `onHit` in `items::on_hit`; `onTryEatItem` asks TryHeal, which nothing supported blocks.
+    (items::ENIGMA_BERRY, &["onEat", "onHit", "onTryEatItem"]),
+    // `items::on_damaging_hit`.
+    (items::JABOCA_BERRY, &["onDamagingHit", "onEat"]),
+    (items::ROWAP_BERRY, &["onDamagingHit", "onEat"]),
+    // Seeds (`field_events`): `onStart` at switch-in (priority -1, `switching::run_switch_in`)
+    // and `onTerrainChange` (every terrain start and end).
+    (items::ELECTRIC_SEED, &["onStart", "onTerrainChange"]),
+    (items::GRASSY_SEED, &["onStart", "onTerrainChange"]),
+    (items::MISTY_SEED, &["onStart", "onTerrainChange"]),
+    (items::PSYCHIC_SEED, &["onStart", "onTerrainChange"]),
+    // Stage items (`items.rs`): White Herb and Mirror Herb at every switch-in batch
+    // (`onAnySwitchIn`), Mega Evolution, move end (`onAnyAfterMove`) and residual (order 29);
+    // White Herb's `onStart` only runs from those; `fling.effect` needs Fling, which is not
+    // supported; Terastallization (`onAnyAfterTerastallization`) is off. Mirror Herb's copied
+    // raises (`onFoeAfterBoost`) are refused past a stage end (`items::stage_end_check`); its
+    // `onEnd` forgets them with the item.
+    (
+        items::WHITE_HERB,
+        &[
+            "fling.effect",
+            "onAnyAfterMega",
+            "onAnyAfterMove",
+            "onAnySwitchIn",
+            "onResidual",
+            "onStart",
+            "onUse",
+        ],
+    ),
+    (
+        items::MIRROR_HERB,
+        &[
+            "onAnyAfterMega",
+            "onAnyAfterMove",
+            "onAnyAfterTerastallization",
+            "onAnySwitchIn",
+            "onEnd",
+            "onFoeAfterBoost",
+            "onResidual",
+            "onUse",
+        ],
+    ),
+    // AfterBoost (`Battle::boost_by` → `items::after_boost`).
+    (items::ADRENALINE_ORB, &["onAfterBoost"]),
+    // `Battle::weather_for` at every per-Pokémon weather read. The callbacks only run
+    // WeatherChange (when the item starts being ignored, stops being ignored, or ends), which
+    // has no implemented handler (`field_events`); `onStart` returns at once for a holder that
+    // does not ignore its item.
+    (items::UTILITY_UMBRELLA, &["onEnd", "onStart", "onUpdate"]),
+    // `onStart` at switch-in (priority -1) and PseudoWeatherChange (`moves::add_pseudo_weather`).
+    (
+        items::ROOM_SERVICE,
+        &["onAnyPseudoWeatherChange", "onStart"],
+    ),
     // Grounding (`Battle::is_grounded`), Speed, effectiveness; Air Balloon's `onStart` only
     // announces it and its pop (`onDamagingHit`) is refused until F15 (`items::on_damaging_hit`;
     // `onAfterSubDamage` needs a substitute, which is refused).
@@ -829,7 +918,9 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     if !m.side_condition.is_none() && side_effect_of(m.side_condition.id()).is_none() {
         return why(&format!("side condition {}", m.side_condition.id()));
     }
-    if !m.pseudo_weather.is_none() && !["gravity", "trickroom"].contains(&m.pseudo_weather.id()) {
+    if !m.pseudo_weather.is_none()
+        && !["gravity", "trickroom", "wonderroom"].contains(&m.pseudo_weather.id())
+    {
         return why(&format!("field effect {}", m.pseudo_weather.id()));
     }
     if let Some(s) = m.self_effect {
@@ -892,7 +983,12 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
                 Weather::Sun | Weather::Rain | Weather::Sand | Weather::Snow
             ),
             x if x == FieldEffect::Terrain as usize => true,
-            x if x == FieldEffect::Gravity as usize || x == FieldEffect::TrickRoom as usize => true,
+            x if x == FieldEffect::Gravity as usize
+                || x == FieldEffect::TrickRoom as usize
+                || x == FieldEffect::WonderRoom as usize =>
+            {
+                true
+            }
             _ => false,
         };
         if !supported {

@@ -95,6 +95,9 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
     if b.field_active(FieldEffect::TrickRoom) {
         out.push(field(27, 1, Kind::FieldDuration(FieldEffect::TrickRoom)));
     }
+    if b.field_active(FieldEffect::WonderRoom) {
+        out.push(field(27, 5, Kind::FieldDuration(FieldEffect::WonderRoom)));
+    }
     for side in [SideId::One, SideId::Two] {
         for (effect, order, sub_order) in [
             (SideEffect::Reflect, 26, 1),
@@ -250,7 +253,9 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
             }
             effect.turns -= 1;
             if effect.turns == 0 {
+                // The `end` callback is `field.clearWeather`: WeatherChange follows.
                 b.set_field(FieldEffect::Weather, Effect::NONE);
+                super::field_events::weather_changed(b);
                 return Ok(false);
             }
             b.set_field(FieldEffect::Weather, effect);
@@ -284,7 +289,14 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
             sort_by_speed(b, &mut actives);
             for (slot, _) in actives {
                 if b.alive(slot).is_some() {
-                    weather_event(b, slot, weather);
+                    // The abilities' `onWeather` read `target.effectiveWeather()` (Utility
+                    // Umbrella hides sun and rain); sandstorm's damage does not.
+                    let seen = if weather == Weather::Sand {
+                        weather
+                    } else {
+                        b.weather_for(slot)
+                    };
+                    weather_event(b, slot, seen);
                 }
             }
             // `eachEvent('Weather')` ends with an Update (gen 7+).
@@ -298,6 +310,10 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
             effect.turns -= 1;
             let ended = effect.turns == 0;
             b.set_field(which, if ended { Effect::NONE } else { effect });
+            // A terrain's `end` callback is `field.clearTerrain`: TerrainChange follows.
+            if ended && which == FieldEffect::Terrain {
+                super::field_events::terrain_changed(b);
+            }
             return Ok(!ended);
         }
         Kind::SideDuration(side, which) => {
@@ -429,9 +445,9 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
                 // Champions).
                 b.rng.chance(33, 100)
             } else {
-                // Hydration: `pokemon.effectiveWeather()` is rain (Utility Umbrella and
-                // Primordial Sea are not supported).
-                b.effective_weather() == Weather::Rain
+                // Hydration: `pokemon.effectiveWeather()` is rain (Utility Umbrella hides it;
+                // Primordial Sea is not supported).
+                b.weather_for(slot) == Weather::Rain
             };
             if cure {
                 b.cure_status(pokemon);
@@ -555,6 +571,16 @@ pub(crate) fn bench<'b, const N: usize>(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Wonder Room's residual order and sub-order hard-coded in `collect` are the dex's.
+    #[test]
+    fn wonder_room_residual_order_matches_the_dex() {
+        use crate::dex::moves;
+        let orders = moves::WONDER_ROOM.data().event_orders;
+        assert!(orders.contains(&("condition.onFieldResidualOrder", 27)));
+        assert!(orders.contains(&("condition.onFieldResidualSubOrder", 5)));
+        assert_eq!(moves::WONDER_ROOM.data().condition_duration, 5);
+    }
 
     /// The side-condition residual orders hard-coded in `collect` are the dex's.
     #[test]

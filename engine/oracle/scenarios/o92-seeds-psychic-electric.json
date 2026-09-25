@@ -1,0 +1,25 @@
+{
+ "description": "O92/O102 Seeds: at battle start Indeedee's Psychic Surge runs TerrainChange and Espeon uses its Psychic Seed (SpD +1). In the turn Hariyama (Psychic Seed) switches in under Psychic Terrain and uses it in its onStart (switch-in priority -1); then Snorlax's Electric Terrain replaces the terrain and TerrainChange uses Snorlax's Electric Seed (Def +1).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Indeedee", "item": "", "ability": "Psychic Surge", "nature": "Timid",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Calm Mind", "Protect"], "level": 50},
+   {"species": "Espeon", "item": "Psychic Seed", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Electric Seed", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Electric Terrain", "Protect"], "level": 50},
+   {"species": "Kangaskhan", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Hariyama", "item": "Psychic Seed", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Bulk Up", "Protect"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "turn": {"p1": "move calmmind, move calmmind", "p2": "move electricterrain, switch 3"}
+}

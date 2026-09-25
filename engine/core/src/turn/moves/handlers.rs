@@ -5,7 +5,7 @@
 //! handled here gets the event's neutral result.
 
 use crate::damage::MOD_ONE_POINT_FIVE;
-use crate::dex::{abilities, items, moves, ItemId, MoveId, MoveTarget, Type, TypeRelation};
+use crate::dex::{abilities, moves, ItemId, MoveId, MoveTarget, Type, TypeRelation};
 use crate::field::{FieldEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{Pokemon, SideId, SlotRef, Status, BOOST_COUNT};
@@ -27,12 +27,7 @@ fn effective_weather<const N: usize>(
     if b.ability(user) == abilities::MEGA_SOL {
         return Err(b.unsupported("Mega Sol's weather for moves"));
     }
-    let weather = b.effective_weather();
-    let hidden = matches!(
-        weather,
-        Weather::Sun | Weather::Rain | Weather::HarshSun | Weather::HeavyRain
-    ) && b.item(holder) == items::UTILITY_UMBRELLA;
-    Ok(if hidden { Weather::None } else { weather })
+    Ok(b.weather_for(holder))
 }
 
 /// The move's `onModifyType` (`useMoveInner`, right before its `onModifyMove`).

@@ -57,6 +57,16 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// (`swordBoost`, `shieldBoost`, `syrupTriggered`), which the state does not record, are all
     /// unset.
     pub battle_start: bool,
+    /// Showdown `target.getMoveHitData(move).typeMod` of the hit in progress, per side and
+    /// slot: set by `getDamage` (`modifyDamage`) for every target it computes damage for,
+    /// cleared at the start of every hit (`None`: not computed, as for fixed-damage and
+    /// status moves). Read by Weakness Policy and Enigma Berry.
+    pub hit_type_mod: [[Option<i8>; N]; 2],
+    /// Mirror Herb's `effectState.boosts` per holder: the foes' raises it copied and has not
+    /// used yet (`ready`). Showdown keeps them on the item across events; the engine keeps
+    /// them only within a stage and refuses a stage that ends with one pending
+    /// (`items::stage_end_check`).
+    pub mirror_herb: Vec<(PokemonRef, [i8; BOOST_COUNT])>,
 }
 
 impl<'a, const N: usize> Battle<'a, N> {
@@ -69,7 +79,14 @@ impl<'a, const N: usize> Battle<'a, N> {
             active_move: None,
             queue: Vec::new(),
             battle_start: false,
+            hit_type_mod: [[None; N]; 2],
+            mirror_herb: Vec::new(),
         }
+    }
+
+    /// The hit's `typeMod` against `target` ([`Battle::hit_type_mod`]).
+    pub fn type_mod_of(&self, target: SlotRef) -> Option<i32> {
+        self.hit_type_mod[target.side.index()][usize::from(target.slot)].map(i32::from)
     }
 
     pub fn apply(&mut self, instruction: Instruction) {
@@ -261,8 +278,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         if immunity == TypeImmunities::FRZ {
             // Harsh sunlight (`sunnyday.onImmunity`, hidden by Utility Umbrella) and Magma
             // Armor (breakable).
-            return (matches!(self.effective_weather(), Weather::Sun | Weather::HarshSun)
-                && mon.item != items::UTILITY_UMBRELLA)
+            return matches!(self.weather_for(slot), Weather::Sun | Weather::HarshSun)
                 || self.ability_unless_broken(slot) == abilities::MAGMA_ARMOR;
         }
         // Ice Body's `onImmunity('hail')`: hail is not a supported weather.
@@ -579,8 +595,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             }
             a if a == abilities::LIMBER => status == Status::Paralyze,
             a if a == abilities::COMATOSE || a == abilities::PURIFYING_SALT => true,
-            // `target.effectiveWeather()`: Utility Umbrella is not supported.
-            a if a == abilities::LEAF_GUARD => self.effective_weather() == Weather::Sun,
+            // `target.effectiveWeather()` (Utility Umbrella hides the sun).
+            a if a == abilities::LEAF_GUARD => self.weather_for(target) == Weather::Sun,
             _ => false,
         };
         if blocked_by_own {
@@ -645,7 +661,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             {
                 yawn
             }
-            a if a == abilities::LEAF_GUARD => yawn && self.effective_weather() == Weather::Sun,
+            a if a == abilities::LEAF_GUARD => yawn && self.weather_for(target) == Weather::Sun,
             // Inner Focus: `if (status.id === 'flinch') return null;`
             a if a == abilities::INNER_FOCUS => condition == conditions::FLINCH,
             // Own Tempo: `if (status.id === 'confusion') return null;`
@@ -877,10 +893,14 @@ impl<'a, const N: usize> Battle<'a, N> {
             _ => {}
         }
         // getCappedBoost.
+        let requested_atk = boost[0];
         for (stat, b) in boost.iter_mut().enumerate() {
             let current = self.state.slot(target).boosts[stat];
             *b = (current + *b).clamp(-6, 6) - current;
         }
+        // Showdown keeps a capped stat's key at 0 (`boost.atk === 0`), unlike a TryBoost
+        // handler's `delete`; Adrenaline Orb tells them apart.
+        let atk_capped_to_zero = requested_atk != 0 && boost[0] == 0;
         // TryBoost (abilities in `resolvePriority` order: Guard Dog's priority 2 first; the
         // rest only delete, so their order is moot).
         let ability = self.ability_unless_broken(target);
@@ -1007,6 +1027,9 @@ impl<'a, const N: usize> Battle<'a, N> {
                 BoostEffect::Ability(abilities::RATTLED),
             );
         }
+        // AfterBoost of items (after the target's ability): Adrenaline Orb, the foes' Mirror
+        // Herbs.
+        super::items::after_boost(self, target, &boost, effect, atk_capped_to_zero);
         changed
     }
 

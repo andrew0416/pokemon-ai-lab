@@ -1,0 +1,27 @@
+{
+ "description": "O103 Utility Umbrella in rain (patched): Ludicolo's Water Gun on Snorlax (Umbrella) gets no rain boost, Starmie's on Kangaskhan does (the defender's effectiveWeather). At the end of the turn Ludicolo (Rain Dish, Umbrella) does not heal while Kangaskhan (Rain Dish) does, and Starmie (Hydration, Umbrella) keeps its burn.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Ludicolo", "item": "Utility Umbrella", "ability": "Rain Dish", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Water Gun", "Protect"], "level": 50},
+   {"species": "Starmie", "item": "Utility Umbrella", "ability": "Hydration", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Water Gun", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Utility Umbrella", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Kangaskhan", "item": "", "ability": "Rain Dish", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Ludicolo": {"hp": 100}, "Starmie": {"status": "brn"}},
+  "field": {"weather": "raindance", "weatherDuration": 3}
+ },
+ "turn": {"p1": "move watergun 1, move watergun 2", "p2": "move harden, move harden"}
+}

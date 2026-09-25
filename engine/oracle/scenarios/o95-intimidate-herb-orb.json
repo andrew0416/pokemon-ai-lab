@@ -1,0 +1,25 @@
+{
+ "description": "O95 at battle start: Salamence's Intimidate lowers Snorlax's Attack, which its White Herb restores in the same switch-in batch (onAnySwitchIn, priority -2); Metagross's Clear Body blocks the drop, but its Adrenaline Orb still activates (Speed +1). In the turn Incineroar switches in and Intimidates again: Snorlax keeps -1 now, Metagross's orb is gone.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Salamence", "item": "", "ability": "Intimidate", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Dragon Dance", "Protect"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Bulk Up", "Protect"], "level": 50},
+   {"species": "Incineroar", "item": "", "ability": "Intimidate", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Bulk Up", "Protect"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "White Herb", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Metagross", "item": "Adrenaline Orb", "ability": "Clear Body", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move dragondance, switch 3", "p2": "move harden, move harden"}
+}

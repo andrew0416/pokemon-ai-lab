@@ -5,7 +5,8 @@
 //! set data the rules do not need live in [`meta::ScenarioMeta`] beside it.
 //!
 //! Scope: initial states only. A scenario is two teams, their team preview order and the
-//! decision to check. The loaded state is the one right after leads are placed and **before
+//! decision to check, in the custom game ([`DOUBLES_FORMAT`], every member brought) or VGC
+//! ([`VGC_FORMAT`], team preview keeps 4). The loaded state is the one right after leads are placed and **before
 //! switch-in effects**. [`switch_in::initial_outcomes`] expands it into the weighted states
 //! after the leads' start effects (the implemented subset: Trace, Sand Stream, Grassy Surge;
 //! anything else that could act is rejected); one of those is Showdown's `before` snapshot.
@@ -29,7 +30,7 @@ use serde_json::Value;
 use lab_engine::action::JointAction;
 use lab_engine::instruction::Outcome;
 use lab_engine::rules::Ruleset;
-use lab_engine::state::{SideId, State};
+use lab_engine::state::{SideId, State, PARTY_SIZE};
 use lab_engine::turn::{enumerate_replacements, enumerate_turn, TurnError};
 use lab_engine::Doubles;
 
@@ -42,10 +43,30 @@ pub use error::{LoadError, SetProblem, TeamProblem};
 pub use json::{ScenarioJson, TeamSet};
 pub use meta::{MemberMeta, ScenarioMeta, SideMeta};
 pub use switch_in::{expand_switch_ins, initial_outcomes, InitialOutcome, SwitchInError};
-pub use team::{build_pokemon, build_side};
+pub use team::{build_picked_side, build_pokemon, build_side, picked_order, preview_order};
 
 /// The oracle's doubles format: Champions mechanics, every member brought, level 50.
 pub const DOUBLES_FORMAT: &str = "gen9championsdoublescustomgame";
+
+/// Champions VGC 2026 Reg M-C (`[Gen 9 Champions] VGC 2026 Reg M-C`): the same battle
+/// mechanics, but Flat Rules' team preview keeps 4 of the (up to 6) members (`Picked Team
+/// Size = Auto` in doubles), and its `Adjust Level = 50` sets every set to level 50 (the team
+/// validator does it; the oracle's `loadTeam` applies it too). Its other rules (clauses, team
+/// size, legality) belong to the team validator, which neither the oracle nor this loader
+/// runs; the timer and Open Team Sheets only add messages. (The custom game's `battle.trunc`
+/// override only differs for values beyond 16 bits and Speed above 10000.)
+pub const VGC_FORMAT: &str = "gen9championsvgc2026regmc";
+
+/// How many members a supported doubles format's team preview keeps (Showdown
+/// `ruleTable.pickedTeamSize`, capped by the team size): every member in the custom game, 4 in
+/// VGC. `None` for a format the loader does not support.
+pub fn picked_team_size(format: &str) -> Option<usize> {
+    match format {
+        DOUBLES_FORMAT => Some(PARTY_SIZE),
+        VGC_FORMAT => Some(4),
+        _ => None,
+    }
+}
 
 /// Showdown's `battle.turn` at the first decision after team preview.
 const FIRST_TURN: u16 = 1;
@@ -94,9 +115,9 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
             error,
         })?;
 
-    if scenario.format != DOUBLES_FORMAT {
+    let Some(picked) = picked_team_size(&scenario.format) else {
         return Err(LoadError::UnsupportedFormat(scenario.format));
-    }
+    };
     let setup_turns = match scenario.setup_turns {
         Some(value) if !is_empty(Some(&value)) => {
             let turns: Vec<(String, String)> =
@@ -121,8 +142,14 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
     let mut state = Doubles::default();
     let mut sides: [SideMeta; 2] = Default::default();
     for (side, spec) in [(SideId::One, &scenario.p1), (SideId::Two, &scenario.p2)] {
-        let team = resolve_team(side, &spec.team, base_dir)?;
-        let (built, meta) = build_side::<2>(side, &team, spec.order.as_deref())?;
+        let mut team = resolve_team(side, &spec.team, base_dir)?;
+        if scenario.format == VGC_FORMAT {
+            // `Adjust Level = 50`.
+            for set in &mut team {
+                set.level = Some(50);
+            }
+        }
+        let (built, meta) = build_picked_side::<2>(side, &team, spec.order.as_deref(), picked)?;
         state.sides[side.index()] = built;
         sides[side.index()] = meta;
     }

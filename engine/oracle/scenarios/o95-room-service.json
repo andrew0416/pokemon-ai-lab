@@ -1,0 +1,23 @@
+{
+ "description": "O95 Room Service: Porygon2's Trick Room starts (PseudoWeatherChange): Snorlax's Room Service lowers its Speed (-1, consumed); Kangaskhan holds none.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Porygon2", "item": "", "ability": "Honey Gather", "nature": "Relaxed",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Trick Room", "Protect"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Bulk Up", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Room Service", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Kangaskhan", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move trickroom, move bulkup", "p2": "move harden, move harden"}
+}

@@ -3,19 +3,23 @@
 //! Showdown runs `eachEvent('Update')` after every action (`runAction`), after the damage of a
 //! hit (`hitStepMoveHitLoop`), after the weather's residual damage, before a healthy Pokémon
 //! switches out, and after a batch of switch-ins. Every active Pokémon is visited in stored
-//! Speed order with ties shuffled; none of the implemented listeners touches another Pokémon,
-//! so the order cannot change the outcome and no random draw is spent on it.
+//! Speed order with ties shuffled; none of the implemented listeners touches another Pokémon
+//! (Starf Berry's random stat is drawn independently per eater), so the order cannot change
+//! the outcome and no random draw is spent on it.
 //!
 //! Listeners implemented here: berries with `onUpdate` (Sitrus, Oran, the five Figy-type
-//! berries, the five pinch stat berries, Lum and the six one-status berries, Leppa) and Lum's
-//! `onAfterSetStatus`; the abilities' `onUpdate` cures run first (`abilities::on_update`: the
-//! status cures of `cured_on_update`, Own Tempo's confusion cure). Other ability `onUpdate`
-//! handlers are refused (Trace still seeking, Disguise, ...). A berry is eaten only if the
-//! `TryEatItem` handlers allow it (`abilities::try_eat_item`).
+//! berries, the five pinch stat berries, Lansat, Starf, Lum and the six one-status berries,
+//! Leppa) and Lum's `onAfterSetStatus`; the abilities' `onUpdate` cures run first
+//! (`abilities::on_update`: the status cures of `cured_on_update`, Own Tempo's confusion cure).
+//! Other ability `onUpdate` handlers are refused (Trace still seeking, Disguise, ...). A berry
+//! is eaten only if the `TryEatItem` handlers allow it (`abilities::try_eat_item`). [`eat_item`]
+//! also runs the `onEat` of the berries eaten elsewhere (Kee, Maranga, Jaboca, Rowap, Micle,
+//! Custap, Enigma).
 
 use crate::dex::{abilities, items, ItemId, Stat, NO_BOOSTS};
 use crate::instruction::Instruction;
-use crate::state::{Pokemon, SlotRef, Status};
+use crate::state::{Pokemon, PokemonRef, SlotRef, Status};
+use crate::volatile::Volatile;
 
 use super::battle::{Battle, BoostEffect};
 use super::TurnError;
@@ -105,6 +109,8 @@ fn item_wants_eating<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
         half
     } else if FIGY_BERRIES.iter().any(|&(i, _)| i == item)
         || STAT_BERRIES.iter().any(|&(i, _)| i == item)
+        || item == items::LANSAT_BERRY
+        || item == items::STARF_BERRY
     {
         pinch
     } else if item == items::LUM_BERRY {
@@ -120,9 +126,17 @@ fn item_wants_eating<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
 }
 
 /// Showdown `eatItem`: `TryEatItem` (nothing implemented blocks it), the berry's `onEat`, then
-/// the berry is gone and remembered as `lastItem`. Returns whether it was eaten.
+/// the berry is gone and remembered as `lastItem`. Returns whether it was eaten. The holder
+/// must have HP, except for Jaboca and Rowap Berry (`!this.hp && this.item !== 'jabocaberry'
+/// && this.item !== 'rowapberry'`), which a holder fainting from the hit still eats.
 pub(crate) fn eat_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> bool {
-    let Some(pokemon) = b.alive(slot) else {
+    let at_zero_hp = [items::JABOCA_BERRY, items::ROWAP_BERRY].contains(&b.item(slot));
+    let holder = if at_zero_hp {
+        b.occupant(slot)
+    } else {
+        b.alive(slot)
+    };
+    let Some(pokemon) = holder else {
         return false;
     };
     let mon = b.mon(pokemon);
@@ -176,10 +190,69 @@ pub(crate) fn eat_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> 
                 new,
             });
         }
-    } else {
+    } else if let Some(index) = [(items::KEE_BERRY, 1), (items::MARANGA_BERRY, 3)]
+        .iter()
+        .find(|&&(i, _)| i == item)
+        .map(|&(_, index)| index)
+    {
+        // `this.boost({def: 1})` / `{spd: 1}` (target and source: the eater).
+        let mut up = NO_BOOSTS;
+        up[index] = 1;
+        b.boost_by(slot, &up, Some(slot), BoostEffect::Item(item));
+    } else if item == items::LANSAT_BERRY {
+        // `pokemon.addVolatile('focusenergy')` (fails if it is already there: no onRestart).
+        b.add_volatile(slot, Volatile::FocusEnergy);
+    } else if item == items::STARF_BERRY {
+        // `this.sample(stats)` over Atk..Spe below +6, then `this.boost({[stat]: 2})`.
+        let boosts = b.state.slot(slot).boosts;
+        let stats: Vec<usize> = (0..5).filter(|&i| boosts[i] < 6).collect();
+        if !stats.is_empty() {
+            let pick = if stats.len() == 1 {
+                0
+            } else {
+                b.rng.uniform(stats.len())
+            };
+            let mut up = NO_BOOSTS;
+            up[stats[pick]] = 2;
+            b.boost_by(slot, &up, Some(slot), BoostEffect::Item(item));
+        }
+    } else if item == items::MICLE_BERRY {
+        // `pokemon.addVolatile('micleberry')` (no onRestart: kept if already there).
+        b.add_volatile(slot, Volatile::MicleBerry);
+    } else if ![
+        items::JABOCA_BERRY,
+        items::ROWAP_BERRY,
+        items::CUSTAP_BERRY,
+        items::ENIGMA_BERRY,
+    ]
+    .contains(&item)
+    {
+        // Those four have an empty `onEat`: their effect follows the eating in the handler
+        // that ate them (damage, +0.1 priority, heal).
         return false;
     }
-    b.use_item(slot)
+    consume(b, slot, pokemon)
+}
+
+/// The end of `eatItem`: `lastItem = item; item = ''` (at any HP, unlike `useItem`), then
+/// `AfterUseItem` (Unburden).
+fn consume<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, pokemon: PokemonRef) -> bool {
+    let (item, last) = (b.mon(pokemon).item, b.mon(pokemon).last_item);
+    if item.is_none() {
+        return false;
+    }
+    b.apply(Instruction::SetLastItem {
+        target: pokemon,
+        old: last,
+        new: item,
+    });
+    b.apply(Instruction::SetItem {
+        target: pokemon,
+        old: item,
+        new: ItemId::NONE,
+    });
+    super::abilities::unburden(b, slot);
+    true
 }
 
 /// `onAfterSetStatus` handlers: Lum Berry is eaten the moment a status lands.

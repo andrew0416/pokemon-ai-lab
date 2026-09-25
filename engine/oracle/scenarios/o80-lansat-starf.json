@@ -1,0 +1,26 @@
+{
+ "description": "O80 Lansat / Starf Berry: Two Seismic Tosses (fixed 50) bring both p2 Pokémon to 1/4 HP; the Update after each hit eats the berry: Snorlax gets focusenergy (Tackle's crit ratio 1+2 = 1/2), Kangaskhan +2 in a random stat. Then Snorlax Tackles Hariyama and Kangaskhan uses Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50},
+   {"species": "Machamp", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Lansat Berry", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Tackle", "Protect"], "level": 50},
+   {"species": "Kangaskhan", "item": "Starf Berry", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {"Snorlax": {"hp": 110}, "Kangaskhan": {"hp": 100}}
+ },
+ "turn": {"p1": "move seismictoss 1, move seismictoss 2", "p2": "move tackle 1, move harden"}
+}

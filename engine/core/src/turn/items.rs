@@ -9,11 +9,7 @@
 //! Refused on purpose (not in `support`'s tables):
 //! - Metronome: its condition keeps `lastMove` and `numConsecutive` and reads
 //!   `moveLastTurnResult` (work plan F13); the item's `onStart` adds it at switch-in.
-//! - Custap Berry: eats the berry when the actions are queued.
 //! - Clear Amulet: `onTryBoost` needs the boost events (F16).
-//! - Utility Umbrella: its effect is `pokemon.effectiveWeather()`, read at many sites (weather
-//!   damage modifier, Chlorophyll / Swift Swim, Solar Power, Rain Dish, Dry Skin, Hydration,
-//!   Leaf Guard, ...); only the freeze immunity and the move handlers read it so far.
 //! - Air Balloon's pop is refused at the hit ([`on_damaging_hit`], F15); grounding is done.
 
 use crate::damage::{MOD_HALF, MOD_ONE_POINT_FIVE};
@@ -21,13 +17,15 @@ use crate::dex::{
     abilities, conditions, items, moves, ItemId, MoveCategory, MoveData, MoveFlags, MoveId,
     Secondary, Stat, Type, TypeImmunities, NO_BOOSTS,
 };
-use crate::field::FieldEffect;
+use crate::field::{FieldEffect, Weather};
 use crate::instruction::Instruction;
-use crate::state::{Pokemon, PokemonRef, SlotRef, State, Status};
+use crate::state::{Pokemon, PokemonRef, SlotRef, State, Status, BOOST_COUNT};
 use crate::volatile::{Volatile, VolatileState};
 
 use super::abilities::{Handler, SUB_ITEM};
 use super::battle::{Battle, BoostEffect, DamageSource};
+use super::order::ORDER_DEFAULT;
+use super::TurnError;
 
 /// The type-resist berries: `onSourceModifyDamage` halves a super-effective hit of one type
 /// (Chilan Berry: every Normal hit) after eating the berry; their `onEat` does nothing.
@@ -76,9 +74,248 @@ pub(crate) fn held_item_problem(mon: &Pokemon) -> Option<String> {
 
 /// Whether an item's `onStart` does nothing when its holder switches in (Showdown runs item
 /// `onStart` handlers in the `SwitchIn` event): the Choice items only remove a `choicelock`
-/// the newcomer cannot have yet; Air Balloon only announces itself.
+/// the newcomer cannot have yet; Air Balloon only announces itself; Utility Umbrella only
+/// acts for a holder ignoring its item (then WeatherChange, which has no implemented
+/// handler).
 pub(crate) fn inert_start(item: ItemId) -> bool {
-    item.data().is_choice || item == items::AIR_BALLOON
+    item.data().is_choice || item == items::AIR_BALLOON || item == items::UTILITY_UMBRELLA
+}
+
+impl<const N: usize> Battle<'_, N> {
+    /// Showdown `pokemon.effectiveWeather()` for the Pokémon in `slot`: the field's
+    /// [`Battle::effective_weather`], except that Utility Umbrella hides sun and rain (and
+    /// their primal forms) from its holder. Sandstorm and snow are unaffected. (Mega Sol, which
+    /// makes its holder's moves see sun, is refused on the field.) Every per-Pokémon weather
+    /// effect reads this: the damage modifier (the defender's), Chlorophyll / Swift Swim, Solar
+    /// Power, Rain Dish, Dry Skin, Hydration, Leaf Guard, sun's freeze immunity and the move
+    /// handlers (Weather Ball, Thunder, Hurricane, Morning Sun...); effects that read the field
+    /// (`field.isWeather`: Sand Rush, Slush Rush, Blizzard, Aurora Veil, Shore Up, sandstorm
+    /// damage) read [`Battle::effective_weather`].
+    pub fn weather_for(&self, slot: SlotRef) -> Weather {
+        let weather = self.effective_weather();
+        let hidden = matches!(
+            weather,
+            Weather::Sun | Weather::Rain | Weather::HarshSun | Weather::HeavyRain
+        ) && self.item(slot) == items::UTILITY_UMBRELLA;
+        if hidden {
+            Weather::None
+        } else {
+            weather
+        }
+    }
+}
+
+/// Whether `handler`, one of the item's handlers that can fire around a switch-in, is
+/// implemented: an inert `onStart` ([`inert_start`]); the `onStart` of an item
+/// [`switch_in_priority`] schedules (Seeds, Room Service); a Seed's `onTerrainChange`
+/// (`field_events`); White Herb's and Mirror Herb's `onAnySwitchIn` ([`any_switch_in_priority`];
+/// White Herb's `onStart` only runs from its own handlers, as `onAnySwitchIn` replaces it as the
+/// switch-in callback, or from `setItem`, which the supported item moves refuse for it).
+pub(crate) fn start_handler_implemented(item: ItemId, handler: &str) -> bool {
+    match handler {
+        "onStart" => {
+            inert_start(item) || switch_in_priority(item).is_some() || item == items::WHITE_HERB
+        }
+        "onTerrainChange" => super::field_events::seed_terrain(item).is_some(),
+        "onAnySwitchIn" => any_switch_in_priority(item).is_some(),
+        _ => false,
+    }
+}
+
+/// `onSwitchInPriority` of an item whose `onStart` acts when its holder switches in (it runs
+/// in the batched `fieldEvent('SwitchIn')`, after the abilities' priority-0 handlers): the
+/// Seeds and Room Service (-1).
+pub(crate) fn switch_in_priority(item: ItemId) -> Option<i32> {
+    let acts = super::field_events::seed_terrain(item).is_some() || item == items::ROOM_SERVICE;
+    acts.then(|| super::abilities::priority(item.data().event_orders, "onSwitchInPriority"))
+}
+
+/// `onAnySwitchInPriority` of an item whose `onAnySwitchIn` runs for every switch-in batch,
+/// held by any active Pokémon: White Herb (-2), Mirror Herb (-3).
+pub(crate) fn any_switch_in_priority(item: ItemId) -> Option<i32> {
+    (item == items::WHITE_HERB || item == items::MIRROR_HERB)
+        .then(|| super::abilities::priority(item.data().event_orders, "onAnySwitchInPriority"))
+}
+
+/// The switch-in handler [`switch_in_priority`] or [`any_switch_in_priority`] scheduled for the
+/// holder in `slot`, run with the item it held when the handlers were collected (Showdown calls
+/// the collected callback: a consumed item makes its `useItem` fail).
+/// - Seeds: [`super::field_events::seed_check`].
+/// - Room Service `onStart`: `this.field.getPseudoWeather('trickroom')` uses it (Speed -1).
+/// - White Herb / Mirror Herb `onAnySwitchIn`: [`white_herb`] / [`mirror_herb_use`] (the
+///   event's target is the holder: `singleEvent('SwitchIn', ..., effectHolder)`).
+pub(crate) fn switch_in_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
+    if b.item(slot) != item {
+        return;
+    }
+    match item {
+        i if super::field_events::seed_terrain(i).is_some() => {
+            super::field_events::seed_check(b, slot);
+        }
+        i if i == items::ROOM_SERVICE => {
+            if b.field_active(FieldEffect::TrickRoom) {
+                use_boost_item(b, slot);
+            }
+        }
+        i if i == items::WHITE_HERB => white_herb(b, slot),
+        i if i == items::MIRROR_HERB => mirror_herb_use(b, slot, slot),
+        _ => {}
+    }
+}
+
+// ---- stage changes: White Herb, Mirror Herb, Adrenaline Orb, Room Service ----------------------
+
+/// White Herb's `onStart`, which its `onAnySwitchIn`, `onAnyAfterMega`, `onAnyAfterMove` and
+/// `onResidual` all call for the holder in `slot`: if a stage is negative, `useItem` (no
+/// `boosts`; `onUse` sets every negative stage to 0 with `setBoost`, which runs no boost
+/// event), consumed.
+pub(crate) fn white_herb<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.item(slot) != items::WHITE_HERB || b.alive(slot).is_none() {
+        return;
+    }
+    let boosts = b.state.slot(slot).boosts;
+    if !boosts.iter().any(|&stage| stage < 0) {
+        return;
+    }
+    for (stat, &stage) in boosts.iter().enumerate() {
+        if stage < 0 {
+            b.apply(Instruction::Boost {
+                target: slot,
+                stat: stat as u8,
+                amount: -stage,
+            });
+        }
+    }
+    b.use_item(slot);
+}
+
+/// Mirror Herb's `onAnySwitchIn` / `onAnyAfterMega` / `onAnyAfterMove` / `onResidual` for the
+/// holder in `slot`: once `ready` (it copied a raise), `useItem` (no `boosts`; `onUse`:
+/// `this.boost(this.effectState.boosts, pokemon)`, whose source is the event's target,
+/// `event_target`), consumed. The copied raises are forgotten when the item goes (`onEnd`).
+pub(crate) fn mirror_herb_use<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    event_target: SlotRef,
+) {
+    let Some(pokemon) = b.alive(slot) else {
+        return;
+    };
+    let Some(index) = b.mirror_herb.iter().position(|(p, _)| *p == pokemon) else {
+        return;
+    };
+    let (_, boosts) = b.mirror_herb.remove(index);
+    if b.item(slot) != items::MIRROR_HERB {
+        return;
+    }
+    b.boost_by(
+        slot,
+        &boosts,
+        Some(event_target),
+        BoostEffect::Item(items::MIRROR_HERB),
+    );
+    b.use_item(slot);
+}
+
+/// The item `AfterBoost` handlers after `target` got `boost` (after TryBoost) from `effect`
+/// (Showdown `runEvent('AfterBoost', target, source, effect, boost)`; they run after the
+/// target's ability, Rattled):
+/// - Adrenaline Orb (the target's): `if (target.boosts['spe'] === 6 || boost.atk === 0)
+///   return; if (effect.name === 'Intimidate') target.useItem();` (Speed +1). An Attack stage
+///   capped to 0 stops it (`atk_capped_to_zero`); one a TryBoost handler deleted does not.
+/// - Mirror Herb (`onFoeAfterBoost`, the target's active foes'): unless the effect is
+///   Opportunist or Mirror Herb, every positive stage is added to the holder's copied raises
+///   ([`Battle::mirror_herb`]), used at the next trigger ([`mirror_herb_use`]).
+///
+/// Adrenaline Orb's own boost and Mirror Herb's accumulation commute, so their Speed order is
+/// moot.
+pub(crate) fn after_boost<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    boost: &[i8; BOOST_COUNT],
+    effect: BoostEffect,
+    atk_capped_to_zero: bool,
+) {
+    let raised = boost.iter().any(|&stage| stage > 0);
+    let copied = effect != BoostEffect::Item(items::MIRROR_HERB)
+        && effect != BoostEffect::Ability(abilities::OPPORTUNIST);
+    if raised && copied {
+        for foe in b.alive_slots(target.side.other()) {
+            if b.item(foe) != items::MIRROR_HERB {
+                continue;
+            }
+            let pokemon = b.alive(foe).expect("alive");
+            let index = match b.mirror_herb.iter().position(|(p, _)| *p == pokemon) {
+                Some(i) => i,
+                None => {
+                    b.mirror_herb.push((pokemon, NO_BOOSTS));
+                    b.mirror_herb.len() - 1
+                }
+            };
+            for (total, &stage) in b.mirror_herb[index].1.iter_mut().zip(boost) {
+                if stage > 0 {
+                    *total += stage;
+                }
+            }
+        }
+    }
+    if effect == BoostEffect::Ability(abilities::INTIMIDATE)
+        && b.item(target) == items::ADRENALINE_ORB
+        && b.alive(target).is_some()
+        && b.state.slot(target).boosts[4] != 6
+        && !atk_capped_to_zero
+    {
+        use_boost_item(b, target);
+    }
+}
+
+/// `runEvent('AfterMove', user)` for the items' `onAnyAfterMove` (White Herb, Mirror Herb),
+/// held by any active Pokémon. Showdown collects `onAny` handlers only while the user is still
+/// active (not yet processed as fainted); every one of them acts on its own holder.
+pub(crate) fn any_after_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) {
+    for slot in b.all_alive() {
+        white_herb(b, slot);
+        mirror_herb_use(b, slot, user);
+    }
+}
+
+/// `runEvent('AfterMega', pokemon)` for the items' `onAnyAfterMega` (White Herb, Mirror Herb).
+pub(crate) fn any_after_mega<const N: usize>(b: &mut Battle<'_, N>, pokemon: SlotRef) {
+    for slot in b.all_alive() {
+        white_herb(b, slot);
+        mirror_herb_use(b, slot, pokemon);
+    }
+}
+
+/// `runEvent('PseudoWeatherChange')` after a new pseudo-weather starts (`addPseudoWeather`, not
+/// a restart): Room Service's `onAnyPseudoWeatherChange` on every active holder uses the item
+/// (`pokemon.useItem(pokemon)`, Speed -1) while Trick Room is up, whichever pseudo-weather
+/// started.
+pub(crate) fn pseudo_weather_change<const N: usize>(b: &mut Battle<'_, N>) {
+    if !b.field_active(FieldEffect::TrickRoom) {
+        return;
+    }
+    for slot in b.all_alive() {
+        if b.item(slot) == items::ROOM_SERVICE {
+            use_boost_item(b, slot);
+        }
+    }
+}
+
+/// The end of a stage: Mirror Herb's copied raises live on the item across events in
+/// Showdown (until its next trigger, possibly turns later); the engine does not carry them
+/// past a stage, so a stage that ends with a living holder still `ready` is refused.
+pub(crate) fn stage_end_check<const N: usize>(b: &Battle<'_, N>) -> Result<(), TurnError> {
+    for &(pokemon, _) in &b.mirror_herb {
+        let mon = b.mon(pokemon);
+        if mon.hp > 0 && mon.item == items::MIRROR_HERB {
+            return Err(b.unsupported(format!(
+                "{}: Mirror Herb keeps copied boosts past the end of a stage (its effectState                  persists until the next trigger)",
+                mon.species.data().name
+            )));
+        }
+    }
+    Ok(())
 }
 
 // ---- Speed, grounding, effectiveness, action order --------------------------------------------
@@ -155,6 +392,28 @@ pub(crate) fn quick_claw<const N: usize>(
     current: i8,
 ) -> Option<i8> {
     (b.mon(pokemon).item == items::QUICK_CLAW && current <= 0 && b.rng.chance(1, 5)).then_some(1)
+}
+
+/// Custap Berry's `onFractionalPriority` (priority -2, like Quick Claw, which a holder of it
+/// cannot also hold) for a move action of the Pokémon in `slot` whose fractional priority is
+/// `current` tenths: `priority <= 0` and the holder at 1/4 of its max HP or less (1/2 with
+/// Gluttony) eats the berry (`eatItem`, empty `onEat`) and makes it +0.1. Showdown runs it
+/// when the turn's actions are queued (`resolveAction`), so the berry is gone before the
+/// first action; Mycelium Might's status-move exception is moot (refused by `support`).
+pub(crate) fn custap<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    pokemon: PokemonRef,
+    current: i8,
+) -> Option<i8> {
+    if b.occupant(slot) != Some(pokemon) || b.mon(pokemon).item != items::CUSTAP_BERRY {
+        return None;
+    }
+    let mon = b.mon(pokemon);
+    let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
+    // `abilityState.gluttony` is set on switch-in: always set here (see `update.rs`).
+    let pinch = 4 * hp <= max_hp || (2 * hp <= max_hp && mon.ability == abilities::GLUTTONY);
+    (current <= 0 && pinch && super::update::eat_item(b, slot)).then_some(1)
 }
 
 // ---- Choice items ---------------------------------------------------------------------------
@@ -451,6 +710,107 @@ pub(crate) fn after_move_secondary_self<const N: usize>(
     }
 }
 
+/// Showdown `useItem` of a held item with `boosts` (Weakness Policy, the absorbing items,
+/// seeds, Room Service, Adrenaline Orb): nothing unless the holder has HP; the item's `boosts`
+/// are applied with the holder as the source (`this.battle.event.target` in every calling
+/// handler) and the item as the effect, while it is still held; then it is consumed and
+/// becomes `lastItem`. The `UseItem` / `Use` / `AfterUseItem` events have no implemented
+/// handler (Unburden is refused by `support`).
+pub(crate) fn use_boost_item<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> bool {
+    let item = b.item(holder);
+    if b.alive(holder).is_none() || item.is_none() {
+        return false;
+    }
+    b.boost_by(
+        holder,
+        &item.data().boosts,
+        Some(holder),
+        BoostEffect::Item(item),
+    );
+    b.use_item(holder)
+}
+
+/// Items with an implemented `onDamagingHit` run by [`on_damaging_hit`]. None has an
+/// `onDamagingHitOrder`, so they run after the ordered handlers (Rough Skin, Rocky Helmet).
+pub(crate) fn has_damaging_hit(item: ItemId) -> bool {
+    [
+        items::WEAKNESS_POLICY,
+        items::ABSORB_BULB,
+        items::CELL_BATTERY,
+        items::LUMINOUS_MOSS,
+        items::SNOWBALL,
+        items::JABOCA_BERRY,
+        items::ROWAP_BERRY,
+    ]
+    .contains(&item)
+}
+
+/// The damaged `target`'s item `onDamagingHit` for a hit of `user`'s move of `move_type` and
+/// `category` (Showdown `runEvent('DamagingHit')`; the holder may be at 0 HP, not yet
+/// processed as fainted):
+/// - Weakness Policy: `!move.damage && !move.damageCallback &&
+///   target.getMoveHitData(move).typeMod > 0` uses the item (Atk and SpA +2). Fixed-damage
+///   moves never compute a `typeMod` ([`Battle::type_mod_of`] is `None`).
+/// - Absorb Bulb (Water, SpA +1), Cell Battery (Electric, Atk +1), Luminous Moss (Water,
+///   SpD +1), Snowball (Ice, Atk +1): `if (move.type === ...) target.useItem()`.
+/// - Jaboca Berry (physical) / Rowap Berry (special): `source.hp && source.isActive &&
+///   !source.hasAbility('magicguard')`, then `target.eatItem()` (which, for these two, works at
+///   0 HP) and `this.damage(source.baseMaxhp / 8, source, target)` (Ripen, 1/4, is refused).
+pub(crate) fn on_damaging_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    item: ItemId,
+    move_type: Type,
+    category: MoveCategory,
+) {
+    let triggers = match item {
+        i if i == items::WEAKNESS_POLICY => b.type_mod_of(target).is_some_and(|t| t > 0),
+        i if i == items::ABSORB_BULB || i == items::LUMINOUS_MOSS => move_type == Type::Water,
+        i if i == items::CELL_BATTERY => move_type == Type::Electric,
+        i if i == items::SNOWBALL => move_type == Type::Ice,
+        i if i == items::JABOCA_BERRY || i == items::ROWAP_BERRY => {
+            let wanted = if i == items::JABOCA_BERRY {
+                MoveCategory::Physical
+            } else {
+                MoveCategory::Special
+            };
+            if category == wanted
+                && b.alive(user).is_some()
+                && b.ability(user) != abilities::MAGIC_GUARD
+                && super::update::eat_item(b, target)
+            {
+                let max_hp = f64::from(b.slot_mon(user).expect("alive").max_hp);
+                b.damage(user, max_hp / 8.0, DamageSource::Indirect);
+            }
+            return;
+        }
+        _ => false,
+    };
+    if triggers {
+        use_boost_item(b, target);
+    }
+}
+
+/// The target's item `onAfterMoveSecondary` (`runEvent('AfterMoveSecondary')` at the end of the
+/// hit loop, skipped for a Sheer Force-boosted move): Kee Berry eats itself after a physical
+/// move (Present's heal, the only exception, is not a supported move), Maranga Berry after a
+/// special one (`target.eatItem()`; their `onEat` raise Def / SpD by 1).
+pub(crate) fn after_move_secondary<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    category: MoveCategory,
+) {
+    let wanted = match b.item(target) {
+        i if i == items::KEE_BERRY => MoveCategory::Physical,
+        i if i == items::MARANGA_BERRY => MoveCategory::Special,
+        _ => return,
+    };
+    if category == wanted {
+        super::update::eat_item(b, target);
+    }
+}
+
 /// The target's item `onHit` (`runEvent('Hit')` in `runMoveEffects`, after the move's own
 /// `onHit`): Sticky Barb moves to an itemless user of a contact move (`takeItem`, then
 /// `setItem`; Protective Pads cannot apply, as the user holds nothing).
@@ -460,6 +820,17 @@ pub(crate) fn on_hit<const N: usize>(
     target: SlotRef,
     data: &MoveData,
 ) {
+    // Enigma Berry: `if (move && target.getMoveHitData(move).typeMod > 0) { if
+    // (target.eatItem()) this.heal(target.baseMaxhp / 4); }`. Its `onTryEatItem` asks
+    // `runEvent('TryHeal')`, which no supported effect answers (Heal Block, Ripen are not).
+    if b.item(target) == items::ENIGMA_BERRY
+        && b.type_mod_of(target).is_some_and(|t| t > 0)
+        && super::update::eat_item(b, target)
+    {
+        let max_hp = f64::from(b.slot_mon(target).expect("the eater").max_hp);
+        b.heal(target, max_hp / 4.0);
+        return;
+    }
     if user == target
         || b.item(target) != items::STICKY_BARB
         || !b.item(user).is_none()
@@ -491,6 +862,9 @@ pub(crate) fn residual_order(item: ItemId) -> Option<(u32, u32)> {
         i if i == items::TOXIC_ORB || i == items::FLAME_ORB || i == items::STICKY_BARB => {
             Some((28, 3))
         }
+        // No `onResidualOrder`: last, with the item sub-order.
+        i if i == items::MICLE_BERRY => Some((ORDER_DEFAULT, SUB_ITEM)),
+        i if i == items::WHITE_HERB || i == items::MIRROR_HERB => Some((29, SUB_ITEM)),
         _ => None,
     }
 }
@@ -522,6 +896,18 @@ pub(crate) fn on_residual<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, 
         i if i == items::STICKY_BARB => {
             b.damage(slot, max_hp / 8.0, DamageSource::Indirect);
         }
+        // Micle Berry: eaten at 1/4 HP (1/2 with Gluttony); `onEat` adds `micleberry`.
+        i if i == items::MICLE_BERRY => {
+            let hp = i32::from(mon.hp);
+            let max = i32::from(mon.max_hp);
+            let pinch = 4 * hp <= max || (2 * hp <= max && mon.ability == abilities::GLUTTONY);
+            if pinch {
+                super::update::eat_item(b, slot);
+            }
+        }
+        i if i == items::WHITE_HERB => white_herb(b, slot),
+        // The Residual handler's event target is the holder itself.
+        i if i == items::MIRROR_HERB => mirror_herb_use(b, slot, slot),
         _ => {}
     }
 }
@@ -618,6 +1004,15 @@ mod tests {
         assert_eq!(p(items::KINGS_ROCK, "onModifyMovePriority"), -1);
         assert_eq!(p(items::RAZOR_FANG, "onModifyMovePriority"), -1);
         assert_eq!(p(items::SHELL_BELL, "onAfterMoveSecondarySelfPriority"), -1);
+        // Custap Berry and Quick Claw share the FractionalPriority priority; Micle Berry's
+        // `onResidual` has no order.
+        assert_eq!(p(items::CUSTAP_BERRY, "onFractionalPriorityPriority"), -2);
+        assert_eq!(p(items::QUICK_CLAW, "onFractionalPriorityPriority"), -2);
+        assert!(!items::MICLE_BERRY
+            .data()
+            .event_orders
+            .iter()
+            .any(|(n, _)| n.starts_with("onResidual")));
         assert_eq!(items::THROAT_SPRAY.data().boosts, [0, 0, 1, 0, 0, 0, 0]);
     }
 }

@@ -68,9 +68,15 @@ pub enum Volatile {
     /// Unburden's own condition (`addVolatile('unburden')` once its holder uses or loses its
     /// item): Speed doubles while the holder has no item. No duration.
     Unburden,
+    /// Focus Energy's condition (`focusenergy`, no duration): critical-hit ratio +2. Added by
+    /// Lansat Berry (the move Focus Energy itself is not supported yet).
+    FocusEnergy,
+    /// Micle Berry's own condition (`micleberry`, duration 2): the holder's next accuracy check
+    /// (`onSourceAccuracy`) is 4915/4096 and ends it.
+    MicleBerry,
 }
 
-pub const VOLATILE_COUNT: usize = 20;
+pub const VOLATILE_COUNT: usize = 22;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -94,6 +100,8 @@ impl Volatile {
         Volatile::Charge,
         Volatile::AngerShellUnchecked,
         Volatile::Unburden,
+        Volatile::FocusEnergy,
+        Volatile::MicleBerry,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -117,9 +125,12 @@ impl Volatile {
             Volatile::Yawn => conditions::YAWN,
             Volatile::Endure => conditions::ENDURE,
             Volatile::Charge => conditions::CHARGE,
-            Volatile::PerishSong | Volatile::ProteanUsed | Volatile::AngerShellUnchecked => {
-                ConditionId::NONE
-            }
+            Volatile::FocusEnergy => conditions::FOCUSENERGY,
+            // Micle Berry is an item's condition: the dex exports no named condition for it.
+            Volatile::PerishSong
+            | Volatile::ProteanUsed
+            | Volatile::AngerShellUnchecked
+            | Volatile::MicleBerry => ConditionId::NONE,
         }
     }
 
@@ -146,6 +157,8 @@ impl Volatile {
             Volatile::Charge => "charge",
             Volatile::AngerShellUnchecked => "angershellunchecked",
             Volatile::Unburden => "unburden",
+            Volatile::FocusEnergy => "focusenergy",
+            Volatile::MicleBerry => "micleberry",
         }
     }
 
@@ -169,7 +182,11 @@ impl Volatile {
             | Volatile::Spotlight
             | Volatile::Roost
             | Volatile::Endure => 1,
-            Volatile::Stall | Volatile::LockedMove | Volatile::MustRecharge | Volatile::Yawn => 2,
+            Volatile::Stall
+            | Volatile::LockedMove
+            | Volatile::MustRecharge
+            | Volatile::Yawn
+            | Volatile::MicleBerry => 2,
             Volatile::Encore => 3,
             Volatile::PerishSong => 4,
             Volatile::Confusion
@@ -178,7 +195,8 @@ impl Volatile {
             | Volatile::ProteanUsed
             | Volatile::Charge
             | Volatile::AngerShellUnchecked
-            | Volatile::Unburden => 0,
+            | Volatile::Unburden
+            | Volatile::FocusEnergy => 0,
         }
     }
 
@@ -298,6 +316,7 @@ mod tests {
                         | Volatile::PerishSong
                         | Volatile::ProteanUsed
                         | Volatile::AngerShellUnchecked
+                        | Volatile::MicleBerry
                 ));
                 continue;
             }
@@ -332,6 +351,18 @@ mod tests {
                 "{id:?}"
             );
         }
+    }
+
+    /// Micle Berry's condition lasts 2 turns; Focus Energy's has no duration.
+    #[test]
+    fn item_condition_durations_match_the_dex() {
+        use crate::dex::items;
+        assert_eq!(
+            items::MICLE_BERRY.data().condition_duration,
+            Volatile::MicleBerry.initial_duration()
+        );
+        assert_eq!(moves::FOCUS_ENERGY.data().condition_duration, 0);
+        assert_eq!(Volatile::FocusEnergy.initial_duration(), 0);
     }
 
     #[test]

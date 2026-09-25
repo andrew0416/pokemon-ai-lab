@@ -232,13 +232,21 @@ pub(crate) fn resume_move<const N: usize>(
 }
 
 /// The end of Showdown `runMove` after `useMove`: `AfterMove` (a locked move on its last
-/// turn ends and, by fatigue, confuses; an Electric move ends Charge), then faints.
+/// turn ends and, by fatigue, confuses; an Electric move ends Charge; White Herb and Mirror
+/// Herb act), then faints.
 fn run_move_tail<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
     let locked = b.volatile(user, Volatile::LockedMove);
     if locked.active && locked.duration == 1 {
         b.remove_volatile(user, Volatile::LockedMove);
     }
     ability_events::charge_after_move(b, user, mv.id, mv.move_type);
+    // The items' `onAnyAfterMove` (White Herb, Mirror Herb), collected only while the user
+    // is still active; they and the lock above act on different holders.
+    if b.active_move
+        .is_some_and(|m| b.occupant(m.user) == Some(m.pokemon))
+    {
+        item_events::any_after_move(b, user);
+    }
     b.faint_messages(true);
     b.check_win(None);
 }
@@ -383,7 +391,9 @@ fn confusion_damage<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> i32
     let mon = b.slot_mon(user).expect("checked");
     let boosts = b.state.slot(user).boosts;
     let attack = boosted_stat(i32::from(mon.stats[0]), boosts[0]);
-    let defense = boosted_stat(i32::from(mon.stats[1]), boosts[1]);
+    // `calculateStat('def', boosts.def)`: the stored SpD under Wonder Room.
+    let stored_def = stored_stat_index(Stat::Def, b.field_active(FieldEffect::WonderRoom));
+    let defense = boosted_stat(i32::from(mon.stats[stored_def]), boosts[1]);
     let level = i32::from(mon.level);
     let base = ((2 * level / 5 + 2) * 40 * attack / defense) / 50 + 2;
     let base = base & 0xffff;
@@ -1193,12 +1203,19 @@ fn accuracy_check<const N: usize>(
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
+    // `accuracy = true` without the `Accuracy` event: a status move on the user, and (gen 8+)
+    // Toxic used by a Poison type.
+    let self_status = mv.target == MoveTarget::User && mv.data.category == MoveCategory::Status;
+    if self_status || (mv.id == moves::TOXIC && b.has_type(user, Type::Poison)) {
+        return true;
+    }
+    // `runEvent('Accuracy')` (after ModifyAccuracy and the stages, which have no side effect
+    // here): Micle Berry's `onSourceAccuracy` on the user ends the volatile, and chains
+    // 4915/4096 onto a numeric accuracy (OHKO moves, which it skips, are refused).
+    let micle = b.remove_volatile(user, Volatile::MicleBerry);
     let Some(base) = mv.accuracy else {
         return true;
     };
-    if mv.target == MoveTarget::User && mv.data.category == MoveCategory::Status {
-        return true;
-    }
     let mut accuracy = i32::from(base);
     // ModifyAccuracy: Gravity (6840/4096), the user's Hustle and item (Wide Lens, Zoom Lens).
     let mut accuracy_mods = ability_events::accuracy_handlers(b, user, mv.data);
@@ -1217,6 +1234,9 @@ fn accuracy_check<const N: usize>(
         accuracy = accuracy * (3 + boost) / 3;
     } else if boost < 0 {
         accuracy = accuracy * 3 / (3 - boost);
+    }
+    if micle {
+        accuracy = modify(accuracy, 4915);
     }
     b.rng.chance(accuracy.max(0) as u32, 100)
 }
@@ -1287,23 +1307,15 @@ fn hit_loop<const N: usize>(
             total_damage: total,
         });
     }
-    // AfterMoveSecondary (skipped for a Sheer Force-boosted move): a thawing move thaws a
-    // frozen target (of the last hit).
-    if mv.data.thaws_target && !ability_hooks::sheer_force_skips(b, user, mv) {
-        for (&t, r) in progress.targets.iter().zip(&results) {
-            if r.ok() {
-                if let Some(p) = b.alive(t) {
-                    if b.mon(p).status == Status::Freeze {
-                        b.cure_status(p);
-                    }
-                }
-            }
-        }
-    }
-    // AfterMoveSecondary of Anger Shell / Berserk on the last hit's targets (Showdown's
-    // `targetsCopy`: those the hit did not fail on; after a later multi-accuracy miss, the
-    // previous hit's, which are the targets kept for this hit). The damage each took is its
-    // last `attackedBy` entry, or `move.totalDamage` for a multi-hit move.
+    // Champions `hitStepMoveHitLoop`: `eachEvent('Update')` after the recoil, then
+    // AfterMoveSecondary (skipped for a Sheer Force-boosted move) for the targets of the last
+    // hit it did not fail on (`targetsCopy`; after a later hit's miss, a fresh copy of every
+    // target). Per target, in Showdown's `subOrder` (Condition 2, Ability 7, Item 8): a
+    // thawing move thaws a frozen target (`frz`'s handler), Anger Shell / Berserk, then the
+    // target's item (Kee / Maranga Berry). The damage a target took is its last `attackedBy`
+    // entry, or `move.totalDamage` for a multi-hit move. Handlers of different targets act on
+    // their own holder only, so their Speed order does not matter.
+    super::update::update_event(b)?;
     if !ability_hooks::sheer_force_skips(b, user, mv) {
         let last_hit: Vec<(SlotRef, i32)> = if ended_by_miss {
             progress.targets.iter().map(|&t| (t, 0)).collect()
@@ -1317,12 +1329,20 @@ fn hit_loop<const N: usize>(
                 .collect()
         };
         for (t, damage) in last_hit {
+            if mv.data.thaws_target {
+                if let Some(p) = b.alive(t) {
+                    if b.mon(p).status == Status::Freeze {
+                        b.cure_status(p);
+                    }
+                }
+            }
             let damage = if mv.data.multihit.is_some() {
                 total
             } else {
                 damage
             };
             ability_events::after_move_secondary(b, user, t, damage, total);
+            item_events::after_move_secondary(b, t, mv.data.category);
         }
     }
     Ok(HitOutcome::Finished {
@@ -1341,6 +1361,8 @@ fn spread_move_hit<const N: usize>(
     total_before: i32,
 ) -> Result<Vec<Hit>, TurnError> {
     let data = mv.data;
+    // `getMoveHitData(move).typeMod` is (re)computed by this hit's `getDamage`.
+    b.hit_type_mod = [[None; N]; 2];
     // getSpreadDamage: every target's damage is decided before any is dealt.
     let mut planned = Vec::with_capacity(targets.len());
     for &t in targets {
@@ -1577,7 +1599,7 @@ fn damaging_hit<const N: usize>(
         }
         if mon.item == items::ROCKY_HELMET {
             handlers.push((2, index, Kind::Item(mon.item)));
-        } else if mon.item == items::AIR_BALLOON {
+        } else if mon.item == items::AIR_BALLOON || item_events::has_damaging_hit(mon.item) {
             handlers.push((LAST, index, Kind::Item(mon.item)));
         }
         // The attacker's own ability is never suppressed by its own move.
@@ -1640,19 +1662,32 @@ fn damaging_hit<const N: usize>(
                 });
                 ability_events::unburden(b, target);
             }
-            Kind::Item(_) => {}
+            // Weakness Policy, the absorbing items, Jaboca / Rowap Berry. The item may have
+            // gone since the handlers were collected (a Jaboca Berry is eaten once).
+            Kind::Item(i) => {
+                if b.mon(pokemon).item == i {
+                    item_events::on_damaging_hit(
+                        b,
+                        user,
+                        target,
+                        i,
+                        mv.move_type,
+                        mv.data.category,
+                    );
+                }
+            }
         }
     }
 }
 
-/// Showdown `field.clearTerrain()`: the terrain ends at once. Its `FieldEnd` only logs, and
-/// the `TerrainChange` event it runs has no implemented handler (seeds, Mimicry and Quark
-/// Drive are refused on the field). Returns whether there was a terrain.
+/// Showdown `field.clearTerrain()`: the terrain ends at once (its `FieldEnd` only logs), then
+/// `eachEvent('TerrainChange')` (`field_events`). Returns whether there was a terrain.
 pub(crate) fn clear_terrain<const N: usize>(b: &mut Battle<'_, N>) -> bool {
     if b.terrain() == Terrain::None {
         return false;
     }
     b.set_field(FieldEffect::Terrain, Effect::NONE);
+    super::field_events::terrain_changed(b);
     true
 }
 
@@ -1694,10 +1729,17 @@ fn get_damage<const N: usize>(
     // Critical hit: ratio 1..4 ??1/24, 1/8, 1/2, always. `CriticalHit` handlers: Battle Armor
     // and Shell Armor (`onCriticalHit: false`, breakable). Showdown rolls first and then
     // cancels; not rolling gives the same distribution.
-    // ModifyCritRatio: the user's item (Scope Lens, Razor Claw), then clamped to 0..4. Lucky
-    // Chant on the target's side is a `CriticalHit` handler too (`onCriticalHit: false`).
+    // ModifyCritRatio: the user's item (Scope Lens, Razor Claw) and its `focusenergy` volatile
+    // (+2, from Lansat Berry), all additive, then clamped to 0..4. Lucky Chant on the target's
+    // side is a `CriticalHit` handler too (`onCriticalHit: false`).
+    let focus_energy = if b.volatile(user, Volatile::FocusEnergy).active {
+        2
+    } else {
+        0
+    };
     let crit_ratio =
-        (i32::from(data.crit_ratio) + item_events::crit_ratio_bonus(b.item(user))).clamp(0, 4);
+        (i32::from(data.crit_ratio) + item_events::crit_ratio_bonus(b.item(user)) + focus_energy)
+            .clamp(0, 4);
     let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit
         && !b.side_effect_active(target.side, SideEffect::LuckyChant);
     let critical = can_crit
@@ -1751,9 +1793,18 @@ fn get_damage<const N: usize>(
 
     // Attack and defense.
     let physical = data.category == MoveCategory::Physical;
-    let attack_stat =
-        data.override_offensive_stat
-            .unwrap_or(if physical { Stat::Atk } else { Stat::Spa });
+    // Wonder Room's `onModifyMove`: a move attacking with Def or SpD (Body Press) takes the
+    // other one's stages (`overrideOffensiveStat` swapped); `calculateStat` then swaps the
+    // stored Def and SpD it reads ([`stored_stat_index`]), while the stages and the Modify*
+    // handlers stay those of the named stat.
+    let wonder_room = b.field_active(FieldEffect::WonderRoom);
+    let attack_stat = match data.override_offensive_stat {
+        Some(Stat::Def) if wonder_room => Stat::Spd,
+        Some(Stat::Spd) if wonder_room => Stat::Def,
+        Some(stat) => stat,
+        None if physical => Stat::Atk,
+        None => Stat::Spa,
+    };
     let defense_stat =
         data.override_defensive_stat
             .unwrap_or(if physical { Stat::Def } else { Stat::Spd });
@@ -1776,7 +1827,7 @@ fn get_damage<const N: usize>(
         def_boost = 0;
     }
     let attack = boosted_stat(
-        i32::from(offensive_mon.stats[stat_index(attack_stat)]),
+        i32::from(offensive_mon.stats[stored_stat_index(attack_stat, wonder_room)]),
         atk_boost,
     );
     // ModifyAtk (physical) / ModifySpA (special), whatever stat the move attacks with.
@@ -1785,11 +1836,13 @@ fn get_damage<const N: usize>(
     attack_mods.extend(item_events::attack_handlers(b, user, data));
     let attack = modify(attack, ability_events::chain(b, attack_mods));
     let mut defense = boosted_stat(
-        i32::from(defender.stats[stat_index(defense_stat)]),
+        i32::from(defender.stats[stored_stat_index(defense_stat, wonder_room)]),
         def_boost,
     );
     // ModifyDef / ModifySpD: sandstorm (Rock SpD) and snow (Ice Def), 1.5x applied directly.
-    let weather = b.effective_weather();
+    // `WeatherModifyDamage` reads `defender.effectiveWeather()` (Utility Umbrella hides sun and
+    // rain; sand and snow are the same for everyone).
+    let weather = b.weather_for(target);
     if defense_stat == Stat::Spd && weather == Weather::Sand && defender.types.contains(&Type::Rock)
     {
         defense = modify(defense, MOD_ONE_POINT_FIVE);
@@ -1823,6 +1876,7 @@ fn get_damage<const N: usize>(
         })
         .sum::<i32>()
         .clamp(-6, 6);
+    b.hit_type_mod[target.side.index()][usize::from(target.slot)] = Some(type_mod as i8);
     let type_effectiveness = if type_mod >= 0 {
         MOD_ONE << type_mod
     } else {
@@ -1887,6 +1941,16 @@ fn screen_applies<const N: usize>(b: &Battle<'_, N>, side: SideId, category: Mov
     }
 }
 
+/// The stored stat `calculateStat(stat)` reads: under Wonder Room Def and SpD trade places
+/// ("Wonder Room swaps defenses before calculating anything else").
+fn stored_stat_index(stat: Stat, wonder_room: bool) -> usize {
+    match stat_index(stat) {
+        1 if wonder_room => 3,
+        3 if wonder_room => 1,
+        i => i,
+    }
+}
+
 fn stat_index(stat: Stat) -> usize {
     match stat {
         Stat::Atk => 0,
@@ -1933,7 +1997,7 @@ fn terrain_of(id: &str) -> Option<Terrain> {
 }
 
 /// Showdown `field.setWeather` from a move or an ability: the same weather again fails;
-/// 5 turns, 8 with the matching rock.
+/// 5 turns, 8 with the matching rock; then `eachEvent('WeatherChange')` (`field_events`).
 pub(crate) fn set_weather<const N: usize>(
     b: &mut Battle<'_, N>,
     source: SlotRef,
@@ -1957,11 +2021,12 @@ pub(crate) fn set_weather<const N: usize>(
             turns,
         },
     );
+    super::field_events::weather_changed(b);
     true
 }
 
 /// Showdown `field.setTerrain`: the same terrain again fails; 5 turns, 8 with Terrain
-/// Extender.
+/// Extender; then `eachEvent('TerrainChange')` (`field_events`: the Seeds).
 pub(crate) fn set_terrain<const N: usize>(
     b: &mut Battle<'_, N>,
     source: SlotRef,
@@ -1982,24 +2047,31 @@ pub(crate) fn set_terrain<const N: usize>(
             turns,
         },
     );
+    super::field_events::terrain_changed(b);
     true
 }
 
-/// Showdown `addPseudoWeather`: Gravity fails if up; Trick Room ends itself on restart.
+/// Showdown `addPseudoWeather`: Gravity fails if up; Trick Room and Wonder Room end
+/// themselves on restart (`onFieldRestart`, no PseudoWeatherChange); a new one (5 turns:
+/// Persistent, which makes Trick Room and Wonder Room last 7, is refused) runs
+/// `PseudoWeatherChange`.
 fn add_pseudo_weather<const N: usize>(b: &mut Battle<'_, N>, id: &str) -> bool {
     let effect = match id {
         "gravity" => FieldEffect::Gravity,
         "trickroom" => FieldEffect::TrickRoom,
+        "wonderroom" => FieldEffect::WonderRoom,
         _ => unreachable!("checked by support"),
     };
     if b.field_active(effect) {
-        if effect == FieldEffect::TrickRoom {
+        if effect == FieldEffect::TrickRoom || effect == FieldEffect::WonderRoom {
             b.set_field(effect, Effect::NONE);
             return true;
         }
         return false;
     }
     b.set_field(effect, Effect { value: 0, turns: 5 });
+    // `runEvent('PseudoWeatherChange')`: Room Service.
+    item_events::pseudo_weather_change(b);
     true
 }
 
