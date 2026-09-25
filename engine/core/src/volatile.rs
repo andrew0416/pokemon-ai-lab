@@ -9,6 +9,7 @@
 //! from the canonical state.
 
 use crate::dex::{conditions, ConditionId, MoveId, Type};
+use crate::state::{PokemonRef, SideId, SlotRef};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 #[repr(u8)]
@@ -114,9 +115,18 @@ pub enum Volatile {
     /// No Retreat (no duration): the holder cannot switch out (`onTrapPokemon`) unless it is
     /// immune to trapping (Ghost), and cannot use No Retreat again.
     NoRetreat,
+    /// Leech Seed (no duration, residual order 8): the holder loses 1/8 of its max HP to
+    /// whoever stands in the seeder's slot (`sourceSlot`, kept in `counter`:
+    /// [`encode_slot`]; hidden in the canonical state).
+    LeechSeed,
+    /// Partial trapping (Bind, Wrap, Fire Spin, ...; duration 5–6, 8 with Grip Claw, residual
+    /// order 13): 1/8 (1/6 with Binding Band: `boundDivisor`, kept in `hidden`) of the max HP
+    /// each turn and no switching while the trapper (`source`, kept in `counter`:
+    /// [`encode_pokemon`]; hidden in the canonical state) stays in.
+    PartiallyTrapped,
 }
 
-pub const VOLATILE_COUNT: usize = 37;
+pub const VOLATILE_COUNT: usize = 39;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -157,6 +167,8 @@ impl Volatile {
         Volatile::SilkTrap,
         Volatile::BurningBulwark,
         Volatile::NoRetreat,
+        Volatile::LeechSeed,
+        Volatile::PartiallyTrapped,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -195,6 +207,8 @@ impl Volatile {
             Volatile::SilkTrap => conditions::SILKTRAP,
             Volatile::BurningBulwark => conditions::BURNINGBULWARK,
             Volatile::NoRetreat => conditions::NORETREAT,
+            Volatile::LeechSeed => conditions::LEECHSEED,
+            Volatile::PartiallyTrapped => conditions::PARTIALLYTRAPPED,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -244,6 +258,8 @@ impl Volatile {
             Volatile::SilkTrap => "silktrap",
             Volatile::BurningBulwark => "burningbulwark",
             Volatile::NoRetreat => "noretreat",
+            Volatile::LeechSeed => "leechseed",
+            Volatile::PartiallyTrapped => "partiallytrapped",
         }
     }
 
@@ -282,7 +298,9 @@ impl Volatile {
             | Volatile::ThroatChop => 2,
             Volatile::Encore | Volatile::Taunt => 3,
             Volatile::PerishSong => 4,
-            Volatile::Disable => 5,
+            // Partial trapping's `durationCallback` replaces it when it starts
+            // (`conditions::volatile_start`).
+            Volatile::Disable | Volatile::PartiallyTrapped => 5,
             Volatile::Confusion
             | Volatile::FlashFire
             | Volatile::ChoiceLock
@@ -295,7 +313,8 @@ impl Volatile {
             | Volatile::Imprison
             | Volatile::GlaiveRush
             | Volatile::SparklingAria
-            | Volatile::NoRetreat => 0,
+            | Volatile::NoRetreat
+            | Volatile::LeechSeed => 0,
         }
     }
 
@@ -303,6 +322,8 @@ impl Volatile {
     /// handler). Its duration is counted down by that residual handler.
     pub fn residual_order(self) -> Option<u32> {
         match self {
+            Volatile::LeechSeed => Some(8),
+            Volatile::PartiallyTrapped => Some(13),
             Volatile::Taunt => Some(15),
             Volatile::Encore => Some(16),
             Volatile::Disable => Some(17),
@@ -320,12 +341,49 @@ impl Volatile {
     pub fn showdown_state(self, state: VolatileState) -> Option<VolatileState> {
         match self {
             Volatile::ProteanUsed | Volatile::AngerShellUnchecked => None,
-            Volatile::Roost | Volatile::HelpingHand => Some(VolatileState {
+            Volatile::Roost | Volatile::HelpingHand | Volatile::LeechSeed => Some(VolatileState {
                 counter: 0,
+                ..state
+            }),
+            Volatile::PartiallyTrapped => Some(VolatileState {
+                counter: 0,
+                hidden: 0,
                 ..state
             }),
             _ => Some(state),
         }
+    }
+}
+
+/// A slot in one `counter` (Leech Seed's `sourceSlot`): never 0.
+pub fn encode_slot(slot: SlotRef) -> u16 {
+    1 + (slot.side.index() as u16) * 256 + u16::from(slot.slot)
+}
+
+/// The slot [`encode_slot`] stored.
+pub fn decode_slot(counter: u16) -> SlotRef {
+    let value = counter - 1;
+    SlotRef {
+        side: if value >= 256 {
+            SideId::Two
+        } else {
+            SideId::One
+        },
+        slot: (value % 256) as u8,
+    }
+}
+
+/// A party member in one `counter` (partial trapping's `source`): never 0.
+pub fn encode_pokemon(pokemon: PokemonRef) -> u16 {
+    1 + (pokemon.side.index() as u16) * 256 + u16::from(pokemon.party)
+}
+
+/// The party member [`encode_pokemon`] stored.
+pub fn decode_pokemon(counter: u16) -> PokemonRef {
+    let slot = decode_slot(counter);
+    PokemonRef {
+        side: slot.side,
+        party: slot.slot,
     }
 }
 
@@ -458,6 +516,7 @@ mod tests {
             (Volatile::Obstruct, moves::OBSTRUCT),
             (Volatile::SilkTrap, moves::SILK_TRAP),
             (Volatile::BurningBulwark, moves::BURNING_BULWARK),
+            (Volatile::LeechSeed, moves::LEECH_SEED),
         ] {
             let data = id.data();
             assert_eq!(
@@ -492,6 +551,44 @@ mod tests {
         );
         assert_eq!(moves::FOCUS_ENERGY.data().condition_duration, 0);
         assert_eq!(Volatile::FocusEnergy.initial_duration(), 0);
+    }
+
+    /// Partial trapping is a named condition (`data/conditions.ts`): its duration, residual order
+    /// and handler list are the implemented ones (`conditions::volatile_start`, `residual`,
+    /// `conditions::trapped`; `onEnd` only logs).
+    #[test]
+    fn partial_trapping_matches_its_condition() {
+        let data = conditions::PARTIALLYTRAPPED.data();
+        assert_eq!(data.duration, Volatile::PartiallyTrapped.initial_duration());
+        assert_eq!(data.event_orders, [("onResidualOrder", 13)]);
+        assert_eq!(
+            Volatile::PartiallyTrapped.residual_order(),
+            Some(13),
+            "residual order"
+        );
+        assert_eq!(
+            data.handlers,
+            [
+                "durationCallback",
+                "onEnd",
+                "onResidual",
+                "onStart",
+                "onTrapPokemon"
+            ]
+        );
+    }
+
+    #[test]
+    fn slots_and_pokemon_round_trip() {
+        for side in [SideId::One, SideId::Two] {
+            for index in 0..6 {
+                let slot = SlotRef { side, slot: index };
+                assert_eq!(decode_slot(encode_slot(slot)), slot);
+                assert_ne!(encode_slot(slot), 0);
+                let pokemon = PokemonRef { side, party: index };
+                assert_eq!(decode_pokemon(encode_pokemon(pokemon)), pokemon);
+            }
+        }
     }
 
     #[test]

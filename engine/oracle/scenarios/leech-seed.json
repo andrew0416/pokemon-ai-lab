@@ -1,0 +1,24 @@
+{
+ "description": "Leech Seed: Venusaur seeds Snorlax (90% accuracy); Ferrothorn, a Grass type, is immune to Hitmontop's Leech Seed. In the residual (order 8) Snorlax loses 1/8 of its max HP and Venusaur (100 HP) heals as much.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Venusaur", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Leech Seed", "Calm Mind"], "level": 50},
+   {"species": "Hitmontop", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Leech Seed", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Ferrothorn", "item": "", "ability": "Honey Gather", "nature": "Relaxed",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Venusaur": {"hp": 100}}},
+ "turn": {"p1": "move leechseed 1, move leechseed 2", "p2": "move calmmind, move calmmind"}
+}

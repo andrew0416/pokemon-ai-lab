@@ -1,0 +1,27 @@
+{
+ "description": "Rapid Spin frees its user: in the setup turn Hitmontop (Grip Claw) binds Forretress and Venusaur seeds it (HP patched after); now Forretress's Rapid Spin removes Leech Seed and the partial trap (and raises its Speed), so the residual neither drains nor binds it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hitmontop", "item": "Grip Claw", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Bind", "Calm Mind"], "level": 50},
+   {"species": "Venusaur", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Leech Seed", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Forretress", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Rapid Spin", "Calm Mind"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move bind 1, move leechseed 1", "move calmmind, move calmmind"]
+ ],
+ "patch": {"p1": {"Venusaur": {"hp": 150}}, "p2": {"Forretress": {"hp": 150}}},
+ "turn": {"p1": "move calmmind, move calmmind", "p2": "move rapidspin 1, move calmmind"}
+}

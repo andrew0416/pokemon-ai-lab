@@ -632,6 +632,12 @@ fn disabled<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> Opti
     {
         return Some(format!("{} is disabled by Gravity", data.name));
     }
+    // `endTurn`: `if (activeMove.flags['cantusetwice'] && pokemon.lastMove?.id === moveSlot.id)
+    // pokemon.disableMove(...)` (Gigaton Hammer, Blood Moon). The hint volatile `runMove` adds
+    // when such a move is forced twice in a row is removed within the same `runMove`.
+    if data.flags.contains(MoveFlags::CANTUSETWICE) && state.slot(slot).last_move == id {
+        return Some(format!("{} cannot be used twice in a row", data.name));
+    }
     // Encore's `onDisableMove`: only the encored move can be chosen.
     let encore = state.slot(slot).volatiles.get(Volatile::Encore);
     if encore.active

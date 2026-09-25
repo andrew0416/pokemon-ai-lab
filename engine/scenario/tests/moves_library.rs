@@ -216,6 +216,60 @@ fn triple_axel_and_water_shuriken_hit_by_hit() {
     common::assert_mc_parity("triple-axel");
 }
 
+#[test]
+fn leech_seed_drains_into_the_seeder_and_misses_grass_types() {
+    assert_exact_parity("leech-seed");
+}
+
+#[test]
+fn leech_seed_heals_whoever_stands_in_the_seeders_slot() {
+    assert_exact_parity("leech-seed-slot");
+}
+
+#[test]
+fn bind_and_fire_spin_with_grip_claw_and_binding_band() {
+    assert_exact_parity("bind-fire-spin");
+}
+
+#[test]
+fn partial_trapping_ends_when_the_trapper_leaves() {
+    assert_exact_parity("bind-source-leaves");
+}
+
+#[test]
+fn rapid_spin_removes_leech_seed_and_partial_trapping() {
+    assert_exact_parity("rapid-spin-trap");
+}
+
+#[test]
+fn gigaton_hammer_and_blood_moon_rest_a_turn() {
+    assert_exact_parity("gigaton-hammer");
+}
+
+/// Partial trapping's `onTrapPokemon` while the trapper is in: the bound Snorlax cannot switch.
+#[test]
+fn a_partially_trapped_pokemon_cannot_switch() {
+    assert_invalid_choice(
+        "bind-source-leaves",
+        1,
+        0,
+        SlotAction::Switch { party_index: 2 },
+        "partially trapped",
+    );
+}
+
+/// `cantusetwice`: Tinkaton cannot choose Gigaton Hammer right after using it.
+#[test]
+fn gigaton_hammer_cannot_be_chosen_twice_in_a_row() {
+    assert_invalid_choice(
+        "gigaton-hammer",
+        0,
+        0,
+        move_choice(0, 1),
+        "cannot be used twice in a row",
+    );
+}
+
 /// No Retreat's `onTrapPokemon`: Snorlax cannot switch to the benched Kommo-o.
 #[test]
 fn no_retreat_traps_its_user() {

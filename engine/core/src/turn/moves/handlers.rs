@@ -195,6 +195,8 @@ pub(super) fn on_try_immunity<const N: usize>(
         // Trick, Switcheroo: `return !target.hasAbility('stickyhold');` (`hasAbility` is not
         // skipped by Mold Breaker).
         moves::TRICK | moves::SWITCHEROO => b.ability(target) != abilities::STICKY_HOLD,
+        // Leech Seed: `return !target.hasType('Grass');`
+        moves::LEECH_SEED => !b.has_type(target, Type::Grass),
         // Endeavor: `return pokemon.hp < target.hp;`
         moves::ENDEAVOR => {
             let hp = |s: SlotRef| b.slot_mon(s).map_or(0, |m| m.hp);
@@ -280,10 +282,12 @@ pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef,
     if mv.id == moves::ICE_SPINNER {
         super::clear_terrain(b);
     }
-    // Rapid Spin: `if (!move.hasSheerForce)` the user's side loses its hazards (Leech Seed and
-    // partial trapping, which it also ends, are not implemented).
-    if mv.id == moves::RAPID_SPIN && !mv.has_sheer_force {
+    // Rapid Spin: `if (!move.hasSheerForce)`, a user with HP (not knocked out by Rocky Helmet
+    // or the like in DamagingHit) loses Leech Seed, its side's hazards, then partial trapping.
+    if mv.id == moves::RAPID_SPIN && !mv.has_sheer_force && b.alive(user).is_some() {
+        b.remove_volatile(user, Volatile::LeechSeed);
         remove_side_effects(b, user.side, &HAZARDS);
+        b.remove_volatile(user, Volatile::PartiallyTrapped);
     }
 }
 

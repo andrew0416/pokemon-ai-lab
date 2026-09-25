@@ -7,7 +7,10 @@ use crate::dex::{
 use crate::field::{Effect, SideEffect};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SideId, SlotRef, State, Status, BOOST_COUNT};
-use crate::volatile::{decode_types, encode_types, Volatile, VolatileState};
+use crate::volatile::{
+    decode_pokemon, decode_slot, decode_types, encode_pokemon, encode_slot, encode_types, Volatile,
+    VolatileState,
+};
 
 use super::battle::{Battle, BoostEffect, DamageSource};
 use super::TurnError;
@@ -88,12 +91,42 @@ pub(crate) fn volatile_end<const N: usize>(
 /// a locked move's are in `Battle::add_volatile_from`): it may change the new state, or fail
 /// (`false`: the volatile is not added).
 pub(crate) fn volatile_start<const N: usize>(
-    b: &Battle<'_, N>,
+    b: &mut Battle<'_, N>,
     target: SlotRef,
     volatile: Volatile,
     new: &mut VolatileState,
 ) -> bool {
+    // The source (`addVolatile(status, source)`): the user of the move adding it.
+    let source = b
+        .active_move
+        .filter(|m| b.occupant(m.user) == Some(m.pokemon));
     match volatile {
+        // Leech Seed: `sourceSlot = source.getSlot()` (whoever stands there at the residual is
+        // healed).
+        Volatile::LeechSeed => {
+            let Some(source) = source else {
+                return false;
+            };
+            new.counter = encode_slot(source.user);
+            true
+        }
+        // Partial trapping: `durationCallback`: 8 if the source holds Grip Claw, else
+        // `this.random(5, 7)`; `onStart`: `boundDivisor` 6 with Binding Band, else 8; the
+        // source is kept for the residual and the trap.
+        Volatile::PartiallyTrapped => {
+            let Some(source) = source else {
+                return false;
+            };
+            let item = b.item(source.user);
+            new.duration = if item == items::GRIP_CLAW {
+                8
+            } else {
+                5 + b.rng.uniform(2) as u8
+            };
+            new.hidden = if item == items::BINDING_BAND { 6 } else { 8 };
+            new.counter = encode_pokemon(source.pokemon);
+            true
+        }
         // Taunt: `if (target.activeTurns && !this.queue.willMove(target))
         // this.effectState.duration++;` (`activeTurns` is `active_since_turn_start`).
         Volatile::Taunt => {
@@ -225,7 +258,8 @@ pub(crate) fn disabled_move<const N: usize>(
 
 /// Why the Pokémon in `slot` cannot switch out because of a condition on it (the
 /// `TrapPokemon` handlers `endTurn` runs, each calling `pokemon.tryTrap()`, which fails for a
-/// Pokémon immune to `trapped`: a Ghost type): No Retreat.
+/// Pokémon immune to `trapped`: a Ghost type): No Retreat; partial trapping while its source is
+/// active (`if (this.effectState.source?.isActive) pokemon.tryTrap();`).
 pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option<String> {
     let mon = state.active(slot)?;
     let immune = mon
@@ -235,14 +269,68 @@ pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option
     if immune {
         return None;
     }
+    let name = mon.species.data().name;
     let volatiles = &state.slot(slot).volatiles;
     if volatiles.has(Volatile::NoRetreat) {
-        return Some(format!(
-            "{} is trapped by No Retreat",
-            mon.species.data().name
-        ));
+        return Some(format!("{name} is trapped by No Retreat"));
+    }
+    let trap = volatiles.get(Volatile::PartiallyTrapped);
+    if trap.active {
+        let source = decode_pokemon(trap.counter);
+        let source_active = state
+            .side(source.side)
+            .slots
+            .iter()
+            .any(|s| s.party_index == Some(source.party));
+        if source_active {
+            return Some(format!("{name} is partially trapped"));
+        }
     }
     None
+}
+
+/// Leech Seed's `onResidual` (order 8) on the seeded Pokémon in `slot`: nothing if the
+/// Pokémon now in the seeder's slot (`getAtSlot(sourceSlot)`, whoever it is) is missing or
+/// fainted; otherwise `this.damage(pokemon.baseMaxhp / 8, pokemon, target)` (not a move's
+/// damage: Magic Guard stops it) and that Pokémon heals what was taken.
+pub(crate) fn leech_seed_residual<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let seed = b.volatile(slot, Volatile::LeechSeed);
+    if !seed.active {
+        return;
+    }
+    let healer = decode_slot(seed.counter);
+    if b.alive(healer).is_none() {
+        return;
+    }
+    let max_hp = b.slot_mon(slot).map_or(0, |m| m.max_hp);
+    let taken = b.damage(slot, f64::from(max_hp) / 8.0, DamageSource::Indirect);
+    if taken > 0 {
+        b.heal(healer, f64::from(taken));
+    }
+}
+
+/// Partial trapping's `onResidual` (order 13, after its duration went down) on the trapped
+/// Pokémon in `slot`: the volatile is deleted (no `onEnd`) once its source left the field, has
+/// no HP or switched in this turn (`!source.activeTurns`); otherwise
+/// `this.damage(pokemon.baseMaxhp / boundDivisor)`.
+pub(crate) fn partially_trapped_residual<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let trap = b.volatile(slot, Volatile::PartiallyTrapped);
+    if !trap.active {
+        return;
+    }
+    let source = decode_pokemon(trap.counter);
+    let source_slot = Battle::<N>::slots(source.side).find(|&s| b.occupant(s) == Some(source));
+    let holds = source_slot.is_some_and(|s| b.mon(source).hp > 0 && b.active_since_turn_start(s));
+    if !holds {
+        b.delete_volatile(slot, Volatile::PartiallyTrapped);
+        return;
+    }
+    let max_hp = b.slot_mon(slot).map_or(0, |m| m.max_hp);
+    b.damage(
+        slot,
+        f64::from(max_hp) / f64::from(trap.hidden),
+        DamageSource::Indirect,
+    );
 }
 
 // ---- entry hazards ------------------------------------------------------------------------------

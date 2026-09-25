@@ -355,6 +355,14 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::REFLECT_TYPE, &["onHit"]),
     (moves::SOAK, &["onHit"]),
     (moves::ENDEAVOR, &["damageCallback", "onTryImmunity"]),
+    // Leech Seed: `onTryImmunity` (Grass) in `handlers`, the volatile's `onResidual` in
+    // `conditions::leech_seed_residual` (`onStart` only logs). Partial trapping (Bind, Wrap,
+    // ...) is the `partiallytrapped` condition (`conditions::volatile_start`,
+    // `partially_trapped_residual`, `trapped`), pinned in `volatile.rs`.
+    (
+        moves::LEECH_SEED,
+        &["condition.onResidual", "condition.onStart", "onTryImmunity"],
+    ),
     // Item moves (`handlers::on_hit`): Bug Bite / Pluck (the berry's `onEat` on the user through
     // `update::berry_on_eat`), Incinerate, Corrosive Gas, Recycle.
     (moves::BUG_BITE, &["onHit"]),
@@ -1056,14 +1064,9 @@ const CORE_CHECKED_ABILITIES: &[AbilityId] = &[
 ];
 
 /// Items without callbacks that Showdown's core checks by name, not implemented here.
-/// Weather rocks, Light Clay and Terrain Extender (durations), Heavy-Duty Boots (entry hazards)
-/// and Protective Pads (contact) are implemented.
-const CORE_CHECKED_ITEMS: &[ItemId] = &[
-    items::BLUNDER_POLICY,
-    items::GRIP_CLAW,
-    items::BINDING_BAND,
-    items::ULTRANECROZIUM_Z,
-];
+/// Weather rocks, Light Clay and Terrain Extender (durations), Heavy-Duty Boots (entry hazards),
+/// Protective Pads (contact), Grip Claw and Binding Band (partial trapping) are implemented.
+const CORE_CHECKED_ITEMS: &[ItemId] = &[items::BLUNDER_POLICY, items::ULTRANECROZIUM_Z];
 
 /// Whether an ability is inert or implemented while its holder is on the field.
 pub(crate) fn ability_supported_on_field(ability: AbilityId) -> bool {
@@ -1167,11 +1170,8 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     }
     let flags = m.flags;
     use crate::dex::MoveFlags as F;
-    for (flag, what) in [
-        (F::CHARGE, "two-turn"),
-        (F::FUTUREMOVE, "future move"),
-        (F::CANTUSETWICE, "can't use twice"),
-    ] {
+    // `cantusetwice` (Gigaton Hammer, Blood Moon) is implemented in `mod.rs::disabled`.
+    for (flag, what) in [(F::CHARGE, "two-turn"), (F::FUTUREMOVE, "future move")] {
         if flags.contains(flag) {
             return why(what);
         }
