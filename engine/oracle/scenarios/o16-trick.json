@@ -1,0 +1,26 @@
+{
+ "description": "O16 Gardevoir Tricks its Leftovers for Snorlax's Life Orb (Snorlax then heals with Leftovers at the end of the turn); item-less Sableye Switcheroos Skarmory's Venusaurite (not Skarmory's own Mega Stone, so it moves).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gardevoir", "item": "Leftovers", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Trick", "Protect"], "level": 50},
+   {"species": "Sableye", "item": "", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Switcheroo", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Life Orb", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Skarmory", "item": "Venusaurite", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Iron Defense", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {"Snorlax": {"hp": 200}}
+ },
+ "turn": {"p1": "move trick 1, move switcheroo 2", "p2": "move swordsdance, move irondefense"}
+}

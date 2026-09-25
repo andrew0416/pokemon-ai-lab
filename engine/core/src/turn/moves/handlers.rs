@@ -5,10 +5,10 @@
 //! handled here gets the event's neutral result.
 
 use crate::damage::MOD_ONE_POINT_FIVE;
-use crate::dex::{abilities, items, moves, MoveId, MoveTarget, Type, TypeRelation};
+use crate::dex::{abilities, items, moves, ItemId, MoveId, MoveTarget, Type, TypeRelation};
 use crate::field::{FieldEffect, Terrain, Weather};
 use crate::instruction::Instruction;
-use crate::state::{SideId, SlotRef, Status, BOOST_COUNT};
+use crate::state::{Pokemon, SideId, SlotRef, Status, BOOST_COUNT};
 
 use super::super::battle::Battle;
 use super::super::order::modify;
@@ -143,6 +143,21 @@ pub(super) fn on_try<const N: usize>(
         moves::POLTERGEIST => b.slot_mon(first_target).is_some_and(|m| !m.item.is_none()),
         // Steel Roller: `return !this.field.isTerrain('');` (no `TryTerrain` handler exists).
         moves::STEEL_ROLLER => b.terrain() != Terrain::None,
+        _ => true,
+    }
+}
+
+/// The move's `onTryImmunity` (`hitStepTryImmunity`, per target). `false` = the target is
+/// immune.
+pub(super) fn on_try_immunity<const N: usize>(
+    b: &Battle<'_, N>,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    match mv.id {
+        // Trick, Switcheroo: `return !target.hasAbility('stickyhold');` (`hasAbility` is not
+        // skipped by Mold Breaker).
+        moves::TRICK | moves::SWITCHEROO => b.ability(target) != abilities::STICKY_HOLD,
         _ => true,
     }
 }
@@ -315,6 +330,7 @@ pub(super) fn on_hit<const N: usize>(
             super::clear_terrain(b);
             return Ok(None);
         }
+        moves::TRICK | moves::SWITCHEROO => trick(b, user, target)?,
         // Pollen Puff: an ally is healed `Math.floor(target.baseMaxhp * 0.5)`; `NOT_FAIL` if
         // nothing is healed. A foe gets nothing more (`undefined`).
         moves::POLLEN_PUFF => {
@@ -331,6 +347,62 @@ pub(super) fn on_hit<const N: usize>(
         _ => return Ok(None),
     };
     Ok(Some(result))
+}
+
+/// Trick and Switcheroo `onHit`: `target.takeItem(source)` and `source.takeItem()` (`undefined`
+/// without an item, `false` when the item's own TakeItem handler refuses: `onTakeItem: false`,
+/// or a Mega Stone of its holder's species); fail if either refuses or both are empty; then
+/// each item's TakeItem handler again with its new holder (a Mega Stone cannot go to its own
+/// species); then both `setItem`s. Abilities with TakeItem handlers (Sticky Hold, Unburden)
+/// are refused on the field. An item whose `Start`, `End` or other TakeItem handler would run
+/// here is not implemented.
+fn trick<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+) -> Result<HitResult, TurnError> {
+    let (yours, mine) = (b.item(target), b.item(user));
+    for item in [yours, mine] {
+        let data = item.data();
+        let other_take_item = data.mega_stone.is_empty() && data.handlers.contains(&"onTakeItem");
+        if other_take_item
+            || data
+                .handlers
+                .iter()
+                .any(|h| ["onStart", "onEnd"].contains(h))
+        {
+            return Err(b.unsupported(format!("Trick moving {} ({:?})", data.name, data.handlers)));
+        }
+    }
+    let taken = |slot: SlotRef, item: ItemId| item.is_none() || b.item_can_be_taken(slot);
+    if !taken(target, yours) || !taken(user, mine) || (yours.is_none() && mine.is_none()) {
+        return Ok(HitResult::Failure);
+    }
+    let received = |item: ItemId, receiver: SlotRef| {
+        item.is_none() || b.slot_mon(receiver).is_some_and(|m| holds_freely(item, m))
+    };
+    if !received(mine, target) || !received(yours, user) {
+        return Ok(HitResult::Failure);
+    }
+    for (slot, old, new) in [(target, yours, mine), (user, mine, yours)] {
+        let pokemon = b.occupant(slot).expect("an active Pokémon");
+        b.apply(Instruction::SetItem {
+            target: pokemon,
+            old,
+            new,
+        });
+    }
+    Ok(HitResult::Success)
+}
+
+/// Whether `item`'s own TakeItem handler lets `holder` part with it (or, called with the new
+/// holder, receive it): not `onTakeItem: false`, and not a Mega Stone of the holder's species
+/// (`item.megaStone?.[holder.baseSpecies.baseSpecies]`).
+fn holds_freely(item: ItemId, holder: &Pokemon) -> bool {
+    let data = item.data();
+    let base = holder.species.data().base_species;
+    let base = if base.is_none() { holder.species } else { base };
+    !data.cannot_be_taken && !data.mega_stone.iter().any(|&(from, _)| from == base)
 }
 
 /// The move's `onHitField` (moves targeting the whole field). `None` = none.

@@ -630,7 +630,7 @@ fn try_spread_move_hit<const N: usize>(
     if targets.is_empty() {
         return Ok(false);
     }
-    // 3. Move-specific immunities: powder, Prankster vs Dark.
+    // 3. Move-specific immunities: powder, the move's `onTryImmunity`, Prankster vs Dark.
     targets.retain(|&t| {
         let powder = mv.data.flags.contains(MoveFlags::POWDER)
             && t != user
@@ -638,7 +638,7 @@ fn try_spread_move_hit<const N: usize>(
         let prankster = mv.prankster_boosted
             && t.side != user.side
             && b.status_immune(t, TypeImmunities::PRANKSTER);
-        !powder && !prankster
+        !powder && handlers::on_try_immunity(b, mv, t) && !prankster
     });
     if targets.is_empty() {
         return Ok(false);

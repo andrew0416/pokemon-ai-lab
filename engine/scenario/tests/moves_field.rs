@@ -55,3 +55,13 @@ fn o8_pollen_puff_damages_foes_and_milk_drink_heals_an_ally() {
 fn o9_foul_play_uses_the_target_attack_and_body_press_defense() {
     assert_exact_parity("o9-foul-play-body-press");
 }
+
+#[test]
+fn o16_trick_and_switcheroo_swap_items() {
+    assert_exact_parity("o16-trick");
+}
+
+#[test]
+fn o16_trick_fails_on_own_or_receiving_mega_stones() {
+    assert_exact_parity("o16-trick-fail");
+}

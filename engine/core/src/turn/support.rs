@@ -68,6 +68,8 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // `onTryMove` only fails an ally-targeted use under Heal Block, which no supported effect
     // adds.
     (moves::POLLEN_PUFF, &["onHit", "onTryHit", "onTryMove"]),
+    (moves::TRICK, &["onHit", "onTryImmunity"]),
+    (moves::SWITCHEROO, &["onHit", "onTryImmunity"]),
     (moves::RISING_VOLTAGE, &["basePowerCallback"]),
     (moves::PSYBLADE, &["onBasePower"]),
     (moves::BLIZZARD, &["onModifyMove"]),
