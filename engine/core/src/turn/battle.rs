@@ -730,6 +730,11 @@ impl<'a, const N: usize> Battle<'a, N> {
                     duration: if old.hidden >= 2 { 2 } else { old.duration },
                     ..old
                 },
+                // Helping Hand's `onRestart`: `this.effectState.multiplier *= 1.5`.
+                Volatile::HelpingHand => VolatileState {
+                    counter: old.counter + 1,
+                    ..old
+                },
                 // No onRestart.
                 _ => return false,
             }
@@ -741,7 +746,13 @@ impl<'a, const N: usize> Battle<'a, N> {
             let mut new = VolatileState {
                 active: true,
                 duration: volatile.initial_duration(),
-                counter: if volatile == Volatile::Stall { 3 } else { 0 },
+                // Stall's first counter; Helping Hand's `onStart`: `multiplier = 1.5` (one
+                // application).
+                counter: match volatile {
+                    Volatile::Stall => 3,
+                    Volatile::HelpingHand => 1,
+                    _ => 0,
+                },
                 ..VolatileState::NONE
             };
             match volatile {

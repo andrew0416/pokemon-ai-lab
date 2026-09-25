@@ -82,6 +82,18 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "onTryHit",
         ],
     ),
+    // Helping Hand: `onTryHit` in `handlers::on_try_hit`, the volatile's start/restart in
+    // `Battle::add_volatile_from` (`counter` = applications), its BasePower handler in
+    // `handlers::volatile_base_power`.
+    (
+        moves::HELPING_HAND,
+        &[
+            "condition.onBasePower",
+            "condition.onRestart",
+            "condition.onStart",
+            "onTryHit",
+        ],
+    ),
     (moves::GRASSY_GLIDE, &["onModifyPriority"]),
     (moves::LOW_KICK, &["basePowerCallback", "onTryHit"]),
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),

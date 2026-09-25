@@ -1672,6 +1672,8 @@ fn get_damage<const N: usize>(
     if let Some(modifier) = handlers::on_base_power(b, user, mv) {
         power_mods.push(Handler::of(b, user, 0, SUB_MOVE, modifier));
     }
+    // The user's volatiles (Helping Hand, priority 10).
+    power_mods.extend(handlers::volatile_base_power(b, user));
     let power_modifier = ability_events::chain(b, power_mods);
 
     // Attack and defense.

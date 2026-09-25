@@ -1,0 +1,24 @@
+{
+ "description": "O7 Helping Hand's volatile in the canonical state: Hitmontop (Levitate) helps Garchomp, whose Earthquake KOs both 1-HP foes; the battle ends before the residual, so Garchomp keeps helpinghand {duration 1} (Showdown's multiplier is not printed).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hitmontop", "item": "", "ability": "Levitate", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Helping Hand", "Protect"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 2, "atk": 32, "def": 32}, "moves": ["Earthquake", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Tyranitar", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Dragon Claw", "Protect"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Moonblast", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Tyranitar": {"hp": 1}, "Clefable": {"hp": 1}}},
+ "turn": {"p1": "move helpinghand -2, move earthquake", "p2": "move dragonclaw 1, move moonblast 2"}
+}

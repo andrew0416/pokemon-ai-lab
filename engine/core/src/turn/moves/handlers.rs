@@ -11,6 +11,7 @@ use crate::instruction::Instruction;
 use crate::state::{Pokemon, SideId, SlotRef, Status, BOOST_COUNT};
 use crate::volatile::Volatile;
 
+use super::super::abilities::{Handler, SUB_CONDITION};
 use super::super::battle::Battle;
 use super::super::order::modify;
 use super::super::TurnError;
@@ -184,6 +185,13 @@ pub(super) fn on_try_hit<const N: usize>(
         // Yawn: `if (target.status || !target.runStatusImmunity('slp')) return false;` (no type
         // or implemented `Immunity` handler covers sleep).
         moves::YAWN => b.slot_mon(target).is_some_and(|m| m.status == Status::None),
+        // Helping Hand: `if (!target.newlySwitched && !this.queue.willMove(target)) return
+        // false;`. `newlySwitched` (switched in this turn) is `move_actions == 0` here: a
+        // Pokémon without a queued move either moved this turn (`runMove` counted it) or
+        // switched in this turn (the count restarts at 0).
+        moves::HELPING_HAND => {
+            b.will_move(target).is_some() || b.state.slot(target).move_actions == 0
+        }
         _ => true,
     }
 }
@@ -237,6 +245,26 @@ pub(super) fn on_base_power<const N: usize>(
         }
         _ => None,
     }
+}
+
+/// BasePower handlers of the user's volatiles (`condition.onBasePower`): Helping Hand
+/// (priority 10) `chainModify(this.effectState.multiplier)`, 1.5 per application.
+pub(super) fn volatile_base_power<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+) -> Vec<Handler> {
+    let mut out = Vec::new();
+    let helping_hand = b.volatile(user, Volatile::HelpingHand);
+    if helping_hand.active {
+        let multiplier = 1.5f64.powi(i32::from(helping_hand.counter));
+        let modifier = (multiplier * 4096.0).trunc() as u32;
+        let priority = super::super::abilities::priority(
+            moves::HELPING_HAND.data().event_orders,
+            "condition.onBasePowerPriority",
+        );
+        out.push(Handler::of(b, user, priority, SUB_CONDITION, modifier));
+    }
+    out
 }
 
 /// Showdown `this.dex.getEffectiveness(attacking, defending)` for one defending type:

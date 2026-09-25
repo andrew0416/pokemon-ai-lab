@@ -56,9 +56,13 @@ pub enum Volatile {
     /// (the type already changed since switching in). No duration; hidden in the canonical
     /// state.
     ProteanUsed,
+    /// Helping Hand: the holder's moves this turn get more power (duration 1). `counter` counts
+    /// the applications (Showdown keeps `multiplier` = 1.5 per application instead, which the
+    /// canonical state does not print, so neither is `counter`).
+    HelpingHand,
 }
 
-pub const VOLATILE_COUNT: usize = 17;
+pub const VOLATILE_COUNT: usize = 18;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -79,6 +83,7 @@ impl Volatile {
         Volatile::PerishSong,
         Volatile::Endure,
         Volatile::ProteanUsed,
+        Volatile::HelpingHand,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -101,6 +106,7 @@ impl Volatile {
             Volatile::Roost => conditions::ROOST,
             Volatile::Yawn => conditions::YAWN,
             Volatile::Endure => conditions::ENDURE,
+            Volatile::HelpingHand => conditions::HELPINGHAND,
             Volatile::PerishSong | Volatile::ProteanUsed => ConditionId::NONE,
         }
     }
@@ -125,6 +131,7 @@ impl Volatile {
             Volatile::PerishSong => "perishsong",
             Volatile::Endure => "endure",
             Volatile::ProteanUsed => "protean",
+            Volatile::HelpingHand => "helpinghand",
         }
     }
 
@@ -147,7 +154,8 @@ impl Volatile {
             | Volatile::RagePowder
             | Volatile::Spotlight
             | Volatile::Roost
-            | Volatile::Endure => 1,
+            | Volatile::Endure
+            | Volatile::HelpingHand => 1,
             Volatile::Stall | Volatile::LockedMove | Volatile::MustRecharge | Volatile::Yawn => 2,
             Volatile::Encore => 3,
             Volatile::PerishSong => 4,
@@ -171,11 +179,12 @@ impl Volatile {
     }
 
     /// What Showdown's `pokemon.volatiles` holds for this kind: `None` for engine-only kinds,
-    /// and the effect state without engine-only payload (Roost's saved types).
+    /// and the effect state without engine-only payload (Roost's saved types, Helping Hand's
+    /// application count).
     pub fn showdown_state(self, state: VolatileState) -> Option<VolatileState> {
         match self {
             Volatile::ProteanUsed => None,
-            Volatile::Roost => Some(VolatileState {
+            Volatile::Roost | Volatile::HelpingHand => Some(VolatileState {
                 counter: 0,
                 ..state
             }),
@@ -290,6 +299,7 @@ mod tests {
             (Volatile::Roost, moves::ROOST),
             (Volatile::Yawn, moves::YAWN),
             (Volatile::PerishSong, moves::PERISH_SONG),
+            (Volatile::HelpingHand, moves::HELPING_HAND),
         ] {
             let data = id.data();
             assert_eq!(
@@ -297,12 +307,20 @@ mod tests {
                 volatile.initial_duration(),
                 "{id:?}"
             );
-            let order = volatile.residual_order().expect("ordered") as i16;
-            assert!(
-                data.event_orders
-                    .contains(&("condition.onResidualOrder", order)),
-                "{id:?}"
-            );
+            match volatile.residual_order() {
+                Some(order) => assert!(
+                    data.event_orders
+                        .contains(&("condition.onResidualOrder", order as i16)),
+                    "{id:?}"
+                ),
+                None => assert!(
+                    !data
+                        .event_orders
+                        .iter()
+                        .any(|(n, _)| *n == "condition.onResidualOrder"),
+                    "{id:?}"
+                ),
+            }
         }
     }
 
