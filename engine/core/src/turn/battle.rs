@@ -173,7 +173,8 @@ impl<'a, const N: usize> Battle<'a, N> {
         if self.has_type(slot, Type::Flying) {
             return false;
         }
-        self.ability(slot) != abilities::LEVITATE
+        // `hasAbility('levitate') && !suppressingAbility(this)`.
+        self.ability(slot) != abilities::LEVITATE || self.suppressing_ability(slot)
     }
 
     pub fn volatile(&self, slot: SlotRef, volatile: Volatile) -> VolatileState {
@@ -208,9 +209,11 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// Showdown `spreadDamage` for one target: at least 1, Damage handlers, clamped to the
     /// target's HP, faint queued at 0 HP. Returns the HP removed.
     ///
-    /// Damage handlers by priority: Rock Head and Magic Guard (0), then Focus Sash (-40).
-    /// Rock Head (`effect.id === 'recoil'`) and Magic Guard (`effect.effectType !== 'Move'`)
-    /// cancel the damage (neither is breakable).
+    /// Damage handlers by priority: Rock Head and Magic Guard (0), Sturdy (-30), Focus Sash
+    /// (-40). Rock Head (`effect.id === 'recoil'`) and Magic Guard (`effect.effectType !==
+    /// 'Move'`) cancel the damage (neither is breakable). Sturdy and Focus Sash leave a full-HP
+    /// target at 1 HP against a move's damage; Sturdy acts first, so the Sash then stays.
+    /// Sturdy is breakable (ignored by Sunsteel Strike and the like).
     pub fn damage(&mut self, target: SlotRef, amount: f64, source: DamageSource) -> i32 {
         let Some(pokemon) = self.alive(target) else {
             return 0;
@@ -225,6 +228,14 @@ impl<'a, const N: usize> Battle<'a, N> {
         if cancelled {
             return 0;
         }
+        if source == DamageSource::Move
+            && mon.hp == mon.max_hp
+            && amount >= i32::from(mon.hp)
+            && self.ability_unless_broken(target) == abilities::STURDY
+        {
+            amount = i32::from(mon.hp) - 1;
+        }
+        let mon = self.mon(pokemon);
         if source == DamageSource::Move
             && mon.item == items::FOCUS_SASH
             && mon.hp == mon.max_hp

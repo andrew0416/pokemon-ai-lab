@@ -8,7 +8,7 @@ use crate::damage::{
 };
 use crate::dex::{
     abilities, items, moves, FixedDamage, IgnoreImmunity, MoveCategory, MoveData, MoveFlags,
-    MoveId, MoveTarget, Stat, Type, TypeImmunities, TypeRelation, NO_BOOSTS,
+    MoveId, MoveTarget, Ohko, Stat, Type, TypeImmunities, TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{SideId, SlotRef, Status};
@@ -540,7 +540,12 @@ fn blocked_by_try_hit<const N: usize>(
     {
         return true;
     }
-    b.volatile(target, Volatile::Protect).active && mv.data.flags.contains(MoveFlags::PROTECT)
+    if b.volatile(target, Volatile::Protect).active && mv.data.flags.contains(MoveFlags::PROTECT) {
+        return true;
+    }
+    // Sturdy `onTryHit`: OHKO moves fail (breakable). OHKO moves are refused by `support`
+    // for now; this keeps the immunity when they are added.
+    mv.data.ohko != Ohko::No && b.ability_unless_broken(target) == abilities::STURDY
 }
 
 /// Showdown `runImmunity(move)`: type chart immunity and Ground vs ungrounded.
@@ -801,9 +806,11 @@ fn get_damage<const N: usize>(
         return Ok(Planned::NoDamage);
     }
 
-    // Critical hit: ratio 1..4 → 1/24, 1/8, 1/2, always.
+    // Critical hit: ratio 1..4 → 1/24, 1/8, 1/2, always. `CriticalHit` handlers: Battle Armor
+    // and Shell Armor (`onCriticalHit: false`, breakable). Showdown rolls first and then
+    // cancels; not rolling gives the same distribution.
     let crit_ratio = data.crit_ratio.min(4);
-    let can_crit = !defender.ability.data().cannot_be_crit;
+    let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit;
     let critical = can_crit
         && (data.will_crit
             || match crit_ratio {

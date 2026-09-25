@@ -17,6 +17,18 @@ fn rock_head_and_magic_guard_match_showdown() {
     assert_exact_parity("o52-rock-head-magic-guard");
 }
 
+// ---- O53 Sturdy / Battle Armor / Shell Armor --------------------------------------------------
+
+#[test]
+fn sturdy_and_ability_ignoring_moves_match_showdown() {
+    assert_exact_parity("o53-sturdy");
+}
+
+#[test]
+fn crit_immunity_and_ability_ignoring_moves_match_showdown() {
+    assert_exact_parity("o53-shell-armor");
+}
+
 // ---- O61 priority ----------------------------------------------------------------------------
 
 #[test]

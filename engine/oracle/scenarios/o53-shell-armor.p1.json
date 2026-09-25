@@ -1,0 +1,34 @@
+[
+ {
+  "species": "Flygon",
+  "item": "",
+  "ability": "Levitate",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "def": 2
+  },
+  "moves": [
+   "High Horsepower",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Excadrill",
+  "item": "",
+  "ability": "Sand Rush",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "def": 2
+  },
+  "moves": [
+   "Sunsteel Strike",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

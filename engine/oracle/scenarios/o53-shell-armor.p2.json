@@ -1,0 +1,32 @@
+[
+ {
+  "species": "Lapras",
+  "item": "",
+  "ability": "Shell Armor",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Calm Mind",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Kabutops",
+  "item": "",
+  "ability": "Battle Armor",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]
