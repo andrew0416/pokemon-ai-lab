@@ -682,6 +682,19 @@ impl<'a, const N: usize> Battle<'a, N> {
 
     // ---- per-slot counters -------------------------------------------------------------------
 
+    /// Showdown `pokemon.activeTurns > 0` during a turn: the Pokémon was already active when the
+    /// turn started (`endTurn` counts every active Pokémon; `switchIn` resets it to 0).
+    ///
+    /// `State` has no such counter. During a turn it equals `move_actions > 0`
+    /// (`activeMoveActions`, also reset by `switchIn`): every Pokémon active at the start of
+    /// the turn has a move action that runs `runMove` (which counts it) unless it switches
+    /// out or faints first, while a Pokémon that switched in during the turn cannot act again.
+    /// Mechanics that break this (a move from Dancer or Instruct after switching in, a
+    /// skipped action while staying in) must replace this with a real counter.
+    pub fn active_since_turn_start(&self, slot: SlotRef) -> bool {
+        self.state.slot(slot).move_actions > 0
+    }
+
     pub fn set_last_move(&mut self, slot: SlotRef, id: MoveId) {
         let old = self.state.slot(slot).last_move;
         if old != id {

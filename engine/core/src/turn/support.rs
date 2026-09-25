@@ -189,6 +189,10 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::MAGIC_GUARD, &["onDamage"]),
     // `onDamage` in `Battle::damage`; `onTryHit` (OHKO immunity) in `moves`.
     (abilities::STURDY, &["onDamage", "onTryHit"]),
+    // Residual handlers (`residual`).
+    (abilities::SPEED_BOOST, &["onResidual"]),
+    (abilities::SHED_SKIN, &["onResidual"]),
+    (abilities::HYDRATION, &["onResidual"]),
     // Extra PP in `moves::deduct_pressure_pp`; `onStart` only announces the ability.
     (abilities::PRESSURE, &["onDeductPP", "onStart"]),
     // Status immunities (`Battle::set_status_blocked`, `status_immune`,

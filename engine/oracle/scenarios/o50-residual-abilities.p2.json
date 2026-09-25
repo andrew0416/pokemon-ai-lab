@@ -1,0 +1,34 @@
+[
+ {
+  "species": "Seviper",
+  "item": "",
+  "ability": "Shed Skin",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "spe": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Coil",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Vaporeon",
+  "item": "",
+  "ability": "Hydration",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Calm Mind",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

@@ -10,6 +10,13 @@ use lab_engine::state::Status;
 use lab_engine::turn::{enumerate_turn, TurnError};
 use lab_scenario::scenario_choices;
 
+// ---- O50 residual abilities ----------------------------------------------------------------
+
+#[test]
+fn speed_boost_shed_skin_and_hydration_match_showdown() {
+    assert_exact_parity("o50-residual-abilities");
+}
+
 // ---- O52 Rock Head / Magic Guard -------------------------------------------------------------
 
 #[test]

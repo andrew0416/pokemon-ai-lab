@@ -7,7 +7,7 @@
 //! the effect instead of running. Handlers of fainted Pokémon and of effects that ended
 //! earlier in the residual are skipped. Faints are processed after every handler.
 
-use crate::dex::{items, Type, TypeImmunities};
+use crate::dex::{abilities, items, AbilityId, Type, TypeImmunities, NO_BOOSTS};
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SideId, SlotRef, Status};
@@ -27,6 +27,10 @@ enum Kind {
     StatusDamage(PokemonRef, SlotRef),
     GrassyHeal(PokemonRef, SlotRef),
     Leftovers(PokemonRef, SlotRef),
+    /// Speed Boost `onResidual` (order 28, sub-order 2).
+    SpeedBoost(PokemonRef, SlotRef),
+    /// Shed Skin and Hydration `onResidual` (order 5, sub-order 3).
+    StatusCure(PokemonRef, SlotRef, AbilityId),
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -139,6 +143,21 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                     sub_order: 4,
                     kind: Kind::Leftovers(pokemon, slot),
                 });
+            }
+            match mon.ability {
+                a if a == abilities::SPEED_BOOST => out.push(Handler {
+                    order: 28,
+                    speed,
+                    sub_order: 2,
+                    kind: Kind::SpeedBoost(pokemon, slot),
+                }),
+                a if a == abilities::SHED_SKIN || a == abilities::HYDRATION => out.push(Handler {
+                    order: 5,
+                    speed,
+                    sub_order: 3,
+                    kind: Kind::StatusCure(pokemon, slot, a),
+                }),
+                _ => {}
             }
         }
     }
@@ -289,6 +308,38 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
             let max_hp = f64::from(b.mon(pokemon).max_hp);
             b.heal(slot, max_hp / 16.0);
         }
+        Kind::SpeedBoost(pokemon, slot) => {
+            // Skipped if the ability changed since the handlers were collected.
+            if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != abilities::SPEED_BOOST {
+                return Ok(());
+            }
+            // `if (pokemon.activeTurns) this.boost({spe: 1})`.
+            if b.active_since_turn_start(slot) {
+                let mut boost = NO_BOOSTS;
+                boost[4] = 1;
+                b.boost(slot, &boost);
+            }
+        }
+        Kind::StatusCure(pokemon, slot, ability) => {
+            if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != ability {
+                return Ok(());
+            }
+            if b.mon(pokemon).status == Status::None {
+                return Ok(());
+            }
+            let cure = if ability == abilities::SHED_SKIN {
+                // `pokemon.hp && pokemon.status && this.randomChance(33, 100)` (not modded in
+                // Champions).
+                b.rng.chance(33, 100)
+            } else {
+                // Hydration: `pokemon.effectiveWeather()` is rain (Utility Umbrella and
+                // Primordial Sea are not supported).
+                b.weather() == Weather::Rain
+            };
+            if cure {
+                b.cure_status(pokemon);
+            }
+        }
     }
     let _ = Type::None;
     Ok(())
@@ -359,4 +410,27 @@ pub(crate) fn bench<'b, const N: usize>(
     (0..s.party.len() as u8).filter(move |&i| {
         s.party[i as usize].hp > 0 && !s.slots.iter().any(|slot| slot.party_index == Some(i))
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The residual orders hard-coded in `collect` are the dex's.
+    #[test]
+    fn ability_residual_orders_match_the_dex() {
+        for (ability, order, sub_order) in [
+            (abilities::SPEED_BOOST, 28, 2),
+            (abilities::SHED_SKIN, 5, 3),
+            (abilities::HYDRATION, 5, 3),
+        ] {
+            let orders = ability.data().event_orders;
+            assert!(orders.contains(&("onResidualOrder", order)), "{ability:?}");
+            assert!(
+                orders.contains(&("onResidualSubOrder", sub_order)),
+                "{ability:?}"
+            );
+            assert_eq!(ability.data().handlers, ["onResidual"], "{ability:?}");
+        }
+    }
 }
