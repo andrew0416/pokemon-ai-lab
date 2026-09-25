@@ -14,7 +14,7 @@ use crate::state::{PokemonRef, SideId, SlotRef, State, Status};
 use crate::volatile::{Volatile, VolatileState};
 
 use super::abilities as ability_events;
-use super::battle::{Battle, DamageSource};
+use super::battle::{Battle, BoostEffect, DamageSource};
 use super::order::ORDER_DEFAULT;
 use super::TurnError;
 
@@ -331,7 +331,12 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
             if b.active_since_turn_start(slot) {
                 let mut boost = NO_BOOSTS;
                 boost[4] = 1;
-                b.boost(slot, &boost);
+                b.boost_by(
+                    slot,
+                    &boost,
+                    Some(slot),
+                    BoostEffect::Ability(abilities::SPEED_BOOST),
+                );
             }
         }
         Kind::StatusCure(pokemon, slot, ability) => {

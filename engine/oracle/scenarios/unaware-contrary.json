@@ -1,0 +1,96 @@
+{
+ "description": "Setup turn: Serperior's Leaf Storm (Contrary: +2 SpA instead of -2) into Clefable, Swoobat's Calm Mind (Simple: +2/+2); Clefable and Quagsire use Calm Mind / Protect. Decision: Leaf Storm again into Clefable, whose Unaware ignores the +2 SpA (and Serperior's move sees Clefable's +1 SpD? no: Unaware only ignores the attacker's boosts when it defends), Swoobat's Calm Mind again, Quagsire Protects, Clefable Protects? no: Clefable uses Moonlight so the hit lands.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Serperior",
+    "item": "Leftovers",
+    "ability": "Contrary",
+    "nature": "Timid",
+    "evs": {
+     "hp": 2,
+     "spa": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Leaf Storm",
+     "Giga Drain",
+     "Glare",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Swoobat",
+    "item": "Leftovers",
+    "ability": "Simple",
+    "nature": "Timid",
+    "evs": {
+     "hp": 2,
+     "spa": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Stored Power",
+     "Air Slash",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Clefable",
+    "item": "Leftovers",
+    "ability": "Unaware",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Moonblast",
+     "Calm Mind",
+     "Moonlight",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Quagsire",
+    "item": "Leftovers",
+    "ability": "Unaware",
+    "nature": "Relaxed",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Earthquake",
+     "Recover",
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move leafstorm 1, move calmmind",
+   "move calmmind, move protect"
+  ]
+ ],
+ "turn": {
+  "p1": "move leafstorm 1, move calmmind",
+  "p2": "move moonlight, move protect"
+ }
+}

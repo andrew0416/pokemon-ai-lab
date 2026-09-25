@@ -220,6 +220,7 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
         &["onAfterMoveSecondarySelf", "onModifyDamage"],
     ),
     (items::FOCUS_SASH, &["onDamage"]),
+    (items::ROCKY_HELMET, &["onDamagingHit"]),
 ];
 
 /// Abilities with callbacks that are implemented while the holder is on the field.
@@ -235,6 +236,24 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         &["onAnyRedirectTarget", "onTryHit"],
     ),
     (abilities::STORM_DRAIN, &["onAnyRedirectTarget", "onTryHit"]),
+    // Boost events (`Battle::boost_by`, F16) and the damage formula's `ModifyBoost`.
+    (abilities::CONTRARY, &["onChangeBoost"]),
+    (abilities::SIMPLE, &["onChangeBoost"]),
+    (abilities::UNAWARE, &["onAnyModifyBoost"]),
+    (abilities::CLEAR_BODY, &["onTryBoost"]),
+    (abilities::WHITE_SMOKE, &["onTryBoost"]),
+    (abilities::FULL_METAL_BODY, &["onTryBoost"]),
+    (abilities::HYPER_CUTTER, &["onTryBoost"]),
+    (abilities::BIG_PECKS, &["onTryBoost"]),
+    (abilities::MIRROR_ARMOR, &["onTryBoost"]),
+    // `onDragOut` only answers force-switch moves, which are all refused.
+    (abilities::GUARD_DOG, &["onDragOut", "onTryBoost"]),
+    (abilities::COMPETITIVE, &["onAfterEachBoost"]),
+    (abilities::DEFIANT, &["onAfterEachBoost"]),
+    // DamagingHit (`moves::damaging_hit`, F15).
+    (abilities::ROUGH_SKIN, &["onDamagingHit"]),
+    (abilities::IRON_BARBS, &["onDamagingHit"]),
+    (abilities::RATTLED, &["onAfterBoost", "onDamagingHit"]),
     (abilities::GALE_WINGS, &["onModifyPriority"]),
     (abilities::TRIAGE, &["onModifyPriority"]),
     // Damage handlers (`Battle::damage`).

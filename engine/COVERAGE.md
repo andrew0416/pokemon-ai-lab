@@ -231,20 +231,17 @@ Protect (201), Fake Out (57), Gravity (37), Heat Wave (34), Hypnosis (32), Close
 
 ## 특성
 
-- 전체 321개 중 지원 78개, 등장 효과만 미지원 16개, 미지원 227개.
-- 라이브러리 사용 66개 중 지원 29개 (44%).
+- 전체 321개 중 지원 93개, 등장 효과만 미지원 16개, 미지원 212개.
+- 라이브러리 사용 66개 중 지원 35개 (53%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
 
 | 이름 | 사용 | 상태 | 이유 |
 |---|---:|---|---|
-| Competitive | 26 | 미지원 | callbacks ["onAfterEachBoost"] are not implemented |
 | Unburden | 22 | 미지원 | callbacks ["condition.onModifySpe", "onAfterUseItem", "onEnd", "onTakeItem"] are not implemented |
 | Unnerve | 20 | 미지원 | callbacks ["onEnd", "onFoeTryEatItem", "onStart"] are not implemented |
 | Thermal Exchange | 14 | 미지원 | callbacks ["onDamagingHit", "onSetStatus", "onUpdate"] are not implemented |
-| Rough Skin | 12 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
 | Trace | 11 | 미지원 | callbacks ["onStart", "onUpdate"] are not implemented |
-| Defiant | 9 | 미지원 | callbacks ["onAfterEachBoost"] are not implemented |
 | Good as Gold | 9 | 미지원 | callbacks ["onTryHit"] are not implemented |
 | Natural Cure | 9 | 미지원 | callbacks ["onSwitchOut"] are not implemented |
 | Cursed Body | 8 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
@@ -256,7 +253,6 @@ Protect (201), Fake Out (57), Gravity (37), Heat Wave (34), Hypnosis (32), Close
 | Inner Focus | 4 | 미지원 | callbacks ["onTryAddVolatile", "onTryBoost"] are not implemented |
 | Protean | 4 | 미지원 | callbacks ["onPrepareHit"] are not implemented |
 | Armor Tail | 3 | 미지원 | callbacks ["onFoeTryMove"] are not implemented |
-| Clear Body | 3 | 미지원 | callbacks ["onTryBoost"] are not implemented |
 | Pixilate | 3 | 미지원 | callbacks ["onBasePower", "onModifyType"] are not implemented |
 | Weak Armor | 3 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
 | Hospitality | 2 | 등장 효과 미구현 | ["onStart"] |
@@ -266,23 +262,21 @@ Protect (201), Fake Out (57), Gravity (37), Heat Wave (34), Hypnosis (32), Close
 | Electromorphosis | 1 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
 | Flame Body | 1 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
 | Gooey | 1 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
-| Hyper Cutter | 1 | 미지원 | callbacks ["onTryBoost"] are not implemented |
 | Libero | 1 | 미지원 | callbacks ["onPrepareHit"] are not implemented |
 | Magic Bounce | 1 | 미지원 | callbacks ["onAllyTryHitSide", "onTryHit"] are not implemented |
 | Poison Touch | 1 | 미지원 | callbacks ["onSourceDamagingHit"] are not implemented |
 | Seed Sower | 1 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
 | Stance Change | 1 | 미지원 | callbacks ["onModifyMove"] are not implemented |
 | Toxic Debris | 1 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
-| Unaware | 1 | 미지원 | callbacks ["onAnyModifyBoost"] are not implemented |
 | Volt Absorb | 1 | 미지원 | callbacks ["onTryHit"] are not implemented |
 
 ### 라이브러리에서 쓰이고 지원됨
 
-Intimidate (30), Grassy Surge (28), Prankster (25), Technician (23), Psychic Surge (16), Adaptability (12), Blaze (9), Hustle (9), Lightning Rod (9), Drizzle (8), Torrent (8), Rock Head (6), Sand Stream (6), Snow Warning (5), Chlorophyll (4), Levitate (4), Sharpness (4), Iron Fist (2), Magic Guard (2), Pressure (2), Sand Rush (2), Sturdy (2), Gale Wings (1), Rain Dish (1), Solar Power (1), Solid Rock (1), Speed Boost (1), Swift Swim (1), Thick Fat (1)
+Intimidate (30), Grassy Surge (28), Competitive (26), Prankster (25), Technician (23), Psychic Surge (16), Adaptability (12), Rough Skin (12), Blaze (9), Defiant (9), Hustle (9), Lightning Rod (9), Drizzle (8), Torrent (8), Rock Head (6), Sand Stream (6), Snow Warning (5), Chlorophyll (4), Levitate (4), Sharpness (4), Clear Body (3), Iron Fist (2), Magic Guard (2), Pressure (2), Sand Rush (2), Sturdy (2), Gale Wings (1), Hyper Cutter (1), Rain Dish (1), Solar Power (1), Solid Rock (1), Speed Boost (1), Swift Swim (1), Thick Fat (1), Unaware (1)
 
 ### 나머지 미지원 (이유별)
 
-- **미지원: callbacks ["onDamagingHit"] are not implemented** (18): Aftermath, Cotton Down, Cute Charm, Effect Spore, Innards Out, Iron Barbs, Justified, Lingering Aroma, Mummy, Perish Body, Poison Point, Sand Spit, Spicy Spray, Static, Steam Engine, Tangling Hair, Wandering Spirit, Water Compaction
+- **미지원: callbacks ["onDamagingHit"] are not implemented** (17): Aftermath, Cotton Down, Cute Charm, Effect Spore, Innards Out, Justified, Lingering Aroma, Mummy, Perish Body, Poison Point, Sand Spit, Spicy Spray, Static, Steam Engine, Tangling Hair, Wandering Spirit, Water Compaction
 - **등장 효과 미구현: ["onStart"]** (15): Anticipation, Costar, Curious Medicine, Dauntless Shield, Download, Embody Aspect (Cornerstone), Embody Aspect (Hearthflame), Embody Aspect (Teal), Embody Aspect (Wellspring), Forewarn, Frisk, Intrepid Sword, Klutz, Screen Cleaner, Supersweet Syrup
 - **미지원: callbacks ["onModifyAtk", "onModifySpA"] are not implemented** (7): Defeatist, Dragon's Maw, Fire Mane, Rocky Payload, Stakeout, Steelworker, Transistor
 - **미지원: callbacks ["onModifyMove"] are not implemented** (7): Infiltrator, Long Reach, Propeller Tail, Serene Grace, Skill Link, Stalwart, Stench
@@ -293,7 +287,6 @@ Intimidate (30), Grassy Surge (28), Prankster (25), Technician (23), Psychic Sur
 - **미지원: callbacks ["onSourceAfterFaint"] are not implemented** (5): Beast Boost, Chilling Neigh, Eelevate, Grim Neigh, Moxie
 - **미지원: callbacks ["onBasePower"] are not implemented** (4): Analytic, Flare Boost, Rivalry, Toxic Boost
 - **미지원: callbacks ["onModifyMove", "onTryBoost"] are not implemented** (4): Illuminate, Keen Eye, Mind's Eye, Scrappy
-- **미지원: callbacks ["onTryBoost"] are not implemented** (4): Big Pecks, Full Metal Body, Mirror Armor, White Smoke
 - **미지원: callbacks ["onAllyTryHitSide", "onTryHit"] are not implemented** (3): Rebound, Sap Sipper, Soundproof
 - **미지원: callbacks ["onAnySetWeather", "onEnd", "onStart"] are not implemented** (3): Delta Stream, Desolate Land, Primordial Sea
 - **미지원: callbacks ["onFoeMaybeTrapPokemon", "onFoeTrapPokemon"] are not implemented** (3): Arena Trap, Magnet Pull, Shadow Tag
@@ -303,7 +296,6 @@ Intimidate (30), Grassy Surge (28), Prankster (25), Technician (23), Psychic Sur
 - **미지원: callbacks ["onAllyBasePower"] are not implemented** (2): Battery, Power Spot
 - **미지원: callbacks ["onAllyFaint"] are not implemented** (2): Power of Alchemy, Receiver
 - **미지원: callbacks ["onAnyBasePower", "onStart"] are not implemented** (2): Dark Aura, Fairy Aura
-- **미지원: callbacks ["onChangeBoost"] are not implemented** (2): Contrary, Simple
 - **미지원: callbacks ["onEnd", "onFoeTryEatItem", "onSourceAfterFaint", "onStart"] are not implemented** (2): As One (Glastrier), As One (Spectrier)
 - **미지원: callbacks ["onEnd", "onStart", "onSwitchIn"] are not implemented** (2): Air Lock, Cloud Nine
 - **미지원: callbacks ["onFoeTryMove"] are not implemented** (2): Dazzling, Queenly Majesty
@@ -320,7 +312,6 @@ Intimidate (30), Grassy Surge (28), Prankster (25), Technician (23), Psychic Sur
 - **미지원: callbacks ["condition.onEnd", "condition.onModifyAtk", "condition.onModifyDef", "condition.onModifySpA", "condition.onModifySpD", "condition.onModifySpe", "condition.onStart", "onEnd", "onStart", "onTerrainChange"] are not implemented** (1): Quark Drive
 - **미지원: callbacks ["condition.onEnd", "condition.onModifyAtk", "condition.onModifyDef", "condition.onModifySpA", "condition.onModifySpD", "condition.onModifySpe", "condition.onStart", "onEnd", "onStart", "onWeatherChange"] are not implemented** (1): Protosynthesis
 - **미지원: callbacks ["condition.onEnd", "condition.onStart", "onEnd", "onResidual"] are not implemented** (1): Zen Mode
-- **미지원: callbacks ["onAfterBoost", "onDamagingHit"] are not implemented** (1): Rattled
 - **미지원: callbacks ["onAfterMoveSecondarySelf"] are not implemented** (1): Magician
 - **미지원: callbacks ["onAfterSetStatus"] are not implemented** (1): Synchronize
 - **미지원: callbacks ["onAfterTerastallization"] are not implemented** (1): Teraform Zero
@@ -352,7 +343,6 @@ Intimidate (30), Grassy Surge (28), Prankster (25), Technician (23), Psychic Sur
 - **미지원: callbacks ["onDamage"] are not implemented** (1): Poison Heal
 - **미지원: callbacks ["onDamagingHit", "onSideConditionStart"] are not implemented** (1): Wind Power
 - **미지원: callbacks ["onDamagingHit", "onSourceTryPrimaryHit"] are not implemented** (1): Gulp Missile
-- **미지원: callbacks ["onDragOut", "onTryBoost"] are not implemented** (1): Guard Dog
 - **미지원: callbacks ["onDragOut"] are not implemented** (1): Suction Cups
 - **미지원: callbacks ["onEatItem", "onResidual"] are not implemented** (1): Cud Chew
 - **미지원: callbacks ["onEatItem"] are not implemented** (1): Cheek Pouch
@@ -388,8 +378,8 @@ Intimidate (30), Grassy Surge (28), Prankster (25), Technician (23), Psychic Sur
 
 ## 도구
 
-- 전체 583개 중 지원 370개, 등장 효과만 미지원 0개, 미지원 213개.
-- 라이브러리 사용 60개 중 지원 38개 (63%).
+- 전체 583개 중 지원 371개, 등장 효과만 미지원 0개, 미지원 212개.
+- 라이브러리 사용 60개 중 지원 39개 (65%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
 
@@ -401,7 +391,6 @@ Intimidate (30), Grassy Surge (28), Prankster (25), Technician (23), Psychic Sur
 | Psychic Seed | 13 | 미지원 | callbacks ["onStart", "onTerrainChange"] are not implemented |
 | Grassy Seed | 9 | 미지원 | callbacks ["onStart", "onTerrainChange"] are not implemented |
 | Colbur Berry | 5 | 미지원 | callbacks ["onEat", "onSourceModifyDamage"] are not implemented |
-| Rocky Helmet | 4 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
 | Air Balloon | 2 | 미지원 | callbacks ["onAfterSubDamage", "onDamagingHit", "onStart"] are not implemented |
 | Chesto Berry | 2 | 미지원 | callbacks ["onEat", "onUpdate"] are not implemented |
 | Chople Berry | 2 | 미지원 | callbacks ["onEat", "onSourceModifyDamage"] are not implemented |
@@ -420,7 +409,7 @@ Intimidate (30), Grassy Surge (28), Prankster (25), Technician (23), Psychic Sur
 
 ### 라이브러리에서 쓰이고 지원됨
 
-Life Orb (52), Focus Sash (31), Leftovers (23), Miracle Seed (21), Pyroarite (20), Salamencite (15), Gardevoirite (11), Baxcalibrite (9), Charizardite Y (9), Starminite (9), Golisopite (8), Black Glasses (7), Floettite (7), Light Clay (7), Raichunite Y (7), Froslassite (5), Mystic Water (4), Garchompite Z (3), Gengarite (3), Metagrossite (3), Swampertite (3), Terrain Extender (3), Fairy Feather (2), Raichunite X (2), Staraptite (2), Tyranitarite (2), Aggronite (1), Blastoisinite (1), Cameruptite (1), Charizardite X (1), Crabominite (1), Damp Rock (1), Delphoxite (1), Dragoninite (1), Glimmoranite (1), Lucarionite Z (1), Sharp Beak (1), Venusaurite (1)
+Life Orb (52), Focus Sash (31), Leftovers (23), Miracle Seed (21), Pyroarite (20), Salamencite (15), Gardevoirite (11), Baxcalibrite (9), Charizardite Y (9), Starminite (9), Golisopite (8), Black Glasses (7), Floettite (7), Light Clay (7), Raichunite Y (7), Froslassite (5), Mystic Water (4), Rocky Helmet (4), Garchompite Z (3), Gengarite (3), Metagrossite (3), Swampertite (3), Terrain Extender (3), Fairy Feather (2), Raichunite X (2), Staraptite (2), Tyranitarite (2), Aggronite (1), Blastoisinite (1), Cameruptite (1), Charizardite X (1), Crabominite (1), Damp Rock (1), Delphoxite (1), Dragoninite (1), Glimmoranite (1), Lucarionite Z (1), Sharp Beak (1), Venusaurite (1)
 
 ### 나머지 미지원 (이유별)
 

@@ -1,0 +1,90 @@
+{
+ "description": "Intimidate (Gyarados, 118) at the start meets Milotic's Competitive (+2 SpA per drop), Kingambit's Defiant (+2 Atk) on one side; Corviknight's Mirror Armor bounces the drop back to Gyarados. Then Gyarados' Waterfall hits Kingambit, Kingambit uses Swords Dance, the others Protect. One damaging move, one secondary roll.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Gyarados",
+    "item": "Life Orb",
+    "ability": "Intimidate",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 17,
+     "spe": 17
+    },
+    "moves": [
+     "Waterfall",
+     "Crunch",
+     "Dragon Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Corviknight",
+    "item": "Leftovers",
+    "ability": "Mirror Armor",
+    "nature": "Impish",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Brave Bird",
+     "Iron Head",
+     "Roost",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Milotic",
+    "item": "Leftovers",
+    "ability": "Competitive",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spa": 2
+    },
+    "moves": [
+     "Muddy Water",
+     "Ice Beam",
+     "Recover",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Kingambit",
+    "item": "Leftovers",
+    "ability": "Defiant",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Kowtow Cleave",
+     "Sucker Punch",
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move waterfall 2, move protect",
+  "p2": "move protect, move swordsdance"
+ }
+}

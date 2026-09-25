@@ -1,0 +1,90 @@
+{
+ "description": "Contact into Rough Skin and Iron Barbs + Rocky Helmet: Excadrill's High Horsepower hits Garchomp (Rough Skin, 1/8 back), Gyarados' Aqua Tail hits Ferrothorn (Iron Barbs 1/8 then Rocky Helmet 1/6 back, order 1 then 2). Both defenders Protect... no: Garchomp uses Swords Dance, Ferrothorn uses Leech Seed-free Iron Defense, so the hits land.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Excadrill",
+    "item": "Leftovers",
+    "ability": "Sand Rush",
+    "nature": "Jolly",
+    "evs": {
+     "hp": 4,
+     "atk": 30,
+     "spe": 32
+    },
+    "moves": [
+     "Iron Head",
+     "High Horsepower",
+     "Rock Slide",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Gyarados",
+    "item": "Life Orb",
+    "ability": "Intimidate",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 17,
+     "spe": 17
+    },
+    "moves": [
+     "Aqua Tail",
+     "Crunch",
+     "Dragon Dance",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "Leftovers",
+    "ability": "Rough Skin",
+    "nature": "Jolly",
+    "evs": {
+     "hp": 4,
+     "atk": 30,
+     "spe": 32
+    },
+    "moves": [
+     "Earthquake",
+     "Dragon Claw",
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Ferrothorn",
+    "item": "Rocky Helmet",
+    "ability": "Iron Barbs",
+    "nature": "Relaxed",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Gyro Ball",
+     "Power Whip",
+     "Iron Defense",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move highhorsepower 1, move aquatail 2",
+  "p2": "move swordsdance, move irondefense"
+ }
+}

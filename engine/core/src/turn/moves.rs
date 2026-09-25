@@ -11,8 +11,9 @@ use crate::damage::{
     MOD_ONE_POINT_TWO,
 };
 use crate::dex::{
-    abilities, items, moves, AbilityId, FixedDamage, IgnoreImmunity, MoveCategory, MoveData,
-    MoveFlags, MoveId, MoveTarget, Ohko, Stat, Type, TypeImmunities, TypeRelation, NO_BOOSTS,
+    abilities, items, moves, AbilityId, FixedDamage, IgnoreImmunity, ItemId, MoveCategory,
+    MoveData, MoveFlags, MoveId, MoveTarget, Ohko, Stat, Type, TypeImmunities, TypeRelation,
+    NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{SideId, SlotRef, Status};
@@ -20,7 +21,7 @@ use crate::volatile::Volatile;
 
 use super::abilities as ability_events;
 use super::abilities::{Handler, SUB_FIELD_CONDITION, SUB_ITEM, SUB_MOVE, SUB_SIDE_CONDITION};
-use super::battle::{ActiveMoveRef, Battle, DamageSource};
+use super::battle::{ActiveMoveRef, Battle, BoostEffect, DamageSource};
 use super::order::{boosted_stat, modify};
 use super::support::{side_effect_of, type_boost_item};
 use super::TurnError;
@@ -470,7 +471,12 @@ fn use_move<const N: usize>(
         result = try_spread_move_hit(b, user, mv, targets, will_act)?;
     }
     if result && mv.data.self_boost != NO_BOOSTS {
-        b.boost(user, &mv.data.self_boost);
+        b.boost_by(
+            user,
+            &mv.data.self_boost,
+            Some(user),
+            BoostEffect::Move(mv.id),
+        );
     }
     if !result {
         return Ok(false);
@@ -719,7 +725,8 @@ fn absorbed_by_ability<const N: usize>(
     }
     let mut up = NO_BOOSTS;
     up[2] = 1;
-    b.boost(target, &up);
+    let absorbing = b.ability_unless_broken(target);
+    b.boost_by(target, &up, Some(user), BoostEffect::Ability(absorbing));
     true
 }
 
@@ -775,9 +782,9 @@ fn accuracy_check<const N: usize>(
     accuracy = modify(accuracy, ability_events::chain(b, accuracy_mods));
     let mut boost = 0i32;
     if !mv.data.ignore_evasion {
-        boost -= i32::from(b.state.slot(target).boosts[6]);
+        boost -= i32::from(b.boost_seen(target, 6, user, false));
     }
-    boost += i32::from(b.state.slot(user).boosts[5]);
+    boost += i32::from(b.boost_seen(user, 5, target, true));
     let boost = boost.clamp(-6, 6);
     if boost > 0 {
         accuracy = accuracy * (3 + boost) / 3;
@@ -869,7 +876,7 @@ fn spread_move_hit<const N: usize>(
         let mut did: Option<bool> = None;
         let mut note = |r: bool| did = Some(did.unwrap_or(false) || r);
         if data.boosts != NO_BOOSTS && b.alive(t).is_some() {
-            note(b.boost(t, &data.boosts));
+            note(b.boost_by(t, &data.boosts, Some(user), BoostEffect::Move(mv.id)));
         }
         if let Some(heal) = data.heal {
             let target_mon = b.occupant(t).map(|p| b.mon(p));
@@ -917,7 +924,7 @@ fn spread_move_hit<const N: usize>(
             && results.iter().any(|r| r.ok())
             && b.rng.chance(u32::from(effect.chance), 100)
         {
-            b.boost(user, &effect.boosts);
+            b.boost_by(user, &effect.boosts, Some(user), BoostEffect::Move(mv.id));
         }
     }
     // secondaries.
@@ -930,7 +937,7 @@ fn spread_move_hit<const N: usize>(
                 continue;
             }
             if secondary.boosts != NO_BOOSTS && b.alive(t).is_some() {
-                b.boost(t, &secondary.boosts);
+                b.boost_by(t, &secondary.boosts, Some(user), BoostEffect::Move(mv.id));
             }
             if secondary.status != Status::None {
                 b.try_set_status(t, secondary.status);
@@ -940,24 +947,29 @@ fn spread_move_hit<const N: usize>(
             }
             handlers::secondary_on_hit(b, t, mv);
             if secondary.self_boosts != NO_BOOSTS {
-                b.boost(user, &secondary.self_boosts);
+                b.boost_by(
+                    user,
+                    &secondary.self_boosts,
+                    Some(user),
+                    BoostEffect::Move(mv.id),
+                );
             }
         }
     }
-    // DamagingHit: a damaging Fire move thaws a frozen target.
-    for (i, &t) in targets.iter().enumerate() {
-        if let Hit::Damage(_) = results[i] {
-            if data.move_type == Type::Fire && data.category != MoveCategory::Status {
-                if let Some(p) = b.alive(t) {
-                    if b.mon(p).status == Status::Freeze {
-                        b.cure_status(p);
-                    }
-                }
-            }
-        }
+    // DamagingHit for every damaged target, then AfterHit (only while the user stands).
+    let damaged: Vec<(SlotRef, i32)> = targets
+        .iter()
+        .zip(&results)
+        .filter_map(|(&t, r)| match r {
+            Hit::Damage(d) => Some((t, *d)),
+            _ => None,
+        })
+        .collect();
+    if !damaged.is_empty() {
+        damaging_hit(b, user, mv, &damaged);
     }
     // AfterHit: Knock Off removes the item of every damaged target.
-    if mv.id == moves::KNOCK_OFF {
+    if mv.id == moves::KNOCK_OFF && b.alive(user).is_some() {
         for (i, &t) in targets.iter().enumerate() {
             if let Hit::Damage(_) = results[i] {
                 b.take_item(t);
@@ -965,6 +977,88 @@ fn spread_move_hit<const N: usize>(
         }
     }
     Ok(results)
+}
+
+/// Showdown `runEvent('DamagingHit', damagedTargets, pokemon, move, damage)` (WORKPLAN F15):
+/// the damaged targets' handlers sorted by `compareLeftToRightOrder` — `onDamagingHitOrder`
+/// (Rough Skin / Iron Barbs 1, Rocky Helmet 2, the rest last), then target index, then a
+/// Pokémon's own order (status, ability, item). A holder that fainted from the hit still acts
+/// (`faintMessages` runs after the move); a handler is skipped once its holder left the slot or
+/// the attacker it hits fainted earlier in the event. Implemented: the `frz` thaw by a Fire
+/// move, Rough Skin, Iron Barbs, Rattled (the ability half), Rocky Helmet. Other
+/// `onDamagingHit` holders are refused by `support`.
+fn damaging_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    damaged: &[(SlotRef, i32)],
+) {
+    #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+    enum Kind {
+        Thaw,
+        Ability(AbilityId),
+        Item(ItemId),
+    }
+    const LAST: u32 = u32::MAX;
+    let mut handlers: Vec<(u32, usize, Kind)> = Vec::new();
+    for (index, &(target, _)) in damaged.iter().enumerate() {
+        let Some(pokemon) = b.occupant(target) else {
+            continue;
+        };
+        let mon = b.mon(pokemon);
+        if mon.status == Status::Freeze
+            && mv.data.move_type == Type::Fire
+            && mv.data.category != MoveCategory::Status
+        {
+            handlers.push((LAST, index, Kind::Thaw));
+        }
+        let ability = b.ability_unless_broken(target);
+        if [abilities::ROUGH_SKIN, abilities::IRON_BARBS].contains(&ability) {
+            handlers.push((1, index, Kind::Ability(ability)));
+        } else if ability == abilities::RATTLED {
+            handlers.push((LAST, index, Kind::Ability(ability)));
+        }
+        if mon.item == items::ROCKY_HELMET {
+            handlers.push((2, index, Kind::Item(mon.item)));
+        }
+    }
+    handlers.sort();
+    let contact =
+        mv.data.flags.contains(MoveFlags::CONTACT) && b.item(user) != items::PROTECTIVE_PADS;
+    for (_, index, kind) in handlers {
+        let target = damaged[index].0;
+        let Some(pokemon) = b.occupant(target) else {
+            continue;
+        };
+        match kind {
+            Kind::Thaw => {
+                if b.mon(pokemon).status == Status::Freeze {
+                    b.cure_status(pokemon);
+                }
+            }
+            Kind::Ability(a) if a == abilities::ROUGH_SKIN || a == abilities::IRON_BARBS => {
+                if contact && b.alive(user).is_some() {
+                    let max_hp = f64::from(b.slot_mon(user).expect("alive").max_hp);
+                    b.damage(user, max_hp / 8.0, DamageSource::Indirect);
+                }
+            }
+            Kind::Ability(a) if a == abilities::RATTLED => {
+                if matches!(mv.data.move_type, Type::Dark | Type::Bug | Type::Ghost) {
+                    let mut up = NO_BOOSTS;
+                    up[4] = 1;
+                    b.boost_by(target, &up, Some(target), BoostEffect::Ability(a));
+                }
+            }
+            Kind::Ability(_) => {}
+            Kind::Item(i) if i == items::ROCKY_HELMET => {
+                if contact && b.alive(user).is_some() {
+                    let max_hp = f64::from(b.slot_mon(user).expect("alive").max_hp);
+                    b.damage(user, max_hp / 6.0, DamageSource::Indirect);
+                }
+            }
+            Kind::Item(_) => {}
+        }
+    }
 }
 
 // ---- damage -------------------------------------------------------------------------------------
@@ -1063,8 +1157,8 @@ fn get_damage<const N: usize>(
     let defense_stat =
         data.override_defensive_stat
             .unwrap_or(if physical { Stat::Def } else { Stat::Spd });
-    let mut atk_boost = b.state.slot(user).boosts[stat_index(attack_stat)];
-    let mut def_boost = b.state.slot(target).boosts[stat_index(defense_stat)];
+    let mut atk_boost = b.boost_seen(user, stat_index(attack_stat), target, true);
+    let mut def_boost = b.boost_seen(target, stat_index(defense_stat), user, false);
     let ignore_negative_offensive = data.ignore_negative_offensive || critical;
     let ignore_positive_defensive = data.ignore_positive_defensive || critical;
     if data.ignore_offensive || (ignore_negative_offensive && atk_boost < 0) {

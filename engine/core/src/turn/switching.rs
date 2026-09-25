@@ -19,7 +19,7 @@ use crate::field::{FieldEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SlotRef, Status, BOOST_COUNT};
 
-use super::battle::{cured_on_update, Battle};
+use super::battle::{cured_on_update, Battle, BoostEffect};
 use super::moves::{set_terrain, set_weather};
 use super::support::{ability_supported_on_field, item_supported_on_field};
 use super::TurnError;
@@ -372,7 +372,12 @@ pub(crate) fn start_ability<const N: usize>(
             drop[0] = -1;
             debug_assert_eq!(drop.len(), BOOST_COUNT);
             for foe in b.alive_slots(slot.side.other()) {
-                b.boost(foe, &drop);
+                b.boost_by(
+                    foe,
+                    &drop,
+                    Some(slot),
+                    BoostEffect::Ability(abilities::INTIMIDATE),
+                );
             }
         }
         StartEffect::Trace => trace(b, slot)?,

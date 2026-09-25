@@ -7,6 +7,7 @@
 
 use crate::dex::{
     abilities, conditions, items, AbilityFlags, AbilityId, ItemId, MoveId, Type, TypeImmunities,
+    NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
@@ -622,29 +623,169 @@ impl<'a, const N: usize> Battle<'a, N> {
 
     // ---- boosts ----------------------------------------------------------------------------
 
-    /// Showdown `battle.boost` without boost-modifying abilities (those are rejected up
-    /// front). Returns whether any stage changed.
-    pub fn boost(&mut self, target: SlotRef, boosts: &[i8; BOOST_COUNT]) -> bool {
+    /// Showdown `battle.boost(boost, target, source, effect)` with its events (WORKPLAN F16):
+    /// `ChangeBoost` (Contrary, Simple), the ±6 cap, `TryBoost` (Clear Body family, Hyper
+    /// Cutter, Big Pecks, Mirror Armor, Guard Dog), each stage change with `AfterEachBoost`
+    /// (Competitive, Defiant), then `AfterBoost` (Rattled). Returns whether any stage changed.
+    ///
+    /// `source` is who caused it (the user of a move, the Intimidate holder, the boosted
+    /// Pokémon itself for its own ability); `effect` what caused it. Handlers that block only
+    /// look at negative changes from someone else, as in Showdown.
+    pub fn boost_by(
+        &mut self,
+        target: SlotRef,
+        boosts: &[i8; BOOST_COUNT],
+        source: Option<SlotRef>,
+        effect: BoostEffect,
+    ) -> bool {
         if self.alive(target).is_none() {
             return false;
         }
+        let from_other = source.is_some_and(|s| s != target);
+        let mut boost = *boosts;
+
+        // ChangeBoost: the target's own ability.
+        match self.ability_unless_broken(target) {
+            a if a == abilities::CONTRARY => boost.iter_mut().for_each(|b| *b = -*b),
+            a if a == abilities::SIMPLE => boost.iter_mut().for_each(|b| *b *= 2),
+            _ => {}
+        }
+        // getCappedBoost.
+        for (stat, b) in boost.iter_mut().enumerate() {
+            let current = self.state.slot(target).boosts[stat];
+            *b = (current + *b).clamp(-6, 6) - current;
+        }
+        // TryBoost (abilities in `resolvePriority` order: Guard Dog's priority 2 first; the
+        // rest only delete, so their order is moot).
+        let ability = self.ability_unless_broken(target);
+        if ability == abilities::GUARD_DOG
+            && effect == BoostEffect::Ability(abilities::INTIMIDATE)
+            && boost[0] != 0
+        {
+            boost[0] = 0;
+            let mut up = NO_BOOSTS;
+            up[0] = 1;
+            self.boost_by(
+                target,
+                &up,
+                Some(target),
+                BoostEffect::Ability(abilities::GUARD_DOG),
+            );
+        }
+        // `if (source && target === source) return;` — no source counts as "from another".
+        let blocks_drops = source.is_none_or(|s| s != target);
+        if blocks_drops {
+            match ability {
+                a if a == abilities::CLEAR_BODY
+                    || a == abilities::WHITE_SMOKE
+                    || a == abilities::FULL_METAL_BODY =>
+                {
+                    boost.iter_mut().filter(|b| **b < 0).for_each(|b| *b = 0);
+                }
+                a if a == abilities::HYPER_CUTTER => boost[0] = boost[0].max(0),
+                a if a == abilities::BIG_PECKS => boost[1] = boost[1].max(0),
+                a if a == abilities::MIRROR_ARMOR
+                    && source.is_some()
+                    && effect != BoostEffect::Ability(abilities::MIRROR_ARMOR) =>
+                {
+                    let source = source.expect("checked");
+                    for stat in 0..BOOST_COUNT {
+                        if boost[stat] >= 0 || self.state.slot(target).boosts[stat] == -6 {
+                            continue;
+                        }
+                        let mut reflected = NO_BOOSTS;
+                        reflected[stat] = boost[stat];
+                        boost[stat] = 0;
+                        if self.alive(source).is_some() {
+                            self.boost_by(
+                                source,
+                                &reflected,
+                                Some(target),
+                                BoostEffect::Ability(abilities::MIRROR_ARMOR),
+                            );
+                        }
+                    }
+                }
+                _ => {}
+            }
+        }
+
         let mut changed = false;
-        for (stat, &amount) in boosts.iter().enumerate() {
+        for (stat, &amount) in boost.iter().enumerate() {
             if amount == 0 {
                 continue;
             }
-            let current = self.state.slot(target).boosts[stat];
-            let delta = (current + amount).clamp(-6, 6) - current;
-            if delta != 0 {
-                self.apply(Instruction::Boost {
-                    target,
-                    stat: stat as u8,
-                    amount: delta,
-                });
-                changed = true;
+            if self.alive(target).is_none() {
+                break;
+            }
+            self.apply(Instruction::Boost {
+                target,
+                stat: stat as u8,
+                amount,
+            });
+            changed = true;
+            // AfterEachBoost: Competitive / Defiant react to each drop from a foe.
+            if amount < 0 && from_other && source.is_some_and(|s| s.side != target.side) {
+                let reacting = self.ability_unless_broken(target);
+                let raised = if reacting == abilities::COMPETITIVE {
+                    Some(2)
+                } else if reacting == abilities::DEFIANT {
+                    Some(0)
+                } else {
+                    None
+                };
+                if let Some(index) = raised {
+                    let mut up = NO_BOOSTS;
+                    up[index] = 2;
+                    self.boost_by(target, &up, Some(target), BoostEffect::Ability(reacting));
+                }
             }
         }
+        // AfterBoost: Rattled after Intimidate's Attack drop.
+        if effect == BoostEffect::Ability(abilities::INTIMIDATE)
+            && boosts[0] != 0
+            && self.alive(target).is_some()
+            && self.ability_unless_broken(target) == abilities::RATTLED
+        {
+            let mut up = NO_BOOSTS;
+            up[4] = 1;
+            self.boost_by(
+                target,
+                &up,
+                Some(target),
+                BoostEffect::Ability(abilities::RATTLED),
+            );
+        }
         changed
+    }
+
+    /// Showdown `getStat`'s `ModifyBoost`: Unaware (`onAnyModifyBoost`) zeroes the boosts an
+    /// attack does not see. `viewer` is the other party of the attack (the target when the
+    /// attacker's stats are read, the attacker when the target's are): if it has Unaware, the
+    /// attacker's Atk/Def/SpA/accuracy or the target's Def/SpD/evasion count as 0.
+    pub fn boost_seen(
+        &self,
+        holder: SlotRef,
+        stat: usize,
+        viewer: SlotRef,
+        as_attacker: bool,
+    ) -> i8 {
+        let boost = self.state.slot(holder).boosts[stat];
+        if viewer == holder || self.ability_unless_broken(viewer) != abilities::UNAWARE {
+            return boost;
+        }
+        let ignored = if as_attacker {
+            // Unaware target: atk, def, spa, accuracy of the attacker.
+            matches!(stat, 0 | 1 | 2 | 5)
+        } else {
+            // Unaware attacker: def, spd, evasion of the target.
+            matches!(stat, 1 | 3 | 6)
+        };
+        if ignored {
+            0
+        } else {
+            boost
+        }
     }
 
     // ---- items ------------------------------------------------------------------------------
@@ -790,6 +931,15 @@ pub(crate) fn cured_on_update(ability: AbilityId, status: Status) -> bool {
         a if a == abilities::MAGMA_ARMOR => status == Status::Freeze,
         _ => false,
     }
+}
+
+/// What caused a boost (Showdown's `effect` in `boost()`), for the handlers that look at it.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum BoostEffect {
+    Move(MoveId),
+    Ability(AbilityId),
+    #[allow(dead_code)]
+    Item(ItemId),
 }
 
 pub(crate) fn weather_from(value: u8) -> Weather {
