@@ -1,0 +1,23 @@
+{
+ "description": "O86 Kee / Maranga Berry (onAfterMoveSecondary): Lucario's physical Tackle makes Snorlax eat its Kee Berry (Def +1), Starmie's special Water Gun makes Kangaskhan eat its Maranga Berry (SpD +1). The targets use Swords Dance afterwards.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Lucario", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Tackle", "Protect"], "level": 50},
+   {"species": "Starmie", "item": "", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Water Gun", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Kee Berry", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Kangaskhan", "item": "Maranga Berry", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move tackle 1, move watergun 2", "p2": "move swordsdance, move swordsdance"}
+}

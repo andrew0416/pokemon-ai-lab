@@ -1262,17 +1262,34 @@ fn hit_loop<const N: usize>(
             total_damage: total,
         });
     }
-    // AfterMoveSecondary (skipped for a Sheer Force-boosted move): a thawing move thaws a
-    // frozen target (of the last hit).
-    if mv.data.thaws_target && !ability_hooks::sheer_force_skips(b, user, mv) {
-        for (&t, r) in progress.targets.iter().zip(&results) {
-            if r.ok() {
+    // Champions `hitStepMoveHitLoop`: `eachEvent('Update')` after the recoil, then
+    // AfterMoveSecondary (skipped for a Sheer Force-boosted move) for the targets of the last
+    // hit it did not fail on (`targetsCopy`; after a later hit's miss, a fresh copy of every
+    // target): a thawing move thaws a frozen target (`frz`'s handler), then the target's item
+    // (Kee / Maranga Berry). Handlers of different targets act on their own holder only, so
+    // their Speed order does not matter.
+    super::update::update_event(b)?;
+    let last_targets: Vec<SlotRef> = if ended_by_miss {
+        progress.targets.clone()
+    } else {
+        progress
+            .targets
+            .iter()
+            .zip(&results)
+            .filter(|(_, r)| r.ok())
+            .map(|(&t, _)| t)
+            .collect()
+    };
+    if !ability_hooks::sheer_force_skips(b, user, mv) {
+        for t in last_targets {
+            if mv.data.thaws_target {
                 if let Some(p) = b.alive(t) {
                     if b.mon(p).status == Status::Freeze {
                         b.cure_status(p);
                     }
                 }
             }
+            item_events::after_move_secondary(b, t, mv.data.category);
         }
     }
     Ok(HitOutcome::Finished {
@@ -1289,6 +1306,8 @@ fn spread_move_hit<const N: usize>(
     targets: &[SlotRef],
 ) -> Result<Vec<Hit>, TurnError> {
     let data = mv.data;
+    // `getMoveHitData(move).typeMod` is (re)computed by this hit's `getDamage`.
+    b.hit_type_mod = [[None; N]; 2];
     // getSpreadDamage: every target's damage is decided before any is dealt.
     let mut planned = Vec::with_capacity(targets.len());
     for &t in targets {
@@ -1518,7 +1537,7 @@ fn damaging_hit<const N: usize>(
         }
         if mon.item == items::ROCKY_HELMET {
             handlers.push((2, index, Kind::Item(mon.item)));
-        } else if mon.item == items::AIR_BALLOON {
+        } else if mon.item == items::AIR_BALLOON || item_events::has_damaging_hit(mon.item) {
             handlers.push((LAST, index, Kind::Item(mon.item)));
         }
     }
@@ -1565,7 +1584,20 @@ fn damaging_hit<const N: usize>(
                     new: ItemId::NONE,
                 });
             }
-            Kind::Item(_) => {}
+            // Weakness Policy, the absorbing items, Jaboca / Rowap Berry. The item may have
+            // gone since the handlers were collected (a Jaboca Berry is eaten once).
+            Kind::Item(i) => {
+                if b.mon(pokemon).item == i {
+                    item_events::on_damaging_hit(
+                        b,
+                        user,
+                        target,
+                        i,
+                        mv.move_type,
+                        mv.data.category,
+                    );
+                }
+            }
         }
     }
 }
@@ -1748,6 +1780,7 @@ fn get_damage<const N: usize>(
         })
         .sum::<i32>()
         .clamp(-6, 6);
+    b.hit_type_mod[target.side.index()][usize::from(target.slot)] = Some(type_mod as i8);
     let type_effectiveness = if type_mod >= 0 {
         MOD_ONE << type_mod
     } else {

@@ -451,6 +451,107 @@ pub(crate) fn after_move_secondary_self<const N: usize>(
     }
 }
 
+/// Showdown `useItem` of a held item with `boosts` (Weakness Policy, the absorbing items,
+/// seeds, Room Service, Adrenaline Orb): nothing unless the holder has HP; the item's `boosts`
+/// are applied with the holder as the source (`this.battle.event.target` in every calling
+/// handler) and the item as the effect, while it is still held; then it is consumed and
+/// becomes `lastItem`. The `UseItem` / `Use` / `AfterUseItem` events have no implemented
+/// handler (Unburden is refused by `support`).
+pub(crate) fn use_boost_item<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> bool {
+    let item = b.item(holder);
+    if b.alive(holder).is_none() || item.is_none() {
+        return false;
+    }
+    b.boost_by(
+        holder,
+        &item.data().boosts,
+        Some(holder),
+        BoostEffect::Item(item),
+    );
+    b.use_item(holder)
+}
+
+/// Items with an implemented `onDamagingHit` run by [`on_damaging_hit`]. None has an
+/// `onDamagingHitOrder`, so they run after the ordered handlers (Rough Skin, Rocky Helmet).
+pub(crate) fn has_damaging_hit(item: ItemId) -> bool {
+    [
+        items::WEAKNESS_POLICY,
+        items::ABSORB_BULB,
+        items::CELL_BATTERY,
+        items::LUMINOUS_MOSS,
+        items::SNOWBALL,
+        items::JABOCA_BERRY,
+        items::ROWAP_BERRY,
+    ]
+    .contains(&item)
+}
+
+/// The damaged `target`'s item `onDamagingHit` for a hit of `user`'s move of `move_type` and
+/// `category` (Showdown `runEvent('DamagingHit')`; the holder may be at 0 HP, not yet
+/// processed as fainted):
+/// - Weakness Policy: `!move.damage && !move.damageCallback &&
+///   target.getMoveHitData(move).typeMod > 0` uses the item (Atk and SpA +2). Fixed-damage
+///   moves never compute a `typeMod` ([`Battle::type_mod_of`] is `None`).
+/// - Absorb Bulb (Water, SpA +1), Cell Battery (Electric, Atk +1), Luminous Moss (Water,
+///   SpD +1), Snowball (Ice, Atk +1): `if (move.type === ...) target.useItem()`.
+/// - Jaboca Berry (physical) / Rowap Berry (special): `source.hp && source.isActive &&
+///   !source.hasAbility('magicguard')`, then `target.eatItem()` (which, for these two, works at
+///   0 HP) and `this.damage(source.baseMaxhp / 8, source, target)` (Ripen, 1/4, is refused).
+pub(crate) fn on_damaging_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    item: ItemId,
+    move_type: Type,
+    category: MoveCategory,
+) {
+    let triggers = match item {
+        i if i == items::WEAKNESS_POLICY => b.type_mod_of(target).is_some_and(|t| t > 0),
+        i if i == items::ABSORB_BULB || i == items::LUMINOUS_MOSS => move_type == Type::Water,
+        i if i == items::CELL_BATTERY => move_type == Type::Electric,
+        i if i == items::SNOWBALL => move_type == Type::Ice,
+        i if i == items::JABOCA_BERRY || i == items::ROWAP_BERRY => {
+            let wanted = if i == items::JABOCA_BERRY {
+                MoveCategory::Physical
+            } else {
+                MoveCategory::Special
+            };
+            if category == wanted
+                && b.alive(user).is_some()
+                && b.ability(user) != abilities::MAGIC_GUARD
+                && super::update::eat_item(b, target)
+            {
+                let max_hp = f64::from(b.slot_mon(user).expect("alive").max_hp);
+                b.damage(user, max_hp / 8.0, DamageSource::Indirect);
+            }
+            return;
+        }
+        _ => false,
+    };
+    if triggers {
+        use_boost_item(b, target);
+    }
+}
+
+/// The target's item `onAfterMoveSecondary` (`runEvent('AfterMoveSecondary')` at the end of the
+/// hit loop, skipped for a Sheer Force-boosted move): Kee Berry eats itself after a physical
+/// move (Present's heal, the only exception, is not a supported move), Maranga Berry after a
+/// special one (`target.eatItem()`; their `onEat` raise Def / SpD by 1).
+pub(crate) fn after_move_secondary<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    category: MoveCategory,
+) {
+    let wanted = match b.item(target) {
+        i if i == items::KEE_BERRY => MoveCategory::Physical,
+        i if i == items::MARANGA_BERRY => MoveCategory::Special,
+        _ => return,
+    };
+    if category == wanted {
+        super::update::eat_item(b, target);
+    }
+}
+
 /// The target's item `onHit` (`runEvent('Hit')` in `runMoveEffects`, after the move's own
 /// `onHit`): Sticky Barb moves to an itemless user of a contact move (`takeItem`, then
 /// `setItem`; Protective Pads cannot apply, as the user holds nothing).

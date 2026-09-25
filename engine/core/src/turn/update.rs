@@ -13,7 +13,7 @@
 
 use crate::dex::{abilities, items, ItemId, Stat, NO_BOOSTS};
 use crate::instruction::Instruction;
-use crate::state::{Pokemon, SlotRef, Status};
+use crate::state::{Pokemon, PokemonRef, SlotRef, Status};
 
 use super::battle::{Battle, BoostEffect};
 use super::TurnError;
@@ -116,9 +116,17 @@ fn item_wants_eating<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
 }
 
 /// Showdown `eatItem`: `TryEatItem` (nothing implemented blocks it), the berry's `onEat`, then
-/// the berry is gone and remembered as `lastItem`. Returns whether it was eaten.
+/// the berry is gone and remembered as `lastItem`. Returns whether it was eaten. The holder
+/// must have HP, except for Jaboca and Rowap Berry (`!this.hp && this.item !== 'jabocaberry'
+/// && this.item !== 'rowapberry'`), which a holder fainting from the hit still eats.
 pub(crate) fn eat_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> bool {
-    let Some(pokemon) = b.alive(slot) else {
+    let at_zero_hp = [items::JABOCA_BERRY, items::ROWAP_BERRY].contains(&b.item(slot));
+    let holder = if at_zero_hp {
+        b.occupant(slot)
+    } else {
+        b.alive(slot)
+    };
+    let Some(pokemon) = holder else {
         return false;
     };
     let mon = b.mon(pokemon);
@@ -167,10 +175,39 @@ pub(crate) fn eat_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> 
                 new,
             });
         }
-    } else {
+    } else if let Some(index) = [(items::KEE_BERRY, 1), (items::MARANGA_BERRY, 3)]
+        .iter()
+        .find(|&&(i, _)| i == item)
+        .map(|&(_, index)| index)
+    {
+        // `this.boost({def: 1})` / `{spd: 1}` (target and source: the eater).
+        let mut up = NO_BOOSTS;
+        up[index] = 1;
+        b.boost_by(slot, &up, Some(slot), BoostEffect::Item(item));
+    } else if item != items::JABOCA_BERRY && item != items::ROWAP_BERRY {
+        // Jaboca / Rowap: an empty `onEat` (their damage follows in `onDamagingHit`).
         return false;
     }
-    b.use_item(slot)
+    consume(b, pokemon)
+}
+
+/// The end of `eatItem`: `lastItem = item; item = ''` (at any HP, unlike `useItem`).
+fn consume<const N: usize>(b: &mut Battle<'_, N>, pokemon: PokemonRef) -> bool {
+    let (item, last) = (b.mon(pokemon).item, b.mon(pokemon).last_item);
+    if item.is_none() {
+        return false;
+    }
+    b.apply(Instruction::SetLastItem {
+        target: pokemon,
+        old: last,
+        new: item,
+    });
+    b.apply(Instruction::SetItem {
+        target: pokemon,
+        old: item,
+        new: ItemId::NONE,
+    });
+    true
 }
 
 /// `onAfterSetStatus` handlers: Lum Berry is eaten the moment a status lands.

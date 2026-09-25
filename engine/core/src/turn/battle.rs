@@ -52,6 +52,11 @@ pub(crate) struct Battle<'a, const N: usize> {
     pub active_move: Option<ActiveMoveRef>,
     /// The actions of the turn not yet run (Showdown `queue.list`), see `queue.rs`.
     pub queue: Vec<super::queue::Action>,
+    /// Showdown `target.getMoveHitData(move).typeMod` of the hit in progress, per side and
+    /// slot: set by `getDamage` (`modifyDamage`) for every target it computes damage for,
+    /// cleared at the start of every hit (`None`: not computed, as for fixed-damage and
+    /// status moves). Read by Weakness Policy and Enigma Berry.
+    pub hit_type_mod: [[Option<i8>; N]; 2],
 }
 
 impl<'a, const N: usize> Battle<'a, N> {
@@ -63,7 +68,13 @@ impl<'a, const N: usize> Battle<'a, N> {
             faint_queue: Vec::new(),
             active_move: None,
             queue: Vec::new(),
+            hit_type_mod: [[None; N]; 2],
         }
+    }
+
+    /// The hit's `typeMod` against `target` ([`Battle::hit_type_mod`]).
+    pub fn type_mod_of(&self, target: SlotRef) -> Option<i32> {
+        self.hit_type_mod[target.side.index()][usize::from(target.slot)].map(i32::from)
     }
 
     pub fn apply(&mut self, instruction: Instruction) {

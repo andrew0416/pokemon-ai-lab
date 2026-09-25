@@ -361,6 +361,16 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::STICKY_BARB, &["onHit", "onResidual"]),
     (items::SHELL_BELL, &["onAfterMoveSecondarySelf"]),
     (items::THROAT_SPRAY, &["onAfterMoveSecondarySelf"]),
+    // DamagingHit (`moves::damaging_hit` → `items::on_damaging_hit`): boost + `useItem`.
+    (items::WEAKNESS_POLICY, &["onDamagingHit"]),
+    (items::ABSORB_BULB, &["onDamagingHit"]),
+    (items::CELL_BATTERY, &["onDamagingHit"]),
+    (items::LUMINOUS_MOSS, &["onDamagingHit"]),
+    (items::SNOWBALL, &["onDamagingHit"]),
+    // AfterMoveSecondary at the end of the hit loop (`items::after_move_secondary`), `onEat`
+    // in `update::eat_item`.
+    (items::KEE_BERRY, &["onAfterMoveSecondary", "onEat"]),
+    (items::MARANGA_BERRY, &["onAfterMoveSecondary", "onEat"]),
     // Grounding (`Battle::is_grounded`), Speed, effectiveness; Air Balloon's `onStart` only
     // announces it and its pop (`onDamagingHit`) is refused until F15 (`items::on_damaging_hit`;
     // `onAfterSubDamage` needs a substitute, which is refused).

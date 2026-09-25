@@ -1,0 +1,23 @@
+{
+ "description": "O86 Cell Battery / Snowball: Raichu's Shock Wave uses Snorlax's Cell Battery (Atk +1), Weavile's Ice Shard uses Kangaskhan's Snowball (Atk +1). The targets use Harden afterwards.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Raichu", "item": "", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Shock Wave", "Protect"], "level": 50},
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Ice Shard", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Cell Battery", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Kangaskhan", "item": "Snowball", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move shockwave 1, move iceshard 2", "p2": "move harden, move harden"}
+}
