@@ -1,0 +1,26 @@
+{
+ "description": "Priority abilities: full-HP Gale Wings Brave Bird (+1) outspeeds a faster Latios's Calm Mind and KOs it at 1 HP; Triage Draining Kiss (+3) KOs a 1-HP Persian before its Quick Attack (+1).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "o61-gale-wings-triage.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "o61-gale-wings-triage.p2.json",
+  "order": "12"
+ },
+ "patch": {
+  "p2": {
+   "Latios": {
+    "hp": 1
+   },
+   "Persian": {
+    "hp": 1
+   }
+  }
+ },
+ "turn": {
+  "p1": "move bravebird 1, move drainingkiss 2",
+  "p2": "move calmmind, move quickattack 2"
+ }
+}

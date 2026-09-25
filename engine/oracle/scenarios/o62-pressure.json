@@ -1,0 +1,16 @@
+{
+ "description": "Pressure on both foes: Growl (spread) and Trick Room (all) each lose 2 extra PP, also through Protect; Zapdos's Thunder Wave into its Pressure ally loses none.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "o62-pressure.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "o62-pressure.p2.json",
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move growl, move trickroom",
+  "p2": "move protect, move thunderwave -1"
+ }
+}

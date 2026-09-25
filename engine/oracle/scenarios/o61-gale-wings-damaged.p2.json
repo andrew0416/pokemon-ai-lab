@@ -1,0 +1,32 @@
+[
+ {
+  "species": "Latios",
+  "item": "",
+  "ability": "Levitate",
+  "nature": "Timid",
+  "evs": {
+   "hp": 32,
+   "spe": 32
+  },
+  "moves": [
+   "Calm Mind",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Persian",
+  "item": "",
+  "ability": "Limber",
+  "nature": "Jolly",
+  "evs": {
+   "hp": 32,
+   "spe": 32
+  },
+  "moves": [
+   "Quick Attack",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

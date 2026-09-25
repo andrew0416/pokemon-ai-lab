@@ -7,7 +7,7 @@
 //! the effect instead of running. Handlers of fainted Pokémon and of effects that ended
 //! earlier in the residual are skipped. Faints are processed after every handler.
 
-use crate::dex::{items, Type, TypeImmunities};
+use crate::dex::{abilities, items, AbilityId, Type, TypeImmunities, NO_BOOSTS};
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SideId, SlotRef, Status};
@@ -27,6 +27,10 @@ enum Kind {
     StatusDamage(PokemonRef, SlotRef),
     GrassyHeal(PokemonRef, SlotRef),
     Leftovers(PokemonRef, SlotRef),
+    /// Speed Boost `onResidual` (order 28, sub-order 2).
+    SpeedBoost(PokemonRef, SlotRef),
+    /// Shed Skin and Hydration `onResidual` (order 5, sub-order 3).
+    StatusCure(PokemonRef, SlotRef, AbilityId),
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -140,6 +144,21 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                     kind: Kind::Leftovers(pokemon, slot),
                 });
             }
+            match mon.ability {
+                a if a == abilities::SPEED_BOOST => out.push(Handler {
+                    order: 28,
+                    speed,
+                    sub_order: 2,
+                    kind: Kind::SpeedBoost(pokemon, slot),
+                }),
+                a if a == abilities::SHED_SKIN || a == abilities::HYDRATION => out.push(Handler {
+                    order: 5,
+                    speed,
+                    sub_order: 3,
+                    kind: Kind::StatusCure(pokemon, slot, a),
+                }),
+                _ => {}
+            }
         }
     }
     let _ = SUB_FIELD_CONDITION;
@@ -189,20 +208,32 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
                 return Ok(());
             }
             b.set_field(FieldEffect::Weather, effect);
-            if b.weather() == Weather::Sand {
-                // eachEvent('Weather'): actives in Speed order, ties shuffled.
-                let mut actives: Vec<(SlotRef, i32)> = b
-                    .all_alive()
-                    .into_iter()
-                    .map(|s| (s, b.action_speed(s)))
-                    .collect();
-                sort_by_speed(b, &mut actives);
-                for (slot, _) in actives {
-                    if b.alive(slot).is_none() || b.status_immune(slot, TypeImmunities::SANDSTORM) {
-                        continue;
-                    }
-                    let max_hp = f64::from(b.slot_mon(slot).expect("alive").max_hp);
-                    b.damage(slot, max_hp / 16.0, DamageSource::Indirect);
+            // `onFieldResidual` of every supported weather: eachEvent('Weather'), actives in
+            // Speed order, ties shuffled.
+            let weather = b.weather();
+            let mut actives: Vec<(SlotRef, i32)> = b
+                .all_alive()
+                .into_iter()
+                .map(|s| (s, b.action_speed(s)))
+                .collect();
+            // Without a handler that acts, the order (and its random tie-breaks) is moot.
+            let acts = weather == Weather::Sand
+                || actives.iter().any(|&(s, _)| {
+                    [
+                        abilities::RAIN_DISH,
+                        abilities::ICE_BODY,
+                        abilities::SOLAR_POWER,
+                        abilities::DRY_SKIN,
+                    ]
+                    .contains(&b.ability(s))
+                });
+            if !acts {
+                return Ok(());
+            }
+            sort_by_speed(b, &mut actives);
+            for (slot, _) in actives {
+                if b.alive(slot).is_some() {
+                    weather_event(b, slot, weather);
                 }
             }
         }
@@ -289,9 +320,73 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
             let max_hp = f64::from(b.mon(pokemon).max_hp);
             b.heal(slot, max_hp / 16.0);
         }
+        Kind::SpeedBoost(pokemon, slot) => {
+            // Skipped if the ability changed since the handlers were collected.
+            if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != abilities::SPEED_BOOST {
+                return Ok(());
+            }
+            // `if (pokemon.activeTurns) this.boost({spe: 1})`.
+            if b.active_since_turn_start(slot) {
+                let mut boost = NO_BOOSTS;
+                boost[4] = 1;
+                b.boost(slot, &boost);
+            }
+        }
+        Kind::StatusCure(pokemon, slot, ability) => {
+            if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != ability {
+                return Ok(());
+            }
+            if b.mon(pokemon).status == Status::None {
+                return Ok(());
+            }
+            let cure = if ability == abilities::SHED_SKIN {
+                // `pokemon.hp && pokemon.status && this.randomChance(33, 100)` (not modded in
+                // Champions).
+                b.rng.chance(33, 100)
+            } else {
+                // Hydration: `pokemon.effectiveWeather()` is rain (Utility Umbrella and
+                // Primordial Sea are not supported).
+                b.weather() == Weather::Rain
+            };
+            if cure {
+                b.cure_status(pokemon);
+            }
+        }
     }
     let _ = Type::None;
     Ok(())
+}
+
+/// `runEvent('Weather', pokemon)` during the weather's residual: the sandstorm's own
+/// `onWeather` (1/16 damage unless immune) and the ability's `onWeather` (they never both act on
+/// one Pokémon, so their order does not matter). `effectiveWeather()` is the weather:
+/// Utility Umbrella, Air Lock and the primal weathers are not supported.
+/// - Rain Dish: heal 1/16 in rain; Ice Body: heal 1/16 in snow;
+/// - Solar Power: 1/8 damage in sun (`this.damage(maxhp / 8, target, target)`);
+/// - Dry Skin: heal 1/8 in rain, 1/8 damage in sun.
+fn weather_event<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, weather: Weather) {
+    let max_hp = f64::from(b.slot_mon(slot).expect("alive").max_hp);
+    if weather == Weather::Sand {
+        if !b.status_immune(slot, TypeImmunities::SANDSTORM) {
+            b.damage(slot, max_hp / 16.0, DamageSource::Indirect);
+        }
+        return;
+    }
+    match (b.ability(slot), weather) {
+        (a, Weather::Rain) if a == abilities::RAIN_DISH => {
+            b.heal(slot, max_hp / 16.0);
+        }
+        (a, Weather::Snow) if a == abilities::ICE_BODY => {
+            b.heal(slot, max_hp / 16.0);
+        }
+        (a, Weather::Rain) if a == abilities::DRY_SKIN => {
+            b.heal(slot, max_hp / 8.0);
+        }
+        (a, Weather::Sun) if a == abilities::DRY_SKIN || a == abilities::SOLAR_POWER => {
+            b.damage(slot, max_hp / 8.0, DamageSource::Indirect);
+        }
+        _ => {}
+    }
 }
 
 /// `speedSort` of Pokémon by `pokemon.speed`, ties shuffled.
@@ -359,4 +454,27 @@ pub(crate) fn bench<'b, const N: usize>(
     (0..s.party.len() as u8).filter(move |&i| {
         s.party[i as usize].hp > 0 && !s.slots.iter().any(|slot| slot.party_index == Some(i))
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The residual orders hard-coded in `collect` are the dex's.
+    #[test]
+    fn ability_residual_orders_match_the_dex() {
+        for (ability, order, sub_order) in [
+            (abilities::SPEED_BOOST, 28, 2),
+            (abilities::SHED_SKIN, 5, 3),
+            (abilities::HYDRATION, 5, 3),
+        ] {
+            let orders = ability.data().event_orders;
+            assert!(orders.contains(&("onResidualOrder", order)), "{ability:?}");
+            assert!(
+                orders.contains(&("onResidualSubOrder", sub_order)),
+                "{ability:?}"
+            );
+            assert_eq!(ability.data().handlers, ["onResidual"], "{ability:?}");
+        }
+    }
 }

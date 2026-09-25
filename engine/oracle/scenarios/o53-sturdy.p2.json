@@ -1,0 +1,30 @@
+[
+ {
+  "species": "Aggron",
+  "item": "Focus Sash",
+  "ability": "Sturdy",
+  "nature": "Serious",
+  "evs": {
+   "def": 2
+  },
+  "moves": [
+   "Iron Defense",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Roggenrola",
+  "item": "",
+  "ability": "Sturdy",
+  "nature": "Serious",
+  "evs": {
+   "def": 2
+  },
+  "moves": [
+   "Iron Defense",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

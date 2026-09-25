@@ -1,0 +1,34 @@
+[
+ {
+  "species": "Lapras",
+  "item": "",
+  "ability": "Shell Armor",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "spa": 32,
+   "def": 2
+  },
+  "moves": [
+   "Water Gun",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Charizard",
+  "item": "",
+  "ability": "Solar Power",
+  "nature": "Modest",
+  "evs": {
+   "hp": 32,
+   "spa": 32,
+   "def": 2
+  },
+  "moves": [
+   "Flamethrower",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

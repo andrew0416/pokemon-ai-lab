@@ -1,0 +1,22 @@
+{
+ "description": "Harsh sunlight: Prankster Will-O-Wisp into Leaf Guard (blocked), Thunder Wave into Aroma Veil Aromatisse (unblocked control), and Ice Beam's freeze chance under the sun's freeze immunity.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "o65-leaf-guard-sun.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "o65-leaf-guard-sun.p2.json",
+  "order": "12"
+ },
+ "patch": {
+  "field": {
+   "weather": "sunnyday",
+   "weatherDuration": 3
+  }
+ },
+ "turn": {
+  "p1": "move swordsdance, move icebeam 2",
+  "p2": "move willowisp 1, move thunderwave 2"
+ }
+}

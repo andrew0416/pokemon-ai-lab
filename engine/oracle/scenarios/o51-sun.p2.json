@@ -1,0 +1,34 @@
+[
+ {
+  "species": "Toxicroak",
+  "item": "",
+  "ability": "Dry Skin",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Bulk Up",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Lapras",
+  "item": "",
+  "ability": "Shell Armor",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Calm Mind",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

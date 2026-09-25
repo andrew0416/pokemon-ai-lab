@@ -1,0 +1,35 @@
+{
+ "description": "Snow: Ice Body heals 1/16 at the end of the turn (Glalie and Glaceon), nobody else changes.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "o51-snow.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "o51-snow.p2.json",
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Glalie": {
+    "hp": 100
+   },
+   "Latios": {
+    "hp": 100
+   }
+  },
+  "p2": {
+   "Glaceon": {
+    "hp": 50
+   }
+  },
+  "field": {
+   "weather": "snowscape",
+   "weatherDuration": 3
+  }
+ },
+ "turn": {
+  "p1": "move calmmind, move calmmind",
+  "p2": "move calmmind, move irondefense"
+ }
+}

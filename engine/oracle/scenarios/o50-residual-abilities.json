@@ -1,0 +1,30 @@
+{
+ "description": "Rain. Speed Boost raises the lead Blaziken's Speed but not Ninjask's, which switched in this turn; Shed Skin cures the burned Seviper with 33% before the burn damage; Hydration cures the paralysed Vaporeon.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "o50-residual-abilities.p1.json",
+  "order": "123"
+ },
+ "p2": {
+  "team": "o50-residual-abilities.p2.json",
+  "order": "12"
+ },
+ "patch": {
+  "p2": {
+   "Seviper": {
+    "status": "brn"
+   },
+   "Vaporeon": {
+    "status": "par"
+   }
+  },
+  "field": {
+   "weather": "raindance",
+   "weatherDuration": 3
+  }
+ },
+ "turn": {
+  "p1": "move bulkup, switch 3",
+  "p2": "move coil, move calmmind"
+ }
+}

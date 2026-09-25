@@ -1,0 +1,34 @@
+[
+ {
+  "species": "Snorlax",
+  "item": "",
+  "ability": "Immunity",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Crunch",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Latios",
+  "item": "",
+  "ability": "Levitate",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Calm Mind",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

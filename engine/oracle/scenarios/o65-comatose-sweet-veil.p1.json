@@ -1,0 +1,34 @@
+[
+ {
+  "species": "Komala",
+  "item": "",
+  "ability": "Comatose",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Ice Beam",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Jumpluff",
+  "item": "",
+  "ability": "Leaf Guard",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Sleep Powder",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

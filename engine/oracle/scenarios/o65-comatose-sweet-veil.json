@@ -1,0 +1,16 @@
+{
+ "description": "Hypnosis into Comatose; Sleep Powder into the ally of a Sweet Veil holder; Ice Beam (10% freeze) into Magma Armor; Will-O-Wisp into Leaf Guard Jumpluff outside the sun as the unblocked control.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "o65-comatose-sweet-veil.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "o65-comatose-sweet-veil.p2.json",
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move icebeam 2, move sleeppowder 2",
+  "p2": "move hypnosis 1, move willowisp 2"
+ }
+}

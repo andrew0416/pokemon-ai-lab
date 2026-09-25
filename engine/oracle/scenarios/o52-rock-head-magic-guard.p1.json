@@ -1,0 +1,34 @@
+[
+ {
+  "species": "Aerodactyl",
+  "item": "Life Orb",
+  "ability": "Rock Head",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "def": 2
+  },
+  "moves": [
+   "Double-Edge",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Clefable",
+  "item": "Life Orb",
+  "ability": "Magic Guard",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Seismic Toss",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

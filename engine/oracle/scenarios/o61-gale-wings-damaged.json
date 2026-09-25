@@ -1,0 +1,28 @@
+{
+ "description": "Gale Wings below full HP gives no priority: the faster Latios uses Calm Mind before Brave Bird KOs it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "o61-gale-wings-damaged.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "o61-gale-wings-damaged.p2.json",
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Talonflame": {
+    "hp": 150
+   }
+  },
+  "p2": {
+   "Latios": {
+    "hp": 1
+   }
+  }
+ },
+ "turn": {
+  "p1": "move bravebird 1, move protect",
+  "p2": "move calmmind, move protect"
+ }
+}

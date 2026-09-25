@@ -14,7 +14,8 @@ use crate::field::{FieldEffect, SideEffect, Weather, FIELD_EFFECT_COUNT, SIDE_EF
 use crate::state::{SideId, SlotRef, State};
 use crate::volatile::Volatile;
 
-use super::battle::weather_from;
+use super::battle::{cured_on_update, weather_from};
+use super::order::fractional_priority_tenths;
 
 /// Moves with Showdown callbacks that are implemented, with the exact callback list.
 pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
@@ -234,6 +235,51 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         &["onAnyRedirectTarget", "onTryHit"],
     ),
     (abilities::STORM_DRAIN, &["onAnyRedirectTarget", "onTryHit"]),
+    (abilities::GALE_WINGS, &["onModifyPriority"]),
+    (abilities::TRIAGE, &["onModifyPriority"]),
+    // Damage handlers (`Battle::damage`).
+    (abilities::ROCK_HEAD, &["onDamage"]),
+    (abilities::MAGIC_GUARD, &["onDamage"]),
+    // `onDamage` in `Battle::damage`; `onTryHit` (OHKO immunity) in `moves`.
+    (abilities::STURDY, &["onDamage", "onTryHit"]),
+    // Residual handlers (`residual`).
+    (abilities::SPEED_BOOST, &["onResidual"]),
+    (abilities::SHED_SKIN, &["onResidual"]),
+    (abilities::HYDRATION, &["onResidual"]),
+    // Weather abilities: `onWeather` in `residual::weather_event`; Solar Power's `onModifySpA`
+    // and Dry Skin's `onSourceBasePower`/`onTryHit` in `moves`; Ice Body's `onImmunity` is for
+    // hail, which is not supported.
+    (abilities::RAIN_DISH, &["onWeather"]),
+    (abilities::ICE_BODY, &["onImmunity", "onWeather"]),
+    (abilities::SOLAR_POWER, &["onModifySpA", "onWeather"]),
+    (
+        abilities::DRY_SKIN,
+        &["onSourceBasePower", "onTryHit", "onWeather"],
+    ),
+    // Extra PP in `moves::deduct_pressure_pp`; `onStart` only announces the ability.
+    (abilities::PRESSURE, &["onDeductPP", "onStart"]),
+    // Status immunities (`Battle::set_status_blocked`, `status_immune`,
+    // `add_volatile_blocked`). `onUpdate` cures are unreachable: see `cured_on_update`.
+    (abilities::WATER_VEIL, &["onSetStatus", "onUpdate"]),
+    (abilities::IMMUNITY, &["onSetStatus", "onUpdate"]),
+    (
+        abilities::INSOMNIA,
+        &["onSetStatus", "onTryAddVolatile", "onUpdate"],
+    ),
+    (
+        abilities::VITAL_SPIRIT,
+        &["onSetStatus", "onTryAddVolatile", "onUpdate"],
+    ),
+    (abilities::LIMBER, &["onSetStatus", "onUpdate"]),
+    (abilities::MAGMA_ARMOR, &["onImmunity", "onUpdate"]),
+    // `onStart` only announces the ability.
+    (abilities::COMATOSE, &["onSetStatus", "onStart"]),
+    (abilities::LEAF_GUARD, &["onSetStatus", "onTryAddVolatile"]),
+    (
+        abilities::SWEET_VEIL,
+        &["onAllySetStatus", "onAllyTryAddVolatile"],
+    ),
+    (abilities::AROMA_VEIL, &["onAllyTryAddVolatile"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -272,7 +318,10 @@ const CORE_CHECKED_ITEMS: &[ItemId] = &[
 /// Whether an ability is inert or implemented while its holder is on the field.
 pub(crate) fn ability_supported_on_field(ability: AbilityId) -> bool {
     let data = ability.data();
-    if CORE_CHECKED_ABILITIES.contains(&ability) || data.fractional_priority_tenths != 0 {
+    // A constant `onFractionalPriority` is implemented for Stall only (`order`).
+    if CORE_CHECKED_ABILITIES.contains(&ability)
+        || data.fractional_priority_tenths != fractional_priority_tenths(ability)
+    {
         return false;
     }
     data.handlers.is_empty()
@@ -452,6 +501,12 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
             if mon.ability == abilities::TRACE {
                 return Err(format!("{name}: Trace still seeking a target"));
             }
+            if cured_on_update(mon.ability, mon.status) {
+                return Err(format!(
+                    "{name}: {} would cure its status on Update (not implemented)",
+                    mon.ability.data().name
+                ));
+            }
             if !item_supported_on_field(mon.item) {
                 return Err(format!(
                     "{name}: item {} ({:?})",
@@ -494,6 +549,10 @@ mod tests {
                 "{id:?}"
             );
         }
+        // Stall's only behaviour is its constant fractional priority.
+        assert!(abilities::STALL.data().handlers.is_empty());
+        assert_eq!(abilities::STALL.data().fractional_priority_tenths, -1);
+        assert!(ability_supported_on_field(abilities::STALL));
         // Detect shares Protect's volatile.
         assert_eq!(
             moves::DETECT.data().volatile_status,

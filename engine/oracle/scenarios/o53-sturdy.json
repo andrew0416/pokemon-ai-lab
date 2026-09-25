@@ -1,0 +1,16 @@
+{
+ "description": "Sturdy: High Horsepower (4x) leaves full-HP Aggron at 1 HP and its Focus Sash unused; Sunsteel Strike ignores Roggenrola's Sturdy and KOs it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "o53-sturdy.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "o53-sturdy.p2.json",
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move highhorsepower 1, move sunsteelstrike 2",
+  "p2": "move irondefense, move irondefense"
+ }
+}

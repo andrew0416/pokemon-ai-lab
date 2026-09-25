@@ -16,9 +16,10 @@
 //!    the source holds Smooth Rock (sand) / Terrain Extender (terrain).
 //!
 //! Only the abilities in `IMPLEMENTED` have behaviour here (Trace, the four weather and four
-//! terrain setters, Intimidate, and Sand Rush as verified inert); the turn engine's
-//! `turn/switching.rs` implements the same set for mid-turn switches (WORKPLAN F4 merges the
-//! two). Any other ability, item or species handler that can fire
+//! terrain setters, Intimidate, and the ones verified inert at start: Sand Rush, the
+//! status-curing `onUpdate` abilities, and abilities whose `onStart` only announces them); the
+//! turn engine's `turn/switching.rs` implements the same set for mid-turn switches (WORKPLAN
+//! F4 merges the two). Any other ability, item or species handler that can fire
 //! during this sequence is rejected with an error naming it; nothing that can change state is
 //! skipped silently. Random calls that cannot change the outcome (speed-tie shuffles in
 //! `eachEvent` with no listeners) are not branched on. Format/rule handlers (`onBegin`,
@@ -201,7 +202,7 @@ fn start_handler(handlers: &'static [&'static str]) -> Option<&'static str> {
 }
 
 /// Implemented abilities with the exact handler lists they were implemented against.
-const IMPLEMENTED: [(AbilityId, &[&str], StartBehavior); 11] = [
+const IMPLEMENTED: &[(AbilityId, &[&str], StartBehavior)] = &[
     (
         abilities::TRACE,
         &["onStart", "onUpdate"],
@@ -257,6 +258,48 @@ const IMPLEMENTED: [(AbilityId, &[&str], StartBehavior); 11] = [
     (
         abilities::SAND_RUSH,
         &["onImmunity", "onModifySpe"],
+        StartBehavior::Inert,
+    ),
+    // Status-curing `onUpdate`: a fresh start has no status (`validate`), so nothing to cure.
+    (
+        abilities::WATER_VEIL,
+        &["onSetStatus", "onUpdate"],
+        StartBehavior::Inert,
+    ),
+    (
+        abilities::IMMUNITY,
+        &["onSetStatus", "onUpdate"],
+        StartBehavior::Inert,
+    ),
+    (
+        abilities::INSOMNIA,
+        &["onSetStatus", "onTryAddVolatile", "onUpdate"],
+        StartBehavior::Inert,
+    ),
+    (
+        abilities::VITAL_SPIRIT,
+        &["onSetStatus", "onTryAddVolatile", "onUpdate"],
+        StartBehavior::Inert,
+    ),
+    (
+        abilities::LIMBER,
+        &["onSetStatus", "onUpdate"],
+        StartBehavior::Inert,
+    ),
+    (
+        abilities::MAGMA_ARMOR,
+        &["onImmunity", "onUpdate"],
+        StartBehavior::Inert,
+    ),
+    // `onStart` only announces the ability.
+    (
+        abilities::COMATOSE,
+        &["onSetStatus", "onStart"],
+        StartBehavior::Inert,
+    ),
+    (
+        abilities::PRESSURE,
+        &["onDeductPP", "onStart"],
         StartBehavior::Inert,
     ),
 ];

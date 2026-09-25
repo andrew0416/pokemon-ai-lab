@@ -1,5 +1,5 @@
-//! Using a move: Showdown `runMove` → `useMove` → `trySpreadMoveHit` / `tryMoveHit` → the
-//! hit steps → `spreadMoveHit` (damage, effects, secondaries) → recoil and after-move
+//! Using a move: Showdown `runMove` ??`useMove` ??`trySpreadMoveHit` / `tryMoveHit` ??the
+//! hit steps ??`spreadMoveHit` (damage, effects, secondaries) ??recoil and after-move
 //! effects, for the implemented moves (see [`super::support`]).
 
 mod handlers;
@@ -12,13 +12,13 @@ use crate::damage::{
 };
 use crate::dex::{
     abilities, items, moves, AbilityId, FixedDamage, IgnoreImmunity, MoveCategory, MoveData,
-    MoveFlags, MoveId, MoveTarget, Stat, Type, TypeImmunities, TypeRelation, NO_BOOSTS,
+    MoveFlags, MoveId, MoveTarget, Ohko, Stat, Type, TypeImmunities, TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{SideId, SlotRef, Status};
 use crate::volatile::Volatile;
 
-use super::battle::{Battle, DamageSource};
+use super::battle::{ActiveMoveRef, Battle, DamageSource};
 use super::order::{boosted_stat, modify};
 use super::support::{side_effect_of, type_boost_item};
 use super::TurnError;
@@ -61,6 +61,22 @@ pub(crate) fn run_move<const N: usize>(
     let pokemon = b.occupant(user).expect("the caller checked the user");
     let id = b.mon(pokemon).moves[move_index as usize].id;
     b.increment_move_actions(user);
+    // `setActiveMove`: set for the whole move, cleared when it ends.
+    b.active_move = Some(ActiveMoveRef { user, pokemon, id });
+    let result = run_move_inner(b, user, move_index, target_loc, will_act);
+    b.active_move = None;
+    result
+}
+
+fn run_move_inner<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    move_index: u8,
+    target_loc: i8,
+    will_act: bool,
+) -> Result<(), TurnError> {
+    let pokemon = b.occupant(user).expect("the caller checked the user");
+    let id = b.mon(pokemon).moves[move_index as usize].id;
     let target = get_target(b, user, id, target_loc);
     let mut mv = ActiveMove {
         id,
@@ -195,7 +211,7 @@ pub fn takes_target(n: usize, target: MoveTarget) -> bool {
         )
 }
 
-/// Showdown `getTarget`. The returned slot may hold a fainted Pokémon (Showdown returns
+/// Showdown `getTarget`. The returned slot may hold a fainted Pok챕mon (Showdown returns
 /// the fainted object; the move then fails).
 fn get_target<const N: usize>(
     b: &mut Battle<'_, N>,
@@ -325,8 +341,10 @@ fn redirect_target<const N: usize>(
     // (priority, speed, holder), in Showdown's handler collection order: the user's side
     // (`onAny`), then each foe's `onFoe` volatiles and `onAny` ability.
     let mut handlers: Vec<(i8, i32, SlotRef)> = Vec::new();
+    // `breakable`: a Mold Breaker move ignores these handlers too.
     let absorbs = |b: &Battle<'_, N>, s: SlotRef| {
-        b.alive(s).is_some() && absorbing_type(b.ability(s)) == Some(mv.data.move_type)
+        b.alive(s).is_some()
+            && absorbing_type(b.ability_unless_broken(s)) == Some(mv.data.move_type)
     };
     for s in Battle::<N>::slots(user.side) {
         if absorbs(b, s) {
@@ -430,13 +448,19 @@ fn use_move<const N: usize>(
 
     let result;
     let mut main_target = target;
-    if matches!(
+    let field_move = matches!(
         mv.data.target,
         MoveTarget::All | MoveTarget::FoeSide | MoveTarget::AllySide
-    ) {
+    );
+    let targets = if field_move {
+        Vec::new()
+    } else {
+        get_move_targets(b, user, mv, target)?
+    };
+    deduct_pressure_pp(b, user, mv, &targets);
+    if field_move {
         result = try_move_hit_field(b, user, mv, target)?;
     } else {
-        let targets = get_move_targets(b, user, mv, target)?;
         let Some(&last) = targets.last() else {
             return Ok(false);
         };
@@ -461,7 +485,52 @@ fn use_move<const N: usize>(
     Ok(true)
 }
 
-/// Showdown `tryMoveHit` → `moveHit` for field and side moves.
+/// The extra PP of Showdown `useMoveInner`: `runEvent('DeductPP')` for every Pok챕mon in
+/// `getMoveTargets`'s `pressureTargets`, then one `deductPP(move, extraPP)` on the used move
+/// (clamped at 0). Pressure (`onDeductPP`, not breakable) adds 1 unless the target is the user's
+/// ally. `pressureTargets` are the move's targets, except: every active Pok챕mon for `all` moves
+/// (only foes can count), nobody for `foeSide` moves, only allies for `allySide`, and all foes
+/// for `mustpressure` moves. `targets` are the resolved targets of a non-field move.
+fn deduct_pressure_pp<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    targets: &[SlotRef],
+) {
+    let foe = user.side.other();
+    let pressure_targets: Vec<SlotRef> = if mv.data.flags.contains(MoveFlags::MUSTPRESSURE) {
+        b.alive_slots(foe)
+    } else {
+        match mv.data.target {
+            MoveTarget::All => b.alive_slots(foe),
+            MoveTarget::FoeSide | MoveTarget::AllySide | MoveTarget::AllyTeam => Vec::new(),
+            _ => targets.to_vec(),
+        }
+    };
+    let extra = pressure_targets
+        .iter()
+        .filter(|t| t.side != user.side && b.ability(**t) == abilities::PRESSURE)
+        .count();
+    if extra == 0 {
+        return;
+    }
+    let pokemon = b.occupant(user).expect("checked");
+    let Some(index) = b.mon(pokemon).moves.iter().position(|m| m.id == mv.id) else {
+        return;
+    };
+    let old = b.mon(pokemon).moves[index].pp;
+    let new = old.saturating_sub(extra as u8);
+    if new != old {
+        b.apply(crate::instruction::Instruction::SetPp {
+            target: pokemon,
+            move_index: index as u8,
+            old,
+            new,
+        });
+    }
+}
+
+/// Showdown `tryMoveHit` ??`moveHit` for field and side moves.
 fn try_move_hit_field<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -525,12 +594,11 @@ fn try_spread_move_hit<const N: usize>(
         return Ok(false);
     }
 
-    // 1. TryHit: Psychic Terrain (priority 4), then Protect (3), then Lightning Rod /
-    //    Storm Drain (0: the holder absorbs the move and its SpA rises).
-    targets.retain(|&t| !blocked_by_try_hit(b, user, mv, t));
+    // 1. TryHit: Psychic Terrain (priority 4), Protect (3), the target's ability (0). Each
+    //    target's handlers only affect that target, so targets can be taken one at a time.
     let mut kept = Vec::with_capacity(targets.len());
-    for &t in &targets {
-        if !absorbed_by_ability(b, user, mv, t) {
+    for t in targets {
+        if try_hit(b, user, mv, t) {
             kept.push(t);
         }
     }
@@ -585,6 +653,33 @@ fn stall_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> bool {
     success
 }
 
+/// The TryHit handlers for one target; `false` = the move fails on it.
+fn try_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    if blocked_by_try_hit(b, user, mv, target) {
+        return false;
+    }
+    // Dry Skin `onTryHit` (breakable): another Pok챕mon's Water move heals the holder by 1/4
+    // of its max HP (nothing at full HP) and fails on it (`return null`).
+    if mv.data.move_type == Type::Water
+        && target != user
+        && b.ability_unless_broken(target) == abilities::DRY_SKIN
+    {
+        let max_hp = f64::from(b.slot_mon(target).expect("a target").max_hp);
+        b.heal(target, max_hp / 4.0);
+        return false;
+    }
+    // Lightning Rod / Storm Drain `onTryHit` (breakable): the holder absorbs the move.
+    if absorbed_by_ability(b, user, mv, target) {
+        return false;
+    }
+    true
+}
+
 fn blocked_by_try_hit<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
@@ -599,7 +694,12 @@ fn blocked_by_try_hit<const N: usize>(
     {
         return true;
     }
-    b.volatile(target, Volatile::Protect).active && mv.data.flags.contains(MoveFlags::PROTECT)
+    if b.volatile(target, Volatile::Protect).active && mv.data.flags.contains(MoveFlags::PROTECT) {
+        return true;
+    }
+    // Sturdy `onTryHit`: OHKO moves fail (breakable). OHKO moves are refused by `support`
+    // for now; this keeps the immunity when they are added.
+    mv.data.ohko != Ohko::No && b.ability_unless_broken(target) == abilities::STURDY
 }
 
 /// Lightning Rod / Storm Drain `onTryHit`: a move of the absorbed type aimed at the holder
@@ -611,7 +711,8 @@ fn absorbed_by_ability<const N: usize>(
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
-    if target == user || absorbing_type(b.ability(target)) != Some(mv.data.move_type) {
+    if target == user || absorbing_type(b.ability_unless_broken(target)) != Some(mv.data.move_type)
+    {
         return false;
     }
     let mut up = NO_BOOSTS;
@@ -702,7 +803,7 @@ fn hit_loop<const N: usize>(
             let amount = (f64::from(total) * f64::from(recoil.0) / f64::from(recoil.1))
                 .round()
                 .max(1.0);
-            b.damage(user, amount, DamageSource::Indirect);
+            b.damage(user, amount, DamageSource::Recoil);
         }
     }
     if !results.iter().any(|r| r.ok()) {
@@ -897,9 +998,11 @@ fn get_damage<const N: usize>(
         return Ok(Planned::NoDamage);
     }
 
-    // Critical hit: ratio 1..4 → 1/24, 1/8, 1/2, always.
+    // Critical hit: ratio 1..4 ??1/24, 1/8, 1/2, always. `CriticalHit` handlers: Battle Armor
+    // and Shell Armor (`onCriticalHit: false`, breakable). Showdown rolls first and then
+    // cancels; not rolling gives the same distribution.
     let crit_ratio = data.crit_ratio.min(4);
-    let can_crit = !defender.ability.data().cannot_be_crit;
+    let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit;
     let critical = can_crit
         && (data.will_crit
             || match crit_ratio {
@@ -910,8 +1013,12 @@ fn get_damage<const N: usize>(
                 _ => true,
             });
 
-    // BasePower handlers, by priority: type items (15), terrain (6), the move (0).
+    // BasePower handlers, by priority: the target's Dry Skin (`onSourceBasePower`, 17,
+    // breakable: Fire 1.25x), type items (15), terrain (6), the move (0).
     let mut power_mods = Vec::new();
+    if data.move_type == Type::Fire && b.ability_unless_broken(target) == abilities::DRY_SKIN {
+        power_mods.push(5120);
+    }
     if type_boost_item(attacker.item) == Some(data.move_type) {
         power_mods.push(4915);
     }
@@ -964,10 +1071,22 @@ fn get_damage<const N: usize>(
     if data.ignore_defensive || (ignore_positive_defensive && def_boost > 0) {
         def_boost = 0;
     }
-    let attack = boosted_stat(
+    let mut attack = boosted_stat(
         i32::from(attacker.stats[stat_index(attack_stat)]),
         atk_boost,
     );
+    // ModifyAtk / ModifySpA (by the category, not the stat used), chained then applied once:
+    // Solar Power (`onModifySpA`, priority 5) 1.5x in harsh sunlight.
+    let mut attack_mods = Vec::new();
+    if data.category == MoveCategory::Special
+        && attacker.ability == abilities::SOLAR_POWER
+        && b.weather() == Weather::Sun
+    {
+        attack_mods.push(MOD_ONE_POINT_FIVE);
+    }
+    if !attack_mods.is_empty() {
+        attack = modify(attack, chain_modifiers(&attack_mods, 0, u32::MAX));
+    }
     let mut defense = boosted_stat(
         i32::from(defender.stats[stat_index(defense_stat)]),
         def_boost,

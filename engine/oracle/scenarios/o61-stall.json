@@ -1,0 +1,23 @@
+{
+ "description": "Stall (-0.1 fractional priority): Sableye's Will-O-Wisp comes after the slower Snorlax's Crunch, which KOs the 1-HP Sableye first.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "o61-stall.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "o61-stall.p2.json",
+  "order": "12"
+ },
+ "patch": {
+  "p2": {
+   "Sableye": {
+    "hp": 1
+   }
+  }
+ },
+ "turn": {
+  "p1": "move crunch 1, move protect",
+  "p2": "move willowisp 1, move protect"
+ }
+}

@@ -1,0 +1,30 @@
+{
+ "description": "Rain: Dry Skin Toxicroak absorbs Water Gun (1/4) and takes Flamethrower at 1.25x base power; at the end of the turn Rain Dish heals 1/16 and Dry Skin 1/8.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "o51-rain.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "o51-rain.p2.json",
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Ludicolo": {
+    "hp": 100
+   },
+   "Toxicroak": {
+    "hp": 80
+   }
+  },
+  "field": {
+   "weather": "raindance",
+   "weatherDuration": 3
+  }
+ },
+ "turn": {
+  "p1": "move calmmind, move bulkup",
+  "p2": "move watergun 2, move flamethrower 2"
+ }
+}

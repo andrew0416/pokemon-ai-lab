@@ -1,0 +1,50 @@
+[
+ {
+  "species": "Blaziken",
+  "item": "",
+  "ability": "Speed Boost",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Bulk Up",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Hawlucha",
+  "item": "",
+  "ability": "Limber",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Ninjask",
+  "item": "",
+  "ability": "Speed Boost",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

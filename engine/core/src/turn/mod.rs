@@ -349,6 +349,8 @@ enum ActionKind {
     Move {
         index: u8,
         target: i8,
+        /// Showdown `action.fractionalPriority`, fixed when the action is queued.
+        fractional_tenths: i8,
     },
     Switch {
         party_index: u8,
@@ -368,13 +370,18 @@ struct Pending {
 }
 
 impl<const N: usize> Battle<'_, N> {
-    /// Showdown's sort key of a queued action: (order, priority, speed).
+    /// Showdown's sort key of a queued action: (order, priority in tenths including the
+    /// fractional priority, speed).
     fn action_key(&self, action: &Action) -> (u32, i32, i32) {
         let in_slot = self.alive(action.slot) == Some(action.pokemon);
         let (order, priority) = match action.kind {
             ActionKind::Switch { .. } => (ORDER_SWITCH, 0),
             ActionKind::Mega => (ORDER_MEGA, 0),
-            ActionKind::Move { index, .. } => {
+            ActionKind::Move {
+                index,
+                fractional_tenths,
+                ..
+            } => {
                 let id = self.mon(action.pokemon).moves[index as usize].id;
                 let priority = if in_slot {
                     self.move_priority(action.slot, id)
@@ -382,7 +389,7 @@ impl<const N: usize> Battle<'_, N> {
                     // A fainted Pokémon's action stays queued with its base priority.
                     i32::from(id.data().priority)
                 };
-                (ORDER_MOVE, priority)
+                (ORDER_MOVE, priority * 10 + i32::from(fractional_tenths))
             }
         };
         let speed = if in_slot {
@@ -426,7 +433,13 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
                             kind: ActionKind::Mega,
                         });
                     }
-                    ActionKind::Move { index, target }
+                    ActionKind::Move {
+                        index,
+                        target,
+                        fractional_tenths: order::fractional_priority_tenths(
+                            state.pokemon(pokemon).ability,
+                        ),
+                    }
                 }
                 SlotAction::Switch { party_index } => ActionKind::Switch { party_index },
             };
@@ -462,7 +475,7 @@ fn run_stage<const N: usize>(
         // `runAction` skips a Pokémon that is no longer active or has fainted.
         if b.alive(action.slot) == Some(action.pokemon) {
             match action.kind {
-                ActionKind::Move { index, target } => {
+                ActionKind::Move { index, target, .. } => {
                     let will_act = !queue.is_empty();
                     moves::run_move(b, action.slot, index, target, will_act)?;
                 }

@@ -1,0 +1,16 @@
+{
+ "description": "Crit immunity: Sunsteel Strike ignores Lapras's Shell Armor and can crit; High Horsepower cannot crit Battle Armor Kabutops.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "o53-shell-armor.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "o53-shell-armor.p2.json",
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move highhorsepower 2, move sunsteelstrike 1",
+  "p2": "move calmmind, move swordsdance"
+ }
+}
