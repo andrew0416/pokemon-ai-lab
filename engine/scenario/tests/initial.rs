@@ -219,8 +219,9 @@ fn state_without_a_canonical_form_is_an_error() {
     s.field[FieldEffect::Weather as usize] = sand(Effect::PERMANENT);
     assert!(unrepresentable(&s, meta).contains("duration"));
 
+    // VGC has a ruleset since O104; a singles format does not.
     let mut other = meta.clone();
-    other.format = "gen9championsvgc2026regmc".into();
+    other.format = "gen9championsbssregmc".into();
     assert!(matches!(
         canonical_json(&loaded.state, &other),
         Err(CanonicalError::UnknownFormat(_))

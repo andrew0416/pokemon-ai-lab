@@ -1,0 +1,26 @@
+{
+ "description": "O104 VGC (gen9championsvgc2026regmc): p1 is the library team sand-owen (teams/library/doubles/m-c/sand-owen/team.json, copied), team preview 5,4,2,6 brings Tyranitar, Gholdengo, Indeedee, Excadrill; p2 brings 4 of 6 with the partial order 3,1 (filled to Hariyama, Kangaskhan, Snorlax, Machamp). Tyranitar's Sand Stream starts sand; in the turn Gholdengo switches to Indeedee (Psychic Surge), Tyranitar Mega Evolves and Low Kicks Hariyama.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "team": "o104-vgc-sand-owen.p1.json",
+  "order": "5,4,2,6"
+ },
+ "p2": {
+  "team": [
+   {"species": "Kangaskhan", "item": "", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Bulk Up", "Protect"], "level": 50},
+   {"species": "Machamp", "item": "", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Bulk Up", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "31"
+ },
+ "turn": {"p1": "move lowkick 1 mega, switch 3", "p2": "move bulkup, move harden"}
+}

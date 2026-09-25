@@ -43,10 +43,13 @@ function readJSON(file) {
 	return JSON.parse(fs.readFileSync(file, 'utf8').replace(/^﻿/, ''));
 }
 
-function loadTeam(spec, baseDir) {
+// `adjustLevel`: the format's `Adjust Level` rule (VGC: 50). The team validator, which the
+// oracle does not run, sets every valid set to that level; the battle itself does not.
+function loadTeam(spec, baseDir, adjustLevel = null) {
 	const team = typeof spec === 'string' ? readJSON(path.resolve(baseDir, spec)) : spec;
 	const names = new Set();
 	for (const set of team) {
+		if (adjustLevel) set.level = adjustLevel;
 		set.name = set.name || set.species;
 		if (names.has(set.name)) throw new Error(`duplicate name ${set.name}: canonical states key Pokémon by name`);
 		names.add(set.name);
@@ -115,8 +118,9 @@ function buildSnapshot(scenario, baseDir) {
 		seed: scenario.seed || 'sodium,00000000000000000000000000000000',
 		strictChoices: true,
 	});
-	battle.setPlayer('p1', {name: 'p1', team: Teams.pack(loadTeam(scenario.p1.team, baseDir))});
-	battle.setPlayer('p2', {name: 'p2', team: Teams.pack(loadTeam(scenario.p2.team, baseDir))});
+	const adjustLevel = battle.ruleTable.adjustLevel;
+	battle.setPlayer('p1', {name: 'p1', team: Teams.pack(loadTeam(scenario.p1.team, baseDir, adjustLevel))});
+	battle.setPlayer('p2', {name: 'p2', team: Teams.pack(loadTeam(scenario.p2.team, baseDir, adjustLevel))});
 	if (battle.requestState === 'teampreview') {
 		battle.makeChoices(`team ${scenario.p1.order || '123456'}`, `team ${scenario.p2.order || '123456'}`);
 	}

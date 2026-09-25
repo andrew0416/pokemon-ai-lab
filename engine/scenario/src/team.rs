@@ -135,6 +135,21 @@ fn nature_from_name(name: &str) -> Option<Nature> {
 /// member: positions split on commas (or per character), cut to the team size, missing
 /// members appended in team order. Returns 0-based team indices in party order.
 pub fn preview_order(order: Option<&str>, team_len: usize) -> Result<Vec<usize>, String> {
+    picked_order(order, team_len, team_len)
+}
+
+/// Team preview as Showdown's `Side.chooseTeam` does it when the format keeps `picked`
+/// members (`pickedTeamSize`, at most the team size): positions split on commas (or per
+/// character), cut to `picked` (entries past the cut are not even checked), then, while
+/// fewer, the first members in team order among positions `0..picked` that are not chosen yet
+/// (`for (let i = 0; i < pickedTeamSize; i++) if (!positions.includes(i)) positions.push(i)`).
+/// Returns the 0-based team indices of the picked members in party order.
+pub fn picked_order(
+    order: Option<&str>,
+    team_len: usize,
+    picked: usize,
+) -> Result<Vec<usize>, String> {
+    let picked = picked.min(team_len);
     let order = order.map(str::trim).unwrap_or("");
     if order.starts_with('[') {
         return Err("bracketed team preview choices are not supported".into());
@@ -146,7 +161,7 @@ pub fn preview_order(order: Option<&str>, team_len: usize) -> Result<Vec<usize>,
         } else {
             order.chars().map(String::from).collect()
         };
-        for part in parts.into_iter().take(team_len) {
+        for part in parts.into_iter().take(picked) {
             let pos: usize = part
                 .trim()
                 .parse()
@@ -160,7 +175,10 @@ pub fn preview_order(order: Option<&str>, team_len: usize) -> Result<Vec<usize>,
             positions.push(pos - 1);
         }
     }
-    for i in 0..team_len {
+    for i in 0..picked {
+        if positions.len() >= picked {
+            break;
+        }
         if !positions.contains(&i) {
             positions.push(i);
         }
@@ -168,11 +186,24 @@ pub fn preview_order(order: Option<&str>, team_len: usize) -> Result<Vec<usize>,
     Ok(positions)
 }
 
-/// Builds a side: party in team preview order, the first `N` members active.
+/// Builds a side that brings every member: party in team preview order, the first `N`
+/// members active.
 pub fn build_side<const N: usize>(
     side: SideId,
     team: &[TeamSet],
     order: Option<&str>,
+) -> Result<(Side<N>, SideMeta), LoadError> {
+    build_picked_side(side, team, order, PARTY_SIZE)
+}
+
+/// Builds a side from team preview: every set is checked, the `picked` members the preview
+/// keeps ([`picked_order`]; Showdown drops the others from `side.pokemon`) form the party in
+/// that order, the first `N` active.
+pub fn build_picked_side<const N: usize>(
+    side: SideId,
+    team: &[TeamSet],
+    order: Option<&str>,
+    picked: usize,
 ) -> Result<(Side<N>, SideMeta), LoadError> {
     let team_err = |problem| LoadError::Team { side, problem };
     if team.is_empty() {
@@ -181,7 +212,7 @@ pub fn build_side<const N: usize>(
     if team.len() > PARTY_SIZE {
         return Err(team_err(TeamProblem::TooLarge(team.len())));
     }
-    let positions = preview_order(order, team.len()).map_err(|reason| {
+    let positions = picked_order(order, team.len(), picked).map_err(|reason| {
         team_err(TeamProblem::Order {
             order: order.unwrap_or("").to_owned(),
             reason,

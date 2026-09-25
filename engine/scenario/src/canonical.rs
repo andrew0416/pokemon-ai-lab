@@ -76,7 +76,7 @@ fn unrepresentable(what: String) -> CanonicalError {
 
 /// The gimmick rules of a scenario format (they decide `canMega`).
 pub fn format_ruleset(format: &str) -> Result<Ruleset, CanonicalError> {
-    if format == crate::DOUBLES_FORMAT {
+    if format == crate::DOUBLES_FORMAT || format == crate::VGC_FORMAT {
         // The Champions mod's `canMegaEvo` applies; no other gimmick exists there.
         Ok(Ruleset::CHAMPIONS_MC)
     } else {
