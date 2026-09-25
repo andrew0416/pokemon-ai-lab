@@ -1,0 +1,26 @@
+{
+ "description": "O4 Sun: Weather Ball becomes Fire with 100 base power. Charizard (Fire STAB, sun 1.5x) into Snorlax; Venusaur (no STAB) into Clefable. Snorlax Swords Dances, Clefable Calm Minds.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Charizard", "item": "", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Weather Ball", "Protect"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Venusaur", "item": "", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Weather Ball", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "field": {"weather": "sunnyday", "weatherDuration": 4}
+ },
+ "turn": {"p1": "move weatherball 1, move calmmind", "p2": "move swordsdance, move weatherball 2"}
+}

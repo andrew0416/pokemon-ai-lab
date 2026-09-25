@@ -37,6 +37,11 @@ struct ActiveMove {
     accuracy: Option<u8>,
     /// Target type after ModifyMove (Showdown `move.target`; Expanding Force widens it).
     target: MoveTarget,
+    /// Type after ModifyType (Showdown `move.type`; Weather Ball, Terrain Pulse). Every rule
+    /// that reads the type of the move being used reads this, not `data.move_type`.
+    move_type: Type,
+    /// Base power after ModifyMove (Showdown `move.basePower`), before `basePowerCallback`.
+    base_power: i32,
 }
 
 /// Per-target result of a hit (Showdown's `damage[i]`: a number, `true`, or `false`).
@@ -90,6 +95,8 @@ fn run_move_inner<const N: usize>(
         spread: false,
         accuracy: id.data().accuracy,
         target: id.data().target,
+        move_type: id.data().move_type,
+        base_power: i32::from(id.data().base_power),
     };
 
     if !before_move(b, user, &mv) {
@@ -348,8 +355,7 @@ fn redirect_target<const N: usize>(
     let mut handlers: Vec<(i8, i32, SlotRef)> = Vec::new();
     // `breakable`: a Mold Breaker move ignores these handlers too.
     let absorbs = |b: &Battle<'_, N>, s: SlotRef| {
-        b.alive(s).is_some()
-            && absorbing_type(b.ability_unless_broken(s)) == Some(mv.data.move_type)
+        b.alive(s).is_some() && absorbing_type(b.ability_unless_broken(s)) == Some(mv.move_type)
     };
     for s in Battle::<N>::slots(user.side) {
         if absorbs(b, s) {
@@ -442,8 +448,9 @@ fn use_move<const N: usize>(
     } else {
         target
     };
-    // ModifyMove: the move's own handler; a changed target type picks a new target
-    // (`getRandomTarget`); then the user's status.
+    // ModifyType and ModifyMove: the move's own handlers; a changed target type picks a new
+    // target (`getRandomTarget`); then the user's status.
+    handlers::on_modify_type(b, user, mv)?;
     handlers::on_modify_move(b, user, target, mv)?;
     if mv.target != base_target {
         target = get_random_target(b, user, mv.target);
@@ -675,7 +682,7 @@ fn try_hit<const N: usize>(
     }
     // Dry Skin `onTryHit` (breakable): another Pok챕mon's Water move heals the holder by 1/4
     // of its max HP (nothing at full HP) and fails on it (`return null`).
-    if mv.data.move_type == Type::Water
+    if mv.move_type == Type::Water
         && target != user
         && b.ability_unless_broken(target) == abilities::DRY_SKIN
     {
@@ -721,8 +728,7 @@ fn absorbed_by_ability<const N: usize>(
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
-    if target == user || absorbing_type(b.ability_unless_broken(target)) != Some(mv.data.move_type)
-    {
+    if target == user || absorbing_type(b.ability_unless_broken(target)) != Some(mv.move_type) {
         return false;
     }
     let mut up = NO_BOOSTS;
@@ -744,7 +750,7 @@ fn absorbing_type(ability: AbilityId) -> Option<Type> {
 
 /// Showdown `runImmunity(move)`: type chart immunity and Ground vs ungrounded.
 fn type_immune<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove, target: SlotRef) -> bool {
-    let ty = mv.data.move_type;
+    let ty = mv.move_type;
     match mv.data.ignore_immunity {
         IgnoreImmunity::All => return false,
         IgnoreImmunity::Type(t) if t == ty => return false,
@@ -955,7 +961,7 @@ fn spread_move_hit<const N: usize>(
     // DamagingHit: a damaging Fire move thaws a frozen target.
     for (i, &t) in targets.iter().enumerate() {
         if let Hit::Damage(_) = results[i] {
-            if data.move_type == Type::Fire && data.category != MoveCategory::Status {
+            if mv.move_type == Type::Fire && data.category != MoveCategory::Status {
                 if let Some(p) = b.alive(t) {
                     if b.mon(p).status == Status::Freeze {
                         b.cure_status(p);
@@ -1001,7 +1007,7 @@ fn get_damage<const N: usize>(
         Some(FixedDamage::Hp(hp)) => return Ok(Planned::Damage(i32::from(hp))),
         None => {}
     }
-    let mut base_power = i32::from(data.base_power);
+    let mut base_power = mv.base_power;
     if mv.id == moves::LOW_KICK || mv.id == moves::GRASS_KNOT {
         base_power = weight_power(defender.species.data().weight_hg);
     }
@@ -1027,8 +1033,9 @@ fn get_damage<const N: usize>(
 
     // BasePower handlers: abilities (Technician 30 ... Punk Rock 7), type items (15),
     // terrain (6), the move (0).
-    let mut power_mods = ability_events::base_power_handlers(b, user, target, data, base_power);
-    if type_boost_item(attacker.item) == Some(data.move_type) {
+    let mut power_mods =
+        ability_events::base_power_handlers(b, user, target, data, mv.move_type, base_power);
+    if type_boost_item(attacker.item) == Some(mv.move_type) {
         power_mods.push(Handler::of(b, user, 15, SUB_ITEM, MOD_ONE_POINT_TWO));
     }
     let attacker_grounded = b.is_grounded(user);
@@ -1039,19 +1046,19 @@ fn get_damage<const N: usize>(
                 && defender_grounded
             {
                 MOD_HALF
-            } else if data.move_type == Type::Grass && attacker_grounded {
+            } else if mv.move_type == Type::Grass && attacker_grounded {
                 MOD_ONE_POINT_THREE
             } else {
                 MOD_ONE
             }
         }
-        Terrain::Electric if data.move_type == Type::Electric && attacker_grounded => {
+        Terrain::Electric if mv.move_type == Type::Electric && attacker_grounded => {
             MOD_ONE_POINT_THREE
         }
-        Terrain::Psychic if data.move_type == Type::Psychic && attacker_grounded => {
+        Terrain::Psychic if mv.move_type == Type::Psychic && attacker_grounded => {
             MOD_ONE_POINT_THREE
         }
-        Terrain::Misty if data.move_type == Type::Dragon && defender_grounded => MOD_HALF,
+        Terrain::Misty if mv.move_type == Type::Dragon && defender_grounded => MOD_HALF,
         _ => MOD_ONE,
     };
     power_mods.push(Handler::global(6, SUB_FIELD_CONDITION, terrain_mod));
@@ -1087,7 +1094,7 @@ fn get_damage<const N: usize>(
     );
     // ModifyAtk (physical) / ModifySpA (special), whatever stat the move attacks with.
     let attack = ability_events::attack_direct(attacker.ability, data, attack);
-    let attack_mods = ability_events::attack_handlers(b, user, target, data);
+    let attack_mods = ability_events::attack_handlers(b, user, target, data, mv.move_type);
     let attack = modify(attack, ability_events::chain(b, attack_mods));
     let mut defense = boosted_stat(
         i32::from(defender.stats[stat_index(defense_stat)]),
@@ -1108,12 +1115,12 @@ fn get_damage<const N: usize>(
     let defense = modify(defense, ability_events::chain(b, defense_mods));
 
     // modifyDamage inputs.
-    let weather_modifier = match (weather, data.move_type) {
+    let weather_modifier = match (weather, mv.move_type) {
         (Weather::Sun, Type::Fire) | (Weather::Rain, Type::Water) => MOD_ONE_POINT_FIVE,
         (Weather::Sun, Type::Water) | (Weather::Rain, Type::Fire) => MOD_HALF,
         _ => MOD_ONE,
     };
-    let stab = data.force_stab || attacker.types.contains(&data.move_type);
+    let stab = data.force_stab || attacker.types.contains(&mv.move_type);
     let stab_modifier = ability_events::modify_stab(attacker.ability, stab);
     // runEffectiveness: per defending type, the chart then the move's onEffectiveness.
     let type_mod: i32 = defender
@@ -1121,7 +1128,7 @@ fn get_damage<const N: usize>(
         .iter()
         .filter(|&&t| t != Type::None)
         .map(|&t| {
-            let chart = handlers::type_effectiveness(data.move_type, t);
+            let chart = handlers::type_effectiveness(mv.move_type, t);
             handlers::on_effectiveness(mv.id, t, chart)
         })
         .sum::<i32>()
@@ -1133,7 +1140,8 @@ fn get_damage<const N: usize>(
     };
     // ModifyDamage (all priority 0, so in Speed order): Life Orb, screens (side conditions,
     // Speed 0), the target's abilities.
-    let mut final_mods = ability_events::modify_damage_handlers(b, user, target, data, type_mod);
+    let mut final_mods =
+        ability_events::modify_damage_handlers(b, user, target, data, mv.move_type, type_mod);
     if attacker.item == items::LIFE_ORB {
         final_mods.push(Handler::of(b, user, 0, SUB_ITEM, 5324));
     }

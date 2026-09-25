@@ -34,6 +34,39 @@ fn effective_weather<const N: usize>(
     Ok(if hidden { Weather::None } else { weather })
 }
 
+/// The move's `onModifyType` (`useMoveInner`, right before its `onModifyMove`).
+pub(super) fn on_modify_type<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &mut ActiveMove,
+) -> Result<(), TurnError> {
+    match mv.id {
+        // Weather Ball: `switch (pokemon.effectiveWeather())`: Fire in sun, Water in rain, Rock
+        // in sandstorm, Ice in hail and snow.
+        moves::WEATHER_BALL => {
+            mv.move_type = match effective_weather(b, user, user)? {
+                Weather::Sun | Weather::HarshSun => Type::Fire,
+                Weather::Rain | Weather::HeavyRain => Type::Water,
+                Weather::Sand => Type::Rock,
+                Weather::Snow => Type::Ice,
+                _ => return Ok(()),
+            };
+        }
+        // Terrain Pulse: `if (!pokemon.isGrounded()) return;` then the type of `field.terrain`.
+        moves::TERRAIN_PULSE if b.is_grounded(user) => {
+            mv.move_type = match b.terrain() {
+                Terrain::Electric => Type::Electric,
+                Terrain::Grassy => Type::Grass,
+                Terrain::Misty => Type::Fairy,
+                Terrain::Psychic => Type::Psychic,
+                Terrain::None => return Ok(()),
+            };
+        }
+        _ => {}
+    }
+    Ok(())
+}
+
 /// The move's `onModifyMove` (`useMoveInner`, after the target is chosen and before
 /// `getMoveTargets`). `target` is the chosen target.
 pub(super) fn on_modify_move<const N: usize>(
@@ -43,6 +76,27 @@ pub(super) fn on_modify_move<const N: usize>(
     mv: &mut ActiveMove,
 ) -> Result<(), TurnError> {
     match mv.id {
+        // Weather Ball: `move.basePower *= 2` in sun, rain, sandstorm, hail and snow (the
+        // user's effective weather).
+        moves::WEATHER_BALL => {
+            if matches!(
+                effective_weather(b, user, user)?,
+                Weather::Sun
+                    | Weather::HarshSun
+                    | Weather::Rain
+                    | Weather::HeavyRain
+                    | Weather::Sand
+                    | Weather::Snow
+            ) {
+                mv.base_power *= 2;
+            }
+        }
+        // Terrain Pulse: `if (this.field.terrain && pokemon.isGrounded()) move.basePower *= 2;`
+        moves::TERRAIN_PULSE => {
+            if b.terrain() != Terrain::None && b.is_grounded(user) {
+                mv.base_power *= 2;
+            }
+        }
         // Expanding Force: `if (this.field.isTerrain('psychicterrain') && source.isGrounded())
         // move.target = 'allAdjacentFoes';` (the caller then re-picks the target).
         moves::EXPANDING_FORCE => {
