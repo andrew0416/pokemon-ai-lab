@@ -1,0 +1,23 @@
+{
+ "description": "O48 boosting absorbers, all before accuracy and type immunity: Thunder Wave into Motor Drive Electivire (Spe +1), Spore into Sap Sipper Azumarill (Atk +1), Fire Blast into Well-Baked Body Dachsbun (Def +2), Will-O-Wisp into Flash Fire Tauros (flashfire volatile).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Electivire", "item": "", "ability": "Motor Drive", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Spore", "Protect"], "level": 50},
+   {"species": "Tauros", "item": "", "ability": "Flash Fire", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32, "spd": 2}, "moves": ["Fire Blast", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Dachsbun", "item": "", "ability": "Well-Baked Body", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Thunder Wave", "Protect"], "level": 50},
+   {"species": "Azumarill", "item": "", "ability": "Sap Sipper", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Will-O-Wisp", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move spore 2, move fireblast 1", "p2": "move thunderwave 1, move willowisp 2"}
+}

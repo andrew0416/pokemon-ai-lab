@@ -1,0 +1,26 @@
+{
+ "description": "O48 Wonder Guard and Good as Gold: Metagross's neutral Iron Head fails on Wonder Guard Spiritomb (no flinch roll), Jolteon's Thunder Wave fails on Good as Gold Gholdengo, and Gholdengo's super-effective Draining Kiss hits its Wonder Guard ally (and drains).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gholdengo", "item": "", "ability": "Good as Gold", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Draining Kiss", "Protect"], "level": 50},
+   {"species": "Spiritomb", "item": "", "ability": "Wonder Guard", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Metagross", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Iron Head", "Protect"], "level": 50},
+   {"species": "Jolteon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32, "spe": 2}, "moves": ["Thunder Wave", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Gholdengo": {"hp": 120}}
+ },
+ "turn": {"p1": "move drainingkiss -2, move calmmind", "p2": "move ironhead 2, move thunderwave 1"}
+}

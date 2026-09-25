@@ -1,0 +1,27 @@
+{
+ "description": "O48 healing absorbers: Thunderbolt into full-HP Volt Absorb Jolteon (blocked, no heal), Hydro Pump into damaged Water Absorb Lanturn (heals 1/4, no accuracy roll), Earth Power into damaged Earth Eater Corviknight (TryHit heals it before its Flying immunity).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Lanturn", "item": "", "ability": "Water Absorb", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32, "spe": 2}, "moves": ["Thunderbolt", "Protect"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Earth Power", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Jolteon", "item": "", "ability": "Volt Absorb", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Hydro Pump", "Protect"], "level": 50},
+   {"species": "Corviknight", "item": "", "ability": "Earth Eater", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Iron Defense", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Lanturn": {"hp": 100}},
+  "p2": {"Corviknight": {"hp": 90}}
+ },
+ "turn": {"p1": "move thunderbolt 1, move earthpower 2", "p2": "move hydropump 1, move irondefense"}
+}

@@ -37,6 +37,9 @@ pub(crate) struct ActiveMoveRef {
     pub user: SlotRef,
     pub pokemon: PokemonRef,
     pub id: MoveId,
+    /// `activeMove.ignoreAbility`: the move's data flag (Sunsteel Strike), set by the user's
+    /// Mold Breaker / Teravolt / Turboblaze in ModifyMove.
+    pub ignore_ability: bool,
 }
 
 pub(crate) struct Battle<'a, const N: usize> {
@@ -110,13 +113,14 @@ impl<'a, const N: usize> Battle<'a, N> {
     }
 
     /// Showdown `suppressingAbility(target)`: the move in progress ignores abilities
-    /// (`ignoreAbility`, e.g. Sunsteel Strike), its user is still active, and `target` is not
-    /// the user (Gen 8+) and holds no Ability Shield.
+    /// (`ignoreAbility`: Sunsteel Strike, or any move of a Mold Breaker user after ModifyMove),
+    /// its user is still active, and `target` is not the user (Gen 8+) and holds no Ability
+    /// Shield.
     pub fn suppressing_ability(&self, target: SlotRef) -> bool {
         let Some(active) = self.active_move else {
             return false;
         };
-        active.id.data().ignore_ability
+        active.ignore_ability
             && self.occupant(active.user) == Some(active.pokemon)
             && active.user != target
             && self.item(target) != items::ABILITY_SHIELD
@@ -142,12 +146,39 @@ impl<'a, const N: usize> Battle<'a, N> {
         self.slot_mon(slot).is_some_and(|m| m.types.contains(&ty))
     }
 
+    /// The weather on the field (`field.weather`), whether or not it is suppressed: what
+    /// setting a weather, its duration and its residual countdown see. Effects of the weather
+    /// read [`Battle::effective_weather`].
     pub fn weather(&self) -> Weather {
         let e = self.state.field[FieldEffect::Weather as usize];
         if !e.is_active() {
             return Weather::None;
         }
         weather_from(e.value)
+    }
+
+    /// Showdown `field.effectiveWeather()`: no weather while it is suppressed
+    /// ([`Battle::weather_suppressed`]), otherwise the field's weather. Every effect of a weather
+    /// reads this (Showdown's `isWeather` and `effectiveWeather`, and the weather condition's own
+    /// handlers, which `runEvent` skips while the weather is suppressed).
+    pub fn effective_weather(&self) -> Weather {
+        if self.weather_suppressed() {
+            Weather::None
+        } else {
+            self.weather()
+        }
+    }
+
+    /// Showdown `field.suppressingWeather()`: an active Pokémon not processed as fainted (it may
+    /// be at 0 HP) has an ability with `suppressWeather` (Air Lock, Cloud Nine). Its
+    /// `abilityState.ending` flag only matters inside its own `End` event, whose
+    /// `WeatherChange` has no implemented handler; Gastro Acid and Neutralizing Gas are not
+    /// supported.
+    pub fn weather_suppressed(&self) -> bool {
+        State::<N>::slot_refs().any(|slot| {
+            self.slot_mon(slot)
+                .is_some_and(|mon| mon.ability.data().suppress_weather)
+        })
     }
 
     pub fn terrain(&self) -> Terrain {
@@ -182,24 +213,37 @@ impl<'a, const N: usize> Battle<'a, N> {
         self.state.slot(slot).volatiles.get(volatile)
     }
 
+    /// Showdown `dex.getImmunity(status, pokemon)`: the immunity the Pokémon's types give,
+    /// without `Immunity` handlers (the powder and Prankster checks of `hitStepTryImmunity`).
+    pub fn natural_immune(&self, slot: SlotRef, immunity: TypeImmunities) -> bool {
+        self.slot_mon(slot)
+            .is_none_or(|mon| mon.types.iter().any(|t| t.immunities().contains(immunity)))
+    }
+
     /// Showdown `dex.getImmunity(status, pokemon)` plus the supported `Immunity` handlers
     /// (`runStatusImmunity`).
     pub fn status_immune(&self, slot: SlotRef, immunity: TypeImmunities) -> bool {
         let Some(mon) = self.slot_mon(slot) else {
             return true;
         };
-        if mon.types.iter().any(|t| t.immunities().contains(immunity)) {
+        if self.natural_immune(slot, immunity) {
             return true;
         }
         // Immunity handlers; each returns false for one immunity id, so order is irrelevant.
+        // Overcoat (breakable): `if (type === 'sandstorm' || type === 'hail' || type ===
+        // 'powder') return false;` (hail is not a supported weather).
+        let overcoat = self.ability_unless_broken(slot) == abilities::OVERCOAT;
         if immunity == TypeImmunities::SANDSTORM {
             // Sand Rush: `onImmunity(type) { if (type === 'sandstorm') return false; }`.
-            return mon.ability == abilities::SAND_RUSH;
+            return mon.ability == abilities::SAND_RUSH || overcoat;
+        }
+        if immunity == TypeImmunities::POWDER {
+            return overcoat;
         }
         if immunity == TypeImmunities::FRZ {
             // Harsh sunlight (`sunnyday.onImmunity`, hidden by Utility Umbrella) and Magma
             // Armor (breakable).
-            return (matches!(self.weather(), Weather::Sun | Weather::HarshSun)
+            return (matches!(self.effective_weather(), Weather::Sun | Weather::HarshSun)
                 && mon.item != items::UTILITY_UMBRELLA)
                 || self.ability_unless_broken(slot) == abilities::MAGMA_ARMOR;
         }
@@ -394,10 +438,28 @@ impl<'a, const N: usize> Battle<'a, N> {
 
     // ---- status --------------------------------------------------------------------------
 
-    /// Showdown `trySetStatus` → `setStatus` for the supported handlers: fails on a fainted
-    /// target, an existing status, status immunity (`runStatusImmunity`), and the `SetStatus`
-    /// handlers (see [`Battle::set_status_blocked`]).
+    /// Showdown `trySetStatus` → `setStatus` for a status inflicted by the move in progress:
+    /// its user is the status's source (moves pass `source` explicitly), none outside a move.
+    /// Other sources (a contact ability's holder, the holder itself for Toxic / Flame Orb) must
+    /// use [`Battle::try_set_status_from`].
     pub fn try_set_status(&mut self, target: SlotRef, status: Status) -> bool {
+        let source = self
+            .active_move
+            .filter(|m| self.occupant(m.user) == Some(m.pokemon))
+            .map(|m| m.user);
+        self.try_set_status_from(target, status, source)
+    }
+
+    /// Showdown `trySetStatus(status, source)` → `setStatus` for the supported handlers: fails
+    /// on a fainted target, an existing status, status immunity (`runStatusImmunity`), and the
+    /// `SetStatus` handlers (see [`Battle::set_status_blocked`]); a status that is set runs the
+    /// `AfterSetStatus` handlers ([`Battle::after_set_status`]).
+    pub fn try_set_status_from(
+        &mut self,
+        target: SlotRef,
+        status: Status,
+        source: Option<SlotRef>,
+    ) -> bool {
         let Some(pokemon) = self.alive(target) else {
             return false;
         };
@@ -418,7 +480,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         if self.set_status_blocked(target, status) {
             return false;
         }
-        if super::abilities::blocks_status(self.mon(pokemon).ability, status) {
+        if super::abilities::blocks_status(self.ability_unless_broken(target), status) {
             return false;
         }
         let turns = match status {
@@ -440,9 +502,28 @@ impl<'a, const N: usize> Battle<'a, N> {
             new: status,
         });
         self.set_status_turns(pokemon, turns);
-        // AfterSetStatus: Lum Berry.
+        self.after_set_status(target, status, source);
+        // Lum Berry's `onAfterSetStatus` (priority -1: after Synchronize).
         super::update::after_set_status(self, target);
         true
+    }
+
+    /// `runEvent('AfterSetStatus', target, source, effect, status)`. The only implemented
+    /// handler is Synchronize on the target (not breakable, not modded in Champions): a burn,
+    /// paralysis or (bad) poison from another Pokémon is passed back to it
+    /// (`source.trySetStatus(status, target)`), which fails if the source already has a status
+    /// or is immune. Toxic Spikes (excluded by Synchronize) is not supported.
+    fn after_set_status(&mut self, target: SlotRef, status: Status, source: Option<SlotRef>) {
+        let Some(source) = source else {
+            return;
+        };
+        if source == target || self.ability(target) != abilities::SYNCHRONIZE {
+            return;
+        }
+        if matches!(status, Status::Sleep | Status::Freeze) {
+            return;
+        }
+        self.try_set_status_from(source, status, Some(target));
     }
 
     /// Showdown `runEvent('SetStatus')` for a status set on `target` by another Pokémon's move.
@@ -470,7 +551,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             a if a == abilities::LIMBER => status == Status::Paralyze,
             a if a == abilities::COMATOSE || a == abilities::PURIFYING_SALT => true,
             // `target.effectiveWeather()`: Utility Umbrella is not supported.
-            a if a == abilities::LEAF_GUARD => self.weather() == Weather::Sun,
+            a if a == abilities::LEAF_GUARD => self.effective_weather() == Weather::Sun,
             _ => false,
         };
         if blocked_by_own {
@@ -495,12 +576,13 @@ impl<'a, const N: usize> Battle<'a, N> {
         false
     }
 
-    /// Showdown `runEvent('TryAddVolatile')` for a new volatile on `target`: the ability
-    /// handlers of Insomnia, Vital Spirit, Purifying Salt and Leaf Guard (in sun) on the
-    /// target block Yawn; Sweet Veil (Yawn) and Aroma Veil (Attract, Disable, Encore, Heal
-    /// Block, Taunt, Torment) block for the whole side. None of those volatiles is
-    /// representable yet, so this only guards their future implementation. The terrains'
-    /// `onTryAddVolatile` (Yawn, confusion) belong with those volatiles too.
+    /// Showdown `runEvent('TryAddVolatile')` for a new volatile on `target`: Inner Focus on the
+    /// target blocks flinch; the ability handlers of Insomnia, Vital Spirit, Purifying Salt and
+    /// Leaf Guard (in sun) on the target block Yawn; Sweet Veil (Yawn) and Aroma Veil (Attract,
+    /// Disable, Encore, Heal Block, Taunt, Torment) block for the whole side. Apart from flinch
+    /// none of those volatiles is representable yet, so this only guards their future
+    /// implementation. The terrains' `onTryAddVolatile` (Yawn, confusion) belong with those
+    /// volatiles too. Every handler only returns `null`, so their order is irrelevant.
     pub fn add_volatile_blocked(&self, target: SlotRef, volatile: Volatile) -> bool {
         let condition = volatile.condition();
         let yawn = condition == conditions::YAWN;
@@ -518,7 +600,9 @@ impl<'a, const N: usize> Battle<'a, N> {
             {
                 yawn
             }
-            a if a == abilities::LEAF_GUARD => yawn && self.weather() == Weather::Sun,
+            a if a == abilities::LEAF_GUARD => yawn && self.effective_weather() == Weather::Sun,
+            // Inner Focus: `if (status.id === 'flinch') return null;`
+            a if a == abilities::INNER_FOCUS => condition == conditions::FLINCH,
             _ => false,
         };
         if blocked_by_own {
@@ -748,6 +832,12 @@ impl<'a, const N: usize> Battle<'a, N> {
                 Some(target),
                 BoostEffect::Ability(abilities::GUARD_DOG),
             );
+        }
+        // Inner Focus (breakable): `if (effect.name === 'Intimidate' && boost.atk) delete boost.atk`.
+        if ability == abilities::INNER_FOCUS
+            && effect == BoostEffect::Ability(abilities::INTIMIDATE)
+        {
+            boost[0] = 0;
         }
         // `if (source && target === source) return;` — no source counts as "from another".
         let blocks_drops = source.is_none_or(|s| s != target);

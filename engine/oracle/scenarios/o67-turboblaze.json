@@ -1,0 +1,23 @@
+{
+ "description": "O67 Turboblaze Reshiram's Quick Attack is not stopped by Farigiraf's Armor Tail (onFoeTryMove ignored); Mold Breaker Haxorus's Will-O-Wisp burns Purifying Salt Garganacl (onSetStatus ignored; no onUpdate cure).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Reshiram", "item": "", "ability": "Turboblaze", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Quick Attack", "Protect"], "level": 50},
+   {"species": "Haxorus", "item": "", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Will-O-Wisp", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garganacl", "item": "", "ability": "Purifying Salt", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50},
+   {"species": "Farigiraf", "item": "", "ability": "Armor Tail", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move quickattack 1, move willowisp 1", "p2": "move calmmind, move calmmind"}
+}

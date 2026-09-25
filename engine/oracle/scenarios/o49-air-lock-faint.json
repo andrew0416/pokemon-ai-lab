@@ -1,0 +1,28 @@
+{
+ "description": "O49 Air Lock ends when its holder faints: Weavile's Ice Shard KOs Air Lock Cofagrigus (1 HP) first; from then on the sand is effective, so Sand Rush Lycanroc outspeeds Gardevoir and Shore Up heals 2/3 (capped) before Gardevoir's Draining Kiss hits it with the sandstorm SpD boost, and sand damages Weavile and Gardevoir at the end of the turn.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Cofagrigus", "item": "", "ability": "Air Lock", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Iron Defense", "Protect"], "level": 50},
+   {"species": "Gardevoir", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Draining Kiss", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Ice Shard", "Protect"], "level": 50},
+   {"species": "Lycanroc", "item": "", "ability": "Sand Rush", "nature": "Serious",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Shore Up", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Cofagrigus": {"hp": 1}},
+  "p2": {"Lycanroc": {"hp": 150}},
+  "field": {"weather": "sandstorm", "weatherDuration": 3}
+ },
+ "turn": {"p1": "move irondefense, move drainingkiss 2", "p2": "move iceshard 1, move shoreup"}
+}

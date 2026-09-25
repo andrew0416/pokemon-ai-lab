@@ -20,12 +20,15 @@ use crate::dex::{
 };
 use crate::field::Weather;
 use crate::state::{Pokemon, SlotRef, Status};
+use crate::volatile::Volatile;
 
 use super::battle::Battle;
 use super::order::modify;
 
 /// Showdown's effect-type sub-orders (`resolvePriority`).
 pub(crate) const SUB_MOVE: u32 = 0;
+/// A Pokémon's volatile or status condition.
+pub(crate) const SUB_CONDITION: u32 = 2;
 pub(crate) const SUB_SIDE_CONDITION: u32 = 4;
 pub(crate) const SUB_FIELD_CONDITION: u32 = 5;
 pub(crate) const SUB_ABILITY: u32 = 7;
@@ -116,8 +119,8 @@ pub(crate) fn priority(orders: &[(&str, i16)], name: &str) -> i32 {
 
 /// The ability of the Pokémon in `holder` as the handlers of `user`'s move see it. Showdown
 /// `suppressingAbility` (gen 8+): a move that ignores abilities (Sunsteel Strike, Moongeist
-/// Beam) skips the breakable abilities of everyone but its user, unless an Ability Shield
-/// protects them.
+/// Beam, or any move of a Mold Breaker user) skips the breakable abilities of everyone but its
+/// user, unless an Ability Shield protects them.
 pub(crate) fn ability_for_move<const N: usize>(
     b: &Battle<'_, N>,
     holder: SlotRef,
@@ -125,7 +128,10 @@ pub(crate) fn ability_for_move<const N: usize>(
     data: &MoveData,
 ) -> AbilityId {
     let ability = b.ability(holder);
-    let suppressed = data.ignore_ability
+    let ignores = data.ignore_ability
+        || b.active_move
+            .is_some_and(|m| m.user == user && m.ignore_ability);
+    let suppressed = ignores
         && holder != user
         && ability.data().flags.contains(AbilityFlags::BREAKABLE)
         && b.item(holder) != items::ABILITY_SHIELD;
@@ -153,6 +159,11 @@ pub(crate) fn base_power_handlers<const N: usize>(
         // `this.modify(basePower, this.event.modifier) <= 60`: Technician has the highest
         // BasePower priority (30), so no factor is chained before it.
         a if a == abilities::TECHNICIAN => (base_power <= 60).then_some(MOD_ONE_POINT_FIVE),
+        // Sheer Force: `if (move.hasSheerForce || move.hasSheerForceBoost)
+        // return this.chainModify([5325, 4096])` (`hasSheerForce` from its own ModifyMove).
+        a if a == abilities::SHEER_FORCE => {
+            (sheer_force_deletes_secondaries(data) || data.has_sheer_force_boost).then_some(5325)
+        }
         a if a == abilities::IRON_FIST => flag(MoveFlags::PUNCH, MOD_ONE_POINT_TWO),
         a if a == abilities::RECKLESS => {
             (data.recoil.is_some() || data.has_crash_damage).then_some(MOD_ONE_POINT_TWO)
@@ -183,6 +194,11 @@ pub(crate) fn base_power_handlers<const N: usize>(
         out.push(Handler::of(b, target, p, SUB_ABILITY, 5120));
     }
     out
+}
+
+/// Sheer Force's `onModifyMove` condition: `move.secondaries && !move.hasSheerForceBoost`.
+pub(crate) fn sheer_force_deletes_secondaries(data: &MoveData) -> bool {
+    !data.secondaries.is_empty() && !data.has_sheer_force_boost
 }
 
 /// `ModifyAtk` (physical moves) or `ModifySpA` (special moves) handlers of abilities: the
@@ -231,7 +247,7 @@ pub(crate) fn attack_handlers<const N: usize>(
     };
     let pinch = 3 * i32::from(attacker.hp) <= i32::from(attacker.max_hp);
     // Solar Power: `onModifySpA` 1.5x in harsh sunlight (`effectiveWeather`).
-    if !physical && ability == abilities::SOLAR_POWER && b.weather() == Weather::Sun {
+    if !physical && ability == abilities::SOLAR_POWER && b.effective_weather() == Weather::Sun {
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
     }
@@ -240,6 +256,20 @@ pub(crate) fn attack_handlers<const N: usize>(
     if (pinch_type == Some(data.move_type) && pinch) || guts {
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
+    }
+    // Flash Fire's volatile (a condition, priority 5): `if (move.type === 'Fire' &&
+    // attacker.hasAbility('flashfire')) return this.chainModify(1.5)`.
+    if data.move_type == Type::Fire
+        && ability == abilities::FLASH_FIRE
+        && b.volatile(user, Volatile::FlashFire).active
+    {
+        let name = if physical {
+            "condition.onModifyAtkPriority"
+        } else {
+            "condition.onModifySpAPriority"
+        };
+        let p = priority(ability.data().event_orders, name);
+        out.push(Handler::of(b, user, p, SUB_CONDITION, MOD_ONE_POINT_FIVE));
     }
     out
 }
@@ -281,10 +311,8 @@ pub(crate) fn burn_damage(ability: AbilityId, max_hp: f64) -> f64 {
 }
 
 /// Ability `onSetStatus` handlers that block a status (they only return `false`, so their
-/// order does not matter): Water Bubble blocks burns, Purifying Salt every status.
-///
-/// Showdown skips a breakable ability for a move that ignores abilities; no move the engine
-/// supports both ignores abilities and inflicts a status (`support.rs` tests this).
+/// order does not matter): Water Bubble blocks burns, Purifying Salt every status. The caller
+/// passes the ability as the move in progress sees it (`ability_unless_broken`).
 pub(crate) fn blocks_status(ability: AbilityId, status: Status) -> bool {
     match ability {
         a if a == abilities::WATER_BUBBLE => status == Status::Burn,

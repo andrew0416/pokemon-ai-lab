@@ -48,7 +48,7 @@ impl<const N: usize> Battle<'_, N> {
         if self.side_effect_active(slot.side, SideEffect::Tailwind) {
             chain.push(2 * MOD_ONE);
         }
-        let weather = self.weather();
+        let weather = self.effective_weather();
         let doubled = match mon.ability {
             a if a == abilities::SAND_RUSH => weather == Weather::Sand,
             a if a == abilities::CHLOROPHYLL => weather == Weather::Sun,

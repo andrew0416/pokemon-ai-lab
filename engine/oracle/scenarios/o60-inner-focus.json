@@ -1,0 +1,25 @@
+{
+ "description": "O60 Inner Focus: Incineroar switches in and its Intimidate lowers Snorlax's Attack but not Inner Focus Lucario's; Weavile's Fake Out hits Lucario without flinching it (the 100% flinch roll still happens), so both Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Lucario", "item": "", "ability": "Inner Focus", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Fake Out", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50},
+   {"species": "Incineroar", "item": "", "ability": "Intimidate", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "turn": {"p1": "move swordsdance, move swordsdance", "p2": "move fakeout 1, switch 3"}
+}

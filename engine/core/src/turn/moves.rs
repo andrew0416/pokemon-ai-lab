@@ -2,6 +2,7 @@
 //! hit steps ??`spreadMoveHit` (damage, effects, secondaries) ??recoil and after-move
 //! effects, for the implemented moves (see [`super::support`]).
 
+mod ability_hooks;
 mod handlers;
 
 use handlers::HitResult;
@@ -39,6 +40,11 @@ struct ActiveMove {
     spread: bool,
     /// Accuracy after ModifyMove; `None` never misses (Showdown `accuracy: true`).
     accuracy: Option<u8>,
+    /// Showdown `move.hasSheerForce`: Sheer Force deleted the secondaries and `self` in
+    /// ModifyMove (and AfterMoveSecondary(Self) effects are skipped).
+    has_sheer_force: bool,
+    /// Serene Grace's ModifyMove doubles every secondary chance and `self.chance` (1 or 2).
+    secondary_chance_factor: u32,
 }
 
 impl PartialEq for ActiveMove {
@@ -48,6 +54,8 @@ impl PartialEq for ActiveMove {
             && self.prankster_boosted == other.prankster_boosted
             && self.spread == other.spread
             && self.accuracy == other.accuracy
+            && self.has_sheer_force == other.has_sheer_force
+            && self.secondary_chance_factor == other.secondary_chance_factor
     }
 }
 
@@ -60,6 +68,8 @@ impl std::hash::Hash for ActiveMove {
         self.prankster_boosted.hash(state);
         self.spread.hash(state);
         self.accuracy.hash(state);
+        self.has_sheer_force.hash(state);
+        self.secondary_chance_factor.hash(state);
     }
 }
 
@@ -82,6 +92,8 @@ pub(crate) struct MoveProgress {
     total_damage: i32,
     /// Whether any hit so far did something (the move's success).
     any_ok: bool,
+    /// `ActiveMoveRef::ignore_ability` of the move in flight (Mold Breaker moves).
+    ignore_ability: bool,
 }
 
 /// How far a move got: finished, or suspended before its next hit.
@@ -132,13 +144,20 @@ pub(crate) fn run_move<const N: usize>(
             prankster_boosted: false,
             spread: false,
             accuracy: None,
+            has_sheer_force: false,
+            secondary_chance_factor: 1,
         };
         before_move(b, user, &recharge);
         return Ok(MoveStep::Done);
     }
     let id = b.mon(pokemon).moves[move_index as usize].id;
     // `setActiveMove`: set for the whole move, cleared when it ends.
-    b.active_move = Some(ActiveMoveRef { user, pokemon, id });
+    b.active_move = Some(ActiveMoveRef {
+        user,
+        pokemon,
+        id,
+        ignore_ability: id.data().ignore_ability,
+    });
     let result = run_move_inner(b, user, move_index, target_loc, will_act);
     if !matches!(result, Ok(MoveStep::Suspended(_))) {
         b.active_move = None;
@@ -156,6 +175,7 @@ pub(crate) fn resume_move<const N: usize>(
         user,
         pokemon,
         id: progress.mv.id,
+        ignore_ability: progress.ignore_ability,
     });
     let mv = progress.mv.clone();
     let result = match hit_loop(b, user, &mv, Some(progress))? {
@@ -210,6 +230,8 @@ fn run_move_inner<const N: usize>(
         prankster_boosted: b.prankster_boosted(user, chosen),
         spread: false,
         accuracy: id.data().accuracy,
+        has_sheer_force: false,
+        secondary_chance_factor: 1,
     };
 
     if !before_move(b, user, &mv) {
@@ -601,8 +623,10 @@ fn use_move<const N: usize>(
     } else {
         target
     };
-    // ModifyMove: the move's own handler, then the user's status.
+    // ModifyMove: the move's own handler (`singleEvent`), then `runEvent`: the user's ability
+    // and status.
     handlers::on_modify_move(b, user, target, mv)?;
+    ability_hooks::on_modify_move(b, user, mv)?;
     // Freeze `onModifyMove`: a defrosting move thaws the user.
     if b.mon(pokemon).status == Status::Freeze && mv.data.flags.contains(MoveFlags::DEFROST) {
         b.cure_status(pokemon);
@@ -622,6 +646,11 @@ fn use_move<const N: usize>(
         get_move_targets(b, user, mv, target)?
     };
     deduct_pressure_pp(b, user, mv, &targets);
+    // TryMove: Dazzling, Queenly Majesty, Armor Tail (`onFoeTryMove`).
+    let try_move_target = targets.last().copied().unwrap_or(target);
+    if !ability_hooks::on_try_move(b, user, mv, try_move_target) {
+        return Ok(None);
+    }
     let result = if field_move {
         try_move_hit_field(b, user, mv, target)?
     } else {
@@ -661,13 +690,16 @@ fn use_move_tail<const N: usize>(
     if !result {
         return;
     }
-    if let Some(pokemon) = b.alive(user) {
-        if b.item(user) == items::LIFE_ORB
-            && mv.data.category != MoveCategory::Status
-            && main_target != user
-        {
-            let max_hp = f64::from(b.mon(pokemon).max_hp);
-            b.damage(user, max_hp / 10.0, DamageSource::Indirect);
+    // AfterMoveSecondarySelf (skipped for a Sheer Force-boosted move): Life Orb.
+    if !ability_hooks::sheer_force_skips(b, user, mv) {
+        if let Some(pokemon) = b.alive(user) {
+            if b.item(user) == items::LIFE_ORB
+                && mv.data.category != MoveCategory::Status
+                && main_target != user
+            {
+                let max_hp = f64::from(b.mon(pokemon).max_hp);
+                b.damage(user, max_hp / 10.0, DamageSource::Indirect);
+            }
         }
     }
 }
@@ -725,7 +757,7 @@ fn try_move_hit_field<const N: usize>(
     target: SlotRef,
 ) -> Result<bool, TurnError> {
     let data = mv.data;
-    if mv.id == moves::AURORA_VEIL && b.weather() != Weather::Snow {
+    if mv.id == moves::AURORA_VEIL && b.effective_weather() != Weather::Snow {
         return Ok(false);
     }
     // runMoveEffects on the target: undefined (nothing attempted) counts as success.
@@ -811,14 +843,14 @@ fn try_spread_move_hit<const N: usize>(
     if targets.is_empty() {
         return Ok(HitOutcome::Finished(false));
     }
-    // 3. Move-specific immunities: powder, Prankster vs Dark.
+    // 3. Move-specific immunities: powder, Prankster vs Dark (`dex.getImmunity`: types only).
     targets.retain(|&t| {
         let powder = mv.data.flags.contains(MoveFlags::POWDER)
             && t != user
-            && b.status_immune(t, TypeImmunities::POWDER);
+            && b.natural_immune(t, TypeImmunities::POWDER);
         let prankster = mv.prankster_boosted
             && t.side != user.side
-            && b.status_immune(t, TypeImmunities::PRANKSTER);
+            && b.natural_immune(t, TypeImmunities::PRANKSTER);
         !powder && !prankster
     });
     if targets.is_empty() {
@@ -845,6 +877,7 @@ fn try_spread_move_hit<const N: usize>(
         hit: 0,
         total_damage: 0,
         any_ok: false,
+        ignore_ability: b.active_move.is_some_and(|a| a.ignore_ability),
     };
     hit_loop(b, user, mv, Some(progress))
 }
@@ -895,7 +928,7 @@ fn stall_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> bool {
 fn try_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
-    mv: &ActiveMove,
+    mv: &mut ActiveMove,
     target: SlotRef,
 ) -> bool {
     if blocked_by_try_hit(b, user, mv, target) {
@@ -915,7 +948,8 @@ fn try_hit<const N: usize>(
     if absorbed_by_ability(b, user, mv, target) {
         return false;
     }
-    true
+    // The other abilities' `onTryHit` (absorbing and immunity abilities).
+    !ability_hooks::on_try_hit(b, user, mv, target)
 }
 
 fn blocked_by_try_hit<const N: usize>(
@@ -1087,8 +1121,9 @@ fn hit_loop<const N: usize>(
     if !progress.any_ok {
         return Ok(HitOutcome::Finished(false));
     }
-    // AfterMoveSecondary: a thawing move thaws a frozen target (of the last hit).
-    if mv.data.thaws_target {
+    // AfterMoveSecondary (skipped for a Sheer Force-boosted move): a thawing move thaws a
+    // frozen target (of the last hit).
+    if mv.data.thaws_target && !ability_hooks::sheer_force_skips(b, user, mv) {
         for (&t, r) in progress.targets.iter().zip(&results) {
             if r.ok() {
                 if let Some(p) = b.alive(t) {
@@ -1203,11 +1238,11 @@ fn spread_move_hit<const N: usize>(
             results[i] = Hit::Failed;
         }
     }
-    // selfDrops: once, for the first target the move did not fail on.
-    if let Some(effect) = data.self_effect {
-        if effect.boosts != NO_BOOSTS
-            && results.iter().any(|r| r.ok())
-            && b.rng.chance(u32::from(effect.chance), 100)
+    // selfDrops: once, for the first target the move did not fail on. Sheer Force deleted
+    // `self`; Serene Grace doubled its chance.
+    if let Some(effect) = data.self_effect.filter(|_| !mv.has_sheer_force) {
+        let chance = u32::from(effect.chance) * mv.secondary_chance_factor;
+        if effect.boosts != NO_BOOSTS && results.iter().any(|r| r.ok()) && b.rng.chance(chance, 100)
         {
             b.boost_by(user, &effect.boosts, Some(user), BoostEffect::Move(mv.id));
         }
@@ -1217,13 +1252,15 @@ fn spread_move_hit<const N: usize>(
             }
         }
     }
-    // secondaries.
+    // secondaries: each target's ModifySecondaries (Shield Dust), then one roll per secondary
+    // (Sheer Force deleted them; Serene Grace doubled the chances).
     for (i, &t) in targets.iter().enumerate() {
         if !results[i].ok() {
             continue;
         }
-        for secondary in data.secondaries {
-            if !b.rng.chance(u32::from(secondary.chance), 100) {
+        for secondary in ability_hooks::secondaries(b, mv, t) {
+            let chance = u32::from(secondary.chance) * mv.secondary_chance_factor;
+            if !b.rng.chance(chance, 100) {
                 continue;
             }
             if secondary.boosts != NO_BOOSTS && b.alive(t).is_some() {
@@ -1470,7 +1507,7 @@ fn get_damage<const N: usize>(
         def_boost,
     );
     // ModifyDef / ModifySpD: sandstorm (Rock SpD) and snow (Ice Def), 1.5x applied directly.
-    let weather = b.weather();
+    let weather = b.effective_weather();
     if defense_stat == Stat::Spd && weather == Weather::Sand && defender.types.contains(&Type::Rock)
     {
         defense = modify(defense, MOD_ONE_POINT_FIVE);

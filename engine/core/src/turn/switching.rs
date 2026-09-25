@@ -9,15 +9,17 @@
 //! A handler whose holder's ability changed before it ran is skipped.
 //!
 //! Implemented start handlers: the four weather and four terrain setters, Intimidate, Trace
-//! (copies a random traceable adjacent foe's ability and starts it at once), and abilities
-//! whose `onStart` only announces them. Anything else that could fire during a switch-in
-//! (other `onStart`/`onSwitchIn`/`onBeforeSwitchIn`/`onUpdate` handlers, items that act on
-//! switch-in, Air Lock) makes the turn unsupported.
+//! (copies a random traceable adjacent foe's ability and starts it at once), Air Lock and Cloud
+//! Nine (their `WeatherChange` event has no implemented handler), and abilities whose `onStart`
+//! only announces them. Anything else that could fire during a switch-in (other
+//! `onStart`/`onSwitchIn`/`onBeforeSwitchIn`/`onUpdate` handlers, items that act on switch-in)
+//! makes the turn unsupported.
 
 use crate::dex::{abilities, items, AbilityFlags, AbilityId, ItemId, SpeciesId, NO_BOOSTS};
 use crate::field::{FieldEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SlotRef, Status, BOOST_COUNT};
+use crate::volatile::Volatile;
 
 use super::battle::{cured_on_update, Battle, BoostEffect};
 use super::moves::{set_terrain, set_weather};
@@ -57,6 +59,9 @@ pub(crate) enum StartEffect {
     Terrain(Terrain),
     Intimidate,
     Trace,
+    /// Air Lock, Cloud Nine: `eachEvent('WeatherChange')` (the weather they suppress is read
+    /// through `Battle::effective_weather`).
+    WeatherChange,
 }
 
 /// Abilities with an implemented start, with the exact handler lists they were implemented
@@ -108,6 +113,18 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         StartEffect::Terrain(Terrain::Psychic),
     ),
     (abilities::INTIMIDATE, &["onStart"], StartEffect::Intimidate),
+    // `onSwitchIn` logs and calls `onStart`; `onStart` and `onEnd` run
+    // `eachEvent('WeatherChange')`.
+    (
+        abilities::AIR_LOCK,
+        &["onEnd", "onStart", "onSwitchIn"],
+        StartEffect::WeatherChange,
+    ),
+    (
+        abilities::CLOUD_NINE,
+        &["onEnd", "onStart", "onSwitchIn"],
+        StartEffect::WeatherChange,
+    ),
     // `onStart` only announces the ability.
     (
         abilities::COMATOSE,
@@ -123,6 +140,21 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
     (
         abilities::GLUTTONY,
         &["onDamage", "onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::MOLD_BREAKER,
+        &["onModifyMove", "onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::TERAVOLT,
+        &["onModifyMove", "onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::TURBOBLAZE,
+        &["onModifyMove", "onStart"],
         StartEffect::None,
     ),
     // Status-curing `onUpdate`: nothing to cure on switch-in, because a holder that already
@@ -173,7 +205,7 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
 
 /// What `ability` does when it starts, or `None` if it has a switch-in handler that is not
 /// implemented. `ModifySpe` handlers are allowed: the start order uses the stored Speed, which
-/// right after switching in is the raw stat. Air Lock / Cloud Nine (`suppressWeather`) are
+/// right after switching in is the raw stat. A `suppressWeather` ability outside the table is
 /// refused.
 pub(crate) fn start_effect(ability: AbilityId) -> Option<StartEffect> {
     if let Some(&(_, _, effect)) = START_HANDLERS.iter().find(|(id, ..)| *id == ability) {
@@ -404,6 +436,53 @@ pub(crate) fn start_ability<const N: usize>(
             }
         }
         StartEffect::Trace => trace(b, slot)?,
+        StartEffect::WeatherChange => weather_change(b)?,
+    }
+    Ok(())
+}
+
+/// Showdown `eachEvent('WeatherChange')`: every active Pokémon's `onWeatherChange` handlers,
+/// in Speed order. None is implemented (Forecast, Flower Gift, Ice Face, Protosynthesis), so
+/// the event does nothing, and a handler that would run makes it unsupported.
+fn weather_change<const N: usize>(b: &Battle<'_, N>) -> Result<(), TurnError> {
+    for slot in b.all_alive() {
+        let mon = b.slot_mon(slot).expect("alive");
+        let handlers = [
+            (mon.ability.data().name, mon.ability.data().handlers),
+            (mon.item.data().name, mon.item.data().handlers),
+            (mon.species.data().name, mon.species.data().handlers),
+        ];
+        for (name, list) in handlers {
+            if list.contains(&"onWeatherChange") {
+                return Err(b.unsupported(format!("{name}: onWeatherChange")));
+            }
+        }
+    }
+    Ok(())
+}
+
+/// `singleEvent('End')` of the ability the Pokémon at `slot` loses while staying active
+/// (`setAbility` during a forme change). Flash Fire's `onEnd` removes its volatile; Air Lock's
+/// and Cloud Nine's end their suppression (the new ability no longer suppresses) and run
+/// `WeatherChange`; an ability without `onEnd` does nothing. Any other `onEnd` is unsupported.
+pub(crate) fn end_ability<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    ability: AbilityId,
+) -> Result<(), TurnError> {
+    if ability == abilities::FLASH_FIRE {
+        b.remove_volatile(slot, Volatile::FlashFire);
+        return Ok(());
+    }
+    if ability == abilities::AIR_LOCK || ability == abilities::CLOUD_NINE {
+        return weather_change(b);
+    }
+    if ability.data().handlers.contains(&"onEnd") {
+        return Err(b.unsupported(format!(
+            "ability {} ending ({:?})",
+            ability.data().name,
+            ability.data().handlers
+        )));
     }
     Ok(())
 }

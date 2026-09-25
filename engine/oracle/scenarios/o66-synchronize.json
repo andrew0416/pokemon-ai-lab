@@ -1,0 +1,23 @@
+{
+ "description": "O66 Synchronize: Umbreon badly poisons Ampharos first; Snorlax's Will-O-Wisp burns Synchronize Espeon, which burns Snorlax back; Ampharos's Thunder Wave paralyzes Synchronize Umbreon, but the paralysis cannot pass back (Ampharos is already poisoned, and Electric).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Espeon", "item": "", "ability": "Synchronize", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Calm Mind", "Protect"], "level": 50},
+   {"species": "Umbreon", "item": "", "ability": "Synchronize", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Toxic", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Will-O-Wisp", "Protect"], "level": 50},
+   {"species": "Ampharos", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Thunder Wave", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move calmmind, move toxic 2", "p2": "move willowisp 1, move thunderwave 2"}
+}

@@ -412,6 +412,58 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         &["onAllySetStatus", "onAllyTryAddVolatile"],
     ),
     (abilities::AROMA_VEIL, &["onAllyTryAddVolatile"]),
+    // Absorbing and immunity abilities: `onTryHit` in `moves::ability_hooks::on_try_hit`.
+    (abilities::VOLT_ABSORB, &["onTryHit"]),
+    (abilities::WATER_ABSORB, &["onTryHit"]),
+    (abilities::EARTH_EATER, &["onTryHit"]),
+    (abilities::MOTOR_DRIVE, &["onTryHit"]),
+    // `onAllyTryHitSide` only acts on an ally's Grass move aimed at its own side, which no
+    // supported move is (pinned by a test below).
+    (abilities::SAP_SIPPER, &["onAllyTryHitSide", "onTryHit"]),
+    (abilities::WELL_BAKED_BODY, &["onTryHit"]),
+    // The volatile's `onModifyAtk`/`onModifySpA` in `abilities::attack_handlers`; `onEnd`
+    // (drop the volatile) in `switching::end_ability`; `onStart`/`condition.onEnd` only log.
+    (
+        abilities::FLASH_FIRE,
+        &[
+            "condition.onEnd",
+            "condition.onModifyAtk",
+            "condition.onModifySpA",
+            "condition.onStart",
+            "onEnd",
+            "onTryHit",
+        ],
+    ),
+    (abilities::BULLETPROOF, &["onTryHit"]),
+    // `onAllyTryHitSide` only logs.
+    (abilities::SOUNDPROOF, &["onAllyTryHitSide", "onTryHit"]),
+    // `onImmunity` (sandstorm, powder) in `Battle::status_immune`.
+    (abilities::OVERCOAT, &["onImmunity", "onTryHit"]),
+    (abilities::TELEPATHY, &["onTryHit"]),
+    (abilities::WONDER_GUARD, &["onTryHit"]),
+    (abilities::GOOD_AS_GOLD, &["onTryHit"]),
+    // `onFoeTryMove` in `moves::ability_hooks::on_try_move`.
+    (abilities::DAZZLING, &["onFoeTryMove"]),
+    (abilities::QUEENLY_MAJESTY, &["onFoeTryMove"]),
+    (abilities::ARMOR_TAIL, &["onFoeTryMove"]),
+    // `suppressWeather` in `Battle::effective_weather`; the handlers in `switching`.
+    (abilities::AIR_LOCK, &["onEnd", "onStart", "onSwitchIn"]),
+    (abilities::CLOUD_NINE, &["onEnd", "onStart", "onSwitchIn"]),
+    // `onTryAddVolatile` (flinch) in `Battle::add_volatile_blocked`; `onTryBoost` (Intimidate
+    // only) in the Intimidate start effect (`switching`).
+    (abilities::INNER_FOCUS, &["onTryAddVolatile", "onTryBoost"]),
+    // `moves::ability_hooks`: ModifyMove, ModifySecondaries; Sheer Force's `onBasePower` in
+    // `abilities::base_power_handlers`.
+    (abilities::SHIELD_DUST, &["onModifySecondaries"]),
+    (abilities::SERENE_GRACE, &["onModifyMove"]),
+    (abilities::SHEER_FORCE, &["onBasePower", "onModifyMove"]),
+    // `Battle::after_set_status`.
+    (abilities::SYNCHRONIZE, &["onAfterSetStatus"]),
+    // `onModifyMove` (`move.ignoreAbility = true`) in `moves::ability_hooks`; `onStart` only
+    // announces the ability.
+    (abilities::MOLD_BREAKER, &["onModifyMove", "onStart"]),
+    (abilities::TERAVOLT, &["onModifyMove", "onStart"]),
+    (abilities::TURBOBLAZE, &["onModifyMove", "onStart"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -714,9 +766,10 @@ mod tests {
         );
     }
 
-    /// `try_set_status` applies ability status blocks (Water Bubble, Purifying Salt) without
-    /// the move: that is only right while no supported move ignores abilities and inflicts a
-    /// status.
+    /// No supported move ignores abilities by its data and inflicts a status. Such a move (or a
+    /// Mold Breaker user's) against an ability whose `onUpdate` would cure the status is refused
+    /// in ModifyMove (`moves::ability_hooks`); this keeps the data-flag case from arising
+    /// unnoticed.
     #[test]
     fn no_supported_move_ignores_abilities_and_sets_a_status() {
         for id in MoveId::all() {
@@ -728,6 +781,23 @@ mod tests {
             for s in m.secondaries {
                 assert_eq!(s.status, crate::state::Status::None, "{id:?}");
             }
+        }
+    }
+
+    /// Sap Sipper's `onAllyTryHitSide` raises the holder's Attack when an ally uses a Grass move
+    /// aimed at their own side (`allySide`/`allyTeam`; TryHitSide is not modelled). No supported
+    /// move is one; this fails when one becomes supported.
+    #[test]
+    fn sap_sipper_ally_side_handler_is_unreachable() {
+        for id in MoveId::all() {
+            let m = id.data();
+            if move_unsupported(id).is_some() || m.move_type != Type::Grass {
+                continue;
+            }
+            assert!(
+                !matches!(m.target, MoveTarget::AllySide | MoveTarget::AllyTeam),
+                "{id:?}"
+            );
         }
     }
 

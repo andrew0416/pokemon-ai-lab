@@ -26,7 +26,7 @@ fn effective_weather<const N: usize>(
     if b.ability(user) == abilities::MEGA_SOL {
         return Err(b.unsupported("Mega Sol's weather for moves"));
     }
-    let weather = b.weather();
+    let weather = b.effective_weather();
     let hidden = matches!(
         weather,
         Weather::Sun | Weather::Rain | Weather::HarshSun | Weather::HeavyRain
@@ -45,7 +45,7 @@ pub(super) fn on_modify_move<const N: usize>(
     match mv.id {
         // Blizzard: `if (this.field.isWeather(['hail', 'snowscape'])) move.accuracy = true;`
         moves::BLIZZARD => {
-            if b.weather() == Weather::Snow {
+            if b.effective_weather() == Weather::Snow {
                 mv.accuracy = None;
             }
         }
@@ -166,9 +166,9 @@ pub(super) fn on_hit<const N: usize>(
             };
             weather_heal(b, target, modifier)
         }
-        // Shore Up: 0.667 in sandstorm (the field's weather), 0.5 otherwise.
+        // Shore Up: 0.667 in sandstorm (`field.isWeather`, no Utility Umbrella), 0.5 otherwise.
         moves::SHORE_UP => {
-            let modifier = if b.weather() == Weather::Sand {
+            let modifier = if b.effective_weather() == Weather::Sand {
                 2732
             } else {
                 2048

@@ -33,7 +33,7 @@ use crate::state::{Pokemon, SlotRef};
 
 use super::battle::{cured_on_update, Battle};
 use super::support::ability_supported_on_field;
-use super::switching::{start_ability, switch_in_supported};
+use super::switching::{end_ability, start_ability, switch_in_supported};
 use super::TurnError;
 
 /// The Mega forme `mon` evolves into, if the turn engine can simulate the change: the forme
@@ -92,8 +92,8 @@ pub(crate) fn run_mega_evo<const N: usize>(
     }
     let hp = mon.hp;
     let new_hp = new.hp_after(old.max_hp, hp);
-    // The old ability's `End`: none of the abilities implemented on the field has one.
-    debug_assert!(!old.ability.data().handlers.contains(&"onEnd"));
+    // setAbility → the old ability's `End` (Flash Fire drops its volatile).
+    end_ability(b, slot, old.ability)?;
     b.apply(Instruction::SetForme {
         target: pokemon,
         old,
