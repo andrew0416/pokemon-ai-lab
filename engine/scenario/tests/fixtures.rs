@@ -405,6 +405,16 @@ fn names_default_to_species_are_truncated_and_must_be_unique() {
     assert_eq!(meta[0].members[1].tera_type, Type::Fairy);
     assert_eq!(meta[0].members[1].gender, lab_engine::dex::Gender::Female);
 
+    // No nickname (or one equal to the species string) → the base species name, as Showdown's
+    // Pokemon constructor does.
+    let formes = parse_team(&team_with(
+        r#"{"name": "Tyranitar-Mega", "species": "Tyranitar-Mega", "ability": "Sand Stream", "nature": "Adamant", "moves": ["Crunch"]}, {"species": "Indeedee-F", "ability": "Psychic Surge", "nature": "Timid", "moves": ["Follow Me"]}"#,
+    ))
+    .unwrap();
+    let (_, meta) = state_from_teams::<2>([(&formes, None), (&p2, None)]).unwrap();
+    assert_eq!(meta[0].members[1].name, "Tyranitar");
+    assert_eq!(meta[0].members[2].name, "Indeedee");
+
     let twins = parse_team(&format!("[{RILLA}, {RILLA}]")).unwrap();
     let err = state_from_teams::<2>([(&twins, None), (&p2, None)]).unwrap_err();
     assert!(matches!(

@@ -28,6 +28,30 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         ],
     ),
     (moves::DETECT, &["onHit", "onPrepareHit"]),
+    (
+        moves::FOLLOW_ME,
+        &[
+            "condition.onFoeRedirectTarget",
+            "condition.onStart",
+            "onTry",
+        ],
+    ),
+    (
+        moves::RAGE_POWDER,
+        &[
+            "condition.onFoeRedirectTarget",
+            "condition.onStart",
+            "onTry",
+        ],
+    ),
+    (
+        moves::SPOTLIGHT,
+        &[
+            "condition.onFoeRedirectTarget",
+            "condition.onStart",
+            "onTryHit",
+        ],
+    ),
     (moves::GRASSY_GLIDE, &["onModifyPriority"]),
     (moves::LOW_KICK, &["basePowerCallback", "onTryHit"]),
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),
@@ -181,6 +205,11 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::SWIFT_SWIM, &["onModifySpe"]),
     (abilities::SLUSH_RUSH, &["onModifySpe"]),
     (abilities::PRANKSTER, &["onModifyPriority"]),
+    (
+        abilities::LIGHTNING_ROD,
+        &["onAnyRedirectTarget", "onTryHit"],
+    ),
+    (abilities::STORM_DRAIN, &["onAnyRedirectTarget", "onTryHit"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -465,7 +494,8 @@ mod tests {
             assert_eq!(move_unsupported(id), None, "{id:?}");
         }
         assert!(move_unsupported(moves::U_TURN).is_some());
-        assert!(move_unsupported(moves::FOLLOW_ME).is_some());
+        assert_eq!(move_unsupported(moves::FOLLOW_ME), None);
+        assert_eq!(move_unsupported(moves::RAGE_POWDER), None);
         assert!(move_unsupported(moves::BULLET_SEED).is_some());
     }
 }

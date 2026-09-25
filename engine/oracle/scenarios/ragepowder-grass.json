@@ -1,0 +1,16 @@
+{
+ "description": "Ribombee's Rage Powder draws Eelektross' Focus Blast (aimed at Tyranitar) but not Rillaboom's Wood Hammer: a Grass type ignores powder, so the hammer meets Tyranitar's Protect.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "redirect.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "redirect.p2.json",
+  "order": "13"
+ },
+ "turn": {
+  "p1": "move focusblast 1, move woodhammer 1",
+  "p2": "move protect, move ragepowder"
+ }
+}

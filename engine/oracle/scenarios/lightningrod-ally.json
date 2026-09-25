@@ -1,0 +1,16 @@
+{
+ "description": "Lightning Rod also pulls an ally's Electric move: Eelektross' Thunderbolt aimed at Tyranitar goes to its partner Raichu (+1 SpA), so Tyranitar's Protect is wasted. Gyarados Dragon Dances.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "redirect.p1.json",
+  "order": "14"
+ },
+ "p2": {
+  "team": "redirect.p2.json",
+  "order": "15"
+ },
+ "turn": {
+  "p1": "move thunderbolt 1, move protect",
+  "p2": "move protect, move dragondance"
+ }
+}

@@ -15,13 +15,25 @@ pub enum Volatile {
     Stall,
     /// Flinch (duration 1).
     Flinch,
+    /// Follow Me: redirects foes' single-target moves to the holder (duration 1).
+    FollowMe,
+    /// Rage Powder: like Follow Me, but not for powder-immune attackers (duration 1).
+    RagePowder,
+    /// Spotlight: like Follow Me with higher redirect priority (duration 1).
+    Spotlight,
 }
 
-pub const VOLATILE_COUNT: usize = 3;
+pub const VOLATILE_COUNT: usize = 6;
 
 impl Volatile {
-    pub const ALL: [Volatile; VOLATILE_COUNT] =
-        [Volatile::Protect, Volatile::Stall, Volatile::Flinch];
+    pub const ALL: [Volatile; VOLATILE_COUNT] = [
+        Volatile::Protect,
+        Volatile::Stall,
+        Volatile::Flinch,
+        Volatile::FollowMe,
+        Volatile::RagePowder,
+        Volatile::Spotlight,
+    ];
 
     /// The Showdown condition this volatile is.
     pub fn condition(self) -> ConditionId {
@@ -29,6 +41,9 @@ impl Volatile {
             Volatile::Protect => conditions::PROTECT,
             Volatile::Stall => conditions::STALL,
             Volatile::Flinch => conditions::FLINCH,
+            Volatile::FollowMe => conditions::FOLLOWME,
+            Volatile::RagePowder => conditions::RAGEPOWDER,
+            Volatile::Spotlight => conditions::SPOTLIGHT,
         }
     }
 
@@ -38,6 +53,9 @@ impl Volatile {
             Volatile::Protect => "protect",
             Volatile::Stall => "stall",
             Volatile::Flinch => "flinch",
+            Volatile::FollowMe => "followme",
+            Volatile::RagePowder => "ragepowder",
+            Volatile::Spotlight => "spotlight",
         }
     }
 
@@ -51,7 +69,11 @@ impl Volatile {
     /// Duration a fresh instance starts with (0 = none).
     pub fn initial_duration(self) -> u8 {
         match self {
-            Volatile::Protect | Volatile::Flinch => 1,
+            Volatile::Protect
+            | Volatile::Flinch
+            | Volatile::FollowMe
+            | Volatile::RagePowder
+            | Volatile::Spotlight => 1,
             Volatile::Stall => 2,
         }
     }

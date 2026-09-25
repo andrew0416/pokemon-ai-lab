@@ -1,0 +1,74 @@
+[
+ {
+  "species": "Eelektross",
+  "item": "Leftovers",
+  "ability": "Levitate",
+  "nature": "Modest",
+  "evs": {
+   "hp": 32,
+   "spa": 32,
+   "spe": 2
+  },
+  "moves": [
+   "Thunderbolt",
+   "Focus Blast",
+   "Flamethrower",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Rillaboom",
+  "item": "Miracle Seed",
+  "ability": "Grassy Surge",
+  "nature": "Brave",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "def": 2
+  },
+  "moves": [
+   "Wood Hammer",
+   "Grassy Glide",
+   "Fake Out",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Bronzong",
+  "item": "Leftovers",
+  "ability": "Levitate",
+  "nature": "Sassy",
+  "evs": {
+   "hp": 32,
+   "spd": 32,
+   "def": 2
+  },
+  "moves": [
+   "Hypnosis",
+   "Gyro Ball",
+   "Iron Head",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Raichu",
+  "item": "Life Orb",
+  "ability": "Lightning Rod",
+  "nature": "Timid",
+  "evs": {
+   "hp": 2,
+   "spa": 32,
+   "spe": 32
+  },
+  "moves": [
+   "Thunderbolt",
+   "Nasty Plot",
+   "Fake Out",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

@@ -1,0 +1,16 @@
+{
+ "description": "Eelektross' Thunderbolt aimed at Gyarados is drawn to the foe Raichu's Lightning Rod, which absorbs it (+1 SpA, on top of its own Nasty Plot). Rillaboom and Gyarados Protect.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "redirect.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "redirect.p2.json",
+  "order": "54"
+ },
+ "turn": {
+  "p1": "move thunderbolt 1, move protect",
+  "p2": "move protect, move nastyplot"
+ }
+}

@@ -1,0 +1,16 @@
+{
+ "description": "Bronzong's Hypnosis aimed at Tyranitar is drawn to Indeedee-F's Follow Me (priority +2, so it is up first); Tyranitar and Eelektross Protect. Psychic Terrain does not block a priority-0 move.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "redirect.p1.json",
+  "order": "31"
+ },
+ "p2": {
+  "team": "redirect.p2.json",
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move hypnosis 1, move protect",
+  "p2": "move protect, move followme"
+ }
+}

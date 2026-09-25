@@ -13,11 +13,16 @@ use crate::meta::{MemberMeta, SideMeta};
 const MAX_NAME_CHARS: usize = 20;
 const LEVEL: u8 = 50;
 
-/// The display name Showdown gives a set.
+/// The display name Showdown gives a set: the nickname, or, when there is none or it equals
+/// the species string, the *base* species name (`Indeedee-F` → `Indeedee`, `Tyranitar-Mega`
+/// → `Tyranitar`; `sim/pokemon.ts` constructor). An unknown species keeps the string as
+/// written; `build_pokemon` rejects it anyway.
 pub fn display_name(set: &TeamSet) -> String {
     let name = match set.name.as_deref() {
-        Some(name) if !name.is_empty() => name,
-        _ => set.species.as_str(),
+        Some(name) if !name.is_empty() && name != set.species => name.to_owned(),
+        _ => SpeciesId::from_name(&set.species)
+            .map(|s| s.data().base_species.data().name.to_owned())
+            .unwrap_or_else(|| set.species.clone()),
     };
     name.chars().take(MAX_NAME_CHARS).collect()
 }

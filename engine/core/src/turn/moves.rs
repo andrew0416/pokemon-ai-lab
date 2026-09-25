@@ -7,8 +7,8 @@ use crate::damage::{
     MOD_ONE_POINT_THREE,
 };
 use crate::dex::{
-    items, moves, FixedDamage, IgnoreImmunity, MoveCategory, MoveData, MoveFlags, MoveId,
-    MoveTarget, Stat, Type, TypeImmunities, TypeRelation, NO_BOOSTS,
+    abilities, items, moves, AbilityId, FixedDamage, IgnoreImmunity, MoveCategory, MoveData,
+    MoveFlags, MoveId, MoveTarget, Stat, Type, TypeImmunities, TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{SideId, SlotRef, Status};
@@ -265,14 +265,15 @@ fn adjacent_allies<const N: usize>(b: &Battle<'_, N>, user: SlotRef) -> Vec<Slot
         .collect()
 }
 
-/// Showdown `getMoveTargets` (no redirection is implemented).
+/// Showdown `getMoveTargets`: spread moves hit everyone in range; a single target that
+/// fainted is re-rolled, then the `RedirectTarget` event may move it (doubles only).
 fn get_move_targets<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
-) -> Vec<SlotRef> {
-    match mv.data.target {
+) -> Result<Vec<SlotRef>, TurnError> {
+    Ok(match mv.data.target {
         MoveTarget::All | MoveTarget::FoeSide | MoveTarget::AllySide | MoveTarget::AllyTeam => {
             Vec::new()
         }
@@ -287,15 +288,111 @@ fn get_move_targets<const N: usize>(
             if b.alive(t).is_none() && t.side != user.side {
                 match get_random_target(b, user, mv.data.target) {
                     Some(r) => t = r,
-                    None => return Vec::new(),
+                    None => return Ok(Vec::new()),
                 }
             }
+            if N > 1 && !mv.data.tracks_target {
+                t = redirect_target(b, user, mv, t)?;
+            }
             if b.alive(t).is_none() {
-                return Vec::new();
+                return Ok(Vec::new());
             }
             vec![t]
         }
+    })
+}
+
+/// Showdown `priorityEvent('RedirectTarget')`: the handlers are Follow Me, Rage Powder and
+/// Spotlight on the user's foes (`onFoeRedirectTarget`, priority 1, 1, 2) and Lightning Rod /
+/// Storm Drain on anyone else (`onAnyRedirectTarget`, priority 0). They are sorted by
+/// priority, then the holder's Speed (`compareRedirectOrder`), and the first whose holder is a
+/// valid target of the move's target type wins. Rage Powder skips powder-immune users. A tie
+/// between two valid holders is broken in Showdown by `effectOrder` (who entered the field or
+/// changed ability first), which the state does not record, so it is unsupported.
+fn redirect_target<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> Result<SlotRef, TurnError> {
+    // (priority, speed, holder), in Showdown's handler collection order: the user's side
+    // (`onAny`), then each foe's `onFoe` volatiles and `onAny` ability.
+    let mut handlers: Vec<(i8, i32, SlotRef)> = Vec::new();
+    let absorbs = |b: &Battle<'_, N>, s: SlotRef| {
+        b.alive(s).is_some() && absorbing_type(b.ability(s)) == Some(mv.data.move_type)
+    };
+    for s in Battle::<N>::slots(user.side) {
+        if absorbs(b, s) {
+            handlers.push((0, b.action_speed(s), s));
+        }
     }
+    for s in b.alive_slots(user.side.other()) {
+        let speed = b.action_speed(s);
+        if b.volatile(s, Volatile::FollowMe).active {
+            handlers.push((1, speed, s));
+        }
+        if b.volatile(s, Volatile::RagePowder).active {
+            handlers.push((1, speed, s));
+        }
+        if b.volatile(s, Volatile::Spotlight).active {
+            handlers.push((2, speed, s));
+        }
+        if absorbs(b, s) {
+            handlers.push((0, speed, s));
+        }
+    }
+    if handlers.is_empty() {
+        return Ok(target);
+    }
+    // Stable, so equal keys keep collection order.
+    handlers.sort_by(|a, b| b.0.cmp(&a.0).then(b.1.cmp(&a.1)));
+
+    let valid = |b: &Battle<'_, N>, priority: i8, holder: SlotRef| -> bool {
+        let loc = loc_of(user, holder);
+        if priority == 0 {
+            // Lightning Rod / Storm Drain treat `adjacentFoe`/`randomNormal` as `normal`.
+            let kind = match mv.data.target {
+                MoveTarget::AdjacentFoe | MoveTarget::RandomNormal => MoveTarget::Normal,
+                other => other,
+            };
+            return valid_target_loc(N, user, loc, kind);
+        }
+        let is_rage_powder = b.volatile(holder, Volatile::RagePowder).active
+            && !b.volatile(holder, Volatile::FollowMe).active
+            && !b.volatile(holder, Volatile::Spotlight).active;
+        if is_rage_powder && b.status_immune(user, TypeImmunities::POWDER) {
+            return false;
+        }
+        valid_target_loc(N, user, loc, mv.data.target)
+    };
+    let mut i = 0;
+    while i < handlers.len() {
+        let key = (handlers[i].0, handlers[i].1);
+        let mut j = i;
+        let mut winners: Vec<SlotRef> = Vec::new();
+        while j < handlers.len() && (handlers[j].0, handlers[j].1) == key {
+            let holder = handlers[j].2;
+            if valid(b, key.0, holder) && !winners.contains(&holder) {
+                winners.push(holder);
+            }
+            j += 1;
+        }
+        match winners.len() {
+            0 => {}
+            1 => return Ok(winners[0]),
+            _ => {
+                return Err(b.unsupported(format!(
+                    "redirection tie between {} and {} (Showdown breaks it by effectOrder)",
+                    b.slot_mon(winners[0])
+                        .map_or("?", |m| m.species.data().name),
+                    b.slot_mon(winners[1])
+                        .map_or("?", |m| m.species.data().name),
+                )));
+            }
+        }
+        i = j;
+    }
+    Ok(target)
 }
 
 // ---- use ---------------------------------------------------------------------------------------
@@ -330,7 +427,7 @@ fn use_move<const N: usize>(
     ) {
         result = try_move_hit_field(b, user, mv, target)?;
     } else {
-        let targets = get_move_targets(b, user, mv, target);
+        let targets = get_move_targets(b, user, mv, target)?;
         let Some(&last) = targets.last() else {
             return Ok(false);
         };
@@ -402,13 +499,29 @@ fn try_spread_move_hit<const N: usize>(
     if mv.id == moves::FAKE_OUT && b.state.slot(user).move_actions > 1 {
         return Ok(false);
     }
+    // Follow Me / Rage Powder `onTry` and Spotlight `onTryHit`: doubles only.
+    if matches!(
+        mv.id,
+        m if m == moves::FOLLOW_ME || m == moves::RAGE_POWDER || m == moves::SPOTLIGHT
+    ) && N == 1
+    {
+        return Ok(false);
+    }
     // PrepareHit: Protect and Detect need a later action and pass the stall check.
     if mv.data.stalling_move && !(will_act && stall_move(b, user)) {
         return Ok(false);
     }
 
-    // 1. TryHit: Psychic Terrain (priority 4), then Protect (3).
+    // 1. TryHit: Psychic Terrain (priority 4), then Protect (3), then Lightning Rod /
+    //    Storm Drain (0: the holder absorbs the move and its SpA rises).
     targets.retain(|&t| !blocked_by_try_hit(b, user, mv, t));
+    let mut kept = Vec::with_capacity(targets.len());
+    for &t in &targets {
+        if !absorbed_by_ability(b, user, mv, t) {
+            kept.push(t);
+        }
+    }
+    targets = kept;
     if targets.is_empty() {
         return Ok(false);
     }
@@ -474,6 +587,35 @@ fn blocked_by_try_hit<const N: usize>(
         return true;
     }
     b.volatile(target, Volatile::Protect).active && mv.data.flags.contains(MoveFlags::PROTECT)
+}
+
+/// Lightning Rod / Storm Drain `onTryHit`: a move of the absorbed type aimed at the holder
+/// (by anyone else) fails against it and raises its SpA one stage (no change at +6, only the
+/// immune message differs).
+fn absorbed_by_ability<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    if target == user || absorbing_type(b.ability(target)) != Some(mv.data.move_type) {
+        return false;
+    }
+    let mut up = NO_BOOSTS;
+    up[2] = 1;
+    b.boost(target, &up);
+    true
+}
+
+/// The move type an ability redirects and absorbs (Lightning Rod, Storm Drain).
+fn absorbing_type(ability: AbilityId) -> Option<Type> {
+    if ability == abilities::LIGHTNING_ROD {
+        Some(Type::Electric)
+    } else if ability == abilities::STORM_DRAIN {
+        Some(Type::Water)
+    } else {
+        None
+    }
 }
 
 /// Showdown `runImmunity(move)`: type chart immunity and Ground vs ungrounded.

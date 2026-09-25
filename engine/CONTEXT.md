@@ -40,6 +40,8 @@
 
 **메가진화 (2026-09-26, WORKPLAN F1~F3 완료):** `Instruction::SetForme`/`SetTypes`(F1), `Pokemon { nature, stat_points }`(F2), `turn/mega.rs`의 `megaEvo` 행동(F3). 시나리오 `mega-tyranitar`(메가 마기라스의 모래날림이 눈을 덮음, 속도 113→123으로 갸라도스 118을 추월)·`mega-tyranitar-sand`(자기 모래 아래 메가: 같은 날씨라 지속 3이 유지)가 Showdown `full`과 정확 일치(`scenario/tests/mega.rs`). 메가 대상 종의 특성이 미지원이면 `TurnError::Unsupported`(예: 메가가디안 픽시레이트, 메가보만다 스카이스킨). 첫 등장 펼치기(`scenario/switch_in.rs`)는 이제 날씨 4종·필드 4종·위협도 처리한다(F4에서 `turn/switching.rs`와 통합 예정).
 
+**대상 유도 (2026-09-26, WORKPLAN F7 완료):** `moves.rs::redirect_target`가 Showdown `priorityEvent('RedirectTarget')`를 재현한다. 후보는 상대의 날따름·분노가루·스포트라이트 휘발(`onFoeRedirectTarget`, 우선도 1·1·2)과 아군·상대의 피뢰침·저수(`onAnyRedirectTarget`, 우선도 0; 전기/물 기술만). 우선도 내림차순 → 보유자 속도(`action_speed`, 트릭룸이면 음수) 내림차순으로 정렬해 기술의 대상 종류에 유효한 첫 보유자로 바꾼다(분노가루는 공격자가 가루 면역이면 건너뜀). 피뢰침·저수의 `onTryHit`는 방어·사이코필드 뒤에 판정해 기술을 무효화하고 특공을 1 올린다. 같은 우선도·속도의 유효 후보가 둘이면 Showdown은 `effectOrder`(등장·특성 변경 순서)로 가르는데 상태에 없으므로 `TurnError::Unsupported`. 시나리오 4개(`followme-hypnosis`, `ragepowder-grass`, `lightningrod-foe`, `lightningrod-ally`)가 정확 일치(`scenario/tests/redirect.rs`). 로더의 기본 표시 이름은 Showdown처럼 **기본종 이름**이다(`Indeedee-F` → `Indeedee`; 닉네임이 종 문자열과 같아도 기본종).
+
 **턴 엔진 검증(2026-09-25):** `single-hit` 정확 분포 271개 결과가 Showdown `full`과 TV 0으로 일치(엔진 약 10ms, Showdown 7.8초). `hypnosis-gravity`(중력 패치) 2개 결과 정확 일치. 두 fixture는 `oracle/expected/*.turn.json`(`strip-report.cjs`로 생성)이고 `scenario/tests/turn.rs`가 정확 비교한다. `spread-damage`는 정확 분포가 너무 커서(세 번째 단계에 중간 상태 14,260개, 네 번째 단계는 수백만) 끝까지 열거하지 못했다. 대신 엔진 표본 200,000회(2.4초)와 Showdown 표본 20,000회(90초)의 주변분포 69개가 모두 잡음(4σ 기준) 안에 있음을 확인했다(`marginals.cjs`). 테스트: `lab-engine` 36개, `lab-scenario` 18개, fmt·clippy(-D warnings)·dex 최신 검사 통과(MSVC).
 
 **로더 검증(2026-09-25):** serde 의존성과 `Cargo.lock`을 갱신했고, GNU에서 `lab-engine` 28개 + `lab-scenario` fixture 6개 테스트가 통과했다. rustfmt, GNU Clippy(`-D warnings`), dex 생성 최신 검사도 통과했다.
@@ -119,7 +121,7 @@ cd engine/py && ../../.venv-doubles/Scripts/maturin.exe build --release -i ../..
 ## 미구현 전수조사 (2026-09-25)
 
 - [`SHOWDOWN-GAPS.md`](SHOWDOWN-GAPS.md): Showdown `sim/*.ts`의 행동 종류 15·이벤트 119·상태 필드를 엔진과 대조한 목록과, 중력 파티 기준 우선순위. [`COVERAGE.md`](COVERAGE.md): dex 전체를 `support.rs`에 통과시킨 자동 생성 표(기술 399/938, 특성 21/321, 도구 370/583 지원; 라이브러리 사용 기준 57%/17%/63%). 생성: `cargo run -p lab-scenario --release --bin lab-coverage -- --out engine/COVERAGE.md`. `core/src/turn/coverage.rs`가 지원 검사의 공개 API다.
-- 가장 큰 공백은 순서대로 날따름·분노가루 유도, 메가진화, 기절 후 교체 결정 단계, 열매·`Update` 이벤트, 피격 특성(`DamagingHit`)·경쟁심/오기, 구애 도구, 연속기·교체기, 앵콜·도발·명령·도우미다.
+- 가장 큰 공백은 순서대로 날따름·분노가루 유도, 메가진화, 기절 후 교체 결정 단계, 열매·`Update` 이벤트, 피격 특성(`DamagingHit`)·경쟁심/오기, 구애 도구, 연속기·교체기, 앵콜·도발·명령·도우미다. (2026-09-26: 유도와 메가진화는 완료.)
 - [`reports/seed-champions-check-2026-09-25.md`](reports/seed-champions-check-2026-09-25.md): `D:\poke-teambuilder-seed`의 Champions 자료를 vendor와 대조한 결과(M-C 전수 일치, 메가루카리오Z 특성 칸 오류 1건, npm 0.11.11 기반 M-B 바인딩 stale). seed 디렉터리는 읽기 전용으로만 열었다.
 
 ## 작업 배분 (2026-09-25 사용자 지시)
@@ -131,7 +133,7 @@ cd engine/py && ../../.venv-doubles/Scripts/maturin.exe build --release -i ../..
 1. [완료 2026-09-25] `data/champions.json` → Rust 정적 테이블 (`core/src/dex/`).
 2. [로더·초기 분포·canonical·patch 완료 2026-09-25] 남은 것: 초기 등장의 다른 특성·도구(`switch_in.rs`는 아직 트레이스·모래날림·그래스메이커만; 턴 중 교체는 `turn/switching.rs`가 날씨·필드 특성·위협까지), `setupTurns`(이제 턴 엔진으로 재생 가능), VGC 4마리 선출. 두 등장 코드(`scenario/switch_in.rs`, `core/turn/switching.rs`)는 합쳐야 한다.
 3. [원시 연산·턴 연결 완료 2026-09-25] 데미지 코어가 턴 엔진에 연결됨.
-4. [턴 엔진 골격 완료 2026-09-25, 메가진화 완료 2026-09-26] 남은 것: 기절 후 교체 결정(`request: switch` 다음 단계, Showdown `instaswitch`; 교체된 기절 포켓몬의 status는 `''`로 바뀜), 날따름·분노가루 유도, 연속기(multihit), 교체기(유턴 등), 혼란·도발·앵콜 등 휘발, 구애 도구, 열매(오봉 등 `onUpdate`), 급소 랭크 보정 도구/특성. 진행 상황은 `WORKPLAN.md` §4.
+4. [턴 엔진 골격 완료 2026-09-25, 메가진화 완료 2026-09-26] 남은 것: 기절 후 교체 결정(`request: switch` 다음 단계, Showdown `instaswitch`; 교체된 기절 포켓몬의 status는 `''`로 바뀜), 연속기(multihit), 교체기(유턴 등), 혼란·도발·앵콜 등 휘발, 구애 도구, 열매(오봉 등 `onUpdate`), 급소 랭크 보정 도구/특성. 진행 상황은 `WORKPLAN.md` §4.
 5. 기술 이식: 날따름, 분노가루, 위협 이외 등장 특성, 메가진화를 먼저 한다. 우선순위는 `teams/library` 더블 사용 빈도 × `support.rs` 미지원 여부로 정한다. 추가할 때마다 oracle 시나리오와 `*.turn.json` fixture를 만든다.
 6. 분포 열거 성능: 광역기 두 개가 겹치는 턴은 정확 분포가 수백만 결과다. 후보: 이미 행동한 대상에 대한 풀죽음 분기 생략(분포 동치), 턴 종료에 사라지는 중간 상태 차이(풀죽음·lastMove 없는 교환 등)를 병합 전에 정규화, HP 구간 대신 정확 값 유지하되 결과 수 상한/근사 모드 도입. PokaiEngine 목표(턴당 약 0.08ms)와 같은 자릿수.
 7. 목표 지표: 시나리오 모음에서 정확 일치 99% 이상.
