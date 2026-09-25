@@ -394,6 +394,10 @@ fn try_move_hit_field<const N: usize>(
     if !data.pseudo_weather.is_none() {
         combine(add_pseudo_weather(b, data.pseudo_weather.id()));
     }
+    // HitField: the move's onHitField (Haze).
+    if let Some(r) = handlers::on_hit_field(b, mv) {
+        combine(r);
+    }
     Ok(outcome.unwrap_or(true))
 }
 
@@ -653,6 +657,7 @@ fn spread_move_hit<const N: usize>(
         // The move's own onHit; NOT_FAIL neither succeeds nor fails.
         match handlers::on_hit(b, user, t, mv)? {
             Some(HitResult::Success) => note(true),
+            Some(HitResult::Failure) => note(false),
             Some(HitResult::NotFail) | None => {}
         }
         if let (Hit::Done, Some(false)) = (results[i], did) {

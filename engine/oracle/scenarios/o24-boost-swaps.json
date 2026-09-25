@@ -1,0 +1,27 @@
+{
+ "description": "O24 Stage manipulation, fastest first: Excadrill Heart Swap (all stages) with Gardevoir, Gardevoir Topsy-Turvy on Snorlax, Weezing Power Swap (Atk, SpA) with Excadrill, Snorlax Guard Swap (Def, SpD) with Weezing.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gardevoir", "item": "Focus Sash", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Topsy-Turvy", "Protect"], "level": 50},
+   {"species": "Weezing", "item": "Leftovers", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Power Swap", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Leftovers", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Guard Swap", "Protect"], "level": 50},
+   {"species": "Excadrill", "item": "Life Orb", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Heart Swap", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Gardevoir": {"boosts": {"spa": 2, "spd": -1, "evasion": 1}}, "Weezing": {"boosts": {"def": 2, "atk": -1}}},
+  "p2": {"Snorlax": {"boosts": {"atk": 3, "def": -2, "spd": 1, "accuracy": -1}}, "Excadrill": {"boosts": {"atk": 1, "spe": 2}}}
+ },
+ "turn": {"p1": "move topsyturvy 1, move powerswap 2", "p2": "move guardswap 2, move heartswap 1"}
+}

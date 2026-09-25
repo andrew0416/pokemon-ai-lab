@@ -1,0 +1,26 @@
+{
+ "description": "O24 Topsy-Turvy fails on unboosted Snorlax and inverts boosted Excadrill's stages; both then Calm Mind (slower).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gardevoir", "item": "Focus Sash", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Topsy-Turvy", "Protect"], "level": 50},
+   {"species": "Weezing", "item": "Leftovers", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spe": 2}, "moves": ["Topsy-Turvy", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Leftovers", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Calm Mind", "Protect"], "level": 50},
+   {"species": "Excadrill", "item": "Life Orb", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {"Excadrill": {"boosts": {"atk": 2, "def": -1, "spe": -3}}}
+ },
+ "turn": {"p1": "move topsyturvy 1, move topsyturvy 2", "p2": "move calmmind, move calmmind"}
+}

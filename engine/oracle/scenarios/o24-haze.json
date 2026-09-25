@@ -1,0 +1,27 @@
+{
+ "description": "O24 Haze clears every active Pokémon's stages, including Protecting Gardevoir's. Faster Excadrill Swords Dances before Haze (cleared); slower Snorlax after (kept).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gardevoir", "item": "Focus Sash", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Protect", "Hyper Voice"], "level": 50},
+   {"species": "Weezing", "item": "Leftovers", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Haze", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Leftovers", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Excadrill", "item": "Life Orb", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Swords Dance", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Gardevoir": {"boosts": {"spa": 2, "spe": -1}}, "Weezing": {"boosts": {"def": 2}}},
+  "p2": {"Snorlax": {"boosts": {"atk": -2, "accuracy": 1}}, "Excadrill": {"boosts": {"spe": 1}}}
+ },
+ "turn": {"p1": "move protect, move haze", "p2": "move swordsdance, move swordsdance"}
+}

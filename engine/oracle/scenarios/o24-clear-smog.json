@@ -1,0 +1,26 @@
+{
+ "description": "O24 Amoonguss Clear Smog (never misses) into boosted Snorlax clears its stages; Snorlax then Swords Dances. Excadrill keeps its own boost behind Protect; Gardevoir Protects.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Amoonguss", "item": "Leftovers", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "spe": 2}, "moves": ["Clear Smog", "Protect"], "level": 50},
+   {"species": "Gardevoir", "item": "Focus Sash", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Protect", "Hyper Voice"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Leftovers", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Excadrill", "item": "Life Orb", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Protect", "Iron Head"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {"Snorlax": {"boosts": {"atk": 2, "def": -1, "spd": 3, "evasion": 1}}, "Excadrill": {"boosts": {"atk": 1}}}
+ },
+ "turn": {"p1": "move clearsmog 1, move protect", "p2": "move swordsdance, move protect"}
+}

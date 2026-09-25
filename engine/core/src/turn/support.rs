@@ -51,6 +51,12 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::MOONLIGHT, &["onHit"]),
     (moves::SYNTHESIS, &["onHit"]),
     (moves::SHORE_UP, &["onHit"]),
+    (moves::HAZE, &["onHitField"]),
+    (moves::CLEAR_SMOG, &["onHit"]),
+    (moves::TOPSY_TURVY, &["onHit"]),
+    (moves::POWER_SWAP, &["onHit"]),
+    (moves::GUARD_SWAP, &["onHit"]),
+    (moves::HEART_SWAP, &["onHit"]),
     (
         moves::GRAVITY,
         &[

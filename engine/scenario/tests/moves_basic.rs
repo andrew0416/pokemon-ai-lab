@@ -125,6 +125,26 @@ fn o26_snarl_spread_special_attack_drop() {
     assert_exact_parity("o26-snarl");
 }
 
+#[test]
+fn o24_clear_smog_clears_the_target() {
+    assert_exact_parity("o24-clear-smog");
+}
+
+#[test]
+fn o24_haze_clears_every_active_pokemon() {
+    assert_exact_parity("o24-haze");
+}
+
+#[test]
+fn o24_topsy_turvy_and_power_guard_heart_swap() {
+    assert_exact_parity("o24-boost-swaps");
+}
+
+#[test]
+fn o24_topsy_turvy_fails_without_stages() {
+    assert_exact_parity("o24-topsy-turvy-fail");
+}
+
 /// Champions `onDisableMove`: once the user has acted since switching in, First Impression
 /// cannot be chosen.
 #[test]

@@ -7,7 +7,8 @@
 use crate::damage::MOD_ONE_POINT_FIVE;
 use crate::dex::{abilities, items, moves, MoveId, Type, TypeRelation};
 use crate::field::{FieldEffect, Terrain, Weather};
-use crate::state::{SlotRef, Status};
+use crate::instruction::Instruction;
+use crate::state::{SideId, SlotRef, Status, BOOST_COUNT};
 
 use super::super::battle::Battle;
 use super::super::order::modify;
@@ -142,6 +143,7 @@ pub(super) fn on_effectiveness(id: MoveId, defending: Type, type_mod: i32) -> i3
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(super) enum HitResult {
     Success,
+    Failure,
     NotFail,
 }
 
@@ -173,9 +175,81 @@ pub(super) fn on_hit<const N: usize>(
             };
             weather_heal(b, target, modifier)
         }
+        // Clear Smog: `target.clearBoosts()`.
+        moves::CLEAR_SMOG => {
+            clear_boosts(b, target);
+            HitResult::Success
+        }
+        // Topsy-Turvy: every stage negated (`target.boosts[i] = -target.boosts[i]`); fails
+        // when there is none.
+        moves::TOPSY_TURVY => {
+            let boosts = b.state.slot(target).boosts;
+            if boosts.iter().all(|&v| v == 0) {
+                HitResult::Failure
+            } else {
+                set_boosts(b, target, boosts.map(|v| -v));
+                HitResult::Success
+            }
+        }
+        // Power Swap (atk, spa), Guard Swap (def, spd), Heart Swap (every stage): the user and
+        // the target exchange those stages (`setBoost`).
+        moves::POWER_SWAP | moves::GUARD_SWAP | moves::HEART_SWAP => {
+            let stats: &[usize] = match mv.id {
+                moves::POWER_SWAP => &[0, 2],
+                moves::GUARD_SWAP => &[1, 3],
+                _ => &[0, 1, 2, 3, 4, 5, 6],
+            };
+            let (before_user, before_target) =
+                (b.state.slot(user).boosts, b.state.slot(target).boosts);
+            let (mut to_user, mut to_target) = (before_user, before_target);
+            for &stat in stats {
+                to_user[stat] = before_target[stat];
+                to_target[stat] = before_user[stat];
+            }
+            set_boosts(b, user, to_user);
+            set_boosts(b, target, to_target);
+            HitResult::Success
+        }
         _ => return Ok(None),
     };
     Ok(Some(result))
+}
+
+/// The move's `onHitField` (moves targeting the whole field). `None` = none.
+pub(super) fn on_hit_field<const N: usize>(b: &mut Battle<'_, N>, mv: &ActiveMove) -> Option<bool> {
+    match mv.id {
+        // Haze: `for (const pokemon of this.getAllActive()) pokemon.clearBoosts();`
+        moves::HAZE => {
+            for side in [SideId::One, SideId::Two] {
+                for slot in Battle::<N>::slots(side) {
+                    if b.occupant(slot).is_some() {
+                        clear_boosts(b, slot);
+                    }
+                }
+            }
+            Some(true)
+        }
+        _ => None,
+    }
+}
+
+/// Showdown `clearBoosts`.
+fn clear_boosts<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    set_boosts(b, slot, [0; BOOST_COUNT]);
+}
+
+/// Showdown `setBoost` for every stage: set directly (no clamping, no boost events).
+fn set_boosts<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, boosts: [i8; BOOST_COUNT]) {
+    for (stat, &new) in boosts.iter().enumerate() {
+        let old = b.state.slot(slot).boosts[stat];
+        if old != new {
+            b.apply(Instruction::Boost {
+                target: slot,
+                stat: stat as u8,
+                amount: new - old,
+            });
+        }
+    }
 }
 
 /// `this.heal(this.modify(pokemon.maxhp, factor))` with `factor` as a 4096-based modifier
