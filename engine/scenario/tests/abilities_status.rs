@@ -10,6 +10,13 @@ use lab_engine::state::Status;
 use lab_engine::turn::{enumerate_turn, TurnError};
 use lab_scenario::scenario_choices;
 
+// ---- O52 Rock Head / Magic Guard -------------------------------------------------------------
+
+#[test]
+fn rock_head_and_magic_guard_match_showdown() {
+    assert_exact_parity("o52-rock-head-magic-guard");
+}
+
 // ---- O61 priority ----------------------------------------------------------------------------
 
 #[test]

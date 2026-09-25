@@ -1,0 +1,27 @@
+{
+ "description": "Sandstorm: Rock Head Aerodactyl's Double-Edge takes no recoil but still Life Orb recoil; poisoned Magic Guard Clefable's Life Orb Seismic Toss takes no Life Orb recoil, no poison and no sandstorm damage. Latios takes sandstorm damage as the control.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "o52-rock-head-magic-guard.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "o52-rock-head-magic-guard.p2.json",
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Clefable": {
+    "status": "psn"
+   }
+  },
+  "field": {
+   "weather": "sandstorm",
+   "weatherDuration": 3
+  }
+ },
+ "turn": {
+  "p1": "move doubleedge 1, move seismictoss 2",
+  "p2": "move calmmind, move irondefense"
+ }
+}

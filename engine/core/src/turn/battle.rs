@@ -21,9 +21,11 @@ use super::TurnError;
 /// What caused a loss of HP; decides which Damage handlers apply.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) enum DamageSource {
-    /// Direct damage of a move.
+    /// Direct damage of a move (Showdown effect type `Move`).
     Move,
-    /// Everything else: recoil, weather, status, items.
+    /// Recoil of a move (`recoil` array; Showdown effect id `recoil`), not Struggle's.
+    Recoil,
+    /// Everything else: weather, status, items (Life Orb), abilities.
     Indirect,
 }
 
@@ -203,14 +205,26 @@ impl<'a, const N: usize> Battle<'a, N> {
 
     // ---- HP ----------------------------------------------------------------------------
 
-    /// Showdown `spreadDamage` for one target: at least 1, Damage handlers (Focus Sash),
-    /// clamped to the target's HP, faint queued at 0 HP. Returns the HP removed.
+    /// Showdown `spreadDamage` for one target: at least 1, Damage handlers, clamped to the
+    /// target's HP, faint queued at 0 HP. Returns the HP removed.
+    ///
+    /// Damage handlers by priority: Rock Head and Magic Guard (0), then Focus Sash (-40).
+    /// Rock Head (`effect.id === 'recoil'`) and Magic Guard (`effect.effectType !== 'Move'`)
+    /// cancel the damage (neither is breakable).
     pub fn damage(&mut self, target: SlotRef, amount: f64, source: DamageSource) -> i32 {
         let Some(pokemon) = self.alive(target) else {
             return 0;
         };
         let mut amount = (amount.floor() as i32).max(1);
         let mon = self.mon(pokemon);
+        let cancelled = match mon.ability {
+            a if a == abilities::ROCK_HEAD => source == DamageSource::Recoil,
+            a if a == abilities::MAGIC_GUARD => source != DamageSource::Move,
+            _ => false,
+        };
+        if cancelled {
+            return 0;
+        }
         if source == DamageSource::Move
             && mon.item == items::FOCUS_SASH
             && mon.hp == mon.max_hp

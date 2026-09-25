@@ -614,7 +614,7 @@ fn hit_loop<const N: usize>(
             let amount = (f64::from(total) * f64::from(recoil.0) / f64::from(recoil.1))
                 .round()
                 .max(1.0);
-            b.damage(user, amount, DamageSource::Indirect);
+            b.damage(user, amount, DamageSource::Recoil);
         }
     }
     if !results.iter().any(|r| r.ok()) {
