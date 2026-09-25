@@ -376,6 +376,12 @@ pub fn parse_choice<const N: usize>(
                 target: 0,
                 gimmick: Gimmick::None,
             },
+            // Struggle, the only choice of a Pokémon without a usable move.
+            ["move", "struggle"] => SlotAction::Move {
+                index: lab_engine::turn::STRUGGLE_INDEX,
+                target: 0,
+                gimmick: Gimmick::None,
+            },
             ["move", mv, rest @ ..] => {
                 let mon = state
                     .active(slot)

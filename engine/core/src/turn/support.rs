@@ -168,6 +168,9 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::DEFOG, &["onHit"]),
     (moves::RAPID_SPIN, &["onAfterHit", "onAfterSubDamage"]),
     (moves::COURT_CHANGE, &["onHitField"]),
+    // Struggle: `onModifyMove` (type `???`) in `handlers::on_modify_move`; `struggleRecoil` in
+    // `moves::hit_loop`; chosen only without a usable move (`STRUGGLE_INDEX`).
+    (moves::STRUGGLE, &["onModifyMove"]),
     (moves::GRASSY_GLIDE, &["onModifyPriority"]),
     (moves::LOW_KICK, &["basePowerCallback", "onTryHit"]),
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),
@@ -793,7 +796,7 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         || m.steals_boosts
         || m.has_crash_damage
         || m.mind_blown_recoil
-        || m.struggle_recoil
+        || (m.struggle_recoil && id != moves::STRUGGLE)
         || m.chloroblast_recoil
         || m.is_z
         || m.is_max

@@ -49,7 +49,7 @@ use branch::Chooser;
 use order::{ORDER_MEGA, ORDER_MOVE, ORDER_SWITCH};
 use queue::{Action, ActionKind};
 
-pub use lock::{locked_move, Locked, RECHARGE_INDEX};
+pub use lock::{locked_move, Locked, RECHARGE_INDEX, STRUGGLE_INDEX};
 pub use moves::{takes_target, valid_target_loc};
 pub use switching::{
     item_start_handler, species_start_handler, start_handler, switch_in_supported,
@@ -529,6 +529,32 @@ fn check_turn<const N: usize>(
                     },
                     Some(mon),
                 ) => {
+                    // Without a usable move the only choice is Struggle (`move 1` names it).
+                    let usable = mon.moves.iter().any(|m| {
+                        !m.id.is_none() && m.pp > 0 && disabled(state, slot, m.id).is_none()
+                    });
+                    let index = if !usable && index == 0 {
+                        STRUGGLE_INDEX
+                    } else {
+                        index
+                    };
+                    if index == STRUGGLE_INDEX {
+                        if usable {
+                            return Err(invalid("Struggle while a move is usable".into()));
+                        }
+                        if target != 0 || !gimmick.is_none() {
+                            return Err(invalid("Struggle takes no target or gimmick".into()));
+                        }
+                        if let Some(why) = support::move_unsupported(move_ids::STRUGGLE) {
+                            return Err(TurnError::Unsupported(why));
+                        }
+                        normalized[side.index()][i] = SlotAction::Move {
+                            index,
+                            target: 0,
+                            gimmick: Gimmick::None,
+                        };
+                        continue;
+                    }
                     let slot_move = mon.moves[index as usize];
                     let id = slot_move.id;
                     if id.is_none() {
@@ -636,7 +662,7 @@ impl<const N: usize> Battle<'_, N> {
                 fractional_tenths,
                 ..
             } => {
-                let id = self.mon(action.pokemon).moves[index as usize].id;
+                let id = lock::action_move_id(self.mon(action.pokemon), index);
                 let priority = if in_slot {
                     self.move_priority(action.slot, id)
                 } else {

@@ -307,6 +307,18 @@ impl<'a, const N: usize> Battle<'a, N> {
         self.lose_hp(target, pokemon, amount)
     }
 
+    /// Showdown `directDamage`: at least 1 HP, no Damage handlers (Struggle's recoil). Returns the
+    /// HP removed.
+    pub fn direct_damage(&mut self, target: SlotRef, amount: i32) -> i32 {
+        let Some(pokemon) = self.alive(target) else {
+            return 0;
+        };
+        if amount == 0 {
+            return 0;
+        }
+        self.lose_hp(target, pokemon, amount.max(1))
+    }
+
     fn lose_hp(&mut self, slot: SlotRef, pokemon: PokemonRef, amount: i32) -> i32 {
         let hp = i32::from(self.mon(pokemon).hp);
         if amount <= 0 || hp == 0 {

@@ -115,6 +115,9 @@ pub(super) fn on_modify_move<const N: usize>(
                 mv.accuracy = None;
             }
         }
+        // Struggle: `move.type = '???'` (typeless: `Type::None` for the move, which no type chart
+        // entry, STAB or type-based handler matches).
+        moves::STRUGGLE => mv.move_type = Type::None,
         // Thunder, Hurricane: `switch (target?.effectiveWeather())`: never misses in rain,
         // accuracy 50 in sun.
         moves::THUNDER | moves::HURRICANE => {

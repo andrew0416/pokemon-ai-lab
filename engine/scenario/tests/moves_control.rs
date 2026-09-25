@@ -201,6 +201,36 @@ fn o22_three_spikes_layers_mirror_armor_and_magic_guard() {
     assert_exact_parity("o22-entry-web");
 }
 
+#[test]
+fn o28_struggle_is_typeless_with_direct_recoil() {
+    assert_exact_parity("o28-struggle");
+}
+
+/// Without a usable move, `move 1` is Struggle (Showdown's request lists only Struggle); a
+/// status move is still disabled by Taunt and Struggle is no choice while a move is usable.
+#[test]
+fn o28_struggle_is_the_only_choice_without_a_usable_move() {
+    let name = "o28-struggle";
+    let fixture = fixture(name);
+    let (loaded, position) = start(name, &fixture);
+    let choices = scenario_choices(&loaded, &position.state).unwrap();
+    let mut state: Doubles = position.state.clone();
+    let expected = enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices).unwrap();
+    let mut by_index = choices;
+    by_index[1][0] = move_choice(0, 0);
+    let mut state: Doubles = position.state.clone();
+    let got = enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, by_index).unwrap();
+    assert_eq!(got, expected);
+    assert_invalid_choice(name, 1, 0, move_choice(1, 0), "Taunt");
+    assert_invalid_choice(
+        name,
+        1,
+        1,
+        move_choice(lab_engine::turn::STRUGGLE_INDEX, 0),
+        "Struggle while a move is usable",
+    );
+}
+
 /// Stealth Rock could knock out a newcomer that Toxic Spikes also poisons: Showdown's result
 /// depends on the order the hazards were set, which the state does not keep.
 #[test]

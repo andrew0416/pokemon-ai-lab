@@ -178,7 +178,7 @@ pub(crate) fn run_move<const N: usize>(
         before_move(b, user, &recharge);
         return Ok(MoveStep::Done);
     }
-    let id = b.mon(pokemon).moves[move_index as usize].id;
+    let id = super::lock::action_move_id(b.mon(pokemon), move_index);
     // `setActiveMove`: set for the whole move, cleared when it ends.
     b.active_move = Some(ActiveMoveRef {
         user,
@@ -238,11 +238,12 @@ fn run_move_inner<const N: usize>(
     will_act: bool,
 ) -> Result<MoveStep, TurnError> {
     let pokemon = b.occupant(user).expect("the caller checked the user");
-    let chosen = b.mon(pokemon).moves[move_index as usize].id;
-    // OverrideAction (Encore): the encored move replaces the chosen one, keeping the chosen
-    // move's priority and Prankster boost; its target is drawn afresh.
+    let chosen = super::lock::action_move_id(b.mon(pokemon), move_index);
+    // OverrideAction (Encore, not for Struggle): the encored move replaces the chosen one,
+    // keeping the chosen move's priority and Prankster boost; its target is drawn afresh.
     let encore = b.volatile(user, Volatile::Encore);
-    let (id, move_index, target) = if encore.active && encore.mv != chosen {
+    let struggle = move_index == super::lock::STRUGGLE_INDEX;
+    let (id, move_index, target) = if !struggle && encore.active && encore.mv != chosen {
         let index = b
             .mon(pokemon)
             .moves
@@ -274,11 +275,12 @@ fn run_move_inner<const N: usize>(
         return Ok(MoveStep::Done);
     }
 
-    // A locked move (Outrage's later turns) costs no PP.
-    if super::lock::locked_move(b.state, user).is_none() {
+    // A locked move (Outrage's later turns) costs no PP, nor does Struggle (`deductPP` finds no
+    // slot, and Struggle goes on anyway).
+    if super::lock::locked_move(b.state, user).is_none() && !struggle {
         let pp = b.mon(pokemon).moves[move_index as usize].pp;
         if pp == 0 {
-            return Err(b.unsupported(format!("{}: Struggle", mv.data.name)));
+            return Err(b.unsupported(format!("{}: no PP left when used", mv.data.name)));
         }
         b.apply(crate::instruction::Instruction::SetPp {
             target: pokemon,
@@ -1020,6 +1022,11 @@ fn prepare_hit_ability<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv:
     if ability != abilities::PROTEAN && ability != abilities::LIBERO {
         return;
     }
+    // `if (move.hasBounced || move.flags['futuremove'] || move.sourceEffect === 'snatch' ||
+    // move.callsMove) return;` and `type !== '???'` (Struggle).
+    if mv.data.calls_move || mv.move_type == Type::None {
+        return;
+    }
     if b.volatile(user, Volatile::ProteanUsed).active {
         return;
     }
@@ -1258,7 +1265,13 @@ fn hit_loop<const N: usize>(
     let user_fainted = b.alive(user).is_none();
     b.faint_messages(user_fainted);
     let total = progress.total_damage;
-    if total > 0 {
+    if total > 0 && mv.data.struggle_recoil {
+        // Struggle: `directDamage(clampIntRange(Math.round(pokemon.baseMaxhp / 4), 1))`, which
+        // no Damage handler sees (Rock Head, Magic Guard, Endure, Sturdy).
+        let max_hp = b.slot_mon(user).map_or(0, |m| m.max_hp);
+        let amount = (f64::from(max_hp) / 4.0).round().max(1.0) as i32;
+        b.direct_damage(user, amount);
+    } else if total > 0 {
         if let Some(recoil) = mv.data.recoil {
             let amount = (f64::from(total) * f64::from(recoil.0) / f64::from(recoil.1))
                 .round()
@@ -1746,7 +1759,9 @@ fn get_damage<const N: usize>(
         (Weather::Sun, Type::Water) | (Weather::Rain, Type::Fire) => MOD_HALF,
         _ => MOD_ONE,
     };
-    let stab = data.force_stab || attacker.types.contains(&mv.move_type);
+    // The `???` type (Struggle's, `Type::None` here) never gets STAB.
+    let stab =
+        data.force_stab || (mv.move_type != Type::None && attacker.types.contains(&mv.move_type));
     let stab_modifier = ability_events::modify_stab(attacker.ability, stab);
     // runEffectiveness: per defending type, the chart then the move's onEffectiveness.
     let type_mod: i32 = defender
