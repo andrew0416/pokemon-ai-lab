@@ -940,6 +940,9 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         &["onResidual", "onSetStatus", "onStart", "onTryAddVolatile"],
     ),
     (abilities::HUNGER_SWITCH, &["onResidual"]),
+    // Mimicry: `onStart` in `switching::start_ability`, `onTerrainChange` in
+    // `field_events::terrain_changed` (`forme::mimicry`).
+    (abilities::MIMICRY, &["onStart", "onTerrainChange"]),
     // Damage handlers (`Battle::damage`).
     (abilities::ROCK_HEAD, &["onDamage"]),
     (abilities::MAGIC_GUARD, &["onDamage"]),

@@ -22,7 +22,7 @@
 //! stores the filtered types and keeps the real ones in the volatile ([`set_types`]).
 
 use crate::dex::{abilities, species, AbilityId, MoveCategory, MoveFlags, MoveId, SpeciesId, Type};
-use crate::field::Weather;
+use crate::field::{Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{Forme, PokemonRef, SlotRef};
 use crate::volatile::{encode_types, Volatile, VolatileState};
@@ -460,6 +460,37 @@ pub(crate) fn residual<const N: usize>(
     Ok(())
 }
 
+// ---- Mimicry ----------------------------------------------------------------------------------
+
+/// Mimicry's `onTerrainChange` (also its `onStart`, `singleEvent('TerrainChange')`) for the
+/// holder in `slot`: its types become the terrain's type (Electric, Grass, Fairy, Psychic), or
+/// its base species' types without a terrain (`pokemon.baseSpecies.types`), unless they already
+/// are (`getTypes().join()`) or `setType` fails (Arceus and Silvally; Terastallization is off).
+/// Not breakable. `field.terrain` is read as is (no terrain suppression exists).
+fn mimicry<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let Some(pokemon) = b.alive(slot) else {
+        return;
+    };
+    let mon = b.mon(pokemon);
+    let types = match b.terrain() {
+        Terrain::Electric => [Type::Electric, Type::None],
+        Terrain::Grassy => [Type::Grass, Type::None],
+        Terrain::Misty => [Type::Fairy, Type::None],
+        Terrain::Psychic => [Type::Psychic, Type::None],
+        Terrain::None => {
+            temporary_forme_base(mon.species)
+                .unwrap_or(mon.species)
+                .data()
+                .types
+        }
+    };
+    let num = mon.species.data().num;
+    if mon.types == types || num == 493 || num == 773 {
+        return;
+    }
+    set_types(b, slot, pokemon, types);
+}
+
 // ---- switch-in and field events ---------------------------------------------------------------
 
 /// `singleEvent('Start')` of a forme ability (`switching::StartEffect::Forme`, run in the
@@ -474,6 +505,7 @@ pub(crate) fn on_start<const N: usize>(
         a if a == abilities::ICE_FACE => ice_face_restore(b, slot),
         a if a == abilities::SCHOOLING => schooling(b, slot),
         a if a == abilities::SHIELDS_DOWN => shields_down(b, slot)?,
+        a if a == abilities::MIMICRY => mimicry(b, slot),
         _ => {}
     }
     Ok(())
@@ -484,6 +516,14 @@ pub(crate) fn on_start<const N: usize>(
 pub(crate) fn weather_changed<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     if b.ability(slot) == abilities::ICE_FACE {
         ice_face_restore(b, slot);
+    }
+}
+
+/// The abilities' `onTerrainChange` for the Pokémon in `slot` (`field_events::terrain_changed`,
+/// before its item's): Mimicry.
+pub(crate) fn terrain_changed<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.ability(slot) == abilities::MIMICRY {
+        mimicry(b, slot);
     }
 }
 
@@ -575,6 +615,15 @@ mod tests {
         ] {
             assert_eq!(temporary_forme_base(forme), Some(base));
         }
+    }
+
+    /// Mimicry's handlers (not breakable: the TerrainChange event reads `b.ability`).
+    #[test]
+    fn mimicry_matches_the_dex() {
+        let data = abilities::MIMICRY.data();
+        assert_eq!(data.handlers, ["onStart", "onTerrainChange"]);
+        assert!(data.event_orders.contains(&("onSwitchInPriority", -1)));
+        assert!(!data.flags.contains(crate::dex::AbilityFlags::BREAKABLE));
     }
 
     /// Zero to Hero's permanent change keeps the ability (so `setAbility` has no End or Start to

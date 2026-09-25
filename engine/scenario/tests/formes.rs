@@ -153,6 +153,22 @@ fn shields_down_refuses_a_core_colour() {
     assert!(error.contains("Shields Down on Minior-Orange"), "{error}");
 }
 
+// ---- Mimicry ----------------------------------------------------------------------------------
+
+/// The terrain's type at the battle start (Electric Surge) and after a new terrain (Misty
+/// Terrain: Fairy, immune to Dragon Claw).
+#[test]
+fn mimicry_takes_the_terrain_type() {
+    assert_exact_parity("mimicry-misty");
+}
+
+/// Back to the base species' types when the terrain ends (Ice Spinner): Ground, immune to
+/// Thunderbolt.
+#[test]
+fn mimicry_returns_to_the_base_types() {
+    assert_exact_parity("mimicry-ice-spinner");
+}
+
 /// A temporary forme cannot be a set's species (Showdown would keep it as the base species).
 #[test]
 fn temporary_formes_are_refused_as_set_species() {
