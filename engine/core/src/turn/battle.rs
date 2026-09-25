@@ -52,6 +52,11 @@ pub(crate) struct Battle<'a, const N: usize> {
     pub active_move: Option<ActiveMoveRef>,
     /// The actions of the turn not yet run (Showdown `queue.list`), see `queue.rs`.
     pub queue: Vec<super::queue::Action>,
+    /// The battle start's switch-ins are running (`enumerate_start`): no Pokémon has been on
+    /// the field before, so the once-per-battle flags Showdown keeps on each Pokémon
+    /// (`swordBoost`, `shieldBoost`, `syrupTriggered`), which the state does not record, are all
+    /// unset.
+    pub battle_start: bool,
 }
 
 impl<'a, const N: usize> Battle<'a, N> {
@@ -63,6 +68,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             faint_queue: Vec::new(),
             active_move: None,
             queue: Vec::new(),
+            battle_start: false,
         }
     }
 
@@ -556,7 +562,8 @@ impl<'a, const N: usize> Battle<'a, N> {
     ///   ability-ignoring move is in progress): Water Veil (brn), Immunity (psn, tox),
     ///   Insomnia and Vital Spirit (slp), Limber (par), Comatose (everything), Purifying Salt
     ///   (everything), Leaf Guard (everything in harsh sunlight), Thermal Exchange (brn);
-    /// - Sweet Veil on the target or an ally (`onAllySetStatus`, slp);
+    /// - Sweet Veil (slp) and Pastel Veil (psn, tox) on the target or an ally
+    ///   (`onAllySetStatus`; Pastel Veil's own `onSetStatus` is the same block);
     /// - Misty Terrain (everything) and Electric Terrain (slp) for a grounded target.
     ///
     /// Flower Veil is refused (`onAllyTryBoost`).
@@ -579,14 +586,21 @@ impl<'a, const N: usize> Battle<'a, N> {
         if blocked_by_own {
             return true;
         }
-        // `onAllySetStatus` runs for every active ally and the target itself.
-        if status == Status::Sleep
-            && self
+        // `onAllySetStatus` runs for every active ally and the target itself: Sweet Veil (slp),
+        // Pastel Veil (psn, tox; its own `onSetStatus` blocks the same for the holder).
+        let veil = match status {
+            Status::Sleep => Some(abilities::SWEET_VEIL),
+            Status::Poison | Status::Toxic => Some(abilities::PASTEL_VEIL),
+            _ => None,
+        };
+        if let Some(veil) = veil {
+            if self
                 .alive_slots(target.side)
                 .into_iter()
-                .any(|s| self.ability_unless_broken(s) == abilities::SWEET_VEIL)
-        {
-            return true;
+                .any(|s| self.ability_unless_broken(s) == veil)
+            {
+                return true;
+            }
         }
         if self.is_grounded(target) {
             match self.terrain() {
@@ -1164,6 +1178,7 @@ pub(crate) fn cured_on_update(ability: AbilityId, status: Status) -> bool {
         a if a == abilities::INSOMNIA || a == abilities::VITAL_SPIRIT => status == Status::Sleep,
         a if a == abilities::LIMBER => status == Status::Paralyze,
         a if a == abilities::MAGMA_ARMOR => status == Status::Freeze,
+        a if a == abilities::PASTEL_VEIL => matches!(status, Status::Poison | Status::Toxic),
         _ => false,
     }
 }

@@ -1,0 +1,26 @@
+{
+ "description": "O68 Download, Intrepid Sword, Dauntless Shield: at the start faster Garchomp's Def +1 comes before Porygon-Z's Download (SpA +1); after Snorlax's Amnesia in the setup turn, Porygon2 switching in gets Atk +1. Gallade's Intrepid Sword gives Atk +1 (Zacian and Zamazenta have a species onBattleStart the engine refuses).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Porygon-Z", "item": "", "ability": "Download", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Protect"], "level": 50},
+   {"species": "Gallade", "item": "", "ability": "Intrepid Sword", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Protect", "Swords Dance"], "level": 50},
+   {"species": "Porygon2", "item": "", "ability": "Download", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Protect"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Dauntless Shield", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Amnesia"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [["move protect, move protect","move swordsdance, move amnesia"]],
+ "turn": {"p1": "switch 3, move swordsdance", "p2": "move swordsdance, move amnesia"}
+}

@@ -625,6 +625,21 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         abilities::BERSERK,
         &["onAfterMoveSecondary", "onDamage", "onTryEatItem"],
     ),
+    // O63 Unnerve: `onFoeTryEatItem` in `abilities::try_eat_item`; `onStart` / `onEnd` only
+    // set and clear the flag it reads (`switching`).
+    (abilities::UNNERVE, &["onEnd", "onFoeTryEatItem", "onStart"]),
+    // O68 Pastel Veil: `onSetStatus` / `onAllySetStatus` in `Battle::set_status_blocked`,
+    // `onUpdate` in `abilities::on_update`, `onStart` / `onAnySwitchIn` in `switching`.
+    (
+        abilities::PASTEL_VEIL,
+        &[
+            "onAllySetStatus",
+            "onAnySwitchIn",
+            "onSetStatus",
+            "onStart",
+            "onUpdate",
+        ],
+    ),
     // O58. Own Tempo: `onTryAddVolatile` (confusion) in `Battle::add_volatile_blocked`,
     // `onUpdate` (confusion cure) in `abilities::on_update`, `onTryBoost` (Intimidate) in
     // `Battle::boost_by`, `onHit` only logs. Oblivious: `onTryHit` in

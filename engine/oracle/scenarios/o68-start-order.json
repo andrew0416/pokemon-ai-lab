@@ -1,0 +1,23 @@
+{
+ "description": "O68 battle-start order: Incineroar's Intimidate and Hydrapple's Supersweet Syrup (priority 0) lower Flamigo's Attack and evasion (Clear Body Metagross is spared); Flamigo's Costar (onSwitchInPriority -2) then copies Metagross's clean stages, although Flamigo is the fastest.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Flamigo", "item": "", "ability": "Costar", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50},
+   {"species": "Metagross", "item": "", "ability": "Clear Body", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Incineroar", "item": "", "ability": "Intimidate", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50},
+   {"species": "Hydrapple", "item": "", "ability": "Supersweet Syrup", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move swordsdance, move swordsdance", "p2": "move swordsdance, move swordsdance"}
+}

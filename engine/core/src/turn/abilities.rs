@@ -349,8 +349,11 @@ const HEALING_BERRIES: [ItemId; 9] = [
 ];
 
 /// `runEvent('TryEatItem', eater, null, null, item)` for the implemented handlers: Anger Shell
-/// and Berserk (the eater's own ability) refuse a healing berry while their check is pending.
-/// `false` = the berry is not eaten.
+/// and Berserk (the eater's own ability) refuse a healing berry while their check is pending;
+/// Unnerve (`onFoeTryEatItem`, WORKPLAN O63) on a foe not fainted (`foes()`) refuses every
+/// berry once it has started (`effectState.unnerved`: an active holder always has, its start
+/// runs first among the switch-in handlers). They only return booleans, so their order does
+/// not matter. `false` = the berry is not eaten.
 pub(crate) fn try_eat_item<const N: usize>(b: &Battle<'_, N>, eater: SlotRef) -> bool {
     let Some(mon) = b.slot_mon(eater) else {
         return false;
@@ -359,7 +362,11 @@ pub(crate) fn try_eat_item<const N: usize>(b: &Battle<'_, N>, eater: SlotRef) ->
     let pending = has_berserk_check(mon.ability)
         && b.volatile(eater, Volatile::AngerShellUnchecked).active
         && HEALING_BERRIES.contains(&item);
-    !pending
+    let unnerved = b
+        .alive_slots(eater.side.other())
+        .into_iter()
+        .any(|foe| b.ability(foe) == abilities::UNNERVE);
+    !pending && !unnerved
 }
 
 /// Sheer Force's `onModifyMove` condition: `move.secondaries && !move.hasSheerForceBoost`.

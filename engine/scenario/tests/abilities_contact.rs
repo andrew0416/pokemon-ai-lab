@@ -4,7 +4,12 @@
 
 mod common;
 
-use common::assert_exact_parity;
+use common::{assert_exact_parity, fixture, start};
+use lab_engine::dex::abilities;
+use lab_engine::rules::Ruleset;
+use lab_engine::state::SideId;
+use lab_engine::turn::{enumerate_turn, TurnError};
+use lab_scenario::scenario_choices;
 
 // ---- O55 onDamagingHit -------------------------------------------------------------------------
 
@@ -107,4 +112,67 @@ fn own_tempo_and_oblivious_block_intimidate_match_showdown() {
 #[test]
 fn scrappy_and_keen_eye_match_showdown() {
     assert_exact_parity("o58-scrappy-keen-eye");
+}
+
+// ---- O68 switch-in abilities, O63 Unnerve --------------------------------------------------------
+
+/// The battle start's handler order: `onSwitchInPriority` before Speed (Costar after Intimidate
+/// and Supersweet Syrup although it is the fastest).
+#[test]
+fn switch_in_priority_and_supersweet_syrup_match_showdown() {
+    assert_exact_parity("o68-start-order");
+}
+
+/// Download at the start and on a switch-in, Intrepid Sword, Dauntless Shield.
+#[test]
+fn download_intrepid_sword_dauntless_shield_match_showdown() {
+    assert_exact_parity("o68-download-sword-shield");
+}
+
+#[test]
+fn hospitality_and_curious_medicine_match_showdown() {
+    assert_exact_parity("o68-support-switch-ins");
+}
+
+/// Screen Cleaner on both sides; Unnerve keeps a foe's Sitrus Berry uneaten.
+#[test]
+fn screen_cleaner_and_unnerve_match_showdown() {
+    assert_exact_parity("o68-screen-cleaner-unnerve");
+}
+
+/// Pastel Veil's `onAnySwitchIn` cures an ally poisoned through Mold Breaker; its `onUpdate`
+/// cures the holder after the action.
+#[test]
+fn pastel_veil_any_switch_in_and_update_match_showdown() {
+    assert_exact_parity("o68-pastel-veil");
+}
+
+/// Pastel Veil's `onStart` cure and `onAllySetStatus` block.
+#[test]
+fn pastel_veil_start_matches_showdown() {
+    assert_exact_parity("o68-pastel-veil-start");
+}
+
+/// Intrepid Sword acts once per battle (`pokemon.swordBoost`); the state does not record it, so
+/// a switch-in after the battle start is refused.
+#[test]
+fn intrepid_sword_after_the_start_is_refused() {
+    let name = "o68-download-sword-shield";
+    let fixture = fixture(name);
+    let (loaded, position) = start(name, &fixture);
+    let mut state = position.state;
+    let choices = scenario_choices(&loaded, &state).unwrap();
+    let porygon2 = state
+        .side(SideId::One)
+        .party
+        .iter()
+        .position(|p| p.species.data().name == "Porygon2")
+        .unwrap();
+    let mon = &mut state.side_mut(SideId::One).party[porygon2];
+    mon.ability = abilities::INTREPID_SWORD;
+    mon.base_ability = abilities::INTREPID_SWORD;
+    match enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices) {
+        Err(TurnError::Unsupported(why)) => assert!(why.contains("Intrepid Sword"), "{why}"),
+        other => panic!("expected Unsupported, got {other:?}"),
+    }
 }

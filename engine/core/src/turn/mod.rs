@@ -149,7 +149,11 @@ pub fn enumerate_start<const N: usize>(state: &mut State<N>) -> Result<Vec<Outco
                 return Err(b.unsupported(why));
             }
         }
+        b.battle_start = true;
         switching::run_switch_in(b, &leads)?;
+        b.battle_start = false;
+        // `runAction('runSwitch')` ends with `eachEvent('Update')`.
+        update::update_event(b)?;
         Ok(true)
     })
 }

@@ -1,0 +1,28 @@
+{
+ "description": "O68 Hospitality and Curious Medicine: Sinistcha switching in heals its damaged ally Kangaskhan by a quarter of its max HP; Slowking-Galar switching in clears its ally Machamp's +2 Attack.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Kangaskhan", "item": "", "ability": "Scrappy", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Sinistcha", "item": "", "ability": "Hospitality", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Slowbro", "item": "", "ability": "Own Tempo", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 10}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Slowking-Galar", "item": "", "ability": "Curious Medicine", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {"p1":{"Kangaskhan":{"hp":100}},"p2":{"Machamp":{"boosts":{"atk":2}}}},
+ "turn": {"p1": "move seismictoss 2, switch 3", "p2": "switch 3, move seismictoss 1"}
+}
