@@ -1,9 +1,9 @@
 //! Callbacks of the conditions moves create (`condition` in `data/moves.ts`): what happens
 //! when a volatile starts and when its duration runs out in the residual.
 
-use crate::dex::Type;
+use crate::dex::{moves, MoveCategory, MoveId, Type};
 use crate::instruction::Instruction;
-use crate::state::{PokemonRef, SlotRef, Status};
+use crate::state::{PokemonRef, SlotRef, State, Status};
 use crate::volatile::{decode_types, encode_types, Volatile, VolatileState};
 
 use super::battle::Battle;
@@ -79,4 +79,58 @@ pub(crate) fn volatile_end<const N: usize>(
         _ => {}
     }
     Ok(())
+}
+
+/// The volatile's `onStart` when it is added (after `TryAddVolatile`; Encore's, confusion's and
+/// a locked move's are in `Battle::add_volatile_from`): it may change the new state, or fail
+/// (`false`: the volatile is not added).
+pub(crate) fn volatile_start<const N: usize>(
+    b: &Battle<'_, N>,
+    target: SlotRef,
+    volatile: Volatile,
+    new: &mut VolatileState,
+) -> bool {
+    match volatile {
+        // Taunt: `if (target.activeTurns && !this.queue.willMove(target))
+        // this.effectState.duration++;` (`activeTurns` is `active_since_turn_start`).
+        Volatile::Taunt => {
+            if b.active_since_turn_start(target) && b.will_move(target).is_none() {
+                new.duration += 1;
+            }
+            true
+        }
+        _ => true,
+    }
+}
+
+/// The user's condition `onBeforeMove` handlers between Gravity (priority 6) and confusion
+/// (3): Taunt (5) fails a status move other than Me First. `false` = the move is not used.
+pub(crate) fn before_move_after_gravity<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+) -> bool {
+    let data = id.data();
+    let taunted = b.volatile(user, Volatile::Taunt).active
+        && data.category == MoveCategory::Status
+        && id != moves::ME_FIRST;
+    !taunted
+}
+
+/// Why the Pokémon in `slot` cannot choose `id` because of a condition on it (the conditions'
+/// `DisableMove` handlers that `endTurn` runs): Taunt disables every status move but Me First.
+pub(crate) fn disabled_move<const N: usize>(
+    state: &State<N>,
+    slot: SlotRef,
+    id: MoveId,
+) -> Option<String> {
+    let volatiles = &state.slot(slot).volatiles;
+    let data = id.data();
+    if volatiles.has(Volatile::Taunt)
+        && data.category == MoveCategory::Status
+        && id != moves::ME_FIRST
+    {
+        return Some(format!("{} is disabled by Taunt", data.name));
+    }
+    None
 }

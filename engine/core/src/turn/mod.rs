@@ -593,6 +593,10 @@ fn disabled<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> Opti
     {
         return Some(format!("Encore locks it into {}", encore.mv.data().name));
     }
+    // Taunt and the other conditions' `onDisableMove`.
+    if let Some(why) = conditions::disabled_move(state, slot, id) {
+        return Some(why);
+    }
     items::disabled_move(state, slot, id)
 }
 

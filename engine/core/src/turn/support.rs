@@ -94,6 +94,17 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "onTryHit",
         ],
     ),
+    // Taunt: `condition.onStart` in `conditions::volatile_start`, `onBeforeMove` and
+    // `onDisableMove` in `conditions`, `onEnd` only logs.
+    (
+        moves::TAUNT,
+        &[
+            "condition.onBeforeMove",
+            "condition.onDisableMove",
+            "condition.onEnd",
+            "condition.onStart",
+        ],
+    ),
     (moves::GRASSY_GLIDE, &["onModifyPriority"]),
     (moves::LOW_KICK, &["basePowerCallback", "onTryHit"]),
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),

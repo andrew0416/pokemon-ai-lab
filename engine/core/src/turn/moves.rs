@@ -296,8 +296,9 @@ fn run_move_inner<const N: usize>(
     Ok(MoveStep::Done)
 }
 
-/// The BeforeMove handlers, by priority: sleep and freeze (10), flinch (8), Gravity (6),
-/// paralysis (1), the Choice lock (0). `false` = the move is not used (no PP, no `lastMove`).
+/// The BeforeMove handlers, by priority: sleep and freeze (10), flinch (8), Gravity (6), Taunt
+/// (5), confusion (3), paralysis (1), the Choice lock (0). `false` = the move is not used (no
+/// PP, no `lastMove`).
 fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) -> bool {
     let pokemon = b.occupant(user).expect("checked");
     // mustrecharge (priority 11): the turn is spent recharging.
@@ -330,6 +331,10 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
         return false;
     }
     if b.field_active(FieldEffect::Gravity) && mv.data.flags.contains(MoveFlags::GRAVITY) {
+        return false;
+    }
+    // Taunt (priority 5).
+    if !conditions::before_move_after_gravity(b, user, mv.id) {
         return false;
     }
     // Confusion (priority 3): one turn less; over at 0; otherwise a 33% hit on itself.

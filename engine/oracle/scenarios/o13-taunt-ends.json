@@ -1,0 +1,27 @@
+{
+ "description": "O13 Taunt over three turns: turn 1 taunts Clefable (3) and Garchomp (4); turn 2 both Protect against the taunted attacks; turn 3 (decided here) Clefable's Draining Kiss and Garchomp's Dragon Claw hit while Weavile and Hitmontop set up, and Clefable's Taunt ends in the residual (order 15) while Garchomp's goes to 1.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Taunt", "Swords Dance", "Protect"], "level": 50},
+   {"species": "Hitmontop", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Taunt", "Bulk Up", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Draining Kiss", "Moonblast"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 2, "atk": 32, "def": 32}, "moves": ["Swords Dance", "Dragon Claw"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move taunt 1, move taunt 2", "move calmmind, move swordsdance"],
+  ["move protect, move protect", "move drainingkiss 1, move dragonclaw 2"]
+ ],
+ "turn": {"p1": "move swordsdance, move bulkup", "p2": "move drainingkiss 1, move dragonclaw 2"}
+}

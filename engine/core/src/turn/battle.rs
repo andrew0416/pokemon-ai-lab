@@ -779,7 +779,12 @@ impl<'a, const N: usize> Battle<'a, N> {
                         new.duration += 1;
                     }
                 }
-                _ => {}
+                // The other conditions' `onStart` (`conditions::volatile_start`).
+                _ => {
+                    if !super::conditions::volatile_start(self, target, volatile, &mut new) {
+                        return false;
+                    }
+                }
             }
             new
         };

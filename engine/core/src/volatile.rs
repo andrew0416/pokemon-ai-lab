@@ -60,9 +60,12 @@ pub enum Volatile {
     /// the applications (Showdown keeps `multiplier` = 1.5 per application instead, which the
     /// canonical state does not print, so neither is `counter`).
     HelpingHand,
+    /// Taunt: status moves can be neither chosen nor used (duration 3, one more if the holder
+    /// was active since the turn started and has no move left; residual order 15).
+    Taunt,
 }
 
-pub const VOLATILE_COUNT: usize = 18;
+pub const VOLATILE_COUNT: usize = 19;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -84,6 +87,7 @@ impl Volatile {
         Volatile::Endure,
         Volatile::ProteanUsed,
         Volatile::HelpingHand,
+        Volatile::Taunt,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -107,6 +111,7 @@ impl Volatile {
             Volatile::Yawn => conditions::YAWN,
             Volatile::Endure => conditions::ENDURE,
             Volatile::HelpingHand => conditions::HELPINGHAND,
+            Volatile::Taunt => conditions::TAUNT,
             Volatile::PerishSong | Volatile::ProteanUsed => ConditionId::NONE,
         }
     }
@@ -132,6 +137,7 @@ impl Volatile {
             Volatile::Endure => "endure",
             Volatile::ProteanUsed => "protean",
             Volatile::HelpingHand => "helpinghand",
+            Volatile::Taunt => "taunt",
         }
     }
 
@@ -157,7 +163,7 @@ impl Volatile {
             | Volatile::Endure
             | Volatile::HelpingHand => 1,
             Volatile::Stall | Volatile::LockedMove | Volatile::MustRecharge | Volatile::Yawn => 2,
-            Volatile::Encore => 3,
+            Volatile::Encore | Volatile::Taunt => 3,
             Volatile::PerishSong => 4,
             Volatile::Confusion
             | Volatile::FlashFire
@@ -170,6 +176,7 @@ impl Volatile {
     /// handler). Its duration is counted down by that residual handler.
     pub fn residual_order(self) -> Option<u32> {
         match self {
+            Volatile::Taunt => Some(15),
             Volatile::Encore => Some(16),
             Volatile::Yawn => Some(23),
             Volatile::PerishSong => Some(24),
@@ -300,6 +307,7 @@ mod tests {
             (Volatile::Yawn, moves::YAWN),
             (Volatile::PerishSong, moves::PERISH_SONG),
             (Volatile::HelpingHand, moves::HELPING_HAND),
+            (Volatile::Taunt, moves::TAUNT),
         ] {
             let data = id.data();
             assert_eq!(
