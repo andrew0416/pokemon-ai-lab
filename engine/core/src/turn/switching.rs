@@ -37,7 +37,7 @@ fn start_effect(ability: AbilityId) -> Option<StartEffect> {
         a if a == abilities::PSYCHIC_SURGE => StartEffect::Terrain(Terrain::Psychic),
         a if a == abilities::INTIMIDATE => StartEffect::Intimidate,
         // `onStart` only announces the ability.
-        a if a == abilities::COMATOSE => StartEffect::None,
+        a if a == abilities::COMATOSE || a == abilities::PRESSURE => StartEffect::None,
         // Implemented on the field and nothing at switch-in.
         _ if !data.handlers.contains(&"onStart") => StartEffect::None,
         _ => return None,

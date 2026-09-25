@@ -184,6 +184,8 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::PRANKSTER, &["onModifyPriority"]),
     (abilities::GALE_WINGS, &["onModifyPriority"]),
     (abilities::TRIAGE, &["onModifyPriority"]),
+    // Extra PP in `moves::deduct_pressure_pp`; `onStart` only announces the ability.
+    (abilities::PRESSURE, &["onDeductPP", "onStart"]),
     // Status immunities (`Battle::set_status_blocked`, `status_immune`,
     // `add_volatile_blocked`). `onUpdate` cures are unreachable: see `cured_on_update`.
     (abilities::WATER_VEIL, &["onSetStatus", "onUpdate"]),

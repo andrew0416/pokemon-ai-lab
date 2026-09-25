@@ -1,0 +1,34 @@
+[
+ {
+  "species": "Aerodactyl",
+  "item": "",
+  "ability": "Pressure",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Protect",
+   "Rock Slide"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Zapdos",
+  "item": "",
+  "ability": "Pressure",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Thunder Wave",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

@@ -7,8 +7,8 @@ use crate::damage::{
     MOD_ONE_POINT_THREE,
 };
 use crate::dex::{
-    items, moves, FixedDamage, IgnoreImmunity, MoveCategory, MoveData, MoveFlags, MoveId,
-    MoveTarget, Stat, Type, TypeImmunities, TypeRelation, NO_BOOSTS,
+    abilities, items, moves, FixedDamage, IgnoreImmunity, MoveCategory, MoveData, MoveFlags,
+    MoveId, MoveTarget, Stat, Type, TypeImmunities, TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{SideId, SlotRef, Status};
@@ -340,13 +340,19 @@ fn use_move<const N: usize>(
 
     let result;
     let mut main_target = target;
-    if matches!(
+    let field_move = matches!(
         mv.data.target,
         MoveTarget::All | MoveTarget::FoeSide | MoveTarget::AllySide
-    ) {
+    );
+    let targets = if field_move {
+        Vec::new()
+    } else {
+        get_move_targets(b, user, mv, target)
+    };
+    deduct_pressure_pp(b, user, mv, &targets);
+    if field_move {
         result = try_move_hit_field(b, user, mv, target)?;
     } else {
-        let targets = get_move_targets(b, user, mv, target);
         let Some(&last) = targets.last() else {
             return Ok(false);
         };
@@ -369,6 +375,51 @@ fn use_move<const N: usize>(
         b.damage(user, max_hp / 10.0, DamageSource::Indirect);
     }
     Ok(true)
+}
+
+/// The extra PP of Showdown `useMoveInner`: `runEvent('DeductPP')` for every Pokémon in
+/// `getMoveTargets`'s `pressureTargets`, then one `deductPP(move, extraPP)` on the used move
+/// (clamped at 0). Pressure (`onDeductPP`, not breakable) adds 1 unless the target is the user's
+/// ally. `pressureTargets` are the move's targets, except: every active Pokémon for `all` moves
+/// (only foes can count), nobody for `foeSide` moves, only allies for `allySide`, and all foes
+/// for `mustpressure` moves. `targets` are the resolved targets of a non-field move.
+fn deduct_pressure_pp<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    targets: &[SlotRef],
+) {
+    let foe = user.side.other();
+    let pressure_targets: Vec<SlotRef> = if mv.data.flags.contains(MoveFlags::MUSTPRESSURE) {
+        b.alive_slots(foe)
+    } else {
+        match mv.data.target {
+            MoveTarget::All => b.alive_slots(foe),
+            MoveTarget::FoeSide | MoveTarget::AllySide | MoveTarget::AllyTeam => Vec::new(),
+            _ => targets.to_vec(),
+        }
+    };
+    let extra = pressure_targets
+        .iter()
+        .filter(|t| t.side != user.side && b.ability(**t) == abilities::PRESSURE)
+        .count();
+    if extra == 0 {
+        return;
+    }
+    let pokemon = b.occupant(user).expect("checked");
+    let Some(index) = b.mon(pokemon).moves.iter().position(|m| m.id == mv.id) else {
+        return;
+    };
+    let old = b.mon(pokemon).moves[index].pp;
+    let new = old.saturating_sub(extra as u8);
+    if new != old {
+        b.apply(crate::instruction::Instruction::SetPp {
+            target: pokemon,
+            move_index: index as u8,
+            old,
+            new,
+        });
+    }
 }
 
 /// Showdown `tryMoveHit` → `moveHit` for field and side moves.

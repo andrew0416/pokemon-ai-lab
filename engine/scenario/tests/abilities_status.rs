@@ -27,6 +27,13 @@ fn stall_fractional_priority_matches_showdown() {
     assert_exact_parity("o61-stall");
 }
 
+// ---- O62 Pressure ------------------------------------------------------------------------------
+
+#[test]
+fn pressure_extra_pp_matches_showdown() {
+    assert_exact_parity("o62-pressure");
+}
+
 // ---- O65 status immunities -------------------------------------------------------------------
 
 #[test]

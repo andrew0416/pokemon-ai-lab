@@ -254,6 +254,11 @@ const IMPLEMENTED: &[(AbilityId, &[&str], StartBehavior)] = &[
         &["onSetStatus", "onStart"],
         StartBehavior::Inert,
     ),
+    (
+        abilities::PRESSURE,
+        &["onDeductPP", "onStart"],
+        StartBehavior::Inert,
+    ),
 ];
 
 fn start_behavior(slot: SlotRef, ability: AbilityId) -> Result<StartBehavior, SwitchInError> {
