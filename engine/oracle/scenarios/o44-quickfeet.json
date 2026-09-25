@@ -1,0 +1,11 @@
+{
+ "description": "O44: paralyzed Granbull (Quick Feet: 1.5x Speed and no paralysis halving, 106 -> 159) outspeeds Lycanroc-Dusk (143) and Double-Edges it at 1 HP before it can Smart Strike Snorlax, unless fully paralyzed. Blissey and Snorlax use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o44-quickfeet.p1.json", "order": "12"},
+ "p2": {"team": "o44-quickfeet.p2.json", "order": "12"},
+ "patch": {
+  "p1": {"Lycanroc": {"hp": 1}},
+  "p2": {"Granbull": {"status": "par"}}
+ },
+ "turn": {"p1": "move smartstrike 2, move swordsdance", "p2": "move doubleedge 1, move swordsdance"}
+}

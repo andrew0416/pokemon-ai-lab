@@ -1,0 +1,10 @@
+{
+ "description": "O45: Charizard Bitter Blade (physical Fire) into burned Sinistcha (Heatproof halves the Attack and its burn damage); Frosmoth Frost Breath (special Ice, always crits) into Snorlax (Thick Fat halves the Sp. Atk). Snorlax and Sinistcha use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o45-thickfat-heatproof.p1.json", "order": "12"},
+ "p2": {"team": "o45-thickfat-heatproof.p2.json", "order": "12"},
+ "patch": {
+  "p2": {"Sinistcha": {"status": "brn"}}
+ },
+ "turn": {"p1": "move bitterblade 2, move swordsdance", "p2": "move frostbreath 2, move swordsdance"}
+}

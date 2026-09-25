@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Venusaur",
+  "item": "",
+  "ability": "Overgrow",
+  "nature": "Modest",
+  "evs": {
+   "hp": 32,
+   "spa": 32,
+   "spd": 2
+  },
+  "moves": [
+   "Giga Drain",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Blissey",
+  "item": "",
+  "ability": "Ball Fetch",
+  "nature": "Bold",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

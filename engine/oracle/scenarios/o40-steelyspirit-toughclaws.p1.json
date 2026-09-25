@@ -1,0 +1,34 @@
+[
+ {
+  "name": "Lycanroc",
+  "species": "Lycanroc-Dusk",
+  "item": "",
+  "ability": "Tough Claws",
+  "nature": "Jolly",
+  "evs": {
+   "hp": 2,
+   "atk": 32,
+   "spe": 32
+  },
+  "moves": [
+   "Smart Strike",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Perrserker",
+  "item": "",
+  "ability": "Steely Spirit",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32
+  },
+  "moves": [
+   "Smart Strike",
+   "Swords Dance"
+  ],
+  "level": 50
+ }
+]

@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Perrserker",
+  "item": "",
+  "ability": "Steely Spirit",
+  "nature": "Brave",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "def": 2
+  },
+  "moves": [
+   "Smart Strike",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Snorlax",
+  "item": "",
+  "ability": "Honey Gather",
+  "nature": "Impish",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

@@ -1,0 +1,7 @@
+{
+ "description": "O40: Staraptor (Reckless) Brave Bird (recoil, 1.2x) into Bronzong; Gallade (Sharpness) Psycho Cut (slicing, 1.5x, high crit) into Blissey. Blissey and Bronzong use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o40-reckless-sharpness.p1.json", "order": "12"},
+ "p2": {"team": "o40-reckless-sharpness.p2.json", "order": "12"},
+ "turn": {"p1": "move bravebird 2, move swordsdance", "p2": "move psychocut 2, move swordsdance"}
+}

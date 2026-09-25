@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Dragalge",
+  "item": "",
+  "ability": "Adaptability",
+  "nature": "Modest",
+  "evs": {
+   "hp": 32,
+   "spa": 32,
+   "spd": 2
+  },
+  "moves": [
+   "Dragon Pulse",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Blissey",
+  "item": "",
+  "ability": "Ball Fetch",
+  "nature": "Bold",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

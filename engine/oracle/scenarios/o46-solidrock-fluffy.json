@@ -1,0 +1,7 @@
+{
+ "description": "O46: Blastoise Crabhammer (4x effective) into Rhyperior (Solid Rock: 0.75x); Dusknoir Shadow Claw (contact) into Houndstone (Fluffy: 0.5x). Houndstone and Rhyperior use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o46-solidrock-fluffy.p1.json", "order": "12"},
+ "p2": {"team": "o46-solidrock-fluffy.p2.json", "order": "12"},
+ "turn": {"p1": "move crabhammer 1, move swordsdance", "p2": "move swordsdance, move shadowclaw 2"}
+}

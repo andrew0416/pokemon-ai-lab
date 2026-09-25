@@ -1,0 +1,7 @@
+{
+ "description": "O40: Toxtricity (Punk Rock) Overdrive (sound, 1.3x) into Persian; Persian (Technician: no boost for 90 BP) Hyper Voice into Toxtricity (Punk Rock halves sound damage). Partners Protect.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o40-punkrock-technician.p1.json", "order": "12"},
+ "p2": {"team": "o40-punkrock-technician.p2.json", "order": "12"},
+ "turn": {"p1": "move overdrive, move protect", "p2": "move hypervoice, move protect"}
+}

@@ -11,7 +11,7 @@ use crate::dex::{
     SelfDestruct, SelfSwitch, Type,
 };
 use crate::field::{FieldEffect, SideEffect, Weather, FIELD_EFFECT_COUNT, SIDE_EFFECT_COUNT};
-use crate::state::{SideId, SlotRef, State};
+use crate::state::{SideId, SlotRef, State, Status};
 use crate::volatile::Volatile;
 
 use super::battle::{cured_on_update, weather_from};
@@ -252,10 +252,78 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::RAIN_DISH, &["onWeather"]),
     (abilities::ICE_BODY, &["onImmunity", "onWeather"]),
     (abilities::SOLAR_POWER, &["onModifySpA", "onWeather"]),
+    // Damage path (`abilities.rs`).
+    (abilities::TECHNICIAN, &["onBasePower"]),
+    (abilities::SHARPNESS, &["onBasePower"]),
+    (abilities::IRON_FIST, &["onBasePower"]),
+    (abilities::STRONG_JAW, &["onBasePower"]),
+    (abilities::MEGA_LAUNCHER, &["onBasePower"]),
+    (abilities::RECKLESS, &["onBasePower"]),
+    (abilities::TOUGH_CLAWS, &["onBasePower"]),
+    (
+        abilities::PUNK_ROCK,
+        &["onBasePower", "onSourceModifyDamage"],
+    ),
+    (abilities::STEELY_SPIRIT, &["onAllyBasePower"]),
+    (abilities::ADAPTABILITY, &["onModifySTAB"]),
+    (abilities::BLAZE, &["onModifyAtk", "onModifySpA"]),
+    (abilities::TORRENT, &["onModifyAtk", "onModifySpA"]),
+    (abilities::OVERGROW, &["onModifyAtk", "onModifySpA"]),
+    (abilities::SWARM, &["onModifyAtk", "onModifySpA"]),
+    (
+        abilities::HUSTLE,
+        &["onModifyAtk", "onSourceModifyAccuracy"],
+    ),
+    (abilities::GUTS, &["onModifyAtk"]),
+    (abilities::MARVEL_SCALE, &["onModifyDef"]),
+    (
+        abilities::THICK_FAT,
+        &["onSourceModifyAtk", "onSourceModifySpA"],
+    ),
+    // `onDamage`: burn damage halved in `residual.rs`.
+    (
+        abilities::HEATPROOF,
+        &["onDamage", "onSourceModifyAtk", "onSourceModifySpA"],
+    ),
+    // `onSetStatus` in `Battle::try_set_status`; `onUpdate` (cure a burn) can only act on a
+    // burned holder, which `check_state` rejects and `onSetStatus` prevents.
+    (
+        abilities::WATER_BUBBLE,
+        &[
+            "onModifyAtk",
+            "onModifySpA",
+            "onSetStatus",
+            "onSourceModifyAtk",
+            "onSourceModifySpA",
+            "onUpdate",
+        ],
+    ),
+    // `onTryAddVolatile` only reacts to Yawn, which no supported move adds.
+    (
+        abilities::PURIFYING_SALT,
+        &[
+            "onSetStatus",
+            "onSourceModifyAtk",
+            "onSourceModifySpA",
+            "onTryAddVolatile",
+        ],
+    ),
+    // `onTryHit` in the move's TryHit step, `onWeather` in the weather residual.
     (
         abilities::DRY_SKIN,
         &["onSourceBasePower", "onTryHit", "onWeather"],
     ),
+    (abilities::SOLID_ROCK, &["onSourceModifyDamage"]),
+    (abilities::FILTER, &["onSourceModifyDamage"]),
+    (abilities::PRISM_ARMOR, &["onSourceModifyDamage"]),
+    (abilities::MULTISCALE, &["onSourceModifyDamage"]),
+    (abilities::SHADOW_SHIELD, &["onSourceModifyDamage"]),
+    (abilities::FLUFFY, &["onSourceModifyDamage"]),
+    (abilities::ICE_SCALES, &["onSourceModifyDamage"]),
+    (abilities::AURA_GUARD, &["onSourceModifyDamage"]),
+    (abilities::FRIEND_GUARD, &["onAnyModifyDamage"]),
+    // `order.rs` (Speed, and paralysis's Quick Feet exception).
+    (abilities::QUICK_FEET, &["onModifySpe"]),
     // Extra PP in `moves::deduct_pressure_pp`; `onStart` only announces the ability.
     (abilities::PRESSURE, &["onDeductPP", "onStart"]),
     // Status immunities (`Battle::set_status_blocked`, `status_immune`,
@@ -522,6 +590,19 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
                 return Err(format!("{name}: substitute or Dynamax"));
             }
         }
+        // Water Bubble's `onUpdate` cures its holder's burn at the next Update (for a bench
+        // member: when it switches in). The Update event is not implemented; its SetStatus
+        // block keeps a holder from being burned during a turn, so only a burned holder at the
+        // start can trigger it.
+        for mon in s.party.iter().filter(|m| m.hp > 0) {
+            let bubble = [mon.ability, mon.base_ability].contains(&abilities::WATER_BUBBLE);
+            if bubble && mon.status == Status::Burn {
+                return Err(format!(
+                    "{}: burned with Water Bubble (onUpdate)",
+                    mon.species.data().name
+                ));
+            }
+        }
     }
     Ok(())
 }
@@ -561,6 +642,29 @@ mod tests {
             moves::DETECT.data().volatile_status,
             moves::PROTECT.data().volatile_status
         );
+    }
+
+    /// `try_set_status` applies ability status blocks (Water Bubble, Purifying Salt) without
+    /// the move: that is only right while no supported move ignores abilities and inflicts a
+    /// status.
+    #[test]
+    fn no_supported_move_ignores_abilities_and_sets_a_status() {
+        for id in MoveId::all() {
+            let m = id.data();
+            if !m.ignore_ability || move_unsupported(id).is_some() {
+                continue;
+            }
+            assert_eq!(m.status, crate::state::Status::None, "{id:?}");
+            for s in m.secondaries {
+                assert_eq!(s.status, crate::state::Status::None, "{id:?}");
+            }
+        }
+    }
+
+    /// Purifying Salt's `onTryAddVolatile` only blocks Yawn, which the engine cannot add.
+    #[test]
+    fn yawn_is_not_a_supported_volatile() {
+        assert!(Volatile::from_condition(crate::dex::conditions::YAWN).is_none());
     }
 
     #[test]

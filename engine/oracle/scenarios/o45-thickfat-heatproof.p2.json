@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Frosmoth",
+  "item": "",
+  "ability": "Honey Gather",
+  "nature": "Modest",
+  "evs": {
+   "hp": 32,
+   "spa": 32,
+   "spd": 2
+  },
+  "moves": [
+   "Frost Breath",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Sinistcha",
+  "item": "",
+  "ability": "Heatproof",
+  "nature": "Impish",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

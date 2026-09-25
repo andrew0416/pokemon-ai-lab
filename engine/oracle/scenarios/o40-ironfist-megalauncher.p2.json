@@ -1,0 +1,32 @@
+[
+ {
+  "species": "Clawitzer",
+  "item": "",
+  "ability": "Mega Launcher",
+  "nature": "Modest",
+  "evs": {
+   "hp": 32,
+   "spa": 32,
+   "spd": 2
+  },
+  "moves": [
+   "Aura Sphere",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Snorlax",
+  "item": "",
+  "ability": "Honey Gather",
+  "nature": "Careful",
+  "evs": {
+   "hp": 32,
+   "spd": 32
+  },
+  "moves": [
+   "Protect"
+  ],
+  "level": 50
+ }
+]

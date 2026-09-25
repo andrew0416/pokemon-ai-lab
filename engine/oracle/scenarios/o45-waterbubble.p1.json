@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Charizard",
+  "item": "",
+  "ability": "Blaze",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "spe": 2
+  },
+  "moves": [
+   "Bitter Blade",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Blissey",
+  "item": "",
+  "ability": "Ball Fetch",
+  "nature": "Bold",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Will-O-Wisp",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

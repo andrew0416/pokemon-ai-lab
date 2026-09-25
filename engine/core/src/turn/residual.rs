@@ -13,6 +13,7 @@ use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SideId, SlotRef, State, Status};
 use crate::volatile::{Volatile, VolatileState};
 
+use super::abilities as ability_events;
 use super::battle::{Battle, DamageSource};
 use super::order::ORDER_DEFAULT;
 use super::TurnError;
@@ -289,7 +290,8 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
             let max_hp = f64::from(b.mon(pokemon).max_hp);
             match b.mon(pokemon).status {
                 Status::Burn => {
-                    b.damage(slot, max_hp / 16.0, DamageSource::Indirect);
+                    let damage = ability_events::burn_damage(b.mon(pokemon).ability, max_hp);
+                    b.damage(slot, damage, DamageSource::Indirect);
                 }
                 Status::Poison => {
                     b.damage(slot, max_hp / 8.0, DamageSource::Indirect);

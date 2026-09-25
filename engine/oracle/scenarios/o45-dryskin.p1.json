@@ -1,0 +1,34 @@
+[
+ {
+  "species": "Charizard",
+  "item": "",
+  "ability": "Blaze",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "spe": 2
+  },
+  "moves": [
+   "Bitter Blade",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Blastoise",
+  "item": "",
+  "ability": "Torrent",
+  "nature": "Modest",
+  "evs": {
+   "hp": 32,
+   "spa": 32,
+   "spd": 2
+  },
+  "moves": [
+   "Hydro Pump",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

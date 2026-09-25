@@ -160,6 +160,18 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onImmunity", "onUpdate"],
         StartEffect::None,
     ),
+    (
+        abilities::WATER_BUBBLE,
+        &[
+            "onModifyAtk",
+            "onModifySpA",
+            "onSetStatus",
+            "onSourceModifyAtk",
+            "onSourceModifySpA",
+            "onUpdate",
+        ],
+        StartEffect::None,
+    ),
 ];
 
 /// What `ability` does when it starts, or `None` if it has a switch-in handler that is not

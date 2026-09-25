@@ -7,8 +7,8 @@ mod handlers;
 use handlers::HitResult;
 
 use crate::damage::{
-    chain_modifiers, damage_rolls, DamageInput, MOD_HALF, MOD_ONE, MOD_ONE_POINT_FIVE,
-    MOD_ONE_POINT_THREE,
+    damage_rolls, DamageInput, MOD_HALF, MOD_ONE, MOD_ONE_POINT_FIVE, MOD_ONE_POINT_THREE,
+    MOD_ONE_POINT_TWO,
 };
 use crate::dex::{
     abilities, items, moves, AbilityId, FixedDamage, IgnoreImmunity, MoveCategory, MoveData,
@@ -18,6 +18,8 @@ use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{SideId, SlotRef, Status};
 use crate::volatile::Volatile;
 
+use super::abilities as ability_events;
+use super::abilities::{Handler, SUB_FIELD_CONDITION, SUB_ITEM, SUB_MOVE, SUB_SIDE_CONDITION};
 use super::battle::{ActiveMoveRef, Battle, DamageSource};
 use super::order::{boosted_stat, modify};
 use super::support::{side_effect_of, type_boost_item};
@@ -765,10 +767,12 @@ fn accuracy_check<const N: usize>(
         return true;
     }
     let mut accuracy = i32::from(base);
-    // ModifyAccuracy: Gravity chains 6840/4096.
+    // ModifyAccuracy: Gravity (6840/4096), the user's Hustle.
+    let mut accuracy_mods = ability_events::accuracy_handlers(b, user, mv.data);
     if b.field_active(FieldEffect::Gravity) {
-        accuracy = modify(accuracy, 6840);
+        accuracy_mods.push(Handler::global(0, SUB_FIELD_CONDITION, 6840));
     }
+    accuracy = modify(accuracy, ability_events::chain(b, accuracy_mods));
     let mut boost = 0i32;
     if !mv.data.ignore_evasion {
         boost -= i32::from(b.state.slot(target).boosts[6]);
@@ -1013,45 +1017,43 @@ fn get_damage<const N: usize>(
                 _ => true,
             });
 
-    // BasePower handlers, by priority: the target's Dry Skin (`onSourceBasePower`, 17,
-    // breakable: Fire 1.25x), type items (15), terrain (6), the move (0).
-    let mut power_mods = Vec::new();
-    if data.move_type == Type::Fire && b.ability_unless_broken(target) == abilities::DRY_SKIN {
-        power_mods.push(5120);
-    }
+    // BasePower handlers: abilities (Technician 30 ... Punk Rock 7), type items (15),
+    // terrain (6), the move (0).
+    let mut power_mods = ability_events::base_power_handlers(b, user, target, data, base_power);
     if type_boost_item(attacker.item) == Some(data.move_type) {
-        power_mods.push(4915);
+        power_mods.push(Handler::of(b, user, 15, SUB_ITEM, MOD_ONE_POINT_TWO));
     }
     let attacker_grounded = b.is_grounded(user);
     let defender_grounded = b.is_grounded(target);
-    match b.terrain() {
+    let terrain_mod = match b.terrain() {
         Terrain::Grassy => {
             if [moves::EARTHQUAKE, moves::BULLDOZE, moves::MAGNITUDE].contains(&mv.id)
                 && defender_grounded
             {
-                power_mods.push(MOD_HALF);
+                MOD_HALF
             } else if data.move_type == Type::Grass && attacker_grounded {
-                power_mods.push(MOD_ONE_POINT_THREE);
+                MOD_ONE_POINT_THREE
+            } else {
+                MOD_ONE
             }
         }
         Terrain::Electric if data.move_type == Type::Electric && attacker_grounded => {
-            power_mods.push(MOD_ONE_POINT_THREE)
+            MOD_ONE_POINT_THREE
         }
         Terrain::Psychic if data.move_type == Type::Psychic && attacker_grounded => {
-            power_mods.push(MOD_ONE_POINT_THREE)
+            MOD_ONE_POINT_THREE
         }
-        Terrain::Misty if data.move_type == Type::Dragon && defender_grounded => {
-            power_mods.push(MOD_HALF)
-        }
-        _ => {}
-    }
+        Terrain::Misty if data.move_type == Type::Dragon && defender_grounded => MOD_HALF,
+        _ => MOD_ONE,
+    };
+    power_mods.push(Handler::global(6, SUB_FIELD_CONDITION, terrain_mod));
     if mv.id == moves::KNOCK_OFF && b.item_can_be_taken(target) {
-        power_mods.push(MOD_ONE_POINT_FIVE);
+        power_mods.push(Handler::of(b, user, 0, SUB_MOVE, MOD_ONE_POINT_FIVE));
     }
     if let Some(modifier) = handlers::on_base_power(b, mv) {
-        power_mods.push(modifier);
+        power_mods.push(Handler::of(b, user, 0, SUB_MOVE, modifier));
     }
-    let power_modifier = chain_modifiers(&power_mods, 0, u32::MAX);
+    let power_modifier = ability_events::chain(b, power_mods);
 
     // Attack and defense.
     let physical = data.category == MoveCategory::Physical;
@@ -1071,22 +1073,14 @@ fn get_damage<const N: usize>(
     if data.ignore_defensive || (ignore_positive_defensive && def_boost > 0) {
         def_boost = 0;
     }
-    let mut attack = boosted_stat(
+    let attack = boosted_stat(
         i32::from(attacker.stats[stat_index(attack_stat)]),
         atk_boost,
     );
-    // ModifyAtk / ModifySpA (by the category, not the stat used), chained then applied once:
-    // Solar Power (`onModifySpA`, priority 5) 1.5x in harsh sunlight.
-    let mut attack_mods = Vec::new();
-    if data.category == MoveCategory::Special
-        && attacker.ability == abilities::SOLAR_POWER
-        && b.weather() == Weather::Sun
-    {
-        attack_mods.push(MOD_ONE_POINT_FIVE);
-    }
-    if !attack_mods.is_empty() {
-        attack = modify(attack, chain_modifiers(&attack_mods, 0, u32::MAX));
-    }
+    // ModifyAtk (physical) / ModifySpA (special), whatever stat the move attacks with.
+    let attack = ability_events::attack_direct(attacker.ability, data, attack);
+    let attack_mods = ability_events::attack_handlers(b, user, target, data);
+    let attack = modify(attack, ability_events::chain(b, attack_mods));
     let mut defense = boosted_stat(
         i32::from(defender.stats[stat_index(defense_stat)]),
         def_boost,
@@ -1101,6 +1095,9 @@ fn get_damage<const N: usize>(
     {
         defense = modify(defense, MOD_ONE_POINT_FIVE);
     }
+    // Chained ModifyDef / ModifySpD handlers, applied after the direct weather boosts.
+    let defense_mods = ability_events::defense_handlers(b, user, target, data, defense_stat);
+    let defense = modify(defense, ability_events::chain(b, defense_mods));
 
     // modifyDamage inputs.
     let weather_modifier = match (weather, data.move_type) {
@@ -1109,6 +1106,7 @@ fn get_damage<const N: usize>(
         _ => MOD_ONE,
     };
     let stab = data.force_stab || attacker.types.contains(&data.move_type);
+    let stab_modifier = ability_events::modify_stab(attacker.ability, stab);
     // runEffectiveness: per defending type, the chart then the move's onEffectiveness.
     let type_mod: i32 = defender
         .types
@@ -1125,14 +1123,17 @@ fn get_damage<const N: usize>(
     } else {
         MOD_ONE >> -type_mod
     };
-    // ModifyDamage: Life Orb and screens.
-    let mut final_mods = Vec::new();
+    // ModifyDamage (all priority 0, so in Speed order): Life Orb, screens (side conditions,
+    // Speed 0), the target's abilities.
+    let mut final_mods = ability_events::modify_damage_handlers(b, user, target, data, type_mod);
     if attacker.item == items::LIFE_ORB {
-        final_mods.push(5324);
+        final_mods.push(Handler::of(b, user, 0, SUB_ITEM, 5324));
     }
     if !critical && target != user && screen_applies(b, target.side, data.category) {
-        final_mods.push(if N > 1 { 2732 } else { MOD_HALF });
+        let modifier = if N > 1 { 2732 } else { MOD_HALF };
+        final_mods.push(Handler::global(0, SUB_SIDE_CONDITION, modifier));
     }
+    let final_modifier = ability_events::chain(b, final_mods);
     let input = DamageInput {
         level: attacker.level,
         base_power: base_power as u16,
@@ -1142,11 +1143,11 @@ fn get_damage<const N: usize>(
         spread: mv.spread,
         weather_modifier,
         critical,
-        stab_modifier: if stab { MOD_ONE_POINT_FIVE } else { MOD_ONE },
+        stab_modifier,
         type_effectiveness,
-        burned: attacker.status == Status::Burn && physical,
+        burned: ability_events::burn_halves(&attacker, data),
         protected: false,
-        final_modifier: chain_modifiers(&final_mods, 0, u32::MAX),
+        final_modifier,
     };
     let rolls = damage_rolls(input);
     Ok(Planned::Damage(i32::from(pick_roll(b, &rolls))))

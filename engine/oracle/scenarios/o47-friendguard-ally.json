@@ -1,0 +1,7 @@
+{
+ "description": "O47: Friend Guard of the user: Maushold (Friend Guard) Double-Edges its ally Snorlax (0.75x from the user's own Friend Guard), and Perrserker Smart Strikes Snorlax too (0.75x). Perrserker's ally Blissey uses Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o47-friendguard-ally.p1.json", "order": "12"},
+ "p2": {"team": "o47-friendguard-ally.p2.json", "order": "12"},
+ "turn": {"p1": "move doubleedge -2, move swordsdance", "p2": "move smartstrike 2, move swordsdance"}
+}

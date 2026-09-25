@@ -1,0 +1,11 @@
+{
+ "description": "O42: Venusaur (Overgrow) at 50/187 HP Giga Drain (special Grass, 1.5x SpA) into Snorlax; Kleavor (Swarm) at 40/177 HP X-Scissor (physical Bug, 1.5x Atk) into Blissey. Blissey and Snorlax use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o42-overgrow-swarm.p1.json", "order": "12"},
+ "p2": {"team": "o42-overgrow-swarm.p2.json", "order": "12"},
+ "patch": {
+  "p1": {"Venusaur": {"hp": 50}},
+  "p2": {"Kleavor": {"hp": 40}}
+ },
+ "turn": {"p1": "move gigadrain 2, move swordsdance", "p2": "move xscissor 2, move swordsdance"}
+}

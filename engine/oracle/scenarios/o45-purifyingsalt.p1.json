@@ -1,0 +1,32 @@
+[
+ {
+  "species": "Garganacl",
+  "item": "",
+  "ability": "Purifying Salt",
+  "nature": "Careful",
+  "evs": {
+   "hp": 32,
+   "spd": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Blissey",
+  "item": "",
+  "ability": "Ball Fetch",
+  "nature": "Bold",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Thunder Wave",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

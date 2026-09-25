@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Clawitzer",
+  "item": "",
+  "ability": "Ball Fetch",
+  "nature": "Modest",
+  "evs": {
+   "hp": 32,
+   "spa": 32,
+   "spd": 2
+  },
+  "moves": [
+   "Dragon Pulse",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Lucario",
+  "item": "",
+  "ability": "Aura Guard",
+  "nature": "Bold",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

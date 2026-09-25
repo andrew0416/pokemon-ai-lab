@@ -1,0 +1,7 @@
+{
+ "description": "O41: Dragalge (Adaptability) Dragon Pulse (STAB, 2x) into Snorlax; Basculegion (Adaptability) Double-Edge (no STAB, no change) into Blissey. Blissey and Snorlax use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o41-adaptability.p1.json", "order": "12"},
+ "p2": {"team": "o41-adaptability.p2.json", "order": "12"},
+ "turn": {"p1": "move dragonpulse 2, move swordsdance", "p2": "move doubleedge 2, move swordsdance"}
+}

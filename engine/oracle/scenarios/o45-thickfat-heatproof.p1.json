@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Charizard",
+  "item": "",
+  "ability": "Blaze",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "spe": 2
+  },
+  "moves": [
+   "Bitter Blade",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Snorlax",
+  "item": "",
+  "ability": "Thick Fat",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

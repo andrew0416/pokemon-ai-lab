@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Granbull",
+  "item": "",
+  "ability": "Quick Feet",
+  "nature": "Jolly",
+  "evs": {
+   "hp": 2,
+   "atk": 32,
+   "spe": 32
+  },
+  "moves": [
+   "Double-Edge",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Snorlax",
+  "item": "",
+  "ability": "Honey Gather",
+  "nature": "Careful",
+  "evs": {
+   "hp": 32,
+   "spd": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

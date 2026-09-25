@@ -1,0 +1,7 @@
+{
+ "description": "O40: Lycanroc-Dusk (Tough Claws) Smart Strike into Snorlax, boosted by its ally Perrserker's Steely Spirit; the foe Perrserker (Steely Spirit, boosts its own Steel moves) Smart Strikes that ally Perrserker. The two others use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o40-steelyspirit-toughclaws.p1.json", "order": "12"},
+ "p2": {"team": "o40-steelyspirit-toughclaws.p2.json", "order": "12"},
+ "turn": {"p1": "move smartstrike 2, move swordsdance", "p2": "move smartstrike 2, move swordsdance"}
+}

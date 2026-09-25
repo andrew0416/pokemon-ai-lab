@@ -1,0 +1,7 @@
+{
+ "description": "O45: Garganacl (Purifying Salt) takes Dusknoir's Shadow Sneak (Ghost: Attack halved) and Lunala's Moongeist Beam (ignores abilities: Purifying Salt is skipped), and its ally Blissey's Thunder Wave fails (Purifying Salt blocks statuses). Garganacl uses Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o45-purifyingsalt.p1.json", "order": "12"},
+ "p2": {"team": "o45-purifyingsalt.p2.json", "order": "12"},
+ "turn": {"p1": "move swordsdance, move thunderwave -1", "p2": "move moongeistbeam 1, move shadowsneak 1"}
+}

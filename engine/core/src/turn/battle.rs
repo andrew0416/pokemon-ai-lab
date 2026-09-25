@@ -414,6 +414,9 @@ impl<'a, const N: usize> Battle<'a, N> {
         if self.set_status_blocked(target, status) {
             return false;
         }
+        if super::abilities::blocks_status(self.mon(pokemon).ability, status) {
+            return false;
+        }
         let turns = match status {
             // Champions `slp`: `sample([2, 3, 3])`.
             Status::Sleep => {
@@ -775,7 +778,10 @@ const STALL_COUNTER_MAX: u16 = 729;
 /// mid-turn, Skill Swap) must check this too.
 pub(crate) fn cured_on_update(ability: AbilityId, status: Status) -> bool {
     match ability {
-        a if a == abilities::WATER_VEIL || a == abilities::THERMAL_EXCHANGE => {
+        a if a == abilities::WATER_VEIL
+            || a == abilities::THERMAL_EXCHANGE
+            || a == abilities::WATER_BUBBLE =>
+        {
             status == Status::Burn
         }
         a if a == abilities::IMMUNITY => matches!(status, Status::Poison | Status::Toxic),

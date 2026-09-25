@@ -1,0 +1,11 @@
+{
+ "description": "O44: burned Heracross (Guts: 1.5x Atk, no burn halving) X-Scissor into Snorlax; Snorlax Double-Edge into its poisoned ally Milotic (Marvel Scale: 1.5x Def). Blissey and Milotic use Swords Dance; burn and poison damage at the end of the turn.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o44-guts-marvelscale.p1.json", "order": "12"},
+ "p2": {"team": "o44-guts-marvelscale.p2.json", "order": "12"},
+ "patch": {
+  "p1": {"Heracross": {"status": "brn"}},
+  "p2": {"Milotic": {"status": "psn"}}
+ },
+ "turn": {"p1": "move xscissor 2, move swordsdance", "p2": "move swordsdance, move doubleedge -1"}
+}

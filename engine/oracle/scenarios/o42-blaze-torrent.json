@@ -1,0 +1,11 @@
+{
+ "description": "O42: pinch abilities at the HP boundary. Charizard (Blaze) at 62/185 HP (above 1/3: no boost) Bitter Blade (physical Fire) into Snorlax; Blastoise (Torrent) at 62/186 HP (exactly 1/3: 1.5x SpA) Hydro Pump into Blissey. Blissey and Snorlax use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o42-blaze-torrent.p1.json", "order": "12"},
+ "p2": {"team": "o42-blaze-torrent.p2.json", "order": "12"},
+ "patch": {
+  "p1": {"Charizard": {"hp": 62}},
+  "p2": {"Blastoise": {"hp": 62}}
+ },
+ "turn": {"p1": "move bitterblade 2, move swordsdance", "p2": "move hydropump 2, move swordsdance"}
+}
