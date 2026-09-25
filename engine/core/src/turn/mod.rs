@@ -323,9 +323,11 @@ fn check_turn<const N: usize>(
 /// Why a move cannot be chosen now (Showdown `DisableMove` handlers that are implemented).
 fn disabled<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> Option<String> {
     let data = id.data();
-    // Champions Fake Out: disabled once the user has acted since switching in.
-    if id == move_ids::FAKE_OUT && state.slot(slot).move_actions > 0 {
-        return Some("Fake Out only works on the first turn out".into());
+    // Champions Fake Out, First Impression: disabled once the user has acted since switching in.
+    if (id == move_ids::FAKE_OUT || id == move_ids::FIRST_IMPRESSION)
+        && state.slot(slot).move_actions > 0
+    {
+        return Some(format!("{} only works on the first turn out", data.name));
     }
     if state.field[FieldEffect::Gravity as usize].is_active()
         && data.flags.contains(MoveFlags::GRAVITY)

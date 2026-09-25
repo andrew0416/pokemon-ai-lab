@@ -1,0 +1,28 @@
+{
+ "description": "O25 Snow: Morning Sun and Synthesis heal modify(maxhp, 0.25), Shore Up 0.5; Clefable's Moonlight at full HP heals nothing (NOT_FAIL). The others start at 40 HP.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Espeon", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Morning Sun", "Protect"], "level": 50},
+   {"species": "Venusaur", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Synthesis", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Moonlight", "Protect"], "level": 50},
+   {"species": "Hippowdon", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Shore Up", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Espeon": {"hp": 40}, "Venusaur": {"hp": 40}},
+  "p2": {"Hippowdon": {"hp": 40}},
+  "field": {"weather": "snowscape", "weatherDuration": 4}
+ },
+ "turn": {"p1": "move morningsun, move synthesis", "p2": "move moonlight, move shoreup"}
+}

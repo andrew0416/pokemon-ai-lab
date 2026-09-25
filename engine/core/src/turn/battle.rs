@@ -147,6 +147,14 @@ impl<'a, const N: usize> Battle<'a, N> {
         if mon.types.iter().any(|t| t.immunities().contains(immunity)) {
             return true;
         }
+        // Sunny Day / Desolate Land `onImmunity`: no freezing in the Pokémon's effective sun
+        // (Utility Umbrella hides it).
+        if immunity == TypeImmunities::FRZ
+            && matches!(self.weather(), Weather::Sun | Weather::HarshSun)
+            && mon.item != items::UTILITY_UMBRELLA
+        {
+            return true;
+        }
         // Sand Rush: `onImmunity(type) { if (type === 'sandstorm') return false; }`.
         immunity == TypeImmunities::SANDSTORM && mon.ability == abilities::SAND_RUSH
     }

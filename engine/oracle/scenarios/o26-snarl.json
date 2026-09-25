@@ -1,0 +1,23 @@
+{
+ "description": "O26 Incineroar Snarl (spread, 95%): Gardevoir Protects, Snorlax takes it (100% SpA drop) and then Calm Minds. Excadrill Protects.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "Leftovers", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Calm Mind", "Protect"], "level": 50},
+   {"species": "Gardevoir", "item": "Focus Sash", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Protect", "Hyper Voice"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Incineroar", "item": "Leftovers", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "spd": 2}, "moves": ["Snarl", "Protect"], "level": 50},
+   {"species": "Excadrill", "item": "Life Orb", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Protect", "Iron Head"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move calmmind, move protect", "p2": "move snarl, move protect"}
+}

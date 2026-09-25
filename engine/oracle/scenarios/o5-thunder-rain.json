@@ -1,0 +1,26 @@
+{
+ "description": "O5 Rain: Zapdos Thunder into Snorlax never misses (30% paralysis); Snorlax then Swords Dances (full paralysis 1/8). The others Protect.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Zapdos", "item": "Leftovers", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "spd": 2}, "moves": ["Thunder", "Protect"], "level": 50},
+   {"species": "Gardevoir", "item": "Focus Sash", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Protect", "Hyper Voice"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Leftovers", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Excadrill", "item": "Life Orb", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Protect", "Iron Head"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "field": {"weather": "raindance", "weatherDuration": 4}
+ },
+ "turn": {"p1": "move thunder 1, move protect", "p2": "move swordsdance, move protect"}
+}

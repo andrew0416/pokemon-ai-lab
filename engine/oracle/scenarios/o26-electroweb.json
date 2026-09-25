@@ -1,0 +1,23 @@
+{
+ "description": "O26 Jolteon Electroweb (spread, 95%): Ground Excadrill is immune, Snorlax takes it (100% Speed drop). Both Swords Dance; Gardevoir Protects.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Jolteon", "item": "Leftovers", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Electroweb", "Protect"], "level": 50},
+   {"species": "Gardevoir", "item": "Focus Sash", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Protect", "Hyper Voice"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Excadrill", "item": "Life Orb", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "Leftovers", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move electroweb, move protect", "p2": "move swordsdance, move swordsdance"}
+}

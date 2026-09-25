@@ -2,6 +2,10 @@
 //! hit steps → `spreadMoveHit` (damage, effects, secondaries) → recoil and after-move
 //! effects, for the implemented moves (see [`super::support`]).
 
+mod handlers;
+
+use handlers::HitResult;
+
 use crate::damage::{
     chain_modifiers, damage_rolls, DamageInput, MOD_HALF, MOD_ONE, MOD_ONE_POINT_FIVE,
     MOD_ONE_POINT_THREE,
@@ -27,6 +31,8 @@ struct ActiveMove {
     priority: i32,
     prankster_boosted: bool,
     spread: bool,
+    /// Accuracy after ModifyMove; `None` never misses (Showdown `accuracy: true`).
+    accuracy: Option<u8>,
 }
 
 /// Per-target result of a hit (Showdown's `damage[i]`: a number, `true`, or `false`).
@@ -62,6 +68,7 @@ pub(crate) fn run_move<const N: usize>(
         priority: b.move_priority(user, id),
         prankster_boosted: b.prankster_boosted(user, id),
         spread: false,
+        accuracy: id.data().accuracy,
     };
 
     if !before_move(b, user, &mv) {
@@ -411,6 +418,8 @@ fn use_move<const N: usize>(
     } else {
         target
     };
+    // ModifyMove: the move's own handler, then the user's status.
+    handlers::on_modify_move(b, user, target, mv)?;
     // Freeze `onModifyMove`: a defrosting move thaws the user.
     if b.mon(pokemon).status == Status::Freeze && mv.data.flags.contains(MoveFlags::DEFROST) {
         b.cure_status(pokemon);
@@ -482,6 +491,10 @@ fn try_move_hit_field<const N: usize>(
     if !data.pseudo_weather.is_none() {
         combine(add_pseudo_weather(b, data.pseudo_weather.id()));
     }
+    // HitField: the move's onHitField (Haze).
+    if let Some(r) = handlers::on_hit_field(b, mv) {
+        combine(r);
+    }
     Ok(outcome.unwrap_or(true))
 }
 
@@ -495,8 +508,8 @@ fn try_spread_move_hit<const N: usize>(
 ) -> Result<bool, TurnError> {
     mv.spread = targets.len() > 1;
 
-    // Try: Fake Out only works on the first action after switching in.
-    if mv.id == moves::FAKE_OUT && b.state.slot(user).move_actions > 1 {
+    // Try: the move's onTry (Fake Out, First Impression, Poltergeist), on the first target.
+    if !handlers::on_try(b, user, mv, targets[0]) {
         return Ok(false);
     }
     // Follow Me / Rage Powder `onTry` and Spotlight `onTryHit`: doubles only.
@@ -644,7 +657,7 @@ fn accuracy_check<const N: usize>(
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
-    let Some(base) = mv.data.accuracy else {
+    let Some(base) = mv.accuracy else {
         return true;
     };
     if mv.data.target == MoveTarget::User && mv.data.category == MoveCategory::Status {
@@ -783,6 +796,12 @@ fn spread_move_hit<const N: usize>(
         if data.stalling_move {
             b.add_volatile(t, Volatile::Stall);
         }
+        // The move's own onHit; NOT_FAIL neither succeeds nor fails.
+        match handlers::on_hit(b, user, t, mv)? {
+            Some(HitResult::Success) => note(true),
+            Some(HitResult::Failure) => note(false),
+            Some(HitResult::NotFail) | None => {}
+        }
         if let (Hit::Done, Some(false)) = (results[i], did) {
             results[i] = Hit::Failed;
         }
@@ -814,6 +833,7 @@ fn spread_move_hit<const N: usize>(
             if let Some(volatile) = Volatile::from_condition(secondary.volatile_status) {
                 b.add_volatile(t, volatile);
             }
+            handlers::secondary_on_hit(b, t, mv);
             if secondary.self_boosts != NO_BOOSTS {
                 b.boost(user, &secondary.self_boosts);
             }
@@ -872,6 +892,7 @@ fn get_damage<const N: usize>(
     if mv.id == moves::LOW_KICK || mv.id == moves::GRASS_KNOT {
         base_power = weight_power(defender.species.data().weight_hg);
     }
+    base_power = handlers::base_power_callback(b, user, target, mv, base_power);
     if base_power == 0 {
         return Ok(Planned::NoDamage);
     }
@@ -920,6 +941,9 @@ fn get_damage<const N: usize>(
     if mv.id == moves::KNOCK_OFF && b.item_can_be_taken(target) {
         power_mods.push(MOD_ONE_POINT_FIVE);
     }
+    if let Some(modifier) = handlers::on_base_power(b, mv) {
+        power_mods.push(modifier);
+    }
     let power_modifier = chain_modifiers(&power_mods, 0, u32::MAX);
 
     // Attack and defense.
@@ -966,13 +990,14 @@ fn get_damage<const N: usize>(
         _ => MOD_ONE,
     };
     let stab = data.force_stab || attacker.types.contains(&data.move_type);
+    // runEffectiveness: per defending type, the chart then the move's onEffectiveness.
     let type_mod: i32 = defender
         .types
         .iter()
-        .map(|&t| match data.move_type.against(t) {
-            TypeRelation::Super => 1,
-            TypeRelation::Resist => -1,
-            _ => 0,
+        .filter(|&&t| t != Type::None)
+        .map(|&t| {
+            let chart = handlers::type_effectiveness(data.move_type, t);
+            handlers::on_effectiveness(mv.id, t, chart)
         })
         .sum::<i32>()
         .clamp(-6, 6);

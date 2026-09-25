@@ -1,0 +1,23 @@
+{
+ "description": "O11 First Impression on the first turn out: Golisopod into Snorlax (Champions: 100 BP, priority +2, no flinch). Snorlax Swords Dances, the others Protect.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Golisopod", "item": "Leftovers", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["First Impression", "Protect"], "level": 50},
+   {"species": "Gardevoir", "item": "Focus Sash", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Protect", "Hyper Voice"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Leftovers", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Excadrill", "item": "Life Orb", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Protect", "Iron Head"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move firstimpression 1, move protect", "p2": "move swordsdance, move protect"}
+}

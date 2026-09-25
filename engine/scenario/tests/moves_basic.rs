@@ -1,0 +1,173 @@
+//! Parity of move-specific callbacks (`core/src/turn/moves/handlers.rs`, WORKPLAN §2.1) with
+//! Showdown: each scenario's exact outcome distribution must equal its oracle fixture
+//! (`engine/oracle/expected/<name>.turn.json`).
+
+mod common;
+
+use common::{assert_exact_parity, fixture, start};
+use lab_engine::rules::Ruleset;
+use lab_engine::state::{SideId, SlotRef};
+use lab_engine::turn::{enumerate_turn, TurnError};
+use lab_scenario::scenario_choices;
+
+#[test]
+fn o2_grav_apple_under_gravity() {
+    assert_exact_parity("o2-grav-apple");
+}
+
+#[test]
+fn o3_rising_voltage_and_psyblade_in_electric_terrain() {
+    assert_exact_parity("o3-rising-voltage");
+}
+
+#[test]
+fn o3_rising_voltage_by_and_into_ungrounded() {
+    assert_exact_parity("o3-rising-voltage-ungrounded");
+}
+
+#[test]
+fn o5_thunder_never_misses_in_rain() {
+    assert_exact_parity("o5-thunder-rain");
+}
+
+#[test]
+fn o5_thunder_accuracy_50_in_sun_then_gravity() {
+    assert_exact_parity("o5-thunder-sun-gravity");
+}
+
+#[test]
+fn o5_blizzard_never_misses_in_snow() {
+    assert_exact_parity("o5-blizzard-snow");
+}
+
+#[test]
+fn o34_freeze_dry_and_flying_press_effectiveness() {
+    assert_exact_parity("o34-freeze-dry-flying-press");
+}
+
+#[test]
+fn o34_freeze_dry_4x_and_flying_press_still_immune() {
+    assert_exact_parity("o34-freeze-dry-flying-press-immune");
+}
+
+#[test]
+fn o17_poltergeist_hits_and_knock_off_keeps_a_mega_stone() {
+    assert_exact_parity("o17-poltergeist-knock-off");
+}
+
+#[test]
+fn o17_poltergeist_fails_and_knock_off_doubles_acrobatics() {
+    assert_exact_parity("o17-acrobatics-knock-off");
+}
+
+#[test]
+fn o17_acrobatics_with_item_then_knock_off() {
+    assert_exact_parity("o17-acrobatics-item");
+}
+
+#[test]
+fn o11_first_impression_on_the_first_turn_out() {
+    assert_exact_parity("o11-first-impression");
+}
+
+#[test]
+fn o11_first_impression_blocked_by_psychic_terrain_on_grounded_targets() {
+    assert_exact_parity("o11-first-impression-psychic-terrain");
+}
+
+#[test]
+fn o12_dire_claw_poison_paralysis_or_sleep() {
+    assert_exact_parity("o12-dire-claw");
+}
+
+#[test]
+fn o12_tri_attack_burn_paralysis_or_freeze() {
+    assert_exact_parity("o12-tri-attack");
+}
+
+#[test]
+fn o12_tri_attack_cannot_freeze_in_sun() {
+    assert_exact_parity("o12-tri-attack-sun");
+}
+
+#[test]
+fn o25_weather_heals_in_sun() {
+    assert_exact_parity("o25-heal-sun");
+}
+
+#[test]
+fn o25_weather_heals_in_sand() {
+    assert_exact_parity("o25-heal-sand");
+}
+
+#[test]
+fn o25_weather_heals_in_snow_and_at_full_hp() {
+    assert_exact_parity("o25-heal-snow-full");
+}
+
+#[test]
+fn o25_weather_heals_without_weather() {
+    assert_exact_parity("o25-heal-clear");
+}
+
+#[test]
+fn o26_icy_wind_spread_speed_drop() {
+    assert_exact_parity("o26-icy-wind");
+}
+
+#[test]
+fn o26_electroweb_spread_speed_drop_and_ground_immunity() {
+    assert_exact_parity("o26-electroweb");
+}
+
+#[test]
+fn o26_snarl_spread_special_attack_drop() {
+    assert_exact_parity("o26-snarl");
+}
+
+#[test]
+fn o24_clear_smog_clears_the_target() {
+    assert_exact_parity("o24-clear-smog");
+}
+
+#[test]
+fn o24_haze_clears_every_active_pokemon() {
+    assert_exact_parity("o24-haze");
+}
+
+#[test]
+fn o24_topsy_turvy_and_power_guard_heart_swap() {
+    assert_exact_parity("o24-boost-swaps");
+}
+
+#[test]
+fn o24_topsy_turvy_fails_without_stages() {
+    assert_exact_parity("o24-topsy-turvy-fail");
+}
+
+/// Champions `onDisableMove`: once the user has acted since switching in, First Impression
+/// cannot be chosen.
+#[test]
+fn o11_first_impression_is_disabled_after_the_first_action() {
+    let name = "o11-first-impression";
+    let fixture = fixture(name);
+    let (loaded, mut state) = start(name, &fixture);
+    let choices = scenario_choices(&loaded, &state).unwrap();
+    let user = SlotRef {
+        side: SideId::One,
+        slot: 0,
+    };
+    state.slot_mut(user).move_actions = 1;
+    let error = enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices).unwrap_err();
+    assert!(
+        matches!(
+            error,
+            TurnError::InvalidChoice {
+                side: SideId::One,
+                slot: 0,
+                ..
+            }
+        ),
+        "{error}"
+    );
+}
