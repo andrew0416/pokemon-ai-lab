@@ -393,6 +393,8 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::SHIELD_DUST, &["onModifySecondaries"]),
     (abilities::SERENE_GRACE, &["onModifyMove"]),
     (abilities::SHEER_FORCE, &["onBasePower", "onModifyMove"]),
+    // `Battle::after_set_status`.
+    (abilities::SYNCHRONIZE, &["onAfterSetStatus"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

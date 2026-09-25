@@ -430,10 +430,28 @@ impl<'a, const N: usize> Battle<'a, N> {
 
     // ---- status --------------------------------------------------------------------------
 
-    /// Showdown `trySetStatus` → `setStatus` for the supported handlers: fails on a fainted
-    /// target, an existing status, status immunity (`runStatusImmunity`), and the `SetStatus`
-    /// handlers (see [`Battle::set_status_blocked`]).
+    /// Showdown `trySetStatus` → `setStatus` for a status inflicted by the move in progress:
+    /// its user is the status's source (moves pass `source` explicitly), none outside a move.
+    /// Other sources (a contact ability's holder, the holder itself for Toxic / Flame Orb) must
+    /// use [`Battle::try_set_status_from`].
     pub fn try_set_status(&mut self, target: SlotRef, status: Status) -> bool {
+        let source = self
+            .active_move
+            .filter(|m| self.occupant(m.user) == Some(m.pokemon))
+            .map(|m| m.user);
+        self.try_set_status_from(target, status, source)
+    }
+
+    /// Showdown `trySetStatus(status, source)` → `setStatus` for the supported handlers: fails
+    /// on a fainted target, an existing status, status immunity (`runStatusImmunity`), and the
+    /// `SetStatus` handlers (see [`Battle::set_status_blocked`]); a status that is set runs the
+    /// `AfterSetStatus` handlers ([`Battle::after_set_status`]).
+    pub fn try_set_status_from(
+        &mut self,
+        target: SlotRef,
+        status: Status,
+        source: Option<SlotRef>,
+    ) -> bool {
         let Some(pokemon) = self.alive(target) else {
             return false;
         };
@@ -476,7 +494,26 @@ impl<'a, const N: usize> Battle<'a, N> {
             new: status,
         });
         self.set_status_turns(pokemon, turns);
+        self.after_set_status(target, status, source);
         true
+    }
+
+    /// `runEvent('AfterSetStatus', target, source, effect, status)`. The only implemented
+    /// handler is Synchronize on the target (not breakable, not modded in Champions): a burn,
+    /// paralysis or (bad) poison from another Pokémon is passed back to it
+    /// (`source.trySetStatus(status, target)`), which fails if the source already has a status
+    /// or is immune. Toxic Spikes (excluded by Synchronize) is not supported.
+    fn after_set_status(&mut self, target: SlotRef, status: Status, source: Option<SlotRef>) {
+        let Some(source) = source else {
+            return;
+        };
+        if source == target || self.ability(target) != abilities::SYNCHRONIZE {
+            return;
+        }
+        if matches!(status, Status::Sleep | Status::Freeze) {
+            return;
+        }
+        self.try_set_status_from(source, status, Some(target));
     }
 
     /// Showdown `runEvent('SetStatus')` for a status set on `target` by another Pokémon's move.

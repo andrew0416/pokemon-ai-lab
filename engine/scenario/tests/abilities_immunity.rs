@@ -87,3 +87,10 @@ fn serene_grace_matches_showdown() {
 fn sheer_force_matches_showdown() {
     assert_exact_parity("o60-sheer-force");
 }
+
+// ---- O66 Synchronize ---------------------------------------------------------------------------
+
+#[test]
+fn synchronize_matches_showdown() {
+    assert_exact_parity("o66-synchronize");
+}
