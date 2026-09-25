@@ -110,6 +110,21 @@ fn o25_weather_heals_without_weather() {
     assert_exact_parity("o25-heal-clear");
 }
 
+#[test]
+fn o26_icy_wind_spread_speed_drop() {
+    assert_exact_parity("o26-icy-wind");
+}
+
+#[test]
+fn o26_electroweb_spread_speed_drop_and_ground_immunity() {
+    assert_exact_parity("o26-electroweb");
+}
+
+#[test]
+fn o26_snarl_spread_special_attack_drop() {
+    assert_exact_parity("o26-snarl");
+}
+
 /// Champions `onDisableMove`: once the user has acted since switching in, First Impression
 /// cannot be chosen.
 #[test]
