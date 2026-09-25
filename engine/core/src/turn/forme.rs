@@ -45,8 +45,10 @@ pub(crate) enum Change {
 /// engine never creates temporarily); the scenario loader refuses the `Some` ones as a set's
 /// species, since Showdown would then keep them as the base.
 pub fn temporary_forme_base(forme: SpeciesId) -> Option<SpeciesId> {
-    let _ = forme;
-    None
+    match forme {
+        f if f == species::AEGISLASH_BLADE => Some(species::AEGISLASH),
+        _ => None,
+    }
 }
 
 /// Showdown `formeChange` for the Pokémon in `slot` (see the module docs).
@@ -297,6 +299,34 @@ pub(crate) fn ice_face_restore<const N: usize>(b: &mut Battle<'_, N>, slot: Slot
     forme_change(b, slot, species::EISCUE, Change::PermanentKeepAbility);
 }
 
+// ---- Stance Change ----------------------------------------------------------------------------
+
+/// Stance Change's `onModifyMove` (priority 1) for the user in `user` using `id`: an Aegislash
+/// (`species.baseSpecies`) takes the Shield forme for King's Shield and the Blade forme for any
+/// damaging move, temporarily (`formeChange(targetForme)`); other status moves change nothing.
+/// It runs in `useMoveInner`, so a move stopped in BeforeMove changes nothing, while a move
+/// called by Sleep Talk does.
+pub(crate) fn stance_change<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, id: MoveId) {
+    let Some(mon) = b.slot_mon(user) else {
+        return;
+    };
+    if mon.species.data().base_species != species::AEGISLASH {
+        return;
+    }
+    let kings_shield = id == crate::dex::moves::KINGS_SHIELD;
+    if id.data().category == MoveCategory::Status && !kings_shield {
+        return;
+    }
+    let target = if kings_shield {
+        species::AEGISLASH
+    } else {
+        species::AEGISLASH_BLADE
+    };
+    if mon.species != target {
+        forme_change(b, user, target, Change::Temporary);
+    }
+}
+
 // ---- switch-in and field events ---------------------------------------------------------------
 
 /// `singleEvent('Start')` of a forme ability (`switching::StartEffect::Forme`, run in the
@@ -343,6 +373,30 @@ mod tests {
             assert_eq!(from.data().types, to.data().types);
             assert_eq!(to.data().battle_only, [from]);
         }
+    }
+
+    /// Every temporary forme is a battle-only forme of its base with the same types and base HP
+    /// (a temporary change keeps max HP, and `revert_on_leave` restores the base's types).
+    #[test]
+    fn temporary_formes_match_the_dex() {
+        for id in SpeciesId::all() {
+            let Some(base) = temporary_forme_base(id) else {
+                continue;
+            };
+            let (forme, base_data) = (id.data(), base.data());
+            assert_eq!(forme.battle_only, [base], "{id:?}");
+            assert_eq!(forme.base_stats[0], base_data.base_stats[0], "{id:?}");
+            assert_eq!(forme.abilities[0], base_data.abilities[0], "{id:?}");
+        }
+        assert_eq!(
+            temporary_forme_base(species::AEGISLASH_BLADE),
+            Some(species::AEGISLASH)
+        );
+        assert_eq!(abilities::STANCE_CHANGE.data().handlers, ["onModifyMove"]);
+        assert!(abilities::STANCE_CHANGE
+            .data()
+            .event_orders
+            .contains(&("onModifyMovePriority", 1)));
     }
 
     /// Ice Face's handlers and orders; the Noice forme keeps the types and base HP.

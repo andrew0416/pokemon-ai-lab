@@ -176,7 +176,8 @@ pub(super) fn accuracy_event<const N: usize>(
 ///   `self` effect and is marked `hasSheerForce`;
 /// - Serene Grace (priority -2): every secondary chance and `self.chance` doubles;
 /// - Keen Eye, Illuminate, Mind's Eye: `move.ignoreEvasion = true`;
-/// - Scrappy, Mind's Eye (priority -5): Fighting and Normal join `move.ignoreImmunity`.
+/// - Scrappy, Mind's Eye (priority -5): Fighting and Normal join `move.ignoreImmunity`;
+/// - Stance Change (priority 1): Aegislash takes its Blade or Shield forme for the move.
 ///
 /// A Pokémon has one ability, so their priorities never compete; none of the other
 /// implemented ModifyMove handlers reads what these change. A move that ignores abilities is
@@ -202,6 +203,10 @@ pub(super) fn on_modify_move<const N: usize>(
     }
     if ability == abilities::SERENE_GRACE {
         mv.secondary_chance_factor = 2;
+    }
+    // Stance Change (priority 1): Aegislash's forme for the move (`forme::stance_change`).
+    if ability == abilities::STANCE_CHANGE {
+        super::super::forme::stance_change(b, user, mv.id);
     }
     // Keen Eye, Illuminate, Mind's Eye: `move.ignoreEvasion = true`.
     if [

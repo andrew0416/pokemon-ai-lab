@@ -926,6 +926,8 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
             "onWeatherChange",
         ],
     ),
+    // Stance Change: `onModifyMove` in `moves::ability_hooks::on_modify_move`.
+    (abilities::STANCE_CHANGE, &["onModifyMove"]),
     // Damage handlers (`Battle::damage`).
     (abilities::ROCK_HEAD, &["onDamage"]),
     (abilities::MAGIC_GUARD, &["onDamage"]),

@@ -62,6 +62,39 @@ fn ice_face_lets_a_confusion_self_hit_through() {
     assert_exact_parity("ice-face-confusion");
 }
 
+// ---- Stance Change ----------------------------------------------------------------------------
+
+/// The Blade forme's SpA for the attack, its Defense for the hit it takes later in the turn;
+/// fainted, it is Aegislash again.
+#[test]
+fn stance_change_takes_the_blade_forme_for_the_turn() {
+    assert_exact_parity("stance-change-blade");
+}
+
+/// King's Shield returns to the Shield forme before protecting.
+#[test]
+fn stance_change_takes_the_shield_forme_for_kings_shield() {
+    assert_exact_parity("stance-change-kings-shield");
+}
+
+/// The Blade forme is temporary: back to Aegislash on switching out.
+#[test]
+fn stance_change_reverts_on_switch_out() {
+    assert_exact_parity("stance-change-switch-out");
+}
+
+/// A temporary forme cannot be a set's species (Showdown would keep it as the base species).
+#[test]
+fn temporary_formes_are_refused_as_set_species() {
+    let team = r#"[{"species": "Aegislash-Blade", "item": "", "ability": "Stance Change",
+        "nature": "Modest", "evs": {"hp": 32}, "moves": ["Hex"], "level": 50}]"#;
+    let sets = lab_scenario::parse_team(team).unwrap();
+    assert_eq!(
+        lab_scenario::build_pokemon(&sets[0]).unwrap_err(),
+        lab_scenario::SetProblem::TemporaryForme("Aegislash-Blade".into())
+    );
+}
+
 /// The busted forme is permanent and keeps Disguise (inert on Mimikyu-Busted); max HP is the
 /// same, the Weakness Policy is still held.
 #[test]
