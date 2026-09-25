@@ -195,6 +195,87 @@ impl Forme {
     }
 }
 
+/// Showdown `moveThisTurnResult` / `moveLastTurnResult`: `undefined` (no move yet), `null`
+/// (neither success nor failure: a recharge turn), `false`, `true`.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub enum MoveResult {
+    #[default]
+    Undefined,
+    Null,
+    Failed,
+    Succeeded,
+}
+
+/// The last `attackedBy` entry with a numeric damage from a foe (`getLastDamagedBy(true)`),
+/// this turn: who hit, from which slot (`getAtSlot(lastDamagedBy.slot)`), for how much.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct DamagedBy {
+    pub source: PokemonRef,
+    pub slot: SlotRef,
+    pub damage: i16,
+}
+
+/// Showdown's damage-history bookkeeping on an active Pokémon (WORKPLAN F13), reduced to
+/// what the implemented consumers read. It resets on switch-out like the rest of the slot
+/// (Champions also resets `timesAttacked` there) and is not part of the canonical output.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct SlotHistory {
+    /// `hurtThisTurn`: the HP left after the latest damage this turn (`spreadDamage`), `None`
+    /// until then and again at the end of the turn. Read by Assurance.
+    pub hurt_this_turn: Option<i16>,
+    /// `getLastDamagedBy(true)` restricted to this turn (its only readers require `thisTurn`):
+    /// Metal Burst, Comeuppance.
+    pub last_damaged_by: Option<DamagedBy>,
+    /// One bit per Pokémon (`attacker_bit`) whose move damaged this one this turn
+    /// (`attackedBy.some(p => p.source === target && p.damage > 0 && p.thisTurn)`): Avalanche,
+    /// Revenge.
+    pub damaged_by_this_turn: u16,
+    /// `timesAttacked`: hits by damaging moves since switching in (Rage Fist).
+    pub times_attacked: u8,
+    /// `moveThisTurnResult`, copied to `move_last_turn_result` at the end of the turn
+    /// (Stomping Tantrum, Temper Flare).
+    pub move_this_turn_result: MoveResult,
+    pub move_last_turn_result: MoveResult,
+    /// `newlySwitched`: set when the Pokémon comes in (also at the start of the battle),
+    /// cleared at the end of the turn (Payback).
+    pub newly_switched: bool,
+}
+
+impl Default for SlotHistory {
+    fn default() -> Self {
+        SlotHistory {
+            hurt_this_turn: None,
+            last_damaged_by: None,
+            damaged_by_this_turn: 0,
+            times_attacked: 0,
+            move_this_turn_result: MoveResult::Undefined,
+            move_last_turn_result: MoveResult::Undefined,
+            newly_switched: true,
+        }
+    }
+}
+
+impl SlotHistory {
+    /// The bit of `damaged_by_this_turn` for an attacker.
+    pub fn attacker_bit(attacker: PokemonRef) -> u16 {
+        1 << (attacker.side.index() * PARTY_SIZE + usize::from(attacker.party))
+    }
+
+    /// Whether `attacker`'s move damaged this Pokémon this turn.
+    pub fn damaged_by(&self, attacker: PokemonRef) -> bool {
+        self.damaged_by_this_turn & Self::attacker_bit(attacker) != 0
+    }
+}
+
+/// A side's faint counters: `totalFainted` (capped at 100; Last Respects), `faintedThisTurn`
+/// and `faintedLastTurn` (Retaliate), as booleans since only their truth is read.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub struct SideHistory {
+    pub total_fainted: u8,
+    pub fainted_this_turn: bool,
+    pub fainted_last_turn: bool,
+}
+
 /// Active-position state that resets on switch-out.
 #[derive(Clone, Debug, Default, PartialEq, Eq, Hash)]
 pub struct Slot {
@@ -210,6 +291,8 @@ pub struct Slot {
     pub last_move: MoveId,
     /// Showdown `activeMoveActions`: moves attempted since switching in (Fake Out).
     pub move_actions: u8,
+    /// Damage history (F13); hidden from the canonical output.
+    pub history: SlotHistory,
     pub substitute_hp: i16,
     pub dynamax: DynamaxState,
 }
@@ -222,6 +305,8 @@ pub struct Side<const N: usize> {
     /// Once-per-battle activations this side has spent. Each kind has its own budget
     /// (Mega and Ultra Burst are separate, as in Showdown).
     pub gimmicks_used: GimmickSet,
+    /// Faint counters (F13); hidden from the canonical output.
+    pub history: SideHistory,
 }
 
 impl<const N: usize> Default for Side<N> {
@@ -231,6 +316,7 @@ impl<const N: usize> Default for Side<N> {
             party: Default::default(),
             effects: [Effect::NONE; SIDE_EFFECT_COUNT],
             gimmicks_used: GimmickSet::EMPTY,
+            history: SideHistory::default(),
         }
     }
 }

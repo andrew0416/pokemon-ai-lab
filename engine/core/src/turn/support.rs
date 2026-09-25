@@ -231,6 +231,25 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::FLYING_PRESS, &["onEffectiveness"]),
     (moves::POLTERGEIST, &["onTry", "onTryHit"]),
     (moves::ACROBATICS, &["basePowerCallback"]),
+    // Damage history (F13): `basePowerCallback`s reading `Slot.history` / `Side.history`
+    // (`handlers::base_power_callback`).
+    (moves::ASSURANCE, &["basePowerCallback"]),
+    (moves::PAYBACK, &["basePowerCallback"]),
+    (moves::AVALANCHE, &["basePowerCallback"]),
+    (moves::STOMPING_TANTRUM, &["basePowerCallback"]),
+    (moves::TEMPER_FLARE, &["basePowerCallback"]),
+    (moves::RAGE_FIST, &["basePowerCallback"]),
+    (moves::LAST_RESPECTS, &["basePowerCallback"]),
+    // Metal Burst, Comeuppance (`target: scripted`): `onTry` (a foe damaged the user this
+    // turn), `onModifyTarget` (that foe's slot), `damageCallback` (1.5x its damage).
+    (
+        moves::METAL_BURST,
+        &["damageCallback", "onModifyTarget", "onTry"],
+    ),
+    (
+        moves::COMEUPPANCE,
+        &["damageCallback", "onModifyTarget", "onTry"],
+    ),
     (moves::FIRST_IMPRESSION, &["onDisableMove", "onTry"]),
     (moves::DIRE_CLAW, &["secondaries.onHit", "secondary.onHit"]),
     (moves::TRI_ATTACK, &["secondaries.onHit", "secondary.onHit"]),
@@ -971,7 +990,8 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         | MoveTarget::All
         | MoveTarget::AllySide
         | MoveTarget::FoeSide
-        | MoveTarget::RandomNormal => {}
+        | MoveTarget::RandomNormal
+        | MoveTarget::Scripted => {}
         other => return why(&format!("target {other:?}")),
     }
     if let Some((low, high)) = m.multihit {

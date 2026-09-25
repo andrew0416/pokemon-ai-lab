@@ -1,0 +1,81 @@
+{
+ "description": "F13 Rage Fist and Metal Burst. Setup turn: Talonflame Seismic Tosses Snorlax (timesAttacked 1). Decision turn: Talonflame Seismic Tosses Snorlax again (2), then Snorlax's Rage Fist on Talonflame has 150 power; Garchomp Seismic Tosses Hariyama, whose Metal Burst returns 75 to Garchomp's slot (scripted target, one branch). One damage roll (Rage Fist).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Rage Fist",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hariyama",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Metal Burst",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Talonflame",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Seismic Toss"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Seismic Toss"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move harden, move harden",
+   "move seismictoss 1, move seismictoss 2"
+  ]
+ ],
+ "turn": {
+  "p1": "move ragefist 1, move metalburst",
+  "p2": "move seismictoss 1, move seismictoss 2"
+ }
+}

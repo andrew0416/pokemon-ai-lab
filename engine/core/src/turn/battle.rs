@@ -332,7 +332,12 @@ impl<'a, const N: usize> Battle<'a, N> {
             amount = i32::from(mon.hp) - 1;
         }
         let amount = super::items::on_damage(self, target, amount, source);
-        self.lose_hp(target, pokemon, amount)
+        let dealt = self.lose_hp(target, pokemon, amount);
+        // `if (targetDamage !== 0) target.hurtThisTurn = target.hp`.
+        if dealt != 0 {
+            self.record_hurt(target);
+        }
+        dealt
     }
 
     /// Showdown `directDamage`: at least 1 HP, no Damage handlers (Struggle's recoil). Returns the
@@ -422,6 +427,7 @@ impl<'a, const N: usize> Battle<'a, N> {
                 old: None,
                 new: Some(pokemon.party),
             });
+            self.record_faint(pokemon.side);
             last = Some(pokemon.side);
         }
         check_win && self.check_win(last)

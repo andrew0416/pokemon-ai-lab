@@ -1,0 +1,79 @@
+{
+ "description": "F13 Last Respects. Talonflame (fastest) Seismic Tosses Hariyama, patched to 40 HP, which faints (totalFainted 1); Snorlax's Last Respects on Talonflame then has 100 power. Garchomp Hardens. One damage roll; p1 has no bench, so no replacement.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Last Respects"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hariyama",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Talonflame",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Seismic Toss"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Hariyama": {
+    "hp": 40
+   }
+  }
+ },
+ "turn": {
+  "p1": "move lastrespects 1, move harden",
+  "p2": "move seismictoss 2, move harden"
+ }
+}

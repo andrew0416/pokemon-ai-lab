@@ -8,7 +8,9 @@
 use crate::dex::{AbilityId, ItemId, MoveId, Type};
 use crate::field::{Effect, FieldEffect, SideEffect};
 use crate::gimmick::Gimmick;
-use crate::state::{BattleResult, Forme, PokemonRef, SideId, Slot, SlotRef, State, Status};
+use crate::state::{
+    BattleResult, Forme, PokemonRef, SideHistory, SideId, Slot, SlotHistory, SlotRef, State, Status,
+};
 use crate::volatile::{Volatile, VolatileState};
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
@@ -101,6 +103,18 @@ pub enum Instruction {
         target: SlotRef,
         old: u8,
         new: u8,
+    },
+    /// The slot's damage history (F13), replaced wholesale.
+    SetSlotHistory {
+        target: SlotRef,
+        old: SlotHistory,
+        new: SlotHistory,
+    },
+    /// The side's faint counters (F13), replaced wholesale.
+    SetSideHistory {
+        side: SideId,
+        old: SideHistory,
+        new: SideHistory,
     },
     SetField {
         effect: FieldEffect,
@@ -196,6 +210,8 @@ impl<const N: usize> State<N> {
             Instruction::SetMoveActions { target, new, .. } => {
                 self.slot_mut(target).move_actions = new
             }
+            Instruction::SetSlotHistory { target, new, .. } => self.slot_mut(target).history = new,
+            Instruction::SetSideHistory { side, new, .. } => self.side_mut(side).history = new,
             Instruction::SetField { effect, new, .. } => self.field[effect as usize] = new,
             Instruction::SetSideEffect {
                 side, effect, new, ..
@@ -252,6 +268,8 @@ impl<const N: usize> State<N> {
             Instruction::SetMoveActions { target, old, .. } => {
                 self.slot_mut(target).move_actions = old
             }
+            Instruction::SetSlotHistory { target, old, .. } => self.slot_mut(target).history = old,
+            Instruction::SetSideHistory { side, old, .. } => self.side_mut(side).history = old,
             Instruction::SetField { effect, old, .. } => self.field[effect as usize] = old,
             Instruction::SetSideEffect {
                 side, effect, old, ..

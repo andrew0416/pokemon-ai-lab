@@ -1,0 +1,83 @@
+{
+ "description": "F13 Stomping Tantrum and Assurance. Setup turn: Scrafty's Sucker Punch fails (Garchomp used Swords Dance), so moveLastTurnResult is false and Stomping Tantrum is doubled next turn. Decision turn: Talonflame (fastest) Seismic Tosses its own ally Garchomp, so Hariyama's Assurance on Garchomp is doubled (hurtThisTurn); Scrafty's Stomping Tantrum hits Talonflame. Two damage rolls.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Scrafty",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Sucker Punch",
+     "Stomping Tantrum"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hariyama",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Assurance",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Talonflame",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Seismic Toss",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move suckerpunch 1, move harden",
+   "move swordsdance, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move stompingtantrum 2, move assurance 1",
+  "p2": "move harden, move seismictoss -1"
+ }
+}

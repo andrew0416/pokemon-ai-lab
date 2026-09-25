@@ -18,7 +18,7 @@ use crate::dex::{
     TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
-use crate::state::{PokemonRef, SideId, SlotRef, Status};
+use crate::state::{MoveResult, PokemonRef, SideId, SlotRef, Status};
 use crate::volatile::Volatile;
 
 use super::abilities as ability_events;
@@ -135,6 +135,10 @@ pub(crate) struct MoveProgress {
     total_damage: i32,
     /// Whether any hit so far did something (the move's success).
     any_ok: bool,
+    /// The last hit's targets it did not fail on (Showdown's `targetsCopy` after
+    /// `spreadMoveHit`) with their damage (`None`: a non-numeric result, a status effect).
+    /// Read for `gotAttacked` once the hits are done.
+    last_hit: Vec<(SlotRef, Option<i32>)>,
     /// `ActiveMoveRef::ignore_ability` of the move in flight (Mold Breaker moves).
     ignore_ability: bool,
 }
@@ -241,6 +245,7 @@ pub(crate) fn resume_move<const N: usize>(
             ok
         }
     };
+    b.finish_move_result(user, result);
     use_move_tail(b, user, &mv, result, main_target);
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
     handlers::on_after_move(b, user, pokemon, &mv);
@@ -314,7 +319,16 @@ fn run_move_inner<const N: usize>(
         source_effect: MoveId::NONE,
     };
 
+    // `pokemon.moveThisTurnResult = willTryMove`: `false` from every BeforeMove handler
+    // except `mustrecharge`, which returns `null` (no failure for Stomping Tantrum).
+    let recharging = b.volatile(user, Volatile::MustRecharge).active;
     if !before_move(b, user, &mv) {
+        let result = if recharging {
+            MoveResult::Null
+        } else {
+            MoveResult::Failed
+        };
+        b.set_move_result(user, result);
         // MoveAborted (the move's type before ModifyType): Charge ends on an Electric move.
         ability_events::charge_after_move(b, user, mv.id, mv.move_type);
         return Ok(MoveStep::Done);
@@ -726,6 +740,9 @@ fn use_move<const N: usize>(
     will_act: bool,
 ) -> Result<Option<MoveProgress>, TurnError> {
     let pokemon = b.occupant(user).expect("checked");
+    // `pokemon.moveThisTurnResult = undefined` (`useMove`); every early return below is a
+    // failure (`false`).
+    b.set_move_result(user, MoveResult::Undefined);
     let base_target = mv.target;
     let mut target = if matches!(mv.target, MoveTarget::User | MoveTarget::Allies) {
         Some(user)
@@ -743,6 +760,7 @@ fn use_move<const N: usize>(
     // Gravity's `onModifyMove`: a Gravity-blocked move fails (only reachable for a called move;
     // BeforeMove stops a chosen one).
     if b.field_active(FieldEffect::Gravity) && mv.data.flags.contains(MoveFlags::GRAVITY) {
+        b.finish_move_result(user, false);
         return Ok(None);
     }
     // Freeze `onModifyMove`: a defrosting move thaws the user.
@@ -752,7 +770,13 @@ fn use_move<const N: usize>(
     // The item's onModifyMove: the Choice lock (priority 0), King's Rock's flinch (-1).
     item_events::on_modify_move(b, user, mv.id);
     mv.added_secondary = item_events::added_secondary(b.item(user), mv.data);
+    // ModifyTarget (`useMoveInner`, before a random target would be drawn): Metal Burst and
+    // Comeuppance aim at the slot of the foe that last damaged the user this turn.
+    if let Some(scripted) = handlers::modify_target(b, user, mv) {
+        target = Some(scripted);
+    }
     let Some(target) = target else {
+        b.finish_move_result(user, false);
         return Ok(None);
     };
 
@@ -770,12 +794,14 @@ fn use_move<const N: usize>(
     // TryMove: Dazzling, Queenly Majesty, Armor Tail (`onFoeTryMove`).
     let try_move_target = targets.last().copied().unwrap_or(target);
     if !ability_hooks::on_try_move(b, user, mv, try_move_target) {
+        b.finish_move_result(user, false);
         return Ok(None);
     }
     let result = if field_move {
         try_move_hit_field(b, user, mv, target, will_act)?
     } else {
         let Some(&last) = targets.last() else {
+            b.finish_move_result(user, false);
             return Ok(None);
         };
         main_target = last;
@@ -793,6 +819,7 @@ fn use_move<const N: usize>(
             }
         }
     };
+    b.finish_move_result(user, result);
     use_move_tail(b, user, mv, result, main_target);
     Ok(None)
 }
@@ -1101,6 +1128,7 @@ fn try_spread_move_hit<const N: usize>(
         hit: 0,
         total_damage: 0,
         any_ok: false,
+        last_hit: Vec::new(),
         ignore_ability: b.active_move.is_some_and(|a| a.ignore_ability),
     };
     hit_loop(b, user, mv, Some(progress))
@@ -1418,6 +1446,16 @@ fn hit_loop<const N: usize>(
             .iter()
             .map(|r| if let Hit::Damage(d) = r { *d } else { 0 })
             .sum::<i32>();
+        progress.last_hit = progress
+            .targets
+            .iter()
+            .zip(&results)
+            .filter_map(|(&t, r)| match r {
+                Hit::Damage(d) => Some((t, Some(*d))),
+                Hit::Done => Some((t, None)),
+                Hit::Failed => None,
+            })
+            .collect();
         let hit_ok = results.iter().any(|r| r.ok());
         progress.any_ok |= hit_ok;
         // `eachEvent('Update')` after the hit's damage (berries eat before faints are
@@ -1449,6 +1487,13 @@ fn hit_loop<const N: usize>(
                 .round()
                 .max(1.0);
             b.damage(user, amount, DamageSource::Recoil);
+        }
+    }
+    // `gotAttacked` and `timesAttacked` (`hit - 1` = the hits made) for the last hit's
+    // targets other than the user (after a later multi-accuracy miss, the previous hit's).
+    for &(t, damage) in &progress.last_hit.clone() {
+        if t != user {
+            b.record_attack(t, user, damage, progress.hit);
         }
     }
     if !progress.any_ok {
@@ -1860,6 +1905,10 @@ fn get_damage<const N: usize>(
     let data = mv.data;
     if type_immune(b, mv, target) {
         return Ok(Planned::Fail);
+    }
+    // `damageCallback` first (Metal Burst, Comeuppance).
+    if let Some(damage) = handlers::damage_callback(b, user, mv) {
+        return Ok(Planned::Damage(damage));
     }
     let attacker = b.slot_mon(user).expect("checked").clone();
     let defender = b.slot_mon(target).expect("alive").clone();

@@ -541,8 +541,10 @@ pub(crate) fn end_turn<const N: usize>(b: &mut Battle<'_, N>) {
         .into_iter()
         .any(|side| needs_replacement(b, side));
     if !needs_switch {
-        // `endTurn`: the DisableMove handlers of every active Pokémon.
+        // `endTurn`: the DisableMove handlers of every active Pokémon, and the per-turn
+        // damage-history resets (F13).
         item_events::end_turn_disable_move(b);
+        b.end_turn_history();
         let turn = b.state.turn;
         b.apply(Instruction::SetTurn {
             old: turn,

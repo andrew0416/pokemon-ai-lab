@@ -21,6 +21,7 @@ mod conditions;
 pub mod coverage;
 mod diff;
 mod field_events;
+mod history;
 mod items;
 pub mod lock;
 mod mega;

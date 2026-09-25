@@ -10,7 +10,7 @@ use crate::dex::{
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
-use crate::state::{Pokemon, PokemonRef, SideId, SlotRef, Status, BOOST_COUNT};
+use crate::state::{MoveResult, Pokemon, PokemonRef, SideId, SlotRef, Status, BOOST_COUNT};
 use crate::volatile::Volatile;
 
 use super::super::abilities::{Handler, SUB_CONDITION};
@@ -151,6 +151,11 @@ pub(super) fn on_try<const N: usize>(
         moves::SLEEP_TALK | moves::SNORE => {
             b.slot_mon(user).is_some_and(|m| m.status == Status::Sleep)
                 || b.ability(user) == abilities::COMATOSE
+        }
+        // Metal Burst, Comeuppance: `if (!lastDamagedBy?.thisTurn) return false;` (a foe's
+        // damaging hit on the user this turn).
+        moves::METAL_BURST | moves::COMEUPPANCE => {
+            b.state.slot(user).history.last_damaged_by.is_some()
         }
         _ => true,
     }
@@ -296,7 +301,83 @@ pub(super) fn base_power_callback<const N: usize>(
         }
         // Acrobatics: `if (!pokemon.item) return move.basePower * 2;` (the held item).
         moves::ACROBATICS if b.item(user).is_none() => base_power * 2,
+        // Assurance: `if (target.hurtThisTurn) return move.basePower * 2;` (the HP left after
+        // the latest damage this turn; 0 is falsy).
+        moves::ASSURANCE
+            if b.state
+                .slot(target)
+                .history
+                .hurt_this_turn
+                .is_some_and(|hp| hp != 0) =>
+        {
+            base_power * 2
+        }
+        // Payback: `if (target.newlySwitched || this.queue.willMove(target)) return
+        // move.basePower; return move.basePower * 2;`
+        moves::PAYBACK
+            if !b.state.slot(target).history.newly_switched && b.will_move(target).is_none() =>
+        {
+            base_power * 2
+        }
+        // Avalanche: `pokemon.attackedBy.some(p => p.source === target && p.damage > 0 &&
+        // p.thisTurn)`.
+        moves::AVALANCHE
+            if b.occupant(target)
+                .is_some_and(|t| b.state.slot(user).history.damaged_by(t)) =>
+        {
+            base_power * 2
+        }
+        // Stomping Tantrum, Temper Flare: `if (pokemon.moveLastTurnResult === false)`.
+        moves::STOMPING_TANTRUM | moves::TEMPER_FLARE
+            if b.state.slot(user).history.move_last_turn_result == MoveResult::Failed =>
+        {
+            base_power * 2
+        }
+        // Rage Fist: `Math.min(350, 50 + 50 * pokemon.timesAttacked)`; Champions resets the
+        // count on switch-out.
+        moves::RAGE_FIST => {
+            (50 + 50 * i32::from(b.state.slot(user).history.times_attacked)).min(350)
+        }
+        // Last Respects: `50 + 50 * pokemon.side.totalFainted`.
+        moves::LAST_RESPECTS => 50 + 50 * i32::from(b.state.side(user.side).history.total_fainted),
         _ => base_power,
+    }
+}
+
+/// The move's `damageCallback` (`getDamage`, before everything else): Metal Burst and
+/// Comeuppance deal `(lastDamagedBy.damage * 1.5) || 1`, which `spreadDamage` truncates.
+pub(super) fn damage_callback<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Option<i32> {
+    match mv.id {
+        moves::METAL_BURST | moves::COMEUPPANCE => {
+            let damage = b
+                .state
+                .slot(user)
+                .history
+                .last_damaged_by
+                .map_or(0, |d| i32::from(d.damage));
+            let scaled = damage * 3 / 2;
+            Some(if scaled == 0 { 1 } else { scaled })
+        }
+        _ => None,
+    }
+}
+
+/// The move's `onModifyTarget` (`useMoveInner`): Metal Burst and Comeuppance target
+/// `getAtSlot(lastDamagedBy.slot)`, the slot the foe that last damaged the user hit from.
+pub(super) fn modify_target<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Option<SlotRef> {
+    match mv.id {
+        moves::METAL_BURST | moves::COMEUPPANCE => {
+            b.state.slot(user).history.last_damaged_by.map(|d| d.slot)
+        }
+        _ => None,
     }
 }
 

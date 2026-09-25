@@ -7,7 +7,7 @@
 
 use crate::gimmick::Gimmick;
 use crate::instruction::Instruction;
-use crate::state::{PokemonRef, SideId, Slot, SlotRef, State};
+use crate::state::{PokemonRef, SideId, Slot, SlotHistory, SlotRef, State};
 use crate::volatile::VolatileState;
 
 pub(crate) fn instructions<const N: usize>(from: &State<N>, to: &State<N>) -> Vec<Instruction> {
@@ -39,6 +39,13 @@ pub(crate) fn instructions<const N: usize>(from: &State<N>, to: &State<N>) -> Ve
                 !(a.gimmicks_used.contains(gimmick) && !b.gimmicks_used.contains(gimmick)),
                 "a spent gimmick cannot come back"
             );
+        }
+        if a.history != b.history {
+            out.push(Instruction::SetSideHistory {
+                side,
+                old: a.history,
+                new: b.history,
+            });
         }
     }
     for (i, (&old, &new)) in from.field.iter().zip(&to.field).enumerate() {
@@ -212,6 +219,13 @@ fn slot_changes(out: &mut Vec<Instruction>, r: SlotRef, a: &Slot, b: &Slot) {
             new: b.fainted_occupant,
         });
     }
+    if b.history != SlotHistory::default() {
+        out.push(Instruction::SetSlotHistory {
+            target: r,
+            old: SlotHistory::default(),
+            new: b.history,
+        });
+    }
     debug_assert!(
         b.substitute_hp == 0 && !b.dynamax.is_active(),
         "no instruction sets these yet"
@@ -311,6 +325,10 @@ mod tests {
         })
         .unwrap()
         .types = [crate::dex::Type::Water, crate::dex::Type::None];
+        // Damage history on a slot and faint counters on a side.
+        to.slot_mut(me).history.times_attacked = 2;
+        to.slot_mut(me).history.newly_switched = false;
+        to.side_mut(SideId::Two).history.total_fainted = 1;
 
         let ins = instructions(&from, &to);
         let mut s = from.clone();
