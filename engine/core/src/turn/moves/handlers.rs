@@ -17,6 +17,7 @@ use super::super::abilities::{Handler, SUB_CONDITION};
 use super::super::battle::{Battle, BoostEffect};
 use super::super::conditions::HAZARDS;
 use super::super::order::modify;
+use super::super::queue::{Action, ActionKind};
 use super::super::TurnError;
 use super::ActiveMove;
 
@@ -464,6 +465,7 @@ pub(super) fn on_hit<const N: usize>(
             return Ok(None);
         }
         moves::TRICK | moves::SWITCHEROO => trick(b, user, target)?,
+        moves::INSTRUCT => instruct(b, target)?,
         // Sleep Talk: one of the user's moves Sleep Talk may call, uniformly at random, used
         // through `useMove` (`moves::call_move`); fails without one. It returns nothing.
         moves::SLEEP_TALK => {
@@ -525,6 +527,64 @@ pub(super) fn on_hit<const N: usize>(
         _ => return Ok(None),
     };
     Ok(Some(result))
+}
+
+/// Instruct `onHit`: the target repeats its last move right away. It fails without a last move,
+/// or when that move has `failinstruct`, `charge` or `recharge`, is a Z- or Max move, or its
+/// slot has no PP; otherwise a move action for it goes to the front of the queue
+/// (`queue.prioritizeAction(queue.resolveAction(...))`: order 3) and runs as a full `runMove`
+/// (PP, BeforeMove, `lastMove`). Showdown aims it at `target.lastMoveTargetLoc`, which the
+/// state does not keep, so a last move with a chosen target (`normal`, `any`, ...) is
+/// unsupported, as are a last move the target does not know (Struggle) and a Quick Claw
+/// holder (`resolveAction` draws its fractional priority again).
+fn instruct<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+) -> Result<HitResult, TurnError> {
+    let Some(pokemon) = b.alive(target) else {
+        return Ok(HitResult::Failure);
+    };
+    let last = b.state.slot(target).last_move;
+    if last.is_none() {
+        return Ok(HitResult::Failure);
+    }
+    let data = last.data();
+    let Some(index) = b.mon(pokemon).moves.iter().position(|m| m.id == last) else {
+        return Err(b.unsupported(format!(
+            "Instruct repeating {}, which the target does not know",
+            data.name
+        )));
+    };
+    let blocked = data.flags.contains(MoveFlags::FAILINSTRUCT)
+        || data.flags.contains(MoveFlags::CHARGE)
+        || data.flags.contains(MoveFlags::RECHARGE)
+        || data.is_z
+        || data.is_max
+        || b.mon(pokemon).moves[index].pp == 0;
+    if blocked {
+        return Ok(HitResult::Failure);
+    }
+    if super::takes_target(N, data.target) {
+        return Err(b.unsupported(format!(
+            "Instruct repeating {} (its lastMoveTargetLoc is not kept)",
+            data.name
+        )));
+    }
+    if b.item(target) == items::QUICK_CLAW {
+        return Err(b.unsupported("Instruct on a Quick Claw holder"));
+    }
+    let fractional_tenths = super::super::items::fractional_priority_tenths(b.mon(pokemon));
+    b.queue.push(Action {
+        slot: target,
+        pokemon,
+        kind: ActionKind::Move {
+            index: index as u8,
+            target: 0,
+            fractional_tenths,
+        },
+        order: Some(3),
+    });
+    Ok(HitResult::Success)
 }
 
 /// Whether Sleep Talk's `onHit` may pick `id`: not `nosleeptalk` (Sleep Talk itself, Assist,

@@ -189,6 +189,8 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // Snore: `onTry`. Both are `sleepUsable` (`moves::before_move`).
     (moves::SLEEP_TALK, &["onHit", "onTry"]),
     (moves::SNORE, &["onTry"]),
+    // Instruct: `onHit` in `handlers` (a new move action with order 3).
+    (moves::INSTRUCT, &["onHit"]),
     (moves::GRASSY_GLIDE, &["onModifyPriority"]),
     (moves::LOW_KICK, &["basePowerCallback", "onTryHit"]),
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),

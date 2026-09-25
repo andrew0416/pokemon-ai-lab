@@ -277,6 +277,23 @@ fn o35_sleep_talk_with_a_multi_hit_move_is_unsupported() {
     assert_unsupported("o35-sleep-talk-multihit", "Sleep Talk calling Bullet Seed");
 }
 
+#[test]
+fn o38_instruct_repeats_the_last_move_at_once() {
+    assert_exact_parity("o38-instruct");
+}
+
+#[test]
+fn o38_instruct_repeats_a_spread_move_from_both_sides() {
+    assert_exact_parity("o38-instruct-spread");
+}
+
+/// Instruct aims a repeated single-target move at `lastMoveTargetLoc`, which the state does not
+/// keep.
+#[test]
+fn o38_instruct_repeating_a_targeted_move_is_unsupported() {
+    assert_unsupported("o38-instruct-target", "lastMoveTargetLoc");
+}
+
 /// Stealth Rock could knock out a newcomer that Toxic Spikes also poisons: Showdown's result
 /// depends on the order the hazards were set, which the state does not keep.
 #[test]
