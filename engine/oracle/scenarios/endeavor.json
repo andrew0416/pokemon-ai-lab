@@ -1,0 +1,24 @@
+{
+ "description": "Endeavor: Weavile (30 HP) brings the full-HP Snorlax down to 30 HP (damageCallback: no crit, no roll); Hitmontop's Endeavor into Clefable (100 HP, below Hitmontop's 157) fails (onTryImmunity).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Endeavor", "Calm Mind"], "level": 50},
+   {"species": "Hitmontop", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Endeavor", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Weavile": {"hp": 30}}, "p2": {"Clefable": {"hp": 100}}},
+ "turn": {"p1": "move endeavor 1, move endeavor 2", "p2": "move calmmind, move calmmind"}
+}

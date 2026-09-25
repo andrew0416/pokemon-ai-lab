@@ -1,0 +1,24 @@
+{
+ "description": "Electro Ball and Gyro Ball read both Speeds with their modifiers: Jolteon (Speed 200) against the paralyzed Snorlax (Speed 25): ratio 8, power 150; Ferrothorn (36) Gyro Balls Jolteon: floor(25 * 200 / 36) + 1 = 139.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Jolteon", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 32, "spa": 2, "spe": 32}, "moves": ["Electro Ball", "Calm Mind"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Ferrothorn", "item": "", "ability": "Honey Gather", "nature": "Relaxed",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Gyro Ball", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Snorlax": {"status": "par"}}},
+ "turn": {"p1": "move electroball 1, move calmmind", "p2": "move calmmind, move gyroball 1"}
+}

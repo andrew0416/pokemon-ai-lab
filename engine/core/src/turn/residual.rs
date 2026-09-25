@@ -36,6 +36,8 @@ enum Kind {
     StatusCure(PokemonRef, SlotRef, AbilityId),
     /// An item's `onResidual` (`items::on_residual`).
     Item(PokemonRef, SlotRef, ItemId),
+    /// Leech Seed's `onResidual` (order 8; no duration).
+    LeechSeed(PokemonRef, SlotRef),
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -139,6 +141,14 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                 });
             }
             for (volatile, state) in b.state.slot(slot).volatiles.iter() {
+                if volatile == Volatile::LeechSeed {
+                    out.push(Handler {
+                        order: volatile.residual_order().unwrap_or(ORDER_DEFAULT),
+                        speed,
+                        sub_order: SUB_CONDITION,
+                        kind: Kind::LeechSeed(pokemon, slot),
+                    });
+                }
                 if state.duration > 0 {
                     out.push(Handler {
                         order: volatile.residual_order().unwrap_or(ORDER_DEFAULT),
@@ -235,7 +245,8 @@ impl Kind {
             | Kind::Leftovers(p, s)
             | Kind::SpeedBoost(p, s)
             | Kind::StatusCure(p, s, _)
-            | Kind::Item(p, s, _) => Some((p, s)),
+            | Kind::Item(p, s, _)
+            | Kind::LeechSeed(p, s) => Some((p, s)),
             Kind::Weather | Kind::FieldDuration(_) | Kind::SideDuration(..) => None,
         }
     }
@@ -361,6 +372,7 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
                         b.set_volatile_state(slot, volatile, state);
                     }
                 }
+                Volatile::PartiallyTrapped => conditions::partially_trapped_residual(b, slot),
                 Volatile::Encore => {
                     // Over once the encored move has no PP left.
                     let out_of_pp = b
@@ -420,6 +432,12 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
                 return Ok(true);
             }
             item_events::on_residual(b, slot, item);
+        }
+        Kind::LeechSeed(pokemon, slot) => {
+            if !still_active(b, pokemon, slot) {
+                return Ok(true);
+            }
+            conditions::leech_seed_residual(b, slot);
         }
         Kind::SpeedBoost(pokemon, slot) => {
             // Skipped if the ability changed since the handlers were collected.

@@ -1,0 +1,28 @@
+{
+ "description": "Take Heart before Purify, and Rest failures: the burned Azumarill's Take Heart raises SpA/SpD and cures it; Toxapex's Purify on it then finds no status (NOT_FAIL: no heal). Snorlax's Rest fails at full HP (onTry); Blissey's Rest fails in Electric Terrain (a grounded user cannot fall asleep: SetStatus).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Rest", "Calm Mind"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Rest", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Toxapex", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Purify", "Calm Mind"], "level": 50},
+   {"species": "Azumarill", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Take Heart", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Blissey": {"hp": 200}},
+  "p2": {"Toxapex": {"hp": 100}, "Azumarill": {"status": "brn"}},
+  "field": {"terrain": "electricterrain", "terrainDuration": 3}
+ },
+ "turn": {"p1": "move rest, move rest", "p2": "move purify -2, move takeheart"}
+}

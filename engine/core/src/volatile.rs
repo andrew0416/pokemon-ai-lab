@@ -9,6 +9,7 @@
 //! from the canonical state.
 
 use crate::dex::{conditions, ConditionId, MoveId, Type};
+use crate::state::{PokemonRef, SideId, SlotRef};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 #[repr(u8)]
@@ -102,9 +103,40 @@ pub enum Volatile {
     Protosynthesis,
     /// Quark Drive's own condition: as [`Volatile::Protosynthesis`], for Electric Terrain.
     QuarkDrive,
+    /// Throat Chop's secondary effect (`throatchop`, duration 2, residual order 22): sound moves
+    /// can be neither chosen nor used. Added by name, so the dex has no condition id.
+    ThroatChop,
+    /// Spiky Shield's single-turn shield (duration 1): like Protect, and a contact move costs
+    /// its user 1/8 of its max HP.
+    SpikyShield,
+    /// Baneful Bunker (duration 1): like Protect, and a contact move poisons its user.
+    BanefulBunker,
+    /// King's Shield (duration 1): blocks damaging moves only; contact lowers Attack by 1.
+    KingsShield,
+    /// Obstruct (duration 1): blocks damaging moves only; contact lowers Defense by 2.
+    Obstruct,
+    /// Silk Trap (duration 1): blocks damaging moves only; contact lowers Speed by 1.
+    SilkTrap,
+    /// Burning Bulwark (duration 1): blocks damaging moves only; contact burns.
+    BurningBulwark,
+    /// No Retreat (no duration): the holder cannot switch out (`onTrapPokemon`) unless it is
+    /// immune to trapping (Ghost), and cannot use No Retreat again.
+    NoRetreat,
+    /// Leech Seed (no duration, residual order 8): the holder loses 1/8 of its max HP to
+    /// whoever stands in the seeder's slot (`sourceSlot`, kept in `counter`:
+    /// [`encode_slot`]; hidden in the canonical state).
+    LeechSeed,
+    /// Partial trapping (Bind, Wrap, Fire Spin, ...; duration 5–6, 8 with Grip Claw, residual
+    /// order 13): 1/8 (1/6 with Binding Band: `boundDivisor`, kept in `hidden`) of the max HP
+    /// each turn and no switching while the trapper (`source`, kept in `counter`:
+    /// [`encode_pokemon`]; hidden in the canonical state) stays in.
+    PartiallyTrapped,
+    /// Destiny Bond (no duration): if a foe's move knocks the holder out, the foe faints too;
+    /// it ends at the holder's next move attempt.
+    DestinyBond,
 }
 
-pub const VOLATILE_COUNT: usize = 31;
+pub const VOLATILE_COUNT: usize = 42;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -139,6 +171,17 @@ impl Volatile {
         Volatile::SparklingAria,
         Volatile::Protosynthesis,
         Volatile::QuarkDrive,
+        Volatile::ThroatChop,
+        Volatile::SpikyShield,
+        Volatile::BanefulBunker,
+        Volatile::KingsShield,
+        Volatile::Obstruct,
+        Volatile::SilkTrap,
+        Volatile::BurningBulwark,
+        Volatile::NoRetreat,
+        Volatile::LeechSeed,
+        Volatile::PartiallyTrapped,
+        Volatile::DestinyBond,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -173,11 +216,22 @@ impl Volatile {
             Volatile::Imprison => conditions::IMPRISON,
             Volatile::GlaiveRush => conditions::GLAIVERUSH,
             Volatile::SparklingAria => conditions::SPARKLINGARIA,
+            Volatile::SpikyShield => conditions::SPIKYSHIELD,
+            Volatile::BanefulBunker => conditions::BANEFULBUNKER,
+            Volatile::KingsShield => conditions::KINGSSHIELD,
+            Volatile::Obstruct => conditions::OBSTRUCT,
+            Volatile::SilkTrap => conditions::SILKTRAP,
+            Volatile::BurningBulwark => conditions::BURNINGBULWARK,
+            Volatile::NoRetreat => conditions::NORETREAT,
+            Volatile::LeechSeed => conditions::LEECHSEED,
+            Volatile::PartiallyTrapped => conditions::PARTIALLYTRAPPED,
+            Volatile::DestinyBond => conditions::DESTINYBOND,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
             | Volatile::AngerShellUnchecked
-            | Volatile::MicleBerry => ConditionId::NONE,
+            | Volatile::MicleBerry
+            | Volatile::ThroatChop => ConditionId::NONE,
         }
     }
 
@@ -215,6 +269,17 @@ impl Volatile {
             Volatile::SparklingAria => "sparklingaria",
             Volatile::Protosynthesis => "protosynthesis",
             Volatile::QuarkDrive => "quarkdrive",
+            Volatile::ThroatChop => "throatchop",
+            Volatile::SpikyShield => "spikyshield",
+            Volatile::BanefulBunker => "banefulbunker",
+            Volatile::KingsShield => "kingsshield",
+            Volatile::Obstruct => "obstruct",
+            Volatile::SilkTrap => "silktrap",
+            Volatile::BurningBulwark => "burningbulwark",
+            Volatile::NoRetreat => "noretreat",
+            Volatile::LeechSeed => "leechseed",
+            Volatile::PartiallyTrapped => "partiallytrapped",
+            Volatile::DestinyBond => "destinybond",
         }
     }
 
@@ -238,15 +303,24 @@ impl Volatile {
             | Volatile::Spotlight
             | Volatile::Roost
             | Volatile::Endure
-            | Volatile::HelpingHand => 1,
+            | Volatile::HelpingHand
+            | Volatile::SpikyShield
+            | Volatile::BanefulBunker
+            | Volatile::KingsShield
+            | Volatile::Obstruct
+            | Volatile::SilkTrap
+            | Volatile::BurningBulwark => 1,
             Volatile::Stall
             | Volatile::LockedMove
             | Volatile::MustRecharge
             | Volatile::Yawn
-            | Volatile::MicleBerry => 2,
+            | Volatile::MicleBerry
+            | Volatile::ThroatChop => 2,
             Volatile::Encore | Volatile::Taunt => 3,
             Volatile::PerishSong => 4,
-            Volatile::Disable => 5,
+            // Partial trapping's `durationCallback` replaces it when it starts
+            // (`conditions::volatile_start`).
+            Volatile::Disable | Volatile::PartiallyTrapped => 5,
             Volatile::Confusion
             | Volatile::FlashFire
             | Volatile::ChoiceLock
@@ -260,7 +334,10 @@ impl Volatile {
             | Volatile::GlaiveRush
             | Volatile::SparklingAria
             | Volatile::Protosynthesis
-            | Volatile::QuarkDrive => 0,
+            | Volatile::QuarkDrive
+            | Volatile::NoRetreat
+            | Volatile::LeechSeed
+            | Volatile::DestinyBond => 0,
         }
     }
 
@@ -268,9 +345,12 @@ impl Volatile {
     /// handler). Its duration is counted down by that residual handler.
     pub fn residual_order(self) -> Option<u32> {
         match self {
+            Volatile::LeechSeed => Some(8),
+            Volatile::PartiallyTrapped => Some(13),
             Volatile::Taunt => Some(15),
             Volatile::Encore => Some(16),
             Volatile::Disable => Some(17),
+            Volatile::ThroatChop => Some(22),
             Volatile::Yawn => Some(23),
             Volatile::PerishSong => Some(24),
             Volatile::Roost => Some(25),
@@ -284,18 +364,53 @@ impl Volatile {
     pub fn showdown_state(self, state: VolatileState) -> Option<VolatileState> {
         match self {
             Volatile::ProteanUsed | Volatile::AngerShellUnchecked => None,
-            Volatile::Roost | Volatile::HelpingHand => Some(VolatileState {
+            Volatile::Roost | Volatile::HelpingHand | Volatile::LeechSeed => Some(VolatileState {
                 counter: 0,
                 ..state
             }),
-            // `bestStat` and `fromBooster` are not canonical fields.
-            Volatile::Protosynthesis | Volatile::QuarkDrive => Some(VolatileState {
-                counter: 0,
-                hidden: 0,
-                ..state
-            }),
+            // `bestStat` / `fromBooster` (Protosynthesis, Quark Drive) and the trapper /
+            // `boundDivisor` (partial trapping) are not canonical fields.
+            Volatile::Protosynthesis | Volatile::QuarkDrive | Volatile::PartiallyTrapped => {
+                Some(VolatileState {
+                    counter: 0,
+                    hidden: 0,
+                    ..state
+                })
+            }
             _ => Some(state),
         }
+    }
+}
+
+/// A slot in one `counter` (Leech Seed's `sourceSlot`): never 0.
+pub fn encode_slot(slot: SlotRef) -> u16 {
+    1 + (slot.side.index() as u16) * 256 + u16::from(slot.slot)
+}
+
+/// The slot [`encode_slot`] stored.
+pub fn decode_slot(counter: u16) -> SlotRef {
+    let value = counter - 1;
+    SlotRef {
+        side: if value >= 256 {
+            SideId::Two
+        } else {
+            SideId::One
+        },
+        slot: (value % 256) as u8,
+    }
+}
+
+/// A party member in one `counter` (partial trapping's `source`): never 0.
+pub fn encode_pokemon(pokemon: PokemonRef) -> u16 {
+    1 + (pokemon.side.index() as u16) * 256 + u16::from(pokemon.party)
+}
+
+/// The party member [`encode_pokemon`] stored.
+pub fn decode_pokemon(counter: u16) -> PokemonRef {
+    let slot = decode_slot(counter);
+    PokemonRef {
+        side: slot.side,
+        party: slot.slot,
     }
 }
 
@@ -341,8 +456,15 @@ impl VolatileState {
 }
 
 /// All volatiles of one slot.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct Volatiles(pub [VolatileState; VOLATILE_COUNT]);
+
+/// Manual: `Default` is only derived for arrays of up to 32 elements.
+impl Default for Volatiles {
+    fn default() -> Self {
+        Volatiles([VolatileState::NONE; VOLATILE_COUNT])
+    }
+}
 
 impl Volatiles {
     pub fn get(&self, volatile: Volatile) -> VolatileState {
@@ -392,6 +514,7 @@ mod tests {
                         | Volatile::ProteanUsed
                         | Volatile::AngerShellUnchecked
                         | Volatile::MicleBerry
+                        | Volatile::ThroatChop
                 ));
                 continue;
             }
@@ -415,6 +538,14 @@ mod tests {
             (Volatile::HelpingHand, moves::HELPING_HAND),
             (Volatile::Taunt, moves::TAUNT),
             (Volatile::Disable, moves::DISABLE),
+            (Volatile::ThroatChop, moves::THROAT_CHOP),
+            (Volatile::SpikyShield, moves::SPIKY_SHIELD),
+            (Volatile::BanefulBunker, moves::BANEFUL_BUNKER),
+            (Volatile::KingsShield, moves::KINGS_SHIELD),
+            (Volatile::Obstruct, moves::OBSTRUCT),
+            (Volatile::SilkTrap, moves::SILK_TRAP),
+            (Volatile::BurningBulwark, moves::BURNING_BULWARK),
+            (Volatile::LeechSeed, moves::LEECH_SEED),
         ] {
             let data = id.data();
             assert_eq!(
@@ -449,6 +580,44 @@ mod tests {
         );
         assert_eq!(moves::FOCUS_ENERGY.data().condition_duration, 0);
         assert_eq!(Volatile::FocusEnergy.initial_duration(), 0);
+    }
+
+    /// Partial trapping is a named condition (`data/conditions.ts`): its duration, residual order
+    /// and handler list are the implemented ones (`conditions::volatile_start`, `residual`,
+    /// `conditions::trapped`; `onEnd` only logs).
+    #[test]
+    fn partial_trapping_matches_its_condition() {
+        let data = conditions::PARTIALLYTRAPPED.data();
+        assert_eq!(data.duration, Volatile::PartiallyTrapped.initial_duration());
+        assert_eq!(data.event_orders, [("onResidualOrder", 13)]);
+        assert_eq!(
+            Volatile::PartiallyTrapped.residual_order(),
+            Some(13),
+            "residual order"
+        );
+        assert_eq!(
+            data.handlers,
+            [
+                "durationCallback",
+                "onEnd",
+                "onResidual",
+                "onStart",
+                "onTrapPokemon"
+            ]
+        );
+    }
+
+    #[test]
+    fn slots_and_pokemon_round_trip() {
+        for side in [SideId::One, SideId::Two] {
+            for index in 0..6 {
+                let slot = SlotRef { side, slot: index };
+                assert_eq!(decode_slot(encode_slot(slot)), slot);
+                assert_ne!(encode_slot(slot), 0);
+                let pokemon = PokemonRef { side, party: index };
+                assert_eq!(decode_pokemon(encode_pokemon(pokemon)), pokemon);
+            }
+        }
     }
 
     #[test]

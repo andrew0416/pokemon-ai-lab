@@ -1,0 +1,24 @@
+{
+ "description": "Raging Bull and Brick Break: the faster Hitmontop's Brick Break into the Ghost-type Gengar is stopped by immunity before its onTryHit, so the foes' Aurora Veil stays; then Tauros-Paldea-Aqua's Raging Bull, Water-type (onModifyType), breaks it before hitting Heatran.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Tauros-Paldea-Aqua", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Raging Bull", "Calm Mind"], "level": 50},
+   {"species": "Hitmontop", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Brick Break", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Heatran", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 32, "spa": 32, "spe": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"sides": {"p2": {"auroraveil": 3}}},
+ "turn": {"p1": "move ragingbull 1, move brickbreak 2", "p2": "move calmmind, move calmmind"}
+}

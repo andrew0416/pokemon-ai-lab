@@ -480,6 +480,10 @@ pub(crate) fn flower_veil_first<const N: usize>(
 /// move request forbids is rejected by `Ruleset::validate_slot_action` (`ActionError::Trapped`),
 /// so `Ruleset::joint_actions` never generates it; forced switches (replacements) ignore it.
 pub fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> bool {
+    // The conditions' `TrapPokemon` handlers (No Retreat, partial trapping).
+    if super::conditions::trapped(state, slot).is_some() {
+        return true;
+    }
     let foe_traps = State::<N>::slot_refs().any(|s| {
         s.side != slot.side
             && state.active(s).is_some_and(|m| {

@@ -14,7 +14,7 @@ use crate::damage::{
 };
 use crate::dex::{
     abilities, items, moves, AbilityId, FixedDamage, IgnoreImmunity, ItemId, MoveCategory,
-    MoveData, MoveFlags, MoveId, MoveTarget, Ohko, Secondary, SelfSwitch, Stat, Type,
+    MoveData, MoveFlags, MoveId, MoveTarget, Ohko, Secondary, SelfDestruct, SelfSwitch, Stat, Type,
     TypeImmunities, TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
@@ -224,6 +224,8 @@ pub(crate) fn run_move<const N: usize>(
             has_bounced: false,
         };
         before_move(b, user, &recharge);
+        // MoveAborted: Destiny Bond ends.
+        conditions::destiny_bond_before_move(b, user, MoveId::NONE, false);
         return Ok(MoveStep::Done);
     }
     let id = super::lock::action_move_id(b.mon(pokemon), move_index);
@@ -344,7 +346,11 @@ fn run_move_inner<const N: usize>(
     // `pokemon.moveThisTurnResult = willTryMove`: `false` from every BeforeMove handler
     // except `mustrecharge`, which returns `null` (no failure for Stomping Tantrum).
     let recharging = b.volatile(user, Volatile::MustRecharge).active;
-    if !before_move(b, user, &mv) {
+    let proceeds = before_move(b, user, &mv);
+    // Destiny Bond's `onBeforeMove` (priority -1, the last handler) for any other move, or its
+    // `onMoveAborted`: the volatile ends at the holder's next move attempt.
+    conditions::destiny_bond_before_move(b, user, mv.id, proceeds);
+    if !proceeds {
         let result = if recharging {
             MoveResult::Null
         } else {
@@ -382,10 +388,9 @@ fn run_move_inner<const N: usize>(
 }
 
 /// The BeforeMove handlers, by priority: Glaive Rush (100), recharge (11), sleep and freeze
-/// (10), flinch (8), Disable (7),
-/// Gravity (6), Taunt (5), a foe's Imprison (4), confusion (3), paralysis (1), the Choice lock
-/// (0). `false` = the move is not used (no
-/// PP, no `lastMove`).
+/// (10), flinch (8), Disable (7), Gravity and Throat Chop (6), Taunt (5), a foe's Imprison (4),
+/// confusion (3), paralysis (1), the Choice lock (0). `false` = the move is not used (no PP, no
+/// `lastMove`).
 fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) -> bool {
     let pokemon = b.occupant(user).expect("checked");
     // Glaive Rush (priority 100): the drawback ends at the holder's next move attempt.
@@ -778,6 +783,12 @@ fn use_move<const N: usize>(
     handlers::on_modify_move(b, user, target, mv)?;
     ability_hooks::on_modify_type(b, user, mv);
     ability_hooks::on_modify_move(b, user, mv)?;
+    // Throat Chop's `onModifyMove` (the user's volatile) returns `false` for a sound move: the
+    // move is gone (`if (!move || pokemon.fainted) return false;`). Only a called move gets here
+    // (BeforeMove stops a chosen one); nothing else in runEvent('ModifyMove') changes the state.
+    if conditions::throat_chopped(b.state, user, mv.id) {
+        return Ok(None);
+    }
     if mv.target != base_target {
         target = get_random_target(b, user, mv.target);
     }
@@ -808,9 +819,11 @@ fn use_move<const N: usize>(
     };
 
     let mut main_target = target;
+    // Showdown `tryMoveHit`: moves aimed at the field or a side, and `allyTeam` moves (Heal
+    // Bell), whose `onHit` covers the whole party.
     let field_move = matches!(
         mv.target,
-        MoveTarget::All | MoveTarget::FoeSide | MoveTarget::AllySide
+        MoveTarget::All | MoveTarget::FoeSide | MoveTarget::AllySide | MoveTarget::AllyTeam
     );
     let targets = if field_move {
         Vec::new()
@@ -823,6 +836,11 @@ fn use_move<const N: usize>(
     if !ability_hooks::on_try_move(b, user, mv, try_move_target) {
         b.finish_move_result(user, false);
         return Ok(None);
+    }
+    // `selfdestruct: 'always'` (Explosion, Self-Destruct, Misty Explosion): the user faints now,
+    // before its hits (even without a target), and attacks at 0 HP.
+    if mv.data.selfdestruct == SelfDestruct::Always {
+        b.faint(user);
     }
     let result = if field_move {
         try_move_hit_field(b, user, mv, target, will_act)?
@@ -998,6 +1016,8 @@ fn use_move_tail<const N: usize>(
         );
     }
     if !result {
+        // MoveFail: High Jump Kick's crash.
+        handlers::on_move_fail(b, user, mv);
         return;
     }
     // AfterMoveSecondarySelf (skipped for a Sheer Force-boosted move): the user's item (Life
@@ -1095,9 +1115,38 @@ fn try_move_hit_field<const N: usize>(
             return Ok(false);
         }
     }
+    // TryHitSide on a Pokémon of the user's side (`allySide`, `allyTeam`): Sap Sipper's
+    // `onAllyTryHitSide` (breakable) raises the Attack of the user's ally for a Grass move
+    // (`if (source === this.effectState.target || !target.isAlly(source)) return;`; Soundproof's
+    // only logs; Magic Bounce's skips moves aimed at the own side).
+    if matches!(mv.target, MoveTarget::AllySide | MoveTarget::AllyTeam)
+        && mv.move_type == Type::Grass
+    {
+        for ally in adjacent_allies(b, user) {
+            if b.ability_unless_broken(ally) == abilities::SAP_SIPPER {
+                let mut up = NO_BOOSTS;
+                up[0] = 1;
+                b.boost_by(
+                    ally,
+                    &up,
+                    Some(user),
+                    BoostEffect::Ability(abilities::SAP_SIPPER),
+                );
+            }
+        }
+    }
     // runMoveEffects on the target: undefined (nothing attempted) counts as success.
     let mut outcome: Option<bool> = None;
     let mut combine = |r: bool| outcome = Some(outcome.unwrap_or(false) || r);
+    // Hit: an `allyTeam` move's `onHit` (Heal Bell, Aromatherapy) on the first Pokémon of the
+    // user's side (only its side matters).
+    if mv.target == MoveTarget::AllyTeam {
+        match handlers::on_hit(b, user, target, mv)? {
+            Some(HitResult::Success) => combine(true),
+            Some(HitResult::Failure) => combine(false),
+            Some(HitResult::NotFail) | None => {}
+        }
+    }
     if !data.side_condition.is_none() {
         let side = target.side;
         let effect = side_effect_of(data.side_condition.id()).expect("checked by support");
@@ -1178,6 +1227,14 @@ fn try_spread_move_hit<const N: usize>(
             total_damage: 0,
         });
     }
+    // Destiny Bond's `onPrepareHit`: `return !pokemon.removeVolatile('destinybond');` (it
+    // fails when used again while it is up).
+    if mv.id == moves::DESTINY_BOND && b.remove_volatile(user, Volatile::DestinyBond) {
+        return Ok(HitOutcome::Finished {
+            ok: false,
+            total_damage: 0,
+        });
+    }
     prepare_hit_ability(b, user, mv);
 
     // 1. TryHit: Psychic Terrain (priority 4), Protect (3), the target's ability (0). Each
@@ -1211,7 +1268,7 @@ fn try_spread_move_hit<const N: usize>(
         let prankster = mv.prankster_boosted
             && t.side != user.side
             && b.natural_immune(t, TypeImmunities::PRANKSTER);
-        !powder && handlers::on_try_immunity(b, mv, t) && !prankster
+        !powder && handlers::on_try_immunity(b, user, mv, t) && !prankster
     });
     if targets.is_empty() {
         return Ok(HitOutcome::Finished {
@@ -1231,6 +1288,12 @@ fn try_spread_move_hit<const N: usize>(
             ok: false,
             total_damage: 0,
         });
+    }
+    // 5. `hitStepBreakProtect` (Feint, Hyperspace Hole): every target left loses its protection.
+    if mv.data.breaks_protect {
+        for &t in &hit {
+            handlers::break_protect(b, t);
+        }
     }
     // The hit's first step is the move's own `onTryHit` (Champions `spreadMoveHit`: on the
     // first target only; failing fails the move).
@@ -1348,7 +1411,11 @@ fn stall_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> bool {
     success
 }
 
-/// The TryHit handlers for one target; `false` = the move fails on it.
+/// The TryHit handlers for one target by priority (`compareLeftToRightOrder`: priority, then
+/// target index; each target's handlers only act on that target, its attacker, or nothing that
+/// another target's handlers read): Psychic Terrain, Wide Guard and Quick Guard (4), the
+/// protect family (3, `handlers::protect_try_hit`), then the target's ability and item.
+/// `false` = the move fails on it.
 fn try_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -1365,6 +1432,13 @@ fn try_hit<const N: usize>(
     // bounce, and none of them reads what a bounced status move changes.
     if magic_bounce_reflects(b, user, mv, target) {
         bounce_move(b, target, user, mv)?;
+        return Ok(false);
+    }
+    if handlers::protect_try_hit(b, user, mv, target) {
+        return Ok(false);
+    }
+    // Sturdy `onTryHit`: OHKO moves fail (breakable).
+    if mv.data.ohko != Ohko::No && b.ability_unless_broken(target) == abilities::STURDY {
         return Ok(false);
     }
     // The target's item `onTryHit` (Safety Goggles against powder).
@@ -1389,6 +1463,8 @@ fn try_hit<const N: usize>(
     Ok(!ability_hooks::on_try_hit(b, user, mv, target))
 }
 
+/// The TryHit handlers of priority 4, which only fail the move: Psychic Terrain, Wide Guard,
+/// Quick Guard.
 fn blocked_by_try_hit<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
@@ -1401,9 +1477,6 @@ fn blocked_by_try_hit<const N: usize>(
         && target.side != user.side
         && b.is_grounded(target)
     {
-        return true;
-    }
-    if b.volatile(target, Volatile::Protect).active && mv.data.flags.contains(MoveFlags::PROTECT) {
         return true;
     }
     // Wide Guard / Quick Guard on the target's side (`onTryHit`, priority 4): spread moves, or
@@ -1422,9 +1495,7 @@ fn blocked_by_try_hit<const N: usize>(
             return true;
         }
     }
-    // Sturdy `onTryHit`: OHKO moves fail (breakable). OHKO moves are refused by `support`
-    // for now; this keeps the immunity when they are added.
-    mv.data.ohko != Ohko::No && b.ability_unless_broken(target) == abilities::STURDY
+    false
 }
 
 /// Lightning Rod / Storm Drain `onTryHit`: a move of the absorbed type aimed at the holder
@@ -1488,6 +1559,26 @@ fn accuracy_check<const N: usize>(
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
+    // OHKO moves bypass every accuracy modifier: 30 (Sheer Cold 20 for a non-Ice user) plus the
+    // level difference; a target of higher level, or of the type of a typed OHKO move (Sheer
+    // Cold vs Ice), is immune. Then the `Accuracy` event: Glaive Rush's drawback hits anyway;
+    // Micle Berry skips OHKO moves (`if (!move.ohko)`). No semi-invulnerable state exists.
+    if mv.data.ohko != Ohko::No {
+        let level = |s: SlotRef| b.slot_mon(s).map_or(0, |m| i32::from(m.level));
+        let (mine, theirs) = (level(user), level(target));
+        let immune_type = matches!(mv.data.ohko, Ohko::Typed(t) if b.has_type(target, t));
+        if mine < theirs || immune_type {
+            return false;
+        }
+        let base = match mv.data.ohko {
+            Ohko::Typed(t) if !b.has_type(user, t) => 20,
+            _ => 30,
+        };
+        if handlers::always_hit(b, target) {
+            return true;
+        }
+        return b.rng.chance((base + mine - theirs) as u32, 100);
+    }
     // `accuracy = true` without the `Accuracy` event: a status move on the user, and (gen 8+)
     // Toxic used by a Poison type.
     let self_status = mv.target == MoveTarget::User && mv.data.category == MoveCategory::Status;
@@ -1554,7 +1645,7 @@ fn hit_loop<const N: usize>(
     }
     let mut results = Vec::new();
     if !ended_by_miss {
-        results = spread_move_hit(b, user, mv, &targets, progress.total_damage)?;
+        results = spread_move_hit(b, user, mv, &targets, progress.total_damage, hit)?;
         progress.hit = hit;
         progress.total_damage += results
             .iter()
@@ -1680,13 +1771,14 @@ fn hit_loop<const N: usize>(
 }
 
 /// Showdown `spreadMoveHit` for the move's own hit. `total_before` is `move.totalDamage` so far
-/// (the earlier hits of a multi-hit move).
+/// (the earlier hits of a multi-hit move); `hit` is `move.hit` (1 for the first hit).
 fn spread_move_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     targets: &[SlotRef],
     total_before: i32,
+    hit: u8,
 ) -> Result<Vec<Hit>, TurnError> {
     let data = mv.data;
     // `getMoveHitData(move).typeMod` is (re)computed by this hit's `getDamage`.
@@ -1694,7 +1786,7 @@ fn spread_move_hit<const N: usize>(
     // getSpreadDamage: every target's damage is decided before any is dealt.
     let mut planned = Vec::with_capacity(targets.len());
     for &t in targets {
-        planned.push(get_damage(b, user, mv, t)?);
+        planned.push(get_damage(b, user, mv, t, hit)?);
     }
     // spreadDamage.
     let mut results = Vec::with_capacity(targets.len());
@@ -1723,7 +1815,10 @@ fn spread_move_hit<const N: usize>(
         }
         let mut did: Option<bool> = None;
         let mut note = |r: bool| did = Some(did.unwrap_or(false) || r);
-        if data.boosts != NO_BOOSTS && b.alive(t).is_some() {
+        if data.boosts != NO_BOOSTS
+            && b.alive(t).is_some()
+            && !handlers::boosts_applied_in_try_hit(mv.id)
+        {
             note(b.boost_by(t, &data.boosts, Some(user), BoostEffect::Move(mv.id)));
         }
         if let Some(heal) = data.heal {
@@ -1792,6 +1887,11 @@ fn spread_move_hit<const N: usize>(
         }
         // `runEvent('Hit')`: the target's item (Sticky Barb).
         item_events::on_hit(b, user, t, data);
+        // `selfdestruct: 'ifHit'` (Memento, Final Gambit): the user faints once the move reached
+        // this target (`damage[i] !== false`, before the effects' result is combined in).
+        if data.selfdestruct == SelfDestruct::IfHit && results[i] != Hit::Failed {
+            b.faint(user);
+        }
         if let (Hit::Done, Some(false)) = (results[i], did) {
             results[i] = Hit::Failed;
         }
@@ -2057,23 +2157,35 @@ enum Planned {
     Damage(i32),
 }
 
-/// Showdown `getDamage` + `modifyDamage`; the crit and the damage roll are decided here.
+/// Showdown `getDamage` + `modifyDamage`; the crit and the damage roll are decided here. `hit`
+/// is `move.hit` (Triple Axel's power).
 fn get_damage<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
+    hit: u8,
 ) -> Result<Planned, TurnError> {
     let data = mv.data;
     if type_immune(b, mv, target) {
         return Ok(Planned::Fail);
     }
-    // `damageCallback` first (Metal Burst, Comeuppance).
-    if let Some(damage) = handlers::damage_callback(b, user, mv) {
-        return Ok(Planned::Damage(damage));
-    }
     let attacker = b.slot_mon(user).expect("checked").clone();
     let defender = b.slot_mon(target).expect("alive").clone();
+    // OHKO moves deal the target's max HP (`if (move.ohko) return target.maxhp;`), then
+    // `damageCallback` (Endeavor, Final Gambit), then fixed damage: no crit, no roll, no
+    // modifiers.
+    if data.ohko != Ohko::No {
+        return Ok(Planned::Damage(i32::from(defender.max_hp)));
+    }
+    if let Some(damage) = handlers::damage_callback(b, user, target, mv) {
+        // A 0 still "deals damage" in Showdown (DamagingHit with 0), which `Planned` cannot
+        // express; the implemented callbacks never return one.
+        if damage <= 0 {
+            return Err(b.unsupported(format!("{}: damageCallback of {damage}", data.name)));
+        }
+        return Ok(Planned::Damage(damage));
+    }
     match data.fixed_damage {
         Some(FixedDamage::Level) => return Ok(Planned::Damage(i32::from(attacker.level))),
         Some(FixedDamage::Hp(hp)) => return Ok(Planned::Damage(i32::from(hp))),
@@ -2083,7 +2195,7 @@ fn get_damage<const N: usize>(
     if mv.id == moves::LOW_KICK || mv.id == moves::GRASS_KNOT {
         base_power = weight_power(defender.species.data().weight_hg);
     }
-    base_power = handlers::base_power_callback(b, user, target, mv, base_power);
+    base_power = handlers::base_power_callback(b, user, target, mv, base_power, hit);
     if base_power == 0 {
         return Ok(Planned::NoDamage);
     }

@@ -1,0 +1,30 @@
+{
+ "description": "No Retreat the turn after: Snorlax's second No Retreat fails (onTry: it already has the volatile, so no boosts); Gengar also used No Retreat but, as a Ghost type, is immune to trapping and switches out to Hitmontop.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["No Retreat", "Protect"], "level": 50},
+   {"species": "Azumarill", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Calm Mind", "Protect"], "level": 50},
+   {"species": "Kommo-o", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Protect"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 32, "spa": 32, "spe": 2}, "moves": ["No Retreat", "Protect"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50},
+   {"species": "Hitmontop", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Protect"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "setupTurns": [
+  ["move noretreat, move calmmind", "move noretreat, move calmmind"]
+ ],
+ "turn": {"p1": "move noretreat, move calmmind", "p2": "switch 3, move calmmind"}
+}

@@ -1,0 +1,31 @@
+{
+ "description": "Destiny Bond fails when used again while up (onPrepareHit removes it): Gengar used it in the setup turn (HP patched to 1 after); its second Destiny Bond fails and Hitmontop's Knock Off knocks it out without fainting itself.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hitmontop", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Knock Off", "Calm Mind"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Kommo-o", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 32, "spa": 32, "spe": 2}, "moves": ["Destiny Bond", "Calm Mind"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "setupTurns": [
+  ["move calmmind, move calmmind", "move calmmind, move destinybond"]
+ ],
+ "patch": {"p2": {"Gengar": {"hp": 1}}},
+ "turn": {"p1": "move knockoff 2, move calmmind", "p2": "move calmmind, move destinybond"}
+}

@@ -1,0 +1,24 @@
+{
+ "description": "Belly Drum and Fillet Away: Azumarill (full HP) pays half its max HP for +6 Attack; Snorlax at exactly half HP (133 of 267) fails; Serperior's Contrary turns the +12 into -6 Attack (still paying HP); Kommo-o's Fillet Away pays half for +2 Attack, SpA and Speed.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Azumarill", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Belly Drum", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Belly Drum", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Serperior", "item": "", "ability": "Contrary", "nature": "Timid",
+    "evs": {"hp": 32, "spa": 32, "spe": 2}, "moves": ["Belly Drum", "Protect"], "level": 50},
+   {"species": "Kommo-o", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Fillet Away", "Clangorous Soul", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Snorlax": {"hp": 133}}},
+ "turn": {"p1": "move bellydrum, move bellydrum", "p2": "move bellydrum, move filletaway"}
+}

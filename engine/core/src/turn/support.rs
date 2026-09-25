@@ -7,8 +7,8 @@
 //! handler lists that are implemented, and a test fails if the dex lists change.
 
 use crate::dex::{
-    abilities, items, moves, AbilityId, ItemId, MoveCategory, MoveId, MoveTarget, Ohko,
-    SelfDestruct, SelfSwitch, Type, NO_BOOSTS,
+    abilities, items, moves, AbilityId, ItemId, MoveCategory, MoveId, MoveTarget, SelfSwitch, Type,
+    NO_BOOSTS,
 };
 use crate::field::{FieldEffect, SideEffect, Weather, FIELD_EFFECT_COUNT, SIDE_EFFECT_COUNT};
 use crate::state::{SideId, SlotRef, State};
@@ -29,6 +29,69 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         ],
     ),
     (moves::DETECT, &["onHit", "onPrepareHit"]),
+    // The other shields: the stall `onPrepareHit` / `onHit` like Protect's, `condition.onTryHit`
+    // in `handlers::protect_try_hit`; `condition.onHit` only acts on Z- and Max Moves (off),
+    // `condition.onStart` only logs. Broken by Feint (`handlers::break_protect`).
+    (
+        moves::SPIKY_SHIELD,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "condition.onTryHit",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
+    (
+        moves::BANEFUL_BUNKER,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "condition.onTryHit",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
+    (
+        moves::KINGS_SHIELD,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "condition.onTryHit",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
+    (
+        moves::OBSTRUCT,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "condition.onTryHit",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
+    (
+        moves::SILK_TRAP,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "condition.onTryHit",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
+    (
+        moves::BURNING_BULWARK,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "condition.onTryHit",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
     // Queue readers (`queue.rs`).
     (moves::SUCKER_PUNCH, &["onTry"]),
     (moves::THUNDERCLAP, &["onTry"]),
@@ -222,6 +285,31 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         &["condition.onEnd", "condition.onResidual", "onHitField"],
     ),
     (moves::RISING_VOLTAGE, &["basePowerCallback"]),
+    // `handlers::base_power_callback` (Triple Axel / Triple Kick read `move.hit`; Return and
+    // Frustration assume Showdown's default happiness, 255, which the state does not hold).
+    (moves::HEX, &["basePowerCallback"]),
+    (moves::INFERNAL_PARADE, &["basePowerCallback"]),
+    (moves::TRIPLE_AXEL, &["basePowerCallback"]),
+    (moves::TRIPLE_KICK, &["basePowerCallback"]),
+    (moves::WATER_SHURIKEN, &["basePowerCallback"]),
+    (moves::ELECTRO_BALL, &["basePowerCallback"]),
+    (moves::GYRO_BALL, &["basePowerCallback"]),
+    (moves::ERUPTION, &["basePowerCallback"]),
+    (moves::WATER_SPOUT, &["basePowerCallback"]),
+    (moves::DRAGON_ENERGY, &["basePowerCallback"]),
+    (moves::FLAIL, &["basePowerCallback"]),
+    (moves::REVERSAL, &["basePowerCallback"]),
+    (moves::CRUSH_GRIP, &["basePowerCallback"]),
+    (moves::WRING_OUT, &["basePowerCallback"]),
+    (moves::HARD_PRESS, &["basePowerCallback"]),
+    (moves::STORED_POWER, &["basePowerCallback"]),
+    (moves::POWER_TRIP, &["basePowerCallback"]),
+    (moves::PUNISHMENT, &["basePowerCallback"]),
+    (moves::TRUMP_CARD, &["basePowerCallback"]),
+    (moves::RETURN, &["basePowerCallback"]),
+    (moves::FRUSTRATION, &["basePowerCallback"]),
+    (moves::BOLT_BEAK, &["basePowerCallback"]),
+    (moves::FISHIOUS_REND, &["basePowerCallback"]),
     (moves::PSYBLADE, &["onBasePower"]),
     (moves::BLIZZARD, &["onModifyMove"]),
     // Still rejected for its confusion secondary; shares Thunder's handler.
@@ -254,6 +342,100 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::PARTING_SHOT, &["onHit"]),
     (moves::FIRST_IMPRESSION, &["onDisableMove", "onTry"]),
     (moves::DIRE_CLAW, &["secondaries.onHit", "secondary.onHit"]),
+    // Belly Drum `onHit`; Clangorous Soul and Fillet Away: `onTry` (HP), `onTryHit` (the boosts,
+    // then deleted: `handlers::boosts_applied_in_try_hit`), `onHit` (the HP cost); No Retreat:
+    // `onTry`, the volatile's `onTrapPokemon` in `conditions::trapped` (`onStart` only logs).
+    (moves::BELLY_DRUM, &["onHit"]),
+    (moves::CLANGOROUS_SOUL, &["onHit", "onTry", "onTryHit"]),
+    (moves::FILLET_AWAY, &["onHit", "onTry", "onTryHit"]),
+    (
+        moves::NO_RETREAT,
+        &["condition.onStart", "condition.onTrapPokemon", "onTry"],
+    ),
+    // Status cures and heals (`handlers::on_hit`): Heal Bell / Aromatherapy (`allyTeam`, through
+    // `moves::try_move_hit_field`, whose TryHitSide runs Sap Sipper's `onAllyTryHitSide`),
+    // Refresh, Purify, Take Heart, Jungle Healing / Lunar Blessing (`allies`), Floral Healing;
+    // Rest's `onTry` and `onHit`.
+    (moves::HEAL_BELL, &["onHit"]),
+    (moves::AROMATHERAPY, &["onHit"]),
+    (moves::REFRESH, &["onHit"]),
+    (moves::PURIFY, &["onHit"]),
+    (moves::TAKE_HEART, &["onHit"]),
+    (moves::JUNGLE_HEALING, &["onHit"]),
+    (moves::LUNAR_BLESSING, &["onHit"]),
+    (moves::FLORAL_HEALING, &["onHit"]),
+    (moves::REST, &["onHit", "onTry"]),
+    // `handlers::on_hit`: Psych Up, Speed Swap (the stored Speed, recalculated on leaving the
+    // field in `Battle::clear_volatile`), Strength Sap, Pain Split, Spite, Reflect Type, Soak
+    // (`handlers::set_types`); Endeavor's `damageCallback` and `onTryImmunity`.
+    (moves::PSYCH_UP, &["onHit"]),
+    (moves::SPEED_SWAP, &["onHit"]),
+    (moves::STRENGTH_SAP, &["onHit"]),
+    (moves::PAIN_SPLIT, &["onHit"]),
+    (moves::SPITE, &["onHit"]),
+    (moves::REFLECT_TYPE, &["onHit"]),
+    (moves::SOAK, &["onHit"]),
+    (moves::ENDEAVOR, &["damageCallback", "onTryImmunity"]),
+    // Leech Seed: `onTryImmunity` (Grass) in `handlers`, the volatile's `onResidual` in
+    // `conditions::leech_seed_residual` (`onStart` only logs). Partial trapping (Bind, Wrap,
+    // ...) is the `partiallytrapped` condition (`conditions::volatile_start`,
+    // `partially_trapped_residual`, `trapped`), pinned in `volatile.rs`.
+    (
+        moves::LEECH_SEED,
+        &["condition.onResidual", "condition.onStart", "onTryImmunity"],
+    ),
+    // Screen breakers (`handlers::on_try_hit`; Raging Bull's type in `on_modify_type`), hazard
+    // setters and Mortal Spin (`on_after_hit`; `onAfterSubDamage` needs a substitute, which is
+    // refused), crash moves (`on_move_fail`), Misty Explosion (`on_base_power`; self-destruct in
+    // `moves::use_move`), Final Gambit (`damage_callback`; `ifHit` in `spread_move_hit`).
+    (moves::PSYCHIC_FANGS, &["onTryHit"]),
+    (moves::BRICK_BREAK, &["onTryHit"]),
+    (moves::RAGING_BULL, &["onModifyType", "onTryHit"]),
+    (moves::CEASELESS_EDGE, &["onAfterHit", "onAfterSubDamage"]),
+    (moves::STONE_AXE, &["onAfterHit", "onAfterSubDamage"]),
+    (moves::MORTAL_SPIN, &["onAfterHit", "onAfterSubDamage"]),
+    (moves::HIGH_JUMP_KICK, &["onMoveFail"]),
+    (moves::JUMP_KICK, &["onMoveFail"]),
+    (moves::AXE_KICK, &["onMoveFail"]),
+    (moves::SUPERCELL_SLAM, &["onMoveFail"]),
+    (moves::MISTY_EXPLOSION, &["onBasePower"]),
+    (moves::FINAL_GAMBIT, &["damageCallback"]),
+    // Destiny Bond: `onPrepareHit` in `moves::try_spread_move_hit`, the volatile's
+    // `onBeforeMove` / `onMoveAborted` in `conditions::destiny_bond_before_move`, its `onFaint`
+    // in `Battle::faint_messages` (`conditions::destiny_bond_faint`); `onStart` only logs.
+    (
+        moves::DESTINY_BOND,
+        &[
+            "condition.onBeforeMove",
+            "condition.onFaint",
+            "condition.onMoveAborted",
+            "condition.onStart",
+            "onPrepareHit",
+        ],
+    ),
+    // Item moves (`handlers::on_hit`): Bug Bite / Pluck (the berry's `onEat` on the user through
+    // `update::berry_on_eat`), Incinerate, Corrosive Gas, Recycle.
+    (moves::BUG_BITE, &["onHit"]),
+    (moves::PLUCK, &["onHit"]),
+    (moves::INCINERATE, &["onHit"]),
+    (moves::CORROSIVE_GAS, &["onHit"]),
+    (moves::RECYCLE, &["onHit"]),
+    // Throat Chop: the secondary's `onHit` adds the `throatchop` volatile
+    // (`handlers::secondary_on_hit`); its `onBeforeMove`, `onModifyMove` (a called sound move,
+    // `moves::use_move`) and `onDisableMove` in `conditions::throat_chopped`; `onStart` and
+    // `onEnd` only log.
+    (
+        moves::THROAT_CHOP,
+        &[
+            "condition.onBeforeMove",
+            "condition.onDisableMove",
+            "condition.onEnd",
+            "condition.onModifyMove",
+            "condition.onStart",
+            "secondaries.onHit",
+            "secondary.onHit",
+        ],
+    ),
     (moves::TRI_ATTACK, &["secondaries.onHit", "secondary.onHit"]),
     (moves::MORNING_SUN, &["onHit"]),
     (moves::MOONLIGHT, &["onHit"]),
@@ -795,8 +977,8 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::WATER_ABSORB, &["onTryHit"]),
     (abilities::EARTH_EATER, &["onTryHit"]),
     (abilities::MOTOR_DRIVE, &["onTryHit"]),
-    // `onAllyTryHitSide` only acts on an ally's Grass move aimed at its own side, which no
-    // supported move is (pinned by a test below).
+    // `onAllyTryHitSide` (an ally's Grass move aimed at its own side: Aromatherapy) in
+    // `moves::try_move_hit_field`.
     (abilities::SAP_SIPPER, &["onAllyTryHitSide", "onTryHit"]),
     (abilities::WELL_BAKED_BODY, &["onTryHit"]),
     // The volatile's `onModifyAtk`/`onModifySpA` in `abilities::attack_handlers`; `onEnd`
@@ -1055,14 +1237,9 @@ const CORE_CHECKED_ABILITIES: &[AbilityId] = &[
 ];
 
 /// Items without callbacks that Showdown's core checks by name, not implemented here.
-/// Weather rocks, Light Clay and Terrain Extender (durations), Heavy-Duty Boots (entry hazards)
-/// and Protective Pads (contact) are implemented.
-const CORE_CHECKED_ITEMS: &[ItemId] = &[
-    items::BLUNDER_POLICY,
-    items::GRIP_CLAW,
-    items::BINDING_BAND,
-    items::ULTRANECROZIUM_Z,
-];
+/// Weather rocks, Light Clay and Terrain Extender (durations), Heavy-Duty Boots (entry hazards),
+/// Protective Pads (contact), Grip Claw and Binding Band (partial trapping) are implemented.
+const CORE_CHECKED_ITEMS: &[ItemId] = &[items::BLUNDER_POLICY, items::ULTRANECROZIUM_Z];
 
 /// Whether an ability is inert or implemented while its holder is on the field.
 pub(crate) fn ability_supported_on_field(ability: AbilityId) -> bool {
@@ -1114,10 +1291,10 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         | MoveTarget::User
         | MoveTarget::All
         | MoveTarget::AllySide
+        | MoveTarget::AllyTeam
         | MoveTarget::FoeSide
         | MoveTarget::RandomNormal
         | MoveTarget::Scripted => {}
-        other => return why(&format!("target {other:?}")),
     }
     if let Some((low, high)) = m.multihit {
         // Fixed counts and the 2–5 draw are implemented (`moves::decide_hits`); other ranges
@@ -1126,27 +1303,23 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
             return why("multi-hit range");
         }
     }
-    if m.ohko != Ohko::No {
-        return why("OHKO");
-    }
-    // Self-switching moves suspend the turn for a decision (F6); the volatile-passing ones
-    // (Baton Pass, Shed Tail) and phazing are not implemented.
+    // OHKO moves (`moves::accuracy_check`, `get_damage`, Sturdy) and self-destruction
+    // (`selfdestruct`: `moves::use_move`, `spread_move_hit`) are implemented. Self-switching
+    // moves suspend the turn for a decision (F6); the volatile-passing ones (Baton Pass, Shed
+    // Tail) are not implemented.
     if matches!(
         m.self_switch,
         SelfSwitch::CopyVolatile | SelfSwitch::ShedTail
     ) {
         return why("switching with volatiles");
     }
-    if m.selfdestruct != SelfDestruct::No {
-        return why("self-destruct");
-    }
     let sleep_moves = id == moves::SLEEP_TALK || id == moves::SNORE;
-    if m.breaks_protect
-        || m.smart_target
+    // `breaksProtect` (`handlers::break_protect`) and crash damage (`handlers::on_move_fail`)
+    // are implemented.
+    if m.smart_target
         || (m.calls_move && id != moves::SLEEP_TALK)
         || (m.sleep_usable && !sleep_moves)
         || m.steals_boosts
-        || m.has_crash_damage
         || m.mind_blown_recoil
         || (m.struggle_recoil && id != moves::STRUGGLE)
         || m.chloroblast_recoil
@@ -1155,16 +1328,24 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     {
         return why("a special mechanic");
     }
-    if m.stalling_move && ![moves::PROTECT, moves::DETECT, moves::ENDURE].contains(&id) {
+    const STALLING_MOVES: [MoveId; 9] = [
+        moves::PROTECT,
+        moves::DETECT,
+        moves::ENDURE,
+        moves::SPIKY_SHIELD,
+        moves::BANEFUL_BUNKER,
+        moves::KINGS_SHIELD,
+        moves::OBSTRUCT,
+        moves::SILK_TRAP,
+        moves::BURNING_BULWARK,
+    ];
+    if m.stalling_move && !STALLING_MOVES.contains(&id) {
         return why("stalling move");
     }
     let flags = m.flags;
     use crate::dex::MoveFlags as F;
-    for (flag, what) in [
-        (F::CHARGE, "two-turn"),
-        (F::FUTUREMOVE, "future move"),
-        (F::CANTUSETWICE, "can't use twice"),
-    ] {
+    // `cantusetwice` (Gigaton Hammer, Blood Moon) is implemented in `mod.rs::disabled`.
+    for (flag, what) in [(F::CHARGE, "two-turn"), (F::FUTUREMOVE, "future move")] {
         if flags.contains(flag) {
             return why(what);
         }
@@ -1389,19 +1570,18 @@ mod tests {
     }
 
     /// Sap Sipper's `onAllyTryHitSide` raises the holder's Attack when an ally uses a Grass move
-    /// aimed at their own side (`allySide`/`allyTeam`; TryHitSide is not modelled). No supported
-    /// move is one; this fails when one becomes supported.
+    /// aimed at their own side (`allySide`/`allyTeam`), which `moves::try_move_hit_field` runs
+    /// for the supported ones; Aromatherapy is the only such move.
     #[test]
-    fn sap_sipper_ally_side_handler_is_unreachable() {
+    fn sap_sipper_ally_side_handler_covers_the_supported_moves() {
         for id in MoveId::all() {
             let m = id.data();
             if move_unsupported(id).is_some() || m.move_type != Type::Grass {
                 continue;
             }
-            assert!(
-                !matches!(m.target, MoveTarget::AllySide | MoveTarget::AllyTeam),
-                "{id:?}"
-            );
+            if matches!(m.target, MoveTarget::AllySide | MoveTarget::AllyTeam) {
+                assert_eq!(id, moves::AROMATHERAPY);
+            }
         }
     }
 
@@ -1458,6 +1638,6 @@ mod tests {
         assert_eq!(move_unsupported(moves::RAGE_POWDER), None);
         assert_eq!(move_unsupported(moves::BULLET_SEED), None);
         assert_eq!(move_unsupported(moves::POPULATION_BOMB), None);
-        assert!(move_unsupported(moves::TRIPLE_AXEL).is_some());
+        assert_eq!(move_unsupported(moves::TRIPLE_AXEL), None);
     }
 }

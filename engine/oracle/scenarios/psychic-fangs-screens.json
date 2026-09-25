@@ -1,0 +1,24 @@
+{
+ "description": "Psychic Fangs breaks screens: the foes have Reflect and Light Screen; Espeon's Psychic Fangs removes both before its damage (onTryHit), so Gardevoir's later Moonblast is not reduced either.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Espeon", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Psychic Fangs", "Calm Mind"], "level": 50},
+   {"species": "Gardevoir", "item": "", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Moonblast", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"sides": {"p2": {"reflect": 3, "lightscreen": 3}}},
+ "turn": {"p1": "move psychicfangs 1, move moonblast 2", "p2": "move calmmind, move calmmind"}
+}

@@ -1,0 +1,26 @@
+{
+ "description": "Recycle: in the setup turn Toxapex's Toxic makes Clefable eat its Lum Berry at once (lastItem). Clefable's Recycle restores it (lastItem cleared), then Toxapex's Toxic makes it eat the berry again; Snorlax's Recycle fails (it has never consumed an item).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Clefable", "item": "Lum Berry", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Recycle", "Calm Mind"], "level": 50},
+   {"species": "Snorlax", "item": "Leftovers", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Recycle", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Toxapex", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Toxic", "Calm Mind"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move calmmind, move calmmind", "move toxic 1, move calmmind"]
+ ],
+ "turn": {"p1": "move recycle, move recycle", "p2": "move toxic 1, move calmmind"}
+}

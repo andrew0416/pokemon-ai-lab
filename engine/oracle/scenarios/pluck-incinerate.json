@@ -1,0 +1,24 @@
+{
+ "description": "Pluck and Incinerate: Talonflame (Bold, 60 HP) Plucks Heatran's Figy Berry and eats it: heals 1/3 and, its nature lowering Attack, becomes confused (2-5 turns); Chandelure's Incinerate is absorbed by Heatran (Flash Fire) and burns up Snorlax's Lum Berry after hitting it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Talonflame", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spe": 2}, "moves": ["Pluck", "Calm Mind"], "level": 50},
+   {"species": "Chandelure", "item": "", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Incinerate", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Heatran", "item": "Figy Berry", "ability": "Flash Fire", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Snorlax", "item": "Lum Berry", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Talonflame": {"hp": 60}}},
+ "turn": {"p1": "move pluck 1, move incinerate", "p2": "move calmmind, move calmmind"}
+}

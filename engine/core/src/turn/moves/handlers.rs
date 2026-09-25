@@ -6,17 +6,18 @@
 
 use crate::damage::MOD_ONE_POINT_FIVE;
 use crate::dex::{
-    abilities, items, moves, ItemId, MoveFlags, MoveId, MoveTarget, Type, TypeRelation, NO_BOOSTS,
+    abilities, items, moves, ItemId, MoveCategory, MoveFlags, MoveId, MoveTarget, Type,
+    TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{MoveResult, Pokemon, PokemonRef, SideId, SlotRef, Status, BOOST_COUNT};
-use crate::volatile::Volatile;
+use crate::volatile::{Volatile, VolatileState};
 
 use super::super::abilities::{Handler, SUB_CONDITION};
-use super::super::battle::{Battle, BoostEffect};
+use super::super::battle::{Battle, BoostEffect, DamageSource};
 use super::super::conditions::HAZARDS;
-use super::super::order::modify;
+use super::super::order::{boosted_stat, modify};
 use super::super::queue::{Action, ActionKind};
 use super::super::TurnError;
 use super::ActiveMove;
@@ -50,6 +51,16 @@ pub(super) fn on_modify_type<const N: usize>(
                 Weather::Rain | Weather::HeavyRain => Type::Water,
                 Weather::Sand => Type::Rock,
                 Weather::Snow => Type::Ice,
+                _ => return Ok(()),
+            };
+        }
+        // Raging Bull: the Paldean Tauros forms make it Fighting, Fire or Water.
+        moves::RAGING_BULL => {
+            let species = b.slot_mon(user).map(|m| m.species);
+            mv.move_type = match species {
+                Some(s) if s == crate::dex::species::TAUROS_PALDEA_COMBAT => Type::Fighting,
+                Some(s) if s == crate::dex::species::TAUROS_PALDEA_BLAZE => Type::Fire,
+                Some(s) if s == crate::dex::species::TAUROS_PALDEA_AQUA => Type::Water,
                 _ => return Ok(()),
             };
         }
@@ -157,6 +168,32 @@ pub(super) fn on_try<const N: usize>(
         moves::METAL_BURST | moves::COMEUPPANCE => {
             b.state.slot(user).history.last_damaged_by.is_some()
         }
+        // Clangorous Soul: `if (source.hp <= (source.maxhp * 33 / 100) || source.maxhp === 1)
+        // return false;` Fillet Away: `source.hp <= source.maxhp / 2`.
+        moves::CLANGOROUS_SOUL | moves::FILLET_AWAY => b.slot_mon(user).is_some_and(|m| {
+            let (hp, max_hp) = (i32::from(m.hp), i32::from(m.max_hp));
+            let enough = if mv.id == moves::CLANGOROUS_SOUL {
+                hp * 100 > max_hp * 33
+            } else {
+                hp * 2 > max_hp
+            };
+            enough && max_hp != 1
+        }),
+        // No Retreat: `if (source.volatiles['noretreat']) return false;` (its other branch
+        // drops the volatile for a `trapped` user; no move that adds `trapped` is implemented).
+        moves::NO_RETREAT => !b.volatile(user, Volatile::NoRetreat).active,
+        // Rest: fails asleep or with Comatose, at full HP, and with Insomnia or Vital Spirit
+        // (`hasAbility`: the user's own ability, never suppressed by its own move).
+        moves::REST => b.slot_mon(user).is_some_and(|m| {
+            m.status != Status::Sleep
+                && m.hp != m.max_hp
+                && ![
+                    abilities::COMATOSE,
+                    abilities::INSOMNIA,
+                    abilities::VITAL_SPIRIT,
+                ]
+                .contains(&m.ability)
+        }),
         _ => true,
     }
 }
@@ -165,6 +202,7 @@ pub(super) fn on_try<const N: usize>(
 /// immune.
 pub(super) fn on_try_immunity<const N: usize>(
     b: &Battle<'_, N>,
+    user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
@@ -172,7 +210,65 @@ pub(super) fn on_try_immunity<const N: usize>(
         // Trick, Switcheroo: `return !target.hasAbility('stickyhold');` (`hasAbility` is not
         // skipped by Mold Breaker).
         moves::TRICK | moves::SWITCHEROO => b.ability(target) != abilities::STICKY_HOLD,
+        // Leech Seed: `return !target.hasType('Grass');`
+        moves::LEECH_SEED => !b.has_type(target, Type::Grass),
+        // Endeavor: `return pokemon.hp < target.hp;`
+        moves::ENDEAVOR => {
+            let hp = |s: SlotRef| b.slot_mon(s).map_or(0, |m| m.hp);
+            hp(user) < hp(target)
+        }
         _ => true,
+    }
+}
+
+/// The move's `damageCallback` (`getDamage`, after type immunity and before the critical hit
+/// roll: no crit, no roll, no modifiers). `None` = the move has none.
+pub(super) fn damage_callback<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    mv: &ActiveMove,
+) -> Option<i32> {
+    let hp = |b: &Battle<'_, N>, s: SlotRef| b.slot_mon(s).map_or(0, |m| i32::from(m.hp));
+    match mv.id {
+        // Endeavor: `return target.getUndynamaxedHP() - pokemon.hp;`
+        moves::ENDEAVOR => Some(hp(b, target) - hp(b, user)),
+        // Final Gambit: `const damage = pokemon.hp; pokemon.faint(); return damage;`
+        moves::FINAL_GAMBIT => {
+            let damage = hp(b, user);
+            b.faint(user);
+            Some(damage)
+        }
+        // Metal Burst, Comeuppance: `(lastDamagedBy.damage * 1.5) || 1`, which `spreadDamage`
+        // truncates (F13).
+        moves::METAL_BURST | moves::COMEUPPANCE => {
+            let damage = b
+                .state
+                .slot(user)
+                .history
+                .last_damaged_by
+                .map_or(0, |d| i32::from(d.damage));
+            let scaled = damage * 3 / 2;
+            Some(if scaled == 0 { 1 } else { scaled })
+        }
+        _ => None,
+    }
+}
+
+/// The move's `onMoveFail` (`useMoveInner` when the move did not succeed on any target, after
+/// its hits): High Jump Kick, Jump Kick, Axe Kick and Supercell Slam crash for half the user's
+/// max HP (`this.damage(source.baseMaxhp / 2, source, source, condition)`: not a move's damage,
+/// so Magic Guard stops it).
+pub(super) fn on_move_fail<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
+    let crash = [
+        moves::HIGH_JUMP_KICK,
+        moves::JUMP_KICK,
+        moves::AXE_KICK,
+        moves::SUPERCELL_SLAM,
+    ];
+    if crash.contains(&mv.id) {
+        let max_hp = b.slot_mon(user).map_or(0, |m| m.max_hp);
+        b.damage(user, f64::from(max_hp) / 2.0, DamageSource::Indirect);
     }
 }
 
@@ -180,12 +276,33 @@ pub(super) fn on_try_immunity<const N: usize>(
 /// first target, after accuracy and before the damage). `false` = the move fails. Low Kick's
 /// and Grass Knot's only act on a Dynamaxed target, Poltergeist's only logs.
 pub(super) fn on_try_hit<const N: usize>(
-    b: &Battle<'_, N>,
+    b: &mut Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
     mv: &mut ActiveMove,
 ) -> bool {
     match mv.id {
+        // Psychic Fangs, Brick Break, Raging Bull: the target's side loses Reflect, Light Screen
+        // and Aurora Veil before the damage (returns nothing).
+        moves::PSYCHIC_FANGS | moves::BRICK_BREAK | moves::RAGING_BULL => {
+            remove_side_effects(
+                b,
+                target.side,
+                &[
+                    SideEffect::Reflect,
+                    SideEffect::LightScreen,
+                    SideEffect::AuroraVeil,
+                ],
+            );
+            true
+        }
+        // Clangorous Soul, Fillet Away: `if (!this.boost(move.boosts!)) return null; delete
+        // move.boosts;` (the move's own boosts are applied here, not in `runMoveEffects`:
+        // `boosts_applied_in_try_hit`).
+        moves::CLANGOROUS_SOUL | moves::FILLET_AWAY => {
+            let boosts = mv.data.boosts;
+            b.boost_by(target, &boosts, Some(user), BoostEffect::Move(mv.id))
+        }
         // Pollen Puff: `if (source.isAlly(target)) { move.basePower = 0; move.infiltrates =
         // true; }` (`infiltrates` only matters against a substitute).
         moves::POLLEN_PUFF => {
@@ -214,6 +331,12 @@ pub(super) fn on_try_hit<const N: usize>(
     }
 }
 
+/// Whether the move's own `onTryHit` applies its `boosts` and deletes them (`delete
+/// move.boosts`), so `runMoveEffects` has none left.
+pub(super) fn boosts_applied_in_try_hit(id: MoveId) -> bool {
+    id == moves::CLANGOROUS_SOUL || id == moves::FILLET_AWAY
+}
+
 /// The move's `onAfterHit`, once per damaged target (`spreadMoveHit`, after `DamagingHit`;
 /// Champions runs it even if the user fainted). Knock Off's is in `moves.rs`.
 /// `onAfterSubDamage` (the same effect against a substitute) is unreachable: substitutes are
@@ -223,10 +346,25 @@ pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef,
     if mv.id == moves::ICE_SPINNER {
         super::clear_terrain(b);
     }
-    // Rapid Spin: `if (!move.hasSheerForce)` the user's side loses its hazards (Leech Seed and
-    // partial trapping, which it also ends, are not implemented).
-    if mv.id == moves::RAPID_SPIN && !mv.has_sheer_force {
+    // Rapid Spin, Mortal Spin: `if (!move.hasSheerForce)` the user loses Leech Seed, its side
+    // its hazards, then the user partial trapping (`removeVolatile` does nothing for a user
+    // knocked out in DamagingHit, `removeSideCondition` still acts).
+    if (mv.id == moves::RAPID_SPIN || mv.id == moves::MORTAL_SPIN) && !mv.has_sheer_force {
+        b.remove_volatile(user, Volatile::LeechSeed);
         remove_side_effects(b, user.side, &HAZARDS);
+        b.remove_volatile(user, Volatile::PartiallyTrapped);
+    }
+    // Ceaseless Edge, Stone Axe: `if (!move.hasSheerForce)` the foe side gets a layer of Spikes /
+    // Stealth Rock (`addSideCondition`, even from a fainted user).
+    if !mv.has_sheer_force {
+        let hazard = match mv.id {
+            moves::CEASELESS_EDGE => Some(SideEffect::Spikes),
+            moves::STONE_AXE => Some(SideEffect::StealthRock),
+            _ => None,
+        };
+        if let Some(hazard) = hazard {
+            super::super::conditions::add_hazard(b, user.side.other(), hazard);
+        }
     }
 }
 
@@ -285,15 +423,31 @@ fn remove_side_effects<const N: usize>(
     removed
 }
 
-/// The move's `basePowerCallback` (`getDamage`, before the critical hit roll).
+/// The move's `basePowerCallback` (`getDamage`, before the critical hit roll), then
+/// `clampIntRange(basePower, 1)` (a fraction is floored, and 0 means no damage). `hit` is
+/// `move.hit`, the hit being made (1 for a single hit).
 pub(super) fn base_power_callback<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
     mv: &ActiveMove,
     base_power: i32,
+    hit: u8,
 ) -> i32 {
-    match mv.id {
+    let hp = |s: SlotRef| {
+        b.slot_mon(s)
+            .map_or((0, 1), |m| (i32::from(m.hp), i32::from(m.max_hp)))
+    };
+    let positive_boosts = |s: SlotRef| -> i32 {
+        b.state
+            .slot(s)
+            .boosts
+            .iter()
+            .filter(|&&v| v > 0)
+            .map(|&v| i32::from(v))
+            .sum()
+    };
+    let power = match mv.id {
         // Rising Voltage: `if (this.field.isTerrain('electricterrain') && target.isGrounded())
         // return move.basePower * 2;`
         moves::RISING_VOLTAGE if b.terrain() == Terrain::Electric && b.is_grounded(target) => {
@@ -340,30 +494,116 @@ pub(super) fn base_power_callback<const N: usize>(
         }
         // Last Respects: `50 + 50 * pokemon.side.totalFainted`.
         moves::LAST_RESPECTS => 50 + 50 * i32::from(b.state.side(user.side).history.total_fainted),
-        _ => base_power,
-    }
-}
-
-/// The move's `damageCallback` (`getDamage`, before everything else): Metal Burst and
-/// Comeuppance deal `(lastDamagedBy.damage * 1.5) || 1`, which `spreadDamage` truncates.
-pub(super) fn damage_callback<const N: usize>(
-    b: &Battle<'_, N>,
-    user: SlotRef,
-    mv: &ActiveMove,
-) -> Option<i32> {
-    match mv.id {
-        moves::METAL_BURST | moves::COMEUPPANCE => {
-            let damage = b
-                .state
-                .slot(user)
-                .history
-                .last_damaged_by
-                .map_or(0, |d| i32::from(d.damage));
-            let scaled = damage * 3 / 2;
-            Some(if scaled == 0 { 1 } else { scaled })
+        // Hex, Infernal Parade: `if (target.status || target.hasAbility('comatose'))` double.
+        moves::HEX | moves::INFERNAL_PARADE => {
+            let statused = b.slot_mon(target).is_some_and(|m| m.status != Status::None)
+                || b.ability(target) == abilities::COMATOSE;
+            if statused {
+                base_power * 2
+            } else {
+                base_power
+            }
         }
-        _ => None,
-    }
+        // Triple Axel: `20 * move.hit`; Triple Kick: `10 * move.hit`.
+        moves::TRIPLE_AXEL => 20 * i32::from(hit),
+        moves::TRIPLE_KICK => 10 * i32::from(hit),
+        // Water Shuriken: 5 more for an untransformed Greninja-Ash with Battle Bond.
+        moves::WATER_SHURIKEN => {
+            let ash = b
+                .slot_mon(user)
+                .is_some_and(|m| m.species == crate::dex::species::GRENINJA_ASH);
+            if ash && b.ability(user) == abilities::BATTLE_BOND {
+                base_power + 5
+            } else {
+                base_power
+            }
+        }
+        // Electro Ball: `[40, 60, 80, 120, 150][min(floor(user Spe / target Spe), 4)]`
+        // (`getStat('spe')`: stages and modifiers; a 0 divisor gives 0).
+        moves::ELECTRO_BALL => {
+            let (mine, theirs) = (b.speed_stat(user), b.speed_stat(target));
+            let ratio = if theirs == 0 { 0 } else { mine / theirs };
+            [40, 60, 80, 120, 150][ratio.clamp(0, 4) as usize]
+        }
+        // Gyro Ball: `Math.floor(25 * target Spe / user Spe) + 1`, at most 150 (1 against a
+        // user at 0).
+        moves::GYRO_BALL => {
+            let (mine, theirs) = (b.speed_stat(user), b.speed_stat(target));
+            if mine == 0 {
+                1
+            } else {
+                (25 * theirs / mine + 1).min(150)
+            }
+        }
+        // Eruption, Water Spout, Dragon Energy: `move.basePower * pokemon.hp / pokemon.maxhp`.
+        moves::ERUPTION | moves::WATER_SPOUT | moves::DRAGON_ENERGY => {
+            let (current, max) = hp(user);
+            base_power * current / max
+        }
+        // Flail, Reversal: by `max(floor(hp * 48 / maxhp), 1)`.
+        moves::FLAIL | moves::REVERSAL => {
+            let (current, max) = hp(user);
+            match (current * 48 / max).max(1) {
+                r if r < 2 => 200,
+                r if r < 5 => 150,
+                r if r < 10 => 100,
+                r if r < 17 => 80,
+                r if r < 33 => 40,
+                _ => 20,
+            }
+        }
+        // Crush Grip, Wring Out (120), Hard Press (100): `Math.floor(Math.floor((max * (100 *
+        // Math.floor(hp * 4096 / maxHP)) + 2048 - 1) / 4096) / 100) || 1` on the target's HP.
+        moves::CRUSH_GRIP | moves::WRING_OUT | moves::HARD_PRESS => {
+            let (current, max) = hp(target);
+            let top = if mv.id == moves::HARD_PRESS { 100 } else { 120 };
+            let fraction = i64::from(current) * 4096 / i64::from(max);
+            (((top * 100 * fraction + 2047) / 4096) / 100).max(1) as i32
+        }
+        // Stored Power, Power Trip: `move.basePower + 20 * pokemon.positiveBoosts()`.
+        moves::STORED_POWER | moves::POWER_TRIP => base_power + 20 * positive_boosts(user),
+        // Punishment: `60 + 20 * target.positiveBoosts()`, at most 200.
+        moves::PUNISHMENT => (60 + 20 * positive_boosts(target)).min(200),
+        // Trump Card: by the PP left (after this use) in the slot of the move that called it
+        // (`move.sourceEffect`, e.g. Sleep Talk) or its own: 200, 80, 60, 50 for 0–3, else 40
+        // (40 without a slot).
+        moves::TRUMP_CARD => {
+            let caller = if mv.source_effect.is_none() {
+                mv.id
+            } else {
+                mv.source_effect
+            };
+            let pp = b
+                .slot_mon(user)
+                .and_then(|m| m.moves.iter().find(|s| s.id == caller))
+                .map(|s| s.pp);
+            match pp {
+                Some(0) => 200,
+                Some(1) => 80,
+                Some(2) => 60,
+                Some(3) => 50,
+                _ => 40,
+            }
+        }
+        // Return: `Math.floor((pokemon.happiness * 10) / 25) || 1`; Frustration: `(255 -
+        // happiness)`. The state has no happiness: every Pokémon has Showdown's default 255 (the
+        // loader rejects a `happiness` field).
+        moves::RETURN => 255 * 10 / 25,
+        moves::FRUSTRATION => 1,
+        // Bolt Beak, Fishious Rend: double `if (target.newlySwitched ||
+        // this.queue.willMove(target))` (`newlySwitched`: no move action since switching in,
+        // as Helping Hand reads it).
+        moves::BOLT_BEAK | moves::FISHIOUS_REND => {
+            if b.will_move(target).is_some() || b.state.slot(target).move_actions == 0 {
+                base_power * 2
+            } else {
+                base_power
+            }
+        }
+        _ => return base_power,
+    };
+    // `clampIntRange(basePower, 1)` (only a callback can produce a value below 1 here).
+    power.max(1)
 }
 
 /// The move's `onModifyTarget` (`useMoveInner`): Metal Burst and Comeuppance target
@@ -398,6 +638,10 @@ pub(super) fn on_base_power<const N: usize>(
         moves::EXPANDING_FORCE if b.terrain() == Terrain::Psychic && b.is_grounded(user) => {
             Some(MOD_ONE_POINT_FIVE)
         }
+        // Misty Explosion: the same in Misty Terrain for a grounded user.
+        moves::MISTY_EXPLOSION if b.terrain() == Terrain::Misty && b.is_grounded(user) => {
+            Some(MOD_ONE_POINT_FIVE)
+        }
         _ => None,
     }
 }
@@ -420,6 +664,107 @@ pub(super) fn volatile_base_power<const N: usize>(
         out.push(Handler::of(b, user, priority, SUB_CONDITION, modifier));
     }
     out
+}
+
+/// The protect family's volatiles, with whether each also blocks status moves (the `blockStatus`
+/// argument of `checkMoveBypassesProtect`: Protect / Detect, Spiky Shield and Baneful Bunker do;
+/// King's Shield, Obstruct, Silk Trap and Burning Bulwark pass `false`).
+const PROTECTIONS: [(Volatile, bool); 7] = [
+    (Volatile::Protect, true),
+    (Volatile::SpikyShield, true),
+    (Volatile::BanefulBunker, true),
+    (Volatile::KingsShield, false),
+    (Volatile::Obstruct, false),
+    (Volatile::SilkTrap, false),
+    (Volatile::BurningBulwark, false),
+];
+
+/// The protect family's `condition.onTryHit` (priority 3) on `target`. A move with the `protect`
+/// flag (a status move only if the shield blocks those; `HitProtect` has no handler) is stopped
+/// (`NOT_FAIL`); a locked move on its first turn (`lockedmove` duration 2: "Outrage counter is
+/// reset") loses its volatile without `onEnd`; and a contact move (`checkMoveMakesContact`: not
+/// through Protective Pads) is punished: Spiky Shield `this.damage(source.baseMaxhp / 8)`,
+/// Baneful Bunker / Burning Bulwark `source.trySetStatus('psn' / 'brn', target)`, King's Shield,
+/// Obstruct, Silk Trap `this.boost({atk: -1} / {def: -2} / {spe: -1}, source, target, move)`.
+/// The shields' `condition.onHit` only acts on Z- and Max Moves (off in Champions). Returns
+/// whether the move is blocked.
+pub(super) fn protect_try_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    for (volatile, blocks_status) in PROTECTIONS {
+        if !b.volatile(target, volatile).active {
+            continue;
+        }
+        let bypassed = (mv.data.category == MoveCategory::Status && !blocks_status)
+            || !mv.data.flags.contains(MoveFlags::PROTECT);
+        if bypassed {
+            continue;
+        }
+        let locked = b.volatile(user, Volatile::LockedMove);
+        if locked.active && locked.duration == 2 {
+            b.delete_volatile(user, Volatile::LockedMove);
+        }
+        let contact =
+            mv.data.flags.contains(MoveFlags::CONTACT) && b.item(user) != items::PROTECTIVE_PADS;
+        if contact {
+            let mut drop = NO_BOOSTS;
+            let effect = match volatile {
+                Volatile::SpikyShield => {
+                    let max_hp = b.slot_mon(user).map_or(0, |m| m.max_hp);
+                    b.damage(user, f64::from(max_hp) / 8.0, DamageSource::Indirect);
+                    None
+                }
+                Volatile::BanefulBunker => {
+                    b.try_set_status_from(user, Status::Poison, Some(target));
+                    None
+                }
+                Volatile::BurningBulwark => {
+                    b.try_set_status_from(user, Status::Burn, Some(target));
+                    None
+                }
+                Volatile::KingsShield => {
+                    drop[0] = -1;
+                    Some(moves::KINGS_SHIELD)
+                }
+                Volatile::Obstruct => {
+                    drop[1] = -2;
+                    Some(moves::OBSTRUCT)
+                }
+                Volatile::SilkTrap => {
+                    drop[4] = -1;
+                    Some(moves::SILK_TRAP)
+                }
+                _ => None,
+            };
+            if let Some(shield) = effect {
+                b.boost_by(user, &drop, Some(target), BoostEffect::Move(shield));
+            }
+        }
+        return true;
+    }
+    false
+}
+
+/// `hitStepBreakProtect` for one target of a `breaksProtect` move (Feint): its protect-family
+/// volatiles are removed (none has `onEnd`) and its side loses Quick Guard and Wide Guard (Crafty
+/// Shield and Mat Block are not implemented); if anything was broken, its `stall` counter is
+/// deleted (gen 6+).
+pub(super) fn break_protect<const N: usize>(b: &mut Battle<'_, N>, target: SlotRef) {
+    let mut broke = false;
+    for (volatile, _) in PROTECTIONS {
+        broke |= b.remove_volatile(target, volatile);
+    }
+    broke |= remove_side_effects(
+        b,
+        target.side,
+        &[SideEffect::QuickGuard, SideEffect::WideGuard],
+    );
+    if broke {
+        b.delete_volatile(target, Volatile::Stall);
+    }
 }
 
 /// The `Accuracy` event's handlers that make a move hit `target` whatever its accuracy: Glaive
@@ -547,6 +892,302 @@ pub(super) fn on_hit<const N: usize>(
             set_boosts(b, user, to_user);
             set_boosts(b, target, to_target);
             HitResult::Success
+        }
+        // Belly Drum: fails at half HP or less, at +6 Attack or with 1 max HP; otherwise
+        // `this.directDamage(target.maxhp / 2)` and `this.boost({atk: 12}, target)` (source: the
+        // user itself, so Contrary turns it into -12 and nothing blocks it).
+        moves::BELLY_DRUM => {
+            let Some(mon) = b.slot_mon(target) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
+            if hp * 2 <= max_hp || b.state.slot(target).boosts[0] >= 6 || max_hp == 1 {
+                HitResult::Failure
+            } else {
+                b.direct_damage(target, max_hp / 2);
+                let mut up = NO_BOOSTS;
+                up[0] = 12;
+                b.boost_by(target, &up, Some(user), BoostEffect::Move(mv.id));
+                HitResult::Success
+            }
+        }
+        // Clangorous Soul: `this.directDamage(pokemon.maxhp * 33 / 100)`; Fillet Away:
+        // `this.directDamage(pokemon.maxhp / 2)` (the boosts came in `onTryHit`).
+        moves::CLANGOROUS_SOUL | moves::FILLET_AWAY => {
+            let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
+            // `clampIntRange(damage, 1)`: a nonzero fraction is at least 1.
+            let amount = if mv.id == moves::CLANGOROUS_SOUL {
+                max_hp * 33 / 100
+            } else {
+                max_hp / 2
+            };
+            b.direct_damage(target, amount.max(1));
+            HitResult::Success
+        }
+        moves::HEAL_BELL | moves::AROMATHERAPY => party_cure(b, user, target.side, mv.id),
+        // Refresh: `if (['', 'slp', 'frz'].includes(pokemon.status)) return false;` then cure.
+        moves::REFRESH => match b.alive(target) {
+            Some(p)
+                if matches!(
+                    b.mon(p).status,
+                    Status::Burn | Status::Paralyze | Status::Poison | Status::Toxic
+                ) =>
+            {
+                b.cure_status(p);
+                HitResult::Success
+            }
+            _ => HitResult::Failure,
+        },
+        // Purify: `if (!target.cureStatus()) return this.NOT_FAIL;` then the user heals
+        // `Math.ceil(source.maxhp * 0.5)`.
+        moves::PURIFY => {
+            if !cure_status(b, target) {
+                HitResult::NotFail
+            } else {
+                let max_hp = b.slot_mon(user).map_or(0, |m| i32::from(m.max_hp));
+                b.heal(user, f64::from((max_hp + 1) / 2));
+                HitResult::Success
+            }
+        }
+        // Take Heart: `const success = !!this.boost({spa: 1, spd: 1}); return
+        // pokemon.cureStatus() || success;`
+        moves::TAKE_HEART => {
+            let mut up = NO_BOOSTS;
+            up[2] = 1;
+            up[3] = 1;
+            let boosted = b.boost_by(target, &up, Some(user), BoostEffect::Move(mv.id));
+            success(cure_status(b, target) || boosted)
+        }
+        // Jungle Healing, Lunar Blessing (each ally and the user): `const success =
+        // !!this.heal(this.modify(pokemon.maxhp, 0.25)); return pokemon.cureStatus() || success;`
+        moves::JUNGLE_HEALING | moves::LUNAR_BLESSING => {
+            let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
+            let healed = b.heal(target, f64::from(modify(max_hp, 1024))) > 0;
+            success(cure_status(b, target) || healed)
+        }
+        // Floral Healing: `this.modify(target.baseMaxhp, 0.667)` in Grassy Terrain, otherwise
+        // `Math.ceil(target.baseMaxhp * 0.5)`; `NOT_FAIL` when nothing is healed.
+        moves::FLORAL_HEALING => {
+            let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
+            let amount = if b.terrain() == Terrain::Grassy {
+                modify(max_hp, 2732)
+            } else {
+                (max_hp + 1) / 2
+            };
+            if b.heal(target, f64::from(amount)) > 0 {
+                HitResult::Success
+            } else {
+                HitResult::NotFail
+            }
+        }
+        // Rest: `target.setStatus('slp', source, move)` (an existing status is replaced; the
+        // SetStatus handlers still block it: terrains, Sweet Veil, Leaf Guard, Purifying Salt;
+        // Safeguard ignores the user's own effect), then `statusState.time = 3` and
+        // `this.heal(target.maxhp)`. The sleep condition's own draw of 2 or 3 turns is overwritten,
+        // so it is not drawn here; AfterSetStatus: Synchronize ignores sleep, Lum Berry is eaten
+        // at once (the 3 turns then land on no status).
+        moves::REST => {
+            let Some(pokemon) = b.alive(target) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let blocked = b.set_status_blocked(target, Status::Sleep)
+                || super::super::abilities::blocks_status(
+                    b.ability_unless_broken(target),
+                    Status::Sleep,
+                );
+            if blocked {
+                HitResult::Failure
+            } else {
+                let old = b.mon(pokemon).status;
+                b.apply(Instruction::ChangeStatus {
+                    target: pokemon,
+                    old,
+                    new: Status::Sleep,
+                });
+                b.set_status_turns(pokemon, 3);
+                super::super::update::after_set_status(b, target);
+                let max_hp = b.mon(pokemon).max_hp;
+                b.heal(target, f64::from(max_hp));
+                HitResult::Success
+            }
+        }
+        // Psych Up: the user takes the target's stages (`source.boosts[i] = target.boosts[i]`, no
+        // boost events), then loses its critical-hit volatiles and copies the target's (of
+        // Dragon Cheer, Focus Energy, G-Max Chi Strike, Laser Focus only Focus Energy exists).
+        moves::PSYCH_UP => {
+            let boosts = b.state.slot(target).boosts;
+            set_boosts(b, user, boosts);
+            b.remove_volatile(user, Volatile::FocusEnergy);
+            if b.volatile(target, Volatile::FocusEnergy).active {
+                b.add_volatile(user, Volatile::FocusEnergy);
+            }
+            HitResult::Success
+        }
+        // Speed Swap: the stored Speed stats trade places (`storedStats.spe`); `setSpecies`
+        // recalculates them when a Pokémon leaves the field (`Battle::clear_volatile`).
+        moves::SPEED_SWAP => {
+            let (Some(p), Some(q)) = (b.occupant(user), b.occupant(target)) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let (mine, theirs) = (b.mon(p).forme(), b.mon(q).forme());
+            for (pokemon, old, speed) in [(p, mine, theirs.stats[4]), (q, theirs, mine.stats[4])] {
+                let mut new = old;
+                new.stats[4] = speed;
+                if new != old {
+                    b.apply(Instruction::SetForme {
+                        target: pokemon,
+                        old,
+                        new,
+                    });
+                }
+            }
+            HitResult::Success
+        }
+        // Strength Sap: fails at -6 Attack; otherwise the target's Attack with its stages but no
+        // modifiers (`getStat('atk', false, true)`), then `this.boost({atk: -1}, target, source)`
+        // and the user heals that much; `!!(healed || boosted)`.
+        moves::STRENGTH_SAP => {
+            let Some(mon) = b.slot_mon(target) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let stage = b.state.slot(target).boosts[0];
+            if stage == -6 {
+                HitResult::Failure
+            } else {
+                let attack = boosted_stat(i32::from(mon.stats[0]), stage);
+                let mut drop = NO_BOOSTS;
+                drop[0] = -1;
+                let boosted = b.boost_by(target, &drop, Some(user), BoostEffect::Move(mv.id));
+                let healed = b.heal(user, f64::from(attack)) > 0;
+                success(healed || boosted)
+            }
+        }
+        // Pain Split: both take the average of their HP (`Math.floor((targetHP + pokemon.hp) / 2)
+        // || 1`) through `sethp` (capped at the max HP, no Damage/Heal events).
+        moves::PAIN_SPLIT => {
+            let hp = |b: &Battle<'_, N>, s: SlotRef| b.slot_mon(s).map_or(0, |m| i32::from(m.hp));
+            let average = ((hp(b, target) + hp(b, user)) / 2).max(1);
+            set_hp(b, target, average);
+            set_hp(b, user, average);
+            HitResult::Success
+        }
+        // Spite: the target's last move (none, or Struggle, which has no slot: fails) loses up to
+        // 4 PP (`deductPP(move.id, 4)`; fails when it has none left).
+        moves::SPITE => {
+            let last = b.state.slot(target).last_move;
+            let Some(pokemon) = b.alive(target) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let index = b.mon(pokemon).moves.iter().position(|m| m.id == last);
+            match index {
+                Some(i) if !last.is_none() && b.mon(pokemon).moves[i].pp > 0 => {
+                    let old = b.mon(pokemon).moves[i].pp;
+                    b.apply(Instruction::SetPp {
+                        target: pokemon,
+                        move_index: i as u8,
+                        old,
+                        new: old.saturating_sub(4),
+                    });
+                    HitResult::Success
+                }
+                _ => HitResult::Failure,
+            }
+        }
+        // Reflect Type: fails for Arceus and Silvally users; the user takes the target's types
+        // (`getTypes(true)`: without an added type, which the engine never has; Roost's filter
+        // is already in the stored types), `setType` then clears the user's added type.
+        moves::REFLECT_TYPE => {
+            let Some(mon) = b.slot_mon(user) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            if [493, 773].contains(&mon.species.data().num) {
+                HitResult::Failure
+            } else {
+                let types = b.slot_mon(target).map_or([Type::None; 2], |m| m.types);
+                if types[0] == Type::None {
+                    HitResult::Failure
+                } else {
+                    set_types(b, user, types);
+                    HitResult::Success
+                }
+            }
+        }
+        // Soak: fails (`null`) on a pure Water type (`getTypes().join() === 'Water'`) or an
+        // Arceus / Silvally (`setType` refuses); otherwise the target becomes pure Water.
+        moves::SOAK => {
+            let Some(mon) = b.slot_mon(target) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let water = [Type::Water, Type::None];
+            if mon.types == water || [493, 773].contains(&mon.species.data().num) {
+                HitResult::Failure
+            } else {
+                set_types(b, target, water);
+                HitResult::Success
+            }
+        }
+        // Bug Bite, Pluck: a user with HP takes the target's berry (`takeItem`, even from a
+        // target the hit knocked out) and eats it itself (`singleEvent('Eat', item, ..., source,
+        // source, move)`: the berry's `onEat` on the user; no `TryEatItem`, no `lastItem`).
+        // Resist berries and berries without handlers have an empty `onEat`. Returns nothing.
+        moves::BUG_BITE | moves::PLUCK => {
+            let item = b.item(target);
+            if let Some(eater) = b.alive(user).filter(|_| item.data().is_berry) {
+                let empty = item.data().handlers.is_empty()
+                    || super::super::items::resist_berry(item).is_some();
+                if b.take_item(target)
+                    && !empty
+                    && !super::super::update::berry_on_eat(b, user, eater, item)
+                {
+                    return Err(b.unsupported(format!(
+                        "{} eating {}",
+                        mv.data.name,
+                        item.data().name
+                    )));
+                }
+            }
+            HitResult::Success
+        }
+        // Incinerate: `if ((item.isBerry || item.isGem) && pokemon.takeItem(source))` (a target
+        // the hit knocked out too). Corrosive Gas: `target.takeItem(source)` (a failure only
+        // logs). Both return nothing.
+        moves::INCINERATE | moves::CORROSIVE_GAS => {
+            let data = b.item(target).data();
+            if mv.id == moves::CORROSIVE_GAS || data.is_berry || data.is_gem {
+                b.take_item(target);
+            }
+            HitResult::Success
+        }
+        // Recycle: fails with an item or without a `lastItem`; otherwise `lastItem` goes back to
+        // being held (`setItem`: its `Start` event runs; an item whose `onStart` acts is refused).
+        moves::RECYCLE => {
+            let Some(pokemon) = b.alive(target) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let (item, last) = (b.mon(pokemon).item, b.mon(pokemon).last_item);
+            if !item.is_none() || last.is_none() {
+                HitResult::Failure
+            } else {
+                if last.data().handlers.contains(&"onStart")
+                    && !super::super::items::inert_start(last)
+                {
+                    return Err(b.unsupported(format!(
+                        "Recycle restoring {} (its onStart)",
+                        last.data().name
+                    )));
+                }
+                b.apply(Instruction::SetLastItem {
+                    target: pokemon,
+                    old: last,
+                    new: ItemId::NONE,
+                });
+                b.apply(Instruction::SetItem {
+                    target: pokemon,
+                    old: ItemId::NONE,
+                    new: last,
+                });
+                HitResult::Success
+            }
         }
         // Steel Roller: `this.field.clearTerrain();` (returns nothing: no effect on success).
         moves::STEEL_ROLLER => {
@@ -859,6 +1500,125 @@ fn set_boosts<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, boosts: [i8;
     }
 }
 
+/// Showdown `pokemon.sethp(hp)` on an active Pokémon with HP: at least 1, at most its max HP,
+/// set outright (no Damage or Heal event).
+fn set_hp<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, hp: i32) {
+    let Some(pokemon) = b.alive(slot) else {
+        return;
+    };
+    let mon = b.mon(pokemon);
+    let (old, new) = (mon.hp, hp.clamp(1, i32::from(mon.max_hp)) as i16);
+    if new < old {
+        b.apply(Instruction::Damage {
+            target: pokemon,
+            amount: old - new,
+        });
+    } else if new > old {
+        b.apply(Instruction::Heal {
+            target: pokemon,
+            amount: new - old,
+        });
+    }
+}
+
+/// Showdown `pokemon.setType(types)` (the caller has checked that it may): the types are
+/// replaced. On a Pokémon under Roost the stored types keep Roost's filter (Flying left out,
+/// Normal when nothing is left) and the volatile remembers the new types to restore when it
+/// ends (nothing to restore without Flying).
+fn set_types<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, types: [Type; 2]) {
+    let Some(pokemon) = b.occupant(slot) else {
+        return;
+    };
+    let roost = b.volatile(slot, Volatile::Roost);
+    let shown = if roost.active && types.contains(&Type::Flying) {
+        let mut kept = types
+            .into_iter()
+            .filter(|&t| t != Type::Flying && t != Type::None);
+        [
+            kept.next().unwrap_or(Type::Normal),
+            kept.next().unwrap_or(Type::None),
+        ]
+    } else {
+        types
+    };
+    if roost.active {
+        let counter = if shown == types {
+            0
+        } else {
+            crate::volatile::encode_types(types)
+        };
+        b.set_volatile_state(slot, Volatile::Roost, VolatileState { counter, ..roost });
+    }
+    let old = b.mon(pokemon).types;
+    if old != shown {
+        b.apply(Instruction::SetTypes {
+            target: pokemon,
+            old,
+            new: shown,
+        });
+    }
+}
+
+/// A handler's boolean result.
+fn success(ok: bool) -> HitResult {
+    if ok {
+        HitResult::Success
+    } else {
+        HitResult::Failure
+    }
+}
+
+/// Showdown `pokemon.cureStatus()` on the Pokémon in `slot`: whether it had a status to lose
+/// (not at 0 HP).
+fn cure_status<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> bool {
+    match b.alive(slot) {
+        Some(p) if b.mon(p).status != Status::None => {
+            b.cure_status(p);
+            true
+        }
+        _ => false,
+    }
+}
+
+/// Heal Bell and Aromatherapy `onHit`: every Pokémon of `side`'s party (`side.pokemon`, benched
+/// ones included) loses its status (`cureStatus`: not at 0 HP), except an active one other than
+/// the user whose ability (`hasAbility`: active only; skipped while the move suppresses it) is
+/// Soundproof (Heal Bell), Sap Sipper (Aromatherapy) or Good as Gold. Succeeds if anyone was
+/// cured. (A substitute's protection against Aromatherapy is not modelled: substitutes are
+/// refused.)
+fn party_cure<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    side: SideId,
+    id: MoveId,
+) -> HitResult {
+    let immune_ability = if id == moves::HEAL_BELL {
+        abilities::SOUNDPROOF
+    } else {
+        abilities::SAP_SIPPER
+    };
+    let user_pokemon = b.occupant(user);
+    let mut cured = false;
+    for party in 0..b.state.side(side).party.len() as u8 {
+        let pokemon = PokemonRef { side, party };
+        let active = Battle::<N>::slots(side).find(|&s| b.occupant(s) == Some(pokemon));
+        if let Some(slot) = active {
+            if Some(pokemon) != user_pokemon && !b.suppressing_ability(slot) {
+                let ability = b.ability(slot);
+                if ability == immune_ability || ability == abilities::GOOD_AS_GOLD {
+                    continue;
+                }
+            }
+        }
+        let mon = b.mon(pokemon);
+        if mon.hp > 0 && mon.status != Status::None {
+            b.cure_status(pokemon);
+            cured = true;
+        }
+    }
+    success(cured)
+}
+
 /// `this.heal(this.modify(pokemon.maxhp, factor))` with `factor` as a 4096-based modifier
 /// (0.667 → 2732); `NOT_FAIL` when nothing is healed.
 fn weather_heal<const N: usize>(
@@ -876,12 +1636,18 @@ fn weather_heal<const N: usize>(
 
 /// The secondary effect's `onHit` (`secondaries` → `moveHit`, after the chance roll):
 /// Dire Claw and Tri Attack draw one of three statuses (`this.sample`) and `trySetStatus` it,
-/// so the draw happens even when the status then fails.
+/// so the draw happens even when the status then fails. Throat Chop: `target.addVolatile(
+/// 'throatchop')` (no `onRestart`: an existing one keeps its duration; a fainted target gets
+/// none).
 pub(super) fn secondary_on_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     target: SlotRef,
     mv: &ActiveMove,
 ) {
+    if mv.id == moves::THROAT_CHOP {
+        b.add_volatile(target, Volatile::ThroatChop);
+        return;
+    }
     let statuses = match mv.id {
         moves::DIRE_CLAW => [Status::Poison, Status::Paralyze, Status::Sleep],
         moves::TRI_ATTACK => [Status::Burn, Status::Paralyze, Status::Freeze],
