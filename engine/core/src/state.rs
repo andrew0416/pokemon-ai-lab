@@ -267,6 +267,17 @@ impl SlotHistory {
     }
 }
 
+/// Showdown `switchFlag` values the engine tells apart: `false`, a move id (a self-switching
+/// move), `true` (Eject Button, Emergency Exit). Eject Button and Emergency Exit read the
+/// distinction.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub enum SwitchFlag {
+    #[default]
+    None,
+    Move,
+    Effect,
+}
+
 /// A side's faint counters: `totalFainted` (capped at 100; Last Respects), `faintedThisTurn`
 /// and `faintedLastTurn` (Retaliate), as booleans since only their truth is read.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
@@ -293,11 +304,12 @@ pub struct Slot {
     pub move_actions: u8,
     /// Damage history (F13); hidden from the canonical output.
     pub history: SlotHistory,
-    /// Showdown `switchFlag`: the occupant must be switched out by a mid-turn decision
-    /// (U-turn, Parting Shot, ...). Set when the move lands, cleared by the switch (the slot
-    /// resets) or when the side has no bench to switch to. While set on a living occupant the
-    /// side's canonical `request` is `switch` (F6).
-    pub switch_flag: bool,
+    /// Showdown `switchFlag`: the occupant must be switched out by a mid-turn decision. Set
+    /// when a self-switching move lands (`Move`, Showdown's move id) or by Eject Button /
+    /// Emergency Exit (`Effect`, Showdown's `true`), cleared by the switch (the slot resets)
+    /// or when the side has no bench to switch to. While set on a living occupant the side's
+    /// canonical `request` is `switch` (F6).
+    pub switch_flag: SwitchFlag,
     pub substitute_hp: i16,
     pub dynamax: DynamaxState,
 }

@@ -43,7 +43,7 @@ use crate::field::FieldEffect;
 use crate::gimmick::Gimmick;
 use crate::instruction::Outcome;
 use crate::rules::{ActionError, Ruleset};
-use crate::state::{PokemonRef, SideId, SlotRef, State};
+use crate::state::{PokemonRef, SideId, SlotRef, State, SwitchFlag};
 use crate::volatile::Volatile;
 
 use battle::Battle;
@@ -144,7 +144,9 @@ fn check_mid_turn_switches<const N: usize>(
             })
             .collect();
         let flagged: Vec<usize> = (0..N)
-            .filter(|&i| s.slots[i].switch_flag && s.slots[i].party_index.is_some())
+            .filter(|&i| {
+                s.slots[i].switch_flag != SwitchFlag::None && s.slots[i].party_index.is_some()
+            })
             .collect();
         let required = flagged.len().min(bench.len());
         let mut given = Vec::new();
@@ -388,12 +390,21 @@ fn run_replacements<const N: usize>(
             tied[b.rng.uniform(tied.len())]
         };
         let (slot, party_index, _) = switches.remove(pick);
+        let hp_before = b.state.side(slot.side).party[usize::from(party_index)].hp;
         switching::switch_in(b, slot, party_index, true)?;
-        newcomers.push(slot);
+        newcomers.push((slot, hp_before));
     }
-    switching::run_switch_in(b, &newcomers)?;
+    let slots: Vec<SlotRef> = newcomers.iter().map(|n| n.0).collect();
+    switching::run_switch_in(b, &slots)?;
     if b.is_over() {
         return Ok(());
+    }
+    // A replacement's Emergency Exit (entry hazards took it to half) would ask for another
+    // switch before the turn ends; the replacement decision cannot suspend.
+    for &(slot, hp_before) in &newcomers {
+        if switching::emergency_exit_would_trigger(b, slot, hp_before) {
+            return Err(b.unsupported("Emergency Exit of a replacement hit by entry hazards"));
+        }
     }
     // `runAction`'s tail with nothing left in the queue: `checkFainted` (a newcomer that fainted
     // to entry hazards gets `fnt`), the Update, then `endTurn` (which waits for another
@@ -409,6 +420,7 @@ fn run_replacements<const N: usize>(
 fn after_action<const N: usize>(
     b: &mut Battle<'_, N>,
     pending: &mut Pending,
+    newcomers: &[(SlotRef, i16)],
 ) -> Result<StageEnd, TurnError> {
     if b.faint_messages(true) {
         pending.done = true;
@@ -416,11 +428,28 @@ fn after_action<const N: usize>(
         return Ok(StageEnd::Finished);
     }
     update::update_event(b)?;
+    // `runSwitch`'s tail: Emergency Exit for a newcomer the entry hazards took to half.
+    for &(slot, hp_before) in newcomers {
+        switching::emergency_exit_check(b, slot, hp_before);
+    }
     if request_switches(b) {
         Ok(StageEnd::Suspended)
     } else {
         Ok(StageEnd::Continue)
     }
+}
+
+/// `runAction`'s phazing block right after a move: every Pokémon with `forceSwitchFlag`
+/// (Roar, Whirlwind, Dragon Tail, Circle Throw, Red Card) still standing is dragged out
+/// (`dragIn`: a uniformly random bench member switches in and runs its `runSwitch` at once).
+fn drag_outs<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), TurnError> {
+    let flagged = std::mem::take(&mut b.force_switch);
+    for slot in flagged {
+        if b.alive(slot).is_some() {
+            switching::drag_in(b, slot)?;
+        }
+    }
+    Ok(())
 }
 
 /// The end of Showdown `runAction` after the Update: a side whose active Pokémon has
@@ -432,7 +461,9 @@ fn request_switches<const N: usize>(b: &mut Battle<'_, N>) -> bool {
     for side in [SideId::One, SideId::Two] {
         let flagged: Vec<SlotRef> = (0..N as u8)
             .map(|slot| SlotRef { side, slot })
-            .filter(|&slot| b.state.slot(slot).switch_flag && b.alive(slot).is_some())
+            .filter(|&slot| {
+                b.state.slot(slot).switch_flag != SwitchFlag::None && b.alive(slot).is_some()
+            })
             .collect();
         if flagged.is_empty() {
             continue;
@@ -450,7 +481,8 @@ fn request_switches<const N: usize>(b: &mut Battle<'_, N>) -> bool {
 
 /// A slot whose living occupant has `switch_flag` set: the state is a suspended turn.
 fn pending_mid_turn_switch<const N: usize>(state: &State<N>) -> Option<SlotRef> {
-    State::<N>::slot_refs().find(|&r| state.slot(r).switch_flag && state.active_ref(r).is_some())
+    State::<N>::slot_refs()
+        .find(|&r| state.slot(r).switch_flag != SwitchFlag::None && state.active_ref(r).is_some())
 }
 
 /// The mid-turn switch stage (`resume_turn`): the `instaswitch` actions by the outgoing
@@ -478,11 +510,13 @@ fn run_mid_turn_switches<const N: usize>(
             tied[b.rng.uniform(tied.len())]
         };
         let (slot, party_index, _) = switches.remove(pick);
+        let hp_before = b.state.side(slot.side).party[usize::from(party_index)].hp;
         switching::switch_in(b, slot, party_index, true)?;
-        newcomers.push(slot);
+        newcomers.push((slot, hp_before));
     }
-    switching::run_switch_in(b, &newcomers)?;
-    after_action(b, pending)
+    let slots: Vec<SlotRef> = newcomers.iter().map(|n| n.0).collect();
+    switching::run_switch_in(b, &slots)?;
+    after_action(b, pending, &newcomers)
 }
 
 /// Runs `stage` repeatedly from `start` until it reports completion, merging identical
@@ -860,6 +894,9 @@ struct Pending {
     /// Mid-turn switches decided for a suspended turn (`resume_turn`): the slot switching
     /// out and the party member coming in. Run by the next stage before anything else.
     switches: Vec<(SlotRef, u8)>,
+    /// The residual phase ran (the turn suspended after it for an Emergency Exit switch): the
+    /// end of the turn only remains.
+    residual_done: bool,
 }
 
 impl Pending {
@@ -870,6 +907,7 @@ impl Pending {
             done: false,
             fractional_drawn: false,
             switches: Vec::new(),
+            residual_done: false,
         }
     }
 }
@@ -1025,7 +1063,10 @@ fn run_stage_inner<const N: usize>(
                 pending.in_progress = Some(progress);
                 Ok(StageEnd::Continue)
             }
-            moves::MoveStep::Done => after_action(b, pending),
+            moves::MoveStep::Done => {
+                drag_outs(b)?;
+                after_action(b, pending, &[])
+            }
         };
     }
     if !b.queue.is_empty() {
@@ -1042,6 +1083,7 @@ fn run_stage_inner<const N: usize>(
 
         // `runAction` skips a Pokémon that is no longer active or has fainted.
         if b.alive(action.slot) == Some(action.pokemon) {
+            let mut newcomers = Vec::new();
             match action.kind {
                 ActionKind::Move { index, target, .. } => {
                     let will_act = b.will_act();
@@ -1051,25 +1093,50 @@ fn run_stage_inner<const N: usize>(
                         pending.in_progress = Some(progress);
                         return Ok(StageEnd::Continue);
                     }
+                    drag_outs(b)?;
                 }
                 ActionKind::Switch { party_index } => {
+                    let hp_before =
+                        b.state.side(action.slot.side).party[usize::from(party_index)].hp;
                     switching::run_switch(b, action.slot, party_index)?;
+                    newcomers.push((action.slot, hp_before));
                 }
                 ActionKind::Mega => {
                     mega::run_mega_evo(b, action.slot)?;
                 }
             }
-            return after_action(b, pending);
+            return after_action(b, pending, &newcomers);
         }
         return Ok(StageEnd::Continue);
     }
 
-    residual::residual(b)?;
-    if !b.is_over() {
+    if !pending.residual_done {
+        // `residualPokemon`: every active Pokémon's HP before the residual damage, for
+        // Emergency Exit.
+        let before: Vec<(SlotRef, i16)> = b
+            .all_alive()
+            .into_iter()
+            .map(|slot| (slot, b.slot_mon(slot).expect("alive").hp))
+            .collect();
+        residual::residual(b)?;
+        pending.residual_done = true;
+        if b.is_over() {
+            pending.done = true;
+            return Ok(StageEnd::Finished);
+        }
+        // `runAction`'s tail for the residual action: `checkFainted` (the queue is empty), the
+        // Update, Emergency Exit for a Pokémon the residual damage took to half, then the
+        // switch requests (the turn ends once they are resolved).
         residual::check_fainted(b);
         update::update_event(b)?;
-        residual::end_turn(b);
+        for (slot, hp_before) in before {
+            switching::emergency_exit_check(b, slot, hp_before);
+        }
+        if request_switches(b) {
+            return Ok(StageEnd::Suspended);
+        }
     }
+    residual::end_turn(b);
     pending.done = true;
     Ok(StageEnd::Finished)
 }

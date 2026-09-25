@@ -30,7 +30,7 @@ use serde_json::Value;
 use lab_engine::action::JointAction;
 use lab_engine::instruction::Outcome;
 use lab_engine::rules::Ruleset;
-use lab_engine::state::{SideId, State, PARTY_SIZE};
+use lab_engine::state::{SideId, State, SwitchFlag, PARTY_SIZE};
 use lab_engine::turn::{enumerate_replacements, enumerate_turn, resume_turn, TurnError};
 use lab_engine::Doubles;
 
@@ -256,7 +256,7 @@ pub fn side_must_switch<const N: usize>(state: &State<N>, side: SideId) -> bool 
         .side(side)
         .slots
         .iter()
-        .any(|slot| slot.switch_flag && slot.party_index.is_some())
+        .any(|slot| slot.switch_flag != SwitchFlag::None && slot.party_index.is_some())
 }
 
 /// [`run_decision`], then every suspended outcome is resumed with the next `mid_turn` choice

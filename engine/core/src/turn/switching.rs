@@ -19,7 +19,7 @@
 use crate::dex::{abilities, items, AbilityFlags, AbilityId, ItemId, SpeciesId, NO_BOOSTS};
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
-use crate::state::{PokemonRef, SlotRef, Status, BOOST_COUNT};
+use crate::state::{PokemonRef, SlotRef, Status, SwitchFlag, BOOST_COUNT};
 use crate::volatile::Volatile;
 
 use super::abilities::{SUB_ABILITY, SUB_ITEM, SUB_SIDE_CONDITION};
@@ -889,4 +889,95 @@ pub(crate) fn fainted_action_speed<const N: usize>(b: &Battle<'_, N>, pokemon: P
     } else {
         spe
     }
+}
+
+/// Showdown `dragIn(side, pos)` for a Pokémon with `forceSwitchFlag`: a uniformly random
+/// bench member (`getRandomSwitchable`; nothing without one), unless `DragOut` blocks it
+/// (Suction Cups, breakable), replaces the occupant and runs its `runSwitch` at once (`isDrag`).
+/// Returns whether a switch happened.
+pub(crate) fn drag_in<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+) -> Result<bool, TurnError> {
+    let bench: Vec<u8> = super::residual::bench(b, slot.side).collect();
+    if bench.is_empty() || b.alive(slot).is_none() {
+        return Ok(false);
+    }
+    let pick = if bench.len() == 1 {
+        0
+    } else {
+        b.rng.uniform(bench.len())
+    };
+    if b.ability_unless_broken(slot) == abilities::SUCTION_CUPS {
+        return Ok(false);
+    }
+    switch_in(b, slot, bench[pick], true)?;
+    run_switch_in(b, &[slot])?;
+    Ok(true)
+}
+
+/// `runEvent('EmergencyExit', target)`: Emergency Exit / Wimp Out ask to switch out unless the
+/// side has no bench, the holder is being dragged out or already flagged; every other active
+/// Pokémon's `switchFlag` is cleared first (even Eject Button's).
+pub(crate) fn emergency_exit<const N: usize>(b: &mut Battle<'_, N>, target: SlotRef) {
+    if !matches!(
+        b.ability(target),
+        a if a == abilities::EMERGENCY_EXIT || a == abilities::WIMP_OUT
+    ) {
+        return;
+    }
+    if super::residual::bench(b, target.side).next().is_none()
+        || b.force_switch.contains(&target)
+        || b.state.slot(target).switch_flag != SwitchFlag::None
+    {
+        return;
+    }
+    for slot in b.all_alive() {
+        b.clear_switch_flag(slot);
+    }
+    b.set_switch_flag(target, SwitchFlag::Effect);
+}
+
+/// Whether `hp_before` → the current HP crossed half (`hp <= maxhp / 2 && before > maxhp /
+/// 2`) for a standing Pokémon: the Emergency Exit condition at `runAction`'s Update sites.
+pub(crate) fn crossed_half<const N: usize>(
+    b: &Battle<'_, N>,
+    slot: SlotRef,
+    hp_before: i16,
+) -> bool {
+    let Some(pokemon) = b.alive(slot) else {
+        return false;
+    };
+    let mon = b.mon(pokemon);
+    let (hp, max_hp, before) = (
+        i32::from(mon.hp),
+        i32::from(mon.max_hp),
+        i32::from(hp_before),
+    );
+    2 * hp <= max_hp && 2 * before > max_hp
+}
+
+/// Emergency Exit for a Pokémon whose HP crossed half since `hp_before` (a `runSwitch` newcomer
+/// hit by hazards, a Pokémon hurt by the residual phase).
+pub(crate) fn emergency_exit_check<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    hp_before: i16,
+) {
+    if crossed_half(b, slot, hp_before) {
+        emergency_exit(b, slot);
+    }
+}
+
+/// Whether [`emergency_exit_check`] would flag the Pokémon (for places that cannot suspend).
+pub(crate) fn emergency_exit_would_trigger<const N: usize>(
+    b: &Battle<'_, N>,
+    slot: SlotRef,
+    hp_before: i16,
+) -> bool {
+    let ability = b.ability(slot);
+    (ability == abilities::EMERGENCY_EXIT || ability == abilities::WIMP_OUT)
+        && crossed_half(b, slot, hp_before)
+        && super::residual::bench(b, slot.side).next().is_some()
+        && b.state.slot(slot).switch_flag == SwitchFlag::None
 }

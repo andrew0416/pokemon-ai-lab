@@ -7,7 +7,7 @@
 
 use crate::gimmick::Gimmick;
 use crate::instruction::Instruction;
-use crate::state::{PokemonRef, SideId, Slot, SlotHistory, SlotRef, State};
+use crate::state::{PokemonRef, SideId, Slot, SlotHistory, SlotRef, State, SwitchFlag};
 use crate::volatile::VolatileState;
 
 pub(crate) fn instructions<const N: usize>(from: &State<N>, to: &State<N>) -> Vec<Instruction> {
@@ -226,11 +226,11 @@ fn slot_changes(out: &mut Vec<Instruction>, r: SlotRef, a: &Slot, b: &Slot) {
             new: b.history,
         });
     }
-    if b.switch_flag {
+    if b.switch_flag != SwitchFlag::None {
         out.push(Instruction::SetSwitchFlag {
             target: r,
-            old: false,
-            new: true,
+            old: SwitchFlag::None,
+            new: b.switch_flag,
         });
     }
     debug_assert!(
@@ -336,7 +336,7 @@ mod tests {
         to.slot_mut(me).history.times_attacked = 2;
         to.slot_mut(me).history.newly_switched = false;
         to.side_mut(SideId::Two).history.total_fainted = 1;
-        to.slot_mut(me).switch_flag = true;
+        to.slot_mut(me).switch_flag = SwitchFlag::Move;
 
         let ins = instructions(&from, &to);
         let mut s = from.clone();

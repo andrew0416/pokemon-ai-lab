@@ -21,7 +21,7 @@ use lab_engine::dex::{MoveId, Type};
 use lab_engine::field::{Effect, FieldEffect, SideEffect, Terrain, Weather, FIELD_EFFECT_COUNT};
 use lab_engine::gimmick::Gimmick;
 use lab_engine::rules::Ruleset;
-use lab_engine::state::{BattleResult, Pokemon, SideId, State, Status, PARTY_SIZE};
+use lab_engine::state::{BattleResult, Pokemon, SideId, State, Status, SwitchFlag, PARTY_SIZE};
 use lab_engine::volatile::{Volatile, VolatileState};
 
 use crate::meta::{ScenarioMeta, SideMeta};
@@ -143,7 +143,7 @@ fn requests<const N: usize>(state: &State<N>) -> [&'static str; 2] {
             .side(side)
             .slots
             .iter()
-            .any(|slot| slot.switch_flag && slot.party_index.is_some())
+            .any(|slot| slot.switch_flag != SwitchFlag::None && slot.party_index.is_some())
     });
     if flagged.iter().any(|&f| f) {
         return flagged.map(|f| if f { "switch" } else { "" });

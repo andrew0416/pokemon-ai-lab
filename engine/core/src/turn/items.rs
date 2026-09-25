@@ -19,7 +19,7 @@ use crate::dex::{
 };
 use crate::field::{FieldEffect, Weather};
 use crate::instruction::Instruction;
-use crate::state::{Pokemon, PokemonRef, SlotRef, State, Status, BOOST_COUNT};
+use crate::state::{Pokemon, PokemonRef, SlotRef, State, Status, SwitchFlag, BOOST_COUNT};
 use crate::volatile::{Volatile, VolatileState};
 
 use super::abilities::{Handler, SUB_ITEM};
@@ -795,13 +795,63 @@ pub(crate) fn on_damaging_hit<const N: usize>(
 /// The target's item `onAfterMoveSecondary` (`runEvent('AfterMoveSecondary')` at the end of the
 /// hit loop, skipped for a Sheer Force-boosted move): Kee Berry eats itself after a physical
 /// move (Present's heal, the only exception, is not a supported move), Maranga Berry after a
-/// special one (`target.eatItem()`; their `onEat` raise Def / SpD by 1).
+/// special one (`target.eatItem()`; their `onEat` raise Def / SpD by 1); Eject Button
+/// (Champions' version: the attacker's own switch flag is not cancelled) asks its holder to
+/// switch out unless its side has no bench, it is being dragged out, or any active Pokémon
+/// already carries an Eject Button / Emergency Exit flag; Red Card is used up and drags the
+/// attacker out (`forceSwitchFlag`) unless the attacker's side has no bench, either is already
+/// being dragged, or the attacker's Suction Cups stop it. A Pokémon that fainted has left its
+/// slot and does nothing.
 pub(crate) fn after_move_secondary<const N: usize>(
     b: &mut Battle<'_, N>,
+    user: SlotRef,
     target: SlotRef,
     category: MoveCategory,
 ) {
-    let wanted = match b.item(target) {
+    let item = b.item(target);
+    if item == items::EJECT_BUTTON {
+        if user == target || b.alive(target).is_none() || category == MoveCategory::Status {
+            return;
+        }
+        if super::residual::bench(b, target.side).next().is_none()
+            || b.force_switch.contains(&target)
+        {
+            return;
+        }
+        if b.all_alive()
+            .iter()
+            .any(|&s| b.state.slot(s).switch_flag == SwitchFlag::Effect)
+        {
+            return;
+        }
+        b.set_switch_flag(target, SwitchFlag::Effect);
+        if !b.use_item(target) {
+            b.clear_switch_flag(target);
+        }
+        return;
+    }
+    if item == items::RED_CARD {
+        if user == target
+            || b.alive(user).is_none()
+            || b.alive(target).is_none()
+            || category == MoveCategory::Status
+        {
+            return;
+        }
+        if super::residual::bench(b, user.side).next().is_none()
+            || b.force_switch.contains(&user)
+            || b.force_switch.contains(&target)
+        {
+            return;
+        }
+        // `target.useItem(source)`, then `runEvent('DragOut', source, target, move)`: the
+        // attacker's own Suction Cups (never suppressed by its own move).
+        if b.use_item(target) && b.ability(user) != abilities::SUCTION_CUPS {
+            b.force_switch.push(user);
+        }
+        return;
+    }
+    let wanted = match item {
         i if i == items::KEE_BERRY => MoveCategory::Physical,
         i if i == items::MARANGA_BERRY => MoveCategory::Special,
         _ => return,

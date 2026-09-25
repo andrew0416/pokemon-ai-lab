@@ -18,7 +18,7 @@ use crate::dex::{
     TypeImmunities, TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
-use crate::state::{MoveResult, PokemonRef, SideId, SlotRef, Status};
+use crate::state::{MoveResult, PokemonRef, SideId, SlotRef, Status, SwitchFlag};
 use crate::volatile::Volatile;
 
 use super::abilities as ability_events;
@@ -831,7 +831,7 @@ fn use_move<const N: usize>(
     // did something (Parting Shot's `onHit` withdrew it if its drops failed). The request is
     // made, or the flag dropped for a side without a bench, after the action.
     if result && b.move_self_switch && b.alive(user).is_some() {
-        b.set_switch_flag(user);
+        b.set_switch_flag(user, SwitchFlag::Move);
     }
     b.finish_move_result(user, result);
     use_move_tail(b, user, mv, result, main_target);
@@ -1552,7 +1552,26 @@ fn hit_loop<const N: usize>(
                 damage
             };
             ability_events::after_move_secondary(b, user, t, damage, total);
-            item_events::after_move_secondary(b, t, mv.data.category);
+            item_events::after_move_secondary(b, user, t, mv.data.category);
+        }
+        // `runEvent('EmergencyExit', target, pokemon)` for each target still standing whose
+        // HP this move took to half: `(hurtThisTurn || 0) + curDamage > maxhp / 2`, with
+        // `curDamage` the move's total damage for a single target, else the last hit's
+        // damage to it (a non-numeric result is skipped).
+        for &(t, damage) in &progress.last_hit.clone() {
+            let Some(pokemon) = b.alive(t) else {
+                continue;
+            };
+            let current = if mv.spread { damage } else { Some(total) };
+            let Some(current) = current else {
+                continue;
+            };
+            let mon = b.mon(pokemon);
+            let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
+            let hurt = b.slot_history(t).hurt_this_turn.map_or(0, i32::from);
+            if 2 * hp <= max_hp && 2 * (hurt + current) > max_hp {
+                super::switching::emergency_exit(b, t);
+            }
         }
     }
     Ok(HitOutcome::Finished {
@@ -1661,6 +1680,11 @@ fn spread_move_hit<const N: usize>(
         if data.self_switch != SelfSwitch::No {
             note(super::residual::bench(b, user.side).next().is_some());
         }
+        // `if (moveData.forceSwitch) { hitResult = !!this.battle.canSwitch(target.side);
+        // didSomething = this.battle.combineResults(didSomething, hitResult); }`
+        if data.force_switch {
+            note(super::residual::bench(b, t.side).next().is_some());
+        }
         // The move's own onHit; NOT_FAIL neither succeeds nor fails.
         match handlers::on_hit(b, user, t, mv)? {
             Some(HitResult::Success) => note(true),
@@ -1734,6 +1758,23 @@ fn spread_move_hit<const N: usize>(
                     BoostEffect::Move(mv.id),
                 );
             }
+        }
+    }
+    // 6. forceSwitch (Roar, Whirlwind, Dragon Tail, Circle Throw): a target the move did not
+    // fail on, standing, with the user standing and a bench on its side, is dragged out right
+    // after the action (`forceSwitchFlag`) unless `DragOut` stops it: Suction Cups (breakable)
+    // returns `null`, which neither drags nor fails the move.
+    if data.force_switch {
+        for (i, &t) in targets.iter().enumerate() {
+            if !results[i].ok()
+                || b.alive(t).is_none()
+                || b.alive(user).is_none()
+                || super::residual::bench(b, t.side).next().is_none()
+                || b.ability_unless_broken(t) == abilities::SUCTION_CUPS
+            {
+                continue;
+            }
+            b.force_switch.push(t);
         }
     }
     // DamagingHit for every damaged target, then AfterHit (only while the user stands).

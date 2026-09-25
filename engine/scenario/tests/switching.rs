@@ -59,3 +59,63 @@ fn volt_switch_into_an_immune_target_matches_showdown_exactly() {
 fn uturn_knock_out_matches_showdown_exactly() {
     assert_exact_parity("uturn-ko");
 }
+
+/// Roar drags a random bench member in; Suction Cups stops it without failing the move.
+#[test]
+fn roar_matches_showdown_exactly() {
+    assert_exact_parity("roar-drag");
+}
+
+/// Roar fails against a side without a bench.
+#[test]
+fn roar_without_a_bench_matches_showdown_exactly() {
+    assert_exact_parity("roar-no-bench");
+}
+
+/// Dragon Tail: damage, then the drag right after the move.
+#[test]
+fn dragon_tail_matches_showdown_exactly() {
+    assert_exact_parity("dragon-tail");
+}
+
+/// Eject Button asks its holder to switch; its queued move is cancelled.
+#[test]
+fn eject_button_matches_showdown_exactly() {
+    assert_exact_parity("eject-button");
+}
+
+/// U-turn into Eject Button: both sides switch (Champions keeps the attacker's flag).
+#[test]
+fn eject_button_against_uturn_matches_showdown_exactly() {
+    assert_exact_parity("eject-button-uturn");
+}
+
+/// Red Card drags the attacker out for a random bench member.
+#[test]
+fn red_card_matches_showdown_exactly() {
+    assert_exact_parity("red-card");
+}
+
+/// Emergency Exit after a hit that crosses half.
+#[test]
+fn emergency_exit_matches_showdown_exactly() {
+    assert_exact_parity("emergency-exit");
+}
+
+/// No Emergency Exit when the holder was already at half or below.
+#[test]
+fn emergency_exit_below_half_matches_showdown_exactly() {
+    assert_exact_parity("emergency-exit-below");
+}
+
+/// Emergency Exit from residual damage suspends the turn after the residual phase.
+#[test]
+fn emergency_exit_from_residual_matches_showdown_exactly() {
+    assert_exact_parity("emergency-exit-residual");
+}
+
+/// Emergency Exit from entry hazards in the newcomer's own runSwitch.
+#[test]
+fn emergency_exit_from_hazards_matches_showdown_exactly() {
+    assert_exact_parity("emergency-exit-hazard");
+}

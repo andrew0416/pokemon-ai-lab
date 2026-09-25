@@ -9,7 +9,8 @@ use crate::dex::{AbilityId, ItemId, MoveId, Type};
 use crate::field::{Effect, FieldEffect, SideEffect};
 use crate::gimmick::Gimmick;
 use crate::state::{
-    BattleResult, Forme, PokemonRef, SideHistory, SideId, Slot, SlotHistory, SlotRef, State, Status,
+    BattleResult, Forme, PokemonRef, SideHistory, SideId, Slot, SlotHistory, SlotRef, State,
+    Status, SwitchFlag,
 };
 use crate::volatile::{Volatile, VolatileState};
 
@@ -119,8 +120,8 @@ pub enum Instruction {
     /// `Slot::switch_flag` (F6).
     SetSwitchFlag {
         target: SlotRef,
-        old: bool,
-        new: bool,
+        old: SwitchFlag,
+        new: SwitchFlag,
     },
     SetField {
         effect: FieldEffect,

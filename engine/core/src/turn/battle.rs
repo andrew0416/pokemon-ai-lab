@@ -12,7 +12,7 @@ use crate::dex::{
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{
-    BattleResult, Pokemon, PokemonRef, SideId, SlotRef, State, Status, BOOST_COUNT,
+    BattleResult, Pokemon, PokemonRef, SideId, SlotRef, State, Status, SwitchFlag, BOOST_COUNT,
 };
 use crate::volatile::{Volatile, VolatileState};
 
@@ -70,6 +70,9 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// Whether the move in flight switches its user out (`move.selfSwitch`); Parting Shot's
     /// `onHit` withdraws it (`delete move.selfSwitch`) when its drops failed.
     pub move_self_switch: bool,
+    /// Showdown `forceSwitchFlag`: Pokémon a phazing move or Red Card drags out right after
+    /// the action (`dragIn`, a uniformly random bench member), within the stage.
+    pub force_switch: Vec<SlotRef>,
 }
 
 impl<'a, const N: usize> Battle<'a, N> {
@@ -85,6 +88,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             hit_type_mod: [[None; N]; 2],
             mirror_herb: Vec::new(),
             move_self_switch: false,
+            force_switch: Vec::new(),
         }
     }
 
@@ -1179,26 +1183,22 @@ impl<'a, const N: usize> Battle<'a, N> {
         self.state.slot(slot).move_actions > 0
     }
 
-    /// `pokemon.switchFlag = true` (F6): the occupant must switch out at the next request.
-    pub fn set_switch_flag(&mut self, slot: SlotRef) {
-        if !self.state.slot(slot).switch_flag {
+    /// `pokemon.switchFlag = <move id | true>` (F6): the occupant must switch out at the next
+    /// request.
+    pub fn set_switch_flag(&mut self, slot: SlotRef, flag: SwitchFlag) {
+        let old = self.state.slot(slot).switch_flag;
+        if old != flag {
             self.apply(Instruction::SetSwitchFlag {
                 target: slot,
-                old: false,
-                new: true,
+                old,
+                new: flag,
             });
         }
     }
 
     /// `pokemon.switchFlag = false`.
     pub fn clear_switch_flag(&mut self, slot: SlotRef) {
-        if self.state.slot(slot).switch_flag {
-            self.apply(Instruction::SetSwitchFlag {
-                target: slot,
-                old: true,
-                new: false,
-            });
-        }
+        self.set_switch_flag(slot, SwitchFlag::None);
     }
 
     pub fn set_last_move(&mut self, slot: SlotRef, id: MoveId) {

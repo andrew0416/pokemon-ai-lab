@@ -5,9 +5,9 @@
 ## 요약
 
 - 팀 28개, 로더 통과 28개.
-- 세 선출 모두 시작 + 방어 턴이 실행되는 팀: 9개 (거부 19개).
-- 선출 84개(팀 × 3) 중 시작 + 방어 턴이 실행되는 선출: 61개.
-- 모든 검사(기술·메가진화 포함) 통과: 1개.
+- 세 선출 모두 시작 + 방어 턴이 실행되는 팀: 13개 (거부 15개).
+- 선출 84개(팀 × 3) 중 시작 + 방어 턴이 실행되는 선출: 66개.
+- 모든 검사(기술·메가진화 포함) 통과: 3개.
 
 ## 거부 이유 (팀 수순)
 
@@ -19,7 +19,6 @@
 | ability Flower Veil (["onAllySetStatus", "onAllyTryAddVolatile", "onAllyTryBoost"]) | 6 | balance-ddee (Floette-Eternal), crown-cecil9 (Floette-Eternal), kickoff-balmung (Floette-Eternal), kickoff-beedrillvgc (Floette-Eternal), kickoff-hollowedhollowed (Floette-Eternal), kickoff-thosewhoknow (Floette-Eternal) |
 | ability No Guard (["onAnyAccuracy", "onAnyInvulnerability"]) | 6 | balance-ddee (Raichu-Mega-Y), crown-cecil9 (Raichu-Mega-Y), crown-eternalton (Raichu-Mega-Y), crown-tachyon112358 (Raichu-Mega-Y), kickoff-hollowedhollowed (Raichu-Mega-Y), kickoff-jhinting (Raichu-Mega-Y) |
 | ability Cursed Body (["onDamagingHit"]) | 5 | coaching-panda (Froslass), kickoff-joshawott (Froslass), kickoff-prongs (Gengar), kickoff-thepostmanp (Froslass), perish-mrada (Gengar) |
-| ability Emergency Exit (["onEmergencyExit"]) | 4 | kickoff-shadezero (Golisopod), kickoff-wolfey (Golisopod), psy-cona (Golisopod), psy-nihat (Golisopod) |
 | ability Pixilate (["onBasePower", "onModifyType"]) | 3 | crown-eternalton (Sylveon), crown-ryukeivgc (Sylveon), kickoff-wolfey (Gardevoir-Mega) |
 | ability Shadow Tag (["onFoeMaybeTrapPokemon", "onFoeTrapPokemon"]) | 2 | kickoff-prongs (Gengar-Mega), perish-mrada (Gengar-Mega) |
 | move Double Shock: callbacks ["onTryMove", "self.onHit"] are not implemented | 2 | kickoff-shadezero, kickoff-thepostmanp |
@@ -27,7 +26,6 @@
 | move Revival Blessing: callbacks ["onTryHit"] are not implemented | 2 | kickoff-shadezero, kickoff-thepostmanp |
 | move Spiky Shield: callbacks ["condition.onHit", "condition.onStart", "condition.onTryHit", "onHit", "onPrepareHit"] are not implemented | 2 | kickoff-joshawott, kickoff-thepostmanp |
 | ability Magic Bounce (["onAllyTryHitSide", "onTryHit"]) | 1 | kickoff-karlin22 (Hatterene) |
-| item Eject Button (["onAfterMoveSecondary"]) | 1 | perish-mrada (Rillaboom) |
 | item Miracle Berry switch-in handler onUpdate | 1 | crown-ryukeivgc (Rillaboom) |
 | move Baneful Bunker: callbacks ["condition.onHit", "condition.onStart", "condition.onTryHit", "onHit", "onPrepareHit"] are not implemented | 1 | kickoff-conkledonk |
 | move Belly Drum: callbacks ["onHit"] are not implemented | 1 | kickoff-joshawott |
@@ -60,13 +58,13 @@
 | kickoff-karlin22 | source-complete-sp-unknown | 거부 | 거부 | 9 | 0 | 3456 방어 턴: Hatterene: ability Magic Bounce (["onAllyTryHitSide", "onTryHit"]) |
 | kickoff-prongs | source-complete-sp-unknown | 거부 | 거부 | 11 | 0 | 1234 방어 턴: Gengar: ability Cursed Body (["onDamagingHit"]) |
 | kickoff-sableyevgc | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 1234 메가진화: Salamence-Mega: ability Aerilate (["onBasePower", "onModifyType"]) |
-| kickoff-shadezero | source-complete-sp-unknown | 거부 | 거부 | 13 | 0 | 1234 방어 턴: Golisopod: ability Emergency Exit (["onEmergencyExit"]) |
+| kickoff-shadezero | source-complete-sp-unknown | 통과 | 거부 | 2 | 0 | 5612 Double Shock: move Double Shock: callbacks ["onTryMove", "self.onHit"] are not implemented |
 | kickoff-thepostmanp | source-complete-sp-unknown | 거부 | 거부 | 17 | 0 | 1234 방어 턴: Froslass: ability Cursed Body (["onDamagingHit"]) |
 | kickoff-thosewhoknow | source-complete-sp-unknown | 거부 | 거부 | 10 | 0 | 1234 방어 턴: Floette-Eternal: ability Flower Veil (["onAllySetStatus", "onAllyTryAddVolatile", "onAllyTryBoost"]) |
-| kickoff-wolfey | source-complete-sp-unknown | 거부 | 거부 | 11 | 0 | 1234 방어 턴: Golisopod: ability Emergency Exit (["onEmergencyExit"]) |
-| perish-mrada | source-complete-sp-unknown | 거부 | 거부 | 19 | 0 | 1234 방어 턴: Gengar: ability Cursed Body (["onDamagingHit"]) |
-| psy-cona | validated | 거부 | 거부 | 10 | 0 | 5612 방어 턴: Golisopod: ability Emergency Exit (["onEmergencyExit"]) |
+| kickoff-wolfey | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 5612 메가진화: Gardevoir-Mega: ability Pixilate (["onBasePower", "onModifyType"]) |
+| perish-mrada | source-complete-sp-unknown | 거부 | 거부 | 10 | 0 | 1234 방어 턴: Gengar: ability Cursed Body (["onDamagingHit"]) |
+| psy-cona | validated | 통과 | 통과 | 0 | 0 |  |
 | psy-lello | source-complete-sp-unknown | 통과 | 거부 | 2 | 0 | 1234 Psychic Fangs: move Psychic Fangs: callbacks ["onTryHit"] are not implemented |
-| psy-nihat | source-complete-sp-unknown | 거부 | 거부 | 11 | 0 | 3456 방어 턴: Golisopod: ability Emergency Exit (["onEmergencyExit"]) |
+| psy-nihat | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | psy-sand-udon | validated | 통과 | 거부 | 2 | 0 | 3456 메가진화: Salamence-Mega: ability Aerilate (["onBasePower", "onModifyType"]) |
 | sand-owen | validated | 통과 | 거부 | 1 | 0 | 1234 메가진화: Salamence-Mega: ability Aerilate (["onBasePower", "onModifyType"]) |

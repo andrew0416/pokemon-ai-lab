@@ -462,6 +462,9 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     ),
     (items::FOCUS_SASH, &["onDamage"]),
     (items::ROCKY_HELMET, &["onDamagingHit"]),
+    // Eject Button (Champions), Red Card: `items::after_move_secondary` (F6).
+    (items::EJECT_BUTTON, &["onAfterMoveSecondary"]),
+    (items::RED_CARD, &["onAfterMoveSecondary"]),
     // `moves::decide_hits` (and no accuracy re-rolls for multi-accuracy moves).
     (items::LOADED_DICE, &["onModifyMove"]),
     // Berries eaten on `Update` (`update.rs`).
@@ -640,6 +643,11 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::DEFIANT, &["onAfterEachBoost"]),
     // DamagingHit (`moves::damaging_hit`, F15).
     (abilities::ROUGH_SKIN, &["onDamagingHit"]),
+    // Emergency Exit / Wimp Out: `switching::emergency_exit` at the hit loop's, `runSwitch`'s
+    // and the residual phase's Update sites (F6). Suction Cups: `DragOut`.
+    (abilities::EMERGENCY_EXIT, &["onEmergencyExit"]),
+    (abilities::WIMP_OUT, &["onEmergencyExit"]),
+    (abilities::SUCTION_CUPS, &["onDragOut"]),
     // Both handlers only set the flag the pinch berries read (`update.rs`).
     (abilities::GLUTTONY, &["onDamage", "onStart"]),
     // `moves::decide_hits`.
@@ -1014,9 +1022,6 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     ) {
         return why("switching with volatiles");
     }
-    if m.force_switch {
-        return why("switching");
-    }
     if m.selfdestruct != SelfDestruct::No {
         return why("self-destruct");
     }
@@ -1312,7 +1317,7 @@ mod tests {
         }
         assert_eq!(move_unsupported(moves::U_TURN), None);
         assert!(move_unsupported(moves::BATON_PASS).is_some());
-        assert!(move_unsupported(moves::WHIRLWIND).is_some());
+        assert_eq!(move_unsupported(moves::WHIRLWIND), None);
         assert_eq!(move_unsupported(moves::FOLLOW_ME), None);
         assert_eq!(move_unsupported(moves::RAGE_POWDER), None);
         assert_eq!(move_unsupported(moves::BULLET_SEED), None);
