@@ -270,6 +270,71 @@ fn gigaton_hammer_cannot_be_chosen_twice_in_a_row() {
     );
 }
 
+#[test]
+fn psychic_fangs_breaks_reflect_and_light_screen_before_hitting() {
+    assert_exact_parity("psychic-fangs-screens");
+}
+
+#[test]
+fn raging_bull_changes_type_and_brick_break_breaks_nothing_on_immunity() {
+    assert_exact_parity("raging-bull-veil");
+}
+
+#[test]
+fn ceaseless_edge_sets_spikes() {
+    assert_exact_parity("ceaseless-edge");
+}
+
+#[test]
+fn mortal_spin_poisons_and_clears_its_sides_hazards() {
+    assert_exact_parity("mortal-spin");
+}
+
+#[test]
+fn stone_axe_sets_stealth_rock() {
+    assert_exact_parity("stone-axe");
+}
+
+#[test]
+fn stone_axe_with_sheer_force_sets_nothing() {
+    assert_exact_parity("stone-axe-sheer-force");
+}
+
+#[test]
+fn high_jump_kick_and_jump_kick_crash_on_protect_and_immunity() {
+    assert_exact_parity("high-jump-kick-crash");
+}
+
+#[test]
+fn explosion_faints_its_user_before_hitting() {
+    assert_exact_parity("explosion");
+}
+
+#[test]
+fn memento_and_final_gambit_faint_their_users() {
+    assert_exact_parity("memento-final-gambit");
+}
+
+#[test]
+fn sheer_cold_against_focus_sash_and_horn_drill_against_sturdy() {
+    assert_exact_parity("ohko");
+}
+
+#[test]
+fn destiny_bond_takes_the_attacker_down() {
+    assert_exact_parity("destiny-bond");
+}
+
+#[test]
+fn destiny_bond_fails_when_used_again() {
+    assert_exact_parity("destiny-bond-again");
+}
+
+#[test]
+fn destiny_bond_ends_at_the_next_move() {
+    assert_exact_parity("destiny-bond-next-move");
+}
+
 /// No Retreat's `onTrapPokemon`: Snorlax cannot switch to the benched Kommo-o.
 #[test]
 fn no_retreat_traps_its_user() {

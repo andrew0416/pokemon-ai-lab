@@ -14,8 +14,8 @@ use crate::damage::{
 };
 use crate::dex::{
     abilities, items, moves, AbilityId, FixedDamage, IgnoreImmunity, ItemId, MoveCategory,
-    MoveData, MoveFlags, MoveId, MoveTarget, Ohko, Secondary, Stat, Type, TypeImmunities,
-    TypeRelation, NO_BOOSTS,
+    MoveData, MoveFlags, MoveId, MoveTarget, Ohko, Secondary, SelfDestruct, Stat, Type,
+    TypeImmunities, TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{PokemonRef, SideId, SlotRef, Status};
@@ -201,6 +201,8 @@ pub(crate) fn run_move<const N: usize>(
             source_effect: MoveId::NONE,
         };
         before_move(b, user, &recharge);
+        // MoveAborted: Destiny Bond ends.
+        conditions::destiny_bond_before_move(b, user, MoveId::NONE, false);
         return Ok(MoveStep::Done);
     }
     let id = super::lock::action_move_id(b.mon(pokemon), move_index);
@@ -314,7 +316,11 @@ fn run_move_inner<const N: usize>(
         source_effect: MoveId::NONE,
     };
 
-    if !before_move(b, user, &mv) {
+    let proceeds = before_move(b, user, &mv);
+    // Destiny Bond's `onBeforeMove` (priority -1, the last handler) for any other move, or its
+    // `onMoveAborted`: the volatile ends at the holder's next move attempt.
+    conditions::destiny_bond_before_move(b, user, mv.id, proceeds);
+    if !proceeds {
         // MoveAborted (the move's type before ModifyType): Charge ends on an Electric move.
         ability_events::charge_after_move(b, user, mv.id, mv.move_type);
         return Ok(MoveStep::Done);
@@ -779,6 +785,11 @@ fn use_move<const N: usize>(
     if !ability_hooks::on_try_move(b, user, mv, try_move_target) {
         return Ok(None);
     }
+    // `selfdestruct: 'always'` (Explosion, Self-Destruct, Misty Explosion): the user faints now,
+    // before its hits (even without a target), and attacks at 0 HP.
+    if mv.data.selfdestruct == SelfDestruct::Always {
+        b.faint(user);
+    }
     let result = if field_move {
         try_move_hit_field(b, user, mv, target, will_act)?
     } else {
@@ -872,6 +883,8 @@ fn use_move_tail<const N: usize>(
         );
     }
     if !result {
+        // MoveFail: High Jump Kick's crash.
+        handlers::on_move_fail(b, user, mv);
         return;
     }
     // AfterMoveSecondarySelf (skipped for a Sheer Force-boosted move): the user's item (Life
@@ -1058,6 +1071,14 @@ fn try_spread_move_hit<const N: usize>(
     // PrepareHit: Protect and Detect need a later action and pass the stall check; then the
     // user's ability (Protean, Libero).
     if mv.data.stalling_move && !(will_act && stall_move(b, user)) {
+        return Ok(HitOutcome::Finished {
+            ok: false,
+            total_damage: 0,
+        });
+    }
+    // Destiny Bond's `onPrepareHit`: `return !pokemon.removeVolatile('destinybond');` (it
+    // fails when used again while it is up).
+    if mv.id == moves::DESTINY_BOND && b.remove_volatile(user, Volatile::DestinyBond) {
         return Ok(HitOutcome::Finished {
             ok: false,
             total_damage: 0,
@@ -1378,6 +1399,26 @@ fn accuracy_check<const N: usize>(
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
+    // OHKO moves bypass every accuracy modifier: 30 (Sheer Cold 20 for a non-Ice user) plus the
+    // level difference; a target of higher level, or of the type of a typed OHKO move (Sheer
+    // Cold vs Ice), is immune. Then the `Accuracy` event: Glaive Rush's drawback hits anyway;
+    // Micle Berry skips OHKO moves (`if (!move.ohko)`). No semi-invulnerable state exists.
+    if mv.data.ohko != Ohko::No {
+        let level = |s: SlotRef| b.slot_mon(s).map_or(0, |m| i32::from(m.level));
+        let (mine, theirs) = (level(user), level(target));
+        let immune_type = matches!(mv.data.ohko, Ohko::Typed(t) if b.has_type(target, t));
+        if mine < theirs || immune_type {
+            return false;
+        }
+        let base = match mv.data.ohko {
+            Ohko::Typed(t) if !b.has_type(user, t) => 20,
+            _ => 30,
+        };
+        if handlers::always_hit(b, target) {
+            return true;
+        }
+        return b.rng.chance((base + mine - theirs) as u32, 100);
+    }
     // `accuracy = true` without the `Accuracy` event: a status move on the user, and (gen 8+)
     // Toxic used by a Poison type.
     let self_status = mv.target == MoveTarget::User && mv.data.category == MoveCategory::Status;
@@ -1659,6 +1700,11 @@ fn spread_move_hit<const N: usize>(
         }
         // `runEvent('Hit')`: the target's item (Sticky Barb).
         item_events::on_hit(b, user, t, data);
+        // `selfdestruct: 'ifHit'` (Memento, Final Gambit): the user faints once the move reached
+        // this target (`damage[i] !== false`, before the effects' result is combined in).
+        if data.selfdestruct == SelfDestruct::IfHit && results[i] != Hit::Failed {
+            b.faint(user);
+        }
         if let (Hit::Done, Some(false)) = (results[i], did) {
             results[i] = Hit::Failed;
         }
@@ -1920,7 +1966,12 @@ fn get_damage<const N: usize>(
     }
     let attacker = b.slot_mon(user).expect("checked").clone();
     let defender = b.slot_mon(target).expect("alive").clone();
-    // `damageCallback` (Endeavor), then fixed damage: no crit, no roll, no modifiers.
+    // OHKO moves deal the target's max HP (`if (move.ohko) return target.maxhp;`), then
+    // `damageCallback` (Endeavor, Final Gambit), then fixed damage: no crit, no roll, no
+    // modifiers.
+    if data.ohko != Ohko::No {
+        return Ok(Planned::Damage(i32::from(defender.max_hp)));
+    }
     if let Some(damage) = handlers::damage_callback(b, user, target, mv) {
         // A 0 still "deals damage" in Showdown (DamagingHit with 0), which `Planned` cannot
         // express; the implemented callbacks never return one.

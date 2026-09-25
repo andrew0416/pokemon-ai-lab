@@ -54,6 +54,16 @@ pub(super) fn on_modify_type<const N: usize>(
                 _ => return Ok(()),
             };
         }
+        // Raging Bull: the Paldean Tauros forms make it Fighting, Fire or Water.
+        moves::RAGING_BULL => {
+            let species = b.slot_mon(user).map(|m| m.species);
+            mv.move_type = match species {
+                Some(s) if s == crate::dex::species::TAUROS_PALDEA_COMBAT => Type::Fighting,
+                Some(s) if s == crate::dex::species::TAUROS_PALDEA_BLAZE => Type::Fire,
+                Some(s) if s == crate::dex::species::TAUROS_PALDEA_AQUA => Type::Water,
+                _ => return Ok(()),
+            };
+        }
         // Terrain Pulse: `if (!pokemon.isGrounded()) return;` then the type of `field.terrain`.
         moves::TERRAIN_PULSE if b.is_grounded(user) => {
             mv.move_type = match b.terrain() {
@@ -209,16 +219,39 @@ pub(super) fn on_try_immunity<const N: usize>(
 /// The move's `damageCallback` (`getDamage`, after type immunity and before the critical hit
 /// roll: no crit, no roll, no modifiers). `None` = the move has none.
 pub(super) fn damage_callback<const N: usize>(
-    b: &Battle<'_, N>,
+    b: &mut Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
     mv: &ActiveMove,
 ) -> Option<i32> {
-    let hp = |s: SlotRef| b.slot_mon(s).map_or(0, |m| i32::from(m.hp));
+    let hp = |b: &Battle<'_, N>, s: SlotRef| b.slot_mon(s).map_or(0, |m| i32::from(m.hp));
     match mv.id {
         // Endeavor: `return target.getUndynamaxedHP() - pokemon.hp;`
-        moves::ENDEAVOR => Some(hp(target) - hp(user)),
+        moves::ENDEAVOR => Some(hp(b, target) - hp(b, user)),
+        // Final Gambit: `const damage = pokemon.hp; pokemon.faint(); return damage;`
+        moves::FINAL_GAMBIT => {
+            let damage = hp(b, user);
+            b.faint(user);
+            Some(damage)
+        }
         _ => None,
+    }
+}
+
+/// The move's `onMoveFail` (`useMoveInner` when the move did not succeed on any target, after
+/// its hits): High Jump Kick, Jump Kick, Axe Kick and Supercell Slam crash for half the user's
+/// max HP (`this.damage(source.baseMaxhp / 2, source, source, condition)`: not a move's damage,
+/// so Magic Guard stops it).
+pub(super) fn on_move_fail<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
+    let crash = [
+        moves::HIGH_JUMP_KICK,
+        moves::JUMP_KICK,
+        moves::AXE_KICK,
+        moves::SUPERCELL_SLAM,
+    ];
+    if crash.contains(&mv.id) {
+        let max_hp = b.slot_mon(user).map_or(0, |m| m.max_hp);
+        b.damage(user, f64::from(max_hp) / 2.0, DamageSource::Indirect);
     }
 }
 
@@ -232,6 +265,20 @@ pub(super) fn on_try_hit<const N: usize>(
     mv: &mut ActiveMove,
 ) -> bool {
     match mv.id {
+        // Psychic Fangs, Brick Break, Raging Bull: the target's side loses Reflect, Light Screen
+        // and Aurora Veil before the damage (returns nothing).
+        moves::PSYCHIC_FANGS | moves::BRICK_BREAK | moves::RAGING_BULL => {
+            remove_side_effects(
+                b,
+                target.side,
+                &[
+                    SideEffect::Reflect,
+                    SideEffect::LightScreen,
+                    SideEffect::AuroraVeil,
+                ],
+            );
+            true
+        }
         // Clangorous Soul, Fillet Away: `if (!this.boost(move.boosts!)) return null; delete
         // move.boosts;` (the move's own boosts are applied here, not in `runMoveEffects`:
         // `boosts_applied_in_try_hit`).
@@ -282,12 +329,25 @@ pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef,
     if mv.id == moves::ICE_SPINNER {
         super::clear_terrain(b);
     }
-    // Rapid Spin: `if (!move.hasSheerForce)`, a user with HP (not knocked out by Rocky Helmet
-    // or the like in DamagingHit) loses Leech Seed, its side's hazards, then partial trapping.
-    if mv.id == moves::RAPID_SPIN && !mv.has_sheer_force && b.alive(user).is_some() {
+    // Rapid Spin, Mortal Spin: `if (!move.hasSheerForce)` the user loses Leech Seed, its side
+    // its hazards, then the user partial trapping (`removeVolatile` does nothing for a user
+    // knocked out in DamagingHit, `removeSideCondition` still acts).
+    if (mv.id == moves::RAPID_SPIN || mv.id == moves::MORTAL_SPIN) && !mv.has_sheer_force {
         b.remove_volatile(user, Volatile::LeechSeed);
         remove_side_effects(b, user.side, &HAZARDS);
         b.remove_volatile(user, Volatile::PartiallyTrapped);
+    }
+    // Ceaseless Edge, Stone Axe: `if (!move.hasSheerForce)` the foe side gets a layer of Spikes /
+    // Stealth Rock (`addSideCondition`, even from a fainted user).
+    if !mv.has_sheer_force {
+        let hazard = match mv.id {
+            moves::CEASELESS_EDGE => Some(SideEffect::Spikes),
+            moves::STONE_AXE => Some(SideEffect::StealthRock),
+            _ => None,
+        };
+        if let Some(hazard) = hazard {
+            super::super::conditions::add_hazard(b, user.side.other(), hazard);
+        }
     }
 }
 
@@ -505,6 +565,10 @@ pub(super) fn on_base_power<const N: usize>(
         // Expanding Force: `if (this.field.isTerrain('psychicterrain') && source.isGrounded())
         // return this.chainModify(1.5);`
         moves::EXPANDING_FORCE if b.terrain() == Terrain::Psychic && b.is_grounded(user) => {
+            Some(MOD_ONE_POINT_FIVE)
+        }
+        // Misty Explosion: the same in Misty Terrain for a grounded user.
+        moves::MISTY_EXPLOSION if b.terrain() == Terrain::Misty && b.is_grounded(user) => {
             Some(MOD_ONE_POINT_FIVE)
         }
         _ => None,

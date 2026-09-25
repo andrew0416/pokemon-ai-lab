@@ -289,6 +289,43 @@ pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option
     None
 }
 
+/// Destiny Bond at the holder's move attempt: its `onBeforeMove` (priority -1, after every other
+/// handler) removes it unless the move is Destiny Bond itself, and its `onMoveAborted` removes
+/// it when BeforeMove stopped the move (`proceeds` false). `removeVolatile` needs HP.
+pub(crate) fn destiny_bond_before_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+    proceeds: bool,
+) {
+    if !proceeds || id != moves::DESTINY_BOND {
+        b.remove_volatile(user, Volatile::DestinyBond);
+    }
+}
+
+/// Destiny Bond's `onFaint` (`runEvent('Faint', pokemon, source, effect)` in `faintMessages`,
+/// before the fainted Pokémon's volatiles are cleared): when the holder in `slot` fainted from
+/// the damage of a move used by `attacker` on the other side (`effect.effectType === 'Move'`,
+/// no future move; the engine records the attacker only for a move's own damage), the attacker
+/// faints too (`source.faint()`: no source, nothing if it already has no HP).
+pub(crate) fn destiny_bond_faint<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    attacker: Option<crate::state::PokemonRef>,
+) {
+    let Some(attacker) = attacker else {
+        return;
+    };
+    if attacker.side == slot.side || !b.volatile(slot, Volatile::DestinyBond).active {
+        return;
+    }
+    if let Some(source_slot) =
+        Battle::<N>::slots(attacker.side).find(|&s| b.occupant(s) == Some(attacker))
+    {
+        b.faint(source_slot);
+    }
+}
+
 /// Leech Seed's `onResidual` (order 8) on the seeded Pokémon in `slot`: nothing if the
 /// Pokémon now in the seeder's slot (`getAtSlot(sourceSlot)`, whoever it is) is missing or
 /// fainted; otherwise `this.damage(pokemon.baseMaxhp / 8, pokemon, target)` (not a move's

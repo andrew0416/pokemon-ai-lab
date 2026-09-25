@@ -7,8 +7,8 @@
 //! handler lists that are implemented, and a test fails if the dex lists change.
 
 use crate::dex::{
-    abilities, items, moves, AbilityId, ItemId, MoveCategory, MoveId, MoveTarget, Ohko,
-    SelfDestruct, SelfSwitch, Type, NO_BOOSTS,
+    abilities, items, moves, AbilityId, ItemId, MoveCategory, MoveId, MoveTarget, SelfSwitch, Type,
+    NO_BOOSTS,
 };
 use crate::field::{FieldEffect, SideEffect, Weather, FIELD_EFFECT_COUNT, SIDE_EFFECT_COUNT};
 use crate::state::{SideId, SlotRef, State};
@@ -362,6 +362,35 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (
         moves::LEECH_SEED,
         &["condition.onResidual", "condition.onStart", "onTryImmunity"],
+    ),
+    // Screen breakers (`handlers::on_try_hit`; Raging Bull's type in `on_modify_type`), hazard
+    // setters and Mortal Spin (`on_after_hit`; `onAfterSubDamage` needs a substitute, which is
+    // refused), crash moves (`on_move_fail`), Misty Explosion (`on_base_power`; self-destruct in
+    // `moves::use_move`), Final Gambit (`damage_callback`; `ifHit` in `spread_move_hit`).
+    (moves::PSYCHIC_FANGS, &["onTryHit"]),
+    (moves::BRICK_BREAK, &["onTryHit"]),
+    (moves::RAGING_BULL, &["onModifyType", "onTryHit"]),
+    (moves::CEASELESS_EDGE, &["onAfterHit", "onAfterSubDamage"]),
+    (moves::STONE_AXE, &["onAfterHit", "onAfterSubDamage"]),
+    (moves::MORTAL_SPIN, &["onAfterHit", "onAfterSubDamage"]),
+    (moves::HIGH_JUMP_KICK, &["onMoveFail"]),
+    (moves::JUMP_KICK, &["onMoveFail"]),
+    (moves::AXE_KICK, &["onMoveFail"]),
+    (moves::SUPERCELL_SLAM, &["onMoveFail"]),
+    (moves::MISTY_EXPLOSION, &["onBasePower"]),
+    (moves::FINAL_GAMBIT, &["damageCallback"]),
+    // Destiny Bond: `onPrepareHit` in `moves::try_spread_move_hit`, the volatile's
+    // `onBeforeMove` / `onMoveAborted` in `conditions::destiny_bond_before_move`, its `onFaint`
+    // in `Battle::faint_messages` (`conditions::destiny_bond_faint`); `onStart` only logs.
+    (
+        moves::DESTINY_BOND,
+        &[
+            "condition.onBeforeMove",
+            "condition.onFaint",
+            "condition.onMoveAborted",
+            "condition.onStart",
+            "onPrepareHit",
+        ],
     ),
     // Item moves (`handlers::on_hit`): Bug Bite / Pluck (the berry's `onEat` on the user through
     // `update::berry_on_eat`), Incinerate, Corrosive Gas, Recycle.
@@ -1130,22 +1159,18 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
             return why("multi-hit range");
         }
     }
-    if m.ohko != Ohko::No {
-        return why("OHKO");
-    }
+    // OHKO moves (`moves::accuracy_check`, `get_damage`, Sturdy) and self-destruction
+    // (`selfdestruct`: `moves::use_move`, `spread_move_hit`) are implemented.
     if m.self_switch != SelfSwitch::No || m.force_switch {
         return why("switching");
     }
-    if m.selfdestruct != SelfDestruct::No {
-        return why("self-destruct");
-    }
     let sleep_moves = id == moves::SLEEP_TALK || id == moves::SNORE;
-    // `breaksProtect` is implemented (`handlers::break_protect`).
+    // `breaksProtect` (`handlers::break_protect`) and crash damage (`handlers::on_move_fail`)
+    // are implemented.
     if m.smart_target
         || (m.calls_move && id != moves::SLEEP_TALK)
         || (m.sleep_usable && !sleep_moves)
         || m.steals_boosts
-        || m.has_crash_damage
         || m.mind_blown_recoil
         || (m.struggle_recoil && id != moves::STRUGGLE)
         || m.chloroblast_recoil

@@ -124,9 +124,12 @@ pub enum Volatile {
     /// each turn and no switching while the trapper (`source`, kept in `counter`:
     /// [`encode_pokemon`]; hidden in the canonical state) stays in.
     PartiallyTrapped,
+    /// Destiny Bond (no duration): if a foe's move knocks the holder out, the foe faints too;
+    /// it ends at the holder's next move attempt.
+    DestinyBond,
 }
 
-pub const VOLATILE_COUNT: usize = 39;
+pub const VOLATILE_COUNT: usize = 40;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -169,6 +172,7 @@ impl Volatile {
         Volatile::NoRetreat,
         Volatile::LeechSeed,
         Volatile::PartiallyTrapped,
+        Volatile::DestinyBond,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -209,6 +213,7 @@ impl Volatile {
             Volatile::NoRetreat => conditions::NORETREAT,
             Volatile::LeechSeed => conditions::LEECHSEED,
             Volatile::PartiallyTrapped => conditions::PARTIALLYTRAPPED,
+            Volatile::DestinyBond => conditions::DESTINYBOND,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -260,6 +265,7 @@ impl Volatile {
             Volatile::NoRetreat => "noretreat",
             Volatile::LeechSeed => "leechseed",
             Volatile::PartiallyTrapped => "partiallytrapped",
+            Volatile::DestinyBond => "destinybond",
         }
     }
 
@@ -314,7 +320,8 @@ impl Volatile {
             | Volatile::GlaiveRush
             | Volatile::SparklingAria
             | Volatile::NoRetreat
-            | Volatile::LeechSeed => 0,
+            | Volatile::LeechSeed
+            | Volatile::DestinyBond => 0,
         }
     }
 

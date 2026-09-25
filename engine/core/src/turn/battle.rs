@@ -46,8 +46,10 @@ pub(crate) struct Battle<'a, const N: usize> {
     pub state: &'a mut State<N>,
     pub log: Vec<Instruction>,
     pub rng: &'a mut Chooser,
-    /// Showdown `faintQueue`: Pokémon at 0 HP not yet processed, in the order they fell.
-    faint_queue: Vec<(PokemonRef, SlotRef)>,
+    /// Showdown `faintQueue`: Pokémon at 0 HP not yet processed, in the order they fell, with
+    /// the Pokémon whose move's damage knocked them out (`faintData.source` when
+    /// `faintData.effect` is a move; `None` otherwise), which Destiny Bond reads.
+    faint_queue: Vec<(PokemonRef, SlotRef, Option<PokemonRef>)>,
     /// The move in progress, if any (cleared when `runMove` ends).
     pub active_move: Option<ActiveMoveRef>,
     /// The actions of the turn not yet run (Showdown `queue.list`), see `queue.rs`.
@@ -332,7 +334,12 @@ impl<'a, const N: usize> Battle<'a, N> {
             amount = i32::from(mon.hp) - 1;
         }
         let amount = super::items::on_damage(self, target, amount, source);
-        self.lose_hp(target, pokemon, amount)
+        // A move's damage has the move's user as its source (Destiny Bond).
+        let attacker = self
+            .active_move
+            .filter(|_| source == DamageSource::Move)
+            .map(|m| m.pokemon);
+        self.lose_hp(target, pokemon, amount, attacker)
     }
 
     /// Showdown `directDamage`: at least 1 HP, no Damage handlers (Struggle's recoil). Returns the
@@ -344,10 +351,16 @@ impl<'a, const N: usize> Battle<'a, N> {
         if amount == 0 {
             return 0;
         }
-        self.lose_hp(target, pokemon, amount.max(1))
+        self.lose_hp(target, pokemon, amount.max(1), None)
     }
 
-    fn lose_hp(&mut self, slot: SlotRef, pokemon: PokemonRef, amount: i32) -> i32 {
+    fn lose_hp(
+        &mut self,
+        slot: SlotRef,
+        pokemon: PokemonRef,
+        amount: i32,
+        attacker: Option<PokemonRef>,
+    ) -> i32 {
         let hp = i32::from(self.mon(pokemon).hp);
         if amount <= 0 || hp == 0 {
             return 0;
@@ -358,7 +371,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             amount: dealt as i16,
         });
         if dealt == hp {
-            self.queue_faint(pokemon, slot);
+            self.queue_faint(pokemon, slot, attacker);
         }
         dealt
     }
@@ -388,9 +401,9 @@ impl<'a, const N: usize> Battle<'a, N> {
 
     // ---- faint and win -------------------------------------------------------------------
 
-    fn queue_faint(&mut self, pokemon: PokemonRef, slot: SlotRef) {
-        if !self.faint_queue.iter().any(|&(p, _)| p == pokemon) {
-            self.faint_queue.push((pokemon, slot));
+    fn queue_faint(&mut self, pokemon: PokemonRef, slot: SlotRef, attacker: Option<PokemonRef>) {
+        if !self.faint_queue.iter().any(|&(p, _, _)| p == pokemon) {
+            self.faint_queue.push((pokemon, slot, attacker));
         }
     }
 
@@ -404,10 +417,18 @@ impl<'a, const N: usize> Battle<'a, N> {
             return false;
         }
         let mut last = None;
+        let mut check_win = check_win;
         while !self.faint_queue.is_empty() {
-            let (pokemon, slot) = self.faint_queue.remove(0);
+            let queue_left = self.faint_queue.len();
+            let (pokemon, slot, attacker) = self.faint_queue.remove(0);
             if self.occupant(slot) != Some(pokemon) {
                 continue;
+            }
+            // runEvent('Faint'): Destiny Bond takes its attacker down (`if
+            // (this.faintQueue.length >= faintQueueLeft) checkWin = true;`).
+            super::conditions::destiny_bond_faint(self, slot, attacker);
+            if self.faint_queue.len() >= queue_left {
+                check_win = true;
             }
             // clearVolatile: the ability and types revert; the slot empties (isActive = false).
             self.clear_volatile(pokemon);
@@ -725,7 +746,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             return;
         };
         let hp = i32::from(self.mon(pokemon).hp);
-        self.lose_hp(slot, pokemon, hp);
+        self.lose_hp(slot, pokemon, hp, None);
     }
 
     pub fn set_status_turns(&mut self, pokemon: PokemonRef, turns: i8) {
