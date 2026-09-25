@@ -40,7 +40,7 @@ fn assert_trapped(name: &str, side: usize, slot: usize, party_index: u8) {
         Err(TurnError::Action {
             error: ActionError::Trapped { slot: s },
             ..
-        }) => assert_eq!(usize::from(s.slot), slot),
+        }) => assert_eq!(usize::from(s), slot),
         other => panic!("expected a Trapped rejection, got {other:?}"),
     }
 }
