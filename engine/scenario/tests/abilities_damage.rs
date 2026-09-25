@@ -74,3 +74,30 @@ fn guts_and_marvel_scale_match_showdown() {
 fn quick_feet_under_paralysis_matches_showdown() {
     assert_exact_parity("o44-quickfeet");
 }
+
+// O45: type-based defensive abilities.
+
+#[test]
+fn water_bubble_matches_showdown() {
+    assert_exact_parity("o45-waterbubble");
+}
+
+#[test]
+fn thick_fat_and_heatproof_match_showdown() {
+    assert_exact_parity("o45-thickfat-heatproof");
+}
+
+#[test]
+fn purifying_salt_and_moongeist_beam_match_showdown() {
+    assert_exact_parity("o45-purifyingsalt");
+}
+
+#[test]
+fn dry_skin_in_rain_matches_showdown() {
+    assert_exact_parity("o45-dryskin-rain");
+}
+
+#[test]
+fn dry_skin_in_sun_matches_showdown() {
+    assert_exact_parity("o45-dryskin-sun");
+}

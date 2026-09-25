@@ -1,0 +1,11 @@
+{
+ "description": "O45: rain; Heliolisk (Dry Skin) at 100/169 HP takes Charizard's Bitter Blade (Fire: 1.25x base power, halved by rain), absorbs Blastoise's Hydro Pump (heals 1/4, no accuracy roll) and heals 1/8 in the rain at the end of the turn. Heliolisk and Snorlax use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o45-dryskin.p1.json", "order": "12"},
+ "p2": {"team": "o45-dryskin.p2.json", "order": "12"},
+ "patch": {
+  "p2": {"Heliolisk": {"hp": 100}},
+  "field": {"weather": "raindance", "weatherDuration": 5}
+ },
+ "turn": {"p1": "move bitterblade 1, move hydropump 1", "p2": "move swordsdance, move swordsdance"}
+}

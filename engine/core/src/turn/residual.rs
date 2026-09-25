@@ -13,6 +13,7 @@ use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SideId, SlotRef, Status};
 use crate::volatile::{Volatile, VolatileState};
 
+use super::abilities;
 use super::battle::{Battle, DamageSource};
 use super::order::ORDER_DEFAULT;
 use super::TurnError;
@@ -189,8 +190,16 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
                 return Ok(());
             }
             b.set_field(FieldEffect::Weather, effect);
-            if b.weather() == Weather::Sand {
-                // eachEvent('Weather'): actives in Speed order, ties shuffled.
+            let weather = b.weather();
+            // Without a listener the event only shuffles speed ties, which changes nothing.
+            let listeners = weather == Weather::Sand
+                || b.all_alive()
+                    .into_iter()
+                    .any(|s| abilities::has_weather_handler(b.ability(s)));
+            if listeners {
+                // eachEvent('Weather'): actives in Speed order, ties shuffled. Each runs its
+                // ability's onWeather (Dry Skin), then the weather's own (sandstorm damage);
+                // no Pokémon has both.
                 let mut actives: Vec<(SlotRef, i32)> = b
                     .all_alive()
                     .into_iter()
@@ -198,7 +207,14 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
                     .collect();
                 sort_by_speed(b, &mut actives);
                 for (slot, _) in actives {
-                    if b.alive(slot).is_none() || b.status_immune(slot, TypeImmunities::SANDSTORM) {
+                    if b.alive(slot).is_none() {
+                        continue;
+                    }
+                    abilities::on_weather(b, slot, weather);
+                    if weather != Weather::Sand
+                        || b.alive(slot).is_none()
+                        || b.status_immune(slot, TypeImmunities::SANDSTORM)
+                    {
                         continue;
                     }
                     let max_hp = f64::from(b.slot_mon(slot).expect("alive").max_hp);
@@ -258,7 +274,8 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
             let max_hp = f64::from(b.mon(pokemon).max_hp);
             match b.mon(pokemon).status {
                 Status::Burn => {
-                    b.damage(slot, max_hp / 16.0, DamageSource::Indirect);
+                    let damage = abilities::burn_damage(b.mon(pokemon).ability, max_hp);
+                    b.damage(slot, damage, DamageSource::Indirect);
                 }
                 Status::Poison => {
                     b.damage(slot, max_hp / 8.0, DamageSource::Indirect);

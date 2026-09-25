@@ -1,0 +1,10 @@
+{
+ "description": "O45: sun; Heliolisk (Dry Skin) takes Charizard's Bitter Blade (Fire: 1.25x base power and sun), absorbs Blastoise's Hydro Pump (retargeted to Snorlax if Heliolisk fainted) and loses 1/8 in the sun at the end of the turn. Heliolisk and Snorlax use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o45-dryskin.p1.json", "order": "12"},
+ "p2": {"team": "o45-dryskin.p2.json", "order": "12"},
+ "patch": {
+  "field": {"weather": "sunnyday", "weatherDuration": 5}
+ },
+ "turn": {"p1": "move bitterblade 1, move hydropump 1", "p2": "move swordsdance, move swordsdance"}
+}

@@ -314,13 +314,16 @@ impl<'a, const N: usize> Battle<'a, N> {
         if immunity != TypeImmunities::EMPTY && self.status_immune(target, immunity) {
             return false;
         }
-        // SetStatus handlers.
+        // SetStatus handlers (each only blocks, so their order does not matter).
         if self.is_grounded(target) {
             match self.terrain() {
                 Terrain::Misty => return false,
                 Terrain::Electric if status == Status::Sleep => return false,
                 _ => {}
             }
+        }
+        if super::abilities::blocks_status(self.mon(pokemon).ability, status) {
+            return false;
         }
         let turns = match status {
             // Champions `slp`: `sample([2, 3, 3])`.

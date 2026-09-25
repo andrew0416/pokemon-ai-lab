@@ -1,0 +1,7 @@
+{
+ "description": "O45: Charizard Bitter Blade (Fire) into Araquanid (Water Bubble halves the Attack) while Blissey's Will-O-Wisp cannot burn it (Water Bubble blocks burns); Araquanid (Water Bubble doubles its Water Attack) Crabhammer into Blissey. Snorlax uses Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o45-waterbubble.p1.json", "order": "12"},
+ "p2": {"team": "o45-waterbubble.p2.json", "order": "12"},
+ "turn": {"p1": "move bitterblade 1, move willowisp 1", "p2": "move crabhammer 2, move swordsdance"}
+}

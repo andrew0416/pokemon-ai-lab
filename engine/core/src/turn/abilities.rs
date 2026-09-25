@@ -18,9 +18,10 @@ use crate::damage::{
 use crate::dex::{
     abilities, items, AbilityFlags, AbilityId, MoveCategory, MoveData, MoveFlags, Stat, Type,
 };
+use crate::field::Weather;
 use crate::state::{Pokemon, SlotRef, Status};
 
-use super::battle::Battle;
+use super::battle::{Battle, DamageSource};
 use super::order::modify;
 
 /// Showdown's effect-type sub-orders (`resolvePriority`).
@@ -136,10 +137,12 @@ pub(crate) fn ability_for_move<const N: usize>(
 }
 
 /// `BasePower` handlers of abilities: the user's `onBasePower`, its side's `onAllyBasePower`
-/// (which includes the user). `base_power` is the move's power before the event.
+/// (which includes the user), the target's `onSourceBasePower`. `base_power` is the move's
+/// power before the event.
 pub(crate) fn base_power_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
+    target: SlotRef,
     data: &MoveData,
     base_power: i32,
 ) -> Vec<Handler> {
@@ -173,26 +176,50 @@ pub(crate) fn base_power_handlers<const N: usize>(
             out.push(Handler::of(b, holder, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
         }
     }
+    // Dry Skin: the target's `onSourceBasePower`, Fire moves `chainModify(1.25)`.
+    let defending = ability_for_move(b, target, user, data);
+    if defending == abilities::DRY_SKIN && data.move_type == Type::Fire {
+        let p = priority(defending.data().event_orders, "onSourceBasePowerPriority");
+        out.push(Handler::of(b, target, p, SUB_ABILITY, 5120));
+    }
     out
 }
 
 /// `ModifyAtk` (physical moves) or `ModifySpA` (special moves) handlers of abilities: the
-/// user's `onModifyAtk`/`onModifySpA`.
+/// user's `onModifyAtk`/`onModifySpA` and the target's `onSourceModifyAtk`/`onSourceModifySpA`.
 pub(crate) fn attack_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
+    target: SlotRef,
     data: &MoveData,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
     let physical = data.category == MoveCategory::Physical;
-    let event = if physical {
-        "onModifyAtkPriority"
+    let (event, source_event) = if physical {
+        ("onModifyAtkPriority", "onSourceModifyAtkPriority")
     } else {
-        "onModifySpAPriority"
+        ("onModifySpAPriority", "onSourceModifySpAPriority")
     };
+    // The target's `onSourceModifyAtk`/`onSourceModifySpA`: halve moves of some types.
+    let defending = ability_for_move(b, target, user, data);
+    let halved: &[Type] = match defending {
+        a if a == abilities::THICK_FAT => &[Type::Ice, Type::Fire],
+        a if a == abilities::HEATPROOF || a == abilities::WATER_BUBBLE => &[Type::Fire],
+        a if a == abilities::PURIFYING_SALT => &[Type::Ghost],
+        _ => &[],
+    };
+    if halved.contains(&data.move_type) {
+        let p = priority(defending.data().event_orders, source_event);
+        out.push(Handler::of(b, target, p, SUB_ABILITY, MOD_HALF));
+    }
     let Some(attacker) = b.slot_mon(user) else {
         return out;
     };
+    // Water Bubble: the user's Water moves `chainModify(2)` (no priority).
+    if attacker.ability == abilities::WATER_BUBBLE && data.move_type == Type::Water {
+        let p = priority(attacker.ability.data().event_orders, event);
+        out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_DOUBLE));
+    }
     let ability = attacker.ability;
     // Blaze, Torrent, Overgrow, Swarm: `attacker.hp <= attacker.maxhp / 3`.
     let pinch_type = match ability {
@@ -235,6 +262,77 @@ pub(crate) fn defense_handlers<const N: usize>(
         out.push(Handler::of(b, target, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
     }
     out
+}
+
+/// Ability `onTryHit` handlers that absorb the move, run after Psychic Terrain and Protect
+/// (`TryHit` priority 0). Dry Skin: a Water move from another Pokémon heals 1/4 of max HP (or
+/// does nothing at full HP) and the target is removed from the move (`return null`).
+pub(crate) fn try_hit_absorbs<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    data: &MoveData,
+) -> bool {
+    if target == user || data.move_type != Type::Water {
+        return false;
+    }
+    if ability_for_move(b, target, user, data) != abilities::DRY_SKIN {
+        return false;
+    }
+    let max_hp = f64::from(b.slot_mon(target).expect("a target").max_hp);
+    b.heal(target, max_hp / 4.0);
+    true
+}
+
+/// The Pokémon's `onWeather` handlers during the weather's `eachEvent('Weather')`. Dry Skin:
+/// rain heals 1/8 of max HP, sun deals 1/8 (`target.effectiveWeather()`; Utility Umbrella and
+/// weather suppression are not supported on the field).
+pub(crate) fn on_weather<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, weather: Weather) {
+    let Some(mon) = b.slot_mon(slot) else {
+        return;
+    };
+    if mon.ability != abilities::DRY_SKIN || mon.hp == 0 {
+        return;
+    }
+    let eighth = f64::from(mon.max_hp) / 8.0;
+    match weather {
+        Weather::Rain => {
+            b.heal(slot, eighth);
+        }
+        Weather::Sun => {
+            b.damage(slot, eighth, DamageSource::Indirect);
+        }
+        _ => {}
+    }
+}
+
+/// Whether an active Pokémon has an `onWeather` ability handler.
+pub(crate) fn has_weather_handler(ability: AbilityId) -> bool {
+    ability == abilities::DRY_SKIN
+}
+
+/// Burn damage before `battle.damage`: 1/16 of max HP, halved by Heatproof's `onDamage`
+/// (`effect.id === 'brn'`: `damage / 2` after the integer clamp to at least 1).
+pub(crate) fn burn_damage(ability: AbilityId, max_hp: f64) -> f64 {
+    let damage = max_hp / 16.0;
+    if ability == abilities::HEATPROOF {
+        damage.floor().max(1.0) / 2.0
+    } else {
+        damage
+    }
+}
+
+/// Ability `onSetStatus` handlers that block a status (they only return `false`, so their
+/// order does not matter): Water Bubble blocks burns, Purifying Salt every status.
+///
+/// Showdown skips a breakable ability for a move that ignores abilities; no move the engine
+/// supports both ignores abilities and inflicts a status (`support.rs` tests this).
+pub(crate) fn blocks_status(ability: AbilityId, status: Status) -> bool {
+    match ability {
+        a if a == abilities::WATER_BUBBLE => status == Status::Burn,
+        a if a == abilities::PURIFYING_SALT => true,
+        _ => false,
+    }
 }
 
 /// Whether a burned user's physical damage is halved: Showdown skips it for Guts

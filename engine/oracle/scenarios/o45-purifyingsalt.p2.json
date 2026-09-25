@@ -1,0 +1,34 @@
+[
+ {
+  "species": "Lunala",
+  "item": "",
+  "ability": "Ball Fetch",
+  "nature": "Modest",
+  "evs": {
+   "hp": 32,
+   "spa": 32,
+   "spd": 2
+  },
+  "moves": [
+   "Moongeist Beam",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Dusknoir",
+  "item": "",
+  "ability": "Ball Fetch",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "def": 2
+  },
+  "moves": [
+   "Shadow Sneak",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

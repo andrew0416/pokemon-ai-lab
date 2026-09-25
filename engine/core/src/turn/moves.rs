@@ -410,8 +410,16 @@ fn try_spread_move_hit<const N: usize>(
         return Ok(false);
     }
 
-    // 1. TryHit: Psychic Terrain (priority 4), then Protect (3).
-    targets.retain(|&t| !blocked_by_try_hit(b, user, mv, t));
+    // 1. TryHit: Psychic Terrain (priority 4), Protect (3), then absorbing abilities (0), each
+    //    only while the target is still hit.
+    let mut kept = Vec::with_capacity(targets.len());
+    for t in targets {
+        if blocked_by_try_hit(b, user, mv, t) || abilities::try_hit_absorbs(b, user, t, mv.data) {
+            continue;
+        }
+        kept.push(t);
+    }
+    targets = kept;
     if targets.is_empty() {
         return Ok(false);
     }
@@ -754,7 +762,7 @@ fn get_damage<const N: usize>(
 
     // BasePower handlers: abilities (Technician 30 ... Punk Rock 7), type items (15),
     // terrain (6), the move (0).
-    let mut power_mods = abilities::base_power_handlers(b, user, data, base_power);
+    let mut power_mods = abilities::base_power_handlers(b, user, target, data, base_power);
     if type_boost_item(attacker.item) == Some(data.move_type) {
         power_mods.push(Handler::of(b, user, 15, SUB_ITEM, MOD_ONE_POINT_TWO));
     }
@@ -811,7 +819,7 @@ fn get_damage<const N: usize>(
     );
     // ModifyAtk (physical) / ModifySpA (special), whatever stat the move attacks with.
     let attack = abilities::attack_direct(attacker.ability, data, attack);
-    let attack_mods = abilities::attack_handlers(b, user, data);
+    let attack_mods = abilities::attack_handlers(b, user, target, data);
     let attack = modify(attack, abilities::chain(b, attack_mods));
     let mut defense = boosted_stat(
         i32::from(defender.stats[stat_index(defense_stat)]),
