@@ -119,8 +119,8 @@ pub(crate) fn priority(orders: &[(&str, i16)], name: &str) -> i32 {
 
 /// The ability of the Pokémon in `holder` as the handlers of `user`'s move see it. Showdown
 /// `suppressingAbility` (gen 8+): a move that ignores abilities (Sunsteel Strike, Moongeist
-/// Beam) skips the breakable abilities of everyone but its user, unless an Ability Shield
-/// protects them.
+/// Beam, or any move of a Mold Breaker user) skips the breakable abilities of everyone but its
+/// user, unless an Ability Shield protects them.
 pub(crate) fn ability_for_move<const N: usize>(
     b: &Battle<'_, N>,
     holder: SlotRef,
@@ -128,7 +128,10 @@ pub(crate) fn ability_for_move<const N: usize>(
     data: &MoveData,
 ) -> AbilityId {
     let ability = b.ability(holder);
-    let suppressed = data.ignore_ability
+    let ignores = data.ignore_ability
+        || b.active_move
+            .is_some_and(|m| m.user == user && m.ignore_ability);
+    let suppressed = ignores
         && holder != user
         && ability.data().flags.contains(AbilityFlags::BREAKABLE)
         && b.item(holder) != items::ABILITY_SHIELD;
@@ -308,10 +311,8 @@ pub(crate) fn burn_damage(ability: AbilityId, max_hp: f64) -> f64 {
 }
 
 /// Ability `onSetStatus` handlers that block a status (they only return `false`, so their
-/// order does not matter): Water Bubble blocks burns, Purifying Salt every status.
-///
-/// Showdown skips a breakable ability for a move that ignores abilities; no move the engine
-/// supports both ignores abilities and inflicts a status (`support.rs` tests this).
+/// order does not matter): Water Bubble blocks burns, Purifying Salt every status. The caller
+/// passes the ability as the move in progress sees it (`ability_unless_broken`).
 pub(crate) fn blocks_status(ability: AbilityId, status: Status) -> bool {
     match ability {
         a if a == abilities::WATER_BUBBLE => status == Status::Burn,

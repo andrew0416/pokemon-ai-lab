@@ -7,36 +7,101 @@
 //! abilities skips them like Showdown's `runEvent` does.
 
 use crate::dex::{
-    abilities, moves, MoveCategory, MoveFlags, MoveTarget, Secondary, Type, NO_BOOSTS,
+    abilities, moves, AbilityFlags, MoveCategory, MoveFlags, MoveTarget, Secondary, Type, NO_BOOSTS,
 };
-use crate::state::SlotRef;
+use crate::state::{SlotRef, Status};
 use crate::volatile::Volatile;
 
 use super::super::abilities::sheer_force_deletes_secondaries;
-use super::super::battle::Battle;
+use super::super::battle::{cured_on_update, Battle};
 use super::super::TurnError;
 use super::{handlers, type_immune, ActiveMove};
 
 /// The user's ability `onModifyMove` (`runEvent('ModifyMove')`, after the move's own):
+/// - Mold Breaker, Teravolt, Turboblaze: `move.ignoreAbility = true` (the Battle's active move,
+///   read by `suppressingAbility`);
 /// - Sheer Force: a move with secondaries (and no `hasSheerForceBoost`) loses them and its
 ///   `self` effect and is marked `hasSheerForce`;
 /// - Serene Grace (priority -2): every secondary chance and `self.chance` doubles.
 ///
 /// A Pokémon has one ability, so their priorities never compete; none of the other
-/// implemented ModifyMove handlers reads what these change.
+/// implemented ModifyMove handlers reads what these change. A move that ignores abilities is
+/// then checked by [`status_cure_bypassed`].
 pub(super) fn on_modify_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &mut ActiveMove,
 ) -> Result<(), TurnError> {
     let ability = b.ability(user);
+    let mold_breaker = [
+        abilities::MOLD_BREAKER,
+        abilities::TERAVOLT,
+        abilities::TURBOBLAZE,
+    ];
+    if mold_breaker.contains(&ability) {
+        if let Some(active) = b.active_move.as_mut() {
+            active.ignore_ability = true;
+        }
+    }
     if ability == abilities::SHEER_FORCE && sheer_force_deletes_secondaries(mv.data) {
         mv.has_sheer_force = true;
     }
     if ability == abilities::SERENE_GRACE {
         mv.secondary_chance_factor = 2;
     }
+    if b.active_move.is_some_and(|m| m.ignore_ability) {
+        if let Some(why) = status_cure_bypassed(b, user, mv) {
+            return Err(b.unsupported(why));
+        }
+    }
     Ok(())
+}
+
+/// A move that ignores abilities sets statuses through the breakable abilities that block them
+/// (`set_status_blocked`, `blocks_status`, `status_immune`). When such an ability also cures
+/// the status in `onUpdate` (Water Veil, Water Bubble, Immunity, Insomnia, Vital Spirit,
+/// Limber, Magma Armor: `cured_on_update`), Showdown cures it at the `Update` after the action,
+/// once the ability is no longer suppressed; the engine has no Update event, so the move is
+/// refused while a Pokémon it could hit that way is active. The statuses a move can set: its
+/// primary status, its secondaries' (unless Sheer Force deleted them), and Dire Claw's and Tri
+/// Attack's `secondary.onHit` draws; a new status-setting handler must be added here.
+fn status_cure_bypassed<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Option<String> {
+    let data = mv.data;
+    let mut statuses: Vec<Status> = Vec::new();
+    if data.status != Status::None {
+        statuses.push(data.status);
+    }
+    if !mv.has_sheer_force {
+        statuses.extend(data.secondaries.iter().map(|s| s.status));
+        match mv.id {
+            moves::DIRE_CLAW => statuses.extend([Status::Poison, Status::Paralyze, Status::Sleep]),
+            moves::TRI_ATTACK => statuses.extend([Status::Burn, Status::Paralyze, Status::Freeze]),
+            _ => {}
+        }
+    }
+    statuses.retain(|&s| s != Status::None);
+    for slot in b.all_alive() {
+        if slot == user || !b.suppressing_ability(slot) {
+            continue;
+        }
+        let ability = b.ability(slot);
+        if !ability.data().flags.contains(AbilityFlags::BREAKABLE) {
+            continue;
+        }
+        if let Some(status) = statuses.iter().find(|&&s| cured_on_update(ability, s)) {
+            return Some(format!(
+                "{} ignoring {}'s {}: {status:?} would be cured on the next Update (not implemented)",
+                data.name,
+                b.slot_mon(slot).map_or("?", |m| m.species.data().name),
+                ability.data().name
+            ));
+        }
+    }
+    None
 }
 
 /// The secondaries of the move on `target` (`secondaries()`): none once Sheer Force deleted

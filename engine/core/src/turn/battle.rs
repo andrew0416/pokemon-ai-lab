@@ -36,6 +36,9 @@ pub(crate) struct ActiveMoveRef {
     pub user: SlotRef,
     pub pokemon: PokemonRef,
     pub id: MoveId,
+    /// `activeMove.ignoreAbility`: the move's data flag (Sunsteel Strike), set by the user's
+    /// Mold Breaker / Teravolt / Turboblaze in ModifyMove.
+    pub ignore_ability: bool,
 }
 
 pub(crate) struct Battle<'a, const N: usize> {
@@ -106,13 +109,14 @@ impl<'a, const N: usize> Battle<'a, N> {
     }
 
     /// Showdown `suppressingAbility(target)`: the move in progress ignores abilities
-    /// (`ignoreAbility`, e.g. Sunsteel Strike), its user is still active, and `target` is not
-    /// the user (Gen 8+) and holds no Ability Shield.
+    /// (`ignoreAbility`: Sunsteel Strike, or any move of a Mold Breaker user after ModifyMove),
+    /// its user is still active, and `target` is not the user (Gen 8+) and holds no Ability
+    /// Shield.
     pub fn suppressing_ability(&self, target: SlotRef) -> bool {
         let Some(active) = self.active_move else {
             return false;
         };
-        active.id.data().ignore_ability
+        active.ignore_ability
             && self.occupant(active.user) == Some(active.pokemon)
             && active.user != target
             && self.item(target) != items::ABILITY_SHIELD
@@ -472,7 +476,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         if self.set_status_blocked(target, status) {
             return false;
         }
-        if super::abilities::blocks_status(self.mon(pokemon).ability, status) {
+        if super::abilities::blocks_status(self.ability_unless_broken(target), status) {
             return false;
         }
         let turns = match status {

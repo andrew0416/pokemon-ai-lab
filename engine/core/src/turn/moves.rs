@@ -70,7 +70,12 @@ pub(crate) fn run_move<const N: usize>(
     let id = b.mon(pokemon).moves[move_index as usize].id;
     b.increment_move_actions(user);
     // `setActiveMove`: set for the whole move, cleared when it ends.
-    b.active_move = Some(ActiveMoveRef { user, pokemon, id });
+    b.active_move = Some(ActiveMoveRef {
+        user,
+        pokemon,
+        id,
+        ignore_ability: id.data().ignore_ability,
+    });
     let result = run_move_inner(b, user, move_index, target_loc, will_act);
     b.active_move = None;
     result

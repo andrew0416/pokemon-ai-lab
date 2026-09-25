@@ -145,6 +145,21 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onDeductPP", "onStart"],
         StartEffect::None,
     ),
+    (
+        abilities::MOLD_BREAKER,
+        &["onModifyMove", "onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::TERAVOLT,
+        &["onModifyMove", "onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::TURBOBLAZE,
+        &["onModifyMove", "onStart"],
+        StartEffect::None,
+    ),
     // Status-curing `onUpdate`: nothing to cure on switch-in, because a holder that already
     // has the status is refused (`cured_on_update`).
     (

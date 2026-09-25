@@ -395,6 +395,11 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::SHEER_FORCE, &["onBasePower", "onModifyMove"]),
     // `Battle::after_set_status`.
     (abilities::SYNCHRONIZE, &["onAfterSetStatus"]),
+    // `onModifyMove` (`move.ignoreAbility = true`) in `moves::ability_hooks`; `onStart` only
+    // announces the ability.
+    (abilities::MOLD_BREAKER, &["onModifyMove", "onStart"]),
+    (abilities::TERAVOLT, &["onModifyMove", "onStart"]),
+    (abilities::TURBOBLAZE, &["onModifyMove", "onStart"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -691,9 +696,10 @@ mod tests {
         );
     }
 
-    /// `try_set_status` applies ability status blocks (Water Bubble, Purifying Salt) without
-    /// the move: that is only right while no supported move ignores abilities and inflicts a
-    /// status.
+    /// No supported move ignores abilities by its data and inflicts a status. Such a move (or a
+    /// Mold Breaker user's) against an ability whose `onUpdate` would cure the status is refused
+    /// in ModifyMove (`moves::ability_hooks`); this keeps the data-flag case from arising
+    /// unnoticed.
     #[test]
     fn no_supported_move_ignores_abilities_and_sets_a_status() {
         for id in MoveId::all() {
