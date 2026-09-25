@@ -38,6 +38,11 @@ pub(crate) enum Change {
     /// `formeChange(species, disguise | iceface, true)`: the new base species with
     /// `updateMaxHp`; the ability stays.
     PermanentKeepAbility,
+    /// `formeChange(species, effect, true)` from another ability: also the forme's first
+    /// ability, as the ability and its base (`setAbility(..., isFromFormeChange)`). The only
+    /// caller, Zero to Hero, keeps Zero to Hero, which has neither `onEnd` nor `onStart`, so
+    /// `setAbility`'s End and Start do nothing.
+    Permanent,
 }
 
 /// The base species a temporary forme created by an implemented ability returns to when its
@@ -65,13 +70,19 @@ pub(crate) fn forme_change<const N: usize>(
     let old = mon.forme();
     let target = mon.forme_as(species);
     let permanent = change != Change::Temporary;
+    let (ability, base_ability) = if change == Change::Permanent {
+        debug_assert_eq!(old.ability, target.ability, "End/Start would have to run");
+        (target.ability, target.base_ability)
+    } else {
+        (old.ability, old.base_ability)
+    };
     let new = Forme {
         species,
         types: old.types,
         max_hp: if permanent { target.max_hp } else { old.max_hp },
         stats: target.stats,
-        ability: old.ability,
-        base_ability: old.base_ability,
+        ability,
+        base_ability,
     };
     let hp = mon.hp;
     let new_hp = new.hp_after(old.max_hp, hp);
@@ -327,6 +338,25 @@ pub(crate) fn stance_change<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef
     }
 }
 
+// ---- Zero to Hero -----------------------------------------------------------------------------
+
+/// `runEvent('SwitchOut')` for a healthy Pokémon leaving `slot` (next to
+/// `abilities::on_switch_out`; a Pokémon has one ability): Zero to Hero turns a Palafin
+/// (`baseSpecies.baseSpecies`) that is not in its Hero forme into Palafin-Hero permanently
+/// (`formeChange('Palafin-Hero', this.effect, true)`), so it stays Hero on the bench and when it
+/// comes back. Its `onSwitchIn` only shows a message (`heroMessageDisplayed`).
+pub(crate) fn on_switch_out<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let Some(mon) = b.alive(slot).map(|p| b.mon(p)) else {
+        return;
+    };
+    if mon.ability == abilities::ZERO_TO_HERO
+        && mon.species.data().base_species == species::PALAFIN
+        && mon.species != species::PALAFIN_HERO
+    {
+        forme_change(b, slot, species::PALAFIN_HERO, Change::Permanent);
+    }
+}
+
 // ---- switch-in and field events ---------------------------------------------------------------
 
 /// `singleEvent('Start')` of a forme ability (`switching::StartEffect::Forme`, run in the
@@ -397,6 +427,19 @@ mod tests {
             .data()
             .event_orders
             .contains(&("onModifyMovePriority", 1)));
+    }
+
+    /// Zero to Hero's permanent change keeps the ability (so `setAbility` has no End or Start to
+    /// run) and the max HP.
+    #[test]
+    fn zero_to_hero_matches_the_dex() {
+        let data = abilities::ZERO_TO_HERO.data();
+        assert_eq!(data.handlers, ["onSwitchIn", "onSwitchOut"]);
+        assert!(!data.handlers.contains(&"onEnd") && !data.handlers.contains(&"onStart"));
+        let (palafin, hero) = (species::PALAFIN.data(), species::PALAFIN_HERO.data());
+        assert_eq!(hero.abilities[0], abilities::ZERO_TO_HERO);
+        assert_eq!(palafin.base_stats[0], hero.base_stats[0]);
+        assert_eq!(palafin.types, hero.types);
     }
 
     /// Ice Face's handlers and orders; the Noice forme keeps the types and base HP.

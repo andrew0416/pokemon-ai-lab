@@ -250,6 +250,13 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         ],
         StartEffect::Forme,
     ),
+    // F19 Zero to Hero: `onSwitchIn` only announces the Hero forme; `onSwitchOut` in
+    // `forme::on_switch_out`.
+    (
+        abilities::ZERO_TO_HERO,
+        &["onSwitchIn", "onSwitchOut"],
+        StartEffect::None,
+    ),
     // O68 switch-in abilities (`start_ability`).
     (abilities::DOWNLOAD, &["onStart"], StartEffect::Download),
     (
@@ -521,7 +528,8 @@ fn switch_in_problem<const N: usize>(
 
 /// Showdown `switchIn` without its `runSwitch`: a healthy old occupant runs `BeforeSwitchOut`
 /// (no implemented handler), the gen 5+ `eachEvent('Update')` and `SwitchOut` (Regenerator,
-/// Natural Cure: `abilities::on_switch_out`); the old occupant leaves (its ability and types
+/// Natural Cure: `abilities::on_switch_out`; Zero to Hero: `forme::on_switch_out`); the old
+/// occupant leaves (its ability and types
 /// revert, its slot state resets); a fainted occupant still holding the position loses `fnt`
 /// (`oldActive.status = ''`); the newcomer takes the position.
 pub(crate) fn switch_in<const N: usize>(
@@ -541,6 +549,7 @@ pub(crate) fn switch_in<const N: usize>(
         if b.mon(outgoing).hp > 0 {
             super::update::update_event(b)?;
             super::abilities::on_switch_out(b, slot);
+            super::forme::on_switch_out(b, slot);
         }
         b.clear_volatile(outgoing);
     }

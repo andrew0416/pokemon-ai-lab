@@ -83,6 +83,20 @@ fn stance_change_reverts_on_switch_out() {
     assert_exact_parity("stance-change-switch-out");
 }
 
+// ---- Zero to Hero -----------------------------------------------------------------------------
+
+/// Palafin switching out becomes Palafin-Hero on the bench.
+#[test]
+fn zero_to_hero_changes_forme_on_switch_out() {
+    assert_exact_parity("zero-to-hero-switch-out");
+}
+
+/// Palafin-Hero stays Hero on the bench and attacks with the Hero forme's Attack once back.
+#[test]
+fn zero_to_hero_forme_is_permanent() {
+    assert_exact_parity("zero-to-hero");
+}
+
 /// A temporary forme cannot be a set's species (Showdown would keep it as the base species).
 #[test]
 fn temporary_formes_are_refused_as_set_species() {
