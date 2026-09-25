@@ -128,6 +128,32 @@ fn jungle_healing_lunar_blessing_and_floral_healing_in_grassy_terrain() {
     assert_exact_parity("jungle-healing-floral");
 }
 
+#[test]
+fn psych_up_copies_stages_and_focus_energy_after_a_speed_swap() {
+    assert_exact_parity("psych-up-speed-swap");
+}
+
+/// Leaving the field recalculates the stored Speed a Speed Swap exchanged.
+#[test]
+fn speed_swap_ends_when_the_pokemon_switches_out() {
+    assert_exact_parity("speed-swap-switch");
+}
+
+#[test]
+fn strength_sap_heals_by_the_boosted_attack_and_pain_split_averages() {
+    assert_exact_parity("strength-sap-pain-split");
+}
+
+#[test]
+fn spite_reflect_type_and_soak_on_a_roosting_target() {
+    assert_exact_parity("spite-soak-reflect-type");
+}
+
+#[test]
+fn endeavor_equalizes_hp_and_fails_against_a_lower_target() {
+    assert_exact_parity("endeavor");
+}
+
 /// No Retreat's `onTrapPokemon`: Snorlax cannot switch to the benched Kommo-o.
 #[test]
 fn no_retreat_traps_its_user() {

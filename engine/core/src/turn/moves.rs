@@ -1096,7 +1096,7 @@ fn try_spread_move_hit<const N: usize>(
         let prankster = mv.prankster_boosted
             && t.side != user.side
             && b.natural_immune(t, TypeImmunities::PRANKSTER);
-        !powder && handlers::on_try_immunity(b, mv, t) && !prankster
+        !powder && handlers::on_try_immunity(b, user, mv, t) && !prankster
     });
     if targets.is_empty() {
         return Ok(HitOutcome::Finished {
@@ -1917,6 +1917,15 @@ fn get_damage<const N: usize>(
     }
     let attacker = b.slot_mon(user).expect("checked").clone();
     let defender = b.slot_mon(target).expect("alive").clone();
+    // `damageCallback` (Endeavor), then fixed damage: no crit, no roll, no modifiers.
+    if let Some(damage) = handlers::damage_callback(b, user, target, mv) {
+        // A 0 still "deals damage" in Showdown (DamagingHit with 0), which `Planned` cannot
+        // express; the implemented callbacks never return one.
+        if damage <= 0 {
+            return Err(b.unsupported(format!("{}: damageCallback of {damage}", data.name)));
+        }
+        return Ok(Planned::Damage(damage));
+    }
     match data.fixed_damage {
         Some(FixedDamage::Level) => return Ok(Planned::Damage(i32::from(attacker.level))),
         Some(FixedDamage::Hp(hp)) => return Ok(Planned::Damage(i32::from(hp))),

@@ -451,6 +451,17 @@ impl<'a, const N: usize> Battle<'a, N> {
                 new: species_types,
             });
         }
+        // `setSpecies` also recalculates the stored stats (Speed Swap's exchange ends).
+        let mon = self.mon(pokemon);
+        let stats = mon.forme_as(mon.species).stats;
+        if mon.stats != stats {
+            let old = mon.forme();
+            self.apply(Instruction::SetForme {
+                target: pokemon,
+                old,
+                new: crate::state::Forme { stats, ..old },
+            });
+        }
     }
 
     /// Showdown `checkWin(faintData)`: with every side out, the side of the last processed

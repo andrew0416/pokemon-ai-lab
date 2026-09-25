@@ -12,12 +12,12 @@ use crate::dex::{
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{Pokemon, PokemonRef, SideId, SlotRef, Status, BOOST_COUNT};
-use crate::volatile::Volatile;
+use crate::volatile::{Volatile, VolatileState};
 
 use super::super::abilities::{Handler, SUB_CONDITION};
 use super::super::battle::{Battle, BoostEffect, DamageSource};
 use super::super::conditions::HAZARDS;
-use super::super::order::modify;
+use super::super::order::{boosted_stat, modify};
 use super::super::queue::{Action, ActionKind};
 use super::super::TurnError;
 use super::ActiveMove;
@@ -187,6 +187,7 @@ pub(super) fn on_try<const N: usize>(
 /// immune.
 pub(super) fn on_try_immunity<const N: usize>(
     b: &Battle<'_, N>,
+    user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
@@ -194,7 +195,28 @@ pub(super) fn on_try_immunity<const N: usize>(
         // Trick, Switcheroo: `return !target.hasAbility('stickyhold');` (`hasAbility` is not
         // skipped by Mold Breaker).
         moves::TRICK | moves::SWITCHEROO => b.ability(target) != abilities::STICKY_HOLD,
+        // Endeavor: `return pokemon.hp < target.hp;`
+        moves::ENDEAVOR => {
+            let hp = |s: SlotRef| b.slot_mon(s).map_or(0, |m| m.hp);
+            hp(user) < hp(target)
+        }
         _ => true,
+    }
+}
+
+/// The move's `damageCallback` (`getDamage`, after type immunity and before the critical hit
+/// roll: no crit, no roll, no modifiers). `None` = the move has none.
+pub(super) fn damage_callback<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    mv: &ActiveMove,
+) -> Option<i32> {
+    let hp = |s: SlotRef| b.slot_mon(s).map_or(0, |m| i32::from(m.hp));
+    match mv.id {
+        // Endeavor: `return target.getUndynamaxedHP() - pokemon.hp;`
+        moves::ENDEAVOR => Some(hp(target) - hp(user)),
+        _ => None,
     }
 }
 
@@ -713,6 +735,121 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::Success
             }
         }
+        // Psych Up: the user takes the target's stages (`source.boosts[i] = target.boosts[i]`, no
+        // boost events), then loses its critical-hit volatiles and copies the target's (of
+        // Dragon Cheer, Focus Energy, G-Max Chi Strike, Laser Focus only Focus Energy exists).
+        moves::PSYCH_UP => {
+            let boosts = b.state.slot(target).boosts;
+            set_boosts(b, user, boosts);
+            b.remove_volatile(user, Volatile::FocusEnergy);
+            if b.volatile(target, Volatile::FocusEnergy).active {
+                b.add_volatile(user, Volatile::FocusEnergy);
+            }
+            HitResult::Success
+        }
+        // Speed Swap: the stored Speed stats trade places (`storedStats.spe`); `setSpecies`
+        // recalculates them when a Pokémon leaves the field (`Battle::clear_volatile`).
+        moves::SPEED_SWAP => {
+            let (Some(p), Some(q)) = (b.occupant(user), b.occupant(target)) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let (mine, theirs) = (b.mon(p).forme(), b.mon(q).forme());
+            for (pokemon, old, speed) in [(p, mine, theirs.stats[4]), (q, theirs, mine.stats[4])] {
+                let mut new = old;
+                new.stats[4] = speed;
+                if new != old {
+                    b.apply(Instruction::SetForme {
+                        target: pokemon,
+                        old,
+                        new,
+                    });
+                }
+            }
+            HitResult::Success
+        }
+        // Strength Sap: fails at -6 Attack; otherwise the target's Attack with its stages but no
+        // modifiers (`getStat('atk', false, true)`), then `this.boost({atk: -1}, target, source)`
+        // and the user heals that much; `!!(healed || boosted)`.
+        moves::STRENGTH_SAP => {
+            let Some(mon) = b.slot_mon(target) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let stage = b.state.slot(target).boosts[0];
+            if stage == -6 {
+                HitResult::Failure
+            } else {
+                let attack = boosted_stat(i32::from(mon.stats[0]), stage);
+                let mut drop = NO_BOOSTS;
+                drop[0] = -1;
+                let boosted = b.boost_by(target, &drop, Some(user), BoostEffect::Move(mv.id));
+                let healed = b.heal(user, f64::from(attack)) > 0;
+                success(healed || boosted)
+            }
+        }
+        // Pain Split: both take the average of their HP (`Math.floor((targetHP + pokemon.hp) / 2)
+        // || 1`) through `sethp` (capped at the max HP, no Damage/Heal events).
+        moves::PAIN_SPLIT => {
+            let hp = |b: &Battle<'_, N>, s: SlotRef| b.slot_mon(s).map_or(0, |m| i32::from(m.hp));
+            let average = ((hp(b, target) + hp(b, user)) / 2).max(1);
+            set_hp(b, target, average);
+            set_hp(b, user, average);
+            HitResult::Success
+        }
+        // Spite: the target's last move (none, or Struggle, which has no slot: fails) loses up to
+        // 4 PP (`deductPP(move.id, 4)`; fails when it has none left).
+        moves::SPITE => {
+            let last = b.state.slot(target).last_move;
+            let Some(pokemon) = b.alive(target) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let index = b.mon(pokemon).moves.iter().position(|m| m.id == last);
+            match index {
+                Some(i) if !last.is_none() && b.mon(pokemon).moves[i].pp > 0 => {
+                    let old = b.mon(pokemon).moves[i].pp;
+                    b.apply(Instruction::SetPp {
+                        target: pokemon,
+                        move_index: i as u8,
+                        old,
+                        new: old.saturating_sub(4),
+                    });
+                    HitResult::Success
+                }
+                _ => HitResult::Failure,
+            }
+        }
+        // Reflect Type: fails for Arceus and Silvally users; the user takes the target's types
+        // (`getTypes(true)`: without an added type, which the engine never has; Roost's filter
+        // is already in the stored types), `setType` then clears the user's added type.
+        moves::REFLECT_TYPE => {
+            let Some(mon) = b.slot_mon(user) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            if [493, 773].contains(&mon.species.data().num) {
+                HitResult::Failure
+            } else {
+                let types = b.slot_mon(target).map_or([Type::None; 2], |m| m.types);
+                if types[0] == Type::None {
+                    HitResult::Failure
+                } else {
+                    set_types(b, user, types);
+                    HitResult::Success
+                }
+            }
+        }
+        // Soak: fails (`null`) on a pure Water type (`getTypes().join() === 'Water'`) or an
+        // Arceus / Silvally (`setType` refuses); otherwise the target becomes pure Water.
+        moves::SOAK => {
+            let Some(mon) = b.slot_mon(target) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let water = [Type::Water, Type::None];
+            if mon.types == water || [493, 773].contains(&mon.species.data().num) {
+                HitResult::Failure
+            } else {
+                set_types(b, target, water);
+                HitResult::Success
+            }
+        }
         // Steel Roller: `this.field.clearTerrain();` (returns nothing: no effect on success).
         moves::STEEL_ROLLER => {
             super::clear_terrain(b);
@@ -1020,6 +1157,65 @@ fn set_boosts<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, boosts: [i8;
                 amount: new - old,
             });
         }
+    }
+}
+
+/// Showdown `pokemon.sethp(hp)` on an active Pokémon with HP: at least 1, at most its max HP,
+/// set outright (no Damage or Heal event).
+fn set_hp<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, hp: i32) {
+    let Some(pokemon) = b.alive(slot) else {
+        return;
+    };
+    let mon = b.mon(pokemon);
+    let (old, new) = (mon.hp, hp.clamp(1, i32::from(mon.max_hp)) as i16);
+    if new < old {
+        b.apply(Instruction::Damage {
+            target: pokemon,
+            amount: old - new,
+        });
+    } else if new > old {
+        b.apply(Instruction::Heal {
+            target: pokemon,
+            amount: new - old,
+        });
+    }
+}
+
+/// Showdown `pokemon.setType(types)` (the caller has checked that it may): the types are
+/// replaced. On a Pokémon under Roost the stored types keep Roost's filter (Flying left out,
+/// Normal when nothing is left) and the volatile remembers the new types to restore when it
+/// ends (nothing to restore without Flying).
+fn set_types<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, types: [Type; 2]) {
+    let Some(pokemon) = b.occupant(slot) else {
+        return;
+    };
+    let roost = b.volatile(slot, Volatile::Roost);
+    let shown = if roost.active && types.contains(&Type::Flying) {
+        let mut kept = types
+            .into_iter()
+            .filter(|&t| t != Type::Flying && t != Type::None);
+        [
+            kept.next().unwrap_or(Type::Normal),
+            kept.next().unwrap_or(Type::None),
+        ]
+    } else {
+        types
+    };
+    if roost.active {
+        let counter = if shown == types {
+            0
+        } else {
+            crate::volatile::encode_types(types)
+        };
+        b.set_volatile_state(slot, Volatile::Roost, VolatileState { counter, ..roost });
+    }
+    let old = b.mon(pokemon).types;
+    if old != shown {
+        b.apply(Instruction::SetTypes {
+            target: pokemon,
+            old,
+            new: shown,
+        });
     }
 }
 

@@ -319,6 +319,17 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::LUNAR_BLESSING, &["onHit"]),
     (moves::FLORAL_HEALING, &["onHit"]),
     (moves::REST, &["onHit", "onTry"]),
+    // `handlers::on_hit`: Psych Up, Speed Swap (the stored Speed, recalculated on leaving the
+    // field in `Battle::clear_volatile`), Strength Sap, Pain Split, Spite, Reflect Type, Soak
+    // (`handlers::set_types`); Endeavor's `damageCallback` and `onTryImmunity`.
+    (moves::PSYCH_UP, &["onHit"]),
+    (moves::SPEED_SWAP, &["onHit"]),
+    (moves::STRENGTH_SAP, &["onHit"]),
+    (moves::PAIN_SPLIT, &["onHit"]),
+    (moves::SPITE, &["onHit"]),
+    (moves::REFLECT_TYPE, &["onHit"]),
+    (moves::SOAK, &["onHit"]),
+    (moves::ENDEAVOR, &["damageCallback", "onTryImmunity"]),
     // Throat Chop: the secondary's `onHit` adds the `throatchop` volatile
     // (`handlers::secondary_on_hit`); its `onBeforeMove`, `onModifyMove` (a called sound move,
     // `moves::use_move`) and `onDisableMove` in `conditions::throat_chopped`; `onStart` and

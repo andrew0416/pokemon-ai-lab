@@ -1,0 +1,27 @@
+{
+ "description": "Spite, Reflect Type, Soak on a roosting target: Gengar's Spite takes 4 PP from Hitmontop's last move (Bulk Up); Talonflame (100 HP) Roosts first (Flying left out), then Politoed's Soak makes it pure Water, which stays when Roost ends; Hitmontop's Reflect Type takes Gengar's Ghost/Poison.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 32, "spa": 32, "spe": 2}, "moves": ["Spite", "Calm Mind"], "level": 50},
+   {"species": "Politoed", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spe": 2}, "moves": ["Soak", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Hitmontop", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Reflect Type", "Bulk Up"], "level": 50},
+   {"species": "Talonflame", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Roost", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move calmmind, move calmmind", "move bulkup, move calmmind"]
+ ],
+ "patch": {"p2": {"Talonflame": {"hp": 100}}},
+ "turn": {"p1": "move spite 1, move soak 2", "p2": "move reflecttype 1, move roost"}
+}
