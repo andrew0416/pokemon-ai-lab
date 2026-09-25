@@ -388,6 +388,12 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     // `items::on_damaging_hit`.
     (items::JABOCA_BERRY, &["onDamagingHit", "onEat"]),
     (items::ROWAP_BERRY, &["onDamagingHit", "onEat"]),
+    // Seeds (`field_events`): `onStart` at switch-in (priority -1, `switching::run_switch_in`)
+    // and `onTerrainChange` (every terrain start and end).
+    (items::ELECTRIC_SEED, &["onStart", "onTerrainChange"]),
+    (items::GRASSY_SEED, &["onStart", "onTerrainChange"]),
+    (items::MISTY_SEED, &["onStart", "onTerrainChange"]),
+    (items::PSYCHIC_SEED, &["onStart", "onTerrainChange"]),
     // Grounding (`Battle::is_grounded`), Speed, effectiveness; Air Balloon's `onStart` only
     // announces it and its pop (`onDamagingHit`) is refused until F15 (`items::on_damaging_hit`;
     // `onAfterSubDamage` needs a substitute, which is refused).

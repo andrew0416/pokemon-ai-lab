@@ -69,3 +69,19 @@ fn enigma_and_jaboca_berries_match_showdown() {
 fn rowap_berry_at_zero_hp_and_jaboca_against_magic_guard_match_showdown() {
     assert_exact_parity("o81-rowap-fainted");
 }
+
+// ---- O92 / O102 Seeds and the TerrainChange event ----------------------------------------------
+
+/// A Seed is used by TerrainChange at battle start (Psychic Surge) and after a terrain move,
+/// and by its own switch-in handler (priority -1) under a terrain that is already up.
+#[test]
+fn seeds_on_terrain_change_and_switch_in_match_showdown() {
+    assert_exact_parity("o92-seeds-psychic-electric");
+}
+
+/// Grassy Seed at battle start, Misty Seed after Misty Terrain replaces Grassy Terrain, and
+/// Ice Spinner's `clearTerrain` (TerrainChange without a terrain).
+#[test]
+fn seeds_with_a_replaced_and_cleared_terrain_match_showdown() {
+    assert_exact_parity("o92-seeds-grassy-misty");
+}

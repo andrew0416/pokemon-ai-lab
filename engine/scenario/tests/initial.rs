@@ -283,12 +283,16 @@ fn unsupported_start_handlers_are_rejected() {
         }
     }
 
+    // Booster Energy's `onStart` is not implemented (the Seeds' are since O92).
     let mut s = loaded.state.clone();
-    s.active_mut(rillaboom).unwrap().item = items::PSYCHIC_SEED;
+    s.active_mut(rillaboom).unwrap().item = items::BOOSTER_ENERGY;
     assert!(matches!(
         expand_switch_ins(&s),
         Err(SwitchInError::UnsupportedItem { .. })
     ));
+    let mut s = loaded.state.clone();
+    s.active_mut(rillaboom).unwrap().item = items::PSYCHIC_SEED;
+    assert!(expand_switch_ins(&s).is_ok());
 
     // A Choice item's `onStart` only removes a lock a newcomer cannot have (O83, 2026-09-26).
     let mut s = loaded.state.clone();

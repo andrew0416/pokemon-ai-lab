@@ -1,0 +1,23 @@
+{
+ "description": "O92/O102 Seeds: at battle start Rillaboom's Grassy Surge uses Snorlax's Grassy Seed (Def +1) through TerrainChange; Kangaskhan's Misty Seed waits. In the turn Clefable's Misty Terrain replaces Grassy Terrain: TerrainChange uses the Misty Seed (SpD +1). Rillaboom's Ice Spinner then clears the terrain (TerrainChange with no terrain: nothing).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Rillaboom", "item": "", "ability": "Grassy Surge", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Ice Spinner", "Protect"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 2, "def": 32, "spe": 32}, "moves": ["Misty Terrain", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Grassy Seed", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Kangaskhan", "item": "Misty Seed", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move icespinner 1, move mistyterrain", "p2": "move harden, move harden"}
+}

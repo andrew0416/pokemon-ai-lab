@@ -81,6 +81,37 @@ pub(crate) fn inert_start(item: ItemId) -> bool {
     item.data().is_choice || item == items::AIR_BALLOON
 }
 
+/// Whether `handler`, one of the item's handlers that can fire around a switch-in, is
+/// implemented: an inert `onStart` ([`inert_start`]), a Seed's `onStart` (the switch-in
+/// handler [`switch_in_priority`] schedules) and `onTerrainChange` (`field_events`).
+pub(crate) fn start_handler_implemented(item: ItemId, handler: &str) -> bool {
+    match handler {
+        "onStart" => inert_start(item) || switch_in_priority(item).is_some(),
+        "onTerrainChange" => super::field_events::seed_terrain(item).is_some(),
+        _ => false,
+    }
+}
+
+/// `onSwitchInPriority` of an item whose `onStart` acts when its holder switches in (it runs
+/// in the batched `fieldEvent('SwitchIn')`, after the abilities' priority-0 handlers): the
+/// Seeds (-1).
+pub(crate) fn switch_in_priority(item: ItemId) -> Option<i32> {
+    super::field_events::seed_terrain(item)
+        .map(|_| super::abilities::priority(item.data().event_orders, "onSwitchInPriority"))
+}
+
+/// The switch-in handler [`switch_in_priority`] scheduled for the holder in `slot`, run with
+/// the item it held when the handlers were collected (Showdown calls the collected callback:
+/// a consumed item makes its `useItem` fail).
+pub(crate) fn switch_in_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
+    if b.item(slot) != item {
+        return;
+    }
+    if super::field_events::seed_terrain(item).is_some() {
+        super::field_events::seed_check(b, slot);
+    }
+}
+
 // ---- Speed, grounding, effectiveness, action order --------------------------------------------
 
 /// `ModifySpe` factor of the holder's item: Choice Scarf `chainModify(1.5)` (skipped while

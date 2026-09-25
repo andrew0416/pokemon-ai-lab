@@ -250,7 +250,9 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
             }
             effect.turns -= 1;
             if effect.turns == 0 {
+                // The `end` callback is `field.clearWeather`: WeatherChange follows.
                 b.set_field(FieldEffect::Weather, Effect::NONE);
+                super::field_events::weather_changed(b);
                 return Ok(false);
             }
             b.set_field(FieldEffect::Weather, effect);
@@ -298,6 +300,10 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
             effect.turns -= 1;
             let ended = effect.turns == 0;
             b.set_field(which, if ended { Effect::NONE } else { effect });
+            // A terrain's `end` callback is `field.clearTerrain`: TerrainChange follows.
+            if ended && which == FieldEffect::Terrain {
+                super::field_events::terrain_changed(b);
+            }
             return Ok(!ended);
         }
         Kind::SideDuration(side, which) => {

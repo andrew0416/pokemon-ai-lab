@@ -1612,14 +1612,14 @@ fn damaging_hit<const N: usize>(
     }
 }
 
-/// Showdown `field.clearTerrain()`: the terrain ends at once. Its `FieldEnd` only logs, and
-/// the `TerrainChange` event it runs has no implemented handler (seeds, Mimicry and Quark
-/// Drive are refused on the field). Returns whether there was a terrain.
+/// Showdown `field.clearTerrain()`: the terrain ends at once (its `FieldEnd` only logs), then
+/// `eachEvent('TerrainChange')` (`field_events`). Returns whether there was a terrain.
 pub(crate) fn clear_terrain<const N: usize>(b: &mut Battle<'_, N>) -> bool {
     if b.terrain() == Terrain::None {
         return false;
     }
     b.set_field(FieldEffect::Terrain, Effect::NONE);
+    super::field_events::terrain_changed(b);
     true
 }
 
@@ -1908,7 +1908,7 @@ fn terrain_of(id: &str) -> Option<Terrain> {
 }
 
 /// Showdown `field.setWeather` from a move or an ability: the same weather again fails;
-/// 5 turns, 8 with the matching rock.
+/// 5 turns, 8 with the matching rock; then `eachEvent('WeatherChange')` (`field_events`).
 pub(crate) fn set_weather<const N: usize>(
     b: &mut Battle<'_, N>,
     source: SlotRef,
@@ -1932,11 +1932,12 @@ pub(crate) fn set_weather<const N: usize>(
             turns,
         },
     );
+    super::field_events::weather_changed(b);
     true
 }
 
 /// Showdown `field.setTerrain`: the same terrain again fails; 5 turns, 8 with Terrain
-/// Extender.
+/// Extender; then `eachEvent('TerrainChange')` (`field_events`: the Seeds).
 pub(crate) fn set_terrain<const N: usize>(
     b: &mut Battle<'_, N>,
     source: SlotRef,
@@ -1957,6 +1958,7 @@ pub(crate) fn set_terrain<const N: usize>(
             turns,
         },
     );
+    super::field_events::terrain_changed(b);
     true
 }
 

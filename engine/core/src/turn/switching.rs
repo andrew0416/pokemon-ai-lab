@@ -11,7 +11,8 @@
 //! Implemented start handlers: the four weather and four terrain setters, Intimidate, Trace
 //! (copies a random traceable adjacent foe's ability and starts it at once), Air Lock and Cloud
 //! Nine (their `WeatherChange` event has no implemented handler), and abilities whose `onStart`
-//! only announces them. Anything else that could fire during a switch-in (other
+//! only announces them; of items, the Seeds' `onStart` (`onSwitchInPriority: -1`, after every
+//! ability). Anything else that could fire during a switch-in (other
 //! `onStart`/`onSwitchIn`/`onBeforeSwitchIn`/`onUpdate` handlers, items that act on switch-in)
 //! makes the turn unsupported.
 
@@ -237,16 +238,16 @@ pub fn switch_in_supported(ability: AbilityId) -> bool {
 }
 
 /// The first switch-in handler of an item that would fire and is not implemented, if any.
-/// `onModifySpe` does not matter (the start order uses the raw Speed stat); an `onStart` that
-/// does nothing on a switch-in (`items::inert_start`) and the `onUpdate` of an item the engine
-/// supports on the field (berries, `update.rs`) are implemented.
+/// `onModifySpe` does not matter (the start order uses the raw Speed stat); the handlers
+/// `items::start_handler_implemented` names (inert `onStart`s, the Seeds) and the `onUpdate`
+/// of an item the engine supports on the field (berries, `update.rs`) are implemented.
 pub fn item_start_handler(item: ItemId) -> Option<&'static str> {
     let handlers = item.data().handlers;
     (0..handlers.len())
         .filter_map(|i| start_handler(&handlers[i..=i]))
         .find(|&h| {
             h != "onModifySpe"
-                && !(h == "onStart" && super::items::inert_start(item))
+                && !super::items::start_handler_implemented(item, h)
                 && !(h == "onUpdate" && item_supported_on_field(item))
         })
 }
@@ -352,36 +353,60 @@ pub(crate) fn switch_in<const N: usize>(
     Ok(())
 }
 
-/// Showdown `runSwitch` for the Pokémon that just switched in: their abilities' start handlers
-/// in Speed order (raw stat; equal Speeds uniformly at random), each skipped if the holder's
-/// ability changed before its turn came.
+/// A handler of the batched `fieldEvent('SwitchIn')`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum SwitchInHandler {
+    /// The newcomer's ability `onStart` (priority 0 for every implemented one).
+    Ability(AbilityId),
+    /// The newcomer's item `onStart` with its `onSwitchInPriority` (`items::switch_in_item`).
+    Item(ItemId),
+}
+
+/// Showdown `runSwitch` for the Pokémon that just switched in: one `fieldEvent('SwitchIn')`
+/// over their abilities' start handlers (priority 0) and their items' (`onSwitchInPriority`,
+/// the Seeds' -1), sorted by priority, then the holder's Speed (raw stat; equal Speeds
+/// uniformly at random). An ability handler is skipped if the holder's ability changed before
+/// its turn came, any handler if its holder fainted. Within a priority group every implemented
+/// item handler only changes its own holder, so tie-breaks drawn per handler (instead of
+/// Showdown's one `speedOrder` for the whole event) give the same distribution.
 pub(crate) fn run_switch_in<const N: usize>(
     b: &mut Battle<'_, N>,
     newcomers: &[SlotRef],
 ) -> Result<(), TurnError> {
-    let mut pending: Vec<(SlotRef, AbilityId, i16)> = newcomers
-        .iter()
-        .filter_map(|&slot| {
-            let pokemon = b.alive(slot)?;
-            let mon = b.mon(pokemon);
-            Some((slot, mon.ability, mon.stats[4]))
-        })
-        .collect();
+    let mut pending: Vec<(i32, i16, SlotRef, SwitchInHandler)> = Vec::new();
+    for &slot in newcomers {
+        let Some(pokemon) = b.alive(slot) else {
+            continue;
+        };
+        let mon = b.mon(pokemon);
+        let speed = mon.stats[4];
+        pending.push((0, speed, slot, SwitchInHandler::Ability(mon.ability)));
+        if let Some(priority) = super::items::switch_in_priority(mon.item) {
+            pending.push((priority, speed, slot, SwitchInHandler::Item(mon.item)));
+        }
+    }
     while !pending.is_empty() {
-        let best = pending.iter().map(|h| h.2).max().expect("non-empty");
+        let best = pending.iter().map(|h| (h.0, h.1)).max().expect("non-empty");
         let tied: Vec<usize> = (0..pending.len())
-            .filter(|&i| pending[i].2 == best)
+            .filter(|&i| (pending[i].0, pending[i].1) == best)
             .collect();
         let pick = if tied.len() == 1 {
             tied[0]
         } else {
             tied[b.rng.uniform(tied.len())]
         };
-        let (slot, ability, _) = pending.remove(pick);
-        if b.alive(slot).is_none() || b.ability(slot) != ability {
+        let (_, _, slot, handler) = pending.remove(pick);
+        if b.alive(slot).is_none() {
             continue;
         }
-        start_ability(b, slot, ability)?;
+        match handler {
+            SwitchInHandler::Ability(ability) => {
+                if b.ability(slot) == ability {
+                    start_ability(b, slot, ability)?;
+                }
+            }
+            SwitchInHandler::Item(item) => super::items::switch_in_item(b, slot, item),
+        }
     }
     Ok(())
 }

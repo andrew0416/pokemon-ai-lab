@@ -20,6 +20,7 @@ mod branch;
 mod conditions;
 pub mod coverage;
 mod diff;
+mod field_events;
 mod items;
 pub mod lock;
 mod mega;
