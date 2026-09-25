@@ -1,0 +1,27 @@
+{
+ "description": "F11 Substitute: Aerodactyl puts up a substitute (setup turn 1); Arbok's Glare is stopped by it (setup turn 2). The substitute's `null` does not fail the move (`hitStepMoveHitLoop` only stops on `false`), so Arbok's Stomping Tantrum into Snorlax in the scenario turn keeps its base power (no doubling for a failed move last turn).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Aerodactyl", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 32, "spd": 32, "spe": 2}, "moves": ["Substitute", "Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Harden", "Tackle"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Arbok", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Glare", "Stomping Tantrum", "Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Harden", "Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move substitute, move harden", "move harden, move harden"],
+  ["move harden, move harden", "move glare 1, move harden"]
+ ],
+ "turn": {"p1": "move harden, move harden", "p2": "move stompingtantrum 2, move harden"}
+}

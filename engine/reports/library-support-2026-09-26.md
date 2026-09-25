@@ -5,16 +5,14 @@
 ## 요약
 
 - 팀 28개, 로더 통과 28개.
-- 세 선출 모두 시작 + 방어 턴이 실행되는 팀: 27개 (거부 1개).
-- 선출 84개(팀 × 3) 중 시작 + 방어 턴이 실행되는 선출: 83개.
-- 모든 검사(기술·메가진화 포함) 통과: 25개.
+- 세 선출 모두 시작 + 방어 턴이 실행되는 팀: 28개 (거부 0개).
+- 선출 84개(팀 × 3) 중 시작 + 방어 턴이 실행되는 선출: 84개.
+- 모든 검사(기술·메가진화 포함) 통과: 28개.
 
 ## 거부 이유 (팀 수순)
 
 | 이유 | 팀 수 | 팀 (포켓몬) |
 |---|---:|---|
-| move Double Shock: callbacks ["onTryMove", "self.onHit"] are not implemented | 2 | kickoff-shadezero, kickoff-thepostmanp |
-| item Miracle Berry switch-in handler onUpdate | 1 | crown-ryukeivgc (Rillaboom) |
 
 ## 팀별
 
@@ -24,7 +22,7 @@
 | coaching-panda | validated | 통과 | 통과 | 0 | 0 |  |
 | crown-cecil9 | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | crown-eternalton | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
-| crown-ryukeivgc | needs-review | 거부 | 거부 | 1 | 0 | 5612 시작: Rillaboom: item Miracle Berry switch-in handler onUpdate |
+| crown-ryukeivgc | needs-review | 통과 | 통과 | 0 | 0 |  |
 | crown-tachyon112358 | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-aveornot | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-balmung | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
@@ -38,8 +36,8 @@
 | kickoff-karlin22 | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-prongs | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-sableyevgc | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
-| kickoff-shadezero | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 5612 Double Shock: move Double Shock: callbacks ["onTryMove", "self.onHit"] are not implemented |
-| kickoff-thepostmanp | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 1234 Double Shock: move Double Shock: callbacks ["onTryMove", "self.onHit"] are not implemented |
+| kickoff-shadezero | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
+| kickoff-thepostmanp | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-thosewhoknow | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-wolfey | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | perish-mrada | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |

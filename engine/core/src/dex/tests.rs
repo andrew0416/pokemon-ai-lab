@@ -160,6 +160,20 @@ fn type_chart() {
     assert!(!Type::Water.immunities().contains(TypeImmunities::PAR));
 }
 
+/// Showdown's `???` (Double Shock): neutral both ways, no immunity, not parsed or listed.
+#[test]
+fn unknown_type_is_neutral() {
+    assert_eq!(Type::Unknown.name(), "???");
+    assert!(!Type::ALL.contains(&Type::Unknown));
+    assert_eq!(Type::from_name("???"), None);
+    assert_eq!(Type::Unknown.immunities(), TypeImmunities::EMPTY);
+    for t in Type::ALL {
+        assert_eq!(t.against(Type::Unknown), TypeRelation::Neutral, "{t:?}");
+        assert_eq!(Type::Unknown.against(t), TypeRelation::Neutral, "{t:?}");
+    }
+    assert_eq!(Type::Unknown.against(Type::Unknown), TypeRelation::Neutral);
+}
+
 #[test]
 fn natures() {
     assert_eq!(

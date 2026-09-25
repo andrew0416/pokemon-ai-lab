@@ -1,0 +1,27 @@
+{
+ "description": "F11 Substitute: in two setup turns Glimmora sets Stealth Rock on p1's side and seeds Donphan, and Slowbro puts up a substitute. Donphan's Rapid Spin hits Slowbro's substitute: its `onAfterSubDamage` still frees Donphan from Leech Seed and clears the Stealth Rock, and its secondary's self boost (+1 Speed) applies.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Donphan", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Rapid Spin", "Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Harden", "Tackle"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Glimmora", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Stealth Rock", "Leech Seed", "Harden"], "level": 50},
+   {"species": "Slowbro", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Substitute", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move harden, move harden", "move stealthrock, move substitute"],
+  ["move harden, move harden", "move leechseed 1, move harden"]
+ ],
+ "turn": {"p1": "move rapidspin 2, move harden", "p2": "move harden, move harden"}
+}

@@ -1,0 +1,26 @@
+{
+ "description": "F11 Substitute: Indeedee's Psychic Surge sets Psychic Terrain at the start and Slowbro puts up a substitute in the setup turn. Weavile's Ice Spinner hits the substitute: its `onAfterSubDamage` (`if (source.hp)`) clears the terrain as its `onAfterHit` would.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Hardy",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Ice Spinner", "Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Harden", "Tackle"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Indeedee", "item": "", "ability": "Psychic Surge", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Harden", "Psychic"], "level": 50},
+   {"species": "Slowbro", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Substitute", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move harden, move harden", "move harden, move substitute"]
+ ],
+ "turn": {"p1": "move icespinner 2, move harden", "p2": "move harden, move harden"}
+}

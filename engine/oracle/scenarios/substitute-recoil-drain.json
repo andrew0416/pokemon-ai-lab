@@ -1,0 +1,27 @@
+{
+ "description": "F11 Substitute: in the setup turn Aerodactyl and Snorlax put up substitutes. Then Tauros's Double-Edge breaks Aerodactyl's substitute: its damage is capped at the substitute's HP and the recoil is a third of that (`applyRecoilDamage` inside `onTryPrimaryHit`; the hit loop's recoil sees no `totalDamage`). Sylveon (patched to 100 HP) drains Snorlax's substitute with Draining Kiss: 3/4 of the damage, rounded up (`Math.ceil`, where a hit on the Pokémon rounds).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Aerodactyl", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 32, "spd": 32, "spe": 2}, "moves": ["Substitute", "Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"def": 32, "spd": 32, "hp": 2}, "moves": ["Substitute", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Tauros", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Double-Edge", "Harden"], "level": 50},
+   {"species": "Sylveon", "item": "", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Draining Kiss", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move substitute, move substitute", "move harden, move harden"]
+ ],
+ "patch": {"p2": {"Sylveon": {"hp": 100}}},
+ "turn": {"p1": "move harden, move harden", "p2": "move doubleedge 1, move drainingkiss 2"}
+}

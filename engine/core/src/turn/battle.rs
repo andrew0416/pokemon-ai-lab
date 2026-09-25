@@ -926,6 +926,10 @@ impl<'a, const N: usize> Battle<'a, N> {
             old,
             new: VolatileState::NONE,
         });
+        // The substitute's HP goes with it (its `onEnd` only logs).
+        if volatile == Volatile::Substitute {
+            self.set_substitute_hp(target, 0);
+        }
         // onEnd.
         if volatile == Volatile::LockedMove && old.hidden <= 1 {
             self.add_volatile(target, Volatile::Confusion);
@@ -948,6 +952,26 @@ impl<'a, const N: usize> Battle<'a, N> {
                 volatile,
                 old,
                 new: VolatileState::NONE,
+            });
+            if volatile == Volatile::Substitute {
+                self.set_substitute_hp(target, 0);
+            }
+        }
+    }
+
+    /// Whether the Pokémon in `slot` is behind a substitute (`volatiles['substitute']`).
+    pub fn has_substitute(&self, slot: SlotRef) -> bool {
+        self.volatile(slot, Volatile::Substitute).active
+    }
+
+    /// The substitute's `effectState.hp` ([`crate::state::Slot::substitute_hp`]).
+    pub fn set_substitute_hp(&mut self, slot: SlotRef, hp: i16) {
+        let old = self.state.slot(slot).substitute_hp;
+        if old != hp {
+            self.apply(Instruction::SetSubstituteHp {
+                target: slot,
+                old,
+                new: hp,
             });
         }
     }

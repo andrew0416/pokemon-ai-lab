@@ -1,0 +1,26 @@
+{
+ "description": "F11 Substitute: Aerodactyl's substitute (setup turn) takes its ally Lucario's Power-Up Punch: Lucario still gets +1 Attack (a secondary's self part applies against a substitute); top rolls and critical hits break the substitute. Gardevoir's Hypnosis is then stopped by a standing substitute (TryPrimaryHit returns null: no sleep, and the move does not fail), or may put Aerodactyl to sleep once the substitute broke.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Aerodactyl", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 32, "spd": 32, "spe": 2}, "moves": ["Substitute", "Harden"], "level": 50},
+   {"species": "Lucario", "item": "", "ability": "Honey Gather", "nature": "Hardy",
+    "evs": {"hp": 32, "atk": 16, "def": 2}, "moves": ["Power-Up Punch", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Gardevoir", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spa": 2}, "moves": ["Hypnosis", "Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Harden", "Tackle"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move substitute, move harden", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move harden, move poweruppunch -1", "p2": "move hypnosis 1, move harden"}
+}

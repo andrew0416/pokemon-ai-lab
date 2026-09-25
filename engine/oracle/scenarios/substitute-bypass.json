@@ -1,0 +1,27 @@
+{
+ "description": "F11 Substitute: Aerodactyl and Corviknight put up substitutes in the setup turn; Corviknight is patched burned, Comfey poisoned. Ribombee's Pollen Puff on its ally Aerodactyl goes through the substitute (`move.infiltrates` for an ally) and heals it. Comfey's Aromatherapy cures itself but not Corviknight behind its substitute. Corviknight's Defog (`bypasssub`) reaches Aerodactyl but lowers no evasion behind a substitute.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Aerodactyl", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 32, "spd": 32, "spe": 2}, "moves": ["Substitute", "Harden"], "level": 50},
+   {"species": "Ribombee", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Pollen Puff", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Corviknight", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Substitute", "Defog"], "level": 50},
+   {"species": "Comfey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Aromatherapy", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move substitute, move harden", "move substitute, move harden"]
+ ],
+ "patch": {"p2": {"Corviknight": {"status": "brn"}, "Comfey": {"status": "psn"}}},
+ "turn": {"p1": "move harden, move pollenpuff -1", "p2": "move defog 1, move aromatherapy"}
+}

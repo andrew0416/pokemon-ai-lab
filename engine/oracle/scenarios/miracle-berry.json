@@ -1,0 +1,23 @@
+{
+ "description": "Miracle Berry (`onUpdate`: a status or confusion eats it; `onEat`: cureStatus and removeVolatile('confusion'), like Lum Berry without its `onAfterSetStatus`). Arcanine's Will-O-Wisp burns Slowbro and Gengar's Confuse Ray confuses Blissey; each eats its Miracle Berry at the Update after the move and is cured.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Slowbro", "item": "Miracle Berry", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Harden", "Tackle"], "level": 50},
+   {"species": "Blissey", "item": "Miracle Berry", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Harden", "Tackle"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Arcanine", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Will-O-Wisp", "Harden"], "level": 50},
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Confuse Ray", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "move willowisp 1, move confuseray 2"}
+}

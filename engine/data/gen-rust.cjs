@@ -227,18 +227,27 @@ function boosts(obj, what) {
 // Type-level immunities that are not attacking types (damageTaken keys in lower case).
 const TYPE_IMMUNITY_KEYS = ['brn', 'frz', 'par', 'psn', 'tox', 'powder', 'prankster', 'sandstorm', 'hail', 'trapped'];
 
+// Showdown's `???` type: not in the type chart (`dex.types.get('???')` has no entry and an
+// empty `damageTaken`), so it is neutral both ways and grants no immunity; `runImmunity` and
+// the STAB check skip it by name. Double Shock gives it to its user in place of Electric.
+const UNKNOWN_TYPE = {variant: 'Unknown', name: '???'};
+
 function genTypes() {
 	const out = [];
-	out.push('/// Pokémon types. `None` fills the second slot of a single-typed Pokémon.');
+	out.push('/// Pokémon types. `None` fills the second slot of a single-typed Pokémon. `Unknown` is');
+	out.push('/// Showdown\'s `???` (no chart entry: neutral both ways, no immunity), which Double Shock');
+	out.push('/// leaves in place of Electric; it is not in [`Type::ALL`] (no species, move or Tera type');
+	out.push('/// has it, and `from_name` does not parse it).');
 	out.push('#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, PartialOrd, Ord)]');
 	out.push('#[repr(u8)]');
 	out.push('pub enum Type {');
 	out.push('    #[default]');
 	out.push('    None = 0,');
 	for (const id of TYPES) out.push(`    ${data.types[id].name},`);
+	out.push(`    ${UNKNOWN_TYPE.variant},`);
 	out.push('}');
 	out.push('');
-	out.push(`pub const TYPE_COUNT: usize = ${TYPES.length + 1};`);
+	out.push(`pub const TYPE_COUNT: usize = ${TYPES.length + 2};`);
 	out.push('');
 	out.push('impl Type {');
 	out.push(`    pub const ALL: [Type; ${TYPES.length}] = [${TYPES.map(id => `Type::${data.types[id].name}`).join(', ')}];`);
@@ -247,6 +256,7 @@ function genTypes() {
 	out.push('        match self {');
 	out.push('            Type::None => "",');
 	for (const id of TYPES) out.push(`            Type::${data.types[id].name} => ${str(data.types[id].name)},`);
+	out.push(`            Type::${UNKNOWN_TYPE.variant} => ${str(UNKNOWN_TYPE.name)},`);
 	out.push('        }');
 	out.push('    }');
 	out.push('');
@@ -268,12 +278,20 @@ function genTypes() {
 			if (!(v in code)) fail(`type chart ${defId} <- ${atkId}: ${v}`);
 			cells.push(`TypeRelation::${code[v]}`);
 		}
+		// Attacking with `???` (no `damageTaken` key anywhere): neutral.
+		if (defId && UNKNOWN_TYPE.name in taken) fail(`type chart ${defId}: a ${UNKNOWN_TYPE.name} key`);
+		cells.push('TypeRelation::Neutral');
 		return `    [${cells.join(', ')}],`;
 	};
-	out.push('/// `TYPE_CHART[defending][attacking]`. The `None` row and column are neutral.');
+	if (TYPES.some(id => [UNKNOWN_TYPE.name, UNKNOWN_TYPE.variant].includes(data.types[id].name))) {
+		fail(`the export has a ${UNKNOWN_TYPE.name} type`);
+	}
+	out.push('/// `TYPE_CHART[defending][attacking]`. The `None` and `Unknown` rows and columns are');
+	out.push('/// neutral.');
 	out.push('pub static TYPE_CHART: [[TypeRelation; TYPE_COUNT]; TYPE_COUNT] = [');
 	out.push(row(null));
 	for (const id of TYPES) out.push(row(id));
+	out.push(row(null));
 	out.push('];');
 	out.push('');
 
@@ -293,6 +311,7 @@ function genTypes() {
 		}
 		out.push(`    TypeImmunities(${bits.length ? bits.join(' | ') : '0'}),`);
 	}
+	out.push('    TypeImmunities::EMPTY,');
 	out.push('];');
 	out.push('');
 	out.push('impl TypeImmunities {');

@@ -1,0 +1,26 @@
+{
+ "description": "F11 Substitute: Aerodactyl (Air Balloon) and Slowbro (Colbur Berry) put up substitutes in the setup turn. Chansey's Seismic Toss breaks Aerodactyl's substitute: no damage reaches Aerodactyl, yet the balloon pops (Air Balloon's `onAfterSubDamage`). Blissey's weak, super-effective Knock Off hits Slowbro's substitute: the Colbur Berry is neither eaten nor halving the damage (`hitSub`), and Knock Off does not take it (no AfterHit against a substitute).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Aerodactyl", "item": "Air Balloon", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 32, "spd": 32, "spe": 2}, "moves": ["Substitute", "Harden"], "level": 50},
+   {"species": "Slowbro", "item": "Colbur Berry", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Substitute", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Seismic Toss", "Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Knock Off", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move substitute, move substitute", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move harden, move harden", "p2": "move seismictoss 1, move knockoff 2"}
+}

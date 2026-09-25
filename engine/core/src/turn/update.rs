@@ -8,8 +8,8 @@
 //! the outcome and no random draw is spent on it.
 //!
 //! Listeners implemented here: berries with `onUpdate` (Sitrus, Oran, the five Figy-type
-//! berries, the five pinch stat berries, Lansat, Starf, Lum and the six one-status berries,
-//! Leppa) and Lum's `onAfterSetStatus`; the abilities' `onUpdate` cures run first
+//! berries, the five pinch stat berries, Lansat, Starf, Lum, Miracle and the six one-status
+//! berries, Leppa) and Lum's `onAfterSetStatus`; the abilities' `onUpdate` cures run first
 //! (`abilities::on_update`: the status cures of `cured_on_update`, Own Tempo's confusion cure).
 //! Other ability `onUpdate` handlers are refused (Trace still seeking, Disguise, ...). A berry
 //! is eaten only if the `TryEatItem` handlers allow it (`abilities::try_eat_item`). [`eat_item`]
@@ -116,8 +116,9 @@ fn item_wants_eating<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
         || item == items::STARF_BERRY
     {
         pinch
-    } else if item == items::LUM_BERRY {
-        // `pokemon.status || pokemon.volatiles['confusion']`.
+    } else if item == items::LUM_BERRY || item == items::MIRACLE_BERRY {
+        // `pokemon.status || pokemon.volatiles['confusion']` (Miracle Berry: the same, without
+        // Lum's `onAfterSetStatus`).
         mon.status != Status::None || b.volatile(slot, Volatile::Confusion).active
     } else if item == items::PERSIM_BERRY {
         b.volatile(slot, Volatile::Confusion).active
@@ -187,7 +188,7 @@ pub(crate) fn berry_on_eat<const N: usize>(
         let mut up = NO_BOOSTS;
         up[index] = 1;
         b.boost_by(slot, &up, Some(slot), BoostEffect::Item(item));
-    } else if item == items::LUM_BERRY {
+    } else if item == items::LUM_BERRY || item == items::MIRACLE_BERRY {
         // `cureStatus()` then `removeVolatile('confusion')`.
         b.cure_status(pokemon);
         b.remove_volatile(slot, Volatile::Confusion);

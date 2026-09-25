@@ -157,9 +157,9 @@ pub(crate) struct MoveProgress {
     /// Whether any hit so far did something (the move's success).
     any_ok: bool,
     /// The last hit's targets it did not fail on (Showdown's `targetsCopy` after
-    /// `spreadMoveHit`) with their damage (`None`: a non-numeric result, a status effect).
-    /// Read for `gotAttacked` once the hits are done.
-    last_hit: Vec<(SlotRef, Option<i32>)>,
+    /// `spreadMoveHit`, with the substitute's targets) and what the hit did to each. Read for
+    /// `gotAttacked` and Emergency Exit once the hits are done.
+    last_hit: Vec<(SlotRef, LastHit)>,
     /// `ActiveMoveRef::ignore_ability` of the move in flight (Mold Breaker moves).
     ignore_ability: bool,
 }
@@ -184,12 +184,46 @@ enum Hit {
     /// Hit without damage (status moves).
     Done,
     Damage(i32),
+    /// The target's substitute took the hit (`TryPrimaryHit` returned `HIT_SUBSTITUTE`): the
+    /// target is `null` for the rest of `spreadMoveHit` (only the user's own effects, `self`
+    /// drops and the secondaries' `self` parts act) and its damage is 0.
+    Substitute,
+    /// The substitute stopped a move that deals no damage (`TryPrimaryHit` returned `null`):
+    /// the target is `false` for the rest of `spreadMoveHit`, but the hit is no failure
+    /// (`hitStepMoveHitLoop` only stops on `false`), so the move succeeds.
+    Blocked,
 }
 
 impl Hit {
+    /// `damage[i] !== false`: the move did not fail on this target.
     fn ok(self) -> bool {
         self != Hit::Failed
     }
+
+    /// `targets[i]` is still the Pokémon: its effects apply to it.
+    fn reached(self) -> bool {
+        matches!(self, Hit::Done | Hit::Damage(_))
+    }
+
+    /// `targets[i] !== false`: the user's `self` drops and the secondaries run for it (a
+    /// substitute's target is `null`, not `false`).
+    fn in_targets(self) -> bool {
+        matches!(self, Hit::Done | Hit::Damage(_) | Hit::Substitute)
+    }
+}
+
+/// What a move's last hit did to one target it did not fail on, as the hit loop's tail reads it
+/// (`gotAttacked`, Emergency Exit).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+enum LastHit {
+    /// Numeric damage.
+    Damage(i32),
+    /// A status effect (`true`).
+    Done,
+    /// The target's substitute took it (`targetsCopy[i]` is `null`, its damage 0).
+    Substitute,
+    /// The substitute stopped it (`targetsCopy[i]` is `false`, its damage `null`).
+    Blocked,
 }
 
 /// Showdown `runMove` for the move in `move_index`. `will_act` is `queue.willAct()`. A
@@ -845,6 +879,14 @@ fn use_move<const N: usize>(
     // The move's own TryMove (`singleEvent('TryMove')`): a two-turn move's charging turn.
     if !handlers::charge_try_move(b, user, mv) {
         b.finish_move_result(user, false);
+        return Ok(None);
+    }
+    // Double Shock's TryMove returns `null`: the move stops, and `useMove` stores that `null`
+    // as the move's result (no failure for Stomping Tantrum).
+    if !handlers::null_try_move(b, user, mv) {
+        if b.slot_history(user).move_this_turn_result == MoveResult::Undefined {
+            b.set_move_result(user, MoveResult::Null);
+        }
         return Ok(None);
     }
     // TryMove: Dazzling, Queenly Majesty, Armor Tail (`onFoeTryMove`).
@@ -1684,8 +1726,10 @@ fn hit_loop<const N: usize>(
             .iter()
             .zip(&results)
             .filter_map(|(&t, r)| match r {
-                Hit::Damage(d) => Some((t, Some(*d))),
-                Hit::Done => Some((t, None)),
+                Hit::Damage(d) => Some((t, LastHit::Damage(*d))),
+                Hit::Done => Some((t, LastHit::Done)),
+                Hit::Substitute => Some((t, LastHit::Substitute)),
+                Hit::Blocked => Some((t, LastHit::Blocked)),
                 Hit::Failed => None,
             })
             .collect();
@@ -1724,10 +1768,20 @@ fn hit_loop<const N: usize>(
     }
     // `gotAttacked` and `timesAttacked` (`hit - 1` = the hits made) for the last hit's
     // targets other than the user (after a later multi-accuracy miss, the previous hit's).
-    for &(t, damage) in &progress.last_hit.clone() {
-        if t != user {
-            b.record_attack(t, user, damage, progress.hit);
+    // A target whose substitute took or stopped the hit is `null` / `false` in `targetsCopy`
+    // and not attacked, unless a later hit missed: `targetsCopy` is then a fresh copy of the
+    // targets with the earlier hit's damage (0 for a substitute's, `null` for a stopped one).
+    for &(t, last) in &progress.last_hit.clone() {
+        if t == user {
+            continue;
         }
+        let damage = match (last, ended_by_miss) {
+            (LastHit::Damage(d), _) => Some(d),
+            (LastHit::Done, _) | (LastHit::Blocked, true) => None,
+            (LastHit::Substitute, true) => Some(0),
+            (LastHit::Substitute | LastHit::Blocked, false) => continue,
+        };
+        b.record_attack(t, user, damage, progress.hit);
     }
     if !progress.any_ok {
         return Ok(HitOutcome::Finished {
@@ -1745,6 +1799,7 @@ fn hit_loop<const N: usize>(
     // their own holder only, so their Speed order does not matter.
     super::update::update_event(b)?;
     if !ability_hooks::sheer_force_skips(b, user, mv) {
+        // `targetsCopy.filter(val => !!val)`: not a target its substitute shielded.
         let last_hit: Vec<(SlotRef, i32)> = if ended_by_miss {
             progress.targets.iter().map(|&t| (t, 0)).collect()
         } else {
@@ -1752,7 +1807,7 @@ fn hit_loop<const N: usize>(
                 .targets
                 .iter()
                 .zip(&results)
-                .filter(|(_, r)| r.ok())
+                .filter(|(_, r)| r.reached())
                 .map(|(&t, r)| (t, if let Hit::Damage(d) = r { *d } else { 0 }))
                 .collect()
         };
@@ -1775,10 +1830,16 @@ fn hit_loop<const N: usize>(
         // `runEvent('EmergencyExit', target, pokemon)` for each target still standing whose
         // HP this move took to half: `(hurtThisTurn || 0) + curDamage > maxhp / 2`, with
         // `curDamage` the move's total damage for a single target, else the last hit's
-        // damage to it (a non-numeric result is skipped).
-        for &(t, damage) in &progress.last_hit.clone() {
+        // damage to it (a non-numeric result is skipped; a hit its substitute took or
+        // stopped counts 0).
+        for &(t, last) in &progress.last_hit.clone() {
             let Some(pokemon) = b.alive(t) else {
                 continue;
+            };
+            let damage = match last {
+                LastHit::Damage(d) => Some(d),
+                LastHit::Done => None,
+                LastHit::Substitute | LastHit::Blocked => Some(0),
             };
             let current = if mv.spread { damage } else { Some(total) };
             let Some(current) = current else {
@@ -1811,14 +1872,32 @@ fn spread_move_hit<const N: usize>(
     let data = mv.data;
     // `getMoveHitData(move).typeMod` is (re)computed by this hit's `getDamage`.
     b.hit_type_mod = [[None; N]; 2];
-    // getSpreadDamage: every target's damage is decided before any is dealt.
-    let mut planned = Vec::with_capacity(targets.len());
+    // 0. `tryPrimaryHitEvent` for every target first: a substitute takes the hit
+    //    (`hit_substitute`). Aura Break's `onAnyTryPrimaryHit` (priority 0, before the
+    //    substitute's -1) only sets a flag `get_damage` reads.
+    let mut shielded = Vec::with_capacity(targets.len());
     for &t in targets {
-        planned.push(get_damage(b, user, mv, t, hit)?);
+        shielded.push(if substitute_takes_hit(b, user, mv, t) {
+            Some(hit_substitute(b, user, mv, t, hit)?)
+        } else {
+            None
+        });
+    }
+    // getSpreadDamage: every other target's damage is decided before any is dealt.
+    let mut planned = Vec::with_capacity(targets.len());
+    for (&t, shield) in targets.iter().zip(&shielded) {
+        planned.push(match shield {
+            Some(_) => None,
+            None => Some(get_damage(b, user, mv, t, hit, false)?),
+        });
     }
     // spreadDamage.
     let mut results = Vec::with_capacity(targets.len());
-    for (&t, plan) in targets.iter().zip(&planned) {
+    for ((&t, plan), shield) in targets.iter().zip(&planned).zip(&shielded) {
+        let Some(plan) = plan else {
+            results.push(shield.expect("a shielded target has its result"));
+            continue;
+        };
         let result = match *plan {
             Planned::Fail => Hit::Failed,
             Planned::NoDamage => Hit::Done,
@@ -1838,8 +1917,18 @@ fn spread_move_hit<const N: usize>(
     }
     // runMoveEffects.
     for (i, &t) in targets.iter().enumerate() {
-        if !results[i].ok() {
-            continue;
+        match results[i] {
+            Hit::Failed | Hit::Blocked => continue,
+            // `targets[i]` is `null`: of the effects only the user's own act
+            // (`selfdestruct: 'ifHit'`, as `damage[i]` is 0; the self-switch check only adds to
+            // the result).
+            Hit::Substitute => {
+                if data.selfdestruct == SelfDestruct::IfHit {
+                    b.faint(user);
+                }
+                continue;
+            }
+            Hit::Done | Hit::Damage(_) => {}
         }
         let mut did: Option<bool> = None;
         let mut note = |r: bool| did = Some(did.unwrap_or(false) || r);
@@ -1935,22 +2024,32 @@ fn spread_move_hit<const N: usize>(
     if let Some(effect) = data.self_effect.filter(|_| !mv.has_sheer_force) {
         let chance = u32::from(effect.chance) * mv.secondary_chance_factor;
         if effect.boosts != NO_BOOSTS {
-            if results.iter().any(|r| r.ok()) && b.rng.chance(chance, 100) {
+            if results.iter().any(|r| r.in_targets()) && b.rng.chance(chance, 100) {
                 b.boost_by(user, &effect.boosts, Some(user), BoostEffect::Move(mv.id));
             }
         } else if let Some(volatile) = Volatile::from_condition(effect.volatile_status) {
-            for _ in results.iter().filter(|r| r.ok()) {
+            for _ in results.iter().filter(|r| r.in_targets()) {
                 if b.add_volatile_from(user, volatile, mv.id) && volatile == Volatile::Roost {
                     conditions::roost_start(b, user);
                 }
+            }
+        } else {
+            // A `self` effect with only an `onHit` (Double Shock).
+            for _ in results.iter().filter(|r| r.in_targets()) {
+                handlers::self_on_hit(b, user, mv);
             }
         }
     }
     // secondaries: each target's ModifySecondaries (Shield Dust), then one roll per secondary
     // (Sheer Force deleted them; Serene Grace doubled the chances).
     for (i, &t) in targets.iter().enumerate() {
-        if !results[i].ok() {
-            continue;
+        match results[i] {
+            Hit::Failed | Hit::Blocked => continue,
+            Hit::Substitute => {
+                substitute_secondaries(b, user, mv);
+                continue;
+            }
+            Hit::Done | Hit::Damage(_) => {}
         }
         // Secondaries: Sheer Force / Shield Dust (`ability_hooks::secondaries`) decide the
         // move's own, Serene Grace doubles their chance, Covert Cloak (`ModifySecondaries`)
@@ -1998,7 +2097,7 @@ fn spread_move_hit<const N: usize>(
     // returns `null`, which neither drags nor fails the move.
     if data.force_switch {
         for (i, &t) in targets.iter().enumerate() {
-            if !results[i].ok()
+            if !results[i].reached()
                 || b.alive(t).is_none()
                 || b.alive(user).is_none()
                 || super::residual::bench(b, t.side).next().is_none()
@@ -2038,6 +2137,115 @@ fn spread_move_hit<const N: usize>(
         }
     }
     Ok(results)
+}
+
+/// The substitute's `onTryPrimaryHit` guard (`if (target === source || move.flags['bypasssub']
+/// || move.infiltrates) return;`): whether `target`'s substitute takes this hit. Sound moves
+/// carry `bypasssub` in the data.
+fn substitute_takes_hit<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    target != user
+        && b.has_substitute(target)
+        && !mv.data.flags.contains(MoveFlags::BYPASSSUB)
+        && !handlers::infiltrates(user, mv, target)
+}
+
+/// The substitute's `onTryPrimaryHit` (F11): `getDamage` for the target (no damage: `null`,
+/// the move stops there without failing); the substitute loses that much (capped at its HP)
+/// and breaks at 0 (`removeVolatile`); the user takes the recoil of that damage
+/// (`applyRecoilDamage`) and drains `Math.ceil(damage * drain)`; then `AfterSubDamage`: the
+/// move's own handler, then the target's item (Air Balloon); `HIT_SUBSTITUTE`.
+/// (`source.lastDamage` has no reader among the implemented moves.)
+fn hit_substitute<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+    hit: u8,
+) -> Result<Hit, TurnError> {
+    // Disguise and Ice Face skip their `onCriticalHit` / `onEffectiveness` against a hit on the
+    // substitute (`hitSub`); that belongs with their forme handlers.
+    if [abilities::DISGUISE, abilities::ICE_FACE].contains(&b.ability(target)) {
+        return Err(b.unsupported("Disguise / Ice Face behind a substitute"));
+    }
+    let damage = match get_damage(b, user, mv, target, hit, true)? {
+        Planned::Damage(d) => d,
+        Planned::Fail | Planned::NoDamage => return Ok(Hit::Blocked),
+    };
+    let sub_hp = i32::from(b.state.slot(target).substitute_hp);
+    let damage = damage.min(sub_hp);
+    if sub_hp - damage <= 0 {
+        b.remove_volatile(target, Volatile::Substitute);
+    } else {
+        b.set_substitute_hp(target, (sub_hp - damage) as i16);
+    }
+    if damage != 0 {
+        substitute_recoil(b, user, mv, damage);
+    }
+    if let Some(drain) = mv.data.drain {
+        let amount = (f64::from(damage) * f64::from(drain.0) / f64::from(drain.1)).ceil();
+        b.heal(user, amount);
+    }
+    handlers::on_after_sub_damage(b, user, mv);
+    item_events::after_sub_damage(b, target);
+    Ok(Hit::Substitute)
+}
+
+/// Showdown `applyRecoilDamage(damage, move, source)` for the damage a substitute took (the
+/// hit loop's own recoil only counts `move.totalDamage`, which leaves it out): Struggle
+/// `directDamage(round(baseMaxhp / 4))`, a `recoil` move `damage(max(1, round(damage *
+/// recoil)))` (Rock Head, Magic Guard); then `EmergencyExit` on the user if the recoil took
+/// its HP to half.
+fn substitute_recoil<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    damage: i32,
+) {
+    let Some(pokemon) = b.alive(user) else {
+        return;
+    };
+    let (hp_before, max_hp) = (b.mon(pokemon).hp, b.mon(pokemon).max_hp);
+    if mv.data.struggle_recoil {
+        let amount = (f64::from(max_hp) / 4.0).round().max(1.0) as i32;
+        b.direct_damage(user, amount);
+    } else if let Some(recoil) = mv.data.recoil {
+        let amount = (f64::from(damage) * f64::from(recoil.0) / f64::from(recoil.1))
+            .round()
+            .max(1.0);
+        b.damage(user, amount, DamageSource::Recoil);
+    } else {
+        return;
+    }
+    super::switching::emergency_exit_check(b, user, hp_before);
+}
+
+/// `secondaries()` for a target whose substitute took the hit: `ModifySecondaries` runs without
+/// a target (no Shield Dust, no Covert Cloak), every secondary is rolled, and `moveHit(null)`
+/// only applies a secondary's `self` part (the user's boosts). Rolls without a `self` part
+/// change nothing, so they are not drawn.
+fn substitute_secondaries<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
+    if mv.has_sheer_force {
+        return;
+    }
+    for secondary in mv.data.secondaries {
+        if secondary.self_boosts == NO_BOOSTS {
+            continue;
+        }
+        let chance = u32::from(secondary.chance) * mv.secondary_chance_factor;
+        if b.rng.chance(chance, 100) {
+            b.boost_by(
+                user,
+                &secondary.self_boosts,
+                Some(user),
+                BoostEffect::Move(mv.id),
+            );
+        }
+    }
 }
 
 /// Showdown `runEvent('DamagingHit', damagedTargets, pokemon, move, damage)` (WORKPLAN F15):
@@ -2191,13 +2399,15 @@ enum Planned {
 }
 
 /// Showdown `getDamage` + `modifyDamage`; the crit and the damage roll are decided here. `hit`
-/// is `move.hit` (Triple Axel's power).
+/// is `move.hit` (Triple Axel's power). `hit_substitute`: the damage is for the target's
+/// substitute (the resist berries' `hitSub` check).
 fn get_damage<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
     hit: u8,
+    hit_substitute: bool,
 ) -> Result<Planned, TurnError> {
     let data = mv.data;
     if type_immune(b, mv, target) {
@@ -2406,6 +2616,7 @@ fn get_damage<const N: usize>(
         target,
         mv.move_type,
         type_mod,
+        hit_substitute,
     ));
     // The target's volatiles (`onSourceModifyDamage`: Glaive Rush).
     final_mods.extend(handlers::volatile_modify_damage(b, target, mv));

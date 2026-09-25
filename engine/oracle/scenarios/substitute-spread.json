@@ -1,0 +1,23 @@
+{
+ "description": "F11 Substitute: Aerodactyl (fastest) puts up a substitute (a quarter of its max HP). Gardevoir's Dazzling Gleam then hits the substitute and Snorlax (spread); some rolls leave the substitute standing, others break it. Blissey's Seismic Toss (50) then breaks what is left of the substitute, or hits Aerodactyl if it is gone. Snorlax Hardens last.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Aerodactyl", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 32, "spd": 32, "spe": 2}, "moves": ["Substitute", "Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Harden", "Tackle"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Gardevoir", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spa": 2}, "moves": ["Dazzling Gleam", "Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Seismic Toss", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move substitute, move harden", "p2": "move dazzlinggleam, move seismictoss 1"}
+}

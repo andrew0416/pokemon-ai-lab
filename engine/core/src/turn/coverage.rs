@@ -6,7 +6,7 @@
 use crate::dex::{AbilityId, ItemId, MoveId};
 
 use super::support::{ability_supported_on_field, item_supported_on_field, move_unsupported};
-use super::switching::{item_start_handler, switch_in_supported};
+use super::switching::{item_start_handler, start_effect, switch_in_supported, StartEffect};
 
 /// How far one dex entry is supported.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -35,6 +35,12 @@ pub fn move_support(id: MoveId) -> Support {
 
 pub fn ability_support(id: AbilityId) -> Support {
     let data = id.data();
+    // Trace never stays on the field: its switch-in (`switching::START_HANDLERS`) replaces it
+    // with the copied ability, so its `onStart` / `onUpdate` are implemented there (a Trace with
+    // nothing to copy is refused when it happens, and `check_state` refuses one left seeking).
+    if matches!(start_effect(id), Some(StartEffect::Trace)) {
+        return Support::Supported;
+    }
     if !ability_supported_on_field(id) {
         return Support::Unsupported {
             reason: format!("callbacks {:?} are not implemented", data.handlers),
@@ -61,4 +67,18 @@ pub fn item_support(id: ItemId) -> Support {
         };
     }
     Support::Supported
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::dex::abilities;
+
+    /// Trace is classified by its switch-in, which replaces it (not by the on-field table, where
+    /// a Trace still seeking is refused).
+    #[test]
+    fn trace_is_supported_through_its_switch_in() {
+        assert!(!ability_supported_on_field(abilities::TRACE));
+        assert_eq!(ability_support(abilities::TRACE), Support::Supported);
+    }
 }

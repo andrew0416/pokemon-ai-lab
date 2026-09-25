@@ -1,0 +1,28 @@
+{
+ "description": "F11 Substitute: Crobat (Rocky Helmet) put up a substitute in the setup turn. Chansey switches out for Arcanine, whose Intimidate lowers Snorlax's Attack but not Crobat's (immune behind its substitute). Ambipom's Double Hit then hits the substitute; a hit that breaks it leaves the second hit to Crobat itself, and only a hit on Crobat triggers Rocky Helmet (no DamagingHit against a substitute).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Crobat", "item": "Rocky Helmet", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"def": 32, "spd": 32, "spe": 2}, "moves": ["Substitute", "Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Harden", "Tackle"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Ambipom", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Double Hit", "Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Harden", "Seismic Toss"], "level": 50},
+   {"species": "Arcanine", "item": "", "ability": "Intimidate", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Harden", "Bite"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "setupTurns": [
+  ["move substitute, move harden", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move harden, move harden", "p2": "move doublehit 1, switch 3"}
+}

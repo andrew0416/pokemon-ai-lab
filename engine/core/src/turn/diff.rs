@@ -250,10 +250,14 @@ fn slot_changes(out: &mut Vec<Instruction>, r: SlotRef, a: &Slot, b: &Slot) {
             new: b.switch_flag,
         });
     }
-    debug_assert!(
-        b.substitute_hp == 0 && !b.dynamax.is_active(),
-        "no instruction sets these yet"
-    );
+    if b.substitute_hp != 0 {
+        out.push(Instruction::SetSubstituteHp {
+            target: r,
+            old: 0,
+            new: b.substitute_hp,
+        });
+    }
+    debug_assert!(!b.dynamax.is_active(), "no instruction sets it yet");
 }
 
 fn field_effect(i: usize) -> crate::field::FieldEffect {
@@ -336,6 +340,10 @@ mod tests {
             },
         );
         to.slot_mut(me).boosts[0] = 1;
+        let r2 = SlotRef {
+            side: SideId::Two,
+            slot: 0,
+        };
         to.field[FieldEffect::Gravity as usize] = crate::field::Effect { value: 0, turns: 4 };
         to.turn = 2;
         // A forme change on one Pokémon, a bare type change on another.
@@ -359,6 +367,15 @@ mod tests {
                 value: 200,
                 turn: 1,
             };
+        // A substitute (F11): the volatile and its HP.
+        to.slot_mut(r2).volatiles.set(
+            Volatile::Substitute,
+            VolatileState {
+                active: true,
+                ..VolatileState::NONE
+            },
+        );
+        to.slot_mut(r2).substitute_hp = 37;
 
         let ins = instructions(&from, &to);
         let mut s = from.clone();

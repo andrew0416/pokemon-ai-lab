@@ -737,6 +737,10 @@ pub(crate) fn start_ability<const N: usize>(
             drop[0] = -1;
             debug_assert_eq!(drop.len(), BOOST_COUNT);
             for foe in b.alive_slots(slot.side.other()) {
+                // `if (target.volatiles['substitute']) this.add('-immune', target);`
+                if b.has_substitute(foe) {
+                    continue;
+                }
                 b.boost_by(
                     foe,
                     &drop,
@@ -835,8 +839,7 @@ fn download<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
 
 /// Intrepid Sword (`this.boost({atk: 1}, pokemon)`), Dauntless Shield (`{def: 1}`) and
 /// Supersweet Syrup (`this.boost({evasion: -1}, target, pokemon, null, true)` for every
-/// adjacent foe not fainted; a substitute, which is refused, makes a foe immune) act once per
-/// battle: Showdown sets `pokemon.swordBoost` / `.shieldBoost` / `.syrupTriggered` for good.
+/// adjacent foe not fainted; a substitute makes a foe immune) act once per battle: Showdown sets `pokemon.swordBoost` / `.shieldBoost` / `.syrupTriggered` for good.
 /// The state does not record those flags, so they act at the battle start (when no Pokémon has
 /// been on the field yet) and a later start is refused.
 fn once_per_battle<const N: usize>(
@@ -857,7 +860,9 @@ fn once_per_battle<const N: usize>(
         _ => {
             boosts[6] = -1;
             for foe in b.alive_slots(slot.side.other()) {
-                b.boost_by(foe, &boosts, Some(slot), BoostEffect::Ability(ability));
+                if !b.has_substitute(foe) {
+                    b.boost_by(foe, &boosts, Some(slot), BoostEffect::Ability(ability));
+                }
             }
             return Ok(());
         }

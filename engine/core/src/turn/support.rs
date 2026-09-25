@@ -226,8 +226,9 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         moves::STICKY_WEB,
         &["condition.onSideStart", "condition.onSwitchIn"],
     ),
-    // Hazard removal: Defog `onHit`, Rapid Spin `onAfterHit` (`onAfterSubDamage` needs a
-    // substitute, which is refused), Court Change `onHitField`.
+    // Hazard removal: Defog `onHit` (no evasion drop behind a substitute), Rapid Spin
+    // `onAfterHit` and `onAfterSubDamage` (`handlers::on_after_sub_damage`), Court Change
+    // `onHitField`.
     (moves::DEFOG, &["onHit"]),
     (moves::RAPID_SPIN, &["onAfterHit", "onAfterSubDamage"]),
     (moves::COURT_CHANGE, &["onHitField"]),
@@ -263,7 +264,7 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::EXPANDING_FORCE, &["onBasePower", "onModifyMove"]),
     (moves::WEATHER_BALL, &["onModifyMove", "onModifyType"]),
     (moves::TERRAIN_PULSE, &["onModifyMove", "onModifyType"]),
-    // `onAfterSubDamage` needs a substitute, which is refused.
+    // `onAfterSubDamage` in `handlers::on_after_sub_damage`.
     (moves::ICE_SPINNER, &["onAfterHit", "onAfterSubDamage"]),
     (moves::STEEL_ROLLER, &["onAfterSubDamage", "onHit", "onTry"]),
     // `onTryMove` only fails an ally-targeted use under Heal Block, which no supported effect
@@ -402,6 +403,22 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     ),
     (moves::FIRST_IMPRESSION, &["onDisableMove", "onTry"]),
     (moves::DIRE_CLAW, &["secondaries.onHit", "secondary.onHit"]),
+    // Substitute (F11): `onTryHit` and `onHit` in `handlers`, the volatile's `onStart` in
+    // `conditions::volatile_start` (HP in `Slot::substitute_hp`), `onTryPrimaryHit` in
+    // `moves::hit_substitute` (routing in `moves::spread_move_hit`), `onEnd` only logs.
+    (
+        moves::SUBSTITUTE,
+        &[
+            "condition.onEnd",
+            "condition.onStart",
+            "condition.onTryPrimaryHit",
+            "onHit",
+            "onTryHit",
+        ],
+    ),
+    // Double Shock: `onTryMove` (`handlers::null_try_move`: no Electric type, `null`) and
+    // `self.onHit` (`handlers::self_on_hit`: Electric becomes `???`, `Type::Unknown`).
+    (moves::DOUBLE_SHOCK, &["onTryMove", "self.onHit"]),
     // Belly Drum `onHit`; Clangorous Soul and Fillet Away: `onTry` (HP), `onTryHit` (the boosts,
     // then deleted: `handlers::boosts_applied_in_try_hit`), `onHit` (the HP cost); No Retreat:
     // `onTry`, the volatile's `onTrapPokemon` in `conditions::trapped` (`onStart` only logs).
@@ -445,8 +462,7 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         &["condition.onResidual", "condition.onStart", "onTryImmunity"],
     ),
     // Screen breakers (`handlers::on_try_hit`; Raging Bull's type in `on_modify_type`), hazard
-    // setters and Mortal Spin (`on_after_hit`; `onAfterSubDamage` needs a substitute, which is
-    // refused), crash moves (`on_move_fail`), Misty Explosion (`on_base_power`; self-destruct in
+    // setters and Mortal Spin (`on_after_hit`, `on_after_sub_damage`), crash moves (`on_move_fail`), Misty Explosion (`on_base_power`; self-destruct in
     // `moves::use_move`), Final Gambit (`damage_callback`; `ifHit` in `spread_move_hit`).
     (moves::PSYCHIC_FANGS, &["onTryHit"]),
     (moves::BRICK_BREAK, &["onTryHit"]),
@@ -735,6 +751,8 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::PETAYA_BERRY, &["onEat", "onUpdate"]),
     (items::APICOT_BERRY, &["onEat", "onUpdate"]),
     (items::LUM_BERRY, &["onAfterSetStatus", "onEat", "onUpdate"]),
+    // Gen 2's Lum Berry without `onAfterSetStatus` (`update.rs`).
+    (items::MIRACLE_BERRY, &["onEat", "onUpdate"]),
     (items::CHERI_BERRY, &["onEat", "onUpdate"]),
     (items::CHESTO_BERRY, &["onEat", "onUpdate"]),
     (items::PECHA_BERRY, &["onEat", "onUpdate"]),
@@ -839,8 +857,8 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
         &["onAnyPseudoWeatherChange", "onStart"],
     ),
     // Grounding (`Battle::is_grounded`), Speed, effectiveness; Air Balloon's `onStart` only
-    // announces it and its pop (`onDamagingHit`) is refused until F15 (`items::on_damaging_hit`;
-    // `onAfterSubDamage` needs a substitute, which is refused).
+    // announces it; it pops on a damaging hit (`moves::damaging_hit`) and on a move its
+    // holder's substitute takes (`items::after_sub_damage`).
     (
         items::AIR_BALLOON,
         &["onAfterSubDamage", "onDamagingHit", "onStart"],
@@ -1588,8 +1606,21 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
                 return Err(format!("{name}: species callbacks"));
             }
             let slot_state = state.slot(r);
-            if slot_state.substitute_hp != 0 || slot_state.dynamax.is_active() {
-                return Err(format!("{name}: substitute or Dynamax"));
+            if slot_state.dynamax.is_active() {
+                return Err(format!("{name}: Dynamax"));
+            }
+            // A substitute is its volatile plus its HP (`Slot::substitute_hp`), both or none.
+            let substitute = slot_state.volatiles.has(Volatile::Substitute);
+            if substitute != (slot_state.substitute_hp > 0) {
+                return Err(format!(
+                    "{name}: substitute volatile {substitute} with {} HP",
+                    slot_state.substitute_hp
+                ));
+            }
+            // Disguise and Ice Face check for a substitute themselves (`hitSub`, the formes
+            // unit); behind one they stay refused.
+            if substitute && [abilities::DISGUISE, abilities::ICE_FACE].contains(&mon.ability) {
+                return Err(format!("{name}: Disguise / Ice Face behind a substitute"));
             }
         }
     }
@@ -1673,6 +1704,120 @@ mod tests {
             }
         }
         assert!(!ability_supported_on_field(abilities::COMMANDER));
+    }
+
+    /// Substitute (F11): every Showdown effect that reads a substitute or passes through one is
+    /// implemented or refused.
+    /// - `onAfterSubDamage`: implemented for these moves (`handlers::on_after_sub_damage`) and
+    ///   Air Balloon (`items::after_sub_damage`); every other holder (Core Enforcer, Shell Side
+    ///   Arm, ...) is refused.
+    /// - `TryPrimaryHit`: only Aura Break's `onAnyTryPrimaryHit` besides the substitute; the
+    ///   gems' `onSourceTryPrimaryHit` and Gulp Missile are refused.
+    /// - `move.infiltrates`: Infiltrator and Present are refused (Pollen Puff is implemented).
+    /// - Moves whose own code reads a substitute: Aromatherapy and Defog are implemented; Shed
+    ///   Tail, Baton Pass, Sky Drop, Tidy Up, Transform, Sparkly Swirl are refused.
+    /// - Disguise and Ice Face (`hitSub` in their handlers) are refused behind a substitute
+    ///   (`check_state`, and `moves::hit_substitute` at run time).
+    #[test]
+    fn substitute_readers_are_implemented_or_refused() {
+        use crate::dex::ItemId;
+        const AFTER_SUB_DAMAGE: [MoveId; 6] = [
+            moves::RAPID_SPIN,
+            moves::MORTAL_SPIN,
+            moves::ICE_SPINNER,
+            moves::STEEL_ROLLER,
+            moves::CEASELESS_EDGE,
+            moves::STONE_AXE,
+        ];
+        for id in MoveId::all() {
+            let handlers = id.data().handlers;
+            if move_unsupported(id).is_none() && handlers.contains(&"onAfterSubDamage") {
+                assert!(AFTER_SUB_DAMAGE.contains(&id), "{id:?}");
+            }
+            if move_unsupported(id).is_none() {
+                assert!(
+                    !handlers.iter().any(|h| h.contains("TryPrimaryHit"))
+                        || id == moves::SUBSTITUTE,
+                    "{id:?}"
+                );
+            }
+        }
+        for id in ItemId::all() {
+            let handlers = id.data().handlers;
+            if item_supported_on_field(id)
+                && handlers
+                    .iter()
+                    .any(|h| h.contains("AfterSubDamage") || h.contains("TryPrimaryHit"))
+            {
+                assert_eq!(id, items::AIR_BALLOON);
+            }
+        }
+        assert!(!item_supported_on_field(items::NORMAL_GEM));
+        for id in AbilityId::all() {
+            let handlers = id.data().handlers;
+            if ability_supported_on_field(id)
+                && handlers
+                    .iter()
+                    .any(|h| h.contains("AfterSubDamage") || h.contains("TryPrimaryHit"))
+            {
+                assert_eq!(id, abilities::AURA_BREAK);
+            }
+        }
+        for ability in [
+            abilities::INFILTRATOR,
+            abilities::GULP_MISSILE,
+            abilities::DISGUISE,
+            abilities::ICE_FACE,
+        ] {
+            assert!(!ability_supported_on_field(ability), "{ability:?}");
+        }
+        for id in [
+            moves::SHED_TAIL,
+            moves::BATON_PASS,
+            moves::SKY_DROP,
+            moves::TIDY_UP,
+            moves::TRANSFORM,
+            moves::SPARKLY_SWIRL,
+            moves::PRESENT,
+        ] {
+            assert!(move_unsupported(id).is_some(), "{id:?}");
+        }
+        assert_eq!(move_unsupported(moves::SUBSTITUTE), None);
+    }
+
+    /// A substitute is its volatile and its HP together; Disguise and Ice Face behind one are
+    /// refused.
+    #[test]
+    fn substitute_state_is_checked() {
+        let mut state = State::<2>::default();
+        let slot = SlotRef {
+            side: SideId::One,
+            slot: 0,
+        };
+        for side in [SideId::One, SideId::Two] {
+            state.side_mut(side).party[0].species = crate::dex::species::MIMIKYU;
+            state.side_mut(side).party[0].max_hp = 100;
+            state.side_mut(side).party[0].hp = 100;
+            state.side_mut(side).slots[0].party_index = Some(0);
+        }
+        assert_eq!(check_state(&state), Ok(()));
+        state.slot_mut(slot).substitute_hp = 25;
+        assert!(check_state(&state).is_err(), "HP without the volatile");
+        state.slot_mut(slot).volatiles.set(
+            Volatile::Substitute,
+            crate::volatile::VolatileState {
+                active: true,
+                ..crate::volatile::VolatileState::NONE
+            },
+        );
+        assert_eq!(check_state(&state), Ok(()));
+        state.slot_mut(slot).substitute_hp = 0;
+        assert!(check_state(&state).is_err(), "the volatile without HP");
+        state.slot_mut(slot).substitute_hp = 25;
+        // `check_state` refuses Disguise on the field anyway until the formes unit; the
+        // substitute check keeps refusing it afterwards.
+        state.side_mut(SideId::One).party[0].ability = abilities::DISGUISE;
+        assert!(check_state(&state).is_err());
     }
 
     /// Purifying Salt's `onTryAddVolatile` only blocks Yawn, which `Battle::add_volatile_blocked`
