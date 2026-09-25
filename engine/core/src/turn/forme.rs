@@ -21,12 +21,14 @@
 //! Types under Roost: Showdown filters Flying out of `getTypes()` while Roost is up; the engine
 //! stores the filtered types and keeps the real ones in the volatile ([`set_types`]).
 
-use crate::dex::{abilities, species, MoveCategory, MoveFlags, MoveId, SpeciesId, Type};
+use crate::dex::{abilities, species, AbilityId, MoveCategory, MoveFlags, MoveId, SpeciesId, Type};
+use crate::field::Weather;
 use crate::instruction::Instruction;
 use crate::state::{Forme, PokemonRef, SlotRef};
 use crate::volatile::{encode_types, Volatile, VolatileState};
 
 use super::battle::{Battle, DamageSource};
+use super::TurnError;
 
 /// How a forme change treats the Pokémon's base species and ability.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -160,11 +162,22 @@ fn set_types<const N: usize>(
     }
 }
 
-// ---- Disguise ---------------------------------------------------------------------------------
+// ---- Disguise and Ice Face --------------------------------------------------------------------
 
 /// The formes whose Disguise still works (`['mimikyu', 'mimikyutotem'].includes(species.id)`).
 fn disguised(species: SpeciesId) -> bool {
     species == species::MIMIKYU || species == species::MIMIKYU_TOTEM
+}
+
+/// Whether the ability shields its holder of species `species` from a move of `category` (the
+/// condition shared by the ability's `onDamage`, `onCriticalHit` and `onEffectiveness`):
+/// Disguise on an undisguised Mimikyu against any move, Ice Face on Eiscue (with its face)
+/// against a physical move.
+fn shield_up(ability: AbilityId, species: SpeciesId, category: MoveCategory) -> bool {
+    (ability == abilities::DISGUISE && disguised(species))
+        || (ability == abilities::ICE_FACE
+            && species == species::EISCUE
+            && category == MoveCategory::Physical)
 }
 
 /// Showdown's `hitSub` test in the Disguise and Ice Face handlers: the target's substitute
@@ -184,8 +197,9 @@ fn hits_substitute<const N: usize>(
 /// Whether the target's ability cancels a critical hit (`onCriticalHit` returning `false`) and
 /// makes every type neutral (`onEffectiveness` returning 0, which ends the Effectiveness event
 /// for each of the target's types) for `user`'s damaging move `id`: Disguise on an undisguised
-/// Mimikyu. Both handlers are breakable and skip a hit on a substitute; their
-/// `runImmunity(move)` test always passes here, since `getDamage` stops at an immunity first.
+/// Mimikyu, Ice Face on Eiscue against a physical move. The handlers are breakable and skip a
+/// hit on a substitute; their `runImmunity(move)` test always passes here, since `getDamage`
+/// stops at an immunity first.
 pub(crate) fn shields_hit<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
@@ -195,34 +209,48 @@ pub(crate) fn shields_hit<const N: usize>(
     let Some(mon) = b.slot_mon(target) else {
         return false;
     };
-    let ability = b.ability_unless_broken(target);
-    let shielded = ability == abilities::DISGUISE && disguised(mon.species);
-    shielded && id.data().category != MoveCategory::Status && !hits_substitute(b, user, target, id)
+    let category = id.data().category;
+    category != MoveCategory::Status
+        && shield_up(b.ability_unless_broken(target), mon.species, category)
+        && !hits_substitute(b, user, target, id)
 }
 
 /// The target's `onDamage` handler of priority 1 (the first Damage handler; returning 0 ends
 /// the event, so no other Damage handler runs) for a move's damage (`effect.effectType ===
-/// 'Move'`: the move's hits and the confusion self-hit): Disguise on an undisguised Mimikyu
-/// sets `effectState.busted` and the damage becomes 0. Breakable. The forme changes at the
-/// next Update ([`on_update`]). Returns whether the damage was absorbed.
+/// 'Move'`: the move's hits and the confusion self-hit): Disguise on an undisguised Mimikyu,
+/// or Ice Face on Eiscue against a physical move (`effect.category === 'Physical'`; the
+/// confusion self-hit has no category), sets `effectState.busted` and the damage becomes 0.
+/// Both are breakable. The forme changes at the next Update ([`on_update`]). Returns whether
+/// the damage was absorbed.
+///
+/// A move's damage to its own user can only be the confusion self-hit (no damaging move can
+/// target its user), which is how the self-hit is told apart from the move in progress.
 pub(crate) fn absorbs_damage<const N: usize>(
     b: &mut Battle<'_, N>,
     target: SlotRef,
     pokemon: PokemonRef,
 ) -> bool {
+    let category = b
+        .active_move
+        .filter(|m| m.user != target)
+        .map_or(MoveCategory::Status, |m| m.id.data().category);
     let ability = b.ability_unless_broken(target);
-    let absorbed = ability == abilities::DISGUISE && disguised(b.mon(pokemon).species);
+    let species = b.mon(pokemon).species;
+    let absorbed = (ability == abilities::DISGUISE && disguised(species))
+        || shield_up(ability, species, category);
     if absorbed && !b.busted.contains(&pokemon) {
         b.busted.push(pokemon);
     }
     absorbed
 }
 
-/// The ability `onUpdate` of Disguise for the Pokémon in `slot` (`eachEvent('Update')`;
-/// breakable, so a move that ignores abilities postpones it to a later Update): a busted
-/// Mimikyu becomes Mimikyu-Busted (Mimikyu-Busted-Totem) permanently, keeping its ability,
-/// then loses 1/8 of its max HP (`this.damage(pokemon.baseMaxhp / 8, pokemon, pokemon,
-/// species)`: not a move's damage).
+/// The ability `onUpdate` of Disguise and Ice Face for the Pokémon in `slot`
+/// (`eachEvent('Update')`; breakable, so a move that ignores abilities postpones them to a
+/// later Update):
+/// - a busted Mimikyu becomes Mimikyu-Busted (Mimikyu-Busted-Totem) permanently, keeping its
+///   ability, then loses 1/8 of its max HP (`this.damage(pokemon.baseMaxhp / 8, pokemon,
+///   pokemon, species)`: not a move's damage);
+/// - a busted Eiscue becomes Eiscue-Noice permanently, keeping its ability.
 pub(crate) fn on_update<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     let Some(pokemon) = b.alive(slot) else {
         return;
@@ -231,7 +259,8 @@ pub(crate) fn on_update<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
         return;
     };
     let species = b.mon(pokemon).species;
-    if b.ability_unless_broken(slot) == abilities::DISGUISE && disguised(species) {
+    let ability = b.ability_unless_broken(slot);
+    if ability == abilities::DISGUISE && disguised(species) {
         b.busted.remove(index);
         let busted = if species == species::MIMIKYU_TOTEM {
             species::MIMIKYU_BUSTED_TOTEM
@@ -241,6 +270,53 @@ pub(crate) fn on_update<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
         forme_change(b, slot, busted, Change::PermanentKeepAbility);
         let max_hp = f64::from(b.mon(pokemon).max_hp);
         b.damage(slot, max_hp / 8.0, DamageSource::Indirect);
+    } else if ability == abilities::ICE_FACE && species == species::EISCUE {
+        b.busted.remove(index);
+        forme_change(b, slot, species::EISCUE_NOICE, Change::PermanentKeepAbility);
+    }
+}
+
+/// Ice Face's `onStart` (switch-in, `onSwitchInPriority: -2`) and `onWeatherChange` (every
+/// `eachEvent('WeatherChange')` except the one an Air Lock / Cloud Nine start or end runs, which
+/// it ignores: `sourceEffect.suppressWeather`): in snow (`field.isWeather`, the effective
+/// weather) Eiscue-Noice gets its face back (`effectState.busted = false`,
+/// `formeChange('Eiscue', this.effect, true)`: permanent, ability kept). `onWeatherChange` also
+/// needs HP. The ability is breakable, so a weather that a Mold Breaker's move sets (its event
+/// runs while the move is active) skips it.
+pub(crate) fn ice_face_restore<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let Some(pokemon) = b.alive(slot) else {
+        return;
+    };
+    if b.ability_unless_broken(slot) != abilities::ICE_FACE
+        || b.mon(pokemon).species != species::EISCUE_NOICE
+        || b.effective_weather() != Weather::Snow
+    {
+        return;
+    }
+    b.busted.retain(|&p| p != pokemon);
+    forme_change(b, slot, species::EISCUE, Change::PermanentKeepAbility);
+}
+
+// ---- switch-in and field events ---------------------------------------------------------------
+
+/// `singleEvent('Start')` of a forme ability (`switching::StartEffect::Forme`, run in the
+/// switch-in's `fieldEvent('SwitchIn')` at the ability's `onSwitchInPriority`).
+pub(crate) fn on_start<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    ability: AbilityId,
+) -> Result<(), TurnError> {
+    if ability == abilities::ICE_FACE {
+        ice_face_restore(b, slot);
+    }
+    Ok(())
+}
+
+/// The forme abilities' `onWeatherChange` for the Pokémon in `slot`
+/// (`field_events::weather_changed`): Ice Face.
+pub(crate) fn weather_changed<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.ability(slot) == abilities::ICE_FACE {
+        ice_face_restore(b, slot);
     }
 }
 
@@ -267,5 +343,28 @@ mod tests {
             assert_eq!(from.data().types, to.data().types);
             assert_eq!(to.data().battle_only, [from]);
         }
+    }
+
+    /// Ice Face's handlers and orders; the Noice forme keeps the types and base HP.
+    #[test]
+    fn ice_face_matches_the_dex() {
+        let data = abilities::ICE_FACE.data();
+        assert_eq!(
+            data.handlers,
+            [
+                "onCriticalHit",
+                "onDamage",
+                "onEffectiveness",
+                "onStart",
+                "onUpdate",
+                "onWeatherChange"
+            ]
+        );
+        assert!(data.event_orders.contains(&("onDamagePriority", 1)));
+        assert!(data.event_orders.contains(&("onSwitchInPriority", -2)));
+        let (face, noice) = (species::EISCUE.data(), species::EISCUE_NOICE.data());
+        assert_eq!(face.types, noice.types);
+        assert_eq!(face.base_stats[0], noice.base_stats[0]);
+        assert_eq!(noice.battle_only, [species::EISCUE]);
     }
 }

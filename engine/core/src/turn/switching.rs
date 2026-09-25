@@ -96,6 +96,8 @@ pub(crate) enum StartEffect {
     Paradox,
     /// Wind Rider: Atk +1 if Tailwind is up on the holder's side.
     WindRider,
+    /// The forme abilities' `onStart` (`forme::on_start`): Ice Face.
+    Forme,
 }
 
 /// Abilities with an implemented start, with the exact handler lists they were implemented
@@ -234,6 +236,19 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         abilities::DISGUISE,
         &["onCriticalHit", "onDamage", "onEffectiveness", "onUpdate"],
         StartEffect::None,
+    ),
+    // F19 Ice Face (`onSwitchInPriority: -2`): its face back in snow (`forme::ice_face_restore`).
+    (
+        abilities::ICE_FACE,
+        &[
+            "onCriticalHit",
+            "onDamage",
+            "onEffectiveness",
+            "onStart",
+            "onUpdate",
+            "onWeatherChange",
+        ],
+        StartEffect::Forme,
     ),
     // O68 switch-in abilities (`start_ability`).
     (abilities::DOWNLOAD, &["onStart"], StartEffect::Download),
@@ -796,6 +811,7 @@ pub(crate) fn start_ability<const N: usize>(
                 super::abilities::wind_rider_boost(b, slot);
             }
         }
+        StartEffect::Forme => super::forme::on_start(b, slot, ability)?,
     }
     Ok(())
 }
@@ -868,14 +884,20 @@ fn once_per_battle<const N: usize>(
     Ok(())
 }
 
-/// Showdown `eachEvent('WeatherChange')`: every active Pokémon's `onWeatherChange` handlers,
-/// in Speed order. None is implemented (Forecast, Flower Gift, Ice Face, Protosynthesis), so
-/// the event does nothing, and a handler that would run makes it unsupported.
+/// Showdown `eachEvent('WeatherChange', airlock | cloudnine)`: every active Pokémon's
+/// `onWeatherChange` handlers, in Speed order. Ice Face's returns at once for a source with
+/// `suppressWeather`; no other is implemented (Forecast, Flower Gift, Protosynthesis), so the
+/// event does nothing, and a handler that would run makes it unsupported.
 fn weather_change<const N: usize>(b: &Battle<'_, N>) -> Result<(), TurnError> {
     for slot in b.all_alive() {
         let mon = b.slot_mon(slot).expect("alive");
+        let ability_handlers = if mon.ability == abilities::ICE_FACE {
+            &[][..]
+        } else {
+            mon.ability.data().handlers
+        };
         let handlers = [
-            (mon.ability.data().name, mon.ability.data().handlers),
+            (mon.ability.data().name, ability_handlers),
             (mon.item.data().name, mon.item.data().handlers),
             (mon.species.data().name, mon.species.data().handlers),
         ];

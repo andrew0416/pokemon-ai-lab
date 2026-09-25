@@ -11,7 +11,7 @@
 //! berries, the five pinch stat berries, Lansat, Starf, Lum and the six one-status berries,
 //! Leppa) and Lum's `onAfterSetStatus`; the abilities' `onUpdate` cures run first
 //! (`abilities::on_update`: the status cures of `cured_on_update`, Own Tempo's confusion cure;
-//! `forme::on_update`: Disguise). Other ability `onUpdate` handlers are refused (Trace still
+//! `forme::on_update`: Disguise, Ice Face). Other ability `onUpdate` handlers are refused (Trace still
 //! seeking, ...). A berry
 //! is eaten only if the `TryEatItem` handlers allow it (`abilities::try_eat_item`). [`eat_item`]
 //! also runs the `onEat` of the berries eaten elsewhere (Kee, Maranga, Jaboca, Rowap, Micle,

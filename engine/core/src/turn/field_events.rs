@@ -5,8 +5,9 @@
 //! (ties shuffled).
 //!
 //! Implemented handlers: the four Seeds' `onTerrainChange` (O92), Quark Drive's
-//! `onTerrainChange` and Protosynthesis's `onWeatherChange` (O72). The other `onWeatherChange`
-//! (Forecast, Flower Gift, Ice Face) and `onTerrainChange` (Mimicry) holders are refused on the
+//! `onTerrainChange` and Protosynthesis's `onWeatherChange` (O72), Ice Face's `onWeatherChange`
+//! (F19, `forme.rs`). The other `onWeatherChange` (Forecast, Flower Gift) and
+//! `onTerrainChange` (Mimicry) holders are refused on the
 //! field and at switch-in, which a test below pins, so these events cannot meet an
 //! unimplemented handler. Every implemented handler only changes its own holder, so the Speed
 //! order (and its random tie-breaks) cannot change the outcome and is not drawn.
@@ -52,12 +53,14 @@ pub(crate) fn terrain_changed<const N: usize>(b: &mut Battle<'_, N>) {
     }
 }
 
-/// Showdown `eachEvent('WeatherChange')`: Protosynthesis's `onWeatherChange`.
+/// Showdown `eachEvent('WeatherChange')`: Protosynthesis's and Ice Face's `onWeatherChange`
+/// (`forme::weather_changed`).
 pub(crate) fn weather_changed<const N: usize>(b: &mut Battle<'_, N>) {
     for slot in b.all_alive() {
         if b.ability(slot) == abilities::PROTOSYNTHESIS {
             super::abilities::paradox_change(b, slot);
         }
+        super::forme::weather_changed(b, slot);
     }
 }
 
@@ -89,7 +92,9 @@ mod tests {
             }
         }
         for id in AbilityId::all() {
-            let implemented = id == abilities::PROTOSYNTHESIS || id == abilities::QUARK_DRIVE;
+            let implemented = id == abilities::PROTOSYNTHESIS
+                || id == abilities::QUARK_DRIVE
+                || id == abilities::ICE_FACE;
             if reacts(id.data().handlers) && !implemented {
                 assert!(
                     !ability_supported_on_field(id) && !switch_in_supported(id),

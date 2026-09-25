@@ -75,9 +75,9 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// Showdown `forceSwitchFlag`: Pokémon a phazing move or Red Card drags out right after
     /// the action (`dragIn`, a uniformly random bench member), within the stage.
     pub force_switch: Vec<SlotRef>,
-    /// Disguise's `abilityState.busted` (`forme::absorbs_damage`): Pokémon whose ability
-    /// absorbed a move's damage and changes forme at the next Update (`forme::on_update`), which
-    /// always comes within the same stage.
+    /// Disguise's and Ice Face's `abilityState.busted` (`forme::absorbs_damage`): Pokémon whose
+    /// ability absorbed a move's damage and changes forme at the next Update
+    /// (`forme::on_update`), which always comes within the same stage.
     pub busted: Vec<PokemonRef>,
 }
 
@@ -316,8 +316,8 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// Showdown `spreadDamage` for one target: at least 1, Damage handlers, clamped to the
     /// target's HP, faint queued at 0 HP. Returns the HP removed.
     ///
-    /// Damage handlers by priority: Disguise (1, `forme::absorbs_damage`), Rock Head and Magic
-    /// Guard (0), Endure (-10), Sturdy (-30),
+    /// Damage handlers by priority: Disguise and Ice Face (1, `forme::absorbs_damage`), Rock
+    /// Head and Magic Guard (0), Endure (-10), Sturdy (-30),
     /// Focus Sash and Focus Band (-40, `items::on_damage`). Rock Head (`effect.id === 'recoil'`)
     /// and Magic Guard (`effect.effectType !== 'Move'`) cancel the damage (neither is
     /// breakable). Endure, Sturdy and Focus Sash leave the target at 1 HP against a move's
@@ -327,8 +327,8 @@ impl<'a, const N: usize> Battle<'a, N> {
         let Some(pokemon) = self.alive(target) else {
             return 0;
         };
-        // Disguise `onDamage` (priority 1, the first handler): a move's damage becomes 0, which
-        // ends the event.
+        // Disguise / Ice Face `onDamage` (priority 1, the first handler): a move's damage becomes
+        // 0, which ends the event.
         if source == DamageSource::Move && super::forme::absorbs_damage(self, target, pokemon) {
             return 0;
         }

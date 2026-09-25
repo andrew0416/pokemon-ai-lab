@@ -913,6 +913,19 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         abilities::DISGUISE,
         &["onCriticalHit", "onDamage", "onEffectiveness", "onUpdate"],
     ),
+    // Ice Face: as Disguise for physical moves; `onStart` in `switching::start_ability`,
+    // `onWeatherChange` in `field_events::weather_changed` (`forme::ice_face_restore`).
+    (
+        abilities::ICE_FACE,
+        &[
+            "onCriticalHit",
+            "onDamage",
+            "onEffectiveness",
+            "onStart",
+            "onUpdate",
+            "onWeatherChange",
+        ],
+    ),
     // Damage handlers (`Battle::damage`).
     (abilities::ROCK_HEAD, &["onDamage"]),
     (abilities::MAGIC_GUARD, &["onDamage"]),

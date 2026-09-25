@@ -39,6 +39,29 @@ fn disguise_absorbs_a_confusion_self_hit() {
     assert_exact_parity("disguise-confusion");
 }
 
+// ---- Ice Face ---------------------------------------------------------------------------------
+
+/// A physical hit is absorbed and Eiscue becomes Eiscue-Noice; the faster Noice forme then
+/// moves before Gardevoir (the queue is re-sorted), its Snowscape restores the face, and
+/// Gardevoir's special move hits the restored Eiscue.
+#[test]
+fn ice_face_absorbs_a_physical_hit_and_snow_restores_it() {
+    assert_exact_parity("ice-face-snowscape");
+}
+
+/// Eiscue-Noice stays Noice on the bench (permanent forme) and gets its face back when it
+/// switches in during snow; the next physical hit is absorbed again.
+#[test]
+fn ice_face_is_restored_on_switch_in_during_snow() {
+    assert_exact_parity("ice-face-switch-in");
+}
+
+/// The confusion self-hit has no category: Ice Face lets it through.
+#[test]
+fn ice_face_lets_a_confusion_self_hit_through() {
+    assert_exact_parity("ice-face-confusion");
+}
+
 /// The busted forme is permanent and keeps Disguise (inert on Mimikyu-Busted); max HP is the
 /// same, the Weakness Policy is still held.
 #[test]
