@@ -138,12 +138,39 @@ impl<'a, const N: usize> Battle<'a, N> {
         self.slot_mon(slot).is_some_and(|m| m.types.contains(&ty))
     }
 
+    /// The weather on the field (`field.weather`), whether or not it is suppressed: what
+    /// setting a weather, its duration and its residual countdown see. Effects of the weather
+    /// read [`Battle::effective_weather`].
     pub fn weather(&self) -> Weather {
         let e = self.state.field[FieldEffect::Weather as usize];
         if !e.is_active() {
             return Weather::None;
         }
         weather_from(e.value)
+    }
+
+    /// Showdown `field.effectiveWeather()`: no weather while it is suppressed
+    /// ([`Battle::weather_suppressed`]), otherwise the field's weather. Every effect of a weather
+    /// reads this (Showdown's `isWeather` and `effectiveWeather`, and the weather condition's own
+    /// handlers, which `runEvent` skips while the weather is suppressed).
+    pub fn effective_weather(&self) -> Weather {
+        if self.weather_suppressed() {
+            Weather::None
+        } else {
+            self.weather()
+        }
+    }
+
+    /// Showdown `field.suppressingWeather()`: an active Pokémon not processed as fainted (it may
+    /// be at 0 HP) has an ability with `suppressWeather` (Air Lock, Cloud Nine). Its
+    /// `abilityState.ending` flag only matters inside its own `End` event, whose
+    /// `WeatherChange` has no implemented handler; Gastro Acid and Neutralizing Gas are not
+    /// supported.
+    pub fn weather_suppressed(&self) -> bool {
+        State::<N>::slot_refs().any(|slot| {
+            self.slot_mon(slot)
+                .is_some_and(|mon| mon.ability.data().suppress_weather)
+        })
     }
 
     pub fn terrain(&self) -> Terrain {
@@ -208,7 +235,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         if immunity == TypeImmunities::FRZ {
             // Harsh sunlight (`sunnyday.onImmunity`, hidden by Utility Umbrella) and Magma
             // Armor (breakable).
-            return (matches!(self.weather(), Weather::Sun | Weather::HarshSun)
+            return (matches!(self.effective_weather(), Weather::Sun | Weather::HarshSun)
                 && mon.item != items::UTILITY_UMBRELLA)
                 || self.ability_unless_broken(slot) == abilities::MAGMA_ARMOR;
         }
@@ -477,7 +504,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             a if a == abilities::LIMBER => status == Status::Paralyze,
             a if a == abilities::COMATOSE || a == abilities::PURIFYING_SALT => true,
             // `target.effectiveWeather()`: Utility Umbrella is not supported.
-            a if a == abilities::LEAF_GUARD => self.weather() == Weather::Sun,
+            a if a == abilities::LEAF_GUARD => self.effective_weather() == Weather::Sun,
             _ => false,
         };
         if blocked_by_own {
@@ -518,7 +545,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             {
                 yawn
             }
-            a if a == abilities::LEAF_GUARD => yawn && self.weather() == Weather::Sun,
+            a if a == abilities::LEAF_GUARD => yawn && self.effective_weather() == Weather::Sun,
             _ => false,
         };
         if blocked_by_own {

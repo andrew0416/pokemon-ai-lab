@@ -43,3 +43,17 @@ fn wonder_guard_and_good_as_gold_match_showdown() {
 fn dazzling_and_armor_tail_match_showdown() {
     assert_exact_parity("o48-dazzling");
 }
+
+// ---- O49 Air Lock / Cloud Nine -----------------------------------------------------------------
+
+/// Cloud Nine and Drought both lead (start expansion); the sun counts down but does nothing.
+#[test]
+fn cloud_nine_suppresses_sun_match_showdown() {
+    assert_exact_parity("o49-cloud-nine-sun");
+}
+
+/// The suppression ends as soon as the Air Lock holder faints, within the turn.
+#[test]
+fn air_lock_holder_fainting_restores_sand_match_showdown() {
+    assert_exact_parity("o49-air-lock-faint");
+}

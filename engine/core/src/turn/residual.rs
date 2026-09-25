@@ -210,8 +210,13 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
             }
             b.set_field(FieldEffect::Weather, effect);
             // `onFieldResidual` of every supported weather: eachEvent('Weather'), actives in
-            // Speed order, ties shuffled.
-            let weather = b.weather();
+            // Speed order, ties shuffled. A suppressed weather still counts down, but its own
+            // `onWeather` and every `Weather` handler are skipped (sandstorm and snow do not even
+            // run the event; sun and rain run it with every handler skipped).
+            let weather = b.effective_weather();
+            if weather == Weather::None {
+                return Ok(());
+            }
             let mut actives: Vec<(SlotRef, i32)> = b
                 .all_alive()
                 .into_iter()
@@ -348,7 +353,7 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
             } else {
                 // Hydration: `pokemon.effectiveWeather()` is rain (Utility Umbrella and
                 // Primordial Sea are not supported).
-                b.weather() == Weather::Rain
+                b.effective_weather() == Weather::Rain
             };
             if cure {
                 b.cure_status(pokemon);
@@ -361,8 +366,8 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
 
 /// `runEvent('Weather', pokemon)` during the weather's residual: the sandstorm's own
 /// `onWeather` (1/16 damage unless immune) and the ability's `onWeather` (they never both act on
-/// one Pokémon, so their order does not matter). `effectiveWeather()` is the weather:
-/// Utility Umbrella, Air Lock and the primal weathers are not supported.
+/// one Pokémon, so their order does not matter). `effectiveWeather()` is the weather (the caller
+/// skips a suppressed one): Utility Umbrella and the primal weathers are not supported.
 /// - Rain Dish: heal 1/16 in rain; Ice Body: heal 1/16 in snow;
 /// - Solar Power: 1/8 damage in sun (`this.damage(maxhp / 8, target, target)`);
 /// - Dry Skin: heal 1/8 in rain, 1/8 damage in sun.

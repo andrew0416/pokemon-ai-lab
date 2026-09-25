@@ -290,13 +290,15 @@ fn unsupported_start_handlers_are_rejected() {
         Err(SwitchInError::UnsupportedItem { .. })
     ));
 
-    // Air Lock suppresses weather: rejected, not ignored.
+    // Air Lock is implemented (O49): its start only runs `WeatherChange`, which has no
+    // implemented handler; the sand it suppresses is still set.
     let mut s = loaded.state.clone();
     s.active_mut(rillaboom).unwrap().ability = abilities::AIR_LOCK;
-    assert!(matches!(
-        expand_switch_ins(&s),
-        Err(SwitchInError::UnsupportedAbility { .. })
-    ));
+    let outcomes = expand_switch_ins(&s).unwrap();
+    assert!(!outcomes.is_empty());
+    for o in &outcomes {
+        assert!(o.state.field[FieldEffect::Weather as usize].is_active());
+    }
 
     // A started position is not an initial one.
     let mut s = loaded.state.clone();

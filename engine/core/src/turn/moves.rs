@@ -546,7 +546,7 @@ fn try_move_hit_field<const N: usize>(
     target: SlotRef,
 ) -> Result<bool, TurnError> {
     let data = mv.data;
-    if mv.id == moves::AURORA_VEIL && b.weather() != Weather::Snow {
+    if mv.id == moves::AURORA_VEIL && b.effective_weather() != Weather::Snow {
         return Ok(false);
     }
     // runMoveEffects on the target: undefined (nothing attempted) counts as success.
@@ -1093,7 +1093,7 @@ fn get_damage<const N: usize>(
         def_boost,
     );
     // ModifyDef / ModifySpD: sandstorm (Rock SpD) and snow (Ice Def), 1.5x applied directly.
-    let weather = b.weather();
+    let weather = b.effective_weather();
     if defense_stat == Stat::Spd && weather == Weather::Sand && defender.types.contains(&Type::Rock)
     {
         defense = modify(defense, MOD_ONE_POINT_FIVE);

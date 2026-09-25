@@ -382,6 +382,9 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::DAZZLING, &["onFoeTryMove"]),
     (abilities::QUEENLY_MAJESTY, &["onFoeTryMove"]),
     (abilities::ARMOR_TAIL, &["onFoeTryMove"]),
+    // `suppressWeather` in `Battle::effective_weather`; the handlers in `switching`.
+    (abilities::AIR_LOCK, &["onEnd", "onStart", "onSwitchIn"]),
+    (abilities::CLOUD_NINE, &["onEnd", "onStart", "onSwitchIn"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

@@ -234,7 +234,7 @@ pub(crate) fn attack_handlers<const N: usize>(
     };
     let pinch = 3 * i32::from(attacker.hp) <= i32::from(attacker.max_hp);
     // Solar Power: `onModifySpA` 1.5x in harsh sunlight (`effectiveWeather`).
-    if !physical && ability == abilities::SOLAR_POWER && b.weather() == Weather::Sun {
+    if !physical && ability == abilities::SOLAR_POWER && b.effective_weather() == Weather::Sun {
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
     }
