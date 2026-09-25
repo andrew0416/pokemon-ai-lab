@@ -112,6 +112,12 @@ cd engine/py && ../../.venv-doubles/Scripts/maturin.exe build --release -i ../..
 - 메가 자격은 Champions `canMegaEvo`처럼 `item.megaStone[species.name]`, 즉 정확한 종 일치로만 준다. `Gardevoir-Mega`가 가디안나이트를 들어도 자격이 없다. 레쿠쟈의 화룡점정 경로는 past/future 태그 규칙이 필요해서 모델링하지 않았다. `teraType`은 사이드카에만 보관하고 자격으로 주지 않는다(`Pokemon`에 테라 필드가 아직 없음).
 - 로더가 받는 형식은 `gen9championsdoublescustomgame`뿐이다(모든 멤버 선출). `gen9championsvgc2026regmc`의 4마리 선출은 아직 없어서 거부한다. IV는 0–31 범위만 검사하고 버린다(Champions 공식에 IV 항이 없음). 이름은 Showdown처럼 20자로 자르고 편마다 유일해야 한다.
 
+## 미구현 전수조사 (2026-09-25)
+
+- [`SHOWDOWN-GAPS.md`](SHOWDOWN-GAPS.md): Showdown `sim/*.ts`의 행동 종류 15·이벤트 119·상태 필드를 엔진과 대조한 목록과, 중력 파티 기준 우선순위. [`COVERAGE.md`](COVERAGE.md): dex 전체를 `support.rs`에 통과시킨 자동 생성 표(기술 399/938, 특성 21/321, 도구 370/583 지원; 라이브러리 사용 기준 57%/17%/63%). 생성: `cargo run -p lab-scenario --release --bin lab-coverage -- --out engine/COVERAGE.md`. `core/src/turn/coverage.rs`가 지원 검사의 공개 API다.
+- 가장 큰 공백은 순서대로 날따름·분노가루 유도, 메가진화, 기절 후 교체 결정 단계, 열매·`Update` 이벤트, 피격 특성(`DamagingHit`)·경쟁심/오기, 구애 도구, 연속기·교체기, 앵콜·도발·명령·도우미다.
+- [`reports/seed-champions-check-2026-09-25.md`](reports/seed-champions-check-2026-09-25.md): `D:\poke-teambuilder-seed`의 Champions 자료를 vendor와 대조한 결과(M-C 전수 일치, 메가루카리오Z 특성 칸 오류 1건, npm 0.11.11 기반 M-B 바인딩 stale). seed 디렉터리는 읽기 전용으로만 열었다.
+
 ## 다음 할 일 (순서대로)
 
 1. [완료 2026-09-25] `data/champions.json` → Rust 정적 테이블 (`core/src/dex/`).

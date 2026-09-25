@@ -41,6 +41,12 @@ fn start_effect(ability: AbilityId) -> Option<StartEffect> {
     })
 }
 
+/// Whether a Pokémon with this ability can switch in during a turn (its switch-in effect, if
+/// any, is implemented).
+pub(crate) fn switch_in_supported(ability: AbilityId) -> bool {
+    start_effect(ability).is_some()
+}
+
 /// Showdown `switchIn` + `runSwitch` for a chosen switch.
 pub(crate) fn run_switch<const N: usize>(
     b: &mut Battle<'_, N>,
