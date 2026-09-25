@@ -5,10 +5,10 @@
 //! time the change happens, e.g. `fnt` is set after fainting); changes to what resets on
 //! switch-out address the [`SlotRef`].
 
-use crate::dex::{AbilityId, ItemId, MoveId};
+use crate::dex::{AbilityId, ItemId, MoveId, Type};
 use crate::field::{Effect, FieldEffect, SideEffect};
 use crate::gimmick::Gimmick;
-use crate::state::{BattleResult, PokemonRef, SideId, Slot, SlotRef, State, Status};
+use crate::state::{BattleResult, Forme, PokemonRef, SideId, Slot, SlotRef, State, Status};
 use crate::volatile::{Volatile, VolatileState};
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
@@ -53,6 +53,19 @@ pub enum Instruction {
         target: PokemonRef,
         old: AbilityId,
         new: AbilityId,
+    },
+    /// A forme change (Mega Evolution, Primal Reversion, ...): species, types, max HP, stats
+    /// and both abilities at once. HP itself changes by a separate `Damage`/`Heal`.
+    SetForme {
+        target: PokemonRef,
+        old: Forme,
+        new: Forme,
+    },
+    /// A type change that keeps the species (Roost, Soak, Protean, ...).
+    SetTypes {
+        target: PokemonRef,
+        old: [Type; 2],
+        new: [Type; 2],
     },
     SetPp {
         target: PokemonRef,
@@ -147,6 +160,8 @@ impl<const N: usize> State<N> {
                 self.pokemon_mut(target).last_item = new
             }
             Instruction::SetAbility { target, new, .. } => self.pokemon_mut(target).ability = new,
+            Instruction::SetForme { target, new, .. } => self.pokemon_mut(target).set_forme(new),
+            Instruction::SetTypes { target, new, .. } => self.pokemon_mut(target).types = new,
             Instruction::SetPp {
                 target,
                 move_index,
@@ -203,6 +218,8 @@ impl<const N: usize> State<N> {
                 self.pokemon_mut(target).last_item = old
             }
             Instruction::SetAbility { target, old, .. } => self.pokemon_mut(target).ability = old,
+            Instruction::SetForme { target, old, .. } => self.pokemon_mut(target).set_forme(old),
+            Instruction::SetTypes { target, old, .. } => self.pokemon_mut(target).types = old,
             Instruction::SetPp {
                 target,
                 move_index,
@@ -239,7 +256,7 @@ impl<const N: usize> State<N> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::dex::{items, SpeciesId};
+    use crate::dex::{abilities, items, species, SpeciesId, Type};
     use crate::field::Weather;
 
     fn doubles_with_leads() -> State<2> {
@@ -279,10 +296,32 @@ mod tests {
         };
         boosted.boosts[0] = 2;
 
+        let my_mon = PokemonRef {
+            side: SideId::One,
+            party: 0,
+        };
+        let mega = Forme {
+            species: species::TYRANITAR_MEGA,
+            types: species::TYRANITAR_MEGA.data().types,
+            max_hp: 200,
+            stats: [184, 170, 115, 140, 91],
+            ability: abilities::SAND_STREAM,
+            base_ability: abilities::SAND_STREAM,
+        };
         let instructions = vec![
             Instruction::Damage {
                 target: foe_mon,
                 amount: 120,
+            },
+            Instruction::SetForme {
+                target: my_mon,
+                old: state.pokemon(my_mon).forme(),
+                new: mega,
+            },
+            Instruction::SetTypes {
+                target: foe_mon,
+                old: state.pokemon(foe_mon).types,
+                new: [Type::Water, Type::None],
             },
             Instruction::Boost {
                 target: me,
@@ -345,6 +384,10 @@ mod tests {
 
         state.apply(&instructions);
         assert_eq!(state.active(foe).unwrap().hp, 80);
+        assert_eq!(state.pokemon(my_mon).forme(), mega);
+        assert_eq!(state.pokemon(my_mon).species, species::TYRANITAR_MEGA);
+        assert_eq!(state.pokemon(my_mon).ability, abilities::SAND_STREAM);
+        assert_eq!(state.pokemon(foe_mon).types, [Type::Water, Type::None]);
         assert_eq!(state.active(foe).unwrap().status_turns, 3);
         assert!(state.slot(foe).volatiles.has(Volatile::Flinch));
         assert!(state

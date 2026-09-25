@@ -38,7 +38,16 @@ pub fn champions_stats(
     if total > MAX_TOTAL_STAT_POINTS {
         return Err(StatPointError::Total { value: total });
     }
+    Ok(champions_stats_unchecked(species, nature, stat_points))
+}
 
+/// [`champions_stats`] without the SP limit checks, for recalculating the stats of an
+/// already validated set after a forme change (Showdown `setSpecies` → `spreadModify`).
+pub fn champions_stats_unchecked(
+    species: SpeciesId,
+    nature: Nature,
+    stat_points: StatPoints,
+) -> CalculatedStats {
     let data = species.data();
     let mut result = [0i16; STAT_COUNT];
     result[0] = if data.fixed_max_hp != 0 {
@@ -60,7 +69,7 @@ pub fn champions_stats(
         };
         result[index] = modified as i16;
     }
-    Ok(result)
+    result
 }
 
 const fn stat_from_index(index: usize) -> Stat {

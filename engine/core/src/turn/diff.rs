@@ -114,12 +114,33 @@ fn pokemon<const N: usize>(
             new: b.last_item,
         });
     }
-    if a.ability != b.ability {
-        out.push(Instruction::SetAbility {
+    let (fa, fb) = (a.forme(), b.forme());
+    if fa.species != fb.species
+        || fa.max_hp != fb.max_hp
+        || fa.stats != fb.stats
+        || fa.base_ability != fb.base_ability
+    {
+        // A forme change carries the ability and types along.
+        out.push(Instruction::SetForme {
             target: r,
-            old: a.ability,
-            new: b.ability,
+            old: fa,
+            new: fb,
         });
+    } else {
+        if a.ability != b.ability {
+            out.push(Instruction::SetAbility {
+                target: r,
+                old: a.ability,
+                new: b.ability,
+            });
+        }
+        if a.types != b.types {
+            out.push(Instruction::SetTypes {
+                target: r,
+                old: a.types,
+                new: b.types,
+            });
+        }
     }
     for (i, (ma, mb)) in a.moves.iter().zip(&b.moves).enumerate() {
         if ma.pp != mb.pp {
@@ -133,12 +154,11 @@ fn pokemon<const N: usize>(
         debug_assert!(ma.id == mb.id && ma.disabled == mb.disabled);
     }
     debug_assert!(
-        a.species == b.species
-            && a.types == b.types
-            && a.max_hp == b.max_hp
-            && a.stats == b.stats
-            && a.base_ability == b.base_ability
-            && a.gimmicks == b.gimmicks,
+        a.level == b.level
+            && a.nature == b.nature
+            && a.stat_points == b.stat_points
+            && a.gimmicks == b.gimmicks
+            && a.gigantamax_factor == b.gigantamax_factor,
         "a field the turn engine never changes differs"
     );
 }
@@ -270,6 +290,17 @@ mod tests {
         to.slot_mut(me).boosts[0] = 1;
         to.field[FieldEffect::Gravity as usize] = crate::field::Effect { value: 0, turns: 4 };
         to.turn = 2;
+        // A forme change on one Pokémon, a bare type change on another.
+        let mega = to.active_mut(me).unwrap();
+        let new_forme = mega.forme_as(crate::dex::species::TYRANITAR_MEGA);
+        mega.set_forme(new_forme);
+        mega.hp = new_forme.hp_after(100, 100);
+        to.active_mut(SlotRef {
+            side: SideId::One,
+            slot: 1,
+        })
+        .unwrap()
+        .types = [crate::dex::Type::Water, crate::dex::Type::None];
 
         let ins = instructions(&from, &to);
         let mut s = from.clone();

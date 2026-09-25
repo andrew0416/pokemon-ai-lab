@@ -100,6 +100,8 @@ pub fn build_pokemon(set: &TeamSet) -> Result<(Pokemon, MemberMeta), SetProblem>
         hp: stats[0],
         max_hp: stats[0],
         stats: [stats[1], stats[2], stats[3], stats[4], stats[5]],
+        nature,
+        stat_points,
         status: Status::None,
         status_turns: 0,
         item,
@@ -113,8 +115,6 @@ pub fn build_pokemon(set: &TeamSet) -> Result<(Pokemon, MemberMeta), SetProblem>
     let meta = MemberMeta {
         name: display_name(set),
         team_index: 0,
-        nature,
-        stat_points,
         gender,
         tera_type,
     };

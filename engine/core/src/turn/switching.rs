@@ -72,17 +72,9 @@ pub(crate) fn run_switch<const N: usize>(
         )));
     };
 
-    // The old active leaves: its ability reverts, the slot resets.
+    // The old active leaves: its ability and types revert, the slot resets.
     if let Some(outgoing) = b.occupant(slot) {
-        let out = b.mon(outgoing);
-        if out.ability != out.base_ability {
-            let (old, new) = (out.ability, out.base_ability);
-            b.apply(Instruction::SetAbility {
-                target: outgoing,
-                old,
-                new,
-            });
-        }
+        b.clear_volatile(outgoing);
     }
     let previous = b.state.slot(slot).clone();
     b.apply(Instruction::Switch {

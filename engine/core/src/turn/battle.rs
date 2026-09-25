@@ -234,16 +234,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             if self.occupant(slot) != Some(pokemon) {
                 continue;
             }
-            // clearVolatile: the ability reverts; the slot empties (isActive = false).
-            let mon = self.mon(pokemon);
-            if mon.ability != mon.base_ability {
-                let (old, new) = (mon.ability, mon.base_ability);
-                self.apply(Instruction::SetAbility {
-                    target: pokemon,
-                    old,
-                    new,
-                });
-            }
+            // clearVolatile: the ability and types revert; the slot empties (isActive = false).
+            self.clear_volatile(pokemon);
             let previous = self.state.slot(slot).clone();
             self.apply(Instruction::Switch {
                 slot,
@@ -254,6 +246,32 @@ impl<'a, const N: usize> Battle<'a, N> {
             last = Some(pokemon.side);
         }
         check_win && self.check_win(last)
+    }
+
+    /// The party-side part of Showdown `clearVolatile` when a Pokémon leaves the field: the
+    /// ability reverts to its base and `setSpecies(baseSpecies)` restores the species' types
+    /// (the species itself stays: Champions never regresses a forme). Slot state is reset by
+    /// the caller's `Switch`.
+    pub fn clear_volatile(&mut self, pokemon: PokemonRef) {
+        let mon = self.mon(pokemon);
+        if mon.ability != mon.base_ability {
+            let (old, new) = (mon.ability, mon.base_ability);
+            self.apply(Instruction::SetAbility {
+                target: pokemon,
+                old,
+                new,
+            });
+        }
+        let mon = self.mon(pokemon);
+        let species_types = mon.species.data().types;
+        if mon.types != species_types {
+            let old = mon.types;
+            self.apply(Instruction::SetTypes {
+                target: pokemon,
+                old,
+                new: species_types,
+            });
+        }
     }
 
     /// Showdown `checkWin(faintData)`: with every side out, the side of the last processed

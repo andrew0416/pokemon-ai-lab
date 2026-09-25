@@ -4,9 +4,10 @@
 //! on switch-out (boosts, volatiles, substitute) lives on the [`Slot`]. poke-engine keeps the
 //! latter on the side, which only works with one active Pokémon.
 
-use crate::dex::{AbilityId, ItemId, MoveId, SpeciesId, Type};
+use crate::dex::{AbilityId, ItemId, MoveId, Nature, SpeciesId, Type};
 use crate::field::{Effect, FIELD_EFFECT_COUNT, SIDE_EFFECT_COUNT};
 use crate::gimmick::{DynamaxState, GimmickSet};
+use crate::stats::{champions_stats_unchecked, StatPoints};
 use crate::volatile::Volatiles;
 
 pub const PARTY_SIZE: usize = 6;
@@ -94,13 +95,20 @@ pub fn champions_max_pp(id: MoveId) -> u8 {
 /// Party member state that survives switching.
 #[derive(Clone, Debug, Default, PartialEq, Eq, Hash)]
 pub struct Pokemon {
+    /// Current species (forme). Champions never reverts a Mega Evolution, not even on
+    /// fainting (`formeRegression` is not set in its `formeChange`).
     pub species: SpeciesId,
     pub level: u8,
+    /// Current types. They reset to the species' types when the Pokémon leaves the field
+    /// (Showdown `clearVolatile` → `setSpecies`).
     pub types: [Type; 2],
     pub hp: i16,
     pub max_hp: i16,
     /// atk, def, spa, spd, spe (before boosts).
     pub stats: [i16; 5],
+    /// Set data the stats are recalculated from on a forme change (Showdown `spreadModify`).
+    pub nature: Nature,
+    pub stat_points: StatPoints,
     pub status: Status,
     /// Showdown `statusState.time` for sleep and freeze, `statusState.stage` for toxic.
     pub status_turns: i8,
@@ -123,6 +131,67 @@ pub struct Pokemon {
 impl Pokemon {
     pub fn is_alive(&self) -> bool {
         self.hp > 0
+    }
+
+    /// The fields a forme change rewrites, as they are now.
+    pub fn forme(&self) -> Forme {
+        Forme {
+            species: self.species,
+            types: self.types,
+            max_hp: self.max_hp,
+            stats: self.stats,
+            ability: self.ability,
+            base_ability: self.base_ability,
+        }
+    }
+
+    /// The forme this Pokémon takes as `species` (Showdown `formeChange` with a permanent
+    /// change): the species' types, its stats from this set's nature and SP, and its first
+    /// ability. HP is not part of it; see [`Forme::hp_after`].
+    pub fn forme_as(&self, species: SpeciesId) -> Forme {
+        let data = species.data();
+        let stats = champions_stats_unchecked(species, self.nature, self.stat_points);
+        Forme {
+            species,
+            types: data.types,
+            max_hp: stats[0],
+            stats: [stats[1], stats[2], stats[3], stats[4], stats[5]],
+            ability: data.abilities[0],
+            base_ability: data.abilities[0],
+        }
+    }
+
+    pub fn set_forme(&mut self, forme: Forme) {
+        self.species = forme.species;
+        self.types = forme.types;
+        self.max_hp = forme.max_hp;
+        self.stats = forme.stats;
+        self.ability = forme.ability;
+        self.base_ability = forme.base_ability;
+    }
+}
+
+/// What a forme change rewrites at once (Showdown `setSpecies` + the ability part of
+/// `formeChange`): species, types, max HP and stats, and the ability with its base.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub struct Forme {
+    pub species: SpeciesId,
+    pub types: [Type; 2],
+    pub max_hp: i16,
+    pub stats: [i16; 5],
+    pub ability: AbilityId,
+    pub base_ability: AbilityId,
+}
+
+impl Forme {
+    /// Showdown `updateMaxHp`: when max HP changes, the HP lost so far is kept
+    /// (`max(1, new_max - (old_max - hp))`); a fainted Pokémon stays at 0.
+    pub fn hp_after(&self, old_max_hp: i16, hp: i16) -> i16 {
+        if self.max_hp == old_max_hp || hp <= 0 {
+            hp
+        } else {
+            (self.max_hp - (old_max_hp - hp)).max(1)
+        }
     }
 }
 

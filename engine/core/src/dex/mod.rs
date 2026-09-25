@@ -132,6 +132,13 @@ pub enum TypeRelation {
     Immune,
 }
 
+/// The neutral nature, for states built without set data.
+impl Default for Nature {
+    fn default() -> Nature {
+        Nature::Hardy
+    }
+}
+
 impl Type {
     /// Relation of an attacking type to one defending type. `Type::None` on either side is
     /// neutral.

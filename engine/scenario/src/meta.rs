@@ -4,10 +4,10 @@
 //! and sorts them by it. Everything else it prints is derivable from the `State` and the dex:
 //! `species` from `SpeciesId::data().name`, `item`/`ability` and the `pp` keys from the
 //! Showdown ids (`ItemId::id()`, ...), `slot` from `Slot::party_index`. So the sidecar only has
-//! to map party indices to names, plus set data the hot state does not carry.
+//! to map party indices to names, plus set data the hot state does not carry (nature and
+//! SP are in `Pokemon` since forme changes recalculate stats from them).
 
-use lab_engine::dex::{Gender, Nature, Type};
-use lab_engine::stats::StatPoints;
+use lab_engine::dex::{Gender, Type};
 
 use crate::json::TurnJson;
 
@@ -18,8 +18,6 @@ pub struct MemberMeta {
     pub name: String,
     /// 0-based position in the team JSON (party order is the team preview order).
     pub team_index: u8,
-    pub nature: Nature,
-    pub stat_points: StatPoints,
     pub gender: Gender,
     /// `Type::None` when not given. Not an eligibility: Tera is locked under Champions M-C
     /// and `Pokemon` has no Tera field yet.

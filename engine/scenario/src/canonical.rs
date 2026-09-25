@@ -12,11 +12,12 @@
 //!
 //! State the engine can hold but whose canonical form is not settled yet is an error
 //! ([`CanonicalError`]), never dropped: substitutes, Dynamax, Magic/Wonder Room, primal
-//! weathers, permanent effects, type changes, disabled moves.
+//! weathers, permanent effects, disabled moves.
 
 use std::fmt;
 use std::fmt::Write as _;
 
+use lab_engine::dex::Type;
 use lab_engine::field::{Effect, FieldEffect, SideEffect, Terrain, Weather, FIELD_EFFECT_COUNT};
 use lab_engine::gimmick::Gimmick;
 use lab_engine::rules::Ruleset;
@@ -363,9 +364,6 @@ fn pokemon(
     active: Option<(u8, &lab_engine::state::Slot)>,
     mega_open: bool,
 ) -> Result<(), String> {
-    if active.is_some() && mon.types != mon.species.data().types {
-        return Err(format!("types {:?} differ from the species", mon.types));
-    }
     if let Some(m) = mon.moves.iter().find(|m| m.disabled) {
         return Err(format!("disabled move {:?}", m.id));
     }
@@ -427,7 +425,26 @@ fn pokemon(
         if !slot.last_move.is_none() {
             write!(out, r#","lastMove":"{}""#, slot.last_move.id()).unwrap();
         }
+        // `getTypes(true)` joined, only when it differs from the species' types.
+        if mon.types != mon.species.data().types {
+            out.push_str(r#","types":"#);
+            string(out, &types_string(mon.types)?);
+        }
     }
     out.push('}');
     Ok(())
+}
+
+/// Showdown `getTypes().join('/')`. A Pokémon with no type at all is `???` there; the
+/// engine has no such state yet, so it is an error rather than a guess.
+fn types_string(types: [Type; 2]) -> Result<String, String> {
+    let names: Vec<&str> = types
+        .iter()
+        .filter(|&&t| t != Type::None)
+        .map(|t| t.name())
+        .collect();
+    if names.is_empty() {
+        return Err("no types (Showdown `???`)".into());
+    }
+    Ok(names.join("/"))
 }
