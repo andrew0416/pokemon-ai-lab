@@ -4,6 +4,8 @@
 
 mod handlers;
 
+use handlers::HitResult;
+
 use crate::damage::{
     chain_modifiers, damage_rolls, DamageInput, MOD_HALF, MOD_ONE, MOD_ONE_POINT_FIVE,
     MOD_ONE_POINT_THREE,
@@ -647,6 +649,11 @@ fn spread_move_hit<const N: usize>(
         // Protect / Detect `onHit`: the stall counter.
         if data.stalling_move {
             b.add_volatile(t, Volatile::Stall);
+        }
+        // The move's own onHit; NOT_FAIL neither succeeds nor fails.
+        match handlers::on_hit(b, user, t, mv)? {
+            Some(HitResult::Success) => note(true),
+            Some(HitResult::NotFail) | None => {}
         }
         if let (Hit::Done, Some(false)) = (results[i], did) {
             results[i] = Hit::Failed;

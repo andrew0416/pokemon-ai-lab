@@ -90,6 +90,26 @@ fn o12_tri_attack_cannot_freeze_in_sun() {
     assert_exact_parity("o12-tri-attack-sun");
 }
 
+#[test]
+fn o25_weather_heals_in_sun() {
+    assert_exact_parity("o25-heal-sun");
+}
+
+#[test]
+fn o25_weather_heals_in_sand() {
+    assert_exact_parity("o25-heal-sand");
+}
+
+#[test]
+fn o25_weather_heals_in_snow_and_at_full_hp() {
+    assert_exact_parity("o25-heal-snow-full");
+}
+
+#[test]
+fn o25_weather_heals_without_weather() {
+    assert_exact_parity("o25-heal-clear");
+}
+
 /// Champions `onDisableMove`: once the user has acted since switching in, First Impression
 /// cannot be chosen.
 #[test]

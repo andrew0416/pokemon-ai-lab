@@ -47,6 +47,10 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::FIRST_IMPRESSION, &["onDisableMove", "onTry"]),
     (moves::DIRE_CLAW, &["secondaries.onHit", "secondary.onHit"]),
     (moves::TRI_ATTACK, &["secondaries.onHit", "secondary.onHit"]),
+    (moves::MORNING_SUN, &["onHit"]),
+    (moves::MOONLIGHT, &["onHit"]),
+    (moves::SYNTHESIS, &["onHit"]),
+    (moves::SHORE_UP, &["onHit"]),
     (
         moves::GRAVITY,
         &[

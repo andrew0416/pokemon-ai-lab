@@ -10,6 +10,7 @@ use crate::field::{FieldEffect, Terrain, Weather};
 use crate::state::{SlotRef, Status};
 
 use super::super::battle::Battle;
+use super::super::order::modify;
 use super::super::TurnError;
 use super::ActiveMove;
 
@@ -133,6 +134,62 @@ pub(super) fn on_effectiveness(id: MoveId, defending: Type, type_mod: i32) -> i3
         // Flying Press: `return typeMod + this.dex.getEffectiveness('Flying', type);`
         moves::FLYING_PRESS => type_mod + type_effectiveness(Type::Flying, defending),
         _ => type_mod,
+    }
+}
+
+/// What an `onHit` handler returned: a truthy value, `false`, or `NOT_FAIL` (the move does
+/// not count as failed, but the target takes no further effects).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(super) enum HitResult {
+    Success,
+    NotFail,
+}
+
+/// The move's primary `onHit` on one target (`runMoveEffects`, after the data effects).
+/// `None` = the move has no `onHit`.
+pub(super) fn on_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    mv: &ActiveMove,
+) -> Result<Option<HitResult>, TurnError> {
+    let result = match mv.id {
+        // Morning Sun, Moonlight, Synthesis: `this.modify(pokemon.maxhp, factor)`, factor
+        // 0.667 in sun, 0.25 in rain, sand, hail and snow, 0.5 otherwise (effective weather).
+        moves::MORNING_SUN | moves::MOONLIGHT | moves::SYNTHESIS => {
+            let modifier = match effective_weather(b, user, target)? {
+                Weather::Sun | Weather::HarshSun => 2732,
+                Weather::Rain | Weather::HeavyRain | Weather::Sand | Weather::Snow => 1024,
+                _ => 2048,
+            };
+            weather_heal(b, target, modifier)
+        }
+        // Shore Up: 0.667 in sandstorm (the field's weather), 0.5 otherwise.
+        moves::SHORE_UP => {
+            let modifier = if b.weather() == Weather::Sand {
+                2732
+            } else {
+                2048
+            };
+            weather_heal(b, target, modifier)
+        }
+        _ => return Ok(None),
+    };
+    Ok(Some(result))
+}
+
+/// `this.heal(this.modify(pokemon.maxhp, factor))` with `factor` as a 4096-based modifier
+/// (0.667 → 2732); `NOT_FAIL` when nothing is healed.
+fn weather_heal<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    modifier: u32,
+) -> HitResult {
+    let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
+    if b.heal(target, f64::from(modify(max_hp, modifier))) > 0 {
+        HitResult::Success
+    } else {
+        HitResult::NotFail
     }
 }
 
