@@ -10,6 +10,23 @@ use lab_engine::state::Status;
 use lab_engine::turn::{enumerate_turn, TurnError};
 use lab_scenario::scenario_choices;
 
+// ---- O61 priority ----------------------------------------------------------------------------
+
+#[test]
+fn gale_wings_and_triage_priority_match_showdown() {
+    assert_exact_parity("o61-gale-wings-triage");
+}
+
+#[test]
+fn gale_wings_below_full_hp_matches_showdown() {
+    assert_exact_parity("o61-gale-wings-damaged");
+}
+
+#[test]
+fn stall_fractional_priority_matches_showdown() {
+    assert_exact_parity("o61-stall");
+}
+
 // ---- O65 status immunities -------------------------------------------------------------------
 
 #[test]

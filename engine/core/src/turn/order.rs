@@ -6,7 +6,7 @@
 //! among ties, gives the same distribution of orders.
 
 use crate::damage::{chain_modifiers, MOD_ONE};
-use crate::dex::{abilities, moves, MoveCategory, MoveId};
+use crate::dex::{abilities, moves, AbilityId, MoveCategory, MoveFlags, MoveId, Type};
 use crate::field::{FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{SlotRef, Status};
 
@@ -77,7 +77,9 @@ impl<const N: usize> Battle<'_, N> {
         }
     }
 
-    /// Priority of `id` used by the Pokémon in `slot` (ModifyPriority handlers).
+    /// Priority of `id` used by the Pokémon in `slot` (ModifyPriority handlers): the move's own
+    /// (`singleEvent`: Grassy Glide), then the user's ability (`runEvent`: Prankster, Gale
+    /// Wings, Triage; each adds to the priority it is given).
     pub(crate) fn move_priority(&self, slot: SlotRef, id: MoveId) -> i32 {
         let data = id.data();
         let mut priority = i32::from(data.priority);
@@ -88,11 +90,39 @@ impl<const N: usize> Battle<'_, N> {
         if self.prankster_boosted(slot, id) {
             priority += 1;
         }
+        match self.ability(slot) {
+            // Gale Wings: `move.type === 'Flying' && pokemon.hp === pokemon.maxhp`.
+            a if a == abilities::GALE_WINGS
+                && data.move_type == Type::Flying
+                && self.slot_mon(slot).is_some_and(|m| m.hp == m.max_hp) =>
+            {
+                priority += 1;
+            }
+            // Triage: `move.flags['heal']`.
+            a if a == abilities::TRIAGE && data.flags.contains(MoveFlags::HEAL) => priority += 3,
+            _ => {}
+        }
         priority
     }
 
     /// Prankster raises the priority of status moves (and marks them for the Dark immunity).
+    /// Showdown sets `move.pranksterBoosted` in the same `getActionSpeed` that computes the
+    /// priority, and `useMove` copies it from the active move, so it is decided when the move
+    /// is used, like the priority.
     pub(crate) fn prankster_boosted(&self, slot: SlotRef, id: MoveId) -> bool {
         self.ability(slot) == abilities::PRANKSTER && id.data().category == MoveCategory::Status
+    }
+}
+
+/// Showdown `runEvent('FractionalPriority')` for a move action, in tenths. It is evaluated
+/// once, when the turn's actions are queued (`resolveAction`), and added to the action's
+/// priority for sorting only (`move.priority`, which Psychic Terrain and Prankster read, does
+/// not include it). The only supported source is Stall's constant `onFractionalPriority: -0.1`;
+/// a constant handler replaces the value instead of adding to it.
+pub(crate) fn fractional_priority_tenths(ability: AbilityId) -> i8 {
+    if ability == abilities::STALL {
+        ability.data().fractional_priority_tenths
+    } else {
+        0
     }
 }

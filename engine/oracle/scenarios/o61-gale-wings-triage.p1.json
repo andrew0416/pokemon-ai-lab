@@ -1,0 +1,34 @@
+[
+ {
+  "species": "Talonflame",
+  "item": "",
+  "ability": "Gale Wings",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Brave Bird",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Comfey",
+  "item": "",
+  "ability": "Triage",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Draining Kiss",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

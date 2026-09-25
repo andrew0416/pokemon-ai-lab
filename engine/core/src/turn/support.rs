@@ -15,6 +15,7 @@ use crate::state::{SideId, SlotRef, State};
 use crate::volatile::Volatile;
 
 use super::battle::{cured_on_update, weather_from};
+use super::order::fractional_priority_tenths;
 
 /// Moves with Showdown callbacks that are implemented, with the exact callback list.
 pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
@@ -181,6 +182,8 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::SWIFT_SWIM, &["onModifySpe"]),
     (abilities::SLUSH_RUSH, &["onModifySpe"]),
     (abilities::PRANKSTER, &["onModifyPriority"]),
+    (abilities::GALE_WINGS, &["onModifyPriority"]),
+    (abilities::TRIAGE, &["onModifyPriority"]),
     // Status immunities (`Battle::set_status_blocked`, `status_immune`,
     // `add_volatile_blocked`). `onUpdate` cures are unreachable: see `cured_on_update`.
     (abilities::WATER_VEIL, &["onSetStatus", "onUpdate"]),
@@ -241,7 +244,10 @@ const CORE_CHECKED_ITEMS: &[ItemId] = &[
 /// Whether an ability is inert or implemented while its holder is on the field.
 pub(crate) fn ability_supported_on_field(ability: AbilityId) -> bool {
     let data = ability.data();
-    if CORE_CHECKED_ABILITIES.contains(&ability) || data.fractional_priority_tenths != 0 {
+    // A constant `onFractionalPriority` is implemented for Stall only (`order`).
+    if CORE_CHECKED_ABILITIES.contains(&ability)
+        || data.fractional_priority_tenths != fractional_priority_tenths(ability)
+    {
         return false;
     }
     data.handlers.is_empty()
@@ -469,6 +475,10 @@ mod tests {
                 "{id:?}"
             );
         }
+        // Stall's only behaviour is its constant fractional priority.
+        assert!(abilities::STALL.data().handlers.is_empty());
+        assert_eq!(abilities::STALL.data().fractional_priority_tenths, -1);
+        assert!(ability_supported_on_field(abilities::STALL));
         // Detect shares Protect's volatile.
         assert_eq!(
             moves::DETECT.data().volatile_status,
