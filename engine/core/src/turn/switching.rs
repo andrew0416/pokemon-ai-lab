@@ -22,6 +22,7 @@ use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SlotRef, Status, BOOST_COUNT};
 use crate::volatile::Volatile;
 
+use super::abilities::{SUB_ABILITY, SUB_ITEM, SUB_SIDE_CONDITION};
 use super::battle::{Battle, BoostEffect};
 use super::moves::{set_terrain, set_weather};
 use super::order::boosted_stat;
@@ -461,7 +462,7 @@ pub(crate) fn switch_in<const N: usize>(
     let previous = b.state.slot(slot).clone();
     b.apply(Instruction::Switch {
         slot,
-        previous,
+        previous: Box::new(previous),
         party_index: Some(party_index),
     });
     Ok(())
@@ -470,85 +471,115 @@ pub(crate) fn switch_in<const N: usize>(
 /// A handler of the batched `fieldEvent('SwitchIn')`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum SwitchInHandler {
-    /// The newcomer's ability `onStart` with its `onSwitchInPriority`.
+    /// The entry hazards of the newcomer's side (`conditions::entry_hazards`; side conditions,
+    /// sub-order 4, their holder the newcomer).
+    Hazards,
+    /// The newcomer's ability `onStart` with its `onSwitchInPriority` (sub-order 7).
     Ability(AbilityId),
     /// The newcomer's item `onStart` with its `onSwitchInPriority`, or any active Pokémon's item
-    /// `onAnySwitchIn` with its `onAnySwitchInPriority` (`items::switch_in_item`).
+    /// `onAnySwitchIn` with its `onAnySwitchInPriority` (`items::switch_in_item`; sub-order 8).
     Item(ItemId),
+    /// `onAnySwitchIn` of a Pastel Veil holder already on the field: its `onStart` again.
+    PastelVeilAny,
 }
 
 /// Showdown `runSwitch` for the Pokémon that just switched in: one `fieldEvent('SwitchIn')`
-/// over their abilities' start handlers (`onSwitchInPriority`: Unnerve 1, Costar and
-/// Hospitality -2, the rest 0), their items' (`onSwitchInPriority`: the Seeds and Room
-/// Service, -1) and every active Pokémon's item `onAnySwitchIn` (White Herb -2, Mirror Herb
-/// -3), sorted by priority, then the holder's Speed (raw stat; equal Speeds uniformly at
-/// random). An ability handler is skipped if the holder's ability changed before its turn
-/// came, any handler if its holder fainted. Within a priority group every implemented item
-/// handler only changes its own holder, so tie-breaks drawn per handler (instead of Showdown's
-/// one `speedOrder` for the whole event) give the same distribution. Every other active Pastel
-/// Veil holder's `onAnySwitchIn` also runs; its cure changes no state another handler reads, so
-/// it runs after them without a random order.
+/// over the entry hazards of each newcomer's side, their abilities' start handlers
+/// (`onSwitchInPriority`: Unnerve 1, Costar and Hospitality -2, the rest 0), their items'
+/// (`onSwitchInPriority`: the Seeds and Room Service, -1) and every active Pokémon's
+/// `onAnySwitchIn` (Pastel Veil 0, White Herb -2, Mirror Herb -3). Showdown sorts the handlers
+/// by priority, then their holder's Speed (`speedSort(getAllActive())` once for the whole event,
+/// so equal Speeds are drawn uniformly at random once and keep that order in every priority
+/// group), then sub-order (side condition 4, ability 7, item 8); the engine draws the same
+/// order once over the holders with a handler. Speeds are the raw stats (Showdown's
+/// `pokemon.speed`, the stored stat of a Pokémon that has not had a turn; a Pokémon already on
+/// the field carries its last action Speed there, which the engine does not model). A handler
+/// is skipped if its holder fainted, an ability handler also if the holder's ability changed
+/// before its turn came; the event stops once the hazards end the battle.
 pub(crate) fn run_switch_in<const N: usize>(
     b: &mut Battle<'_, N>,
     newcomers: &[SlotRef],
 ) -> Result<(), TurnError> {
-    let mut pending: Vec<(i32, i16, SlotRef, SwitchInHandler)> = Vec::new();
+    // (priority, holder, sub-order, handler)
+    let mut handlers: Vec<(i32, SlotRef, u32, SwitchInHandler)> = Vec::new();
     for &slot in newcomers {
         let Some(pokemon) = b.alive(slot) else {
             continue;
         };
         let mon = b.mon(pokemon);
-        let speed = mon.stats[4];
-        pending.push((
+        handlers.push((0, slot, SUB_SIDE_CONDITION, SwitchInHandler::Hazards));
+        handlers.push((
             switch_in_priority(mon.ability),
-            speed,
             slot,
+            SUB_ABILITY,
             SwitchInHandler::Ability(mon.ability),
         ));
         if let Some(priority) = super::items::switch_in_priority(mon.item) {
-            pending.push((priority, speed, slot, SwitchInHandler::Item(mon.item)));
+            handlers.push((priority, slot, SUB_ITEM, SwitchInHandler::Item(mon.item)));
         }
     }
-    // `onAnySwitchIn` of every active Pokémon's item (White Herb -2, Mirror Herb -3).
     for slot in b.all_alive() {
         let mon = b.slot_mon(slot).expect("alive");
         if let Some(priority) = super::items::any_switch_in_priority(mon.item) {
-            pending.push((
-                priority,
-                mon.stats[4],
-                slot,
-                SwitchInHandler::Item(mon.item),
-            ));
+            handlers.push((priority, slot, SUB_ITEM, SwitchInHandler::Item(mon.item)));
+        }
+        if !newcomers.contains(&slot) && mon.ability == abilities::PASTEL_VEIL {
+            handlers.push((0, slot, SUB_ABILITY, SwitchInHandler::PastelVeilAny));
         }
     }
-    while !pending.is_empty() {
-        let best = pending.iter().map(|h| (h.0, h.1)).max().expect("non-empty");
-        let tied: Vec<usize> = (0..pending.len())
-            .filter(|&i| (pending[i].0, pending[i].1) == best)
+    // `speedOrder`: the holders by raw Speed, equal Speeds uniformly at random.
+    let mut remaining: Vec<SlotRef> = Vec::new();
+    for h in &handlers {
+        if !remaining.contains(&h.1) {
+            remaining.push(h.1);
+        }
+    }
+    let speed = |b: &Battle<'_, N>, slot: SlotRef| b.slot_mon(slot).expect("alive").stats[4];
+    let mut ranked: Vec<SlotRef> = Vec::with_capacity(remaining.len());
+    while !remaining.is_empty() {
+        let best = remaining
+            .iter()
+            .map(|&s| speed(b, s))
+            .max()
+            .expect("non-empty");
+        let tied: Vec<usize> = (0..remaining.len())
+            .filter(|&i| speed(b, remaining[i]) == best)
             .collect();
         let pick = if tied.len() == 1 {
             tied[0]
         } else {
             tied[b.rng.uniform(tied.len())]
         };
-        let (_, _, slot, handler) = pending.remove(pick);
+        ranked.push(remaining.remove(pick));
+    }
+    let rank = |slot: SlotRef| ranked.iter().position(|&s| s == slot).expect("ranked");
+    handlers.sort_by_key(|&(priority, slot, sub_order, _)| {
+        (std::cmp::Reverse(priority), rank(slot), sub_order)
+    });
+    for (_, slot, _, handler) in handlers {
         if b.alive(slot).is_none() {
             continue;
         }
         match handler {
+            SwitchInHandler::Hazards => {
+                // Each hazard is followed by `faintMessages`; the event stops once the battle
+                // is over.
+                super::conditions::entry_hazards(b, slot)?;
+                if b.is_over() {
+                    return Ok(());
+                }
+            }
             SwitchInHandler::Ability(ability) => {
                 if b.ability(slot) == ability {
                     start_ability(b, slot, ability)?;
                 }
             }
             SwitchInHandler::Item(item) => super::items::switch_in_item(b, slot, item),
-        }
-    }
-    // `onAnySwitchIn` of the Pastel Veil holders already on the field (a newcomer's ran as its
-    // switch-in handler above).
-    for slot in b.all_alive() {
-        if !newcomers.contains(&slot) && b.ability(slot) == abilities::PASTEL_VEIL {
-            pastel_veil_cure(b, slot);
+            SwitchInHandler::PastelVeilAny => {
+                if b.ability(slot) == abilities::PASTEL_VEIL {
+                    pastel_veil_cure(b, slot);
+                }
+            }
         }
     }
     Ok(())

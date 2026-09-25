@@ -50,7 +50,7 @@ use branch::Chooser;
 use order::{ORDER_MEGA, ORDER_MOVE, ORDER_SWITCH};
 use queue::{Action, ActionKind};
 
-pub use lock::{locked_move, Locked, RECHARGE_INDEX};
+pub use lock::{locked_move, Locked, RECHARGE_INDEX, STRUGGLE_INDEX};
 pub use moves::{takes_target, valid_target_loc};
 pub use switching::{
     item_start_handler, species_start_handler, start_handler, switch_in_supported,
@@ -305,7 +305,13 @@ fn run_replacements<const N: usize>(
         newcomers.push(slot);
     }
     switching::run_switch_in(b, &newcomers)?;
-    // The Update after the batched `runSwitch`, then `endTurn`.
+    if b.is_over() {
+        return Ok(());
+    }
+    // `runAction`'s tail with nothing left in the queue: `checkFainted` (a newcomer that fainted
+    // to entry hazards gets `fnt`), the Update, then `endTurn` (which waits for another
+    // replacement if one is needed).
+    residual::check_fainted(b);
     update::update_event(b)?;
     residual::end_turn(b);
     Ok(())
@@ -530,6 +536,32 @@ fn check_turn<const N: usize>(
                     },
                     Some(mon),
                 ) => {
+                    // Without a usable move the only choice is Struggle (`move 1` names it).
+                    let usable = mon.moves.iter().any(|m| {
+                        !m.id.is_none() && m.pp > 0 && disabled(state, slot, m.id).is_none()
+                    });
+                    let index = if !usable && index == 0 {
+                        STRUGGLE_INDEX
+                    } else {
+                        index
+                    };
+                    if index == STRUGGLE_INDEX {
+                        if usable {
+                            return Err(invalid("Struggle while a move is usable".into()));
+                        }
+                        if target != 0 || !gimmick.is_none() {
+                            return Err(invalid("Struggle takes no target or gimmick".into()));
+                        }
+                        if let Some(why) = support::move_unsupported(move_ids::STRUGGLE) {
+                            return Err(TurnError::Unsupported(why));
+                        }
+                        normalized[side.index()][i] = SlotAction::Move {
+                            index,
+                            target: 0,
+                            gimmick: Gimmick::None,
+                        };
+                        continue;
+                    }
                     let slot_move = mon.moves[index as usize];
                     let id = slot_move.id;
                     if id.is_none() {
@@ -568,6 +600,12 @@ fn check_turn<const N: usize>(
                     if let Some(why) = support::move_unsupported(id) {
                         return Err(TurnError::Unsupported(why));
                     }
+                    if id == move_ids::SLEEP_TALK {
+                        let known = mon.moves.map(|m| m.id);
+                        if let Some(why) = support::sleep_talk_problem(&known) {
+                            return Err(TurnError::Unsupported(why));
+                        }
+                    }
                 }
             }
         }
@@ -599,6 +637,10 @@ fn disabled<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> Opti
             .is_some_and(|m| m.moves.iter().any(|s| s.id == encore.mv))
     {
         return Some(format!("Encore locks it into {}", encore.mv.data().name));
+    }
+    // Taunt and the other conditions' `onDisableMove`.
+    if let Some(why) = conditions::disabled_move(state, slot, id) {
+        return Some(why);
     }
     items::disabled_move(state, slot, id)
 }
@@ -633,7 +675,7 @@ impl<const N: usize> Battle<'_, N> {
                 fractional_tenths,
                 ..
             } => {
-                let id = self.mon(action.pokemon).moves[index as usize].id;
+                let id = lock::action_move_id(self.mon(action.pokemon), index);
                 let priority = if in_slot {
                     self.move_priority(action.slot, id)
                 } else {

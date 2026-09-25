@@ -1,0 +1,89 @@
+{
+ "description": "O33 Sparkling Aria from a Sheer Force user with one target left: the secondary is deleted (hasSheerForce, 1.3x power), so onAfterMove only clears volatiles and the burned Garchomp stays burned.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Primarina",
+    "item": "",
+    "ability": "Sheer Force",
+    "nature": "Modest",
+    "evs": {
+     "hp": 32,
+     "spa": 32,
+     "spe": 2
+    },
+    "moves": [
+     "Sparkling Aria",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hitmontop",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Protect",
+     "Bulk Up"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 2,
+     "atk": 32,
+     "def": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {
+   "Garchomp": {
+    "status": "brn"
+   }
+  }
+ },
+ "turn": {
+  "p1": "move sparklingaria, move protect",
+  "p2": "move swordsdance, move protect"
+ }
+}

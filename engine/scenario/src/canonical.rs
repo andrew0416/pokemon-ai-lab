@@ -240,7 +240,7 @@ fn field(out: &mut String, effects: &[Effect; FIELD_EFFECT_COUNT]) -> Result<(),
 }
 
 /// Side conditions the schema can write, in id order.
-const SIDE_CONDITIONS: [(SideEffect, &str); 9] = [
+const SIDE_CONDITIONS: [(SideEffect, &str); 13] = [
     (SideEffect::AuroraVeil, "auroraveil"),
     (SideEffect::LightScreen, "lightscreen"),
     (SideEffect::LuckyChant, "luckychant"),
@@ -248,9 +248,23 @@ const SIDE_CONDITIONS: [(SideEffect, &str); 9] = [
     (SideEffect::QuickGuard, "quickguard"),
     (SideEffect::Reflect, "reflect"),
     (SideEffect::Safeguard, "safeguard"),
+    (SideEffect::Spikes, "spikes"),
+    (SideEffect::StealthRock, "stealthrock"),
+    (SideEffect::StickyWeb, "stickyweb"),
     (SideEffect::Tailwind, "tailwind"),
+    (SideEffect::ToxicSpikes, "toxicspikes"),
     (SideEffect::WideGuard, "wideguard"),
 ];
+
+/// Entry hazards: no duration (`Effect::PERMANENT`); Spikes and Toxic Spikes write their
+/// `layers` (`Effect.value`), Stealth Rock and Sticky Web nothing.
+fn hazard(effect: SideEffect) -> Option<bool> {
+    match effect {
+        SideEffect::Spikes | SideEffect::ToxicSpikes => Some(true),
+        SideEffect::StealthRock | SideEffect::StickyWeb => Some(false),
+        _ => None,
+    }
+}
 
 fn side_json<const N: usize>(
     out: &mut String,
@@ -310,7 +324,24 @@ fn side_json<const N: usize>(
     write!(out, r#"{{"request":"{request}","conditions":{{"#).unwrap();
     let mut first = true;
     for (effect, id) in SIDE_CONDITIONS {
-        if let Some(turns) = timed(side.effects[effect as usize], id)? {
+        let state = side.effects[effect as usize];
+        if let Some(layered) = hazard(effect) {
+            if !state.is_active() {
+                continue;
+            }
+            if state.turns != Effect::PERMANENT {
+                return Err(unrepresentable(format!("{id} with a duration")));
+            }
+            let sep = if first { "" } else { "," };
+            if layered {
+                write!(out, r#"{sep}"{id}":{{"layers":{}}}"#, state.value).unwrap();
+            } else {
+                write!(out, r#"{sep}"{id}":{{}}"#).unwrap();
+            }
+            first = false;
+            continue;
+        }
+        if let Some(turns) = timed(state, id)? {
             let sep = if first { "" } else { "," };
             write!(out, r#"{sep}"{id}":{{"duration":{turns}}}"#).unwrap();
             first = false;

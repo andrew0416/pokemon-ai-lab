@@ -74,9 +74,30 @@ pub enum Volatile {
     /// Micle Berry's own condition (`micleberry`, duration 2): the holder's next accuracy check
     /// (`onSourceAccuracy`) is 4915/4096 and ends it.
     MicleBerry,
+    /// Helping Hand: the holder's moves this turn get more power (duration 1). `counter` counts
+    /// the applications (Showdown keeps `multiplier` = 1.5 per application instead, which the
+    /// canonical state does not print, so neither is `counter`).
+    HelpingHand,
+    /// Taunt: status moves can be neither chosen nor used (duration 3, one more if the holder
+    /// was active since the turn started and has no move left; residual order 15).
+    Taunt,
+    /// Disable: `mv` (the holder's last move when it started) can be neither chosen nor used
+    /// (duration 5, one less if the holder still has a move to come; residual order 17).
+    Disable,
+    /// Torment: the holder's last move cannot be chosen (no duration).
+    Torment,
+    /// Imprison, on its user: the user's foes can neither choose nor use a move the user knows
+    /// (no duration).
+    Imprison,
+    /// Glaive Rush's drawback on its user until its next move attempt (no duration): moves
+    /// against it cannot miss and deal double damage.
+    GlaiveRush,
+    /// Sparkling Aria's secondary effect on a target it hit (no duration): the move's
+    /// `onAfterMove` removes it again, curing a burn.
+    SparklingAria,
 }
 
-pub const VOLATILE_COUNT: usize = 22;
+pub const VOLATILE_COUNT: usize = 29;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -102,6 +123,13 @@ impl Volatile {
         Volatile::Unburden,
         Volatile::FocusEnergy,
         Volatile::MicleBerry,
+        Volatile::HelpingHand,
+        Volatile::Taunt,
+        Volatile::Disable,
+        Volatile::Torment,
+        Volatile::Imprison,
+        Volatile::GlaiveRush,
+        Volatile::SparklingAria,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -126,6 +154,13 @@ impl Volatile {
             Volatile::Endure => conditions::ENDURE,
             Volatile::Charge => conditions::CHARGE,
             Volatile::FocusEnergy => conditions::FOCUSENERGY,
+            Volatile::HelpingHand => conditions::HELPINGHAND,
+            Volatile::Taunt => conditions::TAUNT,
+            Volatile::Disable => conditions::DISABLE,
+            Volatile::Torment => conditions::TORMENT,
+            Volatile::Imprison => conditions::IMPRISON,
+            Volatile::GlaiveRush => conditions::GLAIVERUSH,
+            Volatile::SparklingAria => conditions::SPARKLINGARIA,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -159,6 +194,13 @@ impl Volatile {
             Volatile::Unburden => "unburden",
             Volatile::FocusEnergy => "focusenergy",
             Volatile::MicleBerry => "micleberry",
+            Volatile::HelpingHand => "helpinghand",
+            Volatile::Taunt => "taunt",
+            Volatile::Disable => "disable",
+            Volatile::Torment => "torment",
+            Volatile::Imprison => "imprison",
+            Volatile::GlaiveRush => "glaiverush",
+            Volatile::SparklingAria => "sparklingaria",
         }
     }
 
@@ -181,14 +223,16 @@ impl Volatile {
             | Volatile::RagePowder
             | Volatile::Spotlight
             | Volatile::Roost
-            | Volatile::Endure => 1,
+            | Volatile::Endure
+            | Volatile::HelpingHand => 1,
             Volatile::Stall
             | Volatile::LockedMove
             | Volatile::MustRecharge
             | Volatile::Yawn
             | Volatile::MicleBerry => 2,
-            Volatile::Encore => 3,
+            Volatile::Encore | Volatile::Taunt => 3,
             Volatile::PerishSong => 4,
+            Volatile::Disable => 5,
             Volatile::Confusion
             | Volatile::FlashFire
             | Volatile::ChoiceLock
@@ -196,7 +240,11 @@ impl Volatile {
             | Volatile::Charge
             | Volatile::AngerShellUnchecked
             | Volatile::Unburden
-            | Volatile::FocusEnergy => 0,
+            | Volatile::FocusEnergy
+            | Volatile::Torment
+            | Volatile::Imprison
+            | Volatile::GlaiveRush
+            | Volatile::SparklingAria => 0,
         }
     }
 
@@ -204,7 +252,9 @@ impl Volatile {
     /// handler). Its duration is counted down by that residual handler.
     pub fn residual_order(self) -> Option<u32> {
         match self {
+            Volatile::Taunt => Some(15),
             Volatile::Encore => Some(16),
+            Volatile::Disable => Some(17),
             Volatile::Yawn => Some(23),
             Volatile::PerishSong => Some(24),
             Volatile::Roost => Some(25),
@@ -213,11 +263,12 @@ impl Volatile {
     }
 
     /// What Showdown's `pokemon.volatiles` holds for this kind: `None` for engine-only kinds,
-    /// and the effect state without engine-only payload (Roost's saved types).
+    /// and the effect state without engine-only payload (Roost's saved types, Helping Hand's
+    /// application count).
     pub fn showdown_state(self, state: VolatileState) -> Option<VolatileState> {
         match self {
             Volatile::ProteanUsed | Volatile::AngerShellUnchecked => None,
-            Volatile::Roost => Some(VolatileState {
+            Volatile::Roost | Volatile::HelpingHand => Some(VolatileState {
                 counter: 0,
                 ..state
             }),
@@ -337,6 +388,9 @@ mod tests {
             (Volatile::Roost, moves::ROOST),
             (Volatile::Yawn, moves::YAWN),
             (Volatile::PerishSong, moves::PERISH_SONG),
+            (Volatile::HelpingHand, moves::HELPING_HAND),
+            (Volatile::Taunt, moves::TAUNT),
+            (Volatile::Disable, moves::DISABLE),
         ] {
             let data = id.data();
             assert_eq!(
@@ -344,12 +398,20 @@ mod tests {
                 volatile.initial_duration(),
                 "{id:?}"
             );
-            let order = volatile.residual_order().expect("ordered") as i16;
-            assert!(
-                data.event_orders
-                    .contains(&("condition.onResidualOrder", order)),
-                "{id:?}"
-            );
+            match volatile.residual_order() {
+                Some(order) => assert!(
+                    data.event_orders
+                        .contains(&("condition.onResidualOrder", order as i16)),
+                    "{id:?}"
+                ),
+                None => assert!(
+                    !data
+                        .event_orders
+                        .iter()
+                        .any(|(n, _)| *n == "condition.onResidualOrder"),
+                    "{id:?}"
+                ),
+            }
         }
     }
 

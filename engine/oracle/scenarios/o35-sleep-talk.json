@@ -1,0 +1,98 @@
+{
+ "description": "O35 Sleep Talk: the sleeping Garchomp (2 turns left) calls Dragon Claw, Swords Dance or Protect (1/3 each; Sleep Talk itself is excluded). Dragon Claw takes a random foe; into Weavile (Pressure) the extra PP comes off Sleep Talk. Protect works (moves are left). Clefable wakes up in BeforeMove (1 turn left), so its Sleep Talk fails (onTry).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Weavile",
+    "item": "",
+    "ability": "Pressure",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hitmontop",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Bulk Up",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 2,
+     "atk": 32,
+     "def": 32
+    },
+    "moves": [
+     "Sleep Talk",
+     "Dragon Claw",
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Sleep Talk",
+     "Moonblast",
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {
+   "Garchomp": {
+    "status": "slp",
+    "statusTime": 3
+   },
+   "Clefable": {
+    "status": "slp",
+    "statusTime": 1
+   }
+  }
+ },
+ "turn": {
+  "p1": "move swordsdance, move bulkup",
+  "p2": "move sleeptalk, move sleeptalk"
+ }
+}

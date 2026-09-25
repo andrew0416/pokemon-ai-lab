@@ -5,14 +5,19 @@
 //! handled here gets the event's neutral result.
 
 use crate::damage::MOD_ONE_POINT_FIVE;
-use crate::dex::{abilities, moves, ItemId, MoveId, MoveTarget, Type, TypeRelation};
-use crate::field::{FieldEffect, Terrain, Weather};
+use crate::dex::{
+    abilities, items, moves, ItemId, MoveFlags, MoveId, MoveTarget, Type, TypeRelation, NO_BOOSTS,
+};
+use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
-use crate::state::{Pokemon, SideId, SlotRef, Status, BOOST_COUNT};
+use crate::state::{Pokemon, PokemonRef, SideId, SlotRef, Status, BOOST_COUNT};
 use crate::volatile::Volatile;
 
-use super::super::battle::Battle;
+use super::super::abilities::{Handler, SUB_CONDITION};
+use super::super::battle::{Battle, BoostEffect};
+use super::super::conditions::HAZARDS;
 use super::super::order::modify;
+use super::super::queue::{Action, ActionKind};
 use super::super::TurnError;
 use super::ActiveMove;
 
@@ -106,6 +111,9 @@ pub(super) fn on_modify_move<const N: usize>(
                 mv.accuracy = None;
             }
         }
+        // Struggle: `move.type = '???'` (typeless: `Type::None` for the move, which no type chart
+        // entry, STAB or type-based handler matches).
+        moves::STRUGGLE => mv.move_type = Type::None,
         // Thunder, Hurricane: `switch (target?.effectiveWeather())`: never misses in rain,
         // accuracy 50 in sun.
         moves::THUNDER | moves::HURRICANE => {
@@ -139,6 +147,11 @@ pub(super) fn on_try<const N: usize>(
         moves::POLTERGEIST => b.slot_mon(first_target).is_some_and(|m| !m.item.is_none()),
         // Steel Roller: `return !this.field.isTerrain('');` (no `TryTerrain` handler exists).
         moves::STEEL_ROLLER => b.terrain() != Terrain::None,
+        // Sleep Talk, Snore: `return source.status === 'slp' || source.hasAbility('comatose');`
+        moves::SLEEP_TALK | moves::SNORE => {
+            b.slot_mon(user).is_some_and(|m| m.status == Status::Sleep)
+                || b.ability(user) == abilities::COMATOSE
+        }
         _ => true,
     }
 }
@@ -179,18 +192,92 @@ pub(super) fn on_try_hit<const N: usize>(
         // Yawn: `if (target.status || !target.runStatusImmunity('slp')) return false;` (no type
         // or implemented `Immunity` handler covers sleep).
         moves::YAWN => b.slot_mon(target).is_some_and(|m| m.status == Status::None),
+        // Helping Hand: `if (!target.newlySwitched && !this.queue.willMove(target)) return
+        // false;`. `newlySwitched` (switched in this turn) is `move_actions == 0` here: a
+        // Pokémon without a queued move either moved this turn (`runMove` counted it) or
+        // switched in this turn (the count restarts at 0).
+        moves::HELPING_HAND => {
+            b.will_move(target).is_some() || b.state.slot(target).move_actions == 0
+        }
+        // Disable: `if (!target.lastMove || target.lastMove.isZOrMaxPowered ||
+        // target.lastMove.isMax || target.lastMove.id === 'struggle') return false;`
+        moves::DISABLE => {
+            let last = b.state.slot(target).last_move;
+            !last.is_none() && last != moves::STRUGGLE && !last.data().is_max
+        }
         _ => true,
     }
 }
 
-/// The move's `onAfterHit`, once per damaged target (`spreadMoveHit`, after `DamagingHit`).
-/// Knock Off's is in `moves.rs`. `onAfterSubDamage` (the same effect against a substitute) is
-/// unreachable: substitutes are refused.
-pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, mv: &ActiveMove) {
+/// The move's `onAfterHit`, once per damaged target (`spreadMoveHit`, after `DamagingHit`;
+/// Champions runs it even if the user fainted). Knock Off's is in `moves.rs`.
+/// `onAfterSubDamage` (the same effect against a substitute) is unreachable: substitutes are
+/// refused.
+pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
     // Ice Spinner: `this.field.clearTerrain();`
     if mv.id == moves::ICE_SPINNER {
         super::clear_terrain(b);
     }
+    // Rapid Spin: `if (!move.hasSheerForce)` the user's side loses its hazards (Leech Seed and
+    // partial trapping, which it also ends, are not implemented).
+    if mv.id == moves::RAPID_SPIN && !mv.has_sheer_force {
+        remove_side_effects(b, user.side, &HAZARDS);
+    }
+}
+
+/// The move's own `onAfterMove` (`runMove`, after `useMove`). Sparkling Aria: if the user
+/// fainted (processed), or the move has Sheer Force's `hasSheerForce`, every active Pokémon just
+/// loses the `sparklingaria` volatile; otherwise each hit target but the user that is still
+/// active loses it, and is cured of a burn if it had it or the move hit several targets.
+pub(super) fn on_after_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    pokemon: PokemonRef,
+    mv: &ActiveMove,
+) {
+    if mv.id != moves::SPARKLING_ARIA {
+        return;
+    }
+    if b.occupant(user) != Some(pokemon) || mv.has_sheer_force {
+        for side in [SideId::One, SideId::Two] {
+            for slot in Battle::<N>::slots(side) {
+                if b.occupant(slot).is_some() {
+                    b.delete_volatile(slot, Volatile::SparklingAria);
+                }
+            }
+        }
+        return;
+    }
+    let targets = super::hit_target_slots::<N>(mv.hit_targets);
+    let several = targets.len() > 1;
+    for target in targets {
+        let Some(hit) = b.alive(target) else {
+            continue;
+        };
+        if target == user {
+            continue;
+        }
+        let had = b.remove_volatile(target, Volatile::SparklingAria);
+        if (had || several) && b.mon(hit).status == Status::Burn {
+            b.cure_status(hit);
+        }
+    }
+}
+
+/// `side.removeSideCondition` for each of `effects`; whether any was there.
+fn remove_side_effects<const N: usize>(
+    b: &mut Battle<'_, N>,
+    side: SideId,
+    effects: &[SideEffect],
+) -> bool {
+    let mut removed = false;
+    for &effect in effects {
+        if b.side_effect_active(side, effect) {
+            b.set_side_effect(side, effect, Effect::NONE);
+            removed = true;
+        }
+    }
+    removed
 }
 
 /// The move's `basePowerCallback` (`getDamage`, before the critical hit roll).
@@ -232,6 +319,45 @@ pub(super) fn on_base_power<const N: usize>(
         }
         _ => None,
     }
+}
+
+/// BasePower handlers of the user's volatiles (`condition.onBasePower`): Helping Hand
+/// (priority 10) `chainModify(this.effectState.multiplier)`, 1.5 per application.
+pub(super) fn volatile_base_power<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+) -> Vec<Handler> {
+    let mut out = Vec::new();
+    let helping_hand = b.volatile(user, Volatile::HelpingHand);
+    if helping_hand.active {
+        let multiplier = 1.5f64.powi(i32::from(helping_hand.counter));
+        let modifier = (multiplier * 4096.0).trunc() as u32;
+        let priority = super::super::abilities::priority(
+            moves::HELPING_HAND.data().event_orders,
+            "condition.onBasePowerPriority",
+        );
+        out.push(Handler::of(b, user, priority, SUB_CONDITION, modifier));
+    }
+    out
+}
+
+/// The `Accuracy` event's handlers that make a move hit `target` whatever its accuracy: Glaive
+/// Rush's drawback (`condition.onAccuracy() { return true; }`).
+pub(super) fn always_hit<const N: usize>(b: &Battle<'_, N>, target: SlotRef) -> bool {
+    b.volatile(target, Volatile::GlaiveRush).active
+}
+
+/// ModifyDamage handlers of the target's volatiles (`onSourceModifyDamage`): Glaive Rush's
+/// drawback `chainModify(2)` (priority 0).
+pub(super) fn volatile_modify_damage<const N: usize>(
+    b: &Battle<'_, N>,
+    target: SlotRef,
+) -> Vec<Handler> {
+    let mut out = Vec::new();
+    if b.volatile(target, Volatile::GlaiveRush).active {
+        out.push(Handler::of(b, target, 0, SUB_CONDITION, 2 * 4096));
+    }
+    out
 }
 
 /// Showdown `this.dex.getEffectiveness(attacking, defending)` for one defending type:
@@ -334,6 +460,52 @@ pub(super) fn on_hit<const N: usize>(
             return Ok(None);
         }
         moves::TRICK | moves::SWITCHEROO => trick(b, user, target)?,
+        moves::INSTRUCT => instruct(b, target)?,
+        // Sleep Talk: one of the user's moves Sleep Talk may call, uniformly at random, used
+        // through `useMove` (`moves::call_move`); fails without one. It returns nothing.
+        moves::SLEEP_TALK => {
+            let known = b
+                .slot_mon(user)
+                .map_or([MoveId::NONE; 4], |m| m.moves.map(|s| s.id));
+            let callable: Vec<MoveId> = known
+                .into_iter()
+                .filter(|&id| sleep_talk_calls(id))
+                .collect();
+            if callable.is_empty() {
+                HitResult::Failure
+            } else {
+                let called = callable[b.rng.uniform(callable.len())];
+                super::call_move(b, user, mv, called)?;
+                HitResult::NotFail
+            }
+        }
+        // Defog: `this.boost({evasion: -1})` on the target (success if a stage changed); the
+        // target's side loses its screens, Safeguard and Mist (no success) and its hazards, the
+        // user's side its hazards (success); then `this.field.clearTerrain()`.
+        moves::DEFOG => {
+            let mut drop = NO_BOOSTS;
+            drop[6] = -1;
+            let mut success = b.boost_by(target, &drop, Some(user), BoostEffect::Move(mv.id));
+            remove_side_effects(
+                b,
+                target.side,
+                &[
+                    SideEffect::Reflect,
+                    SideEffect::LightScreen,
+                    SideEffect::AuroraVeil,
+                    SideEffect::Safeguard,
+                    SideEffect::Mist,
+                ],
+            );
+            success |= remove_side_effects(b, target.side, &HAZARDS);
+            success |= remove_side_effects(b, user.side, &HAZARDS);
+            super::clear_terrain(b);
+            if success {
+                HitResult::Success
+            } else {
+                HitResult::Failure
+            }
+        }
         // Pollen Puff: an ally is healed `Math.floor(target.baseMaxhp * 0.5)`; `NOT_FAIL` if
         // nothing is healed. A foe gets nothing more (`undefined`).
         moves::POLLEN_PUFF => {
@@ -350,6 +522,75 @@ pub(super) fn on_hit<const N: usize>(
         _ => return Ok(None),
     };
     Ok(Some(result))
+}
+
+/// Instruct `onHit`: the target repeats its last move right away. It fails without a last move,
+/// or when that move has `failinstruct`, `charge` or `recharge`, is a Z- or Max move, or its
+/// slot has no PP; otherwise a move action for it goes to the front of the queue
+/// (`queue.prioritizeAction(queue.resolveAction(...))`: order 3) and runs as a full `runMove`
+/// (PP, BeforeMove, `lastMove`). Showdown aims it at `target.lastMoveTargetLoc`, which the
+/// state does not keep, so a last move with a chosen target (`normal`, `any`, ...) is
+/// unsupported, as are a last move the target does not know (Struggle) and a Quick Claw
+/// holder (`resolveAction` draws its fractional priority again).
+fn instruct<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+) -> Result<HitResult, TurnError> {
+    let Some(pokemon) = b.alive(target) else {
+        return Ok(HitResult::Failure);
+    };
+    let last = b.state.slot(target).last_move;
+    if last.is_none() {
+        return Ok(HitResult::Failure);
+    }
+    let data = last.data();
+    let Some(index) = b.mon(pokemon).moves.iter().position(|m| m.id == last) else {
+        return Err(b.unsupported(format!(
+            "Instruct repeating {}, which the target does not know",
+            data.name
+        )));
+    };
+    let blocked = data.flags.contains(MoveFlags::FAILINSTRUCT)
+        || data.flags.contains(MoveFlags::CHARGE)
+        || data.flags.contains(MoveFlags::RECHARGE)
+        || data.is_z
+        || data.is_max
+        || b.mon(pokemon).moves[index].pp == 0;
+    if blocked {
+        return Ok(HitResult::Failure);
+    }
+    if super::takes_target(N, data.target) {
+        return Err(b.unsupported(format!(
+            "Instruct repeating {} (its lastMoveTargetLoc is not kept)",
+            data.name
+        )));
+    }
+    if b.item(target) == items::QUICK_CLAW {
+        return Err(b.unsupported("Instruct on a Quick Claw holder"));
+    }
+    let fractional_tenths = super::super::items::fractional_priority_tenths(b.mon(pokemon));
+    b.queue.push(Action {
+        slot: target,
+        pokemon,
+        kind: ActionKind::Move {
+            index: index as u8,
+            target: 0,
+            fractional_tenths,
+        },
+        order: Some(3),
+    });
+    Ok(HitResult::Success)
+}
+
+/// Whether Sleep Talk's `onHit` may pick `id`: not `nosleeptalk` (Sleep Talk itself, Assist,
+/// Metronome, ...), not a charge move, not a Z- or Max move.
+pub(crate) fn sleep_talk_calls(id: MoveId) -> bool {
+    let data = id.data();
+    !id.is_none()
+        && !data.flags.contains(MoveFlags::NOSLEEPTALK)
+        && !data.flags.contains(MoveFlags::CHARGE)
+        && !(data.is_z && data.base_power != 1)
+        && !data.is_max
 }
 
 /// Trick and Switcheroo `onHit`: `target.takeItem(source)` and `source.takeItem()` (`undefined`
@@ -442,6 +683,34 @@ pub(super) fn on_hit_field<const N: usize>(
                 }
             }
             Some(result)
+        }
+        // Court Change: the listed side conditions of both sides trade places, with their
+        // durations and layers; fails when neither side has one. (The Pledge and G-Max
+        // conditions on the list are not implemented.)
+        moves::COURT_CHANGE => {
+            const SWAPPED: [SideEffect; 11] = [
+                SideEffect::Mist,
+                SideEffect::LightScreen,
+                SideEffect::Reflect,
+                SideEffect::Spikes,
+                SideEffect::Safeguard,
+                SideEffect::Tailwind,
+                SideEffect::ToxicSpikes,
+                SideEffect::StealthRock,
+                SideEffect::StickyWeb,
+                SideEffect::AuroraVeil,
+                SideEffect::LuckyChant,
+            ];
+            let (mine, theirs) = (user.side, user.side.other());
+            let mut success = false;
+            for effect in SWAPPED {
+                let a = b.state.side(mine).effects[effect as usize];
+                let c = b.state.side(theirs).effects[effect as usize];
+                success |= a.is_active() || c.is_active();
+                b.set_side_effect(mine, effect, c);
+                b.set_side_effect(theirs, effect, a);
+            }
+            Some(success)
         }
         // Haze: `for (const pokemon of this.getAllActive()) pokemon.clearBoosts();`
         moves::HAZE => {

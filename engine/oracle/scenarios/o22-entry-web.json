@@ -1,0 +1,124 @@
+{
+ "description": "O22 three layers of Spikes and Sticky Web on p1's side (two setup turns): Garchomp -> Kingambit (Mirror Armor) takes 1/4 and reflects the web's Speed drop to p2's slot 0 (Weavile); Hitmontop -> Clefairy (Magic Guard) takes no Spikes damage and loses 1 Speed.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 2,
+     "atk": 32,
+     "def": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hitmontop",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Bulk Up",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Kingambit",
+    "item": "",
+    "ability": "Mirror Armor",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefairy",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Weavile",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Spikes",
+     "Sticky Web"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Spikes",
+     "Sticky Web"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move swordsdance, move bulkup",
+   "move spikes, move spikes"
+  ],
+  [
+   "move protect, move protect",
+   "move spikes, move stickyweb"
+  ]
+ ],
+ "turn": {
+  "p1": "switch 3, switch 4",
+  "p2": "move spikes, move spikes"
+ }
+}

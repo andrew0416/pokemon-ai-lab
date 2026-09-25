@@ -5,6 +5,7 @@
 mod ability_hooks;
 mod handlers;
 
+pub(crate) use handlers::sleep_talk_calls;
 use handlers::HitResult;
 
 use crate::damage::{
@@ -65,6 +66,12 @@ struct ActiveMove {
     /// Scrappy / Mind's Eye added Fighting and Normal to `move.ignoreImmunity` in ModifyMove: a
     /// move of either type ignores type immunity.
     scrappy: bool,
+    /// Showdown `move.hitTargets`: the targets left after the hit steps, as a bit per slot
+    /// ([`target_bit`]); empty when every hit failed.
+    hit_targets: u8,
+    /// Showdown `move.sourceEffect` for a move another move calls (Sleep Talk), whose PP pays
+    /// Pressure's extra; `NONE` for a move used directly.
+    source_effect: MoveId,
 }
 
 impl PartialEq for ActiveMove {
@@ -82,6 +89,8 @@ impl PartialEq for ActiveMove {
             && self.base_power == other.base_power
             && self.ignore_evasion == other.ignore_evasion
             && self.scrappy == other.scrappy
+            && self.hit_targets == other.hit_targets
+            && self.source_effect == other.source_effect
     }
 }
 
@@ -102,6 +111,8 @@ impl std::hash::Hash for ActiveMove {
         self.base_power.hash(state);
         self.ignore_evasion.hash(state);
         self.scrappy.hash(state);
+        self.hit_targets.hash(state);
+        self.source_effect.hash(state);
     }
 }
 
@@ -186,11 +197,13 @@ pub(crate) fn run_move<const N: usize>(
             base_power: 0,
             ignore_evasion: false,
             scrappy: false,
+            hit_targets: 0,
+            source_effect: MoveId::NONE,
         };
         before_move(b, user, &recharge);
         return Ok(MoveStep::Done);
     }
-    let id = b.mon(pokemon).moves[move_index as usize].id;
+    let id = super::lock::action_move_id(b.mon(pokemon), move_index);
     // `setActiveMove`: set for the whole move, cleared when it ends.
     b.active_move = Some(ActiveMoveRef {
         user,
@@ -222,10 +235,15 @@ pub(crate) fn resume_move<const N: usize>(
         HitOutcome::Suspended(progress) => return Ok(MoveStep::Suspended(progress)),
         HitOutcome::Finished { ok, total_damage } => {
             mv.total_damage = total_damage;
+            if !ok {
+                mv.hit_targets = 0;
+            }
             ok
         }
     };
     use_move_tail(b, user, &mv, result, main_target);
+    // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
+    handlers::on_after_move(b, user, pokemon, &mv);
     run_move_tail(b, user, &mv);
     b.active_move = None;
     Ok(MoveStep::Done)
@@ -259,11 +277,12 @@ fn run_move_inner<const N: usize>(
     will_act: bool,
 ) -> Result<MoveStep, TurnError> {
     let pokemon = b.occupant(user).expect("the caller checked the user");
-    let chosen = b.mon(pokemon).moves[move_index as usize].id;
-    // OverrideAction (Encore): the encored move replaces the chosen one, keeping the chosen
-    // move's priority and Prankster boost; its target is drawn afresh.
+    let chosen = super::lock::action_move_id(b.mon(pokemon), move_index);
+    // OverrideAction (Encore, not for Struggle): the encored move replaces the chosen one,
+    // keeping the chosen move's priority and Prankster boost; its target is drawn afresh.
     let encore = b.volatile(user, Volatile::Encore);
-    let (id, move_index, target) = if encore.active && encore.mv != chosen {
+    let struggle = move_index == super::lock::STRUGGLE_INDEX;
+    let (id, move_index, target) = if !struggle && encore.active && encore.mv != chosen {
         let index = b
             .mon(pokemon)
             .moves
@@ -291,6 +310,8 @@ fn run_move_inner<const N: usize>(
         base_power: i32::from(id.data().base_power),
         ignore_evasion: id.data().ignore_evasion,
         scrappy: false,
+        hit_targets: 0,
+        source_effect: MoveId::NONE,
     };
 
     if !before_move(b, user, &mv) {
@@ -299,11 +320,12 @@ fn run_move_inner<const N: usize>(
         return Ok(MoveStep::Done);
     }
 
-    // A locked move (Outrage's later turns) costs no PP.
-    if super::lock::locked_move(b.state, user).is_none() {
+    // A locked move (Outrage's later turns) costs no PP, nor does Struggle (`deductPP` finds no
+    // slot, and Struggle goes on anyway).
+    if super::lock::locked_move(b.state, user).is_none() && !struggle {
         let pp = b.mon(pokemon).moves[move_index as usize].pp;
         if pp == 0 {
-            return Err(b.unsupported(format!("{}: Struggle", mv.data.name)));
+            return Err(b.unsupported(format!("{}: no PP left when used", mv.data.name)));
         }
         b.apply(crate::instruction::Instruction::SetPp {
             target: pokemon,
@@ -317,14 +339,23 @@ fn run_move_inner<const N: usize>(
     if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
         return Ok(MoveStep::Suspended(progress));
     }
+    // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
+    handlers::on_after_move(b, user, pokemon, &mv);
     run_move_tail(b, user, &mv);
     Ok(MoveStep::Done)
 }
 
-/// The BeforeMove handlers, by priority: sleep and freeze (10), flinch (8), Gravity (6),
-/// paralysis (1), the Choice lock (0). `false` = the move is not used (no PP, no `lastMove`).
+/// The BeforeMove handlers, by priority: Glaive Rush (100), recharge (11), sleep and freeze
+/// (10), flinch (8), Disable (7),
+/// Gravity (6), Taunt (5), a foe's Imprison (4), confusion (3), paralysis (1), the Choice lock
+/// (0). `false` = the move is not used (no
+/// PP, no `lastMove`).
 fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) -> bool {
     let pokemon = b.occupant(user).expect("checked");
+    // Glaive Rush (priority 100): the drawback ends at the holder's next move attempt.
+    if b.volatile(user, Volatile::GlaiveRush).active {
+        b.remove_volatile(user, Volatile::GlaiveRush);
+    }
     // mustrecharge (priority 11): the turn is spent recharging.
     if b.volatile(user, Volatile::MustRecharge).active {
         b.remove_volatile(user, Volatile::MustRecharge);
@@ -336,7 +367,8 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
             b.set_status_turns(pokemon, time);
             if time <= 0 {
                 b.cure_status(pokemon);
-            } else {
+            } else if !mv.data.sleep_usable {
+                // Sleep Talk and Snore go on (`if (move.sleepUsable) return;`).
                 return false;
             }
         }
@@ -354,7 +386,15 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
     if b.volatile(user, Volatile::Flinch).active {
         return false;
     }
+    // Disable (priority 7).
+    if !conditions::before_move_after_flinch(b, user, mv.id) {
+        return false;
+    }
     if b.field_active(FieldEffect::Gravity) && mv.data.flags.contains(MoveFlags::GRAVITY) {
+        return false;
+    }
+    // Taunt (priority 5), a foe's Imprison (4).
+    if !conditions::before_move_after_gravity(b, user, mv.id) {
         return false;
     }
     // Confusion (priority 3): one turn less; over at 0; otherwise a 33% hit on itself.
@@ -700,6 +740,11 @@ fn use_move<const N: usize>(
     if mv.target != base_target {
         target = get_random_target(b, user, mv.target);
     }
+    // Gravity's `onModifyMove`: a Gravity-blocked move fails (only reachable for a called move;
+    // BeforeMove stops a chosen one).
+    if b.field_active(FieldEffect::Gravity) && mv.data.flags.contains(MoveFlags::GRAVITY) {
+        return Ok(None);
+    }
     // Freeze `onModifyMove`: a defrosting move thaws the user.
     if b.mon(pokemon).status == Status::Freeze && mv.data.flags.contains(MoveFlags::DEFROST) {
         b.cure_status(pokemon);
@@ -737,6 +782,9 @@ fn use_move<const N: usize>(
         match try_spread_move_hit(b, user, mv, targets, will_act)? {
             HitOutcome::Finished { ok, total_damage } => {
                 mv.total_damage = total_damage;
+                if !ok {
+                    mv.hit_targets = 0;
+                }
                 ok
             }
             HitOutcome::Suspended(mut progress) => {
@@ -747,6 +795,56 @@ fn use_move<const N: usize>(
     };
     use_move_tail(b, user, mv, result, main_target);
     Ok(None)
+}
+
+/// Showdown `useMove(id, pokemon)` from a move's `onHit` (Sleep Talk): the called move takes
+/// the caller's priority and Prankster boost and ability suppression, its source effect is the
+/// caller (whose PP pays Pressure), its target is drawn afresh, and it runs `useMoveInner`
+/// without BeforeMove, PP or `lastMove`. The called move stays the active move. A multi-hit
+/// called move (it would suspend the caller) is unsupported.
+fn call_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    caller: &ActiveMove,
+    id: MoveId,
+) -> Result<(), TurnError> {
+    let pokemon = b.occupant(user).expect("the caller's user is active");
+    let ignore_ability = b.active_move.is_some_and(|m| m.ignore_ability);
+    b.active_move = Some(ActiveMoveRef {
+        user,
+        pokemon,
+        id,
+        ignore_ability,
+    });
+    let data = id.data();
+    let mut mv = ActiveMove {
+        id,
+        data,
+        priority: caller.priority,
+        prankster_boosted: caller.prankster_boosted,
+        spread: false,
+        accuracy: data.accuracy,
+        has_sheer_force: false,
+        secondary_chance_factor: 1,
+        added_secondary: None,
+        total_damage: 0,
+        target: data.target,
+        move_type: data.move_type,
+        base_power: i32::from(data.base_power),
+        ignore_evasion: data.ignore_evasion,
+        scrappy: false,
+        hit_targets: 0,
+        source_effect: caller.id,
+    };
+    let target = get_random_target(b, user, data.target);
+    let will_act = b.will_act();
+    if use_move(b, user, &mut mv, target, will_act)?.is_some() {
+        return Err(b.unsupported(format!(
+            "{} called by {}: a multi-hit called move",
+            data.name, caller.data.name
+        )));
+    }
+    Ok(())
 }
 
 /// The end of Showdown `useMoveInner` after the hits: the `self` boost, then
@@ -806,7 +904,13 @@ fn deduct_pressure_pp<const N: usize>(
         return;
     }
     let pokemon = b.occupant(user).expect("checked");
-    let Some(index) = b.mon(pokemon).moves.iter().position(|m| m.id == mv.id) else {
+    // `deductPP(callerMoveForPressure || move)`: a called move's caller pays (Sleep Talk).
+    let paying = if mv.source_effect.is_none() {
+        mv.id
+    } else {
+        mv.source_effect
+    };
+    let Some(index) = b.mon(pokemon).moves.iter().position(|m| m.id == paying) else {
         return;
     };
     let old = b.mon(pokemon).moves[index].pp;
@@ -985,7 +1089,8 @@ fn try_spread_move_hit<const N: usize>(
             total_damage: 0,
         });
     }
-    // 7. The hit loop.
+    // 7. The hit loop, on the targets left (`move.hitTargets` unless every hit fails).
+    mv.hit_targets = hit.iter().fold(0, |bits, &t| bits | target_bit::<N>(t));
     let progress = MoveProgress {
         user,
         pokemon: b.occupant(user).expect("checked"),
@@ -999,6 +1104,20 @@ fn try_spread_move_hit<const N: usize>(
         ignore_ability: b.active_move.is_some_and(|a| a.ignore_ability),
     };
     hit_loop(b, user, mv, Some(progress))
+}
+
+/// A slot's bit in [`ActiveMove::hit_targets`].
+fn target_bit<const N: usize>(slot: SlotRef) -> u8 {
+    1 << (slot.side.index() * N + usize::from(slot.slot))
+}
+
+/// The slots in a [`ActiveMove::hit_targets`] bit set, side one first, in slot order.
+fn hit_target_slots<const N: usize>(bits: u8) -> Vec<SlotRef> {
+    [SideId::One, SideId::Two]
+        .into_iter()
+        .flat_map(Battle::<N>::slots)
+        .filter(|&s| bits & target_bit::<N>(s) != 0)
+        .collect()
 }
 
 /// How many times the move hits (`hitStepMoveHitLoop`): 1, a fixed count, or for 2–5 hit
@@ -1038,6 +1157,11 @@ fn decide_hits<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
 fn prepare_hit_ability<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
     let ability = b.ability(user);
     if ability != abilities::PROTEAN && ability != abilities::LIBERO {
+        return;
+    }
+    // `if (move.hasBounced || move.flags['futuremove'] || move.sourceEffect === 'snatch' ||
+    // move.callsMove) return;` and `type !== '???'` (Struggle).
+    if mv.data.calls_move || mv.move_type == Type::None {
         return;
     }
     if b.volatile(user, Volatile::ProteanUsed).active {
@@ -1209,11 +1333,10 @@ fn accuracy_check<const N: usize>(
     if self_status || (mv.id == moves::TOXIC && b.has_type(user, Type::Poison)) {
         return true;
     }
-    // `runEvent('Accuracy')` (after ModifyAccuracy and the stages, which have no side effect
-    // here): Micle Berry's `onSourceAccuracy` on the user ends the volatile, and chains
-    // 4915/4096 onto a numeric accuracy (OHKO moves, which it skips, are refused).
-    let micle = b.remove_volatile(user, Volatile::MicleBerry);
     let Some(base) = mv.accuracy else {
+        // `accuracy === true`: the `Accuracy` event still runs, but Micle Berry's handler keeps
+        // its volatile for a non-numeric accuracy and Glaive Rush's answer changes nothing.
+        // (OHKO moves, which Micle Berry also skips, are refused.)
         return true;
     };
     let mut accuracy = i32::from(base);
@@ -1235,7 +1358,28 @@ fn accuracy_check<const N: usize>(
     } else if boost < 0 {
         accuracy = accuracy * 3 / (3 - boost);
     }
+    // `runEvent('Accuracy')`: the target's Glaive Rush drawback (`onAccuracy`: true) and Micle
+    // Berry's `onSourceAccuracy` on the user (ends its volatile, 4915/4096 onto a numeric
+    // accuracy), both volatiles, in their holders' Speed order (a tie uniformly at random).
+    // Once Glaive Rush has answered, Micle Berry sees a non-numeric accuracy and keeps its
+    // volatile.
+    let glaive_rush = handlers::always_hit(b, target);
+    let micle = b.volatile(user, Volatile::MicleBerry).active;
+    if glaive_rush {
+        if micle && user != target {
+            let user_first = match b.action_speed(user).cmp(&b.action_speed(target)) {
+                std::cmp::Ordering::Greater => true,
+                std::cmp::Ordering::Less => false,
+                std::cmp::Ordering::Equal => b.rng.uniform(2) == 0,
+            };
+            if user_first {
+                b.remove_volatile(user, Volatile::MicleBerry);
+            }
+        }
+        return true;
+    }
     if micle {
+        b.remove_volatile(user, Volatile::MicleBerry);
         accuracy = modify(accuracy, 4915);
     }
     b.rng.chance(accuracy.max(0) as u32, 100)
@@ -1293,7 +1437,13 @@ fn hit_loop<const N: usize>(
     let user_fainted = b.alive(user).is_none();
     b.faint_messages(user_fainted);
     let total = progress.total_damage;
-    if total > 0 {
+    if total > 0 && mv.data.struggle_recoil {
+        // Struggle: `directDamage(clampIntRange(Math.round(pokemon.baseMaxhp / 4), 1))`, which
+        // no Damage handler sees (Rock Head, Magic Guard, Endure, Sturdy).
+        let max_hp = b.slot_mon(user).map_or(0, |m| m.max_hp);
+        let amount = (f64::from(max_hp) / 4.0).round().max(1.0) as i32;
+        b.direct_damage(user, amount);
+    } else if total > 0 {
         if let Some(recoil) = mv.data.recoil {
             let amount = (f64::from(total) * f64::from(recoil.0) / f64::from(recoil.1))
                 .round()
@@ -1545,7 +1695,7 @@ fn spread_move_hit<const N: usize>(
     // them even if the user fainted).
     for result in &results {
         if let Hit::Damage(_) = result {
-            handlers::on_after_hit(b, mv);
+            handlers::on_after_hit(b, user, mv);
         }
     }
     Ok(results)
@@ -1789,6 +1939,8 @@ fn get_damage<const N: usize>(
     if let Some(modifier) = handlers::on_base_power(b, user, mv) {
         power_mods.push(Handler::of(b, user, 0, SUB_MOVE, modifier));
     }
+    // The user's volatiles (Helping Hand, priority 10).
+    power_mods.extend(handlers::volatile_base_power(b, user));
     let power_modifier = ability_events::chain(b, power_mods);
 
     // Attack and defense.
@@ -1862,7 +2014,9 @@ fn get_damage<const N: usize>(
         (Weather::Sun, Type::Water) | (Weather::Rain, Type::Fire) => MOD_HALF,
         _ => MOD_ONE,
     };
-    let stab = data.force_stab || attacker.types.contains(&mv.move_type);
+    // The `???` type (Struggle's, `Type::None` here) never gets STAB.
+    let stab =
+        data.force_stab || (mv.move_type != Type::None && attacker.types.contains(&mv.move_type));
     let stab_modifier = ability_events::modify_stab(attacker.ability, stab);
     // runEffectiveness: per defending type, the chart then the move's onEffectiveness.
     let type_mod: i32 = defender
@@ -1889,6 +2043,8 @@ fn get_damage<const N: usize>(
     final_mods.extend(item_events::modify_damage_handlers(
         b, user, target, data, type_mod,
     ));
+    // The target's volatiles (`onSourceModifyDamage`: Glaive Rush).
+    final_mods.extend(handlers::volatile_modify_damage(b, target));
     if !critical && target != user && screen_applies(b, target.side, data.category) {
         let modifier = if N > 1 { 2732 } else { MOD_HALF };
         final_mods.push(Handler::global(0, SUB_SIDE_CONDITION, modifier));
@@ -2077,13 +2233,17 @@ fn add_pseudo_weather<const N: usize>(b: &mut Battle<'_, N>, id: &str) -> bool {
 
 /// Showdown `addSideCondition` (fails if already up; none of these has `onSideRestart`):
 /// Tailwind 4 turns, the screens 5 (Light Clay 8), Safeguard 5 (Persistent, which makes it 7,
-/// is refused), Mist and Lucky Chant 5, Wide Guard and Quick Guard 1.
+/// is refused), Mist and Lucky Chant 5, Wide Guard and Quick Guard 1. Hazards:
+/// `conditions::add_hazard`.
 fn add_side_condition<const N: usize>(
     b: &mut Battle<'_, N>,
     source: SlotRef,
     side: SideId,
     effect: SideEffect,
 ) -> bool {
+    if conditions::HAZARDS.contains(&effect) {
+        return conditions::add_hazard(b, side, effect);
+    }
     if b.side_effect_active(side, effect) {
         return false;
     }

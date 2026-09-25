@@ -73,10 +73,11 @@ pub enum Instruction {
         old: u8,
         new: u8,
     },
-    /// Replaces the slot wholesale; `previous` restores boosts/volatiles on reverse.
+    /// Replaces the slot wholesale; `previous` restores boosts/volatiles on reverse (boxed:
+    /// a `Slot` carries every volatile's state and would dominate the enum's size).
     Switch {
         slot: SlotRef,
-        previous: Slot,
+        previous: Box<Slot>,
         party_index: Option<u8>,
     },
     /// Records (or clears) which fainted party member an empty slot still holds.
@@ -237,7 +238,7 @@ impl<const N: usize> State<N> {
             } => self.pokemon_mut(target).moves[move_index as usize].pp = old,
             Instruction::Switch {
                 slot, ref previous, ..
-            } => *self.slot_mut(slot) = previous.clone(),
+            } => *self.slot_mut(slot) = previous.as_ref().clone(),
             Instruction::SetFaintedOccupant { slot, old, .. } => {
                 self.slot_mut(slot).fainted_occupant = old
             }
@@ -371,16 +372,16 @@ mod tests {
             },
             Instruction::Switch {
                 slot: me,
-                previous: boosted,
+                previous: Box::new(boosted),
                 party_index: Some(3),
             },
             // The foe's lead faints: its slot empties but remembers it.
             Instruction::Switch {
                 slot: foe_lead,
-                previous: Slot {
+                previous: Box::new(Slot {
                     party_index: Some(0),
                     ..Slot::default()
-                },
+                }),
                 party_index: None,
             },
             Instruction::SetFaintedOccupant {

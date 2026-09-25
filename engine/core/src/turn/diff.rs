@@ -171,7 +171,7 @@ fn slot_changes(out: &mut Vec<Instruction>, r: SlotRef, a: &Slot, b: &Slot) {
     }
     out.push(Instruction::Switch {
         slot: r,
-        previous: a.clone(),
+        previous: Box::new(a.clone()),
         party_index: b.party_index,
     });
     for (stat, &amount) in b.boosts.iter().enumerate() {

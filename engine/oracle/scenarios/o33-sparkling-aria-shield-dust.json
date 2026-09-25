@@ -1,0 +1,92 @@
+{
+ "description": "O33 Sparkling Aria on two targets (Hitmontop protects): Shield Dust keeps the secondary off both burned foes, but with more than one hit target onAfterMove cures their burns anyway.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Primarina",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Modest",
+    "evs": {
+     "hp": 32,
+     "spa": 32,
+     "spe": 2
+    },
+    "moves": [
+     "Sparkling Aria",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hitmontop",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Protect",
+     "Bulk Up"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Shield Dust",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 2,
+     "atk": 32,
+     "def": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Shield Dust",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {
+   "Garchomp": {
+    "status": "brn"
+   },
+   "Clefable": {
+    "status": "brn"
+   }
+  }
+ },
+ "turn": {
+  "p1": "move sparklingaria, move protect",
+  "p2": "move swordsdance, move calmmind"
+ }
+}

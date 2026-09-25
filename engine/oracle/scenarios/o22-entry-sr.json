@@ -1,0 +1,120 @@
+{
+ "description": "O22 Stealth Rock effectiveness and grounding (setup: Stealth Rock and 1 layer of Spikes on p2's side): Weavile -> Charizard takes 1/2 (Rock 4x) and no Spikes (Flying); Clefable -> Bronzong (Levitate) takes 1/16 (Rock resisted by Steel) and no Spikes.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 2,
+     "atk": 32,
+     "def": 32
+    },
+    "moves": [
+     "Stealth Rock",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hitmontop",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Spikes",
+     "Bulk Up"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Weavile",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Charizard",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Modest",
+    "evs": {
+     "hp": 32,
+     "spa": 32,
+     "def": 2
+    },
+    "moves": [
+     "Flamethrower",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Bronzong",
+    "item": "",
+    "ability": "Levitate",
+    "nature": "Relaxed",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Iron Defense",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "1234"
+ },
+ "setupTurns": [
+  [
+   "move stealthrock, move spikes",
+   "move swordsdance, move calmmind"
+  ]
+ ],
+ "turn": {
+  "p1": "move protect, move bulkup",
+  "p2": "switch 3, switch 4"
+ }
+}

@@ -82,6 +82,115 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "onTryHit",
         ],
     ),
+    // Helping Hand: `onTryHit` in `handlers::on_try_hit`, the volatile's start/restart in
+    // `Battle::add_volatile_from` (`counter` = applications), its BasePower handler in
+    // `handlers::volatile_base_power`.
+    (
+        moves::HELPING_HAND,
+        &[
+            "condition.onBasePower",
+            "condition.onRestart",
+            "condition.onStart",
+            "onTryHit",
+        ],
+    ),
+    // Taunt: `condition.onStart` in `conditions::volatile_start`, `onBeforeMove` and
+    // `onDisableMove` in `conditions`, `onEnd` only logs.
+    (
+        moves::TAUNT,
+        &[
+            "condition.onBeforeMove",
+            "condition.onDisableMove",
+            "condition.onEnd",
+            "condition.onStart",
+        ],
+    ),
+    // Disable: `onTryHit` in `handlers::on_try_hit`, `condition.onStart` in
+    // `conditions::volatile_start`, `onBeforeMove` (Champions) and `onDisableMove` in
+    // `conditions`, `onEnd` only logs.
+    (
+        moves::DISABLE,
+        &[
+            "condition.onBeforeMove",
+            "condition.onDisableMove",
+            "condition.onEnd",
+            "condition.onStart",
+            "onTryHit",
+        ],
+    ),
+    // Torment: `onDisableMove` in `conditions::disabled_move`; `onStart` only fails for a
+    // Dynamaxed target (refused), `onEnd` only logs.
+    (
+        moves::TORMENT,
+        &[
+            "condition.onDisableMove",
+            "condition.onEnd",
+            "condition.onStart",
+        ],
+    ),
+    // Imprison: `onFoeDisableMove` and `onFoeBeforeMove` in `conditions`; `onStart` only logs.
+    (
+        moves::IMPRISON,
+        &[
+            "condition.onFoeBeforeMove",
+            "condition.onFoeDisableMove",
+            "condition.onStart",
+        ],
+    ),
+    // Entry hazards: `onSideStart`/`onSideRestart` in `conditions::add_hazard`, `onSwitchIn`
+    // in `conditions::entry_hazards` (run by `switching::run_switch_in`).
+    (
+        moves::STEALTH_ROCK,
+        &["condition.onSideStart", "condition.onSwitchIn"],
+    ),
+    (
+        moves::SPIKES,
+        &[
+            "condition.onSideRestart",
+            "condition.onSideStart",
+            "condition.onSwitchIn",
+        ],
+    ),
+    (
+        moves::TOXIC_SPIKES,
+        &[
+            "condition.onSideRestart",
+            "condition.onSideStart",
+            "condition.onSwitchIn",
+        ],
+    ),
+    (
+        moves::STICKY_WEB,
+        &["condition.onSideStart", "condition.onSwitchIn"],
+    ),
+    // Hazard removal: Defog `onHit`, Rapid Spin `onAfterHit` (`onAfterSubDamage` needs a
+    // substitute, which is refused), Court Change `onHitField`.
+    (moves::DEFOG, &["onHit"]),
+    (moves::RAPID_SPIN, &["onAfterHit", "onAfterSubDamage"]),
+    (moves::COURT_CHANGE, &["onHitField"]),
+    // Struggle: `onModifyMove` (type `???`) in `handlers::on_modify_move`; `struggleRecoil` in
+    // `moves::hit_loop`; chosen only without a usable move (`STRUGGLE_INDEX`).
+    (moves::STRUGGLE, &["onModifyMove"]),
+    // Glaive Rush: the `self` volatile's `onBeforeMove` (priority 100) in `moves::before_move`,
+    // `onAccuracy` and `onSourceModifyDamage` in `handlers`; `onStart` only logs.
+    (
+        moves::GLAIVE_RUSH,
+        &[
+            "condition.onAccuracy",
+            "condition.onBeforeMove",
+            "condition.onSourceModifyDamage",
+            "condition.onStart",
+        ],
+    ),
+    // Sparkling Aria: its secondary adds the `sparklingaria` volatile, its `onAfterMove`
+    // (`handlers::on_after_move`) removes it and cures burns.
+    (moves::SPARKLING_ARIA, &["onAfterMove"]),
+    // Sleep Talk: `onTry` and `onHit` (a random callable move through `moves::call_move`);
+    // Snore: `onTry`. Both are `sleepUsable` (`moves::before_move`).
+    (moves::SLEEP_TALK, &["onHit", "onTry"]),
+    (moves::SNORE, &["onTry"]),
+    // Instruct: `onHit` in `handlers` (a new move action with order 3).
+    (moves::INSTRUCT, &["onHit"]),
     (moves::GRASSY_GLIDE, &["onModifyPriority"]),
     (moves::LOW_KICK, &["basePowerCallback", "onTryHit"]),
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),
@@ -802,8 +911,8 @@ const CORE_CHECKED_ABILITIES: &[AbilityId] = &[
 ];
 
 /// Items without callbacks that Showdown's core checks by name, not implemented here.
-/// Weather rocks, Light Clay and Terrain Extender (durations) are implemented; Heavy-Duty
-/// Boots and Protective Pads only affect unsupported hazards and contact abilities.
+/// Weather rocks, Light Clay and Terrain Extender (durations), Heavy-Duty Boots (entry hazards)
+/// and Protective Pads (contact) are implemented.
 const CORE_CHECKED_ITEMS: &[ItemId] = &[
     items::BLUNDER_POLICY,
     items::GRIP_CLAW,
@@ -881,14 +990,15 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     if m.selfdestruct != SelfDestruct::No {
         return why("self-destruct");
     }
+    let sleep_moves = id == moves::SLEEP_TALK || id == moves::SNORE;
     if m.breaks_protect
         || m.smart_target
-        || m.calls_move
-        || m.sleep_usable
+        || (m.calls_move && id != moves::SLEEP_TALK)
+        || (m.sleep_usable && !sleep_moves)
         || m.steals_boosts
         || m.has_crash_damage
         || m.mind_blown_recoil
-        || m.struggle_recoil
+        || (m.struggle_recoil && id != moves::STRUGGLE)
         || m.chloroblast_recoil
         || m.is_z
         || m.is_max
@@ -942,6 +1052,25 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     None
 }
 
+/// Why Sleep Talk cannot be simulated for a Pokémon with these moves: every move it may call
+/// must be supported, hit once (a multi-hit move would suspend Sleep Talk's own hit) and have
+/// no `onAfterMove` (Showdown runs the called move's AfterMove at the end of `runMove`).
+pub(crate) fn sleep_talk_problem(moves: &[MoveId]) -> Option<String> {
+    for &id in moves {
+        if !super::moves::sleep_talk_calls(id) {
+            continue;
+        }
+        let data = id.data();
+        if let Some(why) = move_unsupported(id) {
+            return Some(format!("Sleep Talk could call {why}"));
+        }
+        if data.multihit.is_some() || data.handlers.contains(&"onAfterMove") {
+            return Some(format!("Sleep Talk calling {}", data.name));
+        }
+    }
+    None
+}
+
 pub(crate) fn side_effect_of(condition: &str) -> Option<SideEffect> {
     Some(match condition {
         "reflect" => SideEffect::Reflect,
@@ -953,12 +1082,16 @@ pub(crate) fn side_effect_of(condition: &str) -> Option<SideEffect> {
         "luckychant" => SideEffect::LuckyChant,
         "wideguard" => SideEffect::WideGuard,
         "quickguard" => SideEffect::QuickGuard,
+        "stealthrock" => SideEffect::StealthRock,
+        "spikes" => SideEffect::Spikes,
+        "toxicspikes" => SideEffect::ToxicSpikes,
+        "stickyweb" => SideEffect::StickyWeb,
         _ => return None,
     })
 }
 
 /// The implemented side effects.
-const SUPPORTED_SIDE_EFFECTS: [SideEffect; 9] = [
+const SUPPORTED_SIDE_EFFECTS: [SideEffect; 13] = [
     SideEffect::Reflect,
     SideEffect::LightScreen,
     SideEffect::AuroraVeil,
@@ -968,6 +1101,10 @@ const SUPPORTED_SIDE_EFFECTS: [SideEffect; 9] = [
     SideEffect::LuckyChant,
     SideEffect::WideGuard,
     SideEffect::QuickGuard,
+    SideEffect::StealthRock,
+    SideEffect::Spikes,
+    SideEffect::ToxicSpikes,
+    SideEffect::StickyWeb,
 ];
 
 /// Checks everything on the field before a turn.
@@ -1004,6 +1141,22 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
             if s.effects[i].is_active() && !SUPPORTED_SIDE_EFFECTS.iter().any(|&e| e as usize == i)
             {
                 return Err(format!("side effect #{i}"));
+            }
+        }
+        // Hazards have no duration and 1..=max layers (0 for Stealth Rock and Sticky Web).
+        for hazard in super::conditions::HAZARDS {
+            let effect = s.effects[hazard as usize];
+            if !effect.is_active() {
+                continue;
+            }
+            let max = super::conditions::hazard_layers(hazard);
+            let layers_ok = if max == 1 {
+                effect.value == 0
+            } else {
+                (1..=max).contains(&effect.value)
+            };
+            if effect.turns != crate::field::Effect::PERMANENT || !layers_ok {
+                return Err(format!("{hazard:?} with {effect:?}"));
             }
         }
         for slot in 0..N as u8 {

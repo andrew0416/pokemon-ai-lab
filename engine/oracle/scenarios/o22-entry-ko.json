@@ -1,0 +1,127 @@
+{
+ "description": "O22 a mid-turn entry-hazard KO: Charizard (patched to 70 of 185 HP) switches into Stealth Rock (92) and faints; at the end of the turn it gets fnt and p2 must replace it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 2,
+     "atk": 32,
+     "def": 32
+    },
+    "moves": [
+     "Stealth Rock",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hitmontop",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Spikes",
+     "Bulk Up"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Weavile",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Charizard",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Modest",
+    "evs": {
+     "hp": 32,
+     "spa": 32,
+     "def": 2
+    },
+    "moves": [
+     "Flamethrower",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Bronzong",
+    "item": "",
+    "ability": "Levitate",
+    "nature": "Relaxed",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Iron Defense",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "1234"
+ },
+ "setupTurns": [
+  [
+   "move stealthrock, move bulkup",
+   "move swordsdance, move calmmind"
+  ]
+ ],
+ "patch": {
+  "p2": {
+   "Charizard": {
+    "hp": 70
+   }
+  }
+ },
+ "turn": {
+  "p1": "move protect, move bulkup",
+  "p2": "switch 3, move calmmind"
+ }
+}

@@ -335,6 +335,18 @@ impl<'a, const N: usize> Battle<'a, N> {
         self.lose_hp(target, pokemon, amount)
     }
 
+    /// Showdown `directDamage`: at least 1 HP, no Damage handlers (Struggle's recoil). Returns the
+    /// HP removed.
+    pub fn direct_damage(&mut self, target: SlotRef, amount: i32) -> i32 {
+        let Some(pokemon) = self.alive(target) else {
+            return 0;
+        };
+        if amount == 0 {
+            return 0;
+        }
+        self.lose_hp(target, pokemon, amount.max(1))
+    }
+
     fn lose_hp(&mut self, slot: SlotRef, pokemon: PokemonRef, amount: i32) -> i32 {
         let hp = i32::from(self.mon(pokemon).hp);
         if amount <= 0 || hp == 0 {
@@ -402,7 +414,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             let previous = self.state.slot(slot).clone();
             self.apply(Instruction::Switch {
                 slot,
-                previous,
+                previous: Box::new(previous),
                 party_index: None,
             });
             self.apply(Instruction::SetFaintedOccupant {
@@ -767,6 +779,11 @@ impl<'a, const N: usize> Battle<'a, N> {
                     duration: if old.hidden >= 2 { 2 } else { old.duration },
                     ..old
                 },
+                // Helping Hand's `onRestart`: `this.effectState.multiplier *= 1.5`.
+                Volatile::HelpingHand => VolatileState {
+                    counter: old.counter + 1,
+                    ..old
+                },
                 // No onRestart.
                 _ => return false,
             }
@@ -778,7 +795,13 @@ impl<'a, const N: usize> Battle<'a, N> {
             let mut new = VolatileState {
                 active: true,
                 duration: volatile.initial_duration(),
-                counter: if volatile == Volatile::Stall { 3 } else { 0 },
+                // Stall's first counter; Helping Hand's `onStart`: `multiplier = 1.5` (one
+                // application).
+                counter: match volatile {
+                    Volatile::Stall => 3,
+                    Volatile::HelpingHand => 1,
+                    _ => 0,
+                },
                 ..VolatileState::NONE
             };
             match volatile {
@@ -805,7 +828,12 @@ impl<'a, const N: usize> Battle<'a, N> {
                         new.duration += 1;
                     }
                 }
-                _ => {}
+                // The other conditions' `onStart` (`conditions::volatile_start`).
+                _ => {
+                    if !super::conditions::volatile_start(self, target, volatile, &mut new) {
+                        return false;
+                    }
+                }
             }
             new
         };

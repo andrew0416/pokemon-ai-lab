@@ -1,0 +1,91 @@
+{
+ "description": "O32 Glaive Rush on the next turn (setup: Garchomp's Glaive Rush knocks out Pichu; p2 has no replacement): Tyranitar's Stone Edge hits Garchomp before Garchomp's Trick Room (-7), so it still cannot miss and deals double damage; Garchomp's move attempt then removes the volatile (BeforeMove priority 100).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 2,
+     "atk": 32,
+     "def": 32
+    },
+    "moves": [
+     "Glaive Rush",
+     "Trick Room",
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hitmontop",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Bulk Up",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Pichu",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 2,
+     "atk": 2,
+     "def": 2
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Tyranitar",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Stone Edge",
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move glaiverush 1, move bulkup",
+   "move swordsdance, move swordsdance"
+  ]
+ ],
+ "turn": {
+  "p1": "move trickroom, move bulkup",
+  "p2": "pass, move stoneedge 1"
+ }
+}

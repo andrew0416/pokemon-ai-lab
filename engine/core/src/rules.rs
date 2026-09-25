@@ -102,7 +102,8 @@ impl Ruleset {
                 if state.slot(slot).party_index.is_none() {
                     return Err(ActionError::EmptySlot { slot: s });
                 }
-                if index >= 4 {
+                // `STRUGGLE_INDEX` stands for Struggle (the turn engine checks it is the only choice).
+                if index >= 4 && index != crate::turn::STRUGGLE_INDEX {
                     return Err(ActionError::MoveIndexOutOfRange { slot: s, index });
                 }
                 if target.unsigned_abs() as usize > N {
@@ -603,7 +604,7 @@ mod tests {
         let previous = state.slot(ONE_0).clone();
         let switch = [Instruction::Switch {
             slot: ONE_0,
-            previous,
+            previous: Box::new(previous),
             party_index: Some(2),
         }];
         state.apply(&switch);

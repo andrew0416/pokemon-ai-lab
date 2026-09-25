@@ -1,0 +1,94 @@
+{
+ "description": "O22 hazard removal (setup: Stealth Rock and Reflect on p2's side, Spikes and Light Screen on p1's side; Electric Terrain patched): Weavile's Rapid Spin hits Hitmontop, raises its Speed and clears p2's Stealth Rock; Garchomp's Defog lowers Clefable's evasion, removes p2's Reflect and p1's Spikes, and ends the terrain; p1's Light Screen stays.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 2,
+     "atk": 32,
+     "def": 32
+    },
+    "moves": [
+     "Stealth Rock",
+     "Defog"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hitmontop",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Light Screen",
+     "Bulk Up"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Weavile",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Spikes",
+     "Rapid Spin"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Reflect",
+     "Calm Mind"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move stealthrock, move lightscreen",
+   "move spikes, move reflect"
+  ]
+ ],
+ "patch": {
+  "field": {
+   "terrain": "electricterrain",
+   "terrainDuration": 3
+  }
+ },
+ "turn": {
+  "p1": "move defog 2, move bulkup",
+  "p2": "move rapidspin 2, move calmmind"
+ }
+}

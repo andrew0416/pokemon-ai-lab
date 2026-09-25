@@ -1,0 +1,152 @@
+{
+ "description": "O22 entry hazards on mid-turn switches (setup: Stealth Rock and Toxic Spikes on p2's side, Spikes and Sticky Web on p1's side). In switch order: Weavile -> Tyranitar (Rock 1/8, poisoned by Toxic Spikes), Garchomp -> Kingambit (Spikes 1/8, Sticky Web -1 Speed from p2's slot 0, Defiant +2 Attack), Hitmontop -> Blissey (Heavy-Duty Boots: nothing), Clefable -> Toxapex (Rock 1/8; a grounded Poison type absorbs Toxic Spikes).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 2,
+     "atk": 32,
+     "def": 32
+    },
+    "moves": [
+     "Stealth Rock",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hitmontop",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Toxic Spikes",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Kingambit",
+    "item": "",
+    "ability": "Defiant",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Kowtow Cleave",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "Heavy-Duty Boots",
+    "ability": "Honey Gather",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Soft-Boiled",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Weavile",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Spikes",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Sticky Web",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Tyranitar",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Rock Slide",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Toxapex",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Recover",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "1234"
+ },
+ "setupTurns": [
+  [
+   "move stealthrock, move toxicspikes",
+   "move spikes, move stickyweb"
+  ]
+ ],
+ "turn": {
+  "p1": "switch 3, switch 4",
+  "p2": "switch 3, switch 4"
+ }
+}
