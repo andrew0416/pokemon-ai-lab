@@ -147,6 +147,24 @@ pub(super) fn on_try<const N: usize>(
     }
 }
 
+/// The move's own `onTryHit` (Champions `spreadMoveHit`: `singleEvent('TryHit', ...)` on the
+/// first target, after accuracy and before the damage). `false` = the move fails. Low Kick's
+/// and Grass Knot's only act on a Dynamaxed target, Poltergeist's only logs.
+pub(super) fn on_try_hit<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    mv: &mut ActiveMove,
+) -> bool {
+    // Pollen Puff: `if (source.isAlly(target)) { move.basePower = 0; move.infiltrates = true; }`
+    // (`infiltrates` only matters against a substitute).
+    if mv.id == moves::POLLEN_PUFF && target.side == user.side {
+        mv.base_power = 0;
+    }
+    let _ = b;
+    true
+}
+
 /// The move's `onAfterHit`, once per damaged target (`spreadMoveHit`, after `DamagingHit`).
 /// Knock Off's is in `moves.rs`. `onAfterSubDamage` (the same effect against a substitute) is
 /// unreachable: substitutes are refused.
@@ -296,6 +314,19 @@ pub(super) fn on_hit<const N: usize>(
         moves::STEEL_ROLLER => {
             super::clear_terrain(b);
             return Ok(None);
+        }
+        // Pollen Puff: an ally is healed `Math.floor(target.baseMaxhp * 0.5)`; `NOT_FAIL` if
+        // nothing is healed. A foe gets nothing more (`undefined`).
+        moves::POLLEN_PUFF => {
+            if target.side != user.side {
+                return Ok(None);
+            }
+            let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
+            if b.heal(target, f64::from(max_hp / 2)) > 0 {
+                HitResult::Success
+            } else {
+                HitResult::NotFail
+            }
         }
         _ => return Ok(None),
     };

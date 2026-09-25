@@ -65,6 +65,9 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // `onAfterSubDamage` needs a substitute, which is refused.
     (moves::ICE_SPINNER, &["onAfterHit", "onAfterSubDamage"]),
     (moves::STEEL_ROLLER, &["onAfterSubDamage", "onHit", "onTry"]),
+    // `onTryMove` only fails an ally-targeted use under Heal Block, which no supported effect
+    // adds.
+    (moves::POLLEN_PUFF, &["onHit", "onTryHit", "onTryMove"]),
     (moves::RISING_VOLTAGE, &["basePowerCallback"]),
     (moves::PSYBLADE, &["onBasePower"]),
     (moves::BLIZZARD, &["onModifyMove"]),
@@ -430,6 +433,9 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         | MoveTarget::AdjacentFoe
         | MoveTarget::AllAdjacentFoes
         | MoveTarget::AllAdjacent
+        | MoveTarget::AdjacentAlly
+        | MoveTarget::AdjacentAllyOrSelf
+        | MoveTarget::Allies
         | MoveTarget::User
         | MoveTarget::All
         | MoveTarget::AllySide

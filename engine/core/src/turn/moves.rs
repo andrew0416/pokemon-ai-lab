@@ -318,6 +318,8 @@ fn get_move_targets<const N: usize>(
             t
         }
         MoveTarget::AllAdjacentFoes => b.alive_slots(user.side.other()),
+        // `alliesAndSelf()`: every active Pokémon on the user's side that has not fainted.
+        MoveTarget::Allies => b.alive_slots(user.side),
         _ => {
             let mut t = target;
             if b.alive(t).is_none() && t.side != user.side {
@@ -443,7 +445,7 @@ fn use_move<const N: usize>(
 ) -> Result<bool, TurnError> {
     let pokemon = b.occupant(user).expect("checked");
     let base_target = mv.target;
-    let mut target = if mv.target == MoveTarget::User {
+    let mut target = if matches!(mv.target, MoveTarget::User | MoveTarget::Allies) {
         Some(user)
     } else {
         target
@@ -651,7 +653,11 @@ fn try_spread_move_hit<const N: usize>(
     if hit.is_empty() {
         return Ok(false);
     }
-    // 7. The hit (single-hit moves only).
+    // 7. The hit (single-hit moves only). Its first step is the move's own `onTryHit`
+    //    (Champions `spreadMoveHit`: on the first target only; failing fails the move).
+    if !handlers::on_try_hit(b, user, hit[0], mv) {
+        return Ok(false);
+    }
     let results = hit_loop(b, user, mv, &hit)?;
     Ok(results.iter().any(|r| r.ok()))
 }

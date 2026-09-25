@@ -40,3 +40,13 @@ fn o6_ice_spinner_clears_grassy_terrain_after_the_hit() {
 fn o6_steel_roller_clears_the_terrain_then_fails_without_one() {
     assert_exact_parity("o6-steel-roller");
 }
+
+#[test]
+fn o8_coaching_life_dew_decorate_and_pollen_puff_on_allies() {
+    assert_exact_parity("o8-ally-support");
+}
+
+#[test]
+fn o8_pollen_puff_damages_foes_and_milk_drink_heals_an_ally() {
+    assert_exact_parity("o8-pollen-puff");
+}
