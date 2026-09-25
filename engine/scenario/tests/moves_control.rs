@@ -65,3 +65,24 @@ fn o13_taunt_ends_in_the_residual() {
 fn o13_a_taunted_pokemon_cannot_choose_a_status_move() {
     assert_invalid_choice("o13-taunt-ends", 1, 0, move_choice(0, 0), "Taunt");
 }
+
+#[test]
+fn o14_disable_before_and_after_the_target_moves() {
+    assert_exact_parity("o14-disable");
+}
+
+#[test]
+fn o14_disable_fails_without_a_last_move() {
+    assert_exact_parity("o14-disable-fail");
+}
+
+#[test]
+fn o14_disable_counts_down_on_the_next_turn() {
+    assert_exact_parity("o14-disable-next");
+}
+
+/// Disable's `onDisableMove`: Clefable cannot choose its disabled Calm Mind.
+#[test]
+fn o14_a_disabled_move_cannot_be_chosen() {
+    assert_invalid_choice("o14-disable-next", 1, 0, move_choice(0, 0), "Disable");
+}

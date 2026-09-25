@@ -1,0 +1,23 @@
+{
+ "description": "O14 Disable's onTryHit on turn 1: Weavile's Disable on Clefable fails (no last move yet); Hitmontop's Disable on Garchomp, which already used Swords Dance this turn, lasts 5 (4 after the residual).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Disable", "Swords Dance", "Protect"], "level": 50},
+   {"species": "Hitmontop", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Disable", "Bulk Up", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Draining Kiss", "Moonblast"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 2, "atk": 32, "def": 32}, "moves": ["Swords Dance", "Dragon Claw"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move disable 1, move disable 2", "p2": "move calmmind, move swordsdance"}
+}

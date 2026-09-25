@@ -63,9 +63,12 @@ pub enum Volatile {
     /// Taunt: status moves can be neither chosen nor used (duration 3, one more if the holder
     /// was active since the turn started and has no move left; residual order 15).
     Taunt,
+    /// Disable: `mv` (the holder's last move when it started) can be neither chosen nor used
+    /// (duration 5, one less if the holder still has a move to come; residual order 17).
+    Disable,
 }
 
-pub const VOLATILE_COUNT: usize = 19;
+pub const VOLATILE_COUNT: usize = 20;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -88,6 +91,7 @@ impl Volatile {
         Volatile::ProteanUsed,
         Volatile::HelpingHand,
         Volatile::Taunt,
+        Volatile::Disable,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -112,6 +116,7 @@ impl Volatile {
             Volatile::Endure => conditions::ENDURE,
             Volatile::HelpingHand => conditions::HELPINGHAND,
             Volatile::Taunt => conditions::TAUNT,
+            Volatile::Disable => conditions::DISABLE,
             Volatile::PerishSong | Volatile::ProteanUsed => ConditionId::NONE,
         }
     }
@@ -138,6 +143,7 @@ impl Volatile {
             Volatile::ProteanUsed => "protean",
             Volatile::HelpingHand => "helpinghand",
             Volatile::Taunt => "taunt",
+            Volatile::Disable => "disable",
         }
     }
 
@@ -165,6 +171,7 @@ impl Volatile {
             Volatile::Stall | Volatile::LockedMove | Volatile::MustRecharge | Volatile::Yawn => 2,
             Volatile::Encore | Volatile::Taunt => 3,
             Volatile::PerishSong => 4,
+            Volatile::Disable => 5,
             Volatile::Confusion
             | Volatile::FlashFire
             | Volatile::ChoiceLock
@@ -178,6 +185,7 @@ impl Volatile {
         match self {
             Volatile::Taunt => Some(15),
             Volatile::Encore => Some(16),
+            Volatile::Disable => Some(17),
             Volatile::Yawn => Some(23),
             Volatile::PerishSong => Some(24),
             Volatile::Roost => Some(25),
@@ -308,6 +316,7 @@ mod tests {
             (Volatile::PerishSong, moves::PERISH_SONG),
             (Volatile::HelpingHand, moves::HELPING_HAND),
             (Volatile::Taunt, moves::TAUNT),
+            (Volatile::Disable, moves::DISABLE),
         ] {
             let data = id.data();
             assert_eq!(

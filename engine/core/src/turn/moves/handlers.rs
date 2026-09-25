@@ -192,6 +192,12 @@ pub(super) fn on_try_hit<const N: usize>(
         moves::HELPING_HAND => {
             b.will_move(target).is_some() || b.state.slot(target).move_actions == 0
         }
+        // Disable: `if (!target.lastMove || target.lastMove.isZOrMaxPowered ||
+        // target.lastMove.isMax || target.lastMove.id === 'struggle') return false;`
+        moves::DISABLE => {
+            let last = b.state.slot(target).last_move;
+            !last.is_none() && last != moves::STRUGGLE && !last.data().is_max
+        }
         _ => true,
     }
 }

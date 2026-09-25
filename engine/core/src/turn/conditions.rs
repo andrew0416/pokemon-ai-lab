@@ -1,7 +1,7 @@
 //! Callbacks of the conditions moves create (`condition` in `data/moves.ts`): what happens
 //! when a volatile starts and when its duration runs out in the residual.
 
-use crate::dex::{moves, MoveCategory, MoveId, Type};
+use crate::dex::{moves, MoveCategory, MoveFlags, MoveId, Type};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SlotRef, State, Status};
 use crate::volatile::{decode_types, encode_types, Volatile, VolatileState};
@@ -99,8 +99,49 @@ pub(crate) fn volatile_start<const N: usize>(
             }
             true
         }
+        // Disable: one turn less `if (this.queue.willMove(pokemon) || (pokemon ===
+        // this.activePokemon && this.activeMove && !this.activeMove.isExternal))` (the second
+        // case: Cursed Body disabling the attacker's move while it is used); it fails without a
+        // last move or when the last move's slot has no PP; `this.effectState.move =
+        // pokemon.lastMove.id`.
+        Volatile::Disable => {
+            let using_a_move = b
+                .active_move
+                .is_some_and(|m| m.user == target && b.occupant(target) == Some(m.pokemon));
+            if b.will_move(target).is_some() || using_a_move {
+                new.duration -= 1;
+            }
+            let last = b.state.slot(target).last_move;
+            if last.is_none() {
+                return false;
+            }
+            let Some(pokemon) = b.occupant(target) else {
+                return false;
+            };
+            if b.mon(pokemon)
+                .moves
+                .iter()
+                .any(|m| m.id == last && m.pp == 0)
+            {
+                return false;
+            }
+            new.mv = last;
+            true
+        }
         _ => true,
     }
+}
+
+/// The user's condition `onBeforeMove` handlers between flinch (priority 8) and Gravity (6):
+/// Disable (7; the Champions override) fails the disabled move unless it has the
+/// `cantusetwice` flag. `false` = the move is not used.
+pub(crate) fn before_move_after_flinch<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+) -> bool {
+    let disable = b.volatile(user, Volatile::Disable);
+    !(disable.active && disable.mv == id && !id.data().flags.contains(MoveFlags::CANTUSETWICE))
 }
 
 /// The user's condition `onBeforeMove` handlers between Gravity (priority 6) and confusion
@@ -118,7 +159,8 @@ pub(crate) fn before_move_after_gravity<const N: usize>(
 }
 
 /// Why the Pokémon in `slot` cannot choose `id` because of a condition on it (the conditions'
-/// `DisableMove` handlers that `endTurn` runs): Taunt disables every status move but Me First.
+/// `DisableMove` handlers that `endTurn` runs): Taunt disables every status move but Me First,
+/// Disable its move.
 pub(crate) fn disabled_move<const N: usize>(
     state: &State<N>,
     slot: SlotRef,
@@ -131,6 +173,10 @@ pub(crate) fn disabled_move<const N: usize>(
         && id != moves::ME_FIRST
     {
         return Some(format!("{} is disabled by Taunt", data.name));
+    }
+    let disable = volatiles.get(Volatile::Disable);
+    if disable.active && disable.mv == id {
+        return Some(format!("{} is disabled by Disable", data.name));
     }
     None
 }

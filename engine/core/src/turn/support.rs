@@ -105,6 +105,19 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "condition.onStart",
         ],
     ),
+    // Disable: `onTryHit` in `handlers::on_try_hit`, `condition.onStart` in
+    // `conditions::volatile_start`, `onBeforeMove` (Champions) and `onDisableMove` in
+    // `conditions`, `onEnd` only logs.
+    (
+        moves::DISABLE,
+        &[
+            "condition.onBeforeMove",
+            "condition.onDisableMove",
+            "condition.onEnd",
+            "condition.onStart",
+            "onTryHit",
+        ],
+    ),
     (moves::GRASSY_GLIDE, &["onModifyPriority"]),
     (moves::LOW_KICK, &["basePowerCallback", "onTryHit"]),
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),
