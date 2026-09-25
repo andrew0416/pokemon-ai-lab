@@ -1,0 +1,23 @@
+{
+ "description": "O17 Gengar (holding its Mega Stone) Poltergeist into item-holding Excadrill; Snorlax Knock Off into Gengar: the Mega Stone cannot be taken, so no 1.5x and no removal. Excadrill Swords Dances, Gardevoir Protects.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gengar", "item": "Gengarite", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Poltergeist", "Protect"], "level": 50},
+   {"species": "Gardevoir", "item": "Focus Sash", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Protect", "Hyper Voice"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Leftovers", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Knock Off", "Protect"], "level": 50},
+   {"species": "Excadrill", "item": "Life Orb", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Swords Dance", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move poltergeist 2, move protect", "p2": "move knockoff 1, move swordsdance"}
+}

@@ -1,0 +1,23 @@
+{
+ "description": "O17 Gengar Poltergeist into itemless Hawlucha fails (onTry). The faster itemless Hawlucha Knock Offs the Sharp Beak holder (1.5x, item removed), whose Acrobatics into Snorlax is then doubled (110). Snorlax Swords Dances.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gengar", "item": "Leftovers", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Poltergeist", "Protect"], "level": 50},
+   {"name": "Beak", "species": "Hawlucha", "item": "Sharp Beak", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Acrobatics", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"name": "Bare", "species": "Hawlucha", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Knock Off", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "Leftovers", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Swords Dance", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move poltergeist 1, move acrobatics 2", "p2": "move knockoff 2, move swordsdance"}
+}

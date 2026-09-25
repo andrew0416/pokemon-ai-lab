@@ -64,9 +64,28 @@ pub(super) fn on_modify_move<const N: usize>(
     Ok(())
 }
 
+/// The move's `onTry` (`singleEvent('Try', move, null, pokemon, targets[0])`, before
+/// PrepareHit and every hit step). `false` = the move fails.
+pub(super) fn on_try<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    first_target: SlotRef,
+) -> bool {
+    match mv.id {
+        // Fake Out: `if (source.activeMoveActions > 1) return false;`
+        moves::FAKE_OUT => b.state.slot(user).move_actions <= 1,
+        // Poltergeist: `return !!target.item;` (the held item, even if suppressed). Its
+        // `onTryHit` only logs the item.
+        moves::POLTERGEIST => b.slot_mon(first_target).is_some_and(|m| !m.item.is_none()),
+        _ => true,
+    }
+}
+
 /// The move's `basePowerCallback` (`getDamage`, before the critical hit roll).
 pub(super) fn base_power_callback<const N: usize>(
     b: &Battle<'_, N>,
+    user: SlotRef,
     target: SlotRef,
     mv: &ActiveMove,
     base_power: i32,
@@ -77,6 +96,8 @@ pub(super) fn base_power_callback<const N: usize>(
         moves::RISING_VOLTAGE if b.terrain() == Terrain::Electric && b.is_grounded(target) => {
             base_power * 2
         }
+        // Acrobatics: `if (!pokemon.item) return move.basePower * 2;` (the held item).
+        moves::ACROBATICS if b.item(user).is_none() => base_power * 2,
         _ => base_power,
     }
 }
