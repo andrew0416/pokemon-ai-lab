@@ -73,8 +73,8 @@ pub(super) fn on_try<const N: usize>(
     first_target: SlotRef,
 ) -> bool {
     match mv.id {
-        // Fake Out: `if (source.activeMoveActions > 1) return false;`
-        moves::FAKE_OUT => b.state.slot(user).move_actions <= 1,
+        // Fake Out, First Impression: `if (source.activeMoveActions > 1) return false;`
+        moves::FAKE_OUT | moves::FIRST_IMPRESSION => b.state.slot(user).move_actions <= 1,
         // Poltergeist: `return !!target.item;` (the held item, even if suppressed). Its
         // `onTryHit` only logs the item.
         moves::POLTERGEIST => b.slot_mon(first_target).is_some_and(|m| !m.item.is_none()),

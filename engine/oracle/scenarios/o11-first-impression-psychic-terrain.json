@@ -1,0 +1,26 @@
+{
+ "description": "O11 Psychic Terrain: Golisopod's priority First Impression into grounded Snorlax is blocked; Heracross's into ungrounded Gyarados hits. Snorlax Swords Dances, Gyarados Bulk Ups.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Golisopod", "item": "Leftovers", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["First Impression", "Protect"], "level": 50},
+   {"species": "Heracross", "item": "Leftovers", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["First Impression", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Leftovers", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Gyarados", "item": "Leftovers", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Bulk Up", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "field": {"terrain": "psychicterrain", "terrainDuration": 4}
+ },
+ "turn": {"p1": "move firstimpression 1, move firstimpression 2", "p2": "move swordsdance, move bulkup"}
+}

@@ -405,7 +405,7 @@ fn try_spread_move_hit<const N: usize>(
 ) -> Result<bool, TurnError> {
     mv.spread = targets.len() > 1;
 
-    // Try: the move's onTry (Fake Out, Poltergeist), on the first target.
+    // Try: the move's onTry (Fake Out, First Impression, Poltergeist), on the first target.
     if !handlers::on_try(b, user, mv, targets[0]) {
         return Ok(false);
     }

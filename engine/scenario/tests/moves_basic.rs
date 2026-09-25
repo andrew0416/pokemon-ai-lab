@@ -4,7 +4,11 @@
 
 mod common;
 
-use common::assert_exact_parity;
+use common::{assert_exact_parity, fixture, start};
+use lab_engine::rules::Ruleset;
+use lab_engine::state::{SideId, SlotRef};
+use lab_engine::turn::{enumerate_turn, TurnError};
+use lab_scenario::scenario_choices;
 
 #[test]
 fn o2_grav_apple_under_gravity() {
@@ -59,4 +63,41 @@ fn o17_poltergeist_fails_and_knock_off_doubles_acrobatics() {
 #[test]
 fn o17_acrobatics_with_item_then_knock_off() {
     assert_exact_parity("o17-acrobatics-item");
+}
+
+#[test]
+fn o11_first_impression_on_the_first_turn_out() {
+    assert_exact_parity("o11-first-impression");
+}
+
+#[test]
+fn o11_first_impression_blocked_by_psychic_terrain_on_grounded_targets() {
+    assert_exact_parity("o11-first-impression-psychic-terrain");
+}
+
+/// Champions `onDisableMove`: once the user has acted since switching in, First Impression
+/// cannot be chosen.
+#[test]
+fn o11_first_impression_is_disabled_after_the_first_action() {
+    let name = "o11-first-impression";
+    let fixture = fixture(name);
+    let (loaded, mut state) = start(name, &fixture);
+    let choices = scenario_choices(&loaded, &state).unwrap();
+    let user = SlotRef {
+        side: SideId::One,
+        slot: 0,
+    };
+    state.slot_mut(user).move_actions = 1;
+    let error = enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices).unwrap_err();
+    assert!(
+        matches!(
+            error,
+            TurnError::InvalidChoice {
+                side: SideId::One,
+                slot: 0,
+                ..
+            }
+        ),
+        "{error}"
+    );
 }
