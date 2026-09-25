@@ -15,7 +15,9 @@ use crate::damage::{
     chain_modifiers, MOD_DOUBLE, MOD_HALF, MOD_ONE, MOD_ONE_POINT_FIVE, MOD_ONE_POINT_THREE,
     MOD_ONE_POINT_TWO,
 };
-use crate::dex::{abilities, items, AbilityFlags, AbilityId, MoveData, MoveFlags, Type};
+use crate::dex::{
+    abilities, items, AbilityFlags, AbilityId, MoveCategory, MoveData, MoveFlags, Type,
+};
 use crate::state::SlotRef;
 
 use super::battle::Battle;
@@ -169,6 +171,40 @@ pub(crate) fn base_power_handlers<const N: usize>(
             let p = priority(ability.data().event_orders, "onAllyBasePowerPriority");
             out.push(Handler::of(b, holder, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
         }
+    }
+    out
+}
+
+/// `ModifyAtk` (physical moves) or `ModifySpA` (special moves) handlers of abilities: the
+/// user's `onModifyAtk`/`onModifySpA`.
+pub(crate) fn attack_handlers<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    data: &MoveData,
+) -> Vec<Handler> {
+    let mut out = Vec::new();
+    let physical = data.category == MoveCategory::Physical;
+    let event = if physical {
+        "onModifyAtkPriority"
+    } else {
+        "onModifySpAPriority"
+    };
+    let Some(attacker) = b.slot_mon(user) else {
+        return out;
+    };
+    let ability = attacker.ability;
+    // Blaze, Torrent, Overgrow, Swarm: `attacker.hp <= attacker.maxhp / 3`.
+    let pinch_type = match ability {
+        a if a == abilities::BLAZE => Some(Type::Fire),
+        a if a == abilities::TORRENT => Some(Type::Water),
+        a if a == abilities::OVERGROW => Some(Type::Grass),
+        a if a == abilities::SWARM => Some(Type::Bug),
+        _ => None,
+    };
+    let pinch = 3 * i32::from(attacker.hp) <= i32::from(attacker.max_hp);
+    if pinch_type == Some(data.move_type) && pinch {
+        let p = priority(ability.data().event_orders, event);
+        out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
     }
     out
 }

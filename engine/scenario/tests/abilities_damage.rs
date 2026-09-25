@@ -43,3 +43,15 @@ fn technician_with_priority_and_weight_power_matches_showdown() {
 fn adaptability_matches_showdown() {
     assert_exact_parity("o41-adaptability");
 }
+
+// O42: pinch abilities (ModifyAtk / ModifySpA).
+
+#[test]
+fn blaze_and_torrent_at_the_hp_boundary_match_showdown() {
+    assert_exact_parity("o42-blaze-torrent");
+}
+
+#[test]
+fn overgrow_and_swarm_match_showdown() {
+    assert_exact_parity("o42-overgrow-swarm");
+}

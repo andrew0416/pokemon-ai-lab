@@ -807,6 +807,9 @@ fn get_damage<const N: usize>(
         i32::from(attacker.stats[stat_index(attack_stat)]),
         atk_boost,
     );
+    // ModifyAtk (physical) / ModifySpA (special), whatever stat the move attacks with.
+    let attack_mods = abilities::attack_handlers(b, user, data);
+    let attack = modify(attack, abilities::chain(b, attack_mods));
     let mut defense = boosted_stat(
         i32::from(defender.stats[stat_index(defense_stat)]),
         def_boost,
