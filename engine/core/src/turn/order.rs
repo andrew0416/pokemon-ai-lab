@@ -14,6 +14,8 @@ use super::battle::Battle;
 
 /// Showdown action `order` values.
 pub(crate) const ORDER_SWITCH: u32 = 103;
+/// `megaEvo`: after switches, before every move.
+pub(crate) const ORDER_MEGA: u32 = 104;
 pub(crate) const ORDER_MOVE: u32 = 200;
 /// Showdown's default for handlers without an order (sorts last).
 pub(crate) const ORDER_DEFAULT: u32 = u32::MAX;

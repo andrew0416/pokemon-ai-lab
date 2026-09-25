@@ -15,15 +15,16 @@ use super::moves::{set_terrain, set_weather};
 use super::support::{ability_supported_on_field, item_supported_on_field};
 use super::TurnError;
 
-/// What an `onStart`-only ability does on switch-in.
-enum StartEffect {
+/// What an `onStart`-only ability does when it starts (switch-in, or `setAbility` after a
+/// forme change).
+pub(crate) enum StartEffect {
     None,
     Weather(Weather),
     Terrain(Terrain),
     Intimidate,
 }
 
-fn start_effect(ability: AbilityId) -> Option<StartEffect> {
+pub(crate) fn start_effect(ability: AbilityId) -> Option<StartEffect> {
     let data = ability.data();
     Some(match ability {
         a if a == abilities::DROUGHT => StartEffect::Weather(Weather::Sun),
@@ -84,6 +85,16 @@ pub(crate) fn run_switch<const N: usize>(
     });
 
     // runSwitch: the newcomer's switch-in handlers.
+    run_start_effect(b, slot, effect);
+    Ok(())
+}
+
+/// The ability's `onStart` handler for the Pokémon at `slot`.
+pub(crate) fn run_start_effect<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    effect: StartEffect,
+) {
     match effect {
         StartEffect::None => {}
         StartEffect::Weather(weather) => {
@@ -101,5 +112,4 @@ pub(crate) fn run_switch<const N: usize>(
             }
         }
     }
-    Ok(())
 }

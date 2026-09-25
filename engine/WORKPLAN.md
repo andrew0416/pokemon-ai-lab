@@ -28,7 +28,7 @@
 |---|---|---|---|---|
 | **F1** | 타입·종 변경 명령 | `Instruction::SetTypes{target, old, new}`, `Instruction::SetSpecies{target, old, new}`(종·타입·능력치·특성을 한 번에 되돌림), `diff.rs` 반영. 정규 출력에 `types`(종과 다를 때)·`species` 변화 반영 | `instruction.rs`, `state.rs`, `turn/diff.rs`, `scenario/canonical.rs` | 단위 테스트(apply/reverse) |
 | **F2** | 성격·SP를 `Pokemon`에 | 메가·폼체인지 시 능력치 재계산 근거. `Pokemon { nature, stat_points }` 추가, 로더가 채움, `stats::champions_stats`로 재계산 함수 | `state.rs`, `scenario/team.rs`, `meta.rs`(사이드카에서 이동) | 로더 fixture |
-| **F3** | 메가진화 행동 | `megaEvo` 큐 행동(order 102, 우선도 없음, 속도순), `runMegaEvo`: 종 변경(F1)·능력치 재계산(F2)·특성 교체·`gimmicks_used`·정규 `canMega` 소거. 같은 턴 기술 순서 재계산(gen 8+: 매 행동 후 재정렬이라 자동). `AfterMega` 이벤트는 훅 자리만. 매직룸 등 도구 억제와 무관(DESIGN.md) | `turn/mod.rs`(Action 종류), 새 `turn/mega.rs`, `support.rs` | 시나리오: 가디안 메가 후 하이퍼보이스(속도 100 변경 확인), 마기라스 메가 모래날림 재발동 없음 확인 |
+| **F3** | 메가진화 행동 | `megaEvo` 큐 행동(order 104, 우선도 없음, 속도순), `runMegaEvo`: 종 변경(F1)·능력치 재계산(F2)·특성 교체·`gimmicks_used`·정규 `canMega` 소거. 같은 턴 기술 순서 재계산(gen 8+: 매 행동 후 재정렬이라 자동). `AfterMega` 이벤트는 훅 자리만. 매직룸 등 도구 억제와 무관(DESIGN.md) | `turn/mod.rs`(Action 종류), 새 `turn/mega.rs`, `support.rs` | 시나리오: 가디안 메가 후 하이퍼보이스(속도 100 변경 확인), 마기라스 메가 모래날림 재발동 없음 확인 |
 | **F4** | 등장 처리 통합 + 동시 등장 순서 | `scenario/switch_in.rs`(트레이스·모래날림·그래스메이커, 속도순 다중 등장)와 `turn/switching.rs`(날씨·필드·위협, 단일)를 `turn/switching.rs` 하나로. `runSwitch`의 일괄 처리: 등장자들 속도 정렬(`speedOrder` 보정), `fieldEvent('SwitchIn')` 핸들러 순서, 트레이스의 `Update` 즉시 시작. 첫 턴 시작(`start`)도 같은 함수 | `turn/switching.rs`, `scenario/switch_in.rs`(위임), `lib.rs` | 기존 `initial.rs` 테스트 유지 + 이중 교체 시나리오 |
 | **F5** | 기절 후 교체 결정 단계 | `enumerate_replacements(state, [Option<party_index>;2×N])`: `request: switch` 상태에서 양쪽 `instaswitch`를 속도순 등장(F4), 기절 포켓몬 status `fnt → ''`, 이어서 `endTurn`(턴 증가). 한쪽만 교체하는 경우 다른 쪽은 `wait`. 합법 교체 후보 생성(`Ruleset::joint_actions`와 같은 자리) | `turn/mod.rs`, `rules.rs`(교체 후보), `canonical.rs`(`request`) | 오라클: 1턴 KO 후 교체 → 2턴 결과를 `setupTurns`로 재현(`enumerate.cjs`는 이미 지원). 로더의 `setupTurns` 거부를 이 단계 이후 해제 |
 | **F6** | 턴 중단·재개 (교체기·탈출 도구·위기회피) | 유턴·볼트체인지·플립턴·패스트샷·바톤터치·탈출버튼·붉은카드·위기회피·도망태세: 행동 도중 `switchFlag` → 턴이 멈추고 그 편의 교체 결정을 받은 뒤 남은 큐를 이어 간다. `Pending`에 "중단 지점"과 남은 큐를 넣고 `enumerate_turn`이 `TurnSuspended{side, outcomes…}`를 돌려주는 API. 바톤터치는 랭크·휘발 복사(`copyVolatileFrom`) | `turn/mod.rs`(Pending·API), `moves.rs`(`selfSwitch`/`forceSwitch`), `battle.rs` | 유턴 → 교체 → 상대 기술 순서 오라클 |
@@ -186,4 +186,6 @@
 
 | ID | 상태 | 커밋 | 시나리오/테스트 | 비고 |
 |---|---|---|---|---|
-| (없음) | | | | |
+| F1 | 완료 2026-09-26 | `baca382` | `instruction.rs`·`diff.rs` 단위 테스트 | `Instruction::SetForme{old,new: Forme}`(종·타입·최대HP·능력치·특성·기본특성 일괄), `Instruction::SetTypes`. 정규 출력 `types`. 퇴장(교체·기절) 시 타입은 종 타입으로 복귀(`Battle::clear_volatile`) |
+| F2 | 완료 2026-09-26 | `baca382` | 로더 fixture | `Pokemon { nature, stat_points }`, `stats::champions_stats_unchecked`, `Pokemon::forme_as(species)`. 사이드카 `MemberMeta`에서 성격·SP 제거 |
+| F3 | 완료 2026-09-26 | (F3 커밋) | `mega-tyranitar`, `mega-tyranitar-sand` / `scenario/tests/mega.rs` | `turn/mega.rs`, `ActionKind::Mega`(order 104). 메가 대상 종의 특성이 필드·등장 모두 지원돼야 선택 가능(`mega_target`), 아니면 `Unsupported`. `AfterMega`는 훅 자리만. 첫 등장(`switch_in.rs`)에 날씨 4·필드 4·위협 추가(F4 통합 전 임시) |

@@ -1,0 +1,22 @@
+{
+ "description": "Tyranitar Mega Evolves under its own sand (patched to 3 turns left): Sand Stream's second start fails against the same weather, so the duration is not reset. Same moves as mega-tyranitar; Torkoal Protects.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "mega-tyranitar.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "mega-tyranitar-sand.p2.json",
+  "order": "12"
+ },
+ "patch": {
+  "field": {
+   "weather": "sandstorm",
+   "weatherDuration": 3
+  }
+ },
+ "turn": {
+  "p1": "move ironhead 2 mega, move protect",
+  "p2": "move protect, move dragondance"
+ }
+}

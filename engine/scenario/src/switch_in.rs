@@ -15,8 +15,10 @@
 //!    ability again fails (gen > 5), the same terrain always fails. Duration is 5, or 8 when
 //!    the source holds Smooth Rock (sand) / Terrain Extender (terrain).
 //!
-//! Only the abilities in `IMPLEMENTED` have behaviour here (Trace, Sand Stream, Grassy Surge,
-//! and Sand Rush as verified inert). Any other ability, item or species handler that can fire
+//! Only the abilities in `IMPLEMENTED` have behaviour here (Trace, the four weather and four
+//! terrain setters, Intimidate, and Sand Rush as verified inert); the turn engine's
+//! `turn/switching.rs` implements the same set for mid-turn switches (WORKPLAN F4 merges the
+//! two). Any other ability, item or species handler that can fire
 //! during this sequence is rejected with an error naming it; nothing that can change state is
 //! skipped silently. Random calls that cannot change the outcome (speed-tie shuffles in
 //! `eachEvent` with no listeners) are not branched on. Format/rule handlers (`onBegin`,
@@ -28,6 +30,11 @@ use std::fmt;
 use lab_engine::dex::{abilities, items, AbilityFlags, AbilityId, ItemId, SpeciesId};
 use lab_engine::field::{Effect, FieldEffect, Terrain, Weather};
 use lab_engine::state::{SideId, SlotRef, State, Status, BOOST_COUNT, PARTY_SIZE};
+
+/// Showdown Intimidate at start: `boost({atk: -1})` on each adjacent foe. Boost events
+/// (Defiant, Clear Body, Mirror Armor, ...) are not modelled; the foes' abilities are checked
+/// against the start events like everyone else's.
+const INTIMIDATE_ATK: i8 = -1;
 
 use crate::LoadedScenario;
 
@@ -156,6 +163,7 @@ enum StartBehavior {
     Trace,
     Weather(Weather),
     Terrain(Terrain),
+    Intimidate,
 }
 
 /// Events that can fire between team preview and the first decision: `SwitchIn` (with the
@@ -193,11 +201,21 @@ fn start_handler(handlers: &'static [&'static str]) -> Option<&'static str> {
 }
 
 /// Implemented abilities with the exact handler lists they were implemented against.
-const IMPLEMENTED: [(AbilityId, &[&str], StartBehavior); 4] = [
+const IMPLEMENTED: [(AbilityId, &[&str], StartBehavior); 11] = [
     (
         abilities::TRACE,
         &["onStart", "onUpdate"],
         StartBehavior::Trace,
+    ),
+    (
+        abilities::DROUGHT,
+        &["onStart"],
+        StartBehavior::Weather(Weather::Sun),
+    ),
+    (
+        abilities::DRIZZLE,
+        &["onStart"],
+        StartBehavior::Weather(Weather::Rain),
     ),
     (
         abilities::SAND_STREAM,
@@ -205,9 +223,34 @@ const IMPLEMENTED: [(AbilityId, &[&str], StartBehavior); 4] = [
         StartBehavior::Weather(Weather::Sand),
     ),
     (
+        abilities::SNOW_WARNING,
+        &["onStart"],
+        StartBehavior::Weather(Weather::Snow),
+    ),
+    (
+        abilities::ELECTRIC_SURGE,
+        &["onStart"],
+        StartBehavior::Terrain(Terrain::Electric),
+    ),
+    (
         abilities::GRASSY_SURGE,
         &["onStart"],
         StartBehavior::Terrain(Terrain::Grassy),
+    ),
+    (
+        abilities::MISTY_SURGE,
+        &["onStart"],
+        StartBehavior::Terrain(Terrain::Misty),
+    ),
+    (
+        abilities::PSYCHIC_SURGE,
+        &["onStart"],
+        StartBehavior::Terrain(Terrain::Psychic),
+    ),
+    (
+        abilities::INTIMIDATE,
+        &["onStart"],
+        StartBehavior::Intimidate,
     ),
     // `onModifySpe` doubles Speed only in sand, which cannot be up before the start
     // handlers run, and the start order is fixed before any of them.
@@ -410,15 +453,33 @@ fn set_weather<const N: usize>(state: &mut State<N>, weather: Weather, source: S
         return;
     }
     let rock = match weather {
+        Weather::Sun => items::HEAT_ROCK,
+        Weather::Rain => items::DAMP_ROCK,
         Weather::Sand => items::SMOOTH_ROCK,
-        // Only abilities that set sand are implemented (see `IMPLEMENTED`).
-        _ => unreachable!("weather {weather:?} has no implemented setter"),
+        Weather::Snow => items::ICY_ROCK,
+        _ => unreachable!("only the four weathers have an ability setter"),
     };
     let holds_rock = state.active(source).is_some_and(|mon| mon.item == rock);
     state.field[FieldEffect::Weather as usize] = Effect {
         value: weather as u8,
         turns: if holds_rock { 8 } else { 5 },
     };
+}
+
+/// Intimidate's start: every adjacent foe (all foes with at most two slots per side) loses
+/// one Atk stage, clamped at -6.
+fn intimidate<const N: usize>(state: &mut State<N>, source: SlotRef) {
+    for slot in 0..N as u8 {
+        let foe = SlotRef {
+            side: source.side.other(),
+            slot,
+        };
+        if state.active(foe).is_none_or(|mon| mon.hp <= 0) {
+            continue;
+        }
+        let boosts = &mut state.slot_mut(foe).boosts;
+        boosts[0] = (boosts[0] + INTIMIDATE_ATK).clamp(-6, 6);
+    }
 }
 
 /// Showdown `setTerrain`: fails if the same terrain is up.
@@ -469,6 +530,7 @@ impl<const N: usize> Expansion<'_, N> {
             StartBehavior::Inert => {}
             StartBehavior::Weather(weather) => set_weather(&mut state, weather, holder),
             StartBehavior::Terrain(terrain) => set_terrain(&mut state, terrain, holder),
+            StartBehavior::Intimidate => intimidate(&mut state, holder),
             StartBehavior::Trace => return self.trace(state, holder, step, p),
         }
         self.run(state, step + 1, p)

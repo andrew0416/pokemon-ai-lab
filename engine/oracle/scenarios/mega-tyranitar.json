@@ -1,0 +1,16 @@
+{
+ "description": "Tyranitar Mega Evolves (Sand Stream starts again and replaces Abomasnow's snow; Speed 113 -> 123 now outruns Gyarados' 118, Atk/Def change) and uses Iron Head on Gyarados, which tries to Dragon Dance (a flinch from the now-faster Mega stops it). Abomasnow and Excadrill Protect. Intimidate from the start applies to both formes.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "mega-tyranitar.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "mega-tyranitar.p2.json",
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move ironhead 2 mega, move protect",
+  "p2": "move protect, move dragondance"
+ }
+}

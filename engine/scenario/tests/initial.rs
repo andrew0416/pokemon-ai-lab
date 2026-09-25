@@ -238,7 +238,7 @@ fn unsupported_start_handlers_are_rejected() {
     };
 
     let mut s = loaded.state.clone();
-    s.active_mut(rillaboom).unwrap().ability = abilities::INTIMIDATE;
+    s.active_mut(rillaboom).unwrap().ability = abilities::DOWNLOAD;
     match expand_switch_ins(&s) {
         Err(SwitchInError::UnsupportedAbility {
             slot,
@@ -246,9 +246,20 @@ fn unsupported_start_handlers_are_rejected() {
             handler: "onStart",
         }) => {
             assert_eq!(slot, rillaboom);
-            assert_eq!(ability, abilities::INTIMIDATE);
+            assert_eq!(ability, abilities::DOWNLOAD);
         }
         other => panic!("{other:?}"),
+    }
+
+    // Intimidate is implemented (2026-09-26): every foe loses one Atk stage.
+    let mut s = loaded.state.clone();
+    s.active_mut(rillaboom).unwrap().ability = abilities::INTIMIDATE;
+    let outcomes = expand_switch_ins(&s).unwrap();
+    assert!(!outcomes.is_empty());
+    for o in &outcomes {
+        for slot in 0..2 {
+            assert_eq!(o.state.side(SideId::Two).slots[slot].boosts[0], -1);
+        }
     }
 
     let mut s = loaded.state.clone();

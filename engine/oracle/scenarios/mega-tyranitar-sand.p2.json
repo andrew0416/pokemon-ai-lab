@@ -1,0 +1,38 @@
+[
+ {
+  "species": "Torkoal",
+  "item": "Leftovers",
+  "ability": "Shell Armor",
+  "nature": "Quiet",
+  "evs": {
+   "hp": 32,
+   "spa": 32,
+   "def": 2
+  },
+  "moves": [
+   "Lava Plume",
+   "Earth Power",
+   "Body Press",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Gyarados",
+  "item": "Life Orb",
+  "ability": "Intimidate",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 17,
+   "spe": 17
+  },
+  "moves": [
+   "Waterfall",
+   "Crunch",
+   "Dragon Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

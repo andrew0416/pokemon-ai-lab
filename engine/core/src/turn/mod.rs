@@ -18,6 +18,7 @@ mod battle;
 mod branch;
 pub mod coverage;
 mod diff;
+mod mega;
 mod moves;
 mod order;
 mod residual;
@@ -37,7 +38,7 @@ use crate::state::{PokemonRef, SideId, SlotRef, State};
 
 use battle::Battle;
 use branch::Chooser;
-use order::{ORDER_MOVE, ORDER_SWITCH};
+use order::{ORDER_MEGA, ORDER_MOVE, ORDER_SWITCH};
 
 pub use moves::{takes_target, valid_target_loc};
 
@@ -297,10 +298,16 @@ fn check_turn<const N: usize>(
                             data.name, data.target
                         )));
                     }
-                    if !gimmick.is_none() {
-                        return Err(TurnError::Unsupported(format!(
-                            "{gimmick:?} activation (effects not implemented)"
-                        )));
+                    match gimmick {
+                        Gimmick::None => {}
+                        Gimmick::Mega => {
+                            mega::mega_target(mon).map_err(TurnError::Unsupported)?;
+                        }
+                        other => {
+                            return Err(TurnError::Unsupported(format!(
+                                "{other:?} activation (effects not implemented)"
+                            )));
+                        }
                     }
                     if let Some(why) = support::move_unsupported(id) {
                         return Err(TurnError::Unsupported(why));
@@ -310,7 +317,6 @@ fn check_turn<const N: usize>(
         }
     }
     support::check_state(state).map_err(TurnError::Unsupported)?;
-    let _ = Gimmick::None;
     Ok(())
 }
 
@@ -338,8 +344,15 @@ struct Action {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 enum ActionKind {
-    Move { index: u8, target: i8 },
-    Switch { party_index: u8 },
+    Move {
+        index: u8,
+        target: i8,
+    },
+    Switch {
+        party_index: u8,
+    },
+    /// Showdown `megaEvo`, queued before the Pokémon's move.
+    Mega,
 }
 
 /// The rest of a turn between stages: the actions not yet run, the Pokémon that fainted in
@@ -358,6 +371,7 @@ impl<const N: usize> Battle<'_, N> {
         let in_slot = self.alive(action.slot) == Some(action.pokemon);
         let (order, priority) = match action.kind {
             ActionKind::Switch { .. } => (ORDER_SWITCH, 0),
+            ActionKind::Mega => (ORDER_MEGA, 0),
             ActionKind::Move { index, .. } => {
                 let id = self.mon(action.pokemon).moves[index as usize].id;
                 let priority = if in_slot {
@@ -398,7 +412,20 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
             };
             let kind = match slot_action {
                 SlotAction::Pass => continue,
-                SlotAction::Move { index, target, .. } => ActionKind::Move { index, target },
+                SlotAction::Move {
+                    index,
+                    target,
+                    gimmick,
+                } => {
+                    if gimmick == Gimmick::Mega {
+                        queue.push(Action {
+                            slot,
+                            pokemon,
+                            kind: ActionKind::Mega,
+                        });
+                    }
+                    ActionKind::Move { index, target }
+                }
                 SlotAction::Switch { party_index } => ActionKind::Switch { party_index },
             };
             queue.push(Action {
@@ -439,6 +466,9 @@ fn run_stage<const N: usize>(
                 }
                 ActionKind::Switch { party_index } => {
                     switching::run_switch(b, action.slot, party_index)?;
+                }
+                ActionKind::Mega => {
+                    mega::run_mega_evo(b, action.slot)?;
                 }
             }
             if b.faint_messages(true) {
