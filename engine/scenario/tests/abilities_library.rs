@@ -131,6 +131,20 @@ fn booster_energy_knock_off_matches_showdown() {
     assert_exact_parity("o98-booster-knock-off");
 }
 
+// ---- O71 Trace on a switch during the turn -----------------------------------------------------
+
+/// A uniformly random traceable foe, and the copied Intimidate starts at once.
+#[test]
+fn trace_on_a_turn_switch_matches_showdown() {
+    assert_exact_parity("o71-trace-switch");
+}
+
+/// A `notrace` foe (Protosynthesis) is never copied.
+#[test]
+fn trace_on_a_turn_switch_skips_untraceable_foes() {
+    assert_exact_parity("o71-trace-switch-notrace");
+}
+
 // ---- Magic Bounce ------------------------------------------------------------------------------
 
 /// A Prankster status move bounces back without the Prankster boost; a spread status move

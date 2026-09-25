@@ -1,0 +1,25 @@
+{
+ "description": "O71 Trace on a switch during the turn: Chansey switches out for Porygon2, whose Trace copies Machamp's Guts or Arcanine's Intimidate with probability 1/2 each; a copied Intimidate starts at once and lowers both foes' Attack before Machamp's Strength hits Snorlax. Arcanine and Snorlax Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Porygon2", "item": "", "ability": "Trace", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Strength"], "level": 50},
+   {"species": "Arcanine", "item": "", "ability": "Intimidate", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, switch 3", "p2": "move strength 1, move harden"}
+}

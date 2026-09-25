@@ -436,7 +436,9 @@ fn switch_in_problem<const N: usize>(
 ) -> Option<String> {
     let mon = b.mon(pokemon);
     let name = mon.species.data().name;
-    if on_field && !ability_supported_on_field(mon.ability) {
+    // Trace is replaced by the ability it copies as it starts (`trace` checks that one; one that
+    // keeps seeking is refused there).
+    if on_field && !ability_supported_on_field(mon.ability) && mon.ability != abilities::TRACE {
         return Some(format!(
             "{name}: ability {} ({:?})",
             mon.ability.data().name,
@@ -939,7 +941,10 @@ fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), T
             copied.data().name
         )));
     }
-    if start_effect(copied).is_none() {
+    // After a switch during the battle the copied ability is on the field for the rest of the
+    // turn, so it must be supported there too (at the battle start `support::check_state` checks
+    // it before the first turn).
+    if start_effect(copied).is_none() || (!b.battle_start && !ability_supported_on_field(copied)) {
         return Err(b.unsupported(format!(
             "Trace copying {} ({:?})",
             copied.data().name,
