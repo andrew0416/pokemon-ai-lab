@@ -1,0 +1,23 @@
+{
+ "description": "O56 blocked Poison Touch and Toxic Chain: Shield Dust Vivillon stops Okidogi's Toxic Chain; the damaged Blastoise's Protective Pads stop Sneasler's Poison Touch (checkMoveMakesContact is called with the target as the attacker).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Okidogi", "item": "", "ability": "Toxic Chain", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Sneasler", "item": "", "ability": "Poison Touch", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Vivillon", "item": "", "ability": "Shield Dust", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Blastoise", "item": "Protective Pads", "ability": "Torrent", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move seismictoss 1, move seismictoss 2", "p2": "move seismictoss 2, move seismictoss 1"}
+}

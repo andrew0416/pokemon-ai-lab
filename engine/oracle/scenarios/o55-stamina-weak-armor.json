@@ -1,0 +1,23 @@
+{
+ "description": "O55 Stamina, Weak Armor, Tangling Hair: Dugtrio-Alola's Seismic Toss raises Stamina Mudsdale's Def; Machamp's physical hit gives Weak Armor Skarmory Def -1 Spe +2; Skarmory and Mudsdale then touch Tangling Hair Dugtrio (Spe -1 each).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Mudsdale", "item": "", "ability": "Stamina", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Skarmory", "item": "", "ability": "Weak Armor", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Dugtrio-Alola", "item": "", "ability": "Tangling Hair", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move seismictoss 1, move seismictoss 1", "p2": "move seismictoss 1, move seismictoss 2"}
+}

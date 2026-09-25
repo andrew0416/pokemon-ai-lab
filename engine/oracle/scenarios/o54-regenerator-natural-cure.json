@@ -1,0 +1,28 @@
+{
+ "description": "O54 onSwitchOut (Champions): damaged Toxapex switching out heals a third of its max HP (Regenerator); paralyzed Starmie switching out is cured (Natural Cure).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Toxapex", "item": "", "ability": "Regenerator", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Starmie", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Blastoise", "item": "", "ability": "Torrent", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1":{"Toxapex":{"hp":60},"Starmie":{"status":"par"}}},
+ "turn": {"p1": "switch 3, switch 4", "p2": "move seismictoss 1, move seismictoss 2"}
+}

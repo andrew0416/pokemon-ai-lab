@@ -1,0 +1,23 @@
+{
+ "description": "O55 Justified and Thermal Exchange: Kingambit's Night Slash gives Justified Absol Atk +1; Talonflame's Flame Charge gives Thermal Exchange Baxcalibur Atk +1, before both use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Absol", "item": "", "ability": "Justified", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50},
+   {"species": "Baxcalibur", "item": "", "ability": "Thermal Exchange", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Talonflame", "item": "", "ability": "Flame Body", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Flame Charge"], "level": 50},
+   {"species": "Kingambit", "item": "", "ability": "Defiant", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Night Slash"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move swordsdance, move swordsdance", "p2": "move flamecharge 2, move nightslash 1"}
+}

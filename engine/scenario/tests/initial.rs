@@ -259,7 +259,8 @@ fn unsupported_start_handlers_are_rejected() {
     };
 
     let mut s = loaded.state.clone();
-    s.active_mut(rillaboom).unwrap().ability = abilities::DOWNLOAD;
+    // Klutz's onStart (ending the item's effects) is not implemented.
+    s.active_mut(rillaboom).unwrap().ability = abilities::KLUTZ;
     match expand_switch_ins(&s) {
         Err(SwitchInError::UnsupportedAbility {
             slot,
@@ -267,7 +268,7 @@ fn unsupported_start_handlers_are_rejected() {
             handler: "onStart",
         }) => {
             assert_eq!(slot, rillaboom);
-            assert_eq!(ability, abilities::DOWNLOAD);
+            assert_eq!(ability, abilities::KLUTZ);
         }
         other => panic!("{other:?}"),
     }

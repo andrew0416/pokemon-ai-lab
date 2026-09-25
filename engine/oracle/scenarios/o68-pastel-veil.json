@@ -1,0 +1,26 @@
+{
+ "description": "O68 Pastel Veil: Mold Breaker Haxorus's Toxic poisons Rapidash's ally Snorlax in the setup turn (Pastel Veil suppressed; its onUpdate only cures the holder). In the turn, Blastoise switching in makes Pastel Veil's onAnySwitchIn cure Snorlax; Haxorus's Toxic on Rapidash itself is cured at the Update after the action.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Rapidash-Galar", "item": "", "ability": "Pastel Veil", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Haxorus", "item": "", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Toxic"], "level": 50},
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Blastoise", "item": "", "ability": "Torrent", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "setupTurns": [["move swordsdance, move swordsdance","move toxic 2, move seismictoss 1"]],
+ "turn": {"p1": "move swordsdance, move swordsdance", "p2": "move toxic 1, switch 3"}
+}

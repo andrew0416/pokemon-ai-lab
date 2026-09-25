@@ -31,7 +31,7 @@ use crate::gimmick::{mega_evolution, Gimmick};
 use crate::instruction::Instruction;
 use crate::state::{Pokemon, SlotRef};
 
-use super::battle::{cured_on_update, Battle};
+use super::battle::Battle;
 use super::support::ability_supported_on_field;
 use super::switching::{end_ability, start_ability, switch_in_supported};
 use super::TurnError;
@@ -80,16 +80,8 @@ pub(crate) fn run_mega_evo<const N: usize>(
     let mega = mega_target(mon).map_err(|why| b.unsupported(why))?;
     let old = mon.forme();
     let new = mon.forme_as(mega);
-    // The Update after this action would cure the status with the new ability (a sleeping
-    // Mewtwo becoming Mewtwo-Mega-Y with Insomnia); no Update event yet, see `cured_on_update`.
-    if cured_on_update(new.ability, mon.status) {
-        return Err(b.unsupported(format!(
-            "{}: {} would cure {:?} on the next Update",
-            mega.data().name,
-            new.ability.data().name,
-            mon.status
-        )));
-    }
+    // A new ability that cures the Pokémon's status (a sleeping Mewtwo becoming Mewtwo-Mega-Y
+    // with Insomnia) does so at the Update after this action (`abilities::on_update`).
     let hp = mon.hp;
     let new_hp = new.hp_after(old.max_hp, hp);
     // setAbility → the old ability's `End` (Flash Fire drops its volatile).

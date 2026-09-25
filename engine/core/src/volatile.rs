@@ -56,9 +56,21 @@ pub enum Volatile {
     /// (the type already changed since switching in). No duration; hidden in the canonical
     /// state.
     ProteanUsed,
+    /// Charge (the move's condition, also added by Electromorphosis and Wind Power): the
+    /// holder's next Electric move has double power (`onBasePower`, priority 9); it ends after
+    /// an Electric move (`onAfterMove`, `onMoveAborted`). No duration.
+    Charge,
+    /// Not a Showdown volatile: Anger Shell's / Berserk's `abilityState.checkedAngerShell` /
+    /// `.checkedBerserk === false` (a single-hit move's damage is waiting for the
+    /// `AfterMoveSecondary` check; healing berries are not eaten meanwhile, `onTryEatItem`). No
+    /// duration; hidden in the canonical state.
+    AngerShellUnchecked,
+    /// Unburden's own condition (`addVolatile('unburden')` once its holder uses or loses its
+    /// item): Speed doubles while the holder has no item. No duration.
+    Unburden,
 }
 
-pub const VOLATILE_COUNT: usize = 17;
+pub const VOLATILE_COUNT: usize = 20;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -79,6 +91,9 @@ impl Volatile {
         Volatile::PerishSong,
         Volatile::Endure,
         Volatile::ProteanUsed,
+        Volatile::Charge,
+        Volatile::AngerShellUnchecked,
+        Volatile::Unburden,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -96,12 +111,15 @@ impl Volatile {
             Volatile::LockedMove => conditions::LOCKEDMOVE,
             Volatile::MustRecharge => conditions::MUSTRECHARGE,
             Volatile::Encore => conditions::ENCORE,
-            Volatile::FlashFire => ConditionId::NONE,
+            Volatile::FlashFire | Volatile::Unburden => ConditionId::NONE,
             Volatile::ChoiceLock => conditions::CHOICELOCK,
             Volatile::Roost => conditions::ROOST,
             Volatile::Yawn => conditions::YAWN,
             Volatile::Endure => conditions::ENDURE,
-            Volatile::PerishSong | Volatile::ProteanUsed => ConditionId::NONE,
+            Volatile::Charge => conditions::CHARGE,
+            Volatile::PerishSong | Volatile::ProteanUsed | Volatile::AngerShellUnchecked => {
+                ConditionId::NONE
+            }
         }
     }
 
@@ -125,6 +143,9 @@ impl Volatile {
             Volatile::PerishSong => "perishsong",
             Volatile::Endure => "endure",
             Volatile::ProteanUsed => "protean",
+            Volatile::Charge => "charge",
+            Volatile::AngerShellUnchecked => "angershellunchecked",
+            Volatile::Unburden => "unburden",
         }
     }
 
@@ -154,7 +175,10 @@ impl Volatile {
             Volatile::Confusion
             | Volatile::FlashFire
             | Volatile::ChoiceLock
-            | Volatile::ProteanUsed => 0,
+            | Volatile::ProteanUsed
+            | Volatile::Charge
+            | Volatile::AngerShellUnchecked
+            | Volatile::Unburden => 0,
         }
     }
 
@@ -174,7 +198,7 @@ impl Volatile {
     /// and the effect state without engine-only payload (Roost's saved types).
     pub fn showdown_state(self, state: VolatileState) -> Option<VolatileState> {
         match self {
-            Volatile::ProteanUsed => None,
+            Volatile::ProteanUsed | Volatile::AngerShellUnchecked => None,
             Volatile::Roost => Some(VolatileState {
                 counter: 0,
                 ..state
@@ -269,7 +293,11 @@ mod tests {
                 // Song (added by name) and engine state.
                 assert!(matches!(
                     v,
-                    Volatile::FlashFire | Volatile::PerishSong | Volatile::ProteanUsed
+                    Volatile::FlashFire
+                        | Volatile::Unburden
+                        | Volatile::PerishSong
+                        | Volatile::ProteanUsed
+                        | Volatile::AngerShellUnchecked
                 ));
                 continue;
             }

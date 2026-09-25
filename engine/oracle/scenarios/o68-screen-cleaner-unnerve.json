@@ -1,0 +1,26 @@
+{
+ "description": "O68 Screen Cleaner and O63 Unnerve: Mr. Rime switching in ends Reflect on its side and Light Screen on the foe's; Tyranitar's Unnerve keeps Blastoise from eating its Sitrus Berry after Tyranitar's Seismic Toss takes it below half.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Tyranitar", "item": "", "ability": "Unnerve", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Mr. Rime", "item": "", "ability": "Screen Cleaner", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blastoise", "item": "Sitrus Berry", "ability": "Torrent", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2":{"Blastoise":{"hp":120}},"sides":{"p1":{"reflect":3},"p2":{"lightscreen":4}}},
+ "turn": {"p1": "move seismictoss 1, switch 3", "p2": "move seismictoss 1, move seismictoss 1"}
+}

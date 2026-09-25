@@ -16,13 +16,14 @@
 //! makes the turn unsupported.
 
 use crate::dex::{abilities, items, AbilityFlags, AbilityId, ItemId, SpeciesId, NO_BOOSTS};
-use crate::field::{FieldEffect, Terrain, Weather};
+use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SlotRef, Status, BOOST_COUNT};
 use crate::volatile::Volatile;
 
-use super::battle::{cured_on_update, Battle, BoostEffect};
+use super::battle::{Battle, BoostEffect};
 use super::moves::{set_terrain, set_weather};
+use super::order::boosted_stat;
 use super::support::{ability_supported_on_field, item_supported_on_field};
 use super::TurnError;
 
@@ -71,6 +72,23 @@ pub(crate) enum StartEffect {
     /// Air Lock, Cloud Nine: `eachEvent('WeatherChange')` (the weather they suppress is read
     /// through `Battle::effective_weather`).
     WeatherChange,
+    /// Download: SpA +1 if the foes' Defense total is at least their Special Defense total,
+    /// else Atk +1.
+    Download,
+    /// Intrepid Sword (Atk +1), Dauntless Shield (Def +1), Supersweet Syrup (adjacent foes'
+    /// evasion -1): once per battle.
+    OncePerBattle,
+    /// Costar: the holder's stat stages become its ally's.
+    Costar,
+    /// Hospitality: adjacent allies heal a quarter of their max HP.
+    Hospitality,
+    /// Screen Cleaner: Reflect, Light Screen and Aurora Veil end on both sides.
+    ScreenCleaner,
+    /// Curious Medicine: adjacent allies' stat stages are cleared.
+    CuriousMedicine,
+    /// Pastel Veil: the holder's and its allies' poison is cured (also whenever anyone switches
+    /// in, `onAnySwitchIn`).
+    PastelVeil,
 }
 
 /// Abilities with an implemented start, with the exact handler lists they were implemented
@@ -166,8 +184,8 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onModifyMove", "onStart"],
         StartEffect::None,
     ),
-    // Status-curing `onUpdate`: nothing to cure on switch-in, because a holder that already
-    // has the status is refused (`cured_on_update`).
+    // Status-curing `onUpdate`: the cure runs at the Update after the switch-in
+    // (`abilities::on_update`), not at the start.
     (
         abilities::WATER_VEIL,
         &["onSetStatus", "onUpdate"],
@@ -196,6 +214,103 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
     (
         abilities::MAGMA_ARMOR,
         &["onImmunity", "onUpdate"],
+        StartEffect::None,
+    ),
+    (
+        abilities::THERMAL_EXCHANGE,
+        &["onDamagingHit", "onSetStatus", "onUpdate"],
+        StartEffect::None,
+    ),
+    // O68 switch-in abilities (`start_ability`).
+    (abilities::DOWNLOAD, &["onStart"], StartEffect::Download),
+    (
+        abilities::INTREPID_SWORD,
+        &["onStart"],
+        StartEffect::OncePerBattle,
+    ),
+    (
+        abilities::DAUNTLESS_SHIELD,
+        &["onStart"],
+        StartEffect::OncePerBattle,
+    ),
+    (
+        abilities::SUPERSWEET_SYRUP,
+        &["onStart"],
+        StartEffect::OncePerBattle,
+    ),
+    // Messages only (Forewarn's `this.sample` picks which move it announces).
+    (abilities::FRISK, &["onStart"], StartEffect::None),
+    (abilities::FOREWARN, &["onStart"], StartEffect::None),
+    (abilities::ANTICIPATION, &["onStart"], StartEffect::None),
+    // `if (pokemon.baseSpecies.name === 'Ogerpon-…-Tera' && pokemon.terastallized ...)`:
+    // Terastallization is not modelled (the ruleset refuses it), so they never act.
+    (
+        abilities::EMBODY_ASPECT_CORNERSTONE,
+        &["onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::EMBODY_ASPECT_HEARTHFLAME,
+        &["onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::EMBODY_ASPECT_TEAL,
+        &["onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::EMBODY_ASPECT_WELLSPRING,
+        &["onStart"],
+        StartEffect::None,
+    ),
+    // `onSwitchInPriority: -2` (`switch_in_priority`).
+    (abilities::COSTAR, &["onStart"], StartEffect::Costar),
+    (
+        abilities::HOSPITALITY,
+        &["onStart"],
+        StartEffect::Hospitality,
+    ),
+    (
+        abilities::SCREEN_CLEANER,
+        &["onStart"],
+        StartEffect::ScreenCleaner,
+    ),
+    (
+        abilities::CURIOUS_MEDICINE,
+        &["onStart"],
+        StartEffect::CuriousMedicine,
+    ),
+    // Unnerve (`onSwitchInPriority: 1`): `onStart` sets `effectState.unnerved`, which its
+    // `onFoeTryEatItem` reads (`abilities::try_eat_item`: an active Unnerve holder has always
+    // started); `onEnd` clears it.
+    (
+        abilities::UNNERVE,
+        &["onEnd", "onFoeTryEatItem", "onStart"],
+        StartEffect::None,
+    ),
+    // Pastel Veil: its `onAnySwitchIn` replaces the `onStart` fallback in the SwitchIn event and
+    // runs for every active holder whenever anyone switches in (`run_switch_in`).
+    (
+        abilities::PASTEL_VEIL,
+        &[
+            "onAllySetStatus",
+            "onAnySwitchIn",
+            "onSetStatus",
+            "onStart",
+            "onUpdate",
+        ],
+        StartEffect::PastelVeil,
+    ),
+    // Own Tempo's confusion cure and Oblivious's (nothing to remove) are Update handlers too.
+    (
+        abilities::OWN_TEMPO,
+        &["onHit", "onTryAddVolatile", "onTryBoost", "onUpdate"],
+        StartEffect::None,
+    ),
+    (
+        abilities::OBLIVIOUS,
+        &["onImmunity", "onTryBoost", "onTryHit", "onUpdate"],
         StartEffect::None,
     ),
     (
@@ -257,9 +372,8 @@ pub fn species_start_handler(species: SpeciesId) -> Option<&'static str> {
 }
 
 /// Why `pokemon` cannot switch in, if it cannot: its ability or item must be implemented on the
-/// field, nothing may fire on its switch-in that is not implemented, and its status must not be
-/// one its ability would cure on the next Update (no Update event yet, see `cured_on_update`).
-/// At battle start `on_field` is false: on-field support is checked before the first turn
+/// field, and nothing may fire on its switch-in that is not implemented. At battle start
+/// `on_field` is false: on-field support is checked before the first turn
 /// (`support::check_state`) so leads with inert-at-start abilities still expand.
 fn switch_in_problem<const N: usize>(
     b: &Battle<'_, N>,
@@ -301,16 +415,12 @@ fn switch_in_problem<const N: usize>(
             start_handler(mon.ability.data().handlers).unwrap_or("suppressWeather")
         ));
     }
-    if cured_on_update(mon.ability, mon.status) {
-        return Some(format!(
-            "{name}: {} would cure its status on Update",
-            mon.ability.data().name
-        ));
-    }
     super::update::berry_problem(mon)
 }
 
-/// Showdown `switchIn` without its `runSwitch`: the old occupant leaves (its ability and types
+/// Showdown `switchIn` without its `runSwitch`: a healthy old occupant runs `BeforeSwitchOut`
+/// (no implemented handler), the gen 5+ `eachEvent('Update')` and `SwitchOut` (Regenerator,
+/// Natural Cure: `abilities::on_switch_out`); the old occupant leaves (its ability and types
 /// revert, its slot state resets); a fainted occupant still holding the position loses `fnt`
 /// (`oldActive.status = ''`); the newcomer takes the position.
 pub(crate) fn switch_in<const N: usize>(
@@ -327,6 +437,10 @@ pub(crate) fn switch_in<const N: usize>(
         return Err(b.unsupported(why));
     }
     if let Some(outgoing) = b.occupant(slot) {
+        if b.mon(outgoing).hp > 0 {
+            super::update::update_event(b)?;
+            super::abilities::on_switch_out(b, slot);
+        }
         b.clear_volatile(outgoing);
     }
     if let Some(fainted) = b.state.slot(slot).fainted_occupant {
@@ -353,18 +467,24 @@ pub(crate) fn switch_in<const N: usize>(
 }
 
 /// Showdown `runSwitch` for the Pokémon that just switched in: their abilities' start handlers
-/// in Speed order (raw stat; equal Speeds uniformly at random), each skipped if the holder's
-/// ability changed before its turn came.
+/// by `onSwitchInPriority` (Unnerve 1, Costar and Hospitality -2, the rest 0), then Speed (raw
+/// stat; equal Speeds uniformly at random), each skipped if the holder's ability changed before
+/// its turn came. Every other active Pastel Veil holder's `onAnySwitchIn` also runs; its cure
+/// changes no state another handler reads, so it runs after them without a random order.
 pub(crate) fn run_switch_in<const N: usize>(
     b: &mut Battle<'_, N>,
     newcomers: &[SlotRef],
 ) -> Result<(), TurnError> {
-    let mut pending: Vec<(SlotRef, AbilityId, i16)> = newcomers
+    let mut pending: Vec<(SlotRef, AbilityId, (i32, i16))> = newcomers
         .iter()
         .filter_map(|&slot| {
             let pokemon = b.alive(slot)?;
             let mon = b.mon(pokemon);
-            Some((slot, mon.ability, mon.stats[4]))
+            Some((
+                slot,
+                mon.ability,
+                (switch_in_priority(mon.ability), mon.stats[4]),
+            ))
         })
         .collect();
     while !pending.is_empty() {
@@ -383,7 +503,44 @@ pub(crate) fn run_switch_in<const N: usize>(
         }
         start_ability(b, slot, ability)?;
     }
+    // `onAnySwitchIn` of the Pastel Veil holders already on the field (a newcomer's ran as its
+    // switch-in handler above).
+    for slot in b.all_alive() {
+        if !newcomers.contains(&slot) && b.ability(slot) == abilities::PASTEL_VEIL {
+            pastel_veil_cure(b, slot);
+        }
+    }
     Ok(())
+}
+
+/// The ability's `onSwitchInPriority` (0 when unset).
+fn switch_in_priority(ability: AbilityId) -> i32 {
+    super::abilities::priority(ability.data().event_orders, "onSwitchInPriority")
+}
+
+/// Pastel Veil's `onStart`: every Pokémon on the holder's side not fainted (`alliesAndSelf()`)
+/// that is poisoned or badly poisoned is cured.
+fn pastel_veil_cure<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) {
+    for ally in b.alive_slots(holder.side) {
+        let pokemon = b.alive(ally).expect("alive");
+        if matches!(b.mon(pokemon).status, Status::Poison | Status::Toxic) {
+            b.cure_status(pokemon);
+        }
+    }
+}
+
+/// Showdown `setBoost` for every stage (no boost events).
+fn set_boosts<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, boosts: [i8; BOOST_COUNT]) {
+    for (stat, &new) in boosts.iter().enumerate() {
+        let old = b.state.slot(slot).boosts[stat];
+        if old != new {
+            b.apply(Instruction::Boost {
+                target: slot,
+                stat: stat as u8,
+                amount: new - old,
+            });
+        }
+    }
 }
 
 /// `switchIn` + its own `runSwitch`, for a switch chosen during a turn (a mid-turn `runSwitch`
@@ -433,7 +590,116 @@ pub(crate) fn start_ability<const N: usize>(
         }
         StartEffect::Trace => trace(b, slot)?,
         StartEffect::WeatherChange => weather_change(b)?,
+        StartEffect::Download => download(b, slot),
+        StartEffect::OncePerBattle => once_per_battle(b, slot, ability)?,
+        // Costar: `const ally = pokemon.allies()[0]` (not fainted); every stage copied (the
+        // critical-hit volatiles it also copies do not exist in the engine).
+        StartEffect::Costar => {
+            if let Some(ally) = b.alive_slots(slot.side).into_iter().find(|&s| s != slot) {
+                let boosts = b.state.slot(ally).boosts;
+                set_boosts(b, slot, boosts);
+            }
+        }
+        // Hospitality: `this.heal(ally.baseMaxhp / 4, ally, pokemon)` for each adjacent ally.
+        StartEffect::Hospitality => {
+            for ally in b.alive_slots(slot.side) {
+                if ally != slot {
+                    let max_hp = f64::from(b.slot_mon(ally).expect("alive").max_hp);
+                    b.heal(ally, max_hp / 4.0);
+                }
+            }
+        }
+        // Screen Cleaner: Reflect, Light Screen, Aurora Veil end on the holder's side and the
+        // foe's (`removeSideCondition`; their `onSideEnd` only logs).
+        StartEffect::ScreenCleaner => {
+            for effect in [
+                SideEffect::Reflect,
+                SideEffect::LightScreen,
+                SideEffect::AuroraVeil,
+            ] {
+                for side in [slot.side, slot.side.other()] {
+                    b.set_side_effect(side, effect, Effect::NONE);
+                }
+            }
+        }
+        // Curious Medicine: `ally.clearBoosts()` for each adjacent ally.
+        StartEffect::CuriousMedicine => {
+            for ally in b.alive_slots(slot.side) {
+                if ally != slot {
+                    set_boosts(b, ally, [0; BOOST_COUNT]);
+                }
+            }
+        }
+        StartEffect::PastelVeil => pastel_veil_cure(b, slot),
     }
+    Ok(())
+}
+
+/// Download's `onStart`: the Defense and Special Defense of the foes not fainted (`foes()`),
+/// with their stages but no modifiers (`getStat(stat, false, true)`; under Wonder Room the
+/// stored stat is read with the other defense's stage), summed: SpA +1 if the Defense total
+/// is positive and at least the Special Defense total, else Atk +1 if that total is positive.
+fn download<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let wonder_room = b.field_active(FieldEffect::WonderRoom);
+    let (mut def, mut spd) = (0, 0);
+    for foe in b.alive_slots(slot.side.other()) {
+        let mon = b.slot_mon(foe).expect("alive");
+        let boosts = b.state.slot(foe).boosts;
+        let (def_boost, spd_boost) = if wonder_room {
+            (boosts[3], boosts[1])
+        } else {
+            (boosts[1], boosts[3])
+        };
+        def += boosted_stat(i32::from(mon.stats[1]), def_boost);
+        spd += boosted_stat(i32::from(mon.stats[3]), spd_boost);
+    }
+    let stat = if def > 0 && def >= spd {
+        2
+    } else if spd > 0 {
+        0
+    } else {
+        return;
+    };
+    let mut up = NO_BOOSTS;
+    up[stat] = 1;
+    b.boost_by(
+        slot,
+        &up,
+        Some(slot),
+        BoostEffect::Ability(abilities::DOWNLOAD),
+    );
+}
+
+/// Intrepid Sword (`this.boost({atk: 1}, pokemon)`), Dauntless Shield (`{def: 1}`) and
+/// Supersweet Syrup (`this.boost({evasion: -1}, target, pokemon, null, true)` for every
+/// adjacent foe not fainted; a substitute, which is refused, makes a foe immune) act once per
+/// battle: Showdown sets `pokemon.swordBoost` / `.shieldBoost` / `.syrupTriggered` for good.
+/// The state does not record those flags, so they act at the battle start (when no Pokémon has
+/// been on the field yet) and a later start is refused.
+fn once_per_battle<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    ability: AbilityId,
+) -> Result<(), TurnError> {
+    if !b.battle_start {
+        return Err(b.unsupported(format!(
+            "{} after the battle start (its once-per-battle flag is not in the state)",
+            ability.data().name
+        )));
+    }
+    let mut boosts = NO_BOOSTS;
+    match ability {
+        a if a == abilities::INTREPID_SWORD => boosts[0] = 1,
+        a if a == abilities::DAUNTLESS_SHIELD => boosts[1] = 1,
+        _ => {
+            boosts[6] = -1;
+            for foe in b.alive_slots(slot.side.other()) {
+                b.boost_by(foe, &boosts, Some(slot), BoostEffect::Ability(ability));
+            }
+            return Ok(());
+        }
+    }
+    b.boost_by(slot, &boosts, Some(slot), BoostEffect::Ability(ability));
     Ok(())
 }
 
@@ -460,12 +726,25 @@ fn weather_change<const N: usize>(b: &Battle<'_, N>) -> Result<(), TurnError> {
 /// `singleEvent('End')` of the ability the Pokémon at `slot` loses while staying active
 /// (`setAbility` during a forme change). Flash Fire's `onEnd` removes its volatile; Air Lock's
 /// and Cloud Nine's end their suppression (the new ability no longer suppresses) and run
-/// `WeatherChange`; an ability without `onEnd` does nothing. Any other `onEnd` is unsupported.
+/// `WeatherChange`; Unnerve's has nothing to undo; an ability without `onEnd` does nothing.
+/// Any other `onEnd` is unsupported.
 pub(crate) fn end_ability<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
     ability: AbilityId,
 ) -> Result<(), TurnError> {
+    // `setAbility` then starts the new ability with a fresh `abilityState` (Anger Shell's and
+    // Berserk's pending check is dropped).
+    b.delete_volatile(slot, Volatile::AngerShellUnchecked);
+    // Unnerve's `onEnd` clears `effectState.unnerved`, which only exists while it is active.
+    if ability == abilities::UNNERVE {
+        return Ok(());
+    }
+    // Unburden: `pokemon.removeVolatile('unburden')`.
+    if ability == abilities::UNBURDEN {
+        b.remove_volatile(slot, Volatile::Unburden);
+        return Ok(());
+    }
     if ability == abilities::FLASH_FIRE {
         b.remove_volatile(slot, Volatile::FlashFire);
         return Ok(());
@@ -518,13 +797,6 @@ fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), T
             "Trace copying {} ({:?})",
             copied.data().name,
             copied.data().handlers
-        )));
-    }
-    let status = b.mon(pokemon).status;
-    if cured_on_update(copied, status) {
-        return Err(b.unsupported(format!(
-            "Trace copying {} would cure {status:?} on Update",
-            copied.data().name
         )));
     }
     b.apply(Instruction::SetAbility {

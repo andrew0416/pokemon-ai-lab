@@ -16,13 +16,14 @@ use crate::damage::{
     MOD_ONE_POINT_TWO, MOD_THREE_QUARTERS,
 };
 use crate::dex::{
-    abilities, items, AbilityFlags, AbilityId, MoveCategory, MoveData, MoveFlags, Stat, Type,
+    abilities, items, moves, AbilityFlags, AbilityId, ItemId, MoveCategory, MoveData, MoveFlags,
+    MoveId, Stat, Type, NO_BOOSTS,
 };
-use crate::field::Weather;
-use crate::state::{Pokemon, SlotRef, Status};
-use crate::volatile::Volatile;
+use crate::field::{SideEffect, Weather};
+use crate::state::{Pokemon, SideId, SlotRef, Status};
+use crate::volatile::{Volatile, VolatileState};
 
-use super::battle::Battle;
+use super::battle::{cured_on_update, Battle, BoostEffect};
 use super::order::modify;
 
 /// Showdown's effect-type sub-orders (`resolvePriority`).
@@ -195,7 +196,206 @@ pub(crate) fn base_power_handlers<const N: usize>(
         let p = priority(defending.data().event_orders, "onSourceBasePowerPriority");
         out.push(Handler::of(b, target, p, SUB_ABILITY, 5120));
     }
+    // The user's `charge` volatile (priority 9): `if (move.type === 'Electric')
+    // return this.chainModify(2)`.
+    if move_type == Type::Electric && b.volatile(user, Volatile::Charge).active {
+        let p = priority(
+            moves::CHARGE.data().event_orders,
+            "condition.onBasePowerPriority",
+        );
+        out.push(Handler::of(b, user, p, SUB_CONDITION, MOD_DOUBLE));
+    }
     out
+}
+
+/// The `charge` volatile's `onAfterMove` and `onMoveAborted` for the Pokémon in `user` after it
+/// used (or failed to use) `id` of type `move_type`: an Electric move other than Charge ends it
+/// (`removeVolatile`: nothing for a fainted user). `AfterMove` sees the type after ModifyType,
+/// `MoveAborted` the move's own type.
+pub(crate) fn charge_after_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+    move_type: Type,
+) {
+    if move_type == Type::Electric && id != moves::CHARGE {
+        b.remove_volatile(user, Volatile::Charge);
+    }
+}
+
+/// `runEvent('SideConditionStart', side, source, condition)` after a side condition starts on
+/// `side` (`side.addSideCondition`): Wind Power (`onSideConditionStart`, every active Pokémon
+/// of that side) gets `charge` when it is Tailwind. Wind Rider, the other handler, is refused
+/// on the field.
+pub(crate) fn side_condition_start<const N: usize>(
+    b: &mut Battle<'_, N>,
+    side: SideId,
+    effect: SideEffect,
+) {
+    if effect != SideEffect::Tailwind {
+        return;
+    }
+    for holder in b.alive_slots(side) {
+        if b.ability(holder) == abilities::WIND_POWER {
+            b.add_volatile(holder, Volatile::Charge);
+        }
+    }
+}
+
+/// Anger Shell and Berserk (Champions): `onDamage` sets `abilityState.checked*` to
+/// `!(effect.effectType === 'Move' && !effect.multihit)` — a single-hit move's damage (or a
+/// confusion self-hit) leaves the half-HP check pending until `AfterMoveSecondary`, and the
+/// holder's healing berries wait ([`try_eat_item`]); any other damage, or a multi-hit move's,
+/// clears it. The pending check is [`Volatile::AngerShellUnchecked`]. Called from
+/// `Battle::damage` for every damage that reaches the Damage event; `multihit` is whether the
+/// damaging effect is a multi-hit move.
+pub(crate) fn on_damage<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    from_move: bool,
+    multihit: bool,
+) {
+    if !has_berserk_check(b.ability(target)) {
+        return;
+    }
+    let pending = from_move && !multihit;
+    let state = b.volatile(target, Volatile::AngerShellUnchecked);
+    if pending != state.active {
+        b.set_volatile_state(
+            target,
+            Volatile::AngerShellUnchecked,
+            VolatileState {
+                active: pending,
+                ..VolatileState::NONE
+            },
+        );
+    }
+}
+
+fn has_berserk_check(ability: AbilityId) -> bool {
+    ability == abilities::ANGER_SHELL || ability == abilities::BERSERK
+}
+
+/// Anger Shell's / Berserk's `onAfterMoveSecondary` for the targets of the move's last hit
+/// (`afterMoveSecondaryEvent`, skipped for a Sheer Force-boosted move): the pending check is
+/// cleared; then, for a target other than the user, still standing, after a move that dealt
+/// damage (`move.totalDamage`), with `damage` the HP the hit took from it
+/// (`getLastAttackedBy().damage`, or `move.totalDamage` for a multi-hit move): if the damage took
+/// it from above half its max HP to half or below, Anger Shell raises Atk, SpA and Spe by 1 and
+/// lowers Def and SpD by 1, Berserk raises SpA by 1 (the holder is its own source). Their
+/// relative order with the other AfterMoveSecondary handlers does not matter: each only
+/// changes its holder.
+pub(crate) fn after_move_secondary<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    damage: i32,
+    total_damage: i32,
+) {
+    let ability = b.ability(target);
+    if !has_berserk_check(ability) || b.occupant(target).is_none() {
+        return;
+    }
+    b.delete_volatile(target, Volatile::AngerShellUnchecked);
+    let Some(mon) = b.alive(target).map(|p| b.mon(p)) else {
+        return;
+    };
+    if target == user || total_damage == 0 {
+        return;
+    }
+    let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
+    // `target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2`.
+    if 2 * hp <= max_hp && 2 * (hp + damage) > max_hp {
+        let mut boosts = NO_BOOSTS;
+        if ability == abilities::ANGER_SHELL {
+            boosts = [1, -1, 1, -1, 1, 0, 0];
+        } else {
+            boosts[2] = 1;
+        }
+        b.boost_by(target, &boosts, Some(target), BoostEffect::Ability(ability));
+    }
+}
+
+/// The ability `onUpdate` handlers of the Pokémon in `slot` (`eachEvent('Update')`, before its
+/// item's): the status cures of [`cured_on_update`] and Own Tempo's confusion cure
+/// (`removeVolatile('confusion')`). All are breakable: a move that ignores abilities suppresses
+/// them at the Update after its hit, and the Update after the action cures. Each only changes
+/// its holder, so their order across Pokémon does not matter.
+pub(crate) fn on_update<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let Some(pokemon) = b.alive(slot) else {
+        return;
+    };
+    let ability = b.ability_unless_broken(slot);
+    if cured_on_update(ability, b.mon(pokemon).status) {
+        b.cure_status(pokemon);
+    }
+    if ability == abilities::OWN_TEMPO && b.volatile(slot, Volatile::Confusion).active {
+        b.remove_volatile(slot, Volatile::Confusion);
+    }
+}
+
+/// `runEvent('SwitchOut')` for a healthy Pokémon leaving `slot` (WORKPLAN O54; Champions
+/// versions, `data/mods/champions/abilities.ts`): Regenerator `pokemon.heal(baseMaxhp / 3)`
+/// (truncated; nothing at full HP); Natural Cure `if (!pokemon.status || pokemon.status ===
+/// 'fnt') return; pokemon.clearStatus()` (its `onCheckShow` is removed in Champions).
+pub(crate) fn on_switch_out<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let Some(pokemon) = b.alive(slot) else {
+        return;
+    };
+    match b.ability(slot) {
+        a if a == abilities::REGENERATOR => {
+            let max_hp = f64::from(b.mon(pokemon).max_hp);
+            b.heal(slot, max_hp / 3.0);
+        }
+        a if a == abilities::NATURAL_CURE => b.cure_status(pokemon),
+        _ => {}
+    }
+}
+
+/// Unburden (WORKPLAN O64) when its holder in `slot` used or lost its item: `onAfterUseItem`
+/// (`useItem`, `eatItem`, Air Balloon's pop) and `onTakeItem` (`takeItem`: Knock Off, Trick,
+/// Sticky Barb; it runs before the item's own TakeItem handler, so even a Mega Stone that stays
+/// adds it) both `addVolatile('unburden')` (nothing on a fainted holder or when it is up). The
+/// volatile doubles Speed while the holder has no item (`order.rs`).
+pub(crate) fn unburden<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.ability(slot) == abilities::UNBURDEN {
+        b.add_volatile(slot, Volatile::Unburden);
+    }
+}
+
+/// The healing items Anger Shell's and Berserk's `onTryEatItem` hold back while their check is
+/// pending.
+const HEALING_BERRIES: [ItemId; 9] = [
+    items::AGUAV_BERRY,
+    items::ENIGMA_BERRY,
+    items::FIGY_BERRY,
+    items::IAPAPA_BERRY,
+    items::MAGO_BERRY,
+    items::SITRUS_BERRY,
+    items::WIKI_BERRY,
+    items::ORAN_BERRY,
+    items::BERRY_JUICE,
+];
+
+/// `runEvent('TryEatItem', eater, null, null, item)` for the implemented handlers: Anger Shell
+/// and Berserk (the eater's own ability) refuse a healing berry while their check is pending;
+/// Unnerve (`onFoeTryEatItem`, WORKPLAN O63) on a foe not fainted (`foes()`) refuses every
+/// berry once it has started (`effectState.unnerved`: an active holder always has, its start
+/// runs first among the switch-in handlers). They only return booleans, so their order does
+/// not matter. `false` = the berry is not eaten.
+pub(crate) fn try_eat_item<const N: usize>(b: &Battle<'_, N>, eater: SlotRef) -> bool {
+    let Some(mon) = b.slot_mon(eater) else {
+        return false;
+    };
+    let item = mon.item;
+    let pending = has_berserk_check(mon.ability)
+        && b.volatile(eater, Volatile::AngerShellUnchecked).active
+        && HEALING_BERRIES.contains(&item);
+    let unnerved = b
+        .alive_slots(eater.side.other())
+        .into_iter()
+        .any(|foe| b.ability(foe) == abilities::UNNERVE);
+    !pending && !unnerved
 }
 
 /// Sheer Force's `onModifyMove` condition: `move.secondaries && !move.hasSheerForceBoost`.

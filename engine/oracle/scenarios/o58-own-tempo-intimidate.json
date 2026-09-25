@@ -1,0 +1,25 @@
+{
+ "description": "O58 Intimidate blocked by Own Tempo and Oblivious: Snorlax switches out for Gyarados, whose Intimidate lowers neither Slowbro's nor Mamoswine's Attack; Own Tempo also stops Excadrill's Confuse Ray.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Excadrill", "item": "", "ability": "Sand Rush", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Confuse Ray"], "level": 50},
+   {"species": "Gyarados", "item": "", "ability": "Intimidate", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Slowbro", "item": "", "ability": "Own Tempo", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50},
+   {"species": "Mamoswine", "item": "", "ability": "Oblivious", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "switch 3, move confuseray 1", "p2": "move swordsdance, move swordsdance"}
+}

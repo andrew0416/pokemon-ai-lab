@@ -1,0 +1,23 @@
+{
+ "description": "O55 Static, Flame Body, Poison Point: four Seismic Tosses (contact, fixed 50 damage). Raichu hits Poison Point Qwilfish, Qwilfish hits Static Raichu, Snorlax hits Flame Body Talonflame; each 30% roll statuses the attacker, with the holder as the source.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Raichu", "item": "", "ability": "Static", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Talonflame", "item": "", "ability": "Flame Body", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Qwilfish", "item": "", "ability": "Poison Point", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 10}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move seismictoss 1, move seismictoss 2", "p2": "move seismictoss 1, move seismictoss 2"}
+}

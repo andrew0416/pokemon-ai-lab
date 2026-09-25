@@ -52,6 +52,11 @@ pub(crate) struct Battle<'a, const N: usize> {
     pub active_move: Option<ActiveMoveRef>,
     /// The actions of the turn not yet run (Showdown `queue.list`), see `queue.rs`.
     pub queue: Vec<super::queue::Action>,
+    /// The battle start's switch-ins are running (`enumerate_start`): no Pokémon has been on
+    /// the field before, so the once-per-battle flags Showdown keeps on each Pokémon
+    /// (`swordBoost`, `shieldBoost`, `syrupTriggered`), which the state does not record, are all
+    /// unset.
+    pub battle_start: bool,
 }
 
 impl<'a, const N: usize> Battle<'a, N> {
@@ -63,6 +68,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             faint_queue: Vec::new(),
             active_move: None,
             queue: Vec::new(),
+            battle_start: false,
         }
     }
 
@@ -278,6 +284,12 @@ impl<'a, const N: usize> Battle<'a, N> {
         let Some(pokemon) = self.alive(target) else {
             return 0;
         };
+        // Anger Shell / Berserk `onDamage` (priority 0, before every handler below that could
+        // change the damage; it changes nothing itself).
+        let multihit = self
+            .active_move
+            .is_some_and(|m| m.id.data().multihit.is_some());
+        super::abilities::on_damage(self, target, source == DamageSource::Move, multihit);
         let mut amount = (amount.floor() as i32).max(1);
         let mon = self.mon(pokemon);
         let cancelled = match mon.ability {
@@ -550,11 +562,11 @@ impl<'a, const N: usize> Battle<'a, N> {
     ///   ability-ignoring move is in progress): Water Veil (brn), Immunity (psn, tox),
     ///   Insomnia and Vital Spirit (slp), Limber (par), Comatose (everything), Purifying Salt
     ///   (everything), Leaf Guard (everything in harsh sunlight), Thermal Exchange (brn);
-    /// - Sweet Veil on the target or an ally (`onAllySetStatus`, slp);
+    /// - Sweet Veil (slp) and Pastel Veil (psn, tox) on the target or an ally
+    ///   (`onAllySetStatus`; Pastel Veil's own `onSetStatus` is the same block);
     /// - Misty Terrain (everything) and Electric Terrain (slp) for a grounded target.
     ///
-    /// Purifying Salt and Thermal Exchange are still refused by `support` (their damage
-    /// handlers are not implemented here); Flower Veil is refused (`onAllyTryBoost`).
+    /// Flower Veil is refused (`onAllyTryBoost`).
     pub fn set_status_blocked(&self, target: SlotRef, status: Status) -> bool {
         let own = self.ability_unless_broken(target);
         let blocked_by_own = match own {
@@ -574,14 +586,21 @@ impl<'a, const N: usize> Battle<'a, N> {
         if blocked_by_own {
             return true;
         }
-        // `onAllySetStatus` runs for every active ally and the target itself.
-        if status == Status::Sleep
-            && self
+        // `onAllySetStatus` runs for every active ally and the target itself: Sweet Veil (slp),
+        // Pastel Veil (psn, tox; its own `onSetStatus` blocks the same for the holder).
+        let veil = match status {
+            Status::Sleep => Some(abilities::SWEET_VEIL),
+            Status::Poison | Status::Toxic => Some(abilities::PASTEL_VEIL),
+            _ => None,
+        };
+        if let Some(veil) = veil {
+            if self
                 .alive_slots(target.side)
                 .into_iter()
-                .any(|s| self.ability_unless_broken(s) == abilities::SWEET_VEIL)
-        {
-            return true;
+                .any(|s| self.ability_unless_broken(s) == veil)
+            {
+                return true;
+            }
         }
         if self.is_grounded(target) {
             match self.terrain() {
@@ -629,6 +648,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             a if a == abilities::LEAF_GUARD => yawn && self.effective_weather() == Weather::Sun,
             // Inner Focus: `if (status.id === 'flinch') return null;`
             a if a == abilities::INNER_FOCUS => condition == conditions::FLINCH,
+            // Own Tempo: `if (status.id === 'confusion') return null;`
+            a if a == abilities::OWN_TEMPO => condition == conditions::CONFUSION,
             _ => false,
         };
         if blocked_by_own {
@@ -877,8 +898,15 @@ impl<'a, const N: usize> Battle<'a, N> {
                 BoostEffect::Ability(abilities::GUARD_DOG),
             );
         }
-        // Inner Focus (breakable): `if (effect.name === 'Intimidate' && boost.atk) delete boost.atk`.
-        if ability == abilities::INNER_FOCUS
+        // Inner Focus, Own Tempo, Oblivious (breakable), Scrappy: `if (effect.name ===
+        // 'Intimidate' && boost.atk) delete boost.atk`.
+        if [
+            abilities::INNER_FOCUS,
+            abilities::OWN_TEMPO,
+            abilities::OBLIVIOUS,
+            abilities::SCRAPPY,
+        ]
+        .contains(&ability)
             && effect == BoostEffect::Ability(abilities::INTIMIDATE)
         {
             boost[0] = 0;
@@ -900,6 +928,13 @@ impl<'a, const N: usize> Battle<'a, N> {
                 }
                 a if a == abilities::HYPER_CUTTER => boost[0] = boost[0].max(0),
                 a if a == abilities::BIG_PECKS => boost[1] = boost[1].max(0),
+                // Keen Eye, Illuminate, Mind's Eye (breakable): accuracy drops.
+                a if a == abilities::KEEN_EYE
+                    || a == abilities::ILLUMINATE
+                    || a == abilities::MINDS_EYE =>
+                {
+                    boost[5] = boost[5].max(0);
+                }
                 a if a == abilities::MIRROR_ARMOR
                     && source.is_some()
                     && effect != BoostEffect::Ability(abilities::MIRROR_ARMOR) =>
@@ -1025,6 +1060,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             old: item,
             new: ItemId::NONE,
         });
+        // AfterUseItem: Unburden.
+        super::abilities::unburden(self, slot);
         true
     }
 
@@ -1049,6 +1086,11 @@ impl<'a, const N: usize> Battle<'a, N> {
         let Some(pokemon) = self.occupant(slot) else {
             return false;
         };
+        if self.mon(pokemon).item.is_none() {
+            return false;
+        }
+        // TakeItem: the holder's ability (Unburden) before the item's own handler.
+        super::abilities::unburden(self, slot);
         if !self.item_can_be_taken(slot) {
             return false;
         }
@@ -1123,16 +1165,14 @@ impl<'a, const N: usize> Battle<'a, N> {
 /// Showdown `stall.counterMax`.
 const STALL_COUNTER_MAX: u16 = 729;
 
-/// Whether `ability`'s `onUpdate` would cure `status` (Water Veil, Thermal Exchange: brn;
-/// Immunity: psn, tox; Insomnia, Vital Spirit: slp; Limber: par; Magma Armor: frz).
+/// Whether `ability`'s `onUpdate` cures `status` (Water Veil, Thermal Exchange, Water Bubble:
+/// brn; Immunity: psn, tox; Insomnia, Vital Spirit: slp; Limber: par; Magma Armor: frz).
 ///
-/// The engine has no `Update` event yet (Showdown runs it after every action), so a holder
-/// must never be active with that status: `support::check_state` refuses such a state and a
-/// switch-in of such a Pokémon is refused. With those guards the cure is unreachable, because
-/// the same abilities block the status from being set (`set_status_blocked`, `status_immune`)
-/// and nothing implemented bypasses them. Anything that gives one of these abilities to a
-/// Pokémon that already has the status (Mega Evolution into Mewtwo-Mega-Y's Insomnia, Trace
-/// mid-turn, Skill Swap) must check this too.
+/// The cure runs in the `Update` event (`abilities::on_update`). The same abilities block the
+/// status from being set, so a holder only has it when something got past them: a move that
+/// ignores abilities (they are breakable, and skipped at the hit's Update while the move is in
+/// progress; the Update after the action cures), or gaining the ability while statused (Mega
+/// Evolution, Trace, a switch-in with a status from before).
 pub(crate) fn cured_on_update(ability: AbilityId, status: Status) -> bool {
     match ability {
         a if a == abilities::WATER_VEIL
@@ -1145,6 +1185,7 @@ pub(crate) fn cured_on_update(ability: AbilityId, status: Status) -> bool {
         a if a == abilities::INSOMNIA || a == abilities::VITAL_SPIRIT => status == Status::Sleep,
         a if a == abilities::LIMBER => status == Status::Paralyze,
         a if a == abilities::MAGMA_ARMOR => status == Status::Freeze,
+        a if a == abilities::PASTEL_VEIL => matches!(status, Status::Poison | Status::Toxic),
         _ => false,
     }
 }

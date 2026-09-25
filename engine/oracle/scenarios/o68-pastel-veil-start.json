@@ -1,0 +1,26 @@
+{
+ "description": "O68 Pastel Veil's onStart: Rapidash switching in cures its badly poisoned ally Snorlax; Machamp's Toxic then fails against Snorlax (onAllySetStatus).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50},
+   {"species": "Kangaskhan", "item": "", "ability": "Scrappy", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50},
+   {"species": "Rapidash-Galar", "item": "", "ability": "Pastel Veil", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Toxic"], "level": 50},
+   {"species": "Blastoise", "item": "", "ability": "Torrent", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1":{"Snorlax":{"status":"tox"}}},
+ "turn": {"p1": "move swordsdance, switch 3", "p2": "move toxic 1, move seismictoss 2"}
+}

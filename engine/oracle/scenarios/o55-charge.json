@@ -1,0 +1,23 @@
+{
+ "description": "O55 Electromorphosis and Wind Power: Talonflame's Gust (wind) charges Kilowattrel, whose Thunder Shock is doubled and ends the charge; Bellibolt's Tailwind charges Kilowattrel again (onSideConditionStart); Snorlax's Seismic Toss charges Bellibolt.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Bellibolt", "item": "", "ability": "Electromorphosis", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Tailwind"], "level": 50},
+   {"species": "Kilowattrel", "item": "", "ability": "Wind Power", "nature": "Brave",
+    "evs": {"hp": 32}, "moves": ["Thunder Shock"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Talonflame", "item": "", "ability": "Flame Body", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Gust"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move tailwind, move thundershock 1", "p2": "move seismictoss 1, move gust 2"}
+}

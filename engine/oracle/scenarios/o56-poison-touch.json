@@ -1,0 +1,23 @@
+{
+ "description": "O56 Poison Touch and Toxic Chain (onSourceDamagingHit): Okidogi's Seismic Toss badly poisons Snorlax 30% of the time (Toxic Chain), Sneasler's poisons Blastoise 30% of the time (Poison Touch; the holder's own Protective Pads do not stop it).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Okidogi", "item": "", "ability": "Toxic Chain", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Sneasler", "item": "Protective Pads", "ability": "Poison Touch", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Blastoise", "item": "", "ability": "Torrent", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move seismictoss 1, move seismictoss 2", "p2": "move seismictoss 2, move seismictoss 1"}
+}
