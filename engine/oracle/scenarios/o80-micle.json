@@ -1,0 +1,26 @@
+{
+ "description": "O80 Micle Berry: in the setup turn Seismic Toss (50) and Dragon Rage (40) leave Voltorb at 25/115 (1/4); the residual eats the berry (micleberry, duration 2). In the scenario turn Voltorb's Hydro Pump has accuracy 80 * 4915/4096 = 96 and ends the volatile; Emolga's Hydro Pump stays at 80.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Seismic Toss", "Bulk Up"], "level": 50},
+   {"species": "Dragonite", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Dragon Rage", "Dragon Dance"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Voltorb", "item": "Micle Berry", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 0, "def": 32, "spd": 32}, "moves": ["Hydro Pump", "Harden"], "level": 50},
+   {"species": "Emolga", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spa": 2}, "moves": ["Hydro Pump", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move seismictoss 1, move dragonrage 1", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move bulkup, move dragondance", "p2": "move hydropump 1, move hydropump 2"}
+}

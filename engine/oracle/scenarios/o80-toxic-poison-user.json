@@ -1,0 +1,23 @@
+{
+ "description": "Accuracy event bypass: Toxic used by a Poison type (Toxapex) cannot miss (gen 8+, no Accuracy event); the same Toxic from Snorlax rolls its 90 accuracy.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Toxapex", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Toxic", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Toxic", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Kangaskhan", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Bulk Up", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move toxic 1, move toxic 2", "p2": "move harden, move bulkup"}
+}

@@ -9,7 +9,6 @@
 //! Refused on purpose (not in `support`'s tables):
 //! - Metronome: its condition keeps `lastMove` and `numConsecutive` and reads
 //!   `moveLastTurnResult` (work plan F13); the item's `onStart` adds it at switch-in.
-//! - Custap Berry: eats the berry when the actions are queued.
 //! - Clear Amulet: `onTryBoost` needs the boost events (F16).
 //! - Utility Umbrella: its effect is `pokemon.effectiveWeather()`, read at many sites (weather
 //!   damage modifier, Chlorophyll / Swift Swim, Solar Power, Rain Dish, Dry Skin, Hydration,
@@ -28,6 +27,7 @@ use crate::volatile::{Volatile, VolatileState};
 
 use super::abilities::{Handler, SUB_ITEM};
 use super::battle::{Battle, BoostEffect, DamageSource};
+use super::order::ORDER_DEFAULT;
 
 /// The type-resist berries: `onSourceModifyDamage` halves a super-effective hit of one type
 /// (Chilan Berry: every Normal hit) after eating the berry; their `onEat` does nothing.
@@ -155,6 +155,28 @@ pub(crate) fn quick_claw<const N: usize>(
     current: i8,
 ) -> Option<i8> {
     (b.mon(pokemon).item == items::QUICK_CLAW && current <= 0 && b.rng.chance(1, 5)).then_some(1)
+}
+
+/// Custap Berry's `onFractionalPriority` (priority -2, like Quick Claw, which a holder of it
+/// cannot also hold) for a move action of the Pokémon in `slot` whose fractional priority is
+/// `current` tenths: `priority <= 0` and the holder at 1/4 of its max HP or less (1/2 with
+/// Gluttony) eats the berry (`eatItem`, empty `onEat`) and makes it +0.1. Showdown runs it
+/// when the turn's actions are queued (`resolveAction`), so the berry is gone before the
+/// first action; Mycelium Might's status-move exception is moot (refused by `support`).
+pub(crate) fn custap<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    pokemon: PokemonRef,
+    current: i8,
+) -> Option<i8> {
+    if b.occupant(slot) != Some(pokemon) || b.mon(pokemon).item != items::CUSTAP_BERRY {
+        return None;
+    }
+    let mon = b.mon(pokemon);
+    let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
+    // `abilityState.gluttony` is set on switch-in: always set here (see `update.rs`).
+    let pinch = 4 * hp <= max_hp || (2 * hp <= max_hp && mon.ability == abilities::GLUTTONY);
+    (current <= 0 && pinch && super::update::eat_item(b, slot)).then_some(1)
 }
 
 // ---- Choice items ---------------------------------------------------------------------------
@@ -561,6 +583,17 @@ pub(crate) fn on_hit<const N: usize>(
     target: SlotRef,
     data: &MoveData,
 ) {
+    // Enigma Berry: `if (move && target.getMoveHitData(move).typeMod > 0) { if
+    // (target.eatItem()) this.heal(target.baseMaxhp / 4); }`. Its `onTryEatItem` asks
+    // `runEvent('TryHeal')`, which no supported effect answers (Heal Block, Ripen are not).
+    if b.item(target) == items::ENIGMA_BERRY
+        && b.type_mod_of(target).is_some_and(|t| t > 0)
+        && super::update::eat_item(b, target)
+    {
+        let max_hp = f64::from(b.slot_mon(target).expect("the eater").max_hp);
+        b.heal(target, max_hp / 4.0);
+        return;
+    }
     if user == target
         || b.item(target) != items::STICKY_BARB
         || !b.item(user).is_none()
@@ -592,6 +625,8 @@ pub(crate) fn residual_order(item: ItemId) -> Option<(u32, u32)> {
         i if i == items::TOXIC_ORB || i == items::FLAME_ORB || i == items::STICKY_BARB => {
             Some((28, 3))
         }
+        // No `onResidualOrder`: last, with the item sub-order.
+        i if i == items::MICLE_BERRY => Some((ORDER_DEFAULT, SUB_ITEM)),
         _ => None,
     }
 }
@@ -622,6 +657,15 @@ pub(crate) fn on_residual<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, 
         }
         i if i == items::STICKY_BARB => {
             b.damage(slot, max_hp / 8.0, DamageSource::Indirect);
+        }
+        // Micle Berry: eaten at 1/4 HP (1/2 with Gluttony); `onEat` adds `micleberry`.
+        i if i == items::MICLE_BERRY => {
+            let hp = i32::from(mon.hp);
+            let max = i32::from(mon.max_hp);
+            let pinch = 4 * hp <= max || (2 * hp <= max && mon.ability == abilities::GLUTTONY);
+            if pinch {
+                super::update::eat_item(b, slot);
+            }
         }
         _ => {}
     }
@@ -718,6 +762,15 @@ mod tests {
         assert_eq!(p(items::KINGS_ROCK, "onModifyMovePriority"), -1);
         assert_eq!(p(items::RAZOR_FANG, "onModifyMovePriority"), -1);
         assert_eq!(p(items::SHELL_BELL, "onAfterMoveSecondarySelfPriority"), -1);
+        // Custap Berry and Quick Claw share the FractionalPriority priority; Micle Berry's
+        // `onResidual` has no order.
+        assert_eq!(p(items::CUSTAP_BERRY, "onFractionalPriorityPriority"), -2);
+        assert_eq!(p(items::QUICK_CLAW, "onFractionalPriorityPriority"), -2);
+        assert!(!items::MICLE_BERRY
+            .data()
+            .event_orders
+            .iter()
+            .any(|(n, _)| n.starts_with("onResidual")));
         assert_eq!(items::THROAT_SPRAY.data().boosts, [0, 0, 1, 0, 0, 0, 0]);
     }
 }

@@ -3,17 +3,20 @@
 //! Showdown runs `eachEvent('Update')` after every action (`runAction`), after the damage of a
 //! hit (`hitStepMoveHitLoop`), after the weather's residual damage, before a healthy Pokémon
 //! switches out, and after a batch of switch-ins. Every active Pokémon is visited in stored
-//! Speed order with ties shuffled; none of the implemented listeners touches another Pokémon,
-//! so the order cannot change the outcome and no random draw is spent on it.
+//! Speed order with ties shuffled; none of the implemented listeners touches another Pokémon
+//! (Starf Berry's random stat is drawn independently per eater), so the order cannot change
+//! the outcome and no random draw is spent on it.
 //!
 //! Listeners implemented here: berries with `onUpdate` (Sitrus, Oran, the five Figy-type
-//! berries, the five pinch stat berries, Lum and the six one-status berries, Leppa) and Lum's
-//! `onAfterSetStatus`. Ability `onUpdate` handlers are either unreachable by construction
+//! berries, the five pinch stat berries, Lansat, Starf, Lum and the six one-status berries,
+//! Leppa) and Lum's `onAfterSetStatus`. [`eat_item`] also runs the `onEat` of the berries
+//! eaten elsewhere (Kee, Maranga, Jaboca, Rowap, Micle, Custap, Enigma). Ability `onUpdate` handlers are either unreachable by construction
 //! (`cured_on_update`) or refused (Trace still seeking, Disguise, ...).
 
 use crate::dex::{abilities, items, ItemId, Stat, NO_BOOSTS};
 use crate::instruction::Instruction;
 use crate::state::{Pokemon, PokemonRef, SlotRef, Status};
+use crate::volatile::Volatile;
 
 use super::battle::{Battle, BoostEffect};
 use super::TurnError;
@@ -101,6 +104,8 @@ fn item_wants_eating<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
         half
     } else if FIGY_BERRIES.iter().any(|&(i, _)| i == item)
         || STAT_BERRIES.iter().any(|&(i, _)| i == item)
+        || item == items::LANSAT_BERRY
+        || item == items::STARF_BERRY
     {
         pinch
     } else if item == items::LUM_BERRY {
@@ -184,8 +189,36 @@ pub(crate) fn eat_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> 
         let mut up = NO_BOOSTS;
         up[index] = 1;
         b.boost_by(slot, &up, Some(slot), BoostEffect::Item(item));
-    } else if item != items::JABOCA_BERRY && item != items::ROWAP_BERRY {
-        // Jaboca / Rowap: an empty `onEat` (their damage follows in `onDamagingHit`).
+    } else if item == items::LANSAT_BERRY {
+        // `pokemon.addVolatile('focusenergy')` (fails if it is already there: no onRestart).
+        b.add_volatile(slot, Volatile::FocusEnergy);
+    } else if item == items::STARF_BERRY {
+        // `this.sample(stats)` over Atk..Spe below +6, then `this.boost({[stat]: 2})`.
+        let boosts = b.state.slot(slot).boosts;
+        let stats: Vec<usize> = (0..5).filter(|&i| boosts[i] < 6).collect();
+        if !stats.is_empty() {
+            let pick = if stats.len() == 1 {
+                0
+            } else {
+                b.rng.uniform(stats.len())
+            };
+            let mut up = NO_BOOSTS;
+            up[stats[pick]] = 2;
+            b.boost_by(slot, &up, Some(slot), BoostEffect::Item(item));
+        }
+    } else if item == items::MICLE_BERRY {
+        // `pokemon.addVolatile('micleberry')` (no onRestart: kept if already there).
+        b.add_volatile(slot, Volatile::MicleBerry);
+    } else if ![
+        items::JABOCA_BERRY,
+        items::ROWAP_BERRY,
+        items::CUSTAP_BERRY,
+        items::ENIGMA_BERRY,
+    ]
+    .contains(&item)
+    {
+        // Those four have an empty `onEat`: their effect follows the eating in the handler
+        // that ate them (damage, +0.1 priority, heal).
         return false;
     }
     consume(b, pokemon)

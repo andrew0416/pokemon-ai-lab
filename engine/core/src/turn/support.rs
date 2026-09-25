@@ -371,6 +371,23 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     // in `update::eat_item`.
     (items::KEE_BERRY, &["onAfterMoveSecondary", "onEat"]),
     (items::MARANGA_BERRY, &["onAfterMoveSecondary", "onEat"]),
+    // Pinch berries on `Update` (`update.rs`): Lansat adds `focusenergy` (crit ratio +2 in
+    // `moves::get_damage`), Starf raises a random stat by 2.
+    (items::LANSAT_BERRY, &["onEat", "onUpdate"]),
+    (items::STARF_BERRY, &["onEat", "onUpdate"]),
+    // `onResidual` eats it (`items::on_residual`); its condition's `onSourceAccuracy` is the
+    // `Accuracy` event in `moves::accuracy_check` (the `MicleBerry` volatile).
+    (
+        items::MICLE_BERRY,
+        &["condition.onSourceAccuracy", "onEat", "onResidual"],
+    ),
+    // Eaten when the actions are queued (`items::custap`, first stage in `mod.rs`).
+    (items::CUSTAP_BERRY, &["onEat", "onFractionalPriority"]),
+    // `onHit` in `items::on_hit`; `onTryEatItem` asks TryHeal, which nothing supported blocks.
+    (items::ENIGMA_BERRY, &["onEat", "onHit", "onTryEatItem"]),
+    // `items::on_damaging_hit`.
+    (items::JABOCA_BERRY, &["onDamagingHit", "onEat"]),
+    (items::ROWAP_BERRY, &["onDamagingHit", "onEat"]),
     // Grounding (`Battle::is_grounded`), Speed, effectiveness; Air Balloon's `onStart` only
     // announces it and its pop (`onDamagingHit`) is refused until F15 (`items::on_damaging_hit`;
     // `onAfterSubDamage` needs a substitute, which is refused).

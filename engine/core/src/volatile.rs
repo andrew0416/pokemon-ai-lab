@@ -56,9 +56,15 @@ pub enum Volatile {
     /// (the type already changed since switching in). No duration; hidden in the canonical
     /// state.
     ProteanUsed,
+    /// Focus Energy's condition (`focusenergy`, no duration): critical-hit ratio +2. Added by
+    /// Lansat Berry (the move Focus Energy itself is not supported yet).
+    FocusEnergy,
+    /// Micle Berry's own condition (`micleberry`, duration 2): the holder's next accuracy check
+    /// (`onSourceAccuracy`) is 4915/4096 and ends it.
+    MicleBerry,
 }
 
-pub const VOLATILE_COUNT: usize = 17;
+pub const VOLATILE_COUNT: usize = 19;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -79,6 +85,8 @@ impl Volatile {
         Volatile::PerishSong,
         Volatile::Endure,
         Volatile::ProteanUsed,
+        Volatile::FocusEnergy,
+        Volatile::MicleBerry,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -101,7 +109,11 @@ impl Volatile {
             Volatile::Roost => conditions::ROOST,
             Volatile::Yawn => conditions::YAWN,
             Volatile::Endure => conditions::ENDURE,
-            Volatile::PerishSong | Volatile::ProteanUsed => ConditionId::NONE,
+            Volatile::FocusEnergy => conditions::FOCUSENERGY,
+            // An item's condition: the dex exports no named condition for it.
+            Volatile::PerishSong | Volatile::ProteanUsed | Volatile::MicleBerry => {
+                ConditionId::NONE
+            }
         }
     }
 
@@ -125,6 +137,8 @@ impl Volatile {
             Volatile::PerishSong => "perishsong",
             Volatile::Endure => "endure",
             Volatile::ProteanUsed => "protean",
+            Volatile::FocusEnergy => "focusenergy",
+            Volatile::MicleBerry => "micleberry",
         }
     }
 
@@ -148,13 +162,18 @@ impl Volatile {
             | Volatile::Spotlight
             | Volatile::Roost
             | Volatile::Endure => 1,
-            Volatile::Stall | Volatile::LockedMove | Volatile::MustRecharge | Volatile::Yawn => 2,
+            Volatile::Stall
+            | Volatile::LockedMove
+            | Volatile::MustRecharge
+            | Volatile::Yawn
+            | Volatile::MicleBerry => 2,
             Volatile::Encore => 3,
             Volatile::PerishSong => 4,
             Volatile::Confusion
             | Volatile::FlashFire
             | Volatile::ChoiceLock
-            | Volatile::ProteanUsed => 0,
+            | Volatile::ProteanUsed
+            | Volatile::FocusEnergy => 0,
         }
     }
 
@@ -269,7 +288,10 @@ mod tests {
                 // Song (added by name) and engine state.
                 assert!(matches!(
                     v,
-                    Volatile::FlashFire | Volatile::PerishSong | Volatile::ProteanUsed
+                    Volatile::FlashFire
+                        | Volatile::PerishSong
+                        | Volatile::ProteanUsed
+                        | Volatile::MicleBerry
                 ));
                 continue;
             }
@@ -304,6 +326,18 @@ mod tests {
                 "{id:?}"
             );
         }
+    }
+
+    /// Micle Berry's condition lasts 2 turns; Focus Energy's has no duration.
+    #[test]
+    fn item_condition_durations_match_the_dex() {
+        use crate::dex::items;
+        assert_eq!(
+            items::MICLE_BERRY.data().condition_duration,
+            Volatile::MicleBerry.initial_duration()
+        );
+        assert_eq!(moves::FOCUS_ENERGY.data().condition_duration, 0);
+        assert_eq!(Volatile::FocusEnergy.initial_duration(), 0);
     }
 
     #[test]

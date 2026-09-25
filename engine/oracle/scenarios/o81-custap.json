@@ -1,0 +1,27 @@
+{
+ "description": "O81 Custap Berry: Snorlax (slowest, 60/267 HP) eats its Custap Berry when the actions are queued and moves first (+0.1): its Seismic Toss KOs Machamp (patched to 40 HP) before Machamp's own Seismic Toss. Kangaskhan also holds a Custap Berry but is above 1/4 HP and keeps it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Bulk Up", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Custap Berry", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Seismic Toss", "Protect"], "level": 50},
+   {"species": "Kangaskhan", "item": "Custap Berry", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Machamp": {"hp": 40}},
+  "p2": {"Snorlax": {"hp": 60}, "Kangaskhan": {"hp": 100}}
+ },
+ "turn": {"p1": "move seismictoss 1, move bulkup", "p2": "move seismictoss 1, move harden"}
+}

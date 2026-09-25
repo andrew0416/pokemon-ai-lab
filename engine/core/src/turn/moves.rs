@@ -1168,12 +1168,19 @@ fn accuracy_check<const N: usize>(
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
+    // `accuracy = true` without the `Accuracy` event: a status move on the user, and (gen 8+)
+    // Toxic used by a Poison type.
+    let self_status = mv.target == MoveTarget::User && mv.data.category == MoveCategory::Status;
+    if self_status || (mv.id == moves::TOXIC && b.has_type(user, Type::Poison)) {
+        return true;
+    }
+    // `runEvent('Accuracy')` (after ModifyAccuracy and the stages, which have no side effect
+    // here): Micle Berry's `onSourceAccuracy` on the user ends the volatile, and chains
+    // 4915/4096 onto a numeric accuracy (OHKO moves, which it skips, are refused).
+    let micle = b.remove_volatile(user, Volatile::MicleBerry);
     let Some(base) = mv.accuracy else {
         return true;
     };
-    if mv.target == MoveTarget::User && mv.data.category == MoveCategory::Status {
-        return true;
-    }
     let mut accuracy = i32::from(base);
     // ModifyAccuracy: Gravity (6840/4096), the user's Hustle and item (Wide Lens, Zoom Lens).
     let mut accuracy_mods = ability_events::accuracy_handlers(b, user, mv.data);
@@ -1192,6 +1199,9 @@ fn accuracy_check<const N: usize>(
         accuracy = accuracy * (3 + boost) / 3;
     } else if boost < 0 {
         accuracy = accuracy * 3 / (3 - boost);
+    }
+    if micle {
+        accuracy = modify(accuracy, 4915);
     }
     b.rng.chance(accuracy.max(0) as u32, 100)
 }
@@ -1651,10 +1661,17 @@ fn get_damage<const N: usize>(
     // Critical hit: ratio 1..4 ??1/24, 1/8, 1/2, always. `CriticalHit` handlers: Battle Armor
     // and Shell Armor (`onCriticalHit: false`, breakable). Showdown rolls first and then
     // cancels; not rolling gives the same distribution.
-    // ModifyCritRatio: the user's item (Scope Lens, Razor Claw), then clamped to 0..4. Lucky
-    // Chant on the target's side is a `CriticalHit` handler too (`onCriticalHit: false`).
+    // ModifyCritRatio: the user's item (Scope Lens, Razor Claw) and its `focusenergy` volatile
+    // (+2, from Lansat Berry), all additive, then clamped to 0..4. Lucky Chant on the target's
+    // side is a `CriticalHit` handler too (`onCriticalHit: false`).
+    let focus_energy = if b.volatile(user, Volatile::FocusEnergy).active {
+        2
+    } else {
+        0
+    };
     let crit_ratio =
-        (i32::from(data.crit_ratio) + item_events::crit_ratio_bonus(b.item(user))).clamp(0, 4);
+        (i32::from(data.crit_ratio) + item_events::crit_ratio_bonus(b.item(user)) + focus_energy)
+            .clamp(0, 4);
     let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit
         && !b.side_effect_active(target.side, SideEffect::LuckyChant);
     let critical = can_crit
