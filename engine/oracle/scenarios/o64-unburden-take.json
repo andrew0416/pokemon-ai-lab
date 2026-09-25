@@ -1,0 +1,23 @@
+{
+ "description": "O64 Unburden's onTakeItem and Air Balloon's AfterUseItem: Kingambit's Knock Off cannot take Sceptile's Sceptilite, but Unburden's TakeItem handler runs first and adds the volatile; Machamp's Seismic Toss pops Liepard's Air Balloon (Unburden).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Kingambit", "item": "", "ability": "Defiant", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Knock Off"], "level": 50},
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Sceptile", "item": "Sceptilite", "ability": "Unburden", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Liepard", "item": "Air Balloon", "ability": "Unburden", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move knockoff 1, move seismictoss 2", "p2": "move seismictoss 1, move seismictoss 2"}
+}

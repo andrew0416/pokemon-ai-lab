@@ -1,0 +1,23 @@
+{
+ "description": "O64 Unburden and Trick: Alakazam's Trick takes Liepard's Leftovers (TakeItem: Unburden), so Liepard, now itemless, moves at double Speed.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Alakazam", "item": "", "ability": "Inner Focus", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Trick"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Liepard", "item": "Leftovers", "ability": "Unburden", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move seismictoss 1, move trick 2", "p2": "move seismictoss 1, move seismictoss 1"}
+}

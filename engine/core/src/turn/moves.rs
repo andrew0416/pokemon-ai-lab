@@ -1631,13 +1631,14 @@ fn damaging_hit<const N: usize>(
                 }
             }
             Kind::Item(i) if i == items::AIR_BALLOON => {
-                // `target.item = ''` without `useItem`: no `lastItem`; AfterUseItem
-                // (Unburden) is not implemented.
+                // `target.item = ''` without `useItem`: no `lastItem`; then AfterUseItem
+                // (Unburden).
                 b.apply(crate::instruction::Instruction::SetItem {
                     target: pokemon,
                     old: items::AIR_BALLOON,
                     new: ItemId::NONE,
                 });
+                ability_events::unburden(b, target);
             }
             Kind::Item(_) => {}
         }

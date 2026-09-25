@@ -334,6 +334,17 @@ pub(crate) fn on_update<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     }
 }
 
+/// Unburden (WORKPLAN O64) when its holder in `slot` used or lost its item: `onAfterUseItem`
+/// (`useItem`, `eatItem`, Air Balloon's pop) and `onTakeItem` (`takeItem`: Knock Off, Trick,
+/// Sticky Barb; it runs before the item's own TakeItem handler, so even a Mega Stone that stays
+/// adds it) both `addVolatile('unburden')` (nothing on a fainted holder or when it is up). The
+/// volatile doubles Speed while the holder has no item (`order.rs`).
+pub(crate) fn unburden<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.ability(slot) == abilities::UNBURDEN {
+        b.add_volatile(slot, Volatile::Unburden);
+    }
+}
+
 /// The healing items Anger Shell's and Berserk's `onTryEatItem` hold back while their check is
 /// pending.
 const HEALING_BERRIES: [ItemId; 9] = [

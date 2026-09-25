@@ -153,6 +153,26 @@ fn pastel_veil_start_matches_showdown() {
     assert_exact_parity("o68-pastel-veil-start");
 }
 
+// ---- O64 Unburden --------------------------------------------------------------------------------
+
+/// A berry eaten (AfterUseItem) doubles the holder's Speed at once: it now moves first.
+#[test]
+fn unburden_after_a_berry_matches_showdown() {
+    assert_exact_parity("o64-unburden-berry");
+}
+
+/// Knock Off against a Mega Stone (TakeItem runs Unburden before the stone refuses) and an
+/// Air Balloon's pop.
+#[test]
+fn unburden_take_item_and_air_balloon_match_showdown() {
+    assert_exact_parity("o64-unburden-take");
+}
+
+#[test]
+fn unburden_after_trick_matches_showdown() {
+    assert_exact_parity("o64-unburden-trick");
+}
+
 /// Intrepid Sword acts once per battle (`pokemon.swordBoost`); the state does not record it, so
 /// a switch-in after the battle start is refused.
 #[test]

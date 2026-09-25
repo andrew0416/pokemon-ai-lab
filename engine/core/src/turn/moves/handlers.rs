@@ -361,9 +361,10 @@ pub(super) fn on_hit<const N: usize>(
 /// without an item, `false` when the item's own TakeItem handler refuses: `onTakeItem: false`,
 /// or a Mega Stone of its holder's species); fail if either refuses or both are empty; then
 /// each item's TakeItem handler again with its new holder (a Mega Stone cannot go to its own
-/// species); then both `setItem`s. Abilities with TakeItem handlers (Sticky Hold, Unburden)
-/// are refused on the field. An item whose `Start`, `End` or other TakeItem handler would run
-/// here is not implemented.
+/// species); then both `setItem`s. Each `takeItem` of a held item first runs the holder's
+/// ability TakeItem handler (Unburden adds its volatile even if the trade then fails; Sticky
+/// Hold is refused on the field). An item whose `Start`, `End` or other TakeItem handler would
+/// run here is not implemented.
 fn trick<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -380,6 +381,12 @@ fn trick<const N: usize>(
                 .any(|h| ["onStart", "onEnd"].contains(h))
         {
             return Err(b.unsupported(format!("Trick moving {} ({:?})", data.name, data.handlers)));
+        }
+    }
+    // `target.takeItem(source)`, then `source.takeItem()`: the TakeItem event (Unburden).
+    for (slot, item) in [(target, yours), (user, mine)] {
+        if !item.is_none() {
+            super::super::abilities::unburden(b, slot);
         }
     }
     let taken = |slot: SlotRef, item: ItemId| item.is_none() || b.item_can_be_taken(slot);

@@ -526,9 +526,9 @@ pub(crate) fn on_residual<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, 
     }
 }
 
-/// Showdown `eatItem` for a held berry: it is consumed and becomes `lastItem`. The events it
-/// runs (`UseItem`, `TryEatItem`, `Eat`, `EatItem`, `AfterUseItem`) have no implemented
-/// handler: Unnerve, As One, Ripen, Cheek Pouch, Cud Chew and Unburden are refused by
+/// Showdown `eatItem` for a held berry: `TryEatItem` (Unnerve, Anger Shell, Berserk:
+/// `abilities::try_eat_item`), then it is consumed and becomes `lastItem` (`AfterUseItem`:
+/// Unburden, in `Battle::use_item`). As One, Ripen, Cheek Pouch and Cud Chew are refused by
 /// `support`, and the resist berries' `onEat` is empty.
 fn eat_item<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> bool {
     // TryEatItem: the ability handlers (`abilities::try_eat_item`).

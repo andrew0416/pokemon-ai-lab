@@ -9,6 +9,7 @@ use crate::damage::{chain_modifiers, MOD_ONE, MOD_ONE_POINT_FIVE};
 use crate::dex::{abilities, moves, AbilityId, MoveCategory, MoveFlags, MoveId, Type};
 use crate::field::{FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{SlotRef, Status};
+use crate::volatile::Volatile;
 
 use super::battle::Battle;
 use super::items as item_events;
@@ -64,6 +65,11 @@ impl<const N: usize> Battle<'_, N> {
         let quick_feet = mon.ability == abilities::QUICK_FEET;
         if quick_feet && mon.status != Status::None {
             chain.push(MOD_ONE_POINT_FIVE);
+        }
+        // Unburden's volatile: `if (!pokemon.item && !pokemon.ignoringAbility())
+        // return this.chainModify(2)` (Gastro Acid and Neutralizing Gas are not supported).
+        if mon.item.is_none() && self.volatile(slot, Volatile::Unburden).active {
+            chain.push(2 * MOD_ONE);
         }
         // The item (Choice Scarf). The factors are all powers of two times 1.5, so the chain
         // is exact in any order.

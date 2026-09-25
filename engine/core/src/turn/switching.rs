@@ -734,6 +734,11 @@ pub(crate) fn end_ability<const N: usize>(
     if ability == abilities::UNNERVE {
         return Ok(());
     }
+    // Unburden: `pokemon.removeVolatile('unburden')`.
+    if ability == abilities::UNBURDEN {
+        b.remove_volatile(slot, Volatile::Unburden);
+        return Ok(());
+    }
     if ability == abilities::FLASH_FIRE {
         b.remove_volatile(slot, Volatile::FlashFire);
         return Ok(());

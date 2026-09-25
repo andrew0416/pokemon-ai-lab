@@ -65,9 +65,12 @@ pub enum Volatile {
     /// `AfterMoveSecondary` check; healing berries are not eaten meanwhile, `onTryEatItem`). No
     /// duration; hidden in the canonical state.
     AngerShellUnchecked,
+    /// Unburden's own condition (`addVolatile('unburden')` once its holder uses or loses its
+    /// item): Speed doubles while the holder has no item. No duration.
+    Unburden,
 }
 
-pub const VOLATILE_COUNT: usize = 19;
+pub const VOLATILE_COUNT: usize = 20;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -90,6 +93,7 @@ impl Volatile {
         Volatile::ProteanUsed,
         Volatile::Charge,
         Volatile::AngerShellUnchecked,
+        Volatile::Unburden,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -107,7 +111,7 @@ impl Volatile {
             Volatile::LockedMove => conditions::LOCKEDMOVE,
             Volatile::MustRecharge => conditions::MUSTRECHARGE,
             Volatile::Encore => conditions::ENCORE,
-            Volatile::FlashFire => ConditionId::NONE,
+            Volatile::FlashFire | Volatile::Unburden => ConditionId::NONE,
             Volatile::ChoiceLock => conditions::CHOICELOCK,
             Volatile::Roost => conditions::ROOST,
             Volatile::Yawn => conditions::YAWN,
@@ -141,6 +145,7 @@ impl Volatile {
             Volatile::ProteanUsed => "protean",
             Volatile::Charge => "charge",
             Volatile::AngerShellUnchecked => "angershellunchecked",
+            Volatile::Unburden => "unburden",
         }
     }
 
@@ -172,7 +177,8 @@ impl Volatile {
             | Volatile::ChoiceLock
             | Volatile::ProteanUsed
             | Volatile::Charge
-            | Volatile::AngerShellUnchecked => 0,
+            | Volatile::AngerShellUnchecked
+            | Volatile::Unburden => 0,
         }
     }
 
@@ -288,6 +294,7 @@ mod tests {
                 assert!(matches!(
                     v,
                     Volatile::FlashFire
+                        | Volatile::Unburden
                         | Volatile::PerishSong
                         | Volatile::ProteanUsed
                         | Volatile::AngerShellUnchecked

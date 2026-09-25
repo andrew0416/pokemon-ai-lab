@@ -625,6 +625,18 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         abilities::BERSERK,
         &["onAfterMoveSecondary", "onDamage", "onTryEatItem"],
     ),
+    // O64 Unburden: `onAfterUseItem` (`Battle::use_item`, Air Balloon's pop) and `onTakeItem`
+    // (`Battle::take_item`, Trick) in `abilities::unburden`, `onEnd` in `switching::end_ability`,
+    // the volatile's `onModifySpe` in `order.rs`.
+    (
+        abilities::UNBURDEN,
+        &[
+            "condition.onModifySpe",
+            "onAfterUseItem",
+            "onEnd",
+            "onTakeItem",
+        ],
+    ),
     // O63 Unnerve: `onFoeTryEatItem` in `abilities::try_eat_item`; `onStart` / `onEnd` only
     // set and clear the flag it reads (`switching`).
     (abilities::UNNERVE, &["onEnd", "onFoeTryEatItem", "onStart"]),

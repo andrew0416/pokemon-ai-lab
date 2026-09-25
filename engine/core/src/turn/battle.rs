@@ -1060,6 +1060,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             old: item,
             new: ItemId::NONE,
         });
+        // AfterUseItem: Unburden.
+        super::abilities::unburden(self, slot);
         true
     }
 
@@ -1084,6 +1086,11 @@ impl<'a, const N: usize> Battle<'a, N> {
         let Some(pokemon) = self.occupant(slot) else {
             return false;
         };
+        if self.mon(pokemon).item.is_none() {
+            return false;
+        }
+        // TakeItem: the holder's ability (Unburden) before the item's own handler.
+        super::abilities::unburden(self, slot);
         if !self.item_can_be_taken(slot) {
             return false;
         }

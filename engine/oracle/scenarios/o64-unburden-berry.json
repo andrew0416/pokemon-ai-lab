@@ -1,0 +1,24 @@
+{
+ "description": "O64 Unburden after eating a berry: Talonflame's Seismic Toss makes Hawlucha eat its Sitrus Berry; Unburden doubles its Speed, so it now moves before Garchomp and faints it (50 HP left) before Garchomp can hit Snorlax.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hawlucha", "item": "Sitrus Berry", "ability": "Unburden", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Talonflame", "item": "", "ability": "Flame Body", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1":{"Hawlucha":{"hp":100}},"p2":{"Garchomp":{"hp":50}}},
+ "turn": {"p1": "move seismictoss 2, move seismictoss 1", "p2": "move seismictoss 1, move seismictoss 2"}
+}
