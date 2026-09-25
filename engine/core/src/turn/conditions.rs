@@ -1,7 +1,9 @@
 //! Callbacks of the conditions moves create (`condition` in `data/moves.ts`): what happens
 //! when a volatile starts and when its duration runs out in the residual.
 
-use crate::dex::{abilities, items, moves, MoveCategory, MoveFlags, MoveId, Type, TypeRelation};
+use crate::dex::{
+    abilities, items, moves, MoveCategory, MoveFlags, MoveId, Type, TypeImmunities, TypeRelation,
+};
 use crate::field::{Effect, SideEffect};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SideId, SlotRef, State, Status, BOOST_COUNT};
@@ -217,6 +219,28 @@ pub(crate) fn disabled_move<const N: usize>(
     }
     if throat_chopped(state, slot, id) {
         return Some(format!("{} is disabled by Throat Chop", data.name));
+    }
+    None
+}
+
+/// Why the Pokémon in `slot` cannot switch out because of a condition on it (the
+/// `TrapPokemon` handlers `endTurn` runs, each calling `pokemon.tryTrap()`, which fails for a
+/// Pokémon immune to `trapped`: a Ghost type): No Retreat.
+pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option<String> {
+    let mon = state.active(slot)?;
+    let immune = mon
+        .types
+        .iter()
+        .any(|t| t.immunities().contains(TypeImmunities::TRAPPED));
+    if immune {
+        return None;
+    }
+    let volatiles = &state.slot(slot).volatiles;
+    if volatiles.has(Volatile::NoRetreat) {
+        return Some(format!(
+            "{} is trapped by No Retreat",
+            mon.species.data().name
+        ));
     }
     None
 }

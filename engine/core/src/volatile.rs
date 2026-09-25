@@ -111,9 +111,12 @@ pub enum Volatile {
     SilkTrap,
     /// Burning Bulwark (duration 1): blocks damaging moves only; contact burns.
     BurningBulwark,
+    /// No Retreat (no duration): the holder cannot switch out (`onTrapPokemon`) unless it is
+    /// immune to trapping (Ghost), and cannot use No Retreat again.
+    NoRetreat,
 }
 
-pub const VOLATILE_COUNT: usize = 36;
+pub const VOLATILE_COUNT: usize = 37;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -153,6 +156,7 @@ impl Volatile {
         Volatile::Obstruct,
         Volatile::SilkTrap,
         Volatile::BurningBulwark,
+        Volatile::NoRetreat,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -190,6 +194,7 @@ impl Volatile {
             Volatile::Obstruct => conditions::OBSTRUCT,
             Volatile::SilkTrap => conditions::SILKTRAP,
             Volatile::BurningBulwark => conditions::BURNINGBULWARK,
+            Volatile::NoRetreat => conditions::NORETREAT,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -238,6 +243,7 @@ impl Volatile {
             Volatile::Obstruct => "obstruct",
             Volatile::SilkTrap => "silktrap",
             Volatile::BurningBulwark => "burningbulwark",
+            Volatile::NoRetreat => "noretreat",
         }
     }
 
@@ -288,7 +294,8 @@ impl Volatile {
             | Volatile::Torment
             | Volatile::Imprison
             | Volatile::GlaiveRush
-            | Volatile::SparklingAria => 0,
+            | Volatile::SparklingAria
+            | Volatile::NoRetreat => 0,
         }
     }
 

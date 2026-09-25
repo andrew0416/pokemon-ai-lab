@@ -517,6 +517,10 @@ fn check_turn<const N: usize>(
                 (SlotAction::Pass, Some(_)) => return Err(invalid("must act".into())),
                 (_, None) => return Err(invalid("empty or fainted slot must pass".into())),
                 (SlotAction::Switch { party_index }, Some(_)) => {
+                    // The conditions' TrapPokemon handlers (No Retreat, ...).
+                    if let Some(why) = conditions::trapped(state, slot) {
+                        return Err(invalid(why));
+                    }
                     let target = &state.side(side).party[party_index as usize];
                     let active = state
                         .side(side)

@@ -92,3 +92,30 @@ fn feint_breaks_protect_and_wide_guard() {
 fn feint_breaks_spiky_shield_before_a_contact_move() {
     assert_exact_parity("feint-spiky-shield");
 }
+
+#[test]
+fn belly_drum_contrary_and_fillet_away_pay_half_their_hp() {
+    assert_exact_parity("belly-drum");
+}
+
+#[test]
+fn clangorous_soul_fillet_away_and_no_retreat_raise_stats() {
+    assert_exact_parity("clangorous-soul");
+}
+
+#[test]
+fn no_retreat_fails_again_and_a_ghost_can_still_switch() {
+    assert_exact_parity("no-retreat");
+}
+
+/// No Retreat's `onTrapPokemon`: Snorlax cannot switch to the benched Kommo-o.
+#[test]
+fn no_retreat_traps_its_user() {
+    assert_invalid_choice(
+        "no-retreat",
+        0,
+        0,
+        SlotAction::Switch { party_index: 2 },
+        "trapped by No Retreat",
+    );
+}

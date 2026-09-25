@@ -153,6 +153,20 @@ pub(super) fn on_try<const N: usize>(
             b.slot_mon(user).is_some_and(|m| m.status == Status::Sleep)
                 || b.ability(user) == abilities::COMATOSE
         }
+        // Clangorous Soul: `if (source.hp <= (source.maxhp * 33 / 100) || source.maxhp === 1)
+        // return false;` Fillet Away: `source.hp <= source.maxhp / 2`.
+        moves::CLANGOROUS_SOUL | moves::FILLET_AWAY => b.slot_mon(user).is_some_and(|m| {
+            let (hp, max_hp) = (i32::from(m.hp), i32::from(m.max_hp));
+            let enough = if mv.id == moves::CLANGOROUS_SOUL {
+                hp * 100 > max_hp * 33
+            } else {
+                hp * 2 > max_hp
+            };
+            enough && max_hp != 1
+        }),
+        // No Retreat: `if (source.volatiles['noretreat']) return false;` (its other branch
+        // drops the volatile for a `trapped` user; no move that adds `trapped` is implemented).
+        moves::NO_RETREAT => !b.volatile(user, Volatile::NoRetreat).active,
         _ => true,
     }
 }
@@ -176,12 +190,19 @@ pub(super) fn on_try_immunity<const N: usize>(
 /// first target, after accuracy and before the damage). `false` = the move fails. Low Kick's
 /// and Grass Knot's only act on a Dynamaxed target, Poltergeist's only logs.
 pub(super) fn on_try_hit<const N: usize>(
-    b: &Battle<'_, N>,
+    b: &mut Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
     mv: &mut ActiveMove,
 ) -> bool {
     match mv.id {
+        // Clangorous Soul, Fillet Away: `if (!this.boost(move.boosts!)) return null; delete
+        // move.boosts;` (the move's own boosts are applied here, not in `runMoveEffects`:
+        // `boosts_applied_in_try_hit`).
+        moves::CLANGOROUS_SOUL | moves::FILLET_AWAY => {
+            let boosts = mv.data.boosts;
+            b.boost_by(target, &boosts, Some(user), BoostEffect::Move(mv.id))
+        }
         // Pollen Puff: `if (source.isAlly(target)) { move.basePower = 0; move.infiltrates =
         // true; }` (`infiltrates` only matters against a substitute).
         moves::POLLEN_PUFF => {
@@ -208,6 +229,12 @@ pub(super) fn on_try_hit<const N: usize>(
         }
         _ => true,
     }
+}
+
+/// Whether the move's own `onTryHit` applies its `boosts` and deletes them (`delete
+/// move.boosts`), so `runMoveEffects` has none left.
+pub(super) fn boosts_applied_in_try_hit(id: MoveId) -> bool {
+    id == moves::CLANGOROUS_SOUL || id == moves::FILLET_AWAY
 }
 
 /// The move's `onAfterHit`, once per damaged target (`spreadMoveHit`, after `DamagingHit`;
@@ -554,6 +581,37 @@ pub(super) fn on_hit<const N: usize>(
             }
             set_boosts(b, user, to_user);
             set_boosts(b, target, to_target);
+            HitResult::Success
+        }
+        // Belly Drum: fails at half HP or less, at +6 Attack or with 1 max HP; otherwise
+        // `this.directDamage(target.maxhp / 2)` and `this.boost({atk: 12}, target)` (source: the
+        // user itself, so Contrary turns it into -12 and nothing blocks it).
+        moves::BELLY_DRUM => {
+            let Some(mon) = b.slot_mon(target) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
+            if hp * 2 <= max_hp || b.state.slot(target).boosts[0] >= 6 || max_hp == 1 {
+                HitResult::Failure
+            } else {
+                b.direct_damage(target, max_hp / 2);
+                let mut up = NO_BOOSTS;
+                up[0] = 12;
+                b.boost_by(target, &up, Some(user), BoostEffect::Move(mv.id));
+                HitResult::Success
+            }
+        }
+        // Clangorous Soul: `this.directDamage(pokemon.maxhp * 33 / 100)`; Fillet Away:
+        // `this.directDamage(pokemon.maxhp / 2)` (the boosts came in `onTryHit`).
+        moves::CLANGOROUS_SOUL | moves::FILLET_AWAY => {
+            let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
+            // `clampIntRange(damage, 1)`: a nonzero fraction is at least 1.
+            let amount = if mv.id == moves::CLANGOROUS_SOUL {
+                max_hp * 33 / 100
+            } else {
+                max_hp / 2
+            };
+            b.direct_damage(target, amount.max(1));
             HitResult::Success
         }
         // Steel Roller: `this.field.clearTerrain();` (returns nothing: no effect on success).

@@ -296,6 +296,16 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::ACROBATICS, &["basePowerCallback"]),
     (moves::FIRST_IMPRESSION, &["onDisableMove", "onTry"]),
     (moves::DIRE_CLAW, &["secondaries.onHit", "secondary.onHit"]),
+    // Belly Drum `onHit`; Clangorous Soul and Fillet Away: `onTry` (HP), `onTryHit` (the boosts,
+    // then deleted: `handlers::boosts_applied_in_try_hit`), `onHit` (the HP cost); No Retreat:
+    // `onTry`, the volatile's `onTrapPokemon` in `conditions::trapped` (`onStart` only logs).
+    (moves::BELLY_DRUM, &["onHit"]),
+    (moves::CLANGOROUS_SOUL, &["onHit", "onTry", "onTryHit"]),
+    (moves::FILLET_AWAY, &["onHit", "onTry", "onTryHit"]),
+    (
+        moves::NO_RETREAT,
+        &["condition.onStart", "condition.onTrapPokemon", "onTry"],
+    ),
     // Throat Chop: the secondary's `onHit` adds the `throatchop` volatile
     // (`handlers::secondary_on_hit`); its `onBeforeMove`, `onModifyMove` (a called sound move,
     // `moves::use_move`) and `onDisableMove` in `conditions::throat_chopped`; `onStart` and

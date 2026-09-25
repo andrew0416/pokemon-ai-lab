@@ -1565,7 +1565,10 @@ fn spread_move_hit<const N: usize>(
         }
         let mut did: Option<bool> = None;
         let mut note = |r: bool| did = Some(did.unwrap_or(false) || r);
-        if data.boosts != NO_BOOSTS && b.alive(t).is_some() {
+        if data.boosts != NO_BOOSTS
+            && b.alive(t).is_some()
+            && !handlers::boosts_applied_in_try_hit(mv.id)
+        {
             note(b.boost_by(t, &data.boosts, Some(user), BoostEffect::Move(mv.id)));
         }
         if let Some(heal) = data.heal {
