@@ -36,6 +36,17 @@ fn steam_engine_and_water_compaction_match_showdown() {
     assert_exact_parity("o55-water-boosts");
 }
 
+#[test]
+fn justified_and_thermal_exchange_match_showdown() {
+    assert_exact_parity("o55-justified-thermal");
+}
+
+/// Thermal Exchange is breakable: a Mold Breaker attacker's Fire move does not trigger it.
+#[test]
+fn thermal_exchange_against_mold_breaker_matches_showdown() {
+    assert_exact_parity("o55-thermal-mold-breaker");
+}
+
 /// Electromorphosis and Wind Power (a wind move, Tailwind) add `charge`, which doubles the
 /// next Electric move and ends after it.
 #[test]

@@ -1,0 +1,23 @@
+{
+ "description": "O55 Thermal Exchange is breakable: Mold Breaker Haxorus's Flame Charge does not raise Baxcalibur's Attack.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50},
+   {"species": "Baxcalibur", "item": "", "ability": "Thermal Exchange", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Haxorus", "item": "", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Flame Charge"], "level": 50},
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move swordsdance, move swordsdance", "p2": "move flamecharge 2, move seismictoss 1"}
+}
