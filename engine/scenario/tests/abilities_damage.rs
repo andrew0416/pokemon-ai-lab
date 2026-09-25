@@ -55,3 +55,10 @@ fn blaze_and_torrent_at_the_hp_boundary_match_showdown() {
 fn overgrow_and_swarm_match_showdown() {
     assert_exact_parity("o42-overgrow-swarm");
 }
+
+// O43: Hustle (attack and accuracy).
+
+#[test]
+fn hustle_matches_showdown() {
+    assert_exact_parity("o43-hustle");
+}

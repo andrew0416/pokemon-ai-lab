@@ -1,0 +1,7 @@
+{
+ "description": "O43: Durant (Hustle) Stone Edge (physical: 1.5x Atk, accuracy 80 -> 64) into Snorlax; Togekiss (Hustle) Hydro Pump (special: neither applies, accuracy 80) into Blissey. Blissey and Snorlax use Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o43-hustle.p1.json", "order": "12"},
+ "p2": {"team": "o43-hustle.p2.json", "order": "12"},
+ "turn": {"p1": "move stoneedge 2, move swordsdance", "p2": "move hydropump 2, move swordsdance"}
+}

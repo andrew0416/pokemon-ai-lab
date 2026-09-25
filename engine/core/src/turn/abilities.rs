@@ -21,6 +21,7 @@ use crate::dex::{
 use crate::state::SlotRef;
 
 use super::battle::Battle;
+use super::order::modify;
 
 /// Showdown's effect-type sub-orders (`resolvePriority`).
 pub(crate) const SUB_MOVE: u32 = 0;
@@ -205,6 +206,37 @@ pub(crate) fn attack_handlers<const N: usize>(
     if pinch_type == Some(data.move_type) && pinch {
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
+    }
+    out
+}
+
+/// The attacking stat after the handlers of the `ModifyAtk` event that return a new value
+/// instead of chaining: Hustle's `return this.modify(atk, 1.5)`. The chained factor is
+/// applied to the result at the end of the event.
+pub(crate) fn attack_direct(ability: AbilityId, data: &MoveData, attack: i32) -> i32 {
+    if ability == abilities::HUSTLE && data.category == MoveCategory::Physical {
+        modify(attack, MOD_ONE_POINT_FIVE)
+    } else {
+        attack
+    }
+}
+
+/// `ModifyAccuracy` handlers of abilities (moves with a numeric accuracy): the user's
+/// `onSourceModifyAccuracy`.
+pub(crate) fn accuracy_handlers<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    data: &MoveData,
+) -> Vec<Handler> {
+    let mut out = Vec::new();
+    let ability = b.ability(user);
+    // Hustle: physical moves 3277/4096.
+    if ability == abilities::HUSTLE && data.category == MoveCategory::Physical {
+        let p = priority(
+            ability.data().event_orders,
+            "onSourceModifyAccuracyPriority",
+        );
+        out.push(Handler::of(b, user, p, SUB_ABILITY, 3277));
     }
     out
 }

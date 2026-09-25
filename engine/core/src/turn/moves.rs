@@ -512,10 +512,12 @@ fn accuracy_check<const N: usize>(
         return true;
     }
     let mut accuracy = i32::from(base);
-    // ModifyAccuracy: Gravity chains 6840/4096.
+    // ModifyAccuracy: Gravity (6840/4096), the user's Hustle.
+    let mut accuracy_mods = abilities::accuracy_handlers(b, user, mv.data);
     if b.field_active(FieldEffect::Gravity) {
-        accuracy = modify(accuracy, 6840);
+        accuracy_mods.push(Handler::global(0, SUB_FIELD_CONDITION, 6840));
     }
+    accuracy = modify(accuracy, abilities::chain(b, accuracy_mods));
     let mut boost = 0i32;
     if !mv.data.ignore_evasion {
         boost -= i32::from(b.state.slot(target).boosts[6]);
@@ -808,6 +810,7 @@ fn get_damage<const N: usize>(
         atk_boost,
     );
     // ModifyAtk (physical) / ModifySpA (special), whatever stat the move attacks with.
+    let attack = abilities::attack_direct(attacker.ability, data, attack);
     let attack_mods = abilities::attack_handlers(b, user, data);
     let attack = modify(attack, abilities::chain(b, attack_mods));
     let mut defense = boosted_stat(

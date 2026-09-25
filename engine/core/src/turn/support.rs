@@ -199,6 +199,10 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::TORRENT, &["onModifyAtk", "onModifySpA"]),
     (abilities::OVERGROW, &["onModifyAtk", "onModifySpA"]),
     (abilities::SWARM, &["onModifyAtk", "onModifySpA"]),
+    (
+        abilities::HUSTLE,
+        &["onModifyAtk", "onSourceModifyAccuracy"],
+    ),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
