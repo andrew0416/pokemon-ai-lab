@@ -181,6 +181,19 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::SWIFT_SWIM, &["onModifySpe"]),
     (abilities::SLUSH_RUSH, &["onModifySpe"]),
     (abilities::PRANKSTER, &["onModifyPriority"]),
+    // Damage path (`abilities.rs`).
+    (abilities::TECHNICIAN, &["onBasePower"]),
+    (abilities::SHARPNESS, &["onBasePower"]),
+    (abilities::IRON_FIST, &["onBasePower"]),
+    (abilities::STRONG_JAW, &["onBasePower"]),
+    (abilities::MEGA_LAUNCHER, &["onBasePower"]),
+    (abilities::RECKLESS, &["onBasePower"]),
+    (abilities::TOUGH_CLAWS, &["onBasePower"]),
+    (
+        abilities::PUNK_ROCK,
+        &["onBasePower", "onSourceModifyDamage"],
+    ),
+    (abilities::STEELY_SPIRIT, &["onAllyBasePower"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

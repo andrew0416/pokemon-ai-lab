@@ -3,8 +3,8 @@
 //! effects, for the implemented moves (see [`super::support`]).
 
 use crate::damage::{
-    chain_modifiers, damage_rolls, DamageInput, MOD_HALF, MOD_ONE, MOD_ONE_POINT_FIVE,
-    MOD_ONE_POINT_THREE,
+    damage_rolls, DamageInput, MOD_HALF, MOD_ONE, MOD_ONE_POINT_FIVE, MOD_ONE_POINT_THREE,
+    MOD_ONE_POINT_TWO,
 };
 use crate::dex::{
     items, moves, FixedDamage, IgnoreImmunity, MoveCategory, MoveData, MoveFlags, MoveId,
@@ -14,6 +14,9 @@ use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{SideId, SlotRef, Status};
 use crate::volatile::Volatile;
 
+use super::abilities::{
+    self, Handler, SUB_FIELD_CONDITION, SUB_ITEM, SUB_MOVE, SUB_SIDE_CONDITION,
+};
 use super::battle::{Battle, DamageSource};
 use super::order::{boosted_stat, modify};
 use super::support::{side_effect_of, type_boost_item};
@@ -747,38 +750,40 @@ fn get_damage<const N: usize>(
                 _ => true,
             });
 
-    // BasePower handlers, by priority: type items (15), terrain (6), the move (0).
-    let mut power_mods = Vec::new();
+    // BasePower handlers: abilities (Technician 30 ... Punk Rock 7), type items (15),
+    // terrain (6), the move (0).
+    let mut power_mods = abilities::base_power_handlers(b, user, data, base_power);
     if type_boost_item(attacker.item) == Some(data.move_type) {
-        power_mods.push(4915);
+        power_mods.push(Handler::of(b, user, 15, SUB_ITEM, MOD_ONE_POINT_TWO));
     }
     let attacker_grounded = b.is_grounded(user);
     let defender_grounded = b.is_grounded(target);
-    match b.terrain() {
+    let terrain_mod = match b.terrain() {
         Terrain::Grassy => {
             if [moves::EARTHQUAKE, moves::BULLDOZE, moves::MAGNITUDE].contains(&mv.id)
                 && defender_grounded
             {
-                power_mods.push(MOD_HALF);
+                MOD_HALF
             } else if data.move_type == Type::Grass && attacker_grounded {
-                power_mods.push(MOD_ONE_POINT_THREE);
+                MOD_ONE_POINT_THREE
+            } else {
+                MOD_ONE
             }
         }
         Terrain::Electric if data.move_type == Type::Electric && attacker_grounded => {
-            power_mods.push(MOD_ONE_POINT_THREE)
+            MOD_ONE_POINT_THREE
         }
         Terrain::Psychic if data.move_type == Type::Psychic && attacker_grounded => {
-            power_mods.push(MOD_ONE_POINT_THREE)
+            MOD_ONE_POINT_THREE
         }
-        Terrain::Misty if data.move_type == Type::Dragon && defender_grounded => {
-            power_mods.push(MOD_HALF)
-        }
-        _ => {}
-    }
+        Terrain::Misty if data.move_type == Type::Dragon && defender_grounded => MOD_HALF,
+        _ => MOD_ONE,
+    };
+    power_mods.push(Handler::global(6, SUB_FIELD_CONDITION, terrain_mod));
     if mv.id == moves::KNOCK_OFF && b.item_can_be_taken(target) {
-        power_mods.push(MOD_ONE_POINT_FIVE);
+        power_mods.push(Handler::of(b, user, 0, SUB_MOVE, MOD_ONE_POINT_FIVE));
     }
-    let power_modifier = chain_modifiers(&power_mods, 0, u32::MAX);
+    let power_modifier = abilities::chain(b, power_mods);
 
     // Attack and defense.
     let physical = data.category == MoveCategory::Physical;
@@ -839,14 +844,17 @@ fn get_damage<const N: usize>(
     } else {
         MOD_ONE >> -type_mod
     };
-    // ModifyDamage: Life Orb and screens.
-    let mut final_mods = Vec::new();
+    // ModifyDamage (all priority 0, so in Speed order): Life Orb, screens (side conditions,
+    // Speed 0), the target's abilities.
+    let mut final_mods = abilities::modify_damage_handlers(b, user, target, data);
     if attacker.item == items::LIFE_ORB {
-        final_mods.push(5324);
+        final_mods.push(Handler::of(b, user, 0, SUB_ITEM, 5324));
     }
     if !critical && target != user && screen_applies(b, target.side, data.category) {
-        final_mods.push(if N > 1 { 2732 } else { MOD_HALF });
+        let modifier = if N > 1 { 2732 } else { MOD_HALF };
+        final_mods.push(Handler::global(0, SUB_SIDE_CONDITION, modifier));
     }
+    let final_modifier = abilities::chain(b, final_mods);
     let input = DamageInput {
         level: attacker.level,
         base_power: base_power as u16,
@@ -860,7 +868,7 @@ fn get_damage<const N: usize>(
         type_effectiveness,
         burned: attacker.status == Status::Burn && physical,
         protected: false,
-        final_modifier: chain_modifiers(&final_mods, 0, u32::MAX),
+        final_modifier,
     };
     let rolls = damage_rolls(input);
     Ok(Planned::Damage(i32::from(pick_roll(b, &rolls))))

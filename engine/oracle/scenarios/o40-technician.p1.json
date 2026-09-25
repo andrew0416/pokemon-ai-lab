@@ -1,0 +1,34 @@
+[
+ {
+  "species": "Scizor",
+  "item": "",
+  "ability": "Technician",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "def": 2
+  },
+  "moves": [
+   "Bullet Punch",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "name": "Lycanroc",
+  "species": "Lycanroc-Dusk",
+  "item": "",
+  "ability": "Ball Fetch",
+  "nature": "Impish",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

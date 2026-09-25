@@ -1,0 +1,7 @@
+{
+ "description": "O40: Tyrantrum (Strong Jaw) Crunch (bite, 1.5x; 20% Def drop) into Blissey, the only attack of the turn. Blissey uses Swords Dance, the others Protect.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o40-strongjaw.p1.json", "order": "12"},
+ "p2": {"team": "o40-strongjaw.p2.json", "order": "12"},
+ "turn": {"p1": "move crunch 2, move protect", "p2": "move protect, move swordsdance"}
+}

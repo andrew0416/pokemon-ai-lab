@@ -1,0 +1,7 @@
+{
+ "description": "O40: Clawitzer (Mega Launcher) Aura Sphere (pulse, 1.5x) into Crabominable, then Crabominable (Iron Fist) Drain Punch (punch, 1.2x) into Clawitzer. Partners Protect.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": "o40-ironfist-megalauncher.p1.json", "order": "12"},
+ "p2": {"team": "o40-ironfist-megalauncher.p2.json", "order": "12"},
+ "turn": {"p1": "move drainpunch 1, move protect", "p2": "move aurasphere 1, move protect"}
+}

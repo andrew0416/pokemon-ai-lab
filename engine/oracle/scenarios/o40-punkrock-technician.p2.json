@@ -1,0 +1,32 @@
+[
+ {
+  "species": "Persian",
+  "item": "",
+  "ability": "Technician",
+  "nature": "Timid",
+  "evs": {
+   "hp": 32,
+   "spa": 2,
+   "spe": 32
+  },
+  "moves": [
+   "Hyper Voice",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Snorlax",
+  "item": "",
+  "ability": "Honey Gather",
+  "nature": "Careful",
+  "evs": {
+   "hp": 32,
+   "spd": 32
+  },
+  "moves": [
+   "Protect"
+  ],
+  "level": 50
+ }
+]

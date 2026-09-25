@@ -14,6 +14,7 @@
 //! `checkFainted`/`endTurn`. Replacements after a faint are the next decision, not part of
 //! the turn.
 
+mod abilities;
 mod battle;
 mod branch;
 pub mod coverage;

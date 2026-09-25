@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Hitmontop",
+  "item": "",
+  "ability": "Technician",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "spe": 2
+  },
+  "moves": [
+   "Protect",
+   "Low Kick"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Blissey",
+  "item": "",
+  "ability": "Ball Fetch",
+  "nature": "Bold",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

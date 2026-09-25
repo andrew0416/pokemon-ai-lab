@@ -1,0 +1,33 @@
+[
+ {
+  "species": "Gallade",
+  "item": "",
+  "ability": "Sharpness",
+  "nature": "Jolly",
+  "evs": {
+   "hp": 2,
+   "atk": 32,
+   "spe": 32
+  },
+  "moves": [
+   "Psycho Cut",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Bronzong",
+  "item": "",
+  "ability": "Levitate",
+  "nature": "Impish",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Swords Dance",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

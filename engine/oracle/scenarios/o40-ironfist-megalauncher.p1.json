@@ -1,0 +1,32 @@
+[
+ {
+  "species": "Crabominable",
+  "item": "",
+  "ability": "Iron Fist",
+  "nature": "Adamant",
+  "evs": {
+   "hp": 32,
+   "atk": 32,
+   "def": 2
+  },
+  "moves": [
+   "Drain Punch",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Blissey",
+  "item": "",
+  "ability": "Ball Fetch",
+  "nature": "Bold",
+  "evs": {
+   "hp": 32,
+   "def": 32
+  },
+  "moves": [
+   "Protect"
+  ],
+  "level": 50
+ }
+]
