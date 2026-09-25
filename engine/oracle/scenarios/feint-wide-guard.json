@@ -1,0 +1,23 @@
+{
+ "description": "Feint breaks protection: Toxapex protects and Bronzong sets Wide Guard; Weavile's Feint (priority 2, no protect flag) removes Toxapex's Protect and its side's Wide Guard and deletes Toxapex's stall counter, then hits; Hitmontop's Growl (spread) then lowers both foes' Attack.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Throat Chop", "Feint", "Taunt"], "level": 50},
+   {"species": "Hitmontop", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Close Combat", "Taunt", "Growl"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Toxapex", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Protect", "Baneful Bunker"], "level": 50},
+   {"species": "Bronzong", "item": "", "ability": "Honey Gather", "nature": "Relaxed",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Wide Guard", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move feint 1, move growl", "p2": "move protect, move wideguard"}
+}

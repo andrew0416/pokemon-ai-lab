@@ -6,7 +6,8 @@
 
 use crate::damage::MOD_ONE_POINT_FIVE;
 use crate::dex::{
-    abilities, items, moves, ItemId, MoveFlags, MoveId, MoveTarget, Type, TypeRelation, NO_BOOSTS,
+    abilities, items, moves, ItemId, MoveCategory, MoveFlags, MoveId, MoveTarget, Type,
+    TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
@@ -14,7 +15,7 @@ use crate::state::{Pokemon, PokemonRef, SideId, SlotRef, Status, BOOST_COUNT};
 use crate::volatile::Volatile;
 
 use super::super::abilities::{Handler, SUB_CONDITION};
-use super::super::battle::{Battle, BoostEffect};
+use super::super::battle::{Battle, BoostEffect, DamageSource};
 use super::super::conditions::HAZARDS;
 use super::super::order::modify;
 use super::super::queue::{Action, ActionKind};
@@ -339,6 +340,107 @@ pub(super) fn volatile_base_power<const N: usize>(
         out.push(Handler::of(b, user, priority, SUB_CONDITION, modifier));
     }
     out
+}
+
+/// The protect family's volatiles, with whether each also blocks status moves (the `blockStatus`
+/// argument of `checkMoveBypassesProtect`: Protect / Detect, Spiky Shield and Baneful Bunker do;
+/// King's Shield, Obstruct, Silk Trap and Burning Bulwark pass `false`).
+const PROTECTIONS: [(Volatile, bool); 7] = [
+    (Volatile::Protect, true),
+    (Volatile::SpikyShield, true),
+    (Volatile::BanefulBunker, true),
+    (Volatile::KingsShield, false),
+    (Volatile::Obstruct, false),
+    (Volatile::SilkTrap, false),
+    (Volatile::BurningBulwark, false),
+];
+
+/// The protect family's `condition.onTryHit` (priority 3) on `target`. A move with the `protect`
+/// flag (a status move only if the shield blocks those; `HitProtect` has no handler) is stopped
+/// (`NOT_FAIL`); a locked move on its first turn (`lockedmove` duration 2: "Outrage counter is
+/// reset") loses its volatile without `onEnd`; and a contact move (`checkMoveMakesContact`: not
+/// through Protective Pads) is punished: Spiky Shield `this.damage(source.baseMaxhp / 8)`,
+/// Baneful Bunker / Burning Bulwark `source.trySetStatus('psn' / 'brn', target)`, King's Shield,
+/// Obstruct, Silk Trap `this.boost({atk: -1} / {def: -2} / {spe: -1}, source, target, move)`.
+/// The shields' `condition.onHit` only acts on Z- and Max Moves (off in Champions). Returns
+/// whether the move is blocked.
+pub(super) fn protect_try_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    for (volatile, blocks_status) in PROTECTIONS {
+        if !b.volatile(target, volatile).active {
+            continue;
+        }
+        let bypassed = (mv.data.category == MoveCategory::Status && !blocks_status)
+            || !mv.data.flags.contains(MoveFlags::PROTECT);
+        if bypassed {
+            continue;
+        }
+        let locked = b.volatile(user, Volatile::LockedMove);
+        if locked.active && locked.duration == 2 {
+            b.delete_volatile(user, Volatile::LockedMove);
+        }
+        let contact =
+            mv.data.flags.contains(MoveFlags::CONTACT) && b.item(user) != items::PROTECTIVE_PADS;
+        if contact {
+            let mut drop = NO_BOOSTS;
+            let effect = match volatile {
+                Volatile::SpikyShield => {
+                    let max_hp = b.slot_mon(user).map_or(0, |m| m.max_hp);
+                    b.damage(user, f64::from(max_hp) / 8.0, DamageSource::Indirect);
+                    None
+                }
+                Volatile::BanefulBunker => {
+                    b.try_set_status_from(user, Status::Poison, Some(target));
+                    None
+                }
+                Volatile::BurningBulwark => {
+                    b.try_set_status_from(user, Status::Burn, Some(target));
+                    None
+                }
+                Volatile::KingsShield => {
+                    drop[0] = -1;
+                    Some(moves::KINGS_SHIELD)
+                }
+                Volatile::Obstruct => {
+                    drop[1] = -2;
+                    Some(moves::OBSTRUCT)
+                }
+                Volatile::SilkTrap => {
+                    drop[4] = -1;
+                    Some(moves::SILK_TRAP)
+                }
+                _ => None,
+            };
+            if let Some(shield) = effect {
+                b.boost_by(user, &drop, Some(target), BoostEffect::Move(shield));
+            }
+        }
+        return true;
+    }
+    false
+}
+
+/// `hitStepBreakProtect` for one target of a `breaksProtect` move (Feint): its protect-family
+/// volatiles are removed (none has `onEnd`) and its side loses Quick Guard and Wide Guard (Crafty
+/// Shield and Mat Block are not implemented); if anything was broken, its `stall` counter is
+/// deleted (gen 6+).
+pub(super) fn break_protect<const N: usize>(b: &mut Battle<'_, N>, target: SlotRef) {
+    let mut broke = false;
+    for (volatile, _) in PROTECTIONS {
+        broke |= b.remove_volatile(target, volatile);
+    }
+    broke |= remove_side_effects(
+        b,
+        target.side,
+        &[SideEffect::QuickGuard, SideEffect::WideGuard],
+    );
+    if broke {
+        b.delete_volatile(target, Volatile::Stall);
+    }
 }
 
 /// The `Accuracy` event's handlers that make a move hit `target` whatever its accuracy: Glaive

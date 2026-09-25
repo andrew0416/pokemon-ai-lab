@@ -1,0 +1,23 @@
+{
+ "description": "Feint breaks Spiky Shield: Hitmontop's Feint (no contact) removes Chesnaught's Spiky Shield and its stall counter and hits; Weavile's contact Throat Chop then hits Chesnaught without recoil (and throat-chops it).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Throat Chop", "Feint", "Taunt"], "level": 50},
+   {"species": "Hitmontop", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Feint", "Taunt", "Growl"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Chesnaught", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Spiky Shield", "Protect"], "level": 50},
+   {"species": "Toxapex", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Baneful Bunker", "Wide Guard", "Haze"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move throatchop 1, move feint 1", "p2": "move spikyshield, move haze"}
+}

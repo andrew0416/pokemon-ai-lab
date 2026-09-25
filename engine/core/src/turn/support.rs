@@ -29,6 +29,69 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         ],
     ),
     (moves::DETECT, &["onHit", "onPrepareHit"]),
+    // The other shields: the stall `onPrepareHit` / `onHit` like Protect's, `condition.onTryHit`
+    // in `handlers::protect_try_hit`; `condition.onHit` only acts on Z- and Max Moves (off),
+    // `condition.onStart` only logs. Broken by Feint (`handlers::break_protect`).
+    (
+        moves::SPIKY_SHIELD,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "condition.onTryHit",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
+    (
+        moves::BANEFUL_BUNKER,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "condition.onTryHit",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
+    (
+        moves::KINGS_SHIELD,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "condition.onTryHit",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
+    (
+        moves::OBSTRUCT,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "condition.onTryHit",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
+    (
+        moves::SILK_TRAP,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "condition.onTryHit",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
+    (
+        moves::BURNING_BULWARK,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "condition.onTryHit",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
     // Queue readers (`queue.rs`).
     (moves::SUCKER_PUNCH, &["onTry"]),
     (moves::THUNDERCLAP, &["onTry"]),
@@ -1007,8 +1070,8 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         return why("self-destruct");
     }
     let sleep_moves = id == moves::SLEEP_TALK || id == moves::SNORE;
-    if m.breaks_protect
-        || m.smart_target
+    // `breaksProtect` is implemented (`handlers::break_protect`).
+    if m.smart_target
         || (m.calls_move && id != moves::SLEEP_TALK)
         || (m.sleep_usable && !sleep_moves)
         || m.steals_boosts
@@ -1021,7 +1084,18 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     {
         return why("a special mechanic");
     }
-    if m.stalling_move && ![moves::PROTECT, moves::DETECT, moves::ENDURE].contains(&id) {
+    const STALLING_MOVES: [MoveId; 9] = [
+        moves::PROTECT,
+        moves::DETECT,
+        moves::ENDURE,
+        moves::SPIKY_SHIELD,
+        moves::BANEFUL_BUNKER,
+        moves::KINGS_SHIELD,
+        moves::OBSTRUCT,
+        moves::SILK_TRAP,
+        moves::BURNING_BULWARK,
+    ];
+    if m.stalling_move && !STALLING_MOVES.contains(&id) {
         return why("stalling move");
     }
     let flags = m.flags;

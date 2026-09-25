@@ -1086,6 +1086,12 @@ fn try_spread_move_hit<const N: usize>(
             total_damage: 0,
         });
     }
+    // 5. `hitStepBreakProtect` (Feint, Hyperspace Hole): every target left loses its protection.
+    if mv.data.breaks_protect {
+        for &t in &hit {
+            handlers::break_protect(b, t);
+        }
+    }
     // The hit's first step is the move's own `onTryHit` (Champions `spreadMoveHit`: on the
     // first target only; failing fails the move).
     if !handlers::on_try_hit(b, user, hit[0], mv) {
@@ -1201,7 +1207,11 @@ fn stall_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> bool {
     success
 }
 
-/// The TryHit handlers for one target; `false` = the move fails on it.
+/// The TryHit handlers for one target by priority (`compareLeftToRightOrder`: priority, then
+/// target index; each target's handlers only act on that target, its attacker, or nothing that
+/// another target's handlers read): Psychic Terrain, Wide Guard and Quick Guard (4), the
+/// protect family (3, `handlers::protect_try_hit`), then the target's ability and item.
+/// `false` = the move fails on it.
 fn try_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -1209,6 +1219,14 @@ fn try_hit<const N: usize>(
     target: SlotRef,
 ) -> bool {
     if blocked_by_try_hit(b, user, mv, target) {
+        return false;
+    }
+    if handlers::protect_try_hit(b, user, mv, target) {
+        return false;
+    }
+    // Sturdy `onTryHit`: OHKO moves fail (breakable). OHKO moves are refused by `support`
+    // for now; this keeps the immunity when they are added.
+    if mv.data.ohko != Ohko::No && b.ability_unless_broken(target) == abilities::STURDY {
         return false;
     }
     // The target's item `onTryHit` (Safety Goggles against powder).
@@ -1233,6 +1251,8 @@ fn try_hit<const N: usize>(
     !ability_hooks::on_try_hit(b, user, mv, target)
 }
 
+/// The TryHit handlers of priority 4, which only fail the move: Psychic Terrain, Wide Guard,
+/// Quick Guard.
 fn blocked_by_try_hit<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
@@ -1245,9 +1265,6 @@ fn blocked_by_try_hit<const N: usize>(
         && target.side != user.side
         && b.is_grounded(target)
     {
-        return true;
-    }
-    if b.volatile(target, Volatile::Protect).active && mv.data.flags.contains(MoveFlags::PROTECT) {
         return true;
     }
     // Wide Guard / Quick Guard on the target's side (`onTryHit`, priority 4): spread moves, or
@@ -1266,9 +1283,7 @@ fn blocked_by_try_hit<const N: usize>(
             return true;
         }
     }
-    // Sturdy `onTryHit`: OHKO moves fail (breakable). OHKO moves are refused by `support`
-    // for now; this keeps the immunity when they are added.
-    mv.data.ohko != Ohko::No && b.ability_unless_broken(target) == abilities::STURDY
+    false
 }
 
 /// Lightning Rod / Storm Drain `onTryHit`: a move of the absorbed type aimed at the holder

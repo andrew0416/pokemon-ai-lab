@@ -1,0 +1,24 @@
+{
+ "description": "Spiky Shield knocks out a spread attacker mid-move: Garchomp (10 HP) uses Breaking Swipe (contact, all adjacent foes); Chesnaught's Spiky Shield blocks it and its 1/8 recoil drops Garchomp to 0 HP in the TryHit step, but the move still hits Toxapex (damage and the Attack drop) before Garchomp's faint is processed.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 2, "atk": 32, "def": 32}, "moves": ["Breaking Swipe", "Protect"], "level": 50},
+   {"species": "Hitmontop", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Bulk Up", "Taunt", "Growl"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Chesnaught", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Spiky Shield", "Protect"], "level": 50},
+   {"species": "Toxapex", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Baneful Bunker", "Wide Guard", "Haze", "Recover"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Garchomp": {"hp": 10}}},
+ "turn": {"p1": "move breakingswipe, move bulkup", "p2": "move spikyshield, move recover"}
+}

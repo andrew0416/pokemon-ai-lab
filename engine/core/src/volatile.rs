@@ -98,9 +98,22 @@ pub enum Volatile {
     /// Throat Chop's secondary effect (`throatchop`, duration 2, residual order 22): sound moves
     /// can be neither chosen nor used. Added by name, so the dex has no condition id.
     ThroatChop,
+    /// Spiky Shield's single-turn shield (duration 1): like Protect, and a contact move costs
+    /// its user 1/8 of its max HP.
+    SpikyShield,
+    /// Baneful Bunker (duration 1): like Protect, and a contact move poisons its user.
+    BanefulBunker,
+    /// King's Shield (duration 1): blocks damaging moves only; contact lowers Attack by 1.
+    KingsShield,
+    /// Obstruct (duration 1): blocks damaging moves only; contact lowers Defense by 2.
+    Obstruct,
+    /// Silk Trap (duration 1): blocks damaging moves only; contact lowers Speed by 1.
+    SilkTrap,
+    /// Burning Bulwark (duration 1): blocks damaging moves only; contact burns.
+    BurningBulwark,
 }
 
-pub const VOLATILE_COUNT: usize = 30;
+pub const VOLATILE_COUNT: usize = 36;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -134,6 +147,12 @@ impl Volatile {
         Volatile::GlaiveRush,
         Volatile::SparklingAria,
         Volatile::ThroatChop,
+        Volatile::SpikyShield,
+        Volatile::BanefulBunker,
+        Volatile::KingsShield,
+        Volatile::Obstruct,
+        Volatile::SilkTrap,
+        Volatile::BurningBulwark,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -165,6 +184,12 @@ impl Volatile {
             Volatile::Imprison => conditions::IMPRISON,
             Volatile::GlaiveRush => conditions::GLAIVERUSH,
             Volatile::SparklingAria => conditions::SPARKLINGARIA,
+            Volatile::SpikyShield => conditions::SPIKYSHIELD,
+            Volatile::BanefulBunker => conditions::BANEFULBUNKER,
+            Volatile::KingsShield => conditions::KINGSSHIELD,
+            Volatile::Obstruct => conditions::OBSTRUCT,
+            Volatile::SilkTrap => conditions::SILKTRAP,
+            Volatile::BurningBulwark => conditions::BURNINGBULWARK,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -207,6 +232,12 @@ impl Volatile {
             Volatile::GlaiveRush => "glaiverush",
             Volatile::SparklingAria => "sparklingaria",
             Volatile::ThroatChop => "throatchop",
+            Volatile::SpikyShield => "spikyshield",
+            Volatile::BanefulBunker => "banefulbunker",
+            Volatile::KingsShield => "kingsshield",
+            Volatile::Obstruct => "obstruct",
+            Volatile::SilkTrap => "silktrap",
+            Volatile::BurningBulwark => "burningbulwark",
         }
     }
 
@@ -230,7 +261,13 @@ impl Volatile {
             | Volatile::Spotlight
             | Volatile::Roost
             | Volatile::Endure
-            | Volatile::HelpingHand => 1,
+            | Volatile::HelpingHand
+            | Volatile::SpikyShield
+            | Volatile::BanefulBunker
+            | Volatile::KingsShield
+            | Volatile::Obstruct
+            | Volatile::SilkTrap
+            | Volatile::BurningBulwark => 1,
             Volatile::Stall
             | Volatile::LockedMove
             | Volatile::MustRecharge
@@ -327,8 +364,15 @@ impl VolatileState {
 }
 
 /// All volatiles of one slot.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct Volatiles(pub [VolatileState; VOLATILE_COUNT]);
+
+/// Manual: `Default` is only derived for arrays of up to 32 elements.
+impl Default for Volatiles {
+    fn default() -> Self {
+        Volatiles([VolatileState::NONE; VOLATILE_COUNT])
+    }
+}
 
 impl Volatiles {
     pub fn get(&self, volatile: Volatile) -> VolatileState {
@@ -401,6 +445,12 @@ mod tests {
             (Volatile::Taunt, moves::TAUNT),
             (Volatile::Disable, moves::DISABLE),
             (Volatile::ThroatChop, moves::THROAT_CHOP),
+            (Volatile::SpikyShield, moves::SPIKY_SHIELD),
+            (Volatile::BanefulBunker, moves::BANEFUL_BUNKER),
+            (Volatile::KingsShield, moves::KINGS_SHIELD),
+            (Volatile::Obstruct, moves::OBSTRUCT),
+            (Volatile::SilkTrap, moves::SILK_TRAP),
+            (Volatile::BurningBulwark, moves::BURNING_BULWARK),
         ] {
             let data = id.data();
             assert_eq!(

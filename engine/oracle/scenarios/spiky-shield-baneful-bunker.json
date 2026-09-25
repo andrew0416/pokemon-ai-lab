@@ -1,0 +1,23 @@
+{
+ "description": "Spiky Shield and Baneful Bunker: Weavile's contact Throat Chop into Chesnaught's Spiky Shield is blocked and costs Weavile 1/8 of its max HP; Hitmontop's contact Close Combat into Toxapex's Baneful Bunker is blocked (no self drop) and poisons Hitmontop, which then takes poison damage. Both shield users keep a stall counter.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Throat Chop", "Feint", "Taunt"], "level": 50},
+   {"species": "Hitmontop", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Close Combat", "Taunt", "Growl"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Chesnaught", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Spiky Shield", "Protect"], "level": 50},
+   {"species": "Toxapex", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Baneful Bunker", "Wide Guard", "Haze"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move throatchop 1, move closecombat 2", "p2": "move spikyshield, move banefulbunker"}
+}

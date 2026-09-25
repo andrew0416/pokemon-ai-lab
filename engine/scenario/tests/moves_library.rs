@@ -55,3 +55,40 @@ fn throat_chop_fails_a_sound_move_called_by_sleep_talk() {
 fn a_throat_chopped_pokemon_cannot_choose_a_sound_move() {
     assert_invalid_choice("throat-chop-next", 1, 0, move_choice(0, 0), "Throat Chop");
 }
+
+#[test]
+fn spiky_shield_hurts_and_baneful_bunker_poisons_a_contact_attacker() {
+    assert_exact_parity("spiky-shield-baneful-bunker");
+}
+
+#[test]
+fn kings_shield_lowers_attack_and_obstruct_lets_a_status_move_through() {
+    assert_exact_parity("kings-shield-status");
+}
+
+#[test]
+fn obstruct_lowers_defense_and_silk_trap_lowers_speed() {
+    assert_exact_parity("obstruct-silk-trap");
+}
+
+#[test]
+fn burning_bulwark_burns_and_protective_pads_avoid_spiky_shield() {
+    assert_exact_parity("burning-bulwark-pads");
+}
+
+/// The attacker faints to Spiky Shield in the TryHit step and its spread move still hits the
+/// other foe.
+#[test]
+fn spiky_shield_knocks_out_a_spread_attacker_that_still_hits_the_other_foe() {
+    assert_exact_parity("spiky-shield-spread-ko");
+}
+
+#[test]
+fn feint_breaks_protect_and_wide_guard() {
+    assert_exact_parity("feint-wide-guard");
+}
+
+#[test]
+fn feint_breaks_spiky_shield_before_a_contact_move() {
+    assert_exact_parity("feint-spiky-shield");
+}
