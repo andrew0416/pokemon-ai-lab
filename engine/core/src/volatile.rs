@@ -71,9 +71,12 @@ pub enum Volatile {
     /// Imprison, on its user: the user's foes can neither choose nor use a move the user knows
     /// (no duration).
     Imprison,
+    /// Glaive Rush's drawback on its user until its next move attempt (no duration): moves
+    /// against it cannot miss and deal double damage.
+    GlaiveRush,
 }
 
-pub const VOLATILE_COUNT: usize = 22;
+pub const VOLATILE_COUNT: usize = 23;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -99,6 +102,7 @@ impl Volatile {
         Volatile::Disable,
         Volatile::Torment,
         Volatile::Imprison,
+        Volatile::GlaiveRush,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -126,6 +130,7 @@ impl Volatile {
             Volatile::Disable => conditions::DISABLE,
             Volatile::Torment => conditions::TORMENT,
             Volatile::Imprison => conditions::IMPRISON,
+            Volatile::GlaiveRush => conditions::GLAIVERUSH,
             Volatile::PerishSong | Volatile::ProteanUsed => ConditionId::NONE,
         }
     }
@@ -155,6 +160,7 @@ impl Volatile {
             Volatile::Disable => "disable",
             Volatile::Torment => "torment",
             Volatile::Imprison => "imprison",
+            Volatile::GlaiveRush => "glaiverush",
         }
     }
 
@@ -188,7 +194,8 @@ impl Volatile {
             | Volatile::ChoiceLock
             | Volatile::ProteanUsed
             | Volatile::Torment
-            | Volatile::Imprison => 0,
+            | Volatile::Imprison
+            | Volatile::GlaiveRush => 0,
         }
     }
 

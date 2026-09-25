@@ -1,0 +1,85 @@
+{
+ "description": "O32 Glaive Rush: Garchomp's Glaive Rush hits Tyranitar and leaves the glaiverush volatile on Garchomp; Tyranitar's later Stone Edge (80% accuracy) cannot miss it (onAccuracy) and deals double damage (onSourceModifyDamage chainModify 2). The volatile has no duration and stays.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 2,
+     "atk": 32,
+     "def": 32
+    },
+    "moves": [
+     "Glaive Rush",
+     "Trick Room",
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hitmontop",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Bulk Up",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Tyranitar",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Stone Edge",
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Bold",
+    "evs": {
+     "hp": 32,
+     "def": 32,
+     "spd": 2
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move glaiverush 1, move bulkup",
+  "p2": "move stoneedge 1, move calmmind"
+ }
+}

@@ -298,12 +298,17 @@ fn run_move_inner<const N: usize>(
     Ok(MoveStep::Done)
 }
 
-/// The BeforeMove handlers, by priority: sleep and freeze (10), flinch (8), Disable (7),
+/// The BeforeMove handlers, by priority: Glaive Rush (100), recharge (11), sleep and freeze
+/// (10), flinch (8), Disable (7),
 /// Gravity (6), Taunt (5), a foe's Imprison (4), confusion (3), paralysis (1), the Choice lock
 /// (0). `false` = the move is not used (no
 /// PP, no `lastMove`).
 fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) -> bool {
     let pokemon = b.occupant(user).expect("checked");
+    // Glaive Rush (priority 100): the drawback ends at the holder's next move attempt.
+    if b.volatile(user, Volatile::GlaiveRush).active {
+        b.remove_volatile(user, Volatile::GlaiveRush);
+    }
     // mustrecharge (priority 11): the turn is spent recharging.
     if b.volatile(user, Volatile::MustRecharge).active {
         b.remove_volatile(user, Volatile::MustRecharge);
@@ -1210,6 +1215,10 @@ fn accuracy_check<const N: usize>(
     } else if boost < 0 {
         accuracy = accuracy * 3 / (3 - boost);
     }
+    // The `Accuracy` event: the target's Glaive Rush drawback (`onAccuracy`) returns true.
+    if handlers::always_hit(b, target) {
+        return true;
+    }
     b.rng.chance(accuracy.max(0) as u32, 100)
 }
 
@@ -1787,6 +1796,8 @@ fn get_damage<const N: usize>(
     final_mods.extend(item_events::modify_damage_handlers(
         b, user, target, data, type_mod,
     ));
+    // The target's volatiles (`onSourceModifyDamage`: Glaive Rush).
+    final_mods.extend(handlers::volatile_modify_damage(b, target));
     if !critical && target != user && screen_applies(b, target.side, data.category) {
         let modifier = if N > 1 { 2732 } else { MOD_HALF };
         final_mods.push(Handler::global(0, SUB_SIDE_CONDITION, modifier));

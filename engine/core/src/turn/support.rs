@@ -171,6 +171,17 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // Struggle: `onModifyMove` (type `???`) in `handlers::on_modify_move`; `struggleRecoil` in
     // `moves::hit_loop`; chosen only without a usable move (`STRUGGLE_INDEX`).
     (moves::STRUGGLE, &["onModifyMove"]),
+    // Glaive Rush: the `self` volatile's `onBeforeMove` (priority 100) in `moves::before_move`,
+    // `onAccuracy` and `onSourceModifyDamage` in `handlers`; `onStart` only logs.
+    (
+        moves::GLAIVE_RUSH,
+        &[
+            "condition.onAccuracy",
+            "condition.onBeforeMove",
+            "condition.onSourceModifyDamage",
+            "condition.onStart",
+        ],
+    ),
     (moves::GRASSY_GLIDE, &["onModifyPriority"]),
     (moves::LOW_KICK, &["basePowerCallback", "onTryHit"]),
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),

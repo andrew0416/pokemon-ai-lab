@@ -301,6 +301,25 @@ pub(super) fn volatile_base_power<const N: usize>(
     out
 }
 
+/// The `Accuracy` event's handlers that make a move hit `target` whatever its accuracy: Glaive
+/// Rush's drawback (`condition.onAccuracy() { return true; }`).
+pub(super) fn always_hit<const N: usize>(b: &Battle<'_, N>, target: SlotRef) -> bool {
+    b.volatile(target, Volatile::GlaiveRush).active
+}
+
+/// ModifyDamage handlers of the target's volatiles (`onSourceModifyDamage`): Glaive Rush's
+/// drawback `chainModify(2)` (priority 0).
+pub(super) fn volatile_modify_damage<const N: usize>(
+    b: &Battle<'_, N>,
+    target: SlotRef,
+) -> Vec<Handler> {
+    let mut out = Vec::new();
+    if b.volatile(target, Volatile::GlaiveRush).active {
+        out.push(Handler::of(b, target, 0, SUB_CONDITION, 2 * 4096));
+    }
+    out
+}
+
 /// Showdown `this.dex.getEffectiveness(attacking, defending)` for one defending type:
 /// 1 super effective, -1 resisted, 0 otherwise (immunity is checked separately).
 pub(super) fn type_effectiveness(attacking: Type, defending: Type) -> i32 {
