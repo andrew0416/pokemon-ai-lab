@@ -118,6 +118,10 @@ cd engine/py && ../../.venv-doubles/Scripts/maturin.exe build --release -i ../..
 - 가장 큰 공백은 순서대로 날따름·분노가루 유도, 메가진화, 기절 후 교체 결정 단계, 열매·`Update` 이벤트, 피격 특성(`DamagingHit`)·경쟁심/오기, 구애 도구, 연속기·교체기, 앵콜·도발·명령·도우미다.
 - [`reports/seed-champions-check-2026-09-25.md`](reports/seed-champions-check-2026-09-25.md): `D:\poke-teambuilder-seed`의 Champions 자료를 vendor와 대조한 결과(M-C 전수 일치, 메가루카리오Z 특성 칸 오류 1건, npm 0.11.11 기반 M-B 바인딩 stale). seed 디렉터리는 읽기 전용으로만 열었다.
 
+## 작업 배분 (2026-09-25 사용자 지시)
+
+미구현 항목을 원소 단위로 쪼개 [`WORKPLAN.md`](WORKPLAN.md)에 정리했다. 난이도 **상**(상태 모델·명령·열거 구조·행동 큐·결정 단계·이벤트 순서 재현: F1~F19)은 **Fable 5.1**, **중·하**(기존 훅에 핸들러 추가: O1~O106)는 **Opus 5.5**가 맡는다. 각 단위의 완료 조건(지원 표 갱신·오라클 시나리오·fixture·테스트·fmt/clippy/coverage 재생성)과 전제 조건은 그 문서 §0·§4를 따른다. Opus 세션은 "의존" 열이 §4에서 완료된 단위만 시작한다.
+
 ## 다음 할 일 (순서대로)
 
 1. [완료 2026-09-25] `data/champions.json` → Rust 정적 테이블 (`core/src/dex/`).
