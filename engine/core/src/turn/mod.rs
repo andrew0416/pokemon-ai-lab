@@ -25,6 +25,7 @@ mod order;
 mod residual;
 mod support;
 mod switching;
+mod update;
 
 use std::collections::HashMap;
 use std::fmt;
@@ -286,6 +287,8 @@ fn run_replacements<const N: usize>(
         newcomers.push(slot);
     }
     switching::run_switch_in(b, &newcomers)?;
+    // The Update after the batched `runSwitch`, then `endTurn`.
+    update::update_event(b)?;
     residual::end_turn(b);
     Ok(())
 }
@@ -680,6 +683,9 @@ fn run_stage<const N: usize>(
             if b.faint_messages(true) {
                 pending.done = true;
                 queue.clear();
+            } else {
+                // `eachEvent('Update')` after every action.
+                update::update_event(b)?;
             }
         }
         return Ok(());
@@ -687,6 +693,8 @@ fn run_stage<const N: usize>(
 
     residual::residual(b)?;
     if !b.is_over() {
+        residual::check_fainted(b);
+        update::update_event(b)?;
         residual::end_turn(b);
     }
     pending.done = true;

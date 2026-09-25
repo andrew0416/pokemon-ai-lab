@@ -231,7 +231,7 @@ Protect (201), Fake Out (57), Gravity (37), Heat Wave (34), Hypnosis (32), Close
 
 ## 특성
 
-- 전체 321개 중 지원 93개, 등장 효과만 미지원 16개, 미지원 212개.
+- 전체 321개 중 지원 94개, 등장 효과만 미지원 16개, 미지원 211개.
 - 라이브러리 사용 66개 중 지원 35개 (53%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
@@ -338,7 +338,6 @@ Intimidate (30), Grassy Surge (28), Competitive (26), Prankster (25), Technician
 - **미지원: callbacks ["onBeforeSwitchIn", "onDamagingHit", "onEnd", "onFaint"] are not implemented** (1): Illusion
 - **미지원: callbacks ["onChangeBoost", "onEatItem", "onSourceModifyDamage", "onTryEatItem", "onTryHeal"] are not implemented** (1): Ripen
 - **미지원: callbacks ["onCriticalHit", "onDamage", "onEffectiveness", "onStart", "onUpdate", "onWeatherChange"] are not implemented** (1): Ice Face
-- **미지원: callbacks ["onDamage", "onStart"] are not implemented** (1): Gluttony
 - **미지원: callbacks ["onDamage", "onTryHit"] are not implemented** (1): Mountaineer
 - **미지원: callbacks ["onDamage"] are not implemented** (1): Poison Heal
 - **미지원: callbacks ["onDamagingHit", "onSideConditionStart"] are not implemented** (1): Wind Power
@@ -378,25 +377,22 @@ Intimidate (30), Grassy Surge (28), Competitive (26), Prankster (25), Technician
 
 ## 도구
 
-- 전체 583개 중 지원 371개, 등장 효과만 미지원 0개, 미지원 212개.
-- 라이브러리 사용 60개 중 지원 39개 (65%).
+- 전체 583개 중 지원 391개, 등장 효과만 미지원 0개, 미지원 192개.
+- 라이브러리 사용 60개 중 지원 42개 (70%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
 
 | 이름 | 사용 | 상태 | 이유 |
 |---|---:|---|---|
-| Sitrus Berry | 51 | 미지원 | callbacks ["onEat", "onTryEatItem", "onUpdate"] are not implemented |
 | Choice Scarf | 24 | 미지원 | callbacks ["onModifyMove", "onModifySpe", "onStart"] are not implemented |
 | Roseli Berry | 22 | 미지원 | callbacks ["onEat", "onSourceModifyDamage"] are not implemented |
 | Psychic Seed | 13 | 미지원 | callbacks ["onStart", "onTerrainChange"] are not implemented |
 | Grassy Seed | 9 | 미지원 | callbacks ["onStart", "onTerrainChange"] are not implemented |
 | Colbur Berry | 5 | 미지원 | callbacks ["onEat", "onSourceModifyDamage"] are not implemented |
 | Air Balloon | 2 | 미지원 | callbacks ["onAfterSubDamage", "onDamagingHit", "onStart"] are not implemented |
-| Chesto Berry | 2 | 미지원 | callbacks ["onEat", "onUpdate"] are not implemented |
 | Chople Berry | 2 | 미지원 | callbacks ["onEat", "onSourceModifyDamage"] are not implemented |
 | Eject Button | 2 | 미지원 | callbacks ["onAfterMoveSecondary"] are not implemented |
 | Electric Seed | 2 | 미지원 | callbacks ["onStart", "onTerrainChange"] are not implemented |
-| Lum Berry | 2 | 미지원 | callbacks ["onAfterSetStatus", "onEat", "onUpdate"] are not implemented |
 | Occa Berry | 2 | 미지원 | callbacks ["onEat", "onSourceModifyDamage"] are not implemented |
 | Shuca Berry | 2 | 미지원 | callbacks ["onEat", "onSourceModifyDamage"] are not implemented |
 | White Herb | 2 | 미지원 | callbacks ["fling.effect", "onAnyAfterMega", "onAnyAfterMove", "onAnySwitchIn", "onResidual", "onStart", "onUse"] are not implemented |
@@ -409,18 +405,17 @@ Intimidate (30), Grassy Surge (28), Competitive (26), Prankster (25), Technician
 
 ### 라이브러리에서 쓰이고 지원됨
 
-Life Orb (52), Focus Sash (31), Leftovers (23), Miracle Seed (21), Pyroarite (20), Salamencite (15), Gardevoirite (11), Baxcalibrite (9), Charizardite Y (9), Starminite (9), Golisopite (8), Black Glasses (7), Floettite (7), Light Clay (7), Raichunite Y (7), Froslassite (5), Mystic Water (4), Rocky Helmet (4), Garchompite Z (3), Gengarite (3), Metagrossite (3), Swampertite (3), Terrain Extender (3), Fairy Feather (2), Raichunite X (2), Staraptite (2), Tyranitarite (2), Aggronite (1), Blastoisinite (1), Cameruptite (1), Charizardite X (1), Crabominite (1), Damp Rock (1), Delphoxite (1), Dragoninite (1), Glimmoranite (1), Lucarionite Z (1), Sharp Beak (1), Venusaurite (1)
+Life Orb (52), Sitrus Berry (51), Focus Sash (31), Leftovers (23), Miracle Seed (21), Pyroarite (20), Salamencite (15), Gardevoirite (11), Baxcalibrite (9), Charizardite Y (9), Starminite (9), Golisopite (8), Black Glasses (7), Floettite (7), Light Clay (7), Raichunite Y (7), Froslassite (5), Mystic Water (4), Rocky Helmet (4), Garchompite Z (3), Gengarite (3), Metagrossite (3), Swampertite (3), Terrain Extender (3), Chesto Berry (2), Fairy Feather (2), Lum Berry (2), Raichunite X (2), Staraptite (2), Tyranitarite (2), Aggronite (1), Blastoisinite (1), Cameruptite (1), Charizardite X (1), Crabominite (1), Damp Rock (1), Delphoxite (1), Dragoninite (1), Glimmoranite (1), Lucarionite Z (1), Sharp Beak (1), Venusaurite (1)
 
 ### 나머지 미지원 (이유별)
 
 - **미지원: callbacks ["onBasePower", "onTakeItem"] are not implemented** (24): Adamant Crystal, Cornerstone Mask, Draco Plate, Dread Plate, Earth Plate, Fist Plate, Flame Plate, Griseous Core, Hearthflame Mask, Icicle Plate, Insect Plate, Iron Plate, Lustrous Globe, Meadow Plate, Mind Plate, Pixie Plate, Sky Plate, Splash Plate, Spooky Plate, Stone Plate, Toxic Plate, Vile Vial, Wellspring Mask, Zap Plate
 - **미지원: callbacks ["onTakeItem"] are not implemented** (24): Bug Memory, Burn Drive, Chill Drive, Dark Memory, Douse Drive, Dragon Memory, Electric Memory, Fairy Memory, Fighting Memory, Fire Memory, Flying Memory, Ghost Memory, Grass Memory, Ground Memory, Ice Memory, Mail, Poison Memory, Psychic Memory, Rock Memory, Rusted Shield, Rusted Sword, Shock Drive, Steel Memory, Water Memory
-- **미지원: callbacks ["onEat", "onUpdate"] are not implemented** (20): Apicot Berry, Aspear Berry, Bitter Berry, Burnt Berry, Cheri Berry, Ganlon Berry, Ice Berry, Lansat Berry, Leppa Berry, Liechi Berry, Mint Berry, Mystery Berry, Pecha Berry, Persim Berry, Petaya Berry, PRZ Cure Berry, PSN Cure Berry, Rawst Berry, Salac Berry, Starf Berry
 - **미지원: callbacks ["onSourceTryPrimaryHit"] are not implemented** (18): Bug Gem, Dark Gem, Dragon Gem, Electric Gem, Fairy Gem, Fighting Gem, Fire Gem, Flying Gem, Ghost Gem, Grass Gem, Ground Gem, Ice Gem, Normal Gem, Poison Gem, Psychic Gem, Rock Gem, Steel Gem, Water Gem
 - **미지원: callbacks ["onEat", "onSourceModifyDamage"] are not implemented** (10): Babiri Berry, Charti Berry, Chilan Berry, Coba Berry, Haban Berry, Kebia Berry, Payapa Berry, Rindo Berry, Tanga Berry, Wacan Berry
+- **미지원: callbacks ["onEat", "onUpdate"] are not implemented** (9): Bitter Berry, Burnt Berry, Ice Berry, Lansat Berry, Mint Berry, Mystery Berry, PRZ Cure Berry, PSN Cure Berry, Starf Berry
 - **미지원: callbacks ["onBasePower"] are not implemented** (8): Adamant Orb, Griseous Orb, Lustrous Orb, Muscle Band, Pink Bow, Polkadot Bow, Soul Dew, Wise Glasses
 - **미지원: callbacks ["onModifySpe"] are not implemented** (8): Macho Brace, Power Anklet, Power Band, Power Belt, Power Bracer, Power Lens, Power Weight, Quick Powder
-- **미지원: callbacks ["onEat", "onTryEatItem", "onUpdate"] are not implemented** (6): Aguav Berry, Figy Berry, Iapapa Berry, Mago Berry, Oran Berry, Wiki Berry
 - **미지원: callbacks [] are not implemented** (6): Binding Band, Blunder Policy, Full Incense, Grip Claw, Lagging Tail, Ultranecrozium Z
 - **미지원: callbacks ["onDamagingHit"] are not implemented** (5): Absorb Bulb, Cell Battery, Luminous Moss, Snowball, Weakness Policy
 - **미지원: callbacks ["onModifyCritRatio"] are not implemented** (5): Leek, Lucky Punch, Razor Claw, Scope Lens, Stick

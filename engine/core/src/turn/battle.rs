@@ -437,6 +437,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             new: status,
         });
         self.set_status_turns(pokemon, turns);
+        // AfterSetStatus: Lum Berry.
+        super::update::after_set_status(self, target);
         true
     }
 

@@ -45,16 +45,7 @@ const START_EVENTS: [&str; 10] = [
 /// The first handler in `handlers` that can fire during a switch-in. Handlers of an effect's
 /// own condition (`condition.on*`) belong to a volatile that does not exist yet.
 pub fn start_handler(handlers: &'static [&'static str]) -> Option<&'static str> {
-    handlers.iter().copied().find(|h| {
-        let Some(event) = h.strip_prefix("on") else {
-            return false;
-        };
-        let event = ["Ally", "Foe", "Any", "Source"]
-            .iter()
-            .find_map(|p| event.strip_prefix(*p).filter(|e| START_EVENTS.contains(e)))
-            .unwrap_or(event);
-        START_EVENTS.contains(&event)
-    })
+    start_handler_of(handlers)
 }
 
 /// What an ability does when it starts (switch-in, Trace copy, or `setAbility` after a forme
@@ -128,6 +119,12 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onDeductPP", "onStart"],
         StartEffect::None,
     ),
+    // Gluttony's `onStart` only sets a flag the berries read (`update.rs` treats it as set).
+    (
+        abilities::GLUTTONY,
+        &["onDamage", "onStart"],
+        StartEffect::None,
+    ),
     // Status-curing `onUpdate`: nothing to cure on switch-in, because a holder that already
     // has the status is refused (`cured_on_update`).
     (
@@ -198,9 +195,35 @@ pub fn switch_in_supported(ability: AbilityId) -> bool {
     start_effect(ability).is_some()
 }
 
-/// The first switch-in handler of an item that would fire, if any (none is implemented).
+/// The first switch-in handler of an item that would fire and is not implemented. An
+/// `onUpdate` of an item the engine supports on the field (berries, `update.rs`) is
+/// implemented and does not count.
 pub fn item_start_handler(item: ItemId) -> Option<&'static str> {
-    start_handler(item.data().handlers)
+    let handlers = item.data().handlers;
+    match start_handler(handlers) {
+        Some("onUpdate") if item_supported_on_field(item) => {
+            let rest: Vec<&'static str> = handlers
+                .iter()
+                .copied()
+                .filter(|h| *h != "onUpdate")
+                .collect();
+            start_handler_of(&rest)
+        }
+        other => other,
+    }
+}
+
+fn start_handler_of(handlers: &[&'static str]) -> Option<&'static str> {
+    handlers.iter().copied().find(|h| {
+        let Some(event) = h.strip_prefix("on") else {
+            return false;
+        };
+        let event = ["Ally", "Foe", "Any", "Source"]
+            .iter()
+            .find_map(|p| event.strip_prefix(*p).filter(|e| START_EVENTS.contains(e)))
+            .unwrap_or(event);
+        START_EVENTS.contains(&event)
+    })
 }
 
 /// The first switch-in handler of a species that would fire, if any (none is implemented).
@@ -256,7 +279,7 @@ fn switch_in_problem<const N: usize>(
             mon.ability.data().name
         ));
     }
-    None
+    super::update::berry_problem(mon)
 }
 
 /// Showdown `switchIn` without its `runSwitch`: the old occupant leaves (its ability and types

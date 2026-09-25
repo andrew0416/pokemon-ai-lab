@@ -221,6 +221,27 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     ),
     (items::FOCUS_SASH, &["onDamage"]),
     (items::ROCKY_HELMET, &["onDamagingHit"]),
+    // Berries eaten on `Update` (`update.rs`).
+    (items::SITRUS_BERRY, &["onEat", "onTryEatItem", "onUpdate"]),
+    (items::ORAN_BERRY, &["onEat", "onTryEatItem", "onUpdate"]),
+    (items::FIGY_BERRY, &["onEat", "onTryEatItem", "onUpdate"]),
+    (items::WIKI_BERRY, &["onEat", "onTryEatItem", "onUpdate"]),
+    (items::MAGO_BERRY, &["onEat", "onTryEatItem", "onUpdate"]),
+    (items::AGUAV_BERRY, &["onEat", "onTryEatItem", "onUpdate"]),
+    (items::IAPAPA_BERRY, &["onEat", "onTryEatItem", "onUpdate"]),
+    (items::LIECHI_BERRY, &["onEat", "onUpdate"]),
+    (items::GANLON_BERRY, &["onEat", "onUpdate"]),
+    (items::SALAC_BERRY, &["onEat", "onUpdate"]),
+    (items::PETAYA_BERRY, &["onEat", "onUpdate"]),
+    (items::APICOT_BERRY, &["onEat", "onUpdate"]),
+    (items::LUM_BERRY, &["onAfterSetStatus", "onEat", "onUpdate"]),
+    (items::CHERI_BERRY, &["onEat", "onUpdate"]),
+    (items::CHESTO_BERRY, &["onEat", "onUpdate"]),
+    (items::PECHA_BERRY, &["onEat", "onUpdate"]),
+    (items::RAWST_BERRY, &["onEat", "onUpdate"]),
+    (items::ASPEAR_BERRY, &["onEat", "onUpdate"]),
+    (items::PERSIM_BERRY, &["onEat", "onUpdate"]),
+    (items::LEPPA_BERRY, &["onEat", "onUpdate"]),
 ];
 
 /// Abilities with callbacks that are implemented while the holder is on the field.
@@ -252,6 +273,8 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::DEFIANT, &["onAfterEachBoost"]),
     // DamagingHit (`moves::damaging_hit`, F15).
     (abilities::ROUGH_SKIN, &["onDamagingHit"]),
+    // Both handlers only set the flag the pinch berries read (`update.rs`).
+    (abilities::GLUTTONY, &["onDamage", "onStart"]),
     (abilities::IRON_BARBS, &["onDamagingHit"]),
     (abilities::RATTLED, &["onAfterBoost", "onDamagingHit"]),
     (abilities::GALE_WINGS, &["onModifyPriority"]),
@@ -600,6 +623,9 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
                     mon.item.data().name,
                     mon.item.data().handlers
                 ));
+            }
+            if let Some(why) = super::update::berry_problem(mon) {
+                return Err(why);
             }
             if !mon.species.data().handlers.is_empty() {
                 return Err(format!("{name}: species callbacks"));

@@ -802,6 +802,8 @@ fn hit_loop<const N: usize>(
     targets: &[SlotRef],
 ) -> Result<Vec<Hit>, TurnError> {
     let results = spread_move_hit(b, user, mv, targets)?;
+    // `eachEvent('Update')` after the hit's damage (berries eat before faints are processed).
+    super::update::update_event(b)?;
     let user_fainted = b.alive(user).is_none();
     b.faint_messages(user_fainted);
 

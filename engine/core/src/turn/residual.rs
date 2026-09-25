@@ -237,6 +237,8 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<(), Tu
                     weather_event(b, slot, weather);
                 }
             }
+            // `eachEvent('Weather')` ends with an Update (gen 7+).
+            super::update::update_event(b)?;
         }
         Kind::FieldDuration(which) => {
             let mut effect = b.state.field[which as usize];
@@ -420,10 +422,8 @@ pub(crate) fn sort_by_speed<const N: usize>(b: &mut Battle<'_, N>, list: &mut [(
     }
 }
 
-/// `checkFainted` and `endTurn`: fainted Pokémon in active positions get `fnt`; if a side
-/// must replace one, the turn waits for that decision, otherwise it advances.
-pub(crate) fn end_turn<const N: usize>(b: &mut Battle<'_, N>) {
-    // checkFainted: a fainted Pokémon still holding an active position gets `fnt`.
+/// `checkFainted`: a fainted Pokémon still holding an active position gets `fnt`.
+pub(crate) fn check_fainted<const N: usize>(b: &mut Battle<'_, N>) {
     for slot in State::<N>::slot_refs() {
         let Some(party) = b.state.slot(slot).fainted_occupant else {
             continue;
@@ -441,6 +441,10 @@ pub(crate) fn end_turn<const N: usize>(b: &mut Battle<'_, N>) {
             });
         }
     }
+}
+
+/// `endTurn`: the turn advances unless a side must first replace a fainted Pokémon.
+pub(crate) fn end_turn<const N: usize>(b: &mut Battle<'_, N>) {
     let needs_switch = [SideId::One, SideId::Two]
         .into_iter()
         .any(|side| needs_replacement(b, side));
