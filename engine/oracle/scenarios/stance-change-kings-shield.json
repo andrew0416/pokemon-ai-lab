@@ -1,0 +1,26 @@
+{
+ "description": "Stance Change back to the Shield forme: Aegislash-Blade (from its Hex in the setup turn, which Snorlax is immune to: ModifyMove comes first) uses King's Shield, becomes Aegislash before the protection starts, and Snorlax's contact Stomping Tantrum is blocked (Attack -1).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Aegislash", "item": "", "ability": "Stance Change", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Hex", "King's Shield"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Metagross", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Hardy",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Stomping Tantrum", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move hex 2, move calmmind", "move calmmind, move calmmind"]
+ ],
+ "turn": {"p1": "move kingsshield, move calmmind", "p2": "move calmmind, move stompingtantrum 1"}
+}

@@ -941,6 +941,60 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // `moves::prepare_hit_ability`.
     (abilities::PROTEAN, &["onPrepareHit"]),
     (abilities::LIBERO, &["onPrepareHit"]),
+    // F19 formes (`forme.rs`). Disguise: `onDamage` in `Battle::damage`, `onCriticalHit` and
+    // `onEffectiveness` in `moves::get_damage`, `onUpdate` in `update::update_event`.
+    (
+        abilities::DISGUISE,
+        &["onCriticalHit", "onDamage", "onEffectiveness", "onUpdate"],
+    ),
+    // Ice Face: as Disguise for physical moves; `onStart` in `switching::start_ability`,
+    // `onWeatherChange` in `field_events::weather_changed` (`forme::ice_face_restore`).
+    (
+        abilities::ICE_FACE,
+        &[
+            "onCriticalHit",
+            "onDamage",
+            "onEffectiveness",
+            "onStart",
+            "onUpdate",
+            "onWeatherChange",
+        ],
+    ),
+    // Stance Change: `onModifyMove` in `moves::ability_hooks::on_modify_move`.
+    (abilities::STANCE_CHANGE, &["onModifyMove"]),
+    // Zero to Hero: `onSwitchOut` in `forme::on_switch_out` (from `switching::switch_in`),
+    // `onSwitchIn` only announces.
+    (abilities::ZERO_TO_HERO, &["onSwitchIn", "onSwitchOut"]),
+    // Schooling, Shields Down, Hunger Switch: `onResidual` in `residual.rs` (`forme::residual`),
+    // `onStart` in `switching::start_ability` (`forme::on_start`); Shields Down's `onSetStatus`
+    // and `onTryAddVolatile` in `Battle::set_status_blocked` / `add_volatile_blocked`.
+    (abilities::SCHOOLING, &["onResidual", "onStart"]),
+    (
+        abilities::SHIELDS_DOWN,
+        &["onResidual", "onSetStatus", "onStart", "onTryAddVolatile"],
+    ),
+    (abilities::HUNGER_SWITCH, &["onResidual"]),
+    // Zen Mode: `onResidual` and its condition's `onStart` / `onEnd` in `forme::zen_mode`
+    // (`Volatile::ZenMode`); its `onEnd` on leaving the field gives what `clearVolatile` does
+    // (`forme::revert_on_leave`), and no supported ability change can end it on the field.
+    (
+        abilities::ZEN_MODE,
+        &[
+            "condition.onEnd",
+            "condition.onStart",
+            "onEnd",
+            "onResidual",
+        ],
+    ),
+    // Mimicry: `onStart` in `switching::start_ability`, `onTerrainChange` in
+    // `field_events::terrain_changed` (`forme::mimicry`).
+    (abilities::MIMICRY, &["onStart", "onTerrainChange"]),
+    // Battle Bond: both handlers do nothing unless the holder is Greninja-Bond or Greninja-Ash,
+    // which `forme::field_problem` refuses.
+    (
+        abilities::BATTLE_BOND,
+        &["onModifyMove", "onSourceAfterFaint"],
+    ),
     // Damage handlers (`Battle::damage`).
     (abilities::ROCK_HEAD, &["onDamage"]),
     (abilities::MAGIC_GUARD, &["onDamage"]),
@@ -1592,6 +1646,9 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
             if mon.ability == abilities::TRACE {
                 return Err(format!("{name}: Trace still seeking a target"));
             }
+            if let Some(why) = super::forme::field_problem(mon) {
+                return Err(why);
+            }
             if !item_supported_on_field(mon.item) {
                 return Err(format!(
                     "{name}: item {} ({:?})",
@@ -1616,11 +1673,6 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
                     "{name}: substitute volatile {substitute} with {} HP",
                     slot_state.substitute_hp
                 ));
-            }
-            // Disguise and Ice Face check for a substitute themselves (`hitSub`, the formes
-            // unit); behind one they stay refused.
-            if substitute && [abilities::DISGUISE, abilities::ICE_FACE].contains(&mon.ability) {
-                return Err(format!("{name}: Disguise / Ice Face behind a substitute"));
             }
         }
     }
@@ -1763,13 +1815,12 @@ mod tests {
                 assert_eq!(id, abilities::AURA_BREAK);
             }
         }
-        for ability in [
-            abilities::INFILTRATOR,
-            abilities::GULP_MISSILE,
-            abilities::DISGUISE,
-            abilities::ICE_FACE,
-        ] {
+        for ability in [abilities::INFILTRATOR, abilities::GULP_MISSILE] {
             assert!(!ability_supported_on_field(ability), "{ability:?}");
+        }
+        // Disguise and Ice Face read the substitute themselves (`hitSub`, `forme::hits_substitute`).
+        for ability in [abilities::DISGUISE, abilities::ICE_FACE] {
+            assert!(ability_supported_on_field(ability), "{ability:?}");
         }
         for id in [
             moves::SHED_TAIL,
@@ -1785,8 +1836,8 @@ mod tests {
         assert_eq!(move_unsupported(moves::SUBSTITUTE), None);
     }
 
-    /// A substitute is its volatile and its HP together; Disguise and Ice Face behind one are
-    /// refused.
+    /// A substitute is its volatile and its HP together; Disguise behind one is fine (F19 checks
+    /// `hitSub` itself).
     #[test]
     fn substitute_state_is_checked() {
         let mut state = State::<2>::default();
@@ -1814,10 +1865,8 @@ mod tests {
         state.slot_mut(slot).substitute_hp = 0;
         assert!(check_state(&state).is_err(), "the volatile without HP");
         state.slot_mut(slot).substitute_hp = 25;
-        // `check_state` refuses Disguise on the field anyway until the formes unit; the
-        // substitute check keeps refusing it afterwards.
         state.side_mut(SideId::One).party[0].ability = abilities::DISGUISE;
-        assert!(check_state(&state).is_err());
+        assert_eq!(check_state(&state), Ok(()));
     }
 
     /// Purifying Salt's `onTryAddVolatile` only blocks Yawn, which `Battle::add_volatile_blocked`

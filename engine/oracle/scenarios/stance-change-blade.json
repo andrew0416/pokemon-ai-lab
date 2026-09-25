@@ -1,0 +1,23 @@
+{
+ "description": "Stance Change: Aegislash takes the Blade forme (SpA 140 base) for its Hex before the damage, and keeps it for the rest of the turn, so Snorlax's Stomping Tantrum hits Blade's Defense (50 base). A critical hit knocks it out, and the fainted Aegislash is Aegislash again (clearVolatile's setSpecies(baseSpecies)).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Aegislash", "item": "", "ability": "Stance Change", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Hex", "King's Shield"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Metagross", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Hardy",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Stomping Tantrum", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move hex 1, move calmmind", "p2": "move calmmind, move stompingtantrum 1"}
+}

@@ -5,8 +5,9 @@
 //! (ties shuffled).
 //!
 //! Implemented handlers: the four Seeds' `onTerrainChange` (O92), Quark Drive's
-//! `onTerrainChange` and Protosynthesis's `onWeatherChange` (O72). The other `onWeatherChange`
-//! (Forecast, Flower Gift, Ice Face) and `onTerrainChange` (Mimicry) holders are refused on the
+//! `onTerrainChange` and Protosynthesis's `onWeatherChange` (O72), Ice Face's `onWeatherChange`
+//! and Mimicry's `onTerrainChange` (F19, `forme.rs`). The other `onWeatherChange` (Forecast,
+//! Flower Gift) holders are refused on the
 //! field and at switch-in, which a test below pins, so these events cannot meet an
 //! unimplemented handler. Every implemented handler only changes its own holder, so the Speed
 //! order (and its random tie-breaks) cannot change the outcome and is not drawn.
@@ -40,24 +41,28 @@ pub(crate) fn seed_check<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     }
 }
 
-/// Showdown `eachEvent('TerrainChange')`: per Pokémon, Quark Drive's `onTerrainChange` (an
-/// ability, sub-order 7) before its Seed's (an item, 8), which matters for the same holder: the
-/// Seed's boost comes after Quark Drive picked its best stat.
+/// Showdown `eachEvent('TerrainChange')`: per Pokémon, Quark Drive's or Mimicry's
+/// `onTerrainChange` (an ability, sub-order 7) before its Seed's (an item, 8), which matters for
+/// the same holder: the Seed's boost comes after Quark Drive picked its best stat.
 pub(crate) fn terrain_changed<const N: usize>(b: &mut Battle<'_, N>) {
     for slot in b.all_alive() {
         if b.ability(slot) == abilities::QUARK_DRIVE {
             super::abilities::paradox_change(b, slot);
         }
+        // Mimicry (an ability too; a Pokémon has one).
+        super::forme::terrain_changed(b, slot);
         seed_check(b, slot);
     }
 }
 
-/// Showdown `eachEvent('WeatherChange')`: Protosynthesis's `onWeatherChange`.
+/// Showdown `eachEvent('WeatherChange')`: Protosynthesis's and Ice Face's `onWeatherChange`
+/// (`forme::weather_changed`).
 pub(crate) fn weather_changed<const N: usize>(b: &mut Battle<'_, N>) {
     for slot in b.all_alive() {
         if b.ability(slot) == abilities::PROTOSYNTHESIS {
             super::abilities::paradox_change(b, slot);
         }
+        super::forme::weather_changed(b, slot);
     }
 }
 
@@ -89,7 +94,10 @@ mod tests {
             }
         }
         for id in AbilityId::all() {
-            let implemented = id == abilities::PROTOSYNTHESIS || id == abilities::QUARK_DRIVE;
+            let implemented = id == abilities::PROTOSYNTHESIS
+                || id == abilities::QUARK_DRIVE
+                || id == abilities::ICE_FACE
+                || id == abilities::MIMICRY;
             if reacts(id.data().handlers) && !implemented {
                 assert!(
                     !ability_supported_on_field(id) && !switch_in_supported(id),

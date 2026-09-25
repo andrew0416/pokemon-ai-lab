@@ -42,6 +42,9 @@ enum Kind {
     /// A slot condition's `onResidual` on the standing occupant (Wish order 4; Revival
     /// Blessing's duration), slot-condition sub-order 3.
     SlotCondition(PokemonRef, SlotRef, SlotCondition),
+    /// A forme ability's `onResidual` (order 29, ability sub-order): Schooling, Shields Down,
+    /// Hunger Switch (`forme::residual`).
+    Forme(PokemonRef, SlotRef, AbilityId),
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -214,6 +217,16 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                     sub_order: 3,
                     kind: Kind::StatusCure(pokemon, slot, a),
                 }),
+                a if super::forme::has_residual(a) => {
+                    let orders = a.data().event_orders;
+                    out.push(Handler {
+                        order: ability_events::priority(orders, "onResidualOrder") as u32,
+                        speed,
+                        // No `onResidualSubOrder`: the ability's effect-type sub-order.
+                        sub_order: ability_events::SUB_ABILITY,
+                        kind: Kind::Forme(pokemon, slot, a),
+                    });
+                }
                 _ => {}
             }
         }
@@ -265,6 +278,7 @@ impl Kind {
             | Kind::Item(p, s, _)
             | Kind::LeechSeed(p, s)
             | Kind::SlotCondition(p, s, _) => Some((p, s)),
+            Kind::Forme(p, s, _) => Some((p, s)),
             Kind::Weather | Kind::FieldDuration(_) | Kind::SideDuration(..) => None,
         }
     }
@@ -459,6 +473,13 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
                 return Ok(true);
             }
             conditions::leech_seed_residual(b, slot);
+        }
+        Kind::Forme(pokemon, slot, ability) => {
+            // Skipped if the ability changed since the handlers were collected.
+            if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != ability {
+                return Ok(true);
+            }
+            super::forme::residual(b, slot, ability)?;
         }
         Kind::SpeedBoost(pokemon, slot) => {
             // Skipped if the ability changed since the handlers were collected.

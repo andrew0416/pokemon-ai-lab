@@ -2167,11 +2167,8 @@ fn hit_substitute<const N: usize>(
     target: SlotRef,
     hit: u8,
 ) -> Result<Hit, TurnError> {
-    // Disguise and Ice Face skip their `onCriticalHit` / `onEffectiveness` against a hit on the
-    // substitute (`hitSub`); that belongs with their forme handlers.
-    if [abilities::DISGUISE, abilities::ICE_FACE].contains(&b.ability(target)) {
-        return Err(b.unsupported("Disguise / Ice Face behind a substitute"));
-    }
+    // Disguise and Ice Face skip their shields against a hit on the substitute (`hitSub`):
+    // `forme::shields_hit` inside `get_damage`.
     let damage = match get_damage(b, user, mv, target, hit, true)? {
         Planned::Damage(d) => d,
         Planned::Fail | Planned::NoDamage => return Ok(Hit::Blocked),
@@ -2458,7 +2455,8 @@ fn get_damage<const N: usize>(
         (i32::from(data.crit_ratio) + item_events::crit_ratio_bonus(b.item(user)) + focus_energy)
             .clamp(0, 4);
     let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit
-        && !b.side_effect_active(target.side, SideEffect::LuckyChant);
+        && !b.side_effect_active(target.side, SideEffect::LuckyChant)
+        && !super::forme::shields_hit(b, user, target, mv.id);
     let critical = can_crit
         && (data.will_crit
             || match crit_ratio {
@@ -2588,7 +2586,9 @@ fn get_damage<const N: usize>(
     let stab =
         data.force_stab || (mv.move_type != Type::None && attacker.types.contains(&mv.move_type));
     let stab_modifier = ability_events::modify_stab(attacker.ability, stab);
-    // runEffectiveness: per defending type, the chart then the move's onEffectiveness.
+    // runEffectiveness: per defending type, the chart then the move's onEffectiveness, then
+    // the target's ability (Disguise returns 0, which ends the event) and item.
+    let neutral = super::forme::shields_hit(b, user, target, mv.id);
     let type_mod: i32 = defender
         .types
         .iter()
@@ -2596,6 +2596,9 @@ fn get_damage<const N: usize>(
         .map(|&t| {
             let chart = handlers::type_effectiveness(mv.move_type, t);
             let by_move = handlers::on_effectiveness(mv.id, t, chart);
+            if neutral {
+                return 0;
+            }
             item_events::on_effectiveness(b, target, mv.move_type, by_move)
         })
         .sum::<i32>()

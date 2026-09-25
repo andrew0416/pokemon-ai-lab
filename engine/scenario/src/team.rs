@@ -32,6 +32,9 @@ pub fn display_name(set: &TeamSet) -> String {
 pub fn build_pokemon(set: &TeamSet) -> Result<(Pokemon, MemberMeta), SetProblem> {
     let species = SpeciesId::from_name(&set.species)
         .ok_or_else(|| SetProblem::UnknownSpecies(set.species.clone()))?;
+    if lab_engine::turn::temporary_forme_base(species).is_some() {
+        return Err(SetProblem::TemporaryForme(set.species.clone()));
+    }
 
     let item = match set.item.as_deref() {
         None | Some("") => ItemId::NONE,

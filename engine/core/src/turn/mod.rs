@@ -21,6 +21,7 @@ mod conditions;
 pub mod coverage;
 mod diff;
 mod field_events;
+mod forme;
 mod history;
 mod items;
 pub mod legal;
@@ -53,6 +54,7 @@ use order::{ORDER_MEGA, ORDER_MOVE, ORDER_SWITCH};
 use queue::{Action, ActionKind};
 
 pub use abilities::trapped;
+pub use forme::temporary_forme_base;
 pub use legal::legal_joint_actions;
 pub use lock::{locked_move, Locked, RECHARGE_INDEX, STRUGGLE_INDEX};
 pub use moves::{takes_target, valid_target_loc};

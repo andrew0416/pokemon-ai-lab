@@ -1,0 +1,23 @@
+{
+ "description": "Corviknight's Dual Wingbeat (contact, two hits) against Mimikyu with Rocky Helmet: the first hit is absorbed (0 damage, yet Rocky Helmet still hurts Corviknight), the Update after it busts the disguise (1/8 of max HP), and the second hit deals normal damage (critical hits possible) with a second Rocky Helmet.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Corviknight", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Dual Wingbeat", "Calm Mind"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Mimikyu", "item": "Rocky Helmet", "ability": "Disguise", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Swords Dance"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move dualwingbeat 1, move calmmind", "p2": "move swordsdance, move calmmind"}
+}

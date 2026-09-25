@@ -96,6 +96,9 @@ pub(crate) enum StartEffect {
     Paradox,
     /// Wind Rider: Atk +1 if Tailwind is up on the holder's side.
     WindRider,
+    /// The forme abilities' `onStart` (`forme::on_start`): Ice Face, Schooling, Shields Down,
+    /// Mimicry.
+    Forme,
 }
 
 /// Abilities with an implemented start, with the exact handler lists they were implemented
@@ -226,6 +229,52 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
     (
         abilities::THERMAL_EXCHANGE,
         &["onDamagingHit", "onSetStatus", "onUpdate"],
+        StartEffect::None,
+    ),
+    // F19 Disguise: its `onUpdate` only acts on a Mimikyu whose ability absorbed a move's damage
+    // (`forme::on_update`), never right after a switch-in.
+    (
+        abilities::DISGUISE,
+        &["onCriticalHit", "onDamage", "onEffectiveness", "onUpdate"],
+        StartEffect::None,
+    ),
+    // F19 Ice Face (`onSwitchInPriority: -2`): its face back in snow (`forme::ice_face_restore`).
+    (
+        abilities::ICE_FACE,
+        &[
+            "onCriticalHit",
+            "onDamage",
+            "onEffectiveness",
+            "onStart",
+            "onUpdate",
+            "onWeatherChange",
+        ],
+        StartEffect::Forme,
+    ),
+    // F19 Schooling and Shields Down (`onSwitchInPriority: -1`): the forme for the HP
+    // (`forme::on_start`); their `onResidual` is in `residual.rs`.
+    (
+        abilities::SCHOOLING,
+        &["onResidual", "onStart"],
+        StartEffect::Forme,
+    ),
+    (
+        abilities::SHIELDS_DOWN,
+        &["onResidual", "onSetStatus", "onStart", "onTryAddVolatile"],
+        StartEffect::Forme,
+    ),
+    // F19 Mimicry (`onSwitchInPriority: -1`): `onStart` runs its `onTerrainChange`
+    // (`forme::on_start`); the TerrainChange event in `field_events::terrain_changed`.
+    (
+        abilities::MIMICRY,
+        &["onStart", "onTerrainChange"],
+        StartEffect::Forme,
+    ),
+    // F19 Zero to Hero: `onSwitchIn` only announces the Hero forme; `onSwitchOut` in
+    // `forme::on_switch_out`.
+    (
+        abilities::ZERO_TO_HERO,
+        &["onSwitchIn", "onSwitchOut"],
         StartEffect::None,
     ),
     // O68 switch-in abilities (`start_ability`).
@@ -455,6 +504,11 @@ fn switch_in_problem<const N: usize>(
             mon.ability.data().handlers
         ));
     }
+    if on_field {
+        if let Some(why) = super::forme::field_problem(mon) {
+            return Some(why);
+        }
+    }
     if on_field && !item_supported_on_field(mon.item) {
         return Some(format!(
             "{name}: item {} ({:?})",
@@ -499,7 +553,8 @@ fn switch_in_problem<const N: usize>(
 
 /// Showdown `switchIn` without its `runSwitch`: a healthy old occupant runs `BeforeSwitchOut`
 /// (no implemented handler), the gen 5+ `eachEvent('Update')` and `SwitchOut` (Regenerator,
-/// Natural Cure: `abilities::on_switch_out`); the old occupant leaves (its ability and types
+/// Natural Cure: `abilities::on_switch_out`; Zero to Hero: `forme::on_switch_out`); the old
+/// occupant leaves (its ability and types
 /// revert, its slot state resets); a fainted occupant still holding the position loses `fnt`
 /// (`oldActive.status = ''`); the newcomer takes the position.
 pub(crate) fn switch_in<const N: usize>(
@@ -519,6 +574,7 @@ pub(crate) fn switch_in<const N: usize>(
         if b.mon(outgoing).hp > 0 {
             super::update::update_event(b)?;
             super::abilities::on_switch_out(b, slot);
+            super::forme::on_switch_out(b, slot);
         }
         b.clear_volatile(outgoing);
     }
@@ -798,6 +854,7 @@ pub(crate) fn start_ability<const N: usize>(
                 super::abilities::wind_rider_boost(b, slot);
             }
         }
+        StartEffect::Forme => super::forme::on_start(b, slot, ability)?,
     }
     Ok(())
 }
@@ -871,14 +928,20 @@ fn once_per_battle<const N: usize>(
     Ok(())
 }
 
-/// Showdown `eachEvent('WeatherChange')`: every active Pokémon's `onWeatherChange` handlers,
-/// in Speed order. None is implemented (Forecast, Flower Gift, Ice Face, Protosynthesis), so
-/// the event does nothing, and a handler that would run makes it unsupported.
+/// Showdown `eachEvent('WeatherChange', airlock | cloudnine)`: every active Pokémon's
+/// `onWeatherChange` handlers, in Speed order. Ice Face's returns at once for a source with
+/// `suppressWeather`; no other is implemented (Forecast, Flower Gift, Protosynthesis), so the
+/// event does nothing, and a handler that would run makes it unsupported.
 fn weather_change<const N: usize>(b: &Battle<'_, N>) -> Result<(), TurnError> {
     for slot in b.all_alive() {
         let mon = b.slot_mon(slot).expect("alive");
+        let ability_handlers = if mon.ability == abilities::ICE_FACE {
+            &[][..]
+        } else {
+            mon.ability.data().handlers
+        };
         let handlers = [
-            (mon.ability.data().name, mon.ability.data().handlers),
+            (mon.ability.data().name, ability_handlers),
             (mon.item.data().name, mon.item.data().handlers),
             (mon.species.data().name, mon.species.data().handlers),
         ];

@@ -121,24 +121,22 @@ Protect (201), Fake Out (57), Encore (42), Gravity (37), Heat Wave (34), U-turn 
 
 ## 특성
 
-- 전체 321개 중 지원 201개, 등장 효과만 미지원 0개, 미지원 120개.
-- 라이브러리 사용 66개 중 지원 64개 (97%).
+- 전체 321개 중 지원 211개, 등장 효과만 미지원 0개, 미지원 110개.
+- 라이브러리 사용 66개 중 지원 66개 (100%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
 
 | 이름 | 사용 | 상태 | 이유 |
 |---|---:|---|---|
-| Disguise | 4 | 미지원 | callbacks ["onCriticalHit", "onDamage", "onEffectiveness", "onUpdate"] are not implemented |
-| Stance Change | 1 | 미지원 | callbacks ["onModifyMove"] are not implemented |
 
 ### 라이브러리에서 쓰이고 지원됨
 
-Intimidate (30), Grassy Surge (28), Competitive (26), Prankster (25), Technician (23), Unburden (22), Unnerve (20), Psychic Surge (16), Thermal Exchange (14), Adaptability (12), Rough Skin (12), Trace (11), Blaze (9), Defiant (9), Good as Gold (9), Hustle (9), Lightning Rod (9), Natural Cure (9), Cursed Body (8), Drizzle (8), Emergency Exit (8), Torrent (8), Flower Veil (7), Rock Head (6), Sand Stream (6), Stamina (6), Flash Fire (5), Snow Warning (5), Chlorophyll (4), Inner Focus (4), Levitate (4), Protean (4), Sharpness (4), Armor Tail (3), Clear Body (3), Pixilate (3), Weak Armor (3), Hospitality (2), Iron Fist (2), Magic Guard (2), Mold Breaker (2), Pressure (2), Regenerator (2), Sand Rush (2), Sturdy (2), Bulletproof (1), Electromorphosis (1), Flame Body (1), Gale Wings (1), Gooey (1), Hyper Cutter (1), Libero (1), Magic Bounce (1), Poison Touch (1), Rain Dish (1), Seed Sower (1), Solar Power (1), Solid Rock (1), Speed Boost (1), Swift Swim (1), Thick Fat (1), Toxic Debris (1), Unaware (1), Volt Absorb (1)
+Intimidate (30), Grassy Surge (28), Competitive (26), Prankster (25), Technician (23), Unburden (22), Unnerve (20), Psychic Surge (16), Thermal Exchange (14), Adaptability (12), Rough Skin (12), Trace (11), Blaze (9), Defiant (9), Good as Gold (9), Hustle (9), Lightning Rod (9), Natural Cure (9), Cursed Body (8), Drizzle (8), Emergency Exit (8), Torrent (8), Flower Veil (7), Rock Head (6), Sand Stream (6), Stamina (6), Flash Fire (5), Snow Warning (5), Chlorophyll (4), Disguise (4), Inner Focus (4), Levitate (4), Protean (4), Sharpness (4), Armor Tail (3), Clear Body (3), Pixilate (3), Weak Armor (3), Hospitality (2), Iron Fist (2), Magic Guard (2), Mold Breaker (2), Pressure (2), Regenerator (2), Sand Rush (2), Sturdy (2), Bulletproof (1), Electromorphosis (1), Flame Body (1), Gale Wings (1), Gooey (1), Hyper Cutter (1), Libero (1), Magic Bounce (1), Poison Touch (1), Rain Dish (1), Seed Sower (1), Solar Power (1), Solid Rock (1), Speed Boost (1), Stance Change (1), Swift Swim (1), Thick Fat (1), Toxic Debris (1), Unaware (1), Volt Absorb (1)
 
 ### 나머지 미지원 (이유별)
 
 - **미지원: callbacks ["onModifyAtk", "onModifySpA"] are not implemented** (7): Defeatist, Dragon's Maw, Fire Mane, Rocky Payload, Stakeout, Steelworker, Transistor
-- **미지원: callbacks ["onResidual"] are not implemented** (7): Bad Dreams, Harvest, Healer, Hunger Switch, Moody, Pickup, Power Construct
+- **미지원: callbacks ["onResidual"] are not implemented** (6): Bad Dreams, Harvest, Healer, Moody, Pickup, Power Construct
 - **미지원: callbacks [] are not implemented** (6): Corrosion, Dancer, Early Bird, Multitype, Persistent, RKS System
 - **미지원: callbacks ["onModifyMove"] are not implemented** (5): Infiltrator, Long Reach, Propeller Tail, Stalwart, Stench
 - **미지원: callbacks ["onSourceAfterFaint"] are not implemented** (5): Beast Boost, Chilling Neigh, Eelevate, Grim Neigh, Moxie
@@ -159,7 +157,6 @@ Intimidate (30), Grassy Surge (28), Competitive (26), Prankster (25), Technician
 - **미지원: callbacks ["onModifySpA"] are not implemented** (2): Minus, Plus
 - **미지원: callbacks ["onModifyWeight"] are not implemented** (2): Heavy Metal, Light Metal
 - **미지원: callbacks ["onSwitchIn"] are not implemented** (2): Imposter, Tera Shift
-- **미지원: callbacks ["condition.onEnd", "condition.onStart", "onEnd", "onResidual"] are not implemented** (1): Zen Mode
 - **미지원: callbacks ["onAfterMoveSecondarySelf"] are not implemented** (1): Magician
 - **미지원: callbacks ["onAfterTerastallization"] are not implemented** (1): Teraform Zero
 - **미지원: callbacks ["onAllyAfterUseItem"] are not implemented** (1): Symbiosis
@@ -181,7 +178,6 @@ Intimidate (30), Grassy Surge (28), Competitive (26), Prankster (25), Technician
 - **미지원: callbacks ["onBeforeMove", "onStart"] are not implemented** (1): Truant
 - **미지원: callbacks ["onBeforeSwitchIn", "onDamagingHit", "onEnd", "onFaint"] are not implemented** (1): Illusion
 - **미지원: callbacks ["onChangeBoost", "onEatItem", "onSourceModifyDamage", "onTryEatItem", "onTryHeal"] are not implemented** (1): Ripen
-- **미지원: callbacks ["onCriticalHit", "onDamage", "onEffectiveness", "onStart", "onUpdate", "onWeatherChange"] are not implemented** (1): Ice Face
 - **미지원: callbacks ["onDamage", "onTryHit"] are not implemented** (1): Mountaineer
 - **미지원: callbacks ["onDamage"] are not implemented** (1): Poison Heal
 - **미지원: callbacks ["onDamagingHit", "onSourceTryPrimaryHit"] are not implemented** (1): Gulp Missile
@@ -195,17 +191,12 @@ Intimidate (30), Grassy Surge (28), Competitive (26), Prankster (25), Technician
 - **미지원: callbacks ["onHit"] are not implemented** (1): Anger Point
 - **미지원: callbacks ["onMaybeTrapPokemon", "onTrapPokemon"] are not implemented** (1): Run Away
 - **미지원: callbacks ["onModifyAtk", "onStart"] are not implemented** (1): Orichalcum Pulse
-- **미지원: callbacks ["onModifyMove", "onSourceAfterFaint"] are not implemented** (1): Battle Bond
 - **미지원: callbacks ["onModifySpA", "onStart"] are not implemented** (1): Hadron Engine
 - **미지원: callbacks ["onModifySpe"] are not implemented** (1): Surge Surfer
 - **미지원: callbacks ["onPrepareHit", "onSourceModifySecondaries"] are not implemented** (1): Parental Bond
-- **미지원: callbacks ["onResidual", "onSetStatus", "onStart", "onTryAddVolatile"] are not implemented** (1): Shields Down
-- **미지원: callbacks ["onResidual", "onStart"] are not implemented** (1): Schooling
 - **미지원: callbacks ["onSourceModifyAccuracy"] are not implemented** (1): Compound Eyes
 - **미지원: callbacks ["onSourceTryHeal"] are not implemented** (1): Liquid Ooze
-- **미지원: callbacks ["onStart", "onTerrainChange"] are not implemented** (1): Mimicry
 - **미지원: callbacks ["onStart", "onWeatherChange"] are not implemented** (1): Forecast
-- **미지원: callbacks ["onSwitchIn", "onSwitchOut"] are not implemented** (1): Zero to Hero
 - **미지원: callbacks ["onTakeItem"] are not implemented** (1): Sticky Hold
 - **미지원: callbacks ["onWeatherModifyDamage"] are not implemented** (1): Mega Sol
 

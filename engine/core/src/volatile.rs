@@ -160,9 +160,13 @@ pub enum Volatile {
     /// [`crate::state::Slot::substitute_hp`], set by its `onStart` and lowered by the moves it
     /// takes (`onTryPrimaryHit`); it ends at 0.
     Substitute,
+    /// Zen Mode's own condition (`zenmode`, no duration; WORKPLAN F19): its start changes the
+    /// holder to its Zen forme and its end back (`turn/forme.rs`). It exists exactly while the
+    /// holder is in a Zen forme.
+    ZenMode,
 }
 
-pub const VOLATILE_COUNT: usize = 55;
+pub const VOLATILE_COUNT: usize = 56;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -221,6 +225,7 @@ impl Volatile {
         Volatile::PhantomForce,
         Volatile::ShadowForce,
         Volatile::Substitute,
+        Volatile::ZenMode,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -241,7 +246,8 @@ impl Volatile {
             Volatile::FlashFire
             | Volatile::Unburden
             | Volatile::Protosynthesis
-            | Volatile::QuarkDrive => ConditionId::NONE,
+            | Volatile::QuarkDrive
+            | Volatile::ZenMode => ConditionId::NONE,
             Volatile::ChoiceLock => conditions::CHOICELOCK,
             Volatile::Roost => conditions::ROOST,
             Volatile::Yawn => conditions::YAWN,
@@ -345,6 +351,7 @@ impl Volatile {
             Volatile::PhantomForce => "phantomforce",
             Volatile::ShadowForce => "shadowforce",
             Volatile::Substitute => "substitute",
+            Volatile::ZenMode => "zenmode",
         }
     }
 
@@ -416,6 +423,7 @@ impl Volatile {
             | Volatile::ElectroShot
             | Volatile::SkyAttack
             | Volatile::Substitute => 0,
+            Volatile::ZenMode => 0,
         }
     }
 
@@ -610,6 +618,7 @@ mod tests {
                         | Volatile::Dive
                         | Volatile::PhantomForce
                         | Volatile::ShadowForce
+                        | Volatile::ZenMode
                 ));
                 continue;
             }

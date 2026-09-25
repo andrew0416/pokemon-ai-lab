@@ -1,0 +1,26 @@
+{
+ "description": "Ice Face only absorbs physical moves: a confused Eiscue's self-hit (a Move effect without a category) deals its damage and keeps the face. Blissey (slower) confused it in the setup turn.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Confuse Ray", "Calm Mind"], "level": 50},
+   {"species": "Metagross", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Eiscue", "item": "", "ability": "Ice Face", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Swords Dance"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move confuseray 1, move calmmind", "move swordsdance, move calmmind"]
+ ],
+ "turn": {"p1": "move calmmind, move calmmind", "p2": "move swordsdance, move calmmind"}
+}

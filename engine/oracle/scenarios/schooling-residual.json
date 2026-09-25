@@ -1,0 +1,23 @@
+{
+ "description": "Schooling: Wishiwashi takes the School forme when it switches in at full HP (onStart), is hit by Rillaboom's super-effective Power Whip, and at the end of the turn (onResidual, order 29) returns to the Solo forme if its HP is at or below a quarter; a critical hit can knock it out, and the fainted Wishiwashi is Solo again.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Rillaboom", "item": "", "ability": "Honey Gather", "nature": "Hardy",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Power Whip", "Calm Mind"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Wishiwashi", "item": "", "ability": "Schooling", "nature": "Hardy",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Hippowdon", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move powerwhip 1, move calmmind", "p2": "move calmmind, move calmmind"}
+}

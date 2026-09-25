@@ -69,6 +69,10 @@ pub enum SetProblem {
     },
     UnknownGender(String),
     UnknownTeraType(String),
+    /// A temporary in-battle forme as the set's species (`lab_engine::turn::temporary_forme_base`):
+    /// Showdown would keep it as the base species, which the engine's state cannot tell apart
+    /// from the forme reached in battle.
+    TemporaryForme(String),
 }
 
 fn side_name(side: SideId) -> &'static str {
@@ -147,6 +151,12 @@ impl fmt::Display for SetProblem {
             }
             SetProblem::UnknownGender(s) => write!(f, "unknown gender {s:?} (M, F or N)"),
             SetProblem::UnknownTeraType(s) => write!(f, "unknown Tera type {s:?}"),
+            SetProblem::TemporaryForme(s) => {
+                write!(
+                    f,
+                    "{s:?} is a temporary in-battle forme, not a set's species"
+                )
+            }
         }
     }
 }

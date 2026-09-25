@@ -1,0 +1,23 @@
+{
+ "description": "Mimicry back to the base types: Stunfisk-Galar is Electric in Pincurchin's Electric Terrain; Weavile's Ice Spinner ends the terrain (clearTerrain → TerrainChange), Stunfisk-Galar is Ground/Steel again, and Raichu's Thunderbolt then fails against the Ground type.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Ice Spinner", "Calm Mind"], "level": 50},
+   {"species": "Raichu", "item": "", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Thunderbolt", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Stunfisk-Galar", "item": "", "ability": "Mimicry", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50},
+   {"species": "Pincurchin", "item": "", "ability": "Electric Surge", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move icespinner 2, move thunderbolt 1", "p2": "move calmmind, move calmmind"}
+}
