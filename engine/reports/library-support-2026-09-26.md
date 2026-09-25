@@ -5,58 +5,49 @@
 ## 요약
 
 - 팀 28개, 로더 통과 28개.
-- 세 선출 모두 시작 + 방어 턴이 실행되는 팀: 24개 (거부 4개).
-- 선출 84개(팀 × 3) 중 시작 + 방어 턴이 실행되는 선출: 80개.
-- 모든 검사(기술·메가진화 포함) 통과: 11개.
+- 세 선출 모두 시작 + 방어 턴이 실행되는 팀: 27개 (거부 1개).
+- 선출 84개(팀 × 3) 중 시작 + 방어 턴이 실행되는 선출: 83개.
+- 모든 검사(기술·메가진화 포함) 통과: 22개.
 
 ## 거부 이유 (팀 수순)
 
 | 이유 | 팀 수 | 팀 (포켓몬) |
 |---|---:|---|
-| move Throat Chop: callbacks ["condition.onBeforeMove", "condition.onDisableMove", "condition.onEnd", "condition.onModifyMove", "condition.onStart", "secondaries.onHit", "secondary.onHit"] are not implemented | 7 | balance-ddee, crown-tachyon112358, kickoff-beedrillvgc, kickoff-hollowedhollowed, kickoff-jhinting, kickoff-joshawott, kickoff-prongs |
 | move Double Shock: callbacks ["onTryMove", "self.onHit"] are not implemented | 2 | kickoff-shadezero, kickoff-thepostmanp |
 | move Electro Shot: callbacks ["onTryMove"] are not implemented | 2 | kickoff-aveornot, kickoff-gwendolyte |
 | move Revival Blessing: callbacks ["onTryHit"] are not implemented | 2 | kickoff-shadezero, kickoff-thepostmanp |
-| move Spiky Shield: callbacks ["condition.onHit", "condition.onStart", "condition.onTryHit", "onHit", "onPrepareHit"] are not implemented | 2 | kickoff-joshawott, kickoff-thepostmanp |
 | item Miracle Berry switch-in handler onUpdate | 1 | crown-ryukeivgc (Rillaboom) |
-| move Baneful Bunker: callbacks ["condition.onHit", "condition.onStart", "condition.onTryHit", "onHit", "onPrepareHit"] are not implemented | 1 | kickoff-conkledonk |
-| move Belly Drum: callbacks ["onHit"] are not implemented | 1 | kickoff-joshawott |
-| move Feint: a special mechanic | 1 | psy-sand-udon |
-| move Fissure: OHKO | 1 | perish-mrada |
-| move Gigaton Hammer: can't use twice | 1 | kickoff-prongs |
-| move Infestation: volatile partiallytrapped | 1 | kickoff-conkledonk |
-| move Psychic Fangs: callbacks ["onTryHit"] are not implemented | 1 | psy-lello |
 | move Solar Beam: callbacks ["onBasePower", "onTryMove"] are not implemented | 1 | kickoff-balmung |
 
 ## 팀별
 
 | 팀 | 라이브러리 상태 | 시작+방어 턴 | 전체 | 거부 검사 수 | 불법 선택 | 첫 거부 |
 |---|---|---|---|---:|---:|---|
-| balance-ddee | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 3456 Throat Chop: move Throat Chop: callbacks ["condition.onBeforeMove", "condition.onDisableMove", "condition.onEnd", "condition.onModifyMove", "condition.onStart", "secondaries.onHit", "secondary.onHit"] are not implemented |
+| balance-ddee | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | coaching-panda | validated | 통과 | 통과 | 0 | 0 |  |
 | crown-cecil9 | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | crown-eternalton | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | crown-ryukeivgc | needs-review | 거부 | 거부 | 1 | 0 | 5612 시작: Rillaboom: item Miracle Berry switch-in handler onUpdate |
-| crown-tachyon112358 | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 3456 Throat Chop: move Throat Chop: callbacks ["condition.onBeforeMove", "condition.onDisableMove", "condition.onEnd", "condition.onModifyMove", "condition.onStart", "secondaries.onHit", "secondary.onHit"] are not implemented |
+| crown-tachyon112358 | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-aveornot | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 3456 Electro Shot: move Electro Shot: callbacks ["onTryMove"] are not implemented |
 | kickoff-balmung | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 1234 Solar Beam: move Solar Beam: callbacks ["onBasePower", "onTryMove"] are not implemented |
-| kickoff-beedrillvgc | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 3456 Throat Chop: move Throat Chop: callbacks ["condition.onBeforeMove", "condition.onDisableMove", "condition.onEnd", "condition.onModifyMove", "condition.onStart", "secondaries.onHit", "secondary.onHit"] are not implemented |
-| kickoff-conkledonk | source-complete-sp-unknown | 거부 | 거부 | 7 | 0 | 5612 방어 턴: move Infestation: volatile partiallytrapped |
+| kickoff-beedrillvgc | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
+| kickoff-conkledonk | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-gerard | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-gwendolyte | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 3456 Electro Shot: move Electro Shot: callbacks ["onTryMove"] are not implemented |
-| kickoff-hollowedhollowed | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 5612 Throat Chop: move Throat Chop: callbacks ["condition.onBeforeMove", "condition.onDisableMove", "condition.onEnd", "condition.onModifyMove", "condition.onStart", "secondaries.onHit", "secondary.onHit"] are not implemented |
-| kickoff-jhinting | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 1234 Throat Chop: move Throat Chop: callbacks ["condition.onBeforeMove", "condition.onDisableMove", "condition.onEnd", "condition.onModifyMove", "condition.onStart", "secondaries.onHit", "secondary.onHit"] are not implemented |
-| kickoff-joshawott | source-complete-sp-unknown | 거부 | 거부 | 8 | 0 | 3456 Throat Chop: move Throat Chop: callbacks ["condition.onBeforeMove", "condition.onDisableMove", "condition.onEnd", "condition.onModifyMove", "condition.onStart", "secondaries.onHit", "secondary.onHit"] are not implemented |
+| kickoff-hollowedhollowed | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
+| kickoff-jhinting | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
+| kickoff-joshawott | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-karlin22 | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
-| kickoff-prongs | source-complete-sp-unknown | 통과 | 거부 | 2 | 0 | 1234 Throat Chop: move Throat Chop: callbacks ["condition.onBeforeMove", "condition.onDisableMove", "condition.onEnd", "condition.onModifyMove", "condition.onStart", "secondaries.onHit", "secondary.onHit"] are not implemented |
+| kickoff-prongs | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-sableyevgc | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-shadezero | source-complete-sp-unknown | 통과 | 거부 | 2 | 0 | 5612 Double Shock: move Double Shock: callbacks ["onTryMove", "self.onHit"] are not implemented |
-| kickoff-thepostmanp | source-complete-sp-unknown | 거부 | 거부 | 9 | 0 | 1234 Double Shock: move Double Shock: callbacks ["onTryMove", "self.onHit"] are not implemented |
+| kickoff-thepostmanp | source-complete-sp-unknown | 통과 | 거부 | 2 | 0 | 1234 Double Shock: move Double Shock: callbacks ["onTryMove", "self.onHit"] are not implemented |
 | kickoff-thosewhoknow | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-wolfey | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
-| perish-mrada | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 1234 Fissure: move Fissure: OHKO |
+| perish-mrada | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | psy-cona | validated | 통과 | 통과 | 0 | 0 |  |
-| psy-lello | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 1234 Psychic Fangs: move Psychic Fangs: callbacks ["onTryHit"] are not implemented |
+| psy-lello | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | psy-nihat | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
-| psy-sand-udon | validated | 통과 | 거부 | 1 | 0 | 3456 Feint: move Feint: a special mechanic |
+| psy-sand-udon | validated | 통과 | 통과 | 0 | 0 |  |
 | sand-owen | validated | 통과 | 통과 | 0 | 0 |  |
