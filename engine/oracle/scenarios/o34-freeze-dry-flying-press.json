@@ -1,0 +1,23 @@
+{
+ "description": "O34 Lapras Freeze-Dry (Champions: no freeze chance) into Water/Flying Gyarados: Water counts as weak, 4x. Hawlucha Flying Press (Fighting + Flying effectiveness) into Bug/Fighting Heracross: 2x instead of 0.5x. Gyarados and Heracross Bulk Up.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Lapras", "item": "Leftovers", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Freeze-Dry", "Protect"], "level": 50},
+   {"species": "Heracross", "item": "Leftovers", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Bulk Up", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Gyarados", "item": "Leftovers", "ability": "Honey Gather", "nature": "Calm",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Bulk Up", "Protect"], "level": 50},
+   {"species": "Hawlucha", "item": "Life Orb", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Flying Press", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move freezedry 1, move bulkup", "p2": "move bulkup, move flyingpress 2"}
+}

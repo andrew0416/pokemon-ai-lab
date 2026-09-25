@@ -1,0 +1,23 @@
+{
+ "description": "O34 Lapras Freeze-Dry into Water/Ground Swampert (4x); Hawlucha Flying Press into Ghost/Poison Gengar stays immune (Fighting's immunity is checked before effectiveness). Swampert and Gengar Bulk Up.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Lapras", "item": "Leftovers", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spe": 2}, "moves": ["Freeze-Dry", "Protect"], "level": 50},
+   {"species": "Gengar", "item": "Leftovers", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Bulk Up", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Swampert", "item": "Leftovers", "ability": "Honey Gather", "nature": "Calm",
+    "evs": {"hp": 32, "spd": 32, "def": 2}, "moves": ["Bulk Up", "Protect"], "level": 50},
+   {"species": "Hawlucha", "item": "Life Orb", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Flying Press", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move freezedry 1, move bulkup", "p2": "move bulkup, move flyingpress 2"}
+}

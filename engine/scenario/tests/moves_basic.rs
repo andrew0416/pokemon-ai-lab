@@ -35,3 +35,13 @@ fn o5_thunder_accuracy_50_in_sun_then_gravity() {
 fn o5_blizzard_never_misses_in_snow() {
     assert_exact_parity("o5-blizzard-snow");
 }
+
+#[test]
+fn o34_freeze_dry_and_flying_press_effectiveness() {
+    assert_exact_parity("o34-freeze-dry-flying-press");
+}
+
+#[test]
+fn o34_freeze_dry_4x_and_flying_press_still_immune() {
+    assert_exact_parity("o34-freeze-dry-flying-press-immune");
+}

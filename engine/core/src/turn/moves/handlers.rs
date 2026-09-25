@@ -5,7 +5,7 @@
 //! handled here gets the event's neutral result.
 
 use crate::damage::MOD_ONE_POINT_FIVE;
-use crate::dex::{abilities, items, moves};
+use crate::dex::{abilities, items, moves, MoveId, Type, TypeRelation};
 use crate::field::{FieldEffect, Terrain, Weather};
 use crate::state::SlotRef;
 
@@ -90,5 +90,27 @@ pub(super) fn on_base_power<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove) 
         // Psyblade: `if (this.field.isTerrain('electricterrain')) return this.chainModify(1.5);`
         moves::PSYBLADE if b.terrain() == Terrain::Electric => Some(MOD_ONE_POINT_FIVE),
         _ => None,
+    }
+}
+
+/// Showdown `this.dex.getEffectiveness(attacking, defending)` for one defending type:
+/// 1 super effective, -1 resisted, 0 otherwise (immunity is checked separately).
+pub(super) fn type_effectiveness(attacking: Type, defending: Type) -> i32 {
+    match attacking.against(defending) {
+        TypeRelation::Super => 1,
+        TypeRelation::Resist => -1,
+        _ => 0,
+    }
+}
+
+/// The move's `onEffectiveness` for one defending type (`runEffectiveness`), given the
+/// chart's `type_mod` for it.
+pub(super) fn on_effectiveness(id: MoveId, defending: Type, type_mod: i32) -> i32 {
+    match id {
+        // Freeze-Dry: `if (type === 'Water') return 1;`
+        moves::FREEZE_DRY if defending == Type::Water => 1,
+        // Flying Press: `return typeMod + this.dex.getEffectiveness('Flying', type);`
+        moves::FLYING_PRESS => type_mod + type_effectiveness(Type::Flying, defending),
+        _ => type_mod,
     }
 }

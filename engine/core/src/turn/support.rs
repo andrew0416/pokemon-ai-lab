@@ -40,6 +40,8 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // Still rejected for its confusion secondary; shares Thunder's handler.
     (moves::HURRICANE, &["onModifyMove"]),
     (moves::THUNDER, &["onModifyMove"]),
+    (moves::FREEZE_DRY, &["onEffectiveness"]),
+    (moves::FLYING_PRESS, &["onEffectiveness"]),
     (
         moves::GRAVITY,
         &[

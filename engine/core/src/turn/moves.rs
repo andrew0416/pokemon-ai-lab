@@ -835,13 +835,14 @@ fn get_damage<const N: usize>(
         _ => MOD_ONE,
     };
     let stab = data.force_stab || attacker.types.contains(&data.move_type);
+    // runEffectiveness: per defending type, the chart then the move's onEffectiveness.
     let type_mod: i32 = defender
         .types
         .iter()
-        .map(|&t| match data.move_type.against(t) {
-            TypeRelation::Super => 1,
-            TypeRelation::Resist => -1,
-            _ => 0,
+        .filter(|&&t| t != Type::None)
+        .map(|&t| {
+            let chart = handlers::type_effectiveness(data.move_type, t);
+            handlers::on_effectiveness(mv.id, t, chart)
         })
         .sum::<i32>()
         .clamp(-6, 6);
