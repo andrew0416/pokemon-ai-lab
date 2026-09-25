@@ -674,6 +674,10 @@ fn try_hit<const N: usize>(
     if blocked_by_try_hit(b, user, mv, target) {
         return false;
     }
+    // The target's item `onTryHit` (Safety Goggles against powder).
+    if item_events::try_hit_blocks(b, user, mv.data, target) {
+        return false;
+    }
     // Dry Skin `onTryHit` (breakable): another Pok챕mon's Water move heals the holder by 1/4
     // of its max HP (nothing at full HP) and fails on it (`return null`).
     if mv.data.move_type == Type::Water
@@ -938,6 +942,10 @@ fn spread_move_hit<const N: usize>(
             continue;
         }
         for secondary in data.secondaries.iter().chain(&mv.added_secondary) {
+            // ModifySecondaries: the target's item (Covert Cloak) drops some before the roll.
+            if !item_events::keeps_secondary(b, t, secondary) {
+                continue;
+            }
             if !b.rng.chance(u32::from(secondary.chance), 100) {
                 continue;
             }

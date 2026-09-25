@@ -5,11 +5,21 @@
 //! `mod.rs` call it where Showdown runs that event. An item not handled here gets the event's
 //! neutral result. Items are read straight from the holder: Klutz holding an item is refused
 //! by `support` (Showdown's `ignoringItem`, work plan F17), so no handler here checks it.
+//!
+//! Refused on purpose (not in `support`'s tables):
+//! - Metronome: its condition keeps `lastMove` and `numConsecutive` and reads
+//!   `moveLastTurnResult` (work plan F13); the item's `onStart` adds it at switch-in.
+//! - Custap Berry: eats the berry when the actions are queued.
+//! - Clear Amulet: `onTryBoost` needs the boost events (F16).
+//! - Utility Umbrella: its effect is `pokemon.effectiveWeather()`, read at many sites (weather
+//!   damage modifier, Chlorophyll / Swift Swim, Solar Power, Rain Dish, Dry Skin, Hydration,
+//!   Leaf Guard, ...); only the freeze immunity and the move handlers read it so far.
+//! - Air Balloon's pop is refused at the hit ([`on_damaging_hit`], F15); grounding is done.
 
 use crate::damage::{MOD_HALF, MOD_ONE_POINT_FIVE};
 use crate::dex::{
     abilities, conditions, items, moves, ItemId, MoveCategory, MoveData, MoveFlags, MoveId,
-    Secondary, Stat, Type, NO_BOOSTS,
+    Secondary, Stat, Type, TypeImmunities, NO_BOOSTS,
 };
 use crate::field::FieldEffect;
 use crate::instruction::Instruction;
@@ -381,6 +391,44 @@ pub(crate) fn on_damage<const N: usize>(
     } else {
         amount
     }
+}
+
+// ---- immunities and secondaries ----------------------------------------------------------------
+
+/// The holder's item `onImmunity` (`runStatusImmunity`): Safety Goggles make it immune to
+/// sandstorm damage and powder (and hail, which is not a supported weather).
+pub(crate) fn grants_immunity(item: ItemId, immunity: TypeImmunities) -> bool {
+    item == items::SAFETY_GOGGLES
+        && (immunity == TypeImmunities::SANDSTORM || immunity == TypeImmunities::POWDER)
+}
+
+/// The target's item `onTryHit` (priority 0): Safety Goggles stop another Pokémon's powder
+/// move against a holder that is not immune by type (`this.dex.getImmunity('powder')`),
+/// `return null`. `true` = the move fails on the target.
+pub(crate) fn try_hit_blocks<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    data: &MoveData,
+    target: SlotRef,
+) -> bool {
+    b.item(target) == items::SAFETY_GOGGLES
+        && data.flags.contains(MoveFlags::POWDER)
+        && target != user
+        && b.slot_mon(target).is_some_and(|m| {
+            !m.types
+                .iter()
+                .any(|t| t.immunities().contains(TypeImmunities::POWDER))
+        })
+}
+
+/// The target's item `onModifySecondaries` (`secondaries`, before each roll): Covert Cloak keeps
+/// only the secondaries with a `self` effect. `false` = the secondary is not rolled.
+pub(crate) fn keeps_secondary<const N: usize>(
+    b: &Battle<'_, N>,
+    target: SlotRef,
+    secondary: &Secondary,
+) -> bool {
+    b.item(target) != items::COVERT_CLOAK || secondary.self_boosts != NO_BOOSTS
 }
 
 // ---- after the move, on hit, residual ----------------------------------------------------------

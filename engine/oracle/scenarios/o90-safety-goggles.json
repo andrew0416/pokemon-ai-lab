@@ -1,0 +1,26 @@
+{
+ "description": "O90 Safety Goggles in a sandstorm: Volcarona's Rage Powder does not draw Safety Goggles Hydreigon's Dragon Pulse (powder immunity), which hits Safety Goggles Dragonite; Amoonguss's Spore (Grass: not redirected) fails on Dragonite (onTryHit). At the end of the turn the sandstorm hurts Amoonguss and Volcarona but neither Goggles holder.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Amoonguss", "item": "", "ability": "Honey Gather", "nature": "Relaxed",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Spore", "Protect"], "level": 50},
+   {"species": "Hydreigon", "item": "Safety Goggles", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 2, "spa": 32, "spe": 32}, "moves": ["Dragon Pulse", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Dragonite", "item": "Safety Goggles", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Volcarona", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 32, "spe": 2, "spd": 32}, "moves": ["Rage Powder", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "field": {"weather": "sandstorm", "weatherDuration": 3}
+ },
+ "turn": {"p1": "move spore 1, move dragonpulse 1", "p2": "move swordsdance, move ragepowder"}
+}

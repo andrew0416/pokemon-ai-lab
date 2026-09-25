@@ -183,6 +183,23 @@ fn a_damaging_hit_on_an_air_balloon_is_refused() {
     assert!(why.contains("Air Balloon"), "{why}");
 }
 
+// ---- O90 Safety Goggles / Covert Cloak ---------------------------------------------------------
+
+#[test]
+fn safety_goggles_powder_redirection_and_sand_match_showdown() {
+    assert_exact_parity("o90-safety-goggles");
+}
+
+#[test]
+fn covert_cloak_blocks_flinch_secondaries_matches_showdown() {
+    assert_exact_parity("o90-covert-cloak");
+}
+
+#[test]
+fn covert_cloak_keeps_self_secondaries_matches_showdown() {
+    assert_exact_parity("o90-covert-cloak-self-secondary");
+}
+
 /// A Pokémon locked by its Choice item cannot choose another move (`choicelock`'s
 /// `onDisableMove`).
 #[test]

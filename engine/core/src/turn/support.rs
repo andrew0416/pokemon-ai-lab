@@ -250,6 +250,10 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     // Drawn when the actions are queued (first stage, `mod.rs`); Lagging Tail and Full Incense
     // have only a constant `onFractionalPriority` (`items::constant_fractional_tenths`).
     (items::QUICK_CLAW, &["onFractionalPriority"]),
+    // `onImmunity` in `Battle::status_immune`, `onTryHit` in the move's TryHit step.
+    (items::SAFETY_GOGGLES, &["onImmunity", "onTryHit"]),
+    // `onModifySecondaries` in the secondaries loop (`items::keeps_secondary`).
+    (items::COVERT_CLOAK, &["onModifySecondaries"]),
     // Choice items (`items.rs`): the stat in `order.rs`/`moves.rs`, `onModifyMove` adds the
     // `choicelock` volatile, `onStart` only removes a lock a newcomer cannot have.
     (

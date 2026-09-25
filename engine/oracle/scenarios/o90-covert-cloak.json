@@ -1,0 +1,23 @@
+{
+ "description": "O90 Covert Cloak: King's Rock Garchomp's Dragon Claw into Covert Cloak Kingambit rolls no flinch (the added secondary is filtered), so Kingambit's Swords Dance always happens; Excadrill's Iron Head into Covert Cloak Snorlax rolls no 30% flinch. Snorlax uses Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Garchomp", "item": "King's Rock", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Dragon Claw", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "Covert Cloak", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Swords Dance", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Kingambit", "item": "Covert Cloak", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Excadrill", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Iron Head", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move dragonclaw 1, move swordsdance", "p2": "move swordsdance, move ironhead 2"}
+}

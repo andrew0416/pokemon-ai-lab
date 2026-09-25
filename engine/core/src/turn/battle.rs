@@ -209,6 +209,10 @@ impl<'a, const N: usize> Battle<'a, N> {
         if mon.types.iter().any(|t| t.immunities().contains(immunity)) {
             return true;
         }
+        // The item's `onImmunity` (Safety Goggles: sandstorm, powder).
+        if super::items::grants_immunity(mon.item, immunity) {
+            return true;
+        }
         // Immunity handlers; each returns false for one immunity id, so order is irrelevant.
         if immunity == TypeImmunities::SANDSTORM {
             // Sand Rush: `onImmunity(type) { if (type === 'sandstorm') return false; }`.
