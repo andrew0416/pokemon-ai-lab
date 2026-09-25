@@ -199,5 +199,13 @@
 | O25 | 완료 2026-09-26 (Opus) | `c72f340` | `o25-heal-sun/sand/snow-full/clear` | 날씨별 회복 `onHit` |
 | O26 | 완료 2026-09-26 (Opus) | `643f140` | `o26-icy-wind`, `o26-electroweb`, `o26-snarl` | 코드 변경 없음, 오라클 확인 |
 | O24 | 완료 2026-09-26 (Opus) | `50c4eed` | `o24-clear-smog`, `o24-haze`, `o24-boost-swaps`, `o24-topsy-turvy-fail` | Haze `onHitField`; Clear Smog·Topsy-Turvy·Power/Guard/Heart Swap `onHit`. 스피드스왑 제외 |
+| O65 | 완료 2026-09-26 (Opus) | `ff43a7c` | `o65-status-block`, `o65-comatose-sweet-veil`, `o65-leaf-guard-sun` / `tests/abilities_status.rs` | `onSetStatus`·`onAllySetStatus`·`onImmunity`(마그마의무장)·`onTryAddVolatile`. `onUpdate` 치료는 `cured_on_update`로 "도달 불가" 처리(그 상태로 필드에 있으면 거부). 클리어스모그(정화의소금) 고스트 반감은 O45, 열교환 공격 상승은 F15, 플라워베일은 F16 대기 |
+| O61 | 완료 2026-09-26 (Opus) | `824fb04` | `o61-gale-wings-triage`, `o61-gale-wings-damaged`, `o61-stall` | 질풍날개·힐링시프트 `onModifyPriority`, 스톨 분수 우선도(`ActionKind::Move.fractional_tenths`, 큐 등록 시 고정) |
+| O62 | 완료 2026-09-26 (Opus) | `2d22309` | `o62-pressure` | `onDeductPP`(`pressureTargets` 규칙) |
+| O52 | 완료 2026-09-26 (Opus) | `9002719` | `o52-rock-head-magic-guard` | `onDamage`, `DamageSource::Recoil` |
+| O53 | 완료 2026-09-26 (Opus) | `233fd5c` | `o53-sturdy`, `o53-shell-armor` | 옹골참 `onDamage`(기합의띠보다 먼저)·`onTryHit`; 특성 무시 기술(`ability_unless_broken`)이 조가비갑주·옹골참을 관통 |
+| O50 | 완료 2026-09-26 (Opus) | `265fcc3` | `o50-residual-abilities` | 가속·탈피(33/100)·촉촉바디 `onResidual`. 가속은 `activeTurns` 대신 `move_actions > 0` 사용(현 메커닉에서 동치) |
+| O51 | 완료 2026-09-26 (Opus) | `28dabdf` | `o51-rain`, `o51-sun`, `o51-snow` | 젖은접시·아이스바디·태양의힘·건조피부 `onWeather`(날씨 단계가 모든 날씨에 실행), 태양의힘 `onModifySpA`, 건조피부 `onTryHit`·`onSourceBasePower` |
+| (병합) | 2026-09-26 | `04ec529` | | Opus 브랜치 `worktree-agent-af6b4f7b6acc3b6b1` 병합. 충돌 5개 파일 수동 해소: `status_immune`(쾌청+우산+마그마의무장 통합), `ActionKind::Move.fractional_tenths`+`Mega`, `try_hit`에 피뢰침·저수 흡수 통합(`ability_unless_broken`), `switch_in.rs` 표 |
 | (병합) | 2026-09-26 | `2e0be94` | | Opus 브랜치 `worktree-agent-a334fdc160394f916` 병합(충돌 없음). 새 파일 `core/src/turn/moves/handlers.rs`(이벤트별 함수), `ActiveMove.accuracy` |
 | F7 | 완료 2026-09-26 | `2e604ec` | `followme-hypnosis`, `ragepowder-grass`, `lightningrod-foe`, `lightningrod-ally` / `scenario/tests/redirect.rs` | `moves.rs::redirect_target`(`RedirectTarget` priority event: 우선도→속도, 첫 유효 대상), 휘발 `FollowMe`·`RagePowder`·`Spotlight`(1턴), 피뢰침·저수 `onTryHit`(흡수 + 특공 +1). 스포트라이트는 코드만(시나리오 없음). 같은 우선도·속도의 유효 유도자 둘(Showdown은 `effectOrder`)은 `Unsupported`. 스토커·프로펠러테일은 미지원(`onModifyMove`) |

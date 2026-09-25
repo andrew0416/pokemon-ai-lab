@@ -31,7 +31,7 @@ use crate::gimmick::{mega_evolution, Gimmick};
 use crate::instruction::Instruction;
 use crate::state::{Pokemon, SlotRef};
 
-use super::battle::Battle;
+use super::battle::{cured_on_update, Battle};
 use super::support::ability_supported_on_field;
 use super::switching::{run_start_effect, start_effect, switch_in_supported};
 use super::TurnError;
@@ -80,6 +80,16 @@ pub(crate) fn run_mega_evo<const N: usize>(
     let mega = mega_target(mon).map_err(|why| b.unsupported(why))?;
     let old = mon.forme();
     let new = mon.forme_as(mega);
+    // The Update after this action would cure the status with the new ability (a sleeping
+    // Mewtwo becoming Mewtwo-Mega-Y with Insomnia); no Update event yet, see `cured_on_update`.
+    if cured_on_update(new.ability, mon.status) {
+        return Err(b.unsupported(format!(
+            "{}: {} would cure {:?} on the next Update",
+            mega.data().name,
+            new.ability.data().name,
+            mon.status
+        )));
+    }
     let hp = mon.hp;
     let new_hp = new.hp_after(old.max_hp, hp);
     // The old ability's `End`: none of the abilities implemented on the field has one.

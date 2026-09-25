@@ -231,8 +231,8 @@ Protect (201), Fake Out (57), Gravity (37), Heat Wave (34), Hypnosis (32), Close
 
 ## 특성
 
-- 전체 321개 중 지원 23개, 등장 효과만 미지원 16개, 미지원 282개.
-- 라이브러리 사용 66개 중 지원 12개 (18%).
+- 전체 321개 중 지원 47개, 등장 효과만 미지원 16개, 미지원 258개.
+- 라이브러리 사용 66개 중 지원 20개 (30%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
 
@@ -255,7 +255,6 @@ Protect (201), Fake Out (57), Gravity (37), Heat Wave (34), Hypnosis (32), Close
 | Emergency Exit | 8 | 미지원 | callbacks ["onEmergencyExit"] are not implemented |
 | Torrent | 8 | 미지원 | callbacks ["onModifyAtk", "onModifySpA"] are not implemented |
 | Flower Veil | 7 | 미지원 | callbacks ["onAllySetStatus", "onAllyTryAddVolatile", "onAllyTryBoost"] are not implemented |
-| Rock Head | 6 | 미지원 | callbacks ["onDamage"] are not implemented |
 | Stamina | 6 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
 | Flash Fire | 5 | 미지원 | callbacks ["condition.onEnd", "condition.onModifyAtk", "condition.onModifySpA", "condition.onStart", "onEnd", "onTryHit"] are not implemented |
 | Disguise | 4 | 미지원 | callbacks ["onCriticalHit", "onDamage", "onEffectiveness", "onUpdate"] are not implemented |
@@ -268,25 +267,18 @@ Protect (201), Fake Out (57), Gravity (37), Heat Wave (34), Hypnosis (32), Close
 | Weak Armor | 3 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
 | Hospitality | 2 | 등장 효과 미구현 | ["onStart"] |
 | Iron Fist | 2 | 미지원 | callbacks ["onBasePower"] are not implemented |
-| Magic Guard | 2 | 미지원 | callbacks ["onDamage"] are not implemented |
 | Mold Breaker | 2 | 미지원 | callbacks ["onModifyMove", "onStart"] are not implemented |
-| Pressure | 2 | 미지원 | callbacks ["onDeductPP", "onStart"] are not implemented |
 | Regenerator | 2 | 미지원 | callbacks ["onSwitchOut"] are not implemented |
-| Sturdy | 2 | 미지원 | callbacks ["onDamage", "onTryHit"] are not implemented |
 | Bulletproof | 1 | 미지원 | callbacks ["onTryHit"] are not implemented |
 | Electromorphosis | 1 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
 | Flame Body | 1 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
-| Gale Wings | 1 | 미지원 | callbacks ["onModifyPriority"] are not implemented |
 | Gooey | 1 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
 | Hyper Cutter | 1 | 미지원 | callbacks ["onTryBoost"] are not implemented |
 | Libero | 1 | 미지원 | callbacks ["onPrepareHit"] are not implemented |
 | Magic Bounce | 1 | 미지원 | callbacks ["onAllyTryHitSide", "onTryHit"] are not implemented |
 | Poison Touch | 1 | 미지원 | callbacks ["onSourceDamagingHit"] are not implemented |
-| Rain Dish | 1 | 미지원 | callbacks ["onWeather"] are not implemented |
 | Seed Sower | 1 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
-| Solar Power | 1 | 미지원 | callbacks ["onModifySpA", "onWeather"] are not implemented |
 | Solid Rock | 1 | 미지원 | callbacks ["onSourceModifyDamage"] are not implemented |
-| Speed Boost | 1 | 미지원 | callbacks ["onResidual"] are not implemented |
 | Stance Change | 1 | 미지원 | callbacks ["onModifyMove"] are not implemented |
 | Thick Fat | 1 | 미지원 | callbacks ["onSourceModifyAtk", "onSourceModifySpA"] are not implemented |
 | Toxic Debris | 1 | 미지원 | callbacks ["onDamagingHit"] are not implemented |
@@ -295,19 +287,19 @@ Protect (201), Fake Out (57), Gravity (37), Heat Wave (34), Hypnosis (32), Close
 
 ### 라이브러리에서 쓰이고 지원됨
 
-Intimidate (30), Grassy Surge (28), Prankster (25), Psychic Surge (16), Lightning Rod (9), Drizzle (8), Sand Stream (6), Snow Warning (5), Chlorophyll (4), Levitate (4), Sand Rush (2), Swift Swim (1)
+Intimidate (30), Grassy Surge (28), Prankster (25), Psychic Surge (16), Lightning Rod (9), Drizzle (8), Rock Head (6), Sand Stream (6), Snow Warning (5), Chlorophyll (4), Levitate (4), Magic Guard (2), Pressure (2), Sand Rush (2), Sturdy (2), Gale Wings (1), Rain Dish (1), Solar Power (1), Speed Boost (1), Swift Swim (1)
 
 ### 나머지 미지원 (이유별)
 
 - **미지원: callbacks ["onDamagingHit"] are not implemented** (18): Aftermath, Cotton Down, Cute Charm, Effect Spore, Innards Out, Iron Barbs, Justified, Lingering Aroma, Mummy, Perish Body, Poison Point, Sand Spit, Spicy Spray, Static, Steam Engine, Tangling Hair, Wandering Spirit, Water Compaction
 - **등장 효과 미구현: ["onStart"]** (15): Anticipation, Costar, Curious Medicine, Dauntless Shield, Download, Embody Aspect (Cornerstone), Embody Aspect (Hearthflame), Embody Aspect (Teal), Embody Aspect (Wellspring), Forewarn, Frisk, Intrepid Sword, Klutz, Screen Cleaner, Supersweet Syrup
 - **미지원: callbacks ["onModifyAtk", "onModifySpA"] are not implemented** (9): Defeatist, Dragon's Maw, Fire Mane, Overgrow, Rocky Payload, Stakeout, Steelworker, Swarm, Transistor
-- **미지원: callbacks ["onResidual"] are not implemented** (9): Bad Dreams, Harvest, Healer, Hunger Switch, Hydration, Moody, Pickup, Power Construct, Shed Skin
 - **미지원: callbacks ["onBasePower"] are not implemented** (8): Analytic, Flare Boost, Mega Launcher, Reckless, Rivalry, Strong Jaw, Tough Claws, Toxic Boost
 - **미지원: callbacks ["onModifyMove"] are not implemented** (7): Infiltrator, Long Reach, Propeller Tail, Serene Grace, Skill Link, Stalwart, Stench
+- **미지원: callbacks ["onResidual"] are not implemented** (7): Bad Dreams, Harvest, Healer, Hunger Switch, Moody, Pickup, Power Construct
 - **미지원: callbacks ["onSourceModifyDamage"] are not implemented** (7): Aura Guard, Filter, Fluffy, Ice Scales, Multiscale, Prism Armor, Shadow Shield
-- **미지원: callbacks [] are not implemented** (7): Corrosion, Dancer, Early Bird, Multitype, Persistent, RKS System, Stall
 - **미지원: callbacks ["onTryHit"] are not implemented** (6): Earth Eater, Motor Drive, Telepathy, Water Absorb, Well-Baked Body, Wonder Guard
+- **미지원: callbacks [] are not implemented** (6): Corrosion, Dancer, Early Bird, Multitype, Persistent, RKS System
 - **미지원: callbacks ["onBasePower", "onModifyType"] are not implemented** (5): Aerilate, Dragonize, Galvanize, Normalize, Refrigerate
 - **미지원: callbacks ["onSourceAfterFaint"] are not implemented** (5): Beast Boost, Chilling Neigh, Eelevate, Grim Neigh, Moxie
 - **미지원: callbacks ["onModifyMove", "onTryBoost"] are not implemented** (4): Illuminate, Keen Eye, Mind's Eye, Scrappy
@@ -319,7 +311,6 @@ Intimidate (30), Grassy Surge (28), Prankster (25), Psychic Surge (16), Lightnin
 - **미지원: callbacks ["onModifyAtk"] are not implemented** (3): Guts, Huge Power, Pure Power
 - **미지원: callbacks ["onModifyDamage"] are not implemented** (3): Neuroforce, Sniper, Tinted Lens
 - **미지원: callbacks ["onModifyDef"] are not implemented** (3): Fur Coat, Grass Pelt, Marvel Scale
-- **미지원: callbacks ["onSetStatus", "onUpdate"] are not implemented** (3): Immunity, Limber, Water Veil
 - **미지원: callbacks ["onAfterMoveSecondary", "onDamage", "onTryEatItem"] are not implemented** (2): Anger Shell, Berserk
 - **미지원: callbacks ["onAfterMoveSecondary"] are not implemented** (2): Color Change, Pickpocket
 - **미지원: callbacks ["onAllyFaint"] are not implemented** (2): Power of Alchemy, Receiver
@@ -336,7 +327,6 @@ Intimidate (30), Grassy Surge (28), Prankster (25), Psychic Surge (16), Lightnin
 - **미지원: callbacks ["onModifySpA"] are not implemented** (2): Minus, Plus
 - **미지원: callbacks ["onModifySpe"] are not implemented** (2): Quick Feet, Surge Surfer
 - **미지원: callbacks ["onModifyWeight"] are not implemented** (2): Heavy Metal, Light Metal
-- **미지원: callbacks ["onSetStatus", "onTryAddVolatile", "onUpdate"] are not implemented** (2): Insomnia, Vital Spirit
 - **미지원: callbacks ["onSwitchIn"] are not implemented** (2): Imposter, Tera Shift
 - **미지원: callbacks ["condition.onEnd", "condition.onModifyAtk", "condition.onModifyDef", "condition.onModifySpA", "condition.onModifySpD", "condition.onModifySpe", "condition.onStart", "onEnd", "onStart", "onTerrainChange"] are not implemented** (1): Quark Drive
 - **미지원: callbacks ["condition.onEnd", "condition.onModifyAtk", "condition.onModifyDef", "condition.onModifySpA", "condition.onModifySpD", "condition.onModifySpe", "condition.onStart", "onEnd", "onStart", "onWeatherChange"] are not implemented** (1): Protosynthesis
@@ -347,9 +337,7 @@ Intimidate (30), Grassy Surge (28), Prankster (25), Psychic Surge (16), Lightnin
 - **미지원: callbacks ["onAfterTerastallization"] are not implemented** (1): Teraform Zero
 - **미지원: callbacks ["onAllyAfterUseItem"] are not implemented** (1): Symbiosis
 - **미지원: callbacks ["onAllyModifyAtk", "onAllyModifySpD", "onStart", "onWeatherChange"] are not implemented** (1): Flower Gift
-- **미지원: callbacks ["onAllySetStatus", "onAllyTryAddVolatile"] are not implemented** (1): Sweet Veil
 - **미지원: callbacks ["onAllySetStatus", "onAnySwitchIn", "onSetStatus", "onStart", "onUpdate"] are not implemented** (1): Pastel Veil
-- **미지원: callbacks ["onAllyTryAddVolatile"] are not implemented** (1): Aroma Veil
 - **미지원: callbacks ["onAnyAccuracy", "onAnyInvulnerability"] are not implemented** (1): No Guard
 - **미지원: callbacks ["onAnyAfterMega", "onAnyAfterMove", "onAnyAfterTerastallization", "onAnySwitchIn", "onEnd", "onFoeAfterBoost", "onResidual"] are not implemented** (1): Opportunist
 - **미지원: callbacks ["onAnyAfterSetStatus"] are not implemented** (1): Poison Puppeteer
@@ -392,13 +380,10 @@ Intimidate (30), Grassy Surge (28), Prankster (25), Psychic Surge (16), Lightnin
 - **미지원: callbacks ["onHit"] are not implemented** (1): Anger Point
 - **미지원: callbacks ["onImmunity", "onTryBoost", "onTryHit", "onUpdate"] are not implemented** (1): Oblivious
 - **미지원: callbacks ["onImmunity", "onTryHit"] are not implemented** (1): Overcoat
-- **미지원: callbacks ["onImmunity", "onUpdate"] are not implemented** (1): Magma Armor
-- **미지원: callbacks ["onImmunity", "onWeather"] are not implemented** (1): Ice Body
 - **미지원: callbacks ["onMaybeTrapPokemon", "onTrapPokemon"] are not implemented** (1): Run Away
 - **미지원: callbacks ["onModifyAtk", "onModifySpA", "onSetStatus", "onSourceModifyAtk", "onSourceModifySpA", "onUpdate"] are not implemented** (1): Water Bubble
 - **미지원: callbacks ["onModifyAtk", "onStart"] are not implemented** (1): Orichalcum Pulse
 - **미지원: callbacks ["onModifyMove", "onSourceAfterFaint"] are not implemented** (1): Battle Bond
-- **미지원: callbacks ["onModifyPriority"] are not implemented** (1): Triage
 - **미지원: callbacks ["onModifySecondaries"] are not implemented** (1): Shield Dust
 - **미지원: callbacks ["onModifySpA", "onStart"] are not implemented** (1): Hadron Engine
 - **미지원: callbacks ["onModifyType"] are not implemented** (1): Liquid Voice
@@ -406,10 +391,7 @@ Intimidate (30), Grassy Surge (28), Prankster (25), Psychic Surge (16), Lightnin
 - **미지원: callbacks ["onResidual", "onSetStatus", "onStart", "onTryAddVolatile"] are not implemented** (1): Shields Down
 - **미지원: callbacks ["onResidual", "onStart"] are not implemented** (1): Schooling
 - **미지원: callbacks ["onSetStatus", "onSourceModifyAtk", "onSourceModifySpA", "onTryAddVolatile"] are not implemented** (1): Purifying Salt
-- **미지원: callbacks ["onSetStatus", "onStart"] are not implemented** (1): Comatose
-- **미지원: callbacks ["onSetStatus", "onTryAddVolatile"] are not implemented** (1): Leaf Guard
 - **미지원: callbacks ["onSideConditionStart", "onStart", "onTryHit"] are not implemented** (1): Wind Rider
-- **미지원: callbacks ["onSourceBasePower", "onTryHit", "onWeather"] are not implemented** (1): Dry Skin
 - **미지원: callbacks ["onSourceDamagingHit"] are not implemented** (1): Toxic Chain
 - **미지원: callbacks ["onSourceModifyAccuracy"] are not implemented** (1): Compound Eyes
 - **미지원: callbacks ["onSourceTryHeal"] are not implemented** (1): Liquid Ooze
