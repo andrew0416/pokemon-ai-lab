@@ -120,6 +120,7 @@ pub(crate) fn run_mega_evo<const N: usize>(
     });
     // setAbility → the new ability's `Start`.
     start_ability(b, slot, new.ability)?;
-    // AfterMega: no supported handler.
+    // AfterMega: the items' `onAnyAfterMega` (White Herb, Mirror Herb).
+    super::items::any_after_mega(b, slot);
     Ok(())
 }

@@ -59,9 +59,14 @@ mod tests {
     use crate::turn::switching::switch_in_supported;
 
     fn reacts(handlers: &[&str]) -> bool {
-        handlers
-            .iter()
-            .any(|h| h.ends_with("TerrainChange") || h.ends_with("WeatherChange"))
+        handlers.iter().any(|h| {
+            let event = h.strip_prefix("on").unwrap_or(h);
+            let event = ["Any", "Ally", "Foe", "Source"]
+                .iter()
+                .find_map(|p| event.strip_prefix(p))
+                .unwrap_or(event);
+            event == "TerrainChange" || event == "WeatherChange"
+        })
     }
 
     /// Every ability, item and species with a TerrainChange / WeatherChange handler is either

@@ -1,0 +1,23 @@
+{
+ "description": "O95 White Herb: Hariyama's Growl lowers both p2 Attacks; Snorlax's White Herb restores its own at the AfterMove (onAnyAfterMove), Kangaskhan keeps -1. Machamp's Close Combat lowers its own Def/SpD; its White Herb restores them after the move (after Snorlax's was used).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Growl", "Protect"], "level": 50},
+   {"species": "Machamp", "item": "White Herb", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Close Combat", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "White Herb", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Kangaskhan", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move growl, move closecombat 2", "p2": "move harden, move harden"}
+}

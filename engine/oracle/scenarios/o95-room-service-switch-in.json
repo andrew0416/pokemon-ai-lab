@@ -1,0 +1,28 @@
+{
+ "description": "O95 Room Service at switch-in: under Trick Room (patched while the only holder is benched), Snorlax switches in and its onStart (switch-in priority -1) uses Room Service (Speed -1). Porygon2's Gravity then runs PseudoWeatherChange with no holder left.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Porygon2", "item": "", "ability": "Honey Gather", "nature": "Relaxed",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Gravity", "Protect"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 2, "spe": 32}, "moves": ["Bulk Up", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Kangaskhan", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Machamp", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Bulk Up", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "Room Service", "ability": "Honey Gather", "nature": "Careful",
+    "evs": {"hp": 32, "def": 2, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {
+  "field": {"pseudoWeather": {"trickroom": 3}}
+ },
+ "turn": {"p1": "move gravity, move bulkup", "p2": "move harden, switch 3"}
+}

@@ -394,6 +394,44 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::GRASSY_SEED, &["onStart", "onTerrainChange"]),
     (items::MISTY_SEED, &["onStart", "onTerrainChange"]),
     (items::PSYCHIC_SEED, &["onStart", "onTerrainChange"]),
+    // Stage items (`items.rs`): White Herb and Mirror Herb at every switch-in batch
+    // (`onAnySwitchIn`), Mega Evolution, move end (`onAnyAfterMove`) and residual (order 29);
+    // White Herb's `onStart` only runs from those; `fling.effect` needs Fling, which is not
+    // supported; Terastallization (`onAnyAfterTerastallization`) is off. Mirror Herb's copied
+    // raises (`onFoeAfterBoost`) are refused past a stage end (`items::stage_end_check`); its
+    // `onEnd` forgets them with the item.
+    (
+        items::WHITE_HERB,
+        &[
+            "fling.effect",
+            "onAnyAfterMega",
+            "onAnyAfterMove",
+            "onAnySwitchIn",
+            "onResidual",
+            "onStart",
+            "onUse",
+        ],
+    ),
+    (
+        items::MIRROR_HERB,
+        &[
+            "onAnyAfterMega",
+            "onAnyAfterMove",
+            "onAnyAfterTerastallization",
+            "onAnySwitchIn",
+            "onEnd",
+            "onFoeAfterBoost",
+            "onResidual",
+            "onUse",
+        ],
+    ),
+    // AfterBoost (`Battle::boost_by` → `items::after_boost`).
+    (items::ADRENALINE_ORB, &["onAfterBoost"]),
+    // `onStart` at switch-in (priority -1) and PseudoWeatherChange (`moves::add_pseudo_weather`).
+    (
+        items::ROOM_SERVICE,
+        &["onAnyPseudoWeatherChange", "onStart"],
+    ),
     // Grounding (`Battle::is_grounded`), Speed, effectiveness; Air Balloon's `onStart` only
     // announces it and its pop (`onDamagingHit`) is refused until F15 (`items::on_damaging_hit`;
     // `onAfterSubDamage` needs a substitute, which is refused).

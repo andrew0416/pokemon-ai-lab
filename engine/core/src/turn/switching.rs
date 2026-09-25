@@ -358,13 +358,15 @@ pub(crate) fn switch_in<const N: usize>(
 enum SwitchInHandler {
     /// The newcomer's ability `onStart` (priority 0 for every implemented one).
     Ability(AbilityId),
-    /// The newcomer's item `onStart` with its `onSwitchInPriority` (`items::switch_in_item`).
+    /// The newcomer's item `onStart` with its `onSwitchInPriority`, or any active Pokémon's item
+    /// `onAnySwitchIn` with its `onAnySwitchInPriority` (`items::switch_in_item`).
     Item(ItemId),
 }
 
 /// Showdown `runSwitch` for the Pokémon that just switched in: one `fieldEvent('SwitchIn')`
-/// over their abilities' start handlers (priority 0) and their items' (`onSwitchInPriority`,
-/// the Seeds' -1), sorted by priority, then the holder's Speed (raw stat; equal Speeds
+/// over their abilities' start handlers (priority 0), their items' (`onSwitchInPriority`: the
+/// Seeds and Room Service, -1) and every active Pokémon's item `onAnySwitchIn` (White Herb -2,
+/// Mirror Herb -3), sorted by priority, then the holder's Speed (raw stat; equal Speeds
 /// uniformly at random). An ability handler is skipped if the holder's ability changed before
 /// its turn came, any handler if its holder fainted. Within a priority group every implemented
 /// item handler only changes its own holder, so tie-breaks drawn per handler (instead of
@@ -383,6 +385,18 @@ pub(crate) fn run_switch_in<const N: usize>(
         pending.push((0, speed, slot, SwitchInHandler::Ability(mon.ability)));
         if let Some(priority) = super::items::switch_in_priority(mon.item) {
             pending.push((priority, speed, slot, SwitchInHandler::Item(mon.item)));
+        }
+    }
+    // `onAnySwitchIn` of every active Pokémon's item (White Herb -2, Mirror Herb -3).
+    for slot in b.all_alive() {
+        let mon = b.slot_mon(slot).expect("alive");
+        if let Some(priority) = super::items::any_switch_in_priority(mon.item) {
+            pending.push((
+                priority,
+                mon.stats[4],
+                slot,
+                SwitchInHandler::Item(mon.item),
+            ));
         }
     }
     while !pending.is_empty() {

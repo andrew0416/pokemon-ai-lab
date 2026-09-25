@@ -220,11 +220,18 @@ pub(crate) fn resume_move<const N: usize>(
 }
 
 /// The end of Showdown `runMove` after `useMove`: `AfterMove` (a locked move on its last
-/// turn ends and, by fatigue, confuses), then faints.
+/// turn ends and, by fatigue, confuses; White Herb and Mirror Herb act), then faints.
 fn run_move_tail<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) {
     let locked = b.volatile(user, Volatile::LockedMove);
     if locked.active && locked.duration == 1 {
         b.remove_volatile(user, Volatile::LockedMove);
+    }
+    // The items' `onAnyAfterMove` (White Herb, Mirror Herb), collected only while the user
+    // is still active; they and the lock above act on different holders.
+    if b.active_move
+        .is_some_and(|m| b.occupant(m.user) == Some(m.pokemon))
+    {
+        item_events::any_after_move(b, user);
     }
     b.faint_messages(true);
     b.check_win(None);
@@ -1962,7 +1969,8 @@ pub(crate) fn set_terrain<const N: usize>(
     true
 }
 
-/// Showdown `addPseudoWeather`: Gravity fails if up; Trick Room ends itself on restart.
+/// Showdown `addPseudoWeather`: Gravity fails if up; Trick Room ends itself on restart
+/// (`onFieldRestart`, no PseudoWeatherChange); a new one runs `PseudoWeatherChange`.
 fn add_pseudo_weather<const N: usize>(b: &mut Battle<'_, N>, id: &str) -> bool {
     let effect = match id {
         "gravity" => FieldEffect::Gravity,
@@ -1977,6 +1985,8 @@ fn add_pseudo_weather<const N: usize>(b: &mut Battle<'_, N>, id: &str) -> bool {
         return false;
     }
     b.set_field(effect, Effect { value: 0, turns: 5 });
+    // `runEvent('PseudoWeatherChange')`: Room Service.
+    item_events::pseudo_weather_change(b);
     true
 }
 

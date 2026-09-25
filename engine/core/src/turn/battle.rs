@@ -57,6 +57,11 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// cleared at the start of every hit (`None`: not computed, as for fixed-damage and
     /// status moves). Read by Weakness Policy and Enigma Berry.
     pub hit_type_mod: [[Option<i8>; N]; 2],
+    /// Mirror Herb's `effectState.boosts` per holder: the foes' raises it copied and has not
+    /// used yet (`ready`). Showdown keeps them on the item across events; the engine keeps
+    /// them only within a stage and refuses a stage that ends with one pending
+    /// (`items::stage_end_check`).
+    pub mirror_herb: Vec<(PokemonRef, [i8; BOOST_COUNT])>,
 }
 
 impl<'a, const N: usize> Battle<'a, N> {
@@ -69,6 +74,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             active_move: None,
             queue: Vec::new(),
             hit_type_mod: [[None; N]; 2],
+            mirror_herb: Vec::new(),
         }
     }
 
@@ -867,10 +873,14 @@ impl<'a, const N: usize> Battle<'a, N> {
             _ => {}
         }
         // getCappedBoost.
+        let requested_atk = boost[0];
         for (stat, b) in boost.iter_mut().enumerate() {
             let current = self.state.slot(target).boosts[stat];
             *b = (current + *b).clamp(-6, 6) - current;
         }
+        // Showdown keeps a capped stat's key at 0 (`boost.atk === 0`), unlike a TryBoost
+        // handler's `delete`; Adrenaline Orb tells them apart.
+        let atk_capped_to_zero = requested_atk != 0 && boost[0] == 0;
         // TryBoost (abilities in `resolvePriority` order: Guard Dog's priority 2 first; the
         // rest only delete, so their order is moot).
         let ability = self.ability_unless_broken(target);
@@ -983,6 +993,9 @@ impl<'a, const N: usize> Battle<'a, N> {
                 BoostEffect::Ability(abilities::RATTLED),
             );
         }
+        // AfterBoost of items (after the target's ability): Adrenaline Orb, the foes' Mirror
+        // Herbs.
+        super::items::after_boost(self, target, &boost, effect, atk_capped_to_zero);
         changed
     }
 

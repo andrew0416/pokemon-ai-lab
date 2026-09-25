@@ -151,6 +151,7 @@ pub fn enumerate_start<const N: usize>(state: &mut State<N>) -> Result<Vec<Outco
             }
         }
         switching::run_switch_in(b, &leads)?;
+        items::stage_end_check(b)?;
         Ok(true)
     })
 }
@@ -194,6 +195,7 @@ pub fn enumerate_replacements<const N: usize>(
     check_replacements(state, &choices)?;
     enumerate_stages(state, (), |b, _| {
         run_replacements(b, &choices)?;
+        items::stage_end_check(b)?;
         Ok(true)
     })
 }
@@ -728,7 +730,8 @@ fn run_stage<const N: usize>(
     b.queue = std::mem::take(&mut pending.queue);
     let result = run_stage_inner(b, pending);
     pending.queue = std::mem::take(&mut b.queue);
-    result
+    result?;
+    items::stage_end_check(b)
 }
 
 fn run_stage_inner<const N: usize>(
