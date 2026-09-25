@@ -27,6 +27,7 @@
 | `data/gen-rust.cjs` → `core/src/dex/generated.rs` | **Rust 정적 테이블(2026-09-25).** 종 1517(MissingNo. 제외: Bird 타입이 상성표에 없음), 기술 938, 도구 583, 특성 321, 타입 19+상성표·타입 면역, 성격 25, 이름으로 참조되는 조건 110. 모르는 필드·값 형태·이름 참조가 나오면 생성이 실패한다. 생성 파일은 직접 고치지 않는다 |
 | `core/src/dex/mod.rs` | 테이블 타입과 조회 API. `SpeciesId`·`MoveId`·`ItemId`·`AbilityId`·`ConditionId`(인덱스 0 = 없음), `from_id`(이진 탐색)·`from_name`, 항목별 상수(`species::GARDEVOIR_MEGA`, `moves::HYPNOSIS`, `conditions::GRAVITY`). `Pokemon`의 종·도구·특성·타입·기술 필드도 이 ID 타입으로 바꿨다. 테스트 21개 통과(GNU), fmt·clippy 통과 |
 | `scenario/` (`lab-scenario`) | **시나리오·팀 JSON → `State<2>` 로더(2026-09-25, 검증 완료).** serde/serde_json은 이 크레이트에만 있고 `lab-engine`은 의존성 없음 그대로다. 종·기술·도구·특성·성격은 dex API로 찾고 모르는 이름은 편·팀 위치·이름을 붙인 오류로 거부한다. 능력치는 `stats::champions_stats`(SP 검증 포함). 레벨·타입·HP·5능력치·상태·도구·특성·기술 4칸·PP를 채운다. 파티 순서 = 팀 프리뷰 순서(Showdown `chooseTeam`처럼 순서 문자열을 팀 크기로 자르고 빠진 멤버는 원래 순서로 뒤에 붙임), 앞 N마리가 선두. 표시 이름·팀 위치·성격·SP·성별·테라 타입은 `State` 밖 사이드카(`ScenarioMeta`/`SideMeta`)에 둔다. `setupTurns`·custom game 외 형식·레벨 50 외·모르는 JSON 필드는 거부한다. 2026-09-25: `patch`는 `decision.rs`가 `enumerate.cjs` `applyPatch` 의미로 적용한다(`scenario_states` = 등장 펼치기 + 패치; 수면 패치는 `statusTime` 필수, 날씨·필드 패치는 지속 턴 필수). `parse_choice`/`scenario_choices`가 Showdown 선택 문자열을 `JointAction`으로 바꾼다. 정규 출력은 휘발·lastMove·lastItem·statusTime/Stage·중력/트릭룸·순풍/벽·기절(fnt, slot null)·request(move/switch/"")·ended/winner를 쓴다 |
+| `search/` (`lab-search`) | **탐색 기반(2026-09-26, WORKPLAN S1).** 알려진 두 파티의 한 국면에서 우리 편의 모든 합법 선택에 maximin 값을 매기는 오프라인 도구. `game`(결정 분류·합법 선택·`transitions`), `solve`(순수 전략 maximin, 상대 모델 ①, 난수 Expect/Worst, 알파베타·Star1, 반복 심화), `choice`(Showdown 선택 문자열). 합법 선택은 `lab_engine::turn::legal_joint_actions`(엔진 `check_side`가 받는 것만 생성). CLI `lab-plan`. 브루트포스 대조 테스트 7개 통과. **성능 한계:** 실전 파티 턴(광역기·풀죽음)은 열거당 약 2 s·수천 결과, 교체 뒤 턴 탐색은 24 GB → F18이 선행 조건 |
 | `scenario/src/bin/lab-turn.rs` | 시나리오를 엔진으로 돌려 oracle과 같은 형식의 보고서를 쓴다(`--before <oracle 보고서>`로 시작 상태 선택, `--mc N --seed S`로 표본 모드). `oracle/compare.cjs`(결합 분포 TV)·`oracle/marginals.cjs`(특징별 주변분포, 큰 분포용)로 비교 |
 | `core/` 로더 지원 | `state::champions_max_pp`/`MoveSlot::full`(Champions PP: `(pp/5+1)*4`, PP 증가 불가 기술은 기본값), `gimmick::mega_evolution`/`structural_gimmicks`(메가스톤의 `mega_stone` 표에서 정확한 종 일치로 메가 자격만 도출). 다른 기믹 자격은 도출하지 않고, 규칙셋도 M-C에서 막는다 |
 | `scenario/src/switch_in.rs` | **첫 등장 펼치기(2026-09-25, 검증 완료).** `initial_outcomes(&LoadedScenario)`/`expand_switch_ins(&State<N>)` → `Vec<InitialOutcome { probability, state }>`. Showdown `runSwitch` 순서(저장 S 내림차순, 동속 균등 분기), 트레이스 균등 대상 분기(`NOTRACE`), 복사 특성 즉시 시작, 모래날림·그래스메이커(5턴, 보송보송바위/그라운드코트 8턴). 구현 목록 밖의 시작 핸들러는 오류로 거부. `State`와 `lab-engine`은 바꾸지 않았다 |
@@ -102,6 +103,10 @@ node engine/data/gen-rust.cjs            # champions.json → core/src/dex/gener
 D:/cargo-target/release/lab-turn.exe engine/oracle/scenarios/single-hit.json --before "$TEMP/full.json" --out "$TEMP/engine.json"
 node engine/oracle/compare.cjs "$TEMP/full.json" "$TEMP/engine.json"          # 정확 분포: TV 0이어야 함
 D:/cargo-target/release/lab-turn.exe <scenario> --before <mc 보고서> --mc 200000 --out "$TEMP/engine-mc.json"
+# 탐색(2026-09-26): 한 편의 모든 합법 선택에 maximin 값. 반드시 release. 무거운 턴은 --max-turns로 예산 제한
+cd engine && cargo build --release -p lab-search
+D:/cargo-target/release/lab-plan.exe engine/oracle/scenarios/eject-button-uturn.json --side p1 --depth 1 --rng expect --top 10
+D:/cargo-target/release/lab-plan.exe <scenario> --side p2 --rng worst --before <oracle 보고서> --exact --max-turns 500
 node engine/oracle/marginals.cjs <showdown mc 보고서> "$TEMP/engine-mc.json"   # 큰 분포: 주변분포 비교
 node engine/oracle/strip-report.cjs "$TEMP/full.json" engine/oracle/expected/<이름>.turn.json   # fixture 갱신
 LAB_ENGINE_STATS=1 …                                                       # 단계별 프런티어 크기 출력
@@ -169,7 +174,7 @@ cd engine/py && ../../.venv-doubles/Scripts/maturin.exe build --release -i ../..
 3. [원시 연산·턴 연결 완료 2026-09-25] 데미지 코어가 턴 엔진에 연결됨.
 4. [턴 엔진 골격 완료 2026-09-25, 메가진화·유도·등장 통합·기절 후 교체 완료 2026-09-26] 남은 것: 연속기(multihit), 교체기(유턴 등), 혼란·도발·앵콜 등 휘발, 구애 도구, 열매(오봉 등 `onUpdate`), 급소 랭크 보정 도구/특성. 진행 상황은 `WORKPLAN.md` §4.
 5. 기술 이식: 날따름, 분노가루, 위협 이외 등장 특성, 메가진화를 먼저 한다. 우선순위는 `teams/library` 더블 사용 빈도 × `support.rs` 미지원 여부로 정한다. 추가할 때마다 oracle 시나리오와 `*.turn.json` fixture를 만든다.
-6. 분포 열거 성능: 광역기 두 개가 겹치는 턴은 정확 분포가 수백만 결과다. 후보: 이미 행동한 대상에 대한 풀죽음 분기 생략(분포 동치), 턴 종료에 사라지는 중간 상태 차이(풀죽음·lastMove 없는 교환 등)를 병합 전에 정규화, HP 구간 대신 정확 값 유지하되 결과 수 상한/근사 모드 도입. PokaiEngine 목표(턴당 약 0.08ms)와 같은 자릿수.
+6. **[다음 우선. 2026-09-26 탐색 기반(S1) 측정으로 확정: `hypnosis-gravity` 깊이 1이 열거 336회에 708 s, 교체 뒤 턴 탐색은 24 GB]** 분포 열거 성능: 광역기 두 개가 겹치는 턴은 정확 분포가 수백만 결과다. 후보: 이미 행동한 대상에 대한 풀죽음 분기 생략(분포 동치), 턴 종료에 사라지는 중간 상태 차이(풀죽음·lastMove 없는 교환 등)를 병합 전에 정규화, HP 구간 대신 정확 값 유지하되 결과 수 상한/근사 모드 도입. PokaiEngine 목표(턴당 약 0.08ms)와 같은 자릿수.
 7. 목표 지표: 시나리오 모음에서 정확 일치 99% 이상.
 
 ## 참고 자료

@@ -1,0 +1,31 @@
+[package]
+name = "lab-search"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Offline planning against a known team on lab-engine: legal choices, exact chance, maximin (DESIGN.md 탐색의 용도와 정보 모델)."
+
+[lib]
+name = "lab_search"
+path = "src/lib.rs"
+
+# The library depends on lab-engine only. The `lab-plan` binary needs the scenario loader
+# (serde); it sits behind the default `cli` feature so hot-path users can turn it off with
+# `default-features = false`.
+[features]
+default = ["cli"]
+cli = ["lab-scenario", "serde_json"]
+
+[dependencies]
+lab-engine = { path = "../core" }
+lab-scenario = { path = "../scenario", optional = true }
+serde_json = { version = "1", optional = true }
+
+[dev-dependencies]
+lab-scenario = { path = "../scenario" }
+serde_json = "1"
+
+[[bin]]
+name = "lab-plan"
+path = "src/bin/lab-plan.rs"
+required-features = ["cli"]

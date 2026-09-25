@@ -23,6 +23,7 @@ mod diff;
 mod field_events;
 mod history;
 mod items;
+pub mod legal;
 pub mod lock;
 mod mega;
 mod moves;
@@ -52,6 +53,7 @@ use order::{ORDER_MEGA, ORDER_MOVE, ORDER_SWITCH};
 use queue::{Action, ActionKind};
 
 pub use abilities::trapped;
+pub use legal::legal_joint_actions;
 pub use lock::{locked_move, Locked, RECHARGE_INDEX, STRUGGLE_INDEX};
 pub use moves::{takes_target, valid_target_loc};
 pub use switching::{
@@ -517,6 +519,27 @@ fn request_switches<const N: usize>(b: &mut Battle<'_, N>) -> bool {
     any
 }
 
+/// Whether `side` must send in a replacement before the next turn (Showdown `request:
+/// switch` for it between turns): an empty active slot and a healthy bench member.
+pub fn side_must_replace<const N: usize>(state: &State<N>, side: SideId) -> bool {
+    let s = state.side(side);
+    let empty = s.slots.iter().any(|slot| slot.party_index.is_none());
+    let bench = (0..s.party.len() as u8).any(|i| {
+        s.party[i as usize].hp > 0 && !s.slots.iter().any(|slot| slot.party_index == Some(i))
+    });
+    empty && bench
+}
+
+/// Whether `side` must send in a mid-turn switch (Showdown `request: switch` with actions
+/// still queued; see [`resume_turn`]): a living occupant with [`SwitchFlag`] set.
+pub fn side_must_switch<const N: usize>(state: &State<N>, side: SideId) -> bool {
+    state
+        .side(side)
+        .slots
+        .iter()
+        .any(|slot| slot.switch_flag != SwitchFlag::None && slot.party_index.is_some())
+}
+
 /// A slot whose living occupant has `switch_flag` set: the state is a suspended turn.
 fn pending_mid_turn_switch<const N: usize>(state: &State<N>) -> Option<SlotRef> {
     State::<N>::slot_refs()
@@ -754,7 +777,6 @@ fn check_turn<const N: usize>(
     ruleset: Ruleset,
     choices: &[JointAction<N>; 2],
 ) -> Result<[JointAction<N>; 2], TurnError> {
-    let mut normalized = *choices;
     if state.result.is_over() {
         return Err(TurnError::BattleOver);
     }
@@ -766,161 +788,172 @@ fn check_turn<const N: usize>(
         });
     }
     for side in [SideId::One, SideId::Two] {
-        let s = state.side(side);
-        let empty = s.slots.iter().any(|slot| slot.party_index.is_none());
-        let bench = (0..s.party.len() as u8).any(|i| {
-            s.party[i as usize].hp > 0 && !s.slots.iter().any(|slot| slot.party_index == Some(i))
-        });
-        if empty && bench {
+        if side_must_replace(state, side) {
             return Err(TurnError::ReplacementPending(side));
         }
     }
-    for (side, action) in [SideId::One, SideId::Two].into_iter().zip(choices) {
-        ruleset
-            .validate_joint_action(state, side, action)
-            .map_err(|error| TurnError::Action { side, error })?;
-        let mut switching_in = Vec::new();
-        for (i, &slot_action) in action.iter().enumerate() {
-            let slot = SlotRef {
-                side,
-                slot: i as u8,
+    let normalized = [
+        check_side(state, ruleset, SideId::One, &choices[0])?,
+        check_side(state, ruleset, SideId::Two, &choices[1])?,
+    ];
+    support::check_state(state).map_err(TurnError::Unsupported)?;
+    Ok(normalized)
+}
+
+/// One side's part of [`check_turn`]: the ruleset's validation, then each slot's choice
+/// against the state (locks, PP, disabled moves, targets, gimmicks, support), returned in the
+/// form the turn runs it.
+pub(crate) fn check_side<const N: usize>(
+    state: &State<N>,
+    ruleset: Ruleset,
+    side: SideId,
+    action: &JointAction<N>,
+) -> Result<JointAction<N>, TurnError> {
+    let mut normalized = *action;
+    ruleset
+        .validate_joint_action(state, side, action)
+        .map_err(|error| TurnError::Action { side, error })?;
+    let mut switching_in = Vec::new();
+    for (i, &slot_action) in action.iter().enumerate() {
+        let slot = SlotRef {
+            side,
+            slot: i as u8,
+        };
+        let invalid = |reason: String| TurnError::InvalidChoice {
+            side,
+            slot: i as u8,
+            reason,
+        };
+        let occupant = state.active(slot).filter(|p| p.hp > 0);
+        // A locked Pokémon: any move choice stands for the locked move, nothing else is
+        // allowed (`trapped`), no PP is needed.
+        if let (Some(locked), Some(mon)) = (lock::locked_move(state, slot), occupant) {
+            let SlotAction::Move { gimmick, .. } = slot_action else {
+                return Err(invalid(format!("locked into {locked:?}; cannot switch")));
             };
-            let invalid = |reason: String| TurnError::InvalidChoice {
-                side,
-                slot: i as u8,
-                reason,
-            };
-            let occupant = state.active(slot).filter(|p| p.hp > 0);
-            // A locked Pokémon: any move choice stands for the locked move, nothing else is
-            // allowed (`trapped`), no PP is needed.
-            if let (Some(locked), Some(mon)) = (lock::locked_move(state, slot), occupant) {
-                let SlotAction::Move { gimmick, .. } = slot_action else {
-                    return Err(invalid(format!("locked into {locked:?}; cannot switch")));
-                };
-                if !gimmick.is_none() {
-                    return Err(invalid(format!("locked into {locked:?}; no {gimmick:?}")));
+            if !gimmick.is_none() {
+                return Err(invalid(format!("locked into {locked:?}; no {gimmick:?}")));
+            }
+            let index = match locked {
+                Locked::Recharge => RECHARGE_INDEX,
+                Locked::Move(id) | Locked::TwoTurn { id, .. } => {
+                    mon.moves.iter().position(|m| m.id == id).ok_or_else(|| {
+                        invalid(format!("locked move {} not known", id.data().name))
+                    })? as u8
                 }
-                let index = match locked {
-                    Locked::Recharge => RECHARGE_INDEX,
-                    Locked::Move(id) | Locked::TwoTurn { id, .. } => {
-                        mon.moves.iter().position(|m| m.id == id).ok_or_else(|| {
-                            invalid(format!("locked move {} not known", id.data().name))
-                        })? as u8
-                    }
-                };
-                // A two-turn move keeps the target location it was aimed at.
-                let target = match locked {
-                    Locked::TwoTurn { target, .. } => target,
-                    _ => 0,
-                };
-                normalized[side.index()][i] = SlotAction::Move {
+            };
+            // A two-turn move keeps the target location it was aimed at.
+            let target = match locked {
+                Locked::TwoTurn { target, .. } => target,
+                _ => 0,
+            };
+            normalized[i] = SlotAction::Move {
+                index,
+                target,
+                gimmick: Gimmick::None,
+            };
+            continue;
+        }
+        match (slot_action, occupant) {
+            (SlotAction::Pass, None) => {}
+            (SlotAction::Pass, Some(_)) => return Err(invalid("must act".into())),
+            (_, None) => return Err(invalid("empty or fainted slot must pass".into())),
+            (SlotAction::Switch { party_index }, Some(_)) => {
+                // A trapped Pokémon (abilities, No Retreat, partial trapping) was rejected
+                // by the ruleset above (`ActionError::Trapped`).
+                let target = &state.side(side).party[party_index as usize];
+                let active = state
+                    .side(side)
+                    .slots
+                    .iter()
+                    .any(|s| s.party_index == Some(party_index));
+                if target.hp <= 0 || active || switching_in.contains(&party_index) {
+                    return Err(invalid(format!("cannot switch to party {party_index}")));
+                }
+                switching_in.push(party_index);
+            }
+            (
+                SlotAction::Move {
                     index,
                     target,
-                    gimmick: Gimmick::None,
+                    gimmick,
+                },
+                Some(mon),
+            ) => {
+                // Without a usable move the only choice is Struggle (`move 1` names it).
+                let usable = mon
+                    .moves
+                    .iter()
+                    .any(|m| !m.id.is_none() && m.pp > 0 && disabled(state, slot, m.id).is_none());
+                let index = if !usable && index == 0 {
+                    STRUGGLE_INDEX
+                } else {
+                    index
                 };
-                continue;
-            }
-            match (slot_action, occupant) {
-                (SlotAction::Pass, None) => {}
-                (SlotAction::Pass, Some(_)) => return Err(invalid("must act".into())),
-                (_, None) => return Err(invalid("empty or fainted slot must pass".into())),
-                (SlotAction::Switch { party_index }, Some(_)) => {
-                    // A trapped Pokémon (abilities, No Retreat, partial trapping) was rejected
-                    // by the ruleset above (`ActionError::Trapped`).
-                    let target = &state.side(side).party[party_index as usize];
-                    let active = state
-                        .side(side)
-                        .slots
-                        .iter()
-                        .any(|s| s.party_index == Some(party_index));
-                    if target.hp <= 0 || active || switching_in.contains(&party_index) {
-                        return Err(invalid(format!("cannot switch to party {party_index}")));
+                if index == STRUGGLE_INDEX {
+                    if usable {
+                        return Err(invalid("Struggle while a move is usable".into()));
                     }
-                    switching_in.push(party_index);
-                }
-                (
-                    SlotAction::Move {
-                        index,
-                        target,
-                        gimmick,
-                    },
-                    Some(mon),
-                ) => {
-                    // Without a usable move the only choice is Struggle (`move 1` names it).
-                    let usable = mon.moves.iter().any(|m| {
-                        !m.id.is_none() && m.pp > 0 && disabled(state, slot, m.id).is_none()
-                    });
-                    let index = if !usable && index == 0 {
-                        STRUGGLE_INDEX
-                    } else {
-                        index
-                    };
-                    if index == STRUGGLE_INDEX {
-                        if usable {
-                            return Err(invalid("Struggle while a move is usable".into()));
-                        }
-                        if target != 0 || !gimmick.is_none() {
-                            return Err(invalid("Struggle takes no target or gimmick".into()));
-                        }
-                        if let Some(why) = support::move_unsupported(move_ids::STRUGGLE) {
-                            return Err(TurnError::Unsupported(why));
-                        }
-                        normalized[side.index()][i] = SlotAction::Move {
-                            index,
-                            target: 0,
-                            gimmick: Gimmick::None,
-                        };
-                        continue;
+                    if target != 0 || !gimmick.is_none() {
+                        return Err(invalid("Struggle takes no target or gimmick".into()));
                     }
-                    let slot_move = mon.moves[index as usize];
-                    let id = slot_move.id;
-                    if id.is_none() {
-                        return Err(invalid(format!("no move in slot {index}")));
-                    }
-                    if slot_move.pp == 0 {
-                        return Err(invalid(format!("{} has no PP", id.data().name)));
-                    }
-                    if let Some(reason) = disabled(state, slot, id) {
-                        return Err(invalid(reason));
-                    }
-                    let data = id.data();
-                    let needs = takes_target(N, data.target);
-                    let ok = if needs {
-                        target != 0 && valid_target_loc(N, slot, target, data.target)
-                    } else {
-                        target == 0
-                    };
-                    if !ok {
-                        return Err(invalid(format!(
-                            "target {target} for {} ({:?})",
-                            data.name, data.target
-                        )));
-                    }
-                    match gimmick {
-                        Gimmick::None => {}
-                        Gimmick::Mega => {
-                            mega::mega_target(mon).map_err(TurnError::Unsupported)?;
-                        }
-                        other => {
-                            return Err(TurnError::Unsupported(format!(
-                                "{other:?} activation (effects not implemented)"
-                            )));
-                        }
-                    }
-                    if let Some(why) = support::move_unsupported(id) {
+                    if let Some(why) = support::move_unsupported(move_ids::STRUGGLE) {
                         return Err(TurnError::Unsupported(why));
                     }
-                    if id == move_ids::SLEEP_TALK {
-                        let known = mon.moves.map(|m| m.id);
-                        if let Some(why) = support::sleep_talk_problem(&known) {
-                            return Err(TurnError::Unsupported(why));
-                        }
+                    normalized[i] = SlotAction::Move {
+                        index,
+                        target: 0,
+                        gimmick: Gimmick::None,
+                    };
+                    continue;
+                }
+                let slot_move = mon.moves[index as usize];
+                let id = slot_move.id;
+                if id.is_none() {
+                    return Err(invalid(format!("no move in slot {index}")));
+                }
+                if slot_move.pp == 0 {
+                    return Err(invalid(format!("{} has no PP", id.data().name)));
+                }
+                if let Some(reason) = disabled(state, slot, id) {
+                    return Err(invalid(reason));
+                }
+                let data = id.data();
+                let needs = takes_target(N, data.target);
+                let ok = if needs {
+                    target != 0 && valid_target_loc(N, slot, target, data.target)
+                } else {
+                    target == 0
+                };
+                if !ok {
+                    return Err(invalid(format!(
+                        "target {target} for {} ({:?})",
+                        data.name, data.target
+                    )));
+                }
+                match gimmick {
+                    Gimmick::None => {}
+                    Gimmick::Mega => {
+                        mega::mega_target(mon).map_err(TurnError::Unsupported)?;
+                    }
+                    other => {
+                        return Err(TurnError::Unsupported(format!(
+                            "{other:?} activation (effects not implemented)"
+                        )));
+                    }
+                }
+                if let Some(why) = support::move_unsupported(id) {
+                    return Err(TurnError::Unsupported(why));
+                }
+                if id == move_ids::SLEEP_TALK {
+                    let known = mon.moves.map(|m| m.id);
+                    if let Some(why) = support::sleep_talk_problem(&known) {
+                        return Err(TurnError::Unsupported(why));
                     }
                 }
             }
         }
     }
-    support::check_state(state).map_err(TurnError::Unsupported)?;
     Ok(normalized)
 }
 

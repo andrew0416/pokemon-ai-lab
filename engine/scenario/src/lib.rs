@@ -30,7 +30,7 @@ use serde_json::Value;
 use lab_engine::action::JointAction;
 use lab_engine::instruction::Outcome;
 use lab_engine::rules::Ruleset;
-use lab_engine::state::{SideId, State, SwitchFlag, PARTY_SIZE};
+use lab_engine::state::{SideId, State, PARTY_SIZE};
 use lab_engine::turn::{enumerate_replacements, enumerate_turn, resume_turn, TurnError};
 use lab_engine::Doubles;
 
@@ -208,12 +208,7 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
 /// Whether `side` must send in a replacement (Showdown `request: switch` for it): an empty
 /// active slot and a healthy bench member.
 pub fn side_must_replace<const N: usize>(state: &State<N>, side: SideId) -> bool {
-    let s = state.side(side);
-    let empty = s.slots.iter().any(|slot| slot.party_index.is_none());
-    let bench = (0..s.party.len() as u8).any(|i| {
-        s.party[i as usize].hp > 0 && !s.slots.iter().any(|slot| slot.party_index == Some(i))
-    });
-    empty && bench
+    lab_engine::turn::side_must_replace(state, side)
 }
 
 /// Parses both sides' choice strings for the decision `state` is waiting for: replacements
@@ -252,11 +247,7 @@ pub fn run_decision(state: &mut Doubles, decision: &Decision) -> Result<Vec<Outc
 /// Whether `side` must send in a mid-turn switch (Showdown `request: switch` with actions
 /// still queued): a living occupant with `Slot::switch_flag`.
 pub fn side_must_switch<const N: usize>(state: &State<N>, side: SideId) -> bool {
-    state
-        .side(side)
-        .slots
-        .iter()
-        .any(|slot| slot.switch_flag != SwitchFlag::None && slot.party_index.is_some())
+    lab_engine::turn::side_must_switch(state, side)
 }
 
 /// [`run_decision`], then every suspended outcome is resumed with the next `mid_turn` choice

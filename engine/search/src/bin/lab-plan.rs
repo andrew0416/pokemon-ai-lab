@@ -1,0 +1,290 @@
+//! Values every choice of one side at an oracle scenario's decision (DESIGN.md "탐색의 용도와
+//! 정보 모델": opponent model ①, chance averaged or at its worst).
+//!
+//! Usage: lab-plan <scenario.json> [--side p1|p2] [--depth n] [--rng expect|worst]
+//!                 [--before <oracle-report.json>] [--top k] [--exact] [--all-targets]
+//!                 [--max-turns n]
+//!
+//! The position is the scenario's (after switch-ins, setup turns and patch); with several
+//! initial states `--before` picks the one matching an oracle report, as `lab-turn` does.
+//! `--depth` counts turns (default 1: this turn, then the material evaluation). `--exact`
+//! values every root choice fully instead of stopping once it falls below the best one.
+//! `--all-targets` keeps damaging moves aimed at an ally. Choices print as Showdown choice
+//! strings against the position's party order, so they paste into a scenario's `turn`.
+
+use std::process::ExitCode;
+
+use serde_json::Value;
+
+use lab_engine::eval::Material;
+use lab_engine::rules::Ruleset;
+use lab_engine::state::SideId;
+use lab_scenario::{canonical_json, load_scenario_file, scenario_positions, Position};
+use lab_search::game::asked_slots;
+use lab_search::{
+    format_choice, format_switches, Chance, Choice, Config, Decision, Pruning, Solver,
+};
+
+fn main() -> ExitCode {
+    match run() {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(e) => {
+            eprintln!("lab-plan: {e}");
+            ExitCode::FAILURE
+        }
+    }
+}
+
+fn run() -> Result<(), String> {
+    let args: Vec<String> = std::env::args().skip(1).collect();
+    let mut scenario = None;
+    let mut before = None;
+    let mut us = SideId::One;
+    let mut top = 10usize;
+    let mut config = Config::new(Ruleset::CHAMPIONS_MC, us);
+    let mut i = 0;
+    while i < args.len() {
+        match args[i].as_str() {
+            "--before" => {
+                i += 1;
+                before = args.get(i).cloned();
+            }
+            "--side" => {
+                i += 1;
+                us = match args.get(i).map(String::as_str) {
+                    Some("p1") => SideId::One,
+                    Some("p2") => SideId::Two,
+                    _ => return Err("--side needs p1 or p2".into()),
+                };
+            }
+            "--depth" => {
+                i += 1;
+                config.depth = args
+                    .get(i)
+                    .and_then(|s| s.parse::<u32>().ok())
+                    .filter(|&d| d > 0)
+                    .ok_or("--depth needs a positive number of turns")?;
+            }
+            "--rng" => {
+                i += 1;
+                config.chance = match args.get(i).map(String::as_str) {
+                    Some("expect") => Chance::Expect,
+                    Some("worst") => Chance::Worst,
+                    _ => return Err("--rng needs expect or worst".into()),
+                };
+            }
+            "--top" => {
+                i += 1;
+                top = args
+                    .get(i)
+                    .and_then(|s| s.parse().ok())
+                    .ok_or("--top needs a number")?;
+            }
+            "--max-turns" => {
+                i += 1;
+                config.max_turns = Some(
+                    args.get(i)
+                        .and_then(|s| s.parse().ok())
+                        .ok_or("--max-turns needs a number")?,
+                );
+            }
+            "--exact" => config.exact_lines = true,
+            "--all-targets" => config.pruning = Pruning::All,
+            other if scenario.is_none() => scenario = Some(other.to_owned()),
+            other => return Err(format!("unexpected argument {other}")),
+        }
+        i += 1;
+    }
+    config.us = us;
+    let scenario = scenario.ok_or(
+        "usage: lab-plan <scenario.json> [--side p1|p2] [--depth n] [--rng expect|worst] \
+         [--before report.json] [--top k] [--exact] [--all-targets] [--max-turns n]",
+    )?;
+
+    let loaded = load_scenario_file(&scenario).map_err(|e| e.to_string())?;
+    let positions = scenario_positions(&loaded)?;
+    let position = pick_position(&loaded, positions, before.as_deref())?;
+    let them = us.other();
+    let mut state = position.state.clone();
+
+    println!("{}", loaded.meta.description.trim());
+    println!(
+        "format {}, turn {}, {} choices for {} (them: {})",
+        loaded.meta.format,
+        state.turn,
+        side_name(us),
+        roster(&loaded, &position, us),
+        roster(&loaded, &position, them)
+    );
+
+    let evaluator = Material;
+    let mut solver = Solver::new(config, &evaluator);
+    let analysis = solver
+        .analyse(&mut state, None)
+        .map_err(|e| e.to_string())?;
+    if state != position.state {
+        return Err("the solver changed the position (bug)".into());
+    }
+    println!(
+        "decision {:?}, depth {}, chance {:?}, pruning {:?}: {} nodes, {} enumerations, {:.2} s",
+        analysis.decision,
+        analysis.depth,
+        config.chance,
+        config.pruning,
+        analysis.nodes,
+        analysis.turns,
+        analysis.elapsed.as_secs_f64()
+    );
+    if analysis.lines.is_empty() {
+        println!("the battle is over: value {:+.1}", analysis.value);
+        return Ok(());
+    }
+    println!(
+        "{} choices for us, {} replies; best value {:+.1}",
+        analysis.lines.len(),
+        analysis
+            .lines
+            .iter()
+            .filter_map(|l| l.reply)
+            .collect::<std::collections::HashSet<_>>()
+            .len(),
+        analysis.value
+    );
+    println!(
+        "{:>3}  {:>9}  {:<44}  reply that holds it",
+        "#", "value", "our choice"
+    );
+    for (rank, line) in analysis.lines.iter().take(top).enumerate() {
+        let value = if line.exact {
+            format!("{:+.1}", line.value)
+        } else {
+            format!("<={:+.1}", line.value)
+        };
+        let ours = describe(&position, analysis.decision, us, &line.ours);
+        let reply = line
+            .reply
+            .map(|r| describe(&position, analysis.decision, them, &r))
+            .unwrap_or_default();
+        println!("{:>3}  {:>9}  {:<44}  {}", rank + 1, value, ours, reply);
+    }
+    if analysis.lines.len() > top {
+        println!("... {} more", analysis.lines.len() - top);
+    }
+    if let Some(turn) = &loaded.meta.turn {
+        let own = match us {
+            SideId::One => &turn.p1,
+            SideId::Two => &turn.p2,
+        };
+        if analysis.decision == Decision::Turn {
+            match lab_scenario::parse_choice(&state, us, &position.order[us.index()], own) {
+                Ok(action) => {
+                    let text = format_choice(&state, us, &position.order[us.index()], &action);
+                    match analysis
+                        .lines
+                        .iter()
+                        .position(|l| l.ours == Choice::Turn(action))
+                    {
+                        Some(rank) => println!(
+                            "the scenario's own choice {text:?} ranks {} (value {:+.1}{})",
+                            rank + 1,
+                            analysis.lines[rank].value,
+                            if analysis.lines[rank].exact {
+                                ""
+                            } else {
+                                ", upper bound"
+                            }
+                        ),
+                        None => println!(
+                            "the scenario's own choice {text:?} is not among the considered choices"
+                        ),
+                    }
+                }
+                Err(e) => println!("the scenario's own choice {own:?} does not parse here: {e}"),
+            }
+        }
+    }
+    Ok(())
+}
+
+fn pick_position(
+    loaded: &lab_scenario::LoadedScenario,
+    positions: Vec<Position>,
+    before: Option<&str>,
+) -> Result<Position, String> {
+    let wanted = match before {
+        Some(path) => {
+            let text = std::fs::read_to_string(path).map_err(|e| format!("{path}: {e}"))?;
+            let report: Value = serde_json::from_str(&text).map_err(|e| format!("{path}: {e}"))?;
+            Some(report["before"].clone())
+        }
+        None => None,
+    };
+    match wanted {
+        None if positions.len() == 1 => Ok(positions.into_iter().next().unwrap()),
+        None => Err(format!(
+            "{} initial states; pass --before <oracle report> to pick one",
+            positions.len()
+        )),
+        Some(w) => positions
+            .into_iter()
+            .find(|p| {
+                canonical_json(&p.state, &loaded.meta)
+                    .ok()
+                    .and_then(|key| serde_json::from_str::<Value>(&key).ok())
+                    .is_some_and(|v| v == w)
+            })
+            .ok_or_else(|| "no initial state matches the report's `before`".to_owned()),
+    }
+}
+
+fn side_name(side: SideId) -> &'static str {
+    match side {
+        SideId::One => "p1",
+        SideId::Two => "p2",
+    }
+}
+
+/// `Gardevoir, Rillaboom | bench Sableye, Milotic` from the sidecar names.
+fn roster(loaded: &lab_scenario::LoadedScenario, position: &Position, side: SideId) -> String {
+    let s = position.state.side(side);
+    let meta = &loaded.meta.sides[side.index()];
+    let name = |party: u8| meta.name(party).unwrap_or("?").to_owned();
+    let active: Vec<String> = s
+        .slots
+        .iter()
+        .map(|slot| match slot.party_index {
+            Some(p) if s.party[p as usize].hp > 0 => name(p),
+            Some(p) => format!("{} (fainted)", name(p)),
+            None => "-".to_owned(),
+        })
+        .collect();
+    let bench: Vec<String> = (0..s.party.len() as u8)
+        .filter(|&p| {
+            !s.party[p as usize].species.is_none()
+                && !s.slots.iter().any(|slot| slot.party_index == Some(p))
+        })
+        .map(|p| {
+            if s.party[p as usize].hp > 0 {
+                name(p)
+            } else {
+                format!("{} (fainted)", name(p))
+            }
+        })
+        .collect();
+    format!("{} | bench {}", active.join(", "), bench.join(", "))
+}
+
+fn describe(position: &Position, decision: Decision, side: SideId, choice: &Choice<2>) -> String {
+    let order = &position.order[side.index()];
+    match choice {
+        Choice::Turn(action) => format_choice(&position.state, side, order, action),
+        Choice::Switches(switches) => {
+            let slots = asked_slots(&position.state, decision, side);
+            if slots.is_empty() {
+                "(waits)".to_owned()
+            } else {
+                format_switches(order, &slots, switches)
+            }
+        }
+    }
+}
