@@ -14,7 +14,7 @@ use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::state::{SideId, SlotRef, Status};
 use crate::volatile::Volatile;
 
-use super::battle::{Battle, DamageSource};
+use super::battle::{ActiveMoveRef, Battle, DamageSource};
 use super::order::{boosted_stat, modify};
 use super::support::{side_effect_of, type_boost_item};
 use super::TurnError;
@@ -55,6 +55,22 @@ pub(crate) fn run_move<const N: usize>(
     let pokemon = b.occupant(user).expect("the caller checked the user");
     let id = b.mon(pokemon).moves[move_index as usize].id;
     b.increment_move_actions(user);
+    // `setActiveMove`: set for the whole move, cleared when it ends.
+    b.active_move = Some(ActiveMoveRef { user, pokemon, id });
+    let result = run_move_inner(b, user, move_index, target_loc, will_act);
+    b.active_move = None;
+    result
+}
+
+fn run_move_inner<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    move_index: u8,
+    target_loc: i8,
+    will_act: bool,
+) -> Result<(), TurnError> {
+    let pokemon = b.occupant(user).expect("the caller checked the user");
+    let id = b.mon(pokemon).moves[move_index as usize].id;
     let target = get_target(b, user, id, target_loc);
     let mut mv = ActiveMove {
         id,

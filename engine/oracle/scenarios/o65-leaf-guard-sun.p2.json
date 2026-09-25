@@ -1,0 +1,34 @@
+[
+ {
+  "species": "Sableye",
+  "item": "",
+  "ability": "Prankster",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Will-O-Wisp",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Persian",
+  "item": "",
+  "ability": "Limber",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Thunder Wave",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

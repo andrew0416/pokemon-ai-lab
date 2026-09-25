@@ -1,0 +1,34 @@
+[
+ {
+  "species": "Snorlax",
+  "item": "",
+  "ability": "Immunity",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Sleep Powder",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Hawlucha",
+  "item": "",
+  "ability": "Limber",
+  "nature": "Serious",
+  "evs": {
+   "hp": 32,
+   "def": 2,
+   "spd": 32
+  },
+  "moves": [
+   "Will-O-Wisp",
+   "Protect"
+  ],
+  "level": 50
+ }
+]

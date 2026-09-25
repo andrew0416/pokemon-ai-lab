@@ -1,0 +1,16 @@
+{
+ "description": "Status moves into the abilities that block them: Sleep Powder into Vital Spirit, Will-O-Wisp into Water Veil, Toxic into Immunity, Thunder Wave into Limber.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "o65-status-block.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "o65-status-block.p2.json",
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move sleeppowder 1, move willowisp 2",
+  "p2": "move toxic 1, move thunderwave 2"
+ }
+}

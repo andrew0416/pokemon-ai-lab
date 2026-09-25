@@ -5,7 +5,9 @@
 //! instruction. Transient per-turn data that Showdown keeps on objects but that does not
 //! survive the turn (the faint queue, what moved) lives here, not in `State`.
 
-use crate::dex::{abilities, items, AbilityId, ItemId, MoveId, Type, TypeImmunities};
+use crate::dex::{
+    abilities, conditions, items, AbilityFlags, AbilityId, ItemId, MoveId, Type, TypeImmunities,
+};
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{
@@ -25,6 +27,15 @@ pub(crate) enum DamageSource {
     Indirect,
 }
 
+/// The move being used (Showdown `activeMove` with `activePokemon`), set for the whole of
+/// `runMove`; it decides whether breakable abilities are suppressed (`suppressingAbility`).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) struct ActiveMoveRef {
+    pub user: SlotRef,
+    pub pokemon: PokemonRef,
+    pub id: MoveId,
+}
+
 pub(crate) struct Battle<'a, const N: usize> {
     pub state: &'a mut State<N>,
     pub log: Vec<Instruction>,
@@ -33,6 +44,8 @@ pub(crate) struct Battle<'a, const N: usize> {
     faint_queue: Vec<(PokemonRef, SlotRef)>,
     /// Pokémon that fainted in an active position this turn (`checkFainted` marks them).
     pub fainted_positions: Vec<(SlotRef, PokemonRef)>,
+    /// The move in progress, if any (cleared when `runMove` ends).
+    pub active_move: Option<ActiveMoveRef>,
 }
 
 impl<'a, const N: usize> Battle<'a, N> {
@@ -43,6 +56,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             rng,
             faint_queue: Vec::new(),
             fainted_positions: Vec::new(),
+            active_move: None,
         }
     }
 
@@ -92,6 +106,31 @@ impl<'a, const N: usize> Battle<'a, N> {
         self.slot_mon(slot).map_or(AbilityId::NONE, |m| m.ability)
     }
 
+    /// Showdown `suppressingAbility(target)`: the move in progress ignores abilities
+    /// (`ignoreAbility`, e.g. Sunsteel Strike), its user is still active, and `target` is not
+    /// the user (Gen 8+) and holds no Ability Shield.
+    pub fn suppressing_ability(&self, target: SlotRef) -> bool {
+        let Some(active) = self.active_move else {
+            return false;
+        };
+        active.id.data().ignore_ability
+            && self.occupant(active.user) == Some(active.pokemon)
+            && active.user != target
+            && self.item(target) != items::ABILITY_SHIELD
+    }
+
+    /// The ability whose handlers run for `slot` in an event: none if it is breakable and the
+    /// move in progress suppresses it (Showdown's `runEvent` skip for `flags.breakable`).
+    pub fn ability_unless_broken(&self, slot: SlotRef) -> AbilityId {
+        let ability = self.ability(slot);
+        if ability.data().flags.contains(AbilityFlags::BREAKABLE) && self.suppressing_ability(slot)
+        {
+            AbilityId::NONE
+        } else {
+            ability
+        }
+    }
+
     pub fn item(&self, slot: SlotRef) -> ItemId {
         self.slot_mon(slot).map_or(ItemId::NONE, |m| m.item)
     }
@@ -139,7 +178,8 @@ impl<'a, const N: usize> Battle<'a, N> {
         self.state.slot(slot).volatiles.get(volatile)
     }
 
-    /// Showdown `dex.getImmunity(status, pokemon)` plus the supported `Immunity` handlers.
+    /// Showdown `dex.getImmunity(status, pokemon)` plus the supported `Immunity` handlers
+    /// (`runStatusImmunity`).
     pub fn status_immune(&self, slot: SlotRef, immunity: TypeImmunities) -> bool {
         let Some(mon) = self.slot_mon(slot) else {
             return true;
@@ -147,8 +187,18 @@ impl<'a, const N: usize> Battle<'a, N> {
         if mon.types.iter().any(|t| t.immunities().contains(immunity)) {
             return true;
         }
-        // Sand Rush: `onImmunity(type) { if (type === 'sandstorm') return false; }`.
-        immunity == TypeImmunities::SANDSTORM && mon.ability == abilities::SAND_RUSH
+        // Immunity handlers; each returns false for one immunity id, so order is irrelevant.
+        if immunity == TypeImmunities::SANDSTORM {
+            // Sand Rush: `onImmunity(type) { if (type === 'sandstorm') return false; }`.
+            return mon.ability == abilities::SAND_RUSH;
+        }
+        if immunity == TypeImmunities::FRZ {
+            // Harsh sunlight (`sunnyday.onImmunity`) and Magma Armor (breakable).
+            return self.weather() == Weather::Sun
+                || self.ability_unless_broken(slot) == abilities::MAGMA_ARMOR;
+        }
+        // Ice Body's `onImmunity('hail')`: hail is not a supported weather.
+        false
     }
 
     // ---- HP ----------------------------------------------------------------------------
@@ -295,7 +345,8 @@ impl<'a, const N: usize> Battle<'a, N> {
     // ---- status --------------------------------------------------------------------------
 
     /// Showdown `trySetStatus` → `setStatus` for the supported handlers: fails on a fainted
-    /// target, an existing status, type immunity, and the Electric/Misty Terrain rules.
+    /// target, an existing status, status immunity (`runStatusImmunity`), and the `SetStatus`
+    /// handlers (see [`Battle::set_status_blocked`]).
     pub fn try_set_status(&mut self, target: SlotRef, status: Status) -> bool {
         let Some(pokemon) = self.alive(target) else {
             return false;
@@ -314,13 +365,8 @@ impl<'a, const N: usize> Battle<'a, N> {
         if immunity != TypeImmunities::EMPTY && self.status_immune(target, immunity) {
             return false;
         }
-        // SetStatus handlers.
-        if self.is_grounded(target) {
-            match self.terrain() {
-                Terrain::Misty => return false,
-                Terrain::Electric if status == Status::Sleep => return false,
-                _ => {}
-            }
+        if self.set_status_blocked(target, status) {
+            return false;
         }
         let turns = match status {
             // Champions `slp`: `sample([2, 3, 3])`.
@@ -342,6 +388,94 @@ impl<'a, const N: usize> Battle<'a, N> {
         });
         self.set_status_turns(pokemon, turns);
         true
+    }
+
+    /// Showdown `runEvent('SetStatus')` for a status set on `target` by another Pokémon's move.
+    /// Every implemented handler only returns `false`/`null` (plus a message), so whether the
+    /// status is blocked does not depend on their order:
+    /// - the target's own ability (`onSetStatus`; breakable ones are skipped while an
+    ///   ability-ignoring move is in progress): Water Veil (brn), Immunity (psn, tox),
+    ///   Insomnia and Vital Spirit (slp), Limber (par), Comatose (everything), Purifying Salt
+    ///   (everything), Leaf Guard (everything in harsh sunlight), Thermal Exchange (brn);
+    /// - Sweet Veil on the target or an ally (`onAllySetStatus`, slp);
+    /// - Misty Terrain (everything) and Electric Terrain (slp) for a grounded target.
+    ///
+    /// Purifying Salt and Thermal Exchange are still refused by `support` (their damage
+    /// handlers are not implemented here); Flower Veil is refused (`onAllyTryBoost`).
+    pub fn set_status_blocked(&self, target: SlotRef, status: Status) -> bool {
+        let own = self.ability_unless_broken(target);
+        let blocked_by_own = match own {
+            a if a == abilities::WATER_VEIL || a == abilities::THERMAL_EXCHANGE => {
+                status == Status::Burn
+            }
+            a if a == abilities::IMMUNITY => matches!(status, Status::Poison | Status::Toxic),
+            a if a == abilities::INSOMNIA || a == abilities::VITAL_SPIRIT => {
+                status == Status::Sleep
+            }
+            a if a == abilities::LIMBER => status == Status::Paralyze,
+            a if a == abilities::COMATOSE || a == abilities::PURIFYING_SALT => true,
+            // `target.effectiveWeather()`: Utility Umbrella is not supported.
+            a if a == abilities::LEAF_GUARD => self.weather() == Weather::Sun,
+            _ => false,
+        };
+        if blocked_by_own {
+            return true;
+        }
+        // `onAllySetStatus` runs for every active ally and the target itself.
+        if status == Status::Sleep
+            && self
+                .alive_slots(target.side)
+                .into_iter()
+                .any(|s| self.ability_unless_broken(s) == abilities::SWEET_VEIL)
+        {
+            return true;
+        }
+        if self.is_grounded(target) {
+            match self.terrain() {
+                Terrain::Misty => return true,
+                Terrain::Electric if status == Status::Sleep => return true,
+                _ => {}
+            }
+        }
+        false
+    }
+
+    /// Showdown `runEvent('TryAddVolatile')` for a new volatile on `target`: the ability
+    /// handlers of Insomnia, Vital Spirit, Purifying Salt and Leaf Guard (in sun) on the
+    /// target block Yawn; Sweet Veil (Yawn) and Aroma Veil (Attract, Disable, Encore, Heal
+    /// Block, Taunt, Torment) block for the whole side. None of those volatiles is
+    /// representable yet, so this only guards their future implementation. The terrains'
+    /// `onTryAddVolatile` (Yawn, confusion) belong with those volatiles too.
+    pub fn add_volatile_blocked(&self, target: SlotRef, volatile: Volatile) -> bool {
+        let condition = volatile.condition();
+        let yawn = condition == conditions::YAWN;
+        let blocked_by_own = match self.ability_unless_broken(target) {
+            a if a == abilities::INSOMNIA
+                || a == abilities::VITAL_SPIRIT
+                || a == abilities::PURIFYING_SALT =>
+            {
+                yawn
+            }
+            a if a == abilities::LEAF_GUARD => yawn && self.weather() == Weather::Sun,
+            _ => false,
+        };
+        if blocked_by_own {
+            return true;
+        }
+        let aroma = [
+            conditions::ATTRACT,
+            conditions::DISABLE,
+            conditions::ENCORE,
+            conditions::HEALBLOCK,
+            conditions::TAUNT,
+            conditions::TORMENT,
+        ]
+        .contains(&condition);
+        self.alive_slots(target.side).into_iter().any(|s| {
+            let ability = self.ability_unless_broken(s);
+            (ability == abilities::SWEET_VEIL && yawn)
+                || (ability == abilities::AROMA_VEIL && aroma)
+        })
     }
 
     pub fn set_status_turns(&mut self, pokemon: PokemonRef, turns: i8) {
@@ -392,6 +526,10 @@ impl<'a, const N: usize> Battle<'a, N> {
                 _ => return false,
             }
         } else {
+            // TryAddVolatile handlers (the new volatile only; a restart skips them).
+            if self.add_volatile_blocked(target, volatile) {
+                return false;
+            }
             VolatileState {
                 active: true,
                 duration: volatile.initial_duration(),
@@ -565,6 +703,29 @@ impl<'a, const N: usize> Battle<'a, N> {
 
 /// Showdown `stall.counterMax`.
 const STALL_COUNTER_MAX: u16 = 729;
+
+/// Whether `ability`'s `onUpdate` would cure `status` (Water Veil, Thermal Exchange: brn;
+/// Immunity: psn, tox; Insomnia, Vital Spirit: slp; Limber: par; Magma Armor: frz).
+///
+/// The engine has no `Update` event yet (Showdown runs it after every action), so a holder
+/// must never be active with that status: `support::check_state` refuses such a state and a
+/// switch-in of such a Pokémon is refused. With those guards the cure is unreachable, because
+/// the same abilities block the status from being set (`set_status_blocked`, `status_immune`)
+/// and nothing implemented bypasses them. Anything that gives one of these abilities to a
+/// Pokémon that already has the status (Mega Evolution into Mewtwo-Mega-Y's Insomnia, Trace
+/// mid-turn, Skill Swap) must check this too.
+pub(crate) fn cured_on_update(ability: AbilityId, status: Status) -> bool {
+    match ability {
+        a if a == abilities::WATER_VEIL || a == abilities::THERMAL_EXCHANGE => {
+            status == Status::Burn
+        }
+        a if a == abilities::IMMUNITY => matches!(status, Status::Poison | Status::Toxic),
+        a if a == abilities::INSOMNIA || a == abilities::VITAL_SPIRIT => status == Status::Sleep,
+        a if a == abilities::LIMBER => status == Status::Paralyze,
+        a if a == abilities::MAGMA_ARMOR => status == Status::Freeze,
+        _ => false,
+    }
+}
 
 pub(crate) fn weather_from(value: u8) -> Weather {
     match value {

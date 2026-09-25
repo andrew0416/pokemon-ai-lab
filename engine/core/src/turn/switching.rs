@@ -1,7 +1,8 @@
 //! Switch actions: Showdown `switchIn` (the old active leaves, its slot state and ability
 //! reset) and `runSwitch` (the newcomer's switch-in handlers).
 //!
-//! Implemented switch-in handlers: weather and terrain setters and Intimidate. A newcomer
+//! Implemented switch-in handlers: weather and terrain setters and Intimidate; abilities whose
+//! `onStart` only announces them are accepted as no-ops. A newcomer
 //! with any other ability or item that acts on switch-in (or that the turn engine does not
 //! implement on the field) makes the turn unsupported.
 
@@ -10,7 +11,7 @@ use crate::field::{Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SlotRef, BOOST_COUNT};
 
-use super::battle::Battle;
+use super::battle::{cured_on_update, Battle};
 use super::moves::{set_terrain, set_weather};
 use super::support::{ability_supported_on_field, item_supported_on_field};
 use super::TurnError;
@@ -35,6 +36,8 @@ fn start_effect(ability: AbilityId) -> Option<StartEffect> {
         a if a == abilities::MISTY_SURGE => StartEffect::Terrain(Terrain::Misty),
         a if a == abilities::PSYCHIC_SURGE => StartEffect::Terrain(Terrain::Psychic),
         a if a == abilities::INTIMIDATE => StartEffect::Intimidate,
+        // `onStart` only announces the ability.
+        a if a == abilities::COMATOSE => StartEffect::None,
         // Implemented on the field and nothing at switch-in.
         _ if !data.handlers.contains(&"onStart") => StartEffect::None,
         _ => return None,
@@ -71,6 +74,13 @@ pub(crate) fn run_switch<const N: usize>(
             mon.ability.data().name
         )));
     };
+    // The Update after the switch would cure the status (see `cured_on_update`).
+    if cured_on_update(mon.ability, mon.status) {
+        return Err(b.unsupported(format!(
+            "{name}: {} would cure its status on Update",
+            mon.ability.data().name
+        )));
+    }
 
     // The old active leaves: its ability reverts, the slot resets.
     if let Some(outgoing) = b.occupant(slot) {

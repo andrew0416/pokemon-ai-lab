@@ -14,7 +14,7 @@ use crate::field::{FieldEffect, SideEffect, Weather, FIELD_EFFECT_COUNT, SIDE_EF
 use crate::state::{SideId, SlotRef, State};
 use crate::volatile::Volatile;
 
-use super::battle::weather_from;
+use super::battle::{cured_on_update, weather_from};
 
 /// Moves with Showdown callbacks that are implemented, with the exact callback list.
 pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
@@ -181,6 +181,28 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::SWIFT_SWIM, &["onModifySpe"]),
     (abilities::SLUSH_RUSH, &["onModifySpe"]),
     (abilities::PRANKSTER, &["onModifyPriority"]),
+    // Status immunities (`Battle::set_status_blocked`, `status_immune`,
+    // `add_volatile_blocked`). `onUpdate` cures are unreachable: see `cured_on_update`.
+    (abilities::WATER_VEIL, &["onSetStatus", "onUpdate"]),
+    (abilities::IMMUNITY, &["onSetStatus", "onUpdate"]),
+    (
+        abilities::INSOMNIA,
+        &["onSetStatus", "onTryAddVolatile", "onUpdate"],
+    ),
+    (
+        abilities::VITAL_SPIRIT,
+        &["onSetStatus", "onTryAddVolatile", "onUpdate"],
+    ),
+    (abilities::LIMBER, &["onSetStatus", "onUpdate"]),
+    (abilities::MAGMA_ARMOR, &["onImmunity", "onUpdate"]),
+    // `onStart` only announces the ability.
+    (abilities::COMATOSE, &["onSetStatus", "onStart"]),
+    (abilities::LEAF_GUARD, &["onSetStatus", "onTryAddVolatile"]),
+    (
+        abilities::SWEET_VEIL,
+        &["onAllySetStatus", "onAllyTryAddVolatile"],
+    ),
+    (abilities::AROMA_VEIL, &["onAllyTryAddVolatile"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -398,6 +420,12 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
             }
             if mon.ability == abilities::TRACE {
                 return Err(format!("{name}: Trace still seeking a target"));
+            }
+            if cured_on_update(mon.ability, mon.status) {
+                return Err(format!(
+                    "{name}: {} would cure its status on Update (not implemented)",
+                    mon.ability.data().name
+                ));
             }
             if !item_supported_on_field(mon.item) {
                 return Err(format!(
