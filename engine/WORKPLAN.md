@@ -201,6 +201,15 @@
 | O24 | 완료 2026-09-26 (Opus) | `50c4eed` | `o24-clear-smog`, `o24-haze`, `o24-boost-swaps`, `o24-topsy-turvy-fail` | Haze `onHitField`; Clear Smog·Topsy-Turvy·Power/Guard/Heart Swap `onHit`. 스피드스왑 제외 |
 | F4 | 완료 2026-09-26 | `9dd7ea6` | `tie-start.initial.json`, 기존 `initial.rs` 10개 | 등장 처리 통합: `turn/switching.rs`의 `switch_in`(퇴장·fnt 해제·슬롯 배치)·`run_switch_in`(일괄 `runSwitch`: 저장 속도순, 동률 균등 무작위, 특성 바뀐 핸들러 건너뜀)·`start_ability`(날씨 4·필드 4·위협·트레이스·메시지만인 것)·`START_HANDLERS` 표. `scenario/switch_in.rs`는 검증 후 `turn::enumerate_start`에 위임 |
 | F5 | 완료 2026-09-26 | `9dd7ea6` | `ko-replace`(setupTurns 1턴 + 교체 결정, 속도 동률 2결과) / `tests/replacement.rs` | `Slot.fainted_occupant`+`Instruction::SetFaintedOccupant`(기절 포켓몬이 자리를 지킴), `turn::enumerate_replacements`(instaswitch 기절자 속도순 → 일괄 runSwitch → endTurn), `enumerate_stages` 공용 열거. 로더: `setupTurns` 재생(`scenario_positions`), Showdown 파티 순서 추적(`advance_order`, `switch N`), `Decision::{Turn,Replacement}`, `lab-turn` 대응 |
+| O40 | 완료 2026-09-26 (Opus) | `ce5de4f` | `o40-*` 6개 / `tests/abilities_damage.rs` | `onBasePower` 8종, 펑크록 `onSourceModifyDamage`, 강철정신 `onAllyBasePower`. 새 파일 `core/src/turn/abilities.rs`: 보정 핸들러를 Showdown `speedSort` 순(우선도→subOrder→속도, 인수가 다를 때만 동률 분기)으로 연쇄하는 `Handler`/`chain` |
+| O41 | 완료 2026-09-26 (Opus) | `5d403dd` | `o41-adaptability` | `onModifySTAB` |
+| O42 | 완료 2026-09-26 (Opus) | `a5647fe` | `o42-blaze-torrent`, `o42-overgrow-swarm` | 1/3 정확 경계 |
+| O43 | 완료 2026-09-26 (Opus) | `93762df` | `o43-hustle` | `onModifyAtk` 직접 곱, `onSourceModifyAccuracy` 3277(중력과 연쇄) |
+| O44 | 완료 2026-09-26 (Opus) | `c208597` | `o44-guts-marvelscale`, `o44-quickfeet` | 근성 화상 반감 무효, 속보 마비 반감 무효 |
+| O45 | 완료 2026-09-26 (Opus) | `0c833eb` | `o45-waterbubble`, `o45-thickfat-heatproof`, `o45-purifyingsalt`, `o45-dryskin-rain`, `o45-dryskin-sun` | 다섯 특성의 전 콜백. 수포 `onUpdate`(화상 치료)는 `check_state`가 화상 상태의 수포를 거부해 도달 불가 처리; 병합 시 `cured_on_update`에도 추가. 정화의소금 `onTryAddVolatile`는 하품 전용 |
+| O46 | 완료 2026-09-26 (Opus) | `17b2658` | `o46-*` 4개 | `onSourceModifyDamage` 8종 |
+| O47 | 완료 2026-09-26 (Opus) | `1f2e0ad` | `o47-friendguard`, `o47-friendguard-ally` | `onAnyModifyDamage`(아군 공격 포함) |
+| (병합) | 2026-09-26 | `5654f3b` | | Opus 브랜치 `worktree-agent-aba64e625a6875c96` 병합. 충돌 6개 파일 수동 해소: 건조피부 중복(TryHit·onWeather는 O51 구현 유지, 위력 1.25는 `abilities.rs` 유지), 태양의힘 `onModifySpA`를 `attack_handlers`로 이동, 기술 자체 `onBasePower`(`handlers::on_base_power`)를 `Handler` 연쇄에 편입, `switch_in.rs`는 F4 버전 유지(수포 등장 표 추가), `super::abilities`는 `ability_events`로 별칭 |
 | O65 | 완료 2026-09-26 (Opus) | `ff43a7c` | `o65-status-block`, `o65-comatose-sweet-veil`, `o65-leaf-guard-sun` / `tests/abilities_status.rs` | `onSetStatus`·`onAllySetStatus`·`onImmunity`(마그마의무장)·`onTryAddVolatile`. `onUpdate` 치료는 `cured_on_update`로 "도달 불가" 처리(그 상태로 필드에 있으면 거부). 클리어스모그(정화의소금) 고스트 반감은 O45, 열교환 공격 상승은 F15, 플라워베일은 F16 대기 |
 | O61 | 완료 2026-09-26 (Opus) | `824fb04` | `o61-gale-wings-triage`, `o61-gale-wings-damaged`, `o61-stall` | 질풍날개·힐링시프트 `onModifyPriority`, 스톨 분수 우선도(`ActionKind::Move.fractional_tenths`, 큐 등록 시 고정) |
 | O62 | 완료 2026-09-26 (Opus) | `2d22309` | `o62-pressure` | `onDeductPP`(`pressureTargets` 규칙) |
