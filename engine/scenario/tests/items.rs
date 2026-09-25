@@ -76,6 +76,18 @@ fn choice_lock_ended_before_the_move_matches_showdown() {
     assert_exact_parity("o83-choice-knocked-before-move");
 }
 
+// ---- O84 Expert Belt / Life Orb ----------------------------------------------------------------
+
+#[test]
+fn expert_belt_matches_showdown() {
+    assert_exact_parity("o84-expert-belt");
+}
+
+#[test]
+fn life_orb_damage_and_recoil_match_showdown() {
+    assert_exact_parity("o84-life-orb");
+}
+
 /// A Pokémon locked by its Choice item cannot choose another move (`choicelock`'s
 /// `onDisableMove`).
 #[test]

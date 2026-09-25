@@ -1,0 +1,23 @@
+{
+ "description": "O84: Life Orb Garchomp's Dragon Claw hits Kingambit (5324/4096, recoil 1/10); Life Orb Blissey's Calm Mind has no recoil (status move); Magic Guard Clefable's Life Orb Draining Kiss hits Garchomp without recoil. Kingambit uses Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Garchomp", "item": "Life Orb", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 2, "atk": 32, "spe": 32}, "moves": ["Dragon Claw", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "Life Orb", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Kingambit", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Clefable", "item": "Life Orb", "ability": "Magic Guard", "nature": "Bold",
+    "evs": {"hp": 32, "spa": 32, "def": 2}, "moves": ["Draining Kiss", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move dragonclaw 1, move calmmind", "p2": "move swordsdance, move drainingkiss 1"}
+}

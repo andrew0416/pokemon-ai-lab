@@ -178,6 +178,7 @@ fn eat_item<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> bool {
 /// effectiveness (`getMoveHitData(move).typeMod`).
 ///
 /// - Life Orb: `chainModify([5324, 4096])`.
+/// - Expert Belt: `chainModify([4915, 4096])` on a super-effective hit.
 /// - Resist berries: a hit of the berry's type (super effective, except for Chilan Berry)
 ///   eats the berry (`target.eatItem()`), then `chainModify(0.5)`. Showdown eats it inside the
 ///   handler; no other ModifyDamage handler reads the target's item, so eating it while the
@@ -191,8 +192,12 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
     type_mod: i32,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
-    if b.item(user) == items::LIFE_ORB {
-        out.push(Handler::of(b, user, 0, SUB_ITEM, 5324));
+    match b.item(user) {
+        i if i == items::LIFE_ORB => out.push(Handler::of(b, user, 0, SUB_ITEM, 5324)),
+        i if i == items::EXPERT_BELT && type_mod > 0 => {
+            out.push(Handler::of(b, user, 0, SUB_ITEM, 4915));
+        }
+        _ => {}
     }
     if let Some(ty) = resist_berry(b.item(target)) {
         let applies = data.move_type == ty && (ty == Type::Normal || type_mod > 0);
