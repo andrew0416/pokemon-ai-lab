@@ -121,6 +121,28 @@ fn initial_outcomes_match_the_oracle_fixture() {
     }
 }
 
+/// A start-of-battle Speed tie (Gardevoir's Trace vs Ninetales' Drought, both 132) is broken
+/// uniformly at random by Showdown's `speedSort`, not by switch-in order: the oracle
+/// (`initial.cjs`, 64 branches) gives Drought/sun 5 and Drought/sun 8 a quarter each and
+/// Shell Armor/sun 8 a half.
+#[test]
+fn start_speed_ties_are_uniform_like_the_oracle() {
+    let loaded = load_scenario_file(engine_dir().join("oracle/scenarios/tie-start.json")).unwrap();
+    let ours = outcome_values(&loaded);
+    let path = engine_dir().join("oracle/expected/tie-start.initial.json");
+    let fixture: Value =
+        serde_json::from_str(&std::fs::read_to_string(&path).unwrap()).unwrap();
+    let expected = fixture["outcomes"].as_array().unwrap();
+    assert_eq!(expected.len(), 3);
+    assert_eq!(ours.len(), expected.len());
+    for o in expected {
+        let p = o["p"].as_f64().unwrap();
+        let found = ours.iter().find(|(_, state)| *state == o["state"]);
+        let (q, _) = found.unwrap_or_else(|| panic!("no engine outcome equals {}", o["state"]));
+        assert!((p - q).abs() < 1e-12, "p {p} vs {q}");
+    }
+}
+
 #[test]
 fn oracle_before_is_one_of_the_initial_outcomes() {
     let fixture = fixture();

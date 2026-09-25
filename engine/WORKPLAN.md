@@ -189,4 +189,15 @@
 | F1 | 완료 2026-09-26 | `baca382` | `instruction.rs`·`diff.rs` 단위 테스트 | `Instruction::SetForme{old,new: Forme}`(종·타입·최대HP·능력치·특성·기본특성 일괄), `Instruction::SetTypes`. 정규 출력 `types`. 퇴장(교체·기절) 시 타입은 종 타입으로 복귀(`Battle::clear_volatile`) |
 | F2 | 완료 2026-09-26 | `baca382` | 로더 fixture | `Pokemon { nature, stat_points }`, `stats::champions_stats_unchecked`, `Pokemon::forme_as(species)`. 사이드카 `MemberMeta`에서 성격·SP 제거 |
 | F3 | 완료 2026-09-26 | `bc97223` | `mega-tyranitar`, `mega-tyranitar-sand` / `scenario/tests/mega.rs` | `turn/mega.rs`, `ActionKind::Mega`(order 104). 메가 대상 종의 특성이 필드·등장 모두 지원돼야 선택 가능(`mega_target`), 아니면 `Unsupported`. `AfterMega`는 훅 자리만. 첫 등장(`switch_in.rs`)에 날씨 4·필드 4·위협 추가(F4 통합 전 임시) |
+| O2 | 완료 2026-09-26 (Opus) | `0f237c2` | `o2-grav-apple` / `tests/moves_basic.rs` | Grav Apple `onBasePower` |
+| O3 | 완료 2026-09-26 (Opus) | `c8f73b3` | `o3-rising-voltage`, `o3-rising-voltage-ungrounded` | Rising Voltage `basePowerCallback`, Psyblade `onBasePower`. 미스티익스플로전 제외(자폭) |
+| O5 | 완료 2026-09-26 (Opus) | `be8f2ce` | `o5-thunder-rain`, `o5-thunder-sun-gravity`, `o5-blizzard-snow` | 날씨 명중 `onModifyMove`. 폭풍은 혼란 휘발 때문에 여전히 거부. 우산은 날씨 읽는 곳에서 검사하되 도구 자체는 거부 |
+| O34 | 완료 2026-09-26 (Opus) | `04ee9c7` | `o34-freeze-dry-flying-press`, `…-immune` | Freeze-Dry / Flying Press `onEffectiveness`. 사우전드애로는 `smackdown` 휘발 필요(미구현) |
+| O17 | 완료 2026-09-26 (Opus) | `fdd07a5` | `o17-poltergeist-knock-off`, `o17-acrobatics-knock-off`, `o17-acrobatics-item` | Poltergeist `onTry`, Acrobatics `basePowerCallback`; 탁쳐서떨구기는 확인만 |
+| O11 | 완료 2026-09-26 (Opus) | `55b3086` | `o11-first-impression`, `…-psychic-terrain` | `onTry`·`onDisableMove` |
+| O12 | 완료 2026-09-26 (Opus) | `9827d00` | `o12-dire-claw`, `o12-tri-attack`, `o12-tri-attack-sun` | 3분기 상태. Champions 다이어클로 30%. 부수 수정: `status_immune`가 쾌청의 얼음 면역을 반영 |
+| O25 | 완료 2026-09-26 (Opus) | `c72f340` | `o25-heal-sun/sand/snow-full/clear` | 날씨별 회복 `onHit` |
+| O26 | 완료 2026-09-26 (Opus) | `643f140` | `o26-icy-wind`, `o26-electroweb`, `o26-snarl` | 코드 변경 없음, 오라클 확인 |
+| O24 | 완료 2026-09-26 (Opus) | `50c4eed` | `o24-clear-smog`, `o24-haze`, `o24-boost-swaps`, `o24-topsy-turvy-fail` | Haze `onHitField`; Clear Smog·Topsy-Turvy·Power/Guard/Heart Swap `onHit`. 스피드스왑 제외 |
+| (병합) | 2026-09-26 | `2e0be94` | | Opus 브랜치 `worktree-agent-a334fdc160394f916` 병합(충돌 없음). 새 파일 `core/src/turn/moves/handlers.rs`(이벤트별 함수), `ActiveMove.accuracy` |
 | F7 | 완료 2026-09-26 | `2e604ec` | `followme-hypnosis`, `ragepowder-grass`, `lightningrod-foe`, `lightningrod-ally` / `scenario/tests/redirect.rs` | `moves.rs::redirect_target`(`RedirectTarget` priority event: 우선도→속도, 첫 유효 대상), 휘발 `FollowMe`·`RagePowder`·`Spotlight`(1턴), 피뢰침·저수 `onTryHit`(흡수 + 특공 +1). 스포트라이트는 코드만(시나리오 없음). 같은 우선도·속도의 유효 유도자 둘(Showdown은 `effectOrder`)은 `Unsupported`. 스토커·프로펠러테일은 미지원(`onModifyMove`) |

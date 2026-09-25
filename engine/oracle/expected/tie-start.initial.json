@@ -1,0 +1,451 @@
+{
+ "provenance": "engine/oracle/initial.cjs",
+ "scenario": "engine/oracle/scenarios/tie-start.json",
+ "format": "gen9championsdoublescustomgame",
+ "showdownCommit": "9e317a666d9fd250f36f494778e843141f09bdba",
+ "branches": 64,
+ "distinctOutcomes": 3,
+ "totalProbability": 1,
+ "before": {
+  "schema": 1,
+  "turn": 1,
+  "ended": false,
+  "winner": "",
+  "field": {
+   "weather": "sunnyday",
+   "weatherDuration": 8,
+   "terrain": "",
+   "terrainDuration": null,
+   "pseudoWeather": {}
+  },
+  "sides": [
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Excadrill",
+      "species": "Excadrill",
+      "hp": 189,
+      "maxhp": 189,
+      "status": "",
+      "item": "leftovers",
+      "ability": "sandrush",
+      "slot": 1,
+      "pp": {
+       "ironhead": 16,
+       "highhorsepower": 12,
+       "rockslide": 12,
+       "protect": 8
+      },
+      "boosts": {},
+      "volatiles": {}
+     },
+     {
+      "name": "Gardevoir",
+      "species": "Gardevoir",
+      "hp": 145,
+      "maxhp": 145,
+      "status": "",
+      "item": "focussash",
+      "ability": "shellarmor",
+      "slot": 0,
+      "pp": {
+       "hypnosis": 20,
+       "hypervoice": 12,
+       "protect": 8,
+       "focusblast": 8
+      },
+      "boosts": {},
+      "volatiles": {}
+     }
+    ]
+   },
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Ninetales",
+      "species": "Ninetales",
+      "hp": 180,
+      "maxhp": 180,
+      "status": "",
+      "item": "heatrock",
+      "ability": "drought",
+      "slot": 0,
+      "pp": {
+       "flamethrower": 16,
+       "willowisp": 16,
+       "nastyplot": 20,
+       "protect": 8
+      },
+      "boosts": {},
+      "volatiles": {}
+     },
+     {
+      "name": "Torkoal",
+      "species": "Torkoal",
+      "hp": 177,
+      "maxhp": 177,
+      "status": "",
+      "item": "leftovers",
+      "ability": "shellarmor",
+      "slot": 1,
+      "pp": {
+       "lavaplume": 16,
+       "earthpower": 12,
+       "bodypress": 12,
+       "protect": 8
+      },
+      "boosts": {},
+      "volatiles": {}
+     }
+    ]
+   }
+  ]
+ },
+ "outcomes": [
+  {
+   "p": 0.5,
+   "branches": 32,
+   "state": {
+    "schema": 1,
+    "turn": 1,
+    "ended": false,
+    "winner": "",
+    "field": {
+     "weather": "sunnyday",
+     "weatherDuration": 8,
+     "terrain": "",
+     "terrainDuration": null,
+     "pseudoWeather": {}
+    },
+    "sides": [
+     {
+      "request": "move",
+      "conditions": {},
+      "slotConditions": [
+       {},
+       {}
+      ],
+      "pokemon": [
+       {
+        "name": "Excadrill",
+        "species": "Excadrill",
+        "hp": 189,
+        "maxhp": 189,
+        "status": "",
+        "item": "leftovers",
+        "ability": "sandrush",
+        "slot": 1,
+        "pp": {
+         "ironhead": 16,
+         "highhorsepower": 12,
+         "rockslide": 12,
+         "protect": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       },
+       {
+        "name": "Gardevoir",
+        "species": "Gardevoir",
+        "hp": 145,
+        "maxhp": 145,
+        "status": "",
+        "item": "focussash",
+        "ability": "shellarmor",
+        "slot": 0,
+        "pp": {
+         "hypnosis": 20,
+         "hypervoice": 12,
+         "protect": 8,
+         "focusblast": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       }
+      ]
+     },
+     {
+      "request": "move",
+      "conditions": {},
+      "slotConditions": [
+       {},
+       {}
+      ],
+      "pokemon": [
+       {
+        "name": "Ninetales",
+        "species": "Ninetales",
+        "hp": 180,
+        "maxhp": 180,
+        "status": "",
+        "item": "heatrock",
+        "ability": "drought",
+        "slot": 0,
+        "pp": {
+         "flamethrower": 16,
+         "willowisp": 16,
+         "nastyplot": 20,
+         "protect": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       },
+       {
+        "name": "Torkoal",
+        "species": "Torkoal",
+        "hp": 177,
+        "maxhp": 177,
+        "status": "",
+        "item": "leftovers",
+        "ability": "shellarmor",
+        "slot": 1,
+        "pp": {
+         "lavaplume": 16,
+         "earthpower": 12,
+         "bodypress": 12,
+         "protect": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "p": 0.25,
+   "branches": 16,
+   "state": {
+    "schema": 1,
+    "turn": 1,
+    "ended": false,
+    "winner": "",
+    "field": {
+     "weather": "sunnyday",
+     "weatherDuration": 5,
+     "terrain": "",
+     "terrainDuration": null,
+     "pseudoWeather": {}
+    },
+    "sides": [
+     {
+      "request": "move",
+      "conditions": {},
+      "slotConditions": [
+       {},
+       {}
+      ],
+      "pokemon": [
+       {
+        "name": "Excadrill",
+        "species": "Excadrill",
+        "hp": 189,
+        "maxhp": 189,
+        "status": "",
+        "item": "leftovers",
+        "ability": "sandrush",
+        "slot": 1,
+        "pp": {
+         "ironhead": 16,
+         "highhorsepower": 12,
+         "rockslide": 12,
+         "protect": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       },
+       {
+        "name": "Gardevoir",
+        "species": "Gardevoir",
+        "hp": 145,
+        "maxhp": 145,
+        "status": "",
+        "item": "focussash",
+        "ability": "drought",
+        "slot": 0,
+        "pp": {
+         "hypnosis": 20,
+         "hypervoice": 12,
+         "protect": 8,
+         "focusblast": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       }
+      ]
+     },
+     {
+      "request": "move",
+      "conditions": {},
+      "slotConditions": [
+       {},
+       {}
+      ],
+      "pokemon": [
+       {
+        "name": "Ninetales",
+        "species": "Ninetales",
+        "hp": 180,
+        "maxhp": 180,
+        "status": "",
+        "item": "heatrock",
+        "ability": "drought",
+        "slot": 0,
+        "pp": {
+         "flamethrower": 16,
+         "willowisp": 16,
+         "nastyplot": 20,
+         "protect": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       },
+       {
+        "name": "Torkoal",
+        "species": "Torkoal",
+        "hp": 177,
+        "maxhp": 177,
+        "status": "",
+        "item": "leftovers",
+        "ability": "shellarmor",
+        "slot": 1,
+        "pp": {
+         "lavaplume": 16,
+         "earthpower": 12,
+         "bodypress": 12,
+         "protect": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "p": 0.25,
+   "branches": 16,
+   "state": {
+    "schema": 1,
+    "turn": 1,
+    "ended": false,
+    "winner": "",
+    "field": {
+     "weather": "sunnyday",
+     "weatherDuration": 8,
+     "terrain": "",
+     "terrainDuration": null,
+     "pseudoWeather": {}
+    },
+    "sides": [
+     {
+      "request": "move",
+      "conditions": {},
+      "slotConditions": [
+       {},
+       {}
+      ],
+      "pokemon": [
+       {
+        "name": "Excadrill",
+        "species": "Excadrill",
+        "hp": 189,
+        "maxhp": 189,
+        "status": "",
+        "item": "leftovers",
+        "ability": "sandrush",
+        "slot": 1,
+        "pp": {
+         "ironhead": 16,
+         "highhorsepower": 12,
+         "rockslide": 12,
+         "protect": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       },
+       {
+        "name": "Gardevoir",
+        "species": "Gardevoir",
+        "hp": 145,
+        "maxhp": 145,
+        "status": "",
+        "item": "focussash",
+        "ability": "drought",
+        "slot": 0,
+        "pp": {
+         "hypnosis": 20,
+         "hypervoice": 12,
+         "protect": 8,
+         "focusblast": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       }
+      ]
+     },
+     {
+      "request": "move",
+      "conditions": {},
+      "slotConditions": [
+       {},
+       {}
+      ],
+      "pokemon": [
+       {
+        "name": "Ninetales",
+        "species": "Ninetales",
+        "hp": 180,
+        "maxhp": 180,
+        "status": "",
+        "item": "heatrock",
+        "ability": "drought",
+        "slot": 0,
+        "pp": {
+         "flamethrower": 16,
+         "willowisp": 16,
+         "nastyplot": 20,
+         "protect": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       },
+       {
+        "name": "Torkoal",
+        "species": "Torkoal",
+        "hp": 177,
+        "maxhp": 177,
+        "status": "",
+        "item": "leftovers",
+        "ability": "shellarmor",
+        "slot": 1,
+        "pp": {
+         "lavaplume": 16,
+         "earthpower": 12,
+         "bodypress": 12,
+         "protect": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       }
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

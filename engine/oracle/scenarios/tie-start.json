@@ -1,0 +1,16 @@
+{
+ "description": "Start-of-battle Speed tie between Gardevoir (Trace, 132) and Ninetales (Drought + Heat Rock, 132): which SwitchIn handler runs first decides whether Trace's copied Drought sets 5-turn sun (Ninetales' then fails) or Ninetales sets 8-turn sun. Showdown breaks the tie by effectOrder (p1's leads switched in first), not at random. Both sides Protect.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "tie-start.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "tie-start.p2.json",
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move protect, move protect",
+  "p2": "move protect, move protect"
+ }
+}

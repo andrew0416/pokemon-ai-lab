@@ -1,0 +1,38 @@
+[
+ {
+  "species": "Ninetales",
+  "item": "Heat Rock",
+  "ability": "Drought",
+  "nature": "Modest",
+  "evs": {
+   "hp": 32,
+   "spa": 22,
+   "spe": 12
+  },
+  "moves": [
+   "Flamethrower",
+   "Will-O-Wisp",
+   "Nasty Plot",
+   "Protect"
+  ],
+  "level": 50
+ },
+ {
+  "species": "Torkoal",
+  "item": "Leftovers",
+  "ability": "Shell Armor",
+  "nature": "Quiet",
+  "evs": {
+   "hp": 32,
+   "spa": 32,
+   "def": 2
+  },
+  "moves": [
+   "Lava Plume",
+   "Earth Power",
+   "Body Press",
+   "Protect"
+  ],
+  "level": 50
+ }
+]
