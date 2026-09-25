@@ -491,7 +491,10 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
 fn weather_event<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, weather: Weather) {
     let max_hp = f64::from(b.slot_mon(slot).expect("alive").max_hp);
     if weather == Weather::Sand {
-        if !b.status_immune(slot, TypeImmunities::SANDSTORM) {
+        // Dig's and Dive's `onImmunity` (`type === 'sandstorm'`): no damage underground.
+        let underground =
+            b.volatile(slot, Volatile::Dig).active || b.volatile(slot, Volatile::Dive).active;
+        if !underground && !b.status_immune(slot, TypeImmunities::SANDSTORM) {
             b.damage(slot, max_hp / 16.0, DamageSource::Indirect);
         }
         return;

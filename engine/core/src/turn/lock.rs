@@ -14,6 +14,21 @@ pub enum Locked {
     Move(MoveId),
     /// The `recharge` pseudo-move: the turn is spent recharging.
     Recharge,
+    /// A two-turn move's second turn (`twoturnmove.onLockMove`), aimed at the target location
+    /// chosen when it started (`volatiles[move].targetLoc`).
+    TwoTurn {
+        id: MoveId,
+        target: i8,
+    },
+}
+
+/// A target location in `twoturnmove`'s `counter` (never 0 for a real location).
+pub fn encode_target_loc(loc: i8) -> u16 {
+    (i16::from(loc) + 100) as u16
+}
+
+pub fn decode_target_loc(counter: u16) -> i8 {
+    (counter as i16 - 100) as i8
 }
 
 /// The move slot index that stands for the `recharge` pseudo-move in an action.
@@ -43,6 +58,13 @@ pub fn locked_move<const N: usize>(state: &State<N>, slot: SlotRef) -> Option<Lo
     let locked = volatiles.get(Volatile::LockedMove);
     if locked.active {
         return Some(Locked::Move(locked.mv));
+    }
+    let charging = volatiles.get(Volatile::TwoTurnMove);
+    if charging.active {
+        return Some(Locked::TwoTurn {
+            id: charging.mv,
+            target: decode_target_loc(charging.counter),
+        });
     }
     None
 }

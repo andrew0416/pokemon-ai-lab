@@ -930,6 +930,12 @@ impl<'a, const N: usize> Battle<'a, N> {
         if volatile == Volatile::LockedMove && old.hidden <= 1 {
             self.add_volatile(target, Volatile::Confusion);
         }
+        // `twoturnmove.onEnd`: the move's own volatile goes with it (an aborted second turn).
+        if volatile == Volatile::TwoTurnMove {
+            if let Some(own) = super::conditions::charge_volatile(old.mv) {
+                self.remove_volatile(target, own);
+            }
+        }
         true
     }
 

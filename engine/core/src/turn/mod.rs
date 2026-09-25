@@ -735,15 +735,20 @@ fn check_turn<const N: usize>(
                 }
                 let index = match locked {
                     Locked::Recharge => RECHARGE_INDEX,
-                    Locked::Move(id) => {
+                    Locked::Move(id) | Locked::TwoTurn { id, .. } => {
                         mon.moves.iter().position(|m| m.id == id).ok_or_else(|| {
                             invalid(format!("locked move {} not known", id.data().name))
                         })? as u8
                     }
                 };
+                // A two-turn move keeps the target location it was aimed at.
+                let target = match locked {
+                    Locked::TwoTurn { target, .. } => target,
+                    _ => 0,
+                };
                 normalized[side.index()][i] = SlotAction::Move {
                     index,
-                    target: 0,
+                    target,
                     gimmick: Gimmick::None,
                 };
                 continue;

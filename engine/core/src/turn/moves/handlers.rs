@@ -629,6 +629,16 @@ pub(super) fn on_base_power<const N: usize>(
     mv: &ActiveMove,
 ) -> Option<u32> {
     match mv.id {
+        // Solar Beam, Solar Blade: half power in rain, sand and snow (`pokemon.effectiveWeather()`,
+        // which Utility Umbrella changes).
+        moves::SOLAR_BEAM | moves::SOLAR_BLADE
+            if matches!(
+                b.weather_for(user),
+                Weather::Rain | Weather::HeavyRain | Weather::Sand | Weather::Snow
+            ) =>
+        {
+            Some(crate::damage::MOD_HALF)
+        }
         // Grav Apple: `if (this.field.getPseudoWeather('gravity')) return this.chainModify(1.5);`
         moves::GRAV_APPLE if b.field_active(FieldEffect::Gravity) => Some(MOD_ONE_POINT_FIVE),
         // Psyblade: `if (this.field.isTerrain('electricterrain')) return this.chainModify(1.5);`
@@ -778,12 +788,127 @@ pub(super) fn always_hit<const N: usize>(b: &Battle<'_, N>, target: SlotRef) -> 
 pub(super) fn volatile_modify_damage<const N: usize>(
     b: &Battle<'_, N>,
     target: SlotRef,
+    mv: &ActiveMove,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
     if b.volatile(target, Volatile::GlaiveRush).active {
         out.push(Handler::of(b, target, 0, SUB_CONDITION, 2 * 4096));
     }
+    // Fly (Gust, Twister), Dig (Earthquake, Magnitude) and Dive (Surf, Whirlpool) take double
+    // damage from the moves that reach them (`onSourceModifyDamage`).
+    let doubled = (b.volatile(target, Volatile::Fly).active
+        && [moves::GUST, moves::TWISTER].contains(&mv.id))
+        || (b.volatile(target, Volatile::Dig).active
+            && [moves::EARTHQUAKE, moves::MAGNITUDE].contains(&mv.id))
+        || (b.volatile(target, Volatile::Dive).active
+            && [moves::SURF, moves::WHIRLPOOL].contains(&mv.id));
+    if doubled {
+        out.push(Handler::of(b, target, 0, SUB_CONDITION, 2 * 4096));
+    }
     out
+}
+
+/// BasePower handlers of the target's volatiles: Bounce's `onSourceBasePower` doubles Gust and
+/// Twister.
+pub(super) fn target_volatile_base_power<const N: usize>(
+    b: &Battle<'_, N>,
+    target: SlotRef,
+    mv: &ActiveMove,
+) -> Vec<Handler> {
+    let mut out = Vec::new();
+    if b.volatile(target, Volatile::Bounce).active && [moves::GUST, moves::TWISTER].contains(&mv.id)
+    {
+        out.push(Handler::of(b, target, 0, SUB_CONDITION, 2 * 4096));
+    }
+    out
+}
+
+/// The two-turn moves' `onTryMove` (`singleEvent('TryMove')`, F9): on the second turn the move's
+/// own volatile is removed and the move goes on; otherwise this is the charging turn: Meteor
+/// Beam and Electro Shot raise SpA first; Solar Beam and Solar Blade in sun and Electro Shot in
+/// rain (`effectiveWeather`) skip the charge, as does Power Herb (`ChargeMove`: `useItem`);
+/// else `twoturnmove` (duration 2, the move, the chosen target location) and the move's own
+/// volatile start, PrepareHit runs (Protean), and the move stops (`return null`). `false` =
+/// the move stops here.
+pub(super) fn charge_try_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> bool {
+    let Some(own) = super::super::conditions::charge_volatile(mv.id) else {
+        return true;
+    };
+    if b.remove_volatile(user, own) {
+        return true;
+    }
+    if mv.id == moves::METEOR_BEAM || mv.id == moves::ELECTRO_SHOT {
+        let mut up = NO_BOOSTS;
+        up[2] = 1;
+        b.boost_by(user, &up, Some(user), BoostEffect::Move(mv.id));
+    }
+    let weather = b.weather_for(user);
+    let skip = match mv.id {
+        i if i == moves::SOLAR_BEAM || i == moves::SOLAR_BLADE => {
+            matches!(weather, Weather::Sun | Weather::HarshSun)
+        }
+        i if i == moves::ELECTRO_SHOT => matches!(weather, Weather::Rain | Weather::HeavyRain),
+        _ => false,
+    };
+    if skip {
+        return true;
+    }
+    if b.item(user) == items::POWER_HERB && b.use_item(user) {
+        return true;
+    }
+    b.set_volatile_state(
+        user,
+        Volatile::TwoTurnMove,
+        VolatileState {
+            active: true,
+            duration: Volatile::TwoTurnMove.initial_duration(),
+            mv: mv.id,
+            counter: super::super::lock::encode_target_loc(mv.target_loc),
+            ..VolatileState::NONE
+        },
+    );
+    b.add_volatile(user, own);
+    super::prepare_hit_ability(b, user, mv);
+    false
+}
+
+/// `hitStepInvulnerabilityEvent` for one target: a semi-invulnerable target is not hit unless
+/// the move is one its state lets through, No Guard (`onAnyInvulnerability`, priority 1) is the
+/// user's or the target's ability, or the move is Toxic from a Poison type.
+pub(super) fn invulnerable<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    let Some(state) = super::super::conditions::semi_invulnerable(b, target) else {
+        return false;
+    };
+    if mv.id == moves::TOXIC && b.has_type(user, Type::Poison) {
+        return false;
+    }
+    if b.ability(user) == abilities::NO_GUARD || b.ability(target) == abilities::NO_GUARD {
+        return false;
+    }
+    let passes: &[MoveId] = match state {
+        Volatile::Fly | Volatile::Bounce => &[
+            moves::GUST,
+            moves::TWISTER,
+            moves::SKY_UPPERCUT,
+            moves::THUNDER,
+            moves::HURRICANE,
+            moves::SMACK_DOWN,
+            moves::THOUSAND_ARROWS,
+        ],
+        Volatile::Dig => &[moves::EARTHQUAKE, moves::MAGNITUDE],
+        Volatile::Dive => &[moves::SURF, moves::WHIRLPOOL],
+        _ => &[],
+    };
+    !passes.contains(&mv.id)
 }
 
 /// Showdown `this.dex.getEffectiveness(attacking, defending)` for one defending type:

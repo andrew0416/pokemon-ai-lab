@@ -75,6 +75,9 @@ struct ActiveMove {
     /// `move.selfSwitch` (U-turn, Parting Shot, ...): the user switches out once the move
     /// landed (F6). Baton Pass and Shed Tail are refused.
     self_switch: bool,
+    /// The target location the user chose (`lastMoveTargetLoc`; 0 for a move without one or
+    /// called by another): a two-turn move aims at it again on its second turn.
+    target_loc: i8,
     /// Showdown `move.typeChangerBoosted`: the ability whose ModifyType changed the move's type
     /// (Pixilate, Aerilate, Refrigerate, Galvanize, Dragonize, Normalize), which then boosts it
     /// in BasePower; `NONE` otherwise.
@@ -102,6 +105,7 @@ impl PartialEq for ActiveMove {
             && self.hit_targets == other.hit_targets
             && self.source_effect == other.source_effect
             && self.self_switch == other.self_switch
+            && self.target_loc == other.target_loc
             && self.type_changer == other.type_changer
             && self.has_bounced == other.has_bounced
     }
@@ -127,6 +131,7 @@ impl std::hash::Hash for ActiveMove {
         self.hit_targets.hash(state);
         self.source_effect.hash(state);
         self.self_switch.hash(state);
+        self.target_loc.hash(state);
         self.type_changer.hash(state);
         self.has_bounced.hash(state);
     }
@@ -220,6 +225,7 @@ pub(crate) fn run_move<const N: usize>(
             hit_targets: 0,
             source_effect: MoveId::NONE,
             self_switch: false,
+            target_loc: 0,
             type_changer: AbilityId::NONE,
             has_bounced: false,
         };
@@ -341,6 +347,7 @@ fn run_move_inner<const N: usize>(
         self_switch: id.data().self_switch == SelfSwitch::Yes,
         type_changer: AbilityId::NONE,
         has_bounced: false,
+        target_loc,
     };
 
     // `pokemon.moveThisTurnResult = willTryMove`: `false` from every BeforeMove handler
@@ -357,6 +364,10 @@ fn run_move_inner<const N: usize>(
             MoveResult::Failed
         };
         b.set_move_result(user, result);
+        // `twoturnmove.onMoveAborted`: the lock ends (and its end removes the move's volatile).
+        if b.volatile(user, Volatile::TwoTurnMove).active {
+            b.remove_volatile(user, Volatile::TwoTurnMove);
+        }
         // MoveAborted (the move's type before ModifyType): Charge ends on an Electric move.
         ability_events::charge_after_move(b, user, mv.id, mv.move_type);
         return Ok(MoveStep::Done);
@@ -831,6 +842,11 @@ fn use_move<const N: usize>(
         get_move_targets(b, user, mv, target)?
     };
     deduct_pressure_pp(b, user, mv, &targets);
+    // The move's own TryMove (`singleEvent('TryMove')`): a two-turn move's charging turn.
+    if !handlers::charge_try_move(b, user, mv) {
+        b.finish_move_result(user, false);
+        return Ok(None);
+    }
     // TryMove: Dazzling, Queenly Majesty, Armor Tail (`onFoeTryMove`).
     let try_move_target = targets.last().copied().unwrap_or(target);
     if !ability_hooks::on_try_move(b, user, mv, try_move_target) {
@@ -914,6 +930,7 @@ fn call_move<const N: usize>(
         hit_targets: 0,
         source_effect: caller.id,
         self_switch: data.self_switch == SelfSwitch::Yes,
+        target_loc: 0,
         type_changer: AbilityId::NONE,
         has_bounced: false,
     };
@@ -989,6 +1006,7 @@ fn bounce_move<const N: usize>(
         // A bounced Parting Shot switches the bouncer out (`moveHit` sets the flag for the
         // copy's user).
         self_switch: data.self_switch == SelfSwitch::Yes,
+        target_loc: 0,
     };
     let will_act = b.will_act();
     if use_move(b, holder, &mut mv, Some(source), will_act)?.is_some() {
@@ -1237,6 +1255,16 @@ fn try_spread_move_hit<const N: usize>(
     }
     prepare_hit_ability(b, user, mv);
 
+    // 0. Invulnerability (`hitStepInvulnerabilityEvent`): a semi-invulnerable target is not hit
+    //    (a failure for the move) unless its state lets the move through, No Guard is in play,
+    //    or the move is Toxic from a Poison type.
+    targets.retain(|&t| !handlers::invulnerable(b, user, mv, t));
+    if targets.is_empty() {
+        return Ok(HitOutcome::Finished {
+            ok: false,
+            total_damage: 0,
+        });
+    }
     // 1. TryHit: Psychic Terrain (priority 4), Protect (3), the target's ability (0). Each
     //    target's handlers only affect that target, so targets can be taken one at a time.
     let mut kept = Vec::with_capacity(targets.len());
@@ -2265,8 +2293,9 @@ fn get_damage<const N: usize>(
     if let Some(modifier) = handlers::on_base_power(b, user, mv) {
         power_mods.push(Handler::of(b, user, 0, SUB_MOVE, modifier));
     }
-    // The user's volatiles (Helping Hand, priority 10).
+    // The user's volatiles (Helping Hand, priority 10) and the target's (Bounce).
     power_mods.extend(handlers::volatile_base_power(b, user));
+    power_mods.extend(handlers::target_volatile_base_power(b, target, mv));
     let power_modifier = ability_events::chain(b, power_mods);
 
     // Attack and defense.
@@ -2374,7 +2403,7 @@ fn get_damage<const N: usize>(
         type_mod,
     ));
     // The target's volatiles (`onSourceModifyDamage`: Glaive Rush).
-    final_mods.extend(handlers::volatile_modify_damage(b, target));
+    final_mods.extend(handlers::volatile_modify_damage(b, target, mv));
     if !critical && target != user && screen_applies(b, target.side, data.category) {
         let modifier = if N > 1 { 2732 } else { MOD_HALF };
         final_mods.push(Handler::global(0, SUB_SIDE_CONDITION, modifier));

@@ -134,9 +134,31 @@ pub enum Volatile {
     /// Destiny Bond (no duration): if a foe's move knocks the holder out, the foe faints too;
     /// it ends at the holder's next move attempt.
     DestinyBond,
+    /// `twoturnmove` (duration 2; F9): the user is locked into `mv` next turn (`onLockMove`),
+    /// aimed at the target location it chose (`targetLoc`, kept in `counter`; hidden). Its end
+    /// removes the move's own volatile; a BeforeMove abort removes it early.
+    TwoTurnMove,
+    /// The charging move's own volatile (`attacker.addVolatile(move.id)`), removed by its
+    /// `onTryMove` on the second turn. These five have no condition data (no duration).
+    SolarBeam,
+    SolarBlade,
+    MeteorBeam,
+    ElectroShot,
+    SkyAttack,
+    /// The semi-invulnerable moves' own volatiles (duration 2): `onInvulnerability` (Fly and
+    /// Bounce let Gust, Twister, Sky Uppercut, Thunder, Hurricane, Smack Down and Thousand
+    /// Arrows through; Dig Earthquake and Magnitude; Dive Surf and Whirlpool), double damage
+    /// from those (`onSourceModifyDamage`; Bounce's `onSourceBasePower`), and Dig / Dive's
+    /// immunity to sandstorm damage (`onImmunity`).
+    Fly,
+    Bounce,
+    Dig,
+    Dive,
+    PhantomForce,
+    ShadowForce,
 }
 
-pub const VOLATILE_COUNT: usize = 42;
+pub const VOLATILE_COUNT: usize = 54;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -182,6 +204,18 @@ impl Volatile {
         Volatile::LeechSeed,
         Volatile::PartiallyTrapped,
         Volatile::DestinyBond,
+        Volatile::TwoTurnMove,
+        Volatile::SolarBeam,
+        Volatile::SolarBlade,
+        Volatile::MeteorBeam,
+        Volatile::ElectroShot,
+        Volatile::SkyAttack,
+        Volatile::Fly,
+        Volatile::Bounce,
+        Volatile::Dig,
+        Volatile::Dive,
+        Volatile::PhantomForce,
+        Volatile::ShadowForce,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -226,12 +260,24 @@ impl Volatile {
             Volatile::LeechSeed => conditions::LEECHSEED,
             Volatile::PartiallyTrapped => conditions::PARTIALLYTRAPPED,
             Volatile::DestinyBond => conditions::DESTINYBOND,
+            Volatile::TwoTurnMove => conditions::TWOTURNMOVE,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
             | Volatile::AngerShellUnchecked
             | Volatile::MicleBerry
-            | Volatile::ThroatChop => ConditionId::NONE,
+            | Volatile::ThroatChop
+            | Volatile::SolarBeam
+            | Volatile::SolarBlade
+            | Volatile::MeteorBeam
+            | Volatile::ElectroShot
+            | Volatile::SkyAttack
+            | Volatile::Fly
+            | Volatile::Bounce
+            | Volatile::Dig
+            | Volatile::Dive
+            | Volatile::PhantomForce
+            | Volatile::ShadowForce => ConditionId::NONE,
         }
     }
 
@@ -280,6 +326,18 @@ impl Volatile {
             Volatile::LeechSeed => "leechseed",
             Volatile::PartiallyTrapped => "partiallytrapped",
             Volatile::DestinyBond => "destinybond",
+            Volatile::TwoTurnMove => "twoturnmove",
+            Volatile::SolarBeam => "solarbeam",
+            Volatile::SolarBlade => "solarblade",
+            Volatile::MeteorBeam => "meteorbeam",
+            Volatile::ElectroShot => "electroshot",
+            Volatile::SkyAttack => "skyattack",
+            Volatile::Fly => "fly",
+            Volatile::Bounce => "bounce",
+            Volatile::Dig => "dig",
+            Volatile::Dive => "dive",
+            Volatile::PhantomForce => "phantomforce",
+            Volatile::ShadowForce => "shadowforce",
         }
     }
 
@@ -315,7 +373,14 @@ impl Volatile {
             | Volatile::MustRecharge
             | Volatile::Yawn
             | Volatile::MicleBerry
-            | Volatile::ThroatChop => 2,
+            | Volatile::ThroatChop
+            | Volatile::TwoTurnMove
+            | Volatile::Fly
+            | Volatile::Bounce
+            | Volatile::Dig
+            | Volatile::Dive
+            | Volatile::PhantomForce
+            | Volatile::ShadowForce => 2,
             Volatile::Encore | Volatile::Taunt => 3,
             Volatile::PerishSong => 4,
             // Partial trapping's `durationCallback` replaces it when it starts
@@ -337,7 +402,12 @@ impl Volatile {
             | Volatile::QuarkDrive
             | Volatile::NoRetreat
             | Volatile::LeechSeed
-            | Volatile::DestinyBond => 0,
+            | Volatile::DestinyBond
+            | Volatile::SolarBeam
+            | Volatile::SolarBlade
+            | Volatile::MeteorBeam
+            | Volatile::ElectroShot
+            | Volatile::SkyAttack => 0,
         }
     }
 
@@ -364,7 +434,11 @@ impl Volatile {
     pub fn showdown_state(self, state: VolatileState) -> Option<VolatileState> {
         match self {
             Volatile::ProteanUsed | Volatile::AngerShellUnchecked => None,
-            Volatile::Roost | Volatile::HelpingHand | Volatile::LeechSeed => Some(VolatileState {
+            // Two-turn move: the target location is not a canonical field.
+            Volatile::Roost
+            | Volatile::HelpingHand
+            | Volatile::LeechSeed
+            | Volatile::TwoTurnMove => Some(VolatileState {
                 counter: 0,
                 ..state
             }),
@@ -515,6 +589,17 @@ mod tests {
                         | Volatile::AngerShellUnchecked
                         | Volatile::MicleBerry
                         | Volatile::ThroatChop
+                        | Volatile::SolarBeam
+                        | Volatile::SolarBlade
+                        | Volatile::MeteorBeam
+                        | Volatile::ElectroShot
+                        | Volatile::SkyAttack
+                        | Volatile::Fly
+                        | Volatile::Bounce
+                        | Volatile::Dig
+                        | Volatile::Dive
+                        | Volatile::PhantomForce
+                        | Volatile::ShadowForce
                 ));
                 continue;
             }

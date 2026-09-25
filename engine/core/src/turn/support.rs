@@ -340,6 +340,50 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     ),
     // Parting Shot: `onHit` drops Atk and SpA and withdraws the switch if that failed (F6).
     (moves::PARTING_SHOT, &["onHit"]),
+    // Two-turn moves (F9): `onTryMove` in `handlers::charge_try_move`; the semi-invulnerable
+    // ones' condition handlers in `handlers::invulnerable`, `volatile_modify_damage`,
+    // `target_volatile_base_power` and the sandstorm residual (`onImmunity`).
+    (moves::SOLAR_BEAM, &["onBasePower", "onTryMove"]),
+    (moves::SOLAR_BLADE, &["onBasePower", "onTryMove"]),
+    (moves::METEOR_BEAM, &["onTryMove"]),
+    (moves::ELECTRO_SHOT, &["onTryMove"]),
+    (moves::SKY_ATTACK, &["onTryMove"]),
+    (moves::PHANTOM_FORCE, &["onTryMove"]),
+    (moves::SHADOW_FORCE, &["onTryMove"]),
+    (
+        moves::FLY,
+        &[
+            "condition.onInvulnerability",
+            "condition.onSourceModifyDamage",
+            "onTryMove",
+        ],
+    ),
+    (
+        moves::BOUNCE,
+        &[
+            "condition.onInvulnerability",
+            "condition.onSourceBasePower",
+            "onTryMove",
+        ],
+    ),
+    (
+        moves::DIG,
+        &[
+            "condition.onImmunity",
+            "condition.onInvulnerability",
+            "condition.onSourceModifyDamage",
+            "onTryMove",
+        ],
+    ),
+    (
+        moves::DIVE,
+        &[
+            "condition.onImmunity",
+            "condition.onInvulnerability",
+            "condition.onSourceModifyDamage",
+            "onTryMove",
+        ],
+    ),
     (moves::FIRST_IMPRESSION, &["onDisableMove", "onTry"]),
     (moves::DIRE_CLAW, &["secondaries.onHit", "secondary.onHit"]),
     // Belly Drum `onHit`; Clangorous Soul and Fillet Away: `onTry` (HP), `onTryHit` (the boosts,
@@ -657,6 +701,8 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     // Eject Button (Champions), Red Card: `items::after_move_secondary` (F6).
     (items::EJECT_BUTTON, &["onAfterMoveSecondary"]),
     (items::RED_CARD, &["onAfterMoveSecondary"]),
+    // Power Herb: `onChargeMove` in `handlers::charge_try_move` (F9).
+    (items::POWER_HERB, &["onChargeMove"]),
     // `moves::decide_hits` (and no accuracy re-rolls for multi-accuracy moves).
     (items::LOADED_DICE, &["onModifyMove"]),
     // Berries eaten on `Update` (`update.rs`).
@@ -1345,10 +1391,13 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     let flags = m.flags;
     use crate::dex::MoveFlags as F;
     // `cantusetwice` (Gigaton Hammer, Blood Moon) is implemented in `mod.rs::disabled`.
-    for (flag, what) in [(F::CHARGE, "two-turn"), (F::FUTUREMOVE, "future move")] {
-        if flags.contains(flag) {
-            return why(what);
-        }
+    if flags.contains(F::FUTUREMOVE) {
+        return why("future move");
+    }
+    // The two-turn moves in `conditions::charge_volatile` are implemented (F9); the others
+    // (Skull Bash, Razor Wind, Sky Drop, Geomancy, ...) are not.
+    if flags.contains(F::CHARGE) && super::conditions::charge_volatile(id).is_none() {
+        return why("two-turn move");
     }
     if !m.slot_condition.is_none() {
         return why("slot condition");
@@ -1585,12 +1634,11 @@ mod tests {
         }
     }
 
-    /// No Guard's `onAnyInvulnerability` (and the Invulnerability event as a whole) only acts on
-    /// a semi-invulnerable target: the two-turn moves (`charge` flag: Fly, Bounce, Dig, Dive,
-    /// Phantom Force, Shadow Force, Sky Drop) and Commander. None is supported; this fails when
-    /// one becomes supported.
+    /// The two-turn moves the engine runs are exactly `conditions::charge_volatile`'s (their
+    /// semi-invulnerability is `handlers::invulnerable`, which No Guard's
+    /// `onAnyInvulnerability` answers); every other charge move and Commander stay refused.
     #[test]
-    fn no_semi_invulnerable_state_is_supported() {
+    fn two_turn_moves_are_the_listed_ones() {
         use crate::dex::MoveFlags;
         for id in MoveId::all() {
             let data = id.data();
@@ -1599,7 +1647,11 @@ mod tests {
                     h == "condition.onInvulnerability" || h == "condition.onAnyInvulnerability"
                 });
             if semi_invulnerable {
-                assert!(move_unsupported(id).is_some(), "{id:?}");
+                assert_eq!(
+                    move_unsupported(id).is_none(),
+                    super::super::conditions::charge_volatile(id).is_some(),
+                    "{id:?}"
+                );
             }
         }
         assert!(!ability_supported_on_field(abilities::COMMANDER));

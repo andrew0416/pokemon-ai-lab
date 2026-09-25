@@ -1,0 +1,72 @@
+{
+ "description": "F9 Meteor Beam's charge turn raises the user's SpA by one stage; Electro Shot in Pelipper's rain raises SpA and fires at once (Swampert takes it: Ground, so... no: it hits Metagross). One damage roll (Electro Shot).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Roserade",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spa": 32
+    },
+    "moves": [
+     "Meteor Beam"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Magnezone",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spa": 32
+    },
+    "moves": [
+     "Electro Shot"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Pelipper",
+    "item": "",
+    "ability": "Drizzle",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Metagross",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move meteorbeam 1, move electroshot 2",
+  "p2": "move harden, move harden"
+ }
+}

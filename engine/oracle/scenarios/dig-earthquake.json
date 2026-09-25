@@ -1,0 +1,73 @@
+{
+ "description": "F9 Dig's charge turn: Garchomp's Earthquake reaches the underground Excadrill for double damage (the other actives are Flying types); Excadrill takes no sandstorm damage underground? No sand here. One damage roll.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Excadrill",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Dig",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Corviknight",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Earthquake"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Skarmory",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move dig 1, move harden",
+  "p2": "move earthquake, move harden"
+ }
+}

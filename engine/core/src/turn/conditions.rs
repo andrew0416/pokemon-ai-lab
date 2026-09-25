@@ -52,6 +52,43 @@ pub(crate) fn roost_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) 
 
 /// The volatile's `onEnd` when its duration runs out in the residual (Showdown
 /// `removeVolatile`: `End` runs while the volatile is still there; the caller removes it).
+/// The two-turn moves the engine runs (`charge` flag) and their own volatile
+/// (`attacker.addVolatile(move.id)` in `twoturnmove`'s start). Other charge moves (Skull Bash,
+/// Razor Wind, Sky Drop, ... ) are refused.
+pub(crate) fn charge_volatile(id: MoveId) -> Option<Volatile> {
+    Some(match id {
+        i if i == moves::SOLAR_BEAM => Volatile::SolarBeam,
+        i if i == moves::SOLAR_BLADE => Volatile::SolarBlade,
+        i if i == moves::METEOR_BEAM => Volatile::MeteorBeam,
+        i if i == moves::ELECTRO_SHOT => Volatile::ElectroShot,
+        i if i == moves::SKY_ATTACK => Volatile::SkyAttack,
+        i if i == moves::FLY => Volatile::Fly,
+        i if i == moves::BOUNCE => Volatile::Bounce,
+        i if i == moves::DIG => Volatile::Dig,
+        i if i == moves::DIVE => Volatile::Dive,
+        i if i == moves::PHANTOM_FORCE => Volatile::PhantomForce,
+        i if i == moves::SHADOW_FORCE => Volatile::ShadowForce,
+        _ => return None,
+    })
+}
+
+/// The semi-invulnerable state of the Pokémon in `slot`, if any (`isSemiInvulnerable`).
+pub(crate) fn semi_invulnerable<const N: usize>(
+    b: &Battle<'_, N>,
+    slot: SlotRef,
+) -> Option<Volatile> {
+    [
+        Volatile::Fly,
+        Volatile::Bounce,
+        Volatile::Dig,
+        Volatile::Dive,
+        Volatile::PhantomForce,
+        Volatile::ShadowForce,
+    ]
+    .into_iter()
+    .find(|&v| b.volatile(slot, v).active)
+}
+
 pub(crate) fn volatile_end<const N: usize>(
     b: &mut Battle<'_, N>,
     pokemon: PokemonRef,
@@ -77,6 +114,12 @@ pub(crate) fn volatile_end<const N: usize>(
         }
         // Perish Song: `target.faint()`.
         Volatile::PerishSong => b.faint(slot),
+        // `twoturnmove.onEnd`: `target.removeVolatile(this.effectState.move)`.
+        Volatile::TwoTurnMove => {
+            if let Some(own) = charge_volatile(state.mv) {
+                b.remove_volatile(slot, own);
+            }
+        }
         // A locked move (Outrage) that ran its course confuses the user (`trueDuration <= 1`);
         // `Battle::remove_volatile` does the same when the move itself ends it.
         Volatile::LockedMove if state.hidden <= 1 => {
