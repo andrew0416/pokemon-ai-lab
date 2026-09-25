@@ -410,7 +410,8 @@ pub(super) fn on_try_hit<const N: usize>(
 /// [`on_damaging_hit`] (`u32::MAX`: no order, after every ordered handler), or `None`. Rough
 /// Skin, Iron Barbs and Rattled are handled by `moves::damaging_hit` itself.
 pub(super) fn damaging_hit_order(ability: AbilityId) -> Option<u32> {
-    const HANDLED: [AbilityId; 19] = [
+    const HANDLED: [AbilityId; 20] = [
+        abilities::CURSED_BODY,
         abilities::STATIC,
         abilities::FLAME_BODY,
         abilities::POISON_POINT,
@@ -546,6 +547,24 @@ pub(super) fn on_damaging_hit<const N: usize>(
         // Seed Sower: `this.field.setTerrain('grassyterrain')` (the holder's Terrain Extender).
         a if a == abilities::SEED_SOWER => {
             super::set_terrain(b, holder, Terrain::Grassy);
+        }
+        // Cursed Body (not breakable): `if (source.volatiles['disable']) return;` then, for a move
+        // that is not a Max Move, a future move or Struggle, 30%:
+        // `source.addVolatile('disable', this.effectState.target)` (Disable's `onStart`: the
+        // attacker's last move, one turn less as the attacker is using a move). The draw is
+        // skipped when the attacker has fainted (`addVolatile` fails on it).
+        a if a == abilities::CURSED_BODY => {
+            let data = mv.data;
+            let eligible = !data.is_max
+                && !data.flags.contains(MoveFlags::FUTUREMOVE)
+                && mv.id != moves::STRUGGLE;
+            if eligible
+                && b.alive(attacker).is_some()
+                && !b.volatile(attacker, Volatile::Disable).active
+                && b.rng.chance(3, 10)
+            {
+                b.add_volatile(attacker, Volatile::Disable);
+            }
         }
         // Electromorphosis: `target.addVolatile('charge')` (nothing on a fainted holder or when
         // it is up: its `onRestart` only logs).

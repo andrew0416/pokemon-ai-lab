@@ -1,0 +1,23 @@
+{
+ "description": "Cursed Body against a multi-hit move: each of Espeon's two Twin Beam hits on Gengar rolls 30% for Disable unless the first already disabled Espeon (`if (source.volatiles['disable']) return;`). Gengar Hardens first; Snorlax and Chansey Harden. Monte Carlo fixture (multi-hit).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Cursed Body", "nature": "Serious",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Espeon", "item": "", "ability": "Synchronize", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Twin Beam", "Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "move twinbeam 1, move harden"}
+}

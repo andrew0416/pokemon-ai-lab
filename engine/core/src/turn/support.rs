@@ -802,6 +802,8 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::WATER_COMPACTION, &["onDamagingHit"]),
     (abilities::AFTERMATH, &["onDamagingHit"]),
     (abilities::INNARDS_OUT, &["onDamagingHit"]),
+    // Cursed Body: 30% `disable` on the attacker (`conditions::volatile_start`).
+    (abilities::CURSED_BODY, &["onDamagingHit"]),
     (
         abilities::WIND_POWER,
         &["onDamagingHit", "onSideConditionStart"],

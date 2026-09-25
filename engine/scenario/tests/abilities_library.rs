@@ -5,7 +5,7 @@
 
 mod common;
 
-use common::assert_exact_parity;
+use common::{assert_exact_parity, assert_mc_parity};
 
 // ---- O70 onModifyType / onBasePower ------------------------------------------------------------
 
@@ -76,4 +76,18 @@ fn no_guard_matches_showdown() {
 fn micle_berry_ends_on_every_accuracy_event() {
     assert_exact_parity("micle-accuracy-true");
     assert_exact_parity("micle-glaive-rush");
+}
+
+// ---- Cursed Body -------------------------------------------------------------------------------
+
+/// 30% Disable on the attacker's move, through Mold Breaker (not breakable).
+#[test]
+fn cursed_body_matches_showdown() {
+    assert_exact_parity("cursed-body");
+}
+
+/// A multi-hit move rolls once per hit until the attacker is disabled (Monte Carlo fixture).
+#[test]
+fn cursed_body_multihit_matches_showdown() {
+    assert_mc_parity("cursed-body-multihit");
 }
