@@ -123,6 +123,13 @@ pub enum Instruction {
         old: SwitchFlag,
         new: SwitchFlag,
     },
+    /// `Slot::substitute_hp` (F11): the HP left on the slot's substitute (Showdown
+    /// `volatiles.substitute.hp`), 0 without one.
+    SetSubstituteHp {
+        target: SlotRef,
+        old: i16,
+        new: i16,
+    },
     SetField {
         effect: FieldEffect,
         old: Effect,
@@ -226,6 +233,9 @@ impl<const N: usize> State<N> {
             Instruction::SetSwitchFlag { target, new, .. } => {
                 self.slot_mut(target).switch_flag = new
             }
+            Instruction::SetSubstituteHp { target, new, .. } => {
+                self.slot_mut(target).substitute_hp = new
+            }
             Instruction::SetField { effect, new, .. } => self.field[effect as usize] = new,
             Instruction::SetSideEffect {
                 side, effect, new, ..
@@ -286,6 +296,9 @@ impl<const N: usize> State<N> {
             Instruction::SetSideHistory { side, old, .. } => self.side_mut(side).history = old,
             Instruction::SetSwitchFlag { target, old, .. } => {
                 self.slot_mut(target).switch_flag = old
+            }
+            Instruction::SetSubstituteHp { target, old, .. } => {
+                self.slot_mut(target).substitute_hp = old
             }
             Instruction::SetField { effect, old, .. } => self.field[effect as usize] = old,
             Instruction::SetSideEffect {
@@ -399,6 +412,11 @@ mod tests {
                     duration: 1,
                     ..VolatileState::NONE
                 },
+            },
+            Instruction::SetSubstituteHp {
+                target: foe,
+                old: 0,
+                new: 50,
             },
             Instruction::SetItem {
                 target: foe_mon,

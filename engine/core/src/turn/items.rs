@@ -882,6 +882,24 @@ pub(crate) fn after_move_secondary<const N: usize>(
     }
 }
 
+/// The target's item `onAfterSubDamage` (`runEvent('AfterSubDamage', target, source, move)`
+/// after its substitute took a move): Air Balloon pops (`target.item = ''`, no `lastItem`;
+/// then AfterUseItem: Unburden), as it does on a damaging hit.
+pub(crate) fn after_sub_damage<const N: usize>(b: &mut Battle<'_, N>, target: SlotRef) {
+    if b.item(target) != items::AIR_BALLOON {
+        return;
+    }
+    let Some(pokemon) = b.occupant(target) else {
+        return;
+    };
+    b.apply(Instruction::SetItem {
+        target: pokemon,
+        old: items::AIR_BALLOON,
+        new: ItemId::NONE,
+    });
+    super::abilities::unburden(b, target);
+}
+
 /// The target's item `onHit` (`runEvent('Hit')` in `runMoveEffects`, after the move's own
 /// `onHit`): Sticky Barb moves to an itemless user of a contact move (`takeItem`, then
 /// `setItem`; Protective Pads cannot apply, as the user holds nothing).
@@ -1001,14 +1019,15 @@ fn eat_item<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> bool {
 /// - Resist berries: a hit of the berry's type (super effective, except for Chilan Berry)
 ///   eats the berry (`target.eatItem()`), then `chainModify(0.5)`. Showdown eats it inside the
 ///   handler; no other ModifyDamage handler reads the target's item, so eating it while the
-///   handlers are collected gives the same result. A substitute would stop it, but substitutes
-///   are refused by `support`.
+///   handlers are collected gives the same result. Not when the damage is for the target's
+///   substitute (`hit_substitute`: `hitSub`, the substitute's `getDamage`).
 pub(crate) fn modify_damage_handlers<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
     move_type: Type,
     type_mod: i32,
+    hit_substitute: bool,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
     match b.item(user) {
@@ -1018,7 +1037,7 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
         }
         _ => {}
     }
-    if let Some(ty) = resist_berry(b.item(target)) {
+    if let Some(ty) = resist_berry(b.item(target)).filter(|_| !hit_substitute) {
         // `move.type`: the type after ModifyType (a Pixilate Normal move is Fairy).
         let applies = move_type == ty && (ty == Type::Normal || type_mod > 0);
         if applies {

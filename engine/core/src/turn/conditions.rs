@@ -207,6 +207,17 @@ pub(crate) fn volatile_start<const N: usize>(
             new.mv = last;
             true
         }
+        // Substitute (F11): `this.effectState.hp = Math.floor(target.maxhp / 4)`; partial
+        // trapping ends silently (`delete target.volatiles['partiallytrapped']`, no `onEnd`).
+        Volatile::Substitute => {
+            let Some(pokemon) = b.occupant(target) else {
+                return false;
+            };
+            let hp = b.mon(pokemon).max_hp / 4;
+            b.set_substitute_hp(target, hp);
+            b.delete_volatile(target, Volatile::PartiallyTrapped);
+            true
+        }
         _ => true,
     }
 }

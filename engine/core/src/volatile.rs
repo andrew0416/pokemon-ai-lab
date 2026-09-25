@@ -156,9 +156,13 @@ pub enum Volatile {
     Dive,
     PhantomForce,
     ShadowForce,
+    /// Substitute (F11, no duration): its HP (`effectState.hp`) is the slot's
+    /// [`crate::state::Slot::substitute_hp`], set by its `onStart` and lowered by the moves it
+    /// takes (`onTryPrimaryHit`); it ends at 0.
+    Substitute,
 }
 
-pub const VOLATILE_COUNT: usize = 54;
+pub const VOLATILE_COUNT: usize = 55;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -216,6 +220,7 @@ impl Volatile {
         Volatile::Dive,
         Volatile::PhantomForce,
         Volatile::ShadowForce,
+        Volatile::Substitute,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -261,6 +266,7 @@ impl Volatile {
             Volatile::PartiallyTrapped => conditions::PARTIALLYTRAPPED,
             Volatile::DestinyBond => conditions::DESTINYBOND,
             Volatile::TwoTurnMove => conditions::TWOTURNMOVE,
+            Volatile::Substitute => conditions::SUBSTITUTE,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -338,6 +344,7 @@ impl Volatile {
             Volatile::Dive => "dive",
             Volatile::PhantomForce => "phantomforce",
             Volatile::ShadowForce => "shadowforce",
+            Volatile::Substitute => "substitute",
         }
     }
 
@@ -407,7 +414,8 @@ impl Volatile {
             | Volatile::SolarBlade
             | Volatile::MeteorBeam
             | Volatile::ElectroShot
-            | Volatile::SkyAttack => 0,
+            | Volatile::SkyAttack
+            | Volatile::Substitute => 0,
         }
     }
 
@@ -631,6 +639,7 @@ mod tests {
             (Volatile::SilkTrap, moves::SILK_TRAP),
             (Volatile::BurningBulwark, moves::BURNING_BULWARK),
             (Volatile::LeechSeed, moves::LEECH_SEED),
+            (Volatile::Substitute, moves::SUBSTITUTE),
         ] {
             let data = id.data();
             assert_eq!(

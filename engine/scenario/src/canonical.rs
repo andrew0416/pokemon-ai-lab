@@ -11,8 +11,8 @@
 //! them).
 //!
 //! State the engine can hold but whose canonical form is not settled yet is an error
-//! ([`CanonicalError`]), never dropped: substitutes, Dynamax, Magic Room, primal weathers,
-//! permanent effects, disabled moves.
+//! ([`CanonicalError`]), never dropped: Dynamax, primal weathers, permanent effects, disabled
+//! moves.
 
 use std::fmt;
 use std::fmt::Write as _;
@@ -323,10 +323,18 @@ fn side_json<const N: usize>(
             return Err(meta_error(format!("slot {slot} holds party[{index}]")));
         }
         slot_of[index] = Some(slot as u8);
-        if s.substitute_hp != 0 || s.dynamax.is_active() {
+        if s.dynamax.is_active() {
             return Err(unrepresentable(format!(
-                "{} slot {slot} substitute or Dynamax",
+                "{} slot {slot} Dynamax",
                 side_name(side_id)
+            )));
+        }
+        // The substitute's HP is written with its volatile (`volatiles.substitute.hp`).
+        if s.volatiles.has(Volatile::Substitute) != (s.substitute_hp > 0) {
+            return Err(unrepresentable(format!(
+                "{} slot {slot} substitute HP {} without its volatile",
+                side_name(side_id),
+                s.substitute_hp
             )));
         }
     }
@@ -395,9 +403,16 @@ fn status_id(status: Status) -> &'static str {
 /// Showdown effect-state fields in `EFFECT_FIELDS` order (`duration`, `counter`, `time`,
 /// `move`, then `trueDuration` for a locked move: hidden in Showdown's own state but written
 /// here because it decides later outcomes; `canonical.cjs` lists it too). The Choice lock's
-/// `move` is kept in `counter` and written as `move`.
-fn volatile_fields(out: &mut String, volatile: Volatile, state: VolatileState) {
+/// `move` is kept in `counter` and written as `move`; the substitute's `hp` is the slot's
+/// `substitute_hp` (`substitute`).
+fn volatile_fields(out: &mut String, volatile: Volatile, state: VolatileState, substitute: i16) {
     out.push('{');
+    if volatile == Volatile::Substitute {
+        // `onStart` sets only `hp`; the volatile has no duration.
+        write!(out, r#""hp":{substitute}"#).unwrap();
+        out.push('}');
+        return;
+    }
     if volatile == Volatile::ChoiceLock {
         write!(out, r#""move":"{}""#, MoveId(state.counter).id()).unwrap();
         out.push('}');
@@ -495,7 +510,7 @@ fn pokemon(
         for (i, (volatile, state)) in volatiles.into_iter().enumerate() {
             let sep = if i == 0 { "" } else { "," };
             write!(out, r#"{sep}"{}":"#, volatile.id()).unwrap();
-            volatile_fields(out, volatile, state);
+            volatile_fields(out, volatile, state, slot.substitute_hp);
         }
         out.push('}');
         if !slot.last_move.is_none() {

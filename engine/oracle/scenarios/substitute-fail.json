@@ -1,0 +1,27 @@
+{
+ "description": "F11 Substitute: in the setup turn Aerodactyl puts up a substitute and Heracross binds Snorlax with Fire Spin. Aerodactyl's second Substitute fails (one is up). Heracross's Close Combat breaks the substitute (damage capped) and still lowers its own defenses (self drops against a substitute). Chansey, patched to 89/357 HP (not above a quarter), fails its Substitute. Snorlax's Substitute succeeds and ends the partial trapping silently, so no Fire Spin damage at the end of the turn.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Aerodactyl", "item": "", "ability": "Honey Gather", "nature": "Timid",
+    "evs": {"hp": 32, "spd": 32, "spe": 2}, "moves": ["Substitute", "Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Substitute", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Substitute", "Harden"], "level": 50},
+   {"species": "Heracross", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Close Combat", "Fire Spin"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move substitute, move harden", "move harden, move firespin 2"]
+ ],
+ "patch": {"p2": {"Chansey": {"hp": 89}}},
+ "turn": {"p1": "move substitute, move substitute", "p2": "move substitute, move closecombat 1"}
+}

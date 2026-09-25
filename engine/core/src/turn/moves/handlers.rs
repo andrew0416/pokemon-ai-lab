@@ -327,8 +327,22 @@ pub(super) fn on_try_hit<const N: usize>(
             let last = b.state.slot(target).last_move;
             !last.is_none() && last != moves::STRUGGLE && !last.data().is_max
         }
+        // Substitute (on its user): `NOT_FAIL` with a substitute already up, or at a quarter of
+        // the max HP or less (`source.hp <= source.maxhp / 4 || source.maxhp === 1`); Champions
+        // `spreadMoveHit` fails the move on any falsy TryHit result.
+        moves::SUBSTITUTE => b.slot_mon(target).is_some_and(|m| {
+            let (hp, max_hp) = (i32::from(m.hp), i32::from(m.max_hp));
+            !b.has_substitute(target) && 4 * hp > max_hp && max_hp != 1
+        }),
         _ => true,
     }
+}
+
+/// Showdown `move.infiltrates` for the implemented moves: Pollen Puff's `onTryHit` sets it on a
+/// hit aimed at an ally (Infiltrator, which also sets it, is refused). It lets the move through
+/// a substitute.
+pub(super) fn infiltrates(user: SlotRef, mv: &ActiveMove, target: SlotRef) -> bool {
+    mv.id == moves::POLLEN_PUFF && target.side == user.side
 }
 
 /// Whether the move's own `onTryHit` applies its `boosts` and deletes them (`delete
@@ -338,9 +352,8 @@ pub(super) fn boosts_applied_in_try_hit(id: MoveId) -> bool {
 }
 
 /// The move's `onAfterHit`, once per damaged target (`spreadMoveHit`, after `DamagingHit`;
-/// Champions runs it even if the user fainted). Knock Off's is in `moves.rs`.
-/// `onAfterSubDamage` (the same effect against a substitute) is unreachable: substitutes are
-/// refused.
+/// Champions runs it even if the user fainted). Knock Off's is in `moves.rs`; against a
+/// substitute the move's `onAfterSubDamage` ([`on_after_sub_damage`]) runs instead.
 pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
     // Ice Spinner: `this.field.clearTerrain();`
     if mv.id == moves::ICE_SPINNER {
@@ -365,6 +378,43 @@ pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef,
         if let Some(hazard) = hazard {
             super::super::conditions::add_hazard(b, user.side.other(), hazard);
         }
+    }
+}
+
+/// The move's `onAfterSubDamage` (`singleEvent('AfterSubDamage', move)` in the substitute's
+/// `onTryPrimaryHit`, after the substitute took the hit, the recoil and the drain): like its
+/// `onAfterHit`, but only while the user has HP.
+/// - Ice Spinner: `if (source.hp) this.field.clearTerrain();`
+/// - Steel Roller: `this.field.clearTerrain();` (its `onHit` does the same on a hit).
+/// - Rapid Spin, Mortal Spin: `if (!move.hasSheerForce)` and `pokemon.hp`: the user loses Leech
+///   Seed, its side its hazards, the user partial trapping.
+/// - Ceaseless Edge, Stone Axe: `if (!move.hasSheerForce && source.hp)` a layer of Spikes /
+///   Stealth Rock on the foe side.
+pub(super) fn on_after_sub_damage<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) {
+    let user_hp = b.alive(user).is_some();
+    match mv.id {
+        moves::ICE_SPINNER if user_hp => {
+            super::clear_terrain(b);
+        }
+        moves::STEEL_ROLLER => {
+            super::clear_terrain(b);
+        }
+        moves::RAPID_SPIN | moves::MORTAL_SPIN if !mv.has_sheer_force && user_hp => {
+            b.remove_volatile(user, Volatile::LeechSeed);
+            remove_side_effects(b, user.side, &HAZARDS);
+            b.remove_volatile(user, Volatile::PartiallyTrapped);
+        }
+        moves::CEASELESS_EDGE if !mv.has_sheer_force && user_hp => {
+            super::super::conditions::add_hazard(b, user.side.other(), SideEffect::Spikes);
+        }
+        moves::STONE_AXE if !mv.has_sheer_force && user_hp => {
+            super::super::conditions::add_hazard(b, user.side.other(), SideEffect::StealthRock);
+        }
+        _ => {}
     }
 }
 
@@ -1314,6 +1364,13 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::Success
             }
         }
+        // Substitute: `this.directDamage(target.maxhp / 4)` after the volatile started (returns
+        // nothing).
+        moves::SUBSTITUTE => {
+            let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
+            b.direct_damage(target, (max_hp / 4).max(1));
+            return Ok(None);
+        }
         // Steel Roller: `this.field.clearTerrain();` (returns nothing: no effect on success).
         moves::STEEL_ROLLER => {
             super::clear_terrain(b);
@@ -1339,13 +1396,15 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::NotFail
             }
         }
-        // Defog: `this.boost({evasion: -1})` on the target (success if a stage changed); the
-        // target's side loses its screens, Safeguard and Mist (no success) and its hazards, the
-        // user's side its hazards (success); then `this.field.clearTerrain()`.
+        // Defog: `if (!target.volatiles['substitute'] || move.infiltrates)` `this.boost({evasion:
+        // -1})` on the target (success if a stage changed); the target's side loses its screens,
+        // Safeguard and Mist (no success) and its hazards, the user's side its hazards
+        // (success); then `this.field.clearTerrain()`.
         moves::DEFOG => {
             let mut drop = NO_BOOSTS;
             drop[6] = -1;
-            let mut success = b.boost_by(target, &drop, Some(user), BoostEffect::Move(mv.id));
+            let mut success = !b.has_substitute(target)
+                && b.boost_by(target, &drop, Some(user), BoostEffect::Move(mv.id));
             remove_side_effects(
                 b,
                 target.side,
@@ -1708,9 +1767,9 @@ fn cure_status<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> bool {
 /// Heal Bell and Aromatherapy `onHit`: every Pokémon of `side`'s party (`side.pokemon`, benched
 /// ones included) loses its status (`cureStatus`: not at 0 HP), except an active one other than
 /// the user whose ability (`hasAbility`: active only; skipped while the move suppresses it) is
-/// Soundproof (Heal Bell), Sap Sipper (Aromatherapy) or Good as Gold. Succeeds if anyone was
-/// cured. (A substitute's protection against Aromatherapy is not modelled: substitutes are
-/// refused.)
+/// Soundproof (Heal Bell), Sap Sipper (Aromatherapy) or Good as Gold, or that is behind a
+/// substitute (Aromatherapy: `if (ally.volatiles['substitute'] && !move.infiltrates) continue;`,
+/// inside the same not-suppressed check). Succeeds if anyone was cured.
 fn party_cure<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -1731,6 +1790,9 @@ fn party_cure<const N: usize>(
             if Some(pokemon) != user_pokemon && !b.suppressing_ability(slot) {
                 let ability = b.ability(slot);
                 if ability == immune_ability || ability == abilities::GOOD_AS_GOLD {
+                    continue;
+                }
+                if id == moves::AROMATHERAPY && b.has_substitute(slot) {
                     continue;
                 }
             }
