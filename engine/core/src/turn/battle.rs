@@ -1268,6 +1268,27 @@ impl<'a, const N: usize> Battle<'a, N> {
         }
     }
 
+    /// Revival Blessing's revival: `hp = 1; sethp(maxhp / 2)` (truncated), `status = ''`,
+    /// `fainted = false` (the side's `totalFainted` stays).
+    pub fn revive(&mut self, pokemon: PokemonRef) {
+        let mon = self.mon(pokemon);
+        if mon.hp > 0 {
+            return;
+        }
+        let (old, half) = (mon.status, mon.max_hp / 2);
+        if old != Status::None {
+            self.apply(Instruction::ChangeStatus {
+                target: pokemon,
+                old,
+                new: Status::None,
+            });
+        }
+        self.apply(Instruction::Heal {
+            target: pokemon,
+            amount: half.max(1),
+        });
+    }
+
     /// `pokemon.switchFlag = false`.
     pub fn clear_switch_flag(&mut self, slot: SlotRef) {
         self.set_switch_flag(slot, SwitchFlag::None);

@@ -6,7 +6,7 @@
 //! switch-out address the [`SlotRef`].
 
 use crate::dex::{AbilityId, ItemId, MoveId, Type};
-use crate::field::{Effect, FieldEffect, SideEffect};
+use crate::field::{Effect, FieldEffect, SideEffect, SlotCondition, SlotEffect};
 use crate::gimmick::Gimmick;
 use crate::state::{
     BattleResult, Forme, PokemonRef, SideHistory, SideId, Slot, SlotHistory, SlotRef, State,
@@ -134,6 +134,14 @@ pub enum Instruction {
         old: Effect,
         new: Effect,
     },
+    /// A slot condition of one position (F12).
+    SetSlotCondition {
+        side: SideId,
+        slot: u8,
+        condition: SlotCondition,
+        old: SlotEffect,
+        new: SlotEffect,
+    },
     /// Spends `side`'s once-per-battle budget for `gimmick`. The budget was unspent before
     /// (validation rejects a second use), so reverse just clears the bit.
     UseGimmick {
@@ -230,6 +238,13 @@ impl<const N: usize> State<N> {
             Instruction::SetSideEffect {
                 side, effect, new, ..
             } => self.side_mut(side).effects[effect as usize] = new,
+            Instruction::SetSlotCondition {
+                side,
+                slot,
+                condition,
+                new,
+                ..
+            } => self.side_mut(side).slot_conditions[usize::from(slot)][condition as usize] = new,
             Instruction::UseGimmick { side, gimmick } => {
                 let used = &mut self.side_mut(side).gimmicks_used;
                 debug_assert!(!gimmick.is_none() && !used.contains(gimmick));
@@ -291,6 +306,13 @@ impl<const N: usize> State<N> {
             Instruction::SetSideEffect {
                 side, effect, old, ..
             } => self.side_mut(side).effects[effect as usize] = old,
+            Instruction::SetSlotCondition {
+                side,
+                slot,
+                condition,
+                old,
+                ..
+            } => self.side_mut(side).slot_conditions[usize::from(slot)][condition as usize] = old,
             Instruction::UseGimmick { side, gimmick } => {
                 let used = &mut self.side_mut(side).gimmicks_used;
                 *used = used.without(gimmick);

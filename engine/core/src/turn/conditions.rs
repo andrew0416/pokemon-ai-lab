@@ -2,9 +2,10 @@
 //! when a volatile starts and when its duration runs out in the residual.
 
 use crate::dex::{
-    abilities, items, moves, MoveCategory, MoveFlags, MoveId, Type, TypeImmunities, TypeRelation,
+    abilities, items, moves, ConditionId, MoveCategory, MoveFlags, MoveId, Type, TypeImmunities,
+    TypeRelation,
 };
-use crate::field::{Effect, SideEffect};
+use crate::field::{Effect, SideEffect, SlotCondition, SlotEffect};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SideId, SlotRef, State, Status, BOOST_COUNT};
 use crate::volatile::{
@@ -52,6 +53,139 @@ pub(crate) fn roost_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) 
 
 /// The volatile's `onEnd` when its duration runs out in the residual (Showdown
 /// `removeVolatile`: `End` runs while the volatile is still there; the caller removes it).
+/// The slot condition a move's `slotCondition` names, if the engine runs it.
+pub(crate) fn slot_condition_of(condition: ConditionId) -> Option<SlotCondition> {
+    Some(match condition {
+        c if c == crate::dex::conditions::WISH => SlotCondition::Wish,
+        c if c == crate::dex::conditions::HEALINGWISH => SlotCondition::HealingWish,
+        c if c == crate::dex::conditions::REVIVALBLESSING => SlotCondition::RevivalBlessing,
+        _ => return None,
+    })
+}
+
+pub(crate) fn slot_condition<const N: usize>(
+    b: &Battle<'_, N>,
+    slot: SlotRef,
+    condition: SlotCondition,
+) -> SlotEffect {
+    b.state.side(slot.side).slot_conditions[usize::from(slot.slot)][condition as usize]
+}
+
+fn set_slot_condition<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    condition: SlotCondition,
+    new: SlotEffect,
+) {
+    let old = slot_condition(b, slot, condition);
+    if old != new {
+        b.apply(Instruction::SetSlotCondition {
+            side: slot.side,
+            slot: slot.slot,
+            condition,
+            old,
+            new,
+        });
+    }
+}
+
+/// Showdown `side.addSlotCondition(target, condition, source, move)`: fails if the condition is
+/// up (none of these has `onRestart`); Wish's `onStart` keeps the wisher's max HP (it heals
+/// half) and the starting turn; Revival Blessing starts with duration 1.
+pub(crate) fn add_slot_condition<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    condition: SlotCondition,
+    source: SlotRef,
+) -> bool {
+    if slot_condition(b, slot, condition).is_active() {
+        return false;
+    }
+    let new = match condition {
+        SlotCondition::Wish => SlotEffect {
+            value: b.slot_mon(source).map_or(0, |m| m.max_hp as u16),
+            turn: b.state.turn,
+        },
+        SlotCondition::HealingWish => SlotEffect { value: 1, turn: 0 },
+        SlotCondition::RevivalBlessing => SlotEffect { value: 1, turn: 1 },
+    };
+    set_slot_condition(b, slot, condition, new);
+    true
+}
+
+/// Showdown `side.removeSlotCondition`: the condition's `End` on the Pokémon in the slot, then
+/// it is gone. Wish's `onEnd` heals a standing occupant half the wisher's max HP.
+pub(crate) fn remove_slot_condition<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    condition: SlotCondition,
+) -> bool {
+    let state = slot_condition(b, slot, condition);
+    if !state.is_active() {
+        return false;
+    }
+    if condition == SlotCondition::Wish && b.alive(slot).is_some() {
+        b.heal(slot, f64::from(state.value) / 2.0);
+    }
+    set_slot_condition(b, slot, condition, SlotEffect::NONE);
+    true
+}
+
+/// Healing Wish's `onSwitchIn` → `onSwap` for the newcomer in `slot` (a SwitchIn handler,
+/// slot-condition sub-order 3, before the entry hazards): a newcomer below full HP or with a
+/// status is healed fully and cured, and the condition ends; otherwise it waits.
+pub(crate) fn slot_condition_switch_in<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if !slot_condition(b, slot, SlotCondition::HealingWish).is_active() {
+        return;
+    }
+    let Some(pokemon) = b.alive(slot) else {
+        return;
+    };
+    let mon = b.mon(pokemon);
+    if mon.hp < mon.max_hp || mon.status != Status::None {
+        let max_hp = f64::from(mon.max_hp);
+        b.heal(slot, max_hp);
+        b.cure_status(pokemon);
+        set_slot_condition(b, slot, SlotCondition::HealingWish, SlotEffect::NONE);
+    }
+}
+
+/// Wish's `onResidual` (order 4): once the turn count passed its starting turn the condition
+/// ends (and heals); Revival Blessing's duration counts down.
+pub(crate) fn slot_condition_residual<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    condition: SlotCondition,
+) {
+    let state = slot_condition(b, slot, condition);
+    if !state.is_active() {
+        return;
+    }
+    match condition {
+        SlotCondition::Wish => {
+            if b.state.turn > state.turn {
+                remove_slot_condition(b, slot, condition);
+            }
+        }
+        SlotCondition::RevivalBlessing => {
+            if state.turn <= 1 {
+                remove_slot_condition(b, slot, condition);
+            } else {
+                set_slot_condition(
+                    b,
+                    slot,
+                    condition,
+                    SlotEffect {
+                        turn: state.turn - 1,
+                        ..state
+                    },
+                );
+            }
+        }
+        SlotCondition::HealingWish => {}
+    }
+}
+
 /// The two-turn moves the engine runs (`charge` flag) and their own volatile
 /// (`attacker.addVolatile(move.id)` in `twoturnmove`'s start). Other charge moves (Skull Bash,
 /// Razor Wind, Sky Drop, ... ) are refused.

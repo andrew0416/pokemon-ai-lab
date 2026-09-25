@@ -5,7 +5,9 @@
 //! latter on the side, which only works with one active Pokémon.
 
 use crate::dex::{AbilityId, ItemId, MoveId, Nature, SpeciesId, Type};
-use crate::field::{Effect, FIELD_EFFECT_COUNT, SIDE_EFFECT_COUNT};
+use crate::field::{
+    Effect, SlotEffect, FIELD_EFFECT_COUNT, SIDE_EFFECT_COUNT, SLOT_CONDITION_COUNT,
+};
 use crate::gimmick::{DynamaxState, GimmickSet};
 use crate::stats::{champions_stats_unchecked, StatPoints};
 use crate::volatile::Volatiles;
@@ -324,6 +326,8 @@ pub struct Side<const N: usize> {
     pub gimmicks_used: GimmickSet,
     /// Faint counters (F13); hidden from the canonical output.
     pub history: SideHistory,
+    /// Slot conditions per position (F12): Wish, Healing Wish, Revival Blessing.
+    pub slot_conditions: [[SlotEffect; SLOT_CONDITION_COUNT]; N],
 }
 
 impl<const N: usize> Default for Side<N> {
@@ -334,6 +338,7 @@ impl<const N: usize> Default for Side<N> {
             effects: [Effect::NONE; SIDE_EFFECT_COUNT],
             gimmicks_used: GimmickSet::EMPTY,
             history: SideHistory::default(),
+            slot_conditions: [[SlotEffect::NONE; SLOT_CONDITION_COUNT]; N],
         }
     }
 }

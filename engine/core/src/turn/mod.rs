@@ -149,7 +149,24 @@ fn check_mid_turn_switches<const N: usize>(
                 s.slots[i].switch_flag != SwitchFlag::None && s.slots[i].party_index.is_some()
             })
             .collect();
-        let required = flagged.len().min(bench.len());
+        // Revival Blessing's slot asks for a fainted party member instead of a bench one.
+        let reviving = |i: usize| {
+            s.slot_conditions[i][crate::field::SlotCondition::RevivalBlessing as usize].is_active()
+        };
+        let fainted: Vec<u8> = (0..s.party.len() as u8)
+            .filter(|&i| s.party[i as usize].hp == 0)
+            .collect();
+        let required = flagged
+            .iter()
+            .filter(|&&i| {
+                if reviving(i) {
+                    !fainted.is_empty()
+                } else {
+                    true
+                }
+            })
+            .count()
+            .min(bench.len() + flagged.iter().filter(|&&i| reviving(i)).count());
         let mut given = Vec::new();
         for (i, &c) in choice.iter().enumerate() {
             let invalid = |reason: String| TurnError::InvalidChoice {
@@ -163,7 +180,8 @@ fn check_mid_turn_switches<const N: usize>(
             if !flagged.contains(&i) {
                 return Err(invalid("the slot is not switching out".into()));
             }
-            if !bench.contains(&party_index) || given.contains(&party_index) {
+            let pool = if reviving(i) { &fainted } else { &bench };
+            if !pool.contains(&party_index) || given.contains(&party_index) {
                 return Err(invalid(format!("cannot switch to party {party_index}")));
             }
             given.push(party_index);
@@ -469,10 +487,29 @@ fn request_switches<const N: usize>(b: &mut Battle<'_, N>) -> bool {
         if flagged.is_empty() {
             continue;
         }
+        // Revival Blessing asks for its fainted party member whatever the bench.
+        let flagged: Vec<(SlotRef, bool)> = flagged
+            .into_iter()
+            .map(|slot| {
+                let reviving = conditions::slot_condition(
+                    b,
+                    slot,
+                    crate::field::SlotCondition::RevivalBlessing,
+                )
+                .is_active();
+                (slot, reviving)
+            })
+            .collect();
         if residual::bench(b, side).next().is_none() {
-            for slot in flagged {
-                b.clear_switch_flag(slot);
+            let mut kept = false;
+            for (slot, reviving) in flagged {
+                if reviving {
+                    kept = true;
+                } else {
+                    b.clear_switch_flag(slot);
+                }
             }
+            any |= kept;
         } else {
             any = true;
         }
@@ -511,6 +548,36 @@ fn run_mid_turn_switches<const N: usize>(
             tied[b.rng.uniform(tied.len())]
         };
         let (slot, party_index, _) = switches.remove(pick);
+        if conditions::slot_condition(b, slot, crate::field::SlotCondition::RevivalBlessing)
+            .is_active()
+        {
+            // `runAction('revivalblessing')`: the fainted party member comes back at half its
+            // max HP with no status; one still holding an active position switches in at
+            // once (`instaswitch`); the condition and the user's flag end.
+            let party = PokemonRef {
+                side: slot.side,
+                party: party_index,
+            };
+            b.revive(party);
+            b.clear_switch_flag(slot);
+            conditions::remove_slot_condition(
+                b,
+                slot,
+                crate::field::SlotCondition::RevivalBlessing,
+            );
+            let held = State::<N>::slot_refs().find(|&r| {
+                r.side == slot.side && b.state.slot(r).fainted_occupant == Some(party_index)
+            });
+            if let Some(held) = held {
+                // `switchIn` into its own position: `queue.cancelAction(oldActive)` drops the
+                // revived Pokémon's queued actions.
+                b.queue.retain(|a| a.pokemon != party);
+                let hp_before = b.mon(party).hp;
+                switching::switch_in(b, held, party_index, false)?;
+                newcomers.push((held, hp_before));
+            }
+            continue;
+        }
         let hp_before = b.state.side(slot.side).party[usize::from(party_index)].hp;
         switching::switch_in(b, slot, party_index, true)?;
         newcomers.push((slot, hp_before));

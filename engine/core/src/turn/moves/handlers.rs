@@ -282,6 +282,12 @@ pub(super) fn on_try_hit<const N: usize>(
     mv: &mut ActiveMove,
 ) -> bool {
     match mv.id {
+        // Healing Wish: `if (!this.canSwitch(source.side)) return this.NOT_FAIL;` — the target
+        // drops out and the user does not faint (`selfdestruct: 'ifHit'`).
+        moves::HEALING_WISH => super::super::residual::bench(b, user.side).next().is_some(),
+        // Revival Blessing: `if (!source.side.pokemon.filter(ally => ally.fainted).length)
+        // return false;`
+        moves::REVIVAL_BLESSING => b.state.side(user.side).party.iter().any(|p| p.hp == 0),
         // Psychic Fangs, Brick Break, Raging Bull: the target's side loses Reflect, Light Screen
         // and Aurora Veil before the damage (returns nothing).
         moves::PSYCHIC_FANGS | moves::BRICK_BREAK | moves::RAGING_BULL => {

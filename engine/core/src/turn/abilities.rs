@@ -30,6 +30,7 @@ use super::order::modify;
 pub(crate) const SUB_MOVE: u32 = 0;
 /// A Pokémon's volatile or status condition.
 pub(crate) const SUB_CONDITION: u32 = 2;
+pub(crate) const SUB_SLOT_CONDITION: u32 = 3;
 pub(crate) const SUB_SIDE_CONDITION: u32 = 4;
 pub(crate) const SUB_FIELD_CONDITION: u32 = 5;
 pub(crate) const SUB_ABILITY: u32 = 7;

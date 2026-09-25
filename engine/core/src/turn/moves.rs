@@ -1875,6 +1875,11 @@ fn spread_move_hit<const N: usize>(
         if let Some(volatile) = Volatile::from_condition(data.volatile_status) {
             note(b.add_volatile(t, volatile));
         }
+        // `if (moveData.slotCondition) hitResult = target.side.addSlotCondition(target,
+        // moveData.slotCondition, source, move)` (Wish, Healing Wish, Revival Blessing).
+        if let Some(condition) = conditions::slot_condition_of(data.slot_condition) {
+            note(conditions::add_slot_condition(b, t, condition, user));
+        }
         // Protect / Detect `onHit`: the stall counter.
         if data.stalling_move {
             b.add_volatile(t, Volatile::Stall);

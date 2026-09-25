@@ -97,7 +97,24 @@ fn run() -> Result<(), String> {
         }
     }
     let position = start.ok_or_else(|| match &wanted {
-        Some(_) => "no initial state matches the report's `before`".to_owned(),
+        Some(w) => {
+            let mut text = "no initial state matches the report's `before`:
+"
+            .to_owned();
+            text.push_str(&format!(
+                "oracle: {w}
+"
+            ));
+            for (i, outcome) in states.iter().enumerate() {
+                let key =
+                    canonical_json(&outcome.state, &loaded.meta).unwrap_or_else(|e| e.to_string());
+                text.push_str(&format!(
+                    "engine {i}: {key}
+"
+                ));
+            }
+            text
+        }
         None => format!(
             "{} initial states; pass --before <oracle report> to pick one",
             states.len()

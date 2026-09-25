@@ -1,0 +1,101 @@
+{
+ "description": "F12 Revival Blessing: in the setup turns Garchomp's Night Shade knocks out Shedinja (1 HP) and Clefable replaces it; then Pawmot uses Revival Blessing, the turn stops for p1's choice (midTurn), and the fainted Shedinja comes back (half of 1 HP, at least 1) on the bench. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Pawmot",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Revival Blessing",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Shedinja",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Night Shade",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Metagross",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move harden, move harden",
+   "move nightshade 2, move harden"
+  ],
+  [
+   "switch 3",
+   ""
+  ]
+ ],
+ "turn": {
+  "p1": "move revivalblessing, move harden",
+  "p2": "move harden, move harden"
+ },
+ "midTurn": {
+  "p1": [
+   "switch 3"
+  ]
+ }
+}

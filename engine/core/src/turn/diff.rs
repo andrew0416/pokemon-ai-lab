@@ -47,6 +47,23 @@ pub(crate) fn instructions<const N: usize>(from: &State<N>, to: &State<N>) -> Ve
                 new: b.history,
             });
         }
+        for slot in 0..N {
+            for condition in crate::field::SlotCondition::ALL {
+                let (old, new) = (
+                    a.slot_conditions[slot][condition as usize],
+                    b.slot_conditions[slot][condition as usize],
+                );
+                if old != new {
+                    out.push(Instruction::SetSlotCondition {
+                        side,
+                        slot: slot as u8,
+                        condition,
+                        old,
+                        new,
+                    });
+                }
+            }
+        }
     }
     for (i, (&old, &new)) in from.field.iter().zip(&to.field).enumerate() {
         if old != new {
@@ -337,6 +354,11 @@ mod tests {
         to.slot_mut(me).history.newly_switched = false;
         to.side_mut(SideId::Two).history.total_fainted = 1;
         to.slot_mut(me).switch_flag = SwitchFlag::Move;
+        to.side_mut(SideId::One).slot_conditions[0][crate::field::SlotCondition::Wish as usize] =
+            crate::field::SlotEffect {
+                value: 200,
+                turn: 1,
+            };
 
         let ins = instructions(&from, &to);
         let mut s = from.clone();

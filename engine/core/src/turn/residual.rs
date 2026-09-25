@@ -8,12 +8,13 @@
 //! earlier in the residual are skipped. Faints are processed after every handler.
 
 use crate::dex::{abilities, items, AbilityId, ItemId, Type, TypeImmunities, NO_BOOSTS};
-use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
+use crate::field::{Effect, FieldEffect, SideEffect, SlotCondition, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SideId, SlotRef, State, Status};
 use crate::volatile::{Volatile, VolatileState};
 
 use super::abilities as ability_events;
+use super::abilities::SUB_SLOT_CONDITION;
 use super::battle::{Battle, BoostEffect, DamageSource};
 use super::conditions;
 use super::items as item_events;
@@ -38,6 +39,9 @@ enum Kind {
     Item(PokemonRef, SlotRef, ItemId),
     /// Leech Seed's `onResidual` (order 8; no duration).
     LeechSeed(PokemonRef, SlotRef),
+    /// A slot condition's `onResidual` on the standing occupant (Wish order 4; Revival
+    /// Blessing's duration), slot-condition sub-order 3.
+    SlotCondition(PokemonRef, SlotRef, SlotCondition),
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -126,6 +130,19 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
             };
             // `pokemon.speed` (Champions `getActionSpeed`, negated under Trick Room).
             let speed = b.action_speed(slot);
+            for (condition, order) in [
+                (SlotCondition::Wish, 4),
+                (SlotCondition::RevivalBlessing, ORDER_DEFAULT),
+            ] {
+                if conditions::slot_condition(b, slot, condition).is_active() {
+                    out.push(Handler {
+                        order,
+                        speed,
+                        sub_order: SUB_SLOT_CONDITION,
+                        kind: Kind::SlotCondition(pokemon, slot, condition),
+                    });
+                }
+            }
             let mon = b.mon(pokemon);
             let status_order = match mon.status {
                 Status::Burn => Some(10),
@@ -246,7 +263,8 @@ impl Kind {
             | Kind::SpeedBoost(p, s)
             | Kind::StatusCure(p, s, _)
             | Kind::Item(p, s, _)
-            | Kind::LeechSeed(p, s) => Some((p, s)),
+            | Kind::LeechSeed(p, s)
+            | Kind::SlotCondition(p, s, _) => Some((p, s)),
             Kind::Weather | Kind::FieldDuration(_) | Kind::SideDuration(..) => None,
         }
     }
@@ -341,6 +359,9 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
             let ended = effect.turns == 0;
             b.set_side_effect(side, which, if ended { Effect::NONE } else { effect });
             return Ok(!ended);
+        }
+        Kind::SlotCondition(_, slot, condition) => {
+            conditions::slot_condition_residual(b, slot, condition);
         }
         Kind::VolatileDuration(pokemon, slot, volatile) => {
             let mut state = b.volatile(slot, volatile);

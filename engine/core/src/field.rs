@@ -40,6 +40,56 @@ pub enum SideEffect {
 
 pub const SIDE_EFFECT_COUNT: usize = 13;
 
+/// Slot conditions (Showdown `side.slotConditions[position]`, WORKPLAN F12): they belong to the
+/// position and outlast the Pokémon that stood there.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum SlotCondition {
+    /// Wish: heals half the wisher's max HP at the residual of the next turn.
+    Wish = 0,
+    /// Healing Wish: fully heals the next Pokémon to switch into the slot that needs it.
+    HealingWish,
+    /// Revival Blessing: the user must pick a fainted party member to revive (a mid-turn
+    /// decision); duration 1.
+    RevivalBlessing,
+}
+
+pub const SLOT_CONDITION_COUNT: usize = 3;
+
+impl SlotCondition {
+    pub const ALL: [SlotCondition; SLOT_CONDITION_COUNT] = [
+        SlotCondition::Wish,
+        SlotCondition::HealingWish,
+        SlotCondition::RevivalBlessing,
+    ];
+
+    /// Showdown's condition id.
+    pub fn id(self) -> &'static str {
+        match self {
+            SlotCondition::Wish => "wish",
+            SlotCondition::HealingWish => "healingwish",
+            SlotCondition::RevivalBlessing => "revivalblessing",
+        }
+    }
+}
+
+/// A slot condition's state: `value` is 0 while the condition is absent; Wish keeps the
+/// wisher's max HP there (it heals half of it, `effectState.hp`) and its starting turn in
+/// `turn` (`startingTurn`); Healing Wish keeps 1; Revival Blessing keeps 1 and its duration in
+/// `turn`.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub struct SlotEffect {
+    pub value: u16,
+    pub turn: u16,
+}
+
+impl SlotEffect {
+    pub const NONE: SlotEffect = SlotEffect { value: 0, turn: 0 };
+
+    pub fn is_active(self) -> bool {
+        self.value != 0
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 #[repr(u8)]
 pub enum Weather {

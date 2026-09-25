@@ -340,6 +340,22 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     ),
     // Parting Shot: `onHit` drops Atk and SpA and withdraws the switch if that failed (F6).
     (moves::PARTING_SHOT, &["onHit"]),
+    // Slot conditions (F12): `conditions::{add_slot_condition, slot_condition_residual,
+    // slot_condition_switch_in, remove_slot_condition}`; Revival Blessing's revival is a
+    // mid-turn decision (`resume_turn`).
+    (
+        moves::WISH,
+        &[
+            "condition.onEnd",
+            "condition.onResidual",
+            "condition.onStart",
+        ],
+    ),
+    (
+        moves::HEALING_WISH,
+        &["condition.onSwap", "condition.onSwitchIn", "onTryHit"],
+    ),
+    (moves::REVIVAL_BLESSING, &["onTryHit"]),
     // Two-turn moves (F9): `onTryMove` in `handlers::charge_try_move`; the semi-invulnerable
     // ones' condition handlers in `handlers::invulnerable`, `volatile_modify_damage`,
     // `target_volatile_base_power` and the sandstorm residual (`onImmunity`).
@@ -1399,7 +1415,9 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     if flags.contains(F::CHARGE) && super::conditions::charge_volatile(id).is_none() {
         return why("two-turn move");
     }
-    if !m.slot_condition.is_none() {
+    if !m.slot_condition.is_none()
+        && super::conditions::slot_condition_of(m.slot_condition).is_none()
+    {
         return why("slot condition");
     }
     if !m.volatile_status.is_none() && Volatile::from_condition(m.volatile_status).is_none() {

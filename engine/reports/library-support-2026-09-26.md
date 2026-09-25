@@ -14,7 +14,6 @@
 | 이유 | 팀 수 | 팀 (포켓몬) |
 |---|---:|---|
 | move Double Shock: callbacks ["onTryMove", "self.onHit"] are not implemented | 2 | kickoff-shadezero, kickoff-thepostmanp |
-| move Revival Blessing: callbacks ["onTryHit"] are not implemented | 2 | kickoff-shadezero, kickoff-thepostmanp |
 | item Miracle Berry switch-in handler onUpdate | 1 | crown-ryukeivgc (Rillaboom) |
 
 ## 팀별
@@ -39,8 +38,8 @@
 | kickoff-karlin22 | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-prongs | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-sableyevgc | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
-| kickoff-shadezero | source-complete-sp-unknown | 통과 | 거부 | 2 | 0 | 5612 Double Shock: move Double Shock: callbacks ["onTryMove", "self.onHit"] are not implemented |
-| kickoff-thepostmanp | source-complete-sp-unknown | 통과 | 거부 | 2 | 0 | 1234 Double Shock: move Double Shock: callbacks ["onTryMove", "self.onHit"] are not implemented |
+| kickoff-shadezero | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 5612 Double Shock: move Double Shock: callbacks ["onTryMove", "self.onHit"] are not implemented |
+| kickoff-thepostmanp | source-complete-sp-unknown | 통과 | 거부 | 1 | 0 | 1234 Double Shock: move Double Shock: callbacks ["onTryMove", "self.onHit"] are not implemented |
 | kickoff-thosewhoknow | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | kickoff-wolfey | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |
 | perish-mrada | source-complete-sp-unknown | 통과 | 통과 | 0 | 0 |  |

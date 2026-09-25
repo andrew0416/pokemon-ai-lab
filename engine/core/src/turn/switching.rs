@@ -22,7 +22,7 @@ use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SlotRef, Status, SwitchFlag, BOOST_COUNT};
 use crate::volatile::Volatile;
 
-use super::abilities::{SUB_ABILITY, SUB_ITEM, SUB_SIDE_CONDITION};
+use super::abilities::{SUB_ABILITY, SUB_ITEM, SUB_SIDE_CONDITION, SUB_SLOT_CONDITION};
 use super::battle::{Battle, BoostEffect};
 use super::moves::{set_terrain, set_weather};
 use super::order::boosted_stat;
@@ -548,6 +548,9 @@ pub(crate) fn switch_in<const N: usize>(
 /// A handler of the batched `fieldEvent('SwitchIn')`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum SwitchInHandler {
+    /// The slot conditions of the newcomer's position (Healing Wish's `onSwitchIn`; sub-order
+    /// 3, before the hazards).
+    SlotConditions,
     /// The entry hazards of the newcomer's side (`conditions::entry_hazards`; side conditions,
     /// sub-order 4, their holder the newcomer).
     Hazards,
@@ -584,6 +587,7 @@ pub(crate) fn run_switch_in<const N: usize>(
             continue;
         };
         let mon = b.mon(pokemon);
+        handlers.push((0, slot, SUB_SLOT_CONDITION, SwitchInHandler::SlotConditions));
         handlers.push((0, slot, SUB_SIDE_CONDITION, SwitchInHandler::Hazards));
         handlers.push((
             switch_in_priority(mon.ability),
@@ -641,6 +645,7 @@ pub(crate) fn run_switch_in<const N: usize>(
             continue;
         }
         match handler {
+            SwitchInHandler::SlotConditions => super::conditions::slot_condition_switch_in(b, slot),
             SwitchInHandler::Hazards => {
                 // Each hazard is followed by `faintMessages`; the event stops once the battle
                 // is over.

@@ -18,7 +18,9 @@ use std::fmt;
 use std::fmt::Write as _;
 
 use lab_engine::dex::{MoveId, Type};
-use lab_engine::field::{Effect, FieldEffect, SideEffect, Terrain, Weather, FIELD_EFFECT_COUNT};
+use lab_engine::field::{
+    Effect, FieldEffect, SideEffect, SlotCondition, Terrain, Weather, FIELD_EFFECT_COUNT,
+};
 use lab_engine::gimmick::Gimmick;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::{BattleResult, Pokemon, SideId, State, Status, SwitchFlag, PARTY_SIZE};
@@ -362,7 +364,41 @@ fn side_json<const N: usize>(
     }
     out.push_str(r#"},"slotConditions":["#);
     for slot in 0..N {
-        out.push_str(if slot == 0 { "{}" } else { ",{}" });
+        if slot > 0 {
+            out.push(',');
+        }
+        out.push('{');
+        let mut first = true;
+        // Alphabetical, as `Object.keys().sort()`: healingwish, revivalblessing, wish.
+        for condition in [
+            SlotCondition::HealingWish,
+            SlotCondition::RevivalBlessing,
+            SlotCondition::Wish,
+        ] {
+            let state = side.slot_conditions[slot][condition as usize];
+            if !state.is_active() {
+                continue;
+            }
+            let sep = if first { "" } else { "," };
+            match condition {
+                // `effectState.hp = source.maxhp / 2` (a JS number: `x.5` for an odd max HP).
+                SlotCondition::Wish => {
+                    let hp = f64::from(state.value) / 2.0;
+                    write!(out, r#"{sep}"wish":{{"hp":{hp}}}"#).unwrap();
+                }
+                SlotCondition::HealingWish => write!(out, r#"{sep}"healingwish":{{}}"#).unwrap(),
+                SlotCondition::RevivalBlessing => {
+                    write!(
+                        out,
+                        r#"{sep}"revivalblessing":{{"duration":{}}}"#,
+                        state.turn
+                    )
+                    .unwrap();
+                }
+            }
+            first = false;
+        }
+        out.push('}');
     }
     out.push_str(r#"],"pokemon":["#);
     for (n, index) in meta.canonical_order().into_iter().enumerate() {
