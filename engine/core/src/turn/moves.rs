@@ -39,6 +39,8 @@ struct ActiveMove {
     accuracy: Option<u8>,
     /// A secondary effect ModifyMove appended to the move's own (King's Rock's flinch).
     added_secondary: Option<Secondary>,
+    /// HP taken by the move's hits (Showdown `move.totalDamage`).
+    total_damage: i32,
 }
 
 /// Per-target result of a hit (Showdown's `damage[i]`: a number, `true`, or `false`).
@@ -92,6 +94,7 @@ fn run_move_inner<const N: usize>(
         spread: false,
         accuracy: id.data().accuracy,
         added_secondary: None,
+        total_damage: 0,
     };
 
     if !before_move(b, user, &mv) {
@@ -484,15 +487,8 @@ fn use_move<const N: usize>(
     if !result {
         return Ok(false);
     }
-    // AfterMoveSecondarySelf: Life Orb.
-    if b.item(user) == items::LIFE_ORB
-        && mv.data.category != MoveCategory::Status
-        && main_target != user
-        && b.alive(user).is_some()
-    {
-        let max_hp = f64::from(b.mon(pokemon).max_hp);
-        b.damage(user, max_hp / 10.0, DamageSource::Indirect);
-    }
+    // AfterMoveSecondarySelf: the user's item (Life Orb, Shell Bell, Throat Spray).
+    item_events::after_move_secondary_self(b, user, main_target, mv.data, mv.total_damage);
     Ok(true)
 }
 
@@ -647,6 +643,10 @@ fn try_spread_move_hit<const N: usize>(
     }
     // 7. The hit (single-hit moves only).
     let results = hit_loop(b, user, mv, &hit)?;
+    mv.total_damage = results
+        .iter()
+        .map(|r| if let Hit::Damage(d) = r { *d } else { 0 })
+        .sum();
     Ok(results.iter().any(|r| r.ok()))
 }
 
@@ -917,6 +917,8 @@ fn spread_move_hit<const N: usize>(
             Some(HitResult::Failure) => note(false),
             Some(HitResult::NotFail) | None => {}
         }
+        // `runEvent('Hit')`: the target's item (Sticky Barb).
+        item_events::on_hit(b, user, t, data);
         if let (Hit::Done, Some(false)) = (results[i], did) {
             results[i] = Hit::Failed;
         }

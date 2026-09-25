@@ -232,6 +232,13 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::FOCUS_BAND, &["onDamage"]),
     (items::KINGS_ROCK, &["onModifyMove"]),
     (items::RAZOR_FANG, &["onModifyMove"]),
+    // Residual (`residual.rs` → `items::on_residual`), after the move (`use_move`), on hit.
+    (items::BLACK_SLUDGE, &["onResidual"]),
+    (items::TOXIC_ORB, &["onResidual"]),
+    (items::FLAME_ORB, &["onResidual"]),
+    (items::STICKY_BARB, &["onHit", "onResidual"]),
+    (items::SHELL_BELL, &["onAfterMoveSecondarySelf"]),
+    (items::THROAT_SPRAY, &["onAfterMoveSecondarySelf"]),
     // Choice items (`items.rs`): the stat in `order.rs`/`moves.rs`, `onModifyMove` adds the
     // `choicelock` volatile, `onStart` only removes a lock a newcomer cannot have.
     (

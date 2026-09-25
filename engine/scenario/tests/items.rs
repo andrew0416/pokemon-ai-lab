@@ -144,6 +144,23 @@ fn kings_rock_flinch_matches_showdown() {
     assert_exact_parity("o91-kings-rock");
 }
 
+// ---- O93 residual and after-move items ---------------------------------------------------------
+
+#[test]
+fn black_sludge_and_status_orbs_match_showdown() {
+    assert_exact_parity("o93-residual-items");
+}
+
+#[test]
+fn status_orb_immunity_magic_guard_and_sticky_barb_damage_match_showdown() {
+    assert_exact_parity("o93-orb-immunity-sticky-barb");
+}
+
+#[test]
+fn sticky_barb_transfer_shell_bell_and_throat_spray_match_showdown() {
+    assert_exact_parity("o93-sticky-barb-shell-bell-throat-spray");
+}
+
 /// A Pokémon locked by its Choice item cannot choose another move (`choicelock`'s
 /// `onDisableMove`).
 #[test]
