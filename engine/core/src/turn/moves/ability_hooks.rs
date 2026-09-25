@@ -1,16 +1,72 @@
 //! Ability callbacks that run inside a move (Showdown `data/abilities.ts`; the Champions mod
-//! overrides none of these): the user's foes' `onFoeTryMove` and the target's `onTryHit`.
+//! overrides none of these): the user's `onModifyMove`, the user's foes' `onFoeTryMove`, the
+//! target's `onTryHit` and `onModifySecondaries`.
 //!
 //! Each function is one event; `moves.rs` calls it where Showdown runs that event. Breakable
 //! abilities are read through [`Battle::ability_unless_broken`], so a move that ignores
 //! abilities skips them like Showdown's `runEvent` does.
 
-use crate::dex::{abilities, moves, MoveCategory, MoveFlags, MoveTarget, Type, NO_BOOSTS};
+use crate::dex::{
+    abilities, moves, MoveCategory, MoveFlags, MoveTarget, Secondary, Type, NO_BOOSTS,
+};
 use crate::state::SlotRef;
 use crate::volatile::Volatile;
 
+use super::super::abilities::sheer_force_deletes_secondaries;
 use super::super::battle::Battle;
+use super::super::TurnError;
 use super::{handlers, type_immune, ActiveMove};
+
+/// The user's ability `onModifyMove` (`runEvent('ModifyMove')`, after the move's own):
+/// - Sheer Force: a move with secondaries (and no `hasSheerForceBoost`) loses them and its
+///   `self` effect and is marked `hasSheerForce`;
+/// - Serene Grace (priority -2): every secondary chance and `self.chance` doubles.
+///
+/// A Pokémon has one ability, so their priorities never compete; none of the other
+/// implemented ModifyMove handlers reads what these change.
+pub(super) fn on_modify_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &mut ActiveMove,
+) -> Result<(), TurnError> {
+    let ability = b.ability(user);
+    if ability == abilities::SHEER_FORCE && sheer_force_deletes_secondaries(mv.data) {
+        mv.has_sheer_force = true;
+    }
+    if ability == abilities::SERENE_GRACE {
+        mv.secondary_chance_factor = 2;
+    }
+    Ok(())
+}
+
+/// The secondaries of the move on `target` (`secondaries()`): none once Sheer Force deleted
+/// them, else the target's `ModifySecondaries` result. Shield Dust (breakable) keeps only
+/// secondaries with a `self` effect (`!!effect.self`); every supported move's `self` secondary
+/// has boosts, the only one without (Genesis Supernova) is a Z-Move.
+pub(super) fn secondaries<const N: usize>(
+    b: &Battle<'_, N>,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> Vec<&'static Secondary> {
+    if mv.has_sheer_force {
+        return Vec::new();
+    }
+    let all = mv.data.secondaries;
+    if b.ability_unless_broken(target) == abilities::SHIELD_DUST {
+        return all.iter().filter(|s| s.self_boosts != NO_BOOSTS).collect();
+    }
+    all.iter().collect()
+}
+
+/// `move.hasSheerForce && pokemon.hasAbility('sheerforce')`: the `AfterMoveSecondarySelf` and
+/// `AfterMoveSecondary` events (Life Orb recoil, a thawing move's thaw) are skipped.
+pub(super) fn sheer_force_skips<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> bool {
+    mv.has_sheer_force && b.ability(user) == abilities::SHEER_FORCE
+}
 
 /// `runEvent('TryMove', user, target, move)` for the implemented handlers: Dazzling, Queenly
 /// Majesty and Armor Tail (`onFoeTryMove`, breakable) on the user's active foes. `target` is

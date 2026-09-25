@@ -529,12 +529,13 @@ impl<'a, const N: usize> Battle<'a, N> {
         false
     }
 
-    /// Showdown `runEvent('TryAddVolatile')` for a new volatile on `target`: the ability
-    /// handlers of Insomnia, Vital Spirit, Purifying Salt and Leaf Guard (in sun) on the
-    /// target block Yawn; Sweet Veil (Yawn) and Aroma Veil (Attract, Disable, Encore, Heal
-    /// Block, Taunt, Torment) block for the whole side. None of those volatiles is
-    /// representable yet, so this only guards their future implementation. The terrains'
-    /// `onTryAddVolatile` (Yawn, confusion) belong with those volatiles too.
+    /// Showdown `runEvent('TryAddVolatile')` for a new volatile on `target`: Inner Focus on the
+    /// target blocks flinch; the ability handlers of Insomnia, Vital Spirit, Purifying Salt and
+    /// Leaf Guard (in sun) on the target block Yawn; Sweet Veil (Yawn) and Aroma Veil (Attract,
+    /// Disable, Encore, Heal Block, Taunt, Torment) block for the whole side. Apart from flinch
+    /// none of those volatiles is representable yet, so this only guards their future
+    /// implementation. The terrains' `onTryAddVolatile` (Yawn, confusion) belong with those
+    /// volatiles too. Every handler only returns `null`, so their order is irrelevant.
     pub fn add_volatile_blocked(&self, target: SlotRef, volatile: Volatile) -> bool {
         let condition = volatile.condition();
         let yawn = condition == conditions::YAWN;
@@ -546,6 +547,8 @@ impl<'a, const N: usize> Battle<'a, N> {
                 yawn
             }
             a if a == abilities::LEAF_GUARD => yawn && self.effective_weather() == Weather::Sun,
+            // Inner Focus: `if (status.id === 'flinch') return null;`
+            a if a == abilities::INNER_FOCUS => condition == conditions::FLINCH,
             _ => false,
         };
         if blocked_by_own {

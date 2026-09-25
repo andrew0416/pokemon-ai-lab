@@ -389,6 +389,12 @@ pub(crate) fn start_ability<const N: usize>(
             drop[0] = -1;
             debug_assert_eq!(drop.len(), BOOST_COUNT);
             for foe in b.alive_slots(slot.side.other()) {
+                // `boost()` → `runEvent('TryBoost')`: Inner Focus (breakable) deletes the Atk
+                // drop when the effect is Intimidate. No other TryBoost handler is supported
+                // on the field (the boost-event framework is WORKPLAN F16).
+                if b.ability_unless_broken(foe) == abilities::INNER_FOCUS {
+                    continue;
+                }
                 b.boost(foe, &drop);
             }
         }

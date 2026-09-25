@@ -36,6 +36,11 @@ struct ActiveMove {
     spread: bool,
     /// Accuracy after ModifyMove; `None` never misses (Showdown `accuracy: true`).
     accuracy: Option<u8>,
+    /// Showdown `move.hasSheerForce`: Sheer Force deleted the secondaries and `self` in
+    /// ModifyMove (and AfterMoveSecondary(Self) effects are skipped).
+    has_sheer_force: bool,
+    /// Serene Grace's ModifyMove doubles every secondary chance and `self.chance` (1 or 2).
+    secondary_chance_factor: u32,
 }
 
 /// Per-target result of a hit (Showdown's `damage[i]`: a number, `true`, or `false`).
@@ -88,6 +93,8 @@ fn run_move_inner<const N: usize>(
         prankster_boosted: b.prankster_boosted(user, id),
         spread: false,
         accuracy: id.data().accuracy,
+        has_sheer_force: false,
+        secondary_chance_factor: 1,
     };
 
     if !before_move(b, user, &mv) {
@@ -439,8 +446,10 @@ fn use_move<const N: usize>(
     } else {
         target
     };
-    // ModifyMove: the move's own handler, then the user's status.
+    // ModifyMove: the move's own handler (`singleEvent`), then `runEvent`: the user's ability
+    // and status.
     handlers::on_modify_move(b, user, target, mv)?;
+    ability_hooks::on_modify_move(b, user, mv)?;
     // Freeze `onModifyMove`: a defrosting move thaws the user.
     if b.mon(pokemon).status == Status::Freeze && mv.data.flags.contains(MoveFlags::DEFROST) {
         b.cure_status(pokemon);
@@ -481,8 +490,9 @@ fn use_move<const N: usize>(
     if !result {
         return Ok(false);
     }
-    // AfterMoveSecondarySelf: Life Orb.
-    if b.item(user) == items::LIFE_ORB
+    // AfterMoveSecondarySelf (skipped for a Sheer Force-boosted move): Life Orb.
+    if !ability_hooks::sheer_force_skips(b, user, mv)
+        && b.item(user) == items::LIFE_ORB
         && mv.data.category != MoveCategory::Status
         && main_target != user
         && b.alive(user).is_some()
@@ -820,8 +830,9 @@ fn hit_loop<const N: usize>(
     if !results.iter().any(|r| r.ok()) {
         return Ok(results);
     }
-    // AfterMoveSecondary: a thawing move thaws a frozen target.
-    if mv.data.thaws_target {
+    // AfterMoveSecondary (skipped for a Sheer Force-boosted move): a thawing move thaws a
+    // frozen target.
+    if mv.data.thaws_target && !ability_hooks::sheer_force_skips(b, user, mv) {
         for (&t, r) in targets.iter().zip(&results) {
             if r.ok() {
                 if let Some(p) = b.alive(t) {
@@ -918,22 +929,24 @@ fn spread_move_hit<const N: usize>(
             results[i] = Hit::Failed;
         }
     }
-    // selfDrops: once, for the first target the move did not fail on.
-    if let Some(effect) = data.self_effect {
-        if effect.boosts != NO_BOOSTS
-            && results.iter().any(|r| r.ok())
-            && b.rng.chance(u32::from(effect.chance), 100)
+    // selfDrops: once, for the first target the move did not fail on. Sheer Force deleted
+    // `self`; Serene Grace doubled its chance.
+    if let Some(effect) = data.self_effect.filter(|_| !mv.has_sheer_force) {
+        let chance = u32::from(effect.chance) * mv.secondary_chance_factor;
+        if effect.boosts != NO_BOOSTS && results.iter().any(|r| r.ok()) && b.rng.chance(chance, 100)
         {
             b.boost(user, &effect.boosts);
         }
     }
-    // secondaries.
+    // secondaries: each target's ModifySecondaries (Shield Dust), then one roll per secondary
+    // (Sheer Force deleted them; Serene Grace doubled the chances).
     for (i, &t) in targets.iter().enumerate() {
         if !results[i].ok() {
             continue;
         }
-        for secondary in data.secondaries {
-            if !b.rng.chance(u32::from(secondary.chance), 100) {
+        for secondary in ability_hooks::secondaries(b, mv, t) {
+            let chance = u32::from(secondary.chance) * mv.secondary_chance_factor;
+            if !b.rng.chance(chance, 100) {
                 continue;
             }
             if secondary.boosts != NO_BOOSTS && b.alive(t).is_some() {

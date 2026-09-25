@@ -57,3 +57,33 @@ fn cloud_nine_suppresses_sun_match_showdown() {
 fn air_lock_holder_fainting_restores_sand_match_showdown() {
     assert_exact_parity("o49-air-lock-faint");
 }
+
+// ---- O60 secondary effects ---------------------------------------------------------------------
+
+/// Inner Focus: no flinch, and a mid-turn Intimidate leaves its Attack alone.
+#[test]
+fn inner_focus_matches_showdown() {
+    assert_exact_parity("o60-inner-focus");
+}
+
+/// Shield Dust drops flinch and burn secondaries (no roll); also Flash Fire's SpA boost.
+#[test]
+fn shield_dust_matches_showdown() {
+    assert_exact_parity("o60-shield-dust");
+}
+
+#[test]
+fn shield_dust_keeps_self_boosts_matches_showdown() {
+    assert_exact_parity("o60-shield-dust-self-boost");
+}
+
+#[test]
+fn serene_grace_matches_showdown() {
+    assert_exact_parity("o60-serene-grace");
+}
+
+/// Sheer Force skips the secondaries, Life Orb recoil and the AfterMoveSecondary thaw.
+#[test]
+fn sheer_force_matches_showdown() {
+    assert_exact_parity("o60-sheer-force");
+}

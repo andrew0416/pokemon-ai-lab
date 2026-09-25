@@ -385,6 +385,14 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // `suppressWeather` in `Battle::effective_weather`; the handlers in `switching`.
     (abilities::AIR_LOCK, &["onEnd", "onStart", "onSwitchIn"]),
     (abilities::CLOUD_NINE, &["onEnd", "onStart", "onSwitchIn"]),
+    // `onTryAddVolatile` (flinch) in `Battle::add_volatile_blocked`; `onTryBoost` (Intimidate
+    // only) in the Intimidate start effect (`switching`).
+    (abilities::INNER_FOCUS, &["onTryAddVolatile", "onTryBoost"]),
+    // `moves::ability_hooks`: ModifyMove, ModifySecondaries; Sheer Force's `onBasePower` in
+    // `abilities::base_power_handlers`.
+    (abilities::SHIELD_DUST, &["onModifySecondaries"]),
+    (abilities::SERENE_GRACE, &["onModifyMove"]),
+    (abilities::SHEER_FORCE, &["onBasePower", "onModifyMove"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

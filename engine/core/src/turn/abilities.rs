@@ -156,6 +156,11 @@ pub(crate) fn base_power_handlers<const N: usize>(
         // `this.modify(basePower, this.event.modifier) <= 60`: Technician has the highest
         // BasePower priority (30), so no factor is chained before it.
         a if a == abilities::TECHNICIAN => (base_power <= 60).then_some(MOD_ONE_POINT_FIVE),
+        // Sheer Force: `if (move.hasSheerForce || move.hasSheerForceBoost)
+        // return this.chainModify([5325, 4096])` (`hasSheerForce` from its own ModifyMove).
+        a if a == abilities::SHEER_FORCE => {
+            (sheer_force_deletes_secondaries(data) || data.has_sheer_force_boost).then_some(5325)
+        }
         a if a == abilities::IRON_FIST => flag(MoveFlags::PUNCH, MOD_ONE_POINT_TWO),
         a if a == abilities::RECKLESS => {
             (data.recoil.is_some() || data.has_crash_damage).then_some(MOD_ONE_POINT_TWO)
@@ -186,6 +191,11 @@ pub(crate) fn base_power_handlers<const N: usize>(
         out.push(Handler::of(b, target, p, SUB_ABILITY, 5120));
     }
     out
+}
+
+/// Sheer Force's `onModifyMove` condition: `move.secondaries && !move.hasSheerForceBoost`.
+pub(crate) fn sheer_force_deletes_secondaries(data: &MoveData) -> bool {
+    !data.secondaries.is_empty() && !data.has_sheer_force_boost
 }
 
 /// `ModifyAtk` (physical moves) or `ModifySpA` (special moves) handlers of abilities: the
