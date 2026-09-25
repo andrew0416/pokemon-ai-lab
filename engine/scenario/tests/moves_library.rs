@@ -6,7 +6,7 @@ mod common;
 
 use common::{assert_exact_parity, fixture, start};
 use lab_engine::action::{Gimmick, SlotAction};
-use lab_engine::rules::Ruleset;
+use lab_engine::rules::{ActionError, Ruleset};
 use lab_engine::turn::{enumerate_turn, TurnError};
 use lab_engine::Doubles;
 use lab_scenario::scenario_choices;
@@ -24,6 +24,24 @@ fn assert_invalid_choice(name: &str, side: usize, slot: usize, choice: SlotActio
             assert!(reason.contains(expected), "{reason}")
         }
         other => panic!("expected InvalidChoice, got {other:?}"),
+    }
+}
+
+/// Runs the scenario's turn with one slot switching out and expects the ruleset's `Trapped`
+/// rejection for that slot (`turn::trapped` covers the conditions' traps too, so the ruleset
+/// never offers the switch).
+fn assert_trapped(name: &str, side: usize, slot: usize, party_index: u8) {
+    let fixture = fixture(name);
+    let (loaded, position) = start(name, &fixture);
+    let mut state: Doubles = position.state;
+    let mut choices = scenario_choices(&loaded, &state).unwrap();
+    choices[side][slot] = SlotAction::Switch { party_index };
+    match enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices) {
+        Err(TurnError::Action {
+            error: ActionError::Trapped { slot: s },
+            ..
+        }) => assert_eq!(usize::from(s.slot), slot),
+        other => panic!("expected a Trapped rejection, got {other:?}"),
     }
 }
 
@@ -249,13 +267,7 @@ fn gigaton_hammer_and_blood_moon_rest_a_turn() {
 /// Partial trapping's `onTrapPokemon` while the trapper is in: the bound Snorlax cannot switch.
 #[test]
 fn a_partially_trapped_pokemon_cannot_switch() {
-    assert_invalid_choice(
-        "bind-source-leaves",
-        1,
-        0,
-        SlotAction::Switch { party_index: 2 },
-        "partially trapped",
-    );
+    assert_trapped("bind-source-leaves", 1, 0, 2);
 }
 
 /// `cantusetwice`: Tinkaton cannot choose Gigaton Hammer right after using it.
@@ -338,11 +350,5 @@ fn destiny_bond_ends_at_the_next_move() {
 /// No Retreat's `onTrapPokemon`: Snorlax cannot switch to the benched Kommo-o.
 #[test]
 fn no_retreat_traps_its_user() {
-    assert_invalid_choice(
-        "no-retreat",
-        0,
-        0,
-        SlotAction::Switch { party_index: 2 },
-        "trapped by No Retreat",
-    );
+    assert_trapped("no-retreat", 0, 0, 2);
 }
