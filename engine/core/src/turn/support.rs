@@ -915,6 +915,9 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         abilities::NO_GUARD,
         &["onAnyAccuracy", "onAnyInvulnerability"],
     ),
+    // `onTryHit` in `moves::try_hit`, `onAllyTryHitSide` in `moves::try_move_hit_field`; the
+    // bounce is `moves::bounce_move` (`ActiveMove.has_bounced`).
+    (abilities::MAGIC_BOUNCE, &["onAllyTryHitSide", "onTryHit"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

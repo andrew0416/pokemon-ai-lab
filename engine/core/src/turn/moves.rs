@@ -76,6 +76,9 @@ struct ActiveMove {
     /// (Pixilate, Aerilate, Refrigerate, Galvanize, Dragonize, Normalize), which then boosts it
     /// in BasePower; `NONE` otherwise.
     type_changer: AbilityId,
+    /// Showdown `move.hasBounced`: a copy Magic Bounce used back at the original user (it cannot
+    /// be bounced again, pays no Pressure PP and adds no Choice lock).
+    has_bounced: bool,
 }
 
 impl PartialEq for ActiveMove {
@@ -96,6 +99,7 @@ impl PartialEq for ActiveMove {
             && self.hit_targets == other.hit_targets
             && self.source_effect == other.source_effect
             && self.type_changer == other.type_changer
+            && self.has_bounced == other.has_bounced
     }
 }
 
@@ -119,6 +123,7 @@ impl std::hash::Hash for ActiveMove {
         self.hit_targets.hash(state);
         self.source_effect.hash(state);
         self.type_changer.hash(state);
+        self.has_bounced.hash(state);
     }
 }
 
@@ -206,6 +211,7 @@ pub(crate) fn run_move<const N: usize>(
             hit_targets: 0,
             source_effect: MoveId::NONE,
             type_changer: AbilityId::NONE,
+            has_bounced: false,
         };
         before_move(b, user, &recharge);
         return Ok(MoveStep::Done);
@@ -320,6 +326,7 @@ fn run_move_inner<const N: usize>(
         hit_targets: 0,
         source_effect: MoveId::NONE,
         type_changer: AbilityId::NONE,
+        has_bounced: false,
     };
 
     if !before_move(b, user, &mv) {
@@ -758,8 +765,11 @@ fn use_move<const N: usize>(
     if b.mon(pokemon).status == Status::Freeze && mv.data.flags.contains(MoveFlags::DEFROST) {
         b.cure_status(pokemon);
     }
-    // The item's onModifyMove: the Choice lock (priority 0), King's Rock's flinch (-1).
-    item_events::on_modify_move(b, user, mv.id);
+    // The item's onModifyMove: the Choice lock (priority 0; `choicelock`'s `onStart` fails for a
+    // bounced move), King's Rock's flinch (-1).
+    if !mv.has_bounced {
+        item_events::on_modify_move(b, user, mv.id);
+    }
     mv.added_secondary = item_events::added_secondary(b.item(user), mv.data);
     let Some(target) = target else {
         return Ok(None);
@@ -845,6 +855,7 @@ fn call_move<const N: usize>(
         hit_targets: 0,
         source_effect: caller.id,
         type_changer: AbilityId::NONE,
+        has_bounced: false,
     };
     let target = get_random_target(b, user, data.target);
     let will_act = b.will_act();
@@ -854,6 +865,73 @@ fn call_move<const N: usize>(
             data.name, caller.data.name
         )));
     }
+    Ok(())
+}
+
+/// Whether Magic Bounce on `holder` (breakable) bounces `mv`: a `reflectable` move from another
+/// Pokémon that has not bounced already (`onTryHit` / `onAllyTryHitSide`; no semi-invulnerable
+/// state exists).
+fn magic_bounce_reflects<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    holder: SlotRef,
+) -> bool {
+    holder != user
+        && !mv.has_bounced
+        && mv.data.flags.contains(MoveFlags::REFLECTABLE)
+        && b.ability_unless_broken(holder) == abilities::MAGIC_BOUNCE
+}
+
+/// Magic Bounce's bounce: `newMove = getActiveMove(move.id)` with `hasBounced` and no Prankster
+/// boost, `useMove(newMove, holder, {target: source})`. The copy keeps the original's priority
+/// (`useMoveInner` copies the active move's) and its source effect is the ability, so it neither
+/// ignores abilities nor pays Pressure PP; it runs `useMoveInner` without BeforeMove, PP or
+/// `lastMove`. Showdown leaves the copy as the battle's active move; the engine restores the
+/// original's, which only the status source of the original's remaining targets reads (Showdown
+/// passes that source explicitly).
+fn bounce_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    holder: SlotRef,
+    source: SlotRef,
+    original: &ActiveMove,
+) -> Result<(), TurnError> {
+    let saved = b.active_move;
+    let pokemon = b.occupant(holder).expect("the bouncer is active");
+    let (id, data) = (original.id, original.data);
+    // `move.ignoreAbility = sourceEffect.ignoreAbility`: the ability has none.
+    b.active_move = Some(ActiveMoveRef {
+        user: holder,
+        pokemon,
+        id,
+        ignore_ability: false,
+    });
+    let mut mv = ActiveMove {
+        id,
+        data,
+        priority: original.priority,
+        prankster_boosted: false,
+        spread: false,
+        accuracy: data.accuracy,
+        has_sheer_force: false,
+        secondary_chance_factor: 1,
+        added_secondary: None,
+        total_damage: 0,
+        target: data.target,
+        move_type: data.move_type,
+        base_power: i32::from(data.base_power),
+        ignore_evasion: data.ignore_evasion,
+        scrappy: false,
+        hit_targets: 0,
+        source_effect: MoveId::NONE,
+        type_changer: AbilityId::NONE,
+        has_bounced: true,
+    };
+    let will_act = b.will_act();
+    if use_move(b, holder, &mut mv, Some(source), will_act)?.is_some() {
+        return Err(b.unsupported(format!("{} bounced: a multi-hit move", data.name)));
+    }
+    b.active_move = saved;
     Ok(())
 }
 
@@ -896,6 +974,11 @@ fn deduct_pressure_pp<const N: usize>(
     mv: &ActiveMove,
     targets: &[SlotRef],
 ) {
+    // `if (!sourceEffect || callerMoveForPressure)`: a bounced move's source effect is Magic
+    // Bounce, which has no PP.
+    if mv.has_bounced {
+        return;
+    }
     let foe = user.side.other();
     let pressure_targets: Vec<SlotRef> = if mv.data.flags.contains(MoveFlags::MUSTPRESSURE) {
         b.alive_slots(foe)
@@ -954,6 +1037,19 @@ fn try_move_hit_field<const N: usize>(
     }
     // PrepareHit: the user's ability (Protean, Libero).
     prepare_hit_ability(b, user, mv);
+    // TryHitSide on a foe's side: Magic Bounce's `onAllyTryHitSide` on an active Pokémon of that
+    // side bounces the move (`return null`: it fails without a message). A second holder then
+    // sees `move.hasBounced`; which one bounces does not matter for a side condition.
+    if mv.target == MoveTarget::FoeSide {
+        let holder = b
+            .alive_slots(target.side)
+            .into_iter()
+            .find(|&s| target.side != user.side && magic_bounce_reflects(b, user, mv, s));
+        if let Some(holder) = holder {
+            bounce_move(b, holder, user, mv)?;
+            return Ok(false);
+        }
+    }
     // runMoveEffects on the target: undefined (nothing attempted) counts as success.
     let mut outcome: Option<bool> = None;
     let mut combine = |r: bool| outcome = Some(outcome.unwrap_or(false) || r);
@@ -1043,7 +1139,7 @@ fn try_spread_move_hit<const N: usize>(
     //    target's handlers only affect that target, so targets can be taken one at a time.
     let mut kept = Vec::with_capacity(targets.len());
     for t in targets {
-        if try_hit(b, user, mv, t) {
+        if try_hit(b, user, mv, t)? {
             kept.push(t);
         }
     }
@@ -1212,13 +1308,22 @@ fn try_hit<const N: usize>(
     user: SlotRef,
     mv: &mut ActiveMove,
     target: SlotRef,
-) -> bool {
+) -> Result<bool, TurnError> {
     if blocked_by_try_hit(b, user, mv, target) {
-        return false;
+        return Ok(false);
+    }
+    // Magic Bounce (`onTryHit`, priority 1: after Psychic Terrain, the guards and Protect, before
+    // every priority-0 handler) uses a copy of the move back at its user, then `return null`.
+    // Showdown runs the TryHit handlers of all targets together by priority; taking the targets
+    // one at a time only moves the other targets' handlers of priority 0..1 before or after the
+    // bounce, and none of them reads what a bounced status move changes.
+    if magic_bounce_reflects(b, user, mv, target) {
+        bounce_move(b, target, user, mv)?;
+        return Ok(false);
     }
     // The target's item `onTryHit` (Safety Goggles against powder).
     if item_events::try_hit_blocks(b, user, mv.data, target) {
-        return false;
+        return Ok(false);
     }
     // Dry Skin `onTryHit` (breakable): another Pok챕mon's Water move heals the holder by 1/4
     // of its max HP (nothing at full HP) and fails on it (`return null`).
@@ -1228,14 +1333,14 @@ fn try_hit<const N: usize>(
     {
         let max_hp = f64::from(b.slot_mon(target).expect("a target").max_hp);
         b.heal(target, max_hp / 4.0);
-        return false;
+        return Ok(false);
     }
     // Lightning Rod / Storm Drain `onTryHit` (breakable): the holder absorbs the move.
     if absorbed_by_ability(b, user, mv, target) {
-        return false;
+        return Ok(false);
     }
     // The other abilities' `onTryHit` (absorbing and immunity abilities).
-    !ability_hooks::on_try_hit(b, user, mv, target)
+    Ok(!ability_hooks::on_try_hit(b, user, mv, target))
 }
 
 fn blocked_by_try_hit<const N: usize>(

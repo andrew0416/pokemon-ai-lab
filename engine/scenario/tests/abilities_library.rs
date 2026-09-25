@@ -91,3 +91,18 @@ fn cursed_body_matches_showdown() {
 fn cursed_body_multihit_matches_showdown() {
     assert_mc_parity("cursed-body-multihit");
 }
+
+// ---- Magic Bounce ------------------------------------------------------------------------------
+
+/// A Prankster status move bounces back without the Prankster boost; a spread status move
+/// bounces at both foes and still hits the holder's ally.
+#[test]
+fn magic_bounce_matches_showdown() {
+    assert_exact_parity("magic-bounce");
+}
+
+/// Stealth Rock bounces onto its user's side (`onAllyTryHitSide`); Mold Breaker gets through.
+#[test]
+fn magic_bounce_side_and_mold_breaker_match_showdown() {
+    assert_exact_parity("magic-bounce-side");
+}
