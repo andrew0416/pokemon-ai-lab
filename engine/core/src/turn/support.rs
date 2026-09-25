@@ -625,6 +625,9 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         abilities::BERSERK,
         &["onAfterMoveSecondary", "onDamage", "onTryEatItem"],
     ),
+    // O54 `onSwitchOut` (Champions) in `abilities::on_switch_out`, from `switching::switch_in`.
+    (abilities::REGENERATOR, &["onSwitchOut"]),
+    (abilities::NATURAL_CURE, &["onSwitchOut"]),
     // O64 Unburden: `onAfterUseItem` (`Battle::use_item`, Air Balloon's pop) and `onTakeItem`
     // (`Battle::take_item`, Trick) in `abilities::unburden`, `onEnd` in `switching::end_ability`,
     // the volatile's `onModifySpe` in `order.rs`.

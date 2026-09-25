@@ -173,6 +173,14 @@ fn unburden_after_trick_matches_showdown() {
     assert_exact_parity("o64-unburden-trick");
 }
 
+// ---- O54 onSwitchOut -----------------------------------------------------------------------------
+
+/// Regenerator and Natural Cure (the Champions `onSwitchOut`) on a switch action.
+#[test]
+fn regenerator_and_natural_cure_match_showdown() {
+    assert_exact_parity("o54-regenerator-natural-cure");
+}
+
 /// Intrepid Sword acts once per battle (`pokemon.swordBoost`); the state does not record it, so
 /// a switch-in after the battle start is refused.
 #[test]

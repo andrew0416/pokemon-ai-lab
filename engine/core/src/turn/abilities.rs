@@ -334,6 +334,24 @@ pub(crate) fn on_update<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     }
 }
 
+/// `runEvent('SwitchOut')` for a healthy Pokémon leaving `slot` (WORKPLAN O54; Champions
+/// versions, `data/mods/champions/abilities.ts`): Regenerator `pokemon.heal(baseMaxhp / 3)`
+/// (truncated; nothing at full HP); Natural Cure `if (!pokemon.status || pokemon.status ===
+/// 'fnt') return; pokemon.clearStatus()` (its `onCheckShow` is removed in Champions).
+pub(crate) fn on_switch_out<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let Some(pokemon) = b.alive(slot) else {
+        return;
+    };
+    match b.ability(slot) {
+        a if a == abilities::REGENERATOR => {
+            let max_hp = f64::from(b.mon(pokemon).max_hp);
+            b.heal(slot, max_hp / 3.0);
+        }
+        a if a == abilities::NATURAL_CURE => b.cure_status(pokemon),
+        _ => {}
+    }
+}
+
 /// Unburden (WORKPLAN O64) when its holder in `slot` used or lost its item: `onAfterUseItem`
 /// (`useItem`, `eatItem`, Air Balloon's pop) and `onTakeItem` (`takeItem`: Knock Off, Trick,
 /// Sticky Barb; it runs before the item's own TakeItem handler, so even a Mega Stone that stays

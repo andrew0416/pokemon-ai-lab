@@ -418,7 +418,9 @@ fn switch_in_problem<const N: usize>(
     super::update::berry_problem(mon)
 }
 
-/// Showdown `switchIn` without its `runSwitch`: the old occupant leaves (its ability and types
+/// Showdown `switchIn` without its `runSwitch`: a healthy old occupant runs `BeforeSwitchOut`
+/// (no implemented handler), the gen 5+ `eachEvent('Update')` and `SwitchOut` (Regenerator,
+/// Natural Cure: `abilities::on_switch_out`); the old occupant leaves (its ability and types
 /// revert, its slot state resets); a fainted occupant still holding the position loses `fnt`
 /// (`oldActive.status = ''`); the newcomer takes the position.
 pub(crate) fn switch_in<const N: usize>(
@@ -435,6 +437,10 @@ pub(crate) fn switch_in<const N: usize>(
         return Err(b.unsupported(why));
     }
     if let Some(outgoing) = b.occupant(slot) {
+        if b.mon(outgoing).hp > 0 {
+            super::update::update_event(b)?;
+            super::abilities::on_switch_out(b, slot);
+        }
         b.clear_volatile(outgoing);
     }
     if let Some(fainted) = b.state.slot(slot).fainted_occupant {
