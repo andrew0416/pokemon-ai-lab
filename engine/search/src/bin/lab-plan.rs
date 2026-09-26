@@ -240,18 +240,19 @@ fn run() -> Result<(), String> {
     if let Some(path) = &dump_children {
         // Feature vectors of the positions one turn ahead, each with its next-turn equilibrium
         // value as the fitting target (WORKPLAN S12): our `--beam` best choices by the root
-        // matrix, every reply, the `--outcomes` most probable outcomes of each pair.
+        // matrix, their `--beam` worst replies, the `--outcomes` most probable outcomes of each
+        // pair (the deep analysis' children, cached).
         let beam = config.reply_beam.unwrap_or(6);
         let deep = solver
             .analyse_deep(&mut state, None, beam)
             .map_err(|e| e.to_string())?;
         let decision = deep.decision;
-        let theirs =
-            lab_search::legal_choices(&state, config.ruleset, decision, them, config.pruning);
         let mut out = String::new();
         let mut rows = 0usize;
+        // Only the beam's replies: their children were just valued by `analyse_deep`, so the
+        // targets come from the solver's cache instead of hundreds of fresh matrix games.
         for line in &deep.lines {
-            for &b in &theirs {
+            for &(b, _) in &line.replies {
                 let pair = match us {
                     SideId::One => [line.ours, b],
                     SideId::Two => [b, line.ours],
