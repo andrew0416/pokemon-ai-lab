@@ -1,0 +1,78 @@
+{
+ "description": "Turn-start Update: Showdown's beforeTurn action (order 4) ends with eachEvent('Update'), so a Sitrus Berry holder patched to 40 HP eats before any move (40 -> 130) and survives Garchomp's Seismic Toss (-> 80). Without that Update the toss comes first and Blissey faints. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Blissey",
+    "item": "Sitrus Berry",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Seismic Toss"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Metagross",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Blissey": {
+    "hp": 40
+   }
+  }
+ },
+ "turn": {
+  "p1": "move harden, move harden",
+  "p2": "move seismictoss 1, move harden"
+ }
+}

@@ -52,7 +52,10 @@ use battle::Battle;
 use branch::Chooser;
 
 pub use branch::RollMode;
-use order::{ORDER_BEFORE_TURN_MOVE, ORDER_MEGA, ORDER_MOVE, ORDER_PRIORITY_CHARGE, ORDER_SWITCH};
+use order::{
+    ORDER_BEFORE_TURN, ORDER_BEFORE_TURN_MOVE, ORDER_MEGA, ORDER_MOVE, ORDER_PRIORITY_CHARGE,
+    ORDER_SWITCH,
+};
 use queue::{Action, ActionKind};
 
 pub use abilities::trapped;
@@ -1092,6 +1095,7 @@ impl<const N: usize> Battle<'_, N> {
             ActionKind::Switch { .. } => (ORDER_SWITCH, 0),
             ActionKind::Mega => (ORDER_MEGA, 0),
             // Not a `move` choice: no priority (`getActionSpeed` only sets it for moves).
+            ActionKind::BeforeTurn => (ORDER_BEFORE_TURN, 0),
             ActionKind::BeforeTurnMove { .. } => (ORDER_BEFORE_TURN_MOVE, 0),
             ActionKind::PriorityCharge { .. } => (ORDER_PRIORITY_CHARGE, 0),
             ActionKind::Move {
@@ -1131,6 +1135,18 @@ impl<const N: usize> Battle<'_, N> {
 /// The turn's actions in choice order (side one first, slot order).
 fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]) -> Vec<Action> {
     let mut queue = Vec::new();
+    // Showdown's `beforeTurn` action: one per turn, on any active Pokémon (its tail is the
+    // turn-start Update).
+    if let Some((slot, pokemon)) = State::<N>::slot_refs()
+        .find_map(|slot| state.active_ref(slot).map(|pokemon| (slot, pokemon)))
+    {
+        queue.push(Action {
+            slot,
+            pokemon,
+            kind: ActionKind::BeforeTurn,
+            order: None,
+        });
+    }
     for (side, action) in [SideId::One, SideId::Two].into_iter().zip(choices) {
         for (i, &slot_action) in action.iter().enumerate() {
             let slot = SlotRef {
@@ -1291,6 +1307,7 @@ fn run_stage_inner<const N: usize>(
                 ActionKind::Mega => {
                     mega::run_mega_evo(b, action.slot)?;
                 }
+                ActionKind::BeforeTurn => {}
                 ActionKind::BeforeTurnMove { index } => {
                     moves::before_turn_move(b, action.slot, index);
                 }

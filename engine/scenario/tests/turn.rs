@@ -43,3 +43,10 @@ fn sampling_agrees_with_enumeration() {
     let noise = (exact.len() as f64 / (2.0 * std::f64::consts::PI * samples as f64)).sqrt();
     assert!(tv < 3.0 * noise, "TV {tv} vs noise {noise}");
 }
+
+/// Showdown's `beforeTurn` action ends with an Update: a Sitrus holder that already sits below
+/// half at the start of the turn eats before the first move.
+#[test]
+fn the_turn_starts_with_an_update() {
+    assert_exact_parity("turn-start-update");
+}

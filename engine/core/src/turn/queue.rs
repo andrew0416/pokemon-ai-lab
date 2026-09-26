@@ -34,6 +34,12 @@ pub(crate) enum ActionKind {
     },
     /// Showdown `megaEvo`, queued before the Pokémon's move.
     Mega,
+    /// Showdown's one `beforeTurn` action per turn (order 4, before every switch and move):
+    /// it does nothing itself, but its `runAction` tail runs `eachEvent('Update')`, so a
+    /// berry condition that already holds at the start of the turn (a patched position) acts
+    /// before the first move. Attached to an arbitrary active Pokémon; neither `willAct` nor
+    /// `willMove` counts it.
+    BeforeTurn,
     /// Showdown `beforeTurnMove` (order 5, before every switch and move): the chosen move's
     /// `beforeTurnCallback` (Counter, Mirror Coat), queued with the move action. Neither
     /// `willAct` nor `willMove` counts it.

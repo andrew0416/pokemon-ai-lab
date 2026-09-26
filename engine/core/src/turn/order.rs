@@ -15,6 +15,8 @@ use super::battle::Battle;
 use super::items as item_events;
 
 /// Showdown action `order` values.
+/// `beforeTurn`: the turn's one no-op action whose tail is the turn-start Update.
+pub(crate) const ORDER_BEFORE_TURN: u32 = 4;
 /// `beforeTurnMove`: a move's `beforeTurnCallback` (Counter, Mirror Coat), before everything.
 pub(crate) const ORDER_BEFORE_TURN_MOVE: u32 = 5;
 pub(crate) const ORDER_SWITCH: u32 = 103;
