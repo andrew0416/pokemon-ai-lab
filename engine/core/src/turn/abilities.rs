@@ -358,6 +358,153 @@ pub(crate) fn truant_before_move<const N: usize>(b: &mut Battle<'_, N>, slot: Sl
     true
 }
 
+// ---- Opus AA: Steadfast, Anger Point ------------------------------------------------------------
+
+/// Steadfast's `onFlinch` (`runEvent('Flinch', pokemon)` in the flinch condition's BeforeMove)
+/// for the flinching Pokémon in `slot`: `this.boost({spe: 1})` — the event's target, with no
+/// source (the event has none).
+pub(crate) fn steadfast<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.alive(slot).is_none() || b.ability(slot) != abilities::STEADFAST {
+        return;
+    }
+    let mut up = NO_BOOSTS;
+    up[4] = 1;
+    b.boost_by(slot, &up, None, BoostEffect::Ability(abilities::STEADFAST));
+}
+
+/// Anger Point's `onHit` (`runEvent('Hit')` on the target, after its volatiles' handlers and
+/// before its item's): `if (!target.hp) return; if (move?.effectType === 'Move' &&
+/// target.getMoveHitData(move).crit) this.boost({atk: 12}, target, target);` — a critical hit
+/// maxes the holder's Attack (not breakable).
+pub(crate) fn anger_point<const N: usize>(b: &mut Battle<'_, N>, target: SlotRef) {
+    if b.alive(target).is_none()
+        || b.ability(target) != abilities::ANGER_POINT
+        || !b.hit_was_crit(target)
+    {
+        return;
+    }
+    let mut up = NO_BOOSTS;
+    up[0] = 12;
+    b.boost_by(
+        target,
+        &up,
+        Some(target),
+        BoostEffect::Ability(abilities::ANGER_POINT),
+    );
+}
+
+// ---- Opus AA: Quick Draw, Moody, Pickup ------------------------------------------------------
+
+/// Quick Draw's `onFractionalPriority` (priority -1, after the constants and Mycelium Might,
+/// before Quick Claw) for a move action of `pokemon` using `id`: `if (move.category !==
+/// "Status" && this.randomChance(3, 10)) return 0.1;` — drawn when the actions are queued
+/// (`resolveAction`: the ability the Pokémon has then, the chosen move's dex category).
+pub(crate) fn quick_draw<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    pokemon: PokemonRef,
+    id: MoveId,
+) -> Option<i8> {
+    (b.occupant(slot) == Some(pokemon)
+        && b.ability(slot) == abilities::QUICK_DRAW
+        && super::items::action_category(id) != MoveCategory::Status
+        && b.rng.chance(3, 10))
+    .then_some(1)
+}
+
+/// Moody's `onResidual` (order 28, sub-order 2) for its holder in `slot`: a uniformly random stat
+/// among Attack, Defense, Special Attack, Special Defense and Speed below +6 goes up by 2, then a
+/// uniformly random other one above -6 goes down by 1 (`this.sample`; accuracy and evasion are
+/// left out), in one `this.boost(boost, pokemon, pokemon)`.
+fn moody<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let boosts = b.state.slot(slot).boosts;
+    let raisable: Vec<usize> = (0..5).filter(|&i| boosts[i] < 6).collect();
+    let raised = if raisable.is_empty() {
+        None
+    } else {
+        Some(raisable[b.rng.uniform(raisable.len())])
+    };
+    let lowerable: Vec<usize> = (0..5)
+        .filter(|&i| boosts[i] > -6 && Some(i) != raised)
+        .collect();
+    let lowered = if lowerable.is_empty() {
+        None
+    } else {
+        Some(lowerable[b.rng.uniform(lowerable.len())])
+    };
+    let mut change = NO_BOOSTS;
+    if let Some(i) = raised {
+        change[i] = 2;
+    }
+    if let Some(i) = lowered {
+        change[i] = -1;
+    }
+    if change != NO_BOOSTS {
+        b.boost_by(
+            slot,
+            &change,
+            Some(slot),
+            BoostEffect::Ability(abilities::MOODY),
+        );
+    }
+}
+
+/// Pickup's `onResidual` (order 28, sub-order 2) for its holder in `slot`: a holder without an
+/// item (`pokemon.item`) takes the `lastItem` of a uniformly random adjacent active Pokémon (in
+/// doubles every other active one not fainted) that used or ate an item this turn
+/// (`usedItemThisTurn`: `SlotHistory::used_item_this_turn`), which forgets it (`lastItem =
+/// ''`), and holds it (`setItem`: the new item's `Start`, as when Trick hands it over). An item
+/// whose `Start` / `End` the engine cannot run for a new holder (Booster Energy's
+/// `effectState.started`) is refused.
+fn pickup<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> Result<(), super::TurnError> {
+    use crate::instruction::Instruction;
+    let Some(holder) = b.alive(slot) else {
+        return Ok(());
+    };
+    if !b.mon(holder).item.is_none() {
+        return Ok(());
+    }
+    let targets: Vec<(SlotRef, PokemonRef)> = b
+        .all_alive()
+        .into_iter()
+        .filter(|&t| t != slot)
+        .filter_map(|t| b.alive(t).map(|p| (t, p)))
+        .filter(|&(t, p)| {
+            !b.mon(p).last_item.is_none() && b.state.slot(t).history.used_item_this_turn
+        })
+        .collect();
+    if targets.is_empty() {
+        return Ok(());
+    }
+    let pick = if targets.len() == 1 {
+        0
+    } else {
+        b.rng.uniform(targets.len())
+    };
+    let (_, source) = targets[pick];
+    let item = b.mon(source).last_item;
+    let data = item.data();
+    let has_start_end = data.handlers.contains(&"onStart") || data.handlers.contains(&"onEnd");
+    if has_start_end && !super::moves::trick_moves_item(item) {
+        return Err(b.unsupported(format!(
+            "Pickup restoring {} (its Start / End for a new holder)",
+            data.name
+        )));
+    }
+    b.apply(Instruction::SetLastItem {
+        target: source,
+        old: item,
+        new: ItemId::NONE,
+    });
+    b.apply(Instruction::SetItem {
+        target: holder,
+        old: ItemId::NONE,
+        new: item,
+    });
+    super::moves::trick_item_start(b, slot, item);
+    Ok(())
+}
+
 /// The residual order and sub-order of an ability's `onResidual` (`onResidualOrder`, and
 /// `onResidualSubOrder` or the ability's effect-type sub-order).
 pub(crate) fn residual_order(ability: AbilityId) -> (u32, u32) {
@@ -380,6 +527,8 @@ pub(crate) fn has_residual(ability: AbilityId) -> bool {
         abilities::CUD_CHEW,
         abilities::BAD_DREAMS,
         abilities::OPPORTUNIST,
+        abilities::MOODY,
+        abilities::PICKUP,
     ]
     .contains(&ability)
 }
@@ -392,6 +541,7 @@ pub(crate) fn has_residual(ability: AbilityId) -> bool {
 /// - Cud Chew: the remembered berry's counter ([`cud_chew_residual`]).
 /// - Bad Dreams: every foe not fainted that is asleep or has Comatose loses 1/8 of its max HP.
 /// - Opportunist (order 29): its copied raises ([`opportunist_use`]).
+/// - Moody, Pickup (order 28, sub-order 2): [`moody`], [`pickup`].
 pub(crate) fn on_residual<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
@@ -399,6 +549,13 @@ pub(crate) fn on_residual<const N: usize>(
 ) -> Result<(), super::TurnError> {
     if ability == abilities::CUD_CHEW {
         return cud_chew_residual(b, slot);
+    }
+    if ability == abilities::MOODY {
+        moody(b, slot);
+        return Ok(());
+    }
+    if ability == abilities::PICKUP {
+        return pickup(b, slot);
     }
     if ability == abilities::OPPORTUNIST {
         opportunist_use(b, slot);
@@ -1354,7 +1511,7 @@ fn steal_item<const N: usize>(
             item.data().handlers
         )));
     }
-    if !b.take_item(victim) {
+    if !b.take_item_by(victim, Some(thief)) {
         return Ok(false);
     }
     if item == items::MIRROR_HERB {
@@ -1435,8 +1592,8 @@ pub(crate) fn pickpocket<const N: usize>(
 /// (after the item's handlers, which cannot act: Magician needs the user to hold nothing): the
 /// user steals the item of the first of `hit_targets` (the move's `hitTargets`, a substitute's
 /// owner included; itself excluded) in Speed order that gives one ([`steal_item`]). Nothing
-/// for a user with an Emergency Exit / Eject Button switch or holding an item (gems and Fling are
-/// refused).
+/// for a user with an Emergency Exit / Eject Button switch, holding an item or with a Gem's
+/// `gem` condition (`source.volatiles['gem']`; Fling is refused).
 pub(crate) fn magician<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -1447,13 +1604,14 @@ pub(crate) fn magician<const N: usize>(
     if b.ability(user) != abilities::MAGICIAN
         || b.state.slot(user).switch_flag == SwitchFlag::Effect
         || !b.raw_item(user).is_none()
+        || b.volatile(user, Volatile::Gem).active
         || id.data().category == MoveCategory::Status
     {
         return Ok(());
     }
     let targets: Vec<SlotRef> = hit_targets.into_iter().filter(|&t| t != user).collect();
     let order = speed_sorted(b, targets, |b, s| {
-        !b.raw_item(s).is_none() && b.item_can_be_taken(s)
+        !b.raw_item(s).is_none() && b.item_can_be_taken(s) && !b.sticky_hold_keeps(s, Some(user))
     });
     for victim in order {
         if steal_item(b, victim, user)? {
@@ -1838,7 +1996,8 @@ pub(crate) fn flower_veil_first<const N: usize>(
 ///   Steel type, each through `tryTrap`, which the Ghost type's `trapped` immunity stops (no
 ///   `Immunity` handler covers `trapped`);
 /// - Shed Shell's `onTrapPokemon` (priority -10, after every other): `pokemon.trapped = false`,
-///   unless the item is suppressed (Magic Room, Klutz: `ignoringItem` skips the handler).
+///   unless the item is suppressed (Magic Room, Klutz: `ignoringItem` skips the handler); Run
+///   Away's (Champions) the same, unless the ability is suppressed.
 ///
 /// `onFoeMaybeTrapPokemon` only sets the `maybeTrapped` display flag. Fairy Lock, Jaw Lock,
 /// Octolock and the trapping moves Anchor Shot, Spirit Shackle and Thousand Waves are not
@@ -1885,8 +2044,9 @@ fn trapped_in<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
                 a if a == abilities::MAGNET_PULL => b.has_type(slot, Type::Steel),
                 _ => false,
             });
-    // The effective item: a suppressed Shed Shell's handler does not run.
-    trapped && b.item(slot) != items::SHED_SHELL
+    // The effective item: a suppressed Shed Shell's handler does not run. Run Away (Champions:
+    // `onTrapPokemon`, priority -10, like Shed Shell) frees its holder unless suppressed.
+    trapped && b.item(slot) != items::SHED_SHELL && b.ability(slot) != abilities::RUN_AWAY
 }
 
 // ---- Protosynthesis / Quark Drive / Booster Energy (WORKPLAN O72, O98) ------------------------
@@ -2181,6 +2341,8 @@ pub(crate) fn attack_handlers<const N: usize>(
 ///   `newly_switched` is read.
 /// - Plus, Minus (Special Attack only): an ally (`pokemon.allies()`: not the holder, not at
 ///   0 HP) with Plus or Minus gives `chainModify(1.5)`.
+/// - Orichalcum Pulse (Attack in the holder's sun), Hadron Engine (Special Attack on Electric
+///   Terrain): `chainModify([5461, 4096])`.
 fn own_attack_modifier<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
@@ -2214,6 +2376,17 @@ fn own_attack_modifier<const N: usize>(
                 ally != user && [abilities::PLUS, abilities::MINUS].contains(&b.ability(ally))
             });
             (!physical && partner).then_some(MOD_ONE_POINT_FIVE)
+        }
+        // Orichalcum Pulse (Attack only): `if (['sunnyday', 'desolateland'].includes(
+        // pokemon.effectiveWeather())) return this.chainModify([5461, 4096]);` (Utility Umbrella
+        // hides the sun).
+        a if a == abilities::ORICHALCUM_PULSE => (physical
+            && matches!(b.weather_for(user), Weather::Sun | Weather::HarshSun))
+        .then_some(5461),
+        // Hadron Engine (Special Attack only): `if (this.field.isTerrain('electricterrain'))
+        // return this.chainModify([5461, 4096]);`.
+        a if a == abilities::HADRON_ENGINE => {
+            (!physical && b.terrain() == crate::field::Terrain::Electric).then_some(5461)
         }
         _ => None,
     }

@@ -163,6 +163,19 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         StartEffect::Terrain(Terrain::Psychic),
     ),
     (abilities::INTIMIDATE, &["onStart"], StartEffect::Intimidate),
+    // Opus AA: Orichalcum Pulse's `onStart` sets sun (`field.setWeather('sunnyday')`, as Drought),
+    // Hadron Engine's Electric Terrain (as Electric Surge); their stat modifiers are in
+    // `abilities::attack_handlers`.
+    (
+        abilities::ORICHALCUM_PULSE,
+        &["onModifyAtk", "onStart"],
+        StartEffect::Weather(Weather::Sun),
+    ),
+    (
+        abilities::HADRON_ENGINE,
+        &["onModifySpA", "onStart"],
+        StartEffect::Terrain(Terrain::Electric),
+    ),
     // `onSwitchIn` logs and calls `onStart`; `onStart` and `onEnd` run
     // `eachEvent('WeatherChange')`.
     (
@@ -281,6 +294,13 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
     (
         abilities::MIMICRY,
         &["onStart", "onTerrainChange"],
+        StartEffect::Forme,
+    ),
+    // Forecast (`onSwitchInPriority: -2`): `onStart` runs its `onWeatherChange`
+    // (`forme::forecast`, Opus AA).
+    (
+        abilities::FORECAST,
+        &["onStart", "onWeatherChange"],
         StartEffect::Forme,
     ),
     // Flower Gift (`onSwitchInPriority: -2`): `onStart` runs its `onWeatherChange`
@@ -1265,11 +1285,11 @@ fn once_per_battle<const N: usize>(
 /// `onWeatherChange` handlers, in Speed order. Ice Face's returns at once for a source with
 /// `suppressWeather`; no other is implemented (Forecast, Flower Gift, Protosynthesis), so the
 /// event does nothing, and a handler that would run makes it unsupported.
-fn weather_change<const N: usize>(b: &Battle<'_, N>) -> Result<(), TurnError> {
+fn weather_change<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), TurnError> {
     for slot in b.all_alive() {
         let mon = b.slot_mon(slot).expect("alive");
         let ability = b.ability(slot);
-        let ability_handlers = if ability == abilities::ICE_FACE {
+        let ability_handlers = if ability == abilities::ICE_FACE || ability == abilities::FORECAST {
             &[][..]
         } else {
             ability.data().handlers
@@ -1284,6 +1304,10 @@ fn weather_change<const N: usize>(b: &Battle<'_, N>) -> Result<(), TurnError> {
                 return Err(b.unsupported(format!("{name}: onWeatherChange")));
             }
         }
+    }
+    // Forecast's `onWeatherChange` (each changes only its holder, so the Speed order is moot).
+    for slot in b.all_alive() {
+        super::forme::forecast(b, slot);
     }
     Ok(())
 }

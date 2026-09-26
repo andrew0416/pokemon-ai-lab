@@ -1,0 +1,70 @@
+{
+ "description": "Normal Gem: Snorlax's Hyper Voice (Normal, spread) uses its Normal Gem at the first target's TryPrimaryHit and the gem condition boosts the move 5325/4096 against both foes. Munchlax's Seismic Toss (Fighting) leaves its Normal Gem unused.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "Normal Gem",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Hyper Voice"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Munchlax",
+    "item": "Normal Gem",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Seismic Toss"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move hypervoice, move seismictoss 1",
+  "p2": "move harden, move harden"
+ }
+}

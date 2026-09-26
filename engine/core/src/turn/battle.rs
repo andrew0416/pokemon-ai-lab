@@ -47,6 +47,9 @@ pub(crate) struct ActiveMoveRef {
     /// through a substitute, the screens, Safeguard and Mist (Pollen Puff's own, on an ally, is
     /// `handlers::infiltrates`).
     pub infiltrates: bool,
+    /// `move.multihit` set by the user's Parental Bond in PrepareHit (Anger Shell and Berserk
+    /// read `effect.multihit`).
+    pub parental_bond: bool,
 }
 
 pub(crate) struct Battle<'a, const N: usize> {
@@ -71,6 +74,10 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// cleared at the start of every hit (`None`: not computed, as for fixed-damage and
     /// status moves). Read by Weakness Policy and Enigma Berry.
     pub hit_type_mod: [[Option<i8>; N]; 2],
+    /// Showdown `target.getMoveHitData(move).crit` of the hit in progress, per side and slot:
+    /// set by `getDamage` for every target it computes damage for, cleared with
+    /// [`Battle::hit_type_mod`]. Read by Anger Point's `onHit`.
+    pub hit_crit: [[bool; N]; 2],
     /// Mirror Herb's `effectState.boosts` per holder: the foes' raises it copied and has not
     /// used yet (`ready`). Showdown keeps them on the item across events; the engine keeps
     /// them only within a stage and refuses a stage that ends with one pending
@@ -146,6 +153,8 @@ pub struct HistoryReaders {
     pub moves_used: bool,
     /// Copycat (`battle.lastMove`: `State::last_move`).
     pub last_move: bool,
+    /// Pickup (`usedItemThisTurn`).
+    pub used_item: bool,
 }
 
 impl HistoryReaders {
@@ -157,6 +166,11 @@ impl HistoryReaders {
                 // without one never gets one.
                 if mon.item == items::METRONOME {
                     readers.move_last_turn_result = true;
+                }
+                // Pickup: an ability only moves between party members (Skill Swap, Trace,
+                // Receiver, ...), so a battle without a holder never gets one.
+                if mon.ability == abilities::PICKUP || mon.base_ability == abilities::PICKUP {
+                    readers.used_item = true;
                 }
                 for slot in &mon.moves {
                     use crate::dex::moves as m;
@@ -199,6 +213,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             queue: Vec::new(),
             battle_start: false,
             hit_type_mod: [[None; N]; 2],
+            hit_crit: [[false; N]; 2],
             mirror_herb: Vec::new(),
             move_self_switch: false,
             force_switch: Vec::new(),
@@ -227,6 +242,11 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// The hit's `typeMod` against `target` ([`Battle::hit_type_mod`]).
     pub fn type_mod_of(&self, target: SlotRef) -> Option<i32> {
         self.hit_type_mod[target.side.index()][usize::from(target.slot)].map(i32::from)
+    }
+
+    /// Whether the hit in progress was a critical hit on `target` ([`Battle::hit_crit`]).
+    pub fn hit_was_crit(&self, target: SlotRef) -> bool {
+        self.hit_crit[target.side.index()][usize::from(target.slot)]
     }
 
     pub fn apply(&mut self, instruction: Instruction) {
@@ -473,10 +493,15 @@ impl<'a, const N: usize> Battle<'a, N> {
             return overcoat;
         }
         if immunity == TypeImmunities::FRZ {
-            // Harsh sunlight (`sunnyday.onImmunity`, hidden by Utility Umbrella) and Magma
-            // Armor (breakable).
-            return matches!(self.weather_for(slot), Weather::Sun | Weather::HarshSun)
-                || self.ability_unless_broken(slot) == abilities::MAGMA_ARMOR;
+            // Harsh sunlight (`sunnyday.onImmunity`, only while the field's weather is sun:
+            // `pokemon.effectiveWeather() === 'sunnyday'`, which Utility Umbrella hides and a
+            // Mega Sol user's move shows, `Battle::move_weather`) and Magma Armor (breakable).
+            let sun = match self.effective_weather() {
+                Weather::Sun => self.move_weather(slot) == Weather::Sun,
+                Weather::HarshSun => self.move_weather(slot) == Weather::HarshSun,
+                _ => false,
+            };
+            return sun || self.ability_unless_broken(slot) == abilities::MAGMA_ARMOR;
         }
         // Ice Body's `onImmunity('hail')`: hail is not a supported weather.
         false
@@ -507,7 +532,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         // change the damage; it changes nothing itself).
         let multihit = self
             .active_move
-            .is_some_and(|m| super::moves::is_multihit(m.id));
+            .is_some_and(|m| super::moves::is_multihit(m.id) || m.parental_bond);
         super::abilities::on_damage(self, target, source == DamageSource::Move, multihit);
         let mut amount = (amount.floor() as i32).max(1);
         let mon = self.mon(pokemon);
@@ -629,17 +654,50 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// `drain`, `leechseed`, `ingrain`, `aquaring`, `strengthsap`. The amount is normalized as
     /// in `heal` (at least 1, truncated), then `runEvent('TryHeal')` chains `[5324, 4096]` on a
     /// holder of Big Root (Heal Block stops it in `heal`; Ripen only doubles a berry's heal,
-    /// `update::berry_heal`; Liquid Ooze is refused). Returns the HP restored.
+    /// `update::berry_heal`). Returns the HP restored.
     pub fn heal_rooted(&mut self, target: SlotRef, amount: f64) -> i32 {
+        self.heal_rooted_from(target, amount, None)
+    }
+
+    /// [`Battle::heal_rooted`] for a heal whose source is the Pokémon in `source` and whose
+    /// effect Liquid Ooze lists (`drain`, `leechseed`, `strengthsap`). Big Root (priority 1) only
+    /// chains its modifier, applied to what the event returns at its end; the TryHeal handlers
+    /// at priority 0 run by `pokemon.speed`, then sub-order — Heal Block on the healed Pokémon (a
+    /// condition, 2: `return false`, which ends the event) and the source's Liquid Ooze
+    /// (`onSourceTryHeal`, an ability, 7; not breakable, and it acts for a source at 0 HP not yet
+    /// fainted): `this.damage(damage)` to the healed Pokémon with the amount before Big Root's
+    /// modifier (not a move's damage: Magic Guard stops it) and `return 0`. TryHeal comes before
+    /// `heal`'s full-HP check, so the ooze hurts a healer at full HP too.
+    pub fn heal_rooted_from(
+        &mut self,
+        target: SlotRef,
+        amount: f64,
+        source: Option<SlotRef>,
+    ) -> i32 {
         let amount = if amount > 0.0 && amount <= 1.0 {
             1.0
         } else {
             amount
         };
-        let mut amount = amount.trunc() as i32;
-        if self.item(target) == items::BIG_ROOT {
-            amount = super::order::modify(amount, 5324);
+        let amount = amount.trunc() as i32;
+        let ooze = source.filter(|&s| {
+            s != target && self.occupant(s).is_some() && self.ability(s) == abilities::LIQUID_OOZE
+        });
+        if let Some(ooze) = ooze {
+            let heal_block_first = self.volatile(target, Volatile::HealBlock).active
+                && self.event_speed(target) >= self.event_speed(ooze);
+            if !heal_block_first {
+                if amount > 0 && self.alive(target).is_some() {
+                    self.damage(target, f64::from(amount), DamageSource::Indirect);
+                }
+                return 0;
+            }
         }
+        let amount = if self.item(target) == items::BIG_ROOT {
+            super::order::modify(amount, 5324)
+        } else {
+            amount
+        };
         self.heal(target, f64::from(amount))
     }
 
@@ -699,6 +757,14 @@ impl<'a, const N: usize> Battle<'a, N> {
             // Receiver / Power of Alchemy (`onAllyFaint`) take `target.getAbility()`, the one it
             // has before `clearVolatile` reverts it.
             let fainted_ability = self.raw_ability(slot);
+            // Power Construct's `formeRegression`: a fainting Zygarde-Complete goes back to its
+            // set's species (50% or 10%) and ability with `updateMaxHp`; the state does not keep
+            // which forme the set had.
+            if self.mon(pokemon).species == crate::dex::species::ZYGARDE_COMPLETE {
+                return Err(self.unsupported(
+                    "Zygarde-Complete fainting (Power Construct's formeRegression to the set's forme)",
+                ));
+            }
             // clearVolatile: the ability and types revert; the slot empties (isActive = false).
             self.clear_volatile(pokemon);
             let previous = self.state.slot(slot).clone();
@@ -878,7 +944,12 @@ impl<'a, const N: usize> Battle<'a, N> {
             Status::Sleep => TypeImmunities::EMPTY,
             Status::None | Status::Fainted => return false,
         };
-        if immunity != TypeImmunities::EMPTY && self.status_immune(target, immunity) {
+        // `!(source?.hasAbility('corrosion') && ['tox', 'psn'].includes(status.id))`: a
+        // Corrosion source's poison skips `runStatusImmunity` (the Poison and Steel types). With
+        // no source Showdown takes the target itself (`if (!source) source = this`: Toxic Orb).
+        let corrosion = matches!(status, Status::Poison | Status::Toxic)
+            && self.ability(source.unwrap_or(target)) == abilities::CORROSION;
+        if immunity != TypeImmunities::EMPTY && !corrosion && self.status_immune(target, immunity) {
             return false;
         }
         if self.set_status_blocked(target, status) {
@@ -1664,6 +1735,8 @@ impl<'a, const N: usize> Battle<'a, N> {
         });
         // `clearEffectState(itemState)`: Eject Pack's flag goes with the item.
         self.delete_volatile(slot, Volatile::EjectPack);
+        // `this.usedItemThisTurn = true` (Pickup).
+        self.record_used_item(slot);
         // The only berries consumed through here are the resist berries, which Showdown eats
         // (`eatItem`: `runEvent('EatItem')` after their empty `onEat`, then `ateBerry = true`,
         // Belch). EatItem comes before the item is gone; nothing it runs reads the item.
@@ -1696,16 +1769,44 @@ impl<'a, const N: usize> Battle<'a, N> {
         !item.mega_stone.iter().any(|&(from, _)| from == base)
     }
 
-    /// Showdown `takeItem` (Knock Off): removed without becoming `lastItem`. Works on a
-    /// target at 0 HP that has not been processed as fainted yet, as in Showdown.
+    /// Sticky Hold's `onTakeItem` (breakable) for the holder in `slot`: `if (!pokemon.hp ||
+    /// pokemon.item === 'stickybarb') return; if ((source && source !== pokemon) ||
+    /// this.activeMove.id === 'knockoff') return false;` — another Pokémon cannot take its item,
+    /// nor can Knock Off remove it, while it has HP (a Sticky Barb goes).
+    pub fn sticky_hold_keeps(&self, slot: SlotRef, source: Option<SlotRef>) -> bool {
+        let Some(mon) = self.slot_mon(slot) else {
+            return false;
+        };
+        let knock_off = self
+            .active_move
+            .is_some_and(|m| m.id == crate::dex::moves::KNOCK_OFF);
+        self.ability_unless_broken(slot) == abilities::STICKY_HOLD
+            && mon.hp > 0
+            && mon.item != items::STICKY_BARB
+            && (source.is_some_and(|s| s != slot) || knock_off)
+    }
+
+    /// Showdown `takeItem()` without a source (the holder itself: Knock Off, Sticky Barb): see
+    /// [`Battle::take_item_by`].
     pub fn take_item(&mut self, slot: SlotRef) -> bool {
+        self.take_item_by(slot, None)
+    }
+
+    /// Showdown `takeItem(source)`: removed without becoming `lastItem`. Works on a target at 0
+    /// HP that has not been processed as fainted yet, as in Showdown. `source` is who takes it
+    /// (Thief, Bug Bite, Magician, Pickpocket, ...); `None` is the holder itself.
+    pub fn take_item_by(&mut self, slot: SlotRef, source: Option<SlotRef>) -> bool {
         let Some(pokemon) = self.occupant(slot) else {
             return false;
         };
         if self.mon(pokemon).item.is_none() {
             return false;
         }
-        // TakeItem: the holder's ability (Unburden) before the item's own handler.
+        // TakeItem: the holder's ability (Sticky Hold, Unburden) before the item's own handler;
+        // Sticky Hold's `false` ends the event.
+        if self.sticky_hold_keeps(slot, source) {
+            return false;
+        }
         super::abilities::unburden(self, slot);
         if !self.item_can_be_taken(slot) {
             return false;

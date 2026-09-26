@@ -39,9 +39,9 @@ pub(crate) enum Change {
     /// `updateMaxHp`; the ability stays.
     PermanentKeepAbility,
     /// `formeChange(species, effect, true)` from another ability: also the forme's first
-    /// ability, as the ability and its base (`setAbility(..., isFromFormeChange)`). The only
-    /// caller, Zero to Hero, keeps Zero to Hero, which has neither `onEnd` nor `onStart`, so
-    /// `setAbility`'s End and Start do nothing.
+    /// ability, as the ability and its base (`setAbility(..., isFromFormeChange)`). The callers,
+    /// Zero to Hero and Power Construct, keep their ability, which has neither `onEnd` nor
+    /// `onStart`, so `setAbility`'s End and Start do nothing.
     Permanent,
 }
 
@@ -58,6 +58,13 @@ pub fn temporary_forme_base(forme: SpeciesId) -> Option<SpeciesId> {
         f if f == species::DARMANITAN_ZEN => Some(species::DARMANITAN),
         f if f == species::DARMANITAN_GALAR_ZEN => Some(species::DARMANITAN_GALAR),
         f if f == species::CHERRIM_SUNSHINE => Some(species::CHERRIM),
+        // Forecast (Opus AA).
+        f if f == species::CASTFORM_SUNNY
+            || f == species::CASTFORM_RAINY
+            || f == species::CASTFORM_SNOWY =>
+        {
+            Some(species::CASTFORM)
+        }
         // Relic Song (`moves::handlers::after_move_secondary_self`).
         f if f == species::MELOETTA_PIROUETTE => Some(species::MELOETTA),
         f if f == species::CRAMORANT_GULPING || f == species::CRAMORANT_GORGING => {
@@ -581,12 +588,14 @@ pub(crate) fn has_residual(ability: AbilityId) -> bool {
         abilities::SHIELDS_DOWN,
         abilities::HUNGER_SWITCH,
         abilities::ZEN_MODE,
+        abilities::POWER_CONSTRUCT,
     ]
     .contains(&ability)
 }
 
 /// The ability's `onResidual` (`residual.rs`, order 29, ability sub-order) for its holder in
-/// `slot`: Schooling, Shields Down, Hunger Switch, Zen Mode. Each only changes its holder.
+/// `slot`: Schooling, Shields Down, Hunger Switch, Zen Mode, Power Construct. Each only changes
+/// its holder.
 pub(crate) fn residual<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
@@ -597,8 +606,53 @@ pub(crate) fn residual<const N: usize>(
         a if a == abilities::SHIELDS_DOWN => shields_down(b, slot)?,
         a if a == abilities::HUNGER_SWITCH => hunger_switch(b, slot),
         a if a == abilities::ZEN_MODE => zen_mode(b, slot),
+        a if a == abilities::POWER_CONSTRUCT => power_construct(b, slot)?,
         _ => {}
     }
+    Ok(())
+}
+
+/// Power Construct's `onResidual` (order 29; `cantsuppress`) for its holder in `slot`: a Zygarde
+/// (`baseSpecies.baseSpecies`; the engine has no Transform) with HP, not already Complete, at
+/// half its max HP or less becomes Zygarde-Complete for good (`formeChange('Zygarde-Complete',
+/// this.effect, true)`: stats, `updateMaxHp` keeping the HP lost so far, and the forme's
+/// ability — Power Construct again, which has no End or Start). Refused: a holder whose item
+/// would then let it Mega Evolve (`canMegaEvo` is recomputed: Zygardite's Zygarde-Complete
+/// entry), and a Zygarde not in its 50% or 10% forme (Mega Zygarde). The `formeRegression` the
+/// change sets makes a fainting Zygarde-Complete go back to its set's forme, which the state
+/// does not keep: that faint is refused in `Battle::faint_messages`.
+fn power_construct<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> Result<(), TurnError> {
+    let Some((forme, hp, max_hp, item)) = b
+        .alive(slot)
+        .map(|p| b.mon(p))
+        .map(|m| (m.species, m.hp, m.max_hp, m.item))
+    else {
+        return Ok(());
+    };
+    let base = forme.data().base_species;
+    let base = if base.is_none() { forme } else { base };
+    if base != species::ZYGARDE || forme == species::ZYGARDE_COMPLETE {
+        return Ok(());
+    }
+    // `if (... || pokemon.hp > pokemon.maxhp / 2) return;`
+    if 2 * i32::from(hp) > i32::from(max_hp) {
+        return Ok(());
+    }
+    if forme != species::ZYGARDE && forme != species::ZYGARDE_10 {
+        return Err(b.unsupported(format!("Power Construct on {}", forme.data().name)));
+    }
+    if item
+        .data()
+        .mega_stone
+        .iter()
+        .any(|&(from, _)| from == species::ZYGARDE_COMPLETE)
+    {
+        return Err(b.unsupported(format!(
+            "Power Construct making a Zygarde holding {} able to Mega Evolve",
+            item.data().name
+        )));
+    }
+    forme_change(b, slot, species::ZYGARDE_COMPLETE, Change::Permanent);
     Ok(())
 }
 
@@ -639,7 +693,8 @@ fn mimicry<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
 
 /// Why a Pokémon cannot be on the field, if its forme ability makes it unsupported although
 /// the ability is supported for other species (`support::check_state`, and
-/// `switching::switch_in_problem` for a switch-in during a turn):
+/// `switching::switch_in_problem` for a switch-in during a turn) — or with the item it holds
+/// (Forecast with Utility Umbrella):
 /// - Battle Bond acts only for Greninja-Bond (`onSourceAfterFaint`: +1 Atk, SpA and Spe once per
 ///   battle, `source.bondTriggered`, which the state does not record) and Greninja-Ash (Water
 ///   Shuriken hits 3 times); on any other species (Greninja itself) both handlers do nothing.
@@ -647,6 +702,15 @@ pub(crate) fn field_problem(mon: &crate::state::Pokemon) -> Option<String> {
     // Symbiosis holding an item it could not pass (`abilities::item_moves`).
     if let Some(why) = super::abilities::symbiosis_problem(mon) {
         return Some(why);
+    }
+    // Forecast with Utility Umbrella: the umbrella's `onStart` / `onUpdate` / `onEnd` run
+    // WeatherChange on the holder in sun or rain when it starts or stops being ignored or is
+    // lost, which the engine does not run.
+    if mon.ability == abilities::FORECAST && mon.item == crate::dex::items::UTILITY_UMBRELLA {
+        return Some(format!(
+            "{}: Forecast holding Utility Umbrella (the umbrella's WeatherChange events)",
+            mon.species.data().name
+        ));
     }
     let bond_forme = mon.species == species::GRENINJA_BOND || mon.species == species::GRENINJA_ASH;
     (mon.ability == abilities::BATTLE_BOND && bond_forme).then(|| {
@@ -675,19 +739,56 @@ pub(crate) fn on_start<const N: usize>(
         // Flower Gift's `onStart` (`onSwitchInPriority: -2`): `singleEvent('WeatherChange')`,
         // which no ability-ignoring move can suppress.
         a if a == abilities::FLOWER_GIFT => flower_gift(b, slot, false),
+        // Forecast's `onStart` (`onSwitchInPriority: -2`): `singleEvent('WeatherChange')`.
+        a if a == abilities::FORECAST => forecast(b, slot),
         _ => {}
     }
     Ok(())
 }
 
 /// The forme abilities' `onWeatherChange` for the Pokémon in `slot`
-/// (`field_events::weather_changed`): Ice Face, Flower Gift.
+/// (`field_events::weather_changed`): Ice Face, Flower Gift, Forecast.
 pub(crate) fn weather_changed<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     if b.ability(slot) == abilities::ICE_FACE {
         ice_face_restore(b, slot);
     }
     if b.ability(slot) == abilities::FLOWER_GIFT {
         flower_gift(b, slot, true);
+    }
+    forecast(b, slot);
+}
+
+// ---- Forecast ---------------------------------------------------------------------------------
+
+/// Forecast's `onWeatherChange` for the Pokémon in `slot` (also run by its `onStart`; not
+/// breakable): a Castform (`baseSpecies.baseSpecies`; the engine has no Transform) takes the
+/// forme of `pokemon.effectiveWeather()` (the suppressors and its own Utility Umbrella hide the
+/// weather; Utility Umbrella holders are refused in [`field_problem`]): Castform-Sunny in sun,
+/// -Rainy in rain, -Snowy in snow, Castform otherwise — temporarily (`formeChange(forme,
+/// this.effect, false)`: the base returns when it leaves the field), and only when the forme
+/// differs.
+pub(crate) fn forecast<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let Some(pokemon) = b.occupant(slot) else {
+        return;
+    };
+    let current = b.mon(pokemon).species;
+    let castform = [
+        species::CASTFORM,
+        species::CASTFORM_SUNNY,
+        species::CASTFORM_RAINY,
+        species::CASTFORM_SNOWY,
+    ];
+    if b.ability(slot) != abilities::FORECAST || !castform.contains(&current) {
+        return;
+    }
+    let forme = match b.weather_for(slot) {
+        Weather::Sun | Weather::HarshSun => species::CASTFORM_SUNNY,
+        Weather::Rain | Weather::HeavyRain => species::CASTFORM_RAINY,
+        Weather::Snow => species::CASTFORM_SNOWY,
+        _ => species::CASTFORM,
+    };
+    if forme != current {
+        forme_change(b, slot, forme, Change::Temporary);
     }
 }
 
@@ -867,16 +968,21 @@ mod tests {
         assert!(!data.flags.contains(crate::dex::AbilityFlags::BREAKABLE));
     }
 
-    /// The F19 ability that stays refused, with the reason pinned here: Power Construct
-    /// (Zygarde-Complete is permanent but regresses on fainting (`formeRegression`) to the set's
-    /// species (Zygarde or Zygarde-10%, not in the state) with `updateMaxHp`, and it recomputes
-    /// `canMegaEvo`). Gulp Missile is implemented (Opus U: `gulp_missile_catch` / `_spit`).
+    /// Power Construct is implemented (Opus AA: [`power_construct`]) up to what the state
+    /// cannot hold: a fainting Zygarde-Complete regresses (`formeRegression`) to the set's species
+    /// (Zygarde or Zygarde-10%, not in the state) with `updateMaxHp` (refused in
+    /// `Battle::faint_messages`), and the recomputed `canMegaEvo` of a Zygardite holder is
+    /// refused. Gulp Missile is implemented (Opus U: `gulp_missile_catch` / `_spit`).
     ///
     /// Battle Bond is supported only where it is inert ([`field_problem`]).
     #[test]
     fn unimplemented_forme_abilities_stay_refused() {
         use crate::turn::support::ability_supported_on_field;
-        assert!(!ability_supported_on_field(abilities::POWER_CONSTRUCT));
+        assert!(ability_supported_on_field(abilities::POWER_CONSTRUCT));
+        assert!(abilities::POWER_CONSTRUCT
+            .data()
+            .event_orders
+            .contains(&("onResidualOrder", 29)));
         assert!(ability_supported_on_field(abilities::GULP_MISSILE));
         assert_eq!(
             abilities::BATTLE_BOND.data().handlers,

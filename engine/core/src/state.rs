@@ -266,6 +266,11 @@ pub struct SlotHistory {
     /// battle (`HistoryReaders`).
     pub stats_raised_this_turn: bool,
     pub stats_lowered_this_turn: bool,
+    /// `usedItemThisTurn`: the Pokémon used or ate its item this turn (`useItem`, `eatItem`).
+    /// Cleared like the stat-change flags (every `endTurn` but the battle start's, and on
+    /// leaving the field). Read by Pickup; recorded only while a Pickup holder is in the battle
+    /// (`HistoryReaders`).
+    pub used_item_this_turn: bool,
     /// `moveSlot.used` per move index (bit `1 << index`): `deductPP` marks a move slot (its own
     /// use, Pressure's extra PP, Spite on it); cleared on switch-in. Read by Last Resort;
     /// recorded only while it is in the battle (`HistoryReaders`).
@@ -284,6 +289,7 @@ impl Default for SlotHistory {
             newly_switched: true,
             stats_raised_this_turn: false,
             stats_lowered_this_turn: false,
+            used_item_this_turn: false,
             moves_used: 0,
         }
     }

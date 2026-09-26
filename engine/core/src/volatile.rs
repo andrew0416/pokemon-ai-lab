@@ -370,9 +370,13 @@ pub enum Volatile {
     /// Update throws the held item (`onUpdate`: `conditions::fling_update`). Added by name, so the
     /// dex has no condition id.
     Fling,
+    /// A Gem's condition (`gem`, duration 1, `affectsFainted`): the holder used a Gem this turn
+    /// and its moves' base power is 5325/4096 (`onBasePower`, priority 14) until the residual.
+    /// Added by name, so the dex has no condition id.
+    Gem,
 }
 
-pub const VOLATILE_COUNT: usize = 110;
+pub const VOLATILE_COUNT: usize = 111;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -486,6 +490,7 @@ impl Volatile {
         Volatile::Curse,
         Volatile::Uproar,
         Volatile::Fling,
+        Volatile::Gem,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -602,7 +607,8 @@ impl Volatile {
             | Volatile::AddedType
             | Volatile::LockOn
             | Volatile::ChillyReception
-            | Volatile::Fling => ConditionId::NONE,
+            | Volatile::Fling
+            | Volatile::Gem => ConditionId::NONE,
         }
     }
 
@@ -719,6 +725,7 @@ impl Volatile {
             Volatile::Curse => "curse",
             Volatile::Uproar => "uproar",
             Volatile::Fling => "fling",
+            Volatile::Gem => "gem",
         }
     }
 
@@ -755,7 +762,8 @@ impl Volatile {
             | Volatile::BeakBlast
             | Volatile::ShellTrap
             | Volatile::Electrify
-            | Volatile::ChillyReception => 1,
+            | Volatile::ChillyReception
+            | Volatile::Gem => 1,
             Volatile::Stall
             | Volatile::LockedMove
             | Volatile::MustRecharge
@@ -995,7 +1003,9 @@ impl Volatile {
             | Volatile::Curse
             | Volatile::Fling
             // Electrify (duration 1, no `noCopy`).
-            | Volatile::Electrify => Passed::Copied,
+            | Volatile::Electrify
+            // A Gem's condition (duration 1, `affectsFainted`, no `noCopy`).
+            | Volatile::Gem => Passed::Copied,
             // `noCopy` conditions.
             Volatile::Spotlight
             | Volatile::Encore
@@ -1254,6 +1264,7 @@ mod tests {
                         | Volatile::LockOn
                         | Volatile::ChillyReception
                         | Volatile::Fling
+                        | Volatile::Gem
                 ));
                 continue;
             }

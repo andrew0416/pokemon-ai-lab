@@ -1,0 +1,70 @@
+{
+ "description": "Sticky Hold against Thief and Bug Bite: Weavile's Thief does not take Swalot's Leftovers and Heracross's Bug Bite does not eat Hydrapple's Sitrus Berry (both takeItem(source) from another Pokemon).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Weavile",
+    "item": "",
+    "ability": "Pressure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Thief"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Heracross",
+    "item": "",
+    "ability": "Guts",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Bug Bite"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Swalot",
+    "item": "Leftovers",
+    "ability": "Sticky Hold",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hydrapple",
+    "item": "Sitrus Berry",
+    "ability": "Sticky Hold",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move thief 1, move bugbite 2",
+  "p2": "move harden, move harden"
+ }
+}

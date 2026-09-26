@@ -384,7 +384,8 @@ fn consume<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, pokemon: Pokemo
         old: item,
         new: ItemId::NONE,
     });
-    // `this.ateBerry = true` (Belch).
+    // `this.usedItemThisTurn = true` (Pickup), `this.ateBerry = true` (Belch).
+    b.record_used_item(slot);
     b.record_ate_berry(pokemon);
     super::abilities::unburden(b, slot);
     super::abilities::symbiosis(b, slot);

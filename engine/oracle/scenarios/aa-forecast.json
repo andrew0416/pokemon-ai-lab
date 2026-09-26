@@ -1,0 +1,70 @@
+{
+ "description": "Forecast: Torkoal's Drought sets sun at the start and Castform's Forecast (onSwitchInPriority -2, after Drought) makes it Castform-Sunny. During the turn Blissey's Rain Dance makes it Castform-Rainy, Chansey's Sandstorm plain Castform, and Torkoal's Snowscape Castform-Snowy (Ice).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Castform",
+    "item": "",
+    "ability": "Forecast",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Torkoal",
+    "item": "",
+    "ability": "Drought",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Snowscape"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Rain Dance"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Sandstorm"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move harden, move snowscape",
+  "p2": "move raindance, move sandstorm"
+ }
+}

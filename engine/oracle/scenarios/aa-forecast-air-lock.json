@@ -1,0 +1,83 @@
+{
+ "description": "Forecast and Air Lock: Castform is Castform-Sunny under Torkoal's sun; Rayquaza switching in with Air Lock runs WeatherChange with the sun suppressed, so Castform goes back to its base forme.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Castform",
+    "item": "",
+    "ability": "Forecast",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Torkoal",
+    "item": "",
+    "ability": "Drought",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Rayquaza",
+    "item": "",
+    "ability": "Air Lock",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "turn": {
+  "p1": "move harden, move harden",
+  "p2": "switch 3, move harden"
+ }
+}

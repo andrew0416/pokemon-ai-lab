@@ -87,13 +87,13 @@ pub(crate) fn inert_start(item: ItemId) -> bool {
 impl<const N: usize> Battle<'_, N> {
     /// Showdown `pokemon.effectiveWeather()` for the Pokémon in `slot`: the field's
     /// [`Battle::effective_weather`], except that Utility Umbrella hides sun and rain (and
-    /// their primal forms) from its holder. Sandstorm and snow are unaffected. (Mega Sol, which
-    /// makes its holder's moves see sun, is refused on the field.) Every per-Pokémon weather
-    /// effect reads this: the damage modifier (the defender's), Chlorophyll / Swift Swim, Solar
-    /// Power, Rain Dish, Dry Skin, Hydration, Leaf Guard, sun's freeze immunity and the move
-    /// handlers (Weather Ball, Thunder, Hurricane, Morning Sun...); effects that read the field
-    /// (`field.isWeather`: Sand Rush, Slush Rush, Blizzard, Aurora Veil, Shore Up, sandstorm
-    /// damage) read [`Battle::effective_weather`].
+    /// their primal forms) from its holder. Sandstorm and snow are unaffected. Every
+    /// per-Pokémon weather effect reads this — Chlorophyll / Swift Swim, Solar Power, Rain Dish,
+    /// Dry Skin, Hydration, Leaf Guard — except where the reading effect is a move or a weather
+    /// (the damage modifier and sand / snow defense, sun's freeze immunity, the move handlers:
+    /// Weather Ball, Thunder, Hurricane, Morning Sun...), which read [`Battle::move_weather`]
+    /// (Mega Sol); effects that read the field (`field.isWeather`: Sand Rush, Slush Rush,
+    /// Blizzard, Aurora Veil, Shore Up, sandstorm damage) read [`Battle::effective_weather`].
     pub fn weather_for(&self, slot: SlotRef) -> Weather {
         let weather = self.effective_weather();
         let hidden = matches!(
@@ -104,6 +104,23 @@ impl<const N: usize> Battle<'_, N> {
             Weather::None
         } else {
             weather
+        }
+    }
+
+    /// Showdown `holder.effectiveWeather()` when the reading effect (`this.battle.effect`) is a
+    /// move or a weather: `if (this.battle.activePokemon?.hasAbility('megasol') && ...) return
+    /// 'sunnyday';` — while a Pokémon with Mega Sol (as it acts: not suppressed, still active)
+    /// is using a move, everyone's weather is sun for it, whatever the field's (even none or a
+    /// suppressed one) and before Utility Umbrella's check. Electro Shot's own charge check
+    /// (`sourceEffect.id !== 'electroshot'`) reads [`Battle::weather_for`] instead.
+    pub fn move_weather(&self, holder: SlotRef) -> Weather {
+        let mega_sol = self.active_move.is_some_and(|m| {
+            self.occupant(m.user) == Some(m.pokemon) && self.ability(m.user) == abilities::MEGA_SOL
+        });
+        if mega_sol {
+            Weather::Sun
+        } else {
+            self.weather_for(holder)
         }
     }
 
@@ -603,10 +620,17 @@ pub(crate) fn constant_fractional_tenths(item: ItemId) -> i8 {
     }
 }
 
-/// The constant handlers of `runEvent('FractionalPriority')` for a move action, in tenths:
-/// the ability's (Stall, sub-order 7) and then the item's (sub-order 8) replace the value, so
-/// the item's wins. Quick Claw's random handler runs after them ([`quick_claw`]).
-pub(crate) fn fractional_priority_tenths<const N: usize>(state: &State<N>, slot: SlotRef) -> i8 {
+/// The deterministic handlers of `runEvent('FractionalPriority')` for a move action of `id`, in
+/// tenths: the constants (priority 0) — the ability's (Stall, sub-order 7) and then the item's
+/// (sub-order 8) replace the value, so the item's wins — then Mycelium Might (priority -1: `if
+/// (move.category === 'Status') return -0.1;`). The random handlers run after them when the
+/// actions are queued: Quick Draw (-1, `abilities::quick_draw`), Quick Claw and Custap Berry
+/// (-2, [`quick_claw`], [`custap`]).
+pub(crate) fn fractional_priority_tenths<const N: usize>(
+    state: &State<N>,
+    slot: SlotRef,
+    id: MoveId,
+) -> i8 {
     let Some(mon) = state.active(slot) else {
         return 0;
     };
@@ -615,45 +639,68 @@ pub(crate) fn fractional_priority_tenths<const N: usize>(state: &State<N>, slot:
     } else {
         mon.item
     };
+    let ability = super::abilities::effective_ability(state, slot);
+    if ability == abilities::MYCELIUM_MIGHT && action_category(id) == MoveCategory::Status {
+        return -1;
+    }
     match constant_fractional_tenths(item) {
-        0 => super::order::fractional_priority_tenths(super::abilities::effective_ability(
-            state, slot,
-        )),
+        0 => super::order::fractional_priority_tenths(ability),
         item => item,
     }
 }
 
-/// Quick Claw's `onFractionalPriority` (priority -2, after the constants) for a move action of
-/// `pokemon` whose fractional priority is `current` tenths: `priority <= 0 &&
-/// this.randomChance(1, 5)` makes it +0.1. Showdown draws it when the turn's actions are
-/// queued (`resolveAction`); Mycelium Might's status-move exception is moot (the ability is
-/// refused by `support`).
+/// The category of an action's move (`action.move.category`: the dex's; the `recharge`
+/// pseudo-move, `MoveId::NONE` in an action, is a status move).
+pub(crate) fn action_category(id: MoveId) -> MoveCategory {
+    if id.is_none() {
+        MoveCategory::Status
+    } else {
+        id.data().category
+    }
+}
+
+/// Mycelium Might's exception in Quick Claw's and Custap Berry's `onFractionalPriority`: `if
+/// (move.category === 'Status' && pokemon.hasAbility('myceliummight')) return;`.
+fn mycelium_status<const N: usize>(b: &Battle<'_, N>, slot: SlotRef, id: MoveId) -> bool {
+    action_category(id) == MoveCategory::Status && b.ability(slot) == abilities::MYCELIUM_MIGHT
+}
+
+/// Quick Claw's `onFractionalPriority` (priority -2, after the constants and Quick Draw) for a
+/// move action of `pokemon` using `id` whose fractional priority is `current` tenths:
+/// `priority <= 0 && this.randomChance(1, 5)` makes it +0.1 (not for a Mycelium Might holder's
+/// status move). Showdown draws it when the turn's actions are queued (`resolveAction`).
 pub(crate) fn quick_claw<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
     pokemon: PokemonRef,
     current: i8,
+    id: MoveId,
 ) -> Option<i8> {
     (b.occupant(slot) == Some(pokemon)
         && b.item(slot) == items::QUICK_CLAW
+        && !mycelium_status(b, slot, id)
         && current <= 0
         && b.rng.chance(1, 5))
     .then_some(1)
 }
 
 /// Custap Berry's `onFractionalPriority` (priority -2, like Quick Claw, which a holder of it
-/// cannot also hold) for a move action of the Pokémon in `slot` whose fractional priority is
-/// `current` tenths: `priority <= 0` and the holder at 1/4 of its max HP or less (1/2 with
-/// Gluttony) eats the berry (`eatItem`, empty `onEat`) and makes it +0.1. Showdown runs it
-/// when the turn's actions are queued (`resolveAction`), so the berry is gone before the
-/// first action; Mycelium Might's status-move exception is moot (refused by `support`).
+/// cannot also hold) for a move action of the Pokémon in `slot` using `id` whose fractional
+/// priority is `current` tenths: `priority <= 0` and the holder at 1/4 of its max HP or less
+/// (1/2 with Gluttony) eats the berry (`eatItem`, empty `onEat`) and makes it +0.1 (not for a
+/// Mycelium Might holder's status move). Showdown runs it when the turn's actions are queued
+/// (`resolveAction`), so the berry is gone before the first action.
 pub(crate) fn custap<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
     pokemon: PokemonRef,
     current: i8,
+    id: MoveId,
 ) -> Option<i8> {
-    if b.occupant(slot) != Some(pokemon) || b.item(slot) != items::CUSTAP_BERRY {
+    if b.occupant(slot) != Some(pokemon)
+        || b.item(slot) != items::CUSTAP_BERRY
+        || mycelium_status(b, slot, id)
+    {
         return None;
     }
     let mon = b.mon(pokemon);
@@ -741,7 +788,8 @@ pub(crate) fn base_power_handlers<const N: usize>(
 }
 
 /// Whether the move being used has the `contact` flag after ModifyMove: Punching Glove's
-/// `onModifyMove` (priority 1) deletes it from a punching move. Every reader of
+/// `onModifyMove` (priority 1) deletes it from a punching move, the user's Long Reach from every
+/// move. Every reader of
 /// `move.flags['contact']` (and `checkMoveMakesContact`, which adds the Protective Pads check)
 /// goes through this. The glove's holder is the user, whose item cannot change during its own
 /// move (a supported effect that takes or gives items needs an empty-handed user).
@@ -752,6 +800,8 @@ pub(crate) fn makes_contact<const N: usize>(
 ) -> bool {
     data.flags.contains(MoveFlags::CONTACT)
         && !(data.flags.contains(MoveFlags::PUNCH) && b.item(user) == items::PUNCHING_GLOVE)
+        // Long Reach's `onModifyMove`: `delete move.flags['contact']`.
+        && b.ability(user) != abilities::LONG_REACH
 }
 
 // ---- defensive stat items ----------------------------------------------------------------------
@@ -985,11 +1035,38 @@ pub(crate) fn crit_ratio_bonus(item: ItemId, holder: &Pokemon) -> i32 {
     0
 }
 
-/// King's Rock / Razor Fang `onModifyMove` (priority -1): a non-status move without a flinch
-/// secondary gets `{chance: 10, volatileStatus: 'flinch'}` appended to its secondaries.
-/// (Serene Grace, priority -2, would double it; it is refused by `support`.)
-pub(crate) fn added_secondary(item: ItemId, data: &MoveData) -> Option<Secondary> {
-    let flinch_item = item == items::KINGS_ROCK || item == items::RAZOR_FANG;
+/// A Gem's `onSourceTryPrimaryHit` (the user's item, priority 0; after Gulp Missile, an ability,
+/// and before the target's substitute, -1) for each target of each hit: `if (target === source ||
+/// move.category === 'Status' || move.flags['pledgecombo']) return; if (move.type === <the gem's
+/// type> && source.useItem()) source.addVolatile('gem');` — the gem is used up on the first
+/// target (`move.type`: after ModifyType) and its condition boosts the move's power
+/// (`handlers::volatile_base_power`). Only Normal Gem is supported: the other Gems are `Past` in
+/// Champions.
+pub(crate) fn gem_try_primary_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    category: MoveCategory,
+    move_type: Type,
+) {
+    if target == user
+        || category == MoveCategory::Status
+        || move_type != Type::Normal
+        || b.item(user) != items::NORMAL_GEM
+    {
+        return;
+    }
+    if b.use_item(user) {
+        b.add_volatile(user, Volatile::Gem);
+    }
+}
+
+/// King's Rock / Razor Fang `onModifyMove` (priority -1), and the user's Stench (`stench`; the
+/// ability's `onModifyMove`, also priority -1, is the same code): a non-status move without a
+/// flinch secondary gets `{chance: 10, volatileStatus: 'flinch'}` appended to its secondaries.
+/// Both at once append one: the second finds the first's flinch.
+pub(crate) fn added_secondary(item: ItemId, stench: bool, data: &MoveData) -> Option<Secondary> {
+    let flinch_item = stench || item == items::KINGS_ROCK || item == items::RAZOR_FANG;
     let has_flinch = data
         .secondaries
         .iter()
@@ -1405,10 +1482,12 @@ pub(crate) fn on_hit<const N: usize>(
         super::update::berry_heal(b, target, max_hp / 4.0);
         return;
     }
+    // `this.checkMoveMakesContact(move, source, target)`: the contact flag after ModifyMove
+    // (Long Reach removes it; Punching Glove and Protective Pads need an item the user lacks).
     if user == target
         || b.item(target) != items::STICKY_BARB
         || !b.raw_item(user).is_none()
-        || !data.flags.contains(MoveFlags::CONTACT)
+        || !makes_contact(b, user, data)
     {
         return;
     }

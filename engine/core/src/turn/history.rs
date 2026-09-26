@@ -130,6 +130,17 @@ impl<const N: usize> Battle<'_, N> {
         self.set_slot_history(slot, history);
     }
 
+    /// `pokemon.usedItemThisTurn = true` (`useItem`, `eatItem`) for the Pokémon in `slot`, for a
+    /// battle with Pickup (F18).
+    pub(crate) fn record_used_item(&mut self, slot: SlotRef) {
+        if !self.history_readers.used_item || self.occupant(slot).is_none() {
+            return;
+        }
+        let mut history = self.slot_history(slot);
+        history.used_item_this_turn = true;
+        self.set_slot_history(slot, history);
+    }
+
     /// `pokemon.ateBerry = true` (`eatItem`, Bug Bite / Pluck), for a battle with Belch (F18).
     pub(crate) fn record_ate_berry(&mut self, pokemon: PokemonRef) {
         if !self.history_readers.ate_berry {
@@ -152,8 +163,8 @@ impl<const N: usize> Battle<'_, N> {
     }
 
     /// `endTurn`'s `if (this.turn !== 1)` resets for every active Pokémon:
-    /// `statsRaisedThisTurn` and `statsLoweredThisTurn` (not when the battle starts: turn 1 still
-    /// sees what the leads' switch-in effects changed).
+    /// `statsRaisedThisTurn`, `statsLoweredThisTurn` and `usedItemThisTurn` (not when the battle
+    /// starts: turn 1 still sees what the leads' switch-in effects changed or used).
     pub(crate) fn reset_stat_changes(&mut self) {
         for slot in State::<N>::slot_refs() {
             if self.state.slot(slot).party_index.is_none() {
@@ -162,6 +173,7 @@ impl<const N: usize> Battle<'_, N> {
             let mut history = self.slot_history(slot);
             history.stats_raised_this_turn = false;
             history.stats_lowered_this_turn = false;
+            history.used_item_this_turn = false;
             self.set_slot_history(slot, history);
         }
     }

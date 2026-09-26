@@ -1,0 +1,70 @@
+{
+ "description": "Long Reach removes contact: Decidueye's Seismic Toss on Ferrothorn triggers neither Iron Barbs nor Sticky Barb's move to the itemless attacker; Rowlet's on Blissey does not trigger Rocky Helmet. Ferrothorn's barb hurts it at the residual.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Decidueye",
+    "item": "",
+    "ability": "Long Reach",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Seismic Toss"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Rowlet",
+    "item": "",
+    "ability": "Long Reach",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Seismic Toss"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Ferrothorn",
+    "item": "Sticky Barb",
+    "ability": "Iron Barbs",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "Rocky Helmet",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move seismictoss 1, move seismictoss 2",
+  "p2": "move harden, move harden"
+ }
+}

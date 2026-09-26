@@ -1,0 +1,70 @@
+{
+ "description": "Sticky Hold: Weavile's Corrosive Gas takes its ally Haxorus's Leftovers but neither Swalot's Leftovers nor Hydrapple's Sitrus Berry (another Pokemon cannot take a Sticky Hold holder's item). Haxorus's Knock Off (Mold Breaker ignores the breakable ability) removes Hydrapple's berry. Swalot keeps its Leftovers.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Weavile",
+    "item": "",
+    "ability": "Pressure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Corrosive Gas"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Haxorus",
+    "item": "Leftovers",
+    "ability": "Mold Breaker",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Knock Off"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Swalot",
+    "item": "Leftovers",
+    "ability": "Sticky Hold",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hydrapple",
+    "item": "Sitrus Berry",
+    "ability": "Sticky Hold",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move corrosivegas, move knockoff 2",
+  "p2": "move harden, move harden"
+ }
+}

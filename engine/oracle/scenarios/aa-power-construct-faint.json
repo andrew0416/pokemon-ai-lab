@@ -1,0 +1,84 @@
+{
+ "description": "Power Construct's formeRegression (refused): Super Fang halves Zygarde (setup turn; Power Construct makes it Zygarde-Complete at the residual if it hit); at 1 HP (patch) Raticate's Super Fang knocks it out. A fainting Zygarde-Complete goes back to its set's forme, which the state does not keep: the engine refuses that faint.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Zygarde",
+    "item": "",
+    "ability": "Power Construct",
+    "nature": "Serious",
+    "evs": {
+     "hp": 31
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50,
+    "name": "Fifty"
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Raticate",
+    "item": "",
+    "ability": "Guts",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Super Fang"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Furret",
+    "item": "",
+    "ability": "Frisk",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move harden, move harden",
+   "move superfang 1, move harden"
+  ]
+ ],
+ "patch": {
+  "p1": {
+   "Fifty": {
+    "hp": 1
+   }
+  }
+ },
+ "turn": {
+  "p1": "move harden, move harden",
+  "p2": "move superfang 1, move harden"
+ }
+}

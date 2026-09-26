@@ -1,0 +1,70 @@
+{
+ "description": "Liquid Ooze: Venusaur (Big Root, full HP) drains Swalot with Giga Drain and takes the ooze damage instead: the drain amount itself, as Big Root only chains a modifier applied at the end of TryHeal, and TryHeal comes before the full-HP check. Ferrothorn's Leech Seed (90%) seeds Tentacruel, whose ooze hurts Ferrothorn at the residual instead of healing it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Venusaur",
+    "item": "Big Root",
+    "ability": "Overgrow",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Giga Drain"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Ferrothorn",
+    "item": "",
+    "ability": "Iron Barbs",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Leech Seed"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Swalot",
+    "item": "",
+    "ability": "Liquid Ooze",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Tentacruel",
+    "item": "",
+    "ability": "Liquid Ooze",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move gigadrain 1, move leechseed 2",
+  "p2": "move harden, move harden"
+ }
+}

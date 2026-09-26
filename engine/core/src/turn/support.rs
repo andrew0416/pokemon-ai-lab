@@ -1500,8 +1500,9 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::QUICK_POWDER, &["onModifySpe"]),
     // `onModifyWeight` in `Battle::weight`.
     (items::FLOAT_STONE, &["onModifyWeight"]),
-    // Drawn when the actions are queued (first stage, `mod.rs`); Lagging Tail and Full Incense
-    // have only a constant `onFractionalPriority` (`items::constant_fractional_tenths`).
+    // Drawn when the actions are queued (first stage, `mod.rs`), after Quick Draw's; Lagging
+    // Tail and Full Incense have only a constant `onFractionalPriority`
+    // (`items::constant_fractional_tenths`).
     (items::QUICK_CLAW, &["onFractionalPriority"]),
     // `onImmunity` in `Battle::status_immune`, `onTryHit` in the move's TryHit step.
     (items::SAFETY_GOGGLES, &["onImmunity", "onTryHit"]),
@@ -1524,6 +1525,10 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     // `onTrapPokemon` (priority -10) in `abilities::trapped`; `onMaybeTrapPokemon` only clears
     // a display flag.
     (items::SHED_SHELL, &["onMaybeTrapPokemon", "onTrapPokemon"]),
+    // Opus AA (items): Normal Gem's `onSourceTryPrimaryHit` in `items::gem_try_primary_hit`
+    // (the `gem` volatile's `onBasePower` in `handlers::volatile_base_power`). The other Gems
+    // are `Past` in Champions and stay refused.
+    (items::NORMAL_GEM, &["onSourceTryPrimaryHit"]),
     // O98: `onStart` (switch-in, priority -2) and `onUpdate` in `abilities::booster_energy`,
     // `onTakeItem` in `Battle::item_can_be_taken` (`abilities::booster_energy_kept`).
     (
@@ -2209,6 +2214,65 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // `Battle::faint_messages`).
     (abilities::RECEIVER, &["onAllyFaint"]),
     (abilities::POWER_OF_ALCHEMY, &["onAllyFaint"]),
+    // Opus AA unit 1. Steadfast: `onFlinch` in the flinch BeforeMove (`abilities::steadfast`).
+    // Anger Point: `onHit` in the Hit event (`abilities::anger_point`, reading
+    // `Battle::hit_crit`). Stench: `onModifyMove` appends King's Rock's flinch
+    // (`items::added_secondary`). Long Reach: `onModifyMove` removes contact
+    // (`items::makes_contact`). Corrosion (`Battle::try_set_status_from`) and Early Bird (the
+    // sleep BeforeMove in `moves::before_move`) have no callbacks.
+    (abilities::STEADFAST, &["onFlinch"]),
+    (abilities::ANGER_POINT, &["onHit"]),
+    (abilities::STENCH, &["onModifyMove"]),
+    (abilities::LONG_REACH, &["onModifyMove"]),
+    // Opus AA unit 2. Quick Draw: its random `onFractionalPriority` is drawn with Quick Claw's
+    // when the actions are queued (`abilities::quick_draw`, first stage in `mod.rs`). Mycelium
+    // Might: `onFractionalPriority` in `items::fractional_priority_tenths` (and the Quick Claw /
+    // Custap exception), `onModifyMove` sets `ignoreAbility` for status moves
+    // (`ability_hooks::on_modify_move`). Run Away (Champions): `onTrapPokemon` in
+    // `conditions::trapped` / `abilities::trapped` like Shed Shell; `onMaybeTrapPokemon` only
+    // clears a display flag. Moody, Pickup: `onResidual` (`abilities::on_residual`; Pickup reads
+    // `SlotHistory::used_item_this_turn`).
+    (abilities::QUICK_DRAW, &["onFractionalPriority"]),
+    (
+        abilities::MYCELIUM_MIGHT,
+        &["onFractionalPriority", "onModifyMove"],
+    ),
+    (
+        abilities::RUN_AWAY,
+        &["onMaybeTrapPokemon", "onTrapPokemon"],
+    ),
+    (abilities::MOODY, &["onResidual"]),
+    (abilities::PICKUP, &["onResidual"]),
+    // Power Construct: `onResidual` in `forme::residual` (Zygarde-Complete; its faint, which
+    // regresses the forme, is refused in `Battle::faint_messages`).
+    (abilities::POWER_CONSTRUCT, &["onResidual"]),
+    // Opus AA unit 3. Surge Surfer: `onModifySpe` in `Battle::speed_stat`. Orichalcum Pulse,
+    // Hadron Engine: `onStart` in `switching::START_HANDLERS` (sun / Electric Terrain),
+    // `onModifyAtk` / `onModifySpA` in `abilities::attack_handlers`. Liquid Ooze:
+    // `onSourceTryHeal` in `Battle::heal_rooted_from` (drain, Leech Seed, Strength Sap). Sticky
+    // Hold: `onTakeItem` in `Battle::take_item_by` (`Battle::sticky_hold_keeps`); Trick and
+    // Switcheroo fail on it in their `onTryImmunity`.
+    (abilities::SURGE_SURFER, &["onModifySpe"]),
+    (abilities::ORICHALCUM_PULSE, &["onModifyAtk", "onStart"]),
+    (abilities::HADRON_ENGINE, &["onModifySpA", "onStart"]),
+    (abilities::LIQUID_OOZE, &["onSourceTryHeal"]),
+    (abilities::STICKY_HOLD, &["onTakeItem"]),
+    // Opus AA unit 4. Forecast: `onStart` (`switching::START_HANDLERS`) and `onWeatherChange`
+    // (`field_events::weather_changed`, Air Lock / Cloud Nine's `switching::weather_change`)
+    // in `forme::forecast`; with Utility Umbrella refused (`forme::field_problem`).
+    (abilities::FORECAST, &["onStart", "onWeatherChange"]),
+    // Opus AA unit 5. Parental Bond: `onPrepareHit` makes an eligible move hit twice
+    // (`moves::parental_bond_applies`, `decide_hits`; the second hit quartered in
+    // `damage::damage_rolls`), `onSourceModifySecondaries` in the secondaries loop (Secret
+    // Power's first hit). A called move that would hit twice is refused by `moves::call_move`.
+    (
+        abilities::PARENTAL_BOND,
+        &["onPrepareHit", "onSourceModifySecondaries"],
+    ),
+    // Opus AA unit 6. Mega Sol: `onWeatherModifyDamage` and its `effectiveWeather()` override
+    // (`Battle::move_weather`: the damage modifier and sand / snow defense in
+    // `moves::get_damage`, the move handlers, sun's freeze immunity).
+    (abilities::MEGA_SOL, &["onWeatherModifyDamage"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -2223,11 +2287,10 @@ fn listed<T: PartialEq + Copy>(table: &[(T, &[&str])], id: T) -> bool {
 }
 
 /// Abilities without callbacks that Showdown's core checks by name (`hasAbility`), with
-/// behaviour not implemented here. Levitate (grounding) and the `onCriticalHit: false`
-/// abilities are implemented.
+/// behaviour not implemented here. Levitate (grounding), the `onCriticalHit: false` abilities,
+/// Corrosion (`setStatus`) and Early Bird (the `slp` BeforeMove) are implemented; Multitype and
+/// RKS System belong to Arceus and Silvally (`Past` in Champions), Persistent is CAP.
 const CORE_CHECKED_ABILITIES: &[AbilityId] = &[
-    abilities::CORROSION,
-    abilities::EARLY_BIRD,
     abilities::MULTITYPE,
     abilities::RKS_SYSTEM,
     abilities::PERSISTENT,
@@ -2657,8 +2720,9 @@ mod tests {
     /// - `onAfterSubDamage`: implemented for these moves (`handlers::on_after_sub_damage`) and
     ///   Air Balloon (`items::after_sub_damage`); every other holder (Core Enforcer, Shell Side
     ///   Arm, ...) is refused.
-    /// - `TryPrimaryHit`: only Aura Break's `onAnyTryPrimaryHit` besides the substitute; the
-    ///   gems' `onSourceTryPrimaryHit` and Gulp Missile are refused.
+    /// - `TryPrimaryHit`: Aura Break's `onAnyTryPrimaryHit`, Gulp Missile's and Normal Gem's
+    ///   `onSourceTryPrimaryHit` (priority 0, before the substitute's -1: the gem is used even
+    ///   when the substitute takes the hit) besides the substitute; the other gems are refused.
     /// - `move.infiltrates`: Infiltrator (`ActiveMoveRef::infiltrates`) and Pollen Puff are
     ///   implemented, and Present's heal (`handlers::infiltrates`).
     /// - Moves whose own code reads a substitute: Aromatherapy and Defog are implemented; Shed
@@ -2698,10 +2762,14 @@ mod tests {
                     .iter()
                     .any(|h| h.contains("AfterSubDamage") || h.contains("TryPrimaryHit"))
             {
-                assert_eq!(id, items::AIR_BALLOON);
+                assert!(
+                    [items::AIR_BALLOON, items::NORMAL_GEM].contains(&id),
+                    "{id:?}"
+                );
             }
         }
-        assert!(!item_supported_on_field(items::NORMAL_GEM));
+        assert!(item_supported_on_field(items::NORMAL_GEM));
+        assert!(!item_supported_on_field(items::FIRE_GEM));
         for id in AbilityId::all() {
             let handlers = id.data().handlers;
             if ability_supported_on_field(id)

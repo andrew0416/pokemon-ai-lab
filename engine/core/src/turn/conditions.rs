@@ -670,9 +670,9 @@ pub(crate) fn disabled_move<const N: usize>(
 /// (`trapped`); partial trapping while its source is active (`if
 /// (this.effectState.source?.isActive) pokemon.tryTrap();`). Shed Shell's `onTrapPokemon`
 /// (priority -10, after every other handler: `pokemon.trapped = false`) frees its holder from
-/// all of them unless the item is suppressed. Commander's `commanding` and `commanded`
-/// (priority -11, after Shed Shell) set `pokemon.trapped = true` without `tryTrap`: no type
-/// immunity or item frees them.
+/// all of them unless the item is suppressed; so does Run Away's (Champions) unless the ability
+/// is suppressed. Commander's `commanding` and `commanded` (priority -11, after Shed Shell) set
+/// `pokemon.trapped = true` without `tryTrap`: no type immunity, item or ability frees them.
 pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option<String> {
     let mon = state.active(slot)?;
     let commander = &state.slot(slot).volatiles;
@@ -683,7 +683,11 @@ pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option
     let immune = all_types(state, slot)
         .iter()
         .any(|t| t.immunities().contains(TypeImmunities::TRAPPED));
-    if immune || (mon.item == items::SHED_SHELL && !super::items::ignoring_item(state, slot)) {
+    let shed_shell = mon.item == items::SHED_SHELL && !super::items::ignoring_item(state, slot);
+    // Run Away (Champions): `onTrapPokemonPriority: -10, onTrapPokemon(pokemon) {
+    // pokemon.trapped = false; }`, as Shed Shell's.
+    let run_away = super::abilities::effective_ability(state, slot) == abilities::RUN_AWAY;
+    if immune || shed_shell || run_away {
         return None;
     }
     let name = mon.species.data().name;
@@ -1161,8 +1165,9 @@ pub(crate) fn leech_seed_residual<const N: usize>(b: &mut Battle<'_, N>, slot: S
     let max_hp = b.slot_mon(slot).map_or(0, |m| m.max_hp);
     let taken = b.damage(slot, f64::from(max_hp) / 8.0, DamageSource::Indirect);
     if taken > 0 {
-        // The heal's effect is the `leechseed` condition (Big Root).
-        b.heal_rooted(healer, f64::from(taken));
+        // `this.heal(damage, target, pokemon)`: the effect is the `leechseed` condition (Big
+        // Root, Liquid Ooze on the seeded Pokémon).
+        b.heal_rooted_from(healer, f64::from(taken), Some(slot));
     }
 }
 

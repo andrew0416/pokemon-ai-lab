@@ -58,6 +58,9 @@ pub(crate) struct ActiveMove {
     /// A secondary effect ModifyMove appended to the move's own (King's Rock's flinch). Not
     /// part of the comparison: it follows from the user's item.
     added_secondary: Option<Secondary>,
+    /// Parental Bond's `onPrepareHit` made the move hit twice (`move.multihit = 2`,
+    /// `move.multihitType = 'parentalbond'`): the second hit's damage is quartered.
+    parental_bond: bool,
     /// HP taken by the move's hits (Showdown `move.totalDamage`), set once the hits are done.
     total_damage: i32,
     /// Target type after ModifyMove (Showdown `move.target`; Expanding Force widens it).
@@ -172,6 +175,7 @@ impl PartialEq for ActiveMove {
             && self.future_hit == other.future_hit
             && self.bypass_protect == other.bypass_protect
             && self.beat_up == other.beat_up
+            && self.parental_bond == other.parental_bond
     }
 }
 
@@ -202,6 +206,7 @@ impl std::hash::Hash for ActiveMove {
         self.future_hit.hash(state);
         self.bypass_protect.hash(state);
         self.beat_up.hash(state);
+        self.parental_bond.hash(state);
     }
 }
 
@@ -328,6 +333,7 @@ pub(crate) fn run_move<const N: usize>(
             has_sheer_force: false,
             secondary_chance_factor: 1,
             added_secondary: None,
+            parental_bond: false,
             total_damage: 0,
             target: MoveId::NONE.data().target,
             move_type: MoveId::NONE.data().move_type,
@@ -360,6 +366,7 @@ pub(crate) fn run_move<const N: usize>(
         ignore_ability: round_source.unwrap_or(id.data().ignore_ability),
         category: id.data().category,
         infiltrates: false,
+        parental_bond: false,
     });
     let result = run_move_inner(b, user, move_index, target_loc, will_act, round_source);
     if !matches!(result, Ok(MoveStep::Suspended(_))) {
@@ -470,6 +477,7 @@ pub(crate) fn future_move_hit<const N: usize>(
         has_sheer_force: false,
         secondary_chance_factor: 1,
         added_secondary: None,
+        parental_bond: false,
         total_damage: 0,
         target: data.target,
         move_type,
@@ -495,6 +503,7 @@ pub(crate) fn future_move_hit<const N: usize>(
         ignore_ability: false,
         category: data.category,
         infiltrates: false,
+        parental_bond: false,
     });
     b.move_self_switch = false;
     if let HitOutcome::Suspended(_) = try_spread_move_hit(b, user, &mut mv, vec![slot], false)? {
@@ -528,6 +537,7 @@ pub(crate) fn resume_move<const N: usize>(
         ignore_ability: progress.ignore_ability,
         category: progress.mv.category,
         infiltrates: progress.infiltrates,
+        parental_bond: progress.mv.parental_bond,
     });
     b.raw_speed = progress.raw_speed.clone();
     let mut mv = progress.mv.clone();
@@ -645,6 +655,7 @@ fn run_external_move<const N: usize>(
         ignore_ability: data.ignore_ability,
         category: data.category,
         infiltrates: false,
+        parental_bond: false,
     });
     let mut mv = ActiveMove {
         id,
@@ -657,6 +668,7 @@ fn run_external_move<const N: usize>(
         has_sheer_force: false,
         secondary_chance_factor: 1,
         added_secondary: None,
+        parental_bond: false,
         total_damage: 0,
         target: data.target,
         move_type: data.move_type,
@@ -750,6 +762,7 @@ fn run_move_inner<const N: usize>(
         has_sheer_force: false,
         secondary_chance_factor: 1,
         added_secondary: None,
+        parental_bond: false,
         total_damage: 0,
         target: id.data().target,
         move_type: id.data().move_type,
@@ -864,7 +877,10 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
     }
     match b.mon(pokemon).status {
         Status::Sleep => {
-            let time = b.mon(pokemon).status_turns - 1;
+            // `if (pokemon.hasAbility('earlybird')) pokemon.statusState.time--;` before the
+            // usual decrement: Early Bird sleeps half as long.
+            let early_bird = i8::from(b.ability(user) == abilities::EARLY_BIRD);
+            let time = b.mon(pokemon).status_turns - 1 - early_bird;
             b.set_status_turns(pokemon, time);
             if time <= 0 {
                 b.cure_status(pokemon);
@@ -891,6 +907,8 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
         return false;
     }
     if b.volatile(user, Volatile::Flinch).active {
+        // `runEvent('Flinch', pokemon)`: Steadfast.
+        ability_events::steadfast(b, user);
         return false;
     }
     // Disable (priority 7).
@@ -1362,7 +1380,10 @@ fn use_move<const N: usize>(
     if !mv.has_bounced {
         item_events::on_modify_move(b, user, mv.id);
     }
-    mv.added_secondary = item_events::added_secondary(b.item(user), mv.data);
+    // Stench (the user's ability, ModifyMove priority -1, sub-order 7) and King's Rock / Razor
+    // Fang (the item, -1, 8) append the same flinch: whichever comes second finds it there.
+    mv.added_secondary =
+        item_events::added_secondary(b.item(user), b.ability(user) == abilities::STENCH, mv.data);
     // ModifyTarget (`useMoveInner`, before a random target would be drawn): Metal Burst and
     // Comeuppance aim at the slot of the foe that last damaged the user this turn.
     if let Some(scripted) = handlers::modify_target(b, user, mv) {
@@ -1468,6 +1489,7 @@ fn call_move<const N: usize>(
         ignore_ability,
         category: id.data().category,
         infiltrates: false,
+        parental_bond: false,
     });
     let data = id.data();
     let mut mv = ActiveMove {
@@ -1481,6 +1503,7 @@ fn call_move<const N: usize>(
         has_sheer_force: false,
         secondary_chance_factor: 1,
         added_secondary: None,
+        parental_bond: false,
         total_damage: 0,
         target: data.target,
         move_type: data.move_type,
@@ -1552,6 +1575,7 @@ fn bounce_move<const N: usize>(
         ignore_ability: false,
         category: data.category,
         infiltrates: false,
+        parental_bond: false,
     });
     let mut mv = ActiveMove {
         id,
@@ -1564,6 +1588,7 @@ fn bounce_move<const N: usize>(
         has_sheer_force: false,
         secondary_chance_factor: 1,
         added_secondary: None,
+        parental_bond: false,
         total_damage: 0,
         target: data.target,
         move_type: data.move_type,
@@ -1901,6 +1926,12 @@ fn try_spread_move_hit<const N: usize>(
         });
     }
     prepare_hit_ability(b, user, mv);
+    if parental_bond_applies(b, user, mv) {
+        mv.parental_bond = true;
+        if let Some(active) = b.active_move.as_mut() {
+            active.parental_bond = true;
+        }
+    }
 
     // 0. Invulnerability (`hitStepInvulnerabilityEvent`): a semi-invulnerable target is not hit
     //    (a failure for the move) unless its state lets the move through, No Guard is in play,
@@ -2050,6 +2081,10 @@ fn decide_hits<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
     if mv.id == moves::BEAT_UP {
         return mv.beat_up.iter().filter(|&&p| p != 0).count().max(1) as u8;
     }
+    // Parental Bond: `move.multihit = 2`.
+    if mv.parental_bond {
+        return 2;
+    }
     let Some((low, high)) = mv.data.multihit else {
         return 1;
     };
@@ -2072,6 +2107,29 @@ fn decide_hits<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
     } else {
         hits
     }
+}
+
+/// Parental Bond's `onPrepareHit` (the user's ability, `runEvent('PrepareHit')`): `if
+/// (move.category === 'Status' || move.multihit || move.flags['noparentalbond'] ||
+/// move.flags['charge'] || move.flags['futuremove'] || move.spreadHit || move.isZ || move.isMax)
+/// return;` — otherwise the move hits twice ([`ActiveMove::parental_bond`]). `move.spreadHit`:
+/// more than one target when the hit starts ([`ActiveMove::spread`]), so a spread move with one
+/// target left hits twice.
+fn parental_bond_applies<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> bool {
+    let flags = mv.data.flags;
+    b.ability(user) == abilities::PARENTAL_BOND
+        && mv.category != MoveCategory::Status
+        && mv.data.multihit.is_none()
+        && !flags.contains(MoveFlags::NOPARENTALBOND)
+        && !flags.contains(MoveFlags::CHARGE)
+        && !flags.contains(MoveFlags::FUTUREMOVE)
+        && !mv.spread
+        && !mv.data.is_z
+        && !mv.data.is_max
 }
 
 /// The user's ability's `onPrepareHit` (`runEvent('PrepareHit')`, after the move's own
@@ -2652,8 +2710,9 @@ fn hit_loop<const N: usize>(
                 }
                 item_events::AfterMoveSecondaryHandler::Ability => {
                     // Berserk / Anger Shell: `move.multihit && !move.smartTarget ?
-                    // move.totalDamage : lastAttackedBy.damage` (Beat Up counts as multihit).
-                    let damage = if is_multihit(mv.id) && !smart {
+                    // move.totalDamage : lastAttackedBy.damage` (Beat Up and Parental Bond count
+                    // as multihit).
+                    let damage = if (is_multihit(mv.id) || mv.parental_bond) && !smart {
                         total
                     } else {
                         damage
@@ -2734,6 +2793,7 @@ fn spread_move_hit<const N: usize>(
     let data = mv.data;
     // `getMoveHitData(move).typeMod` is (re)computed by this hit's `getDamage`.
     b.hit_type_mod = [[None; N]; 2];
+    b.hit_crit = [[false; N]; 2];
     // 0. `tryPrimaryHitEvent` for every target first: a substitute takes the hit
     //    (`hit_substitute`). Aura Break's `onAnyTryPrimaryHit` (priority 0, before the
     //    substitute's -1) only sets a flag `get_damage` reads.
@@ -2744,6 +2804,8 @@ fn spread_move_hit<const N: usize>(
         if mv.id == moves::SURF {
             super::forme::gulp_missile_catch(b, user);
         }
+        // A Gem's `onSourceTryPrimaryHit` (the user's item, priority 0, after Gulp Missile).
+        item_events::gem_try_primary_hit(b, user, t, mv.category, mv.move_type);
         shielded.push(if substitute_takes_hit(b, user, mv, t) {
             Some(hit_substitute(b, user, mv, t, hit)?)
         } else {
@@ -2774,7 +2836,9 @@ fn spread_move_hit<const N: usize>(
                     if let Some(drain) = data.drain {
                         let amount =
                             (f64::from(dealt) * f64::from(drain.0) / f64::from(drain.1)).round();
-                        b.heal_rooted(user, amount);
+                        // `this.battle.heal(..., pokemon, target, 'drain')`: Big Root, the
+                        // target's Liquid Ooze.
+                        b.heal_rooted_from(user, amount, Some(t));
                     }
                 }
                 Hit::Damage(dealt)
@@ -2899,8 +2963,10 @@ fn spread_move_hit<const N: usize>(
             Some(HitResult::NotFail) | None => {}
         }
         // `runEvent('Hit')`: the target's volatiles (Focus Punch, Beak Blast, Shell Trap;
-        // condition sub-order 2), then its item (Sticky Barb, 8).
+        // condition sub-order 2), its ability (Anger Point, 7), then its item (Sticky Barb,
+        // Enigma Berry, 8).
         handlers::volatile_on_hit(b, user, t, mv);
+        ability_events::anger_point(b, t);
         item_events::on_hit(b, user, t, data);
         // `selfdestruct: 'ifHit'` (Memento, Final Gambit): the user faints once the move reached
         // this target (`damage[i] !== false`, before the effects' result is combined in).
@@ -2968,8 +3034,12 @@ fn spread_move_hit<const N: usize>(
         // move's own, Serene Grace doubles their chance, Covert Cloak (`ModifySecondaries`)
         // drops some, and King's Rock's added flinch comes last (ModifyMove priority -1: after
         // Serene Grace, and even through Sheer Force).
+        // Parental Bond's `onSourceModifySecondaries`: on Secret Power's first hit only flinch
+        // secondaries stay (`move.id === 'secretpower' && move.hit < 2`).
+        let first_bond_hit = mv.parental_bond && mv.id == moves::SECRET_POWER && hit < 2;
         let own: Vec<(&Secondary, u32)> = ability_hooks::secondaries(b, mv, t)
             .into_iter()
+            .filter(|s| !first_bond_hit || s.volatile_status == crate::dex::conditions::FLINCH)
             .map(|s| (s, u32::from(s.chance) * mv.secondary_chance_factor))
             .collect();
         // Fling's appended secondary comes last (its PrepareHit runs after ModifyMove).
@@ -3154,7 +3224,7 @@ fn hit_substitute<const N: usize>(
     }
     if let Some(drain) = mv.data.drain {
         let amount = (f64::from(damage) * f64::from(drain.0) / f64::from(drain.1)).ceil();
-        b.heal_rooted(user, amount);
+        b.heal_rooted_from(user, amount, Some(target));
     }
     handlers::on_after_sub_damage(b, user, mv);
     item_events::after_sub_damage(b, target);
@@ -3579,8 +3649,10 @@ fn get_damage<const N: usize>(
     );
     // ModifyDef / ModifySpD: sandstorm (Rock SpD) and snow (Ice Def), 1.5x applied directly.
     // `WeatherModifyDamage` reads `defender.effectiveWeather()` (Utility Umbrella hides sun and
-    // rain; sand and snow are the same for everyone).
-    let weather = b.weather_for(target);
+    // rain; sand and snow are the same for everyone). The readers are the weathers' handlers, so
+    // a Mega Sol user sees sun ([`Battle::move_weather`]): no sand / snow defense, and Mega Sol's
+    // own `onWeatherModifyDamage` (priority 1, a fast exit) applies sun's modifier once.
+    let weather = b.move_weather(target);
     // `this.hasType('Rock')` / `'Ice'` (an added type counts).
     if defense_stat == Stat::Spd && weather == Weather::Sand && b.has_type(target, Type::Rock) {
         defense = modify(defense, MOD_ONE_POINT_FIVE);
@@ -3671,6 +3743,8 @@ fn get_damage<const N: usize>(
         defense: defense.clamp(1, i32::from(u16::MAX)) as u16,
         base_power_modifier: power_modifier,
         spread: mv.spread,
+        // `move.multihitType === 'parentalbond' && move.hit > 1` (not for a spread hit).
+        parental_bond: mv.parental_bond && hit > 1,
         weather_modifier,
         critical,
         stab_modifier,
@@ -3683,6 +3757,7 @@ fn get_damage<const N: usize>(
         final_modifier,
     };
     let rolls = damage_rolls(input);
+    b.hit_crit[target.side.index()][usize::from(target.slot)] = critical;
     Ok(Planned::Damage(i32::from(b.rng.roll(&rolls, user.side))))
 }
 

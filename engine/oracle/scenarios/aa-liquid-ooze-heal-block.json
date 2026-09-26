@@ -1,0 +1,70 @@
+{
+ "description": "Liquid Ooze against Heal Block: Tentacruel's Heal Block hits both foes, then Jumpluff seeds Swalot and Ferrothorn seeds Tentacruel (Leech Seed 90% each). At the residual the TryHeal handlers of priority 0 go by Speed: Tentacruel's ooze (120) comes before Ferrothorn's Heal Block (40) and hurts it; Jumpluff's Heal Block (130) comes before Swalot's ooze (75) and ends the event, so nothing happens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Jumpluff",
+    "item": "",
+    "ability": "Chlorophyll",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Leech Seed"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Ferrothorn",
+    "item": "",
+    "ability": "Iron Barbs",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Leech Seed"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Swalot",
+    "item": "",
+    "ability": "Liquid Ooze",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Tentacruel",
+    "item": "",
+    "ability": "Liquid Ooze",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Heal Block"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move leechseed 1, move leechseed 2",
+  "p2": "move harden, move healblock"
+ }
+}

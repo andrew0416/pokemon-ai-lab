@@ -1,0 +1,70 @@
+{
+ "description": "Quick Draw: Slowbro-Galar (Speed 50) uses Seismic Toss on the faster Chansey (70), which uses Recover. With the 3/10 Quick Draw draw (a damaging move) Slowbro moves first and Recover heals the damage back; otherwise Recover fails at full HP first and Chansey ends 50 HP down.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Slowbro-Galar",
+    "item": "",
+    "ability": "Quick Draw",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Seismic Toss"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Shuckle",
+    "item": "",
+    "ability": "Sturdy",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Recover"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move seismictoss 1, move harden",
+  "p2": "move recover, move harden"
+ }
+}

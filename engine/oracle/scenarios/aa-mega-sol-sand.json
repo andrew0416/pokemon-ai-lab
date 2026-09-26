@@ -1,0 +1,70 @@
+{
+ "description": "Mega Sol in sand: Mega Meganium's Giga Drain on Tyranitar (Rock) gets no sandstorm Special Defense boost (the weather's handler reads effectiveWeather, which is sun for a Mega Sol user's move). Sand hurts Meganium and Snorlax at the residual.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Meganium",
+    "item": "Meganiumite",
+    "ability": "Overgrow",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Giga Drain"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Tyranitar",
+    "item": "",
+    "ability": "Sand Stream",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move gigadrain 1 mega, move harden",
+  "p2": "move harden, move harden"
+ }
+}
