@@ -268,16 +268,17 @@ fn unsupported_start_handlers_are_rejected() {
     };
 
     let mut s = loaded.state.clone();
-    // Orichalcum Pulse's onStart (it sets sun) is not implemented.
-    s.active_mut(rillaboom).unwrap().ability = abilities::ORICHALCUM_PULSE;
+    // Desolate Land's switch-in handlers (a primal weather, deliberately left out) are not
+    // implemented (Orichalcum Pulse, the earlier example, is since Opus AA).
+    s.active_mut(rillaboom).unwrap().ability = abilities::DESOLATE_LAND;
     match expand_switch_ins(&s) {
         Err(SwitchInError::UnsupportedAbility {
             slot,
             ability,
-            handler: "onStart",
+            handler: "onAnySetWeather",
         }) => {
             assert_eq!(slot, rillaboom);
-            assert_eq!(ability, abilities::ORICHALCUM_PULSE);
+            assert_eq!(ability, abilities::DESOLATE_LAND);
         }
         other => panic!("{other:?}"),
     }

@@ -625,17 +625,50 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// `drain`, `leechseed`, `ingrain`, `aquaring`, `strengthsap`. The amount is normalized as
     /// in `heal` (at least 1, truncated), then `runEvent('TryHeal')` chains `[5324, 4096]` on a
     /// holder of Big Root (Heal Block stops it in `heal`; Ripen only doubles a berry's heal,
-    /// `update::berry_heal`; Liquid Ooze is refused). Returns the HP restored.
+    /// `update::berry_heal`). Returns the HP restored.
     pub fn heal_rooted(&mut self, target: SlotRef, amount: f64) -> i32 {
+        self.heal_rooted_from(target, amount, None)
+    }
+
+    /// [`Battle::heal_rooted`] for a heal whose source is the Pokémon in `source` and whose
+    /// effect Liquid Ooze lists (`drain`, `leechseed`, `strengthsap`). Big Root (priority 1) only
+    /// chains its modifier, applied to what the event returns at its end; the TryHeal handlers
+    /// at priority 0 run by `pokemon.speed`, then sub-order — Heal Block on the healed Pokémon (a
+    /// condition, 2: `return false`, which ends the event) and the source's Liquid Ooze
+    /// (`onSourceTryHeal`, an ability, 7; not breakable, and it acts for a source at 0 HP not yet
+    /// fainted): `this.damage(damage)` to the healed Pokémon with the amount before Big Root's
+    /// modifier (not a move's damage: Magic Guard stops it) and `return 0`. TryHeal comes before
+    /// `heal`'s full-HP check, so the ooze hurts a healer at full HP too.
+    pub fn heal_rooted_from(
+        &mut self,
+        target: SlotRef,
+        amount: f64,
+        source: Option<SlotRef>,
+    ) -> i32 {
         let amount = if amount > 0.0 && amount <= 1.0 {
             1.0
         } else {
             amount
         };
-        let mut amount = amount.trunc() as i32;
-        if self.item(target) == items::BIG_ROOT {
-            amount = super::order::modify(amount, 5324);
+        let amount = amount.trunc() as i32;
+        let ooze = source.filter(|&s| {
+            s != target && self.occupant(s).is_some() && self.ability(s) == abilities::LIQUID_OOZE
+        });
+        if let Some(ooze) = ooze {
+            let heal_block_first = self.volatile(target, Volatile::HealBlock).active
+                && self.event_speed(target) >= self.event_speed(ooze);
+            if !heal_block_first {
+                if amount > 0 && self.alive(target).is_some() {
+                    self.damage(target, f64::from(amount), DamageSource::Indirect);
+                }
+                return 0;
+            }
         }
+        let amount = if self.item(target) == items::BIG_ROOT {
+            super::order::modify(amount, 5324)
+        } else {
+            amount
+        };
         self.heal(target, f64::from(amount))
     }
 
@@ -1693,16 +1726,44 @@ impl<'a, const N: usize> Battle<'a, N> {
         !item.mega_stone.iter().any(|&(from, _)| from == base)
     }
 
-    /// Showdown `takeItem` (Knock Off): removed without becoming `lastItem`. Works on a
-    /// target at 0 HP that has not been processed as fainted yet, as in Showdown.
+    /// Sticky Hold's `onTakeItem` (breakable) for the holder in `slot`: `if (!pokemon.hp ||
+    /// pokemon.item === 'stickybarb') return; if ((source && source !== pokemon) ||
+    /// this.activeMove.id === 'knockoff') return false;` — another Pokémon cannot take its item,
+    /// nor can Knock Off remove it, while it has HP (a Sticky Barb goes).
+    pub fn sticky_hold_keeps(&self, slot: SlotRef, source: Option<SlotRef>) -> bool {
+        let Some(mon) = self.slot_mon(slot) else {
+            return false;
+        };
+        let knock_off = self
+            .active_move
+            .is_some_and(|m| m.id == crate::dex::moves::KNOCK_OFF);
+        self.ability_unless_broken(slot) == abilities::STICKY_HOLD
+            && mon.hp > 0
+            && mon.item != items::STICKY_BARB
+            && (source.is_some_and(|s| s != slot) || knock_off)
+    }
+
+    /// Showdown `takeItem()` without a source (the holder itself: Knock Off, Sticky Barb): see
+    /// [`Battle::take_item_by`].
     pub fn take_item(&mut self, slot: SlotRef) -> bool {
+        self.take_item_by(slot, None)
+    }
+
+    /// Showdown `takeItem(source)`: removed without becoming `lastItem`. Works on a target at 0
+    /// HP that has not been processed as fainted yet, as in Showdown. `source` is who takes it
+    /// (Thief, Bug Bite, Magician, Pickpocket, ...); `None` is the holder itself.
+    pub fn take_item_by(&mut self, slot: SlotRef, source: Option<SlotRef>) -> bool {
         let Some(pokemon) = self.occupant(slot) else {
             return false;
         };
         if self.mon(pokemon).item.is_none() {
             return false;
         }
-        // TakeItem: the holder's ability (Unburden) before the item's own handler.
+        // TakeItem: the holder's ability (Sticky Hold, Unburden) before the item's own handler;
+        // Sticky Hold's `false` ends the event.
+        if self.sticky_hold_keeps(slot, source) {
+            return false;
+        }
         super::abilities::unburden(self, slot);
         if !self.item_can_be_taken(slot) {
             return false;

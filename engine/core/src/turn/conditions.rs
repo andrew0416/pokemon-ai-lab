@@ -1011,8 +1011,9 @@ pub(crate) fn leech_seed_residual<const N: usize>(b: &mut Battle<'_, N>, slot: S
     let max_hp = b.slot_mon(slot).map_or(0, |m| m.max_hp);
     let taken = b.damage(slot, f64::from(max_hp) / 8.0, DamageSource::Indirect);
     if taken > 0 {
-        // The heal's effect is the `leechseed` condition (Big Root).
-        b.heal_rooted(healer, f64::from(taken));
+        // `this.heal(damage, target, pokemon)`: the effect is the `leechseed` condition (Big
+        // Root, Liquid Ooze on the seeded Pokémon).
+        b.heal_rooted_from(healer, f64::from(taken), Some(slot));
     }
 }
 

@@ -2578,7 +2578,9 @@ fn spread_move_hit<const N: usize>(
                     if let Some(drain) = data.drain {
                         let amount =
                             (f64::from(dealt) * f64::from(drain.0) / f64::from(drain.1)).round();
-                        b.heal_rooted(user, amount);
+                        // `this.battle.heal(..., pokemon, target, 'drain')`: Big Root, the
+                        // target's Liquid Ooze.
+                        b.heal_rooted_from(user, amount, Some(t));
                     }
                 }
                 Hit::Damage(dealt)
@@ -2922,7 +2924,7 @@ fn hit_substitute<const N: usize>(
     }
     if let Some(drain) = mv.data.drain {
         let amount = (f64::from(damage) * f64::from(drain.0) / f64::from(drain.1)).ceil();
-        b.heal_rooted(user, amount);
+        b.heal_rooted_from(user, amount, Some(target));
     }
     handlers::on_after_sub_damage(b, user, mv);
     item_events::after_sub_damage(b, target);

@@ -2105,6 +2105,17 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // Power Construct: `onResidual` in `forme::residual` (Zygarde-Complete; its faint, which
     // regresses the forme, is refused in `Battle::faint_messages`).
     (abilities::POWER_CONSTRUCT, &["onResidual"]),
+    // Opus AA unit 3. Surge Surfer: `onModifySpe` in `Battle::speed_stat`. Orichalcum Pulse,
+    // Hadron Engine: `onStart` in `switching::START_HANDLERS` (sun / Electric Terrain),
+    // `onModifyAtk` / `onModifySpA` in `abilities::attack_handlers`. Liquid Ooze:
+    // `onSourceTryHeal` in `Battle::heal_rooted_from` (drain, Leech Seed, Strength Sap). Sticky
+    // Hold: `onTakeItem` in `Battle::take_item_by` (`Battle::sticky_hold_keeps`); Trick and
+    // Switcheroo fail on it in their `onTryImmunity`.
+    (abilities::SURGE_SURFER, &["onModifySpe"]),
+    (abilities::ORICHALCUM_PULSE, &["onModifyAtk", "onStart"]),
+    (abilities::HADRON_ENGINE, &["onModifySpA", "onStart"]),
+    (abilities::LIQUID_OOZE, &["onSourceTryHeal"]),
+    (abilities::STICKY_HOLD, &["onTakeItem"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

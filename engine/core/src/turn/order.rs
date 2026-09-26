@@ -71,6 +71,11 @@ impl<const N: usize> Battle<'_, N> {
         if doubled {
             chain.push(2 * MOD_ONE);
         }
+        // Surge Surfer: `if (this.field.isTerrain('electricterrain')) return
+        // this.chainModify(2)` (the field's terrain: grounded or not; no `TryTerrain` handler).
+        if ability == abilities::SURGE_SURFER && self.terrain() == Terrain::Electric {
+            chain.push(2 * MOD_ONE);
+        }
         // Quick Feet: `if (pokemon.status) return this.chainModify(1.5)`.
         let quick_feet = ability == abilities::QUICK_FEET;
         if quick_feet && mon.status != Status::None {

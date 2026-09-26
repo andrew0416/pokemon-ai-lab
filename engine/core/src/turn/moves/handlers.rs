@@ -935,7 +935,7 @@ pub(super) fn on_after_hit<const N: usize>(
     // `target.takeItem(source)` and the item goes to the user (`pass_item`; gems are not
     // supported).
     if (mv.id == moves::COVET || mv.id == moves::THIEF) && b.raw_item(user).is_none() {
-        pass_item(b, target, user, mv.data.name)?;
+        pass_item(b, target, user, mv.data.name, Some(user))?;
     }
     // Ice Spinner: `this.field.clearTerrain();`
     if mv.id == moves::ICE_SPINNER {
@@ -979,6 +979,7 @@ fn pass_item<const N: usize>(
     giver: SlotRef,
     taker: SlotRef,
     by: &str,
+    source: Option<SlotRef>,
 ) -> Result<bool, TurnError> {
     let (Some(holder), item) = (b.occupant(giver), b.raw_item(giver)) else {
         return Ok(false);
@@ -993,7 +994,7 @@ fn pass_item<const N: usize>(
             item.data().handlers
         )));
     }
-    if !b.take_item(giver) {
+    if !b.take_item_by(giver, source) {
         return Ok(false);
     }
     if item == items::MIRROR_HERB {
@@ -2349,7 +2350,8 @@ pub(super) fn on_hit<const N: usize>(
                 let mut drop = NO_BOOSTS;
                 drop[0] = -1;
                 let boosted = b.boost_by(target, &drop, Some(user), BoostEffect::Move(mv.id));
-                let healed = b.heal_rooted(user, f64::from(attack)) > 0;
+                // `this.heal(atk, source, target)`: Big Root, the target's Liquid Ooze.
+                let healed = b.heal_rooted_from(user, f64::from(attack), Some(target)) > 0;
                 success(healed || boosted)
             }
         }
@@ -2438,7 +2440,7 @@ pub(super) fn on_hit<const N: usize>(
             if let Some(eater) = b.alive(user).filter(|_| item.data().is_berry) {
                 let empty = item.data().handlers.is_empty()
                     || super::super::items::resist_berry(item).is_some();
-                if b.take_item(target) {
+                if b.take_item_by(target, Some(user)) {
                     if !empty && !super::super::update::berry_on_eat(b, user, eater, item) {
                         return Err(b.unsupported(format!(
                             "{} eating {}",
@@ -2463,7 +2465,7 @@ pub(super) fn on_hit<const N: usize>(
         moves::INCINERATE | moves::CORROSIVE_GAS => {
             let data = b.item(target).data();
             if mv.id == moves::CORROSIVE_GAS || data.is_berry || data.is_gem {
-                b.take_item(target);
+                b.take_item_by(target, Some(user));
             }
             HitResult::Success
         }
@@ -2693,7 +2695,8 @@ pub(super) fn on_hit<const N: usize>(
             if !b.raw_item(target).is_none() {
                 HitResult::Failure
             } else {
-                success(pass_item(b, user, target, mv.data.name)?)
+                // `source.takeItem()`: the holder takes its own (Sticky Hold lets it).
+                success(pass_item(b, user, target, mv.data.name, None)?)
             }
         }
         // Acupressure: one of the target's stats below +6 (`for (stat in target.boosts)`: Atk, Def,
@@ -2969,7 +2972,8 @@ pub(crate) fn sleep_talk_calls(id: MoveId) -> bool {
 /// species); then `target.setItem(myItem)` and `source.setItem(yourItem)`, each running the
 /// item's `Start` on its new holder ([`trick_item_start`]). Each `takeItem` of a held item first
 /// runs the holder's ability TakeItem handler (Unburden adds its volatile even if the trade then
-/// fails; Sticky Hold is refused on the field) and then the item's `End` on its old holder.
+/// fails; a target with Sticky Hold made the move fail in `onTryImmunity`, and the user's own
+/// `source.takeItem()` is no other Pokémon's) and then the item's `End` on its old holder.
 /// Items with `Start` / `End` handlers move only if [`trick_moves_item`]; an item with another
 /// TakeItem handler is not implemented.
 fn trick<const N: usize>(

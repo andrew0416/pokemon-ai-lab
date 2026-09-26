@@ -163,6 +163,19 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         StartEffect::Terrain(Terrain::Psychic),
     ),
     (abilities::INTIMIDATE, &["onStart"], StartEffect::Intimidate),
+    // Opus AA: Orichalcum Pulse's `onStart` sets sun (`field.setWeather('sunnyday')`, as Drought),
+    // Hadron Engine's Electric Terrain (as Electric Surge); their stat modifiers are in
+    // `abilities::attack_handlers`.
+    (
+        abilities::ORICHALCUM_PULSE,
+        &["onModifyAtk", "onStart"],
+        StartEffect::Weather(Weather::Sun),
+    ),
+    (
+        abilities::HADRON_ENGINE,
+        &["onModifySpA", "onStart"],
+        StartEffect::Terrain(Terrain::Electric),
+    ),
     // `onSwitchIn` logs and calls `onStart`; `onStart` and `onEnd` run
     // `eachEvent('WeatherChange')`.
     (

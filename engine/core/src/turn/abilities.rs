@@ -1468,7 +1468,7 @@ fn steal_item<const N: usize>(
             item.data().handlers
         )));
     }
-    if !b.take_item(victim) {
+    if !b.take_item_by(victim, Some(thief)) {
         return Ok(false);
     }
     if item == items::MIRROR_HERB {
@@ -1567,7 +1567,7 @@ pub(crate) fn magician<const N: usize>(
     }
     let targets: Vec<SlotRef> = hit_targets.into_iter().filter(|&t| t != user).collect();
     let order = speed_sorted(b, targets, |b, s| {
-        !b.raw_item(s).is_none() && b.item_can_be_taken(s)
+        !b.raw_item(s).is_none() && b.item_can_be_taken(s) && !b.sticky_hold_keeps(s, Some(user))
     });
     for victim in order {
         if steal_item(b, victim, user)? {
@@ -2302,6 +2302,8 @@ pub(crate) fn attack_handlers<const N: usize>(
 ///   `newly_switched` is read.
 /// - Plus, Minus (Special Attack only): an ally (`pokemon.allies()`: not the holder, not at
 ///   0 HP) with Plus or Minus gives `chainModify(1.5)`.
+/// - Orichalcum Pulse (Attack in the holder's sun), Hadron Engine (Special Attack on Electric
+///   Terrain): `chainModify([5461, 4096])`.
 fn own_attack_modifier<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
@@ -2335,6 +2337,17 @@ fn own_attack_modifier<const N: usize>(
                 ally != user && [abilities::PLUS, abilities::MINUS].contains(&b.ability(ally))
             });
             (!physical && partner).then_some(MOD_ONE_POINT_FIVE)
+        }
+        // Orichalcum Pulse (Attack only): `if (['sunnyday', 'desolateland'].includes(
+        // pokemon.effectiveWeather())) return this.chainModify([5461, 4096]);` (Utility Umbrella
+        // hides the sun).
+        a if a == abilities::ORICHALCUM_PULSE => (physical
+            && matches!(b.weather_for(user), Weather::Sun | Weather::HarshSun))
+        .then_some(5461),
+        // Hadron Engine (Special Attack only): `if (this.field.isTerrain('electricterrain'))
+        // return this.chainModify([5461, 4096]);`.
+        a if a == abilities::HADRON_ENGINE => {
+            (!physical && b.terrain() == crate::field::Terrain::Electric).then_some(5461)
         }
         _ => None,
     }
