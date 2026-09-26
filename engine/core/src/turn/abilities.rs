@@ -361,6 +361,7 @@ pub(crate) fn has_residual(ability: AbilityId) -> bool {
         abilities::SLOW_START,
         abilities::CUD_CHEW,
         abilities::BAD_DREAMS,
+        abilities::OPPORTUNIST,
     ]
     .contains(&ability)
 }
@@ -372,6 +373,7 @@ pub(crate) fn has_residual(ability: AbilityId) -> bool {
 ///   turn started, `Battle::active_since_turn_start`).
 /// - Cud Chew: the remembered berry's counter ([`cud_chew_residual`]).
 /// - Bad Dreams: every foe not fainted that is asleep or has Comatose loses 1/8 of its max HP.
+/// - Opportunist (order 29): its copied raises ([`opportunist_use`]).
 pub(crate) fn on_residual<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
@@ -379,6 +381,10 @@ pub(crate) fn on_residual<const N: usize>(
 ) -> Result<(), super::TurnError> {
     if ability == abilities::CUD_CHEW {
         return cud_chew_residual(b, slot);
+    }
+    if ability == abilities::OPPORTUNIST {
+        opportunist_use(b, slot);
+        return Ok(());
     }
     // Bad Dreams: `for (const target of pokemon.foes()) if (target.status === 'slp' ||
     // target.hasAbility('comatose')) this.damage(target.baseMaxhp / 8, target, pokemon)`.
@@ -581,6 +587,138 @@ pub(crate) fn dancers<const N: usize>(
         ));
     }
     Ok(out.into_iter().map(|(s, p, _)| (s, p)).collect())
+}
+
+// ---- Opportunist, Receiver / Power of Alchemy -------------------------------------------------
+
+/// The copied raises Opportunist's [`Volatile::Opportunist`] holds (see there).
+pub(crate) fn opportunist_boosts(state: VolatileState) -> [i8; crate::state::BOOST_COUNT] {
+    let mut out = NO_BOOSTS;
+    for (stat, value) in out.iter_mut().enumerate() {
+        let bits = match stat {
+            0..=3 => state.counter >> (4 * stat),
+            4 | 5 => u16::from(state.hidden) >> (4 * (stat - 4)),
+            _ => u16::from(state.time),
+        };
+        *value = (bits & 0xf) as i8;
+    }
+    out
+}
+
+/// [`Volatile::Opportunist`] holding `boosts` (each 0..=12).
+fn opportunist_state(boosts: &[i8; crate::state::BOOST_COUNT]) -> VolatileState {
+    let nibble = |stat: usize| boosts[stat].clamp(0, 12) as u16;
+    VolatileState {
+        active: true,
+        counter: (0..4).map(|s| nibble(s) << (4 * s)).sum(),
+        hidden: (nibble(4) | (nibble(5) << 4)) as u8,
+        time: nibble(6) as u8,
+        ..VolatileState::NONE
+    }
+}
+
+/// Opportunist's `onFoeAfterBoost` after `target` got `boost` (after the cap and TryBoost) from
+/// `effect`: unless the effect is Opportunist or Mirror Herb, every active foe of the target
+/// holding Opportunist (as it acts) adds the positive stages to its copied raises (an empty
+/// table changes nothing when used, so none is kept).
+pub(crate) fn opportunist_after_boost<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    boost: &[i8; crate::state::BOOST_COUNT],
+    effect: BoostEffect,
+) {
+    if effect == BoostEffect::Ability(abilities::OPPORTUNIST)
+        || effect == BoostEffect::Item(items::MIRROR_HERB)
+        || !boost.iter().any(|&stage| stage > 0)
+    {
+        return;
+    }
+    for holder in b.alive_slots(target.side.other()) {
+        if b.ability(holder) != abilities::OPPORTUNIST {
+            continue;
+        }
+        let state = b.volatile(holder, Volatile::Opportunist);
+        let mut copied = if state.active {
+            opportunist_boosts(state)
+        } else {
+            NO_BOOSTS
+        };
+        for (total, &stage) in copied.iter_mut().zip(boost) {
+            if stage > 0 {
+                *total = (*total + stage).min(12);
+            }
+        }
+        b.set_volatile_state(holder, Volatile::Opportunist, opportunist_state(&copied));
+    }
+}
+
+/// Opportunist's `onAnySwitchIn` (priority -3), `onAnyAfterMega`, `onAnyAfterMove` and
+/// `onResidual` (order 29) for its holder in `slot`: with copied raises, `this.boost(boosts,
+/// holder)` (its effect is Opportunist, which no Opportunist or Mirror Herb copies) and they are
+/// forgotten. Nothing while the ability is suppressed (the raises wait).
+pub(crate) fn opportunist_use<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.ability(slot) != abilities::OPPORTUNIST {
+        return;
+    }
+    let state = b.volatile(slot, Volatile::Opportunist);
+    if !state.active {
+        return;
+    }
+    b.delete_volatile(slot, Volatile::Opportunist);
+    if b.alive(slot).is_some() {
+        let boosts = opportunist_boosts(state);
+        b.boost_by(
+            slot,
+            &boosts,
+            Some(slot),
+            BoostEffect::Ability(abilities::OPPORTUNIST),
+        );
+    }
+}
+
+/// Receiver's and Power of Alchemy's `onAllyFaint` when the Pokémon in `fainted` (on the holder's
+/// side, already gone from its slot) fainted with `ability` (`target.getAbility()` while it still
+/// had it): a holder with HP (as its ability acts) takes the ability unless it is `noreceiver` or
+/// No Ability (`setAbility(ability, target)`: the holder's own `cantsuppress` or the new one's
+/// fails, as does Ability Shield (`SetAbility`); then the old ability's `End`, the new one with a
+/// fresh ability state, and its `Start`).
+pub(crate) fn receiver<const N: usize>(
+    b: &mut Battle<'_, N>,
+    fainted: SlotRef,
+    ability: AbilityId,
+) -> Result<(), super::TurnError> {
+    use crate::instruction::Instruction;
+    if ability.data().flags.contains(AbilityFlags::NORECEIVER) || ability == abilities::NO_ABILITY {
+        return Ok(());
+    }
+    for holder in b.alive_slots(fainted.side) {
+        if holder == fainted
+            || ![abilities::RECEIVER, abilities::POWER_OF_ALCHEMY].contains(&b.ability(holder))
+        {
+            continue;
+        }
+        let old = b.raw_ability(holder);
+        let locked = |a: AbilityId| a.data().flags.contains(AbilityFlags::CANTSUPPRESS);
+        if locked(ability) || locked(old) || b.item(holder) == items::ABILITY_SHIELD {
+            continue;
+        }
+        if !super::support::ability_supported_on_field(ability) {
+            return Err(b.unsupported(format!(
+                "Receiver gaining {} ({:?})",
+                ability.data().name,
+                ability.data().handlers
+            )));
+        }
+        super::switching::end_ability(b, holder, old)?;
+        let pokemon = b.occupant(holder).expect("alive");
+        b.apply(Instruction::SetAbility {
+            target: pokemon,
+            old,
+            new: ability,
+        });
+        super::switching::start_ability(b, holder, ability)?;
+    }
+    Ok(())
 }
 
 /// The ability of the Pokémon in `holder` as the handlers of `user`'s move see it. Showdown

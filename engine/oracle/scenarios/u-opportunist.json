@@ -1,0 +1,70 @@
+{
+ "description": "Opportunist copies the foes' raises at the move's AfterMove: Tauros's Swords Dance (+2 Atk), then Garchomp's Dragon Dance (+1 Atk, +1 Spe); Garchomp's Mirror Herb does not copy Opportunist's own boosts.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Espathra",
+    "item": "",
+    "ability": "Opportunist",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Tauros",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Swords Dance"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Garchomp",
+    "item": "Mirror Herb",
+    "ability": "Rough Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Dragon Dance"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move harden, move harden",
+  "p2": "move swordsdance, move dragondance"
+ }
+}

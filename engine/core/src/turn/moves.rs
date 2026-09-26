@@ -552,6 +552,10 @@ fn run_move_tail<const N: usize>(
         .is_some_and(|m| b.occupant(m.user) == Some(m.pokemon))
     {
         item_events::any_after_move(b, user);
+        // Opportunist's `onAnyAfterMove` (each acts on its own holder).
+        for slot in b.all_alive() {
+            ability_events::opportunist_use(b, slot);
+        }
     }
     // Dancer, after AfterMove (`move.flags['dance'] && moveDidSomething && !move.isExternal`).
     if !b.external_move {

@@ -556,6 +556,21 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onBeforeMove", "onStart"],
         StartEffect::Truant,
     ),
+    // Opus U. Opportunist: no `onStart`; its `onAnySwitchIn` is `run_switch_in`'s
+    // (`SwitchInHandler::OpportunistAny`), the rest in `abilities::opportunist_*`.
+    (
+        abilities::OPPORTUNIST,
+        &[
+            "onAnyAfterMega",
+            "onAnyAfterMove",
+            "onAnyAfterTerastallization",
+            "onAnySwitchIn",
+            "onEnd",
+            "onFoeAfterBoost",
+            "onResidual",
+        ],
+        StartEffect::None,
+    ),
 ];
 
 /// What `ability` does when it starts, or `None` if it has a switch-in handler that is not
@@ -793,6 +808,8 @@ enum SwitchInHandler {
     PastelVeilAny,
     /// Commander's `onAnySwitchIn`: its `onUpdate` for the holder.
     CommanderAny,
+    /// Opportunist's `onAnySwitchIn` (priority -3): its copied raises.
+    OpportunistAny,
 }
 
 /// Showdown `runSwitch` for the Pokémon that just switched in: one `fieldEvent('SwitchIn')`
@@ -825,8 +842,9 @@ pub(crate) fn run_switch_in<const N: usize>(
         handlers.push((0, slot, SUB_SLOT_CONDITION, SwitchInHandler::SlotConditions));
         handlers.push((0, slot, SUB_SIDE_CONDITION, SwitchInHandler::Hazards));
         // `getCallback`: an ability with `onAnySwitchIn` has no `onStart` fallback in the
-        // SwitchIn event (Commander; Pastel Veil's are the same handler at the same priority).
-        if mon.ability != abilities::COMMANDER {
+        // SwitchIn event (Commander, Opportunist; Pastel Veil's are the same handler at the same
+        // priority).
+        if mon.ability != abilities::COMMANDER && mon.ability != abilities::OPPORTUNIST {
             handlers.push((
                 switch_in_priority(mon.ability),
                 slot,
@@ -848,6 +866,14 @@ pub(crate) fn run_switch_in<const N: usize>(
         }
         if !newcomers.contains(&slot) && mon.ability == abilities::PASTEL_VEIL {
             handlers.push((0, slot, SUB_ABILITY, SwitchInHandler::PastelVeilAny));
+        }
+        // Opportunist's `onAnySwitchIn` (priority -3) for every active holder.
+        if mon.ability == abilities::OPPORTUNIST {
+            let priority = super::abilities::priority(
+                mon.ability.data().event_orders,
+                "onAnySwitchInPriority",
+            );
+            handlers.push((priority, slot, SUB_ABILITY, SwitchInHandler::OpportunistAny));
         }
         // Commander's `onAnySwitchIn` (priority -2) for every active holder, the newcomers
         // included.
@@ -923,6 +949,7 @@ pub(crate) fn run_switch_in<const N: usize>(
                     super::abilities::commander_update(b, slot);
                 }
             }
+            SwitchInHandler::OpportunistAny => super::abilities::opportunist_use(b, slot),
         }
     }
     Ok(())
@@ -1204,6 +1231,11 @@ pub(crate) fn end_ability<const N: usize>(
     // Slow Start's `onEnd` only logs; its `abilityState.counter` goes with the ability.
     if ability == abilities::SLOW_START {
         b.delete_volatile(slot, Volatile::SlowStart);
+        return Ok(());
+    }
+    // Opportunist's `onEnd`: `delete this.effectState.boosts`.
+    if ability == abilities::OPPORTUNIST {
+        b.delete_volatile(slot, Volatile::Opportunist);
         return Ok(());
     }
     // Cud Chew and Ripen (no `onEnd`): their `abilityState.berry` / `.berryWeaken` go with the

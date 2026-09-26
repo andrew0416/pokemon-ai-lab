@@ -1806,6 +1806,27 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     ),
     // Opus U. Bad Dreams: `onResidual` in `abilities::on_residual`.
     (abilities::BAD_DREAMS, &["onResidual"]),
+    // Opus U. Opportunist: `onFoeAfterBoost` in `abilities::opportunist_after_boost` (from
+    // `Battle::boost_by`); `onAnySwitchIn` (`switching::run_switch_in`), `onAnyAfterMega`
+    // (`mega`), `onAnyAfterMove` (`moves::run_move_tail`) and `onResidual`
+    // (`abilities::on_residual`) in `abilities::opportunist_use`; `onEnd` in
+    // `switching::end_ability`. `onAnyAfterTerastallization`: Terastallization is off.
+    (
+        abilities::OPPORTUNIST,
+        &[
+            "onAnyAfterMega",
+            "onAnyAfterMove",
+            "onAnyAfterTerastallization",
+            "onAnySwitchIn",
+            "onEnd",
+            "onFoeAfterBoost",
+            "onResidual",
+        ],
+    ),
+    // Opus U. Receiver / Power of Alchemy: `onAllyFaint` in `abilities::receiver` (from
+    // `Battle::faint_messages`).
+    (abilities::RECEIVER, &["onAllyFaint"]),
+    (abilities::POWER_OF_ALCHEMY, &["onAllyFaint"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

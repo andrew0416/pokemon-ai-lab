@@ -632,6 +632,9 @@ impl<'a, const N: usize> Battle<'a, N> {
             // left below (at 0 HP it is in no target list, and its `ending` excludes it).
             let gas_ends = self.raw_ability(slot) == abilities::NEUTRALIZING_GAS
                 && !self.volatile(slot, Volatile::NeutralizingGasEnding).active;
+            // Receiver / Power of Alchemy (`onAllyFaint`) take `target.getAbility()`, the one it
+            // has before `clearVolatile` reverts it.
+            let fainted_ability = self.raw_ability(slot);
             // clearVolatile: the ability and types revert; the slot empties (isActive = false).
             self.clear_volatile(pokemon);
             let previous = self.state.slot(slot).clone();
@@ -650,6 +653,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             // once the faint counts as processed (`pokemonLeft` dropped: `boost` needs
             // `foePokemonLeft()`).
             super::abilities::soul_heart(self, &hearts);
+            super::abilities::receiver(self, slot, fainted_ability)?;
             self.record_faint(pokemon.side);
             if gas_ends {
                 super::abilities::neutralizing_gas_end(self, None)?;
@@ -1473,8 +1477,9 @@ impl<'a, const N: usize> Battle<'a, N> {
             );
         }
         // AfterBoost of items (after the target's ability): Adrenaline Orb, the foes' Mirror
-        // Herbs.
+        // Herbs; the foes' Opportunist (`onFoeAfterBoost`; each only adds to its own copies).
         super::items::after_boost(self, target, &boost, effect, atk_capped_to_zero);
+        super::abilities::opportunist_after_boost(self, target, &boost, effect);
         // `if (success)`: `statsRaisedThisTurn` / `statsLoweredThisTurn` from the boost table
         // that was applied (after the cap and TryBoost), while a move reads them.
         if changed {

@@ -259,9 +259,14 @@ pub enum Volatile {
     /// resist berry: the holder's next hit taken is halved once more). No duration; hidden in
     /// the canonical state.
     RipenWeaken,
+    /// Not a Showdown volatile: Opportunist's `effectState.boosts`, the foes' raises it copied
+    /// and has not used yet: 4 bits per stat (0..=12, more cannot change a stage), Atk..SpD in
+    /// `counter`, Spe and accuracy in `hidden`, evasion in `time`
+    /// (`abilities::opportunist_boosts`). No duration; hidden in the canonical state.
+    Opportunist,
 }
 
-pub const VOLATILE_COUNT: usize = 80;
+pub const VOLATILE_COUNT: usize = 81;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -345,6 +350,7 @@ impl Volatile {
         Volatile::Truant,
         Volatile::CudChew,
         Volatile::RipenWeaken,
+        Volatile::Opportunist,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -432,7 +438,8 @@ impl Volatile {
             | Volatile::SlowStart
             | Volatile::Truant
             | Volatile::CudChew
-            | Volatile::RipenWeaken => ConditionId::NONE,
+            | Volatile::RipenWeaken
+            | Volatile::Opportunist => ConditionId::NONE,
         }
     }
 
@@ -519,6 +526,7 @@ impl Volatile {
             Volatile::Truant => "truant",
             Volatile::CudChew => "cudchewberry",
             Volatile::RipenWeaken => "berryweaken",
+            Volatile::Opportunist => "opportunistboosts",
         }
     }
 
@@ -614,7 +622,8 @@ impl Volatile {
             | Volatile::SlowStart
             | Volatile::Truant
             | Volatile::CudChew
-            | Volatile::RipenWeaken => 0,
+            | Volatile::RipenWeaken
+            | Volatile::Opportunist => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -651,7 +660,8 @@ impl Volatile {
             | Volatile::NeutralizingGasEnding
             | Volatile::SlowStart
             | Volatile::CudChew
-            | Volatile::RipenWeaken => None,
+            | Volatile::RipenWeaken
+            | Volatile::Opportunist => None,
             // Two-turn move: the target location is not a canonical field.
             Volatile::Roost
             | Volatile::HelpingHand
@@ -847,6 +857,7 @@ mod tests {
                         | Volatile::Truant
                         | Volatile::CudChew
                         | Volatile::RipenWeaken
+                        | Volatile::Opportunist
                 ));
                 continue;
             }
