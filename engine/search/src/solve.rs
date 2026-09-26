@@ -21,7 +21,7 @@ use std::time::{Duration, Instant};
 use lab_engine::eval::Evaluator;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::{BattleResult, SideId, State};
-use lab_engine::turn::{Suspension, TurnError};
+use lab_engine::turn::{EnumerateOptions, RollMode, Suspension, TurnError};
 
 use crate::choice::Choice;
 use crate::game::{self, Decision, Pruning};
@@ -52,6 +52,11 @@ pub struct Config {
     pub depth: u32,
     pub chance: Chance,
     pub pruning: Pruning,
+    /// Which damage rolls the enumeration branches on. The default is
+    /// [`RollMode::Extremes`]: a realistic turn with two spread moves has millions of exact
+    /// outcomes (distinct HP tuples), two rolls per hit keep it in the thousands, and a
+    /// worst-case value sees the true worst roll whenever the value is monotone in damage.
+    pub rolls: RollMode,
     /// Value every root choice fully instead of cutting it off once it falls below the best.
     pub exact_lines: bool,
     /// Stop with [`SearchError::Budget`] after this many turn enumerations.
@@ -59,6 +64,11 @@ pub struct Config {
 }
 
 impl Config {
+    /// The enumeration options the config asks for.
+    pub fn enumerate_options(&self) -> EnumerateOptions {
+        EnumerateOptions { rolls: self.rolls }
+    }
+
     pub fn new(ruleset: Ruleset, us: SideId) -> Config {
         Config {
             ruleset,
@@ -66,6 +76,7 @@ impl Config {
             depth: 1,
             chance: Chance::Expect,
             pruning: Pruning::Sensible,
+            rolls: RollMode::Extremes,
             exact_lines: false,
             max_turns: None,
         }
@@ -342,7 +353,14 @@ impl<'e, const N: usize, E: Evaluator<N>> Solver<'e, N, E> {
             }
         }
         self.turns += 1;
-        let outcomes = game::transitions(state, self.config.ruleset, decision, suspension, pair)?;
+        let outcomes = game::transitions(
+            state,
+            self.config.ruleset,
+            self.config.enumerate_options(),
+            decision,
+            suspension,
+            pair,
+        )?;
         match self.config.chance {
             Chance::Worst => {
                 let mut worst = f32::INFINITY;

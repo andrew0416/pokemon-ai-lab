@@ -50,6 +50,8 @@ use crate::volatile::Volatile;
 
 use battle::Battle;
 use branch::Chooser;
+
+pub use branch::RollMode;
 use order::{ORDER_MEGA, ORDER_MOVE, ORDER_SWITCH};
 use queue::{Action, ActionKind};
 
@@ -98,6 +100,13 @@ impl fmt::Display for TurnError {
 
 impl std::error::Error for TurnError {}
 
+/// How a turn is enumerated (WORKPLAN F18). The default is the exact distribution.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub struct EnumerateOptions {
+    /// Which damage rolls to branch on; anything but [`RollMode::Full`] approximates.
+    pub rolls: RollMode,
+}
+
 /// Every outcome of the turn in which the sides choose `choices` (side one first). `state`
 /// is left unchanged. Probabilities sum to 1; outcomes are in first-reached order.
 pub fn enumerate_turn<const N: usize>(
@@ -105,9 +114,19 @@ pub fn enumerate_turn<const N: usize>(
     ruleset: Ruleset,
     choices: [JointAction<N>; 2],
 ) -> Result<Vec<Outcome>, TurnError> {
+    enumerate_turn_with(state, ruleset, choices, EnumerateOptions::default())
+}
+
+/// [`enumerate_turn`] with `options`.
+pub fn enumerate_turn_with<const N: usize>(
+    state: &mut State<N>,
+    ruleset: Ruleset,
+    choices: [JointAction<N>; 2],
+    options: EnumerateOptions,
+) -> Result<Vec<Outcome>, TurnError> {
     let choices = check_turn(state, ruleset, &choices)?;
     let start = Pending::new(initial_queue(state, &choices));
-    let endings = enumerate_stages(state, start, run_stage)?;
+    let endings = enumerate_stages(state, start, options, run_stage)?;
     Ok(outcomes(state, endings, Suspension))
 }
 
@@ -123,10 +142,20 @@ pub fn resume_turn<const N: usize>(
     suspension: &Suspension,
     choices: [[Option<u8>; N]; 2],
 ) -> Result<Vec<Outcome>, TurnError> {
+    resume_turn_with(state, suspension, choices, EnumerateOptions::default())
+}
+
+/// [`resume_turn`] with `options`.
+pub fn resume_turn_with<const N: usize>(
+    state: &mut State<N>,
+    suspension: &Suspension,
+    choices: [[Option<u8>; N]; 2],
+    options: EnumerateOptions,
+) -> Result<Vec<Outcome>, TurnError> {
     let switches = check_mid_turn_switches(state, &choices)?;
     let mut start = suspension.0.clone();
     start.switches = switches;
-    let endings = enumerate_stages(state, start, run_stage)?;
+    let endings = enumerate_stages(state, start, options, run_stage)?;
     Ok(outcomes(state, endings, Suspension))
 }
 
@@ -242,7 +271,7 @@ pub fn enumerate_start<const N: usize>(state: &mut State<N>) -> Result<Vec<Outco
     let leads: Vec<SlotRef> = State::<N>::slot_refs()
         .filter(|&r| state.active_ref(r).is_some())
         .collect();
-    let endings = enumerate_stages(state, (), |b, _| {
+    let endings = enumerate_stages(state, (), EnumerateOptions::default(), |b, _| {
         for &slot in &leads {
             let pokemon = b.occupant(slot).expect("a lead");
             if let Some(why) = switching_problem_at_start(b, pokemon) {
@@ -299,7 +328,7 @@ pub fn enumerate_replacements<const N: usize>(
     choices: [[Option<u8>; N]; 2],
 ) -> Result<Vec<Outcome>, TurnError> {
     check_replacements(state, &choices)?;
-    let endings = enumerate_stages(state, (), |b, _| {
+    let endings = enumerate_stages(state, (), EnumerateOptions::default(), |b, _| {
         run_replacements(b, &choices)?;
         items::stage_end_check(b)?;
         Ok(StageEnd::Finished)
@@ -652,6 +681,7 @@ fn outcomes<const N: usize, P>(
 fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
     state: &mut State<N>,
     start: P,
+    options: EnumerateOptions,
     mut stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<StageEnd, TurnError>,
 ) -> Result<Vec<Ending<N, P>>, TurnError> {
     // The turn runs in stages (one action, or the end of turn). After every stage identical
@@ -665,7 +695,7 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
         // Value: (first-reached index, probability); keeps the output order deterministic.
         let mut next: HashMap<(State<N>, P), (usize, f64)> = HashMap::new();
         for (mut work, pending, probability) in frontier {
-            let mut chooser = Chooser::new();
+            let mut chooser = Chooser::with_rolls(options.rolls);
             loop {
                 chooser.begin_run();
                 let mut after = pending.clone();

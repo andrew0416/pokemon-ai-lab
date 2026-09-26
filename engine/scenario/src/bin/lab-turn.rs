@@ -2,7 +2,10 @@
 //! oracle's format, so `engine/oracle/compare.cjs` can compare the two.
 //!
 //! Usage: lab-turn <scenario.json> [--before <oracle-report.json>] [--out <file>]
-//!                 [--mc <samples> [--seed <n>]]
+//!                 [--mc <samples> [--seed <n>]] [--rolls full|extremes|quartiles]
+//!
+//! `--rolls extremes` branches only on the minimum and maximum damage roll (the oracle's
+//! `--mode extremes`; compare against such a report), `quartiles` on four rolls.
 //!
 //! `--mc` samples the turn instead of enumerating it (`mode: "mc"`), for turns whose exact
 //! distribution is too large; compare such reports with `oracle/marginals.cjs`.
@@ -18,9 +21,9 @@ use std::time::Instant;
 use serde_json::{json, Value};
 
 use lab_engine::rules::Ruleset;
-use lab_engine::turn::sample_turn;
+use lab_engine::turn::{sample_turn, EnumerateOptions, RollMode};
 use lab_scenario::{
-    canonical_json, load_scenario_file, run_decision_mid_turn, scenario_decision,
+    canonical_json, load_scenario_file, run_decision_mid_turn_with, scenario_decision,
     scenario_positions, Decision,
 };
 
@@ -41,6 +44,7 @@ fn run() -> Result<(), String> {
     let mut out = None;
     let mut samples: Option<usize> = None;
     let mut seed: u64 = 1;
+    let mut options = EnumerateOptions::default();
     let mut i = 0;
     while i < args.len() {
         match args[i].as_str() {
@@ -67,6 +71,15 @@ fn run() -> Result<(), String> {
                     .get(i)
                     .and_then(|s| s.parse().ok())
                     .ok_or("--seed needs a number")?;
+            }
+            "--rolls" => {
+                i += 1;
+                options.rolls = match args.get(i).map(String::as_str) {
+                    Some("full") => RollMode::Full,
+                    Some("extremes") => RollMode::Extremes,
+                    Some("quartiles") => RollMode::Quartiles,
+                    _ => return Err("--rolls needs full, extremes or quartiles".into()),
+                };
             }
             other if scenario.is_none() => scenario = Some(other.to_owned()),
             other => return Err(format!("unexpected argument {other}")),
@@ -134,9 +147,13 @@ fn run() -> Result<(), String> {
         (Some(_), Decision::Replacement(_)) => {
             return Err("--mc is not implemented for a replacement decision".into())
         }
-        (None, decision) => {
-            run_decision_mid_turn(&mut state, &position.order, decision, &loaded.mid_turn)?
-        }
+        (None, decision) => run_decision_mid_turn_with(
+            &mut state,
+            &position.order,
+            decision,
+            &loaded.mid_turn,
+            options,
+        )?,
     };
     let elapsed = started.elapsed();
 
@@ -164,8 +181,13 @@ fn run() -> Result<(), String> {
         "scenario": scenario,
         "format": loaded.meta.format,
         "turn": loaded.meta.turn.as_ref().map(|t| json!({"p1": t.p1, "p2": t.p2})),
-        "mode": if samples.is_some() { "mc" } else { "engine" },
-        "exact": samples.is_none(),
+        "mode": match (samples, options.rolls) {
+            (Some(_), _) => "mc",
+            (None, RollMode::Full) => "engine",
+            (None, RollMode::Extremes) => "extremes",
+            (None, RollMode::Quartiles) => "quartiles",
+        },
+        "exact": samples.is_none() && options.rolls == RollMode::Full,
         "engine": "lab-engine",
         "branches": samples.unwrap_or(outcomes.len()),
         "distinctOutcomes": merged.len(),

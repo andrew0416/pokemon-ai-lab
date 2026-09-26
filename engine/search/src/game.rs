@@ -10,8 +10,8 @@ use lab_engine::instruction::Outcome;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::{BattleResult, SideId, SlotRef, State, SwitchFlag};
 use lab_engine::turn::{
-    enumerate_replacements, enumerate_turn, legal_joint_actions, resume_turn, side_must_replace,
-    side_must_switch, Suspension, TurnError,
+    enumerate_replacements, enumerate_turn_with, legal_joint_actions, resume_turn_with,
+    side_must_replace, side_must_switch, EnumerateOptions, Suspension, TurnError,
 };
 
 use crate::choice::Choice;
@@ -174,10 +174,12 @@ pub fn asked_slots<const N: usize>(
     }
 }
 
-/// Every outcome of the pair of choices at `decision`; `state` is left unchanged.
+/// Every outcome of the pair of choices at `decision` under `options` (the damage-roll mode);
+/// `state` is left unchanged.
 pub fn transitions<const N: usize>(
     state: &mut State<N>,
     ruleset: Ruleset,
+    options: EnumerateOptions,
     decision: Decision,
     suspension: Option<&Suspension>,
     choices: [Choice<N>; 2],
@@ -190,7 +192,9 @@ pub fn transitions<const N: usize>(
     match decision {
         Decision::Over(_) => Err(TurnError::BattleOver),
         Decision::Turn => match choices {
-            [Choice::Turn(a), Choice::Turn(b)] => enumerate_turn(state, ruleset, [a, b]),
+            [Choice::Turn(a), Choice::Turn(b)] => {
+                enumerate_turn_with(state, ruleset, [a, b], options)
+            }
             _ => Err(mismatch()),
         },
         Decision::Replacement => match choices {
@@ -199,7 +203,7 @@ pub fn transitions<const N: usize>(
         },
         Decision::MidTurn => match (choices, suspension) {
             ([Choice::Switches(a), Choice::Switches(b)], Some(suspension)) => {
-                resume_turn(state, suspension, [a, b])
+                resume_turn_with(state, suspension, [a, b], options)
             }
             _ => Err(mismatch()),
         },

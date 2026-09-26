@@ -10,7 +10,7 @@ use serde_json::Value;
 use lab_engine::eval::Material;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::SideId;
-use lab_engine::turn::enumerate_turn;
+use lab_engine::turn::{enumerate_turn, EnumerateOptions, RollMode};
 use lab_engine::Doubles;
 use lab_scenario::{
     canonical_json, load_scenario_file, parse_choice, scenario_positions, Position,
@@ -18,6 +18,11 @@ use lab_scenario::{
 use lab_search::{
     decision, format_choice, legal_choices, transitions, Chance, Choice, Config, Decision, Pruning,
     Solver, WIN,
+};
+
+/// The brute force and the solver under test both enumerate the exact distribution.
+const OPTIONS: EnumerateOptions = EnumerateOptions {
+    rolls: RollMode::Full,
 };
 
 fn engine_dir() -> PathBuf {
@@ -162,6 +167,7 @@ fn replacement_choices_fill_the_empty_slot() {
     let outcomes = transitions(
         &mut state,
         Ruleset::CHAMPIONS_MC,
+        EnumerateOptions::default(),
         decision,
         None,
         [p1[0], p2[0]],
@@ -211,7 +217,7 @@ fn chance_value(
     depth: u32,
 ) -> f32 {
     let ruleset = Ruleset::CHAMPIONS_MC;
-    let outcomes = transitions(state, ruleset, decision, suspension, pair).unwrap();
+    let outcomes = transitions(state, ruleset, OPTIONS, decision, suspension, pair).unwrap();
     let values: Vec<(f64, f32)> = outcomes
         .iter()
         .map(|o| {
@@ -283,6 +289,7 @@ fn exact_lines_match_brute_force() {
             let expected = brute_force(&mut state, us, chance, 1);
             let mut config = Config::new(Ruleset::CHAMPIONS_MC, us);
             config.chance = chance;
+            config.rolls = RollMode::Full;
             config.exact_lines = true;
             let evaluator = Material;
             let mut solver = Solver::new(config, &evaluator);
@@ -329,7 +336,8 @@ fn cutoff_lines_bound_the_best() {
         .iter()
         .map(|(_, v)| *v)
         .fold(f32::NEG_INFINITY, f32::max);
-    let config = Config::new(Ruleset::CHAMPIONS_MC, SideId::One);
+    let mut config = Config::new(Ruleset::CHAMPIONS_MC, SideId::One);
+    config.rolls = RollMode::Full;
     let evaluator = Material;
     let mut solver = Solver::new(config, &evaluator);
     let analysis = solver.analyse(&mut state, None).unwrap();
@@ -349,6 +357,7 @@ fn depth_two_matches_brute_force() {
     let mut config = Config::new(Ruleset::CHAMPIONS_MC, SideId::Two);
     config.depth = 2;
     config.chance = Chance::Worst;
+    config.rolls = RollMode::Full;
     config.exact_lines = true;
     let evaluator = Material;
     let mut solver = Solver::new(config, &evaluator);

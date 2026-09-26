@@ -11,10 +11,11 @@ use std::path::PathBuf;
 
 use serde_json::Value;
 
+use lab_engine::turn::{EnumerateOptions, RollMode};
 use lab_engine::Doubles;
 use lab_scenario::{
-    canonical_json, load_scenario_file, run_decision_mid_turn, scenario_decision,
-    scenario_positions, LoadedScenario, Position,
+    canonical_json, load_scenario_file, run_decision_mid_turn, run_decision_mid_turn_with,
+    scenario_decision, scenario_positions, LoadedScenario, Position,
 };
 
 pub fn engine_dir() -> PathBuf {
@@ -122,14 +123,43 @@ pub fn assert_mc_parity(name: &str) {
 
 /// Exact parity of one scenario's turn with its oracle fixture of the same name.
 pub fn assert_exact_parity(name: &str) {
-    let fixture = fixture(name);
-    let (loaded, position) = start(name, &fixture);
+    assert_parity_with(name, &fixture(name), EnumerateOptions::default());
+}
+
+/// Parity with the oracle's `--mode extremes` fixture (`oracle/expected/<name>.extremes.json`,
+/// damage rolls only min and max at 1/2 each) under `RollMode::Extremes`: the same
+/// approximation on both sides gives an exact match (WORKPLAN F18).
+pub fn assert_extremes_parity(name: &str) {
+    let path = engine_dir().join(format!("oracle/expected/{name}.extremes.json"));
+    let text = std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("{path:?}: {e}"));
+    let fixture: Value = serde_json::from_str(&text).unwrap();
+    assert_eq!(
+        fixture["mode"], "extremes",
+        "{name}: not an extremes fixture"
+    );
+    assert_parity_with(
+        name,
+        &fixture,
+        EnumerateOptions {
+            rolls: RollMode::Extremes,
+        },
+    );
+}
+
+fn assert_parity_with(name: &str, fixture: &Value, options: EnumerateOptions) {
+    let (loaded, position) = start(name, fixture);
     let mut state = position.state.clone();
     let decision = scenario_decision(&loaded, &position).unwrap();
-    let outcomes =
-        run_decision_mid_turn(&mut state, &position.order, &decision, &loaded.mid_turn).unwrap();
+    let outcomes = run_decision_mid_turn_with(
+        &mut state,
+        &position.order,
+        &decision,
+        &loaded.mid_turn,
+        options,
+    )
+    .unwrap();
     let engine = distribution(&loaded, &mut state, &outcomes);
-    let oracle = oracle_distribution(&fixture);
+    let oracle = oracle_distribution(fixture);
     assert_eq!(engine.len(), oracle.len(), "{name}: number of outcomes");
     for (state, p) in &oracle {
         let q = engine.get(state).unwrap_or_else(|| {

@@ -31,7 +31,9 @@ use lab_engine::action::JointAction;
 use lab_engine::instruction::Outcome;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::{SideId, State, PARTY_SIZE};
-use lab_engine::turn::{enumerate_replacements, enumerate_turn, resume_turn, TurnError};
+use lab_engine::turn::{
+    enumerate_replacements, enumerate_turn_with, resume_turn_with, EnumerateOptions, TurnError,
+};
 use lab_engine::Doubles;
 
 pub use canonical::{canonical_json, canonical_value, CanonicalError};
@@ -238,8 +240,19 @@ pub fn parse_decision(
 /// Every outcome of `decision` from `state` (left unchanged). A turn's outcome can be
 /// suspended for a mid-turn switch (`Outcome::suspension`); see [`run_decision_mid_turn`].
 pub fn run_decision(state: &mut Doubles, decision: &Decision) -> Result<Vec<Outcome>, TurnError> {
+    run_decision_with(state, decision, EnumerateOptions::default())
+}
+
+/// [`run_decision`] with enumeration `options` (damage-roll mode).
+pub fn run_decision_with(
+    state: &mut Doubles,
+    decision: &Decision,
+    options: EnumerateOptions,
+) -> Result<Vec<Outcome>, TurnError> {
     match decision {
-        Decision::Turn(choices) => enumerate_turn(state, Ruleset::CHAMPIONS_MC, *choices),
+        Decision::Turn(choices) => {
+            enumerate_turn_with(state, Ruleset::CHAMPIONS_MC, *choices, options)
+        }
         Decision::Replacement(choices) => enumerate_replacements(state, *choices),
     }
 }
@@ -260,7 +273,24 @@ pub fn run_decision_mid_turn(
     decision: &Decision,
     mid_turn: &[Vec<String>; 2],
 ) -> Result<Vec<Outcome>, String> {
-    let outcomes = run_decision(state, decision).map_err(|e| e.to_string())?;
+    run_decision_mid_turn_with(
+        state,
+        order,
+        decision,
+        mid_turn,
+        EnumerateOptions::default(),
+    )
+}
+
+/// [`run_decision_mid_turn`] with enumeration `options`.
+pub fn run_decision_mid_turn_with(
+    state: &mut Doubles,
+    order: &[PartyOrder; 2],
+    decision: &Decision,
+    mid_turn: &[Vec<String>; 2],
+    options: EnumerateOptions,
+) -> Result<Vec<Outcome>, String> {
+    let outcomes = run_decision_with(state, decision, options).map_err(|e| e.to_string())?;
     let mut done = Vec::new();
     let mut work: Vec<(Outcome, [usize; 2])> = outcomes.into_iter().map(|o| (o, [0, 0])).collect();
     while let Some((outcome, used)) = work.pop() {
@@ -292,7 +322,8 @@ pub fn run_decision_mid_turn(
             done.push(outcome);
             continue;
         }
-        let resumed = resume_turn(&mut paused, &suspension, choices).map_err(|e| e.to_string())?;
+        let resumed = resume_turn_with(&mut paused, &suspension, choices, options)
+            .map_err(|e| e.to_string())?;
         for r in resumed {
             let mut instructions = outcome.instructions.clone();
             instructions.extend(r.instructions);

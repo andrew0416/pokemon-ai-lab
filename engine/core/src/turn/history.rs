@@ -62,8 +62,11 @@ impl<const N: usize> Battle<'_, N> {
         let Some(damage) = damage else {
             return;
         };
+        // Fields nobody in this battle reads are left unrecorded (F18): the distribution of
+        // everything observable is unchanged and positions differing only in them merge.
+        let readers = self.history_readers;
         let mut history = self.slot_history(target);
-        if source.side != target.side {
+        if source.side != target.side && readers.last_damaged_by {
             history.last_damaged_by = Some(DamagedBy {
                 source: attacker,
                 slot: source,
@@ -73,7 +76,9 @@ impl<const N: usize> Battle<'_, N> {
         if damage > 0 {
             history.damaged_by_this_turn |= SlotHistory::attacker_bit(attacker);
         }
-        history.times_attacked = history.times_attacked.saturating_add(hits);
+        if readers.times_attacked {
+            history.times_attacked = history.times_attacked.saturating_add(hits);
+        }
         self.set_slot_history(target, history);
     }
 

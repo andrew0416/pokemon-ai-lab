@@ -79,10 +79,44 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// ability absorbed a move's damage and changes forme at the next Update
     /// (`forme::on_update`), which always comes within the same stage.
     pub busted: Vec<PokemonRef>,
+    /// Which damage-history fields anything in this battle can read (F18): fields nobody reads
+    /// are not recorded, so positions that differ only in them merge (`history.rs`).
+    pub history_readers: HistoryReaders,
+}
+
+/// The readers of the hidden damage history present in a battle (any party member's moves;
+/// see `history::record_attack`).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct HistoryReaders {
+    /// Metal Burst, Comeuppance (`lastDamagedBy`).
+    pub last_damaged_by: bool,
+    /// Rage Fist (`timesAttacked`).
+    pub times_attacked: bool,
+}
+
+impl HistoryReaders {
+    pub fn of<const N: usize>(state: &State<N>) -> HistoryReaders {
+        let mut readers = HistoryReaders::default();
+        for side in &state.sides {
+            for mon in &side.party {
+                for slot in &mon.moves {
+                    if slot.id == crate::dex::moves::METAL_BURST
+                        || slot.id == crate::dex::moves::COMEUPPANCE
+                    {
+                        readers.last_damaged_by = true;
+                    } else if slot.id == crate::dex::moves::RAGE_FIST {
+                        readers.times_attacked = true;
+                    }
+                }
+            }
+        }
+        readers
+    }
 }
 
 impl<'a, const N: usize> Battle<'a, N> {
     pub fn new(state: &'a mut State<N>, rng: &'a mut Chooser) -> Battle<'a, N> {
+        let history_readers = HistoryReaders::of(state);
         Battle {
             state,
             log: Vec::new(),
@@ -96,6 +130,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             move_self_switch: false,
             force_switch: Vec::new(),
             busted: Vec::new(),
+            history_readers,
         }
     }
 

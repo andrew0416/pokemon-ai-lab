@@ -2068,6 +2068,19 @@ fn spread_move_hit<const N: usize>(
             if !item_events::keeps_secondary(b, t, secondary) {
                 continue;
             }
+            // F18: a flinch on a target with no move left this turn can never act (`flinch`
+            // is read only by BeforeMove and ends at the residual; Steadfast fires only when
+            // it stops a move), so the roll is skipped. The end-of-turn distribution is
+            // unchanged; only the mid-turn `flinch` volatile Showdown would show is missing.
+            if flinch_only(secondary)
+                && !matches!(
+                    mv.id,
+                    moves::THROAT_CHOP | moves::DIRE_CLAW | moves::TRI_ATTACK
+                )
+                && b.will_move(t).is_none()
+            {
+                continue;
+            }
             if !b.rng.chance(chance, 100) {
                 continue;
             }
@@ -2644,23 +2657,15 @@ fn get_damage<const N: usize>(
         final_modifier,
     };
     let rolls = damage_rolls(input);
-    Ok(Planned::Damage(i32::from(pick_roll(b, &rolls))))
+    Ok(Planned::Damage(i32::from(b.rng.roll(&rolls))))
 }
 
-/// One of the 16 equally likely rolls, branching once per distinct value.
-fn pick_roll<const N: usize>(b: &mut Battle<'_, N>, rolls: &[u16; 16]) -> u16 {
-    let mut values: Vec<(u16, u32)> = Vec::with_capacity(16);
-    for &r in rolls {
-        match values.iter_mut().find(|(v, _)| *v == r) {
-            Some((_, count)) => *count += 1,
-            None => values.push((r, 1)),
-        }
-    }
-    if values.len() == 1 {
-        return values[0].0;
-    }
-    let weights: Vec<f64> = values.iter().map(|&(_, c)| f64::from(c) / 16.0).collect();
-    values[b.rng.weighted(&weights)].0
+/// A secondary whose only effect is the `flinch` volatile.
+fn flinch_only(secondary: &Secondary) -> bool {
+    secondary.volatile_status == crate::dex::conditions::FLINCH
+        && secondary.status == Status::None
+        && secondary.boosts == NO_BOOSTS
+        && secondary.self_boosts == NO_BOOSTS
 }
 
 fn screen_applies<const N: usize>(b: &Battle<'_, N>, side: SideId, category: MoveCategory) -> bool {

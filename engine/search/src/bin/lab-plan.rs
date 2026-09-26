@@ -3,13 +3,15 @@
 //!
 //! Usage: lab-plan <scenario.json> [--side p1|p2] [--depth n] [--rng expect|worst]
 //!                 [--before <oracle-report.json>] [--top k] [--exact] [--all-targets]
-//!                 [--max-turns n]
+//!                 [--max-turns n] [--rolls full|extremes|quartiles]
 //!
 //! The position is the scenario's (after switch-ins, setup turns and patch); with several
 //! initial states `--before` picks the one matching an oracle report, as `lab-turn` does.
 //! `--depth` counts turns (default 1: this turn, then the material evaluation). `--exact`
 //! values every root choice fully instead of stopping once it falls below the best one.
-//! `--all-targets` keeps damaging moves aimed at an ally. Choices print as Showdown choice
+//! `--all-targets` keeps damaging moves aimed at an ally. `--rolls` picks the damage rolls the
+//! enumeration branches on (default `extremes`: min and max; `full` is exact but a turn with
+//! two spread moves has millions of outcomes). Choices print as Showdown choice
 //! strings against the position's party order, so they paste into a scenario's `turn`.
 
 use std::process::ExitCode;
@@ -19,6 +21,7 @@ use serde_json::Value;
 use lab_engine::eval::Material;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::SideId;
+use lab_engine::turn::RollMode;
 use lab_scenario::{canonical_json, load_scenario_file, scenario_positions, Position};
 use lab_search::game::asked_slots;
 use lab_search::{
@@ -88,6 +91,15 @@ fn run() -> Result<(), String> {
                         .ok_or("--max-turns needs a number")?,
                 );
             }
+            "--rolls" => {
+                i += 1;
+                config.rolls = match args.get(i).map(String::as_str) {
+                    Some("full") => RollMode::Full,
+                    Some("extremes") => RollMode::Extremes,
+                    Some("quartiles") => RollMode::Quartiles,
+                    _ => return Err("--rolls needs full, extremes or quartiles".into()),
+                };
+            }
             "--exact" => config.exact_lines = true,
             "--all-targets" => config.pruning = Pruning::All,
             other if scenario.is_none() => scenario = Some(other.to_owned()),
@@ -98,7 +110,8 @@ fn run() -> Result<(), String> {
     config.us = us;
     let scenario = scenario.ok_or(
         "usage: lab-plan <scenario.json> [--side p1|p2] [--depth n] [--rng expect|worst] \
-         [--before report.json] [--top k] [--exact] [--all-targets] [--max-turns n]",
+         [--before report.json] [--top k] [--exact] [--all-targets] [--max-turns n] \
+         [--rolls full|extremes|quartiles]",
     )?;
 
     let loaded = load_scenario_file(&scenario).map_err(|e| e.to_string())?;
@@ -126,11 +139,12 @@ fn run() -> Result<(), String> {
         return Err("the solver changed the position (bug)".into());
     }
     println!(
-        "decision {:?}, depth {}, chance {:?}, pruning {:?}: {} nodes, {} enumerations, {:.2} s",
+        "decision {:?}, depth {}, chance {:?}, pruning {:?}, rolls {:?}: {} nodes, {} enumerations, {:.2} s",
         analysis.decision,
         analysis.depth,
         config.chance,
         config.pruning,
+        config.rolls,
         analysis.nodes,
         analysis.turns,
         analysis.elapsed.as_secs_f64()

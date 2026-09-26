@@ -21,6 +21,36 @@ pub(crate) struct Chooser {
     /// Sampling mode (xorshift64* state): every decision is drawn at random instead of
     /// enumerated, and [`Chooser::advance`] ends after one run.
     random: Option<u64>,
+    /// Which damage rolls the enumeration branches on (F18).
+    roll_mode: RollMode,
+}
+
+/// How [`Chooser::roll`] treats the 16 damage rolls (WORKPLAN F18). Everything else (critical
+/// hits, accuracy, secondary effects, Speed ties) stays exact in every mode. Sampling ignores
+/// the mode and draws from all 16.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub enum RollMode {
+    /// All 16 rolls (exact distribution).
+    #[default]
+    Full,
+    /// The minimum and the maximum roll, 1/2 each: the oracle's `--mode extremes`. The
+    /// support of the distribution is right at the ends (a worst-case search sees the true
+    /// worst roll as long as the value is monotone in damage); probabilities are approximate.
+    Extremes,
+    /// Rolls 85, 90, 95 and 100 (indices 0, 5, 10, 15), 1/4 each: the exact mean multiplier
+    /// 92.5 with four support points; probabilities are approximate.
+    Quartiles,
+}
+
+impl RollMode {
+    /// The roll indices (into the ascending 16-roll table) the mode branches on.
+    pub fn indices(self) -> &'static [usize] {
+        match self {
+            RollMode::Full => &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+            RollMode::Extremes => &[0, 15],
+            RollMode::Quartiles => &[0, 5, 10, 15],
+        }
+    }
 }
 
 impl Chooser {
@@ -30,7 +60,41 @@ impl Chooser {
             trace: Vec::new(),
             probability: 1.0,
             random: None,
+            roll_mode: RollMode::Full,
         }
+    }
+
+    /// An enumerating chooser that branches on the damage rolls `mode` selects.
+    pub fn with_rolls(mode: RollMode) -> Chooser {
+        Chooser {
+            roll_mode: mode,
+            ..Chooser::new()
+        }
+    }
+
+    /// One damage roll out of `rolls` (ascending, 85% first): in enumeration one branch per
+    /// distinct value among the rolls the mode selects, weighted by multiplicity; in sampling
+    /// one of the 16 uniformly.
+    pub fn roll(&mut self, rolls: &[u16; crate::damage::DAMAGE_ROLL_COUNT]) -> u16 {
+        let indices = if self.random.is_some() {
+            RollMode::Full.indices()
+        } else {
+            self.roll_mode.indices()
+        };
+        let mut values: Vec<(u16, u32)> = Vec::with_capacity(indices.len());
+        for &i in indices {
+            let r = rolls[i];
+            match values.iter_mut().find(|(v, _)| *v == r) {
+                Some((_, count)) => *count += 1,
+                None => values.push((r, 1)),
+            }
+        }
+        if values.len() == 1 {
+            return values[0].0;
+        }
+        let total = indices.len() as f64;
+        let weights: Vec<f64> = values.iter().map(|&(_, c)| f64::from(c) / total).collect();
+        values[self.weighted(&weights)].0
     }
 
     /// A chooser that samples one path per run (Monte Carlo) from a nonzero seed.
@@ -162,5 +226,49 @@ mod tests {
                 (false, 9, 0.75),
             ]
         );
+    }
+
+    /// Every roll mode branches once per distinct value it selects, with the right weights,
+    /// and sampling ignores the mode.
+    #[test]
+    fn roll_modes_branch_on_their_indices() {
+        let rolls: [u16; 16] = std::array::from_fn(|i| 85 + i as u16);
+        for (mode, expected) in [
+            (
+                RollMode::Full,
+                (0..16).map(|i| 85 + i).collect::<Vec<u16>>(),
+            ),
+            (RollMode::Extremes, vec![85, 100]),
+            (RollMode::Quartiles, vec![85, 90, 95, 100]),
+        ] {
+            let mut chooser = Chooser::with_rolls(mode);
+            let mut seen = Vec::new();
+            let mut total = 0.0;
+            loop {
+                chooser.begin_run();
+                seen.push(chooser.roll(&rolls));
+                total += chooser.probability();
+                if !chooser.advance() {
+                    break;
+                }
+            }
+            assert_eq!(seen, expected, "{mode:?}");
+            assert!((total - 1.0).abs() < 1e-12, "{mode:?}: {total}");
+        }
+        // Equal rolls merge (weights add up).
+        let flat = [50u16; 16];
+        let mut chooser = Chooser::with_rolls(RollMode::Extremes);
+        chooser.begin_run();
+        assert_eq!(chooser.roll(&flat), 50);
+        assert!(!chooser.advance());
+        // A sampler draws from all 16 whatever the mode.
+        let mut sampler = Chooser::sampler(7);
+        sampler.roll_mode = RollMode::Extremes;
+        let mut values = std::collections::HashSet::new();
+        for _ in 0..500 {
+            sampler.begin_run();
+            values.insert(sampler.roll(&rolls));
+        }
+        assert!(values.len() > 2, "{values:?}");
     }
 }
