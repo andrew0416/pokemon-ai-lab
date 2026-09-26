@@ -110,6 +110,39 @@ impl<const N: usize> Battle<'_, N> {
         }
     }
 
+    /// The end of a successful `boost()`: `if (Object.values(boost).some(x => x > 0))
+    /// target.statsRaisedThisTurn = true;` and the same with `< 0` for `statsLoweredThisTurn`,
+    /// over the applied table. Recorded only for a battle with a reader (F18).
+    pub(crate) fn record_stat_changes(&mut self, slot: SlotRef, boost: &[i8]) {
+        let readers = self.history_readers;
+        if (!readers.stats_raised && !readers.stats_lowered) || self.occupant(slot).is_none() {
+            return;
+        }
+        let mut history = self.slot_history(slot);
+        if readers.stats_raised && boost.iter().any(|&b| b > 0) {
+            history.stats_raised_this_turn = true;
+        }
+        if readers.stats_lowered && boost.iter().any(|&b| b < 0) {
+            history.stats_lowered_this_turn = true;
+        }
+        self.set_slot_history(slot, history);
+    }
+
+    /// `endTurn`'s `if (this.turn !== 1)` resets for every active Pokémon:
+    /// `statsRaisedThisTurn` and `statsLoweredThisTurn` (not when the battle starts: turn 1 still
+    /// sees what the leads' switch-in effects changed).
+    pub(crate) fn reset_stat_changes(&mut self) {
+        for slot in State::<N>::slot_refs() {
+            if self.state.slot(slot).party_index.is_none() {
+                continue;
+            }
+            let mut history = self.slot_history(slot);
+            history.stats_raised_this_turn = false;
+            history.stats_lowered_this_turn = false;
+            self.set_slot_history(slot, history);
+        }
+    }
+
     /// `faintMessages`: `if (side.totalFainted < 100) side.totalFainted++` and
     /// `side.faintedThisTurn = pokemon`.
     pub(crate) fn record_faint(&mut self, side: SideId) {

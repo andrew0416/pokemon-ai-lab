@@ -241,6 +241,13 @@ pub struct SlotHistory {
     /// `newlySwitched`: set when the Pokémon comes in (also at the start of the battle),
     /// cleared at the end of the turn (Payback).
     pub newly_switched: bool,
+    /// `statsRaisedThisTurn` / `statsLoweredThisTurn`: a `boost()` that changed a stage raised /
+    /// lowered one this turn (Burning Jealousy, Alluring Voice / Lash Out). Cleared at the end
+    /// of every turn but the one that starts the battle (Intimidate at the start still counts
+    /// on turn 1) and when the Pokémon leaves the field. Recorded only while a reader is in the
+    /// battle (`HistoryReaders`).
+    pub stats_raised_this_turn: bool,
+    pub stats_lowered_this_turn: bool,
 }
 
 impl Default for SlotHistory {
@@ -253,6 +260,8 @@ impl Default for SlotHistory {
             move_this_turn_result: MoveResult::Undefined,
             move_last_turn_result: MoveResult::Undefined,
             newly_switched: true,
+            stats_raised_this_turn: false,
+            stats_lowered_this_turn: false,
         }
     }
 }

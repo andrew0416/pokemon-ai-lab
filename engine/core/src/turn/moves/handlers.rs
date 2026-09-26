@@ -948,6 +948,8 @@ pub(super) fn on_base_power<const N: usize>(
         {
             Some(crate::damage::MOD_HALF)
         }
+        // Lash Out: `if (source.statsLoweredThisTurn) return this.chainModify(2);`
+        moves::LASH_OUT if b.state.slot(user).history.stats_lowered_this_turn => Some(2 * 4096),
         // Grav Apple: `if (this.field.getPseudoWeather('gravity')) return this.chainModify(1.5);`
         moves::GRAV_APPLE if b.field_active(FieldEffect::Gravity) => Some(MOD_ONE_POINT_FIVE),
         // Psyblade: `if (this.field.isTerrain('electricterrain')) return this.chainModify(1.5);`
@@ -2361,6 +2363,19 @@ pub(super) fn secondary_on_hit<const N: usize>(
 ) {
     if mv.id == moves::THROAT_CHOP {
         b.add_volatile(target, Volatile::ThroatChop);
+        return;
+    }
+    // Burning Jealousy: `if (target?.statsRaisedThisTurn) target.trySetStatus('brn', source,
+    // move);` Alluring Voice: `if (target?.statsRaisedThisTurn) target.addVolatile('confusion',
+    // source, move);`
+    if mv.id == moves::BURNING_JEALOUSY || mv.id == moves::ALLURING_VOICE {
+        let raised =
+            b.occupant(target).is_some() && b.state.slot(target).history.stats_raised_this_turn;
+        if raised && mv.id == moves::BURNING_JEALOUSY {
+            b.try_set_status(target, Status::Burn);
+        } else if raised {
+            b.add_volatile(target, Volatile::Confusion);
+        }
         return;
     }
     let statuses = match mv.id {

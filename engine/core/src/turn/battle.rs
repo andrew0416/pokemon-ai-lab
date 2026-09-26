@@ -105,6 +105,10 @@ pub struct HistoryReaders {
     pub move_last_turn_result: bool,
     /// Retaliate (`faintedLastTurn`; unsupported, so never set today).
     pub fainted_last_turn: bool,
+    /// Burning Jealousy, Alluring Voice (`statsRaisedThisTurn`).
+    pub stats_raised: bool,
+    /// Lash Out (`statsLoweredThisTurn`).
+    pub stats_lowered: bool,
 }
 
 impl HistoryReaders {
@@ -122,6 +126,10 @@ impl HistoryReaders {
                         readers.move_last_turn_result = true;
                     } else if slot.id == m::RETALIATE {
                         readers.fainted_last_turn = true;
+                    } else if slot.id == m::BURNING_JEALOUSY || slot.id == m::ALLURING_VOICE {
+                        readers.stats_raised = true;
+                    } else if slot.id == m::LASH_OUT {
+                        readers.stats_lowered = true;
                     }
                 }
             }
@@ -1328,6 +1336,11 @@ impl<'a, const N: usize> Battle<'a, N> {
         // AfterBoost of items (after the target's ability): Adrenaline Orb, the foes' Mirror
         // Herbs.
         super::items::after_boost(self, target, &boost, effect, atk_capped_to_zero);
+        // `if (success)`: `statsRaisedThisTurn` / `statsLoweredThisTurn` from the boost table
+        // that was applied (after the cap and TryBoost), while a move reads them.
+        if changed {
+            self.record_stat_changes(target, &boost);
+        }
         changed
     }
 

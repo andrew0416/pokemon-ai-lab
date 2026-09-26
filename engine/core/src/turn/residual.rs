@@ -683,6 +683,7 @@ pub(crate) fn end_turn<const N: usize>(b: &mut Battle<'_, N>) {
         // damage-history resets (F13).
         item_events::end_turn_disable_move(b);
         b.end_turn_history();
+        b.reset_stat_changes();
         let turn = b.state.turn;
         b.apply(Instruction::SetTurn {
             old: turn,

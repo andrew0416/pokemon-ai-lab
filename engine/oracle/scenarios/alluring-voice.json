@@ -1,0 +1,23 @@
+{
+ "description": "Alluring Voice confuses a target whose stats rose this turn: Garchomp's Swords Dance comes before Sylveon's Alluring Voice, which confuses it (2-5 turns). Rolls, crits and the secondary roll branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Sylveon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Alluring Voice", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Heatran", "item": "", "ability": "Flash Fire", "nature": "Serious",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move alluringvoice 1, move harden", "p2": "move swordsdance, move harden"}
+}

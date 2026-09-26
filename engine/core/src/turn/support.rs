@@ -660,6 +660,18 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         ],
     ),
     (moves::TRI_ATTACK, &["secondaries.onHit", "secondary.onHit"]),
+    // Stat-change history (`SlotHistory::stats_raised_this_turn` / `stats_lowered_this_turn`,
+    // set in `Battle::boost_by`): Burning Jealousy's and Alluring Voice's secondary `onHit` in
+    // `handlers::secondary_on_hit`, Lash Out's `onBasePower` in `handlers::on_base_power`.
+    (
+        moves::BURNING_JEALOUSY,
+        &["secondaries.onHit", "secondary.onHit"],
+    ),
+    (
+        moves::ALLURING_VOICE,
+        &["secondaries.onHit", "secondary.onHit"],
+    ),
+    (moves::LASH_OUT, &["onBasePower"]),
     (moves::MORNING_SUN, &["onHit"]),
     (moves::MOONLIGHT, &["onHit"]),
     (moves::SYNTHESIS, &["onHit"]),
