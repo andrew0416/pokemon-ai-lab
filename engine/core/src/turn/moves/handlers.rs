@@ -808,6 +808,8 @@ pub(super) fn on_try_hit<const N: usize>(
         // (hasContrary && pokemon.boosts.spe === -6)) return false;` (`hasAbility`).
         moves::AUTOTOMIZE => {
             let speed = b.state.slot(target).boosts[4];
+            // `pokemon.hasAbility('contrary')`: the effective ability (a suppressed Contrary no
+            // longer reverses the boost, so the +6 check applies).
             if b.ability(target) == abilities::CONTRARY {
                 speed != -6
             } else {
