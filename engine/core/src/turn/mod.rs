@@ -1239,7 +1239,7 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
                     ActionKind::Move {
                         index,
                         target,
-                        fractional_tenths: items::fractional_priority_tenths(state, slot),
+                        fractional_tenths: items::fractional_priority_tenths(state, slot, id),
                     }
                 }
                 SlotAction::Switch { party_index } => ActionKind::Switch { party_index },
@@ -1271,21 +1271,29 @@ fn run_stage<const N: usize>(
         items::stage_end_check(b)?;
         return Ok(end);
     }
-    // Quick Claw's 1/5 is drawn, and Custap Berry eaten, when the actions are queued (first
-    // stage).
+    // Quick Draw's 3/10 and Quick Claw's 1/5 are drawn, and Custap Berry eaten, when the
+    // actions are queued (first stage), in handler order for each action.
     if !pending.fractional_drawn {
         pending.fractional_drawn = true;
         for action in &mut pending.queue {
             if let ActionKind::Move {
-                fractional_tenths, ..
+                index,
+                fractional_tenths,
+                ..
             } = &mut action.kind
             {
+                let id = lock::action_move_id(b.mon(action.pokemon), *index);
+                if let Some(t) = abilities::quick_draw(b, action.slot, action.pokemon, id) {
+                    *fractional_tenths = t;
+                }
                 if let Some(t) =
-                    items::quick_claw(b, action.slot, action.pokemon, *fractional_tenths)
+                    items::quick_claw(b, action.slot, action.pokemon, *fractional_tenths, id)
                 {
                     *fractional_tenths = t;
                 }
-                if let Some(t) = items::custap(b, action.slot, action.pokemon, *fractional_tenths) {
+                if let Some(t) =
+                    items::custap(b, action.slot, action.pokemon, *fractional_tenths, id)
+                {
                     *fractional_tenths = t;
                 }
             }

@@ -1363,8 +1363,9 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::QUICK_POWDER, &["onModifySpe"]),
     // `onModifyWeight` in `Battle::weight`.
     (items::FLOAT_STONE, &["onModifyWeight"]),
-    // Drawn when the actions are queued (first stage, `mod.rs`); Lagging Tail and Full Incense
-    // have only a constant `onFractionalPriority` (`items::constant_fractional_tenths`).
+    // Drawn when the actions are queued (first stage, `mod.rs`), after Quick Draw's; Lagging
+    // Tail and Full Incense have only a constant `onFractionalPriority`
+    // (`items::constant_fractional_tenths`).
     (items::QUICK_CLAW, &["onFractionalPriority"]),
     // `onImmunity` in `Battle::status_immune`, `onTryHit` in the move's TryHit step.
     (items::SAFETY_GOGGLES, &["onImmunity", "onTryHit"]),
@@ -2082,6 +2083,28 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::ANGER_POINT, &["onHit"]),
     (abilities::STENCH, &["onModifyMove"]),
     (abilities::LONG_REACH, &["onModifyMove"]),
+    // Opus AA unit 2. Quick Draw: its random `onFractionalPriority` is drawn with Quick Claw's
+    // when the actions are queued (`abilities::quick_draw`, first stage in `mod.rs`). Mycelium
+    // Might: `onFractionalPriority` in `items::fractional_priority_tenths` (and the Quick Claw /
+    // Custap exception), `onModifyMove` sets `ignoreAbility` for status moves
+    // (`ability_hooks::on_modify_move`). Run Away (Champions): `onTrapPokemon` in
+    // `conditions::trapped` / `abilities::trapped` like Shed Shell; `onMaybeTrapPokemon` only
+    // clears a display flag. Moody, Pickup: `onResidual` (`abilities::on_residual`; Pickup reads
+    // `SlotHistory::used_item_this_turn`).
+    (abilities::QUICK_DRAW, &["onFractionalPriority"]),
+    (
+        abilities::MYCELIUM_MIGHT,
+        &["onFractionalPriority", "onModifyMove"],
+    ),
+    (
+        abilities::RUN_AWAY,
+        &["onMaybeTrapPokemon", "onTrapPokemon"],
+    ),
+    (abilities::MOODY, &["onResidual"]),
+    (abilities::PICKUP, &["onResidual"]),
+    // Power Construct: `onResidual` in `forme::residual` (Zygarde-Complete; its faint, which
+    // regresses the forme, is refused in `Battle::faint_messages`).
+    (abilities::POWER_CONSTRUCT, &["onResidual"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

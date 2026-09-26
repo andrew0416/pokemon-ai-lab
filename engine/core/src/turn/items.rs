@@ -584,10 +584,17 @@ pub(crate) fn constant_fractional_tenths(item: ItemId) -> i8 {
     }
 }
 
-/// The constant handlers of `runEvent('FractionalPriority')` for a move action, in tenths:
-/// the ability's (Stall, sub-order 7) and then the item's (sub-order 8) replace the value, so
-/// the item's wins. Quick Claw's random handler runs after them ([`quick_claw`]).
-pub(crate) fn fractional_priority_tenths<const N: usize>(state: &State<N>, slot: SlotRef) -> i8 {
+/// The deterministic handlers of `runEvent('FractionalPriority')` for a move action of `id`, in
+/// tenths: the constants (priority 0) — the ability's (Stall, sub-order 7) and then the item's
+/// (sub-order 8) replace the value, so the item's wins — then Mycelium Might (priority -1: `if
+/// (move.category === 'Status') return -0.1;`). The random handlers run after them when the
+/// actions are queued: Quick Draw (-1, `abilities::quick_draw`), Quick Claw and Custap Berry
+/// (-2, [`quick_claw`], [`custap`]).
+pub(crate) fn fractional_priority_tenths<const N: usize>(
+    state: &State<N>,
+    slot: SlotRef,
+    id: MoveId,
+) -> i8 {
     let Some(mon) = state.active(slot) else {
         return 0;
     };
@@ -596,45 +603,68 @@ pub(crate) fn fractional_priority_tenths<const N: usize>(state: &State<N>, slot:
     } else {
         mon.item
     };
+    let ability = super::abilities::effective_ability(state, slot);
+    if ability == abilities::MYCELIUM_MIGHT && action_category(id) == MoveCategory::Status {
+        return -1;
+    }
     match constant_fractional_tenths(item) {
-        0 => super::order::fractional_priority_tenths(super::abilities::effective_ability(
-            state, slot,
-        )),
+        0 => super::order::fractional_priority_tenths(ability),
         item => item,
     }
 }
 
-/// Quick Claw's `onFractionalPriority` (priority -2, after the constants) for a move action of
-/// `pokemon` whose fractional priority is `current` tenths: `priority <= 0 &&
-/// this.randomChance(1, 5)` makes it +0.1. Showdown draws it when the turn's actions are
-/// queued (`resolveAction`); Mycelium Might's status-move exception is moot (the ability is
-/// refused by `support`).
+/// The category of an action's move (`action.move.category`: the dex's; the `recharge`
+/// pseudo-move, `MoveId::NONE` in an action, is a status move).
+pub(crate) fn action_category(id: MoveId) -> MoveCategory {
+    if id.is_none() {
+        MoveCategory::Status
+    } else {
+        id.data().category
+    }
+}
+
+/// Mycelium Might's exception in Quick Claw's and Custap Berry's `onFractionalPriority`: `if
+/// (move.category === 'Status' && pokemon.hasAbility('myceliummight')) return;`.
+fn mycelium_status<const N: usize>(b: &Battle<'_, N>, slot: SlotRef, id: MoveId) -> bool {
+    action_category(id) == MoveCategory::Status && b.ability(slot) == abilities::MYCELIUM_MIGHT
+}
+
+/// Quick Claw's `onFractionalPriority` (priority -2, after the constants and Quick Draw) for a
+/// move action of `pokemon` using `id` whose fractional priority is `current` tenths:
+/// `priority <= 0 && this.randomChance(1, 5)` makes it +0.1 (not for a Mycelium Might holder's
+/// status move). Showdown draws it when the turn's actions are queued (`resolveAction`).
 pub(crate) fn quick_claw<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
     pokemon: PokemonRef,
     current: i8,
+    id: MoveId,
 ) -> Option<i8> {
     (b.occupant(slot) == Some(pokemon)
         && b.item(slot) == items::QUICK_CLAW
+        && !mycelium_status(b, slot, id)
         && current <= 0
         && b.rng.chance(1, 5))
     .then_some(1)
 }
 
 /// Custap Berry's `onFractionalPriority` (priority -2, like Quick Claw, which a holder of it
-/// cannot also hold) for a move action of the Pokémon in `slot` whose fractional priority is
-/// `current` tenths: `priority <= 0` and the holder at 1/4 of its max HP or less (1/2 with
-/// Gluttony) eats the berry (`eatItem`, empty `onEat`) and makes it +0.1. Showdown runs it
-/// when the turn's actions are queued (`resolveAction`), so the berry is gone before the
-/// first action; Mycelium Might's status-move exception is moot (refused by `support`).
+/// cannot also hold) for a move action of the Pokémon in `slot` using `id` whose fractional
+/// priority is `current` tenths: `priority <= 0` and the holder at 1/4 of its max HP or less
+/// (1/2 with Gluttony) eats the berry (`eatItem`, empty `onEat`) and makes it +0.1 (not for a
+/// Mycelium Might holder's status move). Showdown runs it when the turn's actions are queued
+/// (`resolveAction`), so the berry is gone before the first action.
 pub(crate) fn custap<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
     pokemon: PokemonRef,
     current: i8,
+    id: MoveId,
 ) -> Option<i8> {
-    if b.occupant(slot) != Some(pokemon) || b.item(slot) != items::CUSTAP_BERRY {
+    if b.occupant(slot) != Some(pokemon)
+        || b.item(slot) != items::CUSTAP_BERRY
+        || mycelium_status(b, slot, id)
+    {
         return None;
     }
     let mon = b.mon(pokemon);

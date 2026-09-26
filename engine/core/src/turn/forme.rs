@@ -39,9 +39,9 @@ pub(crate) enum Change {
     /// `updateMaxHp`; the ability stays.
     PermanentKeepAbility,
     /// `formeChange(species, effect, true)` from another ability: also the forme's first
-    /// ability, as the ability and its base (`setAbility(..., isFromFormeChange)`). The only
-    /// caller, Zero to Hero, keeps Zero to Hero, which has neither `onEnd` nor `onStart`, so
-    /// `setAbility`'s End and Start do nothing.
+    /// ability, as the ability and its base (`setAbility(..., isFromFormeChange)`). The callers,
+    /// Zero to Hero and Power Construct, keep their ability, which has neither `onEnd` nor
+    /// `onStart`, so `setAbility`'s End and Start do nothing.
     Permanent,
 }
 
@@ -577,12 +577,14 @@ pub(crate) fn has_residual(ability: AbilityId) -> bool {
         abilities::SHIELDS_DOWN,
         abilities::HUNGER_SWITCH,
         abilities::ZEN_MODE,
+        abilities::POWER_CONSTRUCT,
     ]
     .contains(&ability)
 }
 
 /// The ability's `onResidual` (`residual.rs`, order 29, ability sub-order) for its holder in
-/// `slot`: Schooling, Shields Down, Hunger Switch, Zen Mode. Each only changes its holder.
+/// `slot`: Schooling, Shields Down, Hunger Switch, Zen Mode, Power Construct. Each only changes
+/// its holder.
 pub(crate) fn residual<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
@@ -593,8 +595,53 @@ pub(crate) fn residual<const N: usize>(
         a if a == abilities::SHIELDS_DOWN => shields_down(b, slot)?,
         a if a == abilities::HUNGER_SWITCH => hunger_switch(b, slot),
         a if a == abilities::ZEN_MODE => zen_mode(b, slot),
+        a if a == abilities::POWER_CONSTRUCT => power_construct(b, slot)?,
         _ => {}
     }
+    Ok(())
+}
+
+/// Power Construct's `onResidual` (order 29; `cantsuppress`) for its holder in `slot`: a Zygarde
+/// (`baseSpecies.baseSpecies`; the engine has no Transform) with HP, not already Complete, at
+/// half its max HP or less becomes Zygarde-Complete for good (`formeChange('Zygarde-Complete',
+/// this.effect, true)`: stats, `updateMaxHp` keeping the HP lost so far, and the forme's
+/// ability — Power Construct again, which has no End or Start). Refused: a holder whose item
+/// would then let it Mega Evolve (`canMegaEvo` is recomputed: Zygardite's Zygarde-Complete
+/// entry), and a Zygarde not in its 50% or 10% forme (Mega Zygarde). The `formeRegression` the
+/// change sets makes a fainting Zygarde-Complete go back to its set's forme, which the state
+/// does not keep: that faint is refused in `Battle::faint_messages`.
+fn power_construct<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> Result<(), TurnError> {
+    let Some((forme, hp, max_hp, item)) = b
+        .alive(slot)
+        .map(|p| b.mon(p))
+        .map(|m| (m.species, m.hp, m.max_hp, m.item))
+    else {
+        return Ok(());
+    };
+    let base = forme.data().base_species;
+    let base = if base.is_none() { forme } else { base };
+    if base != species::ZYGARDE || forme == species::ZYGARDE_COMPLETE {
+        return Ok(());
+    }
+    // `if (... || pokemon.hp > pokemon.maxhp / 2) return;`
+    if 2 * i32::from(hp) > i32::from(max_hp) {
+        return Ok(());
+    }
+    if forme != species::ZYGARDE && forme != species::ZYGARDE_10 {
+        return Err(b.unsupported(format!("Power Construct on {}", forme.data().name)));
+    }
+    if item
+        .data()
+        .mega_stone
+        .iter()
+        .any(|&(from, _)| from == species::ZYGARDE_COMPLETE)
+    {
+        return Err(b.unsupported(format!(
+            "Power Construct making a Zygarde holding {} able to Mega Evolve",
+            item.data().name
+        )));
+    }
+    forme_change(b, slot, species::ZYGARDE_COMPLETE, Change::Permanent);
     Ok(())
 }
 
@@ -861,16 +908,21 @@ mod tests {
         assert!(!data.flags.contains(crate::dex::AbilityFlags::BREAKABLE));
     }
 
-    /// The F19 ability that stays refused, with the reason pinned here: Power Construct
-    /// (Zygarde-Complete is permanent but regresses on fainting (`formeRegression`) to the set's
-    /// species (Zygarde or Zygarde-10%, not in the state) with `updateMaxHp`, and it recomputes
-    /// `canMegaEvo`). Gulp Missile is implemented (Opus U: `gulp_missile_catch` / `_spit`).
+    /// Power Construct is implemented (Opus AA: [`power_construct`]) up to what the state
+    /// cannot hold: a fainting Zygarde-Complete regresses (`formeRegression`) to the set's species
+    /// (Zygarde or Zygarde-10%, not in the state) with `updateMaxHp` (refused in
+    /// `Battle::faint_messages`), and the recomputed `canMegaEvo` of a Zygardite holder is
+    /// refused. Gulp Missile is implemented (Opus U: `gulp_missile_catch` / `_spit`).
     ///
     /// Battle Bond is supported only where it is inert ([`field_problem`]).
     #[test]
     fn unimplemented_forme_abilities_stay_refused() {
         use crate::turn::support::ability_supported_on_field;
-        assert!(!ability_supported_on_field(abilities::POWER_CONSTRUCT));
+        assert!(ability_supported_on_field(abilities::POWER_CONSTRUCT));
+        assert!(abilities::POWER_CONSTRUCT
+            .data()
+            .event_orders
+            .contains(&("onResidualOrder", 29)));
         assert!(ability_supported_on_field(abilities::GULP_MISSILE));
         assert_eq!(
             abilities::BATTLE_BOND.data().handlers,

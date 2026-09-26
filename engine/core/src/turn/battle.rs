@@ -145,6 +145,8 @@ pub struct HistoryReaders {
     pub moves_used: bool,
     /// Copycat (`battle.lastMove`: `State::last_move`).
     pub last_move: bool,
+    /// Pickup (`usedItemThisTurn`).
+    pub used_item: bool,
 }
 
 impl HistoryReaders {
@@ -156,6 +158,11 @@ impl HistoryReaders {
                 // without one never gets one.
                 if mon.item == items::METRONOME {
                     readers.move_last_turn_result = true;
+                }
+                // Pickup: an ability only moves between party members (Skill Swap, Trace,
+                // Receiver, ...), so a battle without a holder never gets one.
+                if mon.ability == abilities::PICKUP || mon.base_ability == abilities::PICKUP {
+                    readers.used_item = true;
                 }
                 for slot in &mon.moves {
                     use crate::dex::moves as m;
@@ -683,6 +690,14 @@ impl<'a, const N: usize> Battle<'a, N> {
             // Receiver / Power of Alchemy (`onAllyFaint`) take `target.getAbility()`, the one it
             // has before `clearVolatile` reverts it.
             let fainted_ability = self.raw_ability(slot);
+            // Power Construct's `formeRegression`: a fainting Zygarde-Complete goes back to its
+            // set's species (50% or 10%) and ability with `updateMaxHp`; the state does not keep
+            // which forme the set had.
+            if self.mon(pokemon).species == crate::dex::species::ZYGARDE_COMPLETE {
+                return Err(self.unsupported(
+                    "Zygarde-Complete fainting (Power Construct's formeRegression to the set's forme)",
+                ));
+            }
             // clearVolatile: the ability and types revert; the slot empties (isActive = false).
             self.clear_volatile(pokemon);
             let previous = self.state.slot(slot).clone();
@@ -1644,6 +1659,8 @@ impl<'a, const N: usize> Battle<'a, N> {
         });
         // `clearEffectState(itemState)`: Eject Pack's flag goes with the item.
         self.delete_volatile(slot, Volatile::EjectPack);
+        // `this.usedItemThisTurn = true` (Pickup).
+        self.record_used_item(slot);
         // The only berries consumed through here are the resist berries, which Showdown eats
         // (`eatItem`: `runEvent('EatItem')` after their empty `onEat`, then `ateBerry = true`,
         // Belch). EatItem comes before the item is gone; nothing it runs reads the item.

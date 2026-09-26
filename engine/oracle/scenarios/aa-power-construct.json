@@ -1,0 +1,72 @@
+{
+ "description": "Power Construct: Super Fang (90% accurate) halves Zygarde (214 HP) and Zygarde-10% (160 HP); at the residual (order 29) each at half HP or less becomes Zygarde-Complete for good, max HP 322 with the HP lost so far kept.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Zygarde",
+    "item": "",
+    "ability": "Power Construct",
+    "nature": "Serious",
+    "evs": {
+     "hp": 31
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50,
+    "name": "Fifty"
+   },
+   {
+    "species": "Zygarde-10%",
+    "item": "",
+    "ability": "Power Construct",
+    "nature": "Serious",
+    "evs": {
+     "hp": 31
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50,
+    "name": "Ten"
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Raticate",
+    "item": "",
+    "ability": "Guts",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Super Fang"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Furret",
+    "item": "",
+    "ability": "Frisk",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Super Fang"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move harden, move harden",
+  "p2": "move superfang 1, move superfang 2"
+ }
+}

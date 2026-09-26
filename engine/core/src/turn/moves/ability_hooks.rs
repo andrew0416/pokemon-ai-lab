@@ -170,8 +170,8 @@ pub(super) fn accuracy_event<const N: usize>(
 }
 
 /// The user's ability `onModifyMove` (`runEvent('ModifyMove')`, after the move's own):
-/// - Mold Breaker, Teravolt, Turboblaze: `move.ignoreAbility = true` (the Battle's active move,
-///   read by `suppressingAbility`);
+/// - Mold Breaker, Teravolt, Turboblaze, and Mycelium Might for a status move:
+///   `move.ignoreAbility = true` (the Battle's active move, read by `suppressingAbility`);
 /// - Sheer Force: a move with secondaries (and no `hasSheerForceBoost`) loses them and its
 ///   `self` effect and is marked `hasSheerForce`;
 /// - Serene Grace (priority -2): every secondary chance and `self.chance` doubles;
@@ -193,7 +193,9 @@ pub(super) fn on_modify_move<const N: usize>(
         abilities::TERAVOLT,
         abilities::TURBOBLAZE,
     ];
-    if mold_breaker.contains(&ability) {
+    // Mycelium Might: `if (move.category === 'Status') move.ignoreAbility = true;`.
+    let mycelium = ability == abilities::MYCELIUM_MIGHT && mv.category == MoveCategory::Status;
+    if mold_breaker.contains(&ability) || mycelium {
         if let Some(active) = b.active_move.as_mut() {
             active.ignore_ability = true;
         }

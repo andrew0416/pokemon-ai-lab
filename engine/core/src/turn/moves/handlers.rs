@@ -2851,7 +2851,11 @@ fn instruct<const N: usize>(
     if b.item(target) == items::QUICK_CLAW {
         return Err(b.unsupported("Instruct on a Quick Claw holder"));
     }
-    let fractional_tenths = super::super::items::fractional_priority_tenths(b.state, target);
+    // Quick Draw's random `onFractionalPriority` would be drawn for the new action too.
+    if b.ability(target) == abilities::QUICK_DRAW && data.category != MoveCategory::Status {
+        return Err(b.unsupported("Instruct on a Quick Draw holder"));
+    }
+    let fractional_tenths = super::super::items::fractional_priority_tenths(b.state, target, last);
     b.queue.push(Action {
         slot: target,
         pokemon,
