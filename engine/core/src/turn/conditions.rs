@@ -915,6 +915,59 @@ pub(crate) fn syrup_bomb_residual<const N: usize>(
     Ok(())
 }
 
+/// Fling's condition `onUpdate` on the Pokémon in `slot` (its user): `const item =
+/// pokemon.getItem(); pokemon.setItem(''); pokemon.lastItem = item.id; pokemon.usedItemThisTurn =
+/// true; this.runEvent('AfterUseItem', pokemon, null, null, item); pokemon.removeVolatile('fling');`
+/// — the item goes without being used (`setItem`: its `End` runs: Mirror Herb forgets its copied
+/// raises, Eject Pack's flag ends; Utility Umbrella's WeatherChange in sun or rain is refused),
+/// becomes `lastItem`, and Unburden and an ally's Symbiosis react. (`usedItemThisTurn` is only
+/// read by Pickup, which is not implemented.)
+pub(crate) fn fling_update<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+) -> Result<(), TurnError> {
+    if !b.volatile(slot, Volatile::Fling).active {
+        return Ok(());
+    }
+    let Some(pokemon) = b.alive(slot) else {
+        return Ok(());
+    };
+    let item = b.raw_item(slot);
+    if item == items::UTILITY_UMBRELLA
+        && matches!(
+            b.effective_weather(),
+            crate::field::Weather::Sun | crate::field::Weather::Rain
+        )
+    {
+        return Err(b.unsupported(
+            "Fling throwing Utility Umbrella in sun or rain (its End's WeatherChange)",
+        ));
+    }
+    if !item.is_none() {
+        b.apply(Instruction::SetItem {
+            target: pokemon,
+            old: item,
+            new: crate::dex::ItemId::NONE,
+        });
+        b.delete_volatile(slot, Volatile::EjectPack);
+        if item == items::MIRROR_HERB {
+            b.mirror_herb.retain(|&(p, _)| p != pokemon);
+        }
+    }
+    let last = b.mon(pokemon).last_item;
+    if last != item {
+        b.apply(Instruction::SetLastItem {
+            target: pokemon,
+            old: last,
+            new: item,
+        });
+    }
+    super::abilities::unburden(b, slot);
+    super::abilities::symbiosis(b, slot);
+    b.remove_volatile(slot, Volatile::Fling);
+    Ok(())
+}
+
 /// Mean Look, Block, Spider Web `onHit`: `target.addVolatile('trapped', source, move,
 /// 'trapper')`. Fails on a fainted target, one already trapped (no `onRestart`) or one immune to
 /// `trapped` (`runStatusImmunity`: a Ghost type); otherwise the target gets `trapped` (its

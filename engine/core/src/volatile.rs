@@ -342,9 +342,17 @@ pub enum Volatile {
     /// A Ghost type's Curse on its target (`curse`, no duration, residual order 12): the holder
     /// loses baseMaxhp / 4 each turn.
     Curse,
+    /// Uproar on its user (`uproar`, duration 3, residual order 28 / sub-order 1): the user is
+    /// locked into Uproar (`onLockMove`) and nobody on the field can fall asleep
+    /// (`onAnySetStatus`); it ends early under Throat Chop or after Struggle.
+    Uproar,
+    /// Fling's condition on its user (`fling`, no duration), from its PrepareHit until the next
+    /// Update throws the held item (`onUpdate`: `conditions::fling_update`). Added by name, so the
+    /// dex has no condition id.
+    Fling,
 }
 
-pub const VOLATILE_COUNT: usize = 104;
+pub const VOLATILE_COUNT: usize = 106;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -452,6 +460,8 @@ impl Volatile {
         Volatile::ChillyReception,
         Volatile::SyrupBomb,
         Volatile::Curse,
+        Volatile::Uproar,
+        Volatile::Fling,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -520,6 +530,7 @@ impl Volatile {
             Volatile::GastroAcid => conditions::GASTROACID,
             Volatile::SyrupBomb => conditions::SYRUPBOMB,
             Volatile::Curse => conditions::CURSE,
+            Volatile::Uproar => conditions::UPROAR,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -562,7 +573,8 @@ impl Volatile {
             | Volatile::CudChew
             | Volatile::RipenWeaken
             | Volatile::Opportunist
-            | Volatile::ChillyReception => ConditionId::NONE,
+            | Volatile::ChillyReception
+            | Volatile::Fling => ConditionId::NONE,
         }
     }
 
@@ -673,6 +685,8 @@ impl Volatile {
             Volatile::ChillyReception => "chillyreception",
             Volatile::SyrupBomb => "syrupbomb",
             Volatile::Curse => "curse",
+            Volatile::Uproar => "uproar",
+            Volatile::Fling => "fling",
         }
     }
 
@@ -724,7 +738,7 @@ impl Volatile {
             | Volatile::ShadowForce
             | Volatile::AllySwitch
             | Volatile::LaserFocus => 2,
-            Volatile::Encore | Volatile::Taunt => 3,
+            Volatile::Encore | Volatile::Taunt | Volatile::Uproar => 3,
             Volatile::PerishSong | Volatile::SyrupBomb => 4,
             // Partial trapping's and Heal Block's `durationCallback` replace it when they start
             // (`conditions::volatile_start`).
@@ -789,7 +803,8 @@ impl Volatile {
             | Volatile::CudChew
             | Volatile::RipenWeaken
             | Volatile::Opportunist
-            | Volatile::Curse => 0,
+            | Volatile::Curse
+            | Volatile::Fling => 0,
             Volatile::Rollout | Volatile::IceBall => 1,
             Volatile::ZenMode => 0,
         }
@@ -807,6 +822,7 @@ impl Volatile {
             Volatile::Nightmare => Some(11),
             Volatile::Octolock | Volatile::SyrupBomb => Some(14),
             Volatile::Curse => Some(12),
+            Volatile::Uproar => Some(28),
             Volatile::Taunt => Some(15),
             Volatile::Encore => Some(16),
             Volatile::Disable => Some(17),
@@ -938,7 +954,8 @@ impl Volatile {
             | Volatile::GastroAcid
             | Volatile::Truant
             | Volatile::ChillyReception
-            | Volatile::Curse => Passed::Copied,
+            | Volatile::Curse
+            | Volatile::Fling => Passed::Copied,
             // `noCopy` conditions.
             Volatile::Spotlight
             | Volatile::Encore
@@ -1001,7 +1018,8 @@ impl Volatile {
             | Volatile::IceBurn
             | Volatile::Geomancy
             | Volatile::Rollout
-            | Volatile::IceBall => Passed::Refused,
+            | Volatile::IceBall
+            | Volatile::Uproar => Passed::Refused,
         }
     }
 }
@@ -1181,6 +1199,7 @@ mod tests {
                         | Volatile::RipenWeaken
                         | Volatile::Opportunist
                         | Volatile::ChillyReception
+                        | Volatile::Fling
                 ));
                 continue;
             }
@@ -1240,6 +1259,7 @@ mod tests {
             (Volatile::ChillyReception, moves::CHILLY_RECEPTION),
             (Volatile::SyrupBomb, moves::SYRUP_BOMB),
             (Volatile::Curse, moves::CURSE),
+            (Volatile::Uproar, moves::UPROAR),
         ] {
             let data = id.data();
             assert_eq!(

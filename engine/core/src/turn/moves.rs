@@ -101,6 +101,10 @@ struct ActiveMove {
     /// Fist, Piercing Drill: a protection that would have stopped the move let it through), as a
     /// bit per slot ([`target_bit`]): the move's damage to them is quartered.
     bypass_protect: u8,
+    /// Beat Up's `move.allies` as their hits' base powers (`5 + floor(baseAtk / 10)` of each
+    /// ally's set species, in hit order; 0 past the last), fixed by its `onModifyMove`
+    /// ([`handlers::beat_up_powers`]). All 0 for any other move.
+    beat_up: [u8; 6],
 }
 
 impl ActiveMove {
@@ -167,6 +171,7 @@ impl PartialEq for ActiveMove {
             && self.has_bounced == other.has_bounced
             && self.future_hit == other.future_hit
             && self.bypass_protect == other.bypass_protect
+            && self.beat_up == other.beat_up
     }
 }
 
@@ -196,6 +201,7 @@ impl std::hash::Hash for ActiveMove {
         self.has_bounced.hash(state);
         self.future_hit.hash(state);
         self.bypass_protect.hash(state);
+        self.beat_up.hash(state);
     }
 }
 
@@ -331,6 +337,7 @@ pub(crate) fn run_move<const N: usize>(
             has_bounced: false,
             future_hit: false,
             bypass_protect: 0,
+            beat_up: [0; 6],
         };
         before_move(b, user, &recharge);
         // MoveAborted: Destiny Bond ends.
@@ -470,6 +477,7 @@ pub(crate) fn future_move_hit<const N: usize>(
         has_bounced: false,
         future_hit: true,
         bypass_protect: 0,
+        beat_up: [0; 6],
     };
     // `trySpreadMoveHit(..., notActive)`: `setActiveMove(move, source, target)`; the move ignores
     // no ability.
@@ -655,6 +663,7 @@ fn run_external_move<const N: usize>(
         has_bounced: false,
         future_hit: false,
         bypass_protect: 0,
+        beat_up: [0; 6],
         target_loc,
     };
     let recharging = b.volatile(user, Volatile::MustRecharge).active;
@@ -743,6 +752,7 @@ fn run_move_inner<const N: usize>(
         has_bounced: false,
         future_hit: false,
         bypass_protect: 0,
+        beat_up: [0; 6],
         target_loc,
     };
 
@@ -797,6 +807,12 @@ fn run_move_inner<const N: usize>(
         return Ok(MoveStep::Suspended(progress));
     }
     let user = handlers::current_slot(b, user, pokemon);
+    // Fling's user knocked out before an Update threw its item (Jaboca Berry, say): Showdown's
+    // `fling.onUpdate` then runs on a 0-HP user, whose `setItem('')` and `removeVolatile` fail
+    // while `lastItem` and AfterUseItem still happen.
+    if b.volatile(user, Volatile::Fling).active && b.alive(user).is_none() {
+        return Err(b.unsupported("Fling's user fainted before its item was thrown"));
+    }
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
     handlers::on_after_move(b, user, pokemon, &mv);
     run_move_tail(b, user, &mv)?;
@@ -1412,6 +1428,7 @@ fn call_move<const N: usize>(
         has_bounced: false,
         future_hit: false,
         bypass_protect: 0,
+        beat_up: [0; 6],
     };
     let target = match target {
         Some(t) => Some(t),
@@ -1490,6 +1507,7 @@ fn bounce_move<const N: usize>(
         has_bounced: true,
         future_hit: false,
         bypass_protect: 0,
+        beat_up: [0; 6],
         // A bounced Parting Shot switches the bouncer out (`moveHit` sets the flag for the
         // copy's user).
         self_switch: data.self_switch != SelfSwitch::No,
@@ -1796,7 +1814,7 @@ fn try_spread_move_hit<const N: usize>(
             total_damage: 0,
         });
     }
-    // The move's other `onPrepareHit` handlers (Ally Switch).
+    // The move's other `onPrepareHit` handlers (Ally Switch, Fling).
     if !handlers::on_prepare_hit(b, user, mv) {
         return Ok(HitOutcome::Finished {
             ok: false,
@@ -1931,6 +1949,10 @@ fn hit_target_slots<const N: usize>(bits: u8) -> Vec<SlotRef> {
 /// moves Showdown's 35/35/15/15 draw (Skill Link: always the maximum; Loaded Dice: 4 or 5
 /// evenly, and 4–10 evenly for a 10-hit move).
 fn decide_hits<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) -> u8 {
+    // Beat Up: `move.multihit = move.allies.length` (a number: no draw, no Skill Link).
+    if mv.id == moves::BEAT_UP {
+        return mv.beat_up.iter().filter(|&&p| p != 0).count().max(1) as u8;
+    }
     let Some((low, high)) = mv.data.multihit else {
         return 1;
     };
@@ -2480,11 +2502,7 @@ fn hit_loop<const N: usize>(
                     }
                 }
                 item_events::AfterMoveSecondaryHandler::Ability => {
-                    let damage = if mv.data.multihit.is_some() {
-                        total
-                    } else {
-                        damage
-                    };
+                    let damage = if is_multihit(mv.id) { total } else { damage };
                     ability_events::after_move_secondary(b, user, t, damage, total);
                     ability_events::pickpocket(b, user, t, mv.data)?;
                     ability_events::color_change(b, t, mv.move_type, mv.data.category);
@@ -2783,9 +2801,12 @@ fn spread_move_hit<const N: usize>(
             .into_iter()
             .map(|s| (s, u32::from(s.chance) * mv.secondary_chance_factor))
             .collect();
+        // Fling's appended secondary comes last (its PrepareHit runs after ModifyMove).
+        let flung = handlers::fling_secondary(b, user, mv, t);
         let added: Vec<(&Secondary, u32)> = mv
             .added_secondary
             .iter()
+            .chain(flung.iter())
             .map(|s| (s, u32::from(s.chance)))
             .collect();
         for (secondary, chance) in own.into_iter().chain(added) {
@@ -2898,6 +2919,12 @@ fn spread_move_hit<const N: usize>(
         }
     }
     Ok(results)
+}
+
+/// Showdown `move.multihit` is set: a multi-hit move of the dex, or Beat Up (its `onModifyMove`
+/// sets it to the number of allies, even 1).
+pub(crate) fn is_multihit(id: MoveId) -> bool {
+    id.data().multihit.is_some() || id == moves::BEAT_UP
 }
 
 /// The `switchFlag` a self-switching move leaves on its user (`source.switchFlag = move.id`):

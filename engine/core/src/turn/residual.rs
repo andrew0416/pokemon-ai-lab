@@ -211,10 +211,16 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                     });
                 }
                 if state.duration > 0 {
+                    // Uproar's `onResidualSubOrder: 1`; the others take the condition's.
+                    let sub_order = if volatile == Volatile::Uproar {
+                        1
+                    } else {
+                        SUB_CONDITION
+                    };
                     out.push(Handler {
                         order: volatile.residual_order().unwrap_or(ORDER_DEFAULT),
                         speed,
-                        sub_order: SUB_CONDITION,
+                        sub_order,
                         kind: Kind::VolatileDuration(pokemon, slot, volatile),
                     });
                 }
@@ -474,6 +480,16 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
                     }
                 }
                 Volatile::PartiallyTrapped => conditions::partially_trapped_residual(b, slot),
+                // Uproar: `if (target.volatiles['throatchop']) { target.removeVolatile('uproar');
+                // return; }` then `if (target.lastMove?.id === 'struggle') delete
+                // target.volatiles['uproar'];` (both ends only log).
+                Volatile::Uproar => {
+                    if b.volatile(slot, Volatile::ThroatChop).active {
+                        b.remove_volatile(slot, volatile);
+                    } else if b.state.slot(slot).last_move == crate::dex::moves::STRUGGLE {
+                        b.delete_volatile(slot, volatile);
+                    }
+                }
                 // Syrup Bomb: `this.boost({spe: -1}, pokemon, this.effectState.source)`.
                 Volatile::SyrupBomb => conditions::syrup_bomb_residual(b, slot)?,
                 // Rollout, Ice Ball: `if (target.lastMove && target.lastMove.id === 'struggle')

@@ -150,6 +150,9 @@ pub(super) fn on_modify_move<const N: usize>(
                 mv.accuracy = None;
             }
         }
+        // Beat Up: `move.allies = pokemon.side.pokemon.filter(ally => ally === pokemon ||
+        // !ally.fainted && !ally.status); move.multihit = move.allies.length;`
+        moves::BEAT_UP => mv.beat_up = beat_up_powers(b, user)?,
         // Curse: `if (!source.hasType('Ghost')) move.target = move.nonGhostTarget; else if
         // (source.isAlly(target)) move.target = 'randomNormal';` (the caller then re-picks the
         // target: the user, or a random foe).
@@ -221,6 +224,84 @@ pub(super) fn on_modify_move<const N: usize>(
         _ => {}
     }
     Ok(())
+}
+
+/// Beat Up's `move.allies` (its `onModifyMove`) as hit powers: `side.pokemon` in order, the user
+/// and every Pokémon that has not fainted and has no status. Showdown's `side.pokemon` puts the
+/// active positions first (in slot order), then the bench in an order the switches so far decided,
+/// which the state does not keep: with two or more eligible benched Pokémon of different power
+/// the hit order is unknown and the move is unsupported.
+fn beat_up_powers<const N: usize>(b: &Battle<'_, N>, user: SlotRef) -> Result<[u8; 6], TurnError> {
+    let side = b.state.side(user.side);
+    let user_pokemon = b.occupant(user);
+    let eligible = |party: u8| {
+        let pokemon = PokemonRef {
+            side: user.side,
+            party,
+        };
+        let mon = b.mon(pokemon);
+        Some(pokemon) == user_pokemon || (mon.hp > 0 && mon.status == Status::None)
+    };
+    let power = |party: u8| {
+        let mon = &side.party[usize::from(party)];
+        5 + set_species(mon).data().base_stats[1] / 10
+    };
+    let mut powers = Vec::new();
+    for slot in &side.slots {
+        if let Some(party) = slot.party_index.or(slot.fainted_occupant) {
+            if eligible(party) {
+                powers.push(power(party));
+            }
+        }
+    }
+    let mut bench = Vec::new();
+    for party in 0..side.party.len() as u8 {
+        let placed = side
+            .slots
+            .iter()
+            .any(|s| s.party_index == Some(party) || s.fainted_occupant == Some(party));
+        if !placed && !side.party[usize::from(party)].species.is_none() && eligible(party) {
+            bench.push(power(party));
+        }
+    }
+    if bench.windows(2).any(|w| w[0] != w[1]) {
+        return Err(b.unsupported(format!(
+            "Beat Up with benched allies of different power {bench:?} (their order in Showdown's              side.pokemon depends on the switches so far, which the state does not keep)"
+        )));
+    }
+    powers.extend(bench);
+    let mut out = [0u8; 6];
+    for (i, p) in powers.into_iter().take(6).enumerate() {
+        out[i] = p;
+    }
+    Ok(out)
+}
+
+/// The species of the Pokémon's set (Showdown `set.species`), which Beat Up reads: its species
+/// before a Mega Evolution (the held Mega Stone names it: Champions evolves only the exact
+/// species), a temporary forme's base, or the forme a permanent battle change left (Palafin-Hero,
+/// Mimikyu-Busted, Eiscue-Noice).
+fn set_species(mon: &Pokemon) -> crate::dex::SpeciesId {
+    use crate::dex::species;
+    if let Some(&(from, _)) = mon
+        .item
+        .data()
+        .mega_stone
+        .iter()
+        .find(|&&(_, to)| to == mon.species)
+    {
+        return from;
+    }
+    if let Some(base) = super::super::forme::temporary_forme_base(mon.species) {
+        return base;
+    }
+    match mon.species {
+        s if s == species::PALAFIN_HERO => species::PALAFIN,
+        s if s == species::MIMIKYU_BUSTED => species::MIMIKYU,
+        s if s == species::MIMIKYU_BUSTED_TOTEM => species::MIMIKYU_TOTEM,
+        s if s == species::EISCUE_NOICE => species::EISCUE,
+        s => s,
+    }
 }
 
 /// Rollout's and Ice Ball's `basePowerCallback` (called for each hit's `getDamage`): the power
@@ -805,6 +886,19 @@ pub(super) fn on_try_hit<const N: usize>(
             let (hp, max_hp) = (i32::from(m.hp), i32::from(m.max_hp));
             !b.has_substitute(target) && 4 * hp > max_hp && max_hp != 1
         }),
+        // Uproar: `for (const [i, allyActive] of activeTeam.entries()) { if (allyActive?.status
+        // === 'slp') allyActive.cureStatus(); ... foeActive ... }` (both sides' actives; returns
+        // nothing).
+        moves::UPROAR => {
+            for side in [SideId::One, SideId::Two] {
+                for slot in Battle::<N>::slots(side) {
+                    if let Some(p) = b.alive(slot).filter(|&p| b.mon(p).status == Status::Sleep) {
+                        b.cure_status(p);
+                    }
+                }
+            }
+            true
+        }
         // Curse: a Ghost's Curse fails on a target already cursed (`if (move.volatileStatus &&
         // target.volatiles['curse']) return false;`); the non-Ghost branch only swaps the effects
         // ([`keeps_volatile_status`], [`try_hit_self_boosts`], [`on_hit`]).
@@ -1460,6 +1554,9 @@ pub(super) fn base_power_callback<const N: usize>(
                 _ => 40,
             }
         }
+        // Beat Up: `5 + Math.floor(setSpecies.baseStats.atk / 10)` of the next of `move.allies`
+        // (one per hit).
+        moves::BEAT_UP => i32::from(mv.beat_up[usize::from(hit.max(1) - 1).min(5)]),
         // Triple Axel: `20 * move.hit`; Triple Kick: `10 * move.hit`.
         moves::TRIPLE_AXEL => 20 * i32::from(hit),
         moves::TRIPLE_KICK => 10 * i32::from(hit),
@@ -2556,6 +2653,55 @@ pub(super) fn on_hit<const N: usize>(
             b.direct_damage(target, (max_hp / 4).max(1));
             return Ok(None);
         }
+        // Fling's `move.onHit`, set by its PrepareHit from the thrown item: a berry is eaten by
+        // the target (`singleEvent('Eat', item, ..., foe, source, move)`: its `onEat` on the
+        // foe; then `runEvent('EatItem', foe, source, move, item)`: Cheek Pouch, Cud Chew, Ripen;
+        // `if (item.onEat) foe.ateBerry = true`); Mental Herb and White Herb run their
+        // `fling.effect` on the target. It returns nothing.
+        moves::FLING => {
+            let Some(item) = flung_item(b, user, mv) else {
+                return Ok(None);
+            };
+            let data = item.data();
+            if data.is_berry {
+                let Some(eater) = b.occupant(target) else {
+                    return Ok(None);
+                };
+                let empty =
+                    data.handlers.is_empty() || super::super::items::resist_berry(item).is_some();
+                if !empty && !super::super::update::berry_on_eat(b, target, eater, item) {
+                    return Err(b.unsupported(format!("Fling feeding {}", data.name)));
+                }
+                super::super::abilities::eat_item_event(b, target, item, false);
+                if data.handlers.contains(&"onEat") {
+                    b.record_ate_berry(eater);
+                }
+            } else if item == items::MENTAL_HERB {
+                // `for (const firstCondition of conditions) if (pokemon.volatiles[firstCondition])
+                // { for (const secondCondition of conditions) pokemon.removeVolatile(...);
+                // return; }` (attract, taunt, encore, torment, disable, healblock).
+                const CURED: [Volatile; 6] = [
+                    Volatile::Attract,
+                    Volatile::Taunt,
+                    Volatile::Encore,
+                    Volatile::Torment,
+                    Volatile::Disable,
+                    Volatile::HealBlock,
+                ];
+                if CURED.iter().any(|&v| b.volatile(target, v).active) {
+                    for v in CURED {
+                        b.remove_volatile(target, v);
+                    }
+                }
+            } else if item == items::WHITE_HERB {
+                // `pokemon.setBoost(boosts)` with every negative stage at 0 (no boost events).
+                let boosts = b.state.slot(target).boosts;
+                if boosts.iter().any(|&v| v < 0) {
+                    set_boosts(b, target, boosts.map(|v| v.max(0)));
+                }
+            }
+            return Ok(None);
+        }
         // Curse (a Ghost's; the non-Ghost branch deleted `move.onHit`): `this.directDamage(
         // source.maxhp / 2, source, source)` after the target got the curse (returns nothing).
         moves::CURSE => {
@@ -2964,17 +3110,80 @@ fn instruct<const N: usize>(
 }
 
 /// The move's own `onPrepareHit` handlers other than the stall moves' (`trySpreadMoveHit`, before
-/// the user's ability's PrepareHit). Ally Switch: `return pokemon.addVolatile('allyswitch');`
-/// (its `onRestart` draws the 1/`counter` chance). `false` = the move fails.
+/// the user's ability's PrepareHit). `false` = the move fails.
+/// - Ally Switch: `return pokemon.addVolatile('allyswitch');` (its `onRestart` draws the
+///   1/`counter` chance).
+/// - Fling: fails if the user ignores its item for Fling (`ignoringItem(true)`: Magic Room, or
+///   Klutz whatever the item), if the item's own TakeItem handler keeps it (`item_can_be_taken`:
+///   a Mega Stone of the user's species, Booster Energy on a Paradox Pokémon; no item at all) or
+///   it has no `fling` data; otherwise `move.basePower = item.fling.basePower`, a Cud Chew user
+///   remembers a flung berry (its `onEatItem`), and the `fling` volatile starts: the next Update
+///   throws the item (`conditions::fling_update`). What the item does to the target (a berry
+///   eaten, `fling.effect`, a status or flinch) is read from the item the user still holds at
+///   the hit: [`on_hit`], [`fling_secondary`].
 pub(super) fn on_prepare_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
-    mv: &ActiveMove,
+    mv: &mut ActiveMove,
 ) -> bool {
     match mv.id {
         moves::ALLY_SWITCH => b.add_volatile(user, Volatile::AllySwitch),
+        moves::FLING => {
+            let magic_room = b.field_active(FieldEffect::MagicRoom);
+            if magic_room || b.ability(user) == abilities::KLUTZ || !b.item_can_be_taken(user) {
+                return false;
+            }
+            let item = b.raw_item(user);
+            let Some(fling) = item.data().fling else {
+                return false;
+            };
+            mv.base_power = i32::from(fling.base_power);
+            if item.data().is_berry && b.ability(user) == abilities::CUD_CHEW {
+                super::super::abilities::eat_item_event(b, user, item, false);
+            }
+            b.add_volatile(user, Volatile::Fling);
+            true
+        }
         _ => true,
     }
+}
+
+/// The item Fling is throwing: the user's held item while its `fling` volatile waits for the
+/// Update (between Fling's PrepareHit and the Update after the hit).
+fn flung_item<const N: usize>(b: &Battle<'_, N>, user: SlotRef, mv: &ActiveMove) -> Option<ItemId> {
+    (mv.id == moves::FLING && b.volatile(user, Volatile::Fling).active).then(|| b.raw_item(user))
+}
+
+/// The secondary Fling's PrepareHit appends for an item with `fling.status` or
+/// `fling.volatileStatus` (Light Ball, Poison Barb, King's Rock, ...: no chance, so it always
+/// applies; Showdown still draws its roll), after the move's own and King's Rock's. The target's
+/// `ModifySecondaries` removes it: Shield Dust (breakable) and Covert Cloak (the caller's
+/// `keeps_secondary`).
+pub(super) fn fling_secondary<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> Option<crate::dex::Secondary> {
+    let item = flung_item(b, user, mv)?;
+    let data = item.data();
+    let fling = data.fling?;
+    if data.is_berry || data.handlers.contains(&"fling.effect") {
+        return None;
+    }
+    if fling.status == Status::None && fling.volatile_status.is_none() {
+        return None;
+    }
+    if b.ability_unless_broken(target) == abilities::SHIELD_DUST {
+        return None;
+    }
+    Some(crate::dex::Secondary {
+        chance: 100,
+        status: fling.status,
+        volatile_status: fling.volatile_status,
+        boosts: NO_BOOSTS,
+        self_boosts: NO_BOOSTS,
+    })
 }
 
 /// Where `pokemon`, which started its move in `user`, stands now: Ally Switch moves it during the

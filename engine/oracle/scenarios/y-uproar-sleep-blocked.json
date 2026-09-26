@@ -1,0 +1,86 @@
+{
+ "description": "Opus Y unit 3 Uproar's onAnySetStatus (setup: Shuckle's Uproar): Shuckle is locked into Uproar (no PP), Hariyama's Spore on Clefable and Blissey's Rest (patched to 300 HP) fail: nobody falls asleep during an uproar.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Shuckle",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Uproar",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Rest",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hariyama",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Spore",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move uproar, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "patch": {
+  "p2": {
+   "Blissey": {
+    "hp": 300
+   }
+  }
+ },
+ "turn": {
+  "p1": "move uproar 1, move harden",
+  "p2": "move rest, move spore 2"
+ }
+}

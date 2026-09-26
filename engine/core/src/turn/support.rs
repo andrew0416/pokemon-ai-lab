@@ -1154,6 +1154,25 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "onTryHit",
         ],
     ),
+    // Opus Y unit 3: Uproar (`onTryHit` wakes both sides' actives; the `self` volatile locks the
+    // user, `lock::locked_move`; `onAnySetStatus` in `Battle::set_status_blocked`; `onResidual`
+    // in `residual.rs`; `onStart` / `onEnd` log).
+    (
+        moves::UPROAR,
+        &[
+            "condition.onAnySetStatus",
+            "condition.onEnd",
+            "condition.onResidual",
+            "condition.onStart",
+            "onTryHit",
+        ],
+    ),
+    // Beat Up: `onModifyMove` (`move.allies`, the hit count: `handlers::beat_up_powers`, refused
+    // when Showdown's bench order would matter) and `basePowerCallback`. Fling: `onPrepareHit`
+    // (`handlers::on_prepare_hit`; the thrown item's effect in `handlers::on_hit` and
+    // `handlers::fling_secondary`), `condition.onUpdate` (`conditions::fling_update`).
+    (moves::BEAT_UP, &["basePowerCallback", "onModifyMove"]),
+    (moves::FLING, &["condition.onUpdate", "onPrepareHit"]),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do
@@ -1240,7 +1259,7 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     // `items::attack_handlers` / `defense_handlers`, the power items in
     // `items::base_power_handlers`; Punching Glove's `onModifyMove` (no contact) is
     // `items::makes_contact`. Mental Herb: `onUpdate` in `update::update_event`
-    // (`items::mental_herb`); `fling.effect` needs Fling, which is not supported.
+    // (`items::mental_herb`); `fling.effect` is Fling's `onHit` (`moves::handlers::on_hit`).
     (items::CLEAR_AMULET, &["onTryBoost"]),
     (items::ABILITY_SHIELD, &["onSetAbility"]),
     (items::BIG_ROOT, &["onTryHeal"]),
@@ -1302,8 +1321,8 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::PSYCHIC_SEED, &["onStart", "onTerrainChange"]),
     // Stage items (`items.rs`): White Herb and Mirror Herb at every switch-in batch
     // (`onAnySwitchIn`), Mega Evolution, move end (`onAnyAfterMove`) and residual (order 29);
-    // White Herb's `onStart` only runs from those; `fling.effect` needs Fling, which is not
-    // supported; Terastallization (`onAnyAfterTerastallization`) is off. Mirror Herb's copied
+    // White Herb's `onStart` only runs from those; `fling.effect` is Fling's `onHit`
+    // (`moves::handlers::on_hit`); Terastallization (`onAnyAfterTerastallization`) is off. Mirror Herb's copied
     // raises (`onFoeAfterBoost`) are refused past a stage end (`items::stage_end_check`); its
     // `onEnd` forgets them with the item.
     (
@@ -2301,7 +2320,7 @@ pub(crate) fn sleep_talk_problem(moves: &[MoveId]) -> Option<String> {
         if let Some(why) = move_unsupported(id) {
             return Some(format!("Sleep Talk could call {why}"));
         }
-        if data.multihit.is_some() || data.handlers.contains(&"onAfterMove") {
+        if super::moves::is_multihit(id) || data.handlers.contains(&"onAfterMove") {
             return Some(format!("Sleep Talk calling {}", data.name));
         }
     }
