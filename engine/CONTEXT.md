@@ -125,6 +125,7 @@ D:/cargo-target/release/lab-plan.exe engine/oracle/scenarios/eject-button-uturn.
 D:/cargo-target/release/lab-plan.exe <scenario> --side p2 --rolls pessimistic --eval heuristic --before <oracle 보고서> --exact --max-turns 500
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median   # 초기 상태가 여럿이면 --position (후보 목록은 옵션 없이 실행하면 출력)
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --solve nash   # 행렬 게임 균형(혼합 전략); 모든 쌍을 열거하므로 수십 초
+python engine/scripts/plan_sweep.py runs/plan-20260926 --rolls median --solve nash --exe D:/cargo-target/release/lab-plan.exe   # 실행 디렉터리의 *-vs-*.json 전부(시작 상태별) → out/, summary.<solve>.<rolls>.json
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --plan "move hypnosis 1, move fakeout 2 / move hypervoice, move grassyglide 1"   # 고정 플랜 vs 최악 응수
 LAB_ENGINE_STATS=1 D:/cargo-target/release/lab-turn.exe <scenario> --position 1 --rolls median   # 단계별 프런티어·재실행 수·시간
 D:/cargo-target/release/lab-turn.exe <scenario> --rolls median      # full|extremes|quartiles|median|pessimistic-p1|pessimistic-p2
