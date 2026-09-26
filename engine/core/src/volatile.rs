@@ -237,9 +237,14 @@ pub enum Volatile {
     /// in `counter`: [`encode_pokemon`]; hidden in the canonical state) is no longer active
     /// (`onUpdate`).
     Attract,
+    /// Not a Showdown volatile: Eject Pack's `itemState.eject` (a stat of the holder was lowered
+    /// and the pack has not been used yet: `items::eject_pack_use`). It lives on the item's
+    /// state, which ends with the item (used, knocked off) and on switching out or fainting
+    /// (`onEnd`). No duration; hidden in the canonical state.
+    EjectPack,
 }
 
-pub const VOLATILE_COUNT: usize = 74;
+pub const VOLATILE_COUNT: usize = 75;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -317,6 +322,7 @@ impl Volatile {
         Volatile::Commanded,
         Volatile::GorillaTactics,
         Volatile::Attract,
+        Volatile::EjectPack,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -398,7 +404,8 @@ impl Volatile {
             | Volatile::SupremeOverlord
             | Volatile::Commanding
             | Volatile::Commanded
-            | Volatile::GorillaTactics => ConditionId::NONE,
+            | Volatile::GorillaTactics
+            | Volatile::EjectPack => ConditionId::NONE,
         }
     }
 
@@ -479,6 +486,7 @@ impl Volatile {
             Volatile::Commanded => "commanded",
             Volatile::GorillaTactics => "gorillatactics",
             Volatile::Attract => "attract",
+            Volatile::EjectPack => "ejectpack",
         }
     }
 
@@ -568,7 +576,8 @@ impl Volatile {
             | Volatile::Commanding
             | Volatile::Commanded
             | Volatile::GorillaTactics
-            | Volatile::Attract => 0,
+            | Volatile::Attract
+            | Volatile::EjectPack => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -601,7 +610,8 @@ impl Volatile {
             Volatile::ProteanUsed
             | Volatile::AngerShellUnchecked
             | Volatile::SupremeOverlord
-            | Volatile::GorillaTactics => None,
+            | Volatile::GorillaTactics
+            | Volatile::EjectPack => None,
             // Two-turn move: the target location is not a canonical field.
             Volatile::Roost
             | Volatile::HelpingHand
@@ -792,6 +802,7 @@ mod tests {
                         | Volatile::Commanding
                         | Volatile::Commanded
                         | Volatile::GorillaTactics
+                        | Volatile::EjectPack
                 ));
                 continue;
             }

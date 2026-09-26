@@ -1487,6 +1487,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             old: item,
             new: ItemId::NONE,
         });
+        // `clearEffectState(itemState)`: Eject Pack's flag goes with the item.
+        self.delete_volatile(slot, Volatile::EjectPack);
         // The only berries consumed through here are the resist berries, which Showdown eats
         // (`eatItem`: `ateBerry = true`, Belch).
         if item.data().is_berry {
@@ -1537,6 +1539,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             old,
             new: ItemId::NONE,
         });
+        // The item's state ends with it (Eject Pack's flag).
+        self.delete_volatile(slot, Volatile::EjectPack);
         true
     }
 

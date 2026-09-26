@@ -1,0 +1,28 @@
+{
+ "description": "Opus W unit 1 Eject Pack: Parting Shot lowers Snorlax's Attack and Special Attack, but Eject Pack ignores drops while the active move is Parting Shot; only the Parting Shot user (Incineroar) switches out (Swampert comes in). Snorlax keeps its pack.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Incineroar", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 16}, "moves": ["Parting Shot"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 10}, "moves": ["Harden"], "level": 50},
+   {"species": "Swampert", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 2}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Eject Pack", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Excadrill", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "turn": {"p1": "move partingshot 1, move harden", "p2": "move harden, move harden"},
+ "midTurn": {"p1": ["switch 3"]}
+}

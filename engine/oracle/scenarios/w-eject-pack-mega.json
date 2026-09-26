@@ -1,0 +1,26 @@
+{
+ "description": "Opus W unit 1 Eject Pack: Manectric Mega Evolves and its new Intimidate lowers both p2 actives' Attack; Snorlax's Eject Pack is used at the AfterMega (onAnyAfterMega) and p2 switches Snorlax out for Chansey before the moves.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Manectric", "item": "Manectite", "ability": "Static", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 10}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Eject Pack", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Swampert", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 2}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "turn": {"p1": "move harden mega, move harden", "p2": "move harden, move harden"},
+ "midTurn": {"p2": ["switch 3"]}
+}

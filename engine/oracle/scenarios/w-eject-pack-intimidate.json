@@ -1,0 +1,28 @@
+{
+ "description": "Opus W unit 1 Eject Pack: Incineroar switches in and Intimidates both p1 actives; Snorlax's Eject Pack sets its eject flag (onAfterBoost) and uses itself in the same switch-in batch (onAnySwitchIn, priority -4): p1 must switch Snorlax out (Chansey comes in, Snorlax's Harden is cancelled). Clefable (no item) stays at -1.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "Eject Pack", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 10}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Swampert", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 2}, "moves": ["Harden"], "level": 50},
+   {"species": "Excadrill", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Incineroar", "item": "", "ability": "Intimidate", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 16}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "switch 3, move harden"},
+ "midTurn": {"p1": ["switch 3"]}
+}

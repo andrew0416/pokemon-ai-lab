@@ -1080,6 +1080,25 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     ),
     // AfterBoost (`Battle::boost_by` → `items::after_boost`).
     (items::ADRENALINE_ORB, &["onAfterBoost"]),
+    // Eject Pack (Opus W unit 1): a stat drop sets its flag (`onAfterBoost` in
+    // `items::after_boost`; the hidden `Volatile::EjectPack`, which `onEnd` and the used item
+    // clear), the next switch-in batch (`onAnySwitchIn`, -4), Mega Evolution, move end or
+    // residual (order 29) uses it (`items::eject_pack_use`: `onUseItem` checks, `onUse` sets
+    // `switchFlag = true`), and the turn suspends for the switch (F6). A use during the battle
+    // start or a replacement, which cannot suspend, is refused (`turn::refuse_switch_request`).
+    (
+        items::EJECT_PACK,
+        &[
+            "onAfterBoost",
+            "onAnyAfterMega",
+            "onAnyAfterMove",
+            "onAnySwitchIn",
+            "onEnd",
+            "onResidual",
+            "onUse",
+            "onUseItem",
+        ],
+    ),
     // `Battle::weather_for` at every per-Pokémon weather read. The callbacks only run
     // WeatherChange on the holder (when the item starts being ignored, stops being ignored, or
     // ends in sun or rain), whose only implemented handler, Protosynthesis's, then changes

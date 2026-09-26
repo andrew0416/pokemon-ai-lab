@@ -142,6 +142,7 @@ pub(crate) fn start_handler_implemented(item: ItemId, handler: &str) -> bool {
             inert_start(item) || switch_in_priority(item).is_some() || item == items::WHITE_HERB
         }
         "onTerrainChange" => super::field_events::seed_terrain(item).is_some(),
+        // White Herb, Mirror Herb, Eject Pack.
         "onAnySwitchIn" => any_switch_in_priority(item).is_some(),
         // Ability Shield: the only `setAbility` of a switch-in is the holder's own Trace, which
         // is refused with the shield (`switching::trace`); a forme change skips the event.
@@ -161,9 +162,10 @@ pub(crate) fn switch_in_priority(item: ItemId) -> Option<i32> {
 }
 
 /// `onAnySwitchInPriority` of an item whose `onAnySwitchIn` runs for every switch-in batch,
-/// held by any active Pokémon: White Herb (-2), Mirror Herb (-3).
+/// held by any active Pokémon: White Herb (-2), Mirror Herb (-3), Eject Pack (-4).
 pub(crate) fn any_switch_in_priority(item: ItemId) -> Option<i32> {
-    (item == items::WHITE_HERB || item == items::MIRROR_HERB)
+    [items::WHITE_HERB, items::MIRROR_HERB, items::EJECT_PACK]
+        .contains(&item)
         .then(|| super::abilities::priority(item.data().event_orders, "onAnySwitchInPriority"))
 }
 
@@ -174,6 +176,8 @@ pub(crate) fn any_switch_in_priority(item: ItemId) -> Option<i32> {
 /// - Room Service `onStart`: `this.field.getPseudoWeather('trickroom')` uses it (Speed -1).
 /// - White Herb / Mirror Herb `onAnySwitchIn`: [`white_herb`] / [`mirror_herb_use`] (the
 ///   event's target is the holder: `singleEvent('SwitchIn', ..., effectHolder)`).
+/// - Eject Pack `onAnySwitchIn`: [`eject_pack_use`] (an Intimidate or Sticky Web earlier in the
+///   same batch set its flag).
 pub(crate) fn switch_in_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
     if b.item(slot) != item {
         return;
@@ -189,6 +193,7 @@ pub(crate) fn switch_in_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRe
         }
         i if i == items::WHITE_HERB => white_herb(b, slot),
         i if i == items::MIRROR_HERB => mirror_herb_use(b, slot, slot),
+        i if i == items::EJECT_PACK => eject_pack_use(b, slot),
         // Booster Energy's `onStart`: `started = true`, then its `onUpdate`.
         i if i == items::BOOSTER_ENERGY => super::abilities::booster_energy(b, slot),
         _ => {}
@@ -258,9 +263,13 @@ pub(crate) fn mirror_herb_use<const N: usize>(
 /// - Mirror Herb (`onFoeAfterBoost`, the target's active foes'): unless the effect is
 ///   Opportunist or Mirror Herb, every positive stage is added to the holder's copied raises
 ///   ([`Battle::mirror_herb`]), used at the next trigger ([`mirror_herb_use`]).
+/// - Eject Pack (the target's): `if (this.effectState.eject || this.activeMove?.id ===
+///   'partingshot') return;` then any negative stage sets `effectState.eject`
+///   ([`Volatile::EjectPack`]), which its triggers act on ([`eject_pack_use`]). A stage capped
+///   to 0 (already at -6) or deleted by a TryBoost handler does not count.
 ///
-/// Adrenaline Orb's own boost and Mirror Herb's accumulation commute, so their Speed order is
-/// moot.
+/// Adrenaline Orb's own boost, Mirror Herb's accumulation and Eject Pack's flag commute, so
+/// their Speed order is moot.
 pub(crate) fn after_boost<const N: usize>(
     b: &mut Battle<'_, N>,
     target: SlotRef,
@@ -299,24 +308,94 @@ pub(crate) fn after_boost<const N: usize>(
     {
         use_boost_item(b, target);
     }
+    if b.item(target) == items::EJECT_PACK
+        && b.alive(target).is_some()
+        && boost.iter().any(|&stage| stage < 0)
+        && !b.active_move.is_some_and(|m| m.id == moves::PARTING_SHOT)
+    {
+        b.set_volatile_state(
+            target,
+            Volatile::EjectPack,
+            VolatileState {
+                active: true,
+                ..VolatileState::NONE
+            },
+        );
+    }
 }
 
-/// `runEvent('AfterMove', user)` for the items' `onAnyAfterMove` (White Herb, Mirror Herb),
-/// held by any active Pokémon. Showdown collects `onAny` handlers only while the user is still
-/// active (not yet processed as fainted); every one of them acts on its own holder.
+/// `runEvent('AfterMove', user)` for the items' `onAnyAfterMove` (White Herb, Mirror Herb,
+/// Eject Pack), held by any active Pokémon. Showdown collects `onAny` handlers only while the
+/// user is still active (not yet processed as fainted); every one of them acts on its own
+/// holder, and only Eject Packs depend on each other ([`eject_packs`]).
 pub(crate) fn any_after_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) {
     for slot in b.all_alive() {
         white_herb(b, slot);
         mirror_herb_use(b, slot, user);
     }
+    eject_packs(b);
 }
 
-/// `runEvent('AfterMega', pokemon)` for the items' `onAnyAfterMega` (White Herb, Mirror Herb).
+/// `runEvent('AfterMega', pokemon)` for the items' `onAnyAfterMega` (White Herb, Mirror Herb,
+/// Eject Pack: an Intimidate the new forme brings).
 pub(crate) fn any_after_mega<const N: usize>(b: &mut Battle<'_, N>, pokemon: SlotRef) {
     for slot in b.all_alive() {
         white_herb(b, slot);
         mirror_herb_use(b, slot, pokemon);
     }
+    eject_packs(b);
+}
+
+// ---- Eject Pack -----------------------------------------------------------------------------
+
+/// Whether the Pokémon in `slot` holds an Eject Pack whose `eject` flag is set (a stat of it was
+/// lowered: [`after_boost`]) and whose handlers run (not suppressed).
+fn eject_pending<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
+    b.item(slot) == items::EJECT_PACK && b.volatile(slot, Volatile::EjectPack).active
+}
+
+/// The Eject Packs' `onAnyAfterMove` / `onAnyAfterMega` handlers of every active holder, in
+/// Showdown's handler order (`pokemon.speed`, [`Battle::event_speed`]; equal Speeds shuffled).
+/// Only holders with the flag act, and the first that switches wins: the next one's `onUseItem`
+/// sees its `switchFlag === true` and fails, keeping its flag for a later trigger (the
+/// switch-in of the first one's replacement).
+fn eject_packs<const N: usize>(b: &mut Battle<'_, N>) {
+    let pending: Vec<SlotRef> = b
+        .all_alive()
+        .into_iter()
+        .filter(|&s| eject_pending(b, s))
+        .collect();
+    if pending.is_empty() {
+        return;
+    }
+    for slot in super::abilities::speed_sorted(b, pending, |_, _| true) {
+        eject_pack_use(b, slot);
+    }
+}
+
+/// Eject Pack's trigger (`onAnySwitchIn`, `onAnyAfterMega`, `onAnyAfterMove`, `onResidual`) for
+/// the holder in `slot`: `if (!this.effectState.eject) return; target.useItem();`. `useItem`
+/// needs a holder with HP, and the pack's `onUseItem` refuses while its side cannot switch
+/// (`canSwitch`: no healthy bench member), while the holder commands or is commanded
+/// (Commander), or while any active Pokémon has `switchFlag === true` (an Eject Button's,
+/// Emergency Exit's or another Eject Pack's); the flag then stays. Otherwise `onUse` sets the
+/// holder's `switchFlag = true` and the pack is used up (its flag goes with the item state,
+/// `Battle::use_item`). The Showdown version here has no once-per-turn limit beyond that.
+pub(crate) fn eject_pack_use<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if !eject_pending(b, slot) || b.alive(slot).is_none() {
+        return;
+    }
+    if super::residual::bench(b, slot.side).next().is_none()
+        || b.volatile(slot, Volatile::Commanding).active
+        || b.volatile(slot, Volatile::Commanded).active
+        || b.all_alive()
+            .iter()
+            .any(|&s| b.state.slot(s).switch_flag == SwitchFlag::Effect)
+    {
+        return;
+    }
+    b.set_switch_flag(slot, SwitchFlag::Effect);
+    b.use_item(slot);
 }
 
 /// `runEvent('PseudoWeatherChange')` after a new pseudo-weather starts (`addPseudoWeather`, not
@@ -1212,7 +1291,9 @@ pub(crate) fn residual_order(item: ItemId) -> Option<(u32, u32)> {
         }
         // No `onResidualOrder`: last, with the item sub-order.
         i if i == items::MICLE_BERRY => Some((ORDER_DEFAULT, SUB_ITEM)),
-        i if i == items::WHITE_HERB || i == items::MIRROR_HERB => Some((29, SUB_ITEM)),
+        i if i == items::WHITE_HERB || i == items::MIRROR_HERB || i == items::EJECT_PACK => {
+            Some((29, SUB_ITEM))
+        }
         _ => None,
     }
 }
@@ -1222,6 +1303,7 @@ pub(crate) fn residual_order(item: ItemId) -> Option<(u32, u32)> {
 /// - Toxic Orb / Flame Orb: `pokemon.trySetStatus('tox' / 'brn', pokemon)` (self-inflicted;
 ///   every implemented SetStatus handler blocks regardless of the source).
 /// - Sticky Barb: `damage(baseMaxhp / 8)`.
+/// - Micle Berry, White Herb, Mirror Herb, Eject Pack: as at their other triggers.
 pub(crate) fn on_residual<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
     let Some(mon) = b.alive(slot).map(|p| b.mon(p)) else {
         return;
@@ -1256,6 +1338,7 @@ pub(crate) fn on_residual<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, 
         i if i == items::WHITE_HERB => white_herb(b, slot),
         // The Residual handler's event target is the holder itself.
         i if i == items::MIRROR_HERB => mirror_herb_use(b, slot, slot),
+        i if i == items::EJECT_PACK => eject_pack_use(b, slot),
         _ => {}
     }
 }

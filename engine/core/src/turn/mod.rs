@@ -287,6 +287,7 @@ pub fn enumerate_start<const N: usize>(state: &mut State<N>) -> Result<Vec<Outco
         // `runAction('runSwitch')` ends with `eachEvent('Update')`.
         update::update_event(b)?;
         items::stage_end_check(b)?;
+        refuse_switch_request(b, "the battle start")?;
         // Then `endTurn` starts turn 1 (the state's turn already is 1): the leads lose
         // `newlySwitched` (`activeTurns` becomes 1), which Payback and Stakeout read.
         b.end_turn_history();
@@ -467,6 +468,7 @@ fn run_replacements<const N: usize>(
             return Err(b.unsupported("Emergency Exit of a replacement hit by entry hazards"));
         }
     }
+    refuse_switch_request(b, "a replacement")?;
     // `runAction`'s tail with nothing left in the queue: `checkFainted` (a newcomer that fainted
     // to entry hazards gets `fnt`), the Update, then `endTurn` (which waits for another
     // replacement if one is needed).
@@ -586,6 +588,19 @@ pub fn side_must_switch<const N: usize>(state: &State<N>, side: SideId) -> bool 
 fn pending_mid_turn_switch<const N: usize>(state: &State<N>) -> Option<SlotRef> {
     State::<N>::slot_refs()
         .find(|&r| state.slot(r).switch_flag != SwitchFlag::None && state.active_ref(r).is_some())
+}
+
+/// A decision that cannot suspend (the battle start, a replacement) refuses a switch request
+/// raised inside it: an Eject Pack used in its switch-in batch (Intimidate, Sticky Web), which
+/// Showdown answers with a `switch` request before the next turn.
+fn refuse_switch_request<const N: usize>(b: &Battle<'_, N>, during: &str) -> Result<(), TurnError> {
+    match pending_mid_turn_switch(b.state) {
+        Some(slot) => Err(b.unsupported(format!(
+            "a switch request for {:?} slot {} (Eject Pack) during {during}",
+            slot.side, slot.slot
+        ))),
+        None => Ok(()),
+    }
 }
 
 /// The mid-turn switch stage (`resume_turn`): the `instaswitch` actions by the outgoing

@@ -716,7 +716,7 @@ fn steal_item<const N: usize>(
 /// Showdown `speedSort` of `slots` by `pokemon.speed` ([`Battle::event_speed`]), fastest first:
 /// equal Speeds are shuffled (uniformly) only when two of them are `relevant`, the only case in
 /// which their order can change the outcome.
-fn speed_sorted<const N: usize>(
+pub(crate) fn speed_sorted<const N: usize>(
     b: &mut Battle<'_, N>,
     mut slots: Vec<SlotRef>,
     relevant: impl Fn(&Battle<'_, N>, SlotRef) -> bool,
