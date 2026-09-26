@@ -110,6 +110,11 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// The move in progress is external (`move.isExternal`: Dancer's copy): no Pressure PP, and
     /// no Dancer after it.
     pub external_move: bool,
+    /// The move another move's handler called (`moves::call_move`: Sleep Talk, Copycat, Mirror
+    /// Move, Nature Power) as it ended, until the caller's `runMove` takes it: Showdown's
+    /// `if (this.battle.activeMove) move = this.battle.activeMove;` after `useMove`, so the
+    /// AfterMove events (the move's own, Charge's) see the called move.
+    pub(crate) called_move: Option<super::moves::ActiveMove>,
     /// Showdown `battle.activeTarget` of the move that just ran (the (redirected) target it was
     /// used at; its user for a self-targeting move) with `useMove`'s result
     /// (`moveDidSomething`); `None` until `useMove` got that far. Dancer reads both.
@@ -204,6 +209,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             unstarted: Vec::new(),
             queue_done: false,
             external_move: false,
+            called_move: None,
             active_target: None,
             suppression,
         }

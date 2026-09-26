@@ -678,7 +678,7 @@ pub(super) fn on_try_hit<const N: usize>(
         moves::MIRROR_MOVE => {
             let copied = b.state.slot(target).last_move;
             if !copied.is_none() && copied.data().flags.contains(MoveFlags::MIRROR) {
-                if let Some(why) = called_move_problem(b, user, copied) {
+                if let Some(why) = called_move_problem(copied) {
                     return Err(b.unsupported(format!("Mirror Move calling {why}")));
                 }
                 super::call_move(b, user, mv, copied, Some(target))?;
@@ -699,7 +699,7 @@ pub(super) fn on_try_hit<const N: usize>(
                 Terrain::Psychic => moves::PSYCHIC,
                 Terrain::None => moves::TRI_ATTACK,
             };
-            if let Some(why) = called_move_problem(b, user, called) {
+            if let Some(why) = called_move_problem(called) {
                 return Err(b.unsupported(format!("Nature Power calling {why}")));
             }
             super::call_move(b, user, mv, called, Some(target))?;
@@ -821,14 +821,11 @@ pub(super) fn on_try_hit<const N: usize>(
 /// Why a move Copycat or Mirror Move would call (`useMove`, which the caller may not know) is not
 /// run: a move the engine does not support; a two-turn move or one that locks its user (the lock
 /// would name a move the user may not have; Rollout, Ice Ball); a move with its own `onAfterMove`, a
-/// `beforeTurnCallback` or a `priorityChargeCallback` (`runMove`'s AfterMove and the queue
-/// actions belong to the caller); an Electric move while the user has Charge (Charge's
-/// `onAfterMove` would see the called move, the engine's the caller).
-fn called_move_problem<const N: usize>(
-    b: &Battle<'_, N>,
-    user: SlotRef,
-    id: MoveId,
-) -> Option<String> {
+/// `beforeTurnCallback` or a `priorityChargeCallback` (the queue actions belong to the caller;
+/// `runMove`'s AfterMove does see the called move, `Battle::called_move`, but the `onAfterMove`
+/// of a called move is not checked against Showdown). An Electric move while the user has
+/// Charge is run: Charge's `onAfterMove` sees the called move (oracle `x-copycat-charge`).
+fn called_move_problem(id: MoveId) -> Option<String> {
     let data = id.data();
     if let Some(why) = super::super::support::move_unsupported(id) {
         return Some(why);
@@ -839,13 +836,11 @@ fn called_move_problem<const N: usize>(
     let own_actions = super::has_before_turn_callback(id)
         || super::has_priority_charge_callback(id)
         || [moves::ROLLOUT, moves::ICE_BALL].contains(&id);
-    let charged = data.move_type == Type::Electric && b.volatile(user, Volatile::Charge).active;
     (data.flags.contains(MoveFlags::CHARGE)
         || locks
         || own_actions
-        || data.handlers.contains(&"onAfterMove")
-        || charged)
-        .then(|| format!("{} (a lock, own actions, AfterMove or Charge)", data.name))
+        || data.handlers.contains(&"onAfterMove"))
+    .then(|| format!("{} (a lock, own actions or AfterMove)", data.name))
 }
 
 /// Showdown `pokemon.setAbility(ability, source)` from a move (Role Play, Entrainment, Simple
@@ -2728,7 +2723,7 @@ pub(super) fn on_hit<const N: usize>(
             if data.flags.contains(MoveFlags::FAILCOPYCAT) || data.is_z || data.is_max {
                 HitResult::Failure
             } else {
-                if let Some(why) = called_move_problem(b, user, copied) {
+                if let Some(why) = called_move_problem(copied) {
                     return Err(b.unsupported(format!("Copycat calling {why}")));
                 }
                 super::call_move(b, user, mv, copied, None)?;

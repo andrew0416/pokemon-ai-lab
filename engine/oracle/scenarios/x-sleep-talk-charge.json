@@ -1,0 +1,26 @@
+{
+ "description": "Opus X unit B4: runMove's AfterMove sees the move Sleep Talk called (`if (this.battle.activeMove) move = this.battle.activeMove`). Setup turn: Kilowattrel's Sleep Talk fails (awake), Whimsicott's Tailwind gives Wind Power Kilowattrel `charge`, Amoonguss's Spore puts it to sleep. The turn: Kilowattrel's Sleep Talk calls Shock Wave (its only other move) at a random foe, doubled by Charge; Charge's onAfterMove sees the Electric Shock Wave and ends the charge.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Kilowattrel", "item": "", "ability": "Wind Power", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Sleep Talk", "Shock Wave"], "level": 50},
+   {"species": "Whimsicott", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Tailwind", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Amoonguss", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Spore", "Harden"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move sleeptalk, move tailwind", "move spore 1, move harden"]
+ ],
+ "turn": {"p1": "move sleeptalk, move harden", "p2": "move harden, move harden"}
+}
