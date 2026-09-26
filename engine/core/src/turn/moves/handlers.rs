@@ -1754,8 +1754,9 @@ pub(super) fn current_slot<const N: usize>(
 /// actions follow them (Showdown's actions hold the Pokémon; a target location is read from the
 /// user's position when the move runs), as does the move in progress. Then `runEvent('Swap')`
 /// for the ally at its new position and the user at its own: Healing Wish's `onSwap` heals one
-/// that needs it. Snipe Shot (`tracksTarget`) keeps aiming at the Pokémon it was aimed at
-/// (`action.originalTarget`), which the queue does not hold: aimed at this side, it is refused.
+/// that needs it. Snipe Shot (`tracksTarget`), and any move of a Stalwart or Propeller Tail
+/// holder, keeps aiming at the Pokémon it was aimed at (`action.originalTarget`), which the queue
+/// does not hold: aimed at this side, it is refused.
 fn swap_positions<const N: usize>(
     b: &mut Battle<'_, N>,
     from: SlotRef,
@@ -1766,10 +1767,9 @@ fn swap_positions<const N: usize>(
             continue;
         };
         let id = super::super::lock::action_move_id(b.mon(action.pokemon), index);
-        if target != 0
-            && id.data().tracks_target
-            && super::at_loc(action.slot, target).side == from.side
-        {
+        let tracks = id.data().tracks_target
+            || super::super::abilities::tracks_original_target(b.mon(action.pokemon).ability);
+        if target != 0 && tracks && super::at_loc(action.slot, target).side == from.side {
             return Err(b.unsupported(format!(
                 "{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)",
                 id.data().name

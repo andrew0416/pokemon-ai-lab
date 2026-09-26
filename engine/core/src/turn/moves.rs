@@ -714,7 +714,7 @@ fn get_move_targets<const N: usize>(
                     None => return Ok(Vec::new()),
                 }
             }
-            if N > 1 && !mv.data.tracks_target {
+            if N > 1 && !ability_events::tracks_target(b, user, mv.data, mv.target) {
                 t = redirect_target(b, user, mv, t)?;
             }
             if b.alive(t).is_none() {

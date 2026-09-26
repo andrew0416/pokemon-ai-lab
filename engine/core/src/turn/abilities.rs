@@ -393,6 +393,31 @@ pub(crate) fn commander_update<const N: usize>(b: &mut Battle<'_, N>, holder: Sl
     }
 }
 
+/// Whether the move `data` (of target type `target` after ModifyMove) that `user` uses skips
+/// the `RedirectTarget` event (`move.tracksTarget`): Snipe Shot and Sky Drop by their data;
+/// Stalwart and Propeller Tail (`onModifyMove`, priority 1, not breakable) set it to `move.target
+/// !== 'scripted'` for every move of their holder, which also overrides the data. Their other
+/// half, `getTarget` keeping the `originalTarget` of the action (only different after Ally
+/// Switch), is refused in `handlers::swap_positions`.
+pub(crate) fn tracks_target<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    data: &MoveData,
+    target: crate::dex::MoveTarget,
+) -> bool {
+    if tracks_original_target(b.ability(user)) {
+        target != crate::dex::MoveTarget::Scripted
+    } else {
+        data.tracks_target
+    }
+}
+
+/// Stalwart and Propeller Tail: Showdown's `getTarget` aims at the action's `originalTarget`
+/// while it is active (`pokemon.hasAbility(['stalwart', 'propellertail'])`).
+pub(crate) fn tracks_original_target(ability: AbilityId) -> bool {
+    ability == abilities::STALWART || ability == abilities::PROPELLER_TAIL
+}
+
 /// Gorilla Tactics' `onModifyMove` for the move `id` its holder in `user` uses (any move but
 /// Struggle, called and status moves included): `if (pokemon.abilityState.choiceLock) return;
 /// pokemon.abilityState.choiceLock = move.id` ([`Volatile::GorillaTactics`]).

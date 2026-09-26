@@ -1,0 +1,23 @@
+{
+ "description": "Opus S unit 6: Stalwart and Propeller Tail (move.tracksTarget: no RedirectTarget). Gastrodon (Storm Drain) uses Follow Me; Barraskewda (Propeller Tail) Aqua Jets Snorlax and Duraludon (Stalwart) Dragon Pulses Snorlax: neither Follow Me nor Storm Drain draws them.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Duraludon", "item": "", "ability": "Stalwart", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Dragon Pulse", "Protect"], "level": 50},
+   {"species": "Barraskewda", "item": "", "ability": "Propeller Tail", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Aqua Jet", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Gastrodon", "item": "", "ability": "Storm Drain", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Follow Me", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move dragonpulse 2, move aquajet 2", "p2": "move followme, move harden"}
+}

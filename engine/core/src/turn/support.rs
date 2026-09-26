@@ -1559,6 +1559,11 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // the substitute (`moves::substitute_takes_hit`, Disguise / Ice Face `forme::hits_substitute`,
     // Defog, Aromatherapy), the screens (`moves::get_damage`), Safeguard and Mist (`battle`).
     (abilities::INFILTRATOR, &["onModifyMove"]),
+    // Stalwart, Propeller Tail: `move.tracksTarget` (`abilities::tracks_target`, read by
+    // `moves::get_move_targets`); `getTarget`'s original target after Ally Switch is refused
+    // (`handlers::swap_positions`).
+    (abilities::STALWART, &["onModifyMove"]),
+    (abilities::PROPELLER_TAIL, &["onModifyMove"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
