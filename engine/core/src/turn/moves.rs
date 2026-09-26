@@ -1366,6 +1366,9 @@ fn use_move_tail<const N: usize>(
     if !ability_hooks::sheer_force_skips(b, user, mv)
         && !mv.data.flags.contains(MoveFlags::FUTUREMOVE)
     {
+        // The move's own handler (`singleEvent`: Fell Stinger, Order Up, Relic Song), then
+        // `runEvent`.
+        handlers::after_move_secondary_self(b, user, main_target, mv)?;
         item_events::after_move_secondary_self(b, user, main_target, mv.data, mv.total_damage);
         // Magician (an ability, sub-order 7, before the item's 8: it needs an empty-handed user,
         // so the item handlers above never acted when it can).
@@ -2415,11 +2418,13 @@ fn spread_move_hit<const N: usize>(
         }
         let mut did: Option<bool> = None;
         let mut note = |r: bool| did = Some(did.unwrap_or(false) || r);
-        if data.boosts != NO_BOOSTS
+        // `moveData.boosts` as the move's ModifyMove left them (Growth in sun).
+        let boosts = handlers::move_boosts(b, user, mv)?;
+        if boosts != NO_BOOSTS
             && b.alive(t).is_some()
             && !handlers::boosts_applied_in_try_hit(mv.id)
         {
-            note(b.boost_by(t, &data.boosts, Some(user), BoostEffect::Move(mv.id)));
+            note(b.boost_by(t, &boosts, Some(user), BoostEffect::Move(mv.id)));
         }
         if let Some(heal) = data.heal {
             let target_mon = b.occupant(t).map(|p| b.mon(p));

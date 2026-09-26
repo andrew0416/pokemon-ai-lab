@@ -914,6 +914,13 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     ),
     (moves::WAKE_UP_SLAP, &["basePowerCallback", "onHit"]),
     (moves::SMELLING_SALTS, &["basePowerCallback", "onHit"]),
+    // Opus V unit 2: Growth's `onModifyMove` boosts (`handlers::move_boosts`); the
+    // `onAfterMoveSecondarySelf` of Fell Stinger, Order Up and Relic Song
+    // (`handlers::after_move_secondary_self`).
+    (moves::GROWTH, &["onModifyMove"]),
+    (moves::FELL_STINGER, &["onAfterMoveSecondarySelf"]),
+    (moves::ORDER_UP, &["onAfterMoveSecondarySelf"]),
+    (moves::RELIC_SONG, &["onAfterMoveSecondarySelf"]),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do

@@ -801,6 +801,109 @@ pub(super) fn on_after_sub_damage<const N: usize>(
     }
 }
 
+/// The move's own `onAfterMoveSecondarySelf` (`useMoveInner` after a successful move that
+/// Sheer Force did not boost, before the user's item and ability handlers; `target` is
+/// `useMoveInner`'s target, the last of the move's targets):
+/// - Fell Stinger: `if (!target || target.fainted || target.hp <= 0) this.boost({atk: 3},
+///   pokemon, pokemon, move);`
+/// - Order Up: a user under `commanded` gets +1 in a stat by its Tatsugiri's forme
+///   (`tatsugiri.baseSpecies.forme`: Droopy Def, Stretchy Spe, anything else — Curly and the
+///   Mega formes — Atk). The Tatsugiri is `commanded`'s source; the state does not keep it, so
+///   it is the ally that is `commanding`; with none left (it fainted) the move is unsupported.
+/// - Relic Song: a Meloetta (`baseSpecies.baseSpecies`) changes to its other forme
+///   (`formeChange`, temporary: Aria ↔ Pirouette). A Meloetta that fainted during its own move
+///   would change forme off the field (unsupported).
+pub(super) fn after_move_secondary_self<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    mv: &ActiveMove,
+) -> Result<(), TurnError> {
+    use crate::dex::species;
+    match mv.id {
+        moves::FELL_STINGER => {
+            if b.alive(target).is_none() {
+                let mut up = NO_BOOSTS;
+                up[0] = 3;
+                b.boost_by(user, &up, Some(user), BoostEffect::Move(mv.id));
+            }
+        }
+        moves::ORDER_UP => {
+            if !b.volatile(user, Volatile::Commanded).active {
+                return Ok(());
+            }
+            let tatsugiri = b
+                .alive_slots(user.side)
+                .into_iter()
+                .find(|&s| s != user && b.volatile(s, Volatile::Commanding).active)
+                .and_then(|s| b.slot_mon(s))
+                .map(|m| m.species);
+            let Some(forme) = tatsugiri else {
+                return Err(b.unsupported(
+                    "Order Up from a commanded Dondozo whose Tatsugiri is gone (the source of \
+                     `commanded` is not in the state)",
+                ));
+            };
+            let stat = match forme {
+                f if f == species::TATSUGIRI_DROOPY => 1,
+                f if f == species::TATSUGIRI_STRETCHY => 4,
+                _ => 0,
+            };
+            let mut up = NO_BOOSTS;
+            up[stat] = 1;
+            b.boost_by(user, &up, Some(user), BoostEffect::Move(mv.id));
+        }
+        moves::RELIC_SONG => {
+            let Some(pokemon) = b.active_move.map(|m| m.pokemon) else {
+                return Ok(());
+            };
+            let current = b.mon(pokemon).species;
+            if ![species::MELOETTA, species::MELOETTA_PIROUETTE].contains(&current) {
+                return Ok(());
+            }
+            if b.occupant(user) != Some(pokemon) {
+                return Err(b.unsupported("Relic Song: Meloetta changing forme after fainting"));
+            }
+            let forme = if current == species::MELOETTA_PIROUETTE {
+                species::MELOETTA
+            } else {
+                species::MELOETTA_PIROUETTE
+            };
+            super::super::forme::forme_change(
+                b,
+                user,
+                forme,
+                super::super::forme::Change::Temporary,
+            );
+        }
+        _ => {}
+    }
+    Ok(())
+}
+
+/// The boosts a move's `runMoveEffects` applies (`moveData.boosts`), after its `onModifyMove`:
+/// Growth's are `{atk: 2, spa: 2}` in the user's sun (`pokemon.effectiveWeather()`: Utility
+/// Umbrella hides it). ModifyMove runs before the hit, but nothing between it and the effects of a
+/// move on its user can change the weather, so the weather is read here.
+pub(super) fn move_boosts<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Result<[i8; BOOST_COUNT], TurnError> {
+    if mv.id == moves::GROWTH
+        && matches!(
+            effective_weather(b, user, user)?,
+            Weather::Sun | Weather::HarshSun
+        )
+    {
+        let mut boosts = NO_BOOSTS;
+        boosts[0] = 2;
+        boosts[2] = 2;
+        return Ok(boosts);
+    }
+    Ok(mv.data.boosts)
+}
+
 /// The move's own `onAfterMove` (`runMove`, after `useMove`). Sparkling Aria: if the user
 /// fainted (processed), or the move has Sheer Force's `hasSheerForce`, every active Pokémon just
 /// loses the `sparklingaria` volatile; otherwise each hit target but the user that is still

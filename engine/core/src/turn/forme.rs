@@ -58,6 +58,8 @@ pub fn temporary_forme_base(forme: SpeciesId) -> Option<SpeciesId> {
         f if f == species::DARMANITAN_ZEN => Some(species::DARMANITAN),
         f if f == species::DARMANITAN_GALAR_ZEN => Some(species::DARMANITAN_GALAR),
         f if f == species::CHERRIM_SUNSHINE => Some(species::CHERRIM),
+        // Relic Song (`moves::handlers::after_move_secondary_self`).
+        f if f == species::MELOETTA_PIROUETTE => Some(species::MELOETTA),
         _ => None,
     }
 }

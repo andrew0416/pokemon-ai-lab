@@ -1,0 +1,23 @@
+{
+ "description": "Relic Song (Opus V): Meloetta's hits Dustox (Shield Dust drops the 10% sleep, so there is no secondary roll; Gengar is immune to the Normal move) and its `onAfterMoveSecondarySelf` changes Meloetta to Meloetta-Pirouette (temporary: types and stats, not max HP). Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Meloetta", "item": "", "ability": "Serene Grace", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Relic Song", "Protect"], "level": 50},
+   {"species": "Hypno", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Dustox", "item": "", "ability": "Shield Dust", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move relicsong, move harden", "p2": "move harden, move harden"}
+}
