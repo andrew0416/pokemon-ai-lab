@@ -90,12 +90,18 @@ pub(crate) fn update_event<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), 
         // ability, so the two ability calls never both act.
         super::abilities::on_update(b, slot);
         super::forme::on_update(b, slot);
+        // The item's handlers were collected with the Pokémon's item at the start of its turn
+        // in the event: an item Symbiosis gives it after a berry is eaten waits for the next
+        // Update.
+        let item = b.item(slot);
         if item_wants_eating(b, slot) {
             eat_item(b, slot);
         }
         // Booster Energy's and Mental Herb's `onUpdate`.
-        super::abilities::booster_energy(b, slot);
-        super::items::mental_herb(b, slot);
+        if b.item(slot) == item {
+            super::abilities::booster_energy(b, slot);
+            super::items::mental_herb(b, slot);
+        }
     }
     Ok(())
 }
@@ -286,6 +292,7 @@ fn consume<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, pokemon: Pokemo
         new: ItemId::NONE,
     });
     super::abilities::unburden(b, slot);
+    super::abilities::symbiosis(b, slot);
     true
 }
 

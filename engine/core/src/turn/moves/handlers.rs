@@ -1886,7 +1886,7 @@ fn trick<const N: usize>(
 /// Seeds, Room Service, White Herb, Air Balloon (its `onStart` only announces it), Utility
 /// Umbrella (its `onStart` / `onEnd` only run WeatherChange for a holder ignoring its item, and
 /// no implemented WeatherChange handler acts on sun or rain from it), Mirror Herb (`onEnd`).
-fn trick_moves_item(item: ItemId) -> bool {
+pub(crate) fn trick_moves_item(item: ItemId) -> bool {
     item.data().is_choice
         || super::super::field_events::seed_terrain(item).is_some()
         || [
@@ -1904,7 +1904,7 @@ fn trick_moves_item(item: ItemId) -> bool {
 /// or from this very move's ModifyMove); a Seed, Room Service and White Herb act as when their
 /// holder switches in (`items::switch_in_item`: used in its terrain, in Trick Room, with a
 /// lowered stat).
-fn trick_item_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
+pub(crate) fn trick_item_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
     if b.item(slot) != item {
         return;
     }

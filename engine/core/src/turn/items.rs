@@ -1031,6 +1031,7 @@ pub(crate) fn after_sub_damage<const N: usize>(b: &mut Battle<'_, N>, target: Sl
         new: ItemId::NONE,
     });
     super::abilities::unburden(b, target);
+    super::abilities::symbiosis(b, target);
 }
 
 /// The target's item `onHit` (`runEvent('Hit')` in `runMoveEffects`, after the move's own

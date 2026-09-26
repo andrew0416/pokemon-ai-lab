@@ -536,6 +536,94 @@ pub(crate) fn after_faint<const N: usize>(
     b.boost_by(slot, &boosts, Some(slot), BoostEffect::Ability(effect));
 }
 
+/// Whether Symbiosis can pass `item` as the engine models it: an item with `Start` / `End`
+/// handlers only if Trick could move it (the Start on the new holder is
+/// `moves::trick_item_start`), and not one whose other `TakeItem` handler is not implemented.
+pub(crate) fn symbiosis_passes(item: ItemId) -> bool {
+    let data = item.data();
+    let start_or_end = data
+        .handlers
+        .iter()
+        .any(|h| ["onStart", "onEnd"].contains(h));
+    let other_take_item = data.mega_stone.is_empty() && data.handlers.contains(&"onTakeItem");
+    !other_take_item && (!start_or_end || super::moves::trick_moves_item(item))
+}
+
+/// Why a Pokémon on the field cannot be simulated because of Symbiosis: it holds an item it
+/// could not pass ([`symbiosis_passes`]). The supported ways to give it another item (Trick)
+/// only move items that pass.
+pub(crate) fn symbiosis_problem(mon: &Pokemon) -> Option<String> {
+    (mon.ability == abilities::SYMBIOSIS && !mon.item.is_none() && !symbiosis_passes(mon.item))
+        .then(|| {
+            format!(
+                "{}: Symbiosis holding {} ({:?})",
+                mon.species.data().name,
+                mon.item.data().name,
+                mon.item.data().handlers
+            )
+        })
+}
+
+/// Symbiosis's `onAllyAfterUseItem` after the Pokémon in `receiver` used, ate or lost (Air
+/// Balloon) its item (`runEvent('AfterUseItem')`; the holder's own use changes nothing, as it
+/// then has no item to give):
+/// - nothing if the receiver has a `switchFlag` (Eject Button sets it before using the item);
+/// - for the active holder on the receiver's side (not breakable): `source.takeItem()` — the
+///   item's own TakeItem handler must let the holder part with it (a Mega Stone of its species
+///   stays); then its End on the holder (Mirror Herb forgets its copied raises);
+/// - the item's TakeItem with the receiver and `pokemon.setItem(myItem)` (the receiver needs HP):
+///   the receiver gets it and its Start runs (`moves::trick_item_start`), otherwise `source.item
+///   = myItem.id` gives it back.
+pub(crate) fn symbiosis<const N: usize>(b: &mut Battle<'_, N>, receiver: SlotRef) {
+    use crate::instruction::Instruction;
+    if b.occupant(receiver).is_none()
+        || b.state.slot(receiver).switch_flag != crate::state::SwitchFlag::None
+    {
+        return;
+    }
+    let holders: Vec<SlotRef> = b
+        .alive_slots(receiver.side)
+        .into_iter()
+        .filter(|&s| s != receiver && b.ability(s) == abilities::SYMBIOSIS)
+        .collect();
+    for holder in holders {
+        let item = b.raw_item(holder);
+        if item.is_none() || !b.item_can_be_taken(holder) {
+            continue;
+        }
+        let giver = b.occupant(holder).expect("an active holder");
+        b.apply(Instruction::SetItem {
+            target: giver,
+            old: item,
+            new: ItemId::NONE,
+        });
+        if item == items::MIRROR_HERB {
+            b.mirror_herb.retain(|&(p, _)| p != giver);
+        }
+        let taker = b.alive(receiver).filter(|&p| {
+            let mon = b.mon(p);
+            let base = base_species(mon.species);
+            mon.item.is_none()
+                && !item.data().cannot_be_taken
+                && !item.data().mega_stone.iter().any(|&(from, _)| from == base)
+        });
+        let Some(taker) = taker else {
+            b.apply(Instruction::SetItem {
+                target: giver,
+                old: ItemId::NONE,
+                new: item,
+            });
+            continue;
+        };
+        b.apply(Instruction::SetItem {
+            target: taker,
+            old: ItemId::NONE,
+            new: item,
+        });
+        super::moves::trick_item_start(b, receiver, item);
+    }
+}
+
 /// Soul-Heart's `onAnyFaint` for one processed faint (`runEvent('Faint')` in `faintMessages`):
 /// every active holder not at 0 HP raises its SpA by 1 (`this.boost({spa: 1},
 /// this.effectState.target)`; `boost` does nothing at 0 HP, and fails once the holder's foes have

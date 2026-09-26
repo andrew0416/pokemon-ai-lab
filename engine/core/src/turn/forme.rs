@@ -558,6 +558,10 @@ fn mimicry<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
 ///   battle, `source.bondTriggered`, which the state does not record) and Greninja-Ash (Water
 ///   Shuriken hits 3 times); on any other species (Greninja itself) both handlers do nothing.
 pub(crate) fn field_problem(mon: &crate::state::Pokemon) -> Option<String> {
+    // Symbiosis holding an item it could not pass (`abilities::symbiosis_passes`).
+    if let Some(why) = super::abilities::symbiosis_problem(mon) {
+        return Some(why);
+    }
     let bond_forme = mon.species == species::GRENINJA_BOND || mon.species == species::GRENINJA_ASH;
     (mon.ability == abilities::BATTLE_BOND && bond_forme).then(|| {
         format!(

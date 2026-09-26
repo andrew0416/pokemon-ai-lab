@@ -5,8 +5,8 @@
 mod ability_hooks;
 mod handlers;
 
-pub(crate) use handlers::sleep_talk_calls;
 use handlers::HitResult;
+pub(crate) use handlers::{sleep_talk_calls, trick_item_start, trick_moves_item};
 
 use crate::damage::{
     damage_rolls, DamageInput, MOD_HALF, MOD_ONE, MOD_ONE_POINT_FIVE, MOD_ONE_POINT_THREE,
@@ -2558,6 +2558,7 @@ fn damaging_hit<const N: usize>(
                     new: ItemId::NONE,
                 });
                 ability_events::unburden(b, target);
+                ability_events::symbiosis(b, target);
             }
             // Weakness Policy, the absorbing items, Jaboca / Rowap Berry. The item may have
             // gone since the handlers were collected (a Jaboca Berry is eaten once).

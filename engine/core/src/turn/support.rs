@@ -1566,6 +1566,10 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::PROPELLER_TAIL, &["onModifyMove"]),
     // Soul-Heart: `onAnyFaint` in `abilities::soul_heart` (from `Battle::faint_messages`).
     (abilities::SOUL_HEART, &["onAnyFaint"]),
+    // Symbiosis: `onAllyAfterUseItem` in `abilities::symbiosis` (from every AfterUseItem site:
+    // `Battle::use_item`, `update::consume`, Air Balloon); an item it could not pass is refused
+    // (`forme::field_problem` → `abilities::symbiosis_problem`).
+    (abilities::SYMBIOSIS, &["onAllyAfterUseItem"]),
     // Flower Gift: `onStart` / `onWeatherChange` in `forme::flower_gift` (switch-in,
     // `field_events::weather_changed`), `onAllyModifyAtk` / `onAllyModifySpD` in
     // `abilities::attack_handlers` / `defense_handlers`. Next to Air Lock / Cloud Nine it is

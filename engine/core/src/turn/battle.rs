@@ -1406,8 +1406,9 @@ impl<'a, const N: usize> Battle<'a, N> {
             old: item,
             new: ItemId::NONE,
         });
-        // AfterUseItem: Unburden.
+        // AfterUseItem: Unburden, an ally's Symbiosis.
         super::abilities::unburden(self, slot);
+        super::abilities::symbiosis(self, slot);
         true
     }
 
