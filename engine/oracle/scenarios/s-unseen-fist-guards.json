@@ -1,0 +1,23 @@
+{
+ "description": "Opus S unit 2: Wide Guard and Quick Guard check HitProtect too. Snorlax's Wide Guard and Clefable's Quick Guard go up; Urshifu-Rapid-Strike (Piercing Drill) Aqua Jets (+1, contact) Snorlax through Quick Guard at a quarter; Urshifu (Unseen Fist) Breaking Swipes (spread, contact) through Wide Guard: Snorlax takes a quarter (and -1 Atk), Clefable is immune (Fairy).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Urshifu", "item": "", "ability": "Unseen Fist", "nature": "Jolly",
+    "evs": {"atk": 32, "spe": 32}, "moves": ["Breaking Swipe", "Protect"], "level": 50},
+   {"name": "Rapid", "species": "Urshifu-Rapid-Strike", "item": "", "ability": "Piercing Drill", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Aqua Jet", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Wide Guard", "Harden"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Magic Guard", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Quick Guard", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move breakingswipe, move aquajet 1", "p2": "move wideguard, move quickguard"}
+}

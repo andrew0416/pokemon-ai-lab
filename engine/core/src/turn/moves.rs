@@ -85,6 +85,10 @@ struct ActiveMove {
     /// Showdown `move.hasBounced`: a copy Magic Bounce used back at the original user (it cannot
     /// be bounced again, pays no Pressure PP and adds no Choice lock).
     has_bounced: bool,
+    /// The targets whose `getMoveHitData(move).bypassProtect` a `HitProtect` handler set (Unseen
+    /// Fist, Piercing Drill: a protection that would have stopped the move let it through), as a
+    /// bit per slot ([`target_bit`]): the move's damage to them is quartered.
+    bypass_protect: u8,
 }
 
 impl PartialEq for ActiveMove {
@@ -108,6 +112,7 @@ impl PartialEq for ActiveMove {
             && self.target_loc == other.target_loc
             && self.type_changer == other.type_changer
             && self.has_bounced == other.has_bounced
+            && self.bypass_protect == other.bypass_protect
     }
 }
 
@@ -134,6 +139,7 @@ impl std::hash::Hash for ActiveMove {
         self.target_loc.hash(state);
         self.type_changer.hash(state);
         self.has_bounced.hash(state);
+        self.bypass_protect.hash(state);
     }
 }
 
@@ -264,6 +270,7 @@ pub(crate) fn run_move<const N: usize>(
             target_loc: 0,
             type_changer: AbilityId::NONE,
             has_bounced: false,
+            bypass_protect: 0,
         };
         before_move(b, user, &recharge);
         // MoveAborted: Destiny Bond ends.
@@ -384,6 +391,7 @@ fn run_move_inner<const N: usize>(
         self_switch: id.data().self_switch == SelfSwitch::Yes,
         type_changer: AbilityId::NONE,
         has_bounced: false,
+        bypass_protect: 0,
         target_loc,
     };
 
@@ -978,6 +986,7 @@ fn call_move<const N: usize>(
         target_loc: 0,
         type_changer: AbilityId::NONE,
         has_bounced: false,
+        bypass_protect: 0,
     };
     let target = get_random_target(b, user, data.target);
     let will_act = b.will_act();
@@ -1048,6 +1057,7 @@ fn bounce_move<const N: usize>(
         source_effect: MoveId::NONE,
         type_changer: AbilityId::NONE,
         has_bounced: true,
+        bypass_protect: 0,
         // A bounced Parting Shot switches the bouncer out (`moveHit` sets the flag for the
         // copy's user).
         self_switch: data.self_switch == SelfSwitch::Yes,
@@ -1535,6 +1545,16 @@ enum TryHit {
     Fail,
 }
 
+/// A protection's verdict on a move (its `onTryHit` through `checkMoveBypassesProtect`): it does
+/// not apply, it stops the move (`NOT_FAIL`), or it would have and a `HitProtect` handler let the
+/// move through (Unseen Fist, Piercing Drill).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Guard {
+    Open,
+    Blocked,
+    Bypassed,
+}
+
 fn try_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -1544,14 +1564,29 @@ fn try_hit<const N: usize>(
     if psychic_terrain_blocks(b, user, mv, target) {
         return Ok(TryHit::Fail);
     }
+    // `runEvent('HitProtect', source, target, move)` inside every `checkMoveBypassesProtect`
+    // (Wide Guard, Quick Guard, the protect family, Mat Block): Unseen Fist and Piercing Drill let
+    // a contact move through and set the target's `bypassProtect` (its damage is quartered).
+    let hit_protect = ability_events::hit_protect(b, user, mv.data);
+    let mut bypassed = false;
     if guarded_by_side(b, mv, target) {
-        return Ok(TryHit::NotFail);
+        if !hit_protect {
+            return Ok(TryHit::NotFail);
+        }
+        bypassed = true;
     }
-    if handlers::protect_try_hit(b, user, mv, target) {
-        return Ok(TryHit::NotFail);
+    match handlers::protect_try_hit(b, user, mv, target, hit_protect) {
+        Guard::Blocked => return Ok(TryHit::NotFail),
+        Guard::Bypassed => bypassed = true,
+        Guard::Open => {}
     }
-    if handlers::side_guard_try_hit(b, user, mv, target) {
-        return Ok(TryHit::NotFail);
+    match handlers::side_guard_try_hit(b, user, mv, target, hit_protect) {
+        Guard::Blocked => return Ok(TryHit::NotFail),
+        Guard::Bypassed => bypassed = true,
+        Guard::Open => {}
+    }
+    if bypassed {
+        mv.bypass_protect |= target_bit::<N>(target);
     }
     // Magic Bounce (`onTryHit`, priority 1: after Psychic Terrain, the guards, Protect and the
     // side guards, before every priority-0 handler) uses a copy of the move back at its user,
@@ -2793,7 +2828,8 @@ fn get_damage<const N: usize>(
         type_effectiveness,
         // `if (this.battle.gen < 6 || move.id !== 'facade')`: Facade keeps its power burned.
         burned: ability_events::burn_halves(&attacker, data) && mv.id != moves::FACADE,
-        protected: false,
+        // `getMoveHitData(move).bypassProtect` (Unseen Fist, Piercing Drill).
+        protected: mv.bypass_protect & target_bit::<N>(target) != 0,
         final_modifier,
     };
     let rolls = damage_rolls(input);

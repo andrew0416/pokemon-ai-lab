@@ -1526,6 +1526,11 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         abilities::SUPREME_OVERLORD,
         &["onBasePower", "onEnd", "onStart"],
     ),
+    // `onHitProtect` in `abilities::hit_protect` (read by `moves::try_hit`'s protections; the
+    // quartered damage is `ActiveMove::bypass_protect`). Champions removes Unseen Fist's
+    // `onModifyMove`.
+    (abilities::UNSEEN_FIST, &["onHitProtect"]),
+    (abilities::PIERCING_DRILL, &["onHitProtect"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

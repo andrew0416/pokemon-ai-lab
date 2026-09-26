@@ -310,6 +310,20 @@ pub(crate) fn wind_rider_boost<const N: usize>(b: &mut Battle<'_, N>, holder: Sl
     )
 }
 
+/// `runEvent('HitProtect', attacker, defender, move)` in `checkMoveBypassesProtect`: the
+/// attacker's `onHitProtect` — Unseen Fist (Champions: its `onModifyMove` is removed) and
+/// Piercing Drill, neither breakable — returns `false` for a move with the `contact` flag (after
+/// ModifyMove: Punching Glove removes it; Protective Pads do not matter), which lets it through
+/// the protection and sets the target's `bypassProtect` (its damage is then quartered).
+pub(crate) fn hit_protect<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    data: &MoveData,
+) -> bool {
+    [abilities::UNSEEN_FIST, abilities::PIERCING_DRILL].contains(&b.ability(user))
+        && super::items::makes_contact(b, user, data)
+}
+
 /// Supreme Overlord's `onStart`: `if (pokemon.side.totalFainted)` the holder's
 /// `abilityState.fallen = Math.min(pokemon.side.totalFainted, 5)`, kept as
 /// [`Volatile::SupremeOverlord`] (the ability state is fresh at every switch-in and ability

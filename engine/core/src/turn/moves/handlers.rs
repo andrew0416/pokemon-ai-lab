@@ -20,7 +20,7 @@ use super::super::conditions::HAZARDS;
 use super::super::order::{boosted_stat, modify};
 use super::super::queue::{Action, ActionKind};
 use super::super::TurnError;
-use super::ActiveMove;
+use super::{ActiveMove, Guard};
 
 /// Showdown `pokemon.effectiveWeather()` of `holder` while `user` is the Pokémon using a
 /// move: Utility Umbrella hides sun and rain from its holder. Mega Sol (every move of its
@@ -808,14 +808,16 @@ const PROTECTIONS: [(Volatile, bool); 7] = [
 /// through Protective Pads) is punished: Spiky Shield `this.damage(source.baseMaxhp / 8)`,
 /// Baneful Bunker / Burning Bulwark `source.trySetStatus('psn' / 'brn', target)`, King's Shield,
 /// Obstruct, Silk Trap `this.boost({atk: -1} / {def: -2} / {spe: -1}, source, target, move)`.
-/// The shields' `condition.onHit` only acts on Z- and Max Moves (off in Champions). Returns
-/// whether the move is blocked.
+/// The shields' `condition.onHit` only acts on Z- and Max Moves (off in Champions). With
+/// `hit_protect` (the user's `HitProtect` handler lets the move through: Unseen Fist, Piercing
+/// Drill) a shield that would stop the move does nothing (`Guard::Bypassed`).
 pub(super) fn protect_try_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
-) -> bool {
+    hit_protect: bool,
+) -> Guard {
     for (volatile, blocks_status) in PROTECTIONS {
         if !b.volatile(target, volatile).active {
             continue;
@@ -824,6 +826,9 @@ pub(super) fn protect_try_hit<const N: usize>(
             || !mv.data.flags.contains(MoveFlags::PROTECT);
         if bypassed {
             continue;
+        }
+        if hit_protect {
+            return Guard::Bypassed;
         }
         let locked = b.volatile(user, Volatile::LockedMove);
         if locked.active && locked.duration == 2 {
@@ -865,44 +870,48 @@ pub(super) fn protect_try_hit<const N: usize>(
                 b.boost_by(user, &drop, Some(target), BoostEffect::Move(shield));
             }
         }
-        return true;
+        return Guard::Blocked;
     }
-    false
+    Guard::Open
 }
 
 /// The side conditions' `onTryHit` (priority 3, after the target's protect-family volatiles):
 /// Crafty Shield stops a status move unless it targets `self` or `all` (from anyone, the side's
 /// own Pokémon included); Mat Block stops a move that does not target `self` and that Protect
 /// without `blockStatus` would (`checkMoveBypassesProtect(move, source, target, false)`: a
-/// damaging move with the `protect` flag; `HitProtect` has no handler), resetting a locked move
-/// on its first turn as Protect does. Both return `NOT_FAIL`. Returns whether the move is
-/// stopped.
+/// damaging move with the `protect` flag, unless `hit_protect`: the user's `HitProtect` handler
+/// lets it through, `Guard::Bypassed`), resetting a locked move on its first turn as Protect
+/// does. Both return `NOT_FAIL` (`Guard::Blocked`).
 pub(super) fn side_guard_try_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
-) -> bool {
+    hit_protect: bool,
+) -> Guard {
     let side = target.side;
     let status = mv.data.category == MoveCategory::Status;
     if b.side_effect_active(side, SideEffect::CraftyShield)
         && status
         && !matches!(mv.target, MoveTarget::User | MoveTarget::All)
     {
-        return true;
+        return Guard::Blocked;
     }
     if b.side_effect_active(side, SideEffect::MatBlock)
         && mv.target != MoveTarget::User
         && !status
         && mv.data.flags.contains(MoveFlags::PROTECT)
     {
+        if hit_protect {
+            return Guard::Bypassed;
+        }
         let locked = b.volatile(user, Volatile::LockedMove);
         if locked.active && locked.duration == 2 {
             b.delete_volatile(user, Volatile::LockedMove);
         }
-        return true;
+        return Guard::Blocked;
     }
-    false
+    Guard::Open
 }
 
 /// `hitStepBreakProtect` for one target of a `breaksProtect` move (Feint): its protect-family
