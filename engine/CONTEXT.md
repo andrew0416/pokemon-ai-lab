@@ -242,7 +242,7 @@ cd engine/py && ../../.venv-doubles/Scripts/maturin.exe build --release -i ../..
 8. **[2026-09-26 이후의 우선순위]**
    - 평가 함수(S12): 중반 국면 표본 2,016행의 부트스트랩 적합(`runs/plan-20260926/fit/weights.combined.json`; 수면 −72·방어 템포 −20이 현행 −45·−10보다 큼, RMSE 37.7→35.9)까지 했다. 남은 것: 실제 경기 결과와의 대조, 상태이상 항의 표본(현재 0행), 적합 가중치로 같은 시드 롤아웃 재측정. 표본 만들기: `runs/rollout-20260926/make_positions.py` → `lab-plan --setup-lenient --position max --dump-children`. 가디안 vs 아쿠스타 판정은 그 뒤(S15).
    - 상대 모델 ②: HP% 관측의 턴별 갱신(S17·S18)과 생존 국면 믹스처(S20)는 됐다. 남은 것은 행동 순서(스피드 비교)·도구/특성 노출·상태이상 관측, 로그에서 관측을 자동으로 뽑는 파서, maximin·deep·plan 모드의 믹스처. DESIGN.md "모델 ③·② 구현".
-   - 깊이 2 혼합 균형은 S21(`analyse_deep_mixed`, `--solve deep-nash`, `lab-rollout --policy deep-nash`)로 됐다. 다음은 S22: 같은 시드로 깊이 2 정책 롤아웃을 돌려 1턴 정책과 승률을 비교(먼저 psy-cona 쌍). 깊이 3은 빔 안에서 재귀(자식도 deep-nash)하면 되지만 비용이 빔²·결과 수 배로 늘어 전치표·증분 평가가 먼저 필요하다.
+   - 깊이 2 혼합 균형은 S21(`analyse_deep_mixed`, `--solve deep-nash`, `lab-rollout --policy deep-nash`)로 됐다. S22(2026-09-27)로 깊이 2 정책 롤아웃을 psy-cona·sand-owen 쌍에 돌렸다: 세 정책이 psy-cona 아쿠스타 우세·sand-owen 무차이로 일치(WORKPLAN S22). 다음 배치는 캐시 + 빔 2·결과 1로 3~4배 싸게 돌 수 있다. 깊이 3은 빔 안에서 재귀(자식도 deep-nash)하면 되지만 비용이 빔²·결과 수 배로 늘어 전치표·증분 평가가 먼저 필요하다.
    - 남은 엔진 버그: 8차 병합 뒤 목록은 prog 보드 B1–B12(위 "8차 병합" 문단). 언너브 시점(F23)·`trapped` 원시 특성(U1)·바디퍼지(W5)는 해결됐다.
    - 라이브러리 밖 커버리지는 9차로 합법 범위가 사실상 끝났다(남은 미지원은 Past·CAP·Z/G맥스·테라·변신 등). 다음 Opus 웨이브는 보드의 버그 B2·B13·B15–B25와 검증(verify-library-turns)이다.
 
