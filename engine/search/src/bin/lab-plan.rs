@@ -25,7 +25,11 @@
 //! position is the most probable one that survives, and each believed team's weight is
 //! multiplied by the probability that its own replay of the same turns produced every
 //! observation (a belief an observation contradicts drops to 0; so does a believed position in
-//! which the choices actually made were not legal). DESIGN.md "모델 ③·② 구현".
+//! which the choices actually made were not legal). The positions the observations cannot tell
+//! apart (sleep turns, hidden rolls: chance neither player sees) form one matrix game, the
+//! probability-weighted average of their payoff matrices, for `--solve nash` and the believed
+//! analysis, as long as their choice lists coincide; `--position` picks one instead.
+//! DESIGN.md "모델 ③·② 구현".
 //!                 [--threads n] [--plan "<turn 1> / <turn 2> / ..."]
 //!                 [--child-nash [--beam b] [--outcomes k]]
 //!
@@ -62,6 +66,8 @@ use lab_scenario::{
     Position,
 };
 use lab_search::game::asked_slots;
+use lab_search::nash::{self, Matrix};
+use lab_search::solve::MixedAnalysis;
 use lab_search::{
     format_choice, format_switches, Chance, Choice, Config, Decision, Pruning, Solver,
 };
@@ -337,15 +343,25 @@ fn run() -> Result<(), String> {
             );
         }
         positions.sort_by(|a, b| b.probability.total_cmp(&a.probability));
-        if positions.len() > 1 && position_index.is_none() {
-            println!(
-                "{} positions survive the observations; taking the most probable (p={:.4}); pass --position to choose",
+    }
+    // The positions the observations cannot tell apart: `--solve nash` and the believed-team
+    // analysis play the matrix game over their mixture (where the choice lists coincide); the
+    // other modes take the most probable one. Empty when there is one position or `--position`.
+    let survivors: Vec<Position> = if !observations.is_empty()
+        && positions.len() > 1
+        && position_index.is_none()
+    {
+        println!(
+                "{} positions survive the observations (most probable p={:.4}); the matrix game is played over their mixture where the choices coincide; pass --position to pick one",
                 positions.len(),
                 positions[0].probability
             );
-            positions.truncate(1);
-        }
-    }
+        let keep = positions.clone();
+        positions.truncate(1);
+        keep
+    } else {
+        Vec::new()
+    };
     let position = pick_position(&loaded, positions, before.as_deref(), position_index, us)?;
     let them = us.other();
     let mut state = position.state.clone();
@@ -411,6 +427,7 @@ fn run() -> Result<(), String> {
                 setup_options,
                 Replay::Believed,
             )?;
+            let mut bsurvivors: Vec<Position> = Vec::new();
             if !observations.is_empty() {
                 let likelihood: f64 = bpositions.iter().map(|p| p.probability).sum();
                 posterior[k] *= likelihood as f32;
@@ -419,10 +436,13 @@ fn run() -> Result<(), String> {
                     continue;
                 }
                 bpositions.sort_by(|a, b| b.probability.total_cmp(&a.probability));
+                if bpositions.len() > 1 && position_index.is_none() {
+                    bsurvivors = bpositions.clone();
+                }
                 bpositions.truncate(1);
             }
             let bp = pick_position(&bl, bpositions, before.as_deref(), position_index, us)?;
-            believed_positions.push(Some(bp));
+            believed_positions.push(Some((bp, bsurvivors)));
         }
         let total: f32 = posterior.iter().sum();
         if total <= 0.0 {
@@ -433,14 +453,17 @@ fn run() -> Result<(), String> {
         }
         for (k, team_path) in believed_teams.iter().enumerate() {
             let w = posterior[k];
-            let Some(believed) = believed_positions[k].clone() else {
+            let Some((believed, bsurvivors)) = believed_positions[k].clone() else {
                 believed_values.push((team_path.clone(), w, f32::NAN));
                 continue;
             };
-            let mut believed_state = believed.state.clone();
-            let mixed = solver
-                .analyse_mixed(&mut believed_state, None)
-                .map_err(|e| format!("believed position {team_path}: {e}"))?;
+            let mixed = analyse_positions(
+                &mut solver,
+                &believed,
+                &bsurvivors,
+                &format!("believed team {team_path}"),
+            )
+            .map_err(|e| format!("believed position {team_path}: {e}"))?;
             believed_values.push((team_path.clone(), w, mixed.equilibrium.value));
             dropped.extend(mixed.unsupported.iter().cloned());
             match &reference {
@@ -460,23 +483,23 @@ fn run() -> Result<(), String> {
             }
         }
         let (_, believed, believed_decision) = reference.expect("at least one believed team");
-        let response = solver
-            .best_response(&mut state, None, &mixture)
-            .map_err(|e| e.to_string())?;
-        if state != position.state {
-            return Err("the solver changed the position (bug)".into());
+        let started = std::time::Instant::now();
+        let real = analyse_positions(&mut solver, &position, &survivors, "real position")?;
+        // Our best response to their mixed strategy, read off the (mixed) real matrix: their
+        // choices the real position does not keep are dropped and the rest renormalised.
+        let response_lines = matrix_best_response(&real, &mixture);
+        if response_lines.is_empty() {
+            return Err("none of their strategy's choices is kept on the real position".into());
         }
-        let real = solver
-            .analyse_mixed(&mut state, None)
-            .map_err(|e| e.to_string())?;
+        let response_elapsed = started.elapsed();
         println!(
             "opponent model 3: their equilibrium strategies on the believed teams, mixed by weight, answered on the real position; real equilibrium {:+.1}; chance {:?}, rolls {:?}, eval {eval}: {} nodes, {} enumerations, {:.2} s",
             real.equilibrium.value,
             config.chance,
             config.rolls,
-            response.nodes,
-            response.turns,
-            response.elapsed.as_secs_f64()
+            real.nodes,
+            real.turns,
+            response_elapsed.as_secs_f64()
         );
         for (k, (team_path, w, value)) in believed_values.iter().enumerate() {
             let prior = weights[k];
@@ -509,20 +532,20 @@ fn run() -> Result<(), String> {
         }
         println!(
             "our best responses on the real position (best value {:+.1}; the gap to the real equilibrium, {:+.1}, is what the hidden sets are worth this turn):",
-            response.lines[0].1,
-            response.lines[0].1 - real.equilibrium.value
+            response_lines[0].1,
+            response_lines[0].1 - real.equilibrium.value
         );
-        for (rank, (choice, value)) in response.lines.iter().take(top).enumerate() {
+        for (rank, (choice, value)) in response_lines.iter().take(top).enumerate() {
             println!(
                 "{:>3}  {:>9}  {}",
                 rank + 1,
                 format!("{value:+.1}"),
-                describe(&position, response.decision, us, choice)
+                describe(&position, real.decision, us, choice)
             );
         }
-        if !response.unsupported.is_empty() || !dropped.is_empty() {
+        if !real.unsupported.is_empty() || !dropped.is_empty() {
             println!("dropped pairs reaching effects the engine does not implement:");
-            let mut all: Vec<&String> = response.unsupported.iter().chain(&dropped).collect();
+            let mut all: Vec<&String> = real.unsupported.iter().chain(&dropped).collect();
             all.sort();
             all.dedup();
             for why in all {
@@ -726,12 +749,7 @@ fn run() -> Result<(), String> {
         return Ok(());
     }
     if solve == "nash" {
-        let mixed = solver
-            .analyse_mixed(&mut state, None)
-            .map_err(|e| e.to_string())?;
-        if state != position.state {
-            return Err("the solver changed the position (bug)".into());
-        }
+        let mixed = analyse_positions(&mut solver, &position, &survivors, "position")?;
         println!(
             "decision {:?}, depth {}, chance {:?}, pruning {:?}, rolls {:?}, eval {eval}: {} nodes, {} enumerations, {:.2} s",
             mixed.decision, mixed.depth, config.chance, config.pruning, config.rolls, mixed.nodes, mixed.turns,
@@ -1109,6 +1127,127 @@ fn roster(loaded: &lab_scenario::LoadedScenario, position: &Position, side: Side
         })
         .collect();
     format!("{} | bench {}", active.join(", "), bench.join(", "))
+}
+
+/// The one-turn matrix game of `single`, or, when `survivors` (positions the observations
+/// cannot tell apart, `single` the most probable of them) has several, of their mixture; falls
+/// back to `single` with a note when the mixture is not well defined.
+fn analyse_positions(
+    solver: &mut Solver<'_, 2, dyn Evaluator<2> + Sync>,
+    single: &Position,
+    survivors: &[Position],
+    label: &str,
+) -> Result<MixedAnalysis<2>, String> {
+    if survivors.len() > 1 {
+        match mixed_over_positions(solver, survivors)? {
+            Ok(mixed) => {
+                println!(
+                    "{label}: matrix game over the mixture of {} positions (total p={:.4})",
+                    survivors.len(),
+                    survivors.iter().map(|p| p.probability).sum::<f64>()
+                );
+                return Ok(mixed);
+            }
+            Err(why) => println!("{label}: {why}; using the most probable position alone"),
+        }
+    }
+    let mut state = single.state.clone();
+    solver
+        .analyse_mixed(&mut state, None)
+        .map_err(|e| e.to_string())
+}
+
+/// Several positions the players cannot tell apart (chance the observations do not reveal:
+/// sleep turns, hidden damage rolls) form one matrix game: the probability-weighted average of
+/// their payoff matrices, over choice lists that must coincide (the same decision, the same
+/// choices kept after dropping unsupported pairs). The inner `Err(why)` says when they do not.
+fn mixed_over_positions(
+    solver: &mut Solver<'_, 2, dyn Evaluator<2> + Sync>,
+    positions: &[Position],
+) -> Result<Result<MixedAnalysis<2>, String>, String> {
+    let mut parts: Vec<(f64, MixedAnalysis<2>)> = Vec::with_capacity(positions.len());
+    for p in positions {
+        let mut state = p.state.clone();
+        let analysis = solver
+            .analyse_mixed(&mut state, None)
+            .map_err(|e| e.to_string())?;
+        parts.push((p.probability, analysis));
+    }
+    let first = &parts[0].1;
+    for (_, m) in &parts[1..] {
+        if m.decision != first.decision {
+            return Ok(Err("the surviving positions ask different decisions".into()));
+        }
+        if m.ours != first.ours || m.theirs != first.theirs {
+            return Ok(Err(
+                "the surviving positions keep different choice lists (different legal moves or unsupported pairs)".into(),
+            ));
+        }
+    }
+    let total: f64 = parts.iter().map(|(p, _)| *p).sum();
+    let mut values = vec![0.0f32; first.matrix.values.len()];
+    for (p, m) in &parts {
+        let w = (*p / total) as f32;
+        for (v, x) in values.iter_mut().zip(&m.matrix.values) {
+            *v += w * x;
+        }
+    }
+    let matrix = Matrix::new(first.matrix.rows, first.matrix.cols, values);
+    let equilibrium = nash::solve(&matrix, 20_000, 0.01);
+    let maximin = matrix.maximin();
+    let nodes = parts.iter().map(|(_, m)| m.nodes).sum();
+    let turns = parts.iter().map(|(_, m)| m.turns).sum();
+    let elapsed = parts.iter().map(|(_, m)| m.elapsed).sum();
+    let mut unsupported: Vec<String> = parts
+        .iter()
+        .flat_map(|(_, m)| m.unsupported.iter().cloned())
+        .collect();
+    unsupported.sort();
+    unsupported.dedup();
+    let first = parts.swap_remove(0).1;
+    Ok(Ok(MixedAnalysis {
+        matrix,
+        equilibrium,
+        maximin,
+        nodes,
+        turns,
+        elapsed,
+        unsupported,
+        ..first
+    }))
+}
+
+/// Our choices' expected values on `analysis`'s matrix against their mixed `strategy` (choices
+/// of theirs the matrix does not keep are dropped and the rest renormalised), best first.
+fn matrix_best_response(
+    analysis: &MixedAnalysis<2>,
+    strategy: &[(Choice<2>, f32)],
+) -> Vec<(Choice<2>, f32)> {
+    let mut weights = vec![0.0f32; analysis.theirs.len()];
+    for (choice, p) in strategy {
+        if let Some(i) = analysis.theirs.iter().position(|x| x == choice) {
+            weights[i] += p;
+        }
+    }
+    let total: f32 = weights.iter().sum();
+    if total <= 0.0 {
+        return Vec::new();
+    }
+    let mut lines: Vec<(Choice<2>, f32)> = analysis
+        .ours
+        .iter()
+        .enumerate()
+        .map(|(r, choice)| {
+            let value: f32 = weights
+                .iter()
+                .enumerate()
+                .map(|(c, w)| w / total * analysis.matrix.at(r, c))
+                .sum();
+            (*choice, value)
+        })
+        .collect();
+    lines.sort_by(|a, b| b.1.total_cmp(&a.1));
+    lines
 }
 
 fn describe(position: &Position, decision: Decision, side: SideId, choice: &Choice<2>) -> String {
