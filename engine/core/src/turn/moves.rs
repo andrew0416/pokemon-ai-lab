@@ -6,7 +6,7 @@ mod ability_hooks;
 mod handlers;
 
 use handlers::HitResult;
-pub(crate) use handlers::{sleep_talk_calls, trick_item_start, trick_moves_item};
+pub(crate) use handlers::{set_types, sleep_talk_calls, trick_item_start, trick_moves_item};
 
 use crate::damage::{
     damage_rolls, DamageInput, MOD_HALF, MOD_ONE, MOD_ONE_POINT_FIVE, MOD_ONE_POINT_THREE,
@@ -1932,6 +1932,7 @@ fn hit_loop<const N: usize>(
             };
             ability_events::after_move_secondary(b, user, t, damage, total);
             ability_events::pickpocket(b, user, t, mv.data)?;
+            ability_events::color_change(b, t, mv.move_type, mv.data.category);
             item_events::after_move_secondary(b, user, t, mv.data.category);
         }
         // `runEvent('EmergencyExit', target, pokemon)` for each of the hit loop's targets still

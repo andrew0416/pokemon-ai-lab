@@ -1573,6 +1573,8 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // `magician`; an item the engine cannot move is refused when stolen.
     (abilities::PICKPOCKET, &["onAfterMoveSecondary"]),
     (abilities::MAGICIAN, &["onAfterMoveSecondarySelf"]),
+    // Color Change: `onAfterMoveSecondary` in `abilities::color_change` (`moves::hit_loop`).
+    (abilities::COLOR_CHANGE, &["onAfterMoveSecondary"]),
     // Wandering Spirit: `onDamagingHit` in `ability_hooks::on_damaging_hit` →
     // `abilities::skill_swap` (End / Start through `switching`).
     (abilities::WANDERING_SPIRIT, &["onDamagingHit"]),

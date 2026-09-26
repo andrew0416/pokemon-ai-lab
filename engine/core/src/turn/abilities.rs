@@ -861,6 +861,30 @@ pub(crate) fn skill_swap<const N: usize>(
     Ok(())
 }
 
+/// Color Change's `onAfterMoveSecondary` for the Pokémon in `target`, hit by a damaging move of
+/// type `move_type` (after ModifyType): a holder with HP that is not already of that type
+/// becomes that type alone (`setType(type)`: not for `???`, nor on Arceus or Silvally; through
+/// Roost's filter, `moves::set_types`). Only its holder changes.
+pub(crate) fn color_change<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    move_type: Type,
+    category: MoveCategory,
+) {
+    let Some(pokemon) = b.alive(target) else {
+        return;
+    };
+    if b.ability(target) != abilities::COLOR_CHANGE
+        || category == MoveCategory::Status
+        || matches!(move_type, Type::None | Type::Unknown)
+        || b.has_type(target, move_type)
+        || [493, 773].contains(&b.mon(pokemon).species.data().num)
+    {
+        return;
+    }
+    super::moves::set_types(b, target, [move_type, Type::None]);
+}
+
 /// Harvest's `onResidual` for its holder: in harsh sunlight (`this.field.isWeather`: the field's
 /// effective weather) or on `this.randomChance(1, 2)`, a holder with HP, no item and a berry as
 /// `lastItem` gets it back (`setItem(lastItem)`: berries have no Start) and forgets it

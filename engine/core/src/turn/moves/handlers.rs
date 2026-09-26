@@ -2061,7 +2061,7 @@ fn set_hp<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, hp: i32) {
 /// replaced. On a Pokémon under Roost the stored types keep Roost's filter (Flying left out,
 /// Normal when nothing is left) and the volatile remembers the new types to restore when it
 /// ends (nothing to restore without Flying).
-fn set_types<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, types: [Type; 2]) {
+pub(crate) fn set_types<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, types: [Type; 2]) {
     let Some(pokemon) = b.occupant(slot) else {
         return;
     };
