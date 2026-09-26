@@ -1351,6 +1351,8 @@ fn try_spread_move_hit<const N: usize>(
     for &t in &targets {
         if accuracy_check(b, user, mv, t) {
             hit.push(t);
+        } else if mv.data.ohko == Ohko::No {
+            item_events::blunder_policy(b, user);
         }
     }
     if hit.is_empty() {
@@ -1909,7 +1911,7 @@ fn spread_move_hit<const N: usize>(
                     if let Some(drain) = data.drain {
                         let amount =
                             (f64::from(dealt) * f64::from(drain.0) / f64::from(drain.1)).round();
-                        b.heal(user, amount);
+                        b.heal_rooted(user, amount);
                     }
                 }
                 Hit::Damage(dealt)
@@ -2200,7 +2202,7 @@ fn hit_substitute<const N: usize>(
     }
     if let Some(drain) = mv.data.drain {
         let amount = (f64::from(damage) * f64::from(drain.0) / f64::from(drain.1)).ceil();
-        b.heal(user, amount);
+        b.heal_rooted(user, amount);
     }
     handlers::on_after_sub_damage(b, user, mv);
     item_events::after_sub_damage(b, target);
@@ -2320,7 +2322,7 @@ fn damaging_hit<const N: usize>(
     }
     handlers.sort();
     let contact =
-        mv.data.flags.contains(MoveFlags::CONTACT) && b.item(user) != items::PROTECTIVE_PADS;
+        item_events::makes_contact(b, user, mv.data) && b.item(user) != items::PROTECTIVE_PADS;
     for (_, index, kind) in handlers {
         let target = damaged[index].0;
         let Some(pokemon) = b.occupant(target) else {
@@ -2493,6 +2495,8 @@ fn get_damage<const N: usize>(
     if type_boost_item(b.item(user)) == Some(mv.move_type) {
         power_mods.push(Handler::of(b, user, 15, SUB_ITEM, MOD_ONE_POINT_TWO));
     }
+    // Muscle Band, Wise Glasses (16), Punching Glove (23).
+    power_mods.extend(item_events::base_power_handlers(b, user, data));
     let attacker_grounded = b.is_grounded(user);
     let defender_grounded = b.is_grounded(target);
     let terrain_mod = match b.terrain() {

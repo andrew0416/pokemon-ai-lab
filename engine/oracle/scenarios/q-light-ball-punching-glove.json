@@ -1,0 +1,23 @@
+{
+ "description": "Opus Q unit 6: Pikachu's Light Ball (onModifySpA 2x) Shock Wave into Snorlax; Hitmonchan's Punching Glove (onBasePower 4506/4096 for punches; its onModifyMove removes contact) Mega Punch into Chansey, whose Rocky Helmet then does nothing. Snorlax and Chansey only Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Pikachu", "item": "Light Ball", "ability": "Static", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Shock Wave", "Protect"], "level": 50},
+   {"species": "Hitmonchan", "item": "Punching Glove", "ability": "Inner Focus", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Mega Punch", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Calm",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Chansey", "item": "Rocky Helmet", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move shockwave 1, move megapunch 2", "p2": "move harden, move harden"}
+}

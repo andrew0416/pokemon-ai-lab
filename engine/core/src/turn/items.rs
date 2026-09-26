@@ -9,13 +9,11 @@
 //! Refused on purpose (not in `support`'s tables):
 //! - Metronome: its condition keeps `lastMove` and `numConsecutive` and reads
 //!   `moveLastTurnResult` (work plan F13); the item's `onStart` adds it at switch-in.
-//! - Clear Amulet: `onTryBoost` needs the boost events (F16).
-//! - Air Balloon's pop is refused at the hit ([`on_damaging_hit`], F15); grounding is done.
 
-use crate::damage::{MOD_HALF, MOD_ONE_POINT_FIVE};
+use crate::damage::{MOD_DOUBLE, MOD_HALF, MOD_ONE_POINT_FIVE};
 use crate::dex::{
-    abilities, conditions, items, moves, ItemId, MoveCategory, MoveData, MoveFlags, MoveId,
-    Secondary, Stat, Type, TypeImmunities, NO_BOOSTS,
+    abilities, conditions, items, moves, species, ItemId, MoveCategory, MoveData, MoveFlags,
+    MoveId, Secondary, SpeciesId, Stat, Type, TypeImmunities, NO_BOOSTS,
 };
 use crate::field::{FieldEffect, Weather};
 use crate::instruction::Instruction;
@@ -117,6 +115,9 @@ pub(crate) fn start_handler_implemented(item: ItemId, handler: &str) -> bool {
         }
         "onTerrainChange" => super::field_events::seed_terrain(item).is_some(),
         "onAnySwitchIn" => any_switch_in_priority(item).is_some(),
+        // Ability Shield: the only `setAbility` of a switch-in is the holder's own Trace, which
+        // is refused with the shield (`switching::trace`); a forme change skips the event.
+        "onSetAbility" => item == items::ABILITY_SHIELD,
         _ => false,
     }
 }
@@ -434,8 +435,12 @@ pub(crate) fn custap<const N: usize>(
 
 // ---- Choice items ---------------------------------------------------------------------------
 
-/// `ModifyAtk` (physical moves) or `ModifySpA` (special moves) handlers of the user's item:
-/// Choice Band / Choice Specs `chainModify(1.5)` at priority 1 (not while Dynamaxed).
+/// `ModifyAtk` (physical moves) or `ModifySpA` (special moves) handlers of the user's item, all
+/// at priority 1:
+/// - Choice Band / Choice Specs `chainModify(1.5)` (not while Dynamaxed);
+/// - Light Ball (both events) for any Pikachu, Thick Club (Attack) for Cubone and Marowak
+///   (`pokemon.baseSpecies.baseSpecies`), Deep Sea Tooth (Special Attack) for Clamperl:
+///   `chainModify(2)`.
 pub(crate) fn attack_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
@@ -443,15 +448,80 @@ pub(crate) fn attack_handlers<const N: usize>(
 ) -> Vec<Handler> {
     let mut out = Vec::new();
     let item = b.item(user);
-    let (boosted, event) = match data.category {
-        MoveCategory::Physical => (items::CHOICE_BAND, "onModifyAtkPriority"),
-        _ => (items::CHOICE_SPECS, "onModifySpAPriority"),
+    let physical = data.category == MoveCategory::Physical;
+    let (boosted, event) = if physical {
+        (items::CHOICE_BAND, "onModifyAtkPriority")
+    } else {
+        (items::CHOICE_SPECS, "onModifySpAPriority")
     };
-    if item == boosted {
+    let base = b.slot_mon(user).map(|m| base_species(m.species));
+    let doubled = match item {
+        i if i == items::LIGHT_BALL => base == Some(species::PIKACHU),
+        i if i == items::THICK_CLUB => {
+            physical && (base == Some(species::CUBONE) || base == Some(species::MAROWAK))
+        }
+        i if i == items::DEEP_SEA_TOOTH => !physical && base == Some(species::CLAMPERL),
+        _ => false,
+    };
+    let modifier = if item == boosted {
+        Some(MOD_ONE_POINT_FIVE)
+    } else {
+        doubled.then_some(MOD_DOUBLE)
+    };
+    if let Some(modifier) = modifier {
         let p = super::abilities::priority(item.data().event_orders, event);
-        out.push(Handler::of(b, user, p, SUB_ITEM, MOD_ONE_POINT_FIVE));
+        out.push(Handler::of(b, user, p, SUB_ITEM, modifier));
     }
     out
+}
+
+/// The base species' species (Showdown `species.baseSpecies`, the species itself for a base
+/// forme).
+fn base_species(species: SpeciesId) -> SpeciesId {
+    let base = species.data().base_species;
+    if base.is_none() {
+        species
+    } else {
+        base
+    }
+}
+
+/// `BasePower` handlers of the user's item other than the type-boosting ones: Muscle Band
+/// (physical) and Wise Glasses (special) `[4505, 4096]` at priority 16; Punching Glove
+/// `[4506, 4096]` for punching moves at priority 23.
+pub(crate) fn base_power_handlers<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    data: &MoveData,
+) -> Vec<Handler> {
+    let item = b.item(user);
+    let modifier = match item {
+        i if i == items::MUSCLE_BAND => (data.category == MoveCategory::Physical).then_some(4505),
+        i if i == items::WISE_GLASSES => (data.category == MoveCategory::Special).then_some(4505),
+        i if i == items::PUNCHING_GLOVE => data.flags.contains(MoveFlags::PUNCH).then_some(4506),
+        _ => None,
+    };
+    modifier
+        .map(|modifier| {
+            let p = super::abilities::priority(item.data().event_orders, "onBasePowerPriority");
+            Handler::of(b, user, p, SUB_ITEM, modifier)
+        })
+        .into_iter()
+        .collect()
+}
+
+/// Whether the move being used has the `contact` flag after ModifyMove: Punching Glove's
+/// `onModifyMove` (priority 1) deletes it from a punching move. Every reader of
+/// `move.flags['contact']` (and `checkMoveMakesContact`, which adds the Protective Pads check)
+/// goes through this. The glove's holder is the user, whose item cannot change during its own
+/// move (a supported effect that takes or gives items needs an empty-handed user).
+pub(crate) fn makes_contact<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    data: &MoveData,
+) -> bool {
+    data.flags.contains(MoveFlags::CONTACT)
+        && !(data.flags.contains(MoveFlags::PUNCH) && b.item(user) == items::PUNCHING_GLOVE)
 }
 
 // ---- defensive stat items ----------------------------------------------------------------------
@@ -475,14 +545,23 @@ pub(crate) fn defense_handlers<const N: usize>(
         Stat::Def => "onModifyDefPriority",
         _ => "onModifySpDPriority",
     };
-    let applies = match item {
-        i if i == items::ASSAULT_VEST => defense_stat == Stat::Spd,
-        i if i == items::EVIOLITE => mon.species.data().nfe,
-        _ => false,
+    let modifier = match item {
+        i if i == items::ASSAULT_VEST => (defense_stat == Stat::Spd).then_some(MOD_ONE_POINT_FIVE),
+        i if i == items::EVIOLITE => mon.species.data().nfe.then_some(MOD_ONE_POINT_FIVE),
+        // Deep Sea Scale: `onModifySpD` for Clamperl (`pokemon.baseSpecies.name`); Metal
+        // Powder: `onModifyDef` for Ditto (`pokemon.species.name === 'Ditto' &&
+        // !pokemon.transformed`: Transform is not supported). Both 2x at priority 2.
+        i if i == items::DEEP_SEA_SCALE => (defense_stat == Stat::Spd
+            && base_species(mon.species) == species::CLAMPERL)
+            .then_some(MOD_DOUBLE),
+        i if i == items::METAL_POWDER => {
+            (defense_stat == Stat::Def && mon.species == species::DITTO).then_some(MOD_DOUBLE)
+        }
+        _ => None,
     };
-    if applies {
+    if let Some(modifier) = modifier {
         let p = super::abilities::priority(item.data().event_orders, event);
-        out.push(Handler::of(b, target, p, SUB_ITEM, MOD_ONE_POINT_FIVE));
+        out.push(Handler::of(b, target, p, SUB_ITEM, modifier));
     }
     out
 }
@@ -608,6 +687,37 @@ pub(crate) fn accuracy_handlers<const N: usize>(
         out.push(Handler::of(b, target, p, SUB_ITEM, 3686));
     }
     out
+}
+
+/// Blunder Policy (no handler: `hitStepAccuracy` itself): after the move missed a target, unless
+/// it is an OHKO move, `pokemon.hasItem('blunderpolicy') && pokemon.useItem()` and then
+/// `this.battle.boost({spe: 2}, pokemon)`, outside any event (no source).
+pub(crate) fn blunder_policy<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) {
+    if b.item(user) == items::BLUNDER_POLICY && b.use_item(user) {
+        let mut up = NO_BOOSTS;
+        up[4] = 2;
+        b.boost_by(user, &up, None, BoostEffect::Item(items::BLUNDER_POLICY));
+    }
+}
+
+/// Mental Herb's `onUpdate`: a holder with any of `attract`, `taunt`, `encore`, `torment`,
+/// `disable`, `healblock` uses the item (`useItem`) and loses all of them. Attract and Heal
+/// Block do not exist in the engine (their moves are refused), so the other four are checked.
+pub(crate) fn mental_herb<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    const CURED: [Volatile; 4] = [
+        Volatile::Taunt,
+        Volatile::Encore,
+        Volatile::Torment,
+        Volatile::Disable,
+    ];
+    if b.item(slot) != items::MENTAL_HERB || !CURED.iter().any(|&v| b.volatile(slot, v).active) {
+        return;
+    }
+    if b.use_item(slot) {
+        for volatile in CURED {
+            b.remove_volatile(slot, volatile);
+        }
+    }
 }
 
 /// `ModifyCritRatio` of the user's item: Scope Lens and Razor Claw `return critRatio + 1`.

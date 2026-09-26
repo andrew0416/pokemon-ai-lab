@@ -1,0 +1,23 @@
+{
+ "description": "Opus Q unit 6: Marowak's Thick Club (onModifyAtk 2x) Strength and Machamp's Muscle Band (onBasePower 4505/4096, physical) Strength into Blissey; Chansey's Wise Glasses (4505/4096, special) Shock Wave into Machamp. Blissey only Hardens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Marowak", "item": "Thick Club", "ability": "Rock Head", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Strength", "Protect"], "level": 50},
+   {"species": "Machamp", "item": "Muscle Band", "ability": "Guts", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Strength", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Chansey", "item": "Wise Glasses", "ability": "Natural Cure", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Shock Wave", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spe": 2}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move strength 2, move strength 2", "p2": "move shockwave 2, move harden"}
+}

@@ -665,11 +665,13 @@ pub(super) fn on_damaging_hit<const N: usize>(
         }
         // Mummy, Lingering Aroma: unless the attacker's ability is `cantsuppress` or already
         // this one, contact: `source.setAbility(this ability, target)` (nothing on an attacker at
-        // 0 HP; no implemented SetAbility handler: Ability Shield is refused on the field): the
+        // 0 HP; the attacker's Ability Shield `onSetAbility` returns `null`, blocking it): the
         // old ability's `End` (`switching::end_ability`), then the new one, which has no start.
         a if a == abilities::MUMMY || a == abilities::LINGERING_AROMA => {
             let old = b.ability(attacker);
-            let locked = old.data().flags.contains(AbilityFlags::CANTSUPPRESS) || old == a;
+            let locked = old.data().flags.contains(AbilityFlags::CANTSUPPRESS)
+                || old == a
+                || b.item(attacker) == items::ABILITY_SHIELD;
             if !locked && contact {
                 if let Some(pokemon) = b.alive(attacker) {
                     super::super::switching::end_ability(b, attacker, old)?;
@@ -721,8 +723,8 @@ pub(super) fn on_source_damaging_hit<const N: usize>(
         return;
     }
     let status = if ability == abilities::POISON_TOUCH {
-        let contact =
-            mv.data.flags.contains(MoveFlags::CONTACT) && b.item(target) != items::PROTECTIVE_PADS;
+        let contact = super::item_events::makes_contact(b, attacker, mv.data)
+            && b.item(target) != items::PROTECTIVE_PADS;
         if !contact {
             return;
         }

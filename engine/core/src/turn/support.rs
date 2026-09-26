@@ -769,6 +769,27 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::ZOOM_LENS, &["onSourceModifyAccuracy"]),
     (items::BRIGHT_POWDER, &["onModifyAccuracy"]),
     (items::LAX_INCENSE, &["onModifyAccuracy"]),
+    // Opus Q unit 6. Clear Amulet: `onTryBoost` in `Battle::boost_by`. Ability Shield:
+    // `onSetAbility` blocks Mummy / Lingering Aroma (`moves::ability_hooks`; Trace holding it
+    // stays refused in `switching::trace`), its Mold Breaker protection is in
+    // `abilities::ability_for_move` / `Battle::suppressing_ability`. Big Root: `onTryHeal` in
+    // `Battle::heal_rooted` (drain, Leech Seed, Strength Sap). The stat items in
+    // `items::attack_handlers` / `defense_handlers`, the power items in
+    // `items::base_power_handlers`; Punching Glove's `onModifyMove` (no contact) is
+    // `items::makes_contact`. Mental Herb: `onUpdate` in `update::update_event`
+    // (`items::mental_herb`); `fling.effect` needs Fling, which is not supported.
+    (items::CLEAR_AMULET, &["onTryBoost"]),
+    (items::ABILITY_SHIELD, &["onSetAbility"]),
+    (items::BIG_ROOT, &["onTryHeal"]),
+    (items::MUSCLE_BAND, &["onBasePower"]),
+    (items::WISE_GLASSES, &["onBasePower"]),
+    (items::PUNCHING_GLOVE, &["onBasePower", "onModifyMove"]),
+    (items::LIGHT_BALL, &["onModifyAtk", "onModifySpA"]),
+    (items::THICK_CLUB, &["onModifyAtk"]),
+    (items::DEEP_SEA_TOOTH, &["onModifySpA"]),
+    (items::DEEP_SEA_SCALE, &["onModifySpD"]),
+    (items::METAL_POWDER, &["onModifyDef"]),
+    (items::MENTAL_HERB, &["fling.effect", "onUpdate"]),
     (items::SCOPE_LENS, &["onModifyCritRatio"]),
     (items::RAZOR_CLAW, &["onModifyCritRatio"]),
     (items::FOCUS_BAND, &["onDamage"]),
@@ -1432,8 +1453,9 @@ const CORE_CHECKED_ABILITIES: &[AbilityId] = &[
 
 /// Items without callbacks that Showdown's core checks by name, not implemented here.
 /// Weather rocks, Light Clay and Terrain Extender (durations), Heavy-Duty Boots (entry hazards),
-/// Protective Pads (contact), Grip Claw and Binding Band (partial trapping) are implemented.
-const CORE_CHECKED_ITEMS: &[ItemId] = &[items::BLUNDER_POLICY, items::ULTRANECROZIUM_Z];
+/// Protective Pads (contact), Grip Claw and Binding Band (partial trapping) and Blunder Policy
+/// (`items::blunder_policy`, from the accuracy step) are implemented.
+const CORE_CHECKED_ITEMS: &[ItemId] = &[items::ULTRANECROZIUM_Z];
 
 /// Whether an ability is inert or implemented while its holder is on the field.
 pub(crate) fn ability_supported_on_field(ability: AbilityId) -> bool {

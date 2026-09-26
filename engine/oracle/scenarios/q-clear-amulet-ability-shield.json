@@ -1,0 +1,23 @@
+{
+ "description": "Opus Q unit 6: Incineroar's Intimidate at the start and its Growl are blocked on Blissey (Clear Amulet: onTryBoost deletes drops from others); Snorlax takes both. Blissey's Shadow Claw into Cofagrigus turns its ability into Mummy; Snorlax's Knock Off into Cofagrigus leaves its ability (Ability Shield: onSetAbility blocks it). Cofagrigus only Hardens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Incineroar", "item": "", "ability": "Intimidate", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Growl", "Protect"], "level": 50},
+   {"species": "Cofagrigus", "item": "", "ability": "Mummy", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Ability Shield", "ability": "Thick Fat", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Knock Off", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "Clear Amulet", "ability": "Natural Cure", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Shadow Claw", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move growl, move harden", "p2": "move knockoff 2, move shadowclaw 2"}
+}

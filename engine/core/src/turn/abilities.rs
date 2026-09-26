@@ -172,7 +172,9 @@ pub(crate) fn base_power_handlers<const N: usize>(
         a if a == abilities::RECKLESS => {
             (data.recoil.is_some() || data.has_crash_damage).then_some(MOD_ONE_POINT_TWO)
         }
-        a if a == abilities::TOUGH_CLAWS => flag(MoveFlags::CONTACT, MOD_ONE_POINT_THREE),
+        a if a == abilities::TOUGH_CLAWS => {
+            super::items::makes_contact(b, user, data).then_some(MOD_ONE_POINT_THREE)
+        }
         a if a == abilities::SHARPNESS => flag(MoveFlags::SLICING, MOD_ONE_POINT_FIVE),
         a if a == abilities::STRONG_JAW => flag(MoveFlags::BITE, MOD_ONE_POINT_FIVE),
         a if a == abilities::MEGA_LAUNCHER => flag(MoveFlags::PULSE, MOD_ONE_POINT_FIVE),
@@ -1201,7 +1203,8 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
     let Some(defender) = b.slot_mon(target) else {
         return out;
     };
-    let contact = data.flags.contains(MoveFlags::CONTACT);
+    // `move.flags['contact']` after ModifyMove (Punching Glove).
+    let contact = super::items::makes_contact(b, user, data);
     let full_hp = defender.hp >= defender.max_hp;
     let ability = ability_for_move(b, target, user, data);
     let modifier = match ability {

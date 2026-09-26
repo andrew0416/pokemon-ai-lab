@@ -473,6 +473,24 @@ impl<'a, const N: usize> Battle<'a, N> {
         healed
     }
 
+    /// `battle.heal` for the heals whose effect Big Root's `onTryHeal` (priority 1) lists:
+    /// `drain`, `leechseed`, `ingrain`, `aquaring`, `strengthsap`. The amount is normalized as
+    /// in `heal` (at least 1, truncated), then `runEvent('TryHeal')` chains `[5324, 4096]` on a
+    /// holder of Big Root (nothing else supported answers TryHeal: Heal Block, Liquid Ooze and
+    /// Ripen are refused). Returns the HP restored.
+    pub fn heal_rooted(&mut self, target: SlotRef, amount: f64) -> i32 {
+        let amount = if amount > 0.0 && amount <= 1.0 {
+            1.0
+        } else {
+            amount
+        };
+        let mut amount = amount.trunc() as i32;
+        if self.item(target) == items::BIG_ROOT {
+            amount = super::order::modify(amount, 5324);
+        }
+        self.heal(target, f64::from(amount))
+    }
+
     // ---- faint and win -------------------------------------------------------------------
 
     fn queue_faint(&mut self, pokemon: PokemonRef, slot: SlotRef, attacker: Option<PokemonRef>) {
@@ -1146,6 +1164,11 @@ impl<'a, const N: usize> Battle<'a, N> {
         // `if (source && target === source) return;` — no source counts as "from another".
         let blocks_drops = source.is_none_or(|s| s != target);
         if blocks_drops {
+            // Clear Amulet (the target's item, `onTryBoostPriority: 1`: before every
+            // priority-0 handler, so Mirror Armor finds nothing to reflect) deletes every drop.
+            if self.item(target) == items::CLEAR_AMULET {
+                boost.iter_mut().filter(|b| **b < 0).for_each(|b| *b = 0);
+            }
             // Flower Veil (`onAllyTryBoost`) deletes a Grass target's drops; it runs before or
             // after the target's own Mirror Armor by Speed (`abilities::flower_veil_first`).
             if super::abilities::flower_veil_first(self, target, &boost, source, effect) {

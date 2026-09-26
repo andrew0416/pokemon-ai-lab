@@ -773,8 +773,8 @@ pub(super) fn protect_try_hit<const N: usize>(
         if locked.active && locked.duration == 2 {
             b.delete_volatile(user, Volatile::LockedMove);
         }
-        let contact =
-            mv.data.flags.contains(MoveFlags::CONTACT) && b.item(user) != items::PROTECTIVE_PADS;
+        let contact = super::item_events::makes_contact(b, user, mv.data)
+            && b.item(user) != items::PROTECTIVE_PADS;
         if contact {
             let mut drop = NO_BOOSTS;
             let effect = match volatile {
@@ -1274,7 +1274,7 @@ pub(super) fn on_hit<const N: usize>(
                 let mut drop = NO_BOOSTS;
                 drop[0] = -1;
                 let boosted = b.boost_by(target, &drop, Some(user), BoostEffect::Move(mv.id));
-                let healed = b.heal(user, f64::from(attack)) > 0;
+                let healed = b.heal_rooted(user, f64::from(attack)) > 0;
                 success(healed || boosted)
             }
         }
