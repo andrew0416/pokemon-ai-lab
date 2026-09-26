@@ -4,7 +4,7 @@
 //! Usage: lab-plan <scenario.json> [--side p1|p2] [--depth n] [--rng expect|worst]
 //!                 [--before <oracle-report.json>] [--top k] [--exact] [--all-targets]
 //!                 [--max-turns n] [--rolls full|extremes|quartiles|median|pessimistic]
-//!                 [--eval material|heuristic] [--position i] [--solve maximin|nash]
+//!                 [--eval material|heuristic] [--position i] [--solve maximin|nash|deep]
 //!                 [--threads n] [--plan "<turn 1> / <turn 2> / ..."]
 //!                 [--child-nash [--beam b] [--outcomes k]]
 //!
@@ -144,8 +144,8 @@ fn run() -> Result<(), String> {
             "--solve" => {
                 i += 1;
                 solve = match args.get(i).map(String::as_str) {
-                    Some(s @ ("maximin" | "nash")) => s.to_owned(),
-                    _ => return Err("--solve needs maximin or nash".into()),
+                    Some(s @ ("maximin" | "nash" | "deep")) => s.to_owned(),
+                    _ => return Err("--solve needs maximin, nash or deep".into()),
                 };
             }
             "--plan" => {
@@ -280,6 +280,64 @@ fn run() -> Result<(), String> {
                     format!("{value:+.1}"),
                     describe(&position, report.decision, them, reply)
                 );
+            }
+        }
+        return Ok(());
+    }
+    if solve == "deep" {
+        let beam = config.reply_beam.unwrap_or(6);
+        let deep = solver
+            .analyse_deep(&mut state, None, beam)
+            .map_err(|e| e.to_string())?;
+        if state != position.state {
+            return Err("the solver changed the position (bug)".into());
+        }
+        println!(
+            "decision {:?}, deep: beam {} x {} (outcomes {}), chance {:?}, rolls {:?}, eval {eval}: {} nodes, {} enumerations, {:.2} s",
+            deep.decision,
+            deep.beam,
+            deep.beam,
+            deep.outcome_cap.map_or("all".to_owned(), |k| k.to_string()),
+            config.chance,
+            config.rolls,
+            deep.nodes,
+            deep.turns,
+            deep.elapsed.as_secs_f64()
+        );
+        println!(
+            "{:>3}  {:>9}  {:>9}  {:<44}  worst reply (deep)",
+            "#", "deep", "shallow", "our choice"
+        );
+        for (rank, line) in deep.lines.iter().enumerate() {
+            let reply = line
+                .replies
+                .first()
+                .map(|(r, _)| describe(&position, deep.decision, them, r))
+                .unwrap_or_default();
+            println!(
+                "{:>3}  {:>9}  {:>9}  {:<44}  {}",
+                rank + 1,
+                format!("{:+.1}", line.deep),
+                format!("{:+.1}", line.shallow),
+                describe(&position, deep.decision, us, &line.ours),
+                reply
+            );
+        }
+        if !deep.shallow_rest.is_empty() {
+            println!(
+                "... {} more choices outside the beam (shallow values {:+.1} .. {:+.1})",
+                deep.shallow_rest.len(),
+                deep.shallow_rest.first().map_or(0.0, |x| x.1),
+                deep.shallow_rest.last().map_or(0.0, |x| x.1)
+            );
+        }
+        if !deep.unsupported.is_empty() {
+            println!(
+                "dropped {} pair(s) that reach effects the engine does not implement:",
+                deep.omitted_pairs
+            );
+            for why in &deep.unsupported {
+                println!("  - {why}");
             }
         }
         return Ok(());

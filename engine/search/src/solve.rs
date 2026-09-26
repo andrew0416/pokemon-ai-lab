@@ -199,6 +199,10 @@ pub struct Solver<'e, const N: usize, E: Evaluator<N> + ?Sized> {
     unsupported: Vec<String>,
     /// Pairs of choices dropped that way.
     omitted_pairs: usize,
+    /// [`Solver::nash_value`] results by position hash (identical children recur across
+    /// replies and outcomes; a hash collision would return a wrong value, which is accepted
+    /// for this approximate valuation).
+    nash_cache: std::collections::HashMap<u64, f32>,
 }
 
 impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
@@ -211,6 +215,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             plan_broken: 0,
             unsupported: Vec::new(),
             omitted_pairs: 0,
+            nash_cache: std::collections::HashMap::new(),
         }
     }
 
@@ -839,6 +844,16 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         if let Decision::Over(result) = decision {
             return Ok(self.terminal(result, 0));
         }
+        let key = {
+            use std::hash::{Hash, Hasher};
+            let mut h = std::collections::hash_map::DefaultHasher::new();
+            state.hash(&mut h);
+            suspension.hash(&mut h);
+            h.finish()
+        };
+        if let Some(&v) = self.nash_cache.get(&key) {
+            return Ok(v);
+        }
         let them = self.config.us.other();
         let ours = self.choices(state, decision, self.config.us)?;
         let theirs = self.choices(state, decision, them)?;
@@ -873,11 +888,109 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             values
         };
         let (ours, theirs, values, _, _) = drop_unevaluable(ours, theirs, values);
-        if ours.is_empty() || theirs.is_empty() {
-            return Ok(f32::NAN);
+        let value = if ours.is_empty() || theirs.is_empty() {
+            f32::NAN
+        } else {
+            let matrix = Matrix::new(ours.len(), theirs.len(), values);
+            nash::solve(&matrix, 20_000, 0.01).value
+        };
+        self.nash_cache.insert(key, value);
+        Ok(value)
+    }
+
+    /// Two turns deep, approximately: the root matrix with leaf values orders our choices
+    /// (row minimum) and their replies (per row); then the `beam` best rows are valued again
+    /// against their `beam` worst columns with each child position worth its own next-turn
+    /// equilibrium ([`Next::Nash`], `Config::outcome_cap`). `state` is left unchanged.
+    pub fn analyse_deep(
+        &mut self,
+        state: &mut State<N>,
+        suspension: Option<&Suspension>,
+        beam: usize,
+    ) -> Result<DeepAnalysis<N>, SearchError> {
+        let started = Instant::now();
+        self.reset_counters();
+        let decision = game::decision(state, suspension)?;
+        if matches!(decision, Decision::Over(_)) {
+            return Err(SearchError::Turn(TurnError::BattleOver));
         }
-        let matrix = Matrix::new(ours.len(), theirs.len(), values);
-        Ok(nash::solve(&matrix, 20_000, 0.01).value)
+        let them = self.config.us.other();
+        let ours = self.choices(state, decision, self.config.us)?;
+        let theirs = self.choices(state, decision, them)?;
+        let next_depth = if decision == Decision::Turn { 0 } else { 1 };
+        let threads = self.config.worker_threads(ours.len() * theirs.len());
+        let values = self.parallel_matrix(
+            state,
+            suspension,
+            decision,
+            &ours,
+            &theirs,
+            Next::Depth(next_depth),
+            threads.max(1),
+        )?;
+        let m = theirs.len();
+        // Rows by their minimum (pure maximin), NaN cells ignored.
+        let mut rows: Vec<(usize, f32, Vec<usize>)> = (0..ours.len())
+            .filter_map(|r| {
+                let mut cols: Vec<usize> =
+                    (0..m).filter(|&c| !values[r * m + c].is_nan()).collect();
+                if cols.is_empty() {
+                    return None;
+                }
+                cols.sort_by(|&a, &b| values[r * m + a].total_cmp(&values[r * m + b]));
+                let worst = values[r * m + cols[0]];
+                Some((r, worst, cols))
+            })
+            .collect();
+        rows.sort_by(|a, b| b.1.total_cmp(&a.1));
+        let beam = beam.max(1);
+        let mut lines = Vec::new();
+        for (r, shallow, cols) in rows.iter().take(beam) {
+            let a = ours[*r];
+            let mut replies = Vec::new();
+            for &c in cols.iter().take(beam) {
+                let b = theirs[c];
+                let pair = self.pair(a, b);
+                let v = self.chance(
+                    state,
+                    decision,
+                    suspension,
+                    pair,
+                    Next::Nash,
+                    f32::NEG_INFINITY,
+                    f32::INFINITY,
+                )?;
+                if !v.is_nan() {
+                    replies.push((b, v));
+                }
+            }
+            replies.sort_by(|x, y| x.1.total_cmp(&y.1));
+            let deep = replies.first().map_or(f32::NAN, |&(_, v)| v);
+            lines.push(DeepLine {
+                ours: a,
+                shallow: *shallow,
+                deep,
+                replies,
+            });
+        }
+        lines.sort_by(|x, y| y.deep.total_cmp(&x.deep));
+        let shallow_rest: Vec<(Choice<N>, f32)> = rows
+            .iter()
+            .skip(beam)
+            .map(|(r, worst, _)| (ours[*r], *worst))
+            .collect();
+        Ok(DeepAnalysis {
+            decision,
+            lines,
+            shallow_rest,
+            beam,
+            outcome_cap: self.config.outcome_cap,
+            nodes: self.nodes,
+            turns: self.turns,
+            elapsed: started.elapsed(),
+            unsupported: self.unsupported.clone(),
+            omitted_pairs: self.omitted_pairs,
+        })
     }
 
     /// Values a fixed plan of ours (one turn choice per entry, in the form `legal_choices`
@@ -1145,6 +1258,36 @@ pub struct PlanReport<const N: usize> {
     /// [`Config::child_nash`]: the plan's value when the positions after it are worth their
     /// own next-turn equilibrium (the worst replies only, capped outcomes).
     pub child: Option<ChildValues<N>>,
+}
+
+/// [`Solver::analyse_deep`]'s result.
+#[derive(Clone, Debug, PartialEq)]
+pub struct DeepAnalysis<const N: usize> {
+    pub decision: Decision,
+    /// The beam's choices, best deep value first.
+    pub lines: Vec<DeepLine<N>>,
+    /// The other choices with their shallow (leaf-valued maximin) value only, best first.
+    pub shallow_rest: Vec<(Choice<N>, f32)>,
+    pub beam: usize,
+    pub outcome_cap: Option<usize>,
+    pub nodes: u64,
+    pub turns: u64,
+    pub elapsed: Duration,
+    pub unsupported: Vec<String>,
+    pub omitted_pairs: usize,
+}
+
+/// One choice of ours in a [`DeepAnalysis`].
+#[derive(Clone, Debug, PartialEq)]
+pub struct DeepLine<const N: usize> {
+    pub ours: Choice<N>,
+    /// Its maximin value with leaf evaluation after this turn.
+    pub shallow: f32,
+    /// Its value against the beam's worst replies with children worth their next-turn
+    /// equilibrium (NaN when none was evaluable).
+    pub deep: f32,
+    /// The replies valued deeply, worst first.
+    pub replies: Vec<(Choice<N>, f32)>,
 }
 
 /// [`PlanReport::child`].

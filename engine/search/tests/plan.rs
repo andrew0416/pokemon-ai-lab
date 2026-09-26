@@ -504,3 +504,42 @@ fn child_equilibrium_matches_the_mixed_analysis() {
     }
     assert!((child.value - child.replies[0].1).abs() < 1e-6);
 }
+
+/// The deep analysis with a beam covering everything: shallow values are the exact lines,
+/// deep values are the plan child values, and identical children hit the cache.
+#[test]
+fn deep_analysis_agrees_with_lines_and_plans() {
+    let position = position("eject-button-uturn");
+    let mut state = position.state.clone();
+    let mut config = Config::new(Ruleset::CHAMPIONS_MC, SideId::One);
+    config.rolls = RollMode::Full;
+    config.exact_lines = true;
+    config.child_nash = true;
+    config.reply_beam = None;
+    config.outcome_cap = None;
+    let evaluator = Material;
+    let mut solver = Solver::new(config, &evaluator);
+    let analysis = solver.analyse(&mut state, None).unwrap();
+    let deep = solver.analyse_deep(&mut state, None, 100).unwrap();
+    assert_eq!(state, position.state);
+    assert_eq!(deep.lines.len(), analysis.lines.len());
+    assert!(deep.shallow_rest.is_empty());
+    for line in &deep.lines {
+        let shallow = analysis.lines.iter().find(|l| l.ours == line.ours).unwrap();
+        assert!((line.shallow - shallow.value).abs() < 1e-3, "{line:?}");
+        let report = solver
+            .evaluate_plan(&mut state, None, &[line.ours])
+            .unwrap();
+        let child = report.child.unwrap();
+        assert!(
+            (line.deep - child.value).abs() < 1e-3,
+            "{:?}: deep {} plan child {}",
+            line.ours,
+            line.deep,
+            child.value
+        );
+    }
+    for pair in deep.lines.windows(2) {
+        assert!(pair[0].deep >= pair[1].deep || pair[1].deep.is_nan());
+    }
+}
