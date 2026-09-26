@@ -139,3 +139,10 @@ fn uturn_into_emergency_exit_matches_showdown_exactly() {
 fn red_card_skips_the_life_orb_recoil() {
     assert_exact_parity("red-card-life-orb");
 }
+
+/// Unnerve blocks berries only once it has started: while one Unnerve holder replaces another,
+/// the switch action's Update lets a foe eat its pending Sitrus Berry.
+#[test]
+fn unnerve_does_not_block_before_it_starts() {
+    assert_exact_parity("unnerve-switch-update");
+}

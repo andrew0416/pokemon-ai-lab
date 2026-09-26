@@ -99,6 +99,10 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// Showdown's `queue.peek()` is a `runSwitch` action (the Update that ends a switch action,
     /// or a batch of `instaswitch` actions, comes before it). Commander's `onUpdate` waits.
     pub awaiting_run_switch: bool,
+    /// The Pokémon whose `runSwitch` has not run yet (the same window as
+    /// [`Battle::awaiting_run_switch`], per Pokémon): their abilities have not started, so a
+    /// handler that only acts once started (Unnerve's `effectState.unnerved`) ignores them.
+    pub unstarted: Vec<PokemonRef>,
 }
 
 /// The readers of the hidden damage history present in a battle (any party member's moves;
@@ -173,6 +177,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             history_readers,
             raw_speed: Vec::new(),
             awaiting_run_switch: false,
+            unstarted: Vec::new(),
         }
     }
 

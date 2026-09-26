@@ -730,6 +730,7 @@ fn switch_in_as<const N: usize>(
     });
     // `switchIn` queued the newcomer's `runSwitch` (a drag runs it at once).
     b.awaiting_run_switch = true;
+    b.unstarted.push(incoming);
     Ok(())
 }
 
@@ -772,6 +773,7 @@ pub(crate) fn run_switch_in<const N: usize>(
 ) -> Result<(), TurnError> {
     // `runSwitch` takes every queued `runSwitch` action at once.
     b.awaiting_run_switch = false;
+    b.unstarted.clear();
     // (priority, holder, sub-order, handler)
     let mut handlers: Vec<(i32, SlotRef, u32, SwitchInHandler)> = Vec::new();
     for &slot in newcomers {

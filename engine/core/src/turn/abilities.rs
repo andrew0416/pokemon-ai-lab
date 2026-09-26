@@ -1075,9 +1075,11 @@ const HEALING_BERRIES: [ItemId; 9] = [
 /// `runEvent('TryEatItem', eater, null, null, item)` for the implemented handlers: Anger Shell
 /// and Berserk (the eater's own ability) refuse a healing berry while their check is pending;
 /// Unnerve (`onFoeTryEatItem`, WORKPLAN O63) on a foe not fainted (`foes()`) refuses every
-/// berry once it has started (`effectState.unnerved`: an active holder always has, its start
-/// runs first among the switch-in handlers). They only return booleans, so their order does
-/// not matter. `false` = the berry is not eaten.
+/// berry once it has started (`effectState.unnerved`, set by its start): a holder that has
+/// switched in but whose `runSwitch` has not run yet ([`Battle::unstarted`]: the Update between
+/// a switch and its `runSwitch`) does not block, so a foe's pending berry is eaten while one
+/// Unnerve holder replaces another. They only return booleans, so their order does not matter.
+/// `false` = the berry is not eaten.
 pub(crate) fn try_eat_item<const N: usize>(b: &Battle<'_, N>, eater: SlotRef) -> bool {
     let Some(mon) = b.slot_mon(eater) else {
         return false;
@@ -1093,6 +1095,7 @@ pub(crate) fn try_eat_item<const N: usize>(b: &Battle<'_, N>, eater: SlotRef) ->
             abilities::AS_ONE_SPECTRIER,
         ]
         .contains(&b.ability(foe))
+            && !b.occupant(foe).is_some_and(|p| b.unstarted.contains(&p))
     });
     !pending && !unnerved
 }
