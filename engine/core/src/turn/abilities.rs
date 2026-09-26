@@ -553,10 +553,11 @@ pub(crate) fn after_faint<const N: usize>(
     b.boost_by(slot, &boosts, Some(slot), BoostEffect::Ability(effect));
 }
 
-/// Whether Symbiosis can pass `item` as the engine models it: an item with `Start` / `End`
-/// handlers only if Trick could move it (the Start on the new holder is
-/// `moves::trick_item_start`), and not one whose other `TakeItem` handler is not implemented.
-pub(crate) fn symbiosis_passes(item: ItemId) -> bool {
+/// Whether the engine can move `item` to another Pokémon (Symbiosis, Pickpocket, Magician): an
+/// item with `Start` / `End` handlers only if Trick could move it (the Start on the new holder
+/// is `moves::trick_item_start`), and not one whose other `TakeItem` handler is not
+/// implemented.
+pub(crate) fn item_moves(item: ItemId) -> bool {
     let data = item.data();
     let start_or_end = data
         .handlers
@@ -567,18 +568,19 @@ pub(crate) fn symbiosis_passes(item: ItemId) -> bool {
 }
 
 /// Why a Pokémon on the field cannot be simulated because of Symbiosis: it holds an item it
-/// could not pass ([`symbiosis_passes`]). The supported ways to give it another item (Trick)
-/// only move items that pass.
+/// could not pass ([`item_moves`]). The supported ways to give it another item (Trick,
+/// Pickpocket, Magician) only move items that pass.
 pub(crate) fn symbiosis_problem(mon: &Pokemon) -> Option<String> {
-    (mon.ability == abilities::SYMBIOSIS && !mon.item.is_none() && !symbiosis_passes(mon.item))
-        .then(|| {
+    (mon.ability == abilities::SYMBIOSIS && !mon.item.is_none() && !item_moves(mon.item)).then(
+        || {
             format!(
                 "{}: Symbiosis holding {} ({:?})",
                 mon.species.data().name,
                 mon.item.data().name,
                 mon.item.data().handlers
             )
-        })
+        },
+    )
 }
 
 /// Symbiosis's `onAllyAfterUseItem` after the Pokémon in `receiver` used, ate or lost (Air
@@ -660,6 +662,161 @@ pub(crate) fn rivalry_problem<const N: usize>(state: &State<N>) -> Option<String
         "Rivalry next to {} of undecided gender (give the set a gender)",
         undecided.species.data().name
     ))
+}
+
+/// `victim.takeItem(thief)` then `thief.setItem(item)` (Pickpocket, Magician; the thief holds
+/// nothing): the TakeItem event (the victim's Unburden, then the item's own handler: a Mega
+/// Stone of the victim's species or Booster Energy on a Paradox Pokémon stays), the item's End
+/// on the victim (Mirror Herb forgets its copied raises), then `setItem` on a thief with HP
+/// (its Start: `moves::trick_item_start`); a thief without HP makes the victim take it back
+/// (`victim.item = item.id`: no Start). Returns whether the thief got the item. An item the
+/// engine cannot move ([`item_moves`]) is unsupported.
+fn steal_item<const N: usize>(
+    b: &mut Battle<'_, N>,
+    victim: SlotRef,
+    thief: SlotRef,
+) -> Result<bool, super::TurnError> {
+    use crate::instruction::Instruction;
+    let (Some(holder), item) = (b.occupant(victim), b.raw_item(victim)) else {
+        return Ok(false);
+    };
+    if item.is_none() {
+        return Ok(false);
+    }
+    if !item_moves(item) {
+        return Err(b.unsupported(format!(
+            "an ability stealing {} ({:?})",
+            item.data().name,
+            item.data().handlers
+        )));
+    }
+    if !b.take_item(victim) {
+        return Ok(false);
+    }
+    if item == items::MIRROR_HERB {
+        b.mirror_herb.retain(|&(p, _)| p != holder);
+    }
+    let Some(taker) = b.alive(thief) else {
+        b.apply(Instruction::SetItem {
+            target: holder,
+            old: ItemId::NONE,
+            new: item,
+        });
+        return Ok(false);
+    };
+    b.apply(Instruction::SetItem {
+        target: taker,
+        old: ItemId::NONE,
+        new: item,
+    });
+    super::moves::trick_item_start(b, thief, item);
+    Ok(true)
+}
+
+/// Showdown `speedSort` of `slots` by `pokemon.speed` ([`Battle::event_speed`]), fastest first:
+/// equal Speeds are shuffled (uniformly) only when two of them are `relevant`, the only case in
+/// which their order can change the outcome.
+fn speed_sorted<const N: usize>(
+    b: &mut Battle<'_, N>,
+    mut slots: Vec<SlotRef>,
+    relevant: impl Fn(&Battle<'_, N>, SlotRef) -> bool,
+) -> Vec<SlotRef> {
+    slots.sort_by_key(|&s| std::cmp::Reverse(b.event_speed(s)));
+    let mut start = 0;
+    while start < slots.len() {
+        let speed = b.event_speed(slots[start]);
+        let end = (start..slots.len())
+            .find(|&i| b.event_speed(slots[i]) != speed)
+            .unwrap_or(slots.len());
+        let count = (start..end).filter(|&i| relevant(b, slots[i])).count();
+        if count >= 2 {
+            for k in start..end - 1 {
+                let pick = k + b.rng.uniform(end - k);
+                slots.swap(k, pick);
+            }
+        }
+        start = end;
+    }
+    slots
+}
+
+/// The order in which AfterMoveSecondary's handlers act on the move's last hit targets
+/// (`targets`, with what each took): every handler but Pickpocket's acts on its own holder only,
+/// so the targets' order matters only when two Pickpocket holders could steal the same item;
+/// then Showdown's Speed order (ties at random) decides.
+pub(crate) fn after_move_secondary_order<const N: usize>(
+    b: &mut Battle<'_, N>,
+    targets: &mut [(SlotRef, i32)],
+) {
+    let pickpockets = targets
+        .iter()
+        .filter(|&&(t, _)| b.ability(t) == abilities::PICKPOCKET)
+        .count();
+    if pickpockets < 2 {
+        return;
+    }
+    let slots = targets.iter().map(|&(t, _)| t).collect();
+    let order = speed_sorted(b, slots, |b, s| b.ability(s) == abilities::PICKPOCKET);
+    targets.sort_by_key(|&(t, _)| order.iter().position(|&s| s == t));
+}
+
+/// Pickpocket's `onAfterMoveSecondary` on the Pokémon in `target`, hit by `user`'s move `data`:
+/// a move with the `contact` flag (after ModifyMove: Punching Glove removes it; Protective Pads
+/// do not matter) from another Pokémon, a holder with no item (`target.item`, suppressed or
+/// not) that is neither switching out nor being dragged out, and a user without an Emergency
+/// Exit / Eject Button switch (`source.switchFlag === true`; a U-turn's does not count): the
+/// holder steals the user's item ([`steal_item`]).
+pub(crate) fn pickpocket<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    data: &MoveData,
+) -> Result<(), super::TurnError> {
+    use crate::state::SwitchFlag;
+    if target == user
+        || b.ability(target) != abilities::PICKPOCKET
+        || !super::items::makes_contact(b, user, data)
+        || !b.raw_item(target).is_none()
+        || b.state.slot(target).switch_flag != SwitchFlag::None
+        || b.force_switch.contains(&target)
+        || b.state.slot(user).switch_flag == SwitchFlag::Effect
+    {
+        return Ok(());
+    }
+    steal_item(b, user, target)?;
+    Ok(())
+}
+
+/// Magician's `onAfterMoveSecondarySelf` for the user in `user` of the damaging move `id`
+/// (after the item's handlers, which cannot act: Magician needs the user to hold nothing): the
+/// user steals the item of the first of `hit_targets` (the move's `hitTargets`, a substitute's
+/// owner included; itself excluded) in Speed order that gives one ([`steal_item`]). Nothing
+/// for a user with an Emergency Exit / Eject Button switch or holding an item (gems and Fling are
+/// refused).
+pub(crate) fn magician<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+    hit_targets: Vec<SlotRef>,
+) -> Result<(), super::TurnError> {
+    use crate::state::SwitchFlag;
+    if b.ability(user) != abilities::MAGICIAN
+        || b.state.slot(user).switch_flag == SwitchFlag::Effect
+        || !b.raw_item(user).is_none()
+        || id.data().category == MoveCategory::Status
+    {
+        return Ok(());
+    }
+    let targets: Vec<SlotRef> = hit_targets.into_iter().filter(|&t| t != user).collect();
+    let order = speed_sorted(b, targets, |b, s| {
+        !b.raw_item(s).is_none() && b.item_can_be_taken(s)
+    });
+    for victim in order {
+        if steal_item(b, victim, user)? {
+            break;
+        }
+    }
+    Ok(())
 }
 
 /// Harvest's `onResidual` for its holder: in harsh sunlight (`this.field.isWeather`: the field's

@@ -1568,6 +1568,11 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::SOUL_HEART, &["onAnyFaint"]),
     // Harvest: `onResidual` (order 28, sub-order 2) in `residual.rs` → `abilities::harvest`.
     (abilities::HARVEST, &["onResidual"]),
+    // Pickpocket (`onAfterMoveSecondary`, `moves::hit_loop`) and Magician
+    // (`onAfterMoveSecondarySelf`, `moves::use_move_tail`): `abilities::pickpocket` /
+    // `magician`; an item the engine cannot move is refused when stolen.
+    (abilities::PICKPOCKET, &["onAfterMoveSecondary"]),
+    (abilities::MAGICIAN, &["onAfterMoveSecondarySelf"]),
     // Cute Charm: `onDamagingHit` in `ability_hooks::on_damaging_hit`, adding Attract
     // (`conditions::add_attract`: BeforeMove in `moves::before_move`, `onUpdate` in
     // `conditions::attract_update`; Mental Herb, Oblivious and Aroma Veil answer it).

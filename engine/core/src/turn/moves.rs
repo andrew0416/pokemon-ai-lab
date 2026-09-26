@@ -1115,6 +1115,9 @@ fn use_move_tail<const N: usize>(
     // Orb, Shell Bell, Throat Spray).
     if !ability_hooks::sheer_force_skips(b, user, mv) {
         item_events::after_move_secondary_self(b, user, main_target, mv.data, mv.total_damage);
+        // Magician (an ability, sub-order 7, before the item's 8: it needs an empty-handed user,
+        // so the item handlers above never acted when it can).
+        ability_events::magician(b, user, mv.id, hit_target_slots::<N>(mv.hit_targets))?;
         if checks_user {
             user_emergency_exit(b, user, hp_before)?;
         }
@@ -1902,7 +1905,7 @@ fn hit_loop<const N: usize>(
     super::update::update_event(b)?;
     if !ability_hooks::sheer_force_skips(b, user, mv) {
         // `targetsCopy.filter(val => !!val)`: not a target its substitute shielded.
-        let last_hit: Vec<(SlotRef, i32)> = if ended_by_miss {
+        let mut last_hit: Vec<(SlotRef, i32)> = if ended_by_miss {
             progress.targets.iter().map(|&t| (t, 0)).collect()
         } else {
             progress
@@ -1913,6 +1916,7 @@ fn hit_loop<const N: usize>(
                 .map(|(&t, r)| (t, if let Hit::Damage(d) = r { *d } else { 0 }))
                 .collect()
         };
+        ability_events::after_move_secondary_order(b, &mut last_hit);
         for (t, damage) in last_hit {
             if mv.data.thaws_target {
                 if let Some(p) = b.alive(t) {
@@ -1927,6 +1931,7 @@ fn hit_loop<const N: usize>(
                 damage
             };
             ability_events::after_move_secondary(b, user, t, damage, total);
+            ability_events::pickpocket(b, user, t, mv.data)?;
             item_events::after_move_secondary(b, user, t, mv.data.category);
         }
         // `runEvent('EmergencyExit', target, pokemon)` for each of the hit loop's targets still

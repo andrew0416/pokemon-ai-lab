@@ -1,0 +1,23 @@
+{
+ "description": "Opus S unit 9b: Magician (onAfterMoveSecondarySelf). Delphox (Magician, no item) Dazzling Gleams both foes; of its hit targets in Speed order, Jolteon (Leftovers) is first and gives its item; Snorlax keeps its Sitrus Berry. Delphox's new Leftovers heal it at the residual (it took no damage: nothing to heal). Hippowdon and the foes Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Delphox", "item": "", "ability": "Magician", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Dazzling Gleam", "Protect"], "level": 50},
+   {"species": "Hippowdon", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Jolteon", "item": "Leftovers", "ability": "Volt Absorb", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "Sitrus Berry", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move dazzlinggleam, move harden", "p2": "move harden, move harden"}
+}
