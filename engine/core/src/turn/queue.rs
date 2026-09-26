@@ -40,6 +40,12 @@ pub(crate) enum ActionKind {
     BeforeTurnMove {
         index: u8,
     },
+    /// Showdown `priorityChargeMove` (order 107: after switches and Mega Evolution, before the
+    /// moves): the chosen move's `priorityChargeCallback` (Focus Punch, Beak Blast, Shell Trap).
+    /// Neither `willAct` nor `willMove` counts it.
+    PriorityCharge {
+        index: u8,
+    },
 }
 
 /// Showdown `queue.willAct()`: a move or switch is still to come.

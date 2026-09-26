@@ -389,6 +389,40 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "onTry",
         ],
     ),
+    // Focus Punch, Beak Blast, Shell Trap: `priorityChargeCallback` is a `priorityChargeMove`
+    // queue action (order 107, `moves::priority_charge_move`) adding the condition (`onStart`
+    // only logs); its `onHit` in `handlers::volatile_on_hit` (`runEvent('Hit')` in
+    // `moves::spread_move_hit`). Focus Punch: `beforeMoveCallback` in `moves::run_move_inner`,
+    // `onTryAddVolatile` (flinch) in `Battle::add_volatile_blocked`. Beak Blast: `onAfterMove`
+    // in `handlers::on_after_move`. Shell Trap: `onTryMove` in `handlers::null_try_move`.
+    (
+        moves::FOCUS_PUNCH,
+        &[
+            "beforeMoveCallback",
+            "condition.onHit",
+            "condition.onStart",
+            "condition.onTryAddVolatile",
+            "priorityChargeCallback",
+        ],
+    ),
+    (
+        moves::BEAK_BLAST,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "onAfterMove",
+            "priorityChargeCallback",
+        ],
+    ),
+    (
+        moves::SHELL_TRAP,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "onTryMove",
+            "priorityChargeCallback",
+        ],
+    ),
     // Parting Shot: `onHit` drops Atk and SpA and withdraws the switch if that failed (F6).
     (moves::PARTING_SHOT, &["onHit"]),
     // Slot conditions (F12): `conditions::{add_slot_condition, slot_condition_residual,

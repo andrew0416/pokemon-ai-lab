@@ -307,6 +307,28 @@ pub(crate) fn before_turn_move<const N: usize>(
     }
 }
 
+/// Whether the move has a `priorityChargeCallback` the engine runs (Focus Punch, Beak Blast,
+/// Shell Trap): its action queues a `priorityChargeMove` action too.
+pub(crate) fn has_priority_charge_callback(id: MoveId) -> bool {
+    handlers::priority_charge_volatile(id).is_some()
+}
+
+/// Showdown `runAction('priorityChargeMove')` for the move in `move_index` of the Pokémon at
+/// `user` (the caller checked it is active and not fainted): the move's
+/// `priorityChargeCallback` adds its condition (`focuspunch`, `beakblast`, `shelltrap`), whatever
+/// the user's status.
+pub(crate) fn priority_charge_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    move_index: u8,
+) {
+    let pokemon = b.occupant(user).expect("the caller checked the user");
+    let id = super::lock::action_move_id(b.mon(pokemon), move_index);
+    if let Some(volatile) = handlers::priority_charge_volatile(id) {
+        b.add_volatile(user, volatile);
+    }
+}
+
 /// The next hit of a suspended multi-hit move, then the move's tail once the hits are done.
 pub(crate) fn resume_move<const N: usize>(
     b: &mut Battle<'_, N>,
@@ -429,6 +451,12 @@ fn run_move_inner<const N: usize>(
         }
         // MoveAborted (the move's type before ModifyType): Charge ends on an Electric move.
         ability_events::charge_after_move(b, user, mv.id, mv.move_type);
+        return Ok(MoveStep::Done);
+    }
+    // The move's `beforeMoveCallback` (Focus Punch after losing focus): the move is not used
+    // (no PP, no `lastMove`, no MoveAborted) and counts as failed.
+    if handlers::before_move_callback(b, user, &mv) {
+        b.set_move_result(user, MoveResult::Failed);
         return Ok(MoveStep::Done);
     }
 
@@ -2119,7 +2147,9 @@ fn spread_move_hit<const N: usize>(
             Some(HitResult::Failure) => note(false),
             Some(HitResult::NotFail) | None => {}
         }
-        // `runEvent('Hit')`: the target's item (Sticky Barb).
+        // `runEvent('Hit')`: the target's volatiles (Focus Punch, Beak Blast, Shell Trap;
+        // condition sub-order 2), then its item (Sticky Barb, 8).
+        handlers::volatile_on_hit(b, user, t, mv);
         item_events::on_hit(b, user, t, data);
         // `selfdestruct: 'ifHit'` (Memento, Final Gambit): the user faints once the move reached
         // this target (`damage[i] !== false`, before the effects' result is combined in).

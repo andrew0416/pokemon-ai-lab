@@ -1,6 +1,7 @@
 //! Moves with an action before the turn's moves (Opus T): Counter and Mirror Coat's
-//! `beforeTurnMove` (order 5). Each scenario's exact outcome distribution must equal its oracle
-//! fixture (`engine/oracle/expected/<name>.turn.json`).
+//! `beforeTurnMove` (order 5); Focus Punch, Beak Blast and Shell Trap's `priorityChargeMove`
+//! (order 107). Each scenario's exact outcome distribution must equal its oracle fixture
+//! (`engine/oracle/expected/<name>.turn.json`).
 
 mod common;
 
@@ -29,4 +30,29 @@ fn counter_ignores_an_allys_hit() {
 #[test]
 fn counter_hits_the_attackers_slot_after_u_turn() {
     assert_exact_parity("counter-uturn");
+}
+
+/// A damaging hit breaks Focus Punch (no PP, no `lastMove`); a status move does not.
+#[test]
+fn focus_punch_fails_after_a_damaging_hit() {
+    assert_exact_parity("focus-punch");
+}
+
+/// Beak Blast's charge burns a contact attacker (not through Protective Pads) and ends after the
+/// move.
+#[test]
+fn beak_blast_burns_contact_attackers() {
+    assert_exact_parity("beak-blast");
+}
+
+/// A foe's physical hit sets off Shell Trap at once (order 3), before the slower foe moves.
+#[test]
+fn shell_trap_goes_next_after_a_physical_hit() {
+    assert_exact_parity("shell-trap");
+}
+
+/// Without a physical hit Shell Trap stops with a `null` result.
+#[test]
+fn shell_trap_without_a_physical_hit_stops() {
+    assert_exact_parity("shell-trap-no-hit");
 }

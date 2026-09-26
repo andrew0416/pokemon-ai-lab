@@ -832,6 +832,11 @@ impl<'a, const N: usize> Battle<'a, N> {
     pub fn add_volatile_blocked(&self, target: SlotRef, volatile: Volatile) -> bool {
         let condition = volatile.condition();
         let yawn = condition == conditions::YAWN;
+        // Focus Punch's condition: `onTryAddVolatile(status) { if (status.id === 'flinch')
+        // return null; }`.
+        if volatile == Volatile::Flinch && self.volatile(target, Volatile::FocusPunch).active {
+            return true;
+        }
         // Misty Terrain: `if (status.id === 'confusion' && target.isGrounded()) return false`.
         if volatile == Volatile::Confusion
             && self.terrain() == Terrain::Misty

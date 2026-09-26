@@ -1,0 +1,24 @@
+{
+ "description": "Shell Trap: Garchomp's physical Seismic Toss hits Turtonator, whose `shelltrap` condition sets gotHit and moves its Shell Trap to the front of the queue (order 3): Shell Trap hits both foes before Snorlax (patched to 10 HP) can move, knocking it out. Wobbuffet protects. Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Turtonator", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Shell Trap", "Protect"], "level": 50},
+   {"species": "Wobbuffet", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Protect", "Counter"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Night Shade", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Snorlax": {"hp": 10}}},
+ "turn": {"p1": "move shelltrap, move protect", "p2": "move seismictoss 1, move nightshade 1"}
+}

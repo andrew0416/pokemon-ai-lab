@@ -52,7 +52,7 @@ use battle::Battle;
 use branch::Chooser;
 
 pub use branch::RollMode;
-use order::{ORDER_BEFORE_TURN_MOVE, ORDER_MEGA, ORDER_MOVE, ORDER_SWITCH};
+use order::{ORDER_BEFORE_TURN_MOVE, ORDER_MEGA, ORDER_MOVE, ORDER_PRIORITY_CHARGE, ORDER_SWITCH};
 use queue::{Action, ActionKind};
 
 pub use abilities::trapped;
@@ -1089,6 +1089,7 @@ impl<const N: usize> Battle<'_, N> {
             ActionKind::Mega => (ORDER_MEGA, 0),
             // Not a `move` choice: no priority (`getActionSpeed` only sets it for moves).
             ActionKind::BeforeTurnMove { .. } => (ORDER_BEFORE_TURN_MOVE, 0),
+            ActionKind::PriorityCharge { .. } => (ORDER_PRIORITY_CHARGE, 0),
             ActionKind::Move {
                 index: RECHARGE_INDEX,
                 ..
@@ -1158,6 +1159,15 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
                             slot,
                             pokemon,
                             kind: ActionKind::BeforeTurnMove { index },
+                            order: None,
+                        });
+                    }
+                    // And a `priorityChargeMove` action for a `priorityChargeCallback`.
+                    if moves::has_priority_charge_callback(id) {
+                        queue.push(Action {
+                            slot,
+                            pokemon,
+                            kind: ActionKind::PriorityCharge { index },
                             order: None,
                         });
                     }
@@ -1279,6 +1289,9 @@ fn run_stage_inner<const N: usize>(
                 }
                 ActionKind::BeforeTurnMove { index } => {
                     moves::before_turn_move(b, action.slot, index);
+                }
+                ActionKind::PriorityCharge { index } => {
+                    moves::priority_charge_move(b, action.slot, index);
                 }
             }
             return after_action(b, pending, &newcomers);

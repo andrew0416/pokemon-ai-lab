@@ -298,6 +298,71 @@ pub(super) fn before_turn_volatile(id: MoveId) -> Option<Volatile> {
     }
 }
 
+/// The condition a move's `priorityChargeCallback` adds to its user once switches and Mega
+/// Evolution are done (`moves::priority_charge_move`).
+pub(super) fn priority_charge_volatile(id: MoveId) -> Option<Volatile> {
+    match id {
+        moves::FOCUS_PUNCH => Some(Volatile::FocusPunch),
+        moves::BEAK_BLAST => Some(Volatile::BeakBlast),
+        moves::SHELL_TRAP => Some(Volatile::ShellTrap),
+        _ => None,
+    }
+}
+
+/// The move's `beforeMoveCallback` (`runMove`, after BeforeMove let it through): `true` stops
+/// the move. Focus Punch: `if (pokemon.volatiles['focuspunch']?.lostFocus) return true;`
+pub(super) fn before_move_callback<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> bool {
+    mv.id == moves::FOCUS_PUNCH && b.volatile(user, Volatile::FocusPunch).counter != 0
+}
+
+/// `runEvent('Hit', target, source, move)` for the target's volatiles (after the move's own
+/// `onHit`, before the target's item):
+/// - Focus Punch: `if (move.category !== 'Status') this.effectState.lostFocus = true;` (any
+///   attacker);
+/// - Beak Blast: `if (this.checkMoveMakesContact(move, source, target)) source.trySetStatus('brn',
+///   target);` (Protective Pads and Punching Glove on the attacker prevent it);
+/// - Shell Trap: a foe's physical move sets `gotHit` and `queue.prioritizeAction` moves the
+///   holder's pending move to the front (order 3).
+pub(super) fn volatile_on_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    mv: &ActiveMove,
+) {
+    let focus = b.volatile(target, Volatile::FocusPunch);
+    if focus.active && mv.data.category != MoveCategory::Status {
+        b.set_volatile_state(
+            target,
+            Volatile::FocusPunch,
+            VolatileState {
+                counter: 1,
+                ..focus
+            },
+        );
+    }
+    if b.volatile(target, Volatile::BeakBlast).active
+        && super::item_events::makes_contact(b, user, mv.data)
+        && b.item(user) != items::PROTECTIVE_PADS
+    {
+        b.try_set_status_from(user, Status::Burn, Some(target));
+    }
+    let trap = b.volatile(target, Volatile::ShellTrap);
+    if trap.active && target.side != user.side && mv.data.category == MoveCategory::Physical {
+        b.set_volatile_state(
+            target,
+            Volatile::ShellTrap,
+            VolatileState { counter: 1, ..trap },
+        );
+        if let Some(index) = b.will_move(target) {
+            b.prioritize_action(index);
+        }
+    }
+}
+
 /// Counter's and Mirror Coat's `condition.onDamagingHit` on the damaged `target`: a hit from a
 /// foe (`!source.isAlly(target)`) whose dex category (`this.getCategory(move)`: the move's own,
 /// not a category ModifyMove changed) is physical (Counter) or special (Mirror Coat) records
@@ -532,6 +597,13 @@ pub(super) fn on_after_move<const N: usize>(
     pokemon: PokemonRef,
     mv: &ActiveMove,
 ) {
+    // Beak Blast: `pokemon.removeVolatile('beakblast')` (nothing on a user at 0 HP).
+    if mv.id == moves::BEAK_BLAST {
+        if b.occupant(user) == Some(pokemon) {
+            b.remove_volatile(user, Volatile::BeakBlast);
+        }
+        return;
+    }
     if mv.id != moves::SPARKLING_ARIA {
         return;
     }
@@ -1118,12 +1190,16 @@ fn spent_type(id: MoveId) -> Option<Type> {
 
 /// The move's own `onTryMove` of moves that stop with `null` (not a failure: `useMove` leaves
 /// `moveThisTurnResult` `null`). Double Shock and Burn Up: `if (pokemon.hasType('Electric' /
-/// 'Fire')) return;`, otherwise `-fail` and `return null`. `false` = the move stops here.
+/// 'Fire')) return;`, otherwise `-fail` and `return null`. Shell Trap: `if
+/// (!pokemon.volatiles['shelltrap']?.gotHit) return null;`. `false` = the move stops here.
 pub(super) fn null_try_move<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
 ) -> bool {
+    if mv.id == moves::SHELL_TRAP {
+        return b.volatile(user, Volatile::ShellTrap).counter != 0;
+    }
     spent_type(mv.id).is_none_or(|t| b.has_type(user, t))
 }
 

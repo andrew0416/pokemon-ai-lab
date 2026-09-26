@@ -197,9 +197,20 @@ pub enum Volatile {
     Counter,
     /// Mirror Coat's condition: as [`Volatile::Counter`], for special hits.
     MirrorCoat,
+    /// Focus Punch's condition (duration 1), added by its `priorityChargeCallback` (order 107):
+    /// a non-status move hitting the holder sets `lostFocus` (`counter` 1, hidden), which makes
+    /// Focus Punch fail (`beforeMoveCallback`); it also blocks flinching (`onTryAddVolatile`).
+    FocusPunch,
+    /// Beak Blast's condition (duration 1, from `priorityChargeCallback`): a contact move hitting
+    /// the holder burns its user (`onHit`); Beak Blast's `onAfterMove` removes it.
+    BeakBlast,
+    /// Shell Trap's condition (duration 1, from `priorityChargeCallback`): a foe's physical move
+    /// hitting the holder sets `gotHit` (`counter` 1, hidden) and moves the holder's Shell Trap to
+    /// the front of the queue; without it Shell Trap stops (`onTryMove`).
+    ShellTrap,
 }
 
-pub const VOLATILE_COUNT: usize = 64;
+pub const VOLATILE_COUNT: usize = 67;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -267,6 +278,9 @@ impl Volatile {
         Volatile::MagnetRise,
         Volatile::Counter,
         Volatile::MirrorCoat,
+        Volatile::FocusPunch,
+        Volatile::BeakBlast,
+        Volatile::ShellTrap,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -338,7 +352,10 @@ impl Volatile {
             | Volatile::Trapped
             | Volatile::Trapper
             | Volatile::Counter
-            | Volatile::MirrorCoat => ConditionId::NONE,
+            | Volatile::MirrorCoat
+            | Volatile::FocusPunch
+            | Volatile::BeakBlast
+            | Volatile::ShellTrap => ConditionId::NONE,
         }
     }
 
@@ -409,6 +426,9 @@ impl Volatile {
             Volatile::MagnetRise => "magnetrise",
             Volatile::Counter => "counter",
             Volatile::MirrorCoat => "mirrorcoat",
+            Volatile::FocusPunch => "focuspunch",
+            Volatile::BeakBlast => "beakblast",
+            Volatile::ShellTrap => "shelltrap",
         }
     }
 
@@ -440,7 +460,10 @@ impl Volatile {
             | Volatile::SilkTrap
             | Volatile::BurningBulwark
             | Volatile::Counter
-            | Volatile::MirrorCoat => 1,
+            | Volatile::MirrorCoat
+            | Volatile::FocusPunch
+            | Volatile::BeakBlast
+            | Volatile::ShellTrap => 1,
             Volatile::Stall
             | Volatile::LockedMove
             | Volatile::MustRecharge
@@ -528,12 +551,15 @@ impl Volatile {
             }),
             // `bestStat` / `fromBooster` (Protosynthesis, Quark Drive) and the trapper /
             // `boundDivisor` (partial trapping) are not canonical fields.
-            // Counter / Mirror Coat: neither `damage` nor `slot` is a canonical field.
+            // Counter / Mirror Coat: neither `damage` nor `slot` is a canonical field; nor are
+            // Focus Punch's `lostFocus` and Shell Trap's `gotHit`.
             Volatile::Protosynthesis
             | Volatile::QuarkDrive
             | Volatile::PartiallyTrapped
             | Volatile::Counter
-            | Volatile::MirrorCoat => Some(VolatileState {
+            | Volatile::MirrorCoat
+            | Volatile::FocusPunch
+            | Volatile::ShellTrap => Some(VolatileState {
                 counter: 0,
                 hidden: 0,
                 ..state
@@ -695,6 +721,9 @@ mod tests {
                         | Volatile::Trapper
                         | Volatile::Counter
                         | Volatile::MirrorCoat
+                        | Volatile::FocusPunch
+                        | Volatile::BeakBlast
+                        | Volatile::ShellTrap
                 ));
                 continue;
             }
@@ -733,6 +762,9 @@ mod tests {
             (Volatile::MagnetRise, moves::MAGNET_RISE),
             (Volatile::Counter, moves::COUNTER),
             (Volatile::MirrorCoat, moves::MIRROR_COAT),
+            (Volatile::FocusPunch, moves::FOCUS_PUNCH),
+            (Volatile::BeakBlast, moves::BEAK_BLAST),
+            (Volatile::ShellTrap, moves::SHELL_TRAP),
         ] {
             let data = id.data();
             assert_eq!(
