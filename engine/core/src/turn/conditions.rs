@@ -440,6 +440,11 @@ pub(crate) fn volatile_start<const N: usize>(
             }
             true
         }
+        // Stockpile: `layers = 1`, then +1 Def / +1 SpD from itself, remembering which took.
+        Volatile::Stockpile => {
+            *new = stockpile_raise(b, target, *new);
+            true
+        }
         // Power Trick, Power Shift: `onStart` swaps the stored Attack and Defense.
         Volatile::PowerTrick | Volatile::PowerShift => {
             swap_stored_stats(b, target, 0, 1);
@@ -666,6 +671,52 @@ pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option
         }
     }
     None
+}
+
+/// Stockpile's `onStart` / `onRestart` (below 3 layers; the move's `onTry` stops a fourth) for the
+/// Pokémon in `slot`: one more layer, then `this.boost({def: 1, spd: 1}, target, target)`, and
+/// each stat that changed counts one more for the `onEnd` to take back (`effectState.def--`).
+/// Returns the volatile's new state.
+pub(crate) fn stockpile_raise<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    state: VolatileState,
+) -> VolatileState {
+    let before = b.state.slot(slot).boosts;
+    let mut up = [0i8; BOOST_COUNT];
+    up[1] = 1;
+    up[3] = 1;
+    b.boost_by(slot, &up, Some(slot), BoostEffect::Move(moves::STOCKPILE));
+    let after = b.state.slot(slot).boosts;
+    let (mut def, mut spd) = (state.hidden & 3, (state.hidden >> 2) & 3);
+    if after[1] != before[1] {
+        def += 1;
+    }
+    if after[3] != before[3] {
+        spd += 1;
+    }
+    VolatileState {
+        counter: state.counter + 1,
+        hidden: def | (spd << 2),
+        ..state
+    }
+}
+
+/// Stockpile's `onEnd` for the Pokémon in `slot` whose volatile had `state`: `this.boost({def:
+/// effectState.def, spd: effectState.spd}, target, target)` for the raises that took.
+pub(crate) fn stockpile_end<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    state: VolatileState,
+) {
+    let (def, spd) = (state.hidden & 3, (state.hidden >> 2) & 3);
+    if def == 0 && spd == 0 {
+        return;
+    }
+    let mut down = [0i8; BOOST_COUNT];
+    down[1] = -(def as i8);
+    down[3] = -(spd as i8);
+    b.boost_by(slot, &down, Some(slot), BoostEffect::Move(moves::STOCKPILE));
 }
 
 /// `pokemon.storedStats[a]` and `[c]` (battle stat indices: 0 Atk .. 4 Spe) trade places for the

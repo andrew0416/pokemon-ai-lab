@@ -269,9 +269,14 @@ pub enum Volatile {
     FreezeShock,
     IceBurn,
     Geomancy,
+    /// Stockpile (no duration, `noCopy`): `effectState.layers` (1–3, kept in `counter` and written
+    /// as `layers`) and how many of its +1 Def / +1 SpD raises took (`effectState.def` / `.spd`,
+    /// negated; kept in `hidden`: Def in bits 0–1, SpD in bits 2–3; not canonical fields), which
+    /// its `onEnd` takes back. Spit Up and Swallow end it.
+    Stockpile,
 }
 
-pub const VOLATILE_COUNT: usize = 86;
+pub const VOLATILE_COUNT: usize = 87;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -361,6 +366,7 @@ impl Volatile {
         Volatile::FreezeShock,
         Volatile::IceBurn,
         Volatile::Geomancy,
+        Volatile::Stockpile,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -421,6 +427,7 @@ impl Volatile {
             Volatile::AquaRing => conditions::AQUARING,
             Volatile::PowerTrick => conditions::POWERTRICK,
             Volatile::PowerShift => conditions::POWERSHIFT,
+            Volatile::Stockpile => conditions::STOCKPILE,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -547,6 +554,7 @@ impl Volatile {
             Volatile::FreezeShock => "freezeshock",
             Volatile::IceBurn => "iceburn",
             Volatile::Geomancy => "geomancy",
+            Volatile::Stockpile => "stockpile",
         }
     }
 
@@ -648,7 +656,8 @@ impl Volatile {
             | Volatile::RazorWind
             | Volatile::FreezeShock
             | Volatile::IceBurn
-            | Volatile::Geomancy => 0,
+            | Volatile::Geomancy
+            | Volatile::Stockpile => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -931,6 +940,7 @@ mod tests {
             (Volatile::AquaRing, moves::AQUA_RING),
             (Volatile::PowerTrick, moves::POWER_TRICK),
             (Volatile::PowerShift, moves::POWER_SHIFT),
+            (Volatile::Stockpile, moves::STOCKPILE),
         ] {
             let data = id.data();
             assert_eq!(

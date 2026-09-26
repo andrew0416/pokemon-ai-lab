@@ -1014,6 +1014,33 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::FREEZE_SHOCK, &["onTryMove"]),
     (moves::ICE_BURN, &["onTryMove"]),
     (moves::GEOMANCY, &["onTryMove"]),
+    // Opus V unit 8: the storms' rain accuracy (`handlers::on_modify_move`, the nominal
+    // target's weather); Freezy Frost, Magic Powder, Camouflage, Conversion `onHit`; Teatime
+    // `onHitField` and Stuff Cheeks (`update::eat_item_forced`); Stockpile's volatile (`layers`,
+    // `conditions::stockpile_raise` / `stockpile_end`), Spit Up and Swallow.
+    (moves::BLEAKWIND_STORM, &["onModifyMove"]),
+    (moves::SANDSEAR_STORM, &["onModifyMove"]),
+    (moves::WILDBOLT_STORM, &["onModifyMove"]),
+    (moves::FREEZY_FROST, &["onHit"]),
+    (moves::MAGIC_POWDER, &["onHit"]),
+    (moves::CAMOUFLAGE, &["onHit"]),
+    (moves::CONVERSION, &["onHit"]),
+    (moves::TEATIME, &["onHitField"]),
+    (moves::STUFF_CHEEKS, &["onHit", "onTry"]),
+    (
+        moves::STOCKPILE,
+        &[
+            "condition.onEnd",
+            "condition.onRestart",
+            "condition.onStart",
+            "onTry",
+        ],
+    ),
+    (
+        moves::SPIT_UP,
+        &["basePowerCallback", "onAfterMove", "onTry"],
+    ),
+    (moves::SWALLOW, &["onHit", "onTry"]),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do

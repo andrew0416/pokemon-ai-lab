@@ -153,6 +153,19 @@ pub(super) fn on_modify_move<const N: usize>(
         // Struggle: `move.type = '???'` (typeless: `Type::None` for the move, which no type chart
         // entry, STAB or type-based handler matches).
         moves::STRUGGLE => mv.move_type = Type::None,
+        // Bleakwind Storm, Sandsear Storm, Wildbolt Storm: `if (target &&
+        // ['raindance', 'primordialsea'].includes(target.effectiveWeather())) move.accuracy =
+        // true;` (the target is the spread move's nominal one, a random foe).
+        moves::BLEAKWIND_STORM | moves::SANDSEAR_STORM | moves::WILDBOLT_STORM => {
+            if let Some(target) = target {
+                if matches!(
+                    effective_weather(b, user, target)?,
+                    Weather::Rain | Weather::HeavyRain
+                ) {
+                    mv.accuracy = None;
+                }
+            }
+        }
         // Thunder, Hurricane: `switch (target?.effectiveWeather())`: never misses in rain,
         // accuracy 50 in sun.
         moves::THUNDER | moves::HURRICANE => {
@@ -263,6 +276,12 @@ pub(super) fn on_try<const N: usize>(
             !b.volatile(first_target, Volatile::Ingrain).active
                 && !b.volatile(first_target, Volatile::SmackDown).active
         }
+        // Stockpile: `if (source.volatiles['stockpile'] && source.volatiles['stockpile'].layers >=
+        // 3) return false;` Spit Up, Swallow: `return !!source.volatiles['stockpile'];`
+        moves::STOCKPILE => b.volatile(user, Volatile::Stockpile).counter < 3,
+        moves::SPIT_UP | moves::SWALLOW => b.volatile(user, Volatile::Stockpile).active,
+        // Stuff Cheeks: `return source.getItem().isBerry;` (the held item).
+        moves::STUFF_CHEEKS => b.raw_item(user).data().is_berry,
         // Rest: fails asleep or with Comatose, at full HP, and with Insomnia or Vital Spirit
         // (`hasAbility`: the user's own ability, never suppressed by its own move).
         moves::REST => b.slot_mon(user).is_some_and(|m| {
@@ -1030,6 +1049,14 @@ pub(super) fn on_after_move<const N: usize>(
         }
         return;
     }
+    // Spit Up: `pokemon.removeVolatile('stockpile')` (its `onEnd` takes the raises back),
+    // whether or not the move hit.
+    if mv.id == moves::SPIT_UP {
+        if b.occupant(user) == Some(pokemon) {
+            b.remove_volatile(user, Volatile::Stockpile);
+        }
+        return;
+    }
     if mv.id != moves::SPARKLING_ARIA {
         return;
     }
@@ -1146,6 +1173,8 @@ pub(super) fn base_power_callback<const N: usize>(
         }
         // Last Respects: `50 + 50 * pokemon.side.totalFainted`.
         moves::LAST_RESPECTS => 50 + 50 * i32::from(b.state.side(user.side).history.total_fainted),
+        // Spit Up: `pokemon.volatiles['stockpile'].layers * 100` (its `onTry` needs the volatile).
+        moves::SPIT_UP => 100 * i32::from(b.volatile(user, Volatile::Stockpile).counter),
         // Wake-Up Slap: `if (target.status === 'slp' || target.hasAbility('comatose')) return
         // move.basePower * 2;` Smelling Salts: `if (target.status === 'par')` the same.
         moves::WAKE_UP_SLAP | moves::SMELLING_SALTS => {
@@ -2315,6 +2344,75 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::NotFail
             }
         }
+        // Freezy Frost: `for (const pokemon of this.getAllActive()) pokemon.clearBoosts();`
+        // (active Pokémon not yet processed as fainted). Returns nothing.
+        moves::FREEZY_FROST => {
+            for side in [SideId::One, SideId::Two] {
+                for slot in Battle::<N>::slots(side) {
+                    if b.occupant(slot).is_some() {
+                        clear_boosts(b, slot);
+                    }
+                }
+            }
+            return Ok(None);
+        }
+        // Magic Powder: `if (target.getTypes().join() === 'Psychic' || !target.setType('Psychic'))
+        // return false;` Camouflage: the same with the terrain's type (Normal without one) on
+        // the user. Conversion: the type of the user's first move (`target.hasType(type)` fails
+        // it). `setType` refuses Arceus and Silvally.
+        moves::MAGIC_POWDER | moves::CAMOUFLAGE | moves::CONVERSION => {
+            let Some(mon) = b.slot_mon(target) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let ty = match mv.id {
+                moves::MAGIC_POWDER => Type::Psychic,
+                moves::CAMOUFLAGE => match b.terrain() {
+                    Terrain::Electric => Type::Electric,
+                    Terrain::Grassy => Type::Grass,
+                    Terrain::Misty => Type::Fairy,
+                    Terrain::Psychic => Type::Psychic,
+                    Terrain::None => Type::Normal,
+                },
+                _ => mon.moves[0].id.data().move_type,
+            };
+            let already = if mv.id == moves::CONVERSION {
+                mon.types.contains(&ty)
+            } else {
+                mon.types == [ty, Type::None]
+            };
+            if already || [493, 773].contains(&mon.species.data().num) {
+                HitResult::Failure
+            } else {
+                set_types(b, target, [ty, Type::None]);
+                return Ok(None);
+            }
+        }
+        // Stuff Cheeks: `if (!this.boost({def: 2})) return null; pokemon.eatItem(true);`
+        moves::STUFF_CHEEKS => {
+            let mut up = NO_BOOSTS;
+            up[1] = 2;
+            if !b.boost_by(target, &up, Some(user), BoostEffect::Move(mv.id)) {
+                HitResult::Failure
+            } else {
+                super::super::update::eat_item_forced(b, target)?;
+                return Ok(None);
+            }
+        }
+        // Swallow: heals `this.modify(pokemon.maxhp, [0.25, 0.5, 1][layers - 1])`, then
+        // `pokemon.removeVolatile('stockpile')` (its `onEnd` takes the raises back); `success ||
+        // NOT_FAIL`.
+        moves::SWALLOW => {
+            let layers = b.volatile(target, Volatile::Stockpile).counter.max(1);
+            let modifier = [1024, 2048, 4096][usize::from(layers.min(3)) - 1];
+            let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
+            let healed = b.heal(target, f64::from(modify(max_hp, modifier))) > 0;
+            b.remove_volatile(target, Volatile::Stockpile);
+            if healed {
+                HitResult::Success
+            } else {
+                HitResult::NotFail
+            }
+        }
         // Power Split: the user and the target both take the average of their stored Attack
         // (`Math.floor((target.storedStats.atk + source.storedStats.atk) / 2)`) and of their
         // stored SpA; Guard Split: of Defense and SpD. Returns nothing.
@@ -2732,8 +2830,8 @@ pub(super) fn on_hit_field<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
-) -> Option<bool> {
-    match mv.id {
+) -> Result<Option<bool>, TurnError> {
+    Ok(match mv.id {
         // Perish Song: every active Pokémon (side one first, slot order) gets the `perishsong`
         // volatile unless `runEvent('Invulnerability')` returns `false` for it (a miss: a
         // semi-invulnerable or commanding Pokémon, [`invulnerable`]) or `runEvent('TryHit')`
@@ -2786,6 +2884,34 @@ pub(super) fn on_hit_field<const N: usize>(
             }
             Some(success)
         }
+        // Teatime: every active Pokémon (`getAllActive`: side one first) that the Invulnerability
+        // event does not exclude and no TryHit handler stops, holding a berry (the held item),
+        // eats it (`eatItem(true)`: no TryEatItem). No berry: `NOT_FAIL` (the move result is
+        // `null`, and it does not succeed).
+        moves::TEATIME => {
+            let mut eaters = Vec::new();
+            for side in [SideId::One, SideId::Two] {
+                for slot in Battle::<N>::slots(side) {
+                    if b.alive(slot).is_none() || invulnerable(b, user, mv, slot) {
+                        continue;
+                    }
+                    if teatime_try_hit_blocks(b, user, mv, slot) {
+                        continue;
+                    }
+                    if b.raw_item(slot).data().is_berry {
+                        eaters.push(slot);
+                    }
+                }
+            }
+            if eaters.is_empty() {
+                b.set_move_result(user, MoveResult::Null);
+                return Ok(Some(false));
+            }
+            for slot in eaters {
+                super::super::update::eat_item_forced(b, slot)?;
+            }
+            Some(true)
+        }
         // Haze: `for (const pokemon of this.getAllActive()) pokemon.clearBoosts();`
         moves::HAZE => {
             for side in [SideId::One, SideId::Two] {
@@ -2798,7 +2924,25 @@ pub(super) fn on_hit_field<const N: usize>(
             Some(true)
         }
         _ => None,
-    }
+    })
+}
+
+/// Whether a `TryHit` handler stops Teatime (`runEvent('TryHit', pokemon, source, move)` falsy)
+/// on `target`: Psychic Terrain against a Prankster-boosted Teatime on a grounded foe, and Good as
+/// Gold (a status move from another Pokémon). No other supported TryHit handler answers a Normal
+/// status move without the `protect`, sound, bullet or powder flags.
+fn teatime_try_hit_blocks<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    let psychic_terrain = b.terrain() == Terrain::Psychic
+        && mv.priority > 0
+        && target.side != user.side
+        && b.is_grounded(target);
+    let good_as_gold = target != user && b.ability_unless_broken(target) == abilities::GOOD_AS_GOLD;
+    psychic_terrain || good_as_gold
 }
 
 /// Whether a `TryHit` handler returns `null` for Perish Song on `target` (only `null` spares

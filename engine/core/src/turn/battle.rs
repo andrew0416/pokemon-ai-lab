@@ -1090,6 +1090,14 @@ impl<'a, const N: usize> Battle<'a, N> {
                     self.remove_volatile(target, volatile);
                     return true;
                 }
+                // Stockpile's `onRestart`: `if (this.effectState.layers >= 3) return false;` then
+                // one more layer and its raises.
+                Volatile::Stockpile => {
+                    if old.counter >= 3 {
+                        return false;
+                    }
+                    super::conditions::stockpile_raise(self, target, old)
+                }
                 // Smack Down's `onRestart`: a holder in the air again (Fly, Bounce) comes down
                 // (`conditions::smack_down_lands`); it returns nothing.
                 Volatile::SmackDown => {
@@ -1218,6 +1226,10 @@ impl<'a, const N: usize> Battle<'a, N> {
         // Power Trick, Power Shift: the stored Attack and Defense trade places back.
         if matches!(volatile, Volatile::PowerTrick | Volatile::PowerShift) {
             super::conditions::swap_stored_stats(self, target, 0, 1);
+        }
+        // Stockpile: the raises that took are taken back.
+        if volatile == Volatile::Stockpile {
+            super::conditions::stockpile_end(self, target, old);
         }
         // `twoturnmove.onEnd`: the move's own volatile goes with it (an aborted second turn).
         if volatile == Volatile::TwoTurnMove {

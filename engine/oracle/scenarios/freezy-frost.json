@@ -1,0 +1,93 @@
+{
+ "description": "Freezy Frost (Opus V): Jolteon's hit on Snorlax clears every active Pokémon's stat stages (patched: Blissey +2 Atk, Snorlax -1 Def, Chansey +3 Spe) before the slower Hardens. Accuracy, rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Jolteon",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spa": 32
+    },
+    "moves": [
+     "Freezy Frost",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Blissey": {
+    "boosts": {
+     "atk": 2
+    }
+   }
+  },
+  "p2": {
+   "Snorlax": {
+    "boosts": {
+     "def": -1
+    }
+   },
+   "Chansey": {
+    "boosts": {
+     "spe": 3
+    }
+   }
+  }
+ },
+ "turn": {
+  "p1": "move freezyfrost 1, move harden",
+  "p2": "move harden, move harden"
+ }
+}

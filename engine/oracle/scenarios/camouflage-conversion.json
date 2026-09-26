@@ -1,0 +1,78 @@
+{
+ "description": "Camouflage and Conversion (Opus V): in Grassy Terrain Hypno's Camouflage makes it pure Grass; Blissey's Conversion makes it the type of its first move (Surf: Water). Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Hypno",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Camouflage",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Surf",
+     "Conversion"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "field": {
+   "terrain": "grassyterrain",
+   "terrainDuration": 5
+  }
+ },
+ "turn": {
+  "p1": "move camouflage, move conversion",
+  "p2": "move harden, move harden"
+ }
+}

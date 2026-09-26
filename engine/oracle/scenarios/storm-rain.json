@@ -1,0 +1,78 @@
+{
+ "description": "Wildbolt Storm in rain (Opus V): `onModifyMove` makes it never miss when its nominal target (a random foe: generate with --keep-nominal-draws) is in rain; Venomoth holds Utility Umbrella, so with Venomoth as the nominal target the storm keeps its 80% accuracy on both foes. Both foes have Shield Dust (no paralysis roll). Nominal target, accuracy, rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Hypno",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spa": 32
+    },
+    "moves": [
+     "Wildbolt Storm",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Dustox",
+    "item": "",
+    "ability": "Shield Dust",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Venomoth",
+    "item": "Utility Umbrella",
+    "ability": "Shield Dust",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "field": {
+   "weather": "raindance",
+   "weatherDuration": 5
+  }
+ },
+ "turn": {
+  "p1": "move wildboltstorm, move harden",
+  "p2": "move harden, move harden"
+ }
+}
