@@ -4,7 +4,7 @@
 //! Usage: lab-plan <scenario.json> [--side p1|p2] [--depth n] [--rng expect|worst]
 //!                 [--before <oracle-report.json>] [--top k] [--exact] [--all-targets]
 //!                 [--max-turns n] [--rolls full|extremes|quartiles|median|pessimistic]
-//!                 [--eval material|heuristic|file:<weights.json>] [--position i]
+//!                 [--eval material|heuristic|file:<weights.json>] [--position i|max]
 //!                 [--solve maximin|nash|deep|deep-nash] [--dump-children <out.jsonl> [--beam b] [--outcomes k]]
 //!                 [--believed-team <team.json>]... [--believed-weight w1,w2,...]
 //!                 [--observed "Name:pct,Name:pct"] [--observed-turn k "Name:pct,..."]... [--observed-tolerance 1.0]
@@ -89,6 +89,8 @@ fn run() -> Result<(), String> {
     let mut us = SideId::One;
     let mut top = 10usize;
     let mut position_index: Option<usize> = None;
+    // `--position max`: the most probable initial state (batch runs over replayed setup turns).
+    let mut position_max = false;
     let mut eval = "heuristic".to_owned();
     let mut solve = "maximin".to_owned();
     let mut plan: Option<String> = None;
@@ -141,11 +143,16 @@ fn run() -> Result<(), String> {
             }
             "--position" => {
                 i += 1;
-                position_index = Some(
-                    args.get(i)
-                        .and_then(|s| s.parse::<usize>().ok())
-                        .ok_or("--position needs an index")?,
-                );
+                match args.get(i).map(String::as_str) {
+                    Some("max") => position_max = true,
+                    Some(s) => {
+                        position_index = Some(
+                            s.parse::<usize>()
+                                .map_err(|_| "--position needs an index or max")?,
+                        )
+                    }
+                    None => return Err("--position needs an index or max".into()),
+                }
             }
             "--max-turns" => {
                 i += 1;
@@ -350,6 +357,7 @@ fn run() -> Result<(), String> {
     let survivors: Vec<Position> = if !observations.is_empty()
         && positions.len() > 1
         && position_index.is_none()
+        && !position_max
     {
         println!(
                 "{} positions survive the observations (most probable p={:.4}); the matrix game is played over their mixture where the choices coincide; pass --position to pick one",
@@ -362,7 +370,14 @@ fn run() -> Result<(), String> {
     } else {
         Vec::new()
     };
-    let position = pick_position(&loaded, positions, before.as_deref(), position_index, us)?;
+    let position = pick_position(
+        &loaded,
+        positions,
+        before.as_deref(),
+        position_index,
+        position_max,
+        us,
+    )?;
     let them = us.other();
     let mut state = position.state.clone();
 
@@ -436,12 +451,19 @@ fn run() -> Result<(), String> {
                     continue;
                 }
                 bpositions.sort_by(|a, b| b.probability.total_cmp(&a.probability));
-                if bpositions.len() > 1 && position_index.is_none() {
+                if bpositions.len() > 1 && position_index.is_none() && !position_max {
                     bsurvivors = bpositions.clone();
                 }
                 bpositions.truncate(1);
             }
-            let bp = pick_position(&bl, bpositions, before.as_deref(), position_index, us)?;
+            let bp = pick_position(
+                &bl,
+                bpositions,
+                before.as_deref(),
+                position_index,
+                position_max,
+                us,
+            )?;
             believed_positions.push(Some((bp, bsurvivors)));
         }
         let total: f32 = posterior.iter().sum();
@@ -1106,8 +1128,15 @@ fn pick_position(
     positions: Vec<Position>,
     before: Option<&str>,
     index: Option<usize>,
+    most_probable: bool,
     us: SideId,
 ) -> Result<Position, String> {
+    if most_probable {
+        return positions
+            .into_iter()
+            .max_by(|a, b| a.probability.total_cmp(&b.probability))
+            .ok_or_else(|| "no initial state".to_owned());
+    }
     if let Some(i) = index {
         let n = positions.len();
         return positions
