@@ -254,7 +254,13 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                 // Every row is valued in full, so the rows are independent: the payoff matrix
                 // in parallel, then each line is its row's minimum.
                 let values = self.parallel_matrix(
-                    state, suspension, decision, &ours, &theirs, next_depth, threads,
+                    state,
+                    suspension,
+                    decision,
+                    &ours,
+                    &theirs,
+                    Next::Depth(next_depth),
+                    threads,
                 )?;
                 for (r, &a) in ours.iter().enumerate() {
                     let row = &values[r * theirs.len()..(r + 1) * theirs.len()];
@@ -560,8 +566,9 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
     }
 }
 
-/// One worker's rows of the payoff matrix with its node and turn counts.
-type RowValues = (Vec<f32>, u64, u64, Vec<String>, usize);
+/// One worker's cells `(index, value)` of the payoff matrix with its node and turn counts,
+/// the unsupported reasons it met and the pairs it dropped.
+type CellValues = (Vec<(usize, f32)>, u64, u64, Vec<String>, usize, u32);
 
 /// The root decision solved as a zero-sum matrix game over both sides' choices, each pair
 /// valued by the exact chance node below it (deeper nodes by maximin as in [`Analysis`]).
@@ -641,7 +648,13 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         let threads = self.config.worker_threads(ours.len());
         let values = if threads > 1 {
             self.parallel_matrix(
-                state, suspension, decision, &ours, &theirs, next_depth, threads,
+                state,
+                suspension,
+                decision,
+                &ours,
+                &theirs,
+                Next::Depth(next_depth),
+                threads,
             )?
         } else {
             let mut values = Vec::with_capacity(ours.len() * theirs.len());
@@ -697,35 +710,42 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         decision: Decision,
         ours: &[Choice<N>],
         theirs: &[Choice<N>],
-        depth: u32,
+        next: Next<'_, N>,
         threads: usize,
     ) -> Result<Vec<f32>, SearchError> {
+        use std::sync::atomic::{AtomicUsize, Ordering};
         let config = self.config;
         let evaluator = self.evaluator;
-        let chunk = ours.len().div_ceil(threads.max(1)).max(1);
-        let results: Vec<Result<RowValues, SearchError>> = std::thread::scope(|scope| {
-            let handles: Vec<_> = ours
-                .chunks(chunk)
-                .map(|rows| {
+        let cells = ours.len() * theirs.len();
+        // Cells are handed out one at a time: pairs differ a lot in cost (a double Protect
+        // is one outcome, two spread moves thousands), so static row chunks leave threads idle.
+        let counter = AtomicUsize::new(0);
+        let results: Vec<Result<CellValues, SearchError>> = std::thread::scope(|scope| {
+            let handles: Vec<_> = (0..threads.max(1))
+                .map(|_| {
                     let mut local_state = state.clone();
                     let suspension = suspension.cloned();
+                    let counter = &counter;
                     scope.spawn(move || {
                         let mut local = Solver::new(config, evaluator);
-                        let mut values = Vec::with_capacity(rows.len() * theirs.len());
-                        for &a in rows {
-                            for &b in theirs {
-                                let pair = local.pair(a, b);
-                                let v = local.chance(
-                                    &mut local_state,
-                                    decision,
-                                    suspension.as_ref(),
-                                    pair,
-                                    Next::Depth(depth),
-                                    f32::NEG_INFINITY,
-                                    f32::INFINITY,
-                                )?;
-                                values.push(v);
+                        let mut values = Vec::new();
+                        loop {
+                            let i = counter.fetch_add(1, Ordering::Relaxed);
+                            if i >= cells {
+                                break;
                             }
+                            let (a, b) = (ours[i / theirs.len()], theirs[i % theirs.len()]);
+                            let pair = local.pair(a, b);
+                            let v = local.chance(
+                                &mut local_state,
+                                decision,
+                                suspension.as_ref(),
+                                pair,
+                                next,
+                                f32::NEG_INFINITY,
+                                f32::INFINITY,
+                            )?;
+                            values.push((i, v));
                         }
                         Ok((
                             values,
@@ -733,6 +753,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                             local.turns,
                             local.unsupported,
                             local.omitted_pairs,
+                            local.plan_broken,
                         ))
                     })
                 })
@@ -742,13 +763,16 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                 .map(|h| h.join().expect("a search thread panicked"))
                 .collect()
         });
-        let mut values = Vec::with_capacity(ours.len() * theirs.len());
+        let mut values = vec![f32::NAN; cells];
         for result in results {
-            let (v, nodes, turns, reasons, omitted) = result?;
-            values.extend(v);
+            let (cells, nodes, turns, reasons, omitted, broken) = result?;
+            for (i, v) in cells {
+                values[i] = v;
+            }
             self.nodes += nodes;
             self.turns += turns;
             self.omitted_pairs += omitted;
+            self.plan_broken += broken;
             for why in reasons {
                 if !self.unsupported.contains(&why) {
                     self.unsupported.push(why);
@@ -800,22 +824,34 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         } else {
             Next::Plan(plan, 0)
         };
+        let threads = self.config.worker_threads(ours.len() * theirs.len());
+        let values = if threads > 1 {
+            self.parallel_matrix(state, suspension, decision, &ours, &theirs, next, threads)?
+        } else {
+            let mut values = Vec::with_capacity(ours.len() * theirs.len());
+            for &a in &ours {
+                for &b in &theirs {
+                    let pair = self.pair(a, b);
+                    values.push(self.chance(
+                        state,
+                        decision,
+                        suspension,
+                        pair,
+                        next,
+                        f32::NEG_INFINITY,
+                        f32::INFINITY,
+                    )?);
+                }
+            }
+            values
+        };
         let mut replies: Vec<(Choice<N>, f32)> = Vec::new();
         let mut best = f32::NEG_INFINITY;
-        for &a in &ours {
+        for (r, _) in ours.iter().enumerate() {
             let mut worst = f32::INFINITY;
             let mut row = Vec::with_capacity(theirs.len());
-            for &b in &theirs {
-                let pair = self.pair(a, b);
-                let v = self.chance(
-                    state,
-                    decision,
-                    suspension,
-                    pair,
-                    next,
-                    f32::NEG_INFINITY,
-                    f32::INFINITY,
-                )?;
+            for (c, &b) in theirs.iter().enumerate() {
+                let v = values[r * theirs.len() + c];
                 if v.is_nan() {
                     continue;
                 }
