@@ -270,6 +270,10 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::GRASSY_GLIDE, &["onModifyPriority"]),
     (moves::LOW_KICK, &["basePowerCallback", "onTryHit"]),
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),
+    // Heavy Slam, Heat Crash: `handlers::base_power_callback` (weight ratio); `onTryHit` only
+    // fails against a Dynamaxed target (off).
+    (moves::HEAVY_SLAM, &["basePowerCallback", "onTryHit"]),
+    (moves::HEAT_CRASH, &["basePowerCallback", "onTryHit"]),
     (moves::FAKE_OUT, &["onDisableMove", "onTry"]),
     (moves::KNOCK_OFF, &["onAfterHit", "onBasePower"]),
     (moves::GRAV_APPLE, &["onBasePower"]),

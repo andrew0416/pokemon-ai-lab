@@ -90,3 +90,15 @@ fn feint_breaks_crafty_shield() {
 fn protect_stops_a_move_before_magic_bounce() {
     assert_exact_parity("magic-bounce-protect");
 }
+
+/// Heavy Slam at 80 base power (3x to 4x the target's weight).
+#[test]
+fn heavy_slam_power_from_the_weight_ratio() {
+    assert_exact_parity("heavy-slam");
+}
+
+/// Heat Crash just over 2x the target's weight: 60 base power.
+#[test]
+fn heat_crash_power_at_a_bracket_edge() {
+    assert_exact_parity("heat-crash");
+}
