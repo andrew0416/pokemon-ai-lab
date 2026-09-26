@@ -114,6 +114,9 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// used at; its user for a self-targeting move) with `useMove`'s result
     /// (`moveDidSomething`); `None` until `useMove` got that far. Dancer reads both.
     pub active_target: Option<(SlotRef, bool)>,
+    /// Whether an ability can be suppressed in this battle (`abilities::suppression_possible`):
+    /// without it [`Battle::ability`] skips the `ignoringAbility` check.
+    pub suppression: bool,
 }
 
 /// The readers of the hidden damage history present in a battle (any party member's moves;
@@ -172,6 +175,7 @@ impl HistoryReaders {
 impl<'a, const N: usize> Battle<'a, N> {
     pub fn new(state: &'a mut State<N>, rng: &'a mut Chooser) -> Battle<'a, N> {
         let history_readers = HistoryReaders::of(state);
+        let suppression = super::abilities::suppression_possible(state);
         Battle {
             state,
             log: Vec::new(),
@@ -192,6 +196,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             queue_done: false,
             external_move: false,
             active_target: None,
+            suppression,
         }
     }
 
@@ -255,7 +260,21 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// `NONE` while it is suppressed by Gastro Acid or Neutralizing Gas
     /// (`abilities::ignoring_ability`; Showdown `ignoringAbility`).
     pub fn ability(&self, slot: SlotRef) -> AbilityId {
-        super::abilities::effective_ability(self.state, slot)
+        if self.suppression {
+            super::abilities::effective_ability(self.state, slot)
+        } else {
+            self.raw_ability(slot)
+        }
+    }
+
+    /// Showdown `pokemon.ignoringAbility()` for the occupant of `slot`
+    /// (`abilities::ignoring_ability`; checked only when suppression is possible at all).
+    pub fn ignoring_ability(&self, slot: SlotRef) -> bool {
+        if self.suppression {
+            super::abilities::ignoring_ability(self.state, slot)
+        } else {
+            self.occupant(slot).is_none()
+        }
     }
 
     /// Showdown `pokemon.ability` itself, suppressed or not (`getAbility()`): Skill Swap, Role

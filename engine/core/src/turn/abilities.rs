@@ -169,6 +169,23 @@ fn neutralizing_gas_on_field<const N: usize>(state: &State<N>) -> bool {
     })
 }
 
+/// Whether any ability can be suppressed in a stage from `state` on: a party member has
+/// Neutralizing Gas (its own or base ability: no effect gives it to another Pokémon, as it is
+/// `failskillswap`, `failroleplay`, `noentrain`, `notrace` and `noreceiver`), or a Gastro Acid
+/// volatile is up (one that lands during the stage sets the flag: [`gastro_acid_start`]). Only
+/// then does `Battle::ability` check.
+pub(crate) fn suppression_possible<const N: usize>(state: &State<N>) -> bool {
+    let gas = state
+        .sides
+        .iter()
+        .flat_map(|side| side.party.iter())
+        .any(|m| {
+            m.ability == abilities::NEUTRALIZING_GAS
+                || m.base_ability == abilities::NEUTRALIZING_GAS
+        });
+    gas || State::<N>::slot_refs().any(|s| state.slot(s).volatiles.has(Volatile::GastroAcid))
+}
+
 /// The ability whose handlers act for the Pokémon in `slot` (`hasAbility`, `runEvent`):
 /// `NONE` while it is suppressed ([`ignoring_ability`]).
 pub(crate) fn effective_ability<const N: usize>(state: &State<N>, slot: SlotRef) -> AbilityId {
@@ -268,6 +285,7 @@ pub(crate) fn gastro_acid_start<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
 ) -> Result<(), super::TurnError> {
+    b.suppression = true;
     let ability = b.raw_ability(slot);
     super::switching::end_ability(b, slot, ability)
 }
@@ -2164,7 +2182,7 @@ pub(crate) fn paradox_volatile_of<const N: usize>(
     slot: SlotRef,
 ) -> Option<(AbilityId, u16)> {
     // `if (this.effectState.bestStat !== ... || pokemon.ignoringAbility()) return;`
-    if ignoring_ability(b.state, slot) {
+    if b.ignoring_ability(slot) {
         return None;
     }
     let proto = b.volatile(slot, Volatile::Protosynthesis);

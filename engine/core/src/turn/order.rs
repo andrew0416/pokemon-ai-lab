@@ -84,7 +84,7 @@ impl<const N: usize> Battle<'_, N> {
         // return this.chainModify(2)`.
         if mon.item.is_none()
             && self.volatile(slot, Volatile::Unburden).active
-            && !super::abilities::ignoring_ability(self.state, slot)
+            && !self.ignoring_ability(slot)
         {
             chain.push(2 * MOD_ONE);
         }
