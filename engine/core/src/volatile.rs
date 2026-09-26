@@ -237,9 +237,13 @@ pub enum Volatile {
     /// in `counter`: [`encode_pokemon`]; hidden in the canonical state) is no longer active
     /// (`onUpdate`).
     Attract,
+    /// Nightmare (the move's condition, no duration, residual order 11): a sleeping (or
+    /// Comatose) holder loses baseMaxhp / 4 each turn. `cureStatus` / `clearStatus` of a sleeping
+    /// holder and a new sleep's `onStart` remove it (`Battle::cure_status`).
+    Nightmare,
 }
 
-pub const VOLATILE_COUNT: usize = 74;
+pub const VOLATILE_COUNT: usize = 75;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -317,6 +321,7 @@ impl Volatile {
         Volatile::Commanded,
         Volatile::GorillaTactics,
         Volatile::Attract,
+        Volatile::Nightmare,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -370,6 +375,7 @@ impl Volatile {
             Volatile::HealBlock => conditions::HEALBLOCK,
             Volatile::SmackDown => conditions::SMACKDOWN,
             Volatile::Attract => conditions::ATTRACT,
+            Volatile::Nightmare => conditions::NIGHTMARE,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -479,6 +485,7 @@ impl Volatile {
             Volatile::Commanded => "commanded",
             Volatile::GorillaTactics => "gorillatactics",
             Volatile::Attract => "attract",
+            Volatile::Nightmare => "nightmare",
         }
     }
 
@@ -568,7 +575,8 @@ impl Volatile {
             | Volatile::Commanding
             | Volatile::Commanded
             | Volatile::GorillaTactics
-            | Volatile::Attract => 0,
+            | Volatile::Attract
+            | Volatile::Nightmare => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -581,6 +589,7 @@ impl Volatile {
             Volatile::LeechSeed => Some(8),
             Volatile::PartiallyTrapped | Volatile::SaltCure => Some(13),
             Volatile::MagnetRise => Some(18),
+            Volatile::Nightmare => Some(11),
             Volatile::Taunt => Some(15),
             Volatile::Encore => Some(16),
             Volatile::Disable => Some(17),
@@ -835,6 +844,7 @@ mod tests {
             (Volatile::ShellTrap, moves::SHELL_TRAP),
             (Volatile::HealBlock, moves::HEAL_BLOCK),
             (Volatile::SmackDown, moves::SMACK_DOWN),
+            (Volatile::Nightmare, moves::NIGHTMARE),
         ] {
             let data = id.data();
             assert_eq!(

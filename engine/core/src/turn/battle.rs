@@ -807,6 +807,11 @@ impl<'a, const N: usize> Battle<'a, N> {
             new: status,
         });
         self.set_status_turns(pokemon, turns);
+        // The `slp` condition's `onStart`: `target.removeVolatile('nightmare')` (one a Comatose
+        // holder kept after losing the ability).
+        if status == Status::Sleep {
+            self.end_nightmare(pokemon);
+        }
         self.after_set_status(target, status, source);
         // Lum Berry's `onAfterSetStatus` (priority -1: after Synchronize).
         super::update::after_set_status(self, target);
@@ -995,11 +1000,15 @@ impl<'a, const N: usize> Battle<'a, N> {
         }
     }
 
-    /// Showdown `cureStatus` / `clearStatus`.
+    /// Showdown `cureStatus` / `clearStatus`: a sleeping Pokémon also loses Nightmare (`if
+    /// (this.status === 'slp' && this.removeVolatile('nightmare'))`).
     pub fn cure_status(&mut self, pokemon: PokemonRef) {
         let old = self.mon(pokemon).status;
         if self.mon(pokemon).hp == 0 || old == Status::None {
             return;
+        }
+        if old == Status::Sleep {
+            self.end_nightmare(pokemon);
         }
         self.apply(Instruction::ChangeStatus {
             target: pokemon,
@@ -1007,6 +1016,14 @@ impl<'a, const N: usize> Battle<'a, N> {
             new: Status::None,
         });
         self.set_status_turns(pokemon, 0);
+    }
+
+    /// `pokemon.removeVolatile('nightmare')` for an active `pokemon` (its sleep ends, or a new
+    /// sleep starts: the `slp` condition's `onStart`).
+    pub fn end_nightmare(&mut self, pokemon: PokemonRef) {
+        if let Some(slot) = State::<N>::slot_refs().find(|&s| self.occupant(s) == Some(pokemon)) {
+            self.remove_volatile(slot, Volatile::Nightmare);
+        }
     }
 
     // ---- volatiles -----------------------------------------------------------------------

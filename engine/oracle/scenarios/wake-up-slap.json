@@ -1,0 +1,24 @@
+{
+ "description": "Wake-Up Slap (Opus V): Gengar's Nightmare lands on the sleeping Snorlax (patched asleep, 3 turns); Hypno's Wake-Up Slap then hits it at double power (140) and wakes it (`cureStatus`, which also ends Nightmare), so Snorlax uses Harden and takes no Nightmare damage at the residual. Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Nightmare", "Harden"], "level": 50},
+   {"species": "Hypno", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Wake-Up Slap", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Snorlax": {"status": "slp", "statusTime": 3}}},
+ "turn": {"p1": "move nightmare 1, move wakeupslap 1", "p2": "move harden, move harden"}
+}

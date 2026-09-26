@@ -435,6 +435,13 @@ pub(crate) fn volatile_start<const N: usize>(
             }
             true
         }
+        // Nightmare: `if (pokemon.status !== 'slp' && !pokemon.hasAbility('comatose')) return
+        // false;`
+        Volatile::Nightmare => {
+            b.slot_mon(target)
+                .is_some_and(|m| m.status == Status::Sleep)
+                || b.ability(target) == abilities::COMATOSE
+        }
         // Substitute (F11): `this.effectState.hp = Math.floor(target.maxhp / 4)`; partial
         // trapping ends silently (`delete target.volatiles['partiallytrapped']`, no `onEnd`).
         Volatile::Substitute => {

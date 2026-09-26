@@ -39,7 +39,8 @@ enum Kind {
     Item(PokemonRef, SlotRef, ItemId),
     /// Leech Seed's `onResidual` (order 8; no duration).
     LeechSeed(PokemonRef, SlotRef),
-    /// The `onResidual` of a volatile without a duration: Ingrain (order 7), Salt Cure (13).
+    /// The `onResidual` of a volatile without a duration: Ingrain (order 7), Nightmare (11), Salt
+    /// Cure (13).
     VolatileEffect(PokemonRef, SlotRef, Volatile),
     /// A slot condition's `onResidual` (future moves order 3, Wish 4; Revival Blessing's
     /// duration), slot-condition sub-order 3. Showdown collects it for the Pokémon in the
@@ -191,7 +192,10 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                         kind: Kind::LeechSeed(pokemon, slot),
                     });
                 }
-                if matches!(volatile, Volatile::Ingrain | Volatile::SaltCure) {
+                if matches!(
+                    volatile,
+                    Volatile::Ingrain | Volatile::SaltCure | Volatile::Nightmare
+                ) {
                     out.push(Handler {
                         order: volatile.residual_order().unwrap_or(ORDER_DEFAULT),
                         speed,
@@ -535,6 +539,11 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
                     let tougher = b.has_type(slot, Type::Water) || b.has_type(slot, Type::Steel);
                     let divisor = if tougher { 8.0 } else { 16.0 };
                     b.damage(slot, max_hp / divisor, DamageSource::Indirect);
+                }
+                // Nightmare: `this.damage(pokemon.baseMaxhp / 4)` (the condition's damage, not a
+                // move's: Magic Guard stops it).
+                Volatile::Nightmare => {
+                    b.damage(slot, max_hp / 4.0, DamageSource::Indirect);
                 }
                 _ => {}
             }

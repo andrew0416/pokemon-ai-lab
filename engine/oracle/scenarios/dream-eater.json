@@ -1,0 +1,27 @@
+{
+ "description": "Dream Eater (Opus V): Gengar's hits the sleeping Snorlax (patched asleep, 3 turns) and drains half the damage (Gengar patched to 60 HP); Hypno's fails on the awake Blissey (`onTryImmunity`: the target must be asleep or Comatose). Snorlax stays asleep (time 3 to 2). Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Dream Eater", "Harden"], "level": 50},
+   {"species": "Hypno", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Dream Eater", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Gengar": {"hp": 60}},
+  "p2": {"Snorlax": {"status": "slp", "statusTime": 3}}
+ },
+ "turn": {"p1": "move dreameater 1, move dreameater 2", "p2": "move harden, move harden"}
+}

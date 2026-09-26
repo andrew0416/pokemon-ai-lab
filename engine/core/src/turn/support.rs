@@ -903,6 +903,17 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "condition.onTryHit",
         ],
     ),
+    // Sleep readers (Opus V unit 1): Dream Eater's `onTryImmunity`
+    // (`handlers::on_try_immunity`); Nightmare's condition (`conditions::volatile_start`, its
+    // residual in `residual.rs`, removed with sleep by `Battle::cure_status`); Wake-Up Slap's
+    // and Smelling Salts' power (`handlers::base_power_callback`) and cure (`handlers::on_hit`).
+    (moves::DREAM_EATER, &["onTryImmunity"]),
+    (
+        moves::NIGHTMARE,
+        &["condition.onResidual", "condition.onStart"],
+    ),
+    (moves::WAKE_UP_SLAP, &["basePowerCallback", "onHit"]),
+    (moves::SMELLING_SALTS, &["basePowerCallback", "onHit"]),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do

@@ -312,6 +312,12 @@ pub(super) fn on_try_immunity<const N: usize>(
         // Worry Seed: `if (target.ability === 'truant' || target.ability === 'insomnia') return
         // false;` (before accuracy).
         moves::WORRY_SEED => ![abilities::TRUANT, abilities::INSOMNIA].contains(&b.ability(target)),
+        // Dream Eater: `return target.status === 'slp' || target.hasAbility('comatose');`
+        moves::DREAM_EATER => {
+            b.slot_mon(target)
+                .is_some_and(|m| m.status == Status::Sleep)
+                || b.ability(target) == abilities::COMATOSE
+        }
         _ => true,
     }
 }
@@ -928,6 +934,23 @@ pub(super) fn base_power_callback<const N: usize>(
         }
         // Last Respects: `50 + 50 * pokemon.side.totalFainted`.
         moves::LAST_RESPECTS => 50 + 50 * i32::from(b.state.side(user.side).history.total_fainted),
+        // Wake-Up Slap: `if (target.status === 'slp' || target.hasAbility('comatose')) return
+        // move.basePower * 2;` Smelling Salts: `if (target.status === 'par')` the same.
+        moves::WAKE_UP_SLAP | moves::SMELLING_SALTS => {
+            let doubled = if mv.id == moves::WAKE_UP_SLAP {
+                b.slot_mon(target)
+                    .is_some_and(|m| m.status == Status::Sleep)
+                    || b.ability(target) == abilities::COMATOSE
+            } else {
+                b.slot_mon(target)
+                    .is_some_and(|m| m.status == Status::Paralyze)
+            };
+            if doubled {
+                base_power * 2
+            } else {
+                base_power
+            }
+        }
         // Hex, Infernal Parade: `if (target.status || target.hasAbility('comatose'))` double.
         moves::HEX | moves::INFERNAL_PARADE => {
             let statused = b.slot_mon(target).is_some_and(|m| m.status != Status::None)
@@ -1741,6 +1764,8 @@ pub(super) fn on_hit<const N: usize>(
                     new: Status::Sleep,
                 });
                 b.set_status_turns(pokemon, 3);
+                // The `slp` condition's `onStart` removes Nightmare.
+                b.end_nightmare(pokemon);
                 super::super::update::after_set_status(b, target);
                 let max_hp = b.mon(pokemon).max_hp;
                 b.heal(target, f64::from(max_hp));
@@ -1950,6 +1975,19 @@ pub(super) fn on_hit<const N: usize>(
         // Steel Roller: `this.field.clearTerrain();` (returns nothing: no effect on success).
         moves::STEEL_ROLLER => {
             super::clear_terrain(b);
+            return Ok(None);
+        }
+        // Wake-Up Slap: `if (target.status === 'slp') target.cureStatus();` Smelling Salts: the
+        // same for `par` (a Comatose target keeps sleeping; both return nothing).
+        moves::WAKE_UP_SLAP | moves::SMELLING_SALTS => {
+            let cured = if mv.id == moves::WAKE_UP_SLAP {
+                Status::Sleep
+            } else {
+                Status::Paralyze
+            };
+            if let Some(p) = b.alive(target).filter(|&p| b.mon(p).status == cured) {
+                b.cure_status(p);
+            }
             return Ok(None);
         }
         moves::TRICK | moves::SWITCHEROO => trick(b, user, target)?,
