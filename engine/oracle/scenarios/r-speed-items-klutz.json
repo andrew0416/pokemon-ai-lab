@@ -1,0 +1,22 @@
+{
+ "description": "Opus R unit 7: Klutz and Speed items. Power Anklet ignores Klutz (ignoreKlutz), so Pikachu is still halved (55) and its Rain Dance follows Chansey's (70) Sunny Day. Klutz suppresses Snorlax's Choice Scarf (50, not 75), so Wobbuffet (53) sets Grassy Terrain before Snorlax's Electric Terrain. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Pikachu", "item": "Power Anklet", "ability": "Klutz", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Rain Dance"], "level": 50},
+   {"species": "Snorlax", "item": "Choice Scarf", "ability": "Klutz", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Electric Terrain"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Sunny Day"], "level": 50},
+   {"species": "Wobbuffet", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Grassy Terrain"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move raindance, move electricterrain",
+  "p2": "move sunnyday, move grassyterrain"
+ }
+}

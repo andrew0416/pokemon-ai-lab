@@ -970,6 +970,15 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
         &["onAfterSubDamage", "onDamagingHit", "onStart"],
     ),
     (items::IRON_BALL, &["onEffectiveness", "onModifySpe"]),
+    // Speed halving (Macho Brace, the Power items) and Quick Powder: `items::speed_modifier`.
+    (items::MACHO_BRACE, &["onModifySpe"]),
+    (items::POWER_ANKLET, &["onModifySpe"]),
+    (items::POWER_BAND, &["onModifySpe"]),
+    (items::POWER_BELT, &["onModifySpe"]),
+    (items::POWER_BRACER, &["onModifySpe"]),
+    (items::POWER_LENS, &["onModifySpe"]),
+    (items::POWER_WEIGHT, &["onModifySpe"]),
+    (items::QUICK_POWDER, &["onModifySpe"]),
     // Drawn when the actions are queued (first stage, `mod.rs`); Lagging Tail and Full Incense
     // have only a constant `onFractionalPriority` (`items::constant_fractional_tenths`).
     (items::QUICK_CLAW, &["onFractionalPriority"]),

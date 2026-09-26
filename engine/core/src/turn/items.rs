@@ -1,10 +1,12 @@
-//! Item handlers (Showdown `data/items.ts`; the Champions mod overrides no callback of these
-//! items) for the items listed in `support`.
+//! Item handlers (Showdown `data/items.ts`; of these items the Champions mod only overrides
+//! Eject Button's `onAfterMoveSecondary`) for the items listed in `support`.
 //!
 //! Each function is one Showdown event; `moves.rs`, `battle.rs`, `order.rs`, `residual.rs` and
 //! `mod.rs` call it where Showdown runs that event. An item not handled here gets the event's
-//! neutral result. Items are read straight from the holder: Klutz holding an item is refused
-//! by `support` (Showdown's `ignoringItem`, work plan F17), so no handler here checks it.
+//! neutral result. Handlers read the effective item, [`Battle::item`]: `NONE` while Showdown's
+//! `ignoringItem` holds (Magic Room, or Klutz with an item that is not `ignoreKlutz`; work plan
+//! F17), when the runEvent loop skips item handlers. What reads `pokemon.item` itself (Knock
+//! Off, Trick, Acrobatics, Unburden, ...) uses [`Battle::raw_item`].
 //!
 //! Refused on purpose (not in `support`'s tables):
 //! - Metronome: its condition keeps `lastMove` and `numConsecutive` and reads
@@ -17,7 +19,7 @@ use crate::dex::{
 };
 use crate::field::{FieldEffect, Weather};
 use crate::instruction::Instruction;
-use crate::state::{PokemonRef, SlotRef, State, Status, SwitchFlag, BOOST_COUNT};
+use crate::state::{Pokemon, PokemonRef, SlotRef, State, Status, SwitchFlag, BOOST_COUNT};
 use crate::volatile::{Volatile, VolatileState};
 
 use super::abilities::{Handler, SUB_ABILITY, SUB_CONDITION, SUB_ITEM};
@@ -324,12 +326,27 @@ pub(crate) fn stage_end_check<const N: usize>(b: &Battle<'_, N>) -> Result<(), T
 
 // ---- Speed, grounding, effectiveness, action order --------------------------------------------
 
-/// `ModifySpe` factor of the holder's item: Choice Scarf `chainModify(1.5)` (skipped while
-/// Dynamaxed, which `support` refuses); Iron Ball `chainModify(0.5)`.
-pub(crate) fn speed_modifier(item: ItemId) -> Option<u32> {
+/// `ModifySpe` factor of `holder`'s effective `item` ([`Battle::item`]: none under Magic Room,
+/// and under Klutz unless the item is `ignoreKlutz`): Choice Scarf `chainModify(1.5)` (skipped
+/// while Dynamaxed, which `support` refuses); Iron Ball, Macho Brace and the six Power items
+/// `chainModify(0.5)` (Macho Brace and the Power items ignore Klutz); Quick Powder
+/// `chainModify(2)` for an untransformed Ditto (`pokemon.species.name === 'Ditto'`; Transform
+/// and Imposter are refused by `support`).
+pub(crate) fn speed_modifier(item: ItemId, holder: &Pokemon) -> Option<u32> {
+    const HALVING: [ItemId; 8] = [
+        items::IRON_BALL,
+        items::MACHO_BRACE,
+        items::POWER_ANKLET,
+        items::POWER_BAND,
+        items::POWER_BELT,
+        items::POWER_BRACER,
+        items::POWER_LENS,
+        items::POWER_WEIGHT,
+    ];
     match item {
         i if i == items::CHOICE_SCARF => Some(MOD_ONE_POINT_FIVE),
-        i if i == items::IRON_BALL => Some(MOD_HALF),
+        i if HALVING.contains(&i) => Some(MOD_HALF),
+        i if i == items::QUICK_POWDER && holder.species == species::DITTO => Some(MOD_DOUBLE),
         _ => None,
     }
 }

@@ -78,10 +78,11 @@ impl<const N: usize> Battle<'_, N> {
         if super::abilities::paradox_volatile_of(self, slot).is_some_and(|(_, best)| best == 4) {
             chain.push(MOD_ONE_POINT_FIVE);
         }
-        // The item (Choice Scarf). The factors are powers of two times at most two 1.5s (Quick
-        // Feet or a paradox condition, and Choice Scarf: 6144 * 6144 / 4096 = 9216 exactly), so
-        // the chain is exact in any order.
-        chain.extend(item_events::speed_modifier(mon.item));
+        // The effective item (Choice Scarf, Iron Ball, Macho Brace, the Power items, Quick
+        // Powder; none under Magic Room or a Klutz it does not ignore). The factors are powers of
+        // two times at most two 1.5s (Quick Feet or a paradox condition, and Choice Scarf: 6144
+        // * 6144 / 4096 = 9216 exactly), so the chain is exact in any order.
+        chain.extend(item_events::speed_modifier(self.item(slot), mon));
         if !chain.is_empty() {
             spe = modify(spe, chain_modifiers(&chain, 0, u32::MAX));
         }

@@ -120,3 +120,22 @@ fn everyone_fainting_at_once_goes_to_the_last_dequeued_side() {
     assert_extremes_parity("r-explosion-everyone-p1");
     assert_extremes_parity("r-explosion-everyone-p2");
 }
+
+/// Power Anklet and Macho Brace halve Speed, Quick Powder doubles Ditto's: the move order
+/// decides which weather and terrain stay.
+#[test]
+fn speed_items_change_the_move_order() {
+    assert_exact_parity("r-speed-items");
+}
+
+/// Klutz: Power Anklet still halves (`ignoreKlutz`), Choice Scarf does nothing.
+#[test]
+fn klutz_keeps_power_items_and_drops_choice_scarf_speed() {
+    assert_exact_parity("r-speed-items-klutz");
+}
+
+/// Magic Room: Iron Ball no longer halves its holder's Speed.
+#[test]
+fn magic_room_drops_iron_ball_speed() {
+    assert_exact_parity("r-speed-items-magic-room");
+}
