@@ -6,11 +6,14 @@
 //!                 [--max-turns n] [--rolls full|extremes|quartiles|median|pessimistic]
 //!                 [--eval material|heuristic] [--position i] [--solve maximin|nash]
 //!                 [--threads n] [--plan "<turn 1> / <turn 2> / ..."]
+//!                 [--child-nash [--beam b] [--outcomes k]]
 //!
 //! `--plan` values a fixed sequence of our turn choices (Showdown choice strings parsed
 //! against the starting position; a turn whose choice is no longer legal falls back to
 //! maximin and is counted as broken) against the reply that hurts us most at every turn;
-//! after the plan `--depth - 1` maximin turns follow.
+//! after the plan `--depth - 1` maximin turns follow. `--child-nash` (one-turn plans) also values
+//! the positions after the plan by their own next-turn equilibrium, for the `--beam` worst
+//! replies and the `--outcomes` most probable outcomes of each.
 //!
 //! The position is the scenario's (after switch-ins, setup turns and patch); with several
 //! initial states `--before` picks the one matching an oracle report, as `lab-turn` does.
@@ -157,6 +160,23 @@ fn run() -> Result<(), String> {
                     .ok_or("--threads needs a number")?;
             }
             "--exact" => config.exact_lines = true,
+            "--child-nash" => config.child_nash = true,
+            "--beam" => {
+                i += 1;
+                config.reply_beam = Some(
+                    args.get(i)
+                        .and_then(|s| s.parse().ok())
+                        .ok_or("--beam needs a number")?,
+                );
+            }
+            "--outcomes" => {
+                i += 1;
+                config.outcome_cap = Some(
+                    args.get(i)
+                        .and_then(|s| s.parse().ok())
+                        .ok_or("--outcomes needs a number")?,
+                );
+            }
             "--all-targets" => config.pruning = Pruning::All,
             other if scenario.is_none() => scenario = Some(other.to_owned()),
             other => return Err(format!("unexpected argument {other}")),
@@ -246,6 +266,21 @@ fn run() -> Result<(), String> {
                 format!("{value:+.1}"),
                 describe(&position, report.decision, them, reply)
             );
+        }
+        if let Some(child) = &report.child {
+            println!(
+                "with the positions after the plan valued by their next-turn equilibrium ({} worst replies, {} outcomes each): value {:+.1}",
+                child.beam,
+                child.outcome_cap.map_or("all".to_owned(), |k| k.to_string()),
+                child.value
+            );
+            for (reply, value) in child.replies.iter().take(top) {
+                println!(
+                    "  {:>9}  {}",
+                    format!("{value:+.1}"),
+                    describe(&position, report.decision, them, reply)
+                );
+            }
         }
         return Ok(());
     }

@@ -43,6 +43,8 @@
 
 **등장 통합·기절 후 교체 (2026-09-26, WORKPLAN F4·F5 완료):** 등장 처리는 `core/src/turn/switching.rs` 하나다: `switch_in`(Showdown `switchIn`: 퇴장자 특성·타입 복귀, 기절 점유자 `fnt` 해제, 슬롯 배치), `run_switch_in`(일괄 `runSwitch`: 등장자들의 시작 핸들러를 **저장 속도(원시 스탯)** 내림차순, 동률은 균등 무작위, 특성이 바뀐 핸들러는 건너뜀), `start_ability`(날씨·필드·위협·트레이스). 첫 등장(`scenario/switch_in.rs`)은 상태 검증 뒤 `turn::enumerate_start`에 위임한다. 기절한 포켓몬은 `Slot::fainted_occupant`로 자리를 지키고(`checkFainted`가 `fnt`를 찍는 근거), 교체 결정은 `turn::enumerate_replacements(state, [[Option<party>; N]; 2])`: instaswitch(기절자 속도순, 동률 무작위) → 일괄 runSwitch → `endTurn`(턴 증가). 로더는 `setupTurns`를 엔진으로 재생하고(`scenario_positions`: 등장 → 설정 턴들 → 패치), Showdown의 `side.pokemon` 순서를 교체마다 갱신해 `switch N`을 해석한다(`advance_order`). `scenario_decision`이 `Decision::Turn`/`Replacement`를 고르고 `run_decision`이 실행한다. 시나리오 `ko-replace`(더블 KO → 양쪽 교체, 등장자 속도 동률로 2결과)가 정확 일치(`tests/replacement.rs`).
 
+**플랜의 2턴 지평 (2026-09-26, WORKPLAN S10):** `lab-plan --plan "<턴1>" --child-nash`가 플랜 뒤 국면(최악 응수 6개 × 확률 상위 결과 4개)을 각각 다음 턴 행렬 게임 균형으로 평가한다(국면마다 수 초). S2 시나리오에서 최면술+속이기는 -130 → -181.7, 방어+그래스슬라이더는 -66.7 → -144.2로, 이 선두 조합 자체가 sand-owen의 마기라스+몰드류 선두에 불리하다는 S9 결론과 일치한다.
+
 **6차 병합 (3) (2026-09-26, Opus Q: 라이브러리 밖 특성·도구 8단위):** 능력치 배율 특성(천하장사·모피코트·강철술사류·스테이크아웃…), 피해 특성(스나이퍼·색안경·아날라이즈·배터리…), 재앙 4종, 기절 후 랭크(자기과신류·혼연일체; `boost_by`가 상대 편이 비면 실패), 명중·회피(모래숨기류·브라이트파우더), 도구(클리어참·어빌리티실드·빅루트·블런더폴리시·근육밴드·펀칭글러브·전기구슬·멘탈허브…), 습기, 스파이시스프레이·치유의마음. 충돌 없음. 새 규칙: 접촉은 `items::makes_contact`, 흡수 회복은 `heal_rooted`; `enumerate_start`가 선두의 `newlySwitched`를 지움. 이전에 거부되던 메가 화염레오·아쿠스타 등이 열려 우리 파티의 화염레오 메가도 계산 가능. 커버리지: 기술 676/938(라이브러리 206/206, 100%), 특성 255/321(라이브러리 66/66, 100%), 도구 482/583(라이브러리 60/60, 100%); 라이브러리 28팀 전 검사 통과.
 
 **F20 (2026-09-26):** 교체의 `switchIn`↔`runSwitch` 사이 Update(오봉열매가 스텔스록보다 먼저)와 방어류로 전 대상이 막힌 기술의 `MoveResult::Null`(스톰핑탠트럼 2배 오류) 수정. 둘 다 오라클 시나리오로 확인. F21(같은 날)이 유턴+위기회피 플래그 순서와 붉은카드 드래그의 생명의구슬 생략을 고쳤다. 남은 N·P 보고 버그: 중단 교체의 교체 전 Update, 광역 탈출버튼 속도순, 트랩 특성의 매끄러운껍질 억제 무시, 가드류의 잠금 초기화.
@@ -135,6 +137,7 @@ D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls m
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --solve nash   # 행렬 게임 균형(혼합 전략); 모든 쌍을 열거하므로 수십 초
 python engine/scripts/plan_sweep.py runs/plan-20260926 --rolls median --solve nash --exe D:/cargo-target/release/lab-plan.exe   # 실행 디렉터리의 *-vs-*.json 전부(시작 상태별) → out/, summary.<solve>.<rolls>.json
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --plan "move hypnosis 1, move fakeout 2 / move hypervoice, move grassyglide 1"   # 고정 플랜 vs 최악 응수
+D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --plan "move hypnosis 1, move fakeout 2" --child-nash --beam 6 --outcomes 4   # 플랜 뒤 국면을 다음 턴 균형으로(수십 초)
 LAB_ENGINE_STATS=1 D:/cargo-target/release/lab-turn.exe <scenario> --position 1 --rolls median   # 단계별 프런티어·재실행 수·시간
 D:/cargo-target/release/lab-turn.exe <scenario> --rolls median      # full|extremes|quartiles|median|pessimistic-p1|pessimistic-p2
 node engine/oracle/marginals.cjs <showdown mc 보고서> "$TEMP/engine-mc.json"   # 큰 분포: 주변분포 비교

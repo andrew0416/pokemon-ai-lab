@@ -451,3 +451,56 @@ fn plan_evaluation_matches_the_lines() {
     assert_eq!(report.broken, 1);
     assert!((report.value - analysis.value).abs() < 1e-3, "{report:?}");
 }
+
+/// `nash_value` at the root equals the mixed analysis' equilibrium value, and a one-turn plan's
+/// child valuation (no cap, every reply) is the worst reply's outcome-weighted child equilibrium.
+#[test]
+fn child_equilibrium_matches_the_mixed_analysis() {
+    let position = position("eject-button-uturn");
+    let mut state = position.state.clone();
+    let mut config = Config::new(Ruleset::CHAMPIONS_MC, SideId::One);
+    config.rolls = RollMode::Full;
+    config.child_nash = true;
+    config.reply_beam = None;
+    config.outcome_cap = None;
+    let evaluator = Material;
+    let mut solver = Solver::new(config, &evaluator);
+    let mixed = solver.analyse_mixed(&mut state, None).unwrap();
+    let root = solver.nash_value(&mut state, None).unwrap();
+    assert!(
+        (root - mixed.equilibrium.value).abs() < 0.05,
+        "{root} vs {mixed:?}"
+    );
+    let decision = decision(&state, None).unwrap();
+    let plan = mixed.ours[0];
+    let report = solver.evaluate_plan(&mut state, None, &[plan]).unwrap();
+    assert_eq!(state, position.state);
+    let child = report.child.expect("child values");
+    assert_eq!(child.replies.len(), mixed.theirs.len());
+    // Brute force: for each reply, sum over outcomes of p * equilibrium(child).
+    for &(reply, value) in &child.replies {
+        let outcomes = transitions(
+            &mut state,
+            Ruleset::CHAMPIONS_MC,
+            OPTIONS,
+            decision,
+            None,
+            [plan, reply],
+        )
+        .unwrap();
+        let mut expected = 0.0f64;
+        for o in &outcomes {
+            state.apply(&o.instructions);
+            let v = solver
+                .nash_value(&mut state, o.suspension.as_ref())
+                .unwrap();
+            state.reverse(&o.instructions);
+            expected += o.probability * f64::from(v);
+        }
+        assert!(
+            (value - expected as f32).abs() < 0.1,
+            "{reply:?}: {value} vs {expected}"
+        );
+    }
+    assert!((child.value - child.replies[0].1).abs() < 1e-6);
+}

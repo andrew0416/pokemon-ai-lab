@@ -33,6 +33,10 @@ use crate::nash::{self, Equilibrium, Matrix};
 enum Next<'p, const N: usize> {
     Depth(u32),
     Plan(&'p [Choice<N>], usize),
+    /// The position is worth the equilibrium value of its own matrix game (one more turn,
+    /// mixed strategies, leaf evaluation below); the chance node above it keeps only its
+    /// `Config::outcome_cap` most probable outcomes.
+    Nash,
 }
 
 /// The value of a won battle (a lost one is its negative); a leaf evaluation must stay well
@@ -70,6 +74,15 @@ pub struct Config {
     pub exact_lines: bool,
     /// Stop with [`SearchError::Budget`] after this many turn enumerations.
     pub max_turns: Option<u64>,
+    /// [`Solver::evaluate_plan`]: after the plan, value each child position by its own
+    /// matrix-game equilibrium (one more turn, mixed strategies) instead of the maximin tree.
+    pub child_nash: bool,
+    /// With `child_nash`: only this many of the opponent's root replies (the worst for us by
+    /// the plain plan value) get the expensive child valuation.
+    pub reply_beam: Option<usize>,
+    /// With `child_nash`: a chance node keeps only its most probable outcomes (renormalised)
+    /// before valuing children by equilibrium.
+    pub outcome_cap: Option<usize>,
     /// Worker threads for the payoff matrix ([`Solver::analyse_mixed`], and [`Solver::analyse`]
     /// with `exact_lines`); 0 uses the machine's parallelism. Each thread works on its own
     /// copy of the state; the result does not depend on the count.
@@ -93,6 +106,9 @@ impl Config {
             exact_lines: false,
             max_turns: None,
             threads: 0,
+            child_nash: false,
+            reply_beam: Some(6),
+            outcome_cap: Some(4),
         }
     }
 
@@ -505,6 +521,19 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             }
             Err(e) => return Err(e.into()),
         };
+        let outcomes = match (next, self.config.outcome_cap) {
+            (Next::Nash, Some(cap)) if outcomes.len() > cap => {
+                let mut kept = outcomes;
+                kept.sort_by(|a, b| b.probability.total_cmp(&a.probability));
+                kept.truncate(cap);
+                let total: f64 = kept.iter().map(|o| o.probability).sum();
+                for o in &mut kept {
+                    o.probability /= total;
+                }
+                kept
+            }
+            _ => outcomes,
+        };
         match self.config.chance {
             Chance::Worst => {
                 let mut worst = f32::INFINITY;
@@ -793,7 +822,62 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         match next {
             Next::Depth(depth) => self.value(state, suspension, depth, alpha, beta),
             Next::Plan(plan, index) => self.plan_value(state, suspension, plan, index, alpha, beta),
+            Next::Nash => self.nash_value(state, suspension),
         }
+    }
+
+    /// The equilibrium value of the position's own matrix game with leaf evaluation below
+    /// (the child valuation of [`Config::child_nash`]); NaN when nothing is evaluable, the
+    /// terminal value when the battle is over.
+    pub fn nash_value(
+        &mut self,
+        state: &mut State<N>,
+        suspension: Option<&Suspension>,
+    ) -> Result<f32, SearchError> {
+        self.nodes += 1;
+        let decision = game::decision(state, suspension)?;
+        if let Decision::Over(result) = decision {
+            return Ok(self.terminal(result, 0));
+        }
+        let them = self.config.us.other();
+        let ours = self.choices(state, decision, self.config.us)?;
+        let theirs = self.choices(state, decision, them)?;
+        let next_depth = if decision == Decision::Turn { 0 } else { 1 };
+        let threads = self.config.worker_threads(ours.len() * theirs.len());
+        let values = if threads > 1 {
+            self.parallel_matrix(
+                state,
+                suspension,
+                decision,
+                &ours,
+                &theirs,
+                Next::Depth(next_depth),
+                threads,
+            )?
+        } else {
+            let mut values = Vec::with_capacity(ours.len() * theirs.len());
+            for &a in &ours {
+                for &b in &theirs {
+                    let pair = self.pair(a, b);
+                    values.push(self.chance(
+                        state,
+                        decision,
+                        suspension,
+                        pair,
+                        Next::Depth(next_depth),
+                        f32::NEG_INFINITY,
+                        f32::INFINITY,
+                    )?);
+                }
+            }
+            values
+        };
+        let (ours, theirs, values, _, _) = drop_unevaluable(ours, theirs, values);
+        if ours.is_empty() || theirs.is_empty() {
+            return Ok(f32::NAN);
+        }
+        let matrix = Matrix::new(ours.len(), theirs.len(), values);
+        Ok(nash::solve(&matrix, 20_000, 0.01).value)
     }
 
     /// Values a fixed plan of ours (one turn choice per entry, in the form `legal_choices`
@@ -867,6 +951,38 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             return Err(SearchError::Unsupported(self.unsupported.clone()));
         }
         replies.sort_by(|x, y| x.1.total_cmp(&y.1));
+        // Phase 2: the worst replies again, with the child positions after the plan valued by
+        // their own equilibrium (only for a one-turn plan at a turn decision: the chance node
+        // right after our choice).
+        let mut child = None;
+        if self.config.child_nash && plan.len() == 1 && decision == Decision::Turn {
+            let beam = self.config.reply_beam.unwrap_or(replies.len()).max(1);
+            let a = plan[0];
+            let mut child_replies = Vec::new();
+            for &(b, _) in replies.iter().take(beam) {
+                let pair = self.pair(a, b);
+                let v = self.chance(
+                    state,
+                    decision,
+                    suspension,
+                    pair,
+                    Next::Nash,
+                    f32::NEG_INFINITY,
+                    f32::INFINITY,
+                )?;
+                if !v.is_nan() {
+                    child_replies.push((b, v));
+                }
+            }
+            child_replies.sort_by(|x, y| x.1.total_cmp(&y.1));
+            let value = child_replies.first().map_or(f32::NAN, |&(_, v)| v);
+            child = Some(ChildValues {
+                value,
+                replies: child_replies,
+                beam,
+                outcome_cap: self.config.outcome_cap,
+            });
+        }
         Ok(PlanReport {
             decision,
             value: best,
@@ -877,6 +993,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             elapsed: started.elapsed(),
             unsupported: self.unsupported.clone(),
             omitted_pairs: self.omitted_pairs,
+            child,
         })
     }
 
@@ -1025,4 +1142,18 @@ pub struct PlanReport<const N: usize> {
     pub elapsed: Duration,
     pub unsupported: Vec<String>,
     pub omitted_pairs: usize,
+    /// [`Config::child_nash`]: the plan's value when the positions after it are worth their
+    /// own next-turn equilibrium (the worst replies only, capped outcomes).
+    pub child: Option<ChildValues<N>>,
+}
+
+/// [`PlanReport::child`].
+#[derive(Clone, Debug, PartialEq)]
+pub struct ChildValues<const N: usize> {
+    /// The worst reply's value under the child equilibrium (NaN when none was evaluable).
+    pub value: f32,
+    /// The replies valued, worst first.
+    pub replies: Vec<(Choice<N>, f32)>,
+    pub beam: usize,
+    pub outcome_cap: Option<usize>,
 }
