@@ -900,14 +900,21 @@ pub(crate) fn before_move<const N: usize>(
 }
 
 /// The item `DisableMove` handlers `endTurn` runs for every active Pokémon: `choicelock`'s
-/// `onDisableMove` removes the lock once the item is no longer a Choice item (the disabling
-/// itself is [`disabled_move`], read from the state when choices are checked).
+/// `onDisableMove` removes the lock once the item is no longer a Choice item or the holder no
+/// longer has the locked move (`!pokemon.hasMove(this.effectState.move)`: a lock a Dancer copy
+/// started on a move the dancer does not know); the disabling itself is [`disabled_move`], read
+/// from the state when choices are checked.
 pub(crate) fn end_turn_disable_move<const N: usize>(b: &mut Battle<'_, N>) {
     for slot in State::<N>::slot_refs() {
-        if b.alive(slot).is_some()
-            && b.volatile(slot, Volatile::ChoiceLock).active
-            && !b.raw_item(slot).data().is_choice
-        {
+        let Some(pokemon) = b.alive(slot) else {
+            continue;
+        };
+        let lock = b.volatile(slot, Volatile::ChoiceLock);
+        if !lock.active {
+            continue;
+        }
+        let has_move = b.mon(pokemon).moves.iter().any(|m| m.id.0 == lock.counter);
+        if !b.raw_item(slot).data().is_choice || !has_move {
             b.remove_volatile(slot, Volatile::ChoiceLock);
         }
     }
