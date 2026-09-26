@@ -1,0 +1,24 @@
+{
+ "description": "Unsupported: Trick moving Booster Energy (its onTakeItem keeps it on a Paradox holder; other TakeItem handlers are not implemented for Trick). No fixture.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Indeedee", "item": "Booster Energy", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Trick", "Harden"], "level": 50},
+   {"species": "Pikachu", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Leftovers", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Seismic Toss", "Harden"], "level": 50},
+   {"species": "Hippowdon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Seismic Toss", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Indeedee": {"hp": 110}}},
+ "turn": {"p1": "move trick 1, move harden", "p2": "move seismictoss 1, move seismictoss 1"}
+}

@@ -229,6 +229,36 @@ fn venoshock_doubles_against_poison() {
     assert_exact_parity("venoshock");
 }
 
+/// Trick moves a Choice Scarf onto an unlocked target (it locks with its next move and outspeeds
+/// its ally); the giver's own lock ends with the turn.
+#[test]
+fn trick_moves_a_choice_scarf() {
+    assert_exact_parity("trick-choice-scarf");
+}
+
+/// Two Choice items traded: each one's `onStart` clears its new holder's lock.
+#[test]
+fn trick_swaps_choice_items_and_clears_locks() {
+    assert_exact_parity("trick-choice-swap");
+}
+
+/// A locked Pokémon that loses its Choice item is unlocked at its move.
+#[test]
+fn trick_takes_a_choice_band_from_a_locked_target() {
+    assert_exact_parity("trick-band-away");
+}
+
+/// A Seed received in its terrain is used at once (`onStart`).
+#[test]
+fn trick_hands_over_a_seed_in_its_terrain() {
+    assert_exact_parity("trick-seed");
+}
+
+#[test]
+fn trick_moving_booster_energy_is_unsupported() {
+    assert_unsupported("trick-booster-energy", "Trick moving Booster Energy");
+}
+
 /// Ingrain stops Roar (no drag, no failure) and the holder's own switch.
 #[test]
 fn ingrain_stops_roar_and_switching() {

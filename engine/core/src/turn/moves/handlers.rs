@@ -1781,10 +1781,12 @@ pub(crate) fn sleep_talk_calls(id: MoveId) -> bool {
 /// without an item, `false` when the item's own TakeItem handler refuses: `onTakeItem: false`,
 /// or a Mega Stone of its holder's species); fail if either refuses or both are empty; then
 /// each item's TakeItem handler again with its new holder (a Mega Stone cannot go to its own
-/// species); then both `setItem`s. Each `takeItem` of a held item first runs the holder's
-/// ability TakeItem handler (Unburden adds its volatile even if the trade then fails; Sticky
-/// Hold is refused on the field). An item whose `Start`, `End` or other TakeItem handler would
-/// run here is not implemented.
+/// species); then `target.setItem(myItem)` and `source.setItem(yourItem)`, each running the
+/// item's `Start` on its new holder ([`trick_item_start`]). Each `takeItem` of a held item first
+/// runs the holder's ability TakeItem handler (Unburden adds its volatile even if the trade then
+/// fails; Sticky Hold is refused on the field) and then the item's `End` on its old holder.
+/// Items with `Start` / `End` handlers move only if [`trick_moves_item`]; an item with another
+/// TakeItem handler is not implemented.
 fn trick<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -1795,12 +1797,11 @@ fn trick<const N: usize>(
     for item in [yours, mine] {
         let data = item.data();
         let other_take_item = data.mega_stone.is_empty() && data.handlers.contains(&"onTakeItem");
-        if other_take_item
-            || data
-                .handlers
-                .iter()
-                .any(|h| ["onStart", "onEnd"].contains(h))
-        {
+        let start_or_end = data
+            .handlers
+            .iter()
+            .any(|h| ["onStart", "onEnd"].contains(h));
+        if other_take_item || (start_or_end && !trick_moves_item(item)) {
             return Err(b.unsupported(format!("Trick moving {} ({:?})", data.name, data.handlers)));
         }
     }
@@ -1820,6 +1821,15 @@ fn trick<const N: usize>(
     if !received(mine, target) || !received(yours, user) {
         return Ok(HitResult::Failure);
     }
+    // The taken items' `End` on their old holders: Mirror Herb forgets its copied raises (none
+    // can be pending inside Trick's own action); Utility Umbrella's changes nothing.
+    for (slot, item) in [(target, yours), (user, mine)] {
+        if item == items::MIRROR_HERB {
+            if let Some(holder) = b.occupant(slot) {
+                b.mirror_herb.retain(|&(p, _)| p != holder);
+            }
+        }
+    }
     for (slot, old, new) in [(target, yours, mine), (user, mine, yours)] {
         let pokemon = b.occupant(slot).expect("an active Pokémon");
         b.apply(Instruction::SetItem {
@@ -1827,8 +1837,45 @@ fn trick<const N: usize>(
             old,
             new,
         });
+        if !new.is_none() {
+            trick_item_start(b, slot, new);
+        }
     }
     Ok(HitResult::Success)
+}
+
+/// Whether Trick can move `item` although it has `Start` / `End` handlers, because those are
+/// implemented for a new holder ([`trick_item_start`]) and an old one: the Choice items, the
+/// Seeds, Room Service, White Herb, Air Balloon (its `onStart` only announces it), Utility
+/// Umbrella (its `onStart` / `onEnd` only run WeatherChange for a holder ignoring its item, and
+/// no implemented WeatherChange handler acts on sun or rain from it), Mirror Herb (`onEnd`).
+fn trick_moves_item(item: ItemId) -> bool {
+    item.data().is_choice
+        || super::super::field_events::seed_terrain(item).is_some()
+        || [
+            items::ROOM_SERVICE,
+            items::WHITE_HERB,
+            items::AIR_BALLOON,
+            items::UTILITY_UMBRELLA,
+            items::MIRROR_HERB,
+        ]
+        .contains(&item)
+}
+
+/// `setItem`'s `singleEvent('Start', item)` on the new holder in `slot` (skipped while it ignores
+/// its item): a Choice item removes the holder's `choicelock` (a lock from its old Choice item,
+/// or from this very move's ModifyMove); a Seed, Room Service and White Herb act as when their
+/// holder switches in (`items::switch_in_item`: used in its terrain, in Trick Room, with a
+/// lowered stat).
+fn trick_item_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
+    if b.item(slot) != item {
+        return;
+    }
+    if item.data().is_choice {
+        b.remove_volatile(slot, Volatile::ChoiceLock);
+    } else if item != items::MIRROR_HERB {
+        super::super::items::switch_in_item(b, slot, item);
+    }
 }
 
 /// Whether `item`'s own TakeItem handler lets `holder` part with it (or, called with the new

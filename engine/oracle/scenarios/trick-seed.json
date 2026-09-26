@@ -1,0 +1,27 @@
+{
+ "description": "Trick hands over an Electric Seed in Electric Terrain (setup turn: Pikachu's Electric Terrain; then Indeedee is patched to hold the seed): the seed's onStart on its new holder Snorlax uses it at once (Defense +1). Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Indeedee", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Trick", "Harden"], "level": 50},
+   {"species": "Pikachu", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Electric Terrain", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Hippowdon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move harden, move electricterrain", "move harden, move harden"]
+ ],
+ "patch": {"p1": {"Indeedee": {"item": "electricseed"}}},
+ "turn": {"p1": "move trick 1, move harden", "p2": "move harden, move harden"}
+}
