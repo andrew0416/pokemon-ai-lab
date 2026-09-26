@@ -278,6 +278,18 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onStart", "onTerrainChange"],
         StartEffect::Forme,
     ),
+    // Flower Gift (`onSwitchInPriority: -2`): `onStart` runs its `onWeatherChange`
+    // (`forme::flower_gift`); its ModifyAtk / ModifySpD handlers are in `abilities`.
+    (
+        abilities::FLOWER_GIFT,
+        &[
+            "onAllyModifyAtk",
+            "onAllyModifySpD",
+            "onStart",
+            "onWeatherChange",
+        ],
+        StartEffect::Forme,
+    ),
     // F19 Zero to Hero: `onSwitchIn` only announces the Hero forme; `onSwitchOut` in
     // `forme::on_switch_out`.
     (
@@ -605,17 +617,17 @@ fn switch_in_problem<const N: usize>(
     }
     // The newcomer next to the Pokémon it would be refused with (`abilities`).
     let suppresses = mon.ability.data().suppress_weather;
-    let paradox = mon.ability == abilities::PROTOSYNTHESIS;
+    let paradox = super::abilities::reacts_to_suppressor_end(mon.ability);
     if suppresses || paradox {
         let clash = b.all_alive().into_iter().any(|s| {
             let other = b.ability(s);
-            (suppresses && other == abilities::PROTOSYNTHESIS)
+            (suppresses && super::abilities::reacts_to_suppressor_end(other))
                 || (paradox && other.data().suppress_weather)
         });
         if clash {
             return Some(format!(
-                "{name}: Protosynthesis next to Air Lock / Cloud Nine (the suppressor's End \
-                 WeatherChange)"
+                "{name}: Protosynthesis / Flower Gift next to Air Lock / Cloud Nine (the \
+                 suppressor's End WeatherChange)"
             ));
         }
     }

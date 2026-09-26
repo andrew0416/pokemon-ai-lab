@@ -1566,6 +1566,19 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::PROPELLER_TAIL, &["onModifyMove"]),
     // Soul-Heart: `onAnyFaint` in `abilities::soul_heart` (from `Battle::faint_messages`).
     (abilities::SOUL_HEART, &["onAnyFaint"]),
+    // Flower Gift: `onStart` / `onWeatherChange` in `forme::flower_gift` (switch-in,
+    // `field_events::weather_changed`), `onAllyModifyAtk` / `onAllyModifySpD` in
+    // `abilities::attack_handlers` / `defense_handlers`. Next to Air Lock / Cloud Nine it is
+    // refused (`abilities::paradox_suppressor_problem`).
+    (
+        abilities::FLOWER_GIFT,
+        &[
+            "onAllyModifyAtk",
+            "onAllyModifySpD",
+            "onStart",
+            "onWeatherChange",
+        ],
+    ),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

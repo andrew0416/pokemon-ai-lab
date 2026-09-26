@@ -951,21 +951,27 @@ pub(crate) fn booster_energy_kept(species: crate::dex::SpeciesId) -> bool {
     PARADOX.contains(&base)
 }
 
-/// Why a Protosynthesis holder and a weather-suppressing ability (Air Lock, Cloud Nine) cannot
-/// be on the field together: the suppressor leaving (fainting, switching out) runs its `onEnd`
-/// `WeatherChange`, which would start Protosynthesis in sun, and the engine does not run an
-/// ability's `End` there.
+/// The abilities whose `onWeatherChange` a weather suppressor's `onEnd` would run: Protosynthesis
+/// and Flower Gift (Ice Face ignores a suppressor's event).
+pub(crate) fn reacts_to_suppressor_end(ability: AbilityId) -> bool {
+    ability == abilities::PROTOSYNTHESIS || ability == abilities::FLOWER_GIFT
+}
+
+/// Why a Protosynthesis or Flower Gift holder and a weather-suppressing ability (Air Lock, Cloud
+/// Nine) cannot be on the field together: the suppressor leaving (fainting, switching out) runs
+/// its `onEnd` `WeatherChange`, which would start Protosynthesis or change Cherrim's forme in
+/// sun, and the engine does not run an ability's `End` there.
 pub(crate) fn paradox_suppressor_problem<const N: usize>(state: &State<N>) -> Option<String> {
     let actives: Vec<&Pokemon> = State::<N>::slot_refs()
         .filter_map(|s| state.active(s))
         .filter(|m| m.hp > 0)
         .collect();
-    let paradox = actives
-        .iter()
-        .any(|m| m.ability == abilities::PROTOSYNTHESIS);
+    let paradox = actives.iter().any(|m| reacts_to_suppressor_end(m.ability));
     let suppressor = actives.iter().any(|m| m.ability.data().suppress_weather);
     (paradox && suppressor).then(|| {
-        "Protosynthesis next to Air Lock / Cloud Nine (the suppressor's End WeatherChange)".into()
+        "Protosynthesis / Flower Gift next to Air Lock / Cloud Nine (the suppressor's End \
+         WeatherChange)"
+            .into()
     })
 }
 
@@ -1040,6 +1046,15 @@ pub(crate) fn attack_handlers<const N: usize>(
     if physical && ability == abilities::GORILLA_TACTICS {
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
+    }
+    // Flower Gift's `onAllyModifyAtk` (priority 3): 1.5x for each Cherrim on the user's side in
+    // the user's sun (Attack only).
+    if physical {
+        let orders = abilities::FLOWER_GIFT.data().event_orders;
+        let p = priority(orders, "onAllyModifyAtkPriority");
+        for holder in super::forme::flower_gift_holders(b, user, user, data) {
+            out.push(Handler::of(b, holder, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
+        }
     }
     // Flash Fire's volatile (a condition, priority 5): `if (move.type === 'Fire' &&
     // attacker.hasAbility('flashfire')) return this.chainModify(1.5)` (`move.type`: after
@@ -1214,6 +1229,15 @@ pub(crate) fn defense_handlers<const N: usize>(
     if let Some(modifier) = coat.filter(|_| defense_stat == Stat::Def) {
         let p = priority(ability.data().event_orders, "onModifyDefPriority");
         out.push(Handler::of(b, target, p, SUB_ABILITY, modifier));
+    }
+    // Flower Gift's `onAllyModifySpD` (priority 4): 1.5x for each Cherrim on the target's side
+    // in the target's sun.
+    if defense_stat == Stat::Spd {
+        let orders = abilities::FLOWER_GIFT.data().event_orders;
+        let p = priority(orders, "onAllyModifySpDPriority");
+        for holder in super::forme::flower_gift_holders(b, target, user, data) {
+            out.push(Handler::of(b, holder, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
+        }
     }
     // Sword of Ruin (`onAnyModifyDef`) / Beads of Ruin (`onAnyModifySpD`), by the stat the
     // move targets (Psyshock meets Sword of Ruin).
