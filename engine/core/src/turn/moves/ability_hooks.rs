@@ -180,8 +180,9 @@ pub(super) fn accuracy_event<const N: usize>(
 /// - Stance Change (priority 1): Aegislash takes its Blade or Shield forme for the move.
 ///
 /// A Pokémon has one ability, so their priorities never compete; none of the other
-/// implemented ModifyMove handlers reads what these change. A move that ignores abilities is
-/// then checked by [`oblivious_bypassed`].
+/// implemented ModifyMove handlers reads what these change. A move that ignores abilities gets
+/// through Oblivious's `onTryHit` (Attract, Captivate, Taunt); its `onUpdate` then removes the
+/// `attract` or `taunt` volatile (`abilities::on_update`).
 pub(super) fn on_modify_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -231,36 +232,7 @@ pub(super) fn on_modify_move<const N: usize>(
     }
     // Gorilla Tactics: the lock.
     super::ability_events::gorilla_modify_move(b, user, mv.id);
-    if b.active_move.is_some_and(|m| m.ignore_ability) {
-        if let Some(why) = oblivious_bypassed(b, user, mv) {
-            return Err(b.unsupported(why));
-        }
-    }
     Ok(())
-}
-
-/// Oblivious (breakable) stops Attract, Captivate and Taunt in its `onTryHit`; a move that
-/// ignores abilities gets through, and Oblivious's `onUpdate` then removes the `attract` or
-/// `taunt` volatile at the next Update, which is not implemented (neither volatile exists yet).
-/// Such a move is refused while another active Pokémon has Oblivious.
-fn oblivious_bypassed<const N: usize>(
-    b: &Battle<'_, N>,
-    user: SlotRef,
-    mv: &ActiveMove,
-) -> Option<String> {
-    if ![moves::ATTRACT, moves::CAPTIVATE, moves::TAUNT].contains(&mv.id) {
-        return None;
-    }
-    b.all_alive()
-        .into_iter()
-        .find(|&slot| slot != user && b.ability(slot) == abilities::OBLIVIOUS)
-        .map(|slot| {
-            format!(
-                "{} ignoring {}'s Oblivious (its onUpdate cure is not implemented)",
-                mv.data.name,
-                b.slot_mon(slot).map_or("?", |m| m.species.data().name)
-            )
-        })
 }
 
 /// The secondaries of the move on `target` (`secondaries()`): none once Sheer Force deleted

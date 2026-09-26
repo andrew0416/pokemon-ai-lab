@@ -1656,10 +1656,16 @@ pub(crate) fn on_update<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     if ability == abilities::OWN_TEMPO && b.volatile(slot, Volatile::Confusion).active {
         b.remove_volatile(slot, Volatile::Confusion);
     }
-    // Oblivious: `if (pokemon.volatiles['attract']) pokemon.removeVolatile('attract')` (its
-    // immunity keeps it from getting one; a move that ignores it could).
-    if ability == abilities::OBLIVIOUS && b.volatile(slot, Volatile::Attract).active {
-        b.remove_volatile(slot, Volatile::Attract);
+    // Oblivious: `if (pokemon.volatiles['attract']) pokemon.removeVolatile('attract')`, then the
+    // same for `taunt` (its immunity and `onTryHit` keep it from getting either; a move that
+    // ignores it, or gaining the ability, leaves one for this cure).
+    if ability == abilities::OBLIVIOUS {
+        if b.volatile(slot, Volatile::Attract).active {
+            b.remove_volatile(slot, Volatile::Attract);
+        }
+        if b.volatile(slot, Volatile::Taunt).active {
+            b.remove_volatile(slot, Volatile::Taunt);
+        }
     }
     if ability == abilities::COMMANDER {
         commander_update(b, slot);

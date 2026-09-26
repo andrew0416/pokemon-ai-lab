@@ -1,0 +1,23 @@
+{
+ "description": "Opus X unit B5: moves that ignore Oblivious (Mold Breaker skips its breakable onTryHit). Haxorus's Taunt lands on Oblivious Slowbro and the Update after the move removes it (Oblivious onUpdate: removeVolatile('taunt')), so Slowbro's Harden works; Excadrill's Captivate (both foes) lowers the Special Attack of both Oblivious females by 2 (nothing for the Update to remove).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Haxorus", "gender": "M", "item": "", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Taunt"], "level": 50},
+   {"species": "Excadrill", "gender": "M", "item": "", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Captivate"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Slowbro", "gender": "F", "item": "", "ability": "Oblivious", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Slowking", "gender": "F", "item": "", "ability": "Oblivious", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 2}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move taunt 1, move captivate", "p2": "move harden, move harden"}
+}
