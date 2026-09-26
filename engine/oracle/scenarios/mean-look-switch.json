@@ -1,0 +1,28 @@
+{
+ "description": "Trapping ends with the trapper (setup turn: the mean-look turn; Umbreon holds Shed Shell, so it is not trapped although it has the volatile). Gengar switches out: Snorlax loses 'trapped' (linked to Gengar's 'trapper'); Snorlax keeps 'trapper' for Umbreon. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Mean Look", "Protect"], "level": 50},
+   {"species": "Umbreon", "item": "Shed Shell", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Block", "Protect", "Harden"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Spider Web", "Protect", "Harden"], "level": 50},
+   {"species": "Dusclops", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Mean Look", "Protect", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move meanlook 1, move block 2", "move spiderweb 2, move meanlook 2"]
+ ],
+ "turn": {"p1": "switch 3, move harden", "p2": "move harden, move harden"}
+}

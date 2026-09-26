@@ -1,0 +1,28 @@
+{
+ "description": "A locked Pokémon loses its Choice item to Trick (setup turn: Choice Band Snorlax locks into Seismic Toss; Indeedee switches in). Indeedee gets the Band (no lock: its Trick came first) and Snorlax Leftovers; Snorlax's still-chosen Seismic Toss ends its lock (choicelock.onBeforeMove sees no Choice item), so no lock is left. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Pikachu", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Indeedee", "item": "Leftovers", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Trick", "Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Choice Band", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Seismic Toss", "Harden"], "level": 50},
+   {"species": "Hippowdon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["switch 3, move harden", "move seismictoss 2, move harden"]
+ ],
+ "turn": {"p1": "move trick 1, move harden", "p2": "move seismictoss 2, move harden"}
+}

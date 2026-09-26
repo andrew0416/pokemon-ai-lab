@@ -1,0 +1,24 @@
+{
+ "description": "Brine keeps its power above half HP: Garchomp at 108 of 215 (108 * 2 > 215).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Kingdra", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Brine", "Harden"], "level": 50},
+   {"species": "Pikachu", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Garchomp": {"hp": 108}}},
+ "turn": {"p1": "move brine 1, move harden", "p2": "move harden, move harden"}
+}

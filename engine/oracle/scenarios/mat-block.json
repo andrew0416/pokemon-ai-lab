@@ -1,0 +1,23 @@
+{
+ "description": "Mat Block on Greninja's first turn out protects p1's side from damaging moves only: Garchomp's Rock Slide is blocked on both (before its accuracy roll), Clefable's Thunder Wave (90%) still paralyzes Snorlax, whose Seismic Toss then goes through 7/8 of the time.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Greninja", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Mat Block", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Rock Slide", "Protect"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Thunder Wave", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move matblock, move seismictoss 1", "p2": "move rockslide, move thunderwave 2"}
+}

@@ -1,0 +1,29 @@
+{
+ "description": "Ingrain (setup turn) keeps its holder in: Snorlax's Roar does not drag Bronzong out (onDragOut returns null: no drag, no failure), and it cannot choose to switch (onTrapPokemon). The residual heals Bronzong (patched to 100 HP) baseMaxhp / 16. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Bronzong", "item": "", "ability": "Levitate", "nature": "Serious",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Ingrain", "Harden"], "level": 50},
+   {"species": "Pikachu", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Roar", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move ingrain, move harden", "move harden, move harden"]
+ ],
+ "patch": {"p1": {"Bronzong": {"hp": 100}}},
+ "turn": {"p1": "move harden, move harden", "p2": "move harden, move roar 1"}
+}

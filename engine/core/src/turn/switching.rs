@@ -1094,7 +1094,9 @@ pub(crate) fn drag_in<const N: usize>(
     } else {
         b.rng.uniform(bench.len())
     };
-    if b.ability_unless_broken(slot) == abilities::SUCTION_CUPS {
+    if b.ability_unless_broken(slot) == abilities::SUCTION_CUPS
+        || super::conditions::drag_out_blocked(b, slot)
+    {
         return Ok(false);
     }
     switch_in_as(b, slot, bench[pick], true, true)?;

@@ -1,0 +1,23 @@
+{
+ "description": "Half-HP damage callbacks (No Guard users, so no accuracy rolls): Super Fang takes floor(267 / 2) = 133 from Snorlax, Ruination floor(197 / 2) = 98 from Machamp, Nature's Madness 65 from Raticate; then Machamp's Revenge (-4) against Blissey, which damaged it this turn, has double power.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Raticate", "item": "", "ability": "No Guard", "nature": "Serious",
+    "evs": {"atk": 32, "def": 32}, "moves": ["Super Fang", "Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "No Guard", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Ruination", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "No Guard", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Nature's Madness", "Harden"], "level": 50},
+   {"species": "Machamp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 2}, "moves": ["Revenge", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move superfang 1, move ruination 2", "p2": "move naturesmadness 1, move revenge 2"}
+}

@@ -255,12 +255,33 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::SNORE, &["onTry"]),
     // Instruct: `onHit` in `handlers` (a new move action with order 3).
     (moves::INSTRUCT, &["onHit"]),
+    // Ally Switch: `onPrepareHit` in `handlers::on_prepare_hit` (the `allyswitch` volatile, its
+    // `onStart` / `onRestart` in `Battle::add_volatile_from`), `onHit` in `handlers::on_hit`
+    // (`handlers::swap_positions`).
+    (
+        moves::ALLY_SWITCH,
+        &[
+            "condition.onRestart",
+            "condition.onStart",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
     (moves::GRASSY_GLIDE, &["onModifyPriority"]),
     (moves::LOW_KICK, &["basePowerCallback", "onTryHit"]),
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),
+    // Heavy Slam, Heat Crash: `handlers::base_power_callback` (weight ratio); `onTryHit` only
+    // fails against a Dynamaxed target (off).
+    (moves::HEAVY_SLAM, &["basePowerCallback", "onTryHit"]),
+    (moves::HEAT_CRASH, &["basePowerCallback", "onTryHit"]),
     (moves::FAKE_OUT, &["onDisableMove", "onTry"]),
     (moves::KNOCK_OFF, &["onAfterHit", "onBasePower"]),
     (moves::GRAV_APPLE, &["onBasePower"]),
+    // `handlers::on_base_power` (the user's status, the target's HP or poison); Facade also
+    // skips the burn halving (`moves::get_damage`).
+    (moves::FACADE, &["onBasePower"]),
+    (moves::BRINE, &["onBasePower"]),
+    (moves::VENOSHOCK, &["onBasePower"]),
     (moves::EXPANDING_FORCE, &["onBasePower", "onModifyMove"]),
     (moves::WEATHER_BALL, &["onModifyMove", "onModifyType"]),
     (moves::TERRAIN_PULSE, &["onModifyMove", "onModifyType"]),
@@ -325,6 +346,8 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::ASSURANCE, &["basePowerCallback"]),
     (moves::PAYBACK, &["basePowerCallback"]),
     (moves::AVALANCHE, &["basePowerCallback"]),
+    // Revenge (Champions `Past`, not refused: the engine keeps no legality list).
+    (moves::REVENGE, &["basePowerCallback"]),
     (moves::STOMPING_TANTRUM, &["basePowerCallback"]),
     (moves::TEMPER_FLARE, &["basePowerCallback"]),
     (moves::RAGE_FIST, &["basePowerCallback"]),
@@ -445,6 +468,46 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::JUNGLE_HEALING, &["onHit"]),
     (moves::LUNAR_BLESSING, &["onHit"]),
     (moves::FLORAL_HEALING, &["onHit"]),
+    // Salt Cure: the secondary's `saltcure` volatile, its `onResidual` (order 13) in
+    // `residual.rs`; `onStart` / `onEnd` only log.
+    (
+        moves::SALT_CURE,
+        &[
+            "condition.onEnd",
+            "condition.onResidual",
+            "condition.onStart",
+        ],
+    ),
+    // Magnet Rise: `onTry` in `handlers::on_try`, `onImmunity` (Ground) in
+    // `Battle::is_grounded`; 5 turns (residual order 18); `onStart` / `onEnd` only log.
+    (
+        moves::MAGNET_RISE,
+        &[
+            "condition.onEnd",
+            "condition.onImmunity",
+            "condition.onStart",
+            "onTry",
+        ],
+    ),
+    // Ingrain: `onResidual` (order 7) in `residual.rs`, `onTrapPokemon` in
+    // `conditions::trapped`, `onDragOut` in `conditions::drag_out_blocked`, grounding in
+    // `Battle::is_grounded`; `onStart` only logs.
+    (
+        moves::INGRAIN,
+        &[
+            "condition.onDragOut",
+            "condition.onResidual",
+            "condition.onStart",
+            "condition.onTrapPokemon",
+        ],
+    ),
+    // Mean Look, Block, Spider Web: `onHit` adds `trapped` linked to the user's `trapper`
+    // (`conditions::add_trap`, `remove_linked_volatiles`; the trap in `conditions::trapped`).
+    (moves::MEAN_LOOK, &["onHit"]),
+    (moves::BLOCK, &["onHit"]),
+    (moves::SPIDER_WEB, &["onHit"]),
+    // Heal Pulse: `handlers::on_hit` (half the target's max HP, 3/4 from a Mega Launcher user).
+    (moves::HEAL_PULSE, &["onHit"]),
     (moves::REST, &["onHit", "onTry"]),
     // `handlers::on_hit`: Psych Up, Speed Swap (the stored Speed, recalculated on leaving the
     // field in `Battle::clear_volatile`), Strength Sap, Pain Split, Spite, Reflect Type, Soak
@@ -480,6 +543,10 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::SUPERCELL_SLAM, &["onMoveFail"]),
     (moves::MISTY_EXPLOSION, &["onBasePower"]),
     (moves::FINAL_GAMBIT, &["damageCallback"]),
+    // Half the target's HP (`handlers::damage_callback`).
+    (moves::SUPER_FANG, &["damageCallback"]),
+    (moves::NATURES_MADNESS, &["damageCallback"]),
+    (moves::RUINATION, &["damageCallback"]),
     // Destiny Bond: `onPrepareHit` in `moves::try_spread_move_hit`, the volatile's
     // `onBeforeMove` / `onMoveAborted` in `conditions::destiny_bond_before_move`, its `onFaint`
     // in `Battle::faint_messages` (`conditions::destiny_bond_faint`); `onStart` only logs.
@@ -627,6 +694,18 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "onHitSide",
             "onTry",
         ],
+    ),
+    // Crafty Shield, Mat Block: `onTry` in `moves::try_move_hit_field` (a later action; Mat Block
+    // only on its user's first turn out), the side's `onTryHit` (priority 3, after the protect
+    // family, before Magic Bounce) in `handlers::side_guard_try_hit`; `onSideStart` only logs.
+    // Mat Block's `stallingMove` has no mechanical effect (it adds no `stall`).
+    (
+        moves::CRAFTY_SHIELD,
+        &["condition.onSideStart", "condition.onTryHit", "onTry"],
+    ),
+    (
+        moves::MAT_BLOCK,
+        &["condition.onSideStart", "condition.onTryHit", "onTry"],
     ),
     // Safeguard: `onSetStatus` / `onTryAddVolatile` in `Battle` (Persistent, the only
     // `durationCallback` change, is refused); Mist: `onTryBoost` in `Battle::boost_by`; Lucky
@@ -1469,7 +1548,7 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     {
         return why("a special mechanic");
     }
-    const STALLING_MOVES: [MoveId; 9] = [
+    const STALLING_MOVES: [MoveId; 10] = [
         moves::PROTECT,
         moves::DETECT,
         moves::ENDURE,
@@ -1479,6 +1558,8 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         moves::OBSTRUCT,
         moves::SILK_TRAP,
         moves::BURNING_BULWARK,
+        // A side move: its `stallingMove` flag does nothing in Showdown (no StallMove check).
+        moves::MAT_BLOCK,
     ];
     if m.stalling_move && !STALLING_MOVES.contains(&id) {
         return why("stalling move");
@@ -1559,6 +1640,8 @@ pub(crate) fn side_effect_of(condition: &str) -> Option<SideEffect> {
         "luckychant" => SideEffect::LuckyChant,
         "wideguard" => SideEffect::WideGuard,
         "quickguard" => SideEffect::QuickGuard,
+        "craftyshield" => SideEffect::CraftyShield,
+        "matblock" => SideEffect::MatBlock,
         "stealthrock" => SideEffect::StealthRock,
         "spikes" => SideEffect::Spikes,
         "toxicspikes" => SideEffect::ToxicSpikes,
@@ -1568,7 +1651,7 @@ pub(crate) fn side_effect_of(condition: &str) -> Option<SideEffect> {
 }
 
 /// The implemented side effects.
-const SUPPORTED_SIDE_EFFECTS: [SideEffect; 13] = [
+const SUPPORTED_SIDE_EFFECTS: [SideEffect; 15] = [
     SideEffect::Reflect,
     SideEffect::LightScreen,
     SideEffect::AuroraVeil,
@@ -1578,6 +1661,8 @@ const SUPPORTED_SIDE_EFFECTS: [SideEffect; 13] = [
     SideEffect::LuckyChant,
     SideEffect::WideGuard,
     SideEffect::QuickGuard,
+    SideEffect::CraftyShield,
+    SideEffect::MatBlock,
     SideEffect::StealthRock,
     SideEffect::Spikes,
     SideEffect::ToxicSpikes,

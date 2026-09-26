@@ -164,9 +164,34 @@ pub enum Volatile {
     /// holder to its Zen forme and its end back (`turn/forme.rs`). It exists exactly while the
     /// holder is in a Zen forme.
     ZenMode,
+    /// Ally Switch's own condition (`allyswitch`, duration 2, `counterMax` 729): `counter` is
+    /// the success chance's denominator for the next use (3, then tripled per success);
+    /// `onRestart` succeeds with probability 1/`counter` or deletes it. Added by name in the
+    /// move's `onPrepareHit`, so the dex has no condition id.
+    AllySwitch,
+    /// Mean Look / Block / Spider Web on their target (`trapped`, no duration): it cannot
+    /// switch out (`onTrapPokemon`) unless immune to trapping. Linked to its trapper's
+    /// [`Volatile::Trapper`] (`addVolatile('trapped', source, move, 'trapper')`): the trapper
+    /// is kept in `counter` ([`encode_pokemon`]; hidden in the canonical state).
+    Trapped,
+    /// The linked `trapper` volatile on the Pokémon that trapped others (no handlers): the
+    /// Pokémon it trapped are bits of `counter` (`SlotHistory::attacker_bit`; hidden). When
+    /// either side of the link leaves the field, the other end is removed
+    /// (`conditions::remove_linked_volatiles`).
+    Trapper,
+    /// Salt Cure's secondary effect (`saltcure`, no duration, residual order 13): the holder
+    /// loses baseMaxhp / 8 each turn if Water or Steel, else / 16 (Champions halves both).
+    SaltCure,
+    /// Ingrain (no duration, residual order 7): heals baseMaxhp / 16 each turn, grounds the
+    /// holder, keeps it from switching out (`onTrapPokemon`) and from being dragged out
+    /// (`onDragOut`).
+    Ingrain,
+    /// Magnet Rise (duration 5, residual order 18): the holder is not grounded (immune to
+    /// Ground).
+    MagnetRise,
 }
 
-pub const VOLATILE_COUNT: usize = 56;
+pub const VOLATILE_COUNT: usize = 62;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -226,6 +251,12 @@ impl Volatile {
         Volatile::ShadowForce,
         Volatile::Substitute,
         Volatile::ZenMode,
+        Volatile::AllySwitch,
+        Volatile::Trapped,
+        Volatile::Trapper,
+        Volatile::SaltCure,
+        Volatile::Ingrain,
+        Volatile::MagnetRise,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -273,6 +304,9 @@ impl Volatile {
             Volatile::DestinyBond => conditions::DESTINYBOND,
             Volatile::TwoTurnMove => conditions::TWOTURNMOVE,
             Volatile::Substitute => conditions::SUBSTITUTE,
+            Volatile::SaltCure => conditions::SALTCURE,
+            Volatile::Ingrain => conditions::INGRAIN,
+            Volatile::MagnetRise => conditions::MAGNETRISE,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -289,7 +323,10 @@ impl Volatile {
             | Volatile::Dig
             | Volatile::Dive
             | Volatile::PhantomForce
-            | Volatile::ShadowForce => ConditionId::NONE,
+            | Volatile::ShadowForce
+            | Volatile::AllySwitch
+            | Volatile::Trapped
+            | Volatile::Trapper => ConditionId::NONE,
         }
     }
 
@@ -352,6 +389,12 @@ impl Volatile {
             Volatile::ShadowForce => "shadowforce",
             Volatile::Substitute => "substitute",
             Volatile::ZenMode => "zenmode",
+            Volatile::AllySwitch => "allyswitch",
+            Volatile::Trapped => "trapped",
+            Volatile::Trapper => "trapper",
+            Volatile::SaltCure => "saltcure",
+            Volatile::Ingrain => "ingrain",
+            Volatile::MagnetRise => "magnetrise",
         }
     }
 
@@ -394,12 +437,13 @@ impl Volatile {
             | Volatile::Dig
             | Volatile::Dive
             | Volatile::PhantomForce
-            | Volatile::ShadowForce => 2,
+            | Volatile::ShadowForce
+            | Volatile::AllySwitch => 2,
             Volatile::Encore | Volatile::Taunt => 3,
             Volatile::PerishSong => 4,
             // Partial trapping's `durationCallback` replaces it when it starts
             // (`conditions::volatile_start`).
-            Volatile::Disable | Volatile::PartiallyTrapped => 5,
+            Volatile::Disable | Volatile::PartiallyTrapped | Volatile::MagnetRise => 5,
             Volatile::Confusion
             | Volatile::FlashFire
             | Volatile::ChoiceLock
@@ -422,7 +466,11 @@ impl Volatile {
             | Volatile::MeteorBeam
             | Volatile::ElectroShot
             | Volatile::SkyAttack
-            | Volatile::Substitute => 0,
+            | Volatile::Substitute
+            | Volatile::Trapped
+            | Volatile::Trapper
+            | Volatile::SaltCure
+            | Volatile::Ingrain => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -431,8 +479,10 @@ impl Volatile {
     /// handler). Its duration is counted down by that residual handler.
     pub fn residual_order(self) -> Option<u32> {
         match self {
+            Volatile::Ingrain => Some(7),
             Volatile::LeechSeed => Some(8),
-            Volatile::PartiallyTrapped => Some(13),
+            Volatile::PartiallyTrapped | Volatile::SaltCure => Some(13),
+            Volatile::MagnetRise => Some(18),
             Volatile::Taunt => Some(15),
             Volatile::Encore => Some(16),
             Volatile::Disable => Some(17),
@@ -454,7 +504,9 @@ impl Volatile {
             Volatile::Roost
             | Volatile::HelpingHand
             | Volatile::LeechSeed
-            | Volatile::TwoTurnMove => Some(VolatileState {
+            | Volatile::TwoTurnMove
+            | Volatile::Trapped
+            | Volatile::Trapper => Some(VolatileState {
                 counter: 0,
                 ..state
             }),
@@ -619,6 +671,9 @@ mod tests {
                         | Volatile::PhantomForce
                         | Volatile::ShadowForce
                         | Volatile::ZenMode
+                        | Volatile::AllySwitch
+                        | Volatile::Trapped
+                        | Volatile::Trapper
                 ));
                 continue;
             }
@@ -651,6 +706,10 @@ mod tests {
             (Volatile::BurningBulwark, moves::BURNING_BULWARK),
             (Volatile::LeechSeed, moves::LEECH_SEED),
             (Volatile::Substitute, moves::SUBSTITUTE),
+            (Volatile::AllySwitch, moves::ALLY_SWITCH),
+            (Volatile::SaltCure, moves::SALT_CURE),
+            (Volatile::Ingrain, moves::INGRAIN),
+            (Volatile::MagnetRise, moves::MAGNET_RISE),
         ] {
             let data = id.data();
             assert_eq!(

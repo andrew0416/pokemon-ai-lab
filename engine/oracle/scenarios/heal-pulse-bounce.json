@@ -1,0 +1,24 @@
+{
+ "description": "Heal Pulse is reflectable: Clawitzer (Mega Launcher, 50 HP) aims it at Magic Bounce Hatterene, whose bounced copy heals Clawitzer by Hatterene's own half, ceil(147 / 2) = 74 (the Mega Launcher bonus is the user's). Audino's Heal Pulse on a Protecting Blissey is blocked, and so is its ally Hatterene's.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Clawitzer", "item": "", "ability": "Mega Launcher", "nature": "Serious",
+    "evs": {"hp": 1, "spa": 32, "spe": 32}, "moves": ["Heal Pulse", "Protect"], "level": 50},
+   {"species": "Audino", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 31, "def": 32, "spd": 2}, "moves": ["Heal Pulse", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Heal Pulse", "Protect"], "level": 50},
+   {"species": "Hatterene", "item": "", "ability": "Magic Bounce", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32, "spd": 2}, "moves": ["Heal Pulse", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Clawitzer": {"hp": 50}}, "p2": {"Blissey": {"hp": 100}}},
+ "turn": {"p1": "move healpulse 2, move healpulse 1", "p2": "move protect, move healpulse -1"}
+}

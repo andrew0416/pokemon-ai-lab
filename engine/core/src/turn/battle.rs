@@ -295,10 +295,11 @@ impl<'a, const N: usize> Battle<'a, N> {
         self.state.side(side).effects[effect as usize].is_active()
     }
 
-    /// Showdown `isGrounded` for the supported effects, in its order: Gravity, Iron Ball,
-    /// Flying, Levitate, Air Balloon.
+    /// Showdown `isGrounded` for the supported effects, in its order: Gravity, Ingrain, Iron
+    /// Ball, Flying, Levitate, Magnet Rise, Air Balloon.
     pub fn is_grounded(&self, slot: SlotRef) -> bool {
-        if self.field_active(FieldEffect::Gravity) {
+        if self.field_active(FieldEffect::Gravity) || self.volatile(slot, Volatile::Ingrain).active
+        {
             return true;
         }
         let item = self.item(slot);
@@ -310,6 +311,9 @@ impl<'a, const N: usize> Battle<'a, N> {
         }
         // `hasAbility('levitate') && !suppressingAbility(this)`.
         if self.ability(slot) == abilities::LEVITATE && !self.suppressing_ability(slot) {
+            return false;
+        }
+        if self.volatile(slot, Volatile::MagnetRise).active {
             return false;
         }
         !super::items::lifts(item)
@@ -538,6 +542,11 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// (a permanent forme stays: Champions never regresses one; a temporary forme returns to its
     /// base species, `forme::revert_on_leave`). Slot state is reset by the caller's `Switch`.
     pub fn clear_volatile(&mut self, pokemon: PokemonRef) {
+        // `removeLinkedVolatiles` for its linked volatiles (Mean Look's `trapped` / `trapper`),
+        // while it still holds its slot.
+        if let Some(slot) = State::<N>::slot_refs().find(|&s| self.occupant(s) == Some(pokemon)) {
+            super::conditions::remove_linked_volatiles(self, pokemon, slot);
+        }
         let mon = self.mon(pokemon);
         if mon.ability != mon.base_ability {
             let (old, new) = (mon.ability, mon.base_ability);
@@ -917,6 +926,24 @@ impl<'a, const N: usize> Battle<'a, N> {
                     counter: old.counter + 1,
                     ..old
                 },
+                // Ally Switch's `onRestart`: `randomChance(1, counter)`, else `delete
+                // pokemon.volatiles['allyswitch']` (no `onEnd`) and fail; on success the counter
+                // triples below `counterMax` (729) and the duration is 2 again.
+                Volatile::AllySwitch => {
+                    if !self.rng.chance(1, u32::from(old.counter.max(1))) {
+                        self.delete_volatile(target, volatile);
+                        return false;
+                    }
+                    VolatileState {
+                        duration: 2,
+                        counter: if old.counter < STALL_COUNTER_MAX {
+                            old.counter * 3
+                        } else {
+                            old.counter
+                        },
+                        ..old
+                    }
+                }
                 // No onRestart.
                 _ => return false,
             }
@@ -931,7 +958,8 @@ impl<'a, const N: usize> Battle<'a, N> {
                 // Stall's first counter; Helping Hand's `onStart`: `multiplier = 1.5` (one
                 // application).
                 counter: match volatile {
-                    Volatile::Stall => 3,
+                    // Stall; Ally Switch's `onStart`: `this.effectState.counter = 3`.
+                    Volatile::Stall | Volatile::AllySwitch => 3,
                     Volatile::HelpingHand => 1,
                     _ => 0,
                 },

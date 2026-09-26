@@ -429,6 +429,7 @@ fn run_move_inner<const N: usize>(
     if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
         return Ok(MoveStep::Suspended(progress));
     }
+    let user = handlers::current_slot(b, user, pokemon);
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
     handlers::on_after_move(b, user, pokemon, &mv);
     run_move_tail(b, user, &mv);
@@ -925,6 +926,8 @@ fn use_move<const N: usize>(
             }
         }
     };
+    // Ally Switch moved the user (Showdown's steps below act on the Pokémon wherever it is).
+    let user = handlers::current_slot(b, user, pokemon);
     // `moveHit`: `if (move.selfSwitch && source.hp) source.switchFlag = move.id` once the move
     // did something (Parting Shot's `onHit` withdrew it if its drops failed). The request is
     // made, or the flag dropped for a side without a bench, after the action.
@@ -1172,7 +1175,11 @@ fn try_move_hit_field<const N: usize>(
     if mv.id == moves::AURORA_VEIL && b.effective_weather() != Weather::Snow {
         return Ok(false);
     }
-    if [moves::WIDE_GUARD, moves::QUICK_GUARD].contains(&mv.id) && !will_act {
+    if [moves::WIDE_GUARD, moves::QUICK_GUARD, moves::CRAFTY_SHIELD].contains(&mv.id) && !will_act {
+        return Ok(false);
+    }
+    // Mat Block: `if (source.activeMoveActions > 1) return false; return !!this.queue.willAct();`
+    if mv.id == moves::MAT_BLOCK && (b.state.slot(user).move_actions > 1 || !will_act) {
         return Ok(false);
     }
     // PrepareHit: the user's ability (Protean, Libero).
@@ -1305,6 +1312,13 @@ fn try_spread_move_hit<const N: usize>(
     // Destiny Bond's `onPrepareHit`: `return !pokemon.removeVolatile('destinybond');` (it
     // fails when used again while it is up).
     if mv.id == moves::DESTINY_BOND && b.remove_volatile(user, Volatile::DestinyBond) {
+        return Ok(HitOutcome::Finished {
+            ok: false,
+            total_damage: 0,
+        });
+    }
+    // The move's other `onPrepareHit` handlers (Ally Switch).
+    if !handlers::on_prepare_hit(b, user, mv) {
         return Ok(HitOutcome::Finished {
             ok: false,
             total_damage: 0,
@@ -1500,8 +1514,9 @@ fn stall_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> bool {
 /// The TryHit handlers for one target by priority (`compareLeftToRightOrder`: priority, then
 /// target index; each target's handlers only act on that target, its attacker, or nothing that
 /// another target's handlers read): Psychic Terrain, Wide Guard and Quick Guard (4), the
-/// protect family (3, `handlers::protect_try_hit`), then the target's ability and item.
-/// `false` = the move fails on it.
+/// protect family (3, `handlers::protect_try_hit`: the target's volatiles, collected before its
+/// side's conditions), Crafty Shield and Mat Block (3, `handlers::side_guard_try_hit`), Magic
+/// Bounce (1), then the target's ability and item. `false` = the move fails on it.
 fn try_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -1511,16 +1526,19 @@ fn try_hit<const N: usize>(
     if blocked_by_try_hit(b, user, mv, target) {
         return Ok(false);
     }
-    // Magic Bounce (`onTryHit`, priority 1: after Psychic Terrain, the guards and Protect, before
-    // every priority-0 handler) uses a copy of the move back at its user, then `return null`.
-    // Showdown runs the TryHit handlers of all targets together by priority; taking the targets
-    // one at a time only moves the other targets' handlers of priority 0..1 before or after the
-    // bounce, and none of them reads what a bounced status move changes.
-    if magic_bounce_reflects(b, user, mv, target) {
-        bounce_move(b, target, user, mv)?;
+    if handlers::protect_try_hit(b, user, mv, target) {
         return Ok(false);
     }
-    if handlers::protect_try_hit(b, user, mv, target) {
+    if handlers::side_guard_try_hit(b, user, mv, target) {
+        return Ok(false);
+    }
+    // Magic Bounce (`onTryHit`, priority 1: after Psychic Terrain, the guards, Protect and the
+    // side guards, before every priority-0 handler) uses a copy of the move back at its user,
+    // then `return null`. Showdown runs the TryHit handlers of all targets together by priority;
+    // taking the targets one at a time only moves the other targets' handlers of priority 0..1
+    // before or after the bounce, and none of them reads what a bounced status move changes.
+    if magic_bounce_reflects(b, user, mv, target) {
+        bounce_move(b, target, user, mv)?;
         return Ok(false);
     }
     // Sturdy `onTryHit`: OHKO moves fail (breakable).
@@ -1987,7 +2005,9 @@ fn spread_move_hit<const N: usize>(
             }
             note(true);
         }
-        if let Some(volatile) = Volatile::from_condition(data.volatile_status) {
+        if let Some(volatile) = Volatile::from_condition(data.volatile_status)
+            .filter(|_| handlers::keeps_volatile_status(b, user, mv))
+        {
             note(b.add_volatile(t, volatile));
         }
         // `if (moveData.slotCondition) hitResult = target.side.addSlotCondition(target,
@@ -2141,6 +2161,7 @@ fn spread_move_hit<const N: usize>(
                 || b.alive(user).is_none()
                 || super::residual::bench(b, t.side).next().is_none()
                 || b.ability_unless_broken(t) == abilities::SUCTION_CUPS
+                || conditions::drag_out_blocked(b, t)
             {
                 continue;
             }
@@ -2586,7 +2607,7 @@ fn get_damage<const N: usize>(
     if mv.id == moves::KNOCK_OFF && b.item_can_be_taken(target) {
         power_mods.push(Handler::of(b, user, 0, SUB_MOVE, MOD_ONE_POINT_FIVE));
     }
-    if let Some(modifier) = handlers::on_base_power(b, user, mv) {
+    if let Some(modifier) = handlers::on_base_power(b, user, target, mv) {
         power_mods.push(Handler::of(b, user, 0, SUB_MOVE, modifier));
     }
     // The user's volatiles (Helping Hand, priority 10) and the target's (Bounce).
@@ -2722,7 +2743,8 @@ fn get_damage<const N: usize>(
         critical,
         stab_modifier,
         type_effectiveness,
-        burned: ability_events::burn_halves(&attacker, data),
+        // `if (this.battle.gen < 6 || move.id !== 'facade')`: Facade keeps its power burned.
+        burned: ability_events::burn_halves(&attacker, data) && mv.id != moves::FACADE,
         protected: false,
         final_modifier,
     };
@@ -2907,7 +2929,10 @@ fn add_side_condition<const N: usize>(
     }
     let turns = match effect {
         SideEffect::Tailwind => 4,
-        SideEffect::WideGuard | SideEffect::QuickGuard => 1,
+        SideEffect::WideGuard
+        | SideEffect::QuickGuard
+        | SideEffect::CraftyShield
+        | SideEffect::MatBlock => 1,
         SideEffect::Reflect | SideEffect::LightScreen | SideEffect::AuroraVeil
             if b.item(source) == items::LIGHT_CLAY =>
         {

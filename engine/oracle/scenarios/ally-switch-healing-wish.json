@@ -1,0 +1,30 @@
+{
+ "description": "Ally Switch into a waiting Healing Wish (setup: Gardevoir's Healing Wish, then full-HP Clefable replaces it, so the condition stays at position a). Clefable's Ally Switch moves Snorlax (patched to 60 HP) into position a, where Healing Wish's onSwap heals it fully and ends. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gardevoir", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Healing Wish"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Ally Switch", "Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Metagross", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move healingwish, move harden", "move harden, move harden"],
+  ["switch 3", ""]
+ ],
+ "patch": {"p1": {"Snorlax": {"hp": 60}}},
+ "turn": {"p1": "move allyswitch, move harden", "p2": "move harden, move harden"}
+}

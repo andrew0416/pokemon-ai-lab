@@ -179,9 +179,13 @@ pub(super) fn on_try<const N: usize>(
             };
             enough && max_hp != 1
         }),
-        // No Retreat: `if (source.volatiles['noretreat']) return false;` (its other branch
-        // drops the volatile for a `trapped` user; no move that adds `trapped` is implemented).
+        // No Retreat: `if (source.volatiles['noretreat']) return false;` (its other branch,
+        // `delete move.volatileStatus` for a `trapped` user, is [`keeps_volatile_status`]).
         moves::NO_RETREAT => !b.volatile(user, Volatile::NoRetreat).active,
+        // Magnet Rise: `if (target.volatiles['smackdown'] || target.volatiles['ingrain']) return
+        // false;` (on itself; Smack Down's volatile is not implemented; its Gravity branch is for
+        // the Z-Move, Gravity's BeforeMove already stops the move).
+        moves::MAGNET_RISE => !b.volatile(first_target, Volatile::Ingrain).active,
         // Rest: fails asleep or with Comatose, at full HP, and with Insomnia or Vital Spirit
         // (`hasAbility`: the user's own ability, never suppressed by its own move).
         moves::REST => b.slot_mon(user).is_some_and(|m| {
@@ -196,6 +200,17 @@ pub(super) fn on_try<const N: usize>(
         }),
         _ => true,
     }
+}
+
+/// Whether the move still has its `volatileStatus` when its effects run: No Retreat's `onTry`
+/// deletes it for a user that is `trapped` (Mean Look, Block, Spider Web), which only gets the
+/// boosts.
+pub(super) fn keeps_volatile_status<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> bool {
+    mv.id != moves::NO_RETREAT || !b.volatile(user, Volatile::Trapped).active
 }
 
 /// The move's `onTryImmunity` (`hitStepTryImmunity`, per target). `false` = the target is
@@ -233,6 +248,11 @@ pub(super) fn damage_callback<const N: usize>(
     match mv.id {
         // Endeavor: `return target.getUndynamaxedHP() - pokemon.hp;`
         moves::ENDEAVOR => Some(hp(b, target) - hp(b, user)),
+        // Super Fang: `clampIntRange(target.getUndynamaxedHP() / 2, 1)`; Nature's Madness,
+        // Ruination: the same floored (`spreadDamage` truncates the fraction anyway).
+        moves::SUPER_FANG | moves::NATURES_MADNESS | moves::RUINATION => {
+            Some((hp(b, target) / 2).max(1))
+        }
         // Final Gambit: `const damage = pokemon.hp; pokemon.faint(); return damage;`
         moves::FINAL_GAMBIT => {
             let damage = hp(b, user);
@@ -529,9 +549,9 @@ pub(super) fn base_power_callback<const N: usize>(
         {
             base_power * 2
         }
-        // Avalanche: `pokemon.attackedBy.some(p => p.source === target && p.damage > 0 &&
-        // p.thisTurn)`.
-        moves::AVALANCHE
+        // Avalanche, Revenge: `pokemon.attackedBy.some(p => p.source === target && p.damage > 0
+        // && p.thisTurn)`.
+        moves::AVALANCHE | moves::REVENGE
             if b.occupant(target)
                 .is_some_and(|t| b.state.slot(user).history.damaged_by(t)) =>
         {
@@ -558,6 +578,23 @@ pub(super) fn base_power_callback<const N: usize>(
                 base_power * 2
             } else {
                 base_power
+            }
+        }
+        // Heavy Slam, Heat Crash: by `pokemon.getWeight()` against `target.getWeight()` (the
+        // species' weight, at least 1; no `ModifyWeight` handler is supported): 120 at 5x or
+        // more, 100 at 4x, 80 at 3x, 60 at 2x, else 40.
+        moves::HEAVY_SLAM | moves::HEAT_CRASH => {
+            let weight = |s: SlotRef| {
+                b.slot_mon(s)
+                    .map_or(1, |m| i32::from(m.species.data().weight_hg.max(1)))
+            };
+            let (mine, theirs) = (weight(user), weight(target));
+            match mine {
+                w if w >= theirs * 5 => 120,
+                w if w >= theirs * 4 => 100,
+                w if w >= theirs * 3 => 80,
+                w if w >= theirs * 2 => 60,
+                _ => 40,
             }
         }
         // Triple Axel: `20 * move.hit`; Triple Kick: `10 * move.hit`.
@@ -682,9 +719,28 @@ pub(super) fn modify_target<const N: usize>(
 pub(super) fn on_base_power<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
+    target: SlotRef,
     mv: &ActiveMove,
 ) -> Option<u32> {
+    let target_mon = b.slot_mon(target);
     match mv.id {
+        // Facade: `if (pokemon.status && pokemon.status !== 'slp') return this.chainModify(2);`
+        moves::FACADE
+            if b.slot_mon(user)
+                .is_some_and(|m| !matches!(m.status, Status::None | Status::Sleep)) =>
+        {
+            Some(2 * 4096)
+        }
+        // Brine: `if (target.hp * 2 <= target.maxhp) return this.chainModify(2);`
+        moves::BRINE if target_mon.is_some_and(|m| 2 * i32::from(m.hp) <= i32::from(m.max_hp)) => {
+            Some(2 * 4096)
+        }
+        // Venoshock: `if (target.status === 'psn' || target.status === 'tox')` double.
+        moves::VENOSHOCK
+            if target_mon.is_some_and(|m| matches!(m.status, Status::Poison | Status::Toxic)) =>
+        {
+            Some(2 * 4096)
+        }
         // Solar Beam, Solar Blade: half power in rain, sand and snow (`pokemon.effectiveWeather()`,
         // which Utility Umbrella changes).
         moves::SOLAR_BEAM | moves::SOLAR_BLADE
@@ -814,10 +870,44 @@ pub(super) fn protect_try_hit<const N: usize>(
     false
 }
 
+/// The side conditions' `onTryHit` (priority 3, after the target's protect-family volatiles):
+/// Crafty Shield stops a status move unless it targets `self` or `all` (from anyone, the side's
+/// own Pokémon included); Mat Block stops a move that does not target `self` and that Protect
+/// without `blockStatus` would (`checkMoveBypassesProtect(move, source, target, false)`: a
+/// damaging move with the `protect` flag; `HitProtect` has no handler), resetting a locked move
+/// on its first turn as Protect does. Both return `NOT_FAIL`. Returns whether the move is
+/// stopped.
+pub(super) fn side_guard_try_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    let side = target.side;
+    let status = mv.data.category == MoveCategory::Status;
+    if b.side_effect_active(side, SideEffect::CraftyShield)
+        && status
+        && !matches!(mv.target, MoveTarget::User | MoveTarget::All)
+    {
+        return true;
+    }
+    if b.side_effect_active(side, SideEffect::MatBlock)
+        && mv.target != MoveTarget::User
+        && !status
+        && mv.data.flags.contains(MoveFlags::PROTECT)
+    {
+        let locked = b.volatile(user, Volatile::LockedMove);
+        if locked.active && locked.duration == 2 {
+            b.delete_volatile(user, Volatile::LockedMove);
+        }
+        return true;
+    }
+    false
+}
+
 /// `hitStepBreakProtect` for one target of a `breaksProtect` move (Feint): its protect-family
-/// volatiles are removed (none has `onEnd`) and its side loses Quick Guard and Wide Guard (Crafty
-/// Shield and Mat Block are not implemented); if anything was broken, its `stall` counter is
-/// deleted (gen 6+).
+/// volatiles are removed (none has `onEnd`) and its side loses Crafty Shield, Mat Block, Quick
+/// Guard and Wide Guard; if anything was broken, its `stall` counter is deleted (gen 6+).
 pub(super) fn break_protect<const N: usize>(b: &mut Battle<'_, N>, target: SlotRef) {
     let mut broke = false;
     for (volatile, _) in PROTECTIONS {
@@ -826,7 +916,12 @@ pub(super) fn break_protect<const N: usize>(b: &mut Battle<'_, N>, target: SlotR
     broke |= remove_side_effects(
         b,
         target.side,
-        &[SideEffect::QuickGuard, SideEffect::WideGuard],
+        &[
+            SideEffect::CraftyShield,
+            SideEffect::MatBlock,
+            SideEffect::QuickGuard,
+            SideEffect::WideGuard,
+        ],
     );
     if broke {
         b.delete_volatile(target, Volatile::Stall);
@@ -1442,6 +1537,24 @@ pub(super) fn on_hit<const N: usize>(
         }
         moves::TRICK | moves::SWITCHEROO => trick(b, user, target)?,
         moves::INSTRUCT => instruct(b, target)?,
+        // Ally Switch (on its user): `NOT_FAIL` outside doubles and triples, or when the other
+        // position's Pokémon has fainted; otherwise `swapPosition` (returns nothing). Triples'
+        // positions are not supported.
+        moves::ALLY_SWITCH => {
+            if N > 2 {
+                return Err(b.unsupported("Ally Switch in triples"));
+            }
+            let other = SlotRef {
+                side: target.side,
+                slot: 1 - target.slot.min(1),
+            };
+            if N != 2 || b.alive(other).is_none() {
+                HitResult::NotFail
+            } else {
+                swap_positions(b, target, other)?;
+                return Ok(None);
+            }
+        }
         // Sleep Talk: one of the user's moves Sleep Talk may call, uniformly at random, used
         // through `useMove` (`moves::call_move`); fails without one. It returns nothing.
         moves::SLEEP_TALK => {
@@ -1487,6 +1600,27 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::Success
             } else {
                 HitResult::Failure
+            }
+        }
+        // Mean Look, Block, Spider Web: `return target.addVolatile('trapped', source, move,
+        // 'trapper');`
+        moves::MEAN_LOOK | moves::BLOCK | moves::SPIDER_WEB => {
+            success(super::super::conditions::add_trap(b, target, user))
+        }
+        // Heal Pulse: `this.heal(this.modify(target.baseMaxhp, 0.75))` from a Mega Launcher user
+        // (`source.hasAbility`: its own ability), otherwise `this.heal(Math.ceil(target.baseMaxhp
+        // * 0.5))`; `NOT_FAIL` when nothing is healed (full HP). Heal Block is not supported.
+        moves::HEAL_PULSE => {
+            let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
+            let amount = if b.ability(user) == abilities::MEGA_LAUNCHER {
+                modify(max_hp, 3072)
+            } else {
+                (max_hp + 1) / 2
+            };
+            if b.heal(target, f64::from(amount)) > 0 {
+                HitResult::Success
+            } else {
+                HitResult::NotFail
             }
         }
         // Pollen Puff: an ally is healed `Math.floor(target.baseMaxhp * 0.5)`; `NOT_FAIL` if
@@ -1565,6 +1699,88 @@ fn instruct<const N: usize>(
     Ok(HitResult::Success)
 }
 
+/// The move's own `onPrepareHit` handlers other than the stall moves' (`trySpreadMoveHit`, before
+/// the user's ability's PrepareHit). Ally Switch: `return pokemon.addVolatile('allyswitch');`
+/// (its `onRestart` draws the 1/`counter` chance). `false` = the move fails.
+pub(super) fn on_prepare_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> bool {
+    match mv.id {
+        moves::ALLY_SWITCH => b.add_volatile(user, Volatile::AllySwitch),
+        _ => true,
+    }
+}
+
+/// Where `pokemon`, which started its move in `user`, stands now: Ally Switch moves it during the
+/// move, and Showdown's later steps follow the Pokémon. A user that fainted keeps its old slot.
+pub(super) fn current_slot<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    pokemon: PokemonRef,
+) -> SlotRef {
+    Battle::<N>::slots(user.side)
+        .find(|&s| b.occupant(s) == Some(pokemon))
+        .unwrap_or(user)
+}
+
+/// Showdown `swapPosition(pokemon, newPosition)` for the Pokémon in `from` and its ally in `to`
+/// (both standing): everything Showdown keeps on the Pokémon (boosts, volatiles, `lastMove`,
+/// damage history, switch flag, substitute) goes with it (the two slots trade places through
+/// [`super::super::diff::slot_changes`]); slot conditions stay with the position. Their queued
+/// actions follow them (Showdown's actions hold the Pokémon; a target location is read from the
+/// user's position when the move runs), as does the move in progress. Then `runEvent('Swap')`
+/// for the ally at its new position and the user at its own: Healing Wish's `onSwap` heals one
+/// that needs it. Snipe Shot (`tracksTarget`) keeps aiming at the Pokémon it was aimed at
+/// (`action.originalTarget`), which the queue does not hold: aimed at this side, it is refused.
+fn swap_positions<const N: usize>(
+    b: &mut Battle<'_, N>,
+    from: SlotRef,
+    to: SlotRef,
+) -> Result<(), TurnError> {
+    for action in &b.queue {
+        let ActionKind::Move { index, target, .. } = action.kind else {
+            continue;
+        };
+        let id = super::super::lock::action_move_id(b.mon(action.pokemon), index);
+        if target != 0
+            && id.data().tracks_target
+            && super::at_loc(action.slot, target).side == from.side
+        {
+            return Err(b.unsupported(format!(
+                "{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)",
+                id.data().name
+            )));
+        }
+    }
+    let (user, ally) = (b.occupant(from), b.occupant(to));
+    let (a, c) = (b.state.slot(from).clone(), b.state.slot(to).clone());
+    let mut swap = Vec::new();
+    super::super::diff::slot_changes(&mut swap, from, &a, &c);
+    super::super::diff::slot_changes(&mut swap, to, &c, &a);
+    for instruction in swap {
+        b.apply(instruction);
+    }
+    for action in &mut b.queue {
+        if Some(action.pokemon) == user {
+            action.slot = to;
+        } else if Some(action.pokemon) == ally {
+            action.slot = from;
+        }
+    }
+    if let Some(active) = b.active_move.as_mut() {
+        if Some(active.pokemon) == user {
+            active.user = to;
+        } else if Some(active.pokemon) == ally {
+            active.user = from;
+        }
+    }
+    super::super::conditions::slot_condition_switch_in(b, from);
+    super::super::conditions::slot_condition_switch_in(b, to);
+    Ok(())
+}
+
 /// Whether Sleep Talk's `onHit` may pick `id`: not `nosleeptalk` (Sleep Talk itself, Assist,
 /// Metronome, ...), not a charge move, not a Z- or Max move.
 pub(crate) fn sleep_talk_calls(id: MoveId) -> bool {
@@ -1580,10 +1796,12 @@ pub(crate) fn sleep_talk_calls(id: MoveId) -> bool {
 /// without an item, `false` when the item's own TakeItem handler refuses: `onTakeItem: false`,
 /// or a Mega Stone of its holder's species); fail if either refuses or both are empty; then
 /// each item's TakeItem handler again with its new holder (a Mega Stone cannot go to its own
-/// species); then both `setItem`s. Each `takeItem` of a held item first runs the holder's
-/// ability TakeItem handler (Unburden adds its volatile even if the trade then fails; Sticky
-/// Hold is refused on the field). An item whose `Start`, `End` or other TakeItem handler would
-/// run here is not implemented.
+/// species); then `target.setItem(myItem)` and `source.setItem(yourItem)`, each running the
+/// item's `Start` on its new holder ([`trick_item_start`]). Each `takeItem` of a held item first
+/// runs the holder's ability TakeItem handler (Unburden adds its volatile even if the trade then
+/// fails; Sticky Hold is refused on the field) and then the item's `End` on its old holder.
+/// Items with `Start` / `End` handlers move only if [`trick_moves_item`]; an item with another
+/// TakeItem handler is not implemented.
 fn trick<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -1594,12 +1812,11 @@ fn trick<const N: usize>(
     for item in [yours, mine] {
         let data = item.data();
         let other_take_item = data.mega_stone.is_empty() && data.handlers.contains(&"onTakeItem");
-        if other_take_item
-            || data
-                .handlers
-                .iter()
-                .any(|h| ["onStart", "onEnd"].contains(h))
-        {
+        let start_or_end = data
+            .handlers
+            .iter()
+            .any(|h| ["onStart", "onEnd"].contains(h));
+        if other_take_item || (start_or_end && !trick_moves_item(item)) {
             return Err(b.unsupported(format!("Trick moving {} ({:?})", data.name, data.handlers)));
         }
     }
@@ -1619,6 +1836,15 @@ fn trick<const N: usize>(
     if !received(mine, target) || !received(yours, user) {
         return Ok(HitResult::Failure);
     }
+    // The taken items' `End` on their old holders: Mirror Herb forgets its copied raises (none
+    // can be pending inside Trick's own action); Utility Umbrella's changes nothing.
+    for (slot, item) in [(target, yours), (user, mine)] {
+        if item == items::MIRROR_HERB {
+            if let Some(holder) = b.occupant(slot) {
+                b.mirror_herb.retain(|&(p, _)| p != holder);
+            }
+        }
+    }
     for (slot, old, new) in [(target, yours, mine), (user, mine, yours)] {
         let pokemon = b.occupant(slot).expect("an active Pokémon");
         b.apply(Instruction::SetItem {
@@ -1626,8 +1852,45 @@ fn trick<const N: usize>(
             old,
             new,
         });
+        if !new.is_none() {
+            trick_item_start(b, slot, new);
+        }
     }
     Ok(HitResult::Success)
+}
+
+/// Whether Trick can move `item` although it has `Start` / `End` handlers, because those are
+/// implemented for a new holder ([`trick_item_start`]) and an old one: the Choice items, the
+/// Seeds, Room Service, White Herb, Air Balloon (its `onStart` only announces it), Utility
+/// Umbrella (its `onStart` / `onEnd` only run WeatherChange for a holder ignoring its item, and
+/// no implemented WeatherChange handler acts on sun or rain from it), Mirror Herb (`onEnd`).
+fn trick_moves_item(item: ItemId) -> bool {
+    item.data().is_choice
+        || super::super::field_events::seed_terrain(item).is_some()
+        || [
+            items::ROOM_SERVICE,
+            items::WHITE_HERB,
+            items::AIR_BALLOON,
+            items::UTILITY_UMBRELLA,
+            items::MIRROR_HERB,
+        ]
+        .contains(&item)
+}
+
+/// `setItem`'s `singleEvent('Start', item)` on the new holder in `slot` (skipped while it ignores
+/// its item): a Choice item removes the holder's `choicelock` (a lock from its old Choice item,
+/// or from this very move's ModifyMove); a Seed, Room Service and White Herb act as when their
+/// holder switches in (`items::switch_in_item`: used in its terrain, in Trick Room, with a
+/// lowered stat).
+fn trick_item_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
+    if b.item(slot) != item {
+        return;
+    }
+    if item.data().is_choice {
+        b.remove_volatile(slot, Volatile::ChoiceLock);
+    } else if item != items::MIRROR_HERB {
+        super::super::items::switch_in_item(b, slot, item);
+    }
 }
 
 /// Whether `item`'s own TakeItem handler lets `holder` part with it (or, called with the new

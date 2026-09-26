@@ -1,0 +1,24 @@
+{
+ "description": "Super Fang on a 1 HP target deals 1 (clampIntRange(0.5, 1)) and knocks it out; Machamp's Revenge against Raticate, which did not damage Machamp (Blissey's Seismic Toss did), keeps 60 base power.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Raticate", "item": "", "ability": "No Guard", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Super Fang", "Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Seismic Toss", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Machamp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 2}, "moves": ["Revenge", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Snorlax": {"hp": 1}}},
+ "turn": {"p1": "move superfang 1, move seismictoss 2", "p2": "move harden, move revenge 1"}
+}

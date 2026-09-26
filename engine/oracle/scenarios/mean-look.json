@@ -1,0 +1,23 @@
+{
+ "description": "Trapping moves: Gengar's Mean Look traps Snorlax (Snorlax 'trapped', Gengar 'trapper'); Umbreon's Block on the Ghost-type Dusclops fails (immune to 'trapped'); Snorlax's Spider Web traps Umbreon, so Snorlax is both trapped and a trapper; Dusclops's Mean Look on the already trapped Umbreon fails. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Mean Look", "Protect"], "level": 50},
+   {"species": "Umbreon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Block", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Spider Web", "Protect"], "level": 50},
+   {"species": "Dusclops", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Mean Look", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move meanlook 1, move block 2", "p2": "move spiderweb 2, move meanlook 2"}
+}
