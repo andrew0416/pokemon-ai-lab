@@ -697,15 +697,12 @@ pub(crate) fn opportunist_use<const N: usize>(b: &mut Battle<'_, N>, slot: SlotR
 /// Receiver's and Power of Alchemy's `onAllyFaint` when the Pokémon in `fainted` (on the holder's
 /// side, already gone from its slot) fainted with `ability` (`target.getAbility()` while it still
 /// had it): a holder with HP (as its ability acts) takes the ability unless it is `noreceiver` or
-/// No Ability (`setAbility(ability, target)`: the holder's own `cantsuppress` or the new one's
-/// fails, as does Ability Shield (`SetAbility`); then the old ability's `End`, the new one with a
-/// fresh ability state, and its `Start`).
+/// No Ability (`setAbility(ability, target)`: [`set_ability`]).
 pub(crate) fn receiver<const N: usize>(
     b: &mut Battle<'_, N>,
     fainted: SlotRef,
     ability: AbilityId,
 ) -> Result<(), super::TurnError> {
-    use crate::instruction::Instruction;
     if ability.data().flags.contains(AbilityFlags::NORECEIVER) || ability == abilities::NO_ABILITY {
         return Ok(());
     }
@@ -715,28 +712,74 @@ pub(crate) fn receiver<const N: usize>(
         {
             continue;
         }
-        let old = b.raw_ability(holder);
-        let locked = |a: AbilityId| a.data().flags.contains(AbilityFlags::CANTSUPPRESS);
-        if locked(ability) || locked(old) || b.item(holder) == items::ABILITY_SHIELD {
-            continue;
-        }
-        if !super::support::ability_supported_on_field(ability) {
-            return Err(b.unsupported(format!(
-                "Receiver gaining {} ({:?})",
-                ability.data().name,
-                ability.data().handlers
-            )));
-        }
-        super::switching::end_ability(b, holder, old)?;
-        let pokemon = b.occupant(holder).expect("alive");
+        set_ability(b, holder, ability)?;
+    }
+    Ok(())
+}
+
+/// Showdown `runEvent('SetAbility', pokemon, source, effect, ability)` fails for the Pokémon at
+/// `slot`: only Ability Shield has a handler (`onSetAbility` returns `null`), an item handler, so
+/// the effective item counts (Magic Room ignores the shield; Klutz does not, as it is
+/// `ignoreKlutz`). `setAbility` and `skillSwap` (both Pokémon) ask it.
+pub(crate) fn set_ability_blocked<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
+    b.item(slot) == items::ABILITY_SHIELD
+}
+
+/// Showdown `pokemon.setAbility(ability, source)` (not from a forme change or Transform) for the
+/// Pokémon at `slot`: the one path of Role Play, Entrainment, Simple Beam, Worry Seed, Receiver,
+/// Power of Alchemy, Mummy and Lingering Aroma. `false` without HP (`!this.hp`), when the new or
+/// the old ability (`getAbility()`: the raw one) is `cantsuppress`, or when `SetAbility` fails
+/// ([`set_ability_blocked`]); otherwise the old ability's `End` (`switching::end_ability`: a
+/// `singleEvent`, run even while the ability is suppressed; Neutralizing Gas's restarts the
+/// others), the new ability with a fresh `abilityState` ([`replace_ability`]), and its `Start`
+/// (`switching::start_ability`: a `singleEvent`, skipped while the holder ignores its ability: a
+/// `gastroacid` volatile stays on it, and an active Neutralizing Gas). An ability the engine does
+/// not run on the field is unsupported.
+pub(crate) fn set_ability<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    ability: AbilityId,
+) -> Result<bool, super::TurnError> {
+    if b.alive(slot).is_none() {
+        return Ok(false);
+    }
+    let old = b.raw_ability(slot);
+    let locked = |a: AbilityId| a.data().flags.contains(AbilityFlags::CANTSUPPRESS);
+    if locked(ability) || locked(old) || set_ability_blocked(b, slot) {
+        return Ok(false);
+    }
+    if !super::support::ability_supported_on_field(ability) {
+        return Err(b.unsupported(format!(
+            "{} gaining {} ({:?})",
+            b.slot_mon(slot).map_or("?", |m| m.species.data().name),
+            ability.data().name,
+            ability.data().handlers
+        )));
+    }
+    super::switching::end_ability(b, slot, old)?;
+    replace_ability(b, slot, ability);
+    super::switching::start_ability(b, slot, ability)?;
+    Ok(true)
+}
+
+/// `pokemon.ability = ability` with a fresh `abilityState` (`setAbility`, `skillSwap`), after the
+/// old ability's `End` took the volatiles that stand for its state (Protean's used flag included).
+pub(crate) fn replace_ability<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    ability: AbilityId,
+) {
+    use crate::instruction::Instruction;
+    let pokemon = b.occupant(slot).expect("an active Pokémon");
+    b.delete_volatile(slot, Volatile::ProteanUsed);
+    let old = b.mon(pokemon).ability;
+    if old != ability {
         b.apply(Instruction::SetAbility {
             target: pokemon,
             old,
             new: ability,
         });
-        super::switching::start_ability(b, holder, ability)?;
     }
-    Ok(())
 }
 
 /// The ability of the Pokémon in `holder` as the handlers of `user`'s move see it. Showdown
@@ -1434,7 +1477,6 @@ pub(crate) fn skill_swap<const N: usize>(
     source: SlotRef,
     target: SlotRef,
 ) -> Result<bool, super::TurnError> {
-    use crate::instruction::Instruction;
     if b.occupant(source).is_none() || b.occupant(target).is_none() {
         return Ok(false);
     }
@@ -1445,7 +1487,7 @@ pub(crate) fn skill_swap<const N: usize>(
         return Ok(false);
     }
     // `runEvent('SetAbility')` on the target, then on the source: Ability Shield returns `null`.
-    if b.item(target) == items::ABILITY_SHIELD || b.item(source) == items::ABILITY_SHIELD {
+    if set_ability_blocked(b, target) || set_ability_blocked(b, source) {
         return Ok(false);
     }
     // What the state is otherwise checked for before a turn: Symbiosis must be able to pass the
@@ -1470,19 +1512,9 @@ pub(crate) fn skill_swap<const N: usize>(
     // Both abilities are already on the field, so both are supported there.
     super::switching::end_ability(b, source, source_ability)?;
     super::switching::end_ability(b, target, target_ability)?;
-    for (slot, old, new) in [
-        (source, source_ability, target_ability),
-        (target, target_ability, source_ability),
-    ] {
-        let pokemon = b.occupant(slot).expect("checked");
-        if old != new {
-            b.apply(Instruction::SetAbility {
-                target: pokemon,
-                old,
-                new,
-            });
-        }
-    }
+    // Both abilities trade places, each with a fresh `abilityState`.
+    replace_ability(b, source, target_ability);
+    replace_ability(b, target, source_ability);
     super::switching::start_ability(b, target, source_ability)?;
     super::switching::start_ability(b, source, target_ability)?;
     Ok(true)
@@ -1656,10 +1688,16 @@ pub(crate) fn on_update<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     if ability == abilities::OWN_TEMPO && b.volatile(slot, Volatile::Confusion).active {
         b.remove_volatile(slot, Volatile::Confusion);
     }
-    // Oblivious: `if (pokemon.volatiles['attract']) pokemon.removeVolatile('attract')` (its
-    // immunity keeps it from getting one; a move that ignores it could).
-    if ability == abilities::OBLIVIOUS && b.volatile(slot, Volatile::Attract).active {
-        b.remove_volatile(slot, Volatile::Attract);
+    // Oblivious: `if (pokemon.volatiles['attract']) pokemon.removeVolatile('attract')`, then the
+    // same for `taunt` (its immunity and `onTryHit` keep it from getting either; a move that
+    // ignores it, or gaining the ability, leaves one for this cure).
+    if ability == abilities::OBLIVIOUS {
+        if b.volatile(slot, Volatile::Attract).active {
+            b.remove_volatile(slot, Volatile::Attract);
+        }
+        if b.volatile(slot, Volatile::Taunt).active {
+            b.remove_volatile(slot, Volatile::Taunt);
+        }
     }
     if ability == abilities::COMMANDER {
         commander_update(b, slot);

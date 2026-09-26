@@ -1,0 +1,26 @@
+{
+ "description": "Opus X unit B4: Copycat calling an Electric move while its user has Charge. Setup turn: Jolteon's Shock Wave hits Bellibolt, whose Electromorphosis gives it `charge`. The turn: Jolteon's Shock Wave at its ally Gastrodon (immune) becomes battle.lastMove; Bellibolt's Copycat calls Shock Wave at a random foe, doubled by Charge, and runMove's AfterMove sees the called Electric move: the charge ends.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Bellibolt", "item": "", "ability": "Electromorphosis", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Copycat", "Harden"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Jolteon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Shock Wave", "Harden"], "level": 50},
+   {"species": "Gastrodon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move harden, move harden", "move shockwave 1, move harden"]
+ ],
+ "turn": {"p1": "move copycat, move harden", "p2": "move shockwave -2, move harden"}
+}

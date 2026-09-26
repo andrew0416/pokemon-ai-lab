@@ -1,0 +1,26 @@
+{
+ "description": "Opus X unit B5: Oblivious's onUpdate removes taunt from a Pokemon that gets the ability. Setup turn: Haxorus Taunts Slowbro. The turn: faster Slowking (Oblivious) Skill Swaps with its ally Slowbro; at the Update after the move Slowbro's new Oblivious removes the taunt, which is gone at the end of the turn (Taunt disables Harden at the choice, so Slowbro Seismic Tosses Hariyama).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Haxorus", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Taunt", "Harden"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Slowbro", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss", "Harden"], "level": 50},
+   {"species": "Slowking", "item": "", "ability": "Oblivious", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 2}, "moves": ["Skill Swap", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move taunt 1, move harden", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move harden, move harden", "p2": "move seismictoss 2, move skillswap -1"}
+}

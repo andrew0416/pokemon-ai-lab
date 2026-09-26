@@ -1,0 +1,29 @@
+{
+ "description": "Opus X unit B7: Klutz ignores Heavy-Duty Boots (the hazards check pokemon.hasItem('heavydutyboots'), false while ignoringItem). Setup: Forretress and Galvantula lay Stealth Rock and Spikes, then Toxic Spikes and Sticky Web, on p1's side. Klutz Lopunny with Boots switches in: Stealth Rock 1/8, Spikes 1/8, poisoned by Toxic Spikes, -1 Speed from Sticky Web.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Lopunny", "item": "Heavy-Duty Boots", "ability": "Klutz", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Forretress", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Stealth Rock", "Toxic Spikes", "Harden"], "level": 50},
+   {"species": "Galvantula", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Spikes", "Sticky Web", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move harden, move harden", "move stealthrock, move spikes"],
+  ["move harden, move harden", "move toxicspikes, move stickyweb"]
+ ],
+ "turn": {"p1": "switch 3, move harden", "p2": "move harden, move harden"}
+}

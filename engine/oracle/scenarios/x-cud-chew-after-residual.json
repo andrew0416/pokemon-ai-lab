@@ -1,0 +1,28 @@
+{
+ "description": "Opus X unit B10: Cud Chew's onEatItem sees an empty queue (!this.queue.peek(): counter 2 - 1) in a switch batch requested after the residual. Setup turn: Toxapex lays Toxic Spikes and Grapploct Octolocks Snorlax; Octolock's residual drop (order 14) sets Snorlax's Eject Pack, used at order 29, so p1 switches after the residual; Farigiraf (Cud Chew, Lum Berry) comes in, is poisoned by the Toxic Spikes in its runSwitch and eats the Lum Berry with nothing left in the queue (counter 1). The turn: Toxapex's Toxic badly poisons Farigiraf; at the residual the toxic damage comes first, then Cud Chew (order 28) eats the Lum Berry again and cures it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "Eject Pack", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Farigiraf", "item": "Lum Berry", "ability": "Cud Chew", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Grapploct", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Octolock", "Harden"], "level": 50},
+   {"species": "Toxapex", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Toxic Spikes", "Toxic", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move harden, move harden", "move octolock 1, move toxicspikes", {"p1": ["switch 3"]}]
+ ],
+ "turn": {"p1": "move harden, move harden", "p2": "move harden, move toxic 1"}
+}

@@ -1852,10 +1852,10 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // O58. Own Tempo: `onTryAddVolatile` (confusion) in `Battle::add_volatile_blocked`,
     // `onUpdate` (confusion cure) in `abilities::on_update`, `onTryBoost` (Intimidate) in
     // `Battle::boost_by`, `onHit` only logs. Oblivious: `onTryHit` in
-    // `moves::ability_hooks::on_try_hit`, `onTryBoost` in `Battle::boost_by`; `onImmunity`
-    // ('attract') and `onUpdate` (attract, taunt) only act on volatiles that do not exist, and an
-    // ability-ignoring Attract / Captivate / Taunt against it is refused
-    // (`ability_hooks::oblivious_bypassed`). Scrappy, Keen Eye, Illuminate, Mind's Eye:
+    // `moves::ability_hooks::on_try_hit`, `onTryBoost` in `Battle::boost_by`, `onImmunity`
+    // ('attract') in `conditions`, `onUpdate` (removes `attract`, then `taunt`: left by an
+    // ability-ignoring move or by gaining the ability) in `abilities::on_update`. Scrappy, Keen
+    // Eye, Illuminate, Mind's Eye:
     // `onModifyMove` in `moves::ability_hooks::on_modify_move`, `onTryBoost` in `Battle::boost_by`.
     (
         abilities::OWN_TEMPO,

@@ -1,0 +1,25 @@
+{
+ "description": "Opus X unit B9: Trace holding an effective Ability Shield does not seek (trace.onStart: pokemon.hasItem('Ability Shield') sets effectState.seek = false and shows -block), so it keeps Trace. Porygon2 (Trace, Ability Shield) switches in for Hariyama next to Snorlax (Honey Gather) and Swampert (Ball Fetch).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Bronzong", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Porygon2", "item": "Ability Shield", "ability": "Trace", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Swampert", "item": "", "ability": "Ball Fetch", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, switch 3", "p2": "move harden, move harden"}
+}

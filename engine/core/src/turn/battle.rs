@@ -104,12 +104,17 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// handler that only acts once started (Unnerve's `effectState.unnerved`) ignores them.
     pub unstarted: Vec<PokemonRef>,
     /// Showdown's `queue.peek()` is empty: the turn's actions are all done (the residual action
-    /// and what follows it in the same stage, or the `runSwitch` of a replacement batch). Cud
-    /// Chew's `onEatItem` reads it.
+    /// and what follows it in the same stage, or the `runSwitch` of a replacement batch or of a
+    /// mid-turn switch batch requested after the residual). Cud Chew's `onEatItem` reads it.
     pub queue_done: bool,
     /// The move in progress is external (`move.isExternal`: Dancer's copy): no Pressure PP, and
     /// no Dancer after it.
     pub external_move: bool,
+    /// The move another move's handler called (`moves::call_move`: Sleep Talk, Copycat, Mirror
+    /// Move, Nature Power) as it ended, until the caller's `runMove` takes it: Showdown's
+    /// `if (this.battle.activeMove) move = this.battle.activeMove;` after `useMove`, so the
+    /// AfterMove events (the move's own, Charge's) see the called move.
+    pub(crate) called_move: Option<super::moves::ActiveMove>,
     /// Showdown `battle.activeTarget` of the move that just ran (the (redirected) target it was
     /// used at; its user for a self-targeting move) with `useMove`'s result
     /// (`moveDidSomething`); `None` until `useMove` got that far. Dancer reads both.
@@ -204,6 +209,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             unstarted: Vec::new(),
             queue_done: false,
             external_move: false,
+            called_move: None,
             active_target: None,
             suppression,
         }
@@ -443,14 +449,12 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// Showdown `dex.getImmunity(status, pokemon)` plus the supported `Immunity` handlers
     /// (`runStatusImmunity`).
     pub fn status_immune(&self, slot: SlotRef, immunity: TypeImmunities) -> bool {
-        let Some(mon) = self.slot_mon(slot) else {
-            return true;
-        };
-        if self.natural_immune(slot, immunity) {
+        if self.slot_mon(slot).is_none() || self.natural_immune(slot, immunity) {
             return true;
         }
-        // The item's `onImmunity` (Safety Goggles: sandstorm, powder).
-        if super::items::grants_immunity(mon.item, immunity) {
+        // The item's `onImmunity` (Safety Goggles: sandstorm, powder), skipped by `runEvent`
+        // while the holder ignores its item (Klutz, Magic Room): the effective item.
+        if super::items::grants_immunity(self.item(slot), immunity) {
             return true;
         }
         // Immunity handlers; each returns false for one immunity id, so order is irrelevant.

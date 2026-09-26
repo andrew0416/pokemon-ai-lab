@@ -62,14 +62,15 @@ pub(crate) fn resist_berry(item: ItemId) -> Option<Type> {
 /// Acrobatics, Unburden, Mega Evolution: [`Battle::raw_item`]). Embargo and the Primal Orbs are
 /// not implemented. Klutz counts while it acts (`hasAbility('klutz')`: not under Gastro Acid or
 /// Neutralizing Gas); an `ignoreKlutz` item (Ability Shield) never asks, so the two checks do
-/// not recurse.
+/// not recurse. A Klutz holder with no item ignores its item too (`!getItem().ignoreKlutz` of
+/// the empty item): only a `singleEvent` for an item it does not hold can tell (Bug Bite's
+/// `Eat` of the stolen berry).
 pub(crate) fn ignoring_item<const N: usize>(state: &State<N>, slot: SlotRef) -> bool {
     let Some(mon) = state.active(slot) else {
         return false;
     };
     state.field[FieldEffect::MagicRoom as usize].is_active()
-        || (!mon.item.is_none()
-            && !mon.item.data().ignore_klutz
+        || (!mon.item.data().ignore_klutz
             && mon.ability == abilities::KLUTZ
             && !super::abilities::ignoring_ability(state, slot))
 }
@@ -151,7 +152,7 @@ impl<const N: usize> Battle<'_, N> {
 /// [`switch_in_priority`] schedules (Seeds, Room Service); a Seed's `onTerrainChange`
 /// (`field_events`); White Herb's and Mirror Herb's `onAnySwitchIn` ([`any_switch_in_priority`];
 /// White Herb's `onStart` only runs from its own handlers, as `onAnySwitchIn` replaces it as the
-/// switch-in callback, or from `setItem`, which the supported item moves refuse for it).
+/// switch-in callback, or from `setItem`'s Start: [`white_herb_start`]).
 pub(crate) fn start_handler_implemented(item: ItemId, handler: &str) -> bool {
     match handler {
         "onStart" => {
@@ -161,7 +162,8 @@ pub(crate) fn start_handler_implemented(item: ItemId, handler: &str) -> bool {
         // White Herb, Mirror Herb, Eject Pack.
         "onAnySwitchIn" => any_switch_in_priority(item).is_some(),
         // Ability Shield: the only `setAbility` of a switch-in is the holder's own Trace, which
-        // is refused with the shield (`switching::trace`); a forme change skips the event.
+        // does not seek with an effective shield (`switching::trace`) and, under Magic Room,
+        // sets the ability past the skipped item; a forme change skips the event.
         "onSetAbility" => item == items::ABILITY_SHIELD,
         _ => false,
     }
@@ -226,20 +228,33 @@ pub(crate) fn switch_in_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRe
 /// `boosts`; `onUse` sets every negative stage to 0 with `setBoost`, which runs no boost
 /// event), consumed.
 pub(crate) fn white_herb<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
-    if b.item(slot) != items::WHITE_HERB || b.alive(slot).is_none() {
+    if b.item(slot) != items::WHITE_HERB {
+        return;
+    }
+    white_herb_start(b, slot);
+}
+
+/// White Herb's `onStart` itself for the holder in `slot`, which `setItem`'s `Start` runs even
+/// while the holder ignores its item (Klutz, Magic Room): with a negative stage the herb is used
+/// (`useItem`), and its `onUse` (the reset) is a `singleEvent('Use')`, which the suppression
+/// skips; the negative stages then stay.
+pub(crate) fn white_herb_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.raw_item(slot) != items::WHITE_HERB || b.alive(slot).is_none() {
         return;
     }
     let boosts = b.state.slot(slot).boosts;
     if !boosts.iter().any(|&stage| stage < 0) {
         return;
     }
-    for (stat, &stage) in boosts.iter().enumerate() {
-        if stage < 0 {
-            b.apply(Instruction::Boost {
-                target: slot,
-                stat: stat as u8,
-                amount: -stage,
-            });
+    if !ignoring_item(b.state, slot) {
+        for (stat, &stage) in boosts.iter().enumerate() {
+            if stage < 0 {
+                b.apply(Instruction::Boost {
+                    target: slot,
+                    stat: stat as u8,
+                    amount: -stage,
+                });
+            }
         }
     }
     b.use_item(slot);
@@ -404,6 +419,10 @@ pub(crate) fn eject_pack_use<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRe
     if !eject_pending(b, slot) || b.alive(slot).is_none() {
         return;
     }
+    // `getAllActive()` also holds a Pokémon at 0 HP whose faint is not processed; `faint()`
+    // clears its `switchFlag`, and the only flag set after that (Emergency Exit after the user's
+    // own recoil) is refused (`moves::user_emergency_exit`, oracle
+    // `x-switchflag-unprocessed-faint`), so the living actives are the same set here.
     if super::residual::bench(b, slot.side).next().is_none()
         || b.volatile(slot, Volatile::Commanding).active
         || b.volatile(slot, Volatile::Commanded).active
@@ -813,7 +832,9 @@ pub(crate) fn before_move<const N: usize>(
         b.remove_volatile(user, Volatile::ChoiceLock);
         return true;
     }
-    id.0 == lock.counter
+    // `!pokemon.ignoringItem() && ... && move.id !== this.effectState.move`: a holder ignoring
+    // its item (Klutz, Magic Room) keeps the lock but is not held to it.
+    ignoring_item(b.state, user) || id.0 == lock.counter
 }
 
 /// The item `DisableMove` handlers `endTurn` runs for every active Pokémon: `choicelock`'s
@@ -1296,6 +1317,9 @@ pub(crate) fn after_move_secondary<const N: usize>(
         {
             return;
         }
+        // `for (const pokemon of this.getAllActive()) if (pokemon.switchFlag === true) return;`
+        // — a 0-HP Pokémon not processed yet cannot carry the flag here (see
+        // `eject_pack_use`).
         if b.all_alive()
             .iter()
             .any(|&s| b.state.slot(s).switch_flag == SwitchFlag::Effect)

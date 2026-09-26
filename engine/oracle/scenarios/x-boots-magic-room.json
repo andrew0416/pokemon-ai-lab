@@ -1,0 +1,29 @@
+{
+ "description": "Opus X unit B7: Magic Room makes Heavy-Duty Boots do nothing (pokemon.hasItem('heavydutyboots') is false while ignoringItem). Setup: Bronzong's Magic Room while Forretress and Galvantula lay Stealth Rock and Spikes, then Toxic Spikes and Sticky Web, on p1's side. Snorlax with Boots switches in for Hariyama: Stealth Rock 1/8, Spikes 1/8, poisoned by Toxic Spikes, -1 Speed from Sticky Web.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Bronzong", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Magic Room", "Harden"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "Heavy-Duty Boots", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Forretress", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Stealth Rock", "Toxic Spikes", "Harden"], "level": 50},
+   {"species": "Galvantula", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Spikes", "Sticky Web", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move magicroom, move harden", "move stealthrock, move spikes"],
+  ["move harden, move harden", "move toxicspikes, move stickyweb"]
+ ],
+ "turn": {"p1": "move harden, switch 3", "p2": "move harden, move harden"}
+}

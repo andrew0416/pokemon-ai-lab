@@ -6,15 +6,15 @@
 
 use crate::damage::MOD_ONE_POINT_FIVE;
 use crate::dex::{
-    abilities, items, moves, AbilityFlags, AbilityId, ItemId, MoveCategory, MoveFlags, MoveId,
-    MoveTarget, Type, TypeRelation, NO_BOOSTS,
+    abilities, items, moves, AbilityFlags, ItemId, MoveCategory, MoveFlags, MoveId, MoveTarget,
+    Type, TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{MoveResult, Pokemon, PokemonRef, SideId, SlotRef, Status, BOOST_COUNT};
 use crate::volatile::{Volatile, VolatileState};
 
-use super::super::abilities::{Handler, SUB_CONDITION};
+use super::super::abilities::{set_ability, Handler, SUB_CONDITION};
 use super::super::battle::{Battle, BoostEffect, DamageSource};
 use super::super::conditions::HAZARDS;
 use super::super::order::{boosted_stat, modify};
@@ -706,7 +706,7 @@ pub(super) fn on_try_hit<const N: usize>(
         moves::MIRROR_MOVE => {
             let copied = b.state.slot(target).last_move;
             if !copied.is_none() && copied.data().flags.contains(MoveFlags::MIRROR) {
-                if let Some(why) = called_move_problem(b, user, copied) {
+                if let Some(why) = called_move_problem(copied) {
                     return Err(b.unsupported(format!("Mirror Move calling {why}")));
                 }
                 super::call_move(b, user, mv, copied, Some(target))?;
@@ -732,7 +732,7 @@ pub(super) fn on_try_hit<const N: usize>(
                 Terrain::Psychic => moves::PSYCHIC,
                 Terrain::None => moves::TRI_ATTACK,
             };
-            if let Some(why) = called_move_problem(b, user, called) {
+            if let Some(why) = called_move_problem(called) {
                 return Err(b.unsupported(format!("Nature Power calling {why}")));
             }
             super::call_move(b, user, mv, called, Some(target))?;
@@ -841,6 +841,8 @@ pub(super) fn on_try_hit<const N: usize>(
         // (hasContrary && pokemon.boosts.spe === -6)) return false;` (`hasAbility`).
         moves::AUTOTOMIZE => {
             let speed = b.state.slot(target).boosts[4];
+            // `pokemon.hasAbility('contrary')`: the effective ability (a suppressed Contrary no
+            // longer reverses the boost, so the +6 check applies).
             if b.ability(target) == abilities::CONTRARY {
                 speed != -6
             } else {
@@ -854,14 +856,11 @@ pub(super) fn on_try_hit<const N: usize>(
 /// Why a move Copycat or Mirror Move would call (`useMove`, which the caller may not know) is not
 /// run: a move the engine does not support; a two-turn move or one that locks its user (the lock
 /// would name a move the user may not have; Rollout, Ice Ball); a move with its own `onAfterMove`, a
-/// `beforeTurnCallback` or a `priorityChargeCallback` (`runMove`'s AfterMove and the queue
-/// actions belong to the caller); an Electric move while the user has Charge (Charge's
-/// `onAfterMove` would see the called move, the engine's the caller).
-fn called_move_problem<const N: usize>(
-    b: &Battle<'_, N>,
-    user: SlotRef,
-    id: MoveId,
-) -> Option<String> {
+/// `beforeTurnCallback` or a `priorityChargeCallback` (the queue actions belong to the caller;
+/// `runMove`'s AfterMove does see the called move, `Battle::called_move`, but the `onAfterMove`
+/// of a called move is not checked against Showdown). An Electric move while the user has
+/// Charge is run: Charge's `onAfterMove` sees the called move (oracle `x-copycat-charge`).
+fn called_move_problem(id: MoveId) -> Option<String> {
     let data = id.data();
     if let Some(why) = super::super::support::move_unsupported(id) {
         return Some(why);
@@ -872,67 +871,11 @@ fn called_move_problem<const N: usize>(
     let own_actions = super::has_before_turn_callback(id)
         || super::has_priority_charge_callback(id)
         || [moves::ROLLOUT, moves::ICE_BALL].contains(&id);
-    let charged = data.move_type == Type::Electric && b.volatile(user, Volatile::Charge).active;
     (data.flags.contains(MoveFlags::CHARGE)
         || locks
         || own_actions
-        || data.handlers.contains(&"onAfterMove")
-        || charged)
-        .then(|| format!("{} (a lock, own actions, AfterMove or Charge)", data.name))
-}
-
-/// Showdown `pokemon.setAbility(ability, source)` from a move (Role Play, Entrainment, Simple
-/// Beam, Worry Seed) on the Pokémon at `slot`: fails (`false`) without HP or when the new or the
-/// old ability is `cantsuppress`; `runEvent('SetAbility')` — Ability Shield (the effective item:
-/// Magic Room suppresses it, Klutz does not) returns `null`, a failure too; then the old
-/// ability's `End` (`switching::end_ability`), the new one with a fresh `abilityState` (Protean's
-/// and Libero's used flag go), and its `Start` (`switching::start_ability`: Intimidate, weather,
-/// Trace, ...). An ability the engine does not run on the field is unsupported.
-fn set_ability<const N: usize>(
-    b: &mut Battle<'_, N>,
-    slot: SlotRef,
-    ability: AbilityId,
-) -> Result<bool, TurnError> {
-    let Some(pokemon) = b.alive(slot) else {
-        return Ok(false);
-    };
-    let old = b.mon(pokemon).ability;
-    let locked = |a: AbilityId| a.data().flags.contains(AbilityFlags::CANTSUPPRESS);
-    if locked(ability) || locked(old) || b.item(slot) == items::ABILITY_SHIELD {
-        return Ok(false);
-    }
-    change_ability(b, slot, ability)?;
-    super::super::switching::start_ability(b, slot, ability)?;
-    Ok(true)
-}
-
-/// The part of `setAbility` / `skillSwap` between the SetAbility event and the new ability's
-/// `Start`: the old ability's `End`, then the new one with a fresh `abilityState`.
-fn change_ability<const N: usize>(
-    b: &mut Battle<'_, N>,
-    slot: SlotRef,
-    ability: AbilityId,
-) -> Result<(), TurnError> {
-    let pokemon = b.occupant(slot).expect("an active Pokémon");
-    let old = b.mon(pokemon).ability;
-    if !super::super::support::ability_supported_on_field(ability) {
-        return Err(b.unsupported(format!(
-            "{} gaining {} ({:?})",
-            b.mon(pokemon).species.data().name,
-            ability.data().name,
-            ability.data().handlers
-        )));
-    }
-    super::super::switching::end_ability(b, slot, old)?;
-    b.delete_volatile(slot, Volatile::ProteanUsed);
-    if old != ability {
-        b.apply(Instruction::SetAbility {
-            target: pokemon,
-            old,
-            new: ability,
-        });
-    }
-    Ok(())
+        || data.handlers.contains(&"onAfterMove"))
+    .then(|| format!("{} (a lock, own actions or AfterMove)", data.name))
 }
 
 /// Showdown `move.infiltrates`: the user's Infiltrator sets it in ModifyMove
@@ -2503,15 +2446,19 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::Success
             }
         }
-        // Bug Bite, Pluck: a user with HP takes the target's berry (`takeItem`, even from a
-        // target the hit knocked out) and eats it itself (`singleEvent('Eat', item, ..., source,
-        // source, move)`: the berry's `onEat` on the user; no `TryEatItem`, no `lastItem`).
-        // Resist berries and berries without handlers have an empty `onEat`. Returns nothing.
+        // Bug Bite, Pluck: a user with HP takes the target's berry (`target.getItem()`: the raw
+        // item, also from a target ignoring it; `takeItem`, even from a target the hit knocked
+        // out) and eats it itself (`singleEvent('Eat', item, ..., source, source, move)`: the
+        // berry's `onEat` on the user; no `TryEatItem`, no `lastItem`). `singleEvent` skips the
+        // `onEat` while the user ignores its item (Klutz, Magic Room) and then returns `true`,
+        // so EatItem still runs. Resist berries and berries without handlers have an empty
+        // `onEat`. Returns nothing.
         moves::BUG_BITE | moves::PLUCK => {
-            let item = b.item(target);
+            let item = b.raw_item(target);
             if let Some(eater) = b.alive(user).filter(|_| item.data().is_berry) {
                 let empty = item.data().handlers.is_empty()
-                    || super::super::items::resist_berry(item).is_some();
+                    || super::super::items::resist_berry(item).is_some()
+                    || super::super::items::ignoring_item(b.state, user);
                 if b.take_item(target) {
                     if !empty && !super::super::update::berry_on_eat(b, user, eater, item) {
                         return Err(b.unsupported(format!(
@@ -2800,7 +2747,7 @@ pub(super) fn on_hit<const N: usize>(
             if data.flags.contains(MoveFlags::FAILCOPYCAT) || data.is_z || data.is_max {
                 HitResult::Failure
             } else {
-                if let Some(why) = called_move_problem(b, user, copied) {
+                if let Some(why) = called_move_problem(copied) {
                     return Err(b.unsupported(format!("Copycat calling {why}")));
                 }
                 super::call_move(b, user, mv, copied, None)?;
@@ -3165,23 +3112,24 @@ pub(crate) fn trick_moves_item(item: ItemId) -> bool {
         .contains(&item)
 }
 
-/// `setItem`'s `singleEvent('Start', item)` on the new holder in `slot` (skipped here while it
-/// ignores its item, except Metronome's): a Choice item removes the holder's `choicelock` (a
-/// lock from its old Choice item, or from this very move's ModifyMove); a Seed, Room Service and
-/// White Herb act as when their holder switches in (`items::switch_in_item`: used in its
-/// terrain, in Trick Room, with a lowered stat); Metronome adds its condition.
+/// `setItem`'s `singleEvent('Start', item)` on the new holder in `slot`. `singleEvent` exempts
+/// `Start` from the item suppression, so the `onStart` runs even while the holder ignores its
+/// item (Klutz, Magic Room): a Choice item removes the holder's `choicelock` (a lock from its
+/// old Choice item, or from this very move's ModifyMove); Metronome adds its condition; White
+/// Herb is used on a lowered stat (`items::white_herb_start`: its `Use` is suppressed then); a
+/// Seed and Room Service are used in their terrain / in Trick Room, but they check
+/// `!pokemon.ignoringItem()` themselves (`items::switch_in_item`'s effective-item check).
+/// Mirror Herb has no `onStart`.
 pub(crate) fn trick_item_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
-    // `singleEvent('Start')` runs even for a holder ignoring its item (only other events skip
-    // it): Metronome's `onStart` adds its condition all the same.
-    if item == items::METRONOME {
-        super::super::items::metronome_start(b, slot);
-        return;
-    }
-    if b.item(slot) != item {
+    if b.raw_item(slot) != item {
         return;
     }
     if item.data().is_choice {
         b.remove_volatile(slot, Volatile::ChoiceLock);
+    } else if item == items::METRONOME {
+        super::super::items::metronome_start(b, slot);
+    } else if item == items::WHITE_HERB {
+        super::super::items::white_herb_start(b, slot);
     } else if item != items::MIRROR_HERB {
         super::super::items::switch_in_item(b, slot, item);
     }

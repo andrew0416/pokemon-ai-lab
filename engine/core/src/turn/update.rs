@@ -86,6 +86,8 @@ pub(crate) fn berry_problem(mon: &Pokemon) -> Option<String> {
 /// tie cannot change the outcome and keeps slot order.
 pub(crate) fn update_event<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), TurnError> {
     let actives = b.all_alive();
+    // The effective ability: Symbiosis acts through `onAllyAfterUseItem`, a `runEvent` handler
+    // skipped while its holder ignores its ability (no implemented Update handler changes that).
     let actives = super::abilities::speed_sorted(b, actives, |b, slot| {
         b.alive_slots(slot.side)
             .into_iter()

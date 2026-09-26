@@ -1,0 +1,26 @@
+{
+ "description": "Opus X unit B1: under Magic Room, a Choice item's Start still removes choicelock. Setup turn: Hariyama (Choice Scarf) and Alakazam (Choice Specs) lock into Harden before Bronzong's Magic Room. Then Alakazam (whose lock Magic Room ignores) Tricks with Hariyama: each gets the other's Choice item and its Start (singleEvent, not suppressed) removes its choicelock.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Bronzong", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Magic Room", "Harden"], "level": 50},
+   {"species": "Hariyama", "item": "Choice Scarf", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden", "Bulk Up"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Alakazam", "item": "Choice Specs", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Trick", "Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move magicroom, move harden", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move harden, move harden", "p2": "move trick 2, move harden"}
+}

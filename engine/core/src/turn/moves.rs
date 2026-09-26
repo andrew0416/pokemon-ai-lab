@@ -35,7 +35,7 @@ use super::TurnError;
 /// and `category` and left out of the comparison (keep the manual impls below in step with new
 /// fields).
 #[derive(Clone, Debug)]
-struct ActiveMove {
+pub(crate) struct ActiveMove {
     id: MoveId,
     /// The dex data, or for a move whose ModifyMove changed its category ([`ActiveMove::category`])
     /// a copy with that category ([`with_category`]), so that everything reading `data`
@@ -687,8 +687,11 @@ fn run_external_move<const N: usize>(
         return Err(b.unsupported(format!("Dancer copying {}: a multi-hit move", data.name)));
     }
     let user = handlers::current_slot(b, user, pokemon);
-    handlers::on_after_move(b, user, pokemon, &mv);
-    run_move_tail(b, user, &mv)?;
+    // `if (this.battle.activeMove) move = this.battle.activeMove;`: a called move's AfterMove.
+    let called = b.called_move.take();
+    let tail = called.as_ref().unwrap_or(&mv);
+    handlers::on_after_move(b, user, pokemon, tail);
+    run_move_tail(b, user, tail)?;
     if no_lock {
         b.delete_volatile(user, Volatile::LockedMove);
     }
@@ -799,9 +802,13 @@ fn run_move_inner<const N: usize>(
         return Ok(MoveStep::Suspended(progress));
     }
     let user = handlers::current_slot(b, user, pokemon);
+    // `if (this.battle.activeMove) move = this.battle.activeMove;`: the AfterMove events see the
+    // move a calling move (Sleep Talk, Copycat) used, not the caller.
+    let called = b.called_move.take();
+    let tail = called.as_ref().unwrap_or(&mv);
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
-    handlers::on_after_move(b, user, pokemon, &mv);
-    run_move_tail(b, user, &mv)?;
+    handlers::on_after_move(b, user, pokemon, tail);
+    run_move_tail(b, user, tail)?;
     // The action's `clearActiveMove()`: `battle.lastMove` is the active move, a called move
     // (Sleep Talk's, Copycat's) rather than its caller.
     if let Some(active) = b.active_move {
@@ -1462,6 +1469,8 @@ fn call_move<const N: usize>(
             data.name, caller.data.name
         )));
     }
+    // It stays the active move: the caller's AfterMove sees it (`run_move_tail`).
+    b.called_move = Some(mv);
     Ok(())
 }
 
@@ -3084,7 +3093,10 @@ fn apply_recoil_damage<const N: usize>(
 /// `useMoveInner`. Unlike the other Emergency Exit sites there is no `pokemon.hp` guard: a user
 /// the recoil knocked out is still flagged, and Showdown then asks for a mid-turn switch of the
 /// fainted Pokémon, which the engine does not model (unsupported). A crash or Life Orb never
-/// knocks out from above half.
+/// knocks out from above half. This is also the only way to an active Pokémon at 0 HP with
+/// `switchFlag === true`, which the `getAllActive()` checks of Eject Button and Eject Pack would
+/// see (oracle `x-switchflag-unprocessed-faint`: the pack stays at AfterMove); lifting the
+/// refusal needs those checks (`items::eject_pack_use`) to include such a Pokémon.
 fn user_emergency_exit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,

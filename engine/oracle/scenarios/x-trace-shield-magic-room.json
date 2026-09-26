@@ -1,0 +1,28 @@
+{
+ "description": "Opus X unit B9: under Magic Room Trace ignores its holder's Ability Shield (pokemon.hasItem('Ability Shield') is false, and the SetAbility event skips the item). After Bronzong's Magic Room (setup turn), Porygon2 (Trace, Ability Shield) switches in for Hariyama and copies Snorlax's Honey Gather or Swampert's Ball Fetch (1/2 each).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Bronzong", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Magic Room", "Harden"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Porygon2", "item": "Ability Shield", "ability": "Trace", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Swampert", "item": "", "ability": "Ball Fetch", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move magicroom, move harden", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move harden, switch 3", "p2": "move harden, move harden"}
+}

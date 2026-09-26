@@ -1160,7 +1160,8 @@ fn hazard_damage<const N: usize>(b: &Battle<'_, N>, slot: SlotRef, effect: SideE
         return 0.0;
     };
     let max_hp = f64::from(mon.max_hp);
-    let boots = mon.item == items::HEAVY_DUTY_BOOTS;
+    // `pokemon.hasItem('heavydutyboots')`: false while the holder ignores its item.
+    let boots = b.item(slot) == items::HEAVY_DUTY_BOOTS;
     let layers = b.state.side(slot.side).effects[effect as usize].value;
     match effect {
         // `if (pokemon.hasItem('heavydutyboots')) return; ... this.damage(pokemon.maxhp *
@@ -1208,7 +1209,8 @@ pub(crate) fn entry_hazards<const N: usize>(
     }
     let mon = b.mon(pokemon);
     let grounded = b.is_grounded(slot);
-    let boots = mon.item == items::HEAVY_DUTY_BOOTS;
+    // `pokemon.hasItem('heavydutyboots')` (Klutz, Magic Room: no Boots).
+    let boots = b.item(slot) == items::HEAVY_DUTY_BOOTS;
     let toxic_spikes_act = present.contains(&SideEffect::ToxicSpikes) && grounded;
     let poisons = toxic_spikes_act
         && !mon.types.contains(&Type::Poison)
