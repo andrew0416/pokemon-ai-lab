@@ -364,11 +364,17 @@ pub(super) fn on_try_hit<const N: usize>(
     }
 }
 
-/// Showdown `move.infiltrates` for the implemented moves: Pollen Puff's `onTryHit` sets it on a
-/// hit aimed at an ally (Infiltrator, which also sets it, is refused). It lets the move through
-/// a substitute.
-pub(super) fn infiltrates(user: SlotRef, mv: &ActiveMove, target: SlotRef) -> bool {
-    mv.id == moves::POLLEN_PUFF && target.side == user.side
+/// Showdown `move.infiltrates`: the user's Infiltrator sets it in ModifyMove
+/// (`ActiveMoveRef::infiltrates`); Pollen Puff's `onTryHit` sets it on a hit aimed at an ally.
+/// It lets the move through a substitute.
+pub(super) fn infiltrates<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    b.active_move.is_some_and(|m| m.infiltrates)
+        || (mv.id == moves::POLLEN_PUFF && target.side == user.side)
 }
 
 /// Whether the move's own `onTryHit` applies its `boosts` and deletes them (`delete
@@ -1596,7 +1602,7 @@ pub(super) fn on_hit<const N: usize>(
         moves::DEFOG => {
             let mut drop = NO_BOOSTS;
             drop[6] = -1;
-            let mut success = !b.has_substitute(target)
+            let mut success = (!b.has_substitute(target) || infiltrates(b, user, mv, target))
                 && b.boost_by(target, &drop, Some(user), BoostEffect::Move(mv.id));
             remove_side_effects(
                 b,
@@ -2138,7 +2144,10 @@ fn party_cure<const N: usize>(
                 if ability == immune_ability || ability == abilities::GOOD_AS_GOLD {
                     continue;
                 }
-                if id == moves::AROMATHERAPY && b.has_substitute(slot) {
+                if id == moves::AROMATHERAPY
+                    && b.has_substitute(slot)
+                    && !b.active_move.is_some_and(|m| m.infiltrates)
+                {
                     continue;
                 }
             }

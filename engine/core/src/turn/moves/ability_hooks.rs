@@ -198,6 +198,12 @@ pub(super) fn on_modify_move<const N: usize>(
             active.ignore_ability = true;
         }
     }
+    // Infiltrator: `move.infiltrates = true`.
+    if ability == abilities::INFILTRATOR {
+        if let Some(active) = b.active_move.as_mut() {
+            active.infiltrates = true;
+        }
+    }
     if ability == abilities::SHEER_FORCE && sheer_force_deletes_secondaries(mv.data) {
         mv.has_sheer_force = true;
     }

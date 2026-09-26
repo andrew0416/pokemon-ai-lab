@@ -40,6 +40,10 @@ pub(crate) struct ActiveMoveRef {
     /// `activeMove.ignoreAbility`: the move's data flag (Sunsteel Strike), set by the user's
     /// Mold Breaker / Teravolt / Turboblaze in ModifyMove.
     pub ignore_ability: bool,
+    /// `activeMove.infiltrates`, set by the user's Infiltrator in ModifyMove: the move goes
+    /// through a substitute, the screens, Safeguard and Mist (Pollen Puff's own, on an ally, is
+    /// `handlers::infiltrates`).
+    pub infiltrates: bool,
 }
 
 pub(crate) struct Battle<'a, const N: usize> {
@@ -668,7 +672,11 @@ impl<'a, const N: usize> Battle<'a, N> {
             .active_move
             .filter(|m| self.occupant(m.user) == Some(m.pokemon))
             .map(|m| m.user);
-        self.try_set_status_from(target, status, source)
+        // Safeguard's `if (effect.effectType === 'Move' && effect.infiltrates &&
+        // !target.isAlly(source)) return;`: an infiltrating move's status on a foe.
+        let infiltrates = self.active_move.is_some_and(|m| m.infiltrates)
+            && source.is_some_and(|s| s.side != target.side);
+        self.try_set_status_inner(target, status, source, infiltrates)
     }
 
     /// Showdown `trySetStatus(status, source)` → `setStatus` for the supported handlers: fails
@@ -681,11 +689,23 @@ impl<'a, const N: usize> Battle<'a, N> {
         status: Status,
         source: Option<SlotRef>,
     ) -> bool {
+        self.try_set_status_inner(target, status, source, false)
+    }
+
+    /// [`Battle::try_set_status_from`]; `infiltrates`: the status is an infiltrating move's
+    /// effect on a foe, which Safeguard lets through.
+    fn try_set_status_inner(
+        &mut self,
+        target: SlotRef,
+        status: Status,
+        source: Option<SlotRef>,
+        infiltrates: bool,
+    ) -> bool {
         let Some(pokemon) = self.alive(target) else {
             return false;
         };
         // Safeguard (`onSetStatus` of the target's side): blocks a status from another Pokémon.
-        if self.safeguarded(target, source) {
+        if !infiltrates && self.safeguarded(target, source) {
             return false;
         }
         if self.mon(pokemon).status != Status::None {
@@ -820,8 +840,8 @@ impl<'a, const N: usize> Battle<'a, N> {
 
     /// Safeguard on `target`'s side against an effect from `source` (its `onSetStatus` and
     /// `onTryAddVolatile`): only another Pokémon's effects are blocked (`target !== source`),
-    /// and nothing without a source (`if (!effect || !source) return;`). Infiltrator, which
-    /// bypasses it, is refused.
+    /// and nothing without a source (`if (!effect || !source) return;`). An infiltrating move
+    /// (Infiltrator) on a foe passes: the callers check it.
     fn safeguarded(&self, target: SlotRef, source: Option<SlotRef>) -> bool {
         source.is_some_and(|s| s != target)
             && self.side_effect_active(target.side, SideEffect::Safeguard)
@@ -882,7 +902,13 @@ impl<'a, const N: usize> Battle<'a, N> {
         // Electric Terrain's `onTryAddVolatile`: Yawn fails on a grounded target (Misty
         // Terrain's only blocks confusion). Safeguard: Yawn and confusion from the user of the
         // move in progress, if that is another Pokémon.
+        // An infiltrating move's volatile on a foe passes (`effect.infiltrates &&
+        // !target.isAlly(source)`).
+        let infiltrates = self
+            .active_move
+            .is_some_and(|m| m.infiltrates && m.user.side != target.side);
         let safeguard = (yawn || condition == conditions::CONFUSION)
+            && !infiltrates
             && self.safeguarded(target, self.active_move.map(|m| m.user));
         veiled
             || flower_veiled
@@ -1203,9 +1229,15 @@ impl<'a, const N: usize> Battle<'a, N> {
         {
             boost[0] = 0;
         }
-        // Mist on the target's side (`onTryBoost`): another Pokémon's drops are blocked
-        // (Infiltrator, which ignores it, is refused).
-        if from_other && self.side_effect_active(target.side, SideEffect::Mist) {
+        // Mist on the target's side (`onTryBoost`): another Pokémon's drops are blocked, except
+        // an infiltrating move's on a foe (`effect.effectType === 'Move' && effect.infiltrates &&
+        // !target.isAlly(source)`: the effect is the move in progress).
+        let infiltrates = self.active_move.is_some_and(|m| {
+            m.infiltrates
+                && effect == BoostEffect::Move(m.id)
+                && source.is_some_and(|s| s.side != target.side)
+        });
+        if from_other && !infiltrates && self.side_effect_active(target.side, SideEffect::Mist) {
             boost.iter_mut().filter(|b| **b < 0).for_each(|b| *b = 0);
         }
         // `if (source && target === source) return;` — no source counts as "from another".

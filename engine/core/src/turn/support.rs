@@ -1555,6 +1555,10 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
             "onStart",
         ],
     ),
+    // Infiltrator: `onModifyMove` sets `ActiveMoveRef::infiltrates` (`ability_hooks`), read by
+    // the substitute (`moves::substitute_takes_hit`, Disguise / Ice Face `forme::hits_substitute`,
+    // Defog, Aromatherapy), the screens (`moves::get_damage`), Safeguard and Mist (`battle`).
+    (abilities::INFILTRATOR, &["onModifyMove"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -1983,7 +1987,8 @@ mod tests {
     ///   Arm, ...) is refused.
     /// - `TryPrimaryHit`: only Aura Break's `onAnyTryPrimaryHit` besides the substitute; the
     ///   gems' `onSourceTryPrimaryHit` and Gulp Missile are refused.
-    /// - `move.infiltrates`: Infiltrator and Present are refused (Pollen Puff is implemented).
+    /// - `move.infiltrates`: Infiltrator (`ActiveMoveRef::infiltrates`) and Pollen Puff are
+    ///   implemented, Present is refused.
     /// - Moves whose own code reads a substitute: Aromatherapy and Defog are implemented; Shed
     ///   Tail, Baton Pass, Sky Drop, Tidy Up, Transform, Sparkly Swirl are refused.
     /// - Disguise and Ice Face (`hitSub` in their handlers) are refused behind a substitute
@@ -2033,9 +2038,8 @@ mod tests {
                 assert_eq!(id, abilities::AURA_BREAK);
             }
         }
-        for ability in [abilities::INFILTRATOR, abilities::GULP_MISSILE] {
-            assert!(!ability_supported_on_field(ability), "{ability:?}");
-        }
+        assert!(!ability_supported_on_field(abilities::GULP_MISSILE));
+        assert!(ability_supported_on_field(abilities::INFILTRATOR));
         // Disguise and Ice Face read the substitute themselves (`hitSub`, `forme::hits_substitute`).
         for ability in [abilities::DISGUISE, abilities::ICE_FACE] {
             assert!(ability_supported_on_field(ability), "{ability:?}");

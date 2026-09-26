@@ -202,16 +202,17 @@ fn shield_up(ability: AbilityId, species: SpeciesId, category: MoveCategory) -> 
 
 /// Showdown's `hitSub` test in the Disguise and Ice Face handlers: the target's substitute
 /// takes the hit (`target.volatiles['substitute'] && !move.flags['bypasssub'] &&
-/// !move.infiltrates`; Infiltrator sets `infiltrates` in the user's ModifyMove).
+/// !move.infiltrates`; Infiltrator sets `infiltrates` in the user's ModifyMove:
+/// `ActiveMoveRef::infiltrates`).
 fn hits_substitute<const N: usize>(
     b: &Battle<'_, N>,
-    user: SlotRef,
+    _user: SlotRef,
     target: SlotRef,
     id: MoveId,
 ) -> bool {
     b.state.slot(target).substitute_hp > 0
         && !id.data().flags.contains(MoveFlags::BYPASSSUB)
-        && b.ability(user) != abilities::INFILTRATOR
+        && !b.active_move.is_some_and(|m| m.infiltrates)
 }
 
 /// Whether the target's ability cancels a critical hit (`onCriticalHit` returning `false`) and

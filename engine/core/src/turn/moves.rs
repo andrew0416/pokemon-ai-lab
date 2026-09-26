@@ -168,6 +168,8 @@ pub(crate) struct MoveProgress {
     last_hit: Vec<(SlotRef, LastHit)>,
     /// `ActiveMoveRef::ignore_ability` of the move in flight (Mold Breaker moves).
     ignore_ability: bool,
+    /// `ActiveMoveRef::infiltrates` of the move in flight (Infiltrator).
+    infiltrates: bool,
     /// [`Battle::raw_speed`] at the suspension: the action goes on in the next stage.
     raw_speed: Vec<PokemonRef>,
 }
@@ -284,6 +286,7 @@ pub(crate) fn run_move<const N: usize>(
         pokemon,
         id,
         ignore_ability: id.data().ignore_ability,
+        infiltrates: false,
     });
     let result = run_move_inner(b, user, move_index, target_loc, will_act);
     if !matches!(result, Ok(MoveStep::Suspended(_))) {
@@ -303,6 +306,7 @@ pub(crate) fn resume_move<const N: usize>(
         pokemon,
         id: progress.mv.id,
         ignore_ability: progress.ignore_ability,
+        infiltrates: progress.infiltrates,
     });
     b.raw_speed = progress.raw_speed.clone();
     let mut mv = progress.mv.clone();
@@ -962,6 +966,7 @@ fn call_move<const N: usize>(
         pokemon,
         id,
         ignore_ability,
+        infiltrates: false,
     });
     let data = id.data();
     let mut mv = ActiveMove {
@@ -1036,6 +1041,7 @@ fn bounce_move<const N: usize>(
         pokemon,
         id,
         ignore_ability: false,
+        infiltrates: false,
     });
     let mut mv = ActiveMove {
         id,
@@ -1434,6 +1440,7 @@ fn try_spread_move_hit<const N: usize>(
         any_ok: false,
         last_hit: Vec::new(),
         ignore_ability: b.active_move.is_some_and(|a| a.ignore_ability),
+        infiltrates: b.active_move.is_some_and(|a| a.infiltrates),
         raw_speed: Vec::new(),
     };
     hit_loop(b, user, mv, Some(progress))
@@ -2314,7 +2321,7 @@ fn substitute_takes_hit<const N: usize>(
     target != user
         && b.has_substitute(target)
         && !mv.data.flags.contains(MoveFlags::BYPASSSUB)
-        && !handlers::infiltrates(user, mv, target)
+        && !handlers::infiltrates(b, user, mv, target)
 }
 
 /// The substitute's `onTryPrimaryHit` (F11): `getDamage` for the target (no damage: `null`,
@@ -2829,7 +2836,11 @@ fn get_damage<const N: usize>(
     ));
     // The target's volatiles (`onSourceModifyDamage`: Glaive Rush).
     final_mods.extend(handlers::volatile_modify_damage(b, target, mv));
-    if !critical && target != user && screen_applies(b, target.side, data.category) {
+    // The screens' `onAnyModifyDamage`: `if (!target.getMoveHitData(move).crit &&
+    // !move.infiltrates)`.
+    let infiltrates = b.active_move.is_some_and(|m| m.infiltrates);
+    if !critical && !infiltrates && target != user && screen_applies(b, target.side, data.category)
+    {
         let modifier = if N > 1 { 2732 } else { MOD_HALF };
         final_mods.push(Handler::global(0, SUB_SIDE_CONDITION, modifier));
     }
