@@ -237,23 +237,29 @@ pub(super) fn on_modify_move<const N: usize>(
     Ok(())
 }
 
-/// The secondaries of the move on `target` (`secondaries()`): none once Sheer Force deleted
-/// them, else the target's `ModifySecondaries` result. Shield Dust (breakable) keeps only
-/// secondaries with a `self` effect (`!!effect.self`); every supported move's `self` secondary
-/// has boosts, the only one without (Genesis Supernova) is a Z-Move.
-pub(super) fn secondaries<const N: usize>(
+/// The secondaries of the move on `target` (`secondaries()`) with their chances: the move's
+/// own (none once Sheer Force deleted them), then the flinch King's Rock, Razor Fang or Stench
+/// appended in ModifyMove, each chance doubled by Serene Grace (`secondary_chance_factor`);
+/// then the target's `ModifySecondaries`, which sees all of them (`moveData.secondaries`): Shield
+/// Dust (breakable) keeps only secondaries with a `self` effect (`!!effect.self`), so it drops
+/// the appended flinch too. Every supported move's `self` secondary has boosts; the only one
+/// without (Genesis Supernova) is a Z-Move.
+pub(super) fn secondaries<'m, const N: usize>(
     b: &Battle<'_, N>,
-    mv: &ActiveMove,
+    mv: &'m ActiveMove,
     target: SlotRef,
-) -> Vec<&'static Secondary> {
-    if mv.has_sheer_force {
-        return Vec::new();
-    }
-    let all = super::handlers::move_secondaries(b, mv);
-    if b.ability_unless_broken(target) == abilities::SHIELD_DUST {
-        return all.iter().filter(|s| s.self_boosts != NO_BOOSTS).collect();
-    }
-    all.iter().collect()
+) -> Vec<(&'m Secondary, u32)> {
+    let own: &'static [Secondary] = if mv.has_sheer_force {
+        &[]
+    } else {
+        super::handlers::move_secondaries(b, mv)
+    };
+    let shield_dust = b.ability_unless_broken(target) == abilities::SHIELD_DUST;
+    own.iter()
+        .chain(mv.added_secondary.iter())
+        .filter(|s| !shield_dust || s.self_boosts != NO_BOOSTS)
+        .map(|s| (s, u32::from(s.chance) * mv.secondary_chance_factor))
+        .collect()
 }
 
 /// `move.hasSheerForce && pokemon.hasAbility('sheerforce')`: the `AfterMoveSecondarySelf` and

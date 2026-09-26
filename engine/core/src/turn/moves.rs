@@ -3049,28 +3049,22 @@ fn spread_move_hit<const N: usize>(
             }
             Hit::Done | Hit::Damage(_) => {}
         }
-        // Secondaries: Sheer Force / Shield Dust (`ability_hooks::secondaries`) decide the
-        // move's own, Covert Cloak (`ModifySecondaries`) drops some, and King's Rock's added
-        // flinch comes after the move's own (ModifyMove priority -1: after Sheer Force, so even
-        // through it). Serene Grace (-2) doubled every chance ModifyMove left, the added flinch's
-        // too.
+        // Secondaries (`ability_hooks::secondaries`): the move's own (Sheer Force deleted them)
+        // and King's Rock's appended flinch (ModifyMove priority -1: after Sheer Force, so even
+        // through it), their chances doubled by Serene Grace (-2), less what the target's
+        // ModifySecondaries drops: Shield Dust there, Covert Cloak (`keeps_secondary`) below.
         // Parental Bond's `onSourceModifySecondaries`: on Secret Power's first hit only flinch
         // secondaries stay (`move.id === 'secretpower' && move.hit < 2`).
         let first_bond_hit = mv.parental_bond && mv.id == moves::SECRET_POWER && hit < 2;
         let own: Vec<(&Secondary, u32)> = ability_hooks::secondaries(b, mv, t)
             .into_iter()
-            .filter(|s| !first_bond_hit || s.volatile_status == crate::dex::conditions::FLINCH)
-            .map(|s| (s, u32::from(s.chance) * mv.secondary_chance_factor))
+            .filter(|(s, _)| !first_bond_hit || s.volatile_status == crate::dex::conditions::FLINCH)
             .collect();
-        // Fling's appended secondary comes last (its PrepareHit runs after ModifyMove).
+        // Fling's appended secondary comes last (its PrepareHit runs after ModifyMove, so Serene
+        // Grace does not double it).
         let flung = handlers::fling_secondary(b, user, mv, t);
-        let added: Vec<(&Secondary, u32)> = mv
-            .added_secondary
-            .iter()
-            .map(|s| (s, u32::from(s.chance) * mv.secondary_chance_factor))
-            .chain(flung.iter().map(|s| (s, u32::from(s.chance))))
-            .collect();
-        for (secondary, chance) in own.into_iter().chain(added) {
+        let flung = flung.iter().map(|s| (s, u32::from(s.chance)));
+        for (secondary, chance) in own.into_iter().chain(flung) {
             if !item_events::keeps_secondary(b, t, secondary) {
                 continue;
             }
