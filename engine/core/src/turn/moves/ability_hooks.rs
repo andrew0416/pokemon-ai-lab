@@ -147,9 +147,8 @@ pub(super) fn base_power_handlers<const N: usize>(
 /// `Some(modifier)`: the chained modifier on the numeric accuracy (4096 without Micle). Callers
 /// with `accuracy === true` ignore the result.
 ///
-/// No Guard's other callback, `onAnyInvulnerability`, only answers a semi-invulnerable target
-/// (two-turn moves, Sky Drop, Commander), which nothing supported creates (pinned by a test in
-/// `support`).
+/// OHKO moves run this event too (`accuracy_check`), with the accuracy `hitStepAccuracy` gave
+/// them. No Guard's other callback, `onAnyInvulnerability`, is in `handlers::invulnerable`.
 pub(super) fn accuracy_event<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,

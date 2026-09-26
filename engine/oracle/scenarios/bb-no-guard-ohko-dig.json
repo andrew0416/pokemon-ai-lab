@@ -1,0 +1,26 @@
+{
+ "description": "Opus BB unit B13: OHKO accuracy against a semi-invulnerable target. Mamoswine (Ice/Ground) digs in the setup turn. Then Jolly Machamp (No Guard) outspeeds it and uses Sheer Cold on it underground: No Guard's `onAnyInvulnerability` lets the move through, and hitStepAccuracy's OHKO branch skips the level and Ice-type check for a semi-invulnerable target (`if (!target.isSemiInvulnerable())`) and keeps the move's 30 accuracy, which No Guard's `Accuracy` handler turns into a hit: Mamoswine faints. Golurk (No Guard) uses Sheer Cold on Glaceon above ground: an Ice type is immune to Sheer Cold whatever No Guard does.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "No Guard", "nature": "Jolly",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Sheer Cold", "Harden"], "level": 50},
+   {"species": "Golurk", "item": "", "ability": "No Guard", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Sheer Cold", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Mamoswine", "item": "", "ability": "Oblivious", "nature": "Brave",
+    "evs": {"hp": 32}, "moves": ["Dig", "Harden"], "level": 50},
+   {"species": "Glaceon", "item": "", "ability": "Snow Cloak", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move harden, move harden", "move dig 1, move harden"]
+ ],
+ "turn": {"p1": "move sheercold 1, move sheercold 2", "p2": "move dig 1, move harden"}
+}

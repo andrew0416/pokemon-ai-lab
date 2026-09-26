@@ -2413,25 +2413,33 @@ fn accuracy_check<const N: usize>(
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
-    // OHKO moves bypass every accuracy modifier: 30 (Sheer Cold 20 for a non-Ice user) plus the
-    // level difference; a target of higher level, or of the type of a typed OHKO move (Sheer
-    // Cold vs Ice), is immune. Then the `Accuracy` event: Glaive Rush's drawback hits anyway;
-    // Micle Berry skips OHKO moves (`if (!move.ohko)`). No semi-invulnerable state exists.
+    // OHKO moves bypass every accuracy modifier (`hitStepAccuracy`): against a target that is
+    // not semi-invulnerable, 30 (Sheer Cold 20 for a non-Ice user) plus the level difference,
+    // and a target of higher level, or of the type of a typed OHKO move (Sheer Cold vs Ice), is
+    // immune; a semi-invulnerable target (reached through No Guard or Lock-On) skips all that
+    // and keeps the move's own accuracy. Then `runEvent('Accuracy')` as for any move: No Guard
+    // (the user's or the target's), Glaive Rush's drawback, Minimize and Lock-On make it hit;
+    // Micle Berry skips OHKO moves (`if (!move.ohko)`).
     if mv.data.ohko != Ohko::No {
-        let level = |s: SlotRef| b.slot_mon(s).map_or(0, |m| i32::from(m.level));
-        let (mine, theirs) = (level(user), level(target));
-        let immune_type = matches!(mv.data.ohko, Ohko::Typed(t) if b.has_type(target, t));
-        if mine < theirs || immune_type {
-            return false;
-        }
-        let base = match mv.data.ohko {
-            Ohko::Typed(t) if !b.has_type(user, t) => 20,
-            _ => 30,
+        let accuracy = if conditions::semi_invulnerable(b, target).is_some() {
+            i32::from(mv.accuracy.unwrap_or(30))
+        } else {
+            let level = |s: SlotRef| b.slot_mon(s).map_or(0, |m| i32::from(m.level));
+            let (mine, theirs) = (level(user), level(target));
+            let immune_type = matches!(mv.data.ohko, Ohko::Typed(t) if b.has_type(target, t));
+            if mine < theirs || immune_type {
+                return false;
+            }
+            let base = match mv.data.ohko {
+                Ohko::Typed(t) if !b.has_type(user, t) => 20,
+                _ => 30,
+            };
+            base + mine - theirs
         };
-        if handlers::always_hit(b, user, target, mv) {
-            return true;
-        }
-        return b.rng.chance((base + mine - theirs) as u32, 100);
+        return match ability_hooks::accuracy_event(b, user, mv, target) {
+            None => true,
+            Some(modifier) => b.rng.chance(modify(accuracy, modifier).max(0) as u32, 100),
+        };
     }
     // `accuracy = true` without the `Accuracy` event: a status move on the user, and (gen 8+)
     // Toxic used by a Poison type.
