@@ -451,6 +451,12 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     ),
     // Parting Shot: `onHit` drops Atk and SpA and withdraws the switch if that failed (F6).
     (moves::PARTING_SHOT, &["onHit"]),
+    // `onTry` in `handlers::on_try`: Belch (`ateBerry`, `SideHistory::ate_berry`; Champions has
+    // no `onDisableMove`), Last Resort (`moveSlot.used`, `SlotHistory::moves_used`), Dark Void
+    // (Darkrai or a bounced copy).
+    (moves::BELCH, &["onTry"]),
+    (moves::LAST_RESORT, &["onTry"]),
+    (moves::DARK_VOID, &["onTry"]),
     // Slot conditions (F12): `conditions::{add_slot_condition, slot_condition_residual,
     // slot_condition_switch_in, remove_slot_condition}`; Revival Blessing's revival is a
     // mid-turn decision (`resume_turn`).

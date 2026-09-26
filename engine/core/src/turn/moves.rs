@@ -633,6 +633,8 @@ fn run_move_inner<const N: usize>(
             old: pp,
             new: pp - 1,
         });
+        // `deductPP`: `moveSlot.used = true` (Last Resort).
+        b.record_move_used(user, usize::from(move_index));
     }
     b.set_last_move(user, id);
 
@@ -1394,6 +1396,7 @@ fn deduct_pressure_pp<const N: usize>(
     let Some(index) = b.mon(pokemon).moves.iter().position(|m| m.id == paying) else {
         return;
     };
+    b.record_move_used(user, index);
     let old = b.mon(pokemon).moves[index].pp;
     let new = old.saturating_sub(extra as u8);
     if new != old {

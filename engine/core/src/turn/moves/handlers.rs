@@ -214,6 +214,30 @@ pub(super) fn on_try<const N: usize>(
         moves::METAL_BURST | moves::COMEUPPANCE => {
             b.state.slot(user).history.last_damaged_by.is_some()
         }
+        // Belch: `return source.ateBerry;` (Champions drops its `onDisableMove`).
+        moves::BELCH => b
+            .occupant(user)
+            .is_some_and(|p| b.state.side(p.side).history.ate_berry & (1 << p.party) != 0),
+        // Last Resort: at least two known moves, Last Resort among them, and every other one
+        // `used` since the user switched in.
+        moves::LAST_RESORT => b.slot_mon(user).is_some_and(|m| {
+            let used = b.state.slot(user).history.moves_used;
+            let known: Vec<usize> = (0..4).filter(|&i| !m.moves[i].id.is_none()).collect();
+            known.len() >= 2
+                && known.iter().any(|&i| m.moves[i].id == moves::LAST_RESORT)
+                && known
+                    .iter()
+                    .all(|&i| m.moves[i].id == moves::LAST_RESORT || used & (1 << i) != 0)
+        }),
+        // Dark Void: only a Darkrai (`species.baseSpecies`) or a bounced copy; otherwise `null`.
+        moves::DARK_VOID => {
+            mv.has_bounced
+                || b.slot_mon(user).is_some_and(|m| {
+                    let base = m.species.data().base_species;
+                    let base = if base.is_none() { m.species } else { base };
+                    base == crate::dex::species::DARKRAI
+                })
+        }
         // Counter, Mirror Coat: `if (!source.volatiles['counter']) return false; if
         // (source.volatiles['counter'].slot === null) return false;`
         moves::COUNTER | moves::MIRROR_COAT => before_turn_volatile(mv.id)
@@ -1750,6 +1774,10 @@ pub(super) fn on_hit<const N: usize>(
                 return Ok(Some(HitResult::Failure));
             };
             let index = b.mon(pokemon).moves.iter().position(|m| m.id == last);
+            // `deductPP` marks the slot `used` before looking at its PP (Last Resort).
+            if let Some(i) = index.filter(|_| !last.is_none()) {
+                b.record_move_used(target, i);
+            }
             match index {
                 Some(i) if !last.is_none() && b.mon(pokemon).moves[i].pp > 0 => {
                     let old = b.mon(pokemon).moves[i].pp;
@@ -1814,15 +1842,18 @@ pub(super) fn on_hit<const N: usize>(
             if let Some(eater) = b.alive(user).filter(|_| item.data().is_berry) {
                 let empty = item.data().handlers.is_empty()
                     || super::super::items::resist_berry(item).is_some();
-                if b.take_item(target)
-                    && !empty
-                    && !super::super::update::berry_on_eat(b, user, eater, item)
-                {
-                    return Err(b.unsupported(format!(
-                        "{} eating {}",
-                        mv.data.name,
-                        item.data().name
-                    )));
+                if b.take_item(target) {
+                    if !empty && !super::super::update::berry_on_eat(b, user, eater, item) {
+                        return Err(b.unsupported(format!(
+                            "{} eating {}",
+                            mv.data.name,
+                            item.data().name
+                        )));
+                    }
+                    // `if (item.onEat) source.ateBerry = true;` (Belch).
+                    if item.data().handlers.contains(&"onEat") {
+                        b.record_ate_berry(eater);
+                    }
                 }
             }
             HitResult::Success

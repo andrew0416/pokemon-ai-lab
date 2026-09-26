@@ -109,6 +109,10 @@ pub struct HistoryReaders {
     pub stats_raised: bool,
     /// Lash Out (`statsLoweredThisTurn`).
     pub stats_lowered: bool,
+    /// Belch (`ateBerry`).
+    pub ate_berry: bool,
+    /// Last Resort (`moveSlot.used`).
+    pub moves_used: bool,
 }
 
 impl HistoryReaders {
@@ -130,6 +134,10 @@ impl HistoryReaders {
                         readers.stats_raised = true;
                     } else if slot.id == m::LASH_OUT {
                         readers.stats_lowered = true;
+                    } else if slot.id == m::BELCH {
+                        readers.ate_berry = true;
+                    } else if slot.id == m::LAST_RESORT {
+                        readers.moves_used = true;
                     }
                 }
             }
@@ -1421,6 +1429,11 @@ impl<'a, const N: usize> Battle<'a, N> {
             old: item,
             new: ItemId::NONE,
         });
+        // The only berries consumed through here are the resist berries, which Showdown eats
+        // (`eatItem`: `ateBerry = true`, Belch).
+        if item.data().is_berry {
+            self.record_ate_berry(pokemon);
+        }
         // AfterUseItem: Unburden.
         super::abilities::unburden(self, slot);
         true
