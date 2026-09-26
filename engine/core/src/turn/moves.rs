@@ -1160,7 +1160,11 @@ fn try_move_hit_field<const N: usize>(
     if mv.id == moves::AURORA_VEIL && b.effective_weather() != Weather::Snow {
         return Ok(false);
     }
-    if [moves::WIDE_GUARD, moves::QUICK_GUARD].contains(&mv.id) && !will_act {
+    if [moves::WIDE_GUARD, moves::QUICK_GUARD, moves::CRAFTY_SHIELD].contains(&mv.id) && !will_act {
+        return Ok(false);
+    }
+    // Mat Block: `if (source.activeMoveActions > 1) return false; return !!this.queue.willAct();`
+    if mv.id == moves::MAT_BLOCK && (b.state.slot(user).move_actions > 1 || !will_act) {
         return Ok(false);
     }
     // PrepareHit: the user's ability (Protean, Libero).
@@ -1494,8 +1498,9 @@ fn stall_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> bool {
 /// The TryHit handlers for one target by priority (`compareLeftToRightOrder`: priority, then
 /// target index; each target's handlers only act on that target, its attacker, or nothing that
 /// another target's handlers read): Psychic Terrain, Wide Guard and Quick Guard (4), the
-/// protect family (3, `handlers::protect_try_hit`), then the target's ability and item.
-/// `false` = the move fails on it.
+/// protect family (3, `handlers::protect_try_hit`: the target's volatiles, collected before its
+/// side's conditions), Crafty Shield and Mat Block (3, `handlers::side_guard_try_hit`), Magic
+/// Bounce (1), then the target's ability and item. `false` = the move fails on it.
 fn try_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -1505,16 +1510,19 @@ fn try_hit<const N: usize>(
     if blocked_by_try_hit(b, user, mv, target) {
         return Ok(false);
     }
-    // Magic Bounce (`onTryHit`, priority 1: after Psychic Terrain, the guards and Protect, before
-    // every priority-0 handler) uses a copy of the move back at its user, then `return null`.
-    // Showdown runs the TryHit handlers of all targets together by priority; taking the targets
-    // one at a time only moves the other targets' handlers of priority 0..1 before or after the
-    // bounce, and none of them reads what a bounced status move changes.
-    if magic_bounce_reflects(b, user, mv, target) {
-        bounce_move(b, target, user, mv)?;
+    if handlers::protect_try_hit(b, user, mv, target) {
         return Ok(false);
     }
-    if handlers::protect_try_hit(b, user, mv, target) {
+    if handlers::side_guard_try_hit(b, user, mv, target) {
+        return Ok(false);
+    }
+    // Magic Bounce (`onTryHit`, priority 1: after Psychic Terrain, the guards, Protect and the
+    // side guards, before every priority-0 handler) uses a copy of the move back at its user,
+    // then `return null`. Showdown runs the TryHit handlers of all targets together by priority;
+    // taking the targets one at a time only moves the other targets' handlers of priority 0..1
+    // before or after the bounce, and none of them reads what a bounced status move changes.
+    if magic_bounce_reflects(b, user, mv, target) {
+        bounce_move(b, target, user, mv)?;
         return Ok(false);
     }
     // Sturdy `onTryHit`: OHKO moves fail (breakable).
@@ -2847,7 +2855,10 @@ fn add_side_condition<const N: usize>(
     }
     let turns = match effect {
         SideEffect::Tailwind => 4,
-        SideEffect::WideGuard | SideEffect::QuickGuard => 1,
+        SideEffect::WideGuard
+        | SideEffect::QuickGuard
+        | SideEffect::CraftyShield
+        | SideEffect::MatBlock => 1,
         SideEffect::Reflect | SideEffect::LightScreen | SideEffect::AuroraVeil
             if b.item(source) == items::LIGHT_CLAY =>
         {

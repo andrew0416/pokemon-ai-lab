@@ -255,10 +255,12 @@ fn field(out: &mut String, effects: &[Effect; FIELD_EFFECT_COUNT]) -> Result<(),
 }
 
 /// Side conditions the schema can write, in id order.
-const SIDE_CONDITIONS: [(SideEffect, &str); 13] = [
+const SIDE_CONDITIONS: [(SideEffect, &str); 15] = [
     (SideEffect::AuroraVeil, "auroraveil"),
+    (SideEffect::CraftyShield, "craftyshield"),
     (SideEffect::LightScreen, "lightscreen"),
     (SideEffect::LuckyChant, "luckychant"),
+    (SideEffect::MatBlock, "matblock"),
     (SideEffect::Mist, "mist"),
     (SideEffect::QuickGuard, "quickguard"),
     (SideEffect::Reflect, "reflect"),

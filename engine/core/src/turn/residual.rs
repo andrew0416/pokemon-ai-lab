@@ -122,6 +122,8 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
             // No `onSideResidualOrder`: Showdown's default order, the side-condition sub-order.
             (SideEffect::WideGuard, ORDER_DEFAULT, SUB_SIDE_CONDITION),
             (SideEffect::QuickGuard, ORDER_DEFAULT, SUB_SIDE_CONDITION),
+            (SideEffect::CraftyShield, ORDER_DEFAULT, SUB_SIDE_CONDITION),
+            (SideEffect::MatBlock, ORDER_DEFAULT, SUB_SIDE_CONDITION),
         ] {
             if b.side_effect_active(side, effect) {
                 out.push(field(order, sub_order, Kind::SideDuration(side, effect)));
@@ -662,6 +664,8 @@ mod tests {
             (moves::LUCKY_CHANT, Some((26, 6))),
             (moves::WIDE_GUARD, None),
             (moves::QUICK_GUARD, None),
+            (moves::CRAFTY_SHIELD, None),
+            (moves::MAT_BLOCK, None),
         ] {
             let orders = id.data().event_orders;
             let found = orders

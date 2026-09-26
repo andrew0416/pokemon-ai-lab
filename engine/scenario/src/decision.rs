@@ -105,6 +105,8 @@ pub fn apply_patch<const N: usize>(
                 "luckychant" => (SideEffect::LuckyChant, 5),
                 "wideguard" => (SideEffect::WideGuard, 1),
                 "quickguard" => (SideEffect::QuickGuard, 1),
+                "craftyshield" => (SideEffect::CraftyShield, 1),
+                "matblock" => (SideEffect::MatBlock, 1),
                 other => return Err(format!("side condition {other:?} is not supported")),
             };
             // The screens' natural duration depends on the source's Light Clay.

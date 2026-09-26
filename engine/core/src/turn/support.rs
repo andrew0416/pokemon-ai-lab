@@ -638,6 +638,18 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "onTry",
         ],
     ),
+    // Crafty Shield, Mat Block: `onTry` in `moves::try_move_hit_field` (a later action; Mat Block
+    // only on its user's first turn out), the side's `onTryHit` (priority 3, after the protect
+    // family, before Magic Bounce) in `handlers::side_guard_try_hit`; `onSideStart` only logs.
+    // Mat Block's `stallingMove` has no mechanical effect (it adds no `stall`).
+    (
+        moves::CRAFTY_SHIELD,
+        &["condition.onSideStart", "condition.onTryHit", "onTry"],
+    ),
+    (
+        moves::MAT_BLOCK,
+        &["condition.onSideStart", "condition.onTryHit", "onTry"],
+    ),
     // Safeguard: `onSetStatus` / `onTryAddVolatile` in `Battle` (Persistent, the only
     // `durationCallback` change, is refused); Mist: `onTryBoost` in `Battle::boost_by`; Lucky
     // Chant: `onCriticalHit: false` in `moves::get_damage`. The side start/end only log.
@@ -1476,7 +1488,7 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     {
         return why("a special mechanic");
     }
-    const STALLING_MOVES: [MoveId; 9] = [
+    const STALLING_MOVES: [MoveId; 10] = [
         moves::PROTECT,
         moves::DETECT,
         moves::ENDURE,
@@ -1486,6 +1498,8 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         moves::OBSTRUCT,
         moves::SILK_TRAP,
         moves::BURNING_BULWARK,
+        // A side move: its `stallingMove` flag does nothing in Showdown (no StallMove check).
+        moves::MAT_BLOCK,
     ];
     if m.stalling_move && !STALLING_MOVES.contains(&id) {
         return why("stalling move");
@@ -1566,6 +1580,8 @@ pub(crate) fn side_effect_of(condition: &str) -> Option<SideEffect> {
         "luckychant" => SideEffect::LuckyChant,
         "wideguard" => SideEffect::WideGuard,
         "quickguard" => SideEffect::QuickGuard,
+        "craftyshield" => SideEffect::CraftyShield,
+        "matblock" => SideEffect::MatBlock,
         "stealthrock" => SideEffect::StealthRock,
         "spikes" => SideEffect::Spikes,
         "toxicspikes" => SideEffect::ToxicSpikes,
@@ -1575,7 +1591,7 @@ pub(crate) fn side_effect_of(condition: &str) -> Option<SideEffect> {
 }
 
 /// The implemented side effects.
-const SUPPORTED_SIDE_EFFECTS: [SideEffect; 13] = [
+const SUPPORTED_SIDE_EFFECTS: [SideEffect; 15] = [
     SideEffect::Reflect,
     SideEffect::LightScreen,
     SideEffect::AuroraVeil,
@@ -1585,6 +1601,8 @@ const SUPPORTED_SIDE_EFFECTS: [SideEffect; 13] = [
     SideEffect::LuckyChant,
     SideEffect::WideGuard,
     SideEffect::QuickGuard,
+    SideEffect::CraftyShield,
+    SideEffect::MatBlock,
     SideEffect::StealthRock,
     SideEffect::Spikes,
     SideEffect::ToxicSpikes,

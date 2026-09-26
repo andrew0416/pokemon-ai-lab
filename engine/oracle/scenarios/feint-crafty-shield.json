@@ -1,0 +1,24 @@
+{
+ "description": "Feint breaks Crafty Shield: Machamp's Feint (+2, damaging, so not blocked) on Hatterene (patched to 1 HP, knocked out) removes p1's Crafty Shield first; Breloom's later Spore then puts Mr. Mime to sleep (2 turns 1/3, 3 turns 2/3).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hatterene", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Crafty Shield", "Protect"], "level": 50},
+   {"species": "Mr. Mime", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Feint", "Protect"], "level": 50},
+   {"species": "Breloom", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Spore", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Hatterene": {"hp": 1}}},
+ "turn": {"p1": "move craftyshield, move seismictoss 2", "p2": "move feint 1, move spore 2"}
+}

@@ -814,10 +814,44 @@ pub(super) fn protect_try_hit<const N: usize>(
     false
 }
 
+/// The side conditions' `onTryHit` (priority 3, after the target's protect-family volatiles):
+/// Crafty Shield stops a status move unless it targets `self` or `all` (from anyone, the side's
+/// own Pokémon included); Mat Block stops a move that does not target `self` and that Protect
+/// without `blockStatus` would (`checkMoveBypassesProtect(move, source, target, false)`: a
+/// damaging move with the `protect` flag; `HitProtect` has no handler), resetting a locked move
+/// on its first turn as Protect does. Both return `NOT_FAIL`. Returns whether the move is
+/// stopped.
+pub(super) fn side_guard_try_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    let side = target.side;
+    let status = mv.data.category == MoveCategory::Status;
+    if b.side_effect_active(side, SideEffect::CraftyShield)
+        && status
+        && !matches!(mv.target, MoveTarget::User | MoveTarget::All)
+    {
+        return true;
+    }
+    if b.side_effect_active(side, SideEffect::MatBlock)
+        && mv.target != MoveTarget::User
+        && !status
+        && mv.data.flags.contains(MoveFlags::PROTECT)
+    {
+        let locked = b.volatile(user, Volatile::LockedMove);
+        if locked.active && locked.duration == 2 {
+            b.delete_volatile(user, Volatile::LockedMove);
+        }
+        return true;
+    }
+    false
+}
+
 /// `hitStepBreakProtect` for one target of a `breaksProtect` move (Feint): its protect-family
-/// volatiles are removed (none has `onEnd`) and its side loses Quick Guard and Wide Guard (Crafty
-/// Shield and Mat Block are not implemented); if anything was broken, its `stall` counter is
-/// deleted (gen 6+).
+/// volatiles are removed (none has `onEnd`) and its side loses Crafty Shield, Mat Block, Quick
+/// Guard and Wide Guard; if anything was broken, its `stall` counter is deleted (gen 6+).
 pub(super) fn break_protect<const N: usize>(b: &mut Battle<'_, N>, target: SlotRef) {
     let mut broke = false;
     for (volatile, _) in PROTECTIONS {
@@ -826,7 +860,12 @@ pub(super) fn break_protect<const N: usize>(b: &mut Battle<'_, N>, target: SlotR
     broke |= remove_side_effects(
         b,
         target.side,
-        &[SideEffect::QuickGuard, SideEffect::WideGuard],
+        &[
+            SideEffect::CraftyShield,
+            SideEffect::MatBlock,
+            SideEffect::QuickGuard,
+            SideEffect::WideGuard,
+        ],
     );
     if broke {
         b.delete_volatile(target, Volatile::Stall);

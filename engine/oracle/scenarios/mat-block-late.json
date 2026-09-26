@@ -1,0 +1,26 @@
+{
+ "description": "Mat Block fails after its user's first turn out (activeMoveActions > 1; setup turn: Greninja's Protect): both Seismic Tosses land. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Greninja", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Mat Block", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move protect, move protect", "move protect, move protect"]
+ ],
+ "turn": {"p1": "move matblock, move protect", "p2": "move seismictoss 1, move seismictoss 1"}
+}

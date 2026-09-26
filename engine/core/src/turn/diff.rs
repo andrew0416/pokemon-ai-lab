@@ -281,6 +281,8 @@ fn side_effect(i: usize) -> crate::field::SideEffect {
         WideGuard,
         QuickGuard,
         LuckyChant,
+        CraftyShield,
+        MatBlock,
     ][i]
 }
 

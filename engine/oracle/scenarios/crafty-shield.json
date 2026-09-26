@@ -1,0 +1,23 @@
+{
+ "description": "Crafty Shield (+3) on p1's side blocks status moves aimed at its Pokémon: Breloom's Spore at Magic Bounce Hatterene (the side condition's TryHit, priority 3, comes before Magic Bounce's, priority 1, so nothing bounces) and even Mr. Mime's own Decorate on its ally; Machamp's Seismic Toss (damaging) hits Mr. Mime. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hatterene", "item": "", "ability": "Magic Bounce", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Crafty Shield", "Protect"], "level": 50},
+   {"species": "Mr. Mime", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Decorate", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Breloom", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Spore", "Protect"], "level": 50},
+   {"species": "Machamp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move craftyshield, move decorate -1", "p2": "move spore 1, move seismictoss 2"}
+}

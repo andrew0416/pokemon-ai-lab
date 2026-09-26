@@ -1,0 +1,24 @@
+{
+ "description": "Protect (TryHit priority 3) comes before Magic Bounce (priority 1): Clawitzer's Heal Pulse at a Protecting Magic Bounce Hatterene is blocked, not bounced; Audino's at a Protecting Blissey too. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Clawitzer", "item": "", "ability": "Mega Launcher", "nature": "Serious",
+    "evs": {"hp": 1, "spa": 32, "spe": 32}, "moves": ["Heal Pulse", "Protect"], "level": 50},
+   {"species": "Audino", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 31, "def": 32, "spd": 2}, "moves": ["Heal Pulse", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Heal Pulse", "Protect"], "level": 50},
+   {"species": "Hatterene", "item": "", "ability": "Magic Bounce", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32, "spd": 2}, "moves": ["Heal Pulse", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Clawitzer": {"hp": 50}}, "p2": {"Blissey": {"hp": 100}}},
+ "turn": {"p1": "move healpulse 2, move healpulse 1", "p2": "move protect, move protect"}
+}

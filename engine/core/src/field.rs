@@ -36,9 +36,12 @@ pub enum SideEffect {
     QuickGuard,
     /// No critical hits against the side.
     LuckyChant,
+    /// Single-turn protections: Crafty Shield blocks status moves, Mat Block damaging ones.
+    CraftyShield,
+    MatBlock,
 }
 
-pub const SIDE_EFFECT_COUNT: usize = 13;
+pub const SIDE_EFFECT_COUNT: usize = 15;
 
 /// Slot conditions (Showdown `side.slotConditions[position]`, WORKPLAN F12): they belong to the
 /// position and outlast the Pokémon that stood there.

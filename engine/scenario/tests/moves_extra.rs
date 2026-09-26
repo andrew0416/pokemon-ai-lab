@@ -60,3 +60,33 @@ fn ally_switch_fails_without_a_standing_partner() {
 fn ally_switch_under_a_snipe_shot_is_unsupported() {
     assert_unsupported("ally-switch-snipe-shot", "tracks its original target");
 }
+
+/// Crafty Shield blocks status moves (the side's own ally's too) before Magic Bounce acts;
+/// damaging moves pass.
+#[test]
+fn crafty_shield_blocks_status_moves_before_magic_bounce() {
+    assert_exact_parity("crafty-shield");
+}
+
+/// Mat Block on the first turn out blocks damaging moves (a spread move before its accuracy
+/// roll), not status moves.
+#[test]
+fn mat_block_blocks_damaging_moves_on_the_first_turn() {
+    assert_exact_parity("mat-block");
+}
+
+#[test]
+fn mat_block_fails_after_the_first_turn_out() {
+    assert_exact_parity("mat-block-late");
+}
+
+#[test]
+fn feint_breaks_crafty_shield() {
+    assert_exact_parity("feint-crafty-shield");
+}
+
+/// Protect's TryHit (priority 3) comes before Magic Bounce's (priority 1): nothing bounces.
+#[test]
+fn protect_stops_a_move_before_magic_bounce() {
+    assert_exact_parity("magic-bounce-protect");
+}
