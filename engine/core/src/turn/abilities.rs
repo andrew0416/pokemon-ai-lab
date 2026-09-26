@@ -662,6 +662,34 @@ pub(crate) fn rivalry_problem<const N: usize>(state: &State<N>) -> Option<String
     ))
 }
 
+/// Harvest's `onResidual` for its holder: in harsh sunlight (`this.field.isWeather`: the field's
+/// effective weather) or on `this.randomChance(1, 2)`, a holder with HP, no item and a berry as
+/// `lastItem` gets it back (`setItem(lastItem)`: berries have no Start) and forgets it
+/// (`lastItem = ''`). The chance is not drawn when nothing could be restored (the outcome is
+/// the same either way).
+pub(crate) fn harvest<const N: usize>(b: &mut Battle<'_, N>, pokemon: PokemonRef) {
+    use crate::instruction::Instruction;
+    let mon = b.mon(pokemon);
+    let (item, last) = (mon.item, mon.last_item);
+    if mon.hp <= 0 || !item.is_none() || last.is_none() || !last.data().is_berry {
+        return;
+    }
+    let sun = b.effective_weather() == Weather::Sun;
+    if !sun && !b.rng.chance(1, 2) {
+        return;
+    }
+    b.apply(Instruction::SetItem {
+        target: pokemon,
+        old: ItemId::NONE,
+        new: last,
+    });
+    b.apply(Instruction::SetLastItem {
+        target: pokemon,
+        old: last,
+        new: ItemId::NONE,
+    });
+}
+
 /// Soul-Heart's `onAnyFaint` for one processed faint (`runEvent('Faint')` in `faintMessages`):
 /// every active holder not at 0 HP raises its SpA by 1 (`this.boost({spa: 1},
 /// this.effectState.target)`; `boost` does nothing at 0 HP, and fails once the holder's foes have
