@@ -1034,11 +1034,11 @@ pub(crate) fn try_hit_blocks<const N: usize>(
     b.item(target) == items::SAFETY_GOGGLES
         && data.flags.contains(MoveFlags::POWDER)
         && target != user
-        && b.slot_mon(target).is_some_and(|m| {
-            !m.types
-                .iter()
-                .any(|t| t.immunities().contains(TypeImmunities::POWDER))
-        })
+        && b.slot_mon(target).is_some()
+        && !b
+            .types(target)
+            .iter()
+            .any(|t| t.immunities().contains(TypeImmunities::POWDER))
 }
 
 /// The target's item `onModifySecondaries` (`secondaries`, before each roll): Covert Cloak keeps

@@ -36,7 +36,8 @@ const ATE_UNCHANGED: [&str; 7] = [
 /// The user's ability `onModifyType` (`runEvent('ModifyType')`, after the move's own
 /// ModifyType and ModifyMove, before the ability's ModifyMove; WORKPLAN O70). A Pokémon has one
 /// ability, so the handlers' priorities (Normalize 1, the rest -1) never compete, and no other
-/// ModifyType handler (Electrify, Ion Deluge) is implemented.
+/// ModifyType handler competes with them: Electrify's (priority -2) runs after them
+/// (`handlers::volatile_modify_type`); Ion Deluge is not implemented.
 /// - Pixilate, Aerilate, Refrigerate, Galvanize, Dragonize: a Normal move (not in
 ///   [`ATE_UNCHANGED`], not a damaging Z-Move) becomes Fairy / Flying / Ice / Electric / Dragon,
 ///   and `move.typeChangerBoosted` is set to the ability.
@@ -136,7 +137,8 @@ pub(super) fn base_power_handlers<const N: usize>(
 /// handlers, all priority 0:
 /// - No Guard (`onAnyAccuracy`, not breakable) of an active Pokémon that is the move's user or
 ///   target returns `true`;
-/// - the target's Glaive Rush drawback (`onAccuracy`) returns `true`;
+/// - the target's Glaive Rush drawback and Minimize (a `minimize` move; `onAccuracy`), and the
+///   user's Lock-On on the target (`onSourceAccuracy`), return `true`;
 /// - Micle Berry's volatile on the user (`onSourceAccuracy`): `if (!move.ohko)` the volatile
 ///   ends, and while the accuracy is still a number it chains 4915/4096.
 ///
@@ -163,7 +165,7 @@ pub(super) fn accuracy_event<const N: usize>(
     let no_guard = [user, target]
         .into_iter()
         .any(|s| b.alive(s).is_some() && b.ability(s) == abilities::NO_GUARD);
-    if no_guard || handlers::always_hit(b, target) {
+    if no_guard || handlers::always_hit(b, user, target, mv) {
         return None;
     }
     Some(modifier)
@@ -808,10 +810,11 @@ pub(super) fn on_source_damaging_hit<const N: usize>(
 /// Showdown `runEffectiveness(move)` for the implemented effectiveness handlers: per defending
 /// type, the chart then the move's own `onEffectiveness`, summed (not clamped).
 fn effectiveness<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove, target: SlotRef) -> i32 {
-    let Some(mon) = b.slot_mon(target) else {
+    if b.slot_mon(target).is_none() {
         return 0;
-    };
-    mon.types
+    }
+    // `getTypes()`: the added type too.
+    b.types(target)
         .iter()
         .filter(|&&t| t != Type::None)
         .map(|&t| {

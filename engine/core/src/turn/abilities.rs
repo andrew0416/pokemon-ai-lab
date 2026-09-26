@@ -1834,9 +1834,9 @@ pub fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> bool {
 }
 
 fn trapped_in<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
-    let Some(mon) = b.alive(slot).map(|p| b.mon(p)) else {
+    if b.alive(slot).is_none() {
         return false;
-    };
+    }
     let immune = b.natural_immune(slot, crate::dex::TypeImmunities::TRAPPED);
     let trapped = !immune
         && b.alive_slots(slot.side.other())
@@ -1844,7 +1844,7 @@ fn trapped_in<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
             .any(|foe| match b.ability(foe) {
                 a if a == abilities::SHADOW_TAG => b.ability(slot) != abilities::SHADOW_TAG,
                 a if a == abilities::ARENA_TRAP => b.is_grounded(slot),
-                a if a == abilities::MAGNET_PULL => mon.types.contains(&Type::Steel),
+                a if a == abilities::MAGNET_PULL => b.has_type(slot, Type::Steel),
                 _ => false,
             });
     // The effective item: a suppressed Shed Shell's handler does not run.

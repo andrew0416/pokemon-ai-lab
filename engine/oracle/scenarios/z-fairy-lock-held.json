@@ -1,0 +1,103 @@
+{
+ "description": "Fairy Lock (Opus Z unit 5): after the setup turn's Fairy Lock every active Pokémon is trapped for this turn's choices (`onTrapPokemon`: `tryTrap`), except a Ghost (Gengar) and a Shed Shell holder (Snorlax) (`.trapped.json`). Clefable's second Fairy Lock fails (no `onFieldRestart`), and the condition ends at this turn's residual. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Fairy Lock",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Kangaskhan",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "Shed Shell",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Gengar",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "setupTurns": [
+  [
+   "move fairylock, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move fairylock, move harden",
+  "p2": "move harden, move harden"
+ }
+}

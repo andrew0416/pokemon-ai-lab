@@ -1,0 +1,101 @@
+{
+ "description": "Dragon Darts (Opus Z unit 6): each dart takes a Golisopod (Emergency Exit, 105/182 HP) below half. The hit loop's `damage` array loses the first target's entry with `smartTarget`, so only the second Golisopod gets the EmergencyExit check and switches out (to Kangaskhan, `midTurn`). Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Dragapult",
+    "item": "",
+    "ability": "Clear Body",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Dragon Darts",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Golisopod",
+    "item": "",
+    "ability": "Emergency Exit",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50,
+    "name": "Goli A"
+   },
+   {
+    "species": "Golisopod",
+    "item": "",
+    "ability": "Emergency Exit",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50,
+    "name": "Goli B"
+   },
+   {
+    "species": "Kangaskhan",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "patch": {
+  "p2": {
+   "Goli A": {
+    "hp": 105
+   },
+   "Goli B": {
+    "hp": 105
+   }
+  }
+ },
+ "turn": {
+  "p1": "move dragondarts 1, move harden",
+  "p2": "move harden, move harden"
+ },
+ "midTurn": {
+  "p2": [
+   "switch 3"
+  ]
+ }
+}

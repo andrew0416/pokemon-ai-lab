@@ -276,7 +276,9 @@ pub(crate) fn slot_changes(out: &mut Vec<Instruction>, r: SlotRef, a: &Slot, b: 
 
 fn field_effect(i: usize) -> crate::field::FieldEffect {
     use crate::field::FieldEffect::*;
-    [Weather, Terrain, TrickRoom, Gravity, MagicRoom, WonderRoom][i]
+    [
+        Weather, Terrain, TrickRoom, Gravity, MagicRoom, WonderRoom, FairyLock,
+    ][i]
 }
 
 fn side_effect(i: usize) -> crate::field::SideEffect {

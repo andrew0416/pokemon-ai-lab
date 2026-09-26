@@ -1117,6 +1117,53 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         ],
     ),
     (moves::DEFENSE_CURL, &["condition.onRestart"]),
+    // Opus Z unit 1: Minimize's volatile (`onRestart`: `null`, like Defense Curl's), its
+    // `onAccuracy` (`handlers::always_hit`) and `onSourceModifyDamage`
+    // (`handlers::volatile_modify_damage`) for `minimize` moves.
+    (
+        moves::MINIMIZE,
+        &[
+            "condition.onAccuracy",
+            "condition.onRestart",
+            "condition.onSourceModifyDamage",
+        ],
+    ),
+    // Opus Z unit 2: Forest's Curse and Trick-or-Treat `onHit` (`handlers::on_hit`: `addType`,
+    // the hidden `Volatile::AddedType`, which `Battle::types` / `has_type` and every
+    // `getTypes()` reader include).
+    (moves::FORESTS_CURSE, &["onHit"]),
+    (moves::TRICK_OR_TREAT, &["onHit"]),
+    // Opus Z unit 4: Lock-On's `onTryHit` and `onHit` (`handlers::on_try_hit`, `on_hit`: the
+    // `lockon` volatile on the user, `Volatile::LockOn`), its `onSourceAccuracy`
+    // (`handlers::always_hit`) and `onSourceInvulnerability` (`handlers::invulnerable`).
+    (
+        moves::LOCK_ON,
+        &[
+            "condition.onSourceAccuracy",
+            "condition.onSourceInvulnerability",
+            "onHit",
+            "onTryHit",
+        ],
+    ),
+    // Opus Z unit 5. Fairy Lock: the `fairylock` pseudo-weather (`FieldEffect::FairyLock`, 2
+    // turns, default residual order; `onFieldStart` only logs), its `onTrapPokemon` in
+    // `conditions::trapped`. Electrify: `onTryHit` in `handlers::on_try_hit`, the volatile's
+    // `onModifyType` in `handlers::volatile_modify_type` (`onStart` only logs). Aura Wheel:
+    // `onTry` and `onModifyType` in `handlers`. Eerie Spell: the secondary's `onHit`
+    // (`handlers::secondary_on_hit`).
+    (
+        moves::FAIRY_LOCK,
+        &["condition.onFieldStart", "condition.onTrapPokemon"],
+    ),
+    (
+        moves::ELECTRIFY,
+        &["condition.onModifyType", "condition.onStart", "onTryHit"],
+    ),
+    (moves::AURA_WHEEL, &["onModifyType", "onTry"]),
+    (
+        moves::EERIE_SPELL,
+        &["secondaries.onHit", "secondary.onHit"],
+    ),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do
@@ -2137,6 +2184,16 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     let m = id.data();
     let name = m.name;
     let why = |what: &str| Some(format!("move {name}: {what}"));
+    // Transform (Opus Z unit 7, evaluated and kept refused): `transformInto` copies the target's
+    // species, stored stats, types and added type, weight, boosts, critical-hit volatiles and
+    // ability, and replaces the moves with 5-PP virtual copies until the user leaves the field;
+    // the state keeps neither the base move slots nor a `transformed` flag (read by the next
+    // `transformInto`, among others).
+    if id == moves::TRANSFORM {
+        return why(
+            "transformInto (base move slots and the `transformed` flag are not in the state)",
+        );
+    }
     if !m.handlers.is_empty() && !listed(MOVES_WITH_HANDLERS, id) {
         return why(&format!("callbacks {:?} are not implemented", m.handlers));
     }
@@ -2186,8 +2243,9 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         moves::NATURE_POWER,
     ]
     .contains(&id);
-    if m.smart_target
-        || (m.calls_move && !calls_supported)
+    // `smartTarget` (Dragon Darts) is implemented: `moves::get_target`, `get_move_targets`
+    // (`smart_targets`), `try_spread_move_hit` and `hit_loop` (Opus Z unit 6).
+    if (m.calls_move && !calls_supported)
         || (m.sleep_usable && !sleep_moves)
         || m.steals_boosts
         || m.mind_blown_recoil
@@ -2235,7 +2293,14 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         return why(&format!("side condition {}", m.side_condition.id()));
     }
     if !m.pseudo_weather.is_none()
-        && !["gravity", "trickroom", "wonderroom", "magicroom"].contains(&m.pseudo_weather.id())
+        && ![
+            "gravity",
+            "trickroom",
+            "wonderroom",
+            "magicroom",
+            "fairylock",
+        ]
+        .contains(&m.pseudo_weather.id())
     {
         return why(&format!("field effect {}", m.pseudo_weather.id()));
     }
@@ -2333,7 +2398,8 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
             x if x == FieldEffect::Gravity as usize
                 || x == FieldEffect::TrickRoom as usize
                 || x == FieldEffect::WonderRoom as usize
-                || x == FieldEffect::MagicRoom as usize =>
+                || x == FieldEffect::MagicRoom as usize
+                || x == FieldEffect::FairyLock as usize =>
             {
                 true
             }
@@ -2639,6 +2705,14 @@ mod tests {
         for id in future {
             assert_eq!(move_unsupported(id), None, "{id:?}");
         }
+    }
+
+    /// `smartTarget` is Dragon Darts' alone, and implemented (Opus Z unit 6).
+    #[test]
+    fn smart_target_is_dragon_darts() {
+        let smart: Vec<MoveId> = MoveId::all().filter(|id| id.data().smart_target).collect();
+        assert_eq!(smart, [moves::DRAGON_DARTS]);
+        assert_eq!(move_unsupported(moves::DRAGON_DARTS), None);
     }
 
     #[test]

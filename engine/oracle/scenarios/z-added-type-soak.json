@@ -1,0 +1,79 @@
+{
+ "description": "Added types (Opus Z unit 2): Forest's Curse (setup turn) adds Grass to Snorlax; then Hypno's Soak makes it pure Water (`setType` clears the added type; `getTypes().join()` saw Normal,Grass), so Blissey's Flame Charge is resisted. Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Hypno",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Forest's Curse",
+     "Soak",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Flame Charge",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move forestscurse 1, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move soak 1, move flamecharge 1",
+  "p2": "move harden, move harden"
+ }
+}

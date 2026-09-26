@@ -333,8 +333,22 @@ impl<'a, const N: usize> Battle<'a, N> {
         self.slot_mon(slot).map_or(ItemId::NONE, |m| m.item)
     }
 
+    /// Showdown `pokemon.hasType(type)`: the types, and the added type (Forest's Curse,
+    /// Trick-or-Treat).
     pub fn has_type(&self, slot: SlotRef, ty: Type) -> bool {
         self.slot_mon(slot).is_some_and(|m| m.types.contains(&ty))
+            || (ty != Type::None && self.added_type(slot) == ty)
+    }
+
+    /// Showdown `pokemon.addedType` ([`Volatile::AddedType`]); `Type::None` without one.
+    pub fn added_type(&self, slot: SlotRef) -> Type {
+        super::conditions::added_type(self.state, slot)
+    }
+
+    /// Showdown `pokemon.getTypes()`: the types, then the added type (`Type::None` fills the
+    /// rest).
+    pub fn types(&self, slot: SlotRef) -> [Type; 3] {
+        super::conditions::all_types(self.state, slot)
     }
 
     /// The weather on the field (`field.weather`), whether or not it is suppressed: what
@@ -419,8 +433,11 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// Showdown `dex.getImmunity(status, pokemon)`: the immunity the Pokémon's types give,
     /// without `Immunity` handlers (the powder and Prankster checks of `hitStepTryImmunity`).
     pub fn natural_immune(&self, slot: SlotRef, immunity: TypeImmunities) -> bool {
-        self.slot_mon(slot)
-            .is_none_or(|mon| mon.types.iter().any(|t| t.immunities().contains(immunity)))
+        self.slot_mon(slot).is_none()
+            || self
+                .types(slot)
+                .iter()
+                .any(|t| t.immunities().contains(immunity))
     }
 
     /// Showdown `dex.getImmunity(status, pokemon)` plus the supported `Immunity` handlers
@@ -623,6 +640,11 @@ impl<'a, const N: usize> Battle<'a, N> {
     }
 
     // ---- faint and win -------------------------------------------------------------------
+
+    /// Whether a Pokémon at 0 HP waits for `faintMessages` (the faint queue is not empty).
+    pub fn faint_pending(&self) -> bool {
+        !self.faint_queue.is_empty()
+    }
 
     fn queue_faint(&mut self, pokemon: PokemonRef, slot: SlotRef, attacker: Option<PokemonRef>) {
         if !self.faint_queue.iter().any(|&(p, _, _)| p == pokemon) {

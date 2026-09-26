@@ -13,9 +13,12 @@ pub enum FieldEffect {
     Gravity,
     MagicRoom,
     WonderRoom,
+    /// Fairy Lock (`fairylock`, duration 2): every active Pokémon is trapped (`onTrapPokemon`:
+    /// `tryTrap`) at the next choice.
+    FairyLock,
 }
 
-pub const FIELD_EFFECT_COUNT: usize = 6;
+pub const FIELD_EFFECT_COUNT: usize = 7;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 #[repr(u8)]

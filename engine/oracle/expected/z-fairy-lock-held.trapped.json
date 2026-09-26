@@ -1,0 +1,149 @@
+{
+ "scenario": "z-fairy-lock-held.json",
+ "before": {
+  "schema": 1,
+  "turn": 2,
+  "ended": false,
+  "winner": "",
+  "field": {
+   "weather": "",
+   "weatherDuration": null,
+   "terrain": "",
+   "terrainDuration": null,
+   "pseudoWeather": {
+    "fairylock": {
+     "duration": 1
+    }
+   }
+  },
+  "sides": [
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Blissey",
+      "species": "Blissey",
+      "hp": 362,
+      "maxhp": 362,
+      "status": "",
+      "item": "",
+      "ability": "honeygather",
+      "slot": 1,
+      "pp": {
+       "harden": 19
+      },
+      "boosts": {
+       "def": 1
+      },
+      "volatiles": {},
+      "lastMove": "harden"
+     },
+     {
+      "name": "Clefable",
+      "species": "Clefable",
+      "hp": 202,
+      "maxhp": 202,
+      "status": "",
+      "item": "",
+      "ability": "honeygather",
+      "slot": 0,
+      "pp": {
+       "fairylock": 11,
+       "harden": 20
+      },
+      "boosts": {},
+      "volatiles": {},
+      "lastMove": "fairylock"
+     },
+     {
+      "name": "Kangaskhan",
+      "species": "Kangaskhan",
+      "hp": 212,
+      "maxhp": 212,
+      "status": "",
+      "item": "",
+      "ability": "honeygather",
+      "slot": null,
+      "pp": {
+       "harden": 20
+      }
+     }
+    ]
+   },
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Chansey",
+      "species": "Chansey",
+      "hp": 357,
+      "maxhp": 357,
+      "status": "",
+      "item": "",
+      "ability": "honeygather",
+      "slot": null,
+      "pp": {
+       "harden": 20
+      }
+     },
+     {
+      "name": "Gengar",
+      "species": "Gengar",
+      "hp": 167,
+      "maxhp": 167,
+      "status": "",
+      "item": "",
+      "ability": "honeygather",
+      "slot": 1,
+      "pp": {
+       "harden": 19
+      },
+      "boosts": {
+       "def": 1
+      },
+      "volatiles": {},
+      "lastMove": "harden"
+     },
+     {
+      "name": "Snorlax",
+      "species": "Snorlax",
+      "hp": 267,
+      "maxhp": 267,
+      "status": "",
+      "item": "shedshell",
+      "ability": "honeygather",
+      "slot": 0,
+      "pp": {
+       "harden": 19
+      },
+      "boosts": {
+       "def": 1
+      },
+      "volatiles": {},
+      "lastMove": "harden"
+     }
+    ]
+   }
+  ]
+ },
+ "trapped": {
+  "p1": {
+   "Clefable": true,
+   "Blissey": true
+  },
+  "p2": {
+   "Snorlax": false,
+   "Gengar": false
+  }
+ }
+}

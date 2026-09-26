@@ -231,6 +231,10 @@ fn set_types<const N: usize>(
     pokemon: PokemonRef,
     types: [Type; 2],
 ) {
+    // `setType` / `setSpecies` drop the added type (Forest's Curse, Trick-or-Treat).
+    if b.occupant(slot) == Some(pokemon) {
+        super::conditions::clear_added_type(b, slot);
+    }
     let roost = b.volatile(slot, Volatile::Roost);
     let roosting = roost.active && b.occupant(slot) == Some(pokemon);
     let shown = if roosting && types.contains(&Type::Flying) {
@@ -623,7 +627,9 @@ fn mimicry<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
         }
     };
     let num = mon.species.data().num;
-    if mon.types == types || num == 493 || num == 773 {
+    // `oldTypes.join() === types.join()` with `oldTypes = pokemon.getTypes()` (an added type
+    // counts).
+    if b.types(slot) == [types[0], types[1], Type::None] || num == 493 || num == 773 {
         return;
     }
     set_types(b, slot, pokemon, types);

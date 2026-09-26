@@ -330,9 +330,29 @@ pub enum Volatile {
     /// `counter`, Spe and accuracy in `hidden`, evasion in `time`
     /// (`abilities::opportunist_boosts`). No duration; hidden in the canonical state.
     Opportunist,
+    /// Minimize (`minimize`, no duration, `noCopy`; its `onRestart` returns `null`): moves with
+    /// the `minimize` flag (Body Slam, Dragon Rush, Flying Press, Heat Crash, Heavy Slam,
+    /// Supercell Slam, ...) never miss the holder (`onAccuracy`) and deal it double damage
+    /// (`onSourceModifyDamage`).
+    Minimize,
+    /// Not a Showdown volatile: `pokemon.addedType`, the type Forest's Curse (Grass) or
+    /// Trick-or-Treat (Ghost) added (`addType`), kept in `counter` ([`encode_type`]).
+    /// `getTypes()` appends it to the types (`conditions::all_types`); `setType` (Soak, Protean,
+    /// ...) and `setSpecies` (forme changes, Mega Evolution, leaving the field) clear it. No
+    /// duration; hidden in the canonical state (`getTypes(true)` leaves it out too).
+    AddedType,
+    /// Lock-On on its user (`lockon`, duration 2, `noCopy`; `source.addVolatile('lockon',
+    /// target)`): the user's moves against the Pokémon it locked on to (`effectState.source`,
+    /// kept in `counter`: [`encode_pokemon`]; not a canonical field) never miss
+    /// (`onSourceAccuracy`) and reach it while semi-invulnerable (`onSourceInvulnerability`).
+    /// Added by name in the move's `onHit`, so the dex has no condition id.
+    LockOn,
+    /// Electrify on its target (`electrify`, duration 1): the holder's moves but Struggle become
+    /// Electric (`onModifyType`, priority -2: after the type-changing abilities).
+    Electrify,
 }
 
-pub const VOLATILE_COUNT: usize = 101;
+pub const VOLATILE_COUNT: usize = 105;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -437,6 +457,10 @@ impl Volatile {
         Volatile::CudChew,
         Volatile::RipenWeaken,
         Volatile::Opportunist,
+        Volatile::Minimize,
+        Volatile::AddedType,
+        Volatile::LockOn,
+        Volatile::Electrify,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -503,6 +527,8 @@ impl Volatile {
             Volatile::DefenseCurl => conditions::DEFENSECURL,
             Volatile::Rollout | Volatile::IceBall => ConditionId::NONE,
             Volatile::GastroAcid => conditions::GASTROACID,
+            Volatile::Minimize => conditions::MINIMIZE,
+            Volatile::Electrify => conditions::ELECTRIFY,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -544,7 +570,9 @@ impl Volatile {
             | Volatile::Truant
             | Volatile::CudChew
             | Volatile::RipenWeaken
-            | Volatile::Opportunist => ConditionId::NONE,
+            | Volatile::Opportunist
+            | Volatile::AddedType
+            | Volatile::LockOn => ConditionId::NONE,
         }
     }
 
@@ -652,6 +680,10 @@ impl Volatile {
             Volatile::CudChew => "cudchewberry",
             Volatile::RipenWeaken => "berryweaken",
             Volatile::Opportunist => "opportunistboosts",
+            Volatile::Minimize => "minimize",
+            Volatile::AddedType => "addedtype",
+            Volatile::LockOn => "lockon",
+            Volatile::Electrify => "electrify",
         }
     }
 
@@ -686,7 +718,8 @@ impl Volatile {
             | Volatile::MirrorCoat
             | Volatile::FocusPunch
             | Volatile::BeakBlast
-            | Volatile::ShellTrap => 1,
+            | Volatile::ShellTrap
+            | Volatile::Electrify => 1,
             Volatile::Stall
             | Volatile::LockedMove
             | Volatile::MustRecharge
@@ -701,7 +734,8 @@ impl Volatile {
             | Volatile::PhantomForce
             | Volatile::ShadowForce
             | Volatile::AllySwitch
-            | Volatile::LaserFocus => 2,
+            | Volatile::LaserFocus
+            | Volatile::LockOn => 2,
             Volatile::Encore | Volatile::Taunt => 3,
             Volatile::PerishSong => 4,
             // Partial trapping's and Heal Block's `durationCallback` replace it when they start
@@ -766,7 +800,9 @@ impl Volatile {
             | Volatile::Truant
             | Volatile::CudChew
             | Volatile::RipenWeaken
-            | Volatile::Opportunist => 0,
+            | Volatile::Opportunist
+            | Volatile::Minimize
+            | Volatile::AddedType => 0,
             Volatile::Rollout | Volatile::IceBall => 1,
             Volatile::ZenMode => 0,
         }
@@ -809,7 +845,8 @@ impl Volatile {
             | Volatile::SlowStart
             | Volatile::CudChew
             | Volatile::RipenWeaken
-            | Volatile::Opportunist => None,
+            | Volatile::Opportunist
+            | Volatile::AddedType => None,
             // Two-turn move: the target location is not a canonical field.
             Volatile::Roost
             | Volatile::HelpingHand
@@ -818,7 +855,8 @@ impl Volatile {
             | Volatile::Trapped
             | Volatile::Trapper
             | Volatile::Attract
-            | Volatile::Octolock => Some(VolatileState {
+            | Volatile::Octolock
+            | Volatile::LockOn => Some(VolatileState {
                 counter: 0,
                 ..state
             }),
@@ -889,15 +927,22 @@ pub fn encode_types(types: [Type; 2]) -> u16 {
 
 /// The types [`encode_types`] stored.
 pub fn decode_types(counter: u16) -> [Type; 2] {
-    // `Type::ALL` plus Double Shock's `???` (`Type::Unknown`, not in `ALL`).
-    let decode = |v: u16| {
-        Type::ALL
-            .into_iter()
-            .chain([Type::Unknown])
-            .find(|&t| u16::from(t as u8) == v)
-            .unwrap_or(Type::None)
-    };
-    [decode(counter >> 8), decode(counter & 0xff)]
+    [decode_type(counter >> 8), decode_type(counter & 0xff)]
+}
+
+/// One type in a `counter` ([`Volatile::AddedType`]).
+pub fn encode_type(ty: Type) -> u16 {
+    u16::from(ty as u8)
+}
+
+/// The type [`encode_type`] stored: `Type::ALL` plus Double Shock's `???` (`Type::Unknown`, not
+/// in `ALL`); anything else is `Type::None`.
+pub fn decode_type(value: u16) -> Type {
+    Type::ALL
+        .into_iter()
+        .chain([Type::Unknown])
+        .find(|&t| u16::from(t as u8) == value)
+        .unwrap_or(Type::None)
 }
 
 /// One volatile's state: Showdown's effect-state fields the canonical output writes
@@ -1024,6 +1069,8 @@ mod tests {
                         | Volatile::CudChew
                         | Volatile::RipenWeaken
                         | Volatile::Opportunist
+                        | Volatile::AddedType
+                        | Volatile::LockOn
                 ));
                 continue;
             }
@@ -1080,6 +1127,9 @@ mod tests {
             (Volatile::DefenseCurl, moves::DEFENSE_CURL),
             (Volatile::Rollout, moves::ROLLOUT),
             (Volatile::IceBall, moves::ICE_BALL),
+            (Volatile::Minimize, moves::MINIMIZE),
+            (Volatile::LockOn, moves::LOCK_ON),
+            (Volatile::Electrify, moves::ELECTRIFY),
         ] {
             let data = id.data();
             assert_eq!(
@@ -1165,6 +1215,10 @@ mod tests {
         ] {
             assert_eq!(decode_types(encode_types(types)), types);
             assert_ne!(encode_types(types), 0);
+        }
+        for ty in [Type::Grass, Type::Ghost, Type::Normal] {
+            assert_eq!(decode_type(encode_type(ty)), ty);
+            assert_ne!(encode_type(ty), 0);
         }
     }
 }

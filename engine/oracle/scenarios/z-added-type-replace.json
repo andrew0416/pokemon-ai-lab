@@ -1,0 +1,83 @@
+{
+ "description": "Added types (Opus Z unit 2): Trick-or-Treat (setup turn 1) adds Ghost to Snorlax, then Forest's Curse (setup turn 2) replaces it with Grass (`addType` keeps one added type). Hypno's Tackle hits Snorlax again. Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Hypno",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Trick-or-Treat",
+     "Forest's Curse",
+     "Tackle",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move trickortreat 1, move harden",
+   "move harden, move harden"
+  ],
+  [
+   "move forestscurse 1, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move tackle 1, move harden",
+  "p2": "move harden, move harden"
+ }
+}

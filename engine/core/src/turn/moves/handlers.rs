@@ -64,6 +64,13 @@ pub(super) fn on_modify_type<const N: usize>(
                 _ => return Ok(()),
             };
         }
+        // Aura Wheel: Dark for Morpeko-Hangry, else Electric (its data type).
+        moves::AURA_WHEEL => {
+            let hangry = b
+                .slot_mon(user)
+                .is_some_and(|m| m.species == crate::dex::species::MORPEKO_HANGRY);
+            mv.move_type = if hangry { Type::Dark } else { Type::Electric };
+        }
         // Terrain Pulse: `if (!pokemon.isGrounded()) return;` then the type of `field.terrain`.
         moves::TERRAIN_PULSE if b.is_grounded(user) => {
             mv.move_type = match b.terrain() {
@@ -77,6 +84,19 @@ pub(super) fn on_modify_type<const N: usize>(
         _ => {}
     }
     Ok(())
+}
+
+/// The ModifyType handlers of the user's volatiles (`runEvent('ModifyType')`, after its
+/// ability's): Electrify (priority -2) makes every move but Struggle Electric. A type an
+/// ability changed keeps its `typeChangerBoosted` (Showdown does not clear it).
+pub(super) fn volatile_modify_type<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &mut ActiveMove,
+) {
+    if b.volatile(user, Volatile::Electrify).active && mv.id != moves::STRUGGLE {
+        mv.move_type = Type::Electric;
+    }
 }
 
 /// The move's `onModifyMove` (`useMoveInner`, after the target is chosen and before
@@ -323,6 +343,13 @@ pub(super) fn on_try<const N: usize>(
                     base == crate::dex::species::DARKRAI
                 })
         }
+        // Aura Wheel: only a Morpeko (`species.baseSpecies`, either forme) uses it; otherwise
+        // `null` (a failure here, as Dark Void's).
+        moves::AURA_WHEEL => b.slot_mon(user).is_some_and(|m| {
+            let base = m.species.data().base_species;
+            let base = if base.is_none() { m.species } else { base };
+            base == crate::dex::species::MORPEKO
+        }),
         // Counter, Mirror Coat: `if (!source.volatiles['counter']) return false; if
         // (source.volatiles['counter'].slot === null) return false;`
         moves::COUNTER | moves::MIRROR_COAT => before_turn_volatile(mv.id)
@@ -405,9 +432,10 @@ pub(super) fn on_try_immunity<const N: usize>(
         moves::WORRY_SEED => {
             ![abilities::TRUANT, abilities::INSOMNIA].contains(&b.raw_ability(target))
         }
-        // Synchronoise: `return target.hasType(source.getTypes());` (a type in common).
+        // Synchronoise: `return target.hasType(source.getTypes());` (a type in common; added
+        // types count on both sides).
         moves::SYNCHRONOISE => {
-            let mine = b.slot_mon(user).map_or([Type::None; 2], |m| m.types);
+            let mine = b.types(user);
             mine.into_iter()
                 .filter(|&t| t != Type::None)
                 .any(|t| b.has_type(target, t))
@@ -685,6 +713,11 @@ pub(super) fn on_try_hit<const N: usize>(
             }
             false
         }
+        // Lock-On: `if (source.volatiles['lockon']) return false;`
+        moves::LOCK_ON => !b.volatile(user, Volatile::LockOn).active,
+        // Electrify: `if (!this.queue.willMove(target) && target.activeTurns) return false;` (a
+        // target that switched in this turn has no active turns yet).
+        moves::ELECTRIFY => b.will_move(target).is_some() || !b.active_since_turn_start(target),
         // Foresight, Odor Sleuth: `if (target.volatiles['miracleeye']) return false;` Miracle
         // Eye: `if (target.volatiles['foresight']) return false;`
         moves::FORESIGHT | moves::ODOR_SLEUTH => !b.volatile(target, Volatile::MiracleEye).active,
@@ -1788,13 +1821,36 @@ pub(super) fn break_protect<const N: usize>(b: &mut Battle<'_, N>, target: SlotR
 }
 
 /// The `Accuracy` event's handlers that make a move hit `target` whatever its accuracy: Glaive
-/// Rush's drawback (`condition.onAccuracy() { return true; }`).
-pub(super) fn always_hit<const N: usize>(b: &Battle<'_, N>, target: SlotRef) -> bool {
+/// Rush's drawback (`condition.onAccuracy() { return true; }`) and Minimize's (`if
+/// (move.flags['minimize']) return true;`) on the target, and the user's Lock-On on it
+/// (`onSourceAccuracy`).
+pub(super) fn always_hit<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    mv: &ActiveMove,
+) -> bool {
     b.volatile(target, Volatile::GlaiveRush).active
+        || minimized(b, target, mv)
+        || locked_on(b, user, target)
 }
 
-/// ModifyDamage handlers of the target's volatiles (`onSourceModifyDamage`): Glaive Rush's
-/// drawback `chainModify(2)` (priority 0).
+/// Lock-On's `onSourceAccuracy` / `onSourceInvulnerability` for a move of its holder `user`: `if
+/// (move && source === this.effectState.target && target === this.effectState.source)` — the
+/// target is the Pokémon it locked on to (wherever it stands; not another Pokémon in its slot).
+fn locked_on<const N: usize>(b: &Battle<'_, N>, user: SlotRef, target: SlotRef) -> bool {
+    let lock = b.volatile(user, Volatile::LockOn);
+    lock.active && b.occupant(target) == Some(crate::volatile::decode_pokemon(lock.counter))
+}
+
+/// Minimize on `target` against a move with the `minimize` flag (Body Slam, Dragon Rush, Heavy
+/// Slam, ...): the move never misses it and deals double damage.
+fn minimized<const N: usize>(b: &Battle<'_, N>, target: SlotRef, mv: &ActiveMove) -> bool {
+    b.volatile(target, Volatile::Minimize).active && mv.data.flags.contains(MoveFlags::MINIMIZE)
+}
+
+/// ModifyDamage handlers of the target's volatiles (`onSourceModifyDamage`, all priority 0):
+/// Glaive Rush's drawback and Minimize (a `minimize` move) `chainModify(2)`.
 pub(super) fn volatile_modify_damage<const N: usize>(
     b: &Battle<'_, N>,
     target: SlotRef,
@@ -1802,6 +1858,9 @@ pub(super) fn volatile_modify_damage<const N: usize>(
 ) -> Vec<Handler> {
     let mut out = Vec::new();
     if b.volatile(target, Volatile::GlaiveRush).active {
+        out.push(Handler::of(b, target, 0, SUB_CONDITION, 2 * 4096));
+    }
+    if minimized(b, target, mv) {
         out.push(Handler::of(b, target, 0, SUB_CONDITION, 2 * 4096));
     }
     // Fly (Gust, Twister), Dig (Earthquake, Magnitude) and Dive (Surf, Whirlpool) take double
@@ -1967,7 +2026,8 @@ pub(super) fn self_on_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, 
 /// `hitStepInvulnerabilityEvent` for one target: Helping Hand always hits; a commanding
 /// Tatsugiri (Commander) is never hit; a semi-invulnerable target is not hit unless the move is
 /// one its state lets through, No Guard (`onAnyInvulnerability`, priority 1) is the user's or
-/// the target's ability, or the move is Toxic from a Poison type.
+/// the target's ability, the user locked on to it (Lock-On), or the move is Toxic from a Poison
+/// type.
 pub(super) fn invulnerable<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
@@ -1987,6 +2047,10 @@ pub(super) fn invulnerable<const N: usize>(
         return false;
     }
     if b.ability(user) == abilities::NO_GUARD || b.ability(target) == abilities::NO_GUARD {
+        return false;
+    }
+    // The user's Lock-On on the target (`onSourceInvulnerability`, priority 1: `return 0`).
+    if locked_on(b, user, target) {
         return false;
     }
     let passes: &[MoveId] = match state {
@@ -2389,9 +2453,10 @@ pub(super) fn on_hit<const N: usize>(
             }
         }
         // Reflect Type: fails for Arceus and Silvally users; the user takes the target's types
-        // (`getTypes(true)`: without an added type, which the engine never has; Roost's filter
-        // is already in the stored types) without `???` (`filter(type => type !== '???')`),
-        // failing if none is left; `setType` then clears the user's added type.
+        // (`getTypes(true)`: without the added type; Roost's filter is already in the stored
+        // types) without `???` (`filter(type => type !== '???')`); with none left it takes
+        // Normal if the target has an added type, else fails. `setType`, then `source.addedType =
+        // target.addedType`.
         moves::REFLECT_TYPE => {
             let Some(mon) = b.slot_mon(user) else {
                 return Ok(Some(HitResult::Failure));
@@ -2400,29 +2465,38 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::Failure
             } else {
                 let types = b.slot_mon(target).map_or([Type::None; 2], |m| m.types);
+                let added = b.added_type(target);
                 let mut kept = types
                     .into_iter()
                     .filter(|&t| t != Type::Unknown && t != Type::None);
-                let types = [
+                let mut types = [
                     kept.next().unwrap_or(Type::None),
                     kept.next().unwrap_or(Type::None),
                 ];
+                if types[0] == Type::None && added != Type::None {
+                    types[0] = Type::Normal;
+                }
                 if types[0] == Type::None {
                     HitResult::Failure
                 } else {
                     set_types(b, user, types);
+                    if added != Type::None {
+                        super::super::conditions::add_type(b, user, added);
+                    }
                     HitResult::Success
                 }
             }
         }
-        // Soak: fails (`null`) on a pure Water type (`getTypes().join() === 'Water'`) or an
-        // Arceus / Silvally (`setType` refuses); otherwise the target becomes pure Water.
+        // Soak: fails (`null`) on a pure Water type (`getTypes().join() === 'Water'`: no added
+        // type either) or an Arceus / Silvally (`setType` refuses); otherwise the target becomes
+        // pure Water.
         moves::SOAK => {
             let Some(mon) = b.slot_mon(target) else {
                 return Ok(Some(HitResult::Failure));
             };
             let water = [Type::Water, Type::None];
-            if mon.types == water || [493, 773].contains(&mon.species.data().num) {
+            let pure_water = b.types(target) == [Type::Water, Type::None, Type::None];
+            if pure_water || [493, 773].contains(&mon.species.data().num) {
                 HitResult::Failure
             } else {
                 set_types(b, target, water);
@@ -2619,10 +2693,12 @@ pub(super) fn on_hit<const N: usize>(
                 },
                 _ => mon.moves[0].id.data().move_type,
             };
+            // `target.hasType(type)` / `target.getTypes().join() === type` (an added type
+            // counts).
             let already = if mv.id == moves::CONVERSION {
-                mon.types.contains(&ty)
+                b.has_type(target, ty)
             } else {
-                mon.types == [ty, Type::None]
+                b.types(target) == [ty, Type::None, Type::None]
             };
             if already || [493, 773].contains(&mon.species.data().num) {
                 HitResult::Failure
@@ -2787,6 +2863,50 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::Success
             } else {
                 HitResult::NotFail
+            }
+        }
+        // Lock-On: `source.addVolatile('lockon', target)` (duration 2; its `effectState.source` is
+        // the target), returning nothing. `onTryHit` already failed a user that has one.
+        moves::LOCK_ON => {
+            if let Some(locked) = b.alive(target) {
+                if b.add_volatile(user, Volatile::LockOn) {
+                    let state = b.volatile(user, Volatile::LockOn);
+                    b.set_volatile_state(
+                        user,
+                        Volatile::LockOn,
+                        VolatileState {
+                            counter: crate::volatile::encode_pokemon(locked),
+                            ..state
+                        },
+                    );
+                }
+            }
+            return Ok(None);
+        }
+        // Forest's Curse (Grass), Trick-or-Treat (Ghost): `if (target.hasType(type)) return
+        // false; if (!target.addType(type)) return false;` (the added type replaces an earlier
+        // one; `addType` only fails Terastallized, which is off); it returns nothing.
+        // Trick-or-Treat's "Curse Glitch" then aims a queued Curse of a target in the second
+        // position at -1 (`action.targetLoc = -1`); Curse is not supported, so that is refused.
+        moves::FORESTS_CURSE | moves::TRICK_OR_TREAT => {
+            let ty = if mv.id == moves::FORESTS_CURSE {
+                Type::Grass
+            } else {
+                Type::Ghost
+            };
+            if b.has_type(target, ty) {
+                HitResult::Failure
+            } else {
+                super::super::conditions::add_type(b, target, ty);
+                let queued_curse = b
+                    .queued_move(target)
+                    .is_some_and(|(id, ..)| id == moves::CURSE);
+                if mv.id == moves::TRICK_OR_TREAT && N == 2 && target.slot == 1 && queued_curse {
+                    return Err(b.unsupported(
+                        "Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)",
+                    ));
+                }
+                return Ok(None);
             }
         }
         // Pollen Puff: an ally is healed `Math.floor(target.baseMaxhp * 0.5)`; `NOT_FAIL` if
@@ -3330,13 +3450,14 @@ fn set_hp<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, hp: i32) {
 }
 
 /// Showdown `pokemon.setType(types)` (the caller has checked that it may): the types are
-/// replaced. On a Pokémon under Roost the stored types keep Roost's filter (Flying left out,
-/// Normal when nothing is left) and the volatile remembers the new types to restore when it
-/// ends (nothing to restore without Flying).
+/// replaced and the added type is gone (`this.addedType = ''`). On a Pokémon under Roost the
+/// stored types keep Roost's filter (Flying left out, Normal when nothing is left) and the
+/// volatile remembers the new types to restore when it ends (nothing to restore without Flying).
 pub(crate) fn set_types<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, types: [Type; 2]) {
     let Some(pokemon) = b.occupant(slot) else {
         return;
     };
+    super::super::conditions::clear_added_type(b, slot);
     let roost = b.volatile(slot, Volatile::Roost);
     let shown = if roost.active && types.contains(&Type::Flying) {
         let mut kept = types
@@ -3466,6 +3587,29 @@ pub(super) fn secondary_on_hit<const N: usize>(
     }
     if mv.id == moves::ANCHOR_SHOT || mv.id == moves::SPIRIT_SHACKLE {
         super::super::conditions::add_trap(b, target, user);
+        return;
+    }
+    // Eerie Spell: `if (!target.hp) return;` then `target.deductPP(target.lastMove, 3)` (Z- and
+    // Max Moves are off): the slot is marked `used` (Last Resort), then loses up to 3 PP; nothing
+    // without a last move or its slot (Struggle).
+    if mv.id == moves::EERIE_SPELL {
+        let Some(pokemon) = b.alive(target) else {
+            return;
+        };
+        let last = b.state.slot(target).last_move;
+        let index = b.mon(pokemon).moves.iter().position(|m| m.id == last);
+        if let Some(i) = index.filter(|_| !last.is_none()) {
+            b.record_move_used(target, i);
+            let old = b.mon(pokemon).moves[i].pp;
+            if old > 0 {
+                b.apply(Instruction::SetPp {
+                    target: pokemon,
+                    move_index: i as u8,
+                    old,
+                    new: old.saturating_sub(3),
+                });
+            }
+        }
         return;
     }
     // Burning Jealousy: `if (target?.statsRaisedThisTurn) target.trySetStatus('brn', source,

@@ -227,6 +227,9 @@ pub(crate) struct MoveProgress {
     infiltrates: bool,
     /// [`Battle::raw_speed`] at the suspension: the action goes on in the next stage.
     raw_speed: Vec<PokemonRef>,
+    /// Showdown `move.smartTarget` still on when the hits start (Dragon Darts with both of its
+    /// smart targets left): hit `n` strikes `targets[n - 1]` alone, and `targets` keeps both.
+    smart: bool,
 }
 
 /// How far a move got: finished, or suspended before its next hit.
@@ -987,6 +990,16 @@ fn get_target<const N: usize>(
     loc: i8,
 ) -> Option<SlotRef> {
     let target = id.data().target;
+    // `if (move.smartTarget) { const curTarget = pokemon.getAtLoc(targetLoc); return curTarget &&
+    // !curTarget.fainted ? curTarget : this.getRandomTarget(pokemon, move); }` (Dragon Darts:
+    // no position checks, and a fainted ally is not kept).
+    if id.data().smart_target {
+        let chosen = (loc != 0).then(|| at_loc(user, loc));
+        return match chosen.filter(|&t| b.alive(t).is_some()) {
+            Some(t) => Some(t),
+            None => get_random_target(b, user, target),
+        };
+    }
     if matches!(
         target,
         MoveTarget::AdjacentAlly | MoveTarget::Any | MoveTarget::Normal
@@ -1083,17 +1096,44 @@ fn get_move_targets<const N: usize>(
                     None => return Ok(Vec::new()),
                 }
             }
+            let mut smart = mv.data.smart_target;
             if N > 1 && !ability_events::tracks_target(b, user, mv.data, mv.target) {
-                t = redirect_target(b, user, mv, t)?;
+                let (redirected, cleared) = redirect_target(b, user, mv, t)?;
+                t = redirected;
+                smart &= !cleared;
             }
+            let targets = if smart {
+                smart_targets(b, user, t)
+            } else {
+                vec![t]
+            };
             // `if (target.fainted && !move.flags['futuremove'])`: a future move may still be aimed
             // at the position of a fainted ally.
-            if b.alive(t).is_none() && !mv.data.flags.contains(MoveFlags::FUTUREMOVE) {
+            if b.alive(targets[0]).is_none() && !mv.data.flags.contains(MoveFlags::FUTUREMOVE) {
                 return Ok(Vec::new());
             }
-            vec![t]
+            targets
         }
     })
+}
+
+/// Showdown `getSmartTargets(target, move)` (Dragon Darts): the target and its adjacent ally
+/// (`target.adjacentAllies()[0]`: the other active Pokémon of its side with HP), in that order;
+/// only the target when that ally is missing, fainted or the user itself, only the ally when the
+/// target has no HP (`move.smartTarget = false` in both cases: one target left).
+fn smart_targets<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+) -> Vec<SlotRef> {
+    let ally = Battle::<N>::slots(target.side)
+        .find(|&s| s != target && b.alive(s).is_some())
+        .filter(|&s| s != user);
+    match ally {
+        None => vec![target],
+        Some(ally) if b.alive(target).is_none() => vec![ally],
+        Some(ally) => vec![target, ally],
+    }
 }
 
 /// Showdown `priorityEvent('RedirectTarget')`: the handlers are Follow Me, Rage Powder and
@@ -1104,26 +1144,33 @@ fn get_move_targets<const N: usize>(
 /// between two valid holders is broken in Showdown by `effectOrder` (who entered the field or
 /// changed ability first), which the state does not record, so it is unsupported. Last comes
 /// the user's own Counter / Mirror Coat condition (`onRedirectTarget`, priority -1): the slot
-/// of the foe whose hit it recorded, whoever stands there now.
+/// of the foe whose hit it recorded, whoever stands there now. The flag is whether a Follow Me,
+/// Rage Powder, Lightning Rod or Storm Drain handler took the move (`if (move.smartTarget)
+/// move.smartTarget = false;`: Dragon Darts then strikes that one target twice); Spotlight's
+/// leaves `smartTarget` on.
 fn redirect_target<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
-) -> Result<SlotRef, TurnError> {
-    let redirected = foe_redirect_target(b, user, mv)?;
-    Ok(redirected
-        .or_else(|| handlers::counter_redirect(b, user, mv))
-        .unwrap_or(target))
+) -> Result<(SlotRef, bool), TurnError> {
+    Ok(match foe_redirect_target(b, user, mv)? {
+        Some((slot, priority)) => (slot, priority < 2),
+        None => (
+            handlers::counter_redirect(b, user, mv).unwrap_or(target),
+            false,
+        ),
+    })
 }
 
 /// The `RedirectTarget` handlers of priority 0 and above ([`redirect_target`]): the new target,
-/// if one of them redirects.
+/// if one of them redirects, with the winning handler's priority (2 Spotlight, 1 Follow Me and
+/// Rage Powder, 0 Lightning Rod and Storm Drain).
 fn foe_redirect_target<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
-) -> Result<Option<SlotRef>, TurnError> {
+) -> Result<Option<(SlotRef, i8)>, TurnError> {
     // (priority, speed, holder), in Showdown's handler collection order: the user's side
     // (`onAny`), then each foe's `onFoe` volatiles and `onAny` ability.
     let mut handlers: Vec<(i8, i32, SlotRef)> = Vec::new();
@@ -1189,7 +1236,7 @@ fn foe_redirect_target<const N: usize>(
         }
         match winners.len() {
             0 => {}
-            1 => return Ok(Some(winners[0])),
+            1 => return Ok(Some((winners[0], key.0))),
             _ => {
                 return Err(b.unsupported(format!(
                     "redirection tie between {} and {} (Showdown breaks it by effectOrder)",
@@ -1239,6 +1286,8 @@ fn use_move<const N: usize>(
         }
     }
     ability_hooks::on_modify_type(b, user, mv);
+    // The user's Electrify (`onModifyTypePriority: -2`, after the abilities' handlers).
+    handlers::volatile_modify_type(b, user, mv);
     ability_hooks::on_modify_move(b, user, mv)?;
     // Throat Chop's `onModifyMove` (the user's volatile) returns `false` for a sound move: the
     // move is gone (`if (!move || pokemon.fainted) return false;`). Only a called move gets here
@@ -1706,7 +1755,12 @@ fn try_spread_move_hit<const N: usize>(
     mut targets: Vec<SlotRef>,
     will_act: bool,
 ) -> Result<HitOutcome, TurnError> {
-    mv.spread = targets.len() > 1;
+    // Dragon Darts' `move.smartTarget` (its two smart targets from `get_move_targets`): `if
+    // (targets.length > 1 && !move.smartTarget) move.spreadHit = true;` — never a spread hit. Any
+    // target a hit step drops turns it off (a miss, an immunity, a failure, and the protect
+    // family's `onTryHit`, which returns NOT_FAIL but sets `move.smartTarget = false` first).
+    let mut smart = mv.data.smart_target && targets.len() > 1;
+    mv.spread = targets.len() > 1 && !smart;
 
     // Future Sight / Doom Desire at use: their `onTry` adds the `futuremove` slot condition at
     // the target's position and returns `NOT_FAIL` (the move succeeds, nothing hits now), or
@@ -1781,7 +1835,9 @@ fn try_spread_move_hit<const N: usize>(
     // 0. Invulnerability (`hitStepInvulnerabilityEvent`): a semi-invulnerable target is not hit
     //    (a failure for the move) unless its state lets the move through, No Guard is in play,
     //    or the move is Toxic from a Poison type.
+    let before = targets.len();
     targets.retain(|&t| !handlers::invulnerable(b, user, mv, t));
+    smart &= targets.len() == before;
     if targets.is_empty() {
         return Ok(HitOutcome::Finished {
             ok: false,
@@ -1795,6 +1851,7 @@ fn try_spread_move_hit<const N: usize>(
     //    Tantrum and Temper Flare do not double after a move that Protect blocked.
     let mut kept = Vec::with_capacity(targets.len());
     let mut at_least_one_failure = false;
+    let before = targets.len();
     for t in targets {
         match try_hit(b, user, mv, t)? {
             TryHit::Hit => kept.push(t),
@@ -1802,6 +1859,9 @@ fn try_spread_move_hit<const N: usize>(
             TryHit::Fail => at_least_one_failure = true,
         }
     }
+    // A failure, or a protection's NOT_FAIL (the only NOT_FAIL a smart-target move can meet on
+    // one of its two targets), ends `smartTarget`.
+    smart &= kept.len() == before;
     targets = kept;
     if targets.is_empty() {
         if !at_least_one_failure {
@@ -1813,7 +1873,9 @@ fn try_spread_move_hit<const N: usize>(
         });
     }
     // 2. Type immunity.
+    let before = targets.len();
     targets.retain(|&t| !type_immune(b, mv, t));
+    smart &= targets.len() == before;
     if targets.is_empty() {
         return Ok(HitOutcome::Finished {
             ok: false,
@@ -1822,6 +1884,7 @@ fn try_spread_move_hit<const N: usize>(
     }
     // 3. Move-specific immunities: powder, the move's `onTryImmunity`, Prankster vs Dark.
     handlers::try_immunity_problem(b, user, mv, &targets)?;
+    let before = targets.len();
     targets.retain(|&t| {
         let powder = mv.data.flags.contains(MoveFlags::POWDER)
             && t != user
@@ -1831,6 +1894,7 @@ fn try_spread_move_hit<const N: usize>(
             && b.natural_immune(t, TypeImmunities::PRANKSTER);
         !powder && handlers::on_try_immunity(b, user, mv, t) && !prankster
     });
+    smart &= targets.len() == before;
     if targets.is_empty() {
         return Ok(HitOutcome::Finished {
             ok: false,
@@ -1846,6 +1910,7 @@ fn try_spread_move_hit<const N: usize>(
             item_events::blunder_policy(b, user);
         }
     }
+    smart &= hit.len() == targets.len();
     if hit.is_empty() {
         return Ok(HitOutcome::Finished {
             ok: false,
@@ -1866,8 +1931,14 @@ fn try_spread_move_hit<const N: usize>(
             total_damage: 0,
         });
     }
-    // 7. The hit loop, on the targets left (`move.hitTargets` unless every hit fails).
-    mv.hit_targets = hit.iter().fold(0, |bits, &t| bits | target_bit::<N>(t));
+    // 7. The hit loop, on the targets left (`move.hitTargets` unless every hit fails). With
+    // `smartTarget` on, the hit loop's `damage` array ends up without the first target's entry,
+    // so `move.hitTargets` is the second target alone.
+    mv.hit_targets = if smart {
+        target_bit::<N>(hit[1])
+    } else {
+        hit.iter().fold(0, |bits, &t| bits | target_bit::<N>(t))
+    };
     let progress = MoveProgress {
         user,
         pokemon: b.occupant(user).expect("checked"),
@@ -1882,6 +1953,7 @@ fn try_spread_move_hit<const N: usize>(
         ignore_ability: b.active_move.is_some_and(|a| a.ignore_ability),
         infiltrates: b.active_move.is_some_and(|a| a.infiltrates),
         raw_speed: Vec::new(),
+        smart,
     };
     hit_loop(b, user, mv, Some(progress))
 }
@@ -1953,15 +2025,22 @@ fn prepare_hit_ability<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv:
     let pokemon = b.occupant(user).expect("the user is active");
     let mon = b.mon(pokemon);
     let new = [mv.move_type, Type::None];
-    if mon.types == new || [493, 773].contains(&mon.species.data().num) {
+    // `source.getTypes().join() !== type` (an added type counts).
+    if b.types(user) == [mv.move_type, Type::None, Type::None]
+        || [493, 773].contains(&mon.species.data().num)
+    {
         return;
     }
     let old = mon.types;
-    b.apply(crate::instruction::Instruction::SetTypes {
-        target: pokemon,
-        old,
-        new,
-    });
+    if old != new {
+        b.apply(crate::instruction::Instruction::SetTypes {
+            target: pokemon,
+            old,
+            new,
+        });
+    }
+    // `setType` drops the added type.
+    conditions::clear_added_type(b, user);
     b.add_volatile(user, Volatile::ProteanUsed);
 }
 
@@ -2186,10 +2265,11 @@ fn type_immune<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove, target: SlotR
     if ty == Type::Ground {
         return !b.is_grounded(target);
     }
-    let Some(mon) = b.slot_mon(target) else {
+    if b.slot_mon(target).is_none() {
         return true;
-    };
-    mon.types
+    }
+    // `getTypes()`: the added type too (Trick-or-Treat's Ghost).
+    b.types(target)
         .iter()
         .any(|&t| ty.against(t) == TypeRelation::Immune)
 }
@@ -2216,7 +2296,7 @@ fn accuracy_check<const N: usize>(
             Ohko::Typed(t) if !b.has_type(user, t) => 20,
             _ => 30,
         };
-        if handlers::always_hit(b, target) {
+        if handlers::always_hit(b, user, target, mv) {
             return true;
         }
         return b.rng.chance((base + mine - theirs) as u32, 100);
@@ -2338,6 +2418,14 @@ fn hit_loop<const N: usize>(
     let mut progress = progress.expect("a hit loop starts with its progress");
     let hit = progress.hit + 1;
     let mut targets = progress.targets.clone();
+    // Champions `hitStepMoveHitLoop` with `move.smartTarget` and two targets: `targetsCopy =
+    // [targets[hit - 1]]`, each dart strikes one of them.
+    let smart = progress.smart;
+    let hit_targets: Vec<SlotRef> = if smart {
+        vec![progress.targets[usize::from(hit - 1)]]
+    } else {
+        targets.clone()
+    };
     // A later hit of a multi-accuracy move (Population Bomb) can miss and end the loop.
     let mut ended_by_miss = false;
     let rerolls = mv.data.multiaccuracy
@@ -2351,14 +2439,16 @@ fn hit_loop<const N: usize>(
     }
     let mut results = Vec::new();
     if !ended_by_miss {
-        results = spread_move_hit(b, user, mv, &targets, progress.total_damage, hit)?;
+        // `move.totalDamage` so far only reaches the hit's handlers through Innards Out, which
+        // adds it only without `smartTarget`.
+        let total_before = if smart { 0 } else { progress.total_damage };
+        results = spread_move_hit(b, user, mv, &hit_targets, total_before, hit)?;
         progress.hit = hit;
         progress.total_damage += results
             .iter()
             .map(|r| if let Hit::Damage(d) = r { *d } else { 0 })
             .sum::<i32>();
-        progress.last_hit = progress
-            .targets
+        let this_hit: Vec<(SlotRef, LastHit)> = hit_targets
             .iter()
             .zip(&results)
             .filter_map(|(&t, r)| match r {
@@ -2369,6 +2459,13 @@ fn hit_loop<const N: usize>(
                 Hit::Failed => None,
             })
             .collect();
+        // With `smartTarget` each target keeps its own dart's result (`moveDamage` grows by one
+        // entry per hit).
+        if smart {
+            progress.last_hit.extend(this_hit);
+        } else {
+            progress.last_hit = this_hit;
+        }
         let hit_ok = results.iter().any(|r| r.ok());
         progress.any_ok |= hit_ok;
         // `eachEvent('Update')` after the hit's damage (berries eat before faints are
@@ -2380,7 +2477,16 @@ fn hit_loop<const N: usize>(
         // `if (!pokemon.hp && targets.length === 1) break;` — a fainted user stops a
         // single-target move; every target fainted stops any.
         if hit_ok && hit < progress.hits && !targets.is_empty() && (user_standing || !single) {
-            progress.targets = targets;
+            // The smart targets stay in place: the next dart goes to the second one.
+            if !smart {
+                progress.targets = targets;
+            }
+            // A faint still waiting for `faintMessages` (the first smart target's, or the
+            // user's) cannot cross a stage (the queue lives in `Battle`): the next hit comes at
+            // once, in this stage.
+            if b.faint_pending() {
+                return hit_loop(b, user, mv, Some(progress));
+            }
             progress.raw_speed = b.raw_speed.clone();
             return Ok(HitOutcome::Suspended(progress));
         }
@@ -2400,8 +2506,18 @@ fn hit_loop<const N: usize>(
     // A target whose substitute took or stopped the hit is `null` / `false` in `targetsCopy`
     // and not attacked, unless a later hit missed: `targetsCopy` is then a fresh copy of the
     // targets with the earlier hit's damage (0 for a substitute's, `null` for a stopped one).
+    // With `smartTarget` (`targetsCopy = targets.slice(0)`) each target is attacked by its own
+    // dart (`moveDamage[i]`; a substitute's `true` is no numeric damage) once.
     for &(t, last) in &progress.last_hit.clone() {
         if t == user {
+            continue;
+        }
+        if smart {
+            let damage = match last {
+                LastHit::Damage(d) => Some(d),
+                _ => None,
+            };
+            b.record_attack(t, user, damage, 1);
             continue;
         }
         let damage = match (last, ended_by_miss) {
@@ -2428,8 +2544,16 @@ fn hit_loop<const N: usize>(
     // `attackedBy` entry, or `move.totalDamage` for a multi-hit move.
     super::update::update_event(b)?;
     if !ability_hooks::sheer_force_skips(b, user, mv) {
-        // `targetsCopy.filter(val => !!val)`: not a target its substitute shielded.
-        let last_hit: Vec<(SlotRef, i32)> = if ended_by_miss {
+        // `targetsCopy.filter(val => !!val)`: not a target its substitute shielded. With
+        // `smartTarget`, `targetsCopy` is every target again, shielded or not, each with its own
+        // dart's damage.
+        let dart = |t: SlotRef| match progress.last_hit.iter().find(|&&(s, _)| s == t) {
+            Some(&(_, LastHit::Damage(d))) => d,
+            _ => 0,
+        };
+        let last_hit: Vec<(SlotRef, i32)> = if smart {
+            progress.targets.iter().map(|&t| (t, dart(t))).collect()
+        } else if ended_by_miss {
             progress.targets.iter().map(|&t| (t, 0)).collect()
         } else {
             progress
@@ -2453,7 +2577,9 @@ fn hit_loop<const N: usize>(
                     }
                 }
                 item_events::AfterMoveSecondaryHandler::Ability => {
-                    let damage = if mv.data.multihit.is_some() {
+                    // Berserk / Anger Shell: `move.multihit && !move.smartTarget ?
+                    // move.totalDamage : lastAttackedBy.damage`.
+                    let damage = if mv.data.multihit.is_some() && !smart {
                         total
                     } else {
                         damage
@@ -2476,7 +2602,12 @@ fn hit_loop<const N: usize>(
         // qualify when its HP dropped this turn without a Damage event (Pain Split, Substitute,
         // Belly Drum) after it was last hurt above half. After a later hit's miss the array
         // still holds the previous hit's values.
-        let damages: Vec<(SlotRef, i32)> = if ended_by_miss {
+        // With `smartTarget` the loop's `damage` array has lost the first target's entry
+        // (`damage = [damage[hit - 1]]` each hit): only the second target is checked, with its own
+        // dart's damage (`targets.length` is 2, so not the total).
+        let damages: Vec<(SlotRef, i32)> = if smart {
+            vec![(progress.targets[1], dart(progress.targets[1]))]
+        } else if ended_by_miss {
             progress
                 .targets
                 .iter()
@@ -2501,7 +2632,7 @@ fn hit_loop<const N: usize>(
             let Some(pokemon) = b.alive(t) else {
                 continue;
             };
-            let current = if mv.spread { damage } else { total };
+            let current = if mv.spread || smart { damage } else { total };
             let mon = b.mon(pokemon);
             let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
             let hurt = b.slot_history(t).hurt_this_turn.map_or(0, i32::from);
@@ -3330,12 +3461,11 @@ fn get_damage<const N: usize>(
     // `WeatherModifyDamage` reads `defender.effectiveWeather()` (Utility Umbrella hides sun and
     // rain; sand and snow are the same for everyone).
     let weather = b.weather_for(target);
-    if defense_stat == Stat::Spd && weather == Weather::Sand && defender.types.contains(&Type::Rock)
-    {
+    // `this.hasType('Rock')` / `'Ice'` (an added type counts).
+    if defense_stat == Stat::Spd && weather == Weather::Sand && b.has_type(target, Type::Rock) {
         defense = modify(defense, MOD_ONE_POINT_FIVE);
     }
-    if defense_stat == Stat::Def && weather == Weather::Snow && defender.types.contains(&Type::Ice)
-    {
+    if defense_stat == Stat::Def && weather == Weather::Snow && b.has_type(target, Type::Ice) {
         defense = modify(defense, MOD_ONE_POINT_FIVE);
     }
     // Chained ModifyDef / ModifySpD handlers, applied after the direct weather boosts.
@@ -3349,16 +3479,17 @@ fn get_damage<const N: usize>(
         (Weather::Sun, Type::Water) | (Weather::Rain, Type::Fire) => MOD_HALF,
         _ => MOD_ONE,
     };
-    // The `???` type (Struggle's, `Type::None` here) never gets STAB.
-    let stab =
-        data.force_stab || (mv.move_type != Type::None && attacker.types.contains(&mv.move_type));
+    // The `???` type (Struggle's, `Type::None` here) never gets STAB; `pokemon.hasType(type)`
+    // counts an added type (Forest's Curse's Grass).
+    let stab = data.force_stab || (mv.move_type != Type::None && b.has_type(user, mv.move_type));
     let stab_modifier = ability_events::modify_stab(b.ability(user), stab);
     // runEffectiveness: per defending type, the chart then the move's onEffectiveness, then
     // the target's ability (Disguise returns 0, which ends the event) and item.
     let neutral = super::forme::shields_hit(b, user, target, mv.id);
     let arrows_neutral = handlers::thousand_arrows_neutral(b, mv, target);
-    let type_mod: i32 = defender
-        .types
+    // `for (const type of target.getTypes())`: the added type too.
+    let type_mod: i32 = b
+        .types(target)
         .iter()
         .filter(|&&t| t != Type::None)
         .map(|&t| {
@@ -3565,17 +3696,18 @@ pub(crate) fn set_terrain<const N: usize>(
     true
 }
 
-/// Showdown `addPseudoWeather`: Gravity fails if up; Trick Room, Wonder Room and Magic Room
-/// end themselves on restart (`onFieldRestart`, no PseudoWeatherChange); a new one (5 turns:
-/// Persistent, which makes the rooms last 7, is refused) runs `PseudoWeatherChange`. Magic
-/// Room's `onFieldStart` runs every active item's End, which only logs; its suppression is
-/// `items::ignoring_item`.
+/// Showdown `addPseudoWeather`: Gravity and Fairy Lock fail if up (no `onFieldRestart`); Trick
+/// Room, Wonder Room and Magic Room end themselves on restart (`onFieldRestart`, no
+/// PseudoWeatherChange); a new one (5 turns, Fairy Lock 2: Persistent, which makes the rooms last
+/// 7, is refused) runs `PseudoWeatherChange`. Magic Room's `onFieldStart` runs every active
+/// item's End, which only logs; its suppression is `items::ignoring_item`. Fairy Lock's only logs.
 fn add_pseudo_weather<const N: usize>(b: &mut Battle<'_, N>, id: &str) -> bool {
     let effect = match id {
         "gravity" => FieldEffect::Gravity,
         "trickroom" => FieldEffect::TrickRoom,
         "wonderroom" => FieldEffect::WonderRoom,
         "magicroom" => FieldEffect::MagicRoom,
+        "fairylock" => FieldEffect::FairyLock,
         _ => unreachable!("checked by support"),
     };
     if b.field_active(effect) {
@@ -3588,7 +3720,12 @@ fn add_pseudo_weather<const N: usize>(b: &mut Battle<'_, N>, id: &str) -> bool {
         }
         return false;
     }
-    b.set_field(effect, Effect { value: 0, turns: 5 });
+    let turns = if effect == FieldEffect::FairyLock {
+        2
+    } else {
+        5
+    };
+    b.set_field(effect, Effect { value: 0, turns });
     // `runEvent('PseudoWeatherChange')`: Room Service.
     item_events::pseudo_weather_change(b);
     true
