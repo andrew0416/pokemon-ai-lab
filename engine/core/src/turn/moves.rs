@@ -3915,7 +3915,8 @@ pub(crate) fn set_terrain<const N: usize>(
 /// Room, Wonder Room and Magic Room end themselves on restart (`onFieldRestart`, no
 /// PseudoWeatherChange); a new one (5 turns, Fairy Lock 2: Persistent, which makes the rooms last
 /// 7, is refused) runs `PseudoWeatherChange`. Magic Room's `onFieldStart` runs every active
-/// item's End, which only logs; its suppression is `items::ignoring_item`. Fairy Lock's only logs.
+/// item's End, which `singleEvent` skips (every holder ignores its item once Magic Room is up);
+/// its suppression is `items::ignoring_item`. Fairy Lock's only logs.
 fn add_pseudo_weather<const N: usize>(b: &mut Battle<'_, N>, id: &str) -> bool {
     let effect = match id {
         "gravity" => FieldEffect::Gravity,

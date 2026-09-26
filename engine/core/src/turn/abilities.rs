@@ -1440,6 +1440,11 @@ pub(crate) fn symbiosis<const N: usize>(b: &mut Battle<'_, N>, receiver: SlotRef
         if item == items::MIRROR_HERB {
             b.mirror_herb.retain(|&(p, _)| p != giver);
         }
+        // Utility Umbrella's End on the giver (a Symbiosis holder: no WeatherChange handler
+        // reacts, but its item state is marked `inactive`).
+        if super::items::umbrella_end(b, holder, item) {
+            b.umbrella_inactive.push(giver);
+        }
         let taker = b.alive(receiver).filter(|&p| {
             let mon = b.mon(p);
             let base = base_species(mon.species);

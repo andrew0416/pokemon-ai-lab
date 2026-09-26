@@ -1,0 +1,23 @@
+{
+ "description": "Opus BB unit B24: Fling throwing Utility Umbrella. In Pelipper's rain Castform (base forme: the umbrella hides the rain) Flings its umbrella at Snorlax; Fling's condition `onUpdate` does `setItem('')`, whose End of the umbrella runs WeatherChange: Castform-Rainy.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Pelipper", "item": "", "ability": "Drizzle", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Castform", "item": "Utility Umbrella", "ability": "Forecast", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Fling", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move fling 1", "p2": "move harden, move harden"}
+}

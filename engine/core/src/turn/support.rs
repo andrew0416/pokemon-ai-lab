@@ -1470,11 +1470,10 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
             "onUseItem",
         ],
     ),
-    // `Battle::weather_for` at every per-Pokémon weather read. The callbacks only run
-    // WeatherChange on the holder (when the item starts being ignored, stops being ignored, or
-    // ends in sun or rain), whose only implemented handler, Protosynthesis's, then changes
-    // nothing: Utility Umbrella does not hide the sun from it, so it already has its condition;
-    // `onStart` returns at once for a holder that does not ignore its item.
+    // `Battle::weather_for` at every per-Pokémon weather read. The callbacks run WeatherChange
+    // on the holder in sun or rain: `onEnd` when it loses the item (`items::umbrella_end`),
+    // `onStart` for a new holder ignoring it (`umbrella_start`), `onUpdate` for an umbrella
+    // given back after its End (`umbrella_update`).
     (items::UTILITY_UMBRELLA, &["onEnd", "onStart", "onUpdate"]),
     // `onStart` at switch-in (priority -1) and PseudoWeatherChange (`moves::add_pseudo_weather`).
     (
@@ -2259,7 +2258,8 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::STICKY_HOLD, &["onTakeItem"]),
     // Opus AA unit 4. Forecast: `onStart` (`switching::START_HANDLERS`) and `onWeatherChange`
     // (`field_events::weather_changed`, Air Lock / Cloud Nine's `switching::weather_change`)
-    // in `forme::forecast`; with Utility Umbrella refused (`forme::field_problem`).
+    // in `forme::forecast`; with Utility Umbrella, also the umbrella's WeatherChange
+    // (`items::umbrella_end` / `umbrella_start` / `umbrella_update`).
     (abilities::FORECAST, &["onStart", "onWeatherChange"]),
     // Opus AA unit 5. Parental Bond: `onPrepareHit` makes an eligible move hit twice
     // (`moves::parental_bond_applies`, `decide_hits`; the second hit quartered in

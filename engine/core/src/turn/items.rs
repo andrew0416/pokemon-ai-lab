@@ -77,11 +77,83 @@ pub(crate) fn ignoring_item<const N: usize>(state: &State<N>, slot: SlotRef) -> 
 
 /// Whether an item's `onStart` does nothing when its holder switches in (Showdown runs item
 /// `onStart` handlers in the `SwitchIn` event): the Choice items only remove a `choicelock`
-/// the newcomer cannot have yet; Air Balloon only announces itself; Utility Umbrella only
-/// acts for a holder ignoring its item (then WeatherChange, which has no implemented
-/// handler).
+/// the newcomer cannot have yet; Air Balloon only announces itself; Utility Umbrella's returns
+/// for a holder that does not ignore its item, and `fieldEvent('SwitchIn')`'s `singleEvent`
+/// skips it for one that does (only `setItem`'s Start, which is exempt, reaches such a holder:
+/// [`umbrella_start`]).
 pub(crate) fn inert_start(item: ItemId) -> bool {
     item.data().is_choice || item == items::AIR_BALLOON || item == items::UTILITY_UMBRELLA
+}
+
+// ---- Utility Umbrella's WeatherChange ----------------------------------------------------------
+
+/// The weather Utility Umbrella's handlers react to: `['sunnyday', 'raindance', 'desolateland',
+/// 'primordialsea'].includes(this.field.effectiveWeather())` (Air Lock and Cloud Nine suppress
+/// it).
+fn umbrella_weather<const N: usize>(b: &Battle<'_, N>) -> bool {
+    matches!(
+        b.effective_weather(),
+        Weather::Sun | Weather::Rain | Weather::HarshSun | Weather::HeavyRain
+    )
+}
+
+/// Utility Umbrella's `onEnd` on the Pokémon in `slot`, which just lost `item` (`takeItem`, or
+/// `setItem` with another item or none): `singleEvent('End')` is skipped while the Pokémon
+/// ignores its item as it is now (Magic Room; Klutz, unless the new item ignores it); otherwise,
+/// in sun or rain, `runEvent('WeatherChange', pokemon, pokemon, item)` on it alone
+/// ([`field_events::weather_changed_at`]): Forecast and Flower Gift now see the weather. Returns
+/// whether the handler ran (it then marks its item state `inactive`, which matters only for an
+/// umbrella given back after `takeItem`: [`Battle::umbrella_inactive`]).
+///
+/// Magic Room's `onFieldStart` and Klutz's `onStart` call every held item's End too, but their
+/// holders then ignore their items (Magic Room is already in `pseudoWeather`), so it never runs
+/// there.
+///
+/// [`field_events::weather_changed_at`]: super::field_events::weather_changed_at
+/// [`Battle::umbrella_inactive`]: super::battle::Battle::umbrella_inactive
+pub(crate) fn umbrella_end<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    item: ItemId,
+) -> bool {
+    if item != items::UTILITY_UMBRELLA || ignoring_item(b.state, slot) {
+        return false;
+    }
+    if umbrella_weather(b) {
+        super::field_events::weather_changed_at(b, slot);
+    }
+    true
+}
+
+/// Utility Umbrella's `onStart` for its new holder in `slot` (`setItem`'s Start, which runs
+/// even while the holder ignores its item): `if (!pokemon.ignoringItem()) return;` — only a
+/// holder that ignores it (Klutz, Magic Room) runs WeatherChange, in sun or rain, and then sees
+/// the weather. Any other holder keeps its forme until the weather changes.
+pub(crate) fn umbrella_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if ignoring_item(b.state, slot) && umbrella_weather(b) {
+        super::field_events::weather_changed_at(b, slot);
+    }
+}
+
+/// Utility Umbrella's `onUpdate` for its holder in `slot` (an item handler: skipped while the
+/// holder ignores it): `if (!this.effectState.inactive) return; this.effectState.inactive =
+/// false;` then WeatherChange in sun or rain, where the holder, under its umbrella again, loses
+/// the weather's forme. Its state is `inactive` only after its End ran in a `takeItem` and the
+/// umbrella came back silently (a failed Trick, a thief that cannot hold it).
+pub(crate) fn umbrella_update<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let Some(pokemon) = b.occupant(slot) else {
+        return;
+    };
+    let marked = b.umbrella_inactive.len();
+    b.umbrella_inactive.retain(|&p| p != pokemon);
+    if b.umbrella_inactive.len() != marked && umbrella_weather(b) {
+        super::field_events::weather_changed_at(b, slot);
+    }
+}
+
+/// `setItem` gives `pokemon` a new item state: an `inactive` mark on the old one is gone.
+pub(crate) fn fresh_item_state<const N: usize>(b: &mut Battle<'_, N>, pokemon: PokemonRef) {
+    b.umbrella_inactive.retain(|&p| p != pokemon);
 }
 
 impl<const N: usize> Battle<'_, N> {
@@ -549,6 +621,18 @@ pub(crate) fn pseudo_weather_change<const N: usize>(b: &mut Battle<'_, N>) {
 /// Showdown (until its next trigger, possibly turns later); the engine does not carry them
 /// past a stage, so a stage that ends with a living holder still `ready` is refused.
 pub(crate) fn stage_end_check<const N: usize>(b: &Battle<'_, N>) -> Result<(), TurnError> {
+    // Utility Umbrella's `inactive` mark waits for the holder's next `onUpdate`, which the
+    // engine only runs within the stage (the Update after the action always comes first).
+    for &pokemon in &b.umbrella_inactive {
+        let mon = b.mon(pokemon);
+        if mon.hp > 0 && mon.item == items::UTILITY_UMBRELLA {
+            return Err(b.unsupported(format!(
+                "{}: Utility Umbrella's `inactive` item state past the end of a stage (its \
+                 onUpdate has not run)",
+                mon.species.data().name
+            )));
+        }
+    }
     for &(pokemon, _) in &b.mirror_herb {
         let mon = b.mon(pokemon);
         if mon.hp > 0 && mon.item == items::MIRROR_HERB {

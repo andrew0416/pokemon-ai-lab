@@ -1,0 +1,27 @@
+{
+ "description": "Opus BB unit B24: Utility Umbrella's `onUpdate` after a failed Trick. Setup: Weavile Tricks the umbrella away from Castform in Pelipper's rain (Castform-Rainy) and back (Castform keeps Castform-Rainy while holding it). Then Kangaskhan, holding its own Kangaskhanite, Tricks Castform: `target.takeItem()` succeeds and runs the umbrella's End (WeatherChange: Castform still sees rain, `effectState.inactive = true`), Kangaskhan's `takeItem()` fails, both items go back silently (`target.item = yourItem.id`, same item state) and the move fails. At the next Update the umbrella's `onUpdate` finds `inactive`, runs WeatherChange again with the umbrella held: Castform goes back to its base forme.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Pelipper", "item": "", "ability": "Drizzle", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Castform", "item": "Utility Umbrella", "ability": "Forecast", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Pressure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Trick", "Harden"], "level": 50},
+   {"species": "Kangaskhan", "item": "Kangaskhanite", "ability": "Scrappy", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Trick", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move harden, move harden", "move trick 2, move harden"],
+  ["move harden, move harden", "move trick 2, move harden"]
+ ],
+ "turn": {"p1": "move harden, move harden", "p2": "move harden, move trick 2"}
+}

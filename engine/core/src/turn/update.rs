@@ -122,6 +122,8 @@ pub(crate) fn update_event<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), 
                 super::items::mental_herb(b, slot);
             } else if item == items::BERRY_JUICE {
                 super::items::berry_juice(b, slot);
+            } else if item == items::UTILITY_UMBRELLA {
+                super::items::umbrella_update(b, slot);
             }
         }
     }

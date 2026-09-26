@@ -1,0 +1,23 @@
+{
+ "description": "Opus BB unit B24: Utility Umbrella's `onEnd` runs `runEvent('WeatherChange')` on its old holder in sun or rain. In Pelipper's rain, Castform holds Utility Umbrella (so Forecast keeps the base forme); Weavile, holding nothing, Tricks it away: `takeItem` runs the umbrella's End with Castform's item gone, Forecast now sees the rain and Castform becomes Castform-Rainy. Weavile's new umbrella Start does nothing (Weavile does not ignore it).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Pelipper", "item": "", "ability": "Drizzle", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Castform", "item": "Utility Umbrella", "ability": "Forecast", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Pressure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Trick", "Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "move trick 2, move harden"}
+}

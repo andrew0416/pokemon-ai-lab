@@ -83,6 +83,12 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// them only within a stage and refuses a stage that ends with one pending
     /// (`items::stage_end_check`).
     pub mirror_herb: Vec<(PokemonRef, [i8; BOOST_COUNT])>,
+    /// Pokémon whose item state Utility Umbrella's End marked `inactive` (`takeItem` keeps the
+    /// cleared state as `pokemon.itemState` until the next `setItem`): an umbrella given back
+    /// silently then runs WeatherChange again at its next `onUpdate` (`items::umbrella_update`).
+    /// Kept within a stage; a stage that ends with a living umbrella holder still marked is
+    /// refused (`items::stage_end_check`).
+    pub umbrella_inactive: Vec<PokemonRef>,
     /// Whether the move in flight switches its user out (`move.selfSwitch`); Parting Shot's
     /// `onHit` withdraws it (`delete move.selfSwitch`) when its drops failed.
     pub move_self_switch: bool,
@@ -215,6 +221,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             hit_type_mod: [[None; N]; 2],
             hit_crit: [[false; N]; 2],
             mirror_herb: Vec::new(),
+            umbrella_inactive: Vec::new(),
             move_self_switch: false,
             force_switch: Vec::new(),
             busted: Vec::new(),
@@ -1819,6 +1826,11 @@ impl<'a, const N: usize> Battle<'a, N> {
         });
         // The item's state ends with it (Eject Pack's flag).
         self.delete_volatile(slot, Volatile::EjectPack);
+        // `singleEvent('End', item, oldItemState, this)` on the holder, which holds nothing now:
+        // Utility Umbrella's WeatherChange (its `inactive` mark stays on the cleared state).
+        if super::items::umbrella_end(self, slot, old) {
+            self.umbrella_inactive.push(pokemon);
+        }
         true
     }
 
