@@ -450,9 +450,15 @@ pub(crate) fn disabled_move<const N: usize>(
 /// (`trapped`); partial trapping while its source is active (`if
 /// (this.effectState.source?.isActive) pokemon.tryTrap();`). Shed Shell's `onTrapPokemon`
 /// (priority -10, after every other handler: `pokemon.trapped = false`) frees its holder from
-/// all of them unless the item is suppressed.
+/// all of them unless the item is suppressed. Commander's `commanding` and `commanded`
+/// (priority -11, after Shed Shell) set `pokemon.trapped = true` without `tryTrap`: no type
+/// immunity or item frees them.
 pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option<String> {
     let mon = state.active(slot)?;
+    let commander = &state.slot(slot).volatiles;
+    if commander.has(Volatile::Commanding) || commander.has(Volatile::Commanded) {
+        return Some(format!("{} is in Commander", mon.species.data().name));
+    }
     let immune = mon
         .types
         .iter()
@@ -487,9 +493,12 @@ pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option
 }
 
 /// The conditions' `onDragOut` on the Pokémon in `slot`: Ingrain returns `null` (no drag, and
-/// the move does not fail). Suction Cups is checked by the callers.
+/// the move does not fail), Commander's `commanding` and `commanded` return `false` (every
+/// caller only drags on a truthy result). Suction Cups is checked by the callers.
 pub(crate) fn drag_out_blocked<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
     b.volatile(slot, Volatile::Ingrain).active
+        || b.volatile(slot, Volatile::Commanding).active
+        || b.volatile(slot, Volatile::Commanded).active
 }
 
 /// Mean Look, Block, Spider Web `onHit`: `target.addVolatile('trapped', source, move,

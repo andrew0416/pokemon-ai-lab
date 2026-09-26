@@ -1086,15 +1086,22 @@ pub(super) fn self_on_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, 
     set_types(b, user, types);
 }
 
-/// `hitStepInvulnerabilityEvent` for one target: a semi-invulnerable target is not hit unless
-/// the move is one its state lets through, No Guard (`onAnyInvulnerability`, priority 1) is the
-/// user's or the target's ability, or the move is Toxic from a Poison type.
+/// `hitStepInvulnerabilityEvent` for one target: Helping Hand always hits; a commanding
+/// Tatsugiri (Commander) is never hit; a semi-invulnerable target is not hit unless the move is
+/// one its state lets through, No Guard (`onAnyInvulnerability`, priority 1) is the user's or
+/// the target's ability, or the move is Toxic from a Poison type.
 pub(super) fn invulnerable<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
+    if mv.id == moves::HELPING_HAND {
+        return false;
+    }
+    if b.volatile(target, Volatile::Commanding).active {
+        return true;
+    }
     let Some(state) = super::super::conditions::semi_invulnerable(b, target) else {
         return false;
     };
@@ -1920,9 +1927,10 @@ pub(super) fn on_hit_field<const N: usize>(
 ) -> Option<bool> {
     match mv.id {
         // Perish Song: every active Pokémon (side one first, slot order) gets the `perishsong`
-        // volatile unless `runEvent('TryHit')` returns `null` for it (it still counts as a
-        // success) or it already has one; fails when nobody was affected. No semi-invulnerable
-        // state exists (`Invulnerability`).
+        // volatile unless `runEvent('Invulnerability')` returns `false` for it (a miss: a
+        // semi-invulnerable or commanding Pokémon, [`invulnerable`]) or `runEvent('TryHit')`
+        // returns `null` (both still count as a success), or it already has one; fails when
+        // nobody was affected.
         moves::PERISH_SONG => {
             let mut result = false;
             for side in [SideId::One, SideId::Two] {
@@ -1930,7 +1938,9 @@ pub(super) fn on_hit_field<const N: usize>(
                     if b.alive(slot).is_none() {
                         continue;
                     }
-                    if perish_song_try_hit_null(b, user, mv, slot) {
+                    if invulnerable(b, user, mv, slot)
+                        || perish_song_try_hit_null(b, user, mv, slot)
+                    {
                         result = true;
                     } else if !b.volatile(slot, Volatile::PerishSong).active {
                         b.add_volatile(slot, Volatile::PerishSong);

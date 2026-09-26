@@ -1,0 +1,25 @@
+{
+ "description": "Opus S unit 3: the Commander conditions against field and phazing moves. Tatsugiri commands Dondozo from the start (p1 bench: Snorlax). Gengar's Perish Song misses the commanding Tatsugiri (onInvulnerability: false) and gives the others the count; Arcanine's Roar on Dondozo fails (commanded's onDragOut returns false, which fails a status move). Dondozo Protects (Roar and Perish Song ignore it).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Tatsugiri", "item": "", "ability": "Commander", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Draco Meteor", "Protect"], "level": 50},
+   {"species": "Dondozo", "item": "", "ability": "Water Veil", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Body Press", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Cursed Body", "nature": "Timid",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Perish Song", "Protect"], "level": 50},
+   {"species": "Arcanine", "item": "", "ability": "Justified", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Roar", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "pass, move protect", "p2": "move perishsong, move roar 2"}
+}

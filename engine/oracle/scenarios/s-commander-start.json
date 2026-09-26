@@ -1,0 +1,25 @@
+{
+ "description": "Opus S unit 3: Commander at the battle start. Tatsugiri and Dondozo lead: Tatsugiri's onAnySwitchIn commands (commanding / commanded, Dondozo +2 in every stat). The turn: Tatsugiri passes; Garchomp's Dragon Claw at Tatsugiri misses (hitStepInvulnerabilityEvent); Dondozo (Eject Button, bench Snorlax) U-turns Garchomp without switching out (selfSwitch is off for a commanded user); Sylveon's Dazzling Gleam hits only Dondozo, whose Eject Button stays (commanded).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Tatsugiri", "item": "", "ability": "Commander", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Draco Meteor", "Protect"], "level": 50},
+   {"species": "Dondozo", "item": "Eject Button", "ability": "Water Veil", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["U-turn", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Sylveon", "item": "", "ability": "Pixilate", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Dazzling Gleam", "Protect"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Dragon Claw", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "pass, move uturn 2", "p2": "move dazzlinggleam, move dragonclaw 1"}
+}

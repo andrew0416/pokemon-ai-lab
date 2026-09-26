@@ -962,6 +962,13 @@ pub(crate) fn after_move_secondary<const N: usize>(
         {
             return;
         }
+        // Champions: `if (target.volatiles['commanding'] || target.volatiles['commanded'])
+        // return;`
+        if b.volatile(target, Volatile::Commanding).active
+            || b.volatile(target, Volatile::Commanded).active
+        {
+            return;
+        }
         if b.all_alive()
             .iter()
             .any(|&s| b.state.slot(s).switch_flag == SwitchFlag::Effect)

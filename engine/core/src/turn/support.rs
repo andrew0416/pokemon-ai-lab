@@ -1531,6 +1531,16 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // `onModifyMove`.
     (abilities::UNSEEN_FIST, &["onHitProtect"]),
     (abilities::PIERCING_DRILL, &["onHitProtect"]),
+    // Commander: `onUpdate` (from `abilities::on_update`), `onAnySwitchIn`
+    // (`switching::run_switch_in`) and `onStart` (`switching::start_ability`) are all
+    // `abilities::commander_update`. The `commanding` / `commanded` conditions: invulnerability
+    // (`handlers::invulnerable`, Perish Song), forced pass (`check_side`, `legal`), trapping
+    // (`conditions::trapped`), `onDragOut` (`conditions::drag_out_blocked`, the phazing step),
+    // no self-switch or Eject Button for the commanded Pokémon.
+    (
+        abilities::COMMANDER,
+        &["onAnySwitchIn", "onStart", "onUpdate"],
+    ),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -1930,7 +1940,8 @@ mod tests {
 
     /// The two-turn moves the engine runs are exactly `conditions::charge_volatile`'s (their
     /// semi-invulnerability is `handlers::invulnerable`, which No Guard's
-    /// `onAnyInvulnerability` answers); every other charge move and Commander stay refused.
+    /// `onAnyInvulnerability` answers); every other charge move stays refused. Commander's
+    /// `commanding` is in `handlers::invulnerable` too (Opus S).
     #[test]
     fn two_turn_moves_are_the_listed_ones() {
         use crate::dex::MoveFlags;
@@ -1948,7 +1959,7 @@ mod tests {
                 );
             }
         }
-        assert!(!ability_supported_on_field(abilities::COMMANDER));
+        assert!(ability_supported_on_field(abilities::COMMANDER));
     }
 
     /// Substitute (F11): every Showdown effect that reads a substitute or passes through one is

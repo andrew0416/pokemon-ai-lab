@@ -102,6 +102,9 @@ pub(crate) enum StartEffect {
     /// Supreme Overlord: `abilityState.fallen = min(side.totalFainted, 5)` when that is not 0
     /// (`abilities::supreme_overlord_start`).
     SupremeOverlord,
+    /// Commander's `onStart` (outside the SwitchIn event, which runs its `onAnySwitchIn`): its
+    /// `onUpdate` (`abilities::commander_update`).
+    Commander,
 }
 
 /// Abilities with an implemented start, with the exact handler lists they were implemented
@@ -482,6 +485,14 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onBasePower", "onEnd", "onStart"],
         StartEffect::SupremeOverlord,
     ),
+    // Commander: `onStart` (a Start outside the SwitchIn event: Mega Evolution) and
+    // `onAnySwitchIn` (`run_switch_in`) both run its `onUpdate` (`abilities::commander_update`,
+    // also at every Update).
+    (
+        abilities::COMMANDER,
+        &["onAnySwitchIn", "onStart", "onUpdate"],
+        StartEffect::Commander,
+    ),
 ];
 
 /// What `ability` does when it starts, or `None` if it has a switch-in handler that is not
@@ -660,6 +671,8 @@ fn switch_in_as<const N: usize>(
         previous: Box::new(previous),
         party_index: Some(party_index),
     });
+    // `switchIn` queued the newcomer's `runSwitch` (a drag runs it at once).
+    b.awaiting_run_switch = true;
     Ok(())
 }
 
@@ -679,6 +692,8 @@ enum SwitchInHandler {
     Item(ItemId),
     /// `onAnySwitchIn` of a Pastel Veil holder already on the field: its `onStart` again.
     PastelVeilAny,
+    /// Commander's `onAnySwitchIn`: its `onUpdate` for the holder.
+    CommanderAny,
 }
 
 /// Showdown `runSwitch` for the Pokémon that just switched in: one `fieldEvent('SwitchIn')`
@@ -698,6 +713,8 @@ pub(crate) fn run_switch_in<const N: usize>(
     b: &mut Battle<'_, N>,
     newcomers: &[SlotRef],
 ) -> Result<(), TurnError> {
+    // `runSwitch` takes every queued `runSwitch` action at once.
+    b.awaiting_run_switch = false;
     // (priority, holder, sub-order, handler)
     let mut handlers: Vec<(i32, SlotRef, u32, SwitchInHandler)> = Vec::new();
     for &slot in newcomers {
@@ -707,12 +724,16 @@ pub(crate) fn run_switch_in<const N: usize>(
         let mon = b.mon(pokemon);
         handlers.push((0, slot, SUB_SLOT_CONDITION, SwitchInHandler::SlotConditions));
         handlers.push((0, slot, SUB_SIDE_CONDITION, SwitchInHandler::Hazards));
-        handlers.push((
-            switch_in_priority(mon.ability),
-            slot,
-            SUB_ABILITY,
-            SwitchInHandler::Ability(mon.ability),
-        ));
+        // `getCallback`: an ability with `onAnySwitchIn` has no `onStart` fallback in the
+        // SwitchIn event (Commander; Pastel Veil's are the same handler at the same priority).
+        if mon.ability != abilities::COMMANDER {
+            handlers.push((
+                switch_in_priority(mon.ability),
+                slot,
+                SUB_ABILITY,
+                SwitchInHandler::Ability(mon.ability),
+            ));
+        }
         // The effective item: `singleEvent('SwitchIn')` skips a suppressed item's handler.
         let item = b.item(slot);
         if let Some(priority) = super::items::switch_in_priority(item) {
@@ -727,6 +748,15 @@ pub(crate) fn run_switch_in<const N: usize>(
         }
         if !newcomers.contains(&slot) && mon.ability == abilities::PASTEL_VEIL {
             handlers.push((0, slot, SUB_ABILITY, SwitchInHandler::PastelVeilAny));
+        }
+        // Commander's `onAnySwitchIn` (priority -2) for every active holder, the newcomers
+        // included.
+        if mon.ability == abilities::COMMANDER {
+            let priority = super::abilities::priority(
+                mon.ability.data().event_orders,
+                "onAnySwitchInPriority",
+            );
+            handlers.push((priority, slot, SUB_ABILITY, SwitchInHandler::CommanderAny));
         }
     }
     // `speedOrder`: the holders by raw Speed, equal Speeds uniformly at random.
@@ -781,6 +811,11 @@ pub(crate) fn run_switch_in<const N: usize>(
             SwitchInHandler::PastelVeilAny => {
                 if b.ability(slot) == abilities::PASTEL_VEIL {
                     pastel_veil_cure(b, slot);
+                }
+            }
+            SwitchInHandler::CommanderAny => {
+                if b.ability(slot) == abilities::COMMANDER {
+                    super::abilities::commander_update(b, slot);
                 }
             }
         }
@@ -922,6 +957,7 @@ pub(crate) fn start_ability<const N: usize>(
         }
         StartEffect::Forme => super::forme::on_start(b, slot, ability)?,
         StartEffect::SupremeOverlord => super::abilities::supreme_overlord_start(b, slot),
+        StartEffect::Commander => super::abilities::commander_update(b, slot),
     }
     Ok(())
 }

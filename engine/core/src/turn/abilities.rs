@@ -17,7 +17,7 @@ use crate::damage::{
 };
 use crate::dex::{
     abilities, items, moves, AbilityFlags, AbilityId, ItemId, MoveCategory, MoveData, MoveFlags,
-    MoveId, Stat, Type, NO_BOOSTS,
+    MoveId, SpeciesId, Stat, Type, NO_BOOSTS,
 };
 use crate::field::{SideEffect, Weather};
 use crate::state::{Pokemon, PokemonRef, SideId, SlotRef, State, Status};
@@ -324,6 +324,75 @@ pub(crate) fn hit_protect<const N: usize>(
         && super::items::makes_contact(b, user, data)
 }
 
+/// The species' base species (`species.baseSpecies`; the dex leaves it unset on some bases).
+fn base_species(species: SpeciesId) -> SpeciesId {
+    let base = species.data().base_species;
+    if base.is_none() {
+        species
+    } else {
+        base
+    }
+}
+
+/// Commander's `onUpdate`, which its `onStart` and `onAnySwitchIn` also run, for the holder in
+/// `holder`:
+/// - doubles only; nothing while a `runSwitch` is the next action (`queue.peek()`: between a
+///   switch-in and its `runSwitch`, [`Battle::awaiting_run_switch`]);
+/// - `ally = pokemon.allies()[0]` (the other active Pokémon not fainted); nothing if the holder
+///   or the ally has a `switchFlag`;
+/// - unless the holder is a Tatsugiri (`baseSpecies.baseSpecies`, Megas included) next to a
+///   Dondozo, `commanding` ends (`removeVolatile`: no `onEnd`) — the ally fainted or is gone;
+/// - otherwise, if it is not commanding yet and the ally is not commanded already, its queued
+///   actions are cancelled (`queue.cancelAction`), it gets `commanding` and the ally gets
+///   `commanded`, whose `onStart` raises Atk, Def, SpA, SpD and Spe by 2 (the boost's source is
+///   the Tatsugiri: `addVolatile('commanded', pokemon)`). An ally that is `commanded` stays so
+///   when its Tatsugiri faints.
+pub(crate) fn commander_update<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) {
+    use crate::dex::species;
+    if N != 2 || b.awaiting_run_switch {
+        return;
+    }
+    let Some(pokemon) = b.alive(holder) else {
+        return;
+    };
+    let ally = b
+        .alive_slots(holder.side)
+        .into_iter()
+        .find(|&s| s != holder);
+    let flagged = |b: &Battle<'_, N>, slot: SlotRef| {
+        b.state.slot(slot).switch_flag != crate::state::SwitchFlag::None
+    };
+    if flagged(b, holder) || ally.is_some_and(|a| flagged(b, a)) {
+        return;
+    }
+    let commanding = b.volatile(holder, Volatile::Commanding).active;
+    let tatsugiri = base_species(b.mon(pokemon).species) == species::TATSUGIRI;
+    let dondozo = ally.filter(|&a| {
+        b.slot_mon(a)
+            .is_some_and(|m| base_species(m.species) == species::DONDOZO)
+    });
+    let (true, Some(ally)) = (tatsugiri, dondozo) else {
+        if commanding {
+            b.remove_volatile(holder, Volatile::Commanding);
+        }
+        return;
+    };
+    // `else { if (!ally.fainted) return; ... }`: the ally is never fainted here.
+    if commanding || b.volatile(ally, Volatile::Commanded).active {
+        return;
+    }
+    b.queue.retain(|action| action.pokemon != pokemon);
+    b.add_volatile(holder, Volatile::Commanding);
+    if b.add_volatile(ally, Volatile::Commanded) {
+        b.boost_by(
+            ally,
+            &[2, 2, 2, 2, 2, 0, 0],
+            Some(holder),
+            BoostEffect::Ability(abilities::COMMANDER),
+        );
+    }
+}
+
 /// Supreme Overlord's `onStart`: `if (pokemon.side.totalFainted)` the holder's
 /// `abilityState.fallen = Math.min(pokemon.side.totalFainted, 5)`, kept as
 /// [`Volatile::SupremeOverlord`] (the ability state is fresh at every switch-in and ability
@@ -464,7 +533,9 @@ pub(crate) fn after_move_secondary<const N: usize>(
 /// item's): the status cures of [`cured_on_update`] and Own Tempo's confusion cure
 /// (`removeVolatile('confusion')`). All are breakable: a move that ignores abilities suppresses
 /// them at the Update after its hit, and the Update after the action cures. Each only changes
-/// its holder, so their order across Pokémon does not matter.
+/// its holder, so their order across Pokémon does not matter. Commander's (not breakable,
+/// [`commander_update`]) changes its holder and its Dondozo ally only, and no other Update
+/// listener reads what it changes.
 pub(crate) fn on_update<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     let Some(pokemon) = b.alive(slot) else {
         return;
@@ -475,6 +546,9 @@ pub(crate) fn on_update<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     }
     if ability == abilities::OWN_TEMPO && b.volatile(slot, Volatile::Confusion).active {
         b.remove_volatile(slot, Volatile::Confusion);
+    }
+    if ability == abilities::COMMANDER {
+        commander_update(b, slot);
     }
 }
 

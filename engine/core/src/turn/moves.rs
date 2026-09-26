@@ -2101,10 +2101,14 @@ fn spread_move_hit<const N: usize>(
                 }
             }
         }
-        // `if (moveData.selfSwitch) { if (canSwitch(source.side)) didSomething = true; else
-        // didSomething = combineResults(didSomething, false); }`
+        // `if (moveData.selfSwitch) { if (canSwitch(source.side) &&
+        // !source.volatiles['commanded']) didSomething = true; else didSomething =
+        // combineResults(didSomething, false); }`
         if data.self_switch != SelfSwitch::No {
-            note(super::residual::bench(b, user.side).next().is_some());
+            note(
+                super::residual::bench(b, user.side).next().is_some()
+                    && !b.volatile(user, Volatile::Commanded).active,
+            );
         }
         // `if (moveData.forceSwitch) { hitResult = !!this.battle.canSwitch(target.side);
         // didSomething = this.battle.combineResults(didSomething, hitResult); }`
@@ -2133,7 +2137,11 @@ fn spread_move_hit<const N: usize>(
     // (Parting Shot's `onHit` withdrew `selfSwitch` if its drops failed). It comes before the
     // targets' Emergency Exit, which clears every other active's flag: U-turn into a Pokémon it
     // takes below half leaves only that Pokémon switching.
-    if b.move_self_switch && b.alive(user).is_some() && results.iter().any(|r| *r != Hit::Failed) {
+    if b.move_self_switch
+        && b.alive(user).is_some()
+        && !b.volatile(user, Volatile::Commanded).active
+        && results.iter().any(|r| *r != Hit::Failed)
+    {
         b.set_switch_flag(user, SwitchFlag::Move);
     }
     // selfDrops: boosts once, for the first target the move did not fail on; an effect
@@ -2232,6 +2240,17 @@ fn spread_move_hit<const N: usize>(
                 || b.alive(t).is_none()
                 || b.alive(user).is_none()
                 || super::residual::bench(b, t.side).next().is_none()
+            {
+                continue;
+            }
+            // Commander's `commanding` / `commanded` `onDragOut` (priority 2, before Suction
+            // Cups) returns `false`: a status move (Roar, Whirlwind) fails on that target.
+            let commander = b.volatile(t, Volatile::Commanding).active
+                || b.volatile(t, Volatile::Commanded).active;
+            if commander && data.category == MoveCategory::Status {
+                results[i] = Hit::Failed;
+            }
+            if commander
                 || b.ability_unless_broken(t) == abilities::SUCTION_CUPS
                 || conditions::drag_out_blocked(b, t)
             {

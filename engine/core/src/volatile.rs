@@ -193,9 +193,18 @@ pub enum Volatile {
     /// `min(side.totalFainted, 5)` when that is not 0), kept in `counter`. No duration; hidden
     /// in the canonical state.
     SupremeOverlord,
+    /// Commander on Tatsugiri inside its Dondozo ally (`commanding`, no duration): it cannot be
+    /// hit (`hitStepInvulnerabilityEvent`, `onInvulnerability`), acts never (its choice is a
+    /// pass, a queued action is cancelled), and can be neither switched out (`onTrapPokemon`,
+    /// after Shed Shell) nor dragged out (`onDragOut`).
+    Commanding,
+    /// Commander on the Dondozo it commands (`commanded`, no duration): +2 in every stat when it
+    /// starts; trapped and not dragged out, as `commanding`, and it does not switch itself out
+    /// (`selfSwitch`, Eject Button).
+    Commanded,
 }
 
-pub const VOLATILE_COUNT: usize = 63;
+pub const VOLATILE_COUNT: usize = 65;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -262,6 +271,8 @@ impl Volatile {
         Volatile::Ingrain,
         Volatile::MagnetRise,
         Volatile::SupremeOverlord,
+        Volatile::Commanding,
+        Volatile::Commanded,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -332,7 +343,9 @@ impl Volatile {
             | Volatile::AllySwitch
             | Volatile::Trapped
             | Volatile::Trapper
-            | Volatile::SupremeOverlord => ConditionId::NONE,
+            | Volatile::SupremeOverlord
+            | Volatile::Commanding
+            | Volatile::Commanded => ConditionId::NONE,
         }
     }
 
@@ -402,6 +415,8 @@ impl Volatile {
             Volatile::Ingrain => "ingrain",
             Volatile::MagnetRise => "magnetrise",
             Volatile::SupremeOverlord => "supremeoverlord",
+            Volatile::Commanding => "commanding",
+            Volatile::Commanded => "commanded",
         }
     }
 
@@ -478,7 +493,9 @@ impl Volatile {
             | Volatile::Trapper
             | Volatile::SaltCure
             | Volatile::Ingrain
-            | Volatile::SupremeOverlord => 0,
+            | Volatile::SupremeOverlord
+            | Volatile::Commanding
+            | Volatile::Commanded => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -685,6 +702,8 @@ mod tests {
                         | Volatile::Trapped
                         | Volatile::Trapper
                         | Volatile::SupremeOverlord
+                        | Volatile::Commanding
+                        | Volatile::Commanded
                 ));
                 continue;
             }

@@ -53,6 +53,14 @@ fn slot_candidates<const N: usize>(state: &State<N>, slot: SlotRef) -> Vec<SlotA
     let Some(mon) = state.active(slot).filter(|p| p.hp > 0) else {
         return vec![SlotAction::Pass];
     };
+    // A commanding Tatsugiri (Commander) can only pass.
+    if state
+        .slot(slot)
+        .volatiles
+        .has(crate::volatile::Volatile::Commanding)
+    {
+        return vec![SlotAction::Pass];
+    }
     if let Some(locked) = lock::locked_move(state, slot) {
         let (index, target) = match locked {
             Locked::Recharge => (RECHARGE_INDEX, 0),

@@ -88,6 +88,10 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// ([`Battle::event_speed`]). A stage is one action, so this starts empty with every stage;
     /// a multi-hit move suspended between hits carries it in its `MoveProgress`.
     pub raw_speed: Vec<PokemonRef>,
+    /// A Pokémon switched in (`switching::switch_in`) and its `runSwitch` has not run yet:
+    /// Showdown's `queue.peek()` is a `runSwitch` action (the Update that ends a switch action,
+    /// or a batch of `instaswitch` actions, comes before it). Commander's `onUpdate` waits.
+    pub awaiting_run_switch: bool,
 }
 
 /// The readers of the hidden damage history present in a battle (any party member's moves;
@@ -145,6 +149,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             busted: Vec::new(),
             history_readers,
             raw_speed: Vec::new(),
+            awaiting_run_switch: false,
         }
     }
 

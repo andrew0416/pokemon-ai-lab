@@ -1,0 +1,24 @@
+{
+ "description": "Opus S unit 3: Commander ends when Dondozo faints. Tatsugiri commands Dondozo from the battle start; Dondozo is patched to 1 HP. Garchomp's Dragon Claw knocks Dondozo out before it moves; at that action's Update Tatsugiri's onUpdate finds no ally and removes commanding, so Sylveon's Dazzling Gleam then hits Tatsugiri. p1 has no bench.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Tatsugiri", "item": "", "ability": "Commander", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Draco Meteor", "Protect"], "level": 50},
+   {"species": "Dondozo", "item": "", "ability": "Water Veil", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Body Press", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Sylveon", "item": "", "ability": "Pixilate", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Dazzling Gleam", "Protect"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Dragon Claw", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Dondozo": {"hp": 1}}},
+ "turn": {"p1": "pass, move bodypress 2", "p2": "move dazzlinggleam, move dragonclaw 2"}
+}
