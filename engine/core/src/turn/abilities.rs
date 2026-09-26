@@ -16,8 +16,8 @@ use crate::damage::{
     MOD_ONE_POINT_TWO, MOD_THREE_QUARTERS,
 };
 use crate::dex::{
-    abilities, items, moves, AbilityFlags, AbilityId, ItemId, MoveCategory, MoveData, MoveFlags,
-    MoveId, SpeciesId, Stat, Type, NO_BOOSTS,
+    abilities, items, moves, AbilityFlags, AbilityId, Gender, ItemId, MoveCategory, MoveData,
+    MoveFlags, MoveId, SpeciesId, Stat, Type, NO_BOOSTS,
 };
 use crate::field::{SideEffect, Weather};
 use crate::state::{Pokemon, PokemonRef, SideId, SlotRef, State, Status};
@@ -206,6 +206,23 @@ pub(crate) fn base_power_handlers<const N: usize>(
             let sand = b.effective_weather() == Weather::Sand;
             let typed = matches!(move_type, Type::Rock | Type::Ground | Type::Steel);
             (sand && typed).then_some(5325)
+        }
+        // Rivalry (priority 24): with both genders known (not genderless), 1.25x for the same
+        // gender, 0.75x for the other ([`rivalry_problem`] refuses an undecided gender).
+        a if a == abilities::RIVALRY => {
+            let gender = |slot: SlotRef| b.slot_mon(slot).map(|m| m.gender);
+            match (gender(user), gender(target)) {
+                (Some(mine), Some(theirs))
+                    if mine != Gender::Genderless && theirs != Gender::Genderless =>
+                {
+                    Some(if mine == theirs {
+                        5120
+                    } else {
+                        MOD_THREE_QUARTERS
+                    })
+                }
+                _ => None,
+            }
         }
         // Supreme Overlord (priority 21): `[powMod[fallen], 4096]` with the count its `onStart`
         // stored ([`supreme_overlord_start`]).
@@ -622,6 +639,27 @@ pub(crate) fn symbiosis<const N: usize>(b: &mut Battle<'_, N>, receiver: SlotRef
         });
         super::moves::trick_item_start(b, receiver, item);
     }
+}
+
+/// Why a battle with an active Rivalry holder cannot be simulated: a Pokémon of either party
+/// has an undecided gender ([`Gender::Random`]: no set gender, a species with a gender ratio;
+/// Showdown drew it with the battle's PRNG), which Rivalry's `onBasePower` would read.
+pub(crate) fn rivalry_problem<const N: usize>(state: &State<N>) -> Option<String> {
+    let rivalry = State::<N>::slot_refs()
+        .filter_map(|s| state.active(s))
+        .any(|m| m.hp > 0 && m.ability == abilities::RIVALRY);
+    if !rivalry {
+        return None;
+    }
+    let undecided = state
+        .sides
+        .iter()
+        .flat_map(|side| side.party.iter())
+        .find(|m| !m.species.is_none() && m.gender == Gender::Random)?;
+    Some(format!(
+        "Rivalry next to {} of undecided gender (give the set a gender)",
+        undecided.species.data().name
+    ))
 }
 
 /// Soul-Heart's `onAnyFaint` for one processed faint (`runEvent('Faint')` in `faintMessages`):

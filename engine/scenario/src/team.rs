@@ -110,6 +110,11 @@ pub fn build_pokemon(set: &TeamSet) -> Result<(Pokemon, MemberMeta), SetProblem>
         stats: [stats[1], stats[2], stats[3], stats[4], stats[5]],
         nature,
         stat_points,
+        // `genders[set.gender] || this.species.gender || this.battle.sample(['M', 'F'])`.
+        gender: match gender {
+            Gender::Random => species.data().gender,
+            given => given,
+        },
         status: Status::None,
         status_turns: 0,
         item,

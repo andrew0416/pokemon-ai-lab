@@ -1566,6 +1566,9 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::PROPELLER_TAIL, &["onModifyMove"]),
     // Soul-Heart: `onAnyFaint` in `abilities::soul_heart` (from `Battle::faint_messages`).
     (abilities::SOUL_HEART, &["onAnyFaint"]),
+    // Rivalry: `onBasePower` in `abilities::base_power_handlers` (`Pokemon::gender`); an
+    // undecided gender next to it is refused (`abilities::rivalry_problem`).
+    (abilities::RIVALRY, &["onBasePower"]),
     // Symbiosis: `onAllyAfterUseItem` in `abilities::symbiosis` (from every AfterUseItem site:
     // `Battle::use_item`, `update::consume`, Air Balloon); an item it could not pass is refused
     // (`forme::field_problem` → `abilities::symbiosis_problem`).
@@ -1922,6 +1925,9 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
         }
     }
     if let Some(why) = super::abilities::paradox_suppressor_problem(state) {
+        return Err(why);
+    }
+    if let Some(why) = super::abilities::rivalry_problem(state) {
         return Err(why);
     }
     Ok(())

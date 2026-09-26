@@ -4,7 +4,7 @@
 //! on switch-out (boosts, volatiles, substitute) lives on the [`Slot`]. poke-engine keeps the
 //! latter on the side, which only works with one active Pokémon.
 
-use crate::dex::{AbilityId, ItemId, MoveId, Nature, SpeciesId, Type};
+use crate::dex::{AbilityId, Gender, ItemId, MoveId, Nature, SpeciesId, Type};
 use crate::field::{
     Effect, SlotEffect, FIELD_EFFECT_COUNT, SIDE_EFFECT_COUNT, SLOT_CONDITION_COUNT,
 };
@@ -111,6 +111,11 @@ pub struct Pokemon {
     /// Set data the stats are recalculated from on a forme change (Showdown `spreadModify`).
     pub nature: Nature,
     pub stat_points: StatPoints,
+    /// Showdown `pokemon.gender`: the set's (`M`, `F`, `N`), else the species' fixed one;
+    /// [`Gender::Random`] when neither decides (Showdown then draws `M` or `F` with the battle's
+    /// PRNG, which the state cannot know: what reads the gender refuses it). Never changes, so
+    /// it does not split positions.
+    pub gender: Gender,
     pub status: Status,
     /// Showdown `statusState.time` for sleep and freeze, `statusState.stage` for toxic.
     pub status_turns: i8,

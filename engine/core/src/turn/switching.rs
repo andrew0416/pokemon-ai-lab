@@ -631,6 +631,20 @@ fn switch_in_problem<const N: usize>(
             ));
         }
     }
+    // A Rivalry holder needs every gender decided (`abilities::rivalry_problem`).
+    if on_field && mon.ability == abilities::RIVALRY {
+        let undecided = b
+            .state
+            .sides
+            .iter()
+            .flat_map(|side| side.party.iter())
+            .any(|m| !m.species.is_none() && m.gender == crate::dex::Gender::Random);
+        if undecided {
+            return Some(format!(
+                "{name}: Rivalry next to a Pokémon of undecided gender"
+            ));
+        }
+    }
     super::update::berry_problem(mon)
 }
 

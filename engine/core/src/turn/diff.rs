@@ -181,6 +181,7 @@ fn pokemon<const N: usize>(
         a.level == b.level
             && a.nature == b.nature
             && a.stat_points == b.stat_points
+            && a.gender == b.gender
             && a.gimmicks == b.gimmicks
             && a.gigantamax_factor == b.gigantamax_factor,
         "a field the turn engine never changes differs"
