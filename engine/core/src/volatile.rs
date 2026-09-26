@@ -189,9 +189,35 @@ pub enum Volatile {
     /// Magnet Rise (duration 5, residual order 18): the holder is not grounded (immune to
     /// Ground).
     MagnetRise,
+    /// Counter's own condition (duration 1), added by its `beforeTurnCallback` when the turn
+    /// starts: the last physical hit from a foe is recorded (`onDamagingHit`): twice its damage
+    /// in `counter` (Showdown `effectState.damage`) and the attacker's slot in `hidden`
+    /// (`effectState.slot`: 1 + the slot index on the holder's foe side; 0 = `null`). Both are
+    /// hidden in the canonical state. Added by name, so the dex has no condition id.
+    Counter,
+    /// Mirror Coat's condition: as [`Volatile::Counter`], for special hits.
+    MirrorCoat,
+    /// Focus Punch's condition (duration 1), added by its `priorityChargeCallback` (order 107):
+    /// a non-status move hitting the holder sets `lostFocus` (`counter` 1, hidden), which makes
+    /// Focus Punch fail (`beforeMoveCallback`); it also blocks flinching (`onTryAddVolatile`).
+    FocusPunch,
+    /// Beak Blast's condition (duration 1, from `priorityChargeCallback`): a contact move hitting
+    /// the holder burns its user (`onHit`); Beak Blast's `onAfterMove` removes it.
+    BeakBlast,
+    /// Shell Trap's condition (duration 1, from `priorityChargeCallback`): a foe's physical move
+    /// hitting the holder sets `gotHit` (`counter` 1, hidden) and moves the holder's Shell Trap to
+    /// the front of the queue; without it Shell Trap stops (`onTryMove`).
+    ShellTrap,
+    /// Heal Block (duration 5, 2 from Psychic Noise; residual order 20): the holder's `heal`
+    /// moves can be neither chosen nor used, and every `battle.heal` on it fails (`onTryHeal`).
+    HealBlock,
+    /// Smack Down / Thousand Arrows (`smackdown`, no duration): the holder is grounded
+    /// (`isGrounded`, right after Ingrain). It only starts on a Pokémon that was airborne
+    /// (Flying, Levitate, Magnet Rise, or in the air with Fly / Bounce, which it brings down).
+    SmackDown,
 }
 
-pub const VOLATILE_COUNT: usize = 62;
+pub const VOLATILE_COUNT: usize = 69;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -257,6 +283,13 @@ impl Volatile {
         Volatile::SaltCure,
         Volatile::Ingrain,
         Volatile::MagnetRise,
+        Volatile::Counter,
+        Volatile::MirrorCoat,
+        Volatile::FocusPunch,
+        Volatile::BeakBlast,
+        Volatile::ShellTrap,
+        Volatile::HealBlock,
+        Volatile::SmackDown,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -307,6 +340,8 @@ impl Volatile {
             Volatile::SaltCure => conditions::SALTCURE,
             Volatile::Ingrain => conditions::INGRAIN,
             Volatile::MagnetRise => conditions::MAGNETRISE,
+            Volatile::HealBlock => conditions::HEALBLOCK,
+            Volatile::SmackDown => conditions::SMACKDOWN,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -326,7 +361,12 @@ impl Volatile {
             | Volatile::ShadowForce
             | Volatile::AllySwitch
             | Volatile::Trapped
-            | Volatile::Trapper => ConditionId::NONE,
+            | Volatile::Trapper
+            | Volatile::Counter
+            | Volatile::MirrorCoat
+            | Volatile::FocusPunch
+            | Volatile::BeakBlast
+            | Volatile::ShellTrap => ConditionId::NONE,
         }
     }
 
@@ -395,6 +435,13 @@ impl Volatile {
             Volatile::SaltCure => "saltcure",
             Volatile::Ingrain => "ingrain",
             Volatile::MagnetRise => "magnetrise",
+            Volatile::Counter => "counter",
+            Volatile::MirrorCoat => "mirrorcoat",
+            Volatile::FocusPunch => "focuspunch",
+            Volatile::BeakBlast => "beakblast",
+            Volatile::ShellTrap => "shelltrap",
+            Volatile::HealBlock => "healblock",
+            Volatile::SmackDown => "smackdown",
         }
     }
 
@@ -424,7 +471,12 @@ impl Volatile {
             | Volatile::KingsShield
             | Volatile::Obstruct
             | Volatile::SilkTrap
-            | Volatile::BurningBulwark => 1,
+            | Volatile::BurningBulwark
+            | Volatile::Counter
+            | Volatile::MirrorCoat
+            | Volatile::FocusPunch
+            | Volatile::BeakBlast
+            | Volatile::ShellTrap => 1,
             Volatile::Stall
             | Volatile::LockedMove
             | Volatile::MustRecharge
@@ -441,9 +493,12 @@ impl Volatile {
             | Volatile::AllySwitch => 2,
             Volatile::Encore | Volatile::Taunt => 3,
             Volatile::PerishSong => 4,
-            // Partial trapping's `durationCallback` replaces it when it starts
+            // Partial trapping's and Heal Block's `durationCallback` replace it when they start
             // (`conditions::volatile_start`).
-            Volatile::Disable | Volatile::PartiallyTrapped | Volatile::MagnetRise => 5,
+            Volatile::Disable
+            | Volatile::PartiallyTrapped
+            | Volatile::MagnetRise
+            | Volatile::HealBlock => 5,
             Volatile::Confusion
             | Volatile::FlashFire
             | Volatile::ChoiceLock
@@ -470,7 +525,8 @@ impl Volatile {
             | Volatile::Trapped
             | Volatile::Trapper
             | Volatile::SaltCure
-            | Volatile::Ingrain => 0,
+            | Volatile::Ingrain
+            | Volatile::SmackDown => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -486,6 +542,7 @@ impl Volatile {
             Volatile::Taunt => Some(15),
             Volatile::Encore => Some(16),
             Volatile::Disable => Some(17),
+            Volatile::HealBlock => Some(20),
             Volatile::ThroatChop => Some(22),
             Volatile::Yawn => Some(23),
             Volatile::PerishSong => Some(24),
@@ -512,13 +569,19 @@ impl Volatile {
             }),
             // `bestStat` / `fromBooster` (Protosynthesis, Quark Drive) and the trapper /
             // `boundDivisor` (partial trapping) are not canonical fields.
-            Volatile::Protosynthesis | Volatile::QuarkDrive | Volatile::PartiallyTrapped => {
-                Some(VolatileState {
-                    counter: 0,
-                    hidden: 0,
-                    ..state
-                })
-            }
+            // Counter / Mirror Coat: neither `damage` nor `slot` is a canonical field; nor are
+            // Focus Punch's `lostFocus` and Shell Trap's `gotHit`.
+            Volatile::Protosynthesis
+            | Volatile::QuarkDrive
+            | Volatile::PartiallyTrapped
+            | Volatile::Counter
+            | Volatile::MirrorCoat
+            | Volatile::FocusPunch
+            | Volatile::ShellTrap => Some(VolatileState {
+                counter: 0,
+                hidden: 0,
+                ..state
+            }),
             _ => Some(state),
         }
     }
@@ -674,6 +737,11 @@ mod tests {
                         | Volatile::AllySwitch
                         | Volatile::Trapped
                         | Volatile::Trapper
+                        | Volatile::Counter
+                        | Volatile::MirrorCoat
+                        | Volatile::FocusPunch
+                        | Volatile::BeakBlast
+                        | Volatile::ShellTrap
                 ));
                 continue;
             }
@@ -710,6 +778,13 @@ mod tests {
             (Volatile::SaltCure, moves::SALT_CURE),
             (Volatile::Ingrain, moves::INGRAIN),
             (Volatile::MagnetRise, moves::MAGNET_RISE),
+            (Volatile::Counter, moves::COUNTER),
+            (Volatile::MirrorCoat, moves::MIRROR_COAT),
+            (Volatile::FocusPunch, moves::FOCUS_PUNCH),
+            (Volatile::BeakBlast, moves::BEAK_BLAST),
+            (Volatile::ShellTrap, moves::SHELL_TRAP),
+            (Volatile::HealBlock, moves::HEAL_BLOCK),
+            (Volatile::SmackDown, moves::SMACK_DOWN),
         ] {
             let data = id.data();
             assert_eq!(

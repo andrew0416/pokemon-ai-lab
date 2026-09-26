@@ -241,6 +241,17 @@ pub struct SlotHistory {
     /// `newlySwitched`: set when the Pokémon comes in (also at the start of the battle),
     /// cleared at the end of the turn (Payback).
     pub newly_switched: bool,
+    /// `statsRaisedThisTurn` / `statsLoweredThisTurn`: a `boost()` that changed a stage raised /
+    /// lowered one this turn (Burning Jealousy, Alluring Voice / Lash Out). Cleared at the end
+    /// of every turn but the one that starts the battle (Intimidate at the start still counts
+    /// on turn 1) and when the Pokémon leaves the field. Recorded only while a reader is in the
+    /// battle (`HistoryReaders`).
+    pub stats_raised_this_turn: bool,
+    pub stats_lowered_this_turn: bool,
+    /// `moveSlot.used` per move index (bit `1 << index`): `deductPP` marks a move slot (its own
+    /// use, Pressure's extra PP, Spite on it); cleared on switch-in. Read by Last Resort;
+    /// recorded only while it is in the battle (`HistoryReaders`).
+    pub moves_used: u8,
 }
 
 impl Default for SlotHistory {
@@ -253,6 +264,9 @@ impl Default for SlotHistory {
             move_this_turn_result: MoveResult::Undefined,
             move_last_turn_result: MoveResult::Undefined,
             newly_switched: true,
+            stats_raised_this_turn: false,
+            stats_lowered_this_turn: false,
+            moves_used: 0,
         }
     }
 }
@@ -287,6 +301,10 @@ pub struct SideHistory {
     pub total_fainted: u8,
     pub fainted_this_turn: bool,
     pub fainted_last_turn: bool,
+    /// `pokemon.ateBerry` per party member (bit `1 << party index`): it ate a berry at some point
+    /// in the battle (`eatItem`, or Bug Bite / Pluck's stolen one). Never cleared. Read by Belch;
+    /// recorded only while it is in the battle (`HistoryReaders`).
+    pub ate_berry: u8,
 }
 
 /// Active-position state that resets on switch-out.

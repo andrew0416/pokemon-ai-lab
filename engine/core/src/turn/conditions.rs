@@ -108,9 +108,52 @@ pub(crate) fn add_slot_condition<const N: usize>(
         },
         SlotCondition::HealingWish => SlotEffect { value: 1, turn: 0 },
         SlotCondition::RevivalBlessing => SlotEffect { value: 1, turn: 1 },
+        // Added by the moves' `onTry` ([`start_future_move`]), never by move data.
+        SlotCondition::FutureMove => unreachable!("no move data adds a futuremove"),
     };
     set_slot_condition(b, slot, condition, new);
     true
+}
+
+/// Future Sight's and Doom Desire's `onTry` at use: `target.side.addSlotCondition(target,
+/// 'futuremove')` at the target's position (fails when one is already there: no `onRestart`),
+/// storing the move, its user and the turn (`onStart`: `endingTurn = (turn - 1) + 2`). The move
+/// then returns `NOT_FAIL`: it succeeds without hitting.
+pub(crate) fn start_future_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    id: MoveId,
+) -> bool {
+    if slot_condition(b, target, SlotCondition::FutureMove).is_active() {
+        return false;
+    }
+    let Some(source) = b.occupant(user) else {
+        return false;
+    };
+    let doom = if id == moves::DOOM_DESIRE {
+        crate::field::FUTURE_MOVE_DOOM_DESIRE
+    } else {
+        0
+    };
+    let new = SlotEffect {
+        value: encode_pokemon(source) | doom,
+        turn: b.state.turn,
+    };
+    set_slot_condition(b, target, SlotCondition::FutureMove, new);
+    true
+}
+
+/// The user and the move a `futuremove` condition stores.
+pub(crate) fn future_move_of(effect: SlotEffect) -> (PokemonRef, MoveId) {
+    let doom = effect.value & crate::field::FUTURE_MOVE_DOOM_DESIRE != 0;
+    let source = decode_pokemon(effect.value & !crate::field::FUTURE_MOVE_DOOM_DESIRE);
+    let id = if doom {
+        moves::DOOM_DESIRE
+    } else {
+        moves::FUTURE_SIGHT
+    };
+    (source, id)
 }
 
 /// Showdown `side.removeSlotCondition`: the condition's `End` on the Pokémon in the slot, then
@@ -144,24 +187,38 @@ pub(crate) fn slot_condition_switch_in<const N: usize>(b: &mut Battle<'_, N>, sl
     let mon = b.mon(pokemon);
     if mon.hp < mon.max_hp || mon.status != Status::None {
         let max_hp = f64::from(mon.max_hp);
-        b.heal(slot, max_hp);
+        // `target.heal(target.maxhp)`: `pokemon.heal`, which Heal Block does not stop.
+        b.heal_unblocked(slot, max_hp);
         b.cure_status(pokemon);
         set_slot_condition(b, slot, SlotCondition::HealingWish, SlotEffect::NONE);
     }
 }
 
 /// Wish's `onResidual` (order 4): once the turn count passed its starting turn the condition
-/// ends (and heals); Revival Blessing's duration counts down.
+/// ends (and heals a standing occupant); Revival Blessing's duration counts down; a future move
+/// (order 3) hits once `getOverflowedTurnCount() >= endingTurn` (the turn it was used + 2,
+/// `moves::future_move_hit`), then ends. The handlers run for whoever holds the position, a
+/// fainted Pokémon not yet replaced included.
 pub(crate) fn slot_condition_residual<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
     condition: SlotCondition,
-) {
+) -> Result<(), TurnError> {
     let state = slot_condition(b, slot, condition);
     if !state.is_active() {
-        return;
+        return Ok(());
     }
     match condition {
+        SlotCondition::FutureMove => {
+            if b.state.turn < state.turn + 2 {
+                return Ok(());
+            }
+            // `removeSlotCondition`: `End` (the hit) while the condition is still there, then
+            // it is gone.
+            let (source, id) = future_move_of(state);
+            super::moves::future_move_hit(b, slot, source, id)?;
+            set_slot_condition(b, slot, condition, SlotEffect::NONE);
+        }
         SlotCondition::Wish => {
             if b.state.turn > state.turn {
                 remove_slot_condition(b, slot, condition);
@@ -184,6 +241,7 @@ pub(crate) fn slot_condition_residual<const N: usize>(
         }
         SlotCondition::HealingWish => {}
     }
+    Ok(())
 }
 
 /// The two-turn moves the engine runs (`charge` flag) and their own volatile
@@ -341,6 +399,42 @@ pub(crate) fn volatile_start<const N: usize>(
             new.mv = last;
             true
         }
+        // Smack Down: it applies to a Flying type or a Levitate / Eelevate holder, not to one
+        // that holds Iron Ball, is rooted or under Gravity; it does apply to one it brings down
+        // from Fly or Bounce ([`smack_down_lands`]) or out of Magnet Rise (deleted, no `onEnd`).
+        // Otherwise it fails.
+        Volatile::SmackDown => {
+            let floats = [abilities::LEVITATE, abilities::EELEVATE].contains(&b.ability(target));
+            let mut applies = b.has_type(target, Type::Flying) || floats;
+            if b.item(target) == items::IRON_BALL
+                || b.volatile(target, Volatile::Ingrain).active
+                || b.field_active(crate::field::FieldEffect::Gravity)
+            {
+                applies = false;
+            }
+            if smack_down_lands(b, target) {
+                applies = true;
+            }
+            if b.volatile(target, Volatile::MagnetRise).active {
+                applies = true;
+                b.delete_volatile(target, Volatile::MagnetRise);
+            }
+            applies
+        }
+        // Heal Block: `durationCallback`: 2 from Psychic Noise, else 5 (Persistent, 7, is
+        // refused); `onStart`: `source.moveThisTurnResult = true` (the user of the move adding
+        // it).
+        Volatile::HealBlock => {
+            if let Some(source) = source {
+                new.duration = if source.id == moves::PSYCHIC_NOISE {
+                    2
+                } else {
+                    5
+                };
+                b.set_move_result(source.user, crate::state::MoveResult::Succeeded);
+            }
+            true
+        }
         // Substitute (F11): `this.effectState.hp = Math.floor(target.maxhp / 4)`; partial
         // trapping ends silently (`delete target.volatiles['partiallytrapped']`, no `onEnd`).
         Volatile::Substitute => {
@@ -354,6 +448,26 @@ pub(crate) fn volatile_start<const N: usize>(
         }
         _ => true,
     }
+}
+
+/// Smack Down's `if (pokemon.removeVolatile('fly') || pokemon.removeVolatile('bounce')) {
+/// this.queue.cancelMove(pokemon); pokemon.removeVolatile('twoturnmove'); }` for the Pokémon at
+/// `slot`: one in the air comes down, its pending move action (the attack turn) is dropped and
+/// its two-turn lock ends. Returns whether it was in the air.
+pub(crate) fn smack_down_lands<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> bool {
+    if !b.remove_volatile(slot, Volatile::Fly) && !b.remove_volatile(slot, Volatile::Bounce) {
+        return false;
+    }
+    if let Some(pokemon) = b.occupant(slot) {
+        let pending = b.queue.iter().position(|a| {
+            a.pokemon == pokemon && matches!(a.kind, super::queue::ActionKind::Move { .. })
+        });
+        if let Some(index) = pending {
+            b.queue.remove(index);
+        }
+    }
+    b.remove_volatile(slot, Volatile::TwoTurnMove);
+    true
 }
 
 /// The user's condition `onBeforeMove` handlers between flinch (priority 8) and Gravity (6):
@@ -381,7 +495,17 @@ pub(crate) fn before_move_after_gravity<const N: usize>(
     let taunted = b.volatile(user, Volatile::Taunt).active
         && data.category == MoveCategory::Status
         && id != moves::ME_FIRST;
-    !throat_chopped(b.state, user, id) && !taunted && !imprisoned(b.state, user, id)
+    !throat_chopped(b.state, user, id)
+        && !heal_blocked(b.state, user, id)
+        && !taunted
+        && !imprisoned(b.state, user, id)
+}
+
+/// Heal Block's `onBeforeMove` (priority 6, with Gravity and Throat Chop: all only fail the
+/// move), `onModifyMove` (a called move) and `onDisableMove`: the holder's `heal` moves (Z- and
+/// Max Moves are off in Champions).
+pub(crate) fn heal_blocked<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> bool {
+    state.slot(slot).volatiles.has(Volatile::HealBlock) && id.data().flags.contains(MoveFlags::HEAL)
 }
 
 /// Throat Chop's `onBeforeMove` (priority 6), `onModifyMove` and `onDisableMove`: the holder's
@@ -440,6 +564,9 @@ pub(crate) fn disabled_move<const N: usize>(
     }
     if throat_chopped(state, slot, id) {
         return Some(format!("{} is disabled by Throat Chop", data.name));
+    }
+    if heal_blocked(state, slot, id) {
+        return Some(format!("{} is disabled by Heal Block", data.name));
     }
     None
 }
@@ -609,6 +736,13 @@ pub(crate) fn destiny_bond_faint<const N: usize>(
         return;
     };
     if attacker.side == slot.side || !b.volatile(slot, Volatile::DestinyBond).active {
+        return;
+    }
+    // `!effect.flags['futuremove']`: a Future Sight / Doom Desire hit (the move in flight when
+    // its faint is processed) does not take its user down.
+    if b.active_move
+        .is_some_and(|m| m.id.data().flags.contains(MoveFlags::FUTUREMOVE))
+    {
         return;
     }
     if let Some(source_slot) =

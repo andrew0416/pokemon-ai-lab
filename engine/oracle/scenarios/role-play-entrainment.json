@@ -1,0 +1,23 @@
+{
+ "description": "Role Play and Entrainment: Gardevoir copies Incineroar's Intimidate (`source.setAbility`), which starts at once and lowers both foes' Attack; Snorlax's Entrainment gives Garchomp its Thick Fat. Incineroar's Intimidate at the start lowered Gardevoir and Snorlax.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gardevoir", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Role Play", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Entrainment", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Incineroar", "item": "", "ability": "Intimidate", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move roleplay 1, move entrainment 2", "p2": "move harden, move harden"}
+}

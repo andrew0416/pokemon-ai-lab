@@ -1,0 +1,23 @@
+{
+ "description": "Counter against Follow Me: Garchomp's Seismic Toss hits Hariyama, whose Counter records 100 from Garchomp's slot, but Clefairy's Follow Me (RedirectTarget priority 1) comes before Counter's own redirect (priority -1): Counter hits Clefairy for 100. Wobbuffet protects.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Counter", "Protect"], "level": 50},
+   {"species": "Wobbuffet", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Mirror Coat", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Clefairy", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Follow Me", "Protect"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move counter, move protect", "p2": "move followme, move seismictoss 1"}
+}

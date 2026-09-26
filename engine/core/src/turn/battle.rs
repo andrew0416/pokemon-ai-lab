@@ -6,8 +6,8 @@
 //! survive the turn (the faint queue, what moved) lives here, not in `State`.
 
 use crate::dex::{
-    abilities, conditions, items, AbilityFlags, AbilityId, ItemId, MoveFlags, MoveId, Type,
-    TypeImmunities, NO_BOOSTS,
+    abilities, conditions, items, AbilityFlags, AbilityId, ItemId, MoveCategory, MoveFlags, MoveId,
+    Type, TypeImmunities, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
@@ -40,6 +40,9 @@ pub(crate) struct ActiveMoveRef {
     /// `activeMove.ignoreAbility`: the move's data flag (Sunsteel Strike), set by the user's
     /// Mold Breaker / Teravolt / Turboblaze in ModifyMove.
     pub ignore_ability: bool,
+    /// `activeMove.category`: the move's own, or the one its ModifyMove chose (Photon Geyser,
+    /// Shell Side Arm).
+    pub category: MoveCategory,
 }
 
 pub(crate) struct Battle<'a, const N: usize> {
@@ -102,6 +105,14 @@ pub struct HistoryReaders {
     pub move_last_turn_result: bool,
     /// Retaliate (`faintedLastTurn`; unsupported, so never set today).
     pub fainted_last_turn: bool,
+    /// Burning Jealousy, Alluring Voice (`statsRaisedThisTurn`).
+    pub stats_raised: bool,
+    /// Lash Out (`statsLoweredThisTurn`).
+    pub stats_lowered: bool,
+    /// Belch (`ateBerry`).
+    pub ate_berry: bool,
+    /// Last Resort (`moveSlot.used`).
+    pub moves_used: bool,
 }
 
 impl HistoryReaders {
@@ -119,6 +130,14 @@ impl HistoryReaders {
                         readers.move_last_turn_result = true;
                     } else if slot.id == m::RETALIATE {
                         readers.fainted_last_turn = true;
+                    } else if slot.id == m::BURNING_JEALOUSY || slot.id == m::ALLURING_VOICE {
+                        readers.stats_raised = true;
+                    } else if slot.id == m::LASH_OUT {
+                        readers.stats_lowered = true;
+                    } else if slot.id == m::BELCH {
+                        readers.ate_berry = true;
+                    } else if slot.id == m::LAST_RESORT {
+                        readers.moves_used = true;
                     }
                 }
             }
@@ -145,6 +164,15 @@ impl<'a, const N: usize> Battle<'a, N> {
             busted: Vec::new(),
             history_readers,
             raw_speed: Vec::new(),
+        }
+    }
+
+    /// The category of `id` as the move in flight has it (`move.category` after ModifyMove:
+    /// Photon Geyser and Shell Side Arm can become physical), else the dex's.
+    pub fn move_category(&self, id: MoveId) -> MoveCategory {
+        match self.active_move {
+            Some(m) if m.id == id => m.category,
+            _ => id.data().category,
         }
     }
 
@@ -295,10 +323,12 @@ impl<'a, const N: usize> Battle<'a, N> {
         self.state.side(side).effects[effect as usize].is_active()
     }
 
-    /// Showdown `isGrounded` for the supported effects, in its order: Gravity, Ingrain, Iron
-    /// Ball, Flying, Levitate, Magnet Rise, Air Balloon.
+    /// Showdown `isGrounded` for the supported effects, in its order: Gravity, Ingrain, Smack
+    /// Down, Iron Ball, Flying, Levitate, Magnet Rise, Air Balloon.
     pub fn is_grounded(&self, slot: SlotRef) -> bool {
-        if self.field_active(FieldEffect::Gravity) || self.volatile(slot, Volatile::Ingrain).active
+        if self.field_active(FieldEffect::Gravity)
+            || self.volatile(slot, Volatile::Ingrain).active
+            || self.volatile(slot, Volatile::SmackDown).active
         {
             return true;
         }
@@ -469,8 +499,18 @@ impl<'a, const N: usize> Battle<'a, N> {
     }
 
     /// Showdown `battle.heal`: fractions below 1 become 1, then truncate; nothing on a fainted
-    /// or full-HP Pokémon. Returns the HP restored.
+    /// or full-HP Pokémon; `runEvent('TryHeal')`: Heal Block on the target stops every heal
+    /// (`return false`, or `null` for an ally's Pollen Puff). Returns the HP restored.
     pub fn heal(&mut self, target: SlotRef, amount: f64) -> i32 {
+        if self.volatile(target, Volatile::HealBlock).active {
+            return 0;
+        }
+        self.heal_unblocked(target, amount)
+    }
+
+    /// Showdown `pokemon.heal` (no TryHeal event: Heal Block does not stop it): Regenerator,
+    /// Healing Wish.
+    pub fn heal_unblocked(&mut self, target: SlotRef, amount: f64) -> i32 {
         let Some(pokemon) = self.alive(target) else {
             return 0;
         };
@@ -835,6 +875,11 @@ impl<'a, const N: usize> Battle<'a, N> {
     pub fn add_volatile_blocked(&self, target: SlotRef, volatile: Volatile) -> bool {
         let condition = volatile.condition();
         let yawn = condition == conditions::YAWN;
+        // Focus Punch's condition: `onTryAddVolatile(status) { if (status.id === 'flinch')
+        // return null; }`.
+        if volatile == Volatile::Flinch && self.volatile(target, Volatile::FocusPunch).active {
+            return true;
+        }
         // Misty Terrain: `if (status.id === 'confusion' && target.isGrounded()) return false`.
         if volatile == Volatile::Confusion
             && self.terrain() == Terrain::Misty
@@ -965,6 +1010,29 @@ impl<'a, const N: usize> Battle<'a, N> {
                     counter: old.counter + 1,
                     ..old
                 },
+                // Smack Down's `onRestart`: a holder in the air again (Fly, Bounce) comes down
+                // (`conditions::smack_down_lands`); it returns nothing.
+                Volatile::SmackDown => {
+                    super::conditions::smack_down_lands(self, target);
+                    return true;
+                }
+                // Heal Block's `onRestart`: nothing from Psychic Noise; otherwise `if
+                // (!source.moveThisTurnResult) source.moveThisTurnResult = false;`. Either way it
+                // returns nothing, so `addVolatile` succeeds without changing the volatile.
+                Volatile::HealBlock => {
+                    let source = self
+                        .active_move
+                        .filter(|m| self.occupant(m.user) == Some(m.pokemon));
+                    if let Some(source) =
+                        source.filter(|m| m.id != crate::dex::moves::PSYCHIC_NOISE)
+                    {
+                        let result = self.state.slot(source.user).history.move_this_turn_result;
+                        if result != crate::state::MoveResult::Succeeded {
+                            self.set_move_result(source.user, crate::state::MoveResult::Failed);
+                        }
+                    }
+                    return true;
+                }
                 // Ally Switch's `onRestart`: `randomChance(1, counter)`, else `delete
                 // pokemon.volatiles['allyswitch']` (no `onEnd`) and fail; on success the counter
                 // triples below `counterMax` (729) and the duration is 2 again.
@@ -1314,6 +1382,11 @@ impl<'a, const N: usize> Battle<'a, N> {
         // AfterBoost of items (after the target's ability): Adrenaline Orb, the foes' Mirror
         // Herbs.
         super::items::after_boost(self, target, &boost, effect, atk_capped_to_zero);
+        // `if (success)`: `statsRaisedThisTurn` / `statsLoweredThisTurn` from the boost table
+        // that was applied (after the cap and TryBoost), while a move reads them.
+        if changed {
+            self.record_stat_changes(target, &boost);
+        }
         changed
     }
 
@@ -1367,6 +1440,11 @@ impl<'a, const N: usize> Battle<'a, N> {
             old: item,
             new: ItemId::NONE,
         });
+        // The only berries consumed through here are the resist berries, which Showdown eats
+        // (`eatItem`: `ateBerry = true`, Belch).
+        if item.data().is_berry {
+            self.record_ate_berry(pokemon);
+        }
         // AfterUseItem: Unburden.
         super::abilities::unburden(self, slot);
         true

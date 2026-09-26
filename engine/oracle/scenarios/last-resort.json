@@ -1,0 +1,27 @@
+{
+ "description": "Last Resort needs every other known move `used` since switching in (setup turns 1-2): Snorlax used Harden and Protect, so its Last Resort works; Umbreon never used Protect, so its Last Resort fails (`onTry`). Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Last Resort", "Harden", "Protect"], "level": 50},
+   {"species": "Umbreon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Last Resort", "Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move harden, move harden", "move harden, move harden"],
+  ["move protect, move harden", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move lastresort 2, move lastresort 2", "p2": "move harden, move harden"}
+}

@@ -15,9 +15,14 @@ use super::battle::Battle;
 use super::items as item_events;
 
 /// Showdown action `order` values.
+/// `beforeTurnMove`: a move's `beforeTurnCallback` (Counter, Mirror Coat), before everything.
+pub(crate) const ORDER_BEFORE_TURN_MOVE: u32 = 5;
 pub(crate) const ORDER_SWITCH: u32 = 103;
 /// `megaEvo`: after switches, before every move.
 pub(crate) const ORDER_MEGA: u32 = 104;
+/// `priorityChargeMove`: a move's `priorityChargeCallback` (Focus Punch, Beak Blast, Shell
+/// Trap), after Mega Evolution and before every move.
+pub(crate) const ORDER_PRIORITY_CHARGE: u32 = 107;
 pub(crate) const ORDER_MOVE: u32 = 200;
 /// Showdown's default for handlers without an order (sorts last).
 pub(crate) const ORDER_DEFAULT: u32 = u32::MAX;

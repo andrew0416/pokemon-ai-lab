@@ -1,0 +1,24 @@
+{
+ "description": "Belch needs `ateBerry`: Garchomp's Seismic Toss takes Snorlax (patched to 140) below half, it eats its Sitrus Berry, and its Belch then works. Umbreon never ate a berry: its Belch fails in `onTry` (Champions has no `onDisableMove`). Accuracy 90, rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "Sitrus Berry", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Belch", "Protect"], "level": 50},
+   {"species": "Umbreon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Belch", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Snorlax": {"hp": 140}}},
+ "turn": {"p1": "move belch 2, move belch 2", "p2": "move seismictoss 1, move harden"}
+}

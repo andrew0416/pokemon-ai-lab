@@ -1,0 +1,24 @@
+{
+ "description": "Smack Down reaches a Pokémon in the air with Fly (setup turn: Charizard charged) and brings it down: `fly` and `twoturnmove` end and its pending attack is cancelled (`queue.cancelMove`). Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Smack Down", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Charizard", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Fly", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [["move protect, move harden", "move fly 2, move harden"]],
+ "turn": {"p1": "move smackdown 1, move harden", "p2": "move fly 2, move harden"}
+}

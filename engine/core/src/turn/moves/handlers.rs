@@ -6,8 +6,8 @@
 
 use crate::damage::MOD_ONE_POINT_FIVE;
 use crate::dex::{
-    abilities, items, moves, ItemId, MoveCategory, MoveFlags, MoveId, MoveTarget, Type,
-    TypeRelation, NO_BOOSTS,
+    abilities, items, moves, AbilityFlags, AbilityId, ItemId, MoveCategory, MoveFlags, MoveId,
+    MoveTarget, Type, TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
@@ -82,12 +82,40 @@ pub(super) fn on_modify_type<const N: usize>(
 /// The move's `onModifyMove` (`useMoveInner`, after the target is chosen and before
 /// `getMoveTargets`). `target` is the chosen target.
 pub(super) fn on_modify_move<const N: usize>(
-    b: &Battle<'_, N>,
+    b: &mut Battle<'_, N>,
     user: SlotRef,
     target: Option<SlotRef>,
     mv: &mut ActiveMove,
 ) -> Result<(), TurnError> {
     match mv.id {
+        // Photon Geyser: `if (pokemon.getStat('atk', false, true) > pokemon.getStat('spa', false,
+        // true)) move.category = 'Physical';` (stages, no modifiers).
+        moves::PHOTON_GEYSER => {
+            let atk = unmodified_stat(b, user, 0);
+            let spa = unmodified_stat(b, user, 2);
+            if atk > spa {
+                mv.set_category(MoveCategory::Physical);
+            }
+        }
+        // Shell Side Arm: against the chosen target, `floor(floor(floor(floor(2 * level / 5 + 2)
+        // * 90 * atk) / def) / 50)` against the same with SpA and SpD (`getStat(.., false,
+        // true)` on both sides); physical (and contact) if higher, or on a tie with
+        // `randomChance(1, 2)`.
+        moves::SHELL_SIDE_ARM => {
+            let Some(target) = target.filter(|&t| b.slot_mon(t).is_some()) else {
+                return Ok(());
+            };
+            let level = i64::from(b.slot_mon(user).map_or(0, |m| m.level));
+            let base = 2 * level / 5 + 2;
+            let hit = |attack: i32, defense: i32| -> i64 {
+                (base * 90 * i64::from(attack) / i64::from(defense.max(1))) / 50
+            };
+            let physical = hit(unmodified_stat(b, user, 0), unmodified_stat(b, target, 1));
+            let special = hit(unmodified_stat(b, user, 2), unmodified_stat(b, target, 3));
+            if physical > special || (physical == special && b.rng.chance(1, 2)) {
+                mv.set_category(MoveCategory::Physical);
+            }
+        }
         // Weather Ball: `move.basePower *= 2` in sun, rain, sandstorm, hail and snow (the
         // user's effective weather).
         moves::WEATHER_BALL => {
@@ -142,6 +170,24 @@ pub(super) fn on_modify_move<const N: usize>(
     Ok(())
 }
 
+/// Showdown `pokemon.getStat(stat, false, true)` for battle stat `index` (0 Atk .. 3 SpD): the
+/// stored stat with its stage (no ModifyBoost, no Modify* handlers). Under Wonder Room the stage
+/// is the other defense's (`statName` is swapped after the stored stat is read).
+fn unmodified_stat<const N: usize>(b: &Battle<'_, N>, slot: SlotRef, index: usize) -> i32 {
+    let Some(mon) = b.slot_mon(slot) else {
+        return 0;
+    };
+    let stage_index = match index {
+        1 if b.field_active(FieldEffect::WonderRoom) => 3,
+        3 if b.field_active(FieldEffect::WonderRoom) => 1,
+        i => i,
+    };
+    boosted_stat(
+        i32::from(mon.stats[index]),
+        b.state.slot(slot).boosts[stage_index],
+    )
+}
+
 /// The move's `onTry` (`singleEvent('Try', move, null, pokemon, targets[0])`, before
 /// PrepareHit and every hit step). `false` = the move fails.
 pub(super) fn on_try<const N: usize>(
@@ -168,6 +214,34 @@ pub(super) fn on_try<const N: usize>(
         moves::METAL_BURST | moves::COMEUPPANCE => {
             b.state.slot(user).history.last_damaged_by.is_some()
         }
+        // Belch: `return source.ateBerry;` (Champions drops its `onDisableMove`).
+        moves::BELCH => b
+            .occupant(user)
+            .is_some_and(|p| b.state.side(p.side).history.ate_berry & (1 << p.party) != 0),
+        // Last Resort: at least two known moves, Last Resort among them, and every other one
+        // `used` since the user switched in.
+        moves::LAST_RESORT => b.slot_mon(user).is_some_and(|m| {
+            let used = b.state.slot(user).history.moves_used;
+            let known: Vec<usize> = (0..4).filter(|&i| !m.moves[i].id.is_none()).collect();
+            known.len() >= 2
+                && known.iter().any(|&i| m.moves[i].id == moves::LAST_RESORT)
+                && known
+                    .iter()
+                    .all(|&i| m.moves[i].id == moves::LAST_RESORT || used & (1 << i) != 0)
+        }),
+        // Dark Void: only a Darkrai (`species.baseSpecies`) or a bounced copy; otherwise `null`.
+        moves::DARK_VOID => {
+            mv.has_bounced
+                || b.slot_mon(user).is_some_and(|m| {
+                    let base = m.species.data().base_species;
+                    let base = if base.is_none() { m.species } else { base };
+                    base == crate::dex::species::DARKRAI
+                })
+        }
+        // Counter, Mirror Coat: `if (!source.volatiles['counter']) return false; if
+        // (source.volatiles['counter'].slot === null) return false;`
+        moves::COUNTER | moves::MIRROR_COAT => before_turn_volatile(mv.id)
+            .is_some_and(|v| b.volatile(user, v).active && b.volatile(user, v).hidden != 0),
         // Clangorous Soul: `if (source.hp <= (source.maxhp * 33 / 100) || source.maxhp === 1)
         // return false;` Fillet Away: `source.hp <= source.maxhp / 2`.
         moves::CLANGOROUS_SOUL | moves::FILLET_AWAY => b.slot_mon(user).is_some_and(|m| {
@@ -183,9 +257,12 @@ pub(super) fn on_try<const N: usize>(
         // `delete move.volatileStatus` for a `trapped` user, is [`keeps_volatile_status`]).
         moves::NO_RETREAT => !b.volatile(user, Volatile::NoRetreat).active,
         // Magnet Rise: `if (target.volatiles['smackdown'] || target.volatiles['ingrain']) return
-        // false;` (on itself; Smack Down's volatile is not implemented; its Gravity branch is for
-        // the Z-Move, Gravity's BeforeMove already stops the move).
-        moves::MAGNET_RISE => !b.volatile(first_target, Volatile::Ingrain).active,
+        // false;` (on itself; its Gravity branch is for the Z-Move, Gravity's BeforeMove already
+        // stops the move).
+        moves::MAGNET_RISE => {
+            !b.volatile(first_target, Volatile::Ingrain).active
+                && !b.volatile(first_target, Volatile::SmackDown).active
+        }
         // Rest: fails asleep or with Comatose, at full HP, and with Insomnia or Vital Spirit
         // (`hasAbility`: the user's own ability, never suppressed by its own move).
         moves::REST => b.slot_mon(user).is_some_and(|m| {
@@ -232,6 +309,9 @@ pub(super) fn on_try_immunity<const N: usize>(
             let hp = |s: SlotRef| b.slot_mon(s).map_or(0, |m| m.hp);
             hp(user) < hp(target)
         }
+        // Worry Seed: `if (target.ability === 'truant' || target.ability === 'insomnia') return
+        // false;` (before accuracy).
+        moves::WORRY_SEED => ![abilities::TRUANT, abilities::INSOMNIA].contains(&b.ability(target)),
         _ => true,
     }
 }
@@ -271,8 +351,148 @@ pub(super) fn damage_callback<const N: usize>(
             let scaled = damage * 3 / 2;
             Some(if scaled == 0 { 1 } else { scaled })
         }
+        // Counter, Mirror Coat: `pokemon.volatiles['counter'].damage || 1` (0 without the
+        // condition, which `onTry` already failed on).
+        moves::COUNTER | moves::MIRROR_COAT => {
+            let recorded = before_turn_volatile(mv.id).map(|v| b.volatile(user, v));
+            match recorded {
+                Some(state) if state.active => Some(i32::from(state.counter).max(1)),
+                _ => Some(0),
+            }
+        }
         _ => None,
     }
+}
+
+/// The condition a move's `beforeTurnCallback` adds to its user at the start of the turn
+/// (`moves::before_turn_move`): Counter's `counter`, Mirror Coat's `mirrorcoat`.
+pub(super) fn before_turn_volatile(id: MoveId) -> Option<Volatile> {
+    match id {
+        moves::COUNTER => Some(Volatile::Counter),
+        moves::MIRROR_COAT => Some(Volatile::MirrorCoat),
+        _ => None,
+    }
+}
+
+/// The condition a move's `priorityChargeCallback` adds to its user once switches and Mega
+/// Evolution are done (`moves::priority_charge_move`).
+pub(super) fn priority_charge_volatile(id: MoveId) -> Option<Volatile> {
+    match id {
+        moves::FOCUS_PUNCH => Some(Volatile::FocusPunch),
+        moves::BEAK_BLAST => Some(Volatile::BeakBlast),
+        moves::SHELL_TRAP => Some(Volatile::ShellTrap),
+        _ => None,
+    }
+}
+
+/// The move's `beforeMoveCallback` (`runMove`, after BeforeMove let it through): `true` stops
+/// the move. Focus Punch: `if (pokemon.volatiles['focuspunch']?.lostFocus) return true;`
+pub(super) fn before_move_callback<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> bool {
+    mv.id == moves::FOCUS_PUNCH && b.volatile(user, Volatile::FocusPunch).counter != 0
+}
+
+/// `runEvent('Hit', target, source, move)` for the target's volatiles (after the move's own
+/// `onHit`, before the target's item):
+/// - Focus Punch: `if (move.category !== 'Status') this.effectState.lostFocus = true;` (any
+///   attacker);
+/// - Beak Blast: `if (this.checkMoveMakesContact(move, source, target)) source.trySetStatus('brn',
+///   target);` (Protective Pads and Punching Glove on the attacker prevent it);
+/// - Shell Trap: a foe's physical move sets `gotHit` and `queue.prioritizeAction` moves the
+///   holder's pending move to the front (order 3).
+pub(super) fn volatile_on_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    mv: &ActiveMove,
+) {
+    let focus = b.volatile(target, Volatile::FocusPunch);
+    if focus.active && mv.category != MoveCategory::Status {
+        b.set_volatile_state(
+            target,
+            Volatile::FocusPunch,
+            VolatileState {
+                counter: 1,
+                ..focus
+            },
+        );
+    }
+    if b.volatile(target, Volatile::BeakBlast).active
+        && super::item_events::makes_contact(b, user, mv.data)
+        && b.item(user) != items::PROTECTIVE_PADS
+    {
+        b.try_set_status_from(user, Status::Burn, Some(target));
+    }
+    let trap = b.volatile(target, Volatile::ShellTrap);
+    if trap.active && target.side != user.side && mv.category == MoveCategory::Physical {
+        b.set_volatile_state(
+            target,
+            Volatile::ShellTrap,
+            VolatileState { counter: 1, ..trap },
+        );
+        if let Some(index) = b.will_move(target) {
+            b.prioritize_action(index);
+        }
+    }
+}
+
+/// Counter's and Mirror Coat's `condition.onDamagingHit` on the damaged `target`: a hit from a
+/// foe (`!source.isAlly(target)`) whose category (`this.getCategory(move)`, which returns the
+/// active move's own `category`, as ModifyMove left it) is physical (Counter) or special
+/// (Mirror Coat) records the attacker's slot (`source.getSlot()`) and twice the damage,
+/// replacing an earlier hit.
+pub(super) fn counter_damaging_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+    damage: i32,
+) {
+    if user.side == target.side {
+        return;
+    }
+    let volatile = match mv.category {
+        MoveCategory::Physical => Volatile::Counter,
+        MoveCategory::Special => Volatile::MirrorCoat,
+        MoveCategory::Status => return,
+    };
+    let state = b.volatile(target, volatile);
+    if !state.active || b.occupant(target).is_none() {
+        return;
+    }
+    b.set_volatile_state(
+        target,
+        volatile,
+        VolatileState {
+            counter: (2 * damage).clamp(0, i32::from(u16::MAX)) as u16,
+            hidden: user.slot + 1,
+            ..state
+        },
+    );
+}
+
+/// Counter's and Mirror Coat's `condition.onRedirectTarget` (priority -1, after every other
+/// handler) for the move `mv` of its holder `user`: `if (move.id !== 'counter') return; if
+/// (source !== this.effectState.target || !this.effectState.slot) return; return
+/// this.getAtSlot(this.effectState.slot);` — the slot of the last foe that hit it, whoever
+/// stands there now (a fainted Pokémon there makes the move fail).
+pub(super) fn counter_redirect<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Option<SlotRef> {
+    let volatile = before_turn_volatile(mv.id)?;
+    let state = b.volatile(user, volatile);
+    if !state.active || state.hidden == 0 {
+        return None;
+    }
+    Some(SlotRef {
+        side: user.side.other(),
+        slot: state.hidden - 1,
+    })
 }
 
 /// The move's `onMoveFail` (`useMoveInner` when the move did not succeed on any target, after
@@ -360,8 +580,133 @@ pub(super) fn on_try_hit<const N: usize>(
             let (hp, max_hp) = (i32::from(m.hp), i32::from(m.max_hp));
             !b.has_substitute(target) && 4 * hp > max_hp && max_hp != 1
         }),
+        // Role Play: `if (target.ability === source.ability) return false; if
+        // (target.getAbility().flags['failroleplay'] || source.getAbility().flags['cantsuppress'])
+        // return false;` (the raw abilities).
+        moves::ROLE_PLAY => {
+            let (mine, theirs) = (b.ability(user), b.ability(target));
+            mine != theirs
+                && !theirs.data().flags.contains(AbilityFlags::FAILROLEPLAY)
+                && !mine.data().flags.contains(AbilityFlags::CANTSUPPRESS)
+        }
+        // Entrainment: fails on the same ability, a `cantsuppress` or Truant target, or a
+        // `noentrain` ability of the user (Dynamax is off).
+        moves::ENTRAINMENT => {
+            let (mine, theirs) = (b.ability(user), b.ability(target));
+            target != user
+                && mine != theirs
+                && !theirs.data().flags.contains(AbilityFlags::CANTSUPPRESS)
+                && theirs != abilities::TRUANT
+                && !mine.data().flags.contains(AbilityFlags::NOENTRAIN)
+        }
+        // Simple Beam: fails on a `cantsuppress`, Simple or Truant target.
+        moves::SIMPLE_BEAM => {
+            let theirs = b.ability(target);
+            !theirs.data().flags.contains(AbilityFlags::CANTSUPPRESS)
+                && theirs != abilities::SIMPLE
+                && theirs != abilities::TRUANT
+        }
+        // Worry Seed: fails on a `cantsuppress` target.
+        moves::WORRY_SEED => !b
+            .ability(target)
+            .data()
+            .flags
+            .contains(AbilityFlags::CANTSUPPRESS),
         _ => true,
     }
+}
+
+/// Showdown `pokemon.setAbility(ability, source)` from a move (Role Play, Entrainment, Simple
+/// Beam, Worry Seed) on the Pokémon at `slot`: fails (`false`) without HP or when the new or the
+/// old ability is `cantsuppress`; `runEvent('SetAbility')` — Ability Shield (the effective item:
+/// Magic Room suppresses it, Klutz does not) returns `null`, a failure too; then the old
+/// ability's `End` (`switching::end_ability`), the new one with a fresh `abilityState` (Protean's
+/// and Libero's used flag go), and its `Start` (`switching::start_ability`: Intimidate, weather,
+/// Trace, ...). An ability the engine does not run on the field is unsupported.
+fn set_ability<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    ability: AbilityId,
+) -> Result<bool, TurnError> {
+    let Some(pokemon) = b.alive(slot) else {
+        return Ok(false);
+    };
+    let old = b.mon(pokemon).ability;
+    let locked = |a: AbilityId| a.data().flags.contains(AbilityFlags::CANTSUPPRESS);
+    if locked(ability) || locked(old) || b.item(slot) == items::ABILITY_SHIELD {
+        return Ok(false);
+    }
+    change_ability(b, slot, ability)?;
+    super::super::switching::start_ability(b, slot, ability)?;
+    Ok(true)
+}
+
+/// The part of `setAbility` / `skillSwap` between the SetAbility event and the new ability's
+/// `Start`: the old ability's `End`, then the new one with a fresh `abilityState`.
+fn change_ability<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    ability: AbilityId,
+) -> Result<(), TurnError> {
+    let pokemon = b.occupant(slot).expect("an active Pokémon");
+    let old = b.mon(pokemon).ability;
+    if !super::super::support::ability_supported_on_field(ability) {
+        return Err(b.unsupported(format!(
+            "{} gaining {} ({:?})",
+            b.mon(pokemon).species.data().name,
+            ability.data().name,
+            ability.data().handlers
+        )));
+    }
+    super::super::switching::end_ability(b, slot, old)?;
+    b.delete_volatile(slot, Volatile::ProteanUsed);
+    if old != ability {
+        b.apply(Instruction::SetAbility {
+            target: pokemon,
+            old,
+            new: ability,
+        });
+    }
+    Ok(())
+}
+
+/// Showdown `battle.skillSwap(source, target)`: fails on a fainted Pokémon or a `failskillswap`
+/// ability on either side; `runEvent('SetAbility')` on the target, then the user (Ability
+/// Shield: `null`, a failure); then both abilities' `End` (the user's first), the swap with
+/// fresh `abilityState`s, and the `Start` of the target's new ability, then the user's.
+fn skill_swap<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+) -> Result<HitResult, TurnError> {
+    if b.alive(user).is_none() || b.alive(target).is_none() {
+        return Ok(HitResult::Failure);
+    }
+    let (mine, theirs) = (b.ability(user), b.ability(target));
+    let fails = |a: AbilityId| a.data().flags.contains(AbilityFlags::FAILSKILLSWAP);
+    if fails(mine) || fails(theirs) {
+        return Ok(HitResult::Failure);
+    }
+    if b.item(target) == items::ABILITY_SHIELD || b.item(user) == items::ABILITY_SHIELD {
+        return Ok(HitResult::Failure);
+    }
+    // Both abilities are already on the field, so both are supported there.
+    super::super::switching::end_ability(b, user, mine)?;
+    super::super::switching::end_ability(b, target, theirs)?;
+    for (slot, old, new) in [(user, mine, theirs), (target, theirs, mine)] {
+        let pokemon = b.occupant(slot).expect("checked");
+        b.delete_volatile(slot, Volatile::ProteanUsed);
+        if old != new {
+            b.apply(Instruction::SetAbility {
+                target: pokemon,
+                old,
+                new,
+            });
+        }
+    }
+    super::super::switching::start_ability(b, target, mine)?;
+    super::super::switching::start_ability(b, user, theirs)?;
+    Ok(HitResult::Success)
 }
 
 /// Showdown `move.infiltrates` for the implemented moves: Pollen Puff's `onTryHit` sets it on a
@@ -454,6 +799,13 @@ pub(super) fn on_after_move<const N: usize>(
     pokemon: PokemonRef,
     mv: &ActiveMove,
 ) {
+    // Beak Blast: `pokemon.removeVolatile('beakblast')` (nothing on a user at 0 HP).
+    if mv.id == moves::BEAK_BLAST {
+        if b.occupant(user) == Some(pokemon) {
+            b.remove_volatile(user, Volatile::BeakBlast);
+        }
+        return;
+    }
     if mv.id != moves::SPARKLING_ARIA {
         return;
     }
@@ -747,6 +1099,8 @@ pub(super) fn on_base_power<const N: usize>(
         {
             Some(crate::damage::MOD_HALF)
         }
+        // Lash Out: `if (source.statsLoweredThisTurn) return this.chainModify(2);`
+        moves::LASH_OUT if b.state.slot(user).history.stats_lowered_this_turn => Some(2 * 4096),
         // Grav Apple: `if (this.field.getPseudoWeather('gravity')) return this.chainModify(1.5);`
         moves::GRAV_APPLE if b.field_active(FieldEffect::Gravity) => Some(MOD_ONE_POINT_FIVE),
         // Psyblade: `if (this.field.isTerrain('electricterrain')) return this.chainModify(1.5);`
@@ -1042,13 +1396,31 @@ fn spent_type(id: MoveId) -> Option<Type> {
 
 /// The move's own `onTryMove` of moves that stop with `null` (not a failure: `useMove` leaves
 /// `moveThisTurnResult` `null`). Double Shock and Burn Up: `if (pokemon.hasType('Electric' /
-/// 'Fire')) return;`, otherwise `-fail` and `return null`. `false` = the move stops here.
+/// 'Fire')) return;`, otherwise `-fail` and `return null`. Shell Trap: `if
+/// (!pokemon.volatiles['shelltrap']?.gotHit) return null;`. `false` = the move stops here.
 pub(super) fn null_try_move<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
 ) -> bool {
+    if mv.id == moves::SHELL_TRAP {
+        return b.volatile(user, Volatile::ShellTrap).counter != 0;
+    }
     spent_type(mv.id).is_none_or(|t| b.has_type(user, t))
+}
+
+/// The move's own `onTryMove` of moves that fail with `false`. Pollen Puff: `if
+/// (source.isAlly(target) && source.volatiles['healblock']) return false;`. `false` = the move
+/// fails.
+pub(super) fn fail_try_move<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    !(mv.id == moves::POLLEN_PUFF
+        && target.side == user.side
+        && b.volatile(user, Volatile::HealBlock).active)
 }
 
 /// Burn Up used by a Pokémon without the Fire type does not thaw it: the `frz` status's
@@ -1134,6 +1506,20 @@ pub(super) fn on_effectiveness(id: MoveId, defending: Type, type_mod: i32) -> i3
         moves::FLYING_PRESS => type_mod + type_effectiveness(Type::Flying, defending),
         _ => type_mod,
     }
+}
+
+/// Thousand Arrows' `onEffectiveness` against `target`: `if (move.type !== 'Ground') return; if
+/// (!target.runImmunity('Ground')) { if (target.hasType('Flying')) return 0; }` — an airborne
+/// Flying type takes it neutrally (every type's modifier becomes 0).
+pub(super) fn thousand_arrows_neutral<const N: usize>(
+    b: &Battle<'_, N>,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    mv.id == moves::THOUSAND_ARROWS
+        && mv.move_type == Type::Ground
+        && !b.is_grounded(target)
+        && b.has_type(target, Type::Flying)
 }
 
 /// What an `onHit` handler returned: a truthy value, `false`, or `NOT_FAIL` (the move does
@@ -1407,6 +1793,10 @@ pub(super) fn on_hit<const N: usize>(
                 return Ok(Some(HitResult::Failure));
             };
             let index = b.mon(pokemon).moves.iter().position(|m| m.id == last);
+            // `deductPP` marks the slot `used` before looking at its PP (Last Resort).
+            if let Some(i) = index.filter(|_| !last.is_none()) {
+                b.record_move_used(target, i);
+            }
             match index {
                 Some(i) if !last.is_none() && b.mon(pokemon).moves[i].pp > 0 => {
                     let old = b.mon(pokemon).moves[i].pp;
@@ -1471,15 +1861,18 @@ pub(super) fn on_hit<const N: usize>(
             if let Some(eater) = b.alive(user).filter(|_| item.data().is_berry) {
                 let empty = item.data().handlers.is_empty()
                     || super::super::items::resist_berry(item).is_some();
-                if b.take_item(target)
-                    && !empty
-                    && !super::super::update::berry_on_eat(b, user, eater, item)
-                {
-                    return Err(b.unsupported(format!(
-                        "{} eating {}",
-                        mv.data.name,
-                        item.data().name
-                    )));
+                if b.take_item(target) {
+                    if !empty && !super::super::update::berry_on_eat(b, user, eater, item) {
+                        return Err(b.unsupported(format!(
+                            "{} eating {}",
+                            mv.data.name,
+                            item.data().name
+                        )));
+                    }
+                    // `if (item.onEat) source.ateBerry = true;` (Belch).
+                    if item.data().handlers.contains(&"onEat") {
+                        b.record_ate_berry(eater);
+                    }
                 }
             }
             HitResult::Success
@@ -1539,6 +1932,33 @@ pub(super) fn on_hit<const N: usize>(
         }
         moves::TRICK | moves::SWITCHEROO => trick(b, user, target)?,
         moves::INSTRUCT => instruct(b, target)?,
+        // Skill Swap: `return this.skillSwap(source, target);`
+        moves::SKILL_SWAP => skill_swap(b, user, target)?,
+        // Role Play: `source.setAbility(target.ability, target)`; Entrainment:
+        // `target.setAbility(source.ability, source)`; Simple Beam: `target.setAbility('simple')`;
+        // Worry Seed: `target.setAbility('insomnia')`, then a sleeping target wakes
+        // (`cureStatus`). A failed `setAbility` (`false` / `null`) is the move's failure.
+        moves::ROLE_PLAY => {
+            let copied = b.ability(target);
+            success(set_ability(b, user, copied)?)
+        }
+        moves::ENTRAINMENT => {
+            let given = b.ability(user);
+            success(set_ability(b, target, given)?)
+        }
+        moves::SIMPLE_BEAM => success(set_ability(b, target, abilities::SIMPLE)?),
+        moves::WORRY_SEED => {
+            let ok = set_ability(b, target, abilities::INSOMNIA)?;
+            if ok {
+                if let Some(p) = b
+                    .alive(target)
+                    .filter(|&p| b.mon(p).status == Status::Sleep)
+                {
+                    b.cure_status(p);
+                }
+            }
+            success(ok)
+        }
         // Ally Switch (on its user): `NOT_FAIL` outside doubles and triples, or when the other
         // position's Pokémon has fainted; otherwise `swapPosition` (returns nothing). Triples'
         // positions are not supported.
@@ -2162,6 +2582,19 @@ pub(super) fn secondary_on_hit<const N: usize>(
 ) {
     if mv.id == moves::THROAT_CHOP {
         b.add_volatile(target, Volatile::ThroatChop);
+        return;
+    }
+    // Burning Jealousy: `if (target?.statsRaisedThisTurn) target.trySetStatus('brn', source,
+    // move);` Alluring Voice: `if (target?.statsRaisedThisTurn) target.addVolatile('confusion',
+    // source, move);`
+    if mv.id == moves::BURNING_JEALOUSY || mv.id == moves::ALLURING_VOICE {
+        let raised =
+            b.occupant(target).is_some() && b.state.slot(target).history.stats_raised_this_turn;
+        if raised && mv.id == moves::BURNING_JEALOUSY {
+            b.try_set_status(target, Status::Burn);
+        } else if raised {
+            b.add_volatile(target, Volatile::Confusion);
+        }
         return;
     }
     let statuses = match mv.id {

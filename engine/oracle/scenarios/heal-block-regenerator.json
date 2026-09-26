@@ -1,0 +1,27 @@
+{
+ "description": "Heal Block (setup turn) does not stop Regenerator (`pokemon.heal`, no TryHeal): Slowbro (patched to 150) switches out healing a third. Umbreon, under Heal Block, cannot use Pollen Puff on its ally (the move's `onTryMove` fails).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Alakazam", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Heal Block", "Calm Mind"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Slowbro", "item": "", "ability": "Regenerator", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Umbreon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Pollen Puff", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "setupTurns": [["move healblock, move harden", "move harden, move protect"]],
+ "patch": {"p2": {"Slowbro": {"hp": 150}}},
+ "turn": {"p1": "move calmmind, move harden", "p2": "switch 3, move pollenpuff -1"}
+}

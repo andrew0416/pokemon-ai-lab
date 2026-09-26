@@ -288,9 +288,26 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // `onAfterSubDamage` in `handlers::on_after_sub_damage`.
     (moves::ICE_SPINNER, &["onAfterHit", "onAfterSubDamage"]),
     (moves::STEEL_ROLLER, &["onAfterSubDamage", "onHit", "onTry"]),
-    // `onTryMove` only fails an ally-targeted use under Heal Block, which no supported effect
-    // adds.
+    // `onTryMove` fails an ally-targeted use under Heal Block (`handlers::fail_try_move`).
     (moves::POLLEN_PUFF, &["onHit", "onTryHit", "onTryMove"]),
+    // Heal Block (also Psychic Noise's secondary): the volatile's `durationCallback` and
+    // `onStart` in `conditions::volatile_start`, `onRestart` in `Battle::add_volatile_from`,
+    // `onBeforeMove` / `onModifyMove` / `onDisableMove` in `conditions::heal_blocked`,
+    // `onTryHeal` in `Battle::heal` (and the healing berries' `onTryEatItem`,
+    // `update::eat_item`); `onEnd` only logs.
+    (
+        moves::HEAL_BLOCK,
+        &[
+            "condition.durationCallback",
+            "condition.onBeforeMove",
+            "condition.onDisableMove",
+            "condition.onEnd",
+            "condition.onModifyMove",
+            "condition.onRestart",
+            "condition.onStart",
+            "condition.onTryHeal",
+        ],
+    ),
     (moves::TRICK, &["onHit", "onTryImmunity"]),
     (moves::SWITCHEROO, &["onHit", "onTryImmunity"]),
     // `condition.onStart` only fails for a Terastallized user; `onType` is applied as a type
@@ -333,12 +350,30 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::BOLT_BEAK, &["basePowerCallback"]),
     (moves::FISHIOUS_REND, &["basePowerCallback"]),
     (moves::PSYBLADE, &["onBasePower"]),
+    // Photon Geyser, Shell Side Arm: `onModifyMove` may make them physical
+    // (`handlers::on_modify_move` → `ActiveMove::set_category`, whose data copy every chain
+    // reads; Shell Side Arm then makes contact). Shell Side Arm's `onPrepareHit`, `onHit` and
+    // `onAfterSubDamage` only reveal the category.
+    (moves::PHOTON_GEYSER, &["onModifyMove"]),
+    (
+        moves::SHELL_SIDE_ARM,
+        &["onAfterSubDamage", "onHit", "onModifyMove", "onPrepareHit"],
+    ),
     (moves::BLIZZARD, &["onModifyMove"]),
     // Still rejected for its confusion secondary; shares Thunder's handler.
     (moves::HURRICANE, &["onModifyMove"]),
     (moves::THUNDER, &["onModifyMove"]),
     (moves::FREEZE_DRY, &["onEffectiveness"]),
     (moves::FLYING_PRESS, &["onEffectiveness"]),
+    // Smack Down / Thousand Arrows: the `smackdown` volatile (`onStart` in
+    // `conditions::volatile_start`, `onRestart` in `Battle::add_volatile_from`, grounding in
+    // `Battle::is_grounded`); Thousand Arrows' `onEffectiveness` in
+    // `handlers::thousand_arrows_neutral` (its Ground immunity is ignored by data).
+    (
+        moves::SMACK_DOWN,
+        &["condition.onRestart", "condition.onStart"],
+    ),
+    (moves::THOUSAND_ARROWS, &["onEffectiveness"]),
     (moves::POLTERGEIST, &["onTry", "onTryHit"]),
     (moves::ACROBATICS, &["basePowerCallback"]),
     // Damage history (F13): `basePowerCallback`s reading `Slot.history` / `Side.history`
@@ -362,8 +397,75 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         moves::COMEUPPANCE,
         &["damageCallback", "onModifyTarget", "onTry"],
     ),
+    // Counter, Mirror Coat (`target: scripted`): `beforeTurnCallback` is a `beforeTurnMove` queue
+    // action (order 5, `moves::before_turn_move`) adding the condition (`onStart`: nothing
+    // recorded yet); its `onDamagingHit` in `moves::damaging_hit`
+    // (`handlers::counter_damaging_hit`), its `onRedirectTarget` last in
+    // `moves::redirect_target`; `onTry` and `damageCallback` (2x the recorded damage, or 1).
+    (
+        moves::COUNTER,
+        &[
+            "beforeTurnCallback",
+            "condition.onDamagingHit",
+            "condition.onRedirectTarget",
+            "condition.onStart",
+            "damageCallback",
+            "onTry",
+        ],
+    ),
+    (
+        moves::MIRROR_COAT,
+        &[
+            "beforeTurnCallback",
+            "condition.onDamagingHit",
+            "condition.onRedirectTarget",
+            "condition.onStart",
+            "damageCallback",
+            "onTry",
+        ],
+    ),
+    // Focus Punch, Beak Blast, Shell Trap: `priorityChargeCallback` is a `priorityChargeMove`
+    // queue action (order 107, `moves::priority_charge_move`) adding the condition (`onStart`
+    // only logs); its `onHit` in `handlers::volatile_on_hit` (`runEvent('Hit')` in
+    // `moves::spread_move_hit`). Focus Punch: `beforeMoveCallback` in `moves::run_move_inner`,
+    // `onTryAddVolatile` (flinch) in `Battle::add_volatile_blocked`. Beak Blast: `onAfterMove`
+    // in `handlers::on_after_move`. Shell Trap: `onTryMove` in `handlers::null_try_move`.
+    (
+        moves::FOCUS_PUNCH,
+        &[
+            "beforeMoveCallback",
+            "condition.onHit",
+            "condition.onStart",
+            "condition.onTryAddVolatile",
+            "priorityChargeCallback",
+        ],
+    ),
+    (
+        moves::BEAK_BLAST,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "onAfterMove",
+            "priorityChargeCallback",
+        ],
+    ),
+    (
+        moves::SHELL_TRAP,
+        &[
+            "condition.onHit",
+            "condition.onStart",
+            "onTryMove",
+            "priorityChargeCallback",
+        ],
+    ),
     // Parting Shot: `onHit` drops Atk and SpA and withdraws the switch if that failed (F6).
     (moves::PARTING_SHOT, &["onHit"]),
+    // `onTry` in `handlers::on_try`: Belch (`ateBerry`, `SideHistory::ate_berry`; Champions has
+    // no `onDisableMove`), Last Resort (`moveSlot.used`, `SlotHistory::moves_used`), Dark Void
+    // (Darkrai or a bounced copy).
+    (moves::BELCH, &["onTry"]),
+    (moves::LAST_RESORT, &["onTry"]),
+    (moves::DARK_VOID, &["onTry"]),
     // Slot conditions (F12): `conditions::{add_slot_condition, slot_condition_residual,
     // slot_condition_switch_in, remove_slot_condition}`; Revival Blessing's revival is a
     // mid-turn decision (`resume_turn`).
@@ -380,6 +482,12 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         &["condition.onSwap", "condition.onSwitchIn", "onTryHit"],
     ),
     (moves::REVIVAL_BLESSING, &["onTryHit"]),
+    // Future Sight, Doom Desire: `onTry` adds the `futuremove` slot condition
+    // (`conditions::start_future_move` from `moves::try_spread_move_hit`); the condition's
+    // `onResidual` (order 3) and `onEnd` are `conditions::slot_condition_residual` →
+    // `moves::future_move_hit`.
+    (moves::FUTURE_SIGHT, &["onTry"]),
+    (moves::DOOM_DESIRE, &["onTry"]),
     // Two-turn moves (F9): `onTryMove` in `handlers::charge_try_move`; the semi-invulnerable
     // ones' condition handlers in `handlers::invulnerable`, `volatile_modify_damage`,
     // `target_volatile_base_power` and the sandstorm residual (`onImmunity`).
@@ -518,6 +626,15 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::PAIN_SPLIT, &["onHit"]),
     (moves::SPITE, &["onHit"]),
     (moves::REFLECT_TYPE, &["onHit"]),
+    // Ability changes (`handlers::skill_swap`, `handlers::set_ability`: the old ability's End,
+    // the new one's Start through `switching`; Ability Shield blocks): Skill Swap `onHit`; Role
+    // Play, Entrainment, Simple Beam `onTryHit` / `onHit`; Worry Seed `onTryImmunity` too. Gastro
+    // Acid (ability suppression) is not supported.
+    (moves::SKILL_SWAP, &["onHit"]),
+    (moves::ROLE_PLAY, &["onHit", "onTryHit"]),
+    (moves::ENTRAINMENT, &["onHit", "onTryHit"]),
+    (moves::SIMPLE_BEAM, &["onHit", "onTryHit"]),
+    (moves::WORRY_SEED, &["onHit", "onTryHit", "onTryImmunity"]),
     (moves::SOAK, &["onHit"]),
     (moves::ENDEAVOR, &["damageCallback", "onTryImmunity"]),
     // Leech Seed: `onTryImmunity` (Grass) in `handlers`, the volatile's `onResidual` in
@@ -584,6 +701,18 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         ],
     ),
     (moves::TRI_ATTACK, &["secondaries.onHit", "secondary.onHit"]),
+    // Stat-change history (`SlotHistory::stats_raised_this_turn` / `stats_lowered_this_turn`,
+    // set in `Battle::boost_by`): Burning Jealousy's and Alluring Voice's secondary `onHit` in
+    // `handlers::secondary_on_hit`, Lash Out's `onBasePower` in `handlers::on_base_power`.
+    (
+        moves::BURNING_JEALOUSY,
+        &["secondaries.onHit", "secondary.onHit"],
+    ),
+    (
+        moves::ALLURING_VOICE,
+        &["secondaries.onHit", "secondary.onHit"],
+    ),
+    (moves::LASH_OUT, &["onBasePower"]),
     (moves::MORNING_SUN, &["onHit"]),
     (moves::MOONLIGHT, &["onHit"]),
     (moves::SYNTHESIS, &["onHit"]),
@@ -1669,10 +1798,8 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     }
     let flags = m.flags;
     use crate::dex::MoveFlags as F;
-    // `cantusetwice` (Gigaton Hammer, Blood Moon) is implemented in `mod.rs::disabled`.
-    if flags.contains(F::FUTUREMOVE) {
-        return why("future move");
-    }
+    // `cantusetwice` (Gigaton Hammer, Blood Moon) is implemented in `mod.rs::disabled`. Future
+    // moves (`futuremove`) are Future Sight and Doom Desire, both implemented (their `onTry`).
     // The two-turn moves in `conditions::charge_volatile` are implemented (F9); the others
     // (Skull Bash, Razor Wind, Sky Drop, Geomancy, ...) are not.
     if flags.contains(F::CHARGE) && super::conditions::charge_volatile(id).is_none() {
@@ -1968,13 +2095,15 @@ mod tests {
     #[test]
     fn substitute_readers_are_implemented_or_refused() {
         use crate::dex::ItemId;
-        const AFTER_SUB_DAMAGE: [MoveId; 6] = [
+        // Shell Side Arm's only reveals its category.
+        const AFTER_SUB_DAMAGE: [MoveId; 7] = [
             moves::RAPID_SPIN,
             moves::MORTAL_SPIN,
             moves::ICE_SPINNER,
             moves::STEEL_ROLLER,
             moves::CEASELESS_EDGE,
             moves::STONE_AXE,
+            moves::SHELL_SIDE_ARM,
         ];
         for id in MoveId::all() {
             let handlers = id.data().handlers;
@@ -2072,6 +2201,20 @@ mod tests {
             Volatile::from_condition(crate::dex::conditions::YAWN),
             Some(Volatile::Yawn)
         );
+    }
+
+    /// The `futuremove` moves are exactly the two implemented ones (their `onTry` and the
+    /// `futuremove` slot condition).
+    #[test]
+    fn future_moves_are_future_sight_and_doom_desire() {
+        use crate::dex::MoveFlags;
+        let future: Vec<MoveId> = MoveId::all()
+            .filter(|id| id.data().flags.contains(MoveFlags::FUTUREMOVE))
+            .collect();
+        assert_eq!(future, [moves::DOOM_DESIRE, moves::FUTURE_SIGHT]);
+        for id in future {
+            assert_eq!(move_unsupported(id), None, "{id:?}");
+        }
     }
 
     #[test]

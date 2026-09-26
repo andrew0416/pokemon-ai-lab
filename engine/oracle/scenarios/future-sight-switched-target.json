@@ -1,0 +1,30 @@
+{
+ "description": "Future Sight hits the slot: Snorlax, its target, switched out to Garchomp in turn 2 (setup), and Garchomp takes the hit at the end of turn 3. Bronzong's Doom Desire at Umbreon's slot finds Umbreon fainted (patched to 1 HP, knocked out by Slowking's Seismic Toss in turn 3): no hit, the condition just ends.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Slowking", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Future Sight", "Seismic Toss", "Calm Mind"], "level": 50},
+   {"species": "Bronzong", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Doom Desire", "Protect", "Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Umbreon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "setupTurns": [
+  ["move futuresight 1, move doomdesire 2", "move harden, move harden"],
+  ["move calmmind, move calmmind", "switch 3, move harden"]
+ ],
+ "patch": {"p2": {"Umbreon": {"hp": 1}}},
+ "turn": {"p1": "move seismictoss 2, move calmmind", "p2": "move harden, move harden"}
+}

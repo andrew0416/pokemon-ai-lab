@@ -1,0 +1,24 @@
+{
+ "description": "Simple Beam and Worry Seed: Gardevoir's Simple Beam gives Garchomp Simple before its Swords Dance (+4). Umbreon (patched asleep) sleeps through its turn; Snorlax's Worry Seed then gives it Insomnia and wakes it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gardevoir", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Simple Beam", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Worry Seed", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Umbreon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Umbreon": {"status": "slp", "statusTime": 3}}},
+ "turn": {"p1": "move simplebeam 1, move worryseed 2", "p2": "move swordsdance, move harden"}
+}

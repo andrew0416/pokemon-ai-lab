@@ -41,9 +41,12 @@ enum Kind {
     LeechSeed(PokemonRef, SlotRef),
     /// The `onResidual` of a volatile without a duration: Ingrain (order 7), Salt Cure (13).
     VolatileEffect(PokemonRef, SlotRef, Volatile),
-    /// A slot condition's `onResidual` on the standing occupant (Wish order 4; Revival
-    /// Blessing's duration), slot-condition sub-order 3.
-    SlotCondition(PokemonRef, SlotRef, SlotCondition),
+    /// A slot condition's `onResidual` (future moves order 3, Wish 4; Revival Blessing's
+    /// duration), slot-condition sub-order 3. Showdown collects it for the Pokémon in the
+    /// position (`side.active`), and runs a slot condition's handler even when that Pokémon has
+    /// fainted (`if (!handler.state?.isSlotCondition) continue;`), so it runs for a position
+    /// held by a fainted Pokémon not yet replaced too.
+    SlotCondition(SlotRef, SlotCondition),
     /// A forme ability's `onResidual` (order 29, ability sub-order): Schooling, Shields Down,
     /// Hunger Switch (`forme::residual`).
     Forme(PokemonRef, SlotRef, AbilityId),
@@ -132,24 +135,37 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
             }
         }
         for slot in Battle::<N>::slots(side) {
+            // Slot conditions, for the Pokémon holding the position, standing or fainted. A
+            // fainted holder's `pokemon.speed` is from before it fainted, which the state does
+            // not keep; its handlers only end their condition (no heal, no hit), which no other
+            // handler's order depends on.
+            let held = b.occupant(slot).is_some() || b.state.slot(slot).fainted_occupant.is_some();
+            if held {
+                let speed = if b.alive(slot).is_some() {
+                    b.action_speed(slot)
+                } else {
+                    0
+                };
+                for (condition, order) in [
+                    (SlotCondition::FutureMove, 3),
+                    (SlotCondition::Wish, 4),
+                    (SlotCondition::RevivalBlessing, ORDER_DEFAULT),
+                ] {
+                    if conditions::slot_condition(b, slot, condition).is_active() {
+                        out.push(Handler {
+                            order,
+                            speed,
+                            sub_order: SUB_SLOT_CONDITION,
+                            kind: Kind::SlotCondition(slot, condition),
+                        });
+                    }
+                }
+            }
             let Some(pokemon) = b.alive(slot) else {
                 continue;
             };
             // `pokemon.speed` (Champions `getActionSpeed`, negated under Trick Room).
             let speed = b.action_speed(slot);
-            for (condition, order) in [
-                (SlotCondition::Wish, 4),
-                (SlotCondition::RevivalBlessing, ORDER_DEFAULT),
-            ] {
-                if conditions::slot_condition(b, slot, condition).is_active() {
-                    out.push(Handler {
-                        order,
-                        speed,
-                        sub_order: SUB_SLOT_CONDITION,
-                        kind: Kind::SlotCondition(pokemon, slot, condition),
-                    });
-                }
-            }
             let mon = b.mon(pokemon);
             let status_order = match mon.status {
                 Status::Burn => Some(10),
@@ -294,10 +310,12 @@ impl Kind {
             | Kind::StatusCure(p, s, _)
             | Kind::Item(p, s, _)
             | Kind::LeechSeed(p, s)
-            | Kind::VolatileEffect(p, s, _)
-            | Kind::SlotCondition(p, s, _) => Some((p, s)),
+            | Kind::VolatileEffect(p, s, _) => Some((p, s)),
             Kind::Forme(p, s, _) => Some((p, s)),
-            Kind::Weather | Kind::FieldDuration(_) | Kind::SideDuration(..) => None,
+            Kind::Weather
+            | Kind::FieldDuration(_)
+            | Kind::SideDuration(..)
+            | Kind::SlotCondition(..) => None,
         }
     }
 }
@@ -392,8 +410,8 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
             b.set_side_effect(side, which, if ended { Effect::NONE } else { effect });
             return Ok(!ended);
         }
-        Kind::SlotCondition(_, slot, condition) => {
-            conditions::slot_condition_residual(b, slot, condition);
+        Kind::SlotCondition(slot, condition) => {
+            conditions::slot_condition_residual(b, slot, condition)?;
         }
         Kind::VolatileDuration(pokemon, slot, volatile) => {
             let mut state = b.volatile(slot, volatile);
@@ -665,6 +683,7 @@ pub(crate) fn end_turn<const N: usize>(b: &mut Battle<'_, N>) {
         // damage-history resets (F13).
         item_events::end_turn_disable_move(b);
         b.end_turn_history();
+        b.reset_stat_changes();
         let turn = b.state.turn;
         b.apply(Instruction::SetTurn {
             old: turn,

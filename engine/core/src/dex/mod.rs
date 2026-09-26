@@ -368,7 +368,9 @@ pub struct SpeciesData {
     pub handlers: &'static [&'static str],
 }
 
-#[derive(Debug, PartialEq)]
+/// `Clone` lets the turn engine keep a copy with a changed category (Photon Geyser, Shell Side
+/// Arm: `move.category` set in ModifyMove).
+#[derive(Clone, Debug, PartialEq)]
 pub struct MoveData {
     pub id: &'static str,
     pub name: &'static str,
