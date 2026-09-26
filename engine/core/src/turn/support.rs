@@ -1541,6 +1541,20 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         abilities::COMMANDER,
         &["onAnySwitchIn", "onStart", "onUpdate"],
     ),
+    // Gorilla Tactics: `abilities::gorilla_modify_move` / `gorilla_before_move` /
+    // `gorilla_disabled_move` (ModifyMove, BeforeMove, DisableMove), `onModifyAtk` in
+    // `abilities::attack_handlers`, `onStart` / `onEnd` in `switching`.
+    (
+        abilities::GORILLA_TACTICS,
+        &[
+            "onBeforeMove",
+            "onDisableMove",
+            "onEnd",
+            "onModifyAtk",
+            "onModifyMove",
+            "onStart",
+        ],
+    ),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

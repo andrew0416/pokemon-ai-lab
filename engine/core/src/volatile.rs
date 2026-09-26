@@ -202,9 +202,13 @@ pub enum Volatile {
     /// starts; trapped and not dragged out, as `commanding`, and it does not switch itself out
     /// (`selfSwitch`, Eject Button).
     Commanded,
+    /// Not a Showdown volatile: Gorilla Tactics' `abilityState.choiceLock`, the move (`mv`) its
+    /// holder is locked into since its first move after starting. No duration; hidden in the
+    /// canonical state.
+    GorillaTactics,
 }
 
-pub const VOLATILE_COUNT: usize = 65;
+pub const VOLATILE_COUNT: usize = 66;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -273,6 +277,7 @@ impl Volatile {
         Volatile::SupremeOverlord,
         Volatile::Commanding,
         Volatile::Commanded,
+        Volatile::GorillaTactics,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -345,7 +350,8 @@ impl Volatile {
             | Volatile::Trapper
             | Volatile::SupremeOverlord
             | Volatile::Commanding
-            | Volatile::Commanded => ConditionId::NONE,
+            | Volatile::Commanded
+            | Volatile::GorillaTactics => ConditionId::NONE,
         }
     }
 
@@ -417,6 +423,7 @@ impl Volatile {
             Volatile::SupremeOverlord => "supremeoverlord",
             Volatile::Commanding => "commanding",
             Volatile::Commanded => "commanded",
+            Volatile::GorillaTactics => "gorillatactics",
         }
     }
 
@@ -495,7 +502,8 @@ impl Volatile {
             | Volatile::Ingrain
             | Volatile::SupremeOverlord
             | Volatile::Commanding
-            | Volatile::Commanded => 0,
+            | Volatile::Commanded
+            | Volatile::GorillaTactics => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -524,9 +532,10 @@ impl Volatile {
     /// application count).
     pub fn showdown_state(self, state: VolatileState) -> Option<VolatileState> {
         match self {
-            Volatile::ProteanUsed | Volatile::AngerShellUnchecked | Volatile::SupremeOverlord => {
-                None
-            }
+            Volatile::ProteanUsed
+            | Volatile::AngerShellUnchecked
+            | Volatile::SupremeOverlord
+            | Volatile::GorillaTactics => None,
             // Two-turn move: the target location is not a canonical field.
             Volatile::Roost
             | Volatile::HelpingHand
@@ -704,6 +713,7 @@ mod tests {
                         | Volatile::SupremeOverlord
                         | Volatile::Commanding
                         | Volatile::Commanded
+                        | Volatile::GorillaTactics
                 ));
                 continue;
             }

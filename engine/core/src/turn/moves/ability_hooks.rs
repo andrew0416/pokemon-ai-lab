@@ -223,6 +223,8 @@ pub(super) fn on_modify_move<const N: usize>(
     if ability == abilities::SCRAPPY || ability == abilities::MINDS_EYE {
         mv.scrappy = true;
     }
+    // Gorilla Tactics: the lock.
+    super::ability_events::gorilla_modify_move(b, user, mv.id);
     if b.active_move.is_some_and(|m| m.ignore_ability) {
         if let Some(why) = oblivious_bypassed(b, user, mv) {
             return Err(b.unsupported(why));

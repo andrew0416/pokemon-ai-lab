@@ -105,6 +105,8 @@ pub(crate) enum StartEffect {
     /// Commander's `onStart` (outside the SwitchIn event, which runs its `onAnySwitchIn`): its
     /// `onUpdate` (`abilities::commander_update`).
     Commander,
+    /// Gorilla Tactics: `abilityState.choiceLock = ""` (the lock volatile goes).
+    GorillaTactics,
 }
 
 /// Abilities with an implemented start, with the exact handler lists they were implemented
@@ -492,6 +494,20 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         abilities::COMMANDER,
         &["onAnySwitchIn", "onStart", "onUpdate"],
         StartEffect::Commander,
+    ),
+    // Gorilla Tactics: `onStart` / `onEnd` reset the lock; the rest in `abilities`
+    // (`gorilla_*`) and `attack_handlers`.
+    (
+        abilities::GORILLA_TACTICS,
+        &[
+            "onBeforeMove",
+            "onDisableMove",
+            "onEnd",
+            "onModifyAtk",
+            "onModifyMove",
+            "onStart",
+        ],
+        StartEffect::GorillaTactics,
     ),
 ];
 
@@ -958,6 +974,7 @@ pub(crate) fn start_ability<const N: usize>(
         StartEffect::Forme => super::forme::on_start(b, slot, ability)?,
         StartEffect::SupremeOverlord => super::abilities::supreme_overlord_start(b, slot),
         StartEffect::Commander => super::abilities::commander_update(b, slot),
+        StartEffect::GorillaTactics => b.delete_volatile(slot, Volatile::GorillaTactics),
     }
     Ok(())
 }
@@ -1084,6 +1101,11 @@ pub(crate) fn end_ability<const N: usize>(
     // Supreme Overlord's `onEnd` only logs; its `abilityState.fallen` goes with the ability.
     if ability == abilities::SUPREME_OVERLORD {
         b.delete_volatile(slot, Volatile::SupremeOverlord);
+        return Ok(());
+    }
+    // Gorilla Tactics' `onEnd`: `pokemon.abilityState.choiceLock = ""`.
+    if ability == abilities::GORILLA_TACTICS {
+        b.delete_volatile(slot, Volatile::GorillaTactics);
         return Ok(());
     }
     // Unburden: `pokemon.removeVolatile('unburden')`.

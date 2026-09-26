@@ -1045,6 +1045,10 @@ fn disabled<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> Opti
     if let Some(why) = conditions::disabled_move(state, slot, id) {
         return Some(why);
     }
+    // Gorilla Tactics' `onDisableMove`.
+    if let Some(why) = abilities::gorilla_disabled_move(state, slot, id) {
+        return Some(why);
+    }
     items::disabled_move(state, slot, id)
 }
 

@@ -393,6 +393,62 @@ pub(crate) fn commander_update<const N: usize>(b: &mut Battle<'_, N>, holder: Sl
     }
 }
 
+/// Gorilla Tactics' `onModifyMove` for the move `id` its holder in `user` uses (any move but
+/// Struggle, called and status moves included): `if (pokemon.abilityState.choiceLock) return;
+/// pokemon.abilityState.choiceLock = move.id` ([`Volatile::GorillaTactics`]).
+pub(crate) fn gorilla_modify_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+) {
+    if b.ability(user) != abilities::GORILLA_TACTICS
+        || id == moves::STRUGGLE
+        || b.volatile(user, Volatile::GorillaTactics).active
+    {
+        return;
+    }
+    let state = VolatileState {
+        active: true,
+        mv: id,
+        ..VolatileState::NONE
+    };
+    b.set_volatile_state(user, Volatile::GorillaTactics, state);
+}
+
+/// Gorilla Tactics' `onBeforeMove` (priority 0): a move other than the locked one (and not
+/// Struggle) fails, with no PP spent. `false` = the move is not used. As with the Choice
+/// lock, only a lock set after the choice (never by a supported effect) reaches it: the other
+/// moves cannot be chosen ([`gorilla_disabled_move`]).
+pub(crate) fn gorilla_before_move<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+) -> bool {
+    let lock = b.volatile(user, Volatile::GorillaTactics);
+    !(b.ability(user) == abilities::GORILLA_TACTICS
+        && lock.active
+        && lock.mv != id
+        && id != moves::STRUGGLE)
+}
+
+/// Gorilla Tactics' `onDisableMove` (`endTurn`): while locked, every other move is disabled
+/// (not hidden).
+pub(crate) fn gorilla_disabled_move<const N: usize>(
+    state: &State<N>,
+    slot: SlotRef,
+    id: MoveId,
+) -> Option<String> {
+    let mon = state.active(slot)?;
+    let lock = state.slot(slot).volatiles.get(Volatile::GorillaTactics);
+    (mon.ability == abilities::GORILLA_TACTICS && lock.active && lock.mv != id).then(|| {
+        format!(
+            "{} is locked into {} by Gorilla Tactics",
+            mon.species.data().name,
+            lock.mv.data().name
+        )
+    })
+}
+
 /// Supreme Overlord's `onStart`: `if (pokemon.side.totalFainted)` the holder's
 /// `abilityState.fallen = Math.min(pokemon.side.totalFainted, 5)`, kept as
 /// [`Volatile::SupremeOverlord`] (the ability state is fresh at every switch-in and ability
@@ -940,6 +996,11 @@ pub(crate) fn attack_handlers<const N: usize>(
     if let Some(modifier) = own_attack_modifier(b, user, target, attacker, physical, move_type) {
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, modifier));
+    }
+    // Gorilla Tactics (priority 1): `chainModify(1.5)` (Attack only; Dynamax is off).
+    if physical && ability == abilities::GORILLA_TACTICS {
+        let p = priority(ability.data().event_orders, event);
+        out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
     }
     // Flash Fire's volatile (a condition, priority 5): `if (move.type === 'Fire' &&
     // attacker.hasAbility('flashfire')) return this.chainModify(1.5)` (`move.type`: after

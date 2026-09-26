@@ -520,8 +520,8 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
     if b.mon(pokemon).status == Status::Paralyze && b.rng.chance(1, 8) {
         return false;
     }
-    // The Choice lock (priority 0).
-    item_events::before_move(b, user, mv.id)
+    // The Choice lock and Gorilla Tactics (priority 0; both only fail the move).
+    item_events::before_move(b, user, mv.id) && ability_events::gorilla_before_move(b, user, mv.id)
 }
 
 /// Showdown `getConfusionDamage(pokemon, 40)`: a 40-power typeless physical hit with the
