@@ -579,7 +579,7 @@ pub(crate) fn disabled_move<const N: usize>(
 /// `ModifyAccuracy` handlers of the user's item (`onSourceModifyAccuracy`, priority -2, only for
 /// a numeric accuracy, which is when the engine checks accuracy): Wide Lens 4505/4096; Zoom
 /// Lens 4915/4096 when the target has no move action left in the queue
-/// (`!this.queue.willMove(target)`).
+/// (`!this.queue.willMove(target)`); and of the target's item (`onModifyAccuracy`).
 pub(crate) fn accuracy_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
@@ -599,6 +599,13 @@ pub(crate) fn accuracy_handlers<const N: usize>(
         let p =
             super::abilities::priority(item.data().event_orders, "onSourceModifyAccuracyPriority");
         out.push(Handler::of(b, user, p, SUB_ITEM, modifier));
+    }
+    // The target's item (`onModifyAccuracy`, priority -2): Bright Powder and Lax Incense
+    // 3686/4096.
+    let held = b.item(target);
+    if held == items::BRIGHT_POWDER || held == items::LAX_INCENSE {
+        let p = super::abilities::priority(held.data().event_orders, "onModifyAccuracyPriority");
+        out.push(Handler::of(b, target, p, SUB_ITEM, 3686));
     }
     out
 }

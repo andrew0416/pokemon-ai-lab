@@ -1,0 +1,26 @@
+{
+ "description": "Opus Q unit 5, in snow: Dodrio (fastest) Will-O-Wisps Sigilyph, whose Wonder Skin makes the status move's accuracy 50. Froslass confuses Dodrio (Confuse Ray); Sigilyph's Will-O-Wisp then meets Dodrio's Tangled Feet (0.5 while confused). Chansey's Thunder Wave (90) into Froslass: Snow Cloak 3277/4096 (priority -1) and Lax Incense 3686/4096 (priority -2).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Froslass", "item": "Lax Incense", "ability": "Snow Cloak", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Confuse Ray", "Protect"], "level": 50},
+   {"species": "Sigilyph", "item": "", "ability": "Wonder Skin", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Will-O-Wisp", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Dodrio", "item": "", "ability": "Tangled Feet", "nature": "Jolly",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Will-O-Wisp", "Protect"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Thunder Wave", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "field": {"weather": "snowscape", "weatherDuration": 4}
+ },
+ "turn": {"p1": "move confuseray 1, move willowisp 1", "p2": "move willowisp 2, move thunderwave 1"}
+}

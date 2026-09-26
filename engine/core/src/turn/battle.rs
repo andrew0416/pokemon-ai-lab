@@ -331,10 +331,11 @@ impl<'a, const N: usize> Battle<'a, N> {
         // 'powder') return false;` (hail is not a supported weather).
         let overcoat = self.ability_unless_broken(slot) == abilities::OVERCOAT;
         if immunity == TypeImmunities::SANDSTORM {
-            // Sand Rush, Sand Force: `onImmunity(type) { if (type === 'sandstorm') return
-            // false; }`.
+            // Sand Rush, Sand Force, Sand Veil (breakable): `onImmunity(type) { if (type ===
+            // 'sandstorm') return false; }`.
             let sand_ability = [abilities::SAND_RUSH, abilities::SAND_FORCE].contains(&mon.ability);
-            return sand_ability || overcoat;
+            let sand_veil = self.ability_unless_broken(slot) == abilities::SAND_VEIL;
+            return sand_ability || sand_veil || overcoat;
         }
         if immunity == TypeImmunities::POWDER {
             return overcoat;

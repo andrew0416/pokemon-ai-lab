@@ -1661,9 +1661,11 @@ fn accuracy_check<const N: usize>(
         ability_hooks::accuracy_event(b, user, mv, target);
         return true;
     };
-    let mut accuracy = i32::from(base);
-    // ModifyAccuracy: Gravity (6840/4096), the user's Hustle and item (Wide Lens, Zoom Lens).
-    let mut accuracy_mods = ability_events::accuracy_handlers(b, user, mv.data);
+    // ModifyAccuracy: Wonder Skin's replacement, then Gravity (6840/4096), the abilities
+    // (Hustle, Compound Eyes, Sand Veil, Victory Star, ...) and items (Wide Lens, Zoom Lens,
+    // Bright Powder).
+    let mut accuracy = ability_events::accuracy_direct(b, user, target, mv.data, i32::from(base));
+    let mut accuracy_mods = ability_events::accuracy_handlers(b, user, target, mv.data);
     accuracy_mods.extend(item_events::accuracy_handlers(b, user, target));
     if b.field_active(FieldEffect::Gravity) {
         accuracy_mods.push(Handler::global(0, SUB_FIELD_CONDITION, 6840));

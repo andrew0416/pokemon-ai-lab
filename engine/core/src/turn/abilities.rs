@@ -1087,23 +1087,76 @@ pub(crate) fn crit_ratio_bonus<const N: usize>(
 }
 
 /// `ModifyAccuracy` handlers of abilities (moves with a numeric accuracy): the user's
-/// `onSourceModifyAccuracy`.
+/// `onSourceModifyAccuracy`, the target's `onModifyAccuracy` (all breakable) and every active
+/// Pokémon's `onAnyModifyAccuracy`.
 pub(crate) fn accuracy_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
+    target: SlotRef,
     data: &MoveData,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
     let ability = b.ability(user);
-    // Hustle: physical moves 3277/4096.
-    if ability == abilities::HUSTLE && data.category == MoveCategory::Physical {
+    let source_modifier = match ability {
+        // Hustle: physical moves 3277/4096.
+        a if a == abilities::HUSTLE => (data.category == MoveCategory::Physical).then_some(3277),
+        // Compound Eyes: 5325/4096.
+        a if a == abilities::COMPOUND_EYES => Some(5325),
+        _ => None,
+    };
+    if let Some(modifier) = source_modifier {
         let p = priority(
             ability.data().event_orders,
             "onSourceModifyAccuracyPriority",
         );
-        out.push(Handler::of(b, user, p, SUB_ABILITY, 3277));
+        out.push(Handler::of(b, user, p, SUB_ABILITY, modifier));
+    }
+    // The target's (priority -1): Sand Veil in sand and Snow Cloak in snow 3277/4096
+    // (`this.field.isWeather(...)`: the field's effective weather), Tangled Feet 0.5 while the
+    // target is confused. Wonder Skin replaces the accuracy instead ([`accuracy_direct`]).
+    let defending = ability_for_move(b, target, user, data);
+    let weather = b.effective_weather();
+    let target_modifier = match defending {
+        a if a == abilities::SAND_VEIL => (weather == Weather::Sand).then_some(3277),
+        a if a == abilities::SNOW_CLOAK => (weather == Weather::Snow).then_some(3277),
+        a if a == abilities::TANGLED_FEET => b
+            .volatile(target, Volatile::Confusion)
+            .active
+            .then_some(MOD_HALF),
+        _ => None,
+    };
+    if let Some(modifier) = target_modifier {
+        let p = priority(defending.data().event_orders, "onModifyAccuracyPriority");
+        out.push(Handler::of(b, target, p, SUB_ABILITY, modifier));
+    }
+    // Victory Star (`onAnyModifyAccuracy`, priority -1, not breakable): 4506/4096 for a move
+    // of its holder or the holder's ally (`source.isAlly(holder)`), once per holder.
+    for holder in b.alive_slots(user.side) {
+        let star = b.ability(holder);
+        if star == abilities::VICTORY_STAR {
+            let p = priority(star.data().event_orders, "onAnyModifyAccuracyPriority");
+            out.push(Handler::of(b, holder, p, SUB_ABILITY, 4506));
+        }
     }
     out
+}
+
+/// The accuracy the `ModifyAccuracy` event starts chaining from: Wonder Skin (the target's,
+/// breakable, priority 10) `return 50` for a status move with a numeric accuracy, which
+/// replaces the accuracy; the chained factors apply to the result at the end of the event.
+pub(crate) fn accuracy_direct<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    data: &MoveData,
+    accuracy: i32,
+) -> i32 {
+    let wonder_skin = ability_for_move(b, target, user, data) == abilities::WONDER_SKIN;
+    if wonder_skin && data.category == MoveCategory::Status {
+        50
+    } else {
+        accuracy
+    }
 }
 
 /// The STAB modifier after `ModifySTAB` (the user's own ability). Adaptability:

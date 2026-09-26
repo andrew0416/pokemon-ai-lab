@@ -767,6 +767,8 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     // Accuracy, critical hits, flinch (`moves.rs`), Focus Band (`Battle::damage`).
     (items::WIDE_LENS, &["onSourceModifyAccuracy"]),
     (items::ZOOM_LENS, &["onSourceModifyAccuracy"]),
+    (items::BRIGHT_POWDER, &["onModifyAccuracy"]),
+    (items::LAX_INCENSE, &["onModifyAccuracy"]),
     (items::SCOPE_LENS, &["onModifyCritRatio"]),
     (items::RAZOR_CLAW, &["onModifyCritRatio"]),
     (items::FOCUS_BAND, &["onDamage"]),
@@ -1070,6 +1072,15 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // `onSourceAfterFaint` in `abilities::after_faint` (from `Battle::faint_messages`);
     // Eelevate's grounding in `Battle::is_grounded`. As One: Unnerve's `onStart` / `onEnd` /
     // `onFoeTryEatItem` too (`abilities::try_eat_item`, `switching`).
+    // ModifyAccuracy (`abilities::accuracy_handlers`, `accuracy_direct`). Sand Veil's
+    // `onImmunity` in `Battle::status_immune`; Snow Cloak's is for hail, which is not a
+    // supported weather.
+    (abilities::SAND_VEIL, &["onImmunity", "onModifyAccuracy"]),
+    (abilities::SNOW_CLOAK, &["onImmunity", "onModifyAccuracy"]),
+    (abilities::TANGLED_FEET, &["onModifyAccuracy"]),
+    (abilities::WONDER_SKIN, &["onModifyAccuracy"]),
+    (abilities::VICTORY_STAR, &["onAnyModifyAccuracy"]),
+    (abilities::COMPOUND_EYES, &["onSourceModifyAccuracy"]),
     (abilities::MOXIE, &["onSourceAfterFaint"]),
     (abilities::CHILLING_NEIGH, &["onSourceAfterFaint"]),
     (abilities::GRIM_NEIGH, &["onSourceAfterFaint"]),

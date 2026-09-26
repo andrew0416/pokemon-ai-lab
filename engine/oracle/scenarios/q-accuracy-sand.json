@@ -1,0 +1,26 @@
+{
+ "description": "Opus Q unit 5, in sand: Victini's Will-O-Wisp (85) into Snorlax: Victory Star 4506/4096 and Sand Veil 3277/4096. Butterfree's Poison Powder (75) into Chansey: Compound Eyes 5325/4096 and its ally Victini's Victory Star (priority -1, by Speed), then Chansey's Bright Powder 3686/4096 (priority -2). Sand Veil also makes Snorlax immune to the sandstorm. Snorlax and Chansey only Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Victini", "item": "", "ability": "Victory Star", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Will-O-Wisp", "Protect"], "level": 50},
+   {"species": "Butterfree", "item": "", "ability": "Compound Eyes", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Poison Powder", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Sand Veil", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Chansey", "item": "Bright Powder", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "field": {"weather": "sandstorm", "weatherDuration": 4}
+ },
+ "turn": {"p1": "move willowisp 1, move poisonpowder 2", "p2": "move harden, move harden"}
+}
