@@ -1759,6 +1759,68 @@ fn accuracy_check<const N: usize>(
     }
 }
 
+/// The accuracy re-roll of a later hit of a `multiaccuracy` move (Champions
+/// `hitStepMoveHitLoop`: Triple Kick, Triple Axel, Population Bomb), which differs from
+/// [`accuracy_check`]: the stages come first, in floating point: the user's accuracy stage and
+/// the target's evasion stage (unless the move ignores evasion) are each clamped and applied as
+/// `boostTable` factors (`[1, 4/3, 5/3, 2, 7/3, 8/3, 3]`) without truncation. Then
+/// `runEvent('ModifyAccuracy')` and `runEvent('Accuracy')`, whose chained modifiers
+/// (`chainModify`: Compound Eyes, Hustle, Wide Lens, Gravity, Micle Berry, ...) Showdown
+/// applies at the end of the event only to a non-negative integer relay value (`relayVar ===
+/// Math.abs(Math.floor(relayVar))`), so a fractional accuracy passes both events unchanged.
+/// Wonder Skin's direct 50 only answers status moves, which none of these is. Finally
+/// `randomChance(accuracy, 100)` is `random(100) < accuracy`: it succeeds `ceil(accuracy)`
+/// times in 100.
+fn multi_accuracy_check<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    let Some(base) = mv.accuracy else {
+        ability_hooks::accuracy_event(b, user, mv, target);
+        return true;
+    };
+    const BOOST_TABLE: [f64; 7] = [1.0, 4.0 / 3.0, 5.0 / 3.0, 2.0, 7.0 / 3.0, 8.0 / 3.0, 3.0];
+    let mut accuracy = f64::from(base);
+    let stage = i32::from(b.boost_seen(user, 5, target, true)).clamp(-6, 6);
+    if stage > 0 {
+        accuracy *= BOOST_TABLE[stage as usize];
+    } else {
+        accuracy /= BOOST_TABLE[(-stage) as usize];
+    }
+    if !mv.ignore_evasion {
+        let stage = i32::from(b.boost_seen(target, 6, user, false)).clamp(-6, 6);
+        if stage > 0 {
+            accuracy /= BOOST_TABLE[stage as usize];
+        } else if stage < 0 {
+            accuracy *= BOOST_TABLE[(-stage) as usize];
+        }
+    }
+    // `runEvent`'s final `this.modify(relayVar, this.event.modifier)`, for an integer only.
+    let integral = |x: f64| x >= 0.0 && x == x.floor();
+    if integral(accuracy) {
+        let mut accuracy_mods = ability_events::accuracy_handlers(b, user, target, mv.data);
+        accuracy_mods.extend(item_events::accuracy_handlers(b, user, target));
+        if b.field_active(FieldEffect::Gravity) {
+            accuracy_mods.push(Handler::global(0, SUB_FIELD_CONDITION, 6840));
+        }
+        accuracy = f64::from(modify(
+            accuracy as i32,
+            ability_events::chain(b, accuracy_mods),
+        ));
+    }
+    match ability_hooks::accuracy_event(b, user, mv, target) {
+        None => true,
+        Some(modifier) => {
+            if integral(accuracy) {
+                accuracy = f64::from(modify(accuracy as i32, modifier));
+            }
+            b.rng.chance(accuracy.ceil().clamp(0.0, 100.0) as u32, 100)
+        }
+    }
+}
+
 /// Showdown `hitStepMoveHitLoop` for a single hit.
 /// Showdown `hitStepMoveHitLoop`, one hit per call for a multi-hit move: the next hit
 /// (`multiaccuracy` moves re-roll accuracy from the second hit), then either a suspension
@@ -1780,7 +1842,7 @@ fn hit_loop<const N: usize>(
         && b.item(user) != items::LOADED_DICE;
     if hit > 1 && rerolls && !targets.is_empty() {
         let first = targets[0];
-        if !accuracy_check(b, user, mv, first) {
+        if !multi_accuracy_check(b, user, mv, first) {
             ended_by_miss = true;
         }
     }

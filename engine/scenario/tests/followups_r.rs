@@ -4,7 +4,7 @@
 
 mod common;
 
-use common::assert_exact_parity;
+use common::{assert_exact_parity, assert_extremes_parity};
 use lab_engine::action::SlotAction;
 use lab_engine::rules::{ActionError, Ruleset};
 use lab_engine::state::{SideId, SlotRef};
@@ -97,4 +97,11 @@ fn magic_room_suppresses_shed_shell_against_shadow_tag() {
 fn klutz_suppresses_shed_shell_against_shadow_tag() {
     assert_trapped_parity("r-shed-shell-klutz");
     assert_exact_parity("r-shed-shell-klutz");
+}
+
+/// Triple Axel's later hits re-roll accuracy with float stages first: at +1 evasion the
+/// fractional 67.5 skips Compound Eyes and hits 68 times in 100 (the first hit: 87).
+#[test]
+fn multi_accuracy_reroll_applies_float_stages_before_modifiers() {
+    assert_extremes_parity("r-triple-axel-evasion");
 }
