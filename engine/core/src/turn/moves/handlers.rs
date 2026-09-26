@@ -1623,6 +1623,12 @@ pub(super) fn charge_try_move<const N: usize>(
         up[2] = 1;
         b.boost_by(user, &up, Some(user), BoostEffect::Move(mv.id));
     }
+    // Skull Bash: `this.boost({def: 1}, attacker, attacker, move)` before ChargeMove.
+    if mv.id == moves::SKULL_BASH {
+        let mut up = NO_BOOSTS;
+        up[1] = 1;
+        b.boost_by(user, &up, Some(user), BoostEffect::Move(mv.id));
+    }
     let weather = b.weather_for(user);
     let skip = match mv.id {
         i if i == moves::SOLAR_BEAM || i == moves::SOLAR_BLADE => {

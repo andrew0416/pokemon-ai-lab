@@ -245,8 +245,8 @@ pub(crate) fn slot_condition_residual<const N: usize>(
 }
 
 /// The two-turn moves the engine runs (`charge` flag) and their own volatile
-/// (`attacker.addVolatile(move.id)` in `twoturnmove`'s start). Other charge moves (Skull Bash,
-/// Razor Wind, Sky Drop, ... ) are refused.
+/// (`attacker.addVolatile(move.id)` in `twoturnmove`'s start). Other charge moves (Sky Drop,
+/// ...) are refused.
 pub(crate) fn charge_volatile(id: MoveId) -> Option<Volatile> {
     Some(match id {
         i if i == moves::SOLAR_BEAM => Volatile::SolarBeam,
@@ -260,6 +260,11 @@ pub(crate) fn charge_volatile(id: MoveId) -> Option<Volatile> {
         i if i == moves::DIVE => Volatile::Dive,
         i if i == moves::PHANTOM_FORCE => Volatile::PhantomForce,
         i if i == moves::SHADOW_FORCE => Volatile::ShadowForce,
+        i if i == moves::SKULL_BASH => Volatile::SkullBash,
+        i if i == moves::RAZOR_WIND => Volatile::RazorWind,
+        i if i == moves::FREEZE_SHOCK => Volatile::FreezeShock,
+        i if i == moves::ICE_BURN => Volatile::IceBurn,
+        i if i == moves::GEOMANCY => Volatile::Geomancy,
         _ => return None,
     })
 }

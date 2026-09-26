@@ -1007,6 +1007,13 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::GUARD_SPLIT, &["onHit"]),
     (moves::BESTOW, &["onHit"]),
     (moves::ACUPRESSURE, &["onHit"]),
+    // Opus V unit 7: the other two-turn moves on the F9 machinery (`handlers::charge_try_move`;
+    // Skull Bash raises Defense before ChargeMove / Power Herb).
+    (moves::SKULL_BASH, &["onTryMove"]),
+    (moves::RAZOR_WIND, &["onTryMove"]),
+    (moves::FREEZE_SHOCK, &["onTryMove"]),
+    (moves::ICE_BURN, &["onTryMove"]),
+    (moves::GEOMANCY, &["onTryMove"]),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do

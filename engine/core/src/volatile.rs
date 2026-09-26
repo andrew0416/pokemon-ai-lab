@@ -262,9 +262,16 @@ pub enum Volatile {
     PowerTrick,
     /// Power Shift: as [`Volatile::PowerTrick`] (the same swap in this Showdown version).
     PowerShift,
+    /// The charging move's own volatile (as [`Volatile::SolarBeam`]; no condition data, no
+    /// duration) for Skull Bash, Razor Wind, Freeze Shock, Ice Burn and Geomancy.
+    SkullBash,
+    RazorWind,
+    FreezeShock,
+    IceBurn,
+    Geomancy,
 }
 
-pub const VOLATILE_COUNT: usize = 81;
+pub const VOLATILE_COUNT: usize = 86;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -349,6 +356,11 @@ impl Volatile {
         Volatile::AquaRing,
         Volatile::PowerTrick,
         Volatile::PowerShift,
+        Volatile::SkullBash,
+        Volatile::RazorWind,
+        Volatile::FreezeShock,
+        Volatile::IceBurn,
+        Volatile::Geomancy,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -437,7 +449,12 @@ impl Volatile {
             | Volatile::SupremeOverlord
             | Volatile::Commanding
             | Volatile::Commanded
-            | Volatile::GorillaTactics => ConditionId::NONE,
+            | Volatile::GorillaTactics
+            | Volatile::SkullBash
+            | Volatile::RazorWind
+            | Volatile::FreezeShock
+            | Volatile::IceBurn
+            | Volatile::Geomancy => ConditionId::NONE,
         }
     }
 
@@ -525,6 +542,11 @@ impl Volatile {
             Volatile::AquaRing => "aquaring",
             Volatile::PowerTrick => "powertrick",
             Volatile::PowerShift => "powershift",
+            Volatile::SkullBash => "skullbash",
+            Volatile::RazorWind => "razorwind",
+            Volatile::FreezeShock => "freezeshock",
+            Volatile::IceBurn => "iceburn",
+            Volatile::Geomancy => "geomancy",
         }
     }
 
@@ -621,7 +643,12 @@ impl Volatile {
             | Volatile::DragonCheer
             | Volatile::AquaRing
             | Volatile::PowerTrick
-            | Volatile::PowerShift => 0,
+            | Volatile::PowerShift
+            | Volatile::SkullBash
+            | Volatile::RazorWind
+            | Volatile::FreezeShock
+            | Volatile::IceBurn
+            | Volatile::Geomancy => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -849,6 +876,11 @@ mod tests {
                         | Volatile::Commanding
                         | Volatile::Commanded
                         | Volatile::GorillaTactics
+                        | Volatile::SkullBash
+                        | Volatile::RazorWind
+                        | Volatile::FreezeShock
+                        | Volatile::IceBurn
+                        | Volatile::Geomancy
                 ));
                 continue;
             }
