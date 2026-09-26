@@ -1067,6 +1067,22 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::SWORD_OF_RUIN, &["onAnyModifyDef", "onStart"]),
     (abilities::VESSEL_OF_RUIN, &["onAnyModifySpA", "onStart"]),
     (abilities::BEADS_OF_RUIN, &["onAnyModifySpD", "onStart"]),
+    // `onSourceAfterFaint` in `abilities::after_faint` (from `Battle::faint_messages`);
+    // Eelevate's grounding in `Battle::is_grounded`. As One: Unnerve's `onStart` / `onEnd` /
+    // `onFoeTryEatItem` too (`abilities::try_eat_item`, `switching`).
+    (abilities::MOXIE, &["onSourceAfterFaint"]),
+    (abilities::CHILLING_NEIGH, &["onSourceAfterFaint"]),
+    (abilities::GRIM_NEIGH, &["onSourceAfterFaint"]),
+    (abilities::BEAST_BOOST, &["onSourceAfterFaint"]),
+    (abilities::EELEVATE, &["onSourceAfterFaint"]),
+    (
+        abilities::AS_ONE_GLASTRIER,
+        &["onEnd", "onFoeTryEatItem", "onSourceAfterFaint", "onStart"],
+    ),
+    (
+        abilities::AS_ONE_SPECTRIER,
+        &["onEnd", "onFoeTryEatItem", "onSourceAfterFaint", "onStart"],
+    ),
     (
         abilities::THICK_FAT,
         &["onSourceModifyAtk", "onSourceModifySpA"],

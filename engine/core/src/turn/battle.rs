@@ -294,8 +294,9 @@ impl<'a, const N: usize> Battle<'a, N> {
         if self.has_type(slot, Type::Flying) {
             return false;
         }
-        // `hasAbility('levitate') && !suppressingAbility(this)`.
-        if self.ability(slot) == abilities::LEVITATE && !self.suppressing_ability(slot) {
+        // `hasAbility(['levitate', 'eelevate']) && !suppressingAbility(this)`.
+        let floats = [abilities::LEVITATE, abilities::EELEVATE].contains(&self.ability(slot));
+        if floats && !self.suppressing_ability(slot) {
             return false;
         }
         !super::items::lifts(item)
@@ -490,9 +491,14 @@ impl<'a, const N: usize> Battle<'a, N> {
         }
         let mut last = None;
         let mut check_win = check_win;
+        // `const length = this.faintQueue.length`, and `faintData`: the last entry taken from
+        // the queue, processed or not (for AfterFaint).
+        let length = self.faint_queue.len();
+        let mut last_source = None;
         while !self.faint_queue.is_empty() {
             let queue_left = self.faint_queue.len();
             let (pokemon, slot, attacker) = self.faint_queue.remove(0);
+            last_source = attacker;
             if self.occupant(slot) != Some(pokemon) {
                 continue;
             }
@@ -518,7 +524,16 @@ impl<'a, const N: usize> Battle<'a, N> {
             self.record_faint(pokemon.side);
             last = Some(pokemon.side);
         }
-        check_win && self.check_win(last)
+        if check_win && self.check_win(last) {
+            return true;
+        }
+        // `runEvent('AfterFaint', faintData.target, faintData.source, faintData.effect,
+        // length)`: only the source's `onSourceAfterFaint` handlers exist, and they need a move's
+        // damage (`effect.effectType === 'Move'`), which is when the queue records a source.
+        if let Some(source) = last_source {
+            super::abilities::after_faint(self, source, length);
+        }
+        false
     }
 
     /// The party-side part of Showdown `clearVolatile` when a Pokémon leaves the field: the
@@ -1044,6 +1059,14 @@ impl<'a, const N: usize> Battle<'a, N> {
 
     // ---- boosts ----------------------------------------------------------------------------
 
+    /// Showdown `side.pokemonLeft > 0`: `pokemonLeft` only drops when `faintMessages` processes
+    /// a faint, so a Pokémon at 0 HP still in its slot (its faint is queued) counts, and a
+    /// processed one has left its slot.
+    pub fn has_pokemon_left(&self, side: SideId) -> bool {
+        let s = self.state.side(side);
+        s.party.iter().any(|m| m.hp > 0) || s.slots.iter().any(|slot| slot.party_index.is_some())
+    }
+
     /// Showdown `battle.boost(boost, target, source, effect)` with its events (WORKPLAN F16):
     /// `ChangeBoost` (Contrary, Simple), the ±6 cap, `TryBoost` (Clear Body family, Hyper
     /// Cutter, Big Pecks, Mirror Armor, Guard Dog), each stage change with `AfterEachBoost`
@@ -1060,6 +1083,10 @@ impl<'a, const N: usize> Battle<'a, N> {
         effect: BoostEffect,
     ) -> bool {
         if self.alive(target).is_none() {
+            return false;
+        }
+        // `if (this.gen > 5 && !target.side.foePokemonLeft()) return false;`
+        if !self.has_pokemon_left(target.side.other()) {
             return false;
         }
         let from_other = source.is_some_and(|s| s != target);

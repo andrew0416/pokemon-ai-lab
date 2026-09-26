@@ -1,0 +1,26 @@
+{
+ "description": "Opus Q unit 4: Salamence's Glacial Lance knocks out p2's last two Pokémon (at 1 HP). faintMessages runs AfterFaint (the hit loop does not check the win while the user stands), but Moxie's boost fails: the foe side has no Pokémon left (boost: !target.side.foePokemonLeft()). The battle ends.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Salamence", "item": "", "ability": "Moxie", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Glacial Lance", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {"Snorlax": {"hp": 1}, "Chansey": {"hp": 1}}
+ },
+ "turn": {"p1": "move glaciallance, move harden", "p2": "move harden, move harden"}
+}

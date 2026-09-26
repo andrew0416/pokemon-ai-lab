@@ -20,7 +20,7 @@ use crate::dex::{
     MoveId, Stat, Type, NO_BOOSTS,
 };
 use crate::field::{SideEffect, Weather};
-use crate::state::{Pokemon, SideId, SlotRef, State, Status};
+use crate::state::{Pokemon, PokemonRef, SideId, SlotRef, State, Status};
 use crate::volatile::{Volatile, VolatileState};
 
 use super::battle::{cured_on_update, Battle, BoostEffect};
@@ -300,6 +300,50 @@ pub(crate) fn wind_rider_boost<const N: usize>(b: &mut Battle<'_, N>, holder: Sl
     )
 }
 
+/// `runEvent('AfterFaint', target, source, effect, length)` at the end of `faintMessages`
+/// (unless the battle ended there), for the source of the last faint taken from the queue when
+/// a move's damage caused it; `length` is how many faints were queued when the call began (a
+/// spread move that knocks out both foes gives 2). The source's `onSourceAfterFaint`
+/// (`effect.effectType === 'Move'`) runs only while it is active (an inactive holder ignores
+/// its ability: fainted in the same batch, or switched out). Each boosts its holder by
+/// `length` (`this.boost(..., source)`: the holder is its own source):
+/// - Moxie, Chilling Neigh, As One (Glastrier; the boost's effect is Chilling Neigh): Attack;
+/// - Grim Neigh, As One (Spectrier; Grim Neigh): Special Attack;
+/// - Beast Boost, Eelevate: the stat of `getBestStat(true, true)`, the first of Atk, Def, SpA,
+///   SpD, Spe with the highest stored stat (no stages, no modifiers, and Wonder Room only swaps
+///   the stages it ignores). Eelevate is breakable, but the move whose damage caused the faint
+///   is the holder's own, whose Mold Breaker does not suppress the holder's ability.
+pub(crate) fn after_faint<const N: usize>(
+    b: &mut Battle<'_, N>,
+    source: PokemonRef,
+    length: usize,
+) {
+    let Some(slot) = State::<N>::slot_refs().find(|&s| b.alive(s) == Some(source)) else {
+        return;
+    };
+    let ability = b.ability(slot);
+    let (stat, effect) = match ability {
+        a if a == abilities::MOXIE || a == abilities::CHILLING_NEIGH => (0, a),
+        a if a == abilities::AS_ONE_GLASTRIER => (0, abilities::CHILLING_NEIGH),
+        a if a == abilities::GRIM_NEIGH => (2, a),
+        a if a == abilities::AS_ONE_SPECTRIER => (2, abilities::GRIM_NEIGH),
+        a if a == abilities::BEAST_BOOST || a == abilities::EELEVATE => {
+            let stats = b.mon(source).stats;
+            let mut best = 0;
+            for stat in 1..stats.len() {
+                if stats[stat] > stats[best] {
+                    best = stat;
+                }
+            }
+            (best, a)
+        }
+        _ => return,
+    };
+    let mut boosts = NO_BOOSTS;
+    boosts[stat] = i8::try_from(length).unwrap_or(i8::MAX);
+    b.boost_by(slot, &boosts, Some(slot), BoostEffect::Ability(effect));
+}
+
 /// Anger Shell and Berserk (Champions): `onDamage` sets `abilityState.checked*` to
 /// `!(effect.effectType === 'Move' && !effect.multihit)` — a single-hit move's damage (or a
 /// confusion self-hit) leaves the half-HP check pending until `AfterMoveSecondary`, and the
@@ -449,10 +493,14 @@ pub(crate) fn try_eat_item<const N: usize>(b: &Battle<'_, N>, eater: SlotRef) ->
     let pending = has_berserk_check(mon.ability)
         && b.volatile(eater, Volatile::AngerShellUnchecked).active
         && HEALING_BERRIES.contains(&item);
-    let unnerved = b
-        .alive_slots(eater.side.other())
-        .into_iter()
-        .any(|foe| b.ability(foe) == abilities::UNNERVE);
+    let unnerved = b.alive_slots(eater.side.other()).into_iter().any(|foe| {
+        [
+            abilities::UNNERVE,
+            abilities::AS_ONE_GLASTRIER,
+            abilities::AS_ONE_SPECTRIER,
+        ]
+        .contains(&b.ability(foe))
+    });
     !pending && !unnerved
 }
 

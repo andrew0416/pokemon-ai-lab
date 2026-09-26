@@ -345,6 +345,18 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onEnd", "onFoeTryEatItem", "onStart"],
         StartEffect::None,
     ),
+    // As One (`onSwitchInPriority: 1`): Unnerve's start, flag and berry block; its
+    // `onSourceAfterFaint` is `abilities::after_faint`.
+    (
+        abilities::AS_ONE_GLASTRIER,
+        &["onEnd", "onFoeTryEatItem", "onSourceAfterFaint", "onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::AS_ONE_SPECTRIER,
+        &["onEnd", "onFoeTryEatItem", "onSourceAfterFaint", "onStart"],
+        StartEffect::None,
+    ),
     // Klutz (`onSwitchInPriority: 1`): `onStart` runs the item's End, which only logs; the
     // suppression is `items::ignoring_item` (F17).
     (abilities::KLUTZ, &["onStart"], StartEffect::None),
@@ -989,8 +1001,15 @@ pub(crate) fn end_ability<const N: usize>(
     // `setAbility` then starts the new ability with a fresh `abilityState` (Anger Shell's and
     // Berserk's pending check is dropped).
     b.delete_volatile(slot, Volatile::AngerShellUnchecked);
-    // Unnerve's `onEnd` clears `effectState.unnerved`, which only exists while it is active.
-    if ability == abilities::UNNERVE {
+    // Unnerve's and As One's `onEnd` clears `effectState.unnerved`, which only exists while it
+    // is active.
+    if [
+        abilities::UNNERVE,
+        abilities::AS_ONE_GLASTRIER,
+        abilities::AS_ONE_SPECTRIER,
+    ]
+    .contains(&ability)
+    {
         return Ok(());
     }
     // Unburden: `pokemon.removeVolatile('unburden')`.

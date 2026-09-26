@@ -1,0 +1,30 @@
+{
+ "description": "Opus Q unit 4: Spectrier's Shock Wave knocks out Blissey (1 HP): Grim Neigh raises SpA by 1. Snorlax (Beast Boost; stored Atk and SpD are both 130) knocks out Chansey (1 HP) with Strength: getBestStat(true, true) keeps the first of equal stats, Attack +1. p2 keeps two Pokémon on the bench.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Spectrier", "item": "", "ability": "Grim Neigh", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Shock Wave", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Beast Boost", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Strength", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Furfrou", "item": "", "ability": "Ball Fetch", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Gogoat", "item": "", "ability": "Sap Sipper", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "1234"
+ },
+ "patch": {
+  "p2": {"Blissey": {"hp": 1}, "Chansey": {"hp": 1}}
+ },
+ "turn": {"p1": "move shockwave 1, move strength 2", "p2": "move harden, move harden"}
+}
