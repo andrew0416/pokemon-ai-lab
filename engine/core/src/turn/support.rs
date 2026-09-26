@@ -1188,6 +1188,9 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "condition.onStart",
         ],
     ),
+    // Opus Y unit 6: Round (`onTry`: `Battle::prioritize_round`, the moved action's
+    // `round_source`; `basePowerCallback` doubles it).
+    (moves::ROUND, &["basePowerCallback", "onTry"]),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do

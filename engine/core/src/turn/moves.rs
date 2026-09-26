@@ -300,13 +300,15 @@ enum LastHit {
 
 /// Showdown `runMove` for the move in `move_index`. `will_act` is `queue.willAct()`. A
 /// multi-hit move returns `MoveStep::Suspended` after its first hit; the turn engine resumes
-/// it with [`resume_move`] as its own stage.
+/// it with [`resume_move`] as its own stage. `round_source`: the action's source effect is a
+/// Round that moved it up (`queue::ActionKind::Move::round_source`).
 pub(crate) fn run_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     move_index: u8,
     target_loc: i8,
     will_act: bool,
+    round_source: Option<bool>,
 ) -> Result<MoveStep, TurnError> {
     let pokemon = b.occupant(user).expect("the caller checked the user");
     b.increment_move_actions(user);
@@ -345,16 +347,18 @@ pub(crate) fn run_move<const N: usize>(
         return Ok(MoveStep::Done);
     }
     let id = super::lock::action_move_id(b.mon(pokemon), move_index);
-    // `setActiveMove`: set for the whole move, cleared when it ends.
+    // `setActiveMove`: set for the whole move, cleared when it ends. A Round's source effect
+    // gives the move that Round's `ignoreAbility` (`useMoveInner`: `move.ignoreAbility =
+    // sourceEffect.ignoreAbility`; the user's own Mold Breaker can still set it in ModifyMove).
     b.active_move = Some(ActiveMoveRef {
         user,
         pokemon,
         id,
-        ignore_ability: id.data().ignore_ability,
+        ignore_ability: round_source.unwrap_or(id.data().ignore_ability),
         category: id.data().category,
         infiltrates: false,
     });
-    let result = run_move_inner(b, user, move_index, target_loc, will_act);
+    let result = run_move_inner(b, user, move_index, target_loc, will_act, round_source);
     if !matches!(result, Ok(MoveStep::Suspended(_))) {
         b.active_move = None;
     }
@@ -709,6 +713,7 @@ fn run_move_inner<const N: usize>(
     move_index: u8,
     target_loc: i8,
     will_act: bool,
+    round_source: Option<bool>,
 ) -> Result<MoveStep, TurnError> {
     let pokemon = b.occupant(user).expect("the caller checked the user");
     let chosen = super::lock::action_move_id(b.mon(pokemon), move_index);
@@ -746,7 +751,13 @@ fn run_move_inner<const N: usize>(
         ignore_evasion: id.data().ignore_evasion,
         scrappy: false,
         hit_targets: 0,
-        source_effect: MoveId::NONE,
+        // `move.sourceEffect = sourceEffect.id` (Round), which Pressure's extra PP charges to
+        // the same Round slot.
+        source_effect: if round_source.is_some() {
+            moves::ROUND
+        } else {
+            MoveId::NONE
+        },
         self_switch: id.data().self_switch != SelfSwitch::No,
         type_changer: AbilityId::NONE,
         has_bounced: false,
@@ -1780,6 +1791,11 @@ fn try_spread_move_hit<const N: usize>(
                 total_damage: 0,
             });
         }
+    }
+    // Round's `onTry`: the first queued Round moves up with this one as its source effect.
+    if mv.id == moves::ROUND {
+        let ignore_ability = b.active_move.is_some_and(|m| m.ignore_ability);
+        b.prioritize_round(ignore_ability);
     }
     if !handlers::on_try(b, user, mv, targets[0]) {
         return Ok(HitOutcome::Finished {

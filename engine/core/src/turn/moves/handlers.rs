@@ -1554,6 +1554,9 @@ pub(super) fn base_power_callback<const N: usize>(
                 _ => 40,
             }
         }
+        // Round: `if (move.sourceEffect === 'round') return move.basePower * 2;` (moved up by an
+        // earlier Round's `onTry`).
+        moves::ROUND if mv.source_effect == moves::ROUND => base_power * 2,
         // Beat Up: `5 + Math.floor(setSpecies.baseStats.atk / 10)` of the next of `move.allies`
         // (one per hit).
         moves::BEAT_UP => i32::from(mv.beat_up[usize::from(hit.max(1) - 1).min(5)]),
@@ -3103,6 +3106,7 @@ fn instruct<const N: usize>(
             index: index as u8,
             target: 0,
             fractional_tenths,
+            round_source: None,
         },
         order: Some(3),
     });

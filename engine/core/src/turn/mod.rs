@@ -1135,7 +1135,7 @@ pub struct Suspension(Pending);
 impl<const N: usize> Battle<'_, N> {
     /// Showdown's sort key of a queued action: (order, priority in tenths including the
     /// fractional priority, speed).
-    fn action_key(&self, action: &Action) -> (u32, i32, i32) {
+    pub(crate) fn action_key(&self, action: &Action) -> (u32, i32, i32) {
         let in_slot = self.alive(action.slot) == Some(action.pokemon);
         let (order, priority) = match action.kind {
             ActionKind::Switch { .. } => (ORDER_SWITCH, 0),
@@ -1241,6 +1241,7 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
                         index,
                         target,
                         fractional_tenths: items::fractional_priority_tenths(state, slot),
+                        round_source: None,
                     }
                 }
                 SlotAction::Switch { party_index } => ActionKind::Switch { party_index },
@@ -1334,10 +1335,15 @@ fn run_stage_inner<const N: usize>(
         if b.alive(action.slot) == Some(action.pokemon) {
             let mut newcomers = Vec::new();
             match action.kind {
-                ActionKind::Move { index, target, .. } => {
+                ActionKind::Move {
+                    index,
+                    target,
+                    round_source,
+                    ..
+                } => {
                     let will_act = b.will_act();
                     if let moves::MoveStep::Suspended(progress) =
-                        moves::run_move(b, action.slot, index, target, will_act)?
+                        moves::run_move(b, action.slot, index, target, will_act, round_source)?
                     {
                         pending.in_progress = Some(progress);
                         return Ok(StageEnd::Continue);
