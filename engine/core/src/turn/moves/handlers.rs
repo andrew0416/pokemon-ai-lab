@@ -719,9 +719,28 @@ pub(super) fn modify_target<const N: usize>(
 pub(super) fn on_base_power<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
+    target: SlotRef,
     mv: &ActiveMove,
 ) -> Option<u32> {
+    let target_mon = b.slot_mon(target);
     match mv.id {
+        // Facade: `if (pokemon.status && pokemon.status !== 'slp') return this.chainModify(2);`
+        moves::FACADE
+            if b.slot_mon(user)
+                .is_some_and(|m| !matches!(m.status, Status::None | Status::Sleep)) =>
+        {
+            Some(2 * 4096)
+        }
+        // Brine: `if (target.hp * 2 <= target.maxhp) return this.chainModify(2);`
+        moves::BRINE if target_mon.is_some_and(|m| 2 * i32::from(m.hp) <= i32::from(m.max_hp)) => {
+            Some(2 * 4096)
+        }
+        // Venoshock: `if (target.status === 'psn' || target.status === 'tox')` double.
+        moves::VENOSHOCK
+            if target_mon.is_some_and(|m| matches!(m.status, Status::Poison | Status::Toxic)) =>
+        {
+            Some(2 * 4096)
+        }
         // Solar Beam, Solar Blade: half power in rain, sand and snow (`pokemon.effectiveWeather()`,
         // which Utility Umbrella changes).
         moves::SOLAR_BEAM | moves::SOLAR_BLADE

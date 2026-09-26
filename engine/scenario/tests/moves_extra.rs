@@ -211,6 +211,24 @@ fn ingrain_grounds_and_blocks_magnet_rise() {
     assert_exact_parity("ingrain-magnet-rise");
 }
 
+/// Facade from a burned user: double power, no burn halving.
+#[test]
+fn facade_doubles_and_ignores_the_burn() {
+    assert_exact_parity("facade");
+}
+
+/// Brine doubles at half HP or less (107 of 215), not above (108).
+#[test]
+fn brine_doubles_at_half_hp() {
+    assert_exact_parity("brine");
+    assert_exact_parity("brine-above-half");
+}
+
+#[test]
+fn venoshock_doubles_against_poison() {
+    assert_exact_parity("venoshock");
+}
+
 /// Ingrain stops Roar (no drag, no failure) and the holder's own switch.
 #[test]
 fn ingrain_stops_roar_and_switching() {

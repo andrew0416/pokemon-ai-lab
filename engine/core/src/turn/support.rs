@@ -277,6 +277,11 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::FAKE_OUT, &["onDisableMove", "onTry"]),
     (moves::KNOCK_OFF, &["onAfterHit", "onBasePower"]),
     (moves::GRAV_APPLE, &["onBasePower"]),
+    // `handlers::on_base_power` (the user's status, the target's HP or poison); Facade also
+    // skips the burn halving (`moves::get_damage`).
+    (moves::FACADE, &["onBasePower"]),
+    (moves::BRINE, &["onBasePower"]),
+    (moves::VENOSHOCK, &["onBasePower"]),
     (moves::EXPANDING_FORCE, &["onBasePower", "onModifyMove"]),
     (moves::WEATHER_BALL, &["onModifyMove", "onModifyType"]),
     (moves::TERRAIN_PULSE, &["onModifyMove", "onModifyType"]),

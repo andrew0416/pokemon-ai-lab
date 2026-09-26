@@ -2537,7 +2537,7 @@ fn get_damage<const N: usize>(
     if mv.id == moves::KNOCK_OFF && b.item_can_be_taken(target) {
         power_mods.push(Handler::of(b, user, 0, SUB_MOVE, MOD_ONE_POINT_FIVE));
     }
-    if let Some(modifier) = handlers::on_base_power(b, user, mv) {
+    if let Some(modifier) = handlers::on_base_power(b, user, target, mv) {
         power_mods.push(Handler::of(b, user, 0, SUB_MOVE, modifier));
     }
     // The user's volatiles (Helping Hand, priority 10) and the target's (Bounce).
@@ -2673,7 +2673,8 @@ fn get_damage<const N: usize>(
         critical,
         stab_modifier,
         type_effectiveness,
-        burned: ability_events::burn_halves(&attacker, data),
+        // `if (this.battle.gen < 6 || move.id !== 'facade')`: Facade keeps its power burned.
+        burned: ability_events::burn_halves(&attacker, data) && mv.id != moves::FACADE,
         protected: false,
         final_modifier,
     };
