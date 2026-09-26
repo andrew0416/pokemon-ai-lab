@@ -1381,9 +1381,20 @@ fn use_move<const N: usize>(
         item_events::on_modify_move(b, user, mv.id);
     }
     // Stench (the user's ability, ModifyMove priority -1, sub-order 7) and King's Rock / Razor
-    // Fang (the item, -1, 8) append the same flinch: whichever comes second finds it there.
-    mv.added_secondary =
-        item_events::added_secondary(b.item(user), b.ability(user) == abilities::STENCH, mv.data);
+    // Fang (the item, -1, 8) append the same flinch: whichever comes second finds it there. They
+    // run after Sheer Force (priority 0), which deleted the move's secondaries (a move that had
+    // its own flinch gets the added one), and before Serene Grace (-2), which doubles it.
+    let own: &[Secondary] = if mv.has_sheer_force {
+        &[]
+    } else {
+        handlers::move_secondaries(b, mv)
+    };
+    mv.added_secondary = item_events::added_secondary(
+        b.item(user),
+        b.ability(user) == abilities::STENCH,
+        mv.data,
+        own,
+    );
     // ModifyTarget (`useMoveInner`, before a random target would be drawn): Metal Burst and
     // Comeuppance aim at the slot of the foe that last damaged the user this turn.
     if let Some(scripted) = handlers::modify_target(b, user, mv) {
@@ -3039,9 +3050,10 @@ fn spread_move_hit<const N: usize>(
             Hit::Done | Hit::Damage(_) => {}
         }
         // Secondaries: Sheer Force / Shield Dust (`ability_hooks::secondaries`) decide the
-        // move's own, Serene Grace doubles their chance, Covert Cloak (`ModifySecondaries`)
-        // drops some, and King's Rock's added flinch comes last (ModifyMove priority -1: after
-        // Serene Grace, and even through Sheer Force).
+        // move's own, Covert Cloak (`ModifySecondaries`) drops some, and King's Rock's added
+        // flinch comes after the move's own (ModifyMove priority -1: after Sheer Force, so even
+        // through it). Serene Grace (-2) doubled every chance ModifyMove left, the added flinch's
+        // too.
         // Parental Bond's `onSourceModifySecondaries`: on Secret Power's first hit only flinch
         // secondaries stay (`move.id === 'secretpower' && move.hit < 2`).
         let first_bond_hit = mv.parental_bond && mv.id == moves::SECRET_POWER && hit < 2;
@@ -3055,8 +3067,8 @@ fn spread_move_hit<const N: usize>(
         let added: Vec<(&Secondary, u32)> = mv
             .added_secondary
             .iter()
-            .chain(flung.iter())
-            .map(|s| (s, u32::from(s.chance)))
+            .map(|s| (s, u32::from(s.chance) * mv.secondary_chance_factor))
+            .chain(flung.iter().map(|s| (s, u32::from(s.chance))))
             .collect();
         for (secondary, chance) in own.into_iter().chain(added) {
             if !item_events::keeps_secondary(b, t, secondary) {

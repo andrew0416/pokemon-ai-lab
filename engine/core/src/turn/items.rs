@@ -1063,12 +1063,18 @@ pub(crate) fn gem_try_primary_hit<const N: usize>(
 
 /// King's Rock / Razor Fang `onModifyMove` (priority -1), and the user's Stench (`stench`; the
 /// ability's `onModifyMove`, also priority -1, is the same code): a non-status move without a
-/// flinch secondary gets `{chance: 10, volatileStatus: 'flinch'}` appended to its secondaries.
-/// Both at once append one: the second finds the first's flinch.
-pub(crate) fn added_secondary(item: ItemId, stench: bool, data: &MoveData) -> Option<Secondary> {
+/// flinch among `secondaries` (the move's secondaries at that point of ModifyMove: none once
+/// Sheer Force, priority 0, deleted them) gets `{chance: 10, volatileStatus: 'flinch'}`
+/// appended. Both at once append one: the second finds the first's flinch. Serene Grace
+/// (priority -2) doubles its chance afterwards like the move's own.
+pub(crate) fn added_secondary(
+    item: ItemId,
+    stench: bool,
+    data: &MoveData,
+    secondaries: &[Secondary],
+) -> Option<Secondary> {
     let flinch_item = stench || item == items::KINGS_ROCK || item == items::RAZOR_FANG;
-    let has_flinch = data
-        .secondaries
+    let has_flinch = secondaries
         .iter()
         .any(|s| s.volatile_status == conditions::FLINCH);
     (flinch_item && data.category != MoveCategory::Status && !has_flinch).then_some(Secondary {
