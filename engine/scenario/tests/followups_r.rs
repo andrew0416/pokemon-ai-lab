@@ -78,6 +78,13 @@ fn spread_eject_buttons_act_in_speed_order() {
     assert_exact_parity("r-spread-eject-buttons");
 }
 
+/// Two Eject Buttons at the same Speed: the tied handlers are shuffled, each holder switches out
+/// half of the time (Monte Carlo fixture: the tie also shuffles every Update).
+#[test]
+fn tied_spread_eject_buttons_act_in_random_order() {
+    common::assert_mc_parity("r-spread-eject-buttons-tie");
+}
+
 /// One spread move, two Red Cards: the faster holder's card drags the attacker; the slower
 /// one's card sees the attacker's `forceSwitchFlag` and stays held.
 #[test]
