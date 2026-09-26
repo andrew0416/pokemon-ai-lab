@@ -563,6 +563,22 @@ pub(crate) fn switch_in<const N: usize>(
     party_index: u8,
     on_field: bool,
 ) -> Result<(), TurnError> {
+    switch_in_as(b, slot, party_index, on_field, false)
+}
+
+/// [`switch_in`], or with `is_drag` the switch of `dragIn` (Roar, Dragon Tail, Red Card):
+/// `if (!oldActive.skipBeforeSwitchOutEventFlag && !isDrag) { runEvent('BeforeSwitchOut');
+/// eachEvent('Update'); }`, so a dragged-out Pokémon leaves without that Update (an Update
+/// condition that arose after the move's last Update, such as Outrage's fatigue confusion next
+/// to a Persim Berry, waits for the Update after the newcomer's `runSwitch`, when the dragged
+/// Pokémon is gone). `SwitchOut` still runs.
+fn switch_in_as<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    party_index: u8,
+    on_field: bool,
+    is_drag: bool,
+) -> Result<(), TurnError> {
     let incoming = PokemonRef {
         side: slot.side,
         party: party_index,
@@ -572,7 +588,9 @@ pub(crate) fn switch_in<const N: usize>(
     }
     if let Some(outgoing) = b.occupant(slot) {
         if b.mon(outgoing).hp > 0 {
-            super::update::update_event(b)?;
+            if !is_drag {
+                super::update::update_event(b)?;
+            }
             super::abilities::on_switch_out(b, slot);
             super::forme::on_switch_out(b, slot);
         }
@@ -1079,7 +1097,7 @@ pub(crate) fn drag_in<const N: usize>(
     if b.ability_unless_broken(slot) == abilities::SUCTION_CUPS {
         return Ok(false);
     }
-    switch_in(b, slot, bench[pick], true)?;
+    switch_in_as(b, slot, bench[pick], true, true)?;
     run_switch_in(b, &[slot])?;
     Ok(true)
 }
@@ -1088,22 +1106,25 @@ pub(crate) fn drag_in<const N: usize>(
 /// side has no bench, the holder is being dragged out or already flagged; every other active
 /// Pokémon's `switchFlag` is cleared first (even Eject Button's).
 pub(crate) fn emergency_exit<const N: usize>(b: &mut Battle<'_, N>, target: SlotRef) {
-    if !matches!(
-        b.ability(target),
-        a if a == abilities::EMERGENCY_EXIT || a == abilities::WIMP_OUT
-    ) {
-        return;
-    }
-    if super::residual::bench(b, target.side).next().is_none()
-        || b.force_switch.contains(&target)
-        || b.state.slot(target).switch_flag != SwitchFlag::None
-    {
+    if !emergency_exit_acts(b, target) {
         return;
     }
     for slot in b.all_alive() {
         b.clear_switch_flag(slot);
     }
     b.set_switch_flag(target, SwitchFlag::Effect);
+}
+
+/// Whether `runEvent('EmergencyExit', target)` would flag the Pokémon in `target`: it has
+/// Emergency Exit or Wimp Out, its side has a bench (`canSwitch`), and it is neither being
+/// dragged out nor already flagged. Its HP is not checked (the handler does not).
+pub(crate) fn emergency_exit_acts<const N: usize>(b: &Battle<'_, N>, target: SlotRef) -> bool {
+    matches!(
+        b.ability(target),
+        a if a == abilities::EMERGENCY_EXIT || a == abilities::WIMP_OUT
+    ) && super::residual::bench(b, target.side).next().is_some()
+        && !b.force_switch.contains(&target)
+        && b.state.slot(target).switch_flag == SwitchFlag::None
 }
 
 /// Whether `hp_before` → the current HP crossed half (`hp <= maxhp / 2 && before > maxhp /
@@ -1143,9 +1164,5 @@ pub(crate) fn emergency_exit_would_trigger<const N: usize>(
     slot: SlotRef,
     hp_before: i16,
 ) -> bool {
-    let ability = b.ability(slot);
-    (ability == abilities::EMERGENCY_EXIT || ability == abilities::WIMP_OUT)
-        && crossed_half(b, slot, hp_before)
-        && super::residual::bench(b, slot.side).next().is_some()
-        && b.state.slot(slot).switch_flag == SwitchFlag::None
+    crossed_half(b, slot, hp_before) && emergency_exit_acts(b, slot)
 }

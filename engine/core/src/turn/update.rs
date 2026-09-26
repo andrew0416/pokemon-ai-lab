@@ -79,7 +79,7 @@ pub(crate) fn update_event<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), 
     let mut actives: Vec<(SlotRef, i32)> = b
         .all_alive()
         .into_iter()
-        .map(|s| (s, b.action_speed(s)))
+        .map(|s| (s, b.event_speed(s)))
         .collect();
     actives.sort_by_key(|&(_, speed)| std::cmp::Reverse(speed));
     for (slot, _) in actives {

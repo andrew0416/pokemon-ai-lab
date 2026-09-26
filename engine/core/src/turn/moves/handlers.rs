@@ -932,38 +932,53 @@ pub(super) fn charge_try_move<const N: usize>(
     false
 }
 
+/// The type Double Shock and Burn Up need and spend (`None` for any other move).
+fn spent_type(id: MoveId) -> Option<Type> {
+    if id == moves::DOUBLE_SHOCK {
+        Some(Type::Electric)
+    } else if id == moves::BURN_UP {
+        Some(Type::Fire)
+    } else {
+        None
+    }
+}
+
 /// The move's own `onTryMove` of moves that stop with `null` (not a failure: `useMove` leaves
-/// `moveThisTurnResult` `null`). Double Shock: `if (pokemon.hasType('Electric')) return;`,
-/// otherwise `-fail` and `return null`. `false` = the move stops here.
+/// `moveThisTurnResult` `null`). Double Shock and Burn Up: `if (pokemon.hasType('Electric' /
+/// 'Fire')) return;`, otherwise `-fail` and `return null`. `false` = the move stops here.
 pub(super) fn null_try_move<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
 ) -> bool {
-    mv.id != moves::DOUBLE_SHOCK || b.has_type(user, Type::Electric)
+    spent_type(mv.id).is_none_or(|t| b.has_type(user, t))
+}
+
+/// Burn Up used by a Pokémon without the Fire type does not thaw it: the `frz` status's
+/// `onBeforeMove` skips a `defrost` move only `if (move.flags['defrost'] && !(move.id ===
+/// 'burnup' && !pokemon.hasType('Fire')))` (Champions keeps the exception).
+pub(super) fn thaws_user<const N: usize>(b: &Battle<'_, N>, user: SlotRef, id: MoveId) -> bool {
+    id.data().flags.contains(MoveFlags::DEFROST)
+        && !(id == moves::BURN_UP && !b.has_type(user, Type::Fire))
 }
 
 /// The move's `self.onHit` (`selfDrops` → `moveHit(source, source, move, move.self)`, once per
-/// target the move did not fail on). Double Shock: `pokemon.setType(pokemon.getTypes(true).map(
-/// type => type === "Electric" ? "???" : type))` (Arceus and Silvally keep their types:
-/// `setType` refuses).
+/// target the move did not fail on). Double Shock and Burn Up:
+/// `pokemon.setType(pokemon.getTypes(true).map(type => type === "Electric" / "Fire" ? "???" :
+/// type))` (Arceus and Silvally keep their types: `setType` refuses).
 pub(super) fn self_on_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
-    if mv.id != moves::DOUBLE_SHOCK {
+    let Some(spent) = spent_type(mv.id) else {
         return;
-    }
+    };
     let Some(mon) = b.slot_mon(user) else {
         return;
     };
     if [493, 773].contains(&mon.species.data().num) {
         return;
     }
-    let types = mon.types.map(|t| {
-        if t == Type::Electric {
-            Type::Unknown
-        } else {
-            t
-        }
-    });
+    let types = mon
+        .types
+        .map(|t| if t == spent { Type::Unknown } else { t });
     set_types(b, user, types);
 }
 

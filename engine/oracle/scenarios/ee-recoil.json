@@ -1,0 +1,27 @@
+{
+ "description": "Emergency Exit after recoil: Golisopod (patched to 95 of 182 HP) knocks out Snorlax (patched to 30 HP) with Double-Edge; the recoil is round(30 / 3) = 10 (85, at or below half) and `applyRecoilDamage` flags it. Excadrill comes in and takes Shuckle's Seismic Toss. Snorlax has no replacement. Deterministic (every roll knocks out).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Shuckle", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Golisopod", "item": "", "ability": "Emergency Exit", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Double-Edge", "Harden"], "level": 50},
+   {"species": "Metagross", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Excadrill", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {"p1": {"Snorlax": {"hp": 30}}, "p2": {"Golisopod": {"hp": 95}}},
+ "turn": {"p1": "move harden, move seismictoss 1", "p2": "move doubleedge 1, move harden"},
+ "midTurn": {"p2": ["switch 3"]}
+}

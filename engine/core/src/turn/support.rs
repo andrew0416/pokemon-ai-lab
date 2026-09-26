@@ -419,6 +419,10 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // Double Shock: `onTryMove` (`handlers::null_try_move`: no Electric type, `null`) and
     // `self.onHit` (`handlers::self_on_hit`: Electric becomes `???`, `Type::Unknown`).
     (moves::DOUBLE_SHOCK, &["onTryMove", "self.onHit"]),
+    // Burn Up: the same with Fire (`handlers::null_try_move`, `handlers::self_on_hit`); its
+    // `defrost` flag does not thaw a frozen user without the Fire type (`handlers::thaws_user`,
+    // the `frz` status's `onBeforeMove`).
+    (moves::BURN_UP, &["onTryMove", "self.onHit"]),
     // Belly Drum `onHit`; Clangorous Soul and Fillet Away: `onTry` (HP), `onTryHit` (the boosts,
     // then deleted: `handlers::boosts_applied_in_try_hit`), `onHit` (the HP cost); No Retreat:
     // `onTry`, the volatile's `onTrapPokemon` in `conditions::trapped` (`onStart` only logs).
@@ -926,7 +930,10 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // DamagingHit (`moves::damaging_hit`, F15).
     (abilities::ROUGH_SKIN, &["onDamagingHit"]),
     // Emergency Exit / Wimp Out: `switching::emergency_exit` at the hit loop's, `runSwitch`'s
-    // and the residual phase's Update sites (F6). Suction Cups: `DragOut`.
+    // and the residual phase's Update sites (F6), and on the move's user after its recoil,
+    // after DamagingHit / AfterHit (Champions `spreadMoveHit`), after MoveFail and after
+    // AfterMoveSecondarySelf (`moves::user_emergency_exit`; a user the recoil knocked out is
+    // refused). Suction Cups: `DragOut`.
     (abilities::EMERGENCY_EXIT, &["onEmergencyExit"]),
     (abilities::WIMP_OUT, &["onEmergencyExit"]),
     (abilities::SUCTION_CUPS, &["onDragOut"]),

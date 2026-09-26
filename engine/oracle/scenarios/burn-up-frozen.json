@@ -1,0 +1,24 @@
+{
+ "description": "Burn Up does not thaw a frozen user without the Fire type: Blissey (patched frozen, 3 turns) picks Burn Up; the `frz` status's `onBeforeMove` exempts a `defrost` move except Burn Up from a non-Fire user, so the freeze runs as usual (time 3 to 2, a 1/4 thaw). Thawed, Blissey's Burn Up then fails (no Fire type, `null`); otherwise it stays frozen.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Shuckle", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Burn Up", "Harden"], "level": 50},
+   {"species": "Metagross", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Blissey": {"status": "frz", "statusTime": 3}}},
+ "turn": {"p1": "move harden, move harden", "p2": "move burnup 1, move harden"}
+}

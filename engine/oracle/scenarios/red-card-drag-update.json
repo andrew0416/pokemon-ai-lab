@@ -1,0 +1,29 @@
+{
+ "description": "A drag runs no Update before the switch (`switchIn(..., isDrag)` skips BeforeSwitchOut and `eachEvent('Update')`). Setup: Dragonite starts Outrage (2 turns in this seed); the patch gives both foes a Red Card. Now Dragonite's last Outrage hits a Red Card holder, which flags Dragonite; its AfterMove ends the lock with fatigue confusion; the drag sends Dragonite out before any Update, so its Persim Berry is not eaten (the confusion ends with the switch) and Dragonite goes to the bench still holding it. Outrage's random target and damage rolls make the outcomes.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Dragonite", "item": "Persim Berry", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Outrage", "Harden"], "level": 50},
+   {"species": "Shuckle", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Metagross", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move outrage, move harden", "move harden, move harden"]
+ ],
+ "patch": {"p2": {"Blissey": {"hp": 362, "item": "redcard"}, "Snorlax": {"hp": 267, "item": "redcard"}}},
+ "turn": {"p1": "move outrage 1, move harden", "p2": "move harden, move harden"}
+}

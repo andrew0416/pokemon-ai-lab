@@ -1,0 +1,27 @@
+{
+ "description": "Hit-loop Emergency Exit on a spread target the move failed on: as ee-spread-done, but Golisopod is at -6 Attack, so Shuckle's Growl fails on it (`damage[i] = false`, 0 in the hit loop's damage array) and lowers Metagross; the check still flags Golisopod (hurtThisTurn 100 + 0 > 91, 60 HP left) and Excadrill comes in. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss", "Harden"], "level": 50},
+   {"species": "Shuckle", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Growl", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Golisopod", "item": "", "ability": "Emergency Exit", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Pain Split", "Harden"], "level": 50},
+   {"species": "Metagross", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Excadrill", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {"p1": {"Shuckle": {"hp": 20}}, "p2": {"Golisopod": {"hp": 150, "boosts": {"atk": -6}}}},
+ "turn": {"p1": "move seismictoss 1, move growl", "p2": "move painsplit 2, move harden"},
+ "midTurn": {"p2": ["switch 3"]}
+}

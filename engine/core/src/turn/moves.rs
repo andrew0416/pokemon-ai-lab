@@ -162,6 +162,8 @@ pub(crate) struct MoveProgress {
     last_hit: Vec<(SlotRef, LastHit)>,
     /// `ActiveMoveRef::ignore_ability` of the move in flight (Mold Breaker moves).
     ignore_ability: bool,
+    /// [`Battle::raw_speed`] at the suspension: the action goes on in the next stage.
+    raw_speed: Vec<PokemonRef>,
 }
 
 /// How far a move got: finished, or suspended before its next hit.
@@ -295,6 +297,7 @@ pub(crate) fn resume_move<const N: usize>(
         id: progress.mv.id,
         ignore_ability: progress.ignore_ability,
     });
+    b.raw_speed = progress.raw_speed.clone();
     let mut mv = progress.mv.clone();
     let result = match hit_loop(b, user, &mv, Some(progress))? {
         HitOutcome::Suspended(progress) => return Ok(MoveStep::Suspended(progress)),
@@ -307,7 +310,7 @@ pub(crate) fn resume_move<const N: usize>(
         }
     };
     b.finish_move_result(user, result);
-    use_move_tail(b, user, &mv, result, main_target);
+    use_move_tail(b, user, &mv, result, main_target)?;
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
     handlers::on_after_move(b, user, pokemon, &mv);
     run_move_tail(b, user, &mv);
@@ -458,7 +461,9 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
                 return false;
             }
         }
-        Status::Freeze if !mv.data.flags.contains(MoveFlags::DEFROST) => {
+        // A `defrost` move goes on (and thaws in ModifyMove), except Burn Up from a Pokémon
+        // without the Fire type.
+        Status::Freeze if !handlers::thaws_user(b, user, mv.id) => {
             let time = b.mon(pokemon).status_turns - 1;
             b.set_status_turns(pokemon, time);
             if time <= 0 || b.rng.chance(1, 4) {
@@ -729,11 +734,11 @@ fn redirect_target<const N: usize>(
     };
     for s in Battle::<N>::slots(user.side) {
         if absorbs(b, s) {
-            handlers.push((0, b.action_speed(s), s));
+            handlers.push((0, b.event_speed(s), s));
         }
     }
     for s in b.alive_slots(user.side.other()) {
-        let speed = b.action_speed(s);
+        let speed = b.event_speed(s);
         if b.volatile(s, Volatile::FollowMe).active {
             handlers.push((1, speed, s));
         }
@@ -876,14 +881,12 @@ fn use_move<const N: usize>(
         get_move_targets(b, user, mv, target)?
     };
     deduct_pressure_pp(b, user, mv, &targets);
-    // The move's own TryMove (`singleEvent('TryMove')`): a two-turn move's charging turn.
-    if !handlers::charge_try_move(b, user, mv) {
-        b.finish_move_result(user, false);
-        return Ok(None);
-    }
-    // Double Shock's TryMove returns `null`: the move stops, and `useMove` stores that `null`
-    // as the move's result (no failure for Stomping Tantrum).
-    if !handlers::null_try_move(b, user, mv) {
+    // The move's own TryMove (`singleEvent('TryMove')`) returns `null` for a two-turn move's
+    // charging turn (`attacker.addVolatile('twoturnmove', defender); return null;`) and for
+    // Double Shock / Burn Up without the Electric / Fire type: the move stops, and `useMove`
+    // stores that
+    // `null` as the move's result (no failure for Stomping Tantrum and Temper Flare).
+    if !handlers::charge_try_move(b, user, mv) || !handlers::null_try_move(b, user, mv) {
         if b.slot_history(user).move_this_turn_result == MoveResult::Undefined {
             b.set_move_result(user, MoveResult::Null);
         }
@@ -929,7 +932,7 @@ fn use_move<const N: usize>(
         b.set_switch_flag(user, SwitchFlag::Move);
     }
     b.finish_move_result(user, result);
-    use_move_tail(b, user, mv, result, main_target);
+    use_move_tail(b, user, mv, result, main_target)?;
     Ok(None)
 }
 
@@ -1058,15 +1061,16 @@ fn bounce_move<const N: usize>(
     Ok(())
 }
 
-/// The end of Showdown `useMoveInner` after the hits: the `self` boost, then
-/// AfterMoveSecondarySelf (Life Orb).
+/// The end of Showdown `useMoveInner` after the hits: the `self` boost, then MoveFail (a
+/// failed move) or AfterMoveSecondarySelf (Life Orb), each followed by the user's Emergency
+/// Exit check.
 fn use_move_tail<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     result: bool,
     main_target: SlotRef,
-) {
+) -> Result<(), TurnError> {
     if result && mv.data.self_boost != NO_BOOSTS {
         b.boost_by(
             user,
@@ -1075,16 +1079,27 @@ fn use_move_tail<const N: usize>(
             BoostEffect::Move(mv.id),
         );
     }
+    // `if (pokemon && pokemon !== target && move.category !== 'Status')`, then the user's
+    // Emergency Exit if the handlers took its HP (`originalHp`, taken just before them) to half.
+    let checks_user = user != main_target && mv.data.category != MoveCategory::Status;
+    let hp_before = b.slot_mon(user).map_or(0, |m| m.hp);
     if !result {
         // MoveFail: High Jump Kick's crash.
         handlers::on_move_fail(b, user, mv);
-        return;
+        if checks_user {
+            user_emergency_exit(b, user, hp_before)?;
+        }
+        return Ok(());
     }
     // AfterMoveSecondarySelf (skipped for a Sheer Force-boosted move): the user's item (Life
     // Orb, Shell Bell, Throat Spray).
     if !ability_hooks::sheer_force_skips(b, user, mv) {
         item_events::after_move_secondary_self(b, user, main_target, mv.data, mv.total_damage);
+        if checks_user {
+            user_emergency_exit(b, user, hp_before)?;
+        }
     }
+    Ok(())
 }
 
 /// The extra PP of Showdown `useMoveInner`: `runEvent('DeductPP')` for every Pok챕mon in
@@ -1387,6 +1402,7 @@ fn try_spread_move_hit<const N: usize>(
         any_ok: false,
         last_hit: Vec::new(),
         ignore_ability: b.active_move.is_some_and(|a| a.ignore_ability),
+        raw_speed: Vec::new(),
     };
     hit_loop(b, user, mv, Some(progress))
 }
@@ -1745,6 +1761,7 @@ fn hit_loop<const N: usize>(
         // single-target move; every target fainted stops any.
         if hit_ok && hit < progress.hits && !targets.is_empty() && (user_standing || !single) {
             progress.targets = targets;
+            progress.raw_speed = b.raw_speed.clone();
             return Ok(HitOutcome::Suspended(progress));
         }
     }
@@ -1752,19 +1769,11 @@ fn hit_loop<const N: usize>(
     let user_fainted = b.alive(user).is_none();
     b.faint_messages(user_fainted);
     let total = progress.total_damage;
-    if total > 0 && mv.data.struggle_recoil {
-        // Struggle: `directDamage(clampIntRange(Math.round(pokemon.baseMaxhp / 4), 1))`, which
-        // no Damage handler sees (Rock Head, Magic Guard, Endure, Sturdy).
-        let max_hp = b.slot_mon(user).map_or(0, |m| m.max_hp);
-        let amount = (f64::from(max_hp) / 4.0).round().max(1.0) as i32;
-        b.direct_damage(user, amount);
-    } else if total > 0 {
-        if let Some(recoil) = mv.data.recoil {
-            let amount = (f64::from(total) * f64::from(recoil.0) / f64::from(recoil.1))
-                .round()
-                .max(1.0);
-            b.damage(user, amount, DamageSource::Recoil);
-        }
+    // `if (move.totalDamage) this.applyRecoilDamage(move.totalDamage, move, pokemon)`: Struggle's
+    // `directDamage` (which no Damage handler sees: Rock Head, Magic Guard, Endure, Sturdy) or
+    // a `recoil` move's, then Emergency Exit on the user.
+    if total > 0 {
+        apply_recoil_damage(b, user, mv, total)?;
     }
     // `gotAttacked` and `timesAttacked` (`hit - 1` = the hits made) for the last hit's
     // targets other than the user (after a later multi-accuracy miss, the previous hit's).
@@ -1827,24 +1836,41 @@ fn hit_loop<const N: usize>(
             ability_events::after_move_secondary(b, user, t, damage, total);
             item_events::after_move_secondary(b, user, t, mv.data.category);
         }
-        // `runEvent('EmergencyExit', target, pokemon)` for each target still standing whose
-        // HP this move took to half: `(hurtThisTurn || 0) + curDamage > maxhp / 2`, with
-        // `curDamage` the move's total damage for a single target, else the last hit's
-        // damage to it (a non-numeric result is skipped; a hit its substitute took or
-        // stopped counts 0).
-        for &(t, last) in &progress.last_hit.clone() {
+        // `runEvent('EmergencyExit', target, pokemon)` for each of the hit loop's targets still
+        // standing whose HP this move took to half: `(hurtThisTurn || 0) + curDamage > maxhp /
+        // 2`, with `curDamage` the move's total damage for a single target, else the target's
+        // entry of the loop's `damage` array: the last hit's numeric damage, and 0 for every
+        // other result (a status effect, a failure on that target, a hit its substitute took or
+        // stopped: `md === true || !md ? 0 : md`). A target the move did no damage to can still
+        // qualify when its HP dropped this turn without a Damage event (Pain Split, Substitute,
+        // Belly Drum) after it was last hurt above half. After a later hit's miss the array
+        // still holds the previous hit's values.
+        let damages: Vec<(SlotRef, i32)> = if ended_by_miss {
+            progress
+                .targets
+                .iter()
+                .map(|&t| {
+                    let last = progress.last_hit.iter().find(|&&(s, _)| s == t);
+                    let damage = match last {
+                        Some(&(_, LastHit::Damage(d))) => d,
+                        _ => 0,
+                    };
+                    (t, damage)
+                })
+                .collect()
+        } else {
+            progress
+                .targets
+                .iter()
+                .zip(&results)
+                .map(|(&t, r)| (t, if let Hit::Damage(d) = r { *d } else { 0 }))
+                .collect()
+        };
+        for (t, damage) in damages {
             let Some(pokemon) = b.alive(t) else {
                 continue;
             };
-            let damage = match last {
-                LastHit::Damage(d) => Some(d),
-                LastHit::Done => None,
-                LastHit::Substitute | LastHit::Blocked => Some(0),
-            };
-            let current = if mv.spread { damage } else { Some(total) };
-            let Some(current) = current else {
-                continue;
-            };
+            let current = if mv.spread { damage } else { total };
             let mon = b.mon(pokemon);
             let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
             let hurt = b.slot_history(t).hurt_this_turn.map_or(0, i32::from);
@@ -2130,6 +2156,8 @@ fn spread_move_hit<const N: usize>(
             _ => None,
         })
         .collect();
+    // `pokemonOriginalHP`: the user's HP before DamagingHit and AfterHit.
+    let user_hp_before = b.alive(user).map(|p| b.mon(p).hp);
     if !damaged.is_empty() {
         damaging_hit(b, user, mv, &damaged, total_before)?;
     }
@@ -2147,6 +2175,16 @@ fn spread_move_hit<const N: usize>(
     for result in &results {
         if let Hit::Damage(_) = result {
             handlers::on_after_hit(b, user, mv);
+        }
+    }
+    // Champions `spreadMoveHit`, when a target took numeric damage: `if (pokemon.hp &&
+    // pokemon.hp <= pokemon.maxhp / 2 && pokemonOriginalHP > pokemon.maxhp / 2)
+    // runEvent('EmergencyExit', pokemon)` (Rough Skin, Iron Barbs, Rocky Helmet took the user
+    // to half). A self-switching move's user already has its `switchFlag` from
+    // `runMoveEffects` (the engine sets it once the move is done), which the handler respects.
+    if !damaged.is_empty() && !b.move_self_switch {
+        if let Some(hp_before) = user_hp_before {
+            super::switching::emergency_exit_check(b, user, hp_before);
         }
     }
     Ok(results)
@@ -2194,7 +2232,7 @@ fn hit_substitute<const N: usize>(
         b.set_substitute_hp(target, (sub_hp - damage) as i16);
     }
     if damage != 0 {
-        substitute_recoil(b, user, mv, damage);
+        apply_recoil_damage(b, user, mv, damage)?;
     }
     if let Some(drain) = mv.data.drain {
         let amount = (f64::from(damage) * f64::from(drain.0) / f64::from(drain.1)).ceil();
@@ -2205,19 +2243,19 @@ fn hit_substitute<const N: usize>(
     Ok(Hit::Substitute)
 }
 
-/// Showdown `applyRecoilDamage(damage, move, source)` for the damage a substitute took (the
-/// hit loop's own recoil only counts `move.totalDamage`, which leaves it out): Struggle
+/// Showdown `applyRecoilDamage(damage, move, pokemon)`, for the hit loop's `move.totalDamage`
+/// and for the damage a substitute took (which the total leaves out): Struggle
 /// `directDamage(round(baseMaxhp / 4))`, a `recoil` move `damage(max(1, round(damage *
 /// recoil)))` (Rock Head, Magic Guard); then `EmergencyExit` on the user if the recoil took
-/// its HP to half.
-fn substitute_recoil<const N: usize>(
+/// its HP to half ([`user_emergency_exit`]).
+fn apply_recoil_damage<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     damage: i32,
-) {
+) -> Result<(), TurnError> {
     let Some(pokemon) = b.alive(user) else {
-        return;
+        return Ok(());
     };
     let (hp_before, max_hp) = (b.mon(pokemon).hp, b.mon(pokemon).max_hp);
     if mv.data.struggle_recoil {
@@ -2229,9 +2267,41 @@ fn substitute_recoil<const N: usize>(
             .max(1.0);
         b.damage(user, amount, DamageSource::Recoil);
     } else {
-        return;
+        return Ok(());
     }
-    super::switching::emergency_exit_check(b, user, hp_before);
+    user_emergency_exit(b, user, hp_before)
+}
+
+/// `if (pokemon.hp <= pokemon.maxhp / 2 && hpBefore > pokemon.maxhp / 2)
+/// runEvent('EmergencyExit', pokemon, pokemon)` for the move's user after its recoil
+/// (`applyRecoilDamage`), a MoveFail crash or AfterMoveSecondarySelf (Life Orb) in
+/// `useMoveInner`. Unlike the other Emergency Exit sites there is no `pokemon.hp` guard: a user
+/// the recoil knocked out is still flagged, and Showdown then asks for a mid-turn switch of the
+/// fainted Pokémon, which the engine does not model (unsupported). A crash or Life Orb never
+/// knocks out from above half.
+fn user_emergency_exit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    hp_before: i16,
+) -> Result<(), TurnError> {
+    let Some(pokemon) = b.occupant(user) else {
+        return Ok(());
+    };
+    let mon = b.mon(pokemon);
+    let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
+    if !(2 * hp <= max_hp && 2 * i32::from(hp_before) > max_hp) {
+        return Ok(());
+    }
+    if hp > 0 {
+        super::switching::emergency_exit(b, user);
+    } else if super::switching::emergency_exit_acts(b, user) {
+        return Err(b.unsupported(format!(
+            "{}: Emergency Exit on a user its recoil knocked out (Showdown asks for a mid-turn \
+             switch of the fainted Pokémon)",
+            mon.species.data().name
+        )));
+    }
+    Ok(())
 }
 
 /// `secondaries()` for a target whose substitute took the hit: `ModifySecondaries` runs without

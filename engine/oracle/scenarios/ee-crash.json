@@ -1,0 +1,27 @@
+{
+ "description": "Emergency Exit after a crash: Golisopod (patched to 100 of 182 HP) uses High Jump Kick on Gengar (Ghost: immune), the move fails and MoveFail's crash takes 91 (9 left); `useMoveInner`'s MoveFail check flags it. Excadrill comes in and takes Shuckle's Seismic Toss. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Shuckle", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Golisopod", "item": "", "ability": "Emergency Exit", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["High Jump Kick", "Harden"], "level": 50},
+   {"species": "Metagross", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Excadrill", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {"p2": {"Golisopod": {"hp": 100}}},
+ "turn": {"p1": "move harden, move seismictoss 1", "p2": "move highjumpkick 1, move harden"},
+ "midTurn": {"p2": ["switch 3"]}
+}

@@ -91,6 +91,9 @@ pub(crate) fn run_mega_evo<const N: usize>(
         old,
         new,
     });
+    // `setSpecies`: `this.speed = this.storedStats.spe` until the next `updateSpeed()` (after
+    // this action).
+    b.species_set(slot);
     if new_hp != hp {
         // updateMaxHp adjusts HP silently, outside `damage`/`heal`.
         let amount = hp - new_hp;

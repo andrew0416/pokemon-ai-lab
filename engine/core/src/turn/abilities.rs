@@ -58,7 +58,7 @@ impl Handler {
     ) -> Handler {
         Handler {
             priority,
-            speed: b.action_speed(holder),
+            speed: b.event_speed(holder),
             sub_order,
             modifier,
         }
@@ -459,7 +459,7 @@ pub(crate) fn flower_veil_first<const N: usize>(
     if !mirror_armor {
         return true;
     }
-    match b.action_speed(holder).cmp(&b.action_speed(target)) {
+    match b.event_speed(holder).cmp(&b.event_speed(target)) {
         std::cmp::Ordering::Greater => true,
         std::cmp::Ordering::Less => false,
         std::cmp::Ordering::Equal => b.rng.uniform(2) == 0,

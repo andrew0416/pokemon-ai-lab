@@ -98,6 +98,8 @@ pub(crate) fn forme_change<const N: usize>(
             new,
         });
     }
+    // `setSpecies`: `this.speed = this.storedStats.spe` until the next `updateSpeed()`.
+    b.species_set(slot);
     // `setType(species.types, true)`, through Roost's filter.
     set_types(b, slot, pokemon, target.types);
     if new_hp != hp {
