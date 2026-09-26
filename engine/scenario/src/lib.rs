@@ -344,6 +344,16 @@ pub fn run_decision_mid_turn_with(
 /// switch-in effects), then every outcome of the setup turns, then the patch. Positions
 /// with the same state and party order merge.
 pub fn scenario_positions(loaded: &LoadedScenario) -> Result<Vec<Position>, String> {
+    scenario_positions_with(loaded, EnumerateOptions::default())
+}
+
+/// [`scenario_positions`] with enumeration `options` for the setup turns (a reduced damage-roll
+/// mode keeps the position count small at the cost of exactness; the initial switch-ins and the
+/// patch are unaffected).
+pub fn scenario_positions_with(
+    loaded: &LoadedScenario,
+    options: EnumerateOptions,
+) -> Result<Vec<Position>, String> {
     let mut positions: Vec<Position> = initial_outcomes(loaded)
         .map_err(|e| e.to_string())?
         .into_iter()
@@ -362,9 +372,14 @@ pub fn scenario_positions(loaded: &LoadedScenario) -> Result<Vec<Position>, Stri
             let decision = parse_decision(&position.state, &position.order, &turn.p1, &turn.p2)
                 .map_err(|e| format!("setup turn {}: {e}", n + 1))?;
             let mut state = position.state.clone();
-            let outcomes =
-                run_decision_mid_turn(&mut state, &position.order, &decision, &turn.mid_turn)
-                    .map_err(|e| format!("setup turn {}: {e}", n + 1))?;
+            let outcomes = run_decision_mid_turn_with(
+                &mut state,
+                &position.order,
+                &decision,
+                &turn.mid_turn,
+                options,
+            )
+            .map_err(|e| format!("setup turn {}: {e}", n + 1))?;
             for outcome in outcomes {
                 let mut end = state.clone();
                 end.apply(&outcome.instructions);

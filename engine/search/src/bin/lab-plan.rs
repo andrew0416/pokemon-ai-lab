@@ -7,7 +7,7 @@
 //!                 [--eval material|heuristic|file:<weights.json>] [--position i]
 //!                 [--solve maximin|nash|deep] [--dump-children <out.jsonl> [--beam b] [--outcomes k]]
 //!                 [--believed-team <team.json>]... [--believed-weight w1,w2,...]
-//!                 [--observed "Name:pct,Name:pct" [--observed-tolerance 1.0]]
+//!                 [--observed "Name:pct,Name:pct" [--observed-tolerance 1.0]] [--setup-rolls full|median|extremes|quartiles]
 //!
 //! `--believed-team` is opponent model ③ at one turn (DESIGN.md): the opponent solves the
 //! matrix game on the team it believes we have (the same species, moves and order as ours, but
@@ -53,7 +53,7 @@ use lab_engine::eval::{
 use lab_engine::rules::Ruleset;
 use lab_engine::state::SideId;
 use lab_engine::turn::RollMode;
-use lab_scenario::{canonical_json, load_scenario_file, scenario_positions, Position};
+use lab_scenario::{canonical_json, load_scenario_file, scenario_positions_with, Position};
 use lab_search::game::asked_slots;
 use lab_search::{
     format_choice, format_switches, Chance, Choice, Config, Decision, Pruning, Solver,
@@ -83,6 +83,7 @@ fn run() -> Result<(), String> {
     let mut believed_teams: Vec<String> = Vec::new();
     let mut observed: Option<String> = None;
     let mut observed_tolerance: f32 = 1.0;
+    let mut setup_rolls = RollMode::Full;
     let mut believed_weights: Vec<f32> = Vec::new();
     let mut pessimistic = false;
     let mut config = Config::new(Ruleset::CHAMPIONS_MC, us);
@@ -199,6 +200,18 @@ fn run() -> Result<(), String> {
                         .ok_or("--observed needs Name:pct,...")?,
                 );
             }
+            "--setup-rolls" => {
+                i += 1;
+                setup_rolls = match args.get(i).map(String::as_str) {
+                    Some("full") => RollMode::Full,
+                    Some("median") => RollMode::Median,
+                    Some("extremes") => RollMode::Extremes,
+                    Some("quartiles") => RollMode::Quartiles,
+                    _ => {
+                        return Err("--setup-rolls needs full, median, extremes or quartiles".into())
+                    }
+                };
+            }
             "--observed-tolerance" => {
                 i += 1;
                 observed_tolerance = args
@@ -257,7 +270,8 @@ fn run() -> Result<(), String> {
     )?;
 
     let loaded = load_scenario_file(&scenario).map_err(|e| e.to_string())?;
-    let mut positions = scenario_positions(&loaded)?;
+    let setup_options = lab_engine::turn::EnumerateOptions { rolls: setup_rolls };
+    let mut positions = scenario_positions_with(&loaded, setup_options)?;
     let observation = match &observed {
         Some(text) => Some(parse_observation(text)?),
         None => None,
@@ -336,7 +350,7 @@ fn run() -> Result<(), String> {
         let mut posterior = weights.clone();
         let mut believed_positions = Vec::with_capacity(believed_teams.len());
         for (k, team_path) in believed_teams.iter().enumerate() {
-            let (bl, mut bpositions) = believed_loaded(&scenario, us, team_path)?;
+            let (bl, mut bpositions) = believed_loaded(&scenario, us, team_path, setup_options)?;
             if let Some(obs) = &observation {
                 let matching = matching_positions(&bl, bpositions, us, obs, observed_tolerance);
                 let likelihood: f64 = matching.iter().map(|p| p.probability).sum();
@@ -804,6 +818,7 @@ fn believed_loaded(
     scenario: &str,
     us: SideId,
     team_path: &str,
+    setup_options: lab_engine::turn::EnumerateOptions,
 ) -> Result<(lab_scenario::LoadedScenario, Vec<Position>), String> {
     let text = std::fs::read_to_string(scenario).map_err(|e| format!("{scenario}: {e}"))?;
     let mut json: Value = serde_json::from_str(&text).map_err(|e| format!("{scenario}: {e}"))?;
@@ -823,7 +838,7 @@ fn believed_loaded(
         .unwrap_or(std::path::Path::new("."));
     let loaded = lab_scenario::load_scenario_str(&json.to_string(), base_dir)
         .map_err(|e| format!("believed scenario: {e}"))?;
-    let positions = scenario_positions(&loaded)?;
+    let positions = scenario_positions_with(&loaded, setup_options)?;
     Ok((loaded, positions))
 }
 
