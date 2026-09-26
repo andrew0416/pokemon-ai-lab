@@ -1,0 +1,74 @@
+{
+ "description": "Gear Up and Magnetic Flux (Opus V): Minun's Magnetic Flux raises Def and SpD of both Plus / Minus holders on its side, then Plusle's Gear Up their Atk and SpA; Hypno's Magnetic Flux fails (no Plus or Minus on its side). Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Plusle",
+    "item": "",
+    "ability": "Plus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Gear Up",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Minun",
+    "item": "",
+    "ability": "Minus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 5
+    },
+    "moves": [
+     "Magnetic Flux",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Hypno",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Magnetic Flux",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move gearup, move magneticflux",
+  "p2": "move magneticflux, move harden"
+ }
+}

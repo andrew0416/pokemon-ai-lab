@@ -617,6 +617,10 @@ pub(super) fn on_try_hit<const N: usize>(
             }
             false
         }
+        // Foresight, Odor Sleuth: `if (target.volatiles['miracleeye']) return false;` Miracle
+        // Eye: `if (target.volatiles['foresight']) return false;`
+        moves::FORESIGHT | moves::ODOR_SLEUTH => !b.volatile(target, Volatile::MiracleEye).active,
+        moves::MIRACLE_EYE => !b.volatile(target, Volatile::Foresight).active,
         // Nature Power: by the terrain, Thunderbolt, Energy Ball, Moonblast, Psychic, else Tri
         // Attack, `useMove(move, pokemon, {target})`; `return null`.
         moves::NATURE_POWER => {
@@ -1945,6 +1949,23 @@ pub(super) fn invulnerable<const N: usize>(
     !passes.contains(&mv.id)
 }
 
+/// The `onNegateImmunity` of the target's volatiles for a move of type `ty` (`runImmunity`
+/// then treats the target as not immune): Foresight on a Ghost type (`if
+/// (pokemon.hasType('Ghost') && ['Normal', 'Fighting'].includes(type)) return false;`),
+/// Miracle Eye on a Dark type against Psychic.
+pub(super) fn immunity_negated<const N: usize>(
+    b: &Battle<'_, N>,
+    target: SlotRef,
+    ty: Type,
+) -> bool {
+    (b.volatile(target, Volatile::Foresight).active
+        && b.has_type(target, Type::Ghost)
+        && matches!(ty, Type::Normal | Type::Fighting))
+        || (b.volatile(target, Volatile::MiracleEye).active
+            && b.has_type(target, Type::Dark)
+            && ty == Type::Psychic)
+}
+
 /// Showdown `this.dex.getEffectiveness(attacking, defending)` for one defending type:
 /// 1 super effective, -1 resisted, 0 otherwise (immunity is checked separately).
 pub(super) fn type_effectiveness(attacking: Type, defending: Type) -> i32 {
@@ -3059,6 +3080,50 @@ pub(super) fn on_hit_field<const N: usize>(
             }
             Some(true)
         }
+        // Flower Shield: every active Grass type (`getAllActive`: side one first) gets +1 Def
+        // (source: the user); `success` if any stage changed. Rototiller: the airborne ones
+        // (`!runImmunity('Ground')`) are skipped, every grounded Grass type gets +1 Atk / +1 SpA;
+        // it fails only with neither a grounded Grass type nor an airborne Pokémon (it returns
+        // nothing otherwise).
+        moves::FLOWER_SHIELD | moves::ROTOTILLER => {
+            let mut targets = Vec::new();
+            let mut airborne = false;
+            for side in [SideId::One, SideId::Two] {
+                for slot in b.alive_slots(side) {
+                    if mv.id == moves::ROTOTILLER && !b.is_grounded(slot) {
+                        airborne = true;
+                        continue;
+                    }
+                    if b.has_type(slot, Type::Grass) {
+                        targets.push(slot);
+                    }
+                }
+            }
+            if mv.id == moves::ROTOTILLER {
+                if targets.is_empty() && !airborne {
+                    return Ok(Some(false));
+                }
+                for slot in targets {
+                    b.boost_by(
+                        slot,
+                        &[1, 0, 1, 0, 0, 0, 0],
+                        Some(user),
+                        BoostEffect::Move(mv.id),
+                    );
+                }
+                return Ok(Some(true));
+            }
+            let mut success = false;
+            for slot in targets {
+                success |= b.boost_by(
+                    slot,
+                    &[0, 1, 0, 0, 0, 0, 0],
+                    Some(user),
+                    BoostEffect::Move(mv.id),
+                );
+            }
+            Some(success)
+        }
         // Haze: `for (const pokemon of this.getAllActive()) pokemon.clearBoosts();`
         moves::HAZE => {
             for side in [SideId::One, SideId::Two] {
@@ -3072,6 +3137,36 @@ pub(super) fn on_hit_field<const N: usize>(
         }
         _ => None,
     })
+}
+
+/// The move's `onHitSide` (moves aimed at a side; Wide Guard's and Quick Guard's are in
+/// `moves::try_move_hit_field`). Gear Up (+1 Atk / +1 SpA) and Magnetic Flux (+1 Def / +1 SpD):
+/// every active Pokémon of the user's side (`side.allies()`, the user included) with Plus or
+/// Minus (`hasAbility`) is boosted (source: the user); fails without one, else succeeds if any
+/// stage changed. `None` = the move has none.
+pub(super) fn on_hit_side<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Option<bool> {
+    let up = match mv.id {
+        moves::GEAR_UP => [1, 0, 1, 0, 0, 0, 0],
+        moves::MAGNETIC_FLUX => [0, 1, 0, 1, 0, 0, 0],
+        _ => return None,
+    };
+    let targets: Vec<SlotRef> = b
+        .alive_slots(user.side)
+        .into_iter()
+        .filter(|&s| [abilities::PLUS, abilities::MINUS].contains(&b.ability(s)))
+        .collect();
+    if targets.is_empty() {
+        return Some(false);
+    }
+    let mut did = false;
+    for target in targets {
+        did |= b.boost_by(target, &up, Some(user), BoostEffect::Move(mv.id));
+    }
+    Some(did)
 }
 
 /// Whether a `TryHit` handler stops Teatime (`runEvent('TryHit', pokemon, source, move)` falsy)

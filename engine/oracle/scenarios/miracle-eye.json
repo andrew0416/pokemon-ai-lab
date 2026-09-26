@@ -1,0 +1,79 @@
+{
+ "description": "Miracle Eye (Opus V): after it lands on Umbreon (setup turn), Hypno's Psyshock hits the Dark type (`onNegateImmunity`); Blissey's Odor Sleuth on Umbreon then fails (`onTryHit`: not with `miracleeye`). Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Hypno",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spa": 32
+    },
+    "moves": [
+     "Miracle Eye",
+     "Psyshock"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Odor Sleuth",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move miracleeye 1, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move psyshock 1, move odorsleuth 1",
+  "p2": "move harden, move harden"
+ }
+}

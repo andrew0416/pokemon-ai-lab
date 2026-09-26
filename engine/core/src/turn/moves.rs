@@ -1528,6 +1528,10 @@ fn try_move_hit_field<const N: usize>(
     if [moves::WIDE_GUARD, moves::QUICK_GUARD].contains(&mv.id) {
         b.add_volatile(user, Volatile::Stall);
     }
+    // The other `onHitSide` handlers (Gear Up, Magnetic Flux).
+    if let Some(r) = handlers::on_hit_side(b, user, mv) {
+        combine(r);
+    }
     if !data.weather.is_none() {
         let weather = weather_of(data.weather.id()).expect("checked by support");
         combine(set_weather(b, user, weather));
@@ -2024,6 +2028,11 @@ fn type_immune<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove, target: SlotR
     // Scrappy / Mind's Eye: `move.ignoreImmunity['Fighting'] = move.ignoreImmunity['Normal'] =
     // true` (keyed by the move's type when immunity is checked).
     if mv.scrappy && matches!(ty, Type::Fighting | Type::Normal) {
+        return false;
+    }
+    // `runEvent('NegateImmunity', target, type)`: Foresight on a Ghost against Normal and
+    // Fighting, Miracle Eye on a Dark type against Psychic (`handlers::immunity_negated`).
+    if handlers::immunity_negated(b, target, ty) {
         return false;
     }
     if ty == Type::Ground {

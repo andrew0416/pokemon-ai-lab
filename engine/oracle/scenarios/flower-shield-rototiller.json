@@ -1,0 +1,72 @@
+{
+ "description": "Flower Shield and Rototiller (Opus V): Venusaur's Rototiller raises Atk and SpA of the grounded Grass types (Venusaur) and skips the airborne Tropius; Hypno's Flower Shield then raises the Def of every Grass type (Venusaur, Tropius). Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Hypno",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Flower Shield",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Venusaur",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Rototiller",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Tropius",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move flowershield, move rototiller",
+  "p2": "move harden, move harden"
+ }
+}

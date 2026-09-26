@@ -274,9 +274,16 @@ pub enum Volatile {
     /// negated; kept in `hidden`: Def in bits 0–1, SpD in bits 2–3; not canonical fields), which
     /// its `onEnd` takes back. Spit Up and Swallow end it.
     Stockpile,
+    /// Foresight / Odor Sleuth on their target (`foresight`, no duration, `noCopy`): a Ghost
+    /// holder loses its immunity to Normal and Fighting moves (`onNegateImmunity`) and its
+    /// positive evasion stages are ignored (`onModifyBoost`).
+    Foresight,
+    /// Miracle Eye on its target (`miracleeye`, no duration, `noCopy`): as Foresight, for a Dark
+    /// holder against Psychic moves.
+    MiracleEye,
 }
 
-pub const VOLATILE_COUNT: usize = 87;
+pub const VOLATILE_COUNT: usize = 89;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -367,6 +374,8 @@ impl Volatile {
         Volatile::IceBurn,
         Volatile::Geomancy,
         Volatile::Stockpile,
+        Volatile::Foresight,
+        Volatile::MiracleEye,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -428,6 +437,8 @@ impl Volatile {
             Volatile::PowerTrick => conditions::POWERTRICK,
             Volatile::PowerShift => conditions::POWERSHIFT,
             Volatile::Stockpile => conditions::STOCKPILE,
+            Volatile::Foresight => conditions::FORESIGHT,
+            Volatile::MiracleEye => conditions::MIRACLEEYE,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -555,6 +566,8 @@ impl Volatile {
             Volatile::IceBurn => "iceburn",
             Volatile::Geomancy => "geomancy",
             Volatile::Stockpile => "stockpile",
+            Volatile::Foresight => "foresight",
+            Volatile::MiracleEye => "miracleeye",
         }
     }
 
@@ -657,7 +670,9 @@ impl Volatile {
             | Volatile::FreezeShock
             | Volatile::IceBurn
             | Volatile::Geomancy
-            | Volatile::Stockpile => 0,
+            | Volatile::Stockpile
+            | Volatile::Foresight
+            | Volatile::MiracleEye => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -941,6 +956,8 @@ mod tests {
             (Volatile::PowerTrick, moves::POWER_TRICK),
             (Volatile::PowerShift, moves::POWER_SHIFT),
             (Volatile::Stockpile, moves::STOCKPILE),
+            (Volatile::Foresight, moves::FORESIGHT),
+            (Volatile::MiracleEye, moves::MIRACLE_EYE),
         ] {
             let data = id.data();
             assert_eq!(

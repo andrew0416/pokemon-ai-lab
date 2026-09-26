@@ -1503,7 +1503,15 @@ impl<'a, const N: usize> Battle<'a, N> {
         viewer: SlotRef,
         as_attacker: bool,
     ) -> i8 {
-        let boost = self.state.slot(holder).boosts[stat];
+        let mut boost = self.state.slot(holder).boosts[stat];
+        // Foresight's and Miracle Eye's `onModifyBoost` on the holder: positive evasion is 0.
+        if stat == 6
+            && boost > 0
+            && (self.volatile(holder, Volatile::Foresight).active
+                || self.volatile(holder, Volatile::MiracleEye).active)
+        {
+            boost = 0;
+        }
         if viewer == holder || self.ability_unless_broken(viewer) != abilities::UNAWARE {
             return boost;
         }

@@ -1053,6 +1053,33 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::FICKLE_BEAM, &["onBasePower"]),
     (moves::SYNCHRONOISE, &["onTryImmunity"]),
     (moves::CAPTIVATE, &["onTryImmunity"]),
+    // Opus V unit 9b: Foresight / Odor Sleuth / Miracle Eye (their `onTryHit` in
+    // `handlers::on_try_hit`; the volatiles' `onNegateImmunity` in `handlers::immunity_negated`,
+    // `onModifyBoost` in `Battle::boost_seen`); Gear Up and Magnetic Flux `onHitSide`; Flower
+    // Shield and Rototiller `onHitField`.
+    (moves::ODOR_SLEUTH, &["onTryHit"]),
+    (
+        moves::FORESIGHT,
+        &[
+            "condition.onModifyBoost",
+            "condition.onNegateImmunity",
+            "condition.onStart",
+            "onTryHit",
+        ],
+    ),
+    (
+        moves::MIRACLE_EYE,
+        &[
+            "condition.onModifyBoost",
+            "condition.onNegateImmunity",
+            "condition.onStart",
+            "onTryHit",
+        ],
+    ),
+    (moves::GEAR_UP, &["onHitSide"]),
+    (moves::MAGNETIC_FLUX, &["onHitSide"]),
+    (moves::FLOWER_SHIELD, &["onHitField"]),
+    (moves::ROTOTILLER, &["onHitField"]),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do

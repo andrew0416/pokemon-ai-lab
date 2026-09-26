@@ -1,0 +1,79 @@
+{
+ "description": "Foresight (Opus V): in the setup turn Gengar raises its evasion (Double Team) and Hypno's Foresight lands; now Hypno's Strength hits the Ghost (`onNegateImmunity`) and ignores its +1 evasion (`onModifyBoost`), so it cannot miss. Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Hypno",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Foresight",
+     "Strength"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Gengar",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Double Team",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move foresight 1, move harden",
+   "move doubleteam, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move strength 1, move harden",
+  "p2": "move harden, move harden"
+ }
+}
