@@ -965,6 +965,12 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "onTryImmunity",
         ],
     ),
+    // Opus V unit 5: Copycat's `onHit` (`battle.lastMove`: `State::last_move`) and Mirror Move's
+    // `onTryHit` (the target's `lastMove`) call a move through `moves::call_move`; Retaliate's
+    // `onBasePower` (`faintedLastTurn`: `SideHistory::fainted_last_turn`).
+    (moves::COPYCAT, &["onHit"]),
+    (moves::MIRROR_MOVE, &["onTryHit"]),
+    (moves::RETALIATE, &["onBasePower"]),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do
@@ -1913,8 +1919,11 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     let sleep_moves = id == moves::SLEEP_TALK || id == moves::SNORE;
     // `breaksProtect` (`handlers::break_protect`) and crash damage (`handlers::on_move_fail`)
     // are implemented.
+    // Sleep Talk, Copycat and Mirror Move call moves through `moves::call_move` (the called move
+    // is checked when it is called: `handlers::called_move_problem`).
+    let calls_supported = [moves::SLEEP_TALK, moves::COPYCAT, moves::MIRROR_MOVE].contains(&id);
     if m.smart_target
-        || (m.calls_move && id != moves::SLEEP_TALK)
+        || (m.calls_move && !calls_supported)
         || (m.sleep_usable && !sleep_moves)
         || m.steals_boosts
         || m.mind_blown_recoil

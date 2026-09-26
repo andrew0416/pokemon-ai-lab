@@ -86,6 +86,12 @@ pub(crate) fn instructions<const N: usize>(from: &State<N>, to: &State<N>) -> Ve
             new: to.result,
         });
     }
+    if from.last_move != to.last_move {
+        out.push(Instruction::SetBattleLastMove {
+            old: from.last_move,
+            new: to.last_move,
+        });
+    }
     out
 }
 

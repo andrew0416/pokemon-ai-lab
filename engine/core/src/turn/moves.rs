@@ -493,6 +493,7 @@ pub(crate) fn future_move_hit<const N: usize>(
         let max_hp = f64::from(b.mon(source).max_hp);
         b.damage(user, max_hp / 10.0, DamageSource::Indirect);
     }
+    // `this.activeMove = null`: the hit never becomes `battle.lastMove`.
     b.active_move = None;
     b.check_win(None);
     Ok(())
@@ -529,6 +530,8 @@ pub(crate) fn resume_move<const N: usize>(
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
     handlers::on_after_move(b, user, pokemon, &mv);
     run_move_tail(b, user, &mv);
+    // The action's `clearActiveMove()`: `battle.lastMove` (a multi-hit move is never called).
+    b.record_battle_last_move(mv.id);
     b.active_move = None;
     Ok(MoveStep::Done)
 }
@@ -659,6 +662,11 @@ fn run_move_inner<const N: usize>(
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
     handlers::on_after_move(b, user, pokemon, &mv);
     run_move_tail(b, user, &mv);
+    // The action's `clearActiveMove()`: `battle.lastMove` is the active move, a called move
+    // (Sleep Talk's, Copycat's) rather than its caller.
+    if let Some(active) = b.active_move {
+        b.record_battle_last_move(active.id);
+    }
     Ok(MoveStep::Done)
 }
 
@@ -1196,16 +1204,18 @@ fn use_move<const N: usize>(
     Ok(None)
 }
 
-/// Showdown `useMove(id, pokemon)` from a move's `onHit` (Sleep Talk): the called move takes
-/// the caller's priority and Prankster boost and ability suppression, its source effect is the
-/// caller (whose PP pays Pressure), its target is drawn afresh, and it runs `useMoveInner`
-/// without BeforeMove, PP or `lastMove`. The called move stays the active move. A multi-hit
-/// called move (it would suspend the caller) is unsupported.
+/// Showdown `useMove(id, pokemon, {target})` from a move's handler (Sleep Talk and Copycat
+/// `onHit`, Mirror Move `onTryHit`): the called move takes the caller's priority and Prankster
+/// boost and ability suppression, its source effect is the caller (whose PP pays Pressure), its
+/// target is `target` or, without one, drawn afresh, and it runs `useMoveInner` without
+/// BeforeMove, PP or `lastMove`. The called move stays the active move. A multi-hit called move
+/// (it would suspend the caller) is unsupported.
 fn call_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     caller: &ActiveMove,
     id: MoveId,
+    target: Option<SlotRef>,
 ) -> Result<(), TurnError> {
     let pokemon = b.occupant(user).expect("the caller's user is active");
     let ignore_ability = b.active_move.is_some_and(|m| m.ignore_ability);
@@ -1244,7 +1254,10 @@ fn call_move<const N: usize>(
         future_hit: false,
         bypass_protect: 0,
     };
-    let target = get_random_target(b, user, data.target);
+    let target = match target {
+        Some(t) => Some(t),
+        None => get_random_target(b, user, data.target),
+    };
     let will_act = b.will_act();
     if use_move(b, user, &mut mv, target, will_act)?.is_some() {
         return Err(b.unsupported(format!(
@@ -1694,7 +1707,7 @@ fn try_spread_move_hit<const N: usize>(
     }
     // The hit's first step is the move's own `onTryHit` (Champions `spreadMoveHit`: on the
     // first target only; failing fails the move).
-    if !handlers::on_try_hit(b, user, hit[0], mv) {
+    if !handlers::on_try_hit(b, user, hit[0], mv)? {
         return Ok(HitOutcome::Finished {
             ok: false,
             total_damage: 0,

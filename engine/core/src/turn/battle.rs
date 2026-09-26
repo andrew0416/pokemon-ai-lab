@@ -115,7 +115,7 @@ pub struct HistoryReaders {
     pub times_attacked: bool,
     /// Stomping Tantrum, Temper Flare (`moveLastTurnResult`).
     pub move_last_turn_result: bool,
-    /// Retaliate (`faintedLastTurn`; unsupported, so never set today).
+    /// Retaliate (`faintedLastTurn`).
     pub fainted_last_turn: bool,
     /// Burning Jealousy, Alluring Voice (`statsRaisedThisTurn`).
     pub stats_raised: bool,
@@ -125,6 +125,8 @@ pub struct HistoryReaders {
     pub ate_berry: bool,
     /// Last Resort (`moveSlot.used`).
     pub moves_used: bool,
+    /// Copycat (`battle.lastMove`: `State::last_move`).
+    pub last_move: bool,
 }
 
 impl HistoryReaders {
@@ -150,6 +152,8 @@ impl HistoryReaders {
                         readers.ate_berry = true;
                     } else if slot.id == m::LAST_RESORT {
                         readers.moves_used = true;
+                    } else if slot.id == m::COPYCAT {
+                        readers.last_move = true;
                     }
                 }
             }
@@ -1611,6 +1615,19 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// `pokemon.switchFlag = false`.
     pub fn clear_switch_flag(&mut self, slot: SlotRef) {
         self.set_switch_flag(slot, SwitchFlag::None);
+    }
+
+    /// The end of an action that used a move (`clearActiveMove()` after `runAction`, not a failed
+    /// one): `battle.lastMove = activeMove` (`State::last_move`), recorded only while a Copycat
+    /// is in a party.
+    pub fn record_battle_last_move(&mut self, id: MoveId) {
+        if !self.history_readers.last_move || id.is_none() {
+            return;
+        }
+        let old = self.state.last_move;
+        if old != id {
+            self.apply(Instruction::SetBattleLastMove { old, new: id });
+        }
     }
 
     pub fn set_last_move(&mut self, slot: SlotRef, id: MoveId) {

@@ -528,8 +528,21 @@ pub(super) fn on_try_hit<const N: usize>(
     user: SlotRef,
     target: SlotRef,
     mv: &mut ActiveMove,
-) -> bool {
-    match mv.id {
+) -> Result<bool, TurnError> {
+    Ok(match mv.id {
+        // Mirror Move: `const move = target.lastMove; if (!move?.flags['mirror'] || move.isZ ||
+        // move.isMax) return false; this.actions.useMove(move.id, pokemon, {target}); return
+        // null;` — either way Mirror Move itself stops here.
+        moves::MIRROR_MOVE => {
+            let copied = b.state.slot(target).last_move;
+            if !copied.is_none() && copied.data().flags.contains(MoveFlags::MIRROR) {
+                if let Some(why) = called_move_problem(b, user, copied) {
+                    return Err(b.unsupported(format!("Mirror Move calling {why}")));
+                }
+                super::call_move(b, user, mv, copied, Some(target))?;
+            }
+            false
+        }
         // Healing Wish: `if (!this.canSwitch(source.side)) return this.NOT_FAIL;` — the target
         // drops out and the user does not faint (`selfdestruct: 'ifHit'`).
         moves::HEALING_WISH => super::super::residual::bench(b, user.side).next().is_some(),
@@ -621,7 +634,36 @@ pub(super) fn on_try_hit<const N: usize>(
             .flags
             .contains(AbilityFlags::CANTSUPPRESS),
         _ => true,
+    })
+}
+
+/// Why a move Copycat or Mirror Move would call (`useMove`, which the caller may not know) is not
+/// run: a move the engine does not support; a two-turn move or one that locks its user (the lock
+/// would name a move the user may not have); a move with its own `onAfterMove`, a
+/// `beforeTurnCallback` or a `priorityChargeCallback` (`runMove`'s AfterMove and the queue
+/// actions belong to the caller); an Electric move while the user has Charge (Charge's
+/// `onAfterMove` would see the called move, the engine's the caller).
+fn called_move_problem<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+) -> Option<String> {
+    let data = id.data();
+    if let Some(why) = super::super::support::move_unsupported(id) {
+        return Some(why);
     }
+    let locks = data
+        .self_effect
+        .is_some_and(|s| s.volatile_status == crate::dex::conditions::LOCKEDMOVE);
+    let own_actions =
+        super::has_before_turn_callback(id) || super::has_priority_charge_callback(id);
+    let charged = data.move_type == Type::Electric && b.volatile(user, Volatile::Charge).active;
+    (data.flags.contains(MoveFlags::CHARGE)
+        || locks
+        || own_actions
+        || data.handlers.contains(&"onAfterMove")
+        || charged)
+        .then(|| format!("{} (a lock, own actions, AfterMove or Charge)", data.name))
 }
 
 /// Showdown `pokemon.setAbility(ability, source)` from a move (Role Play, Entrainment, Simple
@@ -1233,6 +1275,8 @@ pub(super) fn on_base_power<const N: usize>(
         {
             Some(crate::damage::MOD_HALF)
         }
+        // Retaliate: `if (pokemon.side.faintedLastTurn) return this.chainModify(2);`
+        moves::RETALIATE if b.state.side(user.side).history.fainted_last_turn => Some(2 * 4096),
         // Lash Out: `if (source.statsLoweredThisTurn) return this.chainModify(2);`
         moves::LASH_OUT if b.state.slot(user).history.stats_lowered_this_turn => Some(2 * 4096),
         // Grav Apple: `if (this.field.getPseudoWeather('gravity')) return this.chainModify(1.5);`
@@ -2196,8 +2240,27 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::Failure
             } else {
                 let called = callable[b.rng.uniform(callable.len())];
-                super::call_move(b, user, mv, called)?;
+                super::call_move(b, user, mv, called, None)?;
                 HitResult::NotFail
+            }
+        }
+        // Copycat: `let move = this.lastMove; if (!move) return; if (move.flags['failcopycat'] ||
+        // move.isZ || move.isMax) return false; this.actions.useMove(move.id, pokemon);`
+        // (`battle.lastMove`: `State::last_move`; the called move's target is drawn afresh).
+        moves::COPYCAT => {
+            let copied = b.state.last_move;
+            if copied.is_none() {
+                return Ok(None);
+            }
+            let data = copied.data();
+            if data.flags.contains(MoveFlags::FAILCOPYCAT) || data.is_z || data.is_max {
+                HitResult::Failure
+            } else {
+                if let Some(why) = called_move_problem(b, user, copied) {
+                    return Err(b.unsupported(format!("Copycat calling {why}")));
+                }
+                super::call_move(b, user, mv, copied, None)?;
+                return Ok(None);
             }
         }
         // Defog: `if (!target.volatiles['substitute'] || move.infiltrates)` `this.boost({evasion:

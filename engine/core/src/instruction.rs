@@ -163,6 +163,11 @@ pub enum Instruction {
         old: BattleResult,
         new: BattleResult,
     },
+    /// `State::last_move` (Showdown `battle.lastMove`, hidden; Copycat).
+    SetBattleLastMove {
+        old: MoveId,
+        new: MoveId,
+    },
 }
 
 /// One weighted result of a turn (or of a single action while a turn is being built). With
@@ -262,6 +267,7 @@ impl<const N: usize> State<N> {
             }
             Instruction::SetTurn { new, .. } => self.turn = new,
             Instruction::SetResult { new, .. } => self.result = new,
+            Instruction::SetBattleLastMove { new, .. } => self.last_move = new,
         }
     }
 
@@ -332,6 +338,7 @@ impl<const N: usize> State<N> {
             }
             Instruction::SetTurn { old, .. } => self.turn = old,
             Instruction::SetResult { old, .. } => self.result = old,
+            Instruction::SetBattleLastMove { old, .. } => self.last_move = old,
         }
     }
 }
@@ -486,6 +493,10 @@ mod tests {
                 old: BattleResult::Ongoing,
                 new: BattleResult::Win(SideId::One),
             },
+            Instruction::SetBattleLastMove {
+                old: MoveId::NONE,
+                new: crate::dex::moves::PROTECT,
+            },
         ];
 
         state.apply(&instructions);
@@ -506,6 +517,7 @@ mod tests {
         assert_eq!(state.slot(foe_lead).fainted_occupant, Some(0));
         assert!(state.field[FieldEffect::Gravity as usize].is_active());
         assert_eq!(state.result, BattleResult::Win(SideId::One));
+        assert_eq!(state.last_move, crate::dex::moves::PROTECT);
 
         state.reverse(&instructions);
         assert_eq!(state, original);
