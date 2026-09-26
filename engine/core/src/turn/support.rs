@@ -971,6 +971,42 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::COPYCAT, &["onHit"]),
     (moves::MIRROR_MOVE, &["onTryHit"]),
     (moves::RETALIATE, &["onBasePower"]),
+    // Opus V unit 6: Aqua Ring (`residual.rs`, Big Root's `heal_rooted`); Covet and Thief
+    // `onAfterHit` and Bestow `onHit` (`handlers::pass_item`); False Swipe and Hold Back
+    // `onDamage` (`Battle::damage`, priority -20); Power Trick and Power Shift (the stored-stat
+    // swap in `conditions::volatile_start`, `Battle::remove_volatile` and the `onRestart` in
+    // `Battle::add_volatile_from`; `onCopy` is Baton Pass's, refused); Power Split, Guard Split
+    // and Acupressure `onHit`.
+    (
+        moves::AQUA_RING,
+        &["condition.onResidual", "condition.onStart"],
+    ),
+    (moves::COVET, &["onAfterHit"]),
+    (moves::THIEF, &["onAfterHit"]),
+    (moves::FALSE_SWIPE, &["onDamage"]),
+    (moves::HOLD_BACK, &["onDamage"]),
+    (
+        moves::POWER_TRICK,
+        &[
+            "condition.onCopy",
+            "condition.onEnd",
+            "condition.onRestart",
+            "condition.onStart",
+        ],
+    ),
+    (
+        moves::POWER_SHIFT,
+        &[
+            "condition.onCopy",
+            "condition.onEnd",
+            "condition.onRestart",
+            "condition.onStart",
+        ],
+    ),
+    (moves::POWER_SPLIT, &["onHit"]),
+    (moves::GUARD_SPLIT, &["onHit"]),
+    (moves::BESTOW, &["onHit"]),
+    (moves::ACUPRESSURE, &["onHit"]),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do

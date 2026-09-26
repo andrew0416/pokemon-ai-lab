@@ -461,6 +461,16 @@ impl<'a, const N: usize> Battle<'a, N> {
         {
             amount = i32::from(mon.hp) - 1;
         }
+        // False Swipe, Hold Back (the move's own `onDamage`, priority -20: after Endure, before
+        // Sturdy): `if (damage >= target.hp) return target.hp - 1;` for the move's damage to its
+        // target (not a confusion self-hit, whose effect is not the move).
+        let holds_back = self.active_move.is_some_and(|m| {
+            [crate::dex::moves::FALSE_SWIPE, crate::dex::moves::HOLD_BACK].contains(&m.id)
+                && m.user != target
+        });
+        if source == DamageSource::Move && holds_back && amount >= i32::from(mon.hp) {
+            amount = i32::from(mon.hp) - 1;
+        }
         if source == DamageSource::Move
             && mon.hp == mon.max_hp
             && amount >= i32::from(mon.hp)
@@ -1074,6 +1084,12 @@ impl<'a, const N: usize> Battle<'a, N> {
                 },
                 // Laser Focus's `onRestart`: `this.effectState.duration = 2`.
                 Volatile::LaserFocus => VolatileState { duration: 2, ..old },
+                // Power Trick's and Power Shift's `onRestart`: `pokemon.removeVolatile(...)` (its
+                // `onEnd` swaps back); it returns nothing, a success.
+                Volatile::PowerTrick | Volatile::PowerShift => {
+                    self.remove_volatile(target, volatile);
+                    return true;
+                }
                 // Smack Down's `onRestart`: a holder in the air again (Fly, Bounce) comes down
                 // (`conditions::smack_down_lands`); it returns nothing.
                 Volatile::SmackDown => {
@@ -1198,6 +1214,10 @@ impl<'a, const N: usize> Battle<'a, N> {
         // onEnd.
         if volatile == Volatile::LockedMove && old.hidden <= 1 {
             self.add_volatile(target, Volatile::Confusion);
+        }
+        // Power Trick, Power Shift: the stored Attack and Defense trade places back.
+        if matches!(volatile, Volatile::PowerTrick | Volatile::PowerShift) {
+            super::conditions::swap_stored_stats(self, target, 0, 1);
         }
         // `twoturnmove.onEnd`: the move's own volatile goes with it (an aborted second turn).
         if volatile == Volatile::TwoTurnMove {

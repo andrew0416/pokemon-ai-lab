@@ -435,6 +435,11 @@ pub(crate) fn volatile_start<const N: usize>(
             }
             true
         }
+        // Power Trick, Power Shift: `onStart` swaps the stored Attack and Defense.
+        Volatile::PowerTrick | Volatile::PowerShift => {
+            swap_stored_stats(b, target, 0, 1);
+            true
+        }
         // Focus Energy: `if (target.volatiles['dragoncheer']) return false;`
         Volatile::FocusEnergy => !b.volatile(target, Volatile::DragonCheer).active,
         // Dragon Cheer: `if (target.volatiles['focusenergy']) return false;` then
@@ -656,6 +661,30 @@ pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option
         }
     }
     None
+}
+
+/// `pokemon.storedStats[a]` and `[c]` (battle stat indices: 0 Atk .. 4 Spe) trade places for the
+/// Pokémon in `slot` (Power Trick, Power Shift). `setSpecies` recalculates them when it leaves
+/// the field (`Battle::clear_volatile`).
+pub(crate) fn swap_stored_stats<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    a: usize,
+    c: usize,
+) {
+    let Some(pokemon) = b.occupant(slot) else {
+        return;
+    };
+    let old = b.mon(pokemon).forme();
+    let mut new = old;
+    new.stats.swap(a, c);
+    if new != old {
+        b.apply(Instruction::SetForme {
+            target: pokemon,
+            old,
+            new,
+        });
+    }
 }
 
 /// Octolock's `onResidual` (order 14) on the Pokémon in `slot`: once its source is not active,

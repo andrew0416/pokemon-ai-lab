@@ -253,9 +253,18 @@ pub enum Volatile {
     /// Laser Focus (duration 2; its `onRestart` sets the duration to 2 again): the holder's
     /// critical-hit ratio becomes 5 (`onModifyCritRatio`), so its moves always crit.
     LaserFocus,
+    /// Aqua Ring (no duration, residual order 6): heals baseMaxhp / 16 each turn (Big Root
+    /// applies).
+    AquaRing,
+    /// Power Trick (no duration): the holder's stored Attack and Defense trade places when it
+    /// starts and again when it ends (using the move again ends it: `onRestart`). Leaving the
+    /// field recalculates the stored stats anyway.
+    PowerTrick,
+    /// Power Shift: as [`Volatile::PowerTrick`] (the same swap in this Showdown version).
+    PowerShift,
 }
 
-pub const VOLATILE_COUNT: usize = 78;
+pub const VOLATILE_COUNT: usize = 81;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -337,6 +346,9 @@ impl Volatile {
         Volatile::Octolock,
         Volatile::DragonCheer,
         Volatile::LaserFocus,
+        Volatile::AquaRing,
+        Volatile::PowerTrick,
+        Volatile::PowerShift,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -394,6 +406,9 @@ impl Volatile {
             Volatile::Octolock => conditions::OCTOLOCK,
             Volatile::DragonCheer => conditions::DRAGONCHEER,
             Volatile::LaserFocus => conditions::LASERFOCUS,
+            Volatile::AquaRing => conditions::AQUARING,
+            Volatile::PowerTrick => conditions::POWERTRICK,
+            Volatile::PowerShift => conditions::POWERSHIFT,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -507,6 +522,9 @@ impl Volatile {
             Volatile::Octolock => "octolock",
             Volatile::DragonCheer => "dragoncheer",
             Volatile::LaserFocus => "laserfocus",
+            Volatile::AquaRing => "aquaring",
+            Volatile::PowerTrick => "powertrick",
+            Volatile::PowerShift => "powershift",
         }
     }
 
@@ -600,7 +618,10 @@ impl Volatile {
             | Volatile::Attract
             | Volatile::Nightmare
             | Volatile::Octolock
-            | Volatile::DragonCheer => 0,
+            | Volatile::DragonCheer
+            | Volatile::AquaRing
+            | Volatile::PowerTrick
+            | Volatile::PowerShift => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -613,6 +634,7 @@ impl Volatile {
             Volatile::LeechSeed => Some(8),
             Volatile::PartiallyTrapped | Volatile::SaltCure => Some(13),
             Volatile::MagnetRise => Some(18),
+            Volatile::AquaRing => Some(6),
             Volatile::Nightmare => Some(11),
             Volatile::Octolock => Some(14),
             Volatile::Taunt => Some(15),
@@ -874,6 +896,9 @@ mod tests {
             (Volatile::Octolock, moves::OCTOLOCK),
             (Volatile::DragonCheer, moves::DRAGON_CHEER),
             (Volatile::LaserFocus, moves::LASER_FOCUS),
+            (Volatile::AquaRing, moves::AQUA_RING),
+            (Volatile::PowerTrick, moves::POWER_TRICK),
+            (Volatile::PowerShift, moves::POWER_SHIFT),
         ] {
             let data = id.data();
             assert_eq!(

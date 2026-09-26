@@ -1,0 +1,74 @@
+{
+ "description": "Covet and Thief (Opus V): Hypno (no item) Covets Snorlax's Leftovers (`onAfterHit`: `target.takeItem(source)`, then `source.setItem`); Weavile holds Life Orb, so its Thief takes nothing from Chansey (`if (source.item) return;`). Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Hypno",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Covet",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Weavile",
+    "item": "Life Orb",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Thief",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "Leftovers",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "Eviolite",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move covet 1, move thief 2",
+  "p2": "move harden, move harden"
+ }
+}

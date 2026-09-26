@@ -39,8 +39,8 @@ enum Kind {
     Item(PokemonRef, SlotRef, ItemId),
     /// Leech Seed's `onResidual` (order 8; no duration).
     LeechSeed(PokemonRef, SlotRef),
-    /// The `onResidual` of a volatile without a duration: Ingrain (order 7), Nightmare (11), Salt
-    /// Cure (13), Octolock (14).
+    /// The `onResidual` of a volatile without a duration: Aqua Ring (order 6), Ingrain (7),
+    /// Nightmare (11), Salt Cure (13), Octolock (14).
     VolatileEffect(PokemonRef, SlotRef, Volatile),
     /// A slot condition's `onResidual` (future moves order 3, Wish 4; Revival Blessing's
     /// duration), slot-condition sub-order 3. Showdown collects it for the Pokémon in the
@@ -198,6 +198,7 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                         | Volatile::SaltCure
                         | Volatile::Nightmare
                         | Volatile::Octolock
+                        | Volatile::AquaRing
                 ) {
                     out.push(Handler {
                         order: volatile.residual_order().unwrap_or(ORDER_DEFAULT),
@@ -549,6 +550,11 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
                     b.damage(slot, max_hp / 4.0, DamageSource::Indirect);
                 }
                 Volatile::Octolock => conditions::octolock_residual(b, slot),
+                // Aqua Ring: `this.heal(pokemon.baseMaxhp / 16)` (its effect is listed by Big
+                // Root).
+                Volatile::AquaRing => {
+                    b.heal_rooted(slot, max_hp / 16.0);
+                }
                 _ => {}
             }
         }

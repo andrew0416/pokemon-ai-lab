@@ -2679,9 +2679,9 @@ fn spread_move_hit<const N: usize>(
     }
     // AfterHit: the move's other `onAfterHit` handlers, per damaged target (Champions runs
     // them even if the user fainted).
-    for result in &results {
-        if let Hit::Damage(_) = result {
-            handlers::on_after_hit(b, user, mv);
+    for (i, &t) in targets.iter().enumerate() {
+        if let Hit::Damage(_) = results[i] {
+            handlers::on_after_hit(b, user, t, mv)?;
         }
     }
     // Champions `spreadMoveHit`, when a target took numeric damage: `if (pokemon.hp &&

@@ -781,7 +781,18 @@ pub(super) fn boosts_applied_in_try_hit(id: MoveId) -> bool {
 /// The move's `onAfterHit`, once per damaged target (`spreadMoveHit`, after `DamagingHit`;
 /// Champions runs it even if the user fainted). Knock Off's is in `moves.rs`; against a
 /// substitute the move's `onAfterSubDamage` ([`on_after_sub_damage`]) runs instead.
-pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
+pub(super) fn on_after_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    mv: &ActiveMove,
+) -> Result<(), TurnError> {
+    // Covet, Thief: `if (source.item || source.volatiles['gem']) return;` then
+    // `target.takeItem(source)` and the item goes to the user (`pass_item`; gems are not
+    // supported).
+    if (mv.id == moves::COVET || mv.id == moves::THIEF) && b.raw_item(user).is_none() {
+        pass_item(b, target, user, mv.data.name)?;
+    }
     // Ice Spinner: `this.field.clearTerrain();`
     if mv.id == moves::ICE_SPINNER {
         super::clear_terrain(b);
@@ -806,6 +817,60 @@ pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef,
             super::super::conditions::add_hazard(b, user.side.other(), hazard);
         }
     }
+    Ok(())
+}
+
+/// Moves the held item of the Pokémon in `giver` to the one in `taker` (Covet, Thief: from the
+/// target to the user; Bestow: from the user to the target): `giver.takeItem(taker)` — the
+/// TakeItem event (the giver's Unburden, the item's own handler: a Mega Stone of the giver's
+/// species or `onTakeItem: false` stays) and the item's End on the giver (Mirror Herb forgets
+/// its copied raises) — then `singleEvent('TakeItem', item, ..., taker)` (the item's handler with
+/// the new holder: a Mega Stone of its species is refused) and `taker.setItem(item)` (needs HP;
+/// the item's Start: `trick_item_start`); if either refuses, `giver.item = item.id` gives it back
+/// silently. Returns whether the taker got it. An item the engine cannot move
+/// (`abilities::item_moves`) is unsupported. (Opus S's `abilities::steal_item` has no second
+/// TakeItem check; this one stays local to the moves.)
+fn pass_item<const N: usize>(
+    b: &mut Battle<'_, N>,
+    giver: SlotRef,
+    taker: SlotRef,
+    by: &str,
+) -> Result<bool, TurnError> {
+    let (Some(holder), item) = (b.occupant(giver), b.raw_item(giver)) else {
+        return Ok(false);
+    };
+    if item.is_none() {
+        return Ok(false);
+    }
+    if !super::super::abilities::item_moves(item) {
+        return Err(b.unsupported(format!(
+            "{by} moving {} ({:?})",
+            item.data().name,
+            item.data().handlers
+        )));
+    }
+    if !b.take_item(giver) {
+        return Ok(false);
+    }
+    if item == items::MIRROR_HERB {
+        b.mirror_herb.retain(|&(p, _)| p != holder);
+    }
+    let receiver = b.alive(taker).filter(|&p| holds_freely(item, b.mon(p)));
+    let Some(receiver) = receiver else {
+        b.apply(Instruction::SetItem {
+            target: holder,
+            old: ItemId::NONE,
+            new: item,
+        });
+        return Ok(false);
+    };
+    b.apply(Instruction::SetItem {
+        target: receiver,
+        old: ItemId::NONE,
+        new: item,
+    });
+    trick_item_start(b, taker, item);
+    Ok(true)
 }
 
 /// The move's `onAfterSubDamage` (`singleEvent('AfterSubDamage', move)` in the substitute's
@@ -2242,6 +2307,61 @@ pub(super) fn on_hit<const N: usize>(
                 let called = callable[b.rng.uniform(callable.len())];
                 super::call_move(b, user, mv, called, None)?;
                 HitResult::NotFail
+            }
+        }
+        // Power Split: the user and the target both take the average of their stored Attack
+        // (`Math.floor((target.storedStats.atk + source.storedStats.atk) / 2)`) and of their
+        // stored SpA; Guard Split: of Defense and SpD. Returns nothing.
+        moves::POWER_SPLIT | moves::GUARD_SPLIT => {
+            let stats: [usize; 2] = if mv.id == moves::POWER_SPLIT {
+                [0, 2]
+            } else {
+                [1, 3]
+            };
+            let (Some(p), Some(q)) = (b.occupant(user), b.occupant(target)) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let (mine, theirs) = (b.mon(p).forme(), b.mon(q).forme());
+            for (pokemon, old) in [(q, theirs), (p, mine)] {
+                let mut new = old;
+                for stat in stats {
+                    new.stats[stat] =
+                        ((i32::from(mine.stats[stat]) + i32::from(theirs.stats[stat])) / 2) as i16;
+                }
+                if new != old {
+                    b.apply(Instruction::SetForme {
+                        target: pokemon,
+                        old,
+                        new,
+                    });
+                }
+            }
+            return Ok(None);
+        }
+        // Bestow: `if (target.item) return false;` then the user's item goes to the target
+        // (`source.takeItem()`, the item's TakeItem with the target, `target.setItem`; either
+        // refusal gives it back and fails the move).
+        moves::BESTOW => {
+            if !b.raw_item(target).is_none() {
+                HitResult::Failure
+            } else {
+                success(pass_item(b, user, target, mv.data.name)?)
+            }
+        }
+        // Acupressure: one of the target's stats below +6 (`for (stat in target.boosts)`: Atk, Def,
+        // SpA, SpD, Spe, accuracy, evasion), drawn uniformly (`this.sample`), is raised by 2
+        // (`this.boost`, from the user); `false` when all are at +6. It returns nothing otherwise.
+        moves::ACUPRESSURE => {
+            let boosts = b.state.slot(target).boosts;
+            let raisable: Vec<usize> = (0..BOOST_COUNT).filter(|&i| boosts[i] < 6).collect();
+            if raisable.is_empty() {
+                HitResult::Failure
+            } else {
+                let stat = raisable[b.rng.uniform(raisable.len())];
+                let mut up = NO_BOOSTS;
+                up[stat] = 2;
+                b.boost_by(target, &up, Some(user), BoostEffect::Move(mv.id));
+                return Ok(None);
             }
         }
         // Copycat: `let move = this.lastMove; if (!move) return; if (move.flags['failcopycat'] ||
