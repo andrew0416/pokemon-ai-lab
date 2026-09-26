@@ -159,8 +159,10 @@ D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls m
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --believed-team a.json --believed-team b.json --believed-weight 0.7,0.3   # 믿음 분포(가중 혼합)
 D:/cargo-target/release/lab-plan.exe <setupTurns 있는 scenario> --side p1 --rolls median --believed-team a.json --believed-team b.json --believed-weight 0.7,0.3 --observed "Gardevoir:55,Rillaboom:65" --observed-tolerance 1.5   # 모델 ②: 관측(우리 HP%)으로 믿음 갱신 뒤 최적 응답 (Full 재생 2분; `--setup-rolls median --observed-tolerance 6`이면 5초, 허용 폭은 롤 범위만큼 넓게)
 D:/cargo-target/release/lab-plan.exe <setupTurns 2개 있는 scenario> --side p1 --rolls median --setup-rolls median --believed-team a.json --believed-team b.json --believed-weight 0.7,0.3 --observed-turn 1 "Rillaboom:65" --observed-turn 2 "Gardevoir:52,Rillaboom:30" --observed-tolerance 6   # 모델 ② 여러 턴: setup 턴마다 관측 하나, 턴이 재생될 때마다 걸러서 갱신 (S18; 1–3 s)
+D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --solve deep-nash --beam 4 --outcomes 4   # 깊이 2 혼합 균형(S21): 양쪽 빔 위 행렬, 자식은 1턴 균형 값; sand-owen 1턴 218 s
 cargo build --release -p lab-search --bin lab-rollout
 D:/cargo-target/release/lab-rollout.exe <scenario> --games 100 --seed 20260926 --threads 4 --out results.json   # 자기대전 승률(S19): 양쪽 1턴 균형 정책 + 정확 난수로 끝까지; 판당 20–25 s(단일 게임 스레드, 6코어). 같은 시드로 두 선두를 비교
+D:/cargo-target/release/lab-rollout.exe <scenario> --games 50 --seed 20260926 --threads 1 --policy deep-nash --beam 3 --outcomes 2 --out results.json   # 깊이 2 정책 롤아웃(S22 예정): 판당 수 분
 python engine/scripts/fit_eval.py runs/plan-20260926/fit/*.jsonl --out runs/plan-20260926/fit/weights.json   # lab-plan --dump-children 결과로 평가 가중치 적합
 LAB_ENGINE_STATS=1 D:/cargo-target/release/lab-turn.exe <scenario> --position 1 --rolls median   # 단계별 프런티어·재실행 수·시간
 D:/cargo-target/release/lab-turn.exe <scenario> --rolls median      # full|extremes|quartiles|median|pessimistic-p1|pessimistic-p2
@@ -236,7 +238,7 @@ cd engine/py && ../../.venv-doubles/Scripts/maturin.exe build --release -i ../..
 8. **[2026-09-26 이후의 우선순위]**
    - 평가 함수: 실제 경기(Sol 완주 기록, `runs/`) 결과와 `lab-plan` 값을 대조하고, 상태이상·휘발이 있는 국면의 표본을 모아 `fit_eval.py`로 적합(S12). 가디안 vs 아쿠스타 판정은 그 뒤(S15).
    - 상대 모델 ②: HP% 관측의 턴별 갱신(S17·S18)과 생존 국면 믹스처(S20)는 됐다. 남은 것은 행동 순서(스피드 비교)·도구/특성 노출·상태이상 관측, 로그에서 관측을 자동으로 뽑는 파서, maximin·deep·plan 모드의 믹스처. DESIGN.md "모델 ③·② 구현".
-   - 깊이 2에 혼합 전략(현재 `analyse_deep`은 루트 행렬 + 자식 균형), 전치표. `lab-rollout` 정책을 깊이 2(또는 `--child-nash`)로 바꿔 승률이 어떻게 움직이는지 보는 것이 평가 함수 의존을 줄이는 다음 단계.
+   - 깊이 2 혼합 균형은 S21(`analyse_deep_mixed`, `--solve deep-nash`, `lab-rollout --policy deep-nash`)로 됐다. 다음은 S22: 같은 시드로 깊이 2 정책 롤아웃을 돌려 1턴 정책과 승률을 비교(먼저 psy-cona 쌍). 깊이 3은 빔 안에서 재귀(자식도 deep-nash)하면 되지만 비용이 빔²·결과 수 배로 늘어 전치표·증분 평가가 먼저 필요하다.
    - 남은 엔진 버그: 8차 병합 뒤 목록은 prog 보드 B1–B12(위 "8차 병합" 문단). 언너브 시점(F23)·`trapped` 원시 특성(U1)·바디퍼지(W5)는 해결됐다.
    - 라이브러리 밖 커버리지는 Opus 웨이브로 계속(`COVERAGE.md` 미지원 목록 중 실전 빈도순).
 

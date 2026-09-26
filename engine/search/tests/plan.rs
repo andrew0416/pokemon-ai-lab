@@ -579,3 +579,70 @@ fn best_response_is_at_least_the_equilibrium() {
         assert!((response.lines[0].1 - column_max).abs() < 1e-3);
     }
 }
+
+/// The depth-2 mixed analysis: the beams hold every choice of the shallow support, its matrix
+/// is over the kept beams, the equilibrium is a probability distribution with a value inside
+/// the matrix's range, and with a full beam every cell equals the plan's child value.
+#[test]
+fn deep_mixed_beams_and_cells() {
+    let position = position("eject-button-uturn");
+    let mut state = position.state.clone();
+    let mut config = Config::new(Ruleset::CHAMPIONS_MC, SideId::One);
+    config.rolls = RollMode::Full;
+    config.child_nash = true;
+    config.reply_beam = None;
+    config.outcome_cap = None;
+    let evaluator = Material;
+    let mut solver = Solver::new(config, &evaluator);
+    let deep = solver.analyse_deep_mixed(&mut state, None, 100).unwrap();
+    assert_eq!(state, position.state);
+    assert_eq!(deep.matrix.rows, deep.ours.len());
+    assert_eq!(deep.matrix.cols, deep.theirs.len());
+    for (choice, _) in deep.shallow.our_support(lab_search::MIXED_SUPPORT) {
+        assert!(
+            deep.ours.contains(&choice) || deep.omitted_ours > 0,
+            "{choice:?}"
+        );
+    }
+    for (choice, _) in deep.shallow.their_support(lab_search::MIXED_SUPPORT) {
+        assert!(
+            deep.theirs.contains(&choice) || deep.omitted_theirs > 0,
+            "{choice:?}"
+        );
+    }
+    let sum_rows: f32 = deep.equilibrium.rows.iter().sum();
+    let sum_cols: f32 = deep.equilibrium.cols.iter().sum();
+    assert!((sum_rows - 1.0).abs() < 1e-3 && (sum_cols - 1.0).abs() < 1e-3);
+    let lo = deep
+        .matrix
+        .values
+        .iter()
+        .cloned()
+        .fold(f32::INFINITY, f32::min);
+    let hi = deep
+        .matrix
+        .values
+        .iter()
+        .cloned()
+        .fold(f32::NEG_INFINITY, f32::max);
+    assert!(deep.equilibrium.value >= lo - 1e-3 && deep.equilibrium.value <= hi + 1e-3);
+    assert!(deep.equilibrium.value >= deep.maximin.1 - 1e-3);
+    // With every choice in both beams, a cell is the plan's child value for that reply.
+    for (r, a) in deep.ours.iter().enumerate() {
+        let report = solver.evaluate_plan(&mut state, None, &[*a]).unwrap();
+        let child = report.child.unwrap();
+        for (c, b) in deep.theirs.iter().enumerate() {
+            if let Some((_, v)) = child.replies.iter().find(|(x, _)| x == b) {
+                assert!(
+                    (deep.matrix.at(r, c) - v).abs() < 1e-3,
+                    "{a:?} vs {b:?}: deep {} plan child {v}",
+                    deep.matrix.at(r, c)
+                );
+            }
+        }
+    }
+    // A narrow beam is a subset of the full one and never wider than beam + support.
+    let narrow = solver.analyse_deep_mixed(&mut state, None, 1).unwrap();
+    assert!(narrow.ours.iter().all(|c| deep.ours.contains(c)));
+    assert!(narrow.ours.len() <= 1 + deep.shallow.our_support(lab_search::MIXED_SUPPORT).len());
+}

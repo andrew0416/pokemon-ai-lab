@@ -5,7 +5,7 @@
 //!                 [--before <oracle-report.json>] [--top k] [--exact] [--all-targets]
 //!                 [--max-turns n] [--rolls full|extremes|quartiles|median|pessimistic]
 //!                 [--eval material|heuristic|file:<weights.json>] [--position i]
-//!                 [--solve maximin|nash|deep] [--dump-children <out.jsonl> [--beam b] [--outcomes k]]
+//!                 [--solve maximin|nash|deep|deep-nash] [--dump-children <out.jsonl> [--beam b] [--outcomes k]]
 //!                 [--believed-team <team.json>]... [--believed-weight w1,w2,...]
 //!                 [--observed "Name:pct,Name:pct"] [--observed-turn k "Name:pct,..."]... [--observed-tolerance 1.0]
 //!                 [--setup-rolls full|median|extremes|quartiles]
@@ -186,8 +186,8 @@ fn run() -> Result<(), String> {
             "--solve" => {
                 i += 1;
                 solve = match args.get(i).map(String::as_str) {
-                    Some(s @ ("maximin" | "nash" | "deep")) => s.to_owned(),
-                    _ => return Err("--solve needs maximin, nash or deep".into()),
+                    Some(s @ ("maximin" | "nash" | "deep" | "deep-nash")) => s.to_owned(),
+                    _ => return Err("--solve needs maximin, nash, deep or deep-nash".into()),
                 };
             }
             "--plan" => {
@@ -686,6 +686,99 @@ fn run() -> Result<(), String> {
                     format!("{value:+.1}"),
                     describe(&position, report.decision, them, reply)
                 );
+            }
+        }
+        return Ok(());
+    }
+    if solve == "deep-nash" {
+        // Depth-2 mixed equilibrium (S21): both sides' beams, cells worth the children's
+        // next-turn equilibrium, solved as a matrix game.
+        let beam = config.reply_beam.unwrap_or(4);
+        let deep = solver
+            .analyse_deep_mixed(&mut state, None, beam)
+            .map_err(|e| e.to_string())?;
+        if state != position.state {
+            return Err("the solver changed the position (bug)".into());
+        }
+        println!(
+            "decision {:?}, deep-nash: beams {} x {} (+ shallow support >= {:.0}%), outcomes {:?}, chance {:?}, rolls {:?}, eval {eval}: {} nodes, {} enumerations, {:.2} s",
+            deep.decision,
+            deep.beam,
+            deep.beam,
+            lab_search::MIXED_SUPPORT * 100.0,
+            deep.outcome_cap,
+            config.chance,
+            config.rolls,
+            deep.nodes,
+            deep.turns,
+            deep.elapsed.as_secs_f64()
+        );
+        println!(
+            "shallow matrix {}x{}, equilibrium {:+.1}; deep matrix {}x{}, equilibrium {:+.1} (exploitability {:.3}, {} RM+ iterations); pure deep maximin {:+.1}",
+            deep.shallow.matrix.rows,
+            deep.shallow.matrix.cols,
+            deep.shallow.equilibrium.value,
+            deep.matrix.rows,
+            deep.matrix.cols,
+            deep.equilibrium.value,
+            deep.equilibrium.exploitability,
+            deep.equilibrium.iterations,
+            deep.maximin.1
+        );
+        if deep.omitted_ours + deep.omitted_theirs > 0 {
+            println!(
+                "dropped {} of their beam replies and {} of our beam choices whose children reach effects the engine does not implement",
+                deep.omitted_theirs, deep.omitted_ours
+            );
+        }
+        println!("our deep mixed strategy (>= 1%; shallow probability in brackets):");
+        for (choice, p) in deep.our_support(0.01).iter().take(top) {
+            let shallow_p = deep
+                .shallow
+                .ours
+                .iter()
+                .position(|c| c == choice)
+                .map_or(0.0, |i| deep.shallow.equilibrium.rows[i]);
+            println!(
+                "  {:>5.1}% [{:>5.1}%]  {}",
+                p * 100.0,
+                shallow_p * 100.0,
+                describe(&position, deep.decision, us, choice)
+            );
+        }
+        println!("their deep mixed strategy (>= 1%; shallow probability in brackets):");
+        for (choice, p) in deep.their_support(0.01).iter().take(top) {
+            let shallow_p = deep
+                .shallow
+                .theirs
+                .iter()
+                .position(|c| c == choice)
+                .map_or(0.0, |i| deep.shallow.equilibrium.cols[i]);
+            println!(
+                "  {:>5.1}% [{:>5.1}%]  {}",
+                p * 100.0,
+                shallow_p * 100.0,
+                describe(&position, deep.decision, them, choice)
+            );
+        }
+        println!("deep matrix (rows: our beam, columns: their beam; values from our side):");
+        for (r, a) in deep.ours.iter().enumerate() {
+            let cells: Vec<String> = (0..deep.theirs.len())
+                .map(|c| format!("{:>7.1}", deep.matrix.at(r, c)))
+                .collect();
+            println!(
+                "  {}  | {}",
+                cells.join(" "),
+                describe(&position, deep.decision, us, a)
+            );
+        }
+        for (c, b) in deep.theirs.iter().enumerate() {
+            println!("  col {c}: {}", describe(&position, deep.decision, them, b));
+        }
+        if !deep.unsupported.is_empty() {
+            println!("effects the engine does not implement met in the children (those pairs were dropped):");
+            for why in &deep.unsupported {
+                println!("  - {why}");
             }
         }
         return Ok(());

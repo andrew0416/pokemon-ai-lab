@@ -7,6 +7,7 @@
 //! 용도와 정보 모델", AGENTS.md "대전과 비교 방법").
 //!
 //! Usage: lab-rollout <scenario.json> [--games n] [--seed s] [--threads k] [--max-turns t]
+//!                    [--policy nash|deep-nash [--beam b] [--outcomes k]]
 //!                    [--rolls median|extremes|quartiles|full|pessimistic]
 //!                    [--eval material|heuristic|file:<weights.json>]
 //!                    [--setup-rolls full|median|extremes|quartiles] [--position i]
@@ -15,7 +16,11 @@
 //! The start is the scenario's position (after switch-ins, setup turns and patch); with several
 //! initial states one is drawn per game by its probability (`--position` fixes one). `--rolls`
 //! is the damage-roll mode the policy's matrix game is solved with (default median); the game
-//! itself always runs with exact chance (`sample_turn`). Game `g` of seed `s` is deterministic
+//! itself always runs with exact chance (`sample_turn`). `--policy deep-nash` draws from the
+//! depth-2 mixed equilibrium instead (`Solver::analyse_deep_mixed`: both sides' `--beam` best
+//! choices plus their shallow supports, children worth their next-turn equilibrium over the
+//! `--outcomes` most probable outcomes) — much slower per decision, less bound to the
+//! evaluator's one-turn view. Game `g` of seed `s` is deterministic
 //! given the engine, the evaluator and the policy. A game the solver cannot value (an effect the
 //! engine does not implement) is aborted, a game still going after `--max-turns` turns is a
 //! cutoff; both are reported outside the win tally (AGENTS.md: 중단 경기는 승패 집계에서 제외).
@@ -43,6 +48,15 @@ use lab_scenario::{
 };
 use lab_search::solve::SearchError;
 use lab_search::{format_choice, Choice, Config, Decision, Solver};
+
+/// Which equilibrium the sides draw their choices from.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Policy {
+    /// The one-turn matrix game (`analyse_mixed`).
+    Nash,
+    /// The depth-2 matrix game over both beams (`analyse_deep_mixed`).
+    DeepNash,
+}
 
 fn main() -> ExitCode {
     match run() {
@@ -135,6 +149,9 @@ fn run() -> Result<(), String> {
     let mut max_turns: u16 = 30;
     let mut rolls = RollMode::Median;
     let mut setup_rolls = RollMode::Full;
+    let mut policy = Policy::Nash;
+    let mut beam: usize = 3;
+    let mut outcomes: Option<usize> = Some(2);
     let mut eval = "heuristic".to_owned();
     let mut position_index: Option<usize> = None;
     let mut out: Option<String> = None;
@@ -165,6 +182,22 @@ fn run() -> Result<(), String> {
             "--rolls" => {
                 i += 1;
                 rolls = roll_mode(args.get(i), "--rolls")?;
+            }
+            "--policy" => {
+                i += 1;
+                policy = match args.get(i).map(String::as_str) {
+                    Some("nash") => Policy::Nash,
+                    Some("deep-nash") => Policy::DeepNash,
+                    _ => return Err("--policy needs nash or deep-nash".into()),
+                };
+            }
+            "--beam" => {
+                i += 1;
+                beam = parse(&args, i, "--beam")?;
+            }
+            "--outcomes" => {
+                i += 1;
+                outcomes = Some(parse(&args, i, "--outcomes")?);
             }
             "--setup-rolls" => {
                 i += 1;
@@ -242,10 +275,15 @@ fn run() -> Result<(), String> {
     let mut config = Config::new(Ruleset::CHAMPIONS_MC, SideId::One);
     config.rolls = rolls;
     config.threads = if game_threads == 1 { 0 } else { 1 };
+    config.outcome_cap = outcomes;
+    let policy_text = match policy {
+        Policy::Nash => "nash depth 1".to_owned(),
+        Policy::DeepNash => format!("deep-nash beam {beam} outcomes {outcomes:?}"),
+    };
 
     let teams = team_files(&scenario)?;
     println!(
-        "{}\nformat {}, {} initial state(s); {} games, seed {seed}, policy nash depth 1 rolls {:?} eval {eval}, exact chance in play, max {max_turns} turns, {game_threads} game thread(s)",
+        "{}\nformat {}, {} initial state(s); {} games, seed {seed}, policy {policy_text} rolls {:?} eval {eval}, exact chance in play, max {max_turns} turns, {game_threads} game thread(s)",
         loaded.meta.description,
         loaded.meta.format,
         positions.len(),
@@ -276,6 +314,8 @@ fn run() -> Result<(), String> {
                     g,
                     seed,
                     max_turns,
+                    policy,
+                    beam,
                 );
                 if !quiet {
                     let mut o = stdout.lock().unwrap();
@@ -359,7 +399,7 @@ fn run() -> Result<(), String> {
             "teams": teams.iter().map(|(side, path, hash)| json!({"side": side, "file": path, "fnv1a64": format!("{hash:016x}")})).collect::<Vec<_>>(),
             "games": games,
             "seed": seed,
-            "policy": {"solve": "nash", "depth": 1, "rolls": format!("{rolls:?}"), "eval": eval, "chance_in_play": "exact (sample_turn)"},
+            "policy": {"solve": match policy { Policy::Nash => "nash", Policy::DeepNash => "deep-nash" }, "depth": match policy { Policy::Nash => 1, Policy::DeepNash => 2 }, "beam": match policy { Policy::Nash => Value::Null, Policy::DeepNash => json!(beam) }, "outcomes": outcomes, "rolls": format!("{rolls:?}"), "eval": eval, "chance_in_play": "exact (sample_turn)"},
             "max_turns": max_turns,
             "initial_states": positions.len(),
             "tally": {"p1": p1, "p2": p2, "tie": ties, "cutoff": cutoffs, "aborted": aborted, "decided": decided},
@@ -398,6 +438,8 @@ fn play_game(
     index: usize,
     master_seed: u64,
     max_turns: u16,
+    policy: Policy,
+    beam: usize,
 ) -> GameRecord {
     let started = Instant::now();
     let seed =
@@ -424,27 +466,26 @@ fn play_game(
         if state.turn > max_turns {
             break Ending::Cutoff;
         }
-        let mixed = match solver.analyse_mixed(&mut state, suspension.as_ref()) {
-            Ok(m) => m,
+        // The policy: both sides' mixed strategies at this decision.
+        let strategies = match policy {
+            Policy::Nash => solver
+                .analyse_mixed(&mut state, suspension.as_ref())
+                .map(|m| (m.ours, m.theirs, m.equilibrium)),
+            Policy::DeepNash => solver
+                .analyse_deep_mixed(&mut state, suspension.as_ref(), beam)
+                .map(|d| (d.ours, d.theirs, d.equilibrium)),
+        };
+        let (our_choices, their_choices, equilibrium) = match strategies {
+            Ok(s) => s,
             Err(SearchError::Unsupported(whys)) => {
                 break Ending::Aborted(format!("unsupported: {}", whys.join("; ")));
             }
             Err(e) => break Ending::Aborted(format!("solver: {e}")),
         };
-        let rows: Vec<f64> = mixed
-            .equilibrium
-            .rows
-            .iter()
-            .map(|&p| f64::from(p))
-            .collect();
-        let cols: Vec<f64> = mixed
-            .equilibrium
-            .cols
-            .iter()
-            .map(|&p| f64::from(p))
-            .collect();
-        let ours = mixed.ours[rng.weighted(&rows)];
-        let theirs = mixed.theirs[rng.weighted(&cols)];
+        let rows: Vec<f64> = equilibrium.rows.iter().map(|&p| f64::from(p)).collect();
+        let cols: Vec<f64> = equilibrium.cols.iter().map(|&p| f64::from(p)).collect();
+        let ours = our_choices[rng.weighted(&rows)];
+        let theirs = their_choices[rng.weighted(&cols)];
         let [c1, c2] = if config.us == SideId::One {
             [ours, theirs]
         } else {
@@ -494,8 +535,8 @@ fn play_game(
             "decision": format!("{decision:?}"),
             "p1": p1_text,
             "p2": p2_text,
-            "value_p1": if config.us == SideId::One { mixed.equilibrium.value } else { -mixed.equilibrium.value },
-            "exploitability": mixed.equilibrium.exploitability,
+            "value_p1": if config.us == SideId::One { equilibrium.value } else { -equilibrium.value },
+            "exploitability": equilibrium.exploitability,
             "hp_after": hp_summary(loaded, &state),
         }));
         suspension = outcome.suspension;

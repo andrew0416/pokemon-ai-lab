@@ -655,6 +655,84 @@ impl<const N: usize> MixedAnalysis<N> {
     }
 }
 
+/// A choice is in a side's beam of [`Solver::analyse_deep_mixed`] whenever its shallow
+/// equilibrium probability is at least this, besides the `beam` best by expected value.
+pub const MIXED_SUPPORT: f32 = 0.05;
+
+/// Result of [`Solver::analyse_deep_mixed`]: the depth-2 matrix game over both sides' beams.
+#[derive(Clone, Debug)]
+pub struct DeepMixedAnalysis<const N: usize> {
+    pub decision: Decision,
+    /// Our beam and their beam (choices kept after dropping unevaluable pairs).
+    pub ours: Vec<Choice<N>>,
+    pub theirs: Vec<Choice<N>>,
+    /// `ours.len() × theirs.len()`, from our side: each cell the expected next-turn equilibrium
+    /// value of the pair's most probable outcomes.
+    pub matrix: Matrix,
+    pub equilibrium: Equilibrium,
+    /// The pure maximin (row, value) of the deep matrix.
+    pub maximin: (usize, f32),
+    /// The one-turn analysis the beams were taken from.
+    pub shallow: MixedAnalysis<N>,
+    pub beam: usize,
+    pub outcome_cap: Option<usize>,
+    pub nodes: u64,
+    pub turns: u64,
+    pub elapsed: Duration,
+    pub unsupported: Vec<String>,
+    pub omitted_theirs: usize,
+    pub omitted_ours: usize,
+}
+
+impl<const N: usize> DeepMixedAnalysis<N> {
+    /// Our beam choices with deep equilibrium probability at least `min`, most likely first.
+    pub fn our_support(&self, min: f32) -> Vec<(Choice<N>, f32)> {
+        support(&self.ours, &self.equilibrium.rows, min)
+    }
+
+    /// Their beam choices with deep equilibrium probability at least `min`, most likely first.
+    pub fn their_support(&self, min: f32) -> Vec<(Choice<N>, f32)> {
+        support(&self.theirs, &self.equilibrium.cols, min)
+    }
+}
+
+fn support<const N: usize>(
+    choices: &[Choice<N>],
+    probabilities: &[f32],
+    min: f32,
+) -> Vec<(Choice<N>, f32)> {
+    let mut out: Vec<(Choice<N>, f32)> = choices
+        .iter()
+        .zip(probabilities)
+        .filter(|(_, &p)| p >= min)
+        .map(|(c, &p)| (*c, p))
+        .collect();
+    out.sort_by(|a, b| b.1.total_cmp(&a.1));
+    out
+}
+
+/// The indices of the `beam` best entries of `value` (descending when `descending`, else
+/// ascending) plus every index whose `support` probability is at least [`MIXED_SUPPORT`], in
+/// their original order.
+fn beam_indices(value: &[f32], support: &[f32], beam: usize, descending: bool) -> Vec<usize> {
+    let mut order: Vec<usize> = (0..value.len()).collect();
+    order.sort_by(|&a, &b| {
+        if descending {
+            value[b].total_cmp(&value[a])
+        } else {
+            value[a].total_cmp(&value[b])
+        }
+    });
+    let mut keep: Vec<usize> = order.into_iter().take(beam.max(1)).collect();
+    for (i, &p) in support.iter().enumerate() {
+        if p >= MIXED_SUPPORT && !keep.contains(&i) {
+            keep.push(i);
+        }
+    }
+    keep.sort_unstable();
+    keep
+}
+
 impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
     /// Values every pair of choices at the root exactly (no cutoffs) and solves the matrix
     /// game by regret matching. `state` is left unchanged. Costs `ours × theirs` chance nodes,
@@ -902,6 +980,86 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
     /// (row minimum) and their replies (per row); then the `beam` best rows are valued again
     /// against their `beam` worst columns with each child position worth its own next-turn
     /// equilibrium ([`Next::Nash`], `Config::outcome_cap`). `state` is left unchanged.
+    /// Depth-2 mixed analysis (WORKPLAN S21): the matrix game over both sides' beams in which
+    /// each cell is the expected next-turn equilibrium value of the pair's outcomes (as
+    /// [`Solver::analyse_deep`]'s children: the `Config::outcome_cap` most probable outcomes,
+    /// each child worth its own one-turn equilibrium, cached by position), solved for a mixed
+    /// equilibrium of both sides. A side's beam is its `beam` best choices by expected value
+    /// against the other side's shallow (one-turn) equilibrium strategy plus every choice in
+    /// its own shallow support ([`MIXED_SUPPORT`]). Unlike [`Solver::analyse_deep`], which
+    /// values our beam against the worst replies, this gives both players a strategy and so
+    /// serves as a rollout policy (`lab-rollout --policy deep-nash`). `state` is left unchanged.
+    pub fn analyse_deep_mixed(
+        &mut self,
+        state: &mut State<N>,
+        suspension: Option<&Suspension>,
+        beam: usize,
+    ) -> Result<DeepMixedAnalysis<N>, SearchError> {
+        let started = Instant::now();
+        let shallow = self.analyse_mixed(state, suspension)?;
+        let decision = shallow.decision;
+        let (n, m) = (shallow.ours.len(), shallow.theirs.len());
+        // Expected values against the other side's shallow equilibrium strategy.
+        let our_value: Vec<f32> = (0..n)
+            .map(|r| {
+                (0..m)
+                    .map(|c| shallow.equilibrium.cols[c] * shallow.matrix.at(r, c))
+                    .sum()
+            })
+            .collect();
+        let their_value: Vec<f32> = (0..m)
+            .map(|c| {
+                (0..n)
+                    .map(|r| shallow.equilibrium.rows[r] * shallow.matrix.at(r, c))
+                    .sum()
+            })
+            .collect();
+        let our_beam = beam_indices(&our_value, &shallow.equilibrium.rows, beam, true);
+        let their_beam = beam_indices(&their_value, &shallow.equilibrium.cols, beam, false);
+        let ours: Vec<Choice<N>> = our_beam.iter().map(|&r| shallow.ours[r]).collect();
+        let theirs: Vec<Choice<N>> = their_beam.iter().map(|&c| shallow.theirs[c]).collect();
+        let mut values = Vec::with_capacity(ours.len() * theirs.len());
+        for &a in &ours {
+            for &b in &theirs {
+                let pair = self.pair(a, b);
+                values.push(self.chance(
+                    state,
+                    decision,
+                    suspension,
+                    pair,
+                    Next::Nash,
+                    f32::NEG_INFINITY,
+                    f32::INFINITY,
+                )?);
+            }
+        }
+        let (ours, theirs, values, omitted_theirs, omitted_ours) =
+            drop_unevaluable(ours, theirs, values);
+        if ours.is_empty() || theirs.is_empty() {
+            return Err(SearchError::Unsupported(self.unsupported.clone()));
+        }
+        let matrix = Matrix::new(ours.len(), theirs.len(), values);
+        let equilibrium = nash::solve(&matrix, 20_000, 0.01);
+        let maximin = matrix.maximin();
+        Ok(DeepMixedAnalysis {
+            decision,
+            ours,
+            theirs,
+            matrix,
+            equilibrium,
+            maximin,
+            shallow,
+            beam: beam.max(1),
+            outcome_cap: self.config.outcome_cap,
+            nodes: self.nodes,
+            turns: self.turns,
+            elapsed: started.elapsed(),
+            unsupported: self.unsupported.clone(),
+            omitted_theirs,
+            omitted_ours,
+        })
+    }
+
     pub fn analyse_deep(
         &mut self,
         state: &mut State<N>,
