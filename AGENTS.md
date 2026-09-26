@@ -82,3 +82,9 @@
 - 빌드는 로컬과 GitHub Actions(`.github/workflows/engine.yml`) 둘 다 한다. 2026-09-25 사용자 지시로 로컬 빌드 체계를 설치했다: 기본 MSVC(VS Build Tools 2022, `D:\VS\BuildTools`), 대안 GNU(`D:\winlibs`), 산출물 `D:\cargo-target`, venv에 maturin. 명령과 함정은 `engine/CONTEXT.md` "실행 방법". CUDA 13.4 툴킷도 설치됨(드라이버 제외, sm_75 커널 실행 확인). poke-engine 싱글 기준선 wheel은 CI에서 만든다.
 - 골격은 아직 CI를 통과한 적이 없다. 규칙 처리(턴 진행·데미지·기술 효과)는 미구현이다.
 - 2026-09-25 탐색 용도 확정: 일반적으로 강한 AI가 아니라 **알려진 특정 파티를 이기는 플랜을 찾는 오프라인 도구**. 양쪽 파티 확정, 배분·도구는 비공개 전제. 상대 모델 ①완전정보 ②표준 믿음+관측 갱신 ③믿음 고정으로 나누고 플랜마다 성립 조건을 출력한다. 상세는 `engine/DESIGN.md` "탐색의 용도와 정보 모델".
+
+## 2026-09-26 탐색 도구(lab-plan) 사용
+- `engine/search`(lab-search)의 `lab-plan`이 알려진 두 파티의 한 국면을 푼다: `--solve maximin`(읽혀도 성립하는 하한), `--solve nash`(1턴 행렬 게임 균형·혼합 전략, 실전 파티 약 8 s), `--solve deep`(깊이 2 근사, 약 4.5분), `--plan "<턴1> / <턴2>"`(고정 라인 vs 최악 응수, `--child-nash`로 다음 턴 균형까지). 난수는 `--rolls median|extremes|pessimistic|full`(정확 분포 `full`은 실전 턴에서 불가능; 사용자의 "최저난수 보장"은 `--rolls pessimistic`). 명령 예시는 `engine/CONTEXT.md` "실행 방법".
+- 값은 승률이 아니라 평가 함수(`eval::Heuristic`, HP 한 칸 = 100, 임의 가중치) 점수다. 상대 모델은 ①(완전정보)만 구현. 결과를 보고할 때 깊이·난수 모드·평가·제외된 미구현 쌍을 함께 적는다.
+- 실행 기록은 `runs/plan-<날짜>/`(gitignored)에 시나리오·`out/`·`summary.*.json`·README로 남긴다. 시나리오는 `teams/` 원본을 상대 경로로 참조하고, 파생 팀(예: `teams/rillaboom-slot-20260920/starmie-braverilla.json`)은 provenance 파일과 함께 별도 저장한다. 첫 적용: `runs/plan-20260926/README.md`(가디안 vs 아쿠스타 선두, 4 라이브러리 팀, 선두 6×6 표).
+- 여러 매치업은 `python engine/scripts/plan_sweep.py <run-dir> [--leads all]`로 돈다. 평가 가중치 적합은 `lab-plan --dump-children` + `engine/scripts/fit_eval.py`(S12, 진행 중).
