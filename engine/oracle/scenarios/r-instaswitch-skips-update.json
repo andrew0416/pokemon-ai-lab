@@ -1,0 +1,33 @@
+{
+ "description": "Opus R unit 1: a mid-turn switch-out runs no Update before it leaves. Champions' Eject Button keeps the U-turn user's own flag, so Swampert (Eject Button, Unnerve, faster) and Snorlax (U-turn user, Sitrus Berry at 100/267) are both asked to switch. Showdown sets skipBeforeSwitchOutEventFlag at the request, so neither instaswitch runs BeforeSwitchOut and its Update: after Swampert leaves (its Unnerve gone), Snorlax switches out without eating the berry. An Update before Snorlax's switch-out would let it eat. Damage rolls and the critical hit branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "Sitrus Berry", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["U-turn"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Swampert", "item": "Eject Button", "ability": "Unnerve", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Excadrill", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Scizor", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {
+  "p1": {
+   "Snorlax": {"hp": 100}
+  }
+ },
+ "turn": {
+  "p1": "move uturn 1, move harden",
+  "p2": "move harden, move harden"
+ },
+ "midTurn": {
+  "p1": ["switch 3"],
+  "p2": ["switch 3"]
+ }
+}

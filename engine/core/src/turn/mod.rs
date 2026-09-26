@@ -512,8 +512,10 @@ fn drag_outs<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), TurnError> {
 
 /// The end of Showdown `runAction` after the Update: a side whose active Pokémon has
 /// `switchFlag` gets a switch request if it can switch (`canSwitch`: a healthy bench member);
-/// otherwise its flags are cleared. `BeforeSwitchOut` has no implemented handler. Returns
-/// whether the turn must wait for a decision ([`resume_turn`]).
+/// otherwise its flags are cleared. Showdown runs `BeforeSwitchOut` for the flagged Pokémon
+/// here (no implemented handler) and sets `skipBeforeSwitchOutEventFlag`, so their switch-outs
+/// skip it and the Update before it (`switching::instaswitch_in`). Returns whether the turn
+/// must wait for a decision ([`resume_turn`]).
 fn request_switches<const N: usize>(b: &mut Battle<'_, N>) -> bool {
     let mut any = false;
     for side in [SideId::One, SideId::Two] {
@@ -584,9 +586,9 @@ fn pending_mid_turn_switch<const N: usize>(state: &State<N>) -> Option<SlotRef> 
 }
 
 /// The mid-turn switch stage (`resume_turn`): the `instaswitch` actions by the outgoing
-/// Pokémon's action Speed (ties uniformly at random; Showdown runs no Update between them),
-/// then the newcomers' one `runSwitch`, then `runAction`'s tail (faints, Update, switch
-/// requests).
+/// Pokémon's action Speed (ties uniformly at random; Showdown runs no Update between them, nor
+/// before an outgoing Pokémon leaves: `switching::instaswitch_in`), then the newcomers' one
+/// `runSwitch`, then `runAction`'s tail (faints, Update, switch requests).
 fn run_mid_turn_switches<const N: usize>(
     b: &mut Battle<'_, N>,
     switches: Vec<(SlotRef, u8)>,
@@ -639,7 +641,9 @@ fn run_mid_turn_switches<const N: usize>(
             continue;
         }
         let hp_before = b.state.side(slot.side).party[usize::from(party_index)].hp;
-        switching::switch_in(b, slot, party_index, true)?;
+        // The request set `skipBeforeSwitchOutEventFlag`: no BeforeSwitchOut and no Update
+        // before the flagged Pokémon leaves.
+        switching::instaswitch_in(b, slot, party_index, true)?;
         newcomers.push((slot, hp_before));
     }
     // The last `instaswitch` action's `runAction` tail: `eachEvent('Update')` before the
