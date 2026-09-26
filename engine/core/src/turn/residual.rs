@@ -33,7 +33,7 @@ enum Kind {
     Leftovers(PokemonRef, SlotRef),
     /// Speed Boost `onResidual` (order 28, sub-order 2).
     SpeedBoost(PokemonRef, SlotRef),
-    /// Shed Skin and Hydration `onResidual` (order 5, sub-order 3).
+    /// Shed Skin, Hydration and Healer `onResidual` (order 5, sub-order 3).
     StatusCure(PokemonRef, SlotRef, AbilityId),
     /// An item's `onResidual` (`items::on_residual`).
     Item(PokemonRef, SlotRef, ItemId),
@@ -223,12 +223,17 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                     sub_order: 2,
                     kind: Kind::SpeedBoost(pokemon, slot),
                 }),
-                a if a == abilities::SHED_SKIN || a == abilities::HYDRATION => out.push(Handler {
-                    order: 5,
-                    speed,
-                    sub_order: 3,
-                    kind: Kind::StatusCure(pokemon, slot, a),
-                }),
+                a if a == abilities::SHED_SKIN
+                    || a == abilities::HYDRATION
+                    || a == abilities::HEALER =>
+                {
+                    out.push(Handler {
+                        order: 5,
+                        speed,
+                        sub_order: 3,
+                        kind: Kind::StatusCure(pokemon, slot, a),
+                    })
+                }
                 a if super::forme::has_residual(a) => {
                     let orders = a.data().event_orders;
                     out.push(Handler {
@@ -534,6 +539,19 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
         }
         Kind::StatusCure(pokemon, slot, ability) => {
             if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != ability {
+                return Ok(true);
+            }
+            // Healer (Champions): every adjacent ally not at 0 HP with a status is cured on
+            // `this.randomChance(1, 2)` (mainline: 3/10).
+            if ability == abilities::HEALER {
+                for ally in b.alive_slots(slot.side) {
+                    let Some(partner) = b.alive(ally).filter(|_| ally != slot) else {
+                        continue;
+                    };
+                    if b.mon(partner).status != Status::None && b.rng.chance(1, 2) {
+                        b.cure_status(partner);
+                    }
+                }
                 return Ok(true);
             }
             if b.mon(pokemon).status == Status::None {

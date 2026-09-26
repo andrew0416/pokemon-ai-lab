@@ -1,0 +1,26 @@
+{
+ "description": "Opus Q unit 1: Azumarill's Huge Power (onModifyAtk 2x) Aqua Tail into Furfrou's Fur Coat (onModifyDef 2x); Medicham's Pure Power Strength into Gogoat's Grass Pelt (onModifyDef 1.5x in Grassy Terrain). Furfrou and Gogoat only Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Azumarill", "item": "", "ability": "Huge Power", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Aqua Tail", "Protect"], "level": 50},
+   {"species": "Medicham", "item": "", "ability": "Pure Power", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Strength", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Furfrou", "item": "", "ability": "Fur Coat", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Gogoat", "item": "", "ability": "Grass Pelt", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "field": {"terrain": "grassyterrain", "terrainDuration": 4}
+ },
+ "turn": {"p1": "move aquatail 1, move strength 2", "p2": "move harden, move harden"}
+}

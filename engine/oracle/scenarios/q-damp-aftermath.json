@@ -1,0 +1,28 @@
+{
+ "description": "Opus Q unit 7: Hariyama's Strength knocks out Skuntank (1 HP); its Aftermath would take a quarter of Hariyama's HP, but Quagsire's Damp (onAnyDamage: effect Aftermath) stops it. Quagsire and Snorlax only Harden; p2 keeps Chansey on the bench.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Quagsire", "item": "", "ability": "Damp", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Thick Fat", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Strength", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Skuntank", "item": "", "ability": "Aftermath", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {
+  "p2": {"Skuntank": {"hp": 1}}
+ },
+ "turn": {"p1": "move harden, move strength 1", "p2": "move harden, move harden"}
+}

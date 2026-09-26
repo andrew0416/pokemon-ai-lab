@@ -1,0 +1,26 @@
+{
+ "description": "Opus Q unit 6: Venusaur (Big Root, at 100 HP) Giga Drains Snorlax and heals 5324/4096 of the drain. Snorlax's Will-O-Wisp (85) at Ferrothorn: a miss uses its Blunder Policy (Spe +2). Ferrothorn (Big Root, at 100 HP) seeds Blissey; at the end of the turn Leech Seed's heal is boosted too. Blissey only Hardens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Venusaur", "item": "Big Root", "ability": "Chlorophyll", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Giga Drain", "Protect"], "level": 50},
+   {"species": "Ferrothorn", "item": "Big Root", "ability": "Iron Barbs", "nature": "Relaxed",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Leech Seed", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Blunder Policy", "ability": "Thick Fat", "nature": "Calm",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Will-O-Wisp", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Venusaur": {"hp": 100}, "Ferrothorn": {"hp": 100}}
+ },
+ "turn": {"p1": "move gigadrain 1, move leechseed 2", "p2": "move willowisp 2, move harden"}
+}

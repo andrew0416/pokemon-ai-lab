@@ -20,7 +20,7 @@ use crate::dex::{
     MoveId, Stat, Type, NO_BOOSTS,
 };
 use crate::field::{SideEffect, Weather};
-use crate::state::{Pokemon, SideId, SlotRef, State, Status};
+use crate::state::{Pokemon, PokemonRef, SideId, SlotRef, State, Status};
 use crate::volatile::{Volatile, VolatileState};
 
 use super::battle::{cured_on_update, Battle, BoostEffect};
@@ -172,23 +172,66 @@ pub(crate) fn base_power_handlers<const N: usize>(
         a if a == abilities::RECKLESS => {
             (data.recoil.is_some() || data.has_crash_damage).then_some(MOD_ONE_POINT_TWO)
         }
-        a if a == abilities::TOUGH_CLAWS => flag(MoveFlags::CONTACT, MOD_ONE_POINT_THREE),
+        a if a == abilities::TOUGH_CLAWS => {
+            super::items::makes_contact(b, user, data).then_some(MOD_ONE_POINT_THREE)
+        }
         a if a == abilities::SHARPNESS => flag(MoveFlags::SLICING, MOD_ONE_POINT_FIVE),
         a if a == abilities::STRONG_JAW => flag(MoveFlags::BITE, MOD_ONE_POINT_FIVE),
         a if a == abilities::MEGA_LAUNCHER => flag(MoveFlags::PULSE, MOD_ONE_POINT_FIVE),
         a if a == abilities::PUNK_ROCK => flag(MoveFlags::SOUND, MOD_ONE_POINT_THREE),
+        // Analytic (priority 21): `[5325, 4096]` unless another active Pokémon still has a move
+        // in the queue (`this.queue.willMove(target)` over `getAllActive()`).
+        a if a == abilities::ANALYTIC => {
+            let moves_later = b
+                .all_alive()
+                .into_iter()
+                .any(|s| s != user && b.will_move(s).is_some());
+            (!moves_later).then_some(5325)
+        }
+        // Toxic Boost / Flare Boost (priority 19): a poisoned user's physical moves, a burned
+        // user's special moves, 1.5x.
+        a if a == abilities::TOXIC_BOOST => {
+            let poisoned = b
+                .slot_mon(user)
+                .is_some_and(|m| matches!(m.status, Status::Poison | Status::Toxic));
+            (poisoned && data.category == MoveCategory::Physical).then_some(MOD_ONE_POINT_FIVE)
+        }
+        a if a == abilities::FLARE_BOOST => {
+            let burned = b.slot_mon(user).is_some_and(|m| m.status == Status::Burn);
+            (burned && data.category == MoveCategory::Special).then_some(MOD_ONE_POINT_FIVE)
+        }
+        // Sand Force (priority 21): `[5325, 4096]` for Rock, Ground and Steel moves while
+        // `this.field.isWeather('sandstorm')` (the field's effective weather).
+        a if a == abilities::SAND_FORCE => {
+            let sand = b.effective_weather() == Weather::Sand;
+            let typed = matches!(move_type, Type::Rock | Type::Ground | Type::Steel);
+            (sand && typed).then_some(5325)
+        }
         _ => None,
     };
     if let Some(modifier) = boost {
         let p = priority(ability.data().event_orders, "onBasePowerPriority");
         out.push(Handler::of(b, user, p, SUB_ABILITY, modifier));
     }
-    // Steely Spirit: `onAllyBasePower` of every active Pokémon on the user's side.
+    // `onAllyBasePower` of every active Pokémon on the user's side (`alliesAndSelf()`): Steely
+    // Spirit (the holder's own moves too); Battery (special moves) and Power Spot (every move)
+    // only for another Pokémon's move (`attacker !== this.effectState.target`). None is
+    // breakable.
     for holder in b.alive_slots(user.side) {
         let ability = ability_for_move(b, holder, user, data);
-        if ability == abilities::STEELY_SPIRIT && move_type == Type::Steel {
+        let modifier = match ability {
+            a if a == abilities::STEELY_SPIRIT => {
+                (move_type == Type::Steel).then_some(MOD_ONE_POINT_FIVE)
+            }
+            a if a == abilities::BATTERY => {
+                (holder != user && data.category == MoveCategory::Special).then_some(5325)
+            }
+            a if a == abilities::POWER_SPOT => (holder != user).then_some(5325),
+            _ => None,
+        };
+        if let Some(modifier) = modifier {
             let p = priority(ability.data().event_orders, "onAllyBasePowerPriority");
-            out.push(Handler::of(b, holder, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
+            out.push(Handler::of(b, holder, p, SUB_ABILITY, modifier));
         }
     }
     // Dry Skin: the target's `onSourceBasePower`, Fire moves `chainModify(1.25)`.
@@ -257,6 +300,50 @@ pub(crate) fn wind_rider_boost<const N: usize>(b: &mut Battle<'_, N>, holder: Sl
         Some(holder),
         BoostEffect::Ability(abilities::WIND_RIDER),
     )
+}
+
+/// `runEvent('AfterFaint', target, source, effect, length)` at the end of `faintMessages`
+/// (unless the battle ended there), for the source of the last faint taken from the queue when
+/// a move's damage caused it; `length` is how many faints were queued when the call began (a
+/// spread move that knocks out both foes gives 2). The source's `onSourceAfterFaint`
+/// (`effect.effectType === 'Move'`) runs only while it is active (an inactive holder ignores
+/// its ability: fainted in the same batch, or switched out). Each boosts its holder by
+/// `length` (`this.boost(..., source)`: the holder is its own source):
+/// - Moxie, Chilling Neigh, As One (Glastrier; the boost's effect is Chilling Neigh): Attack;
+/// - Grim Neigh, As One (Spectrier; Grim Neigh): Special Attack;
+/// - Beast Boost, Eelevate: the stat of `getBestStat(true, true)`, the first of Atk, Def, SpA,
+///   SpD, Spe with the highest stored stat (no stages, no modifiers, and Wonder Room only swaps
+///   the stages it ignores). Eelevate is breakable, but the move whose damage caused the faint
+///   is the holder's own, whose Mold Breaker does not suppress the holder's ability.
+pub(crate) fn after_faint<const N: usize>(
+    b: &mut Battle<'_, N>,
+    source: PokemonRef,
+    length: usize,
+) {
+    let Some(slot) = State::<N>::slot_refs().find(|&s| b.alive(s) == Some(source)) else {
+        return;
+    };
+    let ability = b.ability(slot);
+    let (stat, effect) = match ability {
+        a if a == abilities::MOXIE || a == abilities::CHILLING_NEIGH => (0, a),
+        a if a == abilities::AS_ONE_GLASTRIER => (0, abilities::CHILLING_NEIGH),
+        a if a == abilities::GRIM_NEIGH => (2, a),
+        a if a == abilities::AS_ONE_SPECTRIER => (2, abilities::GRIM_NEIGH),
+        a if a == abilities::BEAST_BOOST || a == abilities::EELEVATE => {
+            let stats = b.mon(source).stats;
+            let mut best = 0;
+            for stat in 1..stats.len() {
+                if stats[stat] > stats[best] {
+                    best = stat;
+                }
+            }
+            (best, a)
+        }
+        _ => return,
+    };
+    let mut boosts = NO_BOOSTS;
+    boosts[stat] = i8::try_from(length).unwrap_or(i8::MAX);
+    b.boost_by(slot, &boosts, Some(slot), BoostEffect::Ability(effect));
 }
 
 /// Anger Shell and Berserk (Champions): `onDamage` sets `abilityState.checked*` to
@@ -408,10 +495,14 @@ pub(crate) fn try_eat_item<const N: usize>(b: &Battle<'_, N>, eater: SlotRef) ->
     let pending = has_berserk_check(mon.ability)
         && b.volatile(eater, Volatile::AngerShellUnchecked).active
         && HEALING_BERRIES.contains(&item);
-    let unnerved = b
-        .alive_slots(eater.side.other())
-        .into_iter()
-        .any(|foe| b.ability(foe) == abilities::UNNERVE);
+    let unnerved = b.alive_slots(eater.side.other()).into_iter().any(|foe| {
+        [
+            abilities::UNNERVE,
+            abilities::AS_ONE_GLASTRIER,
+            abilities::AS_ONE_SPECTRIER,
+        ]
+        .contains(&b.ability(foe))
+    });
     !pending && !unnerved
 }
 
@@ -732,6 +823,10 @@ pub(crate) fn attack_handlers<const N: usize>(
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
     }
+    if let Some(modifier) = own_attack_modifier(b, user, target, attacker, physical, move_type) {
+        let p = priority(ability.data().event_orders, event);
+        out.push(Handler::of(b, user, p, SUB_ABILITY, modifier));
+    }
     // Flash Fire's volatile (a condition, priority 5): `if (move.type === 'Fire' &&
     // attacker.hasAbility('flashfire')) return this.chainModify(1.5)` (`move.type`: after
     // ModifyType).
@@ -747,6 +842,13 @@ pub(crate) fn attack_handlers<const N: usize>(
         let p = priority(ability.data().event_orders, name);
         out.push(Handler::of(b, user, p, SUB_CONDITION, MOD_ONE_POINT_FIVE));
     }
+    // Tablets of Ruin (`onAnyModifyAtk`) / Vessel of Ruin (`onAnyModifySpA`).
+    let (ruin, any_event) = if physical {
+        (abilities::TABLETS_OF_RUIN, "onAnyModifyAtkPriority")
+    } else {
+        (abilities::VESSEL_OF_RUIN, "onAnyModifySpAPriority")
+    };
+    out.extend(ruin_handler(b, ruin, user, any_event));
     // Protosynthesis / Quark Drive's condition (priority 5): 5325/4096 when the best stat is
     // the one the event is for (`ModifyAtk` for physical moves, `ModifySpA` for special ones,
     // whatever stat the move attacks with). A volatile, so no ability-ignoring move skips it.
@@ -763,6 +865,56 @@ pub(crate) fn attack_handlers<const N: usize>(
     out
 }
 
+/// The user's own `onModifyAtk` / `onModifySpA` (WORKPLAN O-Q unit 1), all at priority 5 and
+/// none breakable (they are the user's):
+/// - Huge Power, Pure Power: `chainModify(2)` (Attack only).
+/// - Steelworker, Dragon's Maw, Rocky Payload, Fire Mane: `chainModify(1.5)` for a Steel /
+///   Dragon / Rock / Fire move (`move.type`, after ModifyType); Transistor `[5325, 4096]` for an
+///   Electric move.
+/// - Defeatist: `pokemon.hp <= pokemon.maxhp / 2` halves.
+/// - Stakeout: `!defender.activeTurns` doubles. `activeTurns` is 0 from the switch-in to the
+///   next `endTurn`, exactly while `newlySwitched` is set (both reset on switching in and
+///   cleared together in `endTurn`, the battle start's included), so the slot history's
+///   `newly_switched` is read.
+/// - Plus, Minus (Special Attack only): an ally (`pokemon.allies()`: not the holder, not at
+///   0 HP) with Plus or Minus gives `chainModify(1.5)`.
+fn own_attack_modifier<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    attacker: &Pokemon,
+    physical: bool,
+    move_type: Type,
+) -> Option<u32> {
+    let typed = |ty: Type, modifier: u32| (move_type == ty).then_some(modifier);
+    match attacker.ability {
+        a if a == abilities::HUGE_POWER || a == abilities::PURE_POWER => {
+            physical.then_some(MOD_DOUBLE)
+        }
+        a if a == abilities::STEELWORKER => typed(Type::Steel, MOD_ONE_POINT_FIVE),
+        a if a == abilities::TRANSISTOR => typed(Type::Electric, 5325),
+        a if a == abilities::DRAGONS_MAW => typed(Type::Dragon, MOD_ONE_POINT_FIVE),
+        a if a == abilities::ROCKY_PAYLOAD => typed(Type::Rock, MOD_ONE_POINT_FIVE),
+        a if a == abilities::FIRE_MANE => typed(Type::Fire, MOD_ONE_POINT_FIVE),
+        a if a == abilities::DEFEATIST => {
+            (2 * i32::from(attacker.hp) <= i32::from(attacker.max_hp)).then_some(MOD_HALF)
+        }
+        a if a == abilities::STAKEOUT => b
+            .state
+            .slot(target)
+            .history
+            .newly_switched
+            .then_some(MOD_DOUBLE),
+        a if a == abilities::PLUS || a == abilities::MINUS => {
+            let partner = b.alive_slots(user.side).into_iter().any(|ally| {
+                ally != user && [abilities::PLUS, abilities::MINUS].contains(&b.ability(ally))
+            });
+            (!physical && partner).then_some(MOD_ONE_POINT_FIVE)
+        }
+        _ => None,
+    }
+}
+
 /// The paradox ability whose condition the Pokémon in `slot` has, with the condition's best
 /// stat (0 Atk, 1 Def, 2 SpA, 3 SpD, 4 Spe; the condition's handlers are in the ability's data).
 pub(crate) fn paradox_volatile_of<const N: usize>(
@@ -777,6 +929,41 @@ pub(crate) fn paradox_volatile_of<const N: usize>(
     quark
         .active
         .then_some((abilities::QUARK_DRIVE, quark.counter))
+}
+
+/// A Ruin ability's `onAny<Stat>` handler for the Modify event of the stat it lowers
+/// (Tablets: ModifyAtk, Vessel: ModifySpA, Sword: ModifyDef, Beads: ModifySpD). `stat_holder`
+/// is the Pokémon whose stat the event modifies (the user for Atk / SpA, the target for Def /
+/// SpD); the handler is collected from every active Pokémon not at 0 HP (`alliesAndSelf()` and
+/// `foes()` of it) and is not breakable.
+///
+/// Nothing when `stat_holder` has the same ability (`source.hasAbility(...)` /
+/// `target.hasAbility(...)`). Otherwise every holder's handler runs, but only the first one in
+/// the event's order chains 0.75: it stores itself in `move.ruinedAtk` (etc.) and the others
+/// return. The handlers share a priority, so the first is the fastest holder (holders with the
+/// same Speed sit at the same place in the order): one handler at that holder's Speed.
+///
+/// The stored holder lasts for the whole move (Tablets / Vessel keep it; Sword / Beads replace
+/// it only once it no longer has the ability), so a later target or hit of the same move could
+/// in principle keep a holder that has meanwhile become slower than another holder; that only
+/// changes the result with two holders of the same Ruin ability whose Speed order flips between
+/// hits of one multi-hit move while three or more other factors chain, and is not modelled.
+fn ruin_handler<const N: usize>(
+    b: &Battle<'_, N>,
+    ruin: AbilityId,
+    stat_holder: SlotRef,
+    priority_name: &str,
+) -> Option<Handler> {
+    if b.ability(stat_holder) == ruin {
+        return None;
+    }
+    let holder = b
+        .all_alive()
+        .into_iter()
+        .filter(|&s| b.ability(s) == ruin)
+        .max_by_key(|&s| b.action_speed(s))?;
+    let p = priority(ruin.data().event_orders, priority_name);
+    Some(Handler::of(b, holder, p, SUB_ABILITY, MOD_THREE_QUARTERS))
 }
 
 /// `ModifyDef` or `ModifySpD` handlers of abilities (by the stat the move targets): the
@@ -801,6 +988,27 @@ pub(crate) fn defense_handlers<const N: usize>(
         let p = priority(ability.data().event_orders, "onModifyDefPriority");
         out.push(Handler::of(b, target, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
     }
+    // Fur Coat (`chainModify(2)`) and Grass Pelt (`if (this.field.isTerrain('grassyterrain'))
+    // return this.chainModify(1.5)`): `onModifyDef`, priority 6, both breakable.
+    let coat = match ability {
+        a if a == abilities::FUR_COAT => Some(MOD_DOUBLE),
+        a if a == abilities::GRASS_PELT => {
+            (b.terrain() == crate::field::Terrain::Grassy).then_some(MOD_ONE_POINT_FIVE)
+        }
+        _ => None,
+    };
+    if let Some(modifier) = coat.filter(|_| defense_stat == Stat::Def) {
+        let p = priority(ability.data().event_orders, "onModifyDefPriority");
+        out.push(Handler::of(b, target, p, SUB_ABILITY, modifier));
+    }
+    // Sword of Ruin (`onAnyModifyDef`) / Beads of Ruin (`onAnyModifySpD`), by the stat the
+    // move targets (Psyshock meets Sword of Ruin).
+    let (ruin, any_event) = if defense_stat == Stat::Def {
+        (abilities::SWORD_OF_RUIN, "onAnyModifyDefPriority")
+    } else {
+        (abilities::BEADS_OF_RUIN, "onAnyModifySpDPriority")
+    };
+    out.extend(ruin_handler(b, ruin, target, any_event));
     // Protosynthesis / Quark Drive's condition (priority 6): 5325/4096 on the best stat.
     let wanted = if defense_stat == Stat::Def { 1 } else { 3 };
     if let Some(v) = paradox_volatile_of(b, target).filter(|&(_, best)| best == wanted) {
@@ -856,24 +1064,101 @@ pub(crate) fn attack_direct(ability: AbilityId, data: &MoveData, attack: i32) ->
     }
 }
 
+/// The user's ability `onModifyCritRatio` as an addition to the move's crit ratio (the result
+/// is clamped to 0..=4): Super Luck `critRatio + 1`; Merciless `return 5` against a poisoned or
+/// badly poisoned target, which after the clamp is a sure critical hit whatever else adds to it.
+pub(crate) fn crit_ratio_bonus<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+) -> i32 {
+    match b.ability(user) {
+        a if a == abilities::SUPER_LUCK => 1,
+        a if a == abilities::MERCILESS => {
+            let poisoned = b
+                .slot_mon(target)
+                .is_some_and(|m| matches!(m.status, Status::Poison | Status::Toxic));
+            if poisoned {
+                5
+            } else {
+                0
+            }
+        }
+        _ => 0,
+    }
+}
+
 /// `ModifyAccuracy` handlers of abilities (moves with a numeric accuracy): the user's
-/// `onSourceModifyAccuracy`.
+/// `onSourceModifyAccuracy`, the target's `onModifyAccuracy` (all breakable) and every active
+/// Pokémon's `onAnyModifyAccuracy`.
 pub(crate) fn accuracy_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
+    target: SlotRef,
     data: &MoveData,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
     let ability = b.ability(user);
-    // Hustle: physical moves 3277/4096.
-    if ability == abilities::HUSTLE && data.category == MoveCategory::Physical {
+    let source_modifier = match ability {
+        // Hustle: physical moves 3277/4096.
+        a if a == abilities::HUSTLE => (data.category == MoveCategory::Physical).then_some(3277),
+        // Compound Eyes: 5325/4096.
+        a if a == abilities::COMPOUND_EYES => Some(5325),
+        _ => None,
+    };
+    if let Some(modifier) = source_modifier {
         let p = priority(
             ability.data().event_orders,
             "onSourceModifyAccuracyPriority",
         );
-        out.push(Handler::of(b, user, p, SUB_ABILITY, 3277));
+        out.push(Handler::of(b, user, p, SUB_ABILITY, modifier));
+    }
+    // The target's (priority -1): Sand Veil in sand and Snow Cloak in snow 3277/4096
+    // (`this.field.isWeather(...)`: the field's effective weather), Tangled Feet 0.5 while the
+    // target is confused. Wonder Skin replaces the accuracy instead ([`accuracy_direct`]).
+    let defending = ability_for_move(b, target, user, data);
+    let weather = b.effective_weather();
+    let target_modifier = match defending {
+        a if a == abilities::SAND_VEIL => (weather == Weather::Sand).then_some(3277),
+        a if a == abilities::SNOW_CLOAK => (weather == Weather::Snow).then_some(3277),
+        a if a == abilities::TANGLED_FEET => b
+            .volatile(target, Volatile::Confusion)
+            .active
+            .then_some(MOD_HALF),
+        _ => None,
+    };
+    if let Some(modifier) = target_modifier {
+        let p = priority(defending.data().event_orders, "onModifyAccuracyPriority");
+        out.push(Handler::of(b, target, p, SUB_ABILITY, modifier));
+    }
+    // Victory Star (`onAnyModifyAccuracy`, priority -1, not breakable): 4506/4096 for a move
+    // of its holder or the holder's ally (`source.isAlly(holder)`), once per holder.
+    for holder in b.alive_slots(user.side) {
+        let star = b.ability(holder);
+        if star == abilities::VICTORY_STAR {
+            let p = priority(star.data().event_orders, "onAnyModifyAccuracyPriority");
+            out.push(Handler::of(b, holder, p, SUB_ABILITY, 4506));
+        }
     }
     out
+}
+
+/// The accuracy the `ModifyAccuracy` event starts chaining from: Wonder Skin (the target's,
+/// breakable, priority 10) `return 50` for a status move with a numeric accuracy, which
+/// replaces the accuracy; the chained factors apply to the result at the end of the event.
+pub(crate) fn accuracy_direct<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    data: &MoveData,
+    accuracy: i32,
+) -> i32 {
+    let wonder_skin = ability_for_move(b, target, user, data) == abilities::WONDER_SKIN;
+    if wonder_skin && data.category == MoveCategory::Status {
+        50
+    } else {
+        accuracy
+    }
 }
 
 /// The STAB modifier after `ModifySTAB` (the user's own ability). Adaptability:
@@ -887,9 +1172,11 @@ pub(crate) fn modify_stab(ability: AbilityId, stab: bool) -> u32 {
     }
 }
 
-/// `ModifyDamage` handlers of abilities: the target's `onSourceModifyDamage` and every active
-/// Pokémon's `onAnyModifyDamage`. `type_mod` is the hit's clamped effectiveness exponent
-/// (`getMoveHitData(move).typeMod`); `move_type` is the type of the move being used.
+/// `ModifyDamage` handlers of abilities: the user's `onModifyDamage`, the target's
+/// `onSourceModifyDamage` and every active Pokémon's `onAnyModifyDamage`. `type_mod` is the
+/// hit's clamped effectiveness exponent (`getMoveHitData(move).typeMod`), `critical` whether it
+/// is a critical hit (`getMoveHitData(move).crit`); `move_type` is the type of the move being
+/// used.
 pub(crate) fn modify_damage_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
@@ -897,12 +1184,27 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
     data: &MoveData,
     move_type: Type,
     type_mod: i32,
+    critical: bool,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
+    // The user's own (priority 0): Sniper 1.5x on a critical hit, Tinted Lens 2x on a resisted
+    // hit (`typeMod < 0`), Neuroforce `[5120, 4096]` on a super-effective one.
+    let own = b.ability(user);
+    let own_modifier = match own {
+        a if a == abilities::SNIPER => critical.then_some(MOD_ONE_POINT_FIVE),
+        a if a == abilities::TINTED_LENS => (type_mod < 0).then_some(MOD_DOUBLE),
+        a if a == abilities::NEUROFORCE => (type_mod > 0).then_some(5120),
+        _ => None,
+    };
+    if let Some(modifier) = own_modifier {
+        let p = priority(own.data().event_orders, "onModifyDamagePriority");
+        out.push(Handler::of(b, user, p, SUB_ABILITY, modifier));
+    }
     let Some(defender) = b.slot_mon(target) else {
         return out;
     };
-    let contact = data.flags.contains(MoveFlags::CONTACT);
+    // `move.flags['contact']` after ModifyMove (Punching Glove).
+    let contact = super::items::makes_contact(b, user, data);
     let full_hp = defender.hp >= defender.max_hp;
     let ability = ability_for_move(b, target, user, data);
     let modifier = match ability {

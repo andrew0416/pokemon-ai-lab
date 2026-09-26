@@ -1386,6 +1386,8 @@ fn try_spread_move_hit<const N: usize>(
     for &t in &targets {
         if accuracy_check(b, user, mv, t) {
             hit.push(t);
+        } else if mv.data.ohko == Ohko::No {
+            item_events::blunder_policy(b, user);
         }
     }
     if hit.is_empty() {
@@ -1720,9 +1722,11 @@ fn accuracy_check<const N: usize>(
         ability_hooks::accuracy_event(b, user, mv, target);
         return true;
     };
-    let mut accuracy = i32::from(base);
-    // ModifyAccuracy: Gravity (6840/4096), the user's Hustle and item (Wide Lens, Zoom Lens).
-    let mut accuracy_mods = ability_events::accuracy_handlers(b, user, mv.data);
+    // ModifyAccuracy: Wonder Skin's replacement, then Gravity (6840/4096), the abilities
+    // (Hustle, Compound Eyes, Sand Veil, Victory Star, ...) and items (Wide Lens, Zoom Lens,
+    // Bright Powder).
+    let mut accuracy = ability_events::accuracy_direct(b, user, target, mv.data, i32::from(base));
+    let mut accuracy_mods = ability_events::accuracy_handlers(b, user, target, mv.data);
     accuracy_mods.extend(item_events::accuracy_handlers(b, user, target));
     if b.field_active(FieldEffect::Gravity) {
         accuracy_mods.push(Handler::global(0, SUB_FIELD_CONDITION, 6840));
@@ -1976,7 +1980,7 @@ fn spread_move_hit<const N: usize>(
                     if let Some(drain) = data.drain {
                         let amount =
                             (f64::from(dealt) * f64::from(drain.0) / f64::from(drain.1)).round();
-                        b.heal(user, amount);
+                        b.heal_rooted(user, amount);
                     }
                 }
                 Hit::Damage(dealt)
@@ -2290,7 +2294,7 @@ fn hit_substitute<const N: usize>(
     }
     if let Some(drain) = mv.data.drain {
         let amount = (f64::from(damage) * f64::from(drain.0) / f64::from(drain.1)).ceil();
-        b.heal(user, amount);
+        b.heal_rooted(user, amount);
     }
     handlers::on_after_sub_damage(b, user, mv);
     item_events::after_sub_damage(b, target);
@@ -2442,7 +2446,7 @@ fn damaging_hit<const N: usize>(
     }
     handlers.sort();
     let contact =
-        mv.data.flags.contains(MoveFlags::CONTACT) && b.item(user) != items::PROTECTIVE_PADS;
+        item_events::makes_contact(b, user, mv.data) && b.item(user) != items::PROTECTIVE_PADS;
     for (_, index, kind) in handlers {
         let target = damaged[index].0;
         let Some(pokemon) = b.occupant(target) else {
@@ -2588,9 +2592,11 @@ fn get_damage<const N: usize>(
     } else {
         0
     };
-    let crit_ratio =
-        (i32::from(data.crit_ratio) + item_events::crit_ratio_bonus(b.item(user)) + focus_energy)
-            .clamp(0, 4);
+    let crit_ratio = (i32::from(data.crit_ratio)
+        + item_events::crit_ratio_bonus(b.item(user))
+        + ability_events::crit_ratio_bonus(b, user, target)
+        + focus_energy)
+        .clamp(0, 4);
     let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit
         && !b.side_effect_active(target.side, SideEffect::LuckyChant)
         && !super::forme::shields_hit(b, user, target, mv.id);
@@ -2613,6 +2619,8 @@ fn get_damage<const N: usize>(
     if type_boost_item(b.item(user)) == Some(mv.move_type) {
         power_mods.push(Handler::of(b, user, 15, SUB_ITEM, MOD_ONE_POINT_TWO));
     }
+    // Muscle Band, Wise Glasses (16), Punching Glove (23).
+    power_mods.extend(item_events::base_power_handlers(b, user, data));
     let attacker_grounded = b.is_grounded(user);
     let defender_grounded = b.is_grounded(target);
     let terrain_mod = match b.terrain() {
@@ -2748,8 +2756,15 @@ fn get_damage<const N: usize>(
     };
     // ModifyDamage (all priority 0, so in Speed order): the target's abilities, items (Life
     // Orb, resist berries), screens (side conditions, Speed 0).
-    let mut final_mods =
-        ability_events::modify_damage_handlers(b, user, target, data, mv.move_type, type_mod);
+    let mut final_mods = ability_events::modify_damage_handlers(
+        b,
+        user,
+        target,
+        data,
+        mv.move_type,
+        type_mod,
+        critical,
+    );
     final_mods.extend(item_events::modify_damage_handlers(
         b,
         user,

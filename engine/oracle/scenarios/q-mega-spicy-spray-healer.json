@@ -1,0 +1,23 @@
+{
+ "description": "Opus Q unit 8: Scovillain and Audino Mega Evolve (their Mega abilities are now supported). Snorlax's Shock Wave (no contact) into Scovillain-Mega: Spicy Spray burns Snorlax. At the end of the turn Audino-Mega's Healer (Champions: 1/2) may cure its ally before the burn damage. Blissey only Hardens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Scovillain", "item": "Scovillainite", "ability": "Chlorophyll", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Audino", "item": "Audinite", "ability": "Healer", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Shock Wave", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden mega, move harden", "p2": "move harden mega, move shockwave 1"}
+}

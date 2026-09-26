@@ -1,0 +1,30 @@
+{
+ "description": "Opus Q unit 4: Garchomp's Drill Run fails against Eelektross (Eelevate: ungrounded like Levitate). Eelektross's Shock Wave knocks out Blissey (1 HP): Eelevate raises its best stored stat (SpA) by 1. Glastrier's Strength knocks out Garchomp (1 HP): Chilling Neigh raises Attack by 1. p2 keeps two Pokémon on the bench.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Glastrier", "item": "", "ability": "Chilling Neigh", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Strength", "Protect"], "level": 50},
+   {"species": "Eelektross", "item": "", "ability": "Eelevate", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Shock Wave", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Jolly",
+    "evs": {"atk": 32, "spe": 32}, "moves": ["Drill Run", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Furfrou", "item": "", "ability": "Ball Fetch", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Gogoat", "item": "", "ability": "Sap Sipper", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "1234"
+ },
+ "patch": {
+  "p2": {"Garchomp": {"hp": 1}, "Blissey": {"hp": 1}}
+ },
+ "turn": {"p1": "move strength 1, move shockwave 2", "p2": "move drillrun 2, move harden"}
+}

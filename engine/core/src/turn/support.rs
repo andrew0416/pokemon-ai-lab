@@ -850,6 +850,29 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     // Accuracy, critical hits, flinch (`moves.rs`), Focus Band (`Battle::damage`).
     (items::WIDE_LENS, &["onSourceModifyAccuracy"]),
     (items::ZOOM_LENS, &["onSourceModifyAccuracy"]),
+    (items::BRIGHT_POWDER, &["onModifyAccuracy"]),
+    (items::LAX_INCENSE, &["onModifyAccuracy"]),
+    // Opus Q unit 6. Clear Amulet: `onTryBoost` in `Battle::boost_by`. Ability Shield:
+    // `onSetAbility` blocks Mummy / Lingering Aroma (`moves::ability_hooks`; Trace holding it
+    // stays refused in `switching::trace`), its Mold Breaker protection is in
+    // `abilities::ability_for_move` / `Battle::suppressing_ability`. Big Root: `onTryHeal` in
+    // `Battle::heal_rooted` (drain, Leech Seed, Strength Sap). The stat items in
+    // `items::attack_handlers` / `defense_handlers`, the power items in
+    // `items::base_power_handlers`; Punching Glove's `onModifyMove` (no contact) is
+    // `items::makes_contact`. Mental Herb: `onUpdate` in `update::update_event`
+    // (`items::mental_herb`); `fling.effect` needs Fling, which is not supported.
+    (items::CLEAR_AMULET, &["onTryBoost"]),
+    (items::ABILITY_SHIELD, &["onSetAbility"]),
+    (items::BIG_ROOT, &["onTryHeal"]),
+    (items::MUSCLE_BAND, &["onBasePower"]),
+    (items::WISE_GLASSES, &["onBasePower"]),
+    (items::PUNCHING_GLOVE, &["onBasePower", "onModifyMove"]),
+    (items::LIGHT_BALL, &["onModifyAtk", "onModifySpA"]),
+    (items::THICK_CLUB, &["onModifyAtk"]),
+    (items::DEEP_SEA_TOOTH, &["onModifySpA"]),
+    (items::DEEP_SEA_SCALE, &["onModifySpD"]),
+    (items::METAL_POWDER, &["onModifyDef"]),
+    (items::MENTAL_HERB, &["fling.effect", "onUpdate"]),
     (items::SCOPE_LENS, &["onModifyCritRatio"]),
     (items::RAZOR_CLAW, &["onModifyCritRatio"]),
     (items::FOCUS_BAND, &["onDamage"]),
@@ -1120,6 +1143,71 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     ),
     (abilities::GUTS, &["onModifyAtk"]),
     (abilities::MARVEL_SCALE, &["onModifyDef"]),
+    // `abilities::attack_handlers` (the user's own modifiers) and `defense_handlers`.
+    (abilities::HUGE_POWER, &["onModifyAtk"]),
+    (abilities::PURE_POWER, &["onModifyAtk"]),
+    (abilities::STEELWORKER, &["onModifyAtk", "onModifySpA"]),
+    (abilities::TRANSISTOR, &["onModifyAtk", "onModifySpA"]),
+    (abilities::DRAGONS_MAW, &["onModifyAtk", "onModifySpA"]),
+    (abilities::ROCKY_PAYLOAD, &["onModifyAtk", "onModifySpA"]),
+    (abilities::FIRE_MANE, &["onModifyAtk", "onModifySpA"]),
+    (abilities::DEFEATIST, &["onModifyAtk", "onModifySpA"]),
+    (abilities::STAKEOUT, &["onModifyAtk", "onModifySpA"]),
+    (abilities::PLUS, &["onModifySpA"]),
+    (abilities::MINUS, &["onModifySpA"]),
+    (abilities::FUR_COAT, &["onModifyDef"]),
+    (abilities::GRASS_PELT, &["onModifyDef"]),
+    // `abilities::base_power_handlers`, `modify_damage_handlers`, `crit_ratio_bonus`; Sand
+    // Force's `onImmunity` in `Battle::status_immune`.
+    (abilities::ANALYTIC, &["onBasePower"]),
+    (abilities::TOXIC_BOOST, &["onBasePower"]),
+    (abilities::FLARE_BOOST, &["onBasePower"]),
+    (abilities::SAND_FORCE, &["onBasePower", "onImmunity"]),
+    (abilities::BATTERY, &["onAllyBasePower"]),
+    (abilities::POWER_SPOT, &["onAllyBasePower"]),
+    (abilities::SNIPER, &["onModifyDamage"]),
+    (abilities::TINTED_LENS, &["onModifyDamage"]),
+    (abilities::NEUROFORCE, &["onModifyDamage"]),
+    (abilities::SUPER_LUCK, &["onModifyCritRatio"]),
+    (abilities::MERCILESS, &["onModifyCritRatio"]),
+    // Ruin abilities: `abilities::ruin_handler` in the Modify events of `get_damage`; `onStart`
+    // only announces them (`switching`).
+    (abilities::TABLETS_OF_RUIN, &["onAnyModifyAtk", "onStart"]),
+    (abilities::SWORD_OF_RUIN, &["onAnyModifyDef", "onStart"]),
+    (abilities::VESSEL_OF_RUIN, &["onAnyModifySpA", "onStart"]),
+    (abilities::BEADS_OF_RUIN, &["onAnyModifySpD", "onStart"]),
+    // `onSourceAfterFaint` in `abilities::after_faint` (from `Battle::faint_messages`);
+    // Eelevate's grounding in `Battle::is_grounded`. As One: Unnerve's `onStart` / `onEnd` /
+    // `onFoeTryEatItem` too (`abilities::try_eat_item`, `switching`).
+    // ModifyAccuracy (`abilities::accuracy_handlers`, `accuracy_direct`). Sand Veil's
+    // `onImmunity` in `Battle::status_immune`; Snow Cloak's is for hail, which is not a
+    // supported weather.
+    (abilities::SAND_VEIL, &["onImmunity", "onModifyAccuracy"]),
+    (abilities::SNOW_CLOAK, &["onImmunity", "onModifyAccuracy"]),
+    (abilities::TANGLED_FEET, &["onModifyAccuracy"]),
+    (abilities::WONDER_SKIN, &["onModifyAccuracy"]),
+    (abilities::VICTORY_STAR, &["onAnyModifyAccuracy"]),
+    (abilities::COMPOUND_EYES, &["onSourceModifyAccuracy"]),
+    // Damp: `onAnyTryMove` in `moves::ability_hooks::on_try_move`, `onAnyDamage` (Aftermath
+    // only) in `ability_hooks::on_damaging_hit`.
+    (abilities::DAMP, &["onAnyDamage", "onAnyTryMove"]),
+    // Champions Mega abilities: Spicy Spray (`ability_hooks::on_damaging_hit`), Healer (Champions
+    // 1/2 `onResidual` in `residual.rs`).
+    (abilities::SPICY_SPRAY, &["onDamagingHit"]),
+    (abilities::HEALER, &["onResidual"]),
+    (abilities::MOXIE, &["onSourceAfterFaint"]),
+    (abilities::CHILLING_NEIGH, &["onSourceAfterFaint"]),
+    (abilities::GRIM_NEIGH, &["onSourceAfterFaint"]),
+    (abilities::BEAST_BOOST, &["onSourceAfterFaint"]),
+    (abilities::EELEVATE, &["onSourceAfterFaint"]),
+    (
+        abilities::AS_ONE_GLASTRIER,
+        &["onEnd", "onFoeTryEatItem", "onSourceAfterFaint", "onStart"],
+    ),
+    (
+        abilities::AS_ONE_SPECTRIER,
+        &["onEnd", "onFoeTryEatItem", "onSourceAfterFaint", "onStart"],
+    ),
     (
         abilities::THICK_FAT,
         &["onSourceModifyAtk", "onSourceModifySpA"],
@@ -1458,8 +1546,9 @@ const CORE_CHECKED_ABILITIES: &[AbilityId] = &[
 
 /// Items without callbacks that Showdown's core checks by name, not implemented here.
 /// Weather rocks, Light Clay and Terrain Extender (durations), Heavy-Duty Boots (entry hazards),
-/// Protective Pads (contact), Grip Claw and Binding Band (partial trapping) are implemented.
-const CORE_CHECKED_ITEMS: &[ItemId] = &[items::BLUNDER_POLICY, items::ULTRANECROZIUM_Z];
+/// Protective Pads (contact), Grip Claw and Binding Band (partial trapping) and Blunder Policy
+/// (`items::blunder_policy`, from the accuracy step) are implemented.
+const CORE_CHECKED_ITEMS: &[ItemId] = &[items::ULTRANECROZIUM_Z];
 
 /// Whether an ability is inert or implemented while its holder is on the field.
 pub(crate) fn ability_supported_on_field(ability: AbilityId) -> bool {

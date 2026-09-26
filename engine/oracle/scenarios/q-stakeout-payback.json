@@ -1,0 +1,25 @@
+{
+ "description": "Opus Q unit 1: turn 1. Chansey switches to Furfrou; Gumshoos's Stakeout doubles its Strength on the newcomer (activeTurns 0). Snorlax's Payback on the lead Blissey, which already moved, is doubled: the leads are not newlySwitched on turn 1 (Showdown's endTurn after the start).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gumshoos", "item": "", "ability": "Stakeout", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Strength", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Payback", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Furfrou", "item": "", "ability": "Ball Fetch", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "turn": {"p1": "move strength 2, move payback 1", "p2": "move harden, switch 3"}
+}
