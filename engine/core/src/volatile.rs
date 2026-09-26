@@ -281,9 +281,20 @@ pub enum Volatile {
     /// Miracle Eye on its target (`miracleeye`, no duration, `noCopy`): as Foresight, for a Dark
     /// holder against Psychic moves.
     MiracleEye,
+    /// Defense Curl (`defensecurl`, no duration, `noCopy`; its `onRestart` returns `null`):
+    /// Rollout and Ice Ball have double power.
+    DefenseCurl,
+    /// Rollout's own condition (`rollout`, duration 1, 2 again after each hit below the fifth):
+    /// the holder is locked into Rollout (`onLockMove`) aimed at the target location it chose
+    /// (`lastMoveTargetLoc`, kept in `counter` as `lock::encode_target_loc`); `hitCount` (=
+    /// `contactHitCount`) in `hidden`. Neither is a canonical field. Added by name, so the dex has
+    /// no condition id.
+    Rollout,
+    /// Ice Ball's own condition (`iceball`): as [`Volatile::Rollout`].
+    IceBall,
 }
 
-pub const VOLATILE_COUNT: usize = 89;
+pub const VOLATILE_COUNT: usize = 92;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -376,6 +387,9 @@ impl Volatile {
         Volatile::Stockpile,
         Volatile::Foresight,
         Volatile::MiracleEye,
+        Volatile::DefenseCurl,
+        Volatile::Rollout,
+        Volatile::IceBall,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -439,6 +453,8 @@ impl Volatile {
             Volatile::Stockpile => conditions::STOCKPILE,
             Volatile::Foresight => conditions::FORESIGHT,
             Volatile::MiracleEye => conditions::MIRACLEEYE,
+            Volatile::DefenseCurl => conditions::DEFENSECURL,
+            Volatile::Rollout | Volatile::IceBall => ConditionId::NONE,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -568,6 +584,9 @@ impl Volatile {
             Volatile::Stockpile => "stockpile",
             Volatile::Foresight => "foresight",
             Volatile::MiracleEye => "miracleeye",
+            Volatile::DefenseCurl => "defensecurl",
+            Volatile::Rollout => "rollout",
+            Volatile::IceBall => "iceball",
         }
     }
 
@@ -672,7 +691,9 @@ impl Volatile {
             | Volatile::Geomancy
             | Volatile::Stockpile
             | Volatile::Foresight
-            | Volatile::MiracleEye => 0,
+            | Volatile::MiracleEye
+            | Volatile::DefenseCurl => 0,
+            Volatile::Rollout | Volatile::IceBall => 1,
             Volatile::ZenMode => 0,
         }
     }
@@ -731,7 +752,9 @@ impl Volatile {
             | Volatile::Counter
             | Volatile::MirrorCoat
             | Volatile::FocusPunch
-            | Volatile::ShellTrap => Some(VolatileState {
+            | Volatile::ShellTrap
+            | Volatile::Rollout
+            | Volatile::IceBall => Some(VolatileState {
                 counter: 0,
                 hidden: 0,
                 ..state
@@ -905,6 +928,8 @@ mod tests {
                         | Volatile::FreezeShock
                         | Volatile::IceBurn
                         | Volatile::Geomancy
+                        | Volatile::Rollout
+                        | Volatile::IceBall
                 ));
                 continue;
             }
@@ -958,6 +983,9 @@ mod tests {
             (Volatile::Stockpile, moves::STOCKPILE),
             (Volatile::Foresight, moves::FORESIGHT),
             (Volatile::MiracleEye, moves::MIRACLE_EYE),
+            (Volatile::DefenseCurl, moves::DEFENSE_CURL),
+            (Volatile::Rollout, moves::ROLLOUT),
+            (Volatile::IceBall, moves::ICE_BALL),
         ] {
             let data = id.data();
             assert_eq!(

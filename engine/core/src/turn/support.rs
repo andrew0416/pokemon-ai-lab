@@ -1080,6 +1080,32 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::MAGNETIC_FLUX, &["onHitSide"]),
     (moves::FLOWER_SHIELD, &["onHitField"]),
     (moves::ROTOTILLER, &["onHitField"]),
+    // Opus V unit 9c: Rollout and Ice Ball (their condition: `onModifyMove` starts it,
+    // `basePowerCallback` counts the hits in `handlers::rolling_power`, `onLockMove` in
+    // `lock::locked_move`, `onResidual` in `residual.rs`; `onAfterMove` only acts in generations
+    // 7–8, where a hit could skip its contact count); Defense Curl's volatile (`onRestart`:
+    // `null`) doubles them.
+    (
+        moves::ROLLOUT,
+        &[
+            "basePowerCallback",
+            "condition.onResidual",
+            "condition.onStart",
+            "onAfterMove",
+            "onModifyMove",
+        ],
+    ),
+    (
+        moves::ICE_BALL,
+        &[
+            "basePowerCallback",
+            "condition.onResidual",
+            "condition.onStart",
+            "onAfterMove",
+            "onModifyMove",
+        ],
+    ),
+    (moves::DEFENSE_CURL, &["condition.onRestart"]),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do

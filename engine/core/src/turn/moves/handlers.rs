@@ -153,6 +153,28 @@ pub(super) fn on_modify_move<const N: usize>(
         // Struggle: `move.type = '???'` (typeless: `Type::None` for the move, which no type chart
         // entry, STAB or type-based handler matches).
         moves::STRUGGLE => mv.move_type = Type::None,
+        // Rollout, Ice Ball: `if (pokemon.volatiles['rollout'] || pokemon.status === 'slp' ||
+        // !target) return; pokemon.addVolatile('rollout');` — the lock aims at
+        // `lastMoveTargetLoc`, the location the user chose (the called moves that would set it
+        // otherwise are refused: `called_move_problem`).
+        moves::ROLLOUT | moves::ICE_BALL => {
+            let volatile = rolling_volatile(mv.id);
+            let asleep = b.slot_mon(user).is_some_and(|m| m.status == Status::Sleep);
+            if b.volatile(user, volatile).active || asleep || target.is_none() {
+                return Ok(());
+            }
+            if b.add_volatile(user, volatile) {
+                let state = b.volatile(user, volatile);
+                b.set_volatile_state(
+                    user,
+                    volatile,
+                    VolatileState {
+                        counter: super::super::lock::encode_target_loc(mv.target_loc),
+                        ..state
+                    },
+                );
+            }
+        }
         // Present: `const rand = this.random(10);` below 2: `move.heal = [1, 4]` and
         // `move.infiltrates = true` (the power stays 0: [`move_heal`], [`infiltrates`]); below 6:
         // 40 power; below 9: 80; else 120.
@@ -187,6 +209,50 @@ pub(super) fn on_modify_move<const N: usize>(
         _ => {}
     }
     Ok(())
+}
+
+/// Rollout's and Ice Ball's `basePowerCallback` (called for each hit's `getDamage`): the power
+/// doubles per earlier hit (`2 ** contactHitCount` once `hitCount` is set); the hit counts one
+/// more unless the user is asleep, and below the fifth the condition lasts one more turn
+/// (`duration = 2`); Defense Curl doubles it again.
+fn rolling_power<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+    base_power: i32,
+) -> i32 {
+    let volatile = rolling_volatile(id);
+    let state = b.volatile(user, volatile);
+    let mut power = base_power;
+    if state.active && state.hidden > 0 {
+        power <<= state.hidden;
+    }
+    let asleep = b.slot_mon(user).is_some_and(|m| m.status == Status::Sleep);
+    if state.active && !asleep {
+        let hits = state.hidden + 1;
+        b.set_volatile_state(
+            user,
+            volatile,
+            VolatileState {
+                hidden: hits,
+                duration: if hits < 5 { 2 } else { state.duration },
+                ..state
+            },
+        );
+    }
+    if b.volatile(user, Volatile::DefenseCurl).active {
+        power *= 2;
+    }
+    power.max(1)
+}
+
+/// Rollout's or Ice Ball's own condition.
+fn rolling_volatile(id: MoveId) -> Volatile {
+    if id == moves::ICE_BALL {
+        Volatile::IceBall
+    } else {
+        Volatile::Rollout
+    }
 }
 
 /// Showdown `pokemon.getStat(stat, false, true)` for battle stat `index` (0 Atk .. 3 SpD): the
@@ -733,7 +799,7 @@ pub(super) fn on_try_hit<const N: usize>(
 
 /// Why a move Copycat or Mirror Move would call (`useMove`, which the caller may not know) is not
 /// run: a move the engine does not support; a two-turn move or one that locks its user (the lock
-/// would name a move the user may not have); a move with its own `onAfterMove`, a
+/// would name a move the user may not have; Rollout, Ice Ball); a move with its own `onAfterMove`, a
 /// `beforeTurnCallback` or a `priorityChargeCallback` (`runMove`'s AfterMove and the queue
 /// actions belong to the caller); an Electric move while the user has Charge (Charge's
 /// `onAfterMove` would see the called move, the engine's the caller).
@@ -749,8 +815,9 @@ fn called_move_problem<const N: usize>(
     let locks = data
         .self_effect
         .is_some_and(|s| s.volatile_status == crate::dex::conditions::LOCKEDMOVE);
-    let own_actions =
-        super::has_before_turn_callback(id) || super::has_priority_charge_callback(id);
+    let own_actions = super::has_before_turn_callback(id)
+        || super::has_priority_charge_callback(id)
+        || [moves::ROLLOUT, moves::ICE_BALL].contains(&id);
     let charged = data.move_type == Type::Electric && b.volatile(user, Volatile::Charge).active;
     (data.flags.contains(MoveFlags::CHARGE)
         || locks
@@ -1247,13 +1314,17 @@ fn remove_side_effects<const N: usize>(
 /// `clampIntRange(basePower, 1)` (a fraction is floored, and 0 means no damage). `hit` is
 /// `move.hit`, the hit being made (1 for a single hit).
 pub(super) fn base_power_callback<const N: usize>(
-    b: &Battle<'_, N>,
+    b: &mut Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
     mv: &ActiveMove,
     base_power: i32,
     hit: u8,
 ) -> i32 {
+    if mv.id == moves::ROLLOUT || mv.id == moves::ICE_BALL {
+        return rolling_power(b, user, mv.id, base_power);
+    }
+    let b: &Battle<'_, N> = b;
     let hp = |s: SlotRef| {
         b.slot_mon(s)
             .map_or((0, 1), |m| (i32::from(m.hp), i32::from(m.max_hp)))

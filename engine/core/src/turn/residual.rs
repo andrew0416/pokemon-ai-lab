@@ -460,6 +460,13 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
                     }
                 }
                 Volatile::PartiallyTrapped => conditions::partially_trapped_residual(b, slot),
+                // Rollout, Ice Ball: `if (target.lastMove && target.lastMove.id === 'struggle')
+                // delete target.volatiles['rollout'];` (no lock after Struggle).
+                Volatile::Rollout | Volatile::IceBall => {
+                    if b.state.slot(slot).last_move == crate::dex::moves::STRUGGLE {
+                        b.delete_volatile(slot, volatile);
+                    }
+                }
                 Volatile::Encore => {
                     // Over once the encored move has no PP left.
                     let out_of_pp = b
