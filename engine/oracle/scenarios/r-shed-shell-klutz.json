@@ -1,0 +1,23 @@
+{
+ "description": "Opus R unit 3: Klutz suppresses its holder's Shed Shell against a trapping ability. Gothitelle's Shadow Tag traps Snorlax (Klutz, Shed Shell ignored) but not Munchlax (Shed Shell), which switches out to Blissey. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gothitelle", "item": "", "ability": "Shadow Tag", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "Shed Shell", "ability": "Klutz", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Munchlax", "item": "Shed Shell", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "turn": {
+  "p1": "move harden, move harden",
+  "p2": "move harden, switch 3"
+ }
+}
