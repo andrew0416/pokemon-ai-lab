@@ -928,12 +928,9 @@ fn use_move<const N: usize>(
     };
     // Ally Switch moved the user (Showdown's steps below act on the Pokémon wherever it is).
     let user = handlers::current_slot(b, user, pokemon);
-    // `moveHit`: `if (move.selfSwitch && source.hp) source.switchFlag = move.id` once the move
-    // did something (Parting Shot's `onHit` withdrew it if its drops failed). The request is
-    // made, or the flag dropped for a side without a bench, after the action.
-    if result && b.move_self_switch && b.alive(user).is_some() {
-        b.set_switch_flag(user, SwitchFlag::Move);
-    }
+    // The self-switch flag was set in `spread_move_hit` (`runMoveEffects`), before the targets'
+    // Emergency Exit could clear it. The request is made, or the flag dropped for a side
+    // without a bench, after the action.
     b.finish_move_result(user, result);
     use_move_tail(b, user, mv, result, main_target)?;
     Ok(None)
@@ -2092,6 +2089,14 @@ fn spread_move_hit<const N: usize>(
             results[i] = Hit::Failed;
         }
     }
+    // The end of `runMoveEffects`: `else if (move.selfSwitch && source.hp &&
+    // !source.volatiles['commanded']) source.switchFlag = move.id` once anything happened
+    // (Parting Shot's `onHit` withdrew `selfSwitch` if its drops failed). It comes before the
+    // targets' Emergency Exit, which clears every other active's flag: U-turn into a Pokémon it
+    // takes below half leaves only that Pokémon switching.
+    if b.move_self_switch && b.alive(user).is_some() && results.iter().any(|r| *r != Hit::Failed) {
+        b.set_switch_flag(user, SwitchFlag::Move);
+    }
     // selfDrops: boosts once, for the first target the move did not fail on; an effect
     // without boosts (Roost's, Outrage's volatile) is applied to the user for every such
     // target. Sheer Force deleted `self`; Serene Grace doubled its chance.
@@ -2230,7 +2235,7 @@ fn spread_move_hit<const N: usize>(
     // pokemon.hp <= pokemon.maxhp / 2 && pokemonOriginalHP > pokemon.maxhp / 2)
     // runEvent('EmergencyExit', pokemon)` (Rough Skin, Iron Barbs, Rocky Helmet took the user
     // to half). A self-switching move's user already has its `switchFlag` from
-    // `runMoveEffects` (the engine sets it once the move is done), which the handler respects.
+    // `runMoveEffects` (set above), which the handler respects.
     if !damaged.is_empty() && !b.move_self_switch {
         if let Some(hp_before) = user_hp_before {
             super::switching::emergency_exit_check(b, user, hp_before);

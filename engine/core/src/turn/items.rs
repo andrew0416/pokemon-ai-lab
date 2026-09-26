@@ -717,7 +717,13 @@ pub(crate) fn after_move_secondary_self<const N: usize>(
     };
     let max_hp = f64::from(mon.max_hp);
     match b.item(user) {
-        i if i == items::LIFE_ORB && data.category != MoveCategory::Status && target != user => {
+        // `if (source && source !== target && move && move.category !== 'Status' &&
+        // !source.forceSwitchFlag)`: a user Red Card is dragging out pays no recoil.
+        i if i == items::LIFE_ORB
+            && data.category != MoveCategory::Status
+            && target != user
+            && !b.force_switch.contains(&user) =>
+        {
             b.damage(user, max_hp / 10.0, DamageSource::Indirect);
         }
         i if i == items::SHELL_BELL && total_damage > 0 => {

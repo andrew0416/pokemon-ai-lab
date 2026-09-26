@@ -126,3 +126,16 @@ fn emergency_exit_from_hazards_matches_showdown_exactly() {
 fn a_switch_runs_the_update_before_the_entry_hazards() {
     assert_exact_parity("switch-update-sitrus");
 }
+
+/// U-turn into an Emergency Exit target: the user's switch flag is set in `runMoveEffects`
+/// and the target's Emergency Exit clears it, so only the target switches.
+#[test]
+fn uturn_into_emergency_exit_matches_showdown_exactly() {
+    assert_exact_parity("uturn-emergency-exit");
+}
+
+/// A Life Orb user dragged out by Red Card pays no recoil (`!source.forceSwitchFlag`).
+#[test]
+fn red_card_skips_the_life_orb_recoil() {
+    assert_exact_parity("red-card-life-orb");
+}
