@@ -677,9 +677,11 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
     if b.volatile(user, Volatile::GlaiveRush).active {
         b.remove_volatile(user, Volatile::GlaiveRush);
     }
-    // mustrecharge (priority 11): the turn is spent recharging.
+    // mustrecharge (priority 11): the turn is spent recharging; Truant's volatile goes too
+    // (`pokemon.removeVolatile('truant')`), so the holder moves after its recharge turn.
     if b.volatile(user, Volatile::MustRecharge).active {
         b.remove_volatile(user, Volatile::MustRecharge);
+        b.remove_volatile(user, Volatile::Truant);
         return false;
     }
     match b.mon(pokemon).status {

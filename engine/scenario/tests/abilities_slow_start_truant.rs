@@ -38,3 +38,9 @@ fn truant_loafs_and_sleep_comes_first() {
 fn truant_restart_after_moving_loafs_next() {
     assert_exact_parity("u-truant-restart");
 }
+
+/// The recharge turn after Hyper Beam removes the truant volatile with mustrecharge.
+#[test]
+fn recharge_turn_clears_truant() {
+    assert_exact_parity("u-truant-recharge");
+}
