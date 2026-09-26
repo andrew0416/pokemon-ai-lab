@@ -3127,8 +3127,8 @@ fn spread_move_hit<const N: usize>(
     }
     // 6. forceSwitch (Roar, Whirlwind, Dragon Tail, Circle Throw): a target the move did not
     // fail on, standing, with the user standing and a bench on its side, is dragged out right
-    // after the action (`forceSwitchFlag`) unless `DragOut` stops it: Suction Cups (breakable)
-    // returns `null`, which neither drags nor fails the move.
+    // after the action (`forceSwitchFlag`) unless `DragOut` stops it: Suction Cups and Guard Dog
+    // (both breakable) return `null`, which neither drags nor fails the move.
     if data.force_switch {
         for (i, &t) in targets.iter().enumerate() {
             if !results[i].reached()
@@ -3146,7 +3146,7 @@ fn spread_move_hit<const N: usize>(
                 results[i] = Hit::Failed;
             }
             if commander
-                || b.ability_unless_broken(t) == abilities::SUCTION_CUPS
+                || drag_out_ability(b.ability_unless_broken(t))
                 || conditions::drag_out_blocked(b, t)
             {
                 continue;
@@ -4069,4 +4069,12 @@ mod tests {
         assert_eq!(weight_power(999), 80);
         assert_eq!(weight_power(99), 20);
     }
+}
+
+/// The abilities whose `onDragOut` returns `null` (Suction Cups, priority 0; Guard Dog, priority
+/// 1): the holder is neither dragged out nor is the phazing move failed. Both are breakable, so
+/// callers pass `ability_unless_broken` (a Mold Breaker phazer) or the effective ability (Red
+/// Card, whose event the attacker's own move does not suppress).
+pub(crate) fn drag_out_ability(ability: AbilityId) -> bool {
+    ability == abilities::SUCTION_CUPS || ability == abilities::GUARD_DOG
 }

@@ -1484,7 +1484,8 @@ pub(crate) fn fainted_action_speed<const N: usize>(b: &Battle<'_, N>, pokemon: P
 
 /// Showdown `dragIn(side, pos)` for a Pokémon with `forceSwitchFlag`: a uniformly random
 /// bench member (`getRandomSwitchable`; nothing without one), unless `DragOut` blocks it
-/// (Suction Cups, breakable), replaces the occupant and runs its `runSwitch` at once (`isDrag`).
+/// (Suction Cups or Guard Dog, breakable), replaces the occupant and runs its `runSwitch` at once
+/// (`isDrag`).
 /// Returns whether a switch happened.
 pub(crate) fn drag_in<const N: usize>(
     b: &mut Battle<'_, N>,
@@ -1499,7 +1500,7 @@ pub(crate) fn drag_in<const N: usize>(
     } else {
         b.rng.uniform(bench.len())
     };
-    if b.ability_unless_broken(slot) == abilities::SUCTION_CUPS
+    if super::moves::drag_out_ability(b.ability_unless_broken(slot))
         || super::conditions::drag_out_blocked(b, slot)
     {
         return Ok(false);

@@ -1562,7 +1562,8 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::HYPER_CUTTER, &["onTryBoost"]),
     (abilities::BIG_PECKS, &["onTryBoost"]),
     (abilities::MIRROR_ARMOR, &["onTryBoost"]),
-    // `onDragOut` only answers force-switch moves, which are all refused.
+    // `onDragOut` (`moves::drag_out_ability`, with Suction Cups): Roar, Whirlwind, Dragon Tail,
+    // Circle Throw, `dragIn` and Red Card (B28).
     (abilities::GUARD_DOG, &["onDragOut", "onTryBoost"]),
     (abilities::COMPETITIVE, &["onAfterEachBoost"]),
     (abilities::DEFIANT, &["onAfterEachBoost"]),

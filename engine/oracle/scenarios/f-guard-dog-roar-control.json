@@ -1,0 +1,7 @@
+{
+ "description": "B28 control: the same Roar on an Intimidate Mabosstiff drags it out for Blissey (one bench member, no draw).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Roar", "Dragon Tail", "Harden"], "level": 50}, {"species": "Torkoal", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "123"},
+ "p2": {"team": [{"species": "Mabosstiff", "item": "", "ability": "Intimidate", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Crunch", "Harden"], "level": 50}, {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "123"},
+ "turn": {"p1": "move roar 1, move harden", "p2": "move harden, move harden"}
+}

@@ -1,0 +1,7 @@
+{
+ "description": "B28: Guard Dog's onDragOut (priority 1, returns null) blocks phazing: Snorlax's Roar on Mabosstiff (Guard Dog) neither drags it out nor fails; the control with an Intimidate Mabosstiff is f-guard-dog-roar-control.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Roar", "Dragon Tail", "Harden"], "level": 50}, {"species": "Torkoal", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "123"},
+ "p2": {"team": [{"species": "Mabosstiff", "item": "", "ability": "Guard Dog", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Crunch", "Harden"], "level": 50}, {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "123"},
+ "turn": {"p1": "move roar 1, move harden", "p2": "move harden, move harden"}
+}

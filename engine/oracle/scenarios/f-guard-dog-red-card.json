@@ -1,0 +1,7 @@
+{
+ "description": "B28: Red Card's runEvent('DragOut', source, ...) is stopped by the attacker's Guard Dog: Mabosstiff's Crunch uses up Snorlax's Red Card but Mabosstiff stays in.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Mabosstiff", "item": "", "ability": "Guard Dog", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Crunch", "Harden"], "level": 50}, {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "123"},
+ "p2": {"team": [{"species": "Snorlax", "item": "Red Card", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}, {"species": "Torkoal", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "123"},
+ "turn": {"p1": "move crunch 1, move harden", "p2": "move harden, move harden"}
+}

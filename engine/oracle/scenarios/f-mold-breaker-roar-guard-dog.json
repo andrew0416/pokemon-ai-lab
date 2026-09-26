@@ -1,0 +1,7 @@
+{
+ "description": "B28: Guard Dog is breakable: a Mold Breaker Snorlax's Roar drags the Guard Dog Mabosstiff out for Blissey.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Snorlax", "item": "", "ability": "Mold Breaker", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Roar", "Harden"], "level": 50}, {"species": "Torkoal", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "123"},
+ "p2": {"team": [{"species": "Mabosstiff", "item": "", "ability": "Guard Dog", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Crunch", "Harden"], "level": 50}, {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "123"},
+ "turn": {"p1": "move roar 1, move harden", "p2": "move harden, move harden"}
+}
