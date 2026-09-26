@@ -369,3 +369,48 @@ fn depth_two_matches_brute_force() {
         assert!((line.value - value).abs() < 1e-3, "{line:?} vs {value}");
     }
 }
+
+/// The matrix game's payoffs are the exact chance values (brute force), its equilibrium value
+/// is at least the pure maximin, and the strategies are distributions.
+#[test]
+fn mixed_analysis_matches_brute_force_payoffs() {
+    let position = position("eject-button-uturn");
+    let mut state = position.state.clone();
+    let mut config = Config::new(Ruleset::CHAMPIONS_MC, SideId::One);
+    config.rolls = RollMode::Full;
+    let evaluator = Material;
+    let mut solver = Solver::new(config, &evaluator);
+    let mixed = solver.analyse_mixed(&mut state, None).unwrap();
+    assert_eq!(state, position.state);
+    let decision = decision(&state, None).unwrap();
+    for (r, &a) in mixed.ours.iter().enumerate() {
+        for (c, &b) in mixed.theirs.iter().enumerate() {
+            let expected = chance_value(
+                &mut state,
+                SideId::One,
+                Chance::Expect,
+                decision,
+                None,
+                [a, b],
+                0,
+            );
+            assert!(
+                (mixed.matrix.at(r, c) - expected).abs() < 1e-3,
+                "{a:?} vs {b:?}: {} vs {expected}",
+                mixed.matrix.at(r, c)
+            );
+        }
+    }
+    let brute = brute_force(&mut state, SideId::One, Chance::Expect, 1);
+    let pure = brute
+        .iter()
+        .map(|(_, v)| *v)
+        .fold(f32::NEG_INFINITY, f32::max);
+    assert!((mixed.maximin.1 - pure).abs() < 1e-3);
+    assert!(mixed.equilibrium.value >= pure - 1e-2, "{mixed:?}");
+    let sum: f32 = mixed.equilibrium.rows.iter().sum();
+    assert!((sum - 1.0).abs() < 1e-4);
+    let sum: f32 = mixed.equilibrium.cols.iter().sum();
+    assert!((sum - 1.0).abs() < 1e-4);
+    assert!(!mixed.our_support(0.01).is_empty());
+}

@@ -25,6 +25,7 @@ use lab_engine::turn::{EnumerateOptions, RollMode, Suspension, TurnError};
 
 use crate::choice::Choice;
 use crate::game::{self, Decision, Pruning};
+use crate::nash::{self, Equilibrium, Matrix};
 
 /// The value of a won battle (a lost one is its negative); a leaf evaluation must stay well
 /// inside `(-WIN, WIN)`. A faster win scores slightly higher (`WIN + remaining depth`).
@@ -411,5 +412,110 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized> Solver<'e, N, E> {
                 Ok(sum as f32)
             }
         }
+    }
+}
+
+/// The root decision solved as a zero-sum matrix game over both sides' choices, each pair
+/// valued by the exact chance node below it (deeper nodes by maximin as in [`Analysis`]).
+#[derive(Clone, Debug, PartialEq)]
+pub struct MixedAnalysis<const N: usize> {
+    pub decision: Decision,
+    pub ours: Vec<Choice<N>>,
+    pub theirs: Vec<Choice<N>>,
+    /// `ours.len() × theirs.len()`, from our side.
+    pub matrix: Matrix,
+    pub equilibrium: Equilibrium,
+    /// The pure maximin (row, value) of the same matrix, for comparison.
+    pub maximin: (usize, f32),
+    pub depth: u32,
+    pub nodes: u64,
+    pub turns: u64,
+    pub elapsed: Duration,
+}
+
+impl<const N: usize> MixedAnalysis<N> {
+    /// Our choices with equilibrium probability at least `min`, most likely first.
+    pub fn our_support(&self, min: f32) -> Vec<(Choice<N>, f32)> {
+        let mut out: Vec<(Choice<N>, f32)> = self
+            .ours
+            .iter()
+            .zip(&self.equilibrium.rows)
+            .filter(|(_, &p)| p >= min)
+            .map(|(c, &p)| (*c, p))
+            .collect();
+        out.sort_by(|a, b| b.1.total_cmp(&a.1));
+        out
+    }
+
+    /// Their choices with equilibrium probability at least `min`, most likely first.
+    pub fn their_support(&self, min: f32) -> Vec<(Choice<N>, f32)> {
+        let mut out: Vec<(Choice<N>, f32)> = self
+            .theirs
+            .iter()
+            .zip(&self.equilibrium.cols)
+            .filter(|(_, &p)| p >= min)
+            .map(|(c, &p)| (*c, p))
+            .collect();
+        out.sort_by(|a, b| b.1.total_cmp(&a.1));
+        out
+    }
+}
+
+impl<'e, const N: usize, E: Evaluator<N> + ?Sized> Solver<'e, N, E> {
+    /// Values every pair of choices at the root exactly (no cutoffs) and solves the matrix
+    /// game by regret matching. `state` is left unchanged. Costs `ours × theirs` chance nodes,
+    /// each with the full subtree of depth `config.depth - 1`.
+    pub fn analyse_mixed(
+        &mut self,
+        state: &mut State<N>,
+        suspension: Option<&Suspension>,
+    ) -> Result<MixedAnalysis<N>, SearchError> {
+        let started = Instant::now();
+        self.nodes = 0;
+        self.turns = 0;
+        let decision = game::decision(state, suspension)?;
+        if matches!(decision, Decision::Over(_)) {
+            return Err(SearchError::Turn(TurnError::BattleOver));
+        }
+        let them = self.config.us.other();
+        let ours = self.choices(state, decision, self.config.us)?;
+        let theirs = self.choices(state, decision, them)?;
+        let depth = self.config.depth.max(1);
+        let next_depth = if decision == Decision::Turn {
+            depth - 1
+        } else {
+            depth
+        };
+        let mut values = Vec::with_capacity(ours.len() * theirs.len());
+        for &a in &ours {
+            for &b in &theirs {
+                let pair = self.pair(a, b);
+                let v = self.chance(
+                    state,
+                    decision,
+                    suspension,
+                    pair,
+                    next_depth,
+                    f32::NEG_INFINITY,
+                    f32::INFINITY,
+                )?;
+                values.push(v);
+            }
+        }
+        let matrix = Matrix::new(ours.len(), theirs.len(), values);
+        let equilibrium = nash::solve(&matrix, 20_000, 0.01);
+        let maximin = matrix.maximin();
+        Ok(MixedAnalysis {
+            decision,
+            ours,
+            theirs,
+            matrix,
+            equilibrium,
+            maximin,
+            depth,
+            nodes: self.nodes,
+            turns: self.turns,
+            elapsed: started.elapsed(),
+        })
     }
 }

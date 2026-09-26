@@ -11,7 +11,9 @@
 //!   outcome distribution of a pair of choices, all on `lab_engine::turn`.
 //! - [`solve`]: depth-limited maximin over pure strategies with alpha-beta cutoffs at the
 //!   adversary node and Star1 cutoffs at chance nodes; every line of the root is reported with
-//!   its value and the reply that holds it there.
+//!   its value and the reply that holds it there. [`Solver::analyse_mixed`] instead solves the
+//!   root turn as a matrix game ([`nash`]): the value when neither side can be read, with a
+//!   mixed strategy for each side.
 //! - [`choice`]: choices in Showdown's choice-string form (`move hypervoice 1, switch 3`), the
 //!   inverse of `lab_scenario::parse_choice`.
 //!
@@ -20,8 +22,10 @@
 
 pub mod choice;
 pub mod game;
+pub mod nash;
 pub mod solve;
 
 pub use choice::{format_choice, format_switches, Choice};
 pub use game::{decision, legal_choices, transitions, Decision, Pruning};
-pub use solve::{Analysis, Chance, Config, Line, SearchError, Solver, WIN};
+pub use nash::{Equilibrium, Matrix};
+pub use solve::{Analysis, Chance, Config, Line, MixedAnalysis, SearchError, Solver, WIN};

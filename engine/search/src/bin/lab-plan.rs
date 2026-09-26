@@ -4,7 +4,7 @@
 //! Usage: lab-plan <scenario.json> [--side p1|p2] [--depth n] [--rng expect|worst]
 //!                 [--before <oracle-report.json>] [--top k] [--exact] [--all-targets]
 //!                 [--max-turns n] [--rolls full|extremes|quartiles|median|pessimistic]
-//!                 [--eval material|heuristic] [--position i]
+//!                 [--eval material|heuristic] [--position i] [--solve maximin|nash]
 //!
 //! The position is the scenario's (after switch-ins, setup turns and patch); with several
 //! initial states `--before` picks the one matching an oracle report, as `lab-turn` does.
@@ -49,6 +49,7 @@ fn run() -> Result<(), String> {
     let mut top = 10usize;
     let mut position_index: Option<usize> = None;
     let mut eval = "heuristic".to_owned();
+    let mut solve = "maximin".to_owned();
     let mut pessimistic = false;
     let mut config = Config::new(Ruleset::CHAMPIONS_MC, us);
     let mut i = 0;
@@ -130,6 +131,13 @@ fn run() -> Result<(), String> {
                     _ => return Err("--eval needs material or heuristic".into()),
                 };
             }
+            "--solve" => {
+                i += 1;
+                solve = match args.get(i).map(String::as_str) {
+                    Some(s @ ("maximin" | "nash")) => s.to_owned(),
+                    _ => return Err("--solve needs maximin or nash".into()),
+                };
+            }
             "--exact" => config.exact_lines = true,
             "--all-targets" => config.pruning = Pruning::All,
             other if scenario.is_none() => scenario = Some(other.to_owned()),
@@ -169,6 +177,45 @@ fn run() -> Result<(), String> {
         Box::new(Heuristic)
     };
     let mut solver = Solver::new(config, evaluator.as_ref());
+    if solve == "nash" {
+        let mixed = solver
+            .analyse_mixed(&mut state, None)
+            .map_err(|e| e.to_string())?;
+        if state != position.state {
+            return Err("the solver changed the position (bug)".into());
+        }
+        println!(
+            "decision {:?}, depth {}, chance {:?}, pruning {:?}, rolls {:?}, eval {eval}: {} nodes, {} enumerations, {:.2} s",
+            mixed.decision, mixed.depth, config.chance, config.pruning, config.rolls, mixed.nodes, mixed.turns,
+            mixed.elapsed.as_secs_f64()
+        );
+        println!(
+            "matrix {}x{}; equilibrium value {:+.1} (exploitability {:.3}, {} RM+ iterations); pure maximin {:+.1}",
+            mixed.matrix.rows,
+            mixed.matrix.cols,
+            mixed.equilibrium.value,
+            mixed.equilibrium.exploitability,
+            mixed.equilibrium.iterations,
+            mixed.maximin.1
+        );
+        println!("our mixed strategy (>= 1%):");
+        for (choice, p) in mixed.our_support(0.01).iter().take(top) {
+            println!(
+                "  {:>5.1}%  {}",
+                p * 100.0,
+                describe(&position, mixed.decision, us, choice)
+            );
+        }
+        println!("their mixed strategy (>= 1%):");
+        for (choice, p) in mixed.their_support(0.01).iter().take(top) {
+            println!(
+                "  {:>5.1}%  {}",
+                p * 100.0,
+                describe(&position, mixed.decision, them, choice)
+            );
+        }
+        return Ok(());
+    }
     let analysis = solver
         .analyse(&mut state, None)
         .map_err(|e| e.to_string())?;
