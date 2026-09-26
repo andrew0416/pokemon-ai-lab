@@ -43,6 +43,8 @@
 
 **등장 통합·기절 후 교체 (2026-09-26, WORKPLAN F4·F5 완료):** 등장 처리는 `core/src/turn/switching.rs` 하나다: `switch_in`(Showdown `switchIn`: 퇴장자 특성·타입 복귀, 기절 점유자 `fnt` 해제, 슬롯 배치), `run_switch_in`(일괄 `runSwitch`: 등장자들의 시작 핸들러를 **저장 속도(원시 스탯)** 내림차순, 동률은 균등 무작위, 특성이 바뀐 핸들러는 건너뜀), `start_ability`(날씨·필드·위협·트레이스). 첫 등장(`scenario/switch_in.rs`)은 상태 검증 뒤 `turn::enumerate_start`에 위임한다. 기절한 포켓몬은 `Slot::fainted_occupant`로 자리를 지키고(`checkFainted`가 `fnt`를 찍는 근거), 교체 결정은 `turn::enumerate_replacements(state, [[Option<party>; N]; 2])`: instaswitch(기절자 속도순, 동률 무작위) → 일괄 runSwitch → `endTurn`(턴 증가). 로더는 `setupTurns`를 엔진으로 재생하고(`scenario_positions`: 등장 → 설정 턴들 → 패치), Showdown의 `side.pokemon` 순서를 교체마다 갱신해 `switch N`을 해석한다(`advance_order`). `scenario_decision`이 `Decision::Turn`/`Replacement`를 고르고 `run_decision`이 실행한다. 시나리오 `ko-replace`(더블 KO → 양쪽 교체, 등장자 속도 동률로 2결과)가 정확 일치(`tests/replacement.rs`).
 
+**실전 파티 첫 실행 (2026-09-26, WORKPLAN S2):** `lab-plan --position`으로 우리 파티(가디안·고릴타 선두) vs 라이브러리 `sand-owen`을 VGC 형식으로 돌렸다: 158개 합법 선택, 3,447회 열거, 2.9 s(Median). 결과 해석과 한계는 WORKPLAN S2 행. 시나리오 파일은 저장소 밖(임시)이며, 실전 비교용 시나리오를 저장소에 둘 때는 `teams/`의 팀 파일을 참조하고 AGENTS.md대로 원본을 바꾸지 않는다.
+
 **열거 성능 2부 a·평가 함수 (2026-09-26, WORKPLAN F18 2부 a):** 롤 1개 모드 둘을 추가했다. `RollMode::Median`(92%)과 `RollMode::Pessimistic(side)`(그 편의 공격은 최소, 받는 공격은 최대 — "최저난수 보장" 라인 검증용). 실전형 무거운 턴이 Extremes 31,920 결과·2.9 s에서 Median 2,001 결과·0.17 s로 줄어 깊이 1 탐색이 초 단위가 됐다(`ko-replace` 251 s → 8.8 s). `eval::Heuristic`(상태이상·랭크·휘발·순풍·벽 가중치; 임의 시작값)이 `lab-plan`의 기본 평가다. `move_last_turn_result`·`fainted_last_turn` 이월도 읽는 기술이 있을 때만 남긴다. 명령: `lab-plan <scenario> --side p2 --rolls median|pessimistic --eval heuristic|material`. 주의: `--rng worst`는 명중·급소·부가효과까지 상대가 고르는 극단이라 값이 거의 전부 -10000이 되기 쉽다; 최저난수 기준은 `--rolls pessimistic`(+ `--rng expect`)이 맞다.
 
 **열거 성능 1부 (2026-09-26, WORKPLAN F18 1부):** 실전형 턴(광역기 둘)의 정확 분포는 HP 조합이 수천만이라 열거 자체가 불가능하다(`spread-damage` Full: 48 GB 할당 실패). 그래서 (1) 난수 모드 `RollMode::{Full, Extremes, Quartiles}`를 `EnumerateOptions`로 넣었다: Extremes(최소·최대 롤)는 오라클 `--mode extremes`와 같은 근사여서 `*.extremes.json` fixture와 정확 일치로 검증하고, 탐색(`lab-plan`)의 기본값이다(`hypnosis-gravity` 깊이 1: 708 s → 1.1 s). Full은 그대로 정확 분포. (2) 정확성을 유지하는 축소 둘: 파티에 읽는 기술이 없으면 `last_damaged_by`·`times_attacked`를 기록하지 않고(`Battle.history_readers`), 남은 행동이 없는 대상의 풀죽음은 분기하지 않는다(`flinch_only` + `will_move`). 둘 다 fixture 전부 통과. 명령: `lab-turn ... --rolls extremes`, `lab-plan ... --rolls full|extremes|quartiles`. 남은 일은 WORKPLAN F18 행.
@@ -115,6 +117,7 @@ D:/cargo-target/release/lab-turn.exe <scenario> --before <mc 보고서> --mc 200
 cd engine && cargo build --release -p lab-search
 D:/cargo-target/release/lab-plan.exe engine/oracle/scenarios/eject-button-uturn.json --side p1 --depth 1 --rng expect --top 10
 D:/cargo-target/release/lab-plan.exe <scenario> --side p2 --rolls pessimistic --eval heuristic --before <oracle 보고서> --exact --max-turns 500
+D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median   # 초기 상태가 여럿이면 --position (후보 목록은 옵션 없이 실행하면 출력)
 D:/cargo-target/release/lab-turn.exe <scenario> --rolls median      # full|extremes|quartiles|median|pessimistic-p1|pessimistic-p2
 node engine/oracle/marginals.cjs <showdown mc 보고서> "$TEMP/engine-mc.json"   # 큰 분포: 주변분포 비교
 node engine/oracle/strip-report.cjs "$TEMP/full.json" engine/oracle/expected/<이름>.turn.json   # fixture 갱신

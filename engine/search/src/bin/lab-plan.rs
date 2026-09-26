@@ -4,7 +4,7 @@
 //! Usage: lab-plan <scenario.json> [--side p1|p2] [--depth n] [--rng expect|worst]
 //!                 [--before <oracle-report.json>] [--top k] [--exact] [--all-targets]
 //!                 [--max-turns n] [--rolls full|extremes|quartiles|median|pessimistic]
-//!                 [--eval material|heuristic]
+//!                 [--eval material|heuristic] [--position i]
 //!
 //! The position is the scenario's (after switch-ins, setup turns and patch); with several
 //! initial states `--before` picks the one matching an oracle report, as `lab-turn` does.
@@ -47,6 +47,7 @@ fn run() -> Result<(), String> {
     let mut before = None;
     let mut us = SideId::One;
     let mut top = 10usize;
+    let mut position_index: Option<usize> = None;
     let mut eval = "heuristic".to_owned();
     let mut pessimistic = false;
     let mut config = Config::new(Ruleset::CHAMPIONS_MC, us);
@@ -87,6 +88,14 @@ fn run() -> Result<(), String> {
                     .get(i)
                     .and_then(|s| s.parse().ok())
                     .ok_or("--top needs a number")?;
+            }
+            "--position" => {
+                i += 1;
+                position_index = Some(
+                    args.get(i)
+                        .and_then(|s| s.parse::<usize>().ok())
+                        .ok_or("--position needs an index")?,
+                );
             }
             "--max-turns" => {
                 i += 1;
@@ -140,7 +149,7 @@ fn run() -> Result<(), String> {
 
     let loaded = load_scenario_file(&scenario).map_err(|e| e.to_string())?;
     let positions = scenario_positions(&loaded)?;
-    let position = pick_position(&loaded, positions, before.as_deref())?;
+    let position = pick_position(&loaded, positions, before.as_deref(), position_index)?;
     let them = us.other();
     let mut state = position.state.clone();
 
@@ -252,7 +261,15 @@ fn pick_position(
     loaded: &lab_scenario::LoadedScenario,
     positions: Vec<Position>,
     before: Option<&str>,
+    index: Option<usize>,
 ) -> Result<Position, String> {
+    if let Some(i) = index {
+        let n = positions.len();
+        return positions
+            .into_iter()
+            .nth(i)
+            .ok_or_else(|| format!("--position {i}: only {n} initial states"));
+    }
     let wanted = match before {
         Some(path) => {
             let text = std::fs::read_to_string(path).map_err(|e| format!("{path}: {e}"))?;
@@ -263,10 +280,38 @@ fn pick_position(
     };
     match wanted {
         None if positions.len() == 1 => Ok(positions.into_iter().next().unwrap()),
-        None => Err(format!(
-            "{} initial states; pass --before <oracle report> to pick one",
-            positions.len()
-        )),
+        None => {
+            // Several start states (Trace, Speed ties among the leads): list them.
+            let mut text = format!(
+                "{} initial states; pass --position <index> or --before <oracle report>:
+",
+                positions.len()
+            );
+            for (i, p) in positions.iter().enumerate() {
+                let actives: Vec<String> = [SideId::One, SideId::Two]
+                    .into_iter()
+                    .flat_map(|side| {
+                        let meta = &loaded.meta.sides[side.index()];
+                        p.state.side(side).slots.iter().filter_map(move |slot| {
+                            let party = slot.party_index?;
+                            let mon = &p.state.side(side).party[party as usize];
+                            Some(format!(
+                                "{} ({})",
+                                meta.name(party).unwrap_or("?"),
+                                mon.ability.data().name
+                            ))
+                        })
+                    })
+                    .collect();
+                text.push_str(&format!(
+                    "  {i}: p={:.4} {}
+",
+                    p.probability,
+                    actives.join(", ")
+                ));
+            }
+            Err(text)
+        }
         Some(w) => positions
             .into_iter()
             .find(|p| {
