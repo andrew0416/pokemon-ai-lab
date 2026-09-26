@@ -152,7 +152,7 @@ impl<const N: usize> Battle<'_, N> {
 /// [`switch_in_priority`] schedules (Seeds, Room Service); a Seed's `onTerrainChange`
 /// (`field_events`); White Herb's and Mirror Herb's `onAnySwitchIn` ([`any_switch_in_priority`];
 /// White Herb's `onStart` only runs from its own handlers, as `onAnySwitchIn` replaces it as the
-/// switch-in callback, or from `setItem`, which the supported item moves refuse for it).
+/// switch-in callback, or from `setItem`'s Start: [`white_herb_start`]).
 pub(crate) fn start_handler_implemented(item: ItemId, handler: &str) -> bool {
     match handler {
         "onStart" => {
@@ -228,20 +228,33 @@ pub(crate) fn switch_in_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRe
 /// `boosts`; `onUse` sets every negative stage to 0 with `setBoost`, which runs no boost
 /// event), consumed.
 pub(crate) fn white_herb<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
-    if b.item(slot) != items::WHITE_HERB || b.alive(slot).is_none() {
+    if b.item(slot) != items::WHITE_HERB {
+        return;
+    }
+    white_herb_start(b, slot);
+}
+
+/// White Herb's `onStart` itself for the holder in `slot`, which `setItem`'s `Start` runs even
+/// while the holder ignores its item (Klutz, Magic Room): with a negative stage the herb is used
+/// (`useItem`), and its `onUse` (the reset) is a `singleEvent('Use')`, which the suppression
+/// skips; the negative stages then stay.
+pub(crate) fn white_herb_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.raw_item(slot) != items::WHITE_HERB || b.alive(slot).is_none() {
         return;
     }
     let boosts = b.state.slot(slot).boosts;
     if !boosts.iter().any(|&stage| stage < 0) {
         return;
     }
-    for (stat, &stage) in boosts.iter().enumerate() {
-        if stage < 0 {
-            b.apply(Instruction::Boost {
-                target: slot,
-                stat: stat as u8,
-                amount: -stage,
-            });
+    if !ignoring_item(b.state, slot) {
+        for (stat, &stage) in boosts.iter().enumerate() {
+            if stage < 0 {
+                b.apply(Instruction::Boost {
+                    target: slot,
+                    stat: stat as u8,
+                    amount: -stage,
+                });
+            }
         }
     }
     b.use_item(slot);
@@ -815,7 +828,9 @@ pub(crate) fn before_move<const N: usize>(
         b.remove_volatile(user, Volatile::ChoiceLock);
         return true;
     }
-    id.0 == lock.counter
+    // `!pokemon.ignoringItem() && ... && move.id !== this.effectState.move`: a holder ignoring
+    // its item (Klutz, Magic Room) keeps the lock but is not held to it.
+    ignoring_item(b.state, user) || id.0 == lock.counter
 }
 
 /// The item `DisableMove` handlers `endTurn` runs for every active Pokémon: `choicelock`'s

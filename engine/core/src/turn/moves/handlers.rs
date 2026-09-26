@@ -3049,23 +3049,24 @@ pub(crate) fn trick_moves_item(item: ItemId) -> bool {
         .contains(&item)
 }
 
-/// `setItem`'s `singleEvent('Start', item)` on the new holder in `slot` (skipped here while it
-/// ignores its item, except Metronome's): a Choice item removes the holder's `choicelock` (a
-/// lock from its old Choice item, or from this very move's ModifyMove); a Seed, Room Service and
-/// White Herb act as when their holder switches in (`items::switch_in_item`: used in its
-/// terrain, in Trick Room, with a lowered stat); Metronome adds its condition.
+/// `setItem`'s `singleEvent('Start', item)` on the new holder in `slot`. `singleEvent` exempts
+/// `Start` from the item suppression, so the `onStart` runs even while the holder ignores its
+/// item (Klutz, Magic Room): a Choice item removes the holder's `choicelock` (a lock from its
+/// old Choice item, or from this very move's ModifyMove); Metronome adds its condition; White
+/// Herb is used on a lowered stat (`items::white_herb_start`: its `Use` is suppressed then); a
+/// Seed and Room Service are used in their terrain / in Trick Room, but they check
+/// `!pokemon.ignoringItem()` themselves (`items::switch_in_item`'s effective-item check).
+/// Mirror Herb has no `onStart`.
 pub(crate) fn trick_item_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
-    // `singleEvent('Start')` runs even for a holder ignoring its item (only other events skip
-    // it): Metronome's `onStart` adds its condition all the same.
-    if item == items::METRONOME {
-        super::super::items::metronome_start(b, slot);
-        return;
-    }
-    if b.item(slot) != item {
+    if b.raw_item(slot) != item {
         return;
     }
     if item.data().is_choice {
         b.remove_volatile(slot, Volatile::ChoiceLock);
+    } else if item == items::METRONOME {
+        super::super::items::metronome_start(b, slot);
+    } else if item == items::WHITE_HERB {
+        super::super::items::white_herb_start(b, slot);
     } else if item != items::MIRROR_HERB {
         super::super::items::switch_in_item(b, slot, item);
     }

@@ -1,0 +1,26 @@
+{
+ "description": "Opus X unit B1: under Magic Room, setItem's Start still runs White Herb's onStart. Setup turn: Bronzong's Magic Room and Snorlax's Growl (-1 Attack to Bronzong and Hariyama). Then Alakazam Tricks its White Herb onto Hariyama (no item): the herb is used up (useItem), its onUse is suppressed, and Hariyama stays at -1 Attack.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Bronzong", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Magic Room", "Harden"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Alakazam", "item": "White Herb", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Trick", "Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Growl", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move magicroom, move harden", "move harden, move growl"]
+ ],
+ "turn": {"p1": "move harden, move harden", "p2": "move trick 2, move harden"}
+}
