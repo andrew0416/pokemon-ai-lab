@@ -119,6 +119,7 @@ pub fn build_pokemon(set: &TeamSet) -> Result<(Pokemon, MemberMeta), SetProblem>
         status_turns: 0,
         item,
         last_item: ItemId::NONE,
+        autotomized: 0,
         ability,
         base_ability: ability,
         moves,

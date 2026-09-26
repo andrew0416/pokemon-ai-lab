@@ -1,0 +1,26 @@
+{
+ "description": "Opus W unit 5 Autotomize: a second Autotomize (Scizor moves first at +2 Speed) takes its 18 kg to the 0.1 kg minimum, and Speed to +4; Machamp's Low Kick then has 20 base power.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Scizor", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Autotomize", "Harden"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Low Kick", "Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move autotomize, move harden", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move autotomize, move harden", "p2": "move lowkick 1, move harden"}
+}

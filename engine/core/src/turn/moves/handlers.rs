@@ -612,6 +612,16 @@ pub(super) fn on_try_hit<const N: usize>(
             .data()
             .flags
             .contains(AbilityFlags::CANTSUPPRESS),
+        // Autotomize (on its user): `if ((!hasContrary && pokemon.boosts.spe === 6) ||
+        // (hasContrary && pokemon.boosts.spe === -6)) return false;` (`hasAbility`).
+        moves::AUTOTOMIZE => {
+            let speed = b.state.slot(target).boosts[4];
+            if b.ability(target) == abilities::CONTRARY {
+                speed != -6
+            } else {
+                speed != 6
+            }
+        }
         _ => true,
     }
 }
@@ -1545,6 +1555,22 @@ pub(super) fn on_hit<const N: usize>(
                 _ => 2048,
             };
             weather_heal(b, target, modifier)
+        }
+        // Autotomize: `if (pokemon.weighthg > 1) pokemon.weighthg = Math.max(1, pokemon.weighthg
+        // - 1000);` after its Speed +2 (the data `boosts`); it returns nothing.
+        moves::AUTOTOMIZE => {
+            if let Some(pokemon) = b.occupant(target) {
+                let mon = b.mon(pokemon);
+                if mon.weight_hg() > 1 {
+                    let old = mon.autotomized;
+                    b.apply(Instruction::SetAutotomized {
+                        target: pokemon,
+                        old,
+                        new: old + 1,
+                    });
+                }
+            }
+            return Ok(None);
         }
         // Shore Up: 0.667 in sandstorm (`field.isWeather`, no Utility Umbrella), 0.5 otherwise.
         moves::SHORE_UP => {

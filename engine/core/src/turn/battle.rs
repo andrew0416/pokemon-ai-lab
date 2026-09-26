@@ -668,7 +668,9 @@ impl<'a, const N: usize> Battle<'a, N> {
                 new: species_types,
             });
         }
-        // `setSpecies` also recalculates the stored stats (Speed Swap's exchange ends).
+        // `setSpecies` also resets the weight (Autotomize) and recalculates the stored stats
+        // (Speed Swap's exchange ends).
+        self.reset_autotomize(pokemon);
         let mon = self.mon(pokemon);
         let stats = mon.forme_as(mon.species).stats;
         if mon.stats != stats {

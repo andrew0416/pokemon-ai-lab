@@ -99,8 +99,10 @@ pub(crate) fn forme_change<const N: usize>(
             new,
         });
     }
-    // `setSpecies`: `this.speed = this.storedStats.spe` until the next `updateSpeed()`.
+    // `setSpecies`: `this.speed = this.storedStats.spe` until the next `updateSpeed()`, and the
+    // new forme's weight (Autotomize's reductions end).
     b.species_set(slot);
+    b.reset_autotomize(pokemon);
     // `setType(species.types, true)`, through Roost's filter.
     set_types(b, slot, pokemon, target.types);
     if new_hp != hp {

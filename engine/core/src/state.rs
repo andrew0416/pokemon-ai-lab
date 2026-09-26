@@ -123,6 +123,12 @@ pub struct Pokemon {
     /// The item this Pokémon last consumed (Showdown `lastItem`); knocked-off items are not
     /// recorded.
     pub last_item: ItemId,
+    /// Autotomize's weight reductions since the last `setSpecies` (Showdown lowers `weighthg`
+    /// itself, `max(1, weighthg - 1000)` while it is above 1): the weight is the forme's minus
+    /// 1000 hg per reduction, at least 1 hg ([`Pokemon::weight_hg`]). `setSpecies` resets it:
+    /// leaving the field (switching out, fainting) and every forme change. Hidden from the
+    /// canonical output, as Showdown's `weighthg` is.
+    pub autotomized: u8,
     /// Current ability; changes in battle (Trace) and reverts to `base_ability` on
     /// switch-out or fainting.
     pub ability: AbilityId,
@@ -138,6 +144,13 @@ pub struct Pokemon {
 impl Pokemon {
     pub fn is_alive(&self) -> bool {
         self.hp > 0
+    }
+
+    /// Showdown `pokemon.weighthg`: the current forme's weight, lowered by Autotomize
+    /// ([`Pokemon::autotomized`]), before the `ModifyWeight` handlers.
+    pub fn weight_hg(&self) -> i32 {
+        let weight = i32::from(self.species.data().weight_hg);
+        (weight - 1000 * i32::from(self.autotomized)).max(1)
     }
 
     /// The fields a forme change rewrites, as they are now.

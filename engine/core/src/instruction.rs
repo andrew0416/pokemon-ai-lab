@@ -70,6 +70,12 @@ pub enum Instruction {
         old: [Type; 2],
         new: [Type; 2],
     },
+    /// `Pokemon::autotomized` (Autotomize's weight loss; reset by `setSpecies`).
+    SetAutotomized {
+        target: PokemonRef,
+        old: u8,
+        new: u8,
+    },
     SetPp {
         target: PokemonRef,
         move_index: u8,
@@ -209,6 +215,9 @@ impl<const N: usize> State<N> {
             Instruction::SetAbility { target, new, .. } => self.pokemon_mut(target).ability = new,
             Instruction::SetForme { target, new, .. } => self.pokemon_mut(target).set_forme(new),
             Instruction::SetTypes { target, new, .. } => self.pokemon_mut(target).types = new,
+            Instruction::SetAutotomized { target, new, .. } => {
+                self.pokemon_mut(target).autotomized = new
+            }
             Instruction::SetPp {
                 target,
                 move_index,
@@ -285,6 +294,9 @@ impl<const N: usize> State<N> {
             Instruction::SetAbility { target, old, .. } => self.pokemon_mut(target).ability = old,
             Instruction::SetForme { target, old, .. } => self.pokemon_mut(target).set_forme(old),
             Instruction::SetTypes { target, old, .. } => self.pokemon_mut(target).types = old,
+            Instruction::SetAutotomized { target, old, .. } => {
+                self.pokemon_mut(target).autotomized = old
+            }
             Instruction::SetPp {
                 target,
                 move_index,

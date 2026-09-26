@@ -717,6 +717,9 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::MOONLIGHT, &["onHit"]),
     (moves::SYNTHESIS, &["onHit"]),
     (moves::SHORE_UP, &["onHit"]),
+    // Autotomize (Opus W unit 5): `onTryHit` (Speed already at the cap) and `onHit` (the user's
+    // weight, `Pokemon::autotomized`) in `handlers`; its Speed +2 is the data `boosts`.
+    (moves::AUTOTOMIZE, &["onHit", "onTryHit"]),
     (moves::HAZE, &["onHitField"]),
     (moves::CLEAR_SMOG, &["onHit"]),
     (moves::TOPSY_TURVY, &["onHit"]),

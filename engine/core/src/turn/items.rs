@@ -103,17 +103,17 @@ impl<const N: usize> Battle<'_, N> {
 
     /// Showdown `pokemon.getWeight()`: `runEvent('ModifyWeight', pokemon, null, null,
     /// pokemon.weighthg)`, then at least 1 hg. `weighthg` is the current forme's weight
-    /// (`setSpecies`; Autotomize, which lowers it until the next `setSpecies`, is refused by
-    /// `support`). Handlers by priority: Heavy Metal (1) doubles it; then, at priority 0, Light
-    /// Metal (ability) and Float Stone (item) each halve it with truncation. Heavy Metal and
-    /// Light Metal are breakable: a move that ignores abilities skips the target's, not its
-    /// user's own ([`Battle::ability_unless_broken`]); a suppressed Float Stone does nothing.
-    /// Read by Low Kick, Grass Knot, Heavy Slam and Heat Crash.
+    /// (`setSpecies`), less Autotomize's reductions since then ([`Pokemon::weight_hg`]).
+    /// Handlers by priority: Heavy Metal (1) doubles it; then, at priority 0, Light Metal
+    /// (ability) and Float Stone (item) each halve it with truncation. Heavy Metal and Light
+    /// Metal are breakable: a move that ignores abilities skips the target's, not its user's
+    /// own ([`Battle::ability_unless_broken`]); a suppressed Float Stone does nothing. Read by
+    /// Low Kick, Grass Knot, Heavy Slam and Heat Crash.
     pub(crate) fn weight(&self, slot: SlotRef) -> i32 {
         let Some(mon) = self.slot_mon(slot) else {
             return 1;
         };
-        let mut weight = i32::from(mon.species.data().weight_hg);
+        let mut weight = mon.weight_hg();
         let ability = self.ability_unless_broken(slot);
         if ability == abilities::HEAVY_METAL {
             weight *= 2;
@@ -125,6 +125,19 @@ impl<const N: usize> Battle<'_, N> {
             weight /= 2;
         }
         weight.max(1)
+    }
+
+    /// `setSpecies`'s `this.weighthg = species.weighthg` for `pokemon`: Autotomize's reductions
+    /// end (a forme change, leaving the field).
+    pub(crate) fn reset_autotomize(&mut self, pokemon: PokemonRef) {
+        let old = self.mon(pokemon).autotomized;
+        if old != 0 {
+            self.apply(Instruction::SetAutotomized {
+                target: pokemon,
+                old,
+                new: 0,
+            });
+        }
     }
 }
 

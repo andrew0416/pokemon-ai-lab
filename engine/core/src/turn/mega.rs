@@ -92,8 +92,9 @@ pub(crate) fn run_mega_evo<const N: usize>(
         new,
     });
     // `setSpecies`: `this.speed = this.storedStats.spe` until the next `updateSpeed()` (after
-    // this action).
+    // this action), and the Mega forme's weight (Autotomize's reductions end).
     b.species_set(slot);
+    b.reset_autotomize(pokemon);
     if new_hp != hp {
         // updateMaxHp adjusts HP silently, outside `damage`/`heal`.
         let amount = hp - new_hp;
