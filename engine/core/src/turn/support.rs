@@ -365,6 +365,15 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::THUNDER, &["onModifyMove"]),
     (moves::FREEZE_DRY, &["onEffectiveness"]),
     (moves::FLYING_PRESS, &["onEffectiveness"]),
+    // Smack Down / Thousand Arrows: the `smackdown` volatile (`onStart` in
+    // `conditions::volatile_start`, `onRestart` in `Battle::add_volatile_from`, grounding in
+    // `Battle::is_grounded`); Thousand Arrows' `onEffectiveness` in
+    // `handlers::thousand_arrows_neutral` (its Ground immunity is ignored by data).
+    (
+        moves::SMACK_DOWN,
+        &["condition.onRestart", "condition.onStart"],
+    ),
+    (moves::THOUSAND_ARROWS, &["onEffectiveness"]),
     (moves::POLTERGEIST, &["onTry", "onTryHit"]),
     (moves::ACROBATICS, &["basePowerCallback"]),
     // Damage history (F13): `basePowerCallback`s reading `Slot.history` / `Side.history`

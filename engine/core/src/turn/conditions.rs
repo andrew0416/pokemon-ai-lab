@@ -399,6 +399,28 @@ pub(crate) fn volatile_start<const N: usize>(
             new.mv = last;
             true
         }
+        // Smack Down: it applies to a Flying type or a Levitate / Eelevate holder, not to one
+        // that holds Iron Ball, is rooted or under Gravity; it does apply to one it brings down
+        // from Fly or Bounce ([`smack_down_lands`]) or out of Magnet Rise (deleted, no `onEnd`).
+        // Otherwise it fails.
+        Volatile::SmackDown => {
+            let floats = [abilities::LEVITATE, abilities::EELEVATE].contains(&b.ability(target));
+            let mut applies = b.has_type(target, Type::Flying) || floats;
+            if b.item(target) == items::IRON_BALL
+                || b.volatile(target, Volatile::Ingrain).active
+                || b.field_active(crate::field::FieldEffect::Gravity)
+            {
+                applies = false;
+            }
+            if smack_down_lands(b, target) {
+                applies = true;
+            }
+            if b.volatile(target, Volatile::MagnetRise).active {
+                applies = true;
+                b.delete_volatile(target, Volatile::MagnetRise);
+            }
+            applies
+        }
         // Heal Block: `durationCallback`: 2 from Psychic Noise, else 5 (Persistent, 7, is
         // refused); `onStart`: `source.moveThisTurnResult = true` (the user of the move adding
         // it).
@@ -426,6 +448,26 @@ pub(crate) fn volatile_start<const N: usize>(
         }
         _ => true,
     }
+}
+
+/// Smack Down's `if (pokemon.removeVolatile('fly') || pokemon.removeVolatile('bounce')) {
+/// this.queue.cancelMove(pokemon); pokemon.removeVolatile('twoturnmove'); }` for the Pokémon at
+/// `slot`: one in the air comes down, its pending move action (the attack turn) is dropped and
+/// its two-turn lock ends. Returns whether it was in the air.
+pub(crate) fn smack_down_lands<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> bool {
+    if !b.remove_volatile(slot, Volatile::Fly) && !b.remove_volatile(slot, Volatile::Bounce) {
+        return false;
+    }
+    if let Some(pokemon) = b.occupant(slot) {
+        let pending = b.queue.iter().position(|a| {
+            a.pokemon == pokemon && matches!(a.kind, super::queue::ActionKind::Move { .. })
+        });
+        if let Some(index) = pending {
+            b.queue.remove(index);
+        }
+    }
+    b.remove_volatile(slot, Volatile::TwoTurnMove);
+    true
 }
 
 /// The user's condition `onBeforeMove` handlers between flinch (priority 8) and Gravity (6):

@@ -323,10 +323,12 @@ impl<'a, const N: usize> Battle<'a, N> {
         self.state.side(side).effects[effect as usize].is_active()
     }
 
-    /// Showdown `isGrounded` for the supported effects, in its order: Gravity, Ingrain, Iron
-    /// Ball, Flying, Levitate, Magnet Rise, Air Balloon.
+    /// Showdown `isGrounded` for the supported effects, in its order: Gravity, Ingrain, Smack
+    /// Down, Iron Ball, Flying, Levitate, Magnet Rise, Air Balloon.
     pub fn is_grounded(&self, slot: SlotRef) -> bool {
-        if self.field_active(FieldEffect::Gravity) || self.volatile(slot, Volatile::Ingrain).active
+        if self.field_active(FieldEffect::Gravity)
+            || self.volatile(slot, Volatile::Ingrain).active
+            || self.volatile(slot, Volatile::SmackDown).active
         {
             return true;
         }
@@ -1005,6 +1007,12 @@ impl<'a, const N: usize> Battle<'a, N> {
                     counter: old.counter + 1,
                     ..old
                 },
+                // Smack Down's `onRestart`: a holder in the air again (Fly, Bounce) comes down
+                // (`conditions::smack_down_lands`); it returns nothing.
+                Volatile::SmackDown => {
+                    super::conditions::smack_down_lands(self, target);
+                    return true;
+                }
                 // Heal Block's `onRestart`: nothing from Psychic Noise; otherwise `if
                 // (!source.moveThisTurnResult) source.moveThisTurnResult = false;`. Either way it
                 // returns nothing, so `addVolatile` succeeds without changing the volatile.

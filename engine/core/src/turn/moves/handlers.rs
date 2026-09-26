@@ -257,9 +257,12 @@ pub(super) fn on_try<const N: usize>(
         // `delete move.volatileStatus` for a `trapped` user, is [`keeps_volatile_status`]).
         moves::NO_RETREAT => !b.volatile(user, Volatile::NoRetreat).active,
         // Magnet Rise: `if (target.volatiles['smackdown'] || target.volatiles['ingrain']) return
-        // false;` (on itself; Smack Down's volatile is not implemented; its Gravity branch is for
-        // the Z-Move, Gravity's BeforeMove already stops the move).
-        moves::MAGNET_RISE => !b.volatile(first_target, Volatile::Ingrain).active,
+        // false;` (on itself; its Gravity branch is for the Z-Move, Gravity's BeforeMove already
+        // stops the move).
+        moves::MAGNET_RISE => {
+            !b.volatile(first_target, Volatile::Ingrain).active
+                && !b.volatile(first_target, Volatile::SmackDown).active
+        }
         // Rest: fails asleep or with Comatose, at full HP, and with Insomnia or Vital Spirit
         // (`hasAbility`: the user's own ability, never suppressed by its own move).
         moves::REST => b.slot_mon(user).is_some_and(|m| {
@@ -1501,6 +1504,20 @@ pub(super) fn on_effectiveness(id: MoveId, defending: Type, type_mod: i32) -> i3
         moves::FLYING_PRESS => type_mod + type_effectiveness(Type::Flying, defending),
         _ => type_mod,
     }
+}
+
+/// Thousand Arrows' `onEffectiveness` against `target`: `if (move.type !== 'Ground') return; if
+/// (!target.runImmunity('Ground')) { if (target.hasType('Flying')) return 0; }` — an airborne
+/// Flying type takes it neutrally (every type's modifier becomes 0).
+pub(super) fn thousand_arrows_neutral<const N: usize>(
+    b: &Battle<'_, N>,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    mv.id == moves::THOUSAND_ARROWS
+        && mv.move_type == Type::Ground
+        && !b.is_grounded(target)
+        && b.has_type(target, Type::Flying)
 }
 
 /// What an `onHit` handler returned: a truthy value, `false`, or `NOT_FAIL` (the move does

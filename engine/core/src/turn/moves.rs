@@ -3013,13 +3013,18 @@ fn get_damage<const N: usize>(
     // runEffectiveness: per defending type, the chart then the move's onEffectiveness, then
     // the target's ability (Disguise returns 0, which ends the event) and item.
     let neutral = super::forme::shields_hit(b, user, target, mv.id);
+    let arrows_neutral = handlers::thousand_arrows_neutral(b, mv, target);
     let type_mod: i32 = defender
         .types
         .iter()
         .filter(|&&t| t != Type::None)
         .map(|&t| {
             let chart = handlers::type_effectiveness(mv.move_type, t);
-            let by_move = handlers::on_effectiveness(mv.id, t, chart);
+            let by_move = if arrows_neutral {
+                0
+            } else {
+                handlers::on_effectiveness(mv.id, t, chart)
+            };
             if neutral {
                 return 0;
             }

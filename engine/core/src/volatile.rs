@@ -211,9 +211,13 @@ pub enum Volatile {
     /// Heal Block (duration 5, 2 from Psychic Noise; residual order 20): the holder's `heal`
     /// moves can be neither chosen nor used, and every `battle.heal` on it fails (`onTryHeal`).
     HealBlock,
+    /// Smack Down / Thousand Arrows (`smackdown`, no duration): the holder is grounded
+    /// (`isGrounded`, right after Ingrain). It only starts on a Pokémon that was airborne
+    /// (Flying, Levitate, Magnet Rise, or in the air with Fly / Bounce, which it brings down).
+    SmackDown,
 }
 
-pub const VOLATILE_COUNT: usize = 68;
+pub const VOLATILE_COUNT: usize = 69;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -285,6 +289,7 @@ impl Volatile {
         Volatile::BeakBlast,
         Volatile::ShellTrap,
         Volatile::HealBlock,
+        Volatile::SmackDown,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -336,6 +341,7 @@ impl Volatile {
             Volatile::Ingrain => conditions::INGRAIN,
             Volatile::MagnetRise => conditions::MAGNETRISE,
             Volatile::HealBlock => conditions::HEALBLOCK,
+            Volatile::SmackDown => conditions::SMACKDOWN,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -435,6 +441,7 @@ impl Volatile {
             Volatile::BeakBlast => "beakblast",
             Volatile::ShellTrap => "shelltrap",
             Volatile::HealBlock => "healblock",
+            Volatile::SmackDown => "smackdown",
         }
     }
 
@@ -518,7 +525,8 @@ impl Volatile {
             | Volatile::Trapped
             | Volatile::Trapper
             | Volatile::SaltCure
-            | Volatile::Ingrain => 0,
+            | Volatile::Ingrain
+            | Volatile::SmackDown => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -776,6 +784,7 @@ mod tests {
             (Volatile::BeakBlast, moves::BEAK_BLAST),
             (Volatile::ShellTrap, moves::SHELL_TRAP),
             (Volatile::HealBlock, moves::HEAL_BLOCK),
+            (Volatile::SmackDown, moves::SMACK_DOWN),
         ] {
             let data = id.data();
             assert_eq!(
