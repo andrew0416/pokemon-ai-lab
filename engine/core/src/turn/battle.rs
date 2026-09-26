@@ -524,6 +524,11 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// (a permanent forme stays: Champions never regresses one; a temporary forme returns to its
     /// base species, `forme::revert_on_leave`). Slot state is reset by the caller's `Switch`.
     pub fn clear_volatile(&mut self, pokemon: PokemonRef) {
+        // `removeLinkedVolatiles` for its linked volatiles (Mean Look's `trapped` / `trapper`),
+        // while it still holds its slot.
+        if let Some(slot) = State::<N>::slot_refs().find(|&s| self.occupant(s) == Some(pokemon)) {
+            super::conditions::remove_linked_volatiles(self, pokemon, slot);
+        }
         let mon = self.mon(pokemon);
         if mon.ability != mon.base_ability {
             let (old, new) = (mon.ability, mon.base_ability);

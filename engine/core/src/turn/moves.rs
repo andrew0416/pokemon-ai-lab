@@ -1979,7 +1979,9 @@ fn spread_move_hit<const N: usize>(
             }
             note(true);
         }
-        if let Some(volatile) = Volatile::from_condition(data.volatile_status) {
+        if let Some(volatile) = Volatile::from_condition(data.volatile_status)
+            .filter(|_| handlers::keeps_volatile_status(b, user, mv))
+        {
             note(b.add_volatile(t, volatile));
         }
         // `if (moveData.slotCondition) hitResult = target.side.addSlotCondition(target,

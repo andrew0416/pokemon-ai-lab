@@ -457,6 +457,11 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::JUNGLE_HEALING, &["onHit"]),
     (moves::LUNAR_BLESSING, &["onHit"]),
     (moves::FLORAL_HEALING, &["onHit"]),
+    // Mean Look, Block, Spider Web: `onHit` adds `trapped` linked to the user's `trapper`
+    // (`conditions::add_trap`, `remove_linked_volatiles`; the trap in `conditions::trapped`).
+    (moves::MEAN_LOOK, &["onHit"]),
+    (moves::BLOCK, &["onHit"]),
+    (moves::SPIDER_WEB, &["onHit"]),
     // Heal Pulse: `handlers::on_hit` (half the target's max HP, 3/4 from a Mega Launcher user).
     (moves::HEAL_PULSE, &["onHit"]),
     (moves::REST, &["onHit", "onTry"]),

@@ -7,7 +7,7 @@ use crate::dex::{
 };
 use crate::field::{Effect, SideEffect, SlotCondition, SlotEffect};
 use crate::instruction::Instruction;
-use crate::state::{PokemonRef, SideId, SlotRef, State, Status, BOOST_COUNT};
+use crate::state::{PokemonRef, SideId, SlotHistory, SlotRef, State, Status, BOOST_COUNT};
 use crate::volatile::{
     decode_pokemon, decode_slot, decode_types, encode_pokemon, encode_slot, encode_types, Volatile,
     VolatileState,
@@ -446,21 +446,27 @@ pub(crate) fn disabled_move<const N: usize>(
 
 /// Why the Pokémon in `slot` cannot switch out because of a condition on it (the
 /// `TrapPokemon` handlers `endTurn` runs, each calling `pokemon.tryTrap()`, which fails for a
-/// Pokémon immune to `trapped`: a Ghost type): No Retreat; partial trapping while its source is
-/// active (`if (this.effectState.source?.isActive) pokemon.tryTrap();`).
+/// Pokémon immune to `trapped`: a Ghost type): No Retreat; Mean Look, Block and Spider Web
+/// (`trapped`); partial trapping while its source is active (`if
+/// (this.effectState.source?.isActive) pokemon.tryTrap();`). Shed Shell's `onTrapPokemon`
+/// (priority -10, after every other handler: `pokemon.trapped = false`) frees its holder from
+/// all of them unless the item is suppressed.
 pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option<String> {
     let mon = state.active(slot)?;
     let immune = mon
         .types
         .iter()
         .any(|t| t.immunities().contains(TypeImmunities::TRAPPED));
-    if immune {
+    if immune || (mon.item == items::SHED_SHELL && !super::items::ignoring_item(state, slot)) {
         return None;
     }
     let name = mon.species.data().name;
     let volatiles = &state.slot(slot).volatiles;
     if volatiles.has(Volatile::NoRetreat) {
         return Some(format!("{name} is trapped by No Retreat"));
+    }
+    if volatiles.has(Volatile::Trapped) {
+        return Some(format!("{name} is trapped (Mean Look, Block, Spider Web)"));
     }
     let trap = volatiles.get(Volatile::PartiallyTrapped);
     if trap.active {
@@ -475,6 +481,95 @@ pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option
         }
     }
     None
+}
+
+/// Mean Look, Block, Spider Web `onHit`: `target.addVolatile('trapped', source, move,
+/// 'trapper')`. Fails on a fainted target, one already trapped (no `onRestart`) or one immune to
+/// `trapped` (`runStatusImmunity`: a Ghost type); otherwise the target gets `trapped` (its
+/// `onStart` only logs) linked to the source's `trapper`, which gains the target.
+pub(crate) fn add_trap<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    source: SlotRef,
+) -> bool {
+    let (Some(trapped), Some(trapper)) = (b.alive(target), b.alive(source)) else {
+        return false;
+    };
+    if b.volatile(target, Volatile::Trapped).active
+        || b.status_immune(target, TypeImmunities::TRAPPED)
+        || b.add_volatile_blocked(target, Volatile::Trapped)
+    {
+        return false;
+    }
+    b.set_volatile_state(
+        target,
+        Volatile::Trapped,
+        VolatileState {
+            active: true,
+            counter: encode_pokemon(trapper),
+            ..VolatileState::NONE
+        },
+    );
+    let links = b.volatile(source, Volatile::Trapper);
+    b.set_volatile_state(
+        source,
+        Volatile::Trapper,
+        VolatileState {
+            active: true,
+            counter: links.counter | SlotHistory::attacker_bit(trapped),
+            ..VolatileState::NONE
+        },
+    );
+    true
+}
+
+/// Showdown `removeLinkedVolatiles` for the Pokémon `pokemon` leaving the field from `slot`
+/// (`clearVolatile`): each Pokémon it trapped loses `trapped` (`removeVolatile`: not at 0 HP);
+/// if it was trapped, its trapper forgets it and loses `trapper` once it has trapped nobody
+/// left.
+pub(crate) fn remove_linked_volatiles<const N: usize>(
+    b: &mut Battle<'_, N>,
+    pokemon: PokemonRef,
+    slot: SlotRef,
+) {
+    let links = b.volatile(slot, Volatile::Trapper);
+    if links.active {
+        for other in State::<N>::slot_refs() {
+            let Some(held) = b.occupant(other) else {
+                continue;
+            };
+            let trap = b.volatile(other, Volatile::Trapped);
+            if links.counter & SlotHistory::attacker_bit(held) != 0
+                && trap.active
+                && decode_pokemon(trap.counter) == pokemon
+            {
+                b.remove_volatile(other, Volatile::Trapped);
+            }
+        }
+    }
+    let trap = b.volatile(slot, Volatile::Trapped);
+    if trap.active {
+        let trapper = decode_pokemon(trap.counter);
+        let held = Battle::<N>::slots(trapper.side).find(|&s| b.occupant(s) == Some(trapper));
+        if let Some(held) = held {
+            let links = b.volatile(held, Volatile::Trapper);
+            if links.active {
+                let rest = links.counter & !SlotHistory::attacker_bit(pokemon);
+                if rest == 0 {
+                    b.remove_volatile(held, Volatile::Trapper);
+                } else {
+                    b.set_volatile_state(
+                        held,
+                        Volatile::Trapper,
+                        VolatileState {
+                            counter: rest,
+                            ..links
+                        },
+                    );
+                }
+            }
+        }
+    }
 }
 
 /// Destiny Bond at the holder's move attempt: its `onBeforeMove` (priority -1, after every other

@@ -5,8 +5,59 @@
 mod common;
 
 use common::assert_exact_parity;
-use lab_engine::turn::TurnError;
+use lab_engine::action::SlotAction;
+use lab_engine::rules::{ActionError, Ruleset};
+use lab_engine::state::{SideId, SlotRef};
+use lab_engine::turn::{trapped, TurnError};
 use lab_scenario::{load_scenario_file, run_decision, scenario_decision, scenario_positions};
+
+/// `turn::trapped` for every active Pokémon of the scenario's position against Showdown's
+/// `pokemon.trapped` (`oracle/trapped.cjs` → `oracle/expected/<name>.trapped.json`), and the
+/// ruleset rejects exactly the trapped ones' switches.
+fn assert_trapped_parity(name: &str) {
+    let path = common::engine_dir().join(format!("oracle/expected/{name}.trapped.json"));
+    let text = std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("{path:?}: {e}"));
+    let fixture: serde_json::Value = serde_json::from_str(&text).unwrap();
+    let (loaded, position) = common::start(name, &fixture);
+    let state = position.state;
+    let mut checked = 0;
+    for (key, side) in [("p1", SideId::One), ("p2", SideId::Two)] {
+        let expected = fixture["trapped"][key].as_object().unwrap();
+        for slot in 0..2u8 {
+            let r = SlotRef { side, slot };
+            let Some(party) = state.slot(r).party_index else {
+                continue;
+            };
+            let mon_name = loaded.meta.sides[side.index()].name(party).unwrap();
+            let want = expected[mon_name].as_bool().unwrap();
+            assert_eq!(trapped(&state, r), want, "{name}: {mon_name}");
+            checked += 1;
+            let bench = (0..state.side(side).party.len() as u8).find(|&i| {
+                state.side(side).party[i as usize].hp > 0
+                    && !state
+                        .side(side)
+                        .slots
+                        .iter()
+                        .any(|s| s.party_index == Some(i))
+            });
+            if let Some(party_index) = bench {
+                let switch = SlotAction::Switch { party_index };
+                let result = Ruleset::CHAMPIONS_MC.validate_slot_action(&state, r, switch);
+                let expected = if want {
+                    Err(ActionError::Trapped { slot })
+                } else {
+                    Ok(())
+                };
+                assert_eq!(result, expected, "{name}: {mon_name}");
+            }
+        }
+    }
+    let total: usize = ["p1", "p2"]
+        .iter()
+        .map(|k| fixture["trapped"][k].as_object().unwrap().len())
+        .sum();
+    assert_eq!(checked, total, "{name}");
+}
 
 /// Runs the scenario's turn (first position) and expects `Unsupported` naming `expected`.
 fn assert_unsupported(name: &str, expected: &str) {
@@ -101,4 +152,29 @@ fn heavy_slam_power_from_the_weight_ratio() {
 #[test]
 fn heat_crash_power_at_a_bracket_edge() {
     assert_exact_parity("heat-crash");
+}
+
+/// Mean Look, Block (a Ghost is immune), Spider Web; a trapped target cannot be trapped again.
+#[test]
+fn mean_look_block_spider_web_trap_with_linked_volatiles() {
+    assert_exact_parity("mean-look");
+}
+
+/// The trapper switching out frees its target; the trapped Pokémon cannot choose to switch, a
+/// Shed Shell holder can.
+#[test]
+fn mean_look_ends_when_the_trapper_switches_out() {
+    assert_exact_parity("mean-look-switch");
+    assert_trapped_parity("mean-look-switch");
+}
+
+#[test]
+fn mean_look_ends_when_the_trapper_faints() {
+    assert_exact_parity("mean-look-faint");
+}
+
+/// No Retreat from a trapped user boosts without adding its own volatile.
+#[test]
+fn no_retreat_of_a_trapped_user_only_boosts() {
+    assert_exact_parity("no-retreat-trapped");
 }

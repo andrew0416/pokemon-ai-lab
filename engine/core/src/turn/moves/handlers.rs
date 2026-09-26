@@ -179,8 +179,8 @@ pub(super) fn on_try<const N: usize>(
             };
             enough && max_hp != 1
         }),
-        // No Retreat: `if (source.volatiles['noretreat']) return false;` (its other branch
-        // drops the volatile for a `trapped` user; no move that adds `trapped` is implemented).
+        // No Retreat: `if (source.volatiles['noretreat']) return false;` (its other branch,
+        // `delete move.volatileStatus` for a `trapped` user, is [`keeps_volatile_status`]).
         moves::NO_RETREAT => !b.volatile(user, Volatile::NoRetreat).active,
         // Rest: fails asleep or with Comatose, at full HP, and with Insomnia or Vital Spirit
         // (`hasAbility`: the user's own ability, never suppressed by its own move).
@@ -196,6 +196,17 @@ pub(super) fn on_try<const N: usize>(
         }),
         _ => true,
     }
+}
+
+/// Whether the move still has its `volatileStatus` when its effects run: No Retreat's `onTry`
+/// deletes it for a user that is `trapped` (Mean Look, Block, Spider Web), which only gets the
+/// boosts.
+pub(super) fn keeps_volatile_status<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> bool {
+    mv.id != moves::NO_RETREAT || !b.volatile(user, Volatile::Trapped).active
 }
 
 /// The move's `onTryImmunity` (`hitStepTryImmunity`, per target). `false` = the target is
@@ -1547,6 +1558,11 @@ pub(super) fn on_hit<const N: usize>(
             } else {
                 HitResult::Failure
             }
+        }
+        // Mean Look, Block, Spider Web: `return target.addVolatile('trapped', source, move,
+        // 'trapper');`
+        moves::MEAN_LOOK | moves::BLOCK | moves::SPIDER_WEB => {
+            success(super::super::conditions::add_trap(b, target, user))
         }
         // Heal Pulse: `this.heal(this.modify(target.baseMaxhp, 0.75))` from a Mega Launcher user
         // (`source.hasAbility`: its own ability), otherwise `this.heal(Math.ceil(target.baseMaxhp

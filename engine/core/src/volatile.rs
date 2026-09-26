@@ -169,9 +169,19 @@ pub enum Volatile {
     /// `onRestart` succeeds with probability 1/`counter` or deletes it. Added by name in the
     /// move's `onPrepareHit`, so the dex has no condition id.
     AllySwitch,
+    /// Mean Look / Block / Spider Web on their target (`trapped`, no duration): it cannot
+    /// switch out (`onTrapPokemon`) unless immune to trapping. Linked to its trapper's
+    /// [`Volatile::Trapper`] (`addVolatile('trapped', source, move, 'trapper')`): the trapper
+    /// is kept in `counter` ([`encode_pokemon`]; hidden in the canonical state).
+    Trapped,
+    /// The linked `trapper` volatile on the Pokémon that trapped others (no handlers): the
+    /// Pokémon it trapped are bits of `counter` (`SlotHistory::attacker_bit`; hidden). When
+    /// either side of the link leaves the field, the other end is removed
+    /// (`conditions::remove_linked_volatiles`).
+    Trapper,
 }
 
-pub const VOLATILE_COUNT: usize = 57;
+pub const VOLATILE_COUNT: usize = 59;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -232,6 +242,8 @@ impl Volatile {
         Volatile::Substitute,
         Volatile::ZenMode,
         Volatile::AllySwitch,
+        Volatile::Trapped,
+        Volatile::Trapper,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -296,7 +308,9 @@ impl Volatile {
             | Volatile::Dive
             | Volatile::PhantomForce
             | Volatile::ShadowForce
-            | Volatile::AllySwitch => ConditionId::NONE,
+            | Volatile::AllySwitch
+            | Volatile::Trapped
+            | Volatile::Trapper => ConditionId::NONE,
         }
     }
 
@@ -360,6 +374,8 @@ impl Volatile {
             Volatile::Substitute => "substitute",
             Volatile::ZenMode => "zenmode",
             Volatile::AllySwitch => "allyswitch",
+            Volatile::Trapped => "trapped",
+            Volatile::Trapper => "trapper",
         }
     }
 
@@ -431,7 +447,9 @@ impl Volatile {
             | Volatile::MeteorBeam
             | Volatile::ElectroShot
             | Volatile::SkyAttack
-            | Volatile::Substitute => 0,
+            | Volatile::Substitute
+            | Volatile::Trapped
+            | Volatile::Trapper => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -463,7 +481,9 @@ impl Volatile {
             Volatile::Roost
             | Volatile::HelpingHand
             | Volatile::LeechSeed
-            | Volatile::TwoTurnMove => Some(VolatileState {
+            | Volatile::TwoTurnMove
+            | Volatile::Trapped
+            | Volatile::Trapper => Some(VolatileState {
                 counter: 0,
                 ..state
             }),
@@ -629,6 +649,8 @@ mod tests {
                         | Volatile::ShadowForce
                         | Volatile::ZenMode
                         | Volatile::AllySwitch
+                        | Volatile::Trapped
+                        | Volatile::Trapper
                 ));
                 continue;
             }
