@@ -24,10 +24,22 @@ fn liquid_ooze_hurts_drainers() {
     assert_exact_parity("aa-liquid-ooze");
 }
 
+/// Liquid Ooze and Heal Block (both TryHeal priority 0) go by Speed: the faster decides.
+#[test]
+fn liquid_ooze_and_heal_block_go_by_speed() {
+    assert_exact_parity("aa-liquid-ooze-heal-block");
+}
+
 /// Sticky Hold keeps the item from Corrosive Gas; Mold Breaker's Knock Off takes it.
 #[test]
 fn sticky_hold_keeps_items_unless_broken() {
     assert_exact_parity("aa-sticky-hold");
+}
+
+/// Sticky Hold keeps the item from Thief and the berry from Bug Bite.
+#[test]
+fn sticky_hold_keeps_items_from_thief_and_bug_bite() {
+    assert_exact_parity("aa-sticky-hold-thief");
 }
 
 /// Sticky Hold keeps the item from Knock Off, whose power is still boosted.
