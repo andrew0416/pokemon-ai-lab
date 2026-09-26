@@ -2600,6 +2600,8 @@ fn spread_move_hit<const N: usize>(
         if mv.id == moves::SURF {
             super::forme::gulp_missile_catch(b, user);
         }
+        // A Gem's `onSourceTryPrimaryHit` (the user's item, priority 0, after Gulp Missile).
+        item_events::gem_try_primary_hit(b, user, t, mv.category, mv.move_type);
         shielded.push(if substitute_takes_hit(b, user, mv, t) {
             Some(hit_substitute(b, user, mv, t, hit)?)
         } else {

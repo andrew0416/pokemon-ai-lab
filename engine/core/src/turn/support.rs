@@ -1388,6 +1388,10 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     // `onTrapPokemon` (priority -10) in `abilities::trapped`; `onMaybeTrapPokemon` only clears
     // a display flag.
     (items::SHED_SHELL, &["onMaybeTrapPokemon", "onTrapPokemon"]),
+    // Opus AA (items): Normal Gem's `onSourceTryPrimaryHit` in `items::gem_try_primary_hit`
+    // (the `gem` volatile's `onBasePower` in `handlers::volatile_base_power`). The other Gems
+    // are `Past` in Champions and stay refused.
+    (items::NORMAL_GEM, &["onSourceTryPrimaryHit"]),
     // O98: `onStart` (switch-in, priority -2) and `onUpdate` in `abilities::booster_energy`,
     // `onTakeItem` in `Battle::item_can_be_taken` (`abilities::booster_energy_kept`).
     (
@@ -2566,8 +2570,9 @@ mod tests {
     /// - `onAfterSubDamage`: implemented for these moves (`handlers::on_after_sub_damage`) and
     ///   Air Balloon (`items::after_sub_damage`); every other holder (Core Enforcer, Shell Side
     ///   Arm, ...) is refused.
-    /// - `TryPrimaryHit`: only Aura Break's `onAnyTryPrimaryHit` besides the substitute; the
-    ///   gems' `onSourceTryPrimaryHit` and Gulp Missile are refused.
+    /// - `TryPrimaryHit`: Aura Break's `onAnyTryPrimaryHit`, Gulp Missile's and Normal Gem's
+    ///   `onSourceTryPrimaryHit` (priority 0, before the substitute's -1: the gem is used even
+    ///   when the substitute takes the hit) besides the substitute; the other gems are refused.
     /// - `move.infiltrates`: Infiltrator (`ActiveMoveRef::infiltrates`) and Pollen Puff are
     ///   implemented, and Present's heal (`handlers::infiltrates`).
     /// - Moves whose own code reads a substitute: Aromatherapy and Defog are implemented; Shed
@@ -2607,10 +2612,14 @@ mod tests {
                     .iter()
                     .any(|h| h.contains("AfterSubDamage") || h.contains("TryPrimaryHit"))
             {
-                assert_eq!(id, items::AIR_BALLOON);
+                assert!(
+                    [items::AIR_BALLOON, items::NORMAL_GEM].contains(&id),
+                    "{id:?}"
+                );
             }
         }
-        assert!(!item_supported_on_field(items::NORMAL_GEM));
+        assert!(item_supported_on_field(items::NORMAL_GEM));
+        assert!(!item_supported_on_field(items::FIRE_GEM));
         for id in AbilityId::all() {
             let handlers = id.data().handlers;
             if ability_supported_on_field(id)

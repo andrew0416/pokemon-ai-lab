@@ -1,0 +1,90 @@
+{
+ "description": "Normal Gem's condition mid-turn: Snorlax's gem-boosted Tackle takes Golisopod (100 HP, patch) below half; Emergency Exit asks for a switch and the turn stops there, with Snorlax's gem condition (duration 1) still up.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "Normal Gem",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Tackle"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Shuckle",
+    "item": "",
+    "ability": "Sturdy",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Golisopod",
+    "item": "",
+    "ability": "Emergency Exit",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "patch": {
+  "p2": {
+   "Golisopod": {
+    "hp": 100
+   }
+  }
+ },
+ "turn": {
+  "p1": "move tackle 1, move harden",
+  "p2": "move harden, move harden"
+ }
+}

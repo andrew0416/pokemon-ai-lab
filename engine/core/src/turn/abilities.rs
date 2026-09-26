@@ -1549,8 +1549,8 @@ pub(crate) fn pickpocket<const N: usize>(
 /// (after the item's handlers, which cannot act: Magician needs the user to hold nothing): the
 /// user steals the item of the first of `hit_targets` (the move's `hitTargets`, a substitute's
 /// owner included; itself excluded) in Speed order that gives one ([`steal_item`]). Nothing
-/// for a user with an Emergency Exit / Eject Button switch or holding an item (gems and Fling are
-/// refused).
+/// for a user with an Emergency Exit / Eject Button switch, holding an item or with a Gem's
+/// `gem` condition (`source.volatiles['gem']`; Fling is refused).
 pub(crate) fn magician<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -1561,6 +1561,7 @@ pub(crate) fn magician<const N: usize>(
     if b.ability(user) != abilities::MAGICIAN
         || b.state.slot(user).switch_flag == SwitchFlag::Effect
         || !b.raw_item(user).is_none()
+        || b.volatile(user, Volatile::Gem).active
         || id.data().category == MoveCategory::Status
     {
         return Ok(());

@@ -1014,6 +1014,32 @@ pub(crate) fn crit_ratio_bonus(item: ItemId, holder: &Pokemon) -> i32 {
     0
 }
 
+/// A Gem's `onSourceTryPrimaryHit` (the user's item, priority 0; after Gulp Missile, an ability,
+/// and before the target's substitute, -1) for each target of each hit: `if (target === source ||
+/// move.category === 'Status' || move.flags['pledgecombo']) return; if (move.type === <the gem's
+/// type> && source.useItem()) source.addVolatile('gem');` — the gem is used up on the first
+/// target (`move.type`: after ModifyType) and its condition boosts the move's power
+/// (`handlers::volatile_base_power`). Only Normal Gem is supported: the other Gems are `Past` in
+/// Champions.
+pub(crate) fn gem_try_primary_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    category: MoveCategory,
+    move_type: Type,
+) {
+    if target == user
+        || category == MoveCategory::Status
+        || move_type != Type::Normal
+        || b.item(user) != items::NORMAL_GEM
+    {
+        return;
+    }
+    if b.use_item(user) {
+        b.add_volatile(user, Volatile::Gem);
+    }
+}
+
 /// King's Rock / Razor Fang `onModifyMove` (priority -1), and the user's Stench (`stench`; the
 /// ability's `onModifyMove`, also priority -1, is the same code): a non-status move without a
 /// flinch secondary gets `{chance: 10, volatileStatus: 'flinch'}` appended to its secondaries.

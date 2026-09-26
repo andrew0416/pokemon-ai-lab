@@ -330,9 +330,13 @@ pub enum Volatile {
     /// `counter`, Spe and accuracy in `hidden`, evasion in `time`
     /// (`abilities::opportunist_boosts`). No duration; hidden in the canonical state.
     Opportunist,
+    /// A Gem's condition (`gem`, duration 1, `affectsFainted`): the holder used a Gem this turn
+    /// and its moves' base power is 5325/4096 (`onBasePower`, priority 14) until the residual.
+    /// Added by name, so the dex has no condition id.
+    Gem,
 }
 
-pub const VOLATILE_COUNT: usize = 101;
+pub const VOLATILE_COUNT: usize = 102;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -437,6 +441,7 @@ impl Volatile {
         Volatile::CudChew,
         Volatile::RipenWeaken,
         Volatile::Opportunist,
+        Volatile::Gem,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -544,7 +549,8 @@ impl Volatile {
             | Volatile::Truant
             | Volatile::CudChew
             | Volatile::RipenWeaken
-            | Volatile::Opportunist => ConditionId::NONE,
+            | Volatile::Opportunist
+            | Volatile::Gem => ConditionId::NONE,
         }
     }
 
@@ -652,6 +658,7 @@ impl Volatile {
             Volatile::CudChew => "cudchewberry",
             Volatile::RipenWeaken => "berryweaken",
             Volatile::Opportunist => "opportunistboosts",
+            Volatile::Gem => "gem",
         }
     }
 
@@ -686,7 +693,8 @@ impl Volatile {
             | Volatile::MirrorCoat
             | Volatile::FocusPunch
             | Volatile::BeakBlast
-            | Volatile::ShellTrap => 1,
+            | Volatile::ShellTrap
+            | Volatile::Gem => 1,
             Volatile::Stall
             | Volatile::LockedMove
             | Volatile::MustRecharge
@@ -1024,6 +1032,7 @@ mod tests {
                         | Volatile::CudChew
                         | Volatile::RipenWeaken
                         | Volatile::Opportunist
+                        | Volatile::Gem
                 ));
                 continue;
             }

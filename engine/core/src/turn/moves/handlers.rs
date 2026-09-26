@@ -929,9 +929,11 @@ pub(super) fn on_after_hit<const N: usize>(
     mv: &ActiveMove,
 ) -> Result<(), TurnError> {
     // Covet, Thief: `if (source.item || source.volatiles['gem']) return;` then
-    // `target.takeItem(source)` and the item goes to the user (`pass_item`; gems are not
-    // supported).
-    if (mv.id == moves::COVET || mv.id == moves::THIEF) && b.raw_item(user).is_none() {
+    // `target.takeItem(source)` and the item goes to the user (`pass_item`).
+    if (mv.id == moves::COVET || mv.id == moves::THIEF)
+        && b.raw_item(user).is_none()
+        && !b.volatile(user, Volatile::Gem).active
+    {
         pass_item(b, target, user, mv.data.name, Some(user))?;
     }
     // Ice Spinner: `this.field.clearTerrain();`
@@ -1611,12 +1613,17 @@ pub(super) fn volatile_crit_ratio<const N: usize>(b: &Battle<'_, N>, user: SlotR
 }
 
 /// BasePower handlers of the user's volatiles (`condition.onBasePower`): Helping Hand
-/// (priority 10) `chainModify(this.effectState.multiplier)`, 1.5 per application.
+/// (priority 10) `chainModify(this.effectState.multiplier)`, 1.5 per application; a Gem's
+/// `gem` condition (priority 14, not in the dex's orders: the condition is added by name)
+/// `chainModify([5325, 4096])` for any move while it lasts.
 pub(super) fn volatile_base_power<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
+    if b.volatile(user, Volatile::Gem).active {
+        out.push(Handler::of(b, user, 14, SUB_CONDITION, 5325));
+    }
     let helping_hand = b.volatile(user, Volatile::HelpingHand);
     if helping_hand.active {
         let multiplier = 1.5f64.powi(i32::from(helping_hand.counter));
