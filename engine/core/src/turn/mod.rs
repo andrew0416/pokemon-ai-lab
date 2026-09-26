@@ -284,6 +284,9 @@ pub fn enumerate_start<const N: usize>(state: &mut State<N>) -> Result<Vec<Outco
         // `runAction('runSwitch')` ends with `eachEvent('Update')`.
         update::update_event(b)?;
         items::stage_end_check(b)?;
+        // Then `endTurn` starts turn 1 (the state's turn already is 1): the leads lose
+        // `newlySwitched` (`activeTurns` becomes 1), which Payback and Stakeout read.
+        b.end_turn_history();
         Ok(StageEnd::Finished)
     })?;
     Ok(outcomes(state, endings, |()| {

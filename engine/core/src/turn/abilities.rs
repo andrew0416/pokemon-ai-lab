@@ -732,6 +732,10 @@ pub(crate) fn attack_handlers<const N: usize>(
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
     }
+    if let Some(modifier) = own_attack_modifier(b, user, target, attacker, physical, move_type) {
+        let p = priority(ability.data().event_orders, event);
+        out.push(Handler::of(b, user, p, SUB_ABILITY, modifier));
+    }
     // Flash Fire's volatile (a condition, priority 5): `if (move.type === 'Fire' &&
     // attacker.hasAbility('flashfire')) return this.chainModify(1.5)` (`move.type`: after
     // ModifyType).
@@ -761,6 +765,56 @@ pub(crate) fn attack_handlers<const N: usize>(
         out.push(Handler::of(b, user, p, SUB_CONDITION, 5325));
     }
     out
+}
+
+/// The user's own `onModifyAtk` / `onModifySpA` (WORKPLAN O-Q unit 1), all at priority 5 and
+/// none breakable (they are the user's):
+/// - Huge Power, Pure Power: `chainModify(2)` (Attack only).
+/// - Steelworker, Dragon's Maw, Rocky Payload, Fire Mane: `chainModify(1.5)` for a Steel /
+///   Dragon / Rock / Fire move (`move.type`, after ModifyType); Transistor `[5325, 4096]` for an
+///   Electric move.
+/// - Defeatist: `pokemon.hp <= pokemon.maxhp / 2` halves.
+/// - Stakeout: `!defender.activeTurns` doubles. `activeTurns` is 0 from the switch-in to the
+///   next `endTurn`, exactly while `newlySwitched` is set (both reset on switching in and
+///   cleared together in `endTurn`, the battle start's included), so the slot history's
+///   `newly_switched` is read.
+/// - Plus, Minus (Special Attack only): an ally (`pokemon.allies()`: not the holder, not at
+///   0 HP) with Plus or Minus gives `chainModify(1.5)`.
+fn own_attack_modifier<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    attacker: &Pokemon,
+    physical: bool,
+    move_type: Type,
+) -> Option<u32> {
+    let typed = |ty: Type, modifier: u32| (move_type == ty).then_some(modifier);
+    match attacker.ability {
+        a if a == abilities::HUGE_POWER || a == abilities::PURE_POWER => {
+            physical.then_some(MOD_DOUBLE)
+        }
+        a if a == abilities::STEELWORKER => typed(Type::Steel, MOD_ONE_POINT_FIVE),
+        a if a == abilities::TRANSISTOR => typed(Type::Electric, 5325),
+        a if a == abilities::DRAGONS_MAW => typed(Type::Dragon, MOD_ONE_POINT_FIVE),
+        a if a == abilities::ROCKY_PAYLOAD => typed(Type::Rock, MOD_ONE_POINT_FIVE),
+        a if a == abilities::FIRE_MANE => typed(Type::Fire, MOD_ONE_POINT_FIVE),
+        a if a == abilities::DEFEATIST => {
+            (2 * i32::from(attacker.hp) <= i32::from(attacker.max_hp)).then_some(MOD_HALF)
+        }
+        a if a == abilities::STAKEOUT => b
+            .state
+            .slot(target)
+            .history
+            .newly_switched
+            .then_some(MOD_DOUBLE),
+        a if a == abilities::PLUS || a == abilities::MINUS => {
+            let partner = b.alive_slots(user.side).into_iter().any(|ally| {
+                ally != user && [abilities::PLUS, abilities::MINUS].contains(&b.ability(ally))
+            });
+            (!physical && partner).then_some(MOD_ONE_POINT_FIVE)
+        }
+        _ => None,
+    }
 }
 
 /// The paradox ability whose condition the Pokémon in `slot` has, with the condition's best
@@ -800,6 +854,19 @@ pub(crate) fn defense_handlers<const N: usize>(
     {
         let p = priority(ability.data().event_orders, "onModifyDefPriority");
         out.push(Handler::of(b, target, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
+    }
+    // Fur Coat (`chainModify(2)`) and Grass Pelt (`if (this.field.isTerrain('grassyterrain'))
+    // return this.chainModify(1.5)`): `onModifyDef`, priority 6, both breakable.
+    let coat = match ability {
+        a if a == abilities::FUR_COAT => Some(MOD_DOUBLE),
+        a if a == abilities::GRASS_PELT => {
+            (b.terrain() == crate::field::Terrain::Grassy).then_some(MOD_ONE_POINT_FIVE)
+        }
+        _ => None,
+    };
+    if let Some(modifier) = coat.filter(|_| defense_stat == Stat::Def) {
+        let p = priority(ability.data().event_orders, "onModifyDefPriority");
+        out.push(Handler::of(b, target, p, SUB_ABILITY, modifier));
     }
     // Protosynthesis / Quark Drive's condition (priority 6): 5325/4096 on the best stat.
     let wanted = if defense_stat == Stat::Def { 1 } else { 3 };

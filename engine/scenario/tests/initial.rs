@@ -79,10 +79,15 @@ fn single_hit_trace_branches_over_both_foes() {
         );
         traced.push(ability(&o.state, GARDEVOIR));
 
-        // Nothing else changes: only Gardevoir's ability and the field.
+        // Nothing else changes: only Gardevoir's ability, the field, and the leads' switch-in
+        // flag (`endTurn` before turn 1 clears `newlySwitched`).
         let mut rest = o.state.clone();
         rest.field = before.field;
         rest.side_mut(SideId::One).party[0].ability = abilities::TRACE;
+        for r in Doubles::slot_refs() {
+            assert!(!rest.slot(r).history.newly_switched, "{r:?}");
+            rest.slot_mut(r).history.newly_switched = true;
+        }
         assert_eq!(rest, before);
     }
     traced.sort();

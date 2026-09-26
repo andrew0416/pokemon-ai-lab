@@ -1,0 +1,23 @@
+{
+ "description": "Opus Q unit 1: Plusle (Plus) and Minun (Minus) side by side: each one's Shock Wave gets 1.5x SpA from its partner (onModifySpA: an ally with Plus or Minus). Blissey and Snorlax only Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Plusle", "item": "", "ability": "Plus", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Shock Wave", "Protect"], "level": 50},
+   {"species": "Minun", "item": "", "ability": "Minus", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "spe": 2}, "moves": ["Shock Wave", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Calm",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move shockwave 1, move shockwave 2", "p2": "move harden, move harden"}
+}

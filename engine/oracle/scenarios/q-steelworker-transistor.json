@@ -1,0 +1,23 @@
+{
+ "description": "Opus Q unit 1: Dhelmise's Steelworker (1.5x Steel, onModifyAtk) Smart Strike into Blissey; Regieleki's Transistor (5325/4096 Electric, onModifySpA) Shock Wave into Snorlax. Blissey and Snorlax only Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Dhelmise", "item": "", "ability": "Steelworker", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Smart Strike", "Protect"], "level": 50},
+   {"species": "Regieleki", "item": "", "ability": "Transistor", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Shock Wave", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Calm",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move smartstrike 1, move shockwave 2", "p2": "move harden, move harden"}
+}
