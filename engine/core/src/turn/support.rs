@@ -2233,8 +2233,9 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         moves::NATURE_POWER,
     ]
     .contains(&id);
-    if m.smart_target
-        || (m.calls_move && !calls_supported)
+    // `smartTarget` (Dragon Darts) is implemented: `moves::get_target`, `get_move_targets`
+    // (`smart_targets`), `try_spread_move_hit` and `hit_loop` (Opus Z unit 6).
+    if (m.calls_move && !calls_supported)
         || (m.sleep_usable && !sleep_moves)
         || m.steals_boosts
         || m.mind_blown_recoil
@@ -2694,6 +2695,14 @@ mod tests {
         for id in future {
             assert_eq!(move_unsupported(id), None, "{id:?}");
         }
+    }
+
+    /// `smartTarget` is Dragon Darts' alone, and implemented (Opus Z unit 6).
+    #[test]
+    fn smart_target_is_dragon_darts() {
+        let smart: Vec<MoveId> = MoveId::all().filter(|id| id.data().smart_target).collect();
+        assert_eq!(smart, [moves::DRAGON_DARTS]);
+        assert_eq!(move_unsupported(moves::DRAGON_DARTS), None);
     }
 
     #[test]

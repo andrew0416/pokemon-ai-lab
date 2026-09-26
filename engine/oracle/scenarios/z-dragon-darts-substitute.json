@@ -1,0 +1,96 @@
+{
+ "description": "Dragon Darts (Opus Z unit 6): Snorlax is behind a substitute (setup turn) and holds an Eject Button. The first dart hits the substitute, the second Chansey; with `smartTarget` the hit loop's AfterMoveSecondary runs for every target again (`targetsCopy = targets.slice(0)`), substitute or not, so Snorlax's Eject Button sends it out (to Kangaskhan, `midTurn`). Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Dragapult",
+    "item": "",
+    "ability": "Clear Body",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Dragon Darts",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "Eject Button",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Substitute",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Kangaskhan",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "setupTurns": [
+  [
+   "move harden, move harden",
+   "move substitute, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move dragondarts 1, move harden",
+  "p2": "move harden, move harden"
+ },
+ "midTurn": {
+  "p2": [
+   "switch 3"
+  ]
+ }
+}

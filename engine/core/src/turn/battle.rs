@@ -641,6 +641,11 @@ impl<'a, const N: usize> Battle<'a, N> {
 
     // ---- faint and win -------------------------------------------------------------------
 
+    /// Whether a Pokémon at 0 HP waits for `faintMessages` (the faint queue is not empty).
+    pub fn faint_pending(&self) -> bool {
+        !self.faint_queue.is_empty()
+    }
+
     fn queue_faint(&mut self, pokemon: PokemonRef, slot: SlotRef, attacker: Option<PokemonRef>) {
         if !self.faint_queue.iter().any(|&(p, _, _)| p == pokemon) {
             self.faint_queue.push((pokemon, slot, attacker));
