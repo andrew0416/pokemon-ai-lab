@@ -229,7 +229,8 @@ pub(crate) fn shields_hit<const N: usize>(
     let Some(mon) = b.slot_mon(target) else {
         return false;
     };
-    let category = id.data().category;
+    // `move.category`: after ModifyMove (Photon Geyser, Shell Side Arm).
+    let category = b.move_category(id);
     category != MoveCategory::Status
         && shield_up(b.ability_unless_broken(target), mon.species, category)
         && !hits_substitute(b, user, target, id)
@@ -253,7 +254,7 @@ pub(crate) fn absorbs_damage<const N: usize>(
     let category = b
         .active_move
         .filter(|m| m.user != target)
-        .map_or(MoveCategory::Status, |m| m.id.data().category);
+        .map_or(MoveCategory::Status, |m| m.category);
     let ability = b.ability_unless_broken(target);
     let species = b.mon(pokemon).species;
     let absorbed = (ability == abilities::DISGUISE && disguised(species))

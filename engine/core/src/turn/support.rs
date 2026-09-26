@@ -333,6 +333,15 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::BOLT_BEAK, &["basePowerCallback"]),
     (moves::FISHIOUS_REND, &["basePowerCallback"]),
     (moves::PSYBLADE, &["onBasePower"]),
+    // Photon Geyser, Shell Side Arm: `onModifyMove` may make them physical
+    // (`handlers::on_modify_move` → `ActiveMove::set_category`, whose data copy every chain
+    // reads; Shell Side Arm then makes contact). Shell Side Arm's `onPrepareHit`, `onHit` and
+    // `onAfterSubDamage` only reveal the category.
+    (moves::PHOTON_GEYSER, &["onModifyMove"]),
+    (
+        moves::SHELL_SIDE_ARM,
+        &["onAfterSubDamage", "onHit", "onModifyMove", "onPrepareHit"],
+    ),
     (moves::BLIZZARD, &["onModifyMove"]),
     // Still rejected for its confusion secondary; shares Thunder's handler.
     (moves::HURRICANE, &["onModifyMove"]),
@@ -2019,13 +2028,15 @@ mod tests {
     #[test]
     fn substitute_readers_are_implemented_or_refused() {
         use crate::dex::ItemId;
-        const AFTER_SUB_DAMAGE: [MoveId; 6] = [
+        // Shell Side Arm's only reveals its category.
+        const AFTER_SUB_DAMAGE: [MoveId; 7] = [
             moves::RAPID_SPIN,
             moves::MORTAL_SPIN,
             moves::ICE_SPINNER,
             moves::STEEL_ROLLER,
             moves::CEASELESS_EDGE,
             moves::STONE_AXE,
+            moves::SHELL_SIDE_ARM,
         ];
         for id in MoveId::all() {
             let handlers = id.data().handlers;

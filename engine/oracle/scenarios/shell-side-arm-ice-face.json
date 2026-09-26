@@ -1,0 +1,23 @@
+{
+ "description": "Shell Side Arm's category is decided against the chosen target: Hariyama's comes out physical against Eiscue, so Ice Face (`effect.category === 'Physical'`, the active move's category) absorbs it and Eiscue becomes Noice. Covert Cloak removes the poison roll.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Shell Side Arm", "Protect"], "level": 50},
+   {"species": "Wobbuffet", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Protect", "Counter"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Eiscue", "item": "Covert Cloak", "ability": "Ice Face", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move shellsidearm 1, move protect", "p2": "move harden, move harden"}
+}

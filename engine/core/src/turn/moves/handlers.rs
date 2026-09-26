@@ -82,12 +82,40 @@ pub(super) fn on_modify_type<const N: usize>(
 /// The move's `onModifyMove` (`useMoveInner`, after the target is chosen and before
 /// `getMoveTargets`). `target` is the chosen target.
 pub(super) fn on_modify_move<const N: usize>(
-    b: &Battle<'_, N>,
+    b: &mut Battle<'_, N>,
     user: SlotRef,
     target: Option<SlotRef>,
     mv: &mut ActiveMove,
 ) -> Result<(), TurnError> {
     match mv.id {
+        // Photon Geyser: `if (pokemon.getStat('atk', false, true) > pokemon.getStat('spa', false,
+        // true)) move.category = 'Physical';` (stages, no modifiers).
+        moves::PHOTON_GEYSER => {
+            let atk = unmodified_stat(b, user, 0);
+            let spa = unmodified_stat(b, user, 2);
+            if atk > spa {
+                mv.set_category(MoveCategory::Physical);
+            }
+        }
+        // Shell Side Arm: against the chosen target, `floor(floor(floor(floor(2 * level / 5 + 2)
+        // * 90 * atk) / def) / 50)` against the same with SpA and SpD (`getStat(.., false,
+        // true)` on both sides); physical (and contact) if higher, or on a tie with
+        // `randomChance(1, 2)`.
+        moves::SHELL_SIDE_ARM => {
+            let Some(target) = target.filter(|&t| b.slot_mon(t).is_some()) else {
+                return Ok(());
+            };
+            let level = i64::from(b.slot_mon(user).map_or(0, |m| m.level));
+            let base = 2 * level / 5 + 2;
+            let hit = |attack: i32, defense: i32| -> i64 {
+                (base * 90 * i64::from(attack) / i64::from(defense.max(1))) / 50
+            };
+            let physical = hit(unmodified_stat(b, user, 0), unmodified_stat(b, target, 1));
+            let special = hit(unmodified_stat(b, user, 2), unmodified_stat(b, target, 3));
+            if physical > special || (physical == special && b.rng.chance(1, 2)) {
+                mv.set_category(MoveCategory::Physical);
+            }
+        }
         // Weather Ball: `move.basePower *= 2` in sun, rain, sandstorm, hail and snow (the
         // user's effective weather).
         moves::WEATHER_BALL => {
@@ -140,6 +168,24 @@ pub(super) fn on_modify_move<const N: usize>(
         _ => {}
     }
     Ok(())
+}
+
+/// Showdown `pokemon.getStat(stat, false, true)` for battle stat `index` (0 Atk .. 3 SpD): the
+/// stored stat with its stage (no ModifyBoost, no Modify* handlers). Under Wonder Room the stage
+/// is the other defense's (`statName` is swapped after the stored stat is read).
+fn unmodified_stat<const N: usize>(b: &Battle<'_, N>, slot: SlotRef, index: usize) -> i32 {
+    let Some(mon) = b.slot_mon(slot) else {
+        return 0;
+    };
+    let stage_index = match index {
+        1 if b.field_active(FieldEffect::WonderRoom) => 3,
+        3 if b.field_active(FieldEffect::WonderRoom) => 1,
+        i => i,
+    };
+    boosted_stat(
+        i32::from(mon.stats[index]),
+        b.state.slot(slot).boosts[stage_index],
+    )
 }
 
 /// The move's `onTry` (`singleEvent('Try', move, null, pokemon, targets[0])`, before
@@ -334,7 +380,7 @@ pub(super) fn volatile_on_hit<const N: usize>(
     mv: &ActiveMove,
 ) {
     let focus = b.volatile(target, Volatile::FocusPunch);
-    if focus.active && mv.data.category != MoveCategory::Status {
+    if focus.active && mv.category != MoveCategory::Status {
         b.set_volatile_state(
             target,
             Volatile::FocusPunch,
@@ -351,7 +397,7 @@ pub(super) fn volatile_on_hit<const N: usize>(
         b.try_set_status_from(user, Status::Burn, Some(target));
     }
     let trap = b.volatile(target, Volatile::ShellTrap);
-    if trap.active && target.side != user.side && mv.data.category == MoveCategory::Physical {
+    if trap.active && target.side != user.side && mv.category == MoveCategory::Physical {
         b.set_volatile_state(
             target,
             Volatile::ShellTrap,
@@ -364,9 +410,10 @@ pub(super) fn volatile_on_hit<const N: usize>(
 }
 
 /// Counter's and Mirror Coat's `condition.onDamagingHit` on the damaged `target`: a hit from a
-/// foe (`!source.isAlly(target)`) whose dex category (`this.getCategory(move)`: the move's own,
-/// not a category ModifyMove changed) is physical (Counter) or special (Mirror Coat) records
-/// the attacker's slot (`source.getSlot()`) and twice the damage, replacing an earlier hit.
+/// foe (`!source.isAlly(target)`) whose category (`this.getCategory(move)`, which returns the
+/// active move's own `category`, as ModifyMove left it) is physical (Counter) or special
+/// (Mirror Coat) records the attacker's slot (`source.getSlot()`) and twice the damage,
+/// replacing an earlier hit.
 pub(super) fn counter_damaging_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -377,7 +424,7 @@ pub(super) fn counter_damaging_hit<const N: usize>(
     if user.side == target.side {
         return;
     }
-    let volatile = match mv.data.category {
+    let volatile = match mv.category {
         MoveCategory::Physical => Volatile::Counter,
         MoveCategory::Special => Volatile::MirrorCoat,
         MoveCategory::Status => return,

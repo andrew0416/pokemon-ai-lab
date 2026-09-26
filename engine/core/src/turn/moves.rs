@@ -32,11 +32,18 @@ use super::TurnError;
 
 /// The move being used, with what is decided when it is used. It is part of a suspended
 /// multi-hit move's progress (`MoveProgress`), so it is comparable: `data` is implied by `id`
-/// and left out of the comparison (keep the manual impls below in step with new fields).
+/// and `category` and left out of the comparison (keep the manual impls below in step with new
+/// fields).
 #[derive(Clone, Debug)]
 struct ActiveMove {
     id: MoveId,
+    /// The dex data, or for a move whose ModifyMove changed its category ([`ActiveMove::category`])
+    /// a copy with that category ([`with_category`]), so that everything reading `data`
+    /// (the ability and item chains, contact, screens, Counter) sees Showdown's `move.category`.
     data: &'static MoveData,
+    /// Showdown `move.category`: the dex's, or the one ModifyMove chose (Photon Geyser and Shell
+    /// Side Arm become physical). Set through [`ActiveMove::set_category`].
+    category: MoveCategory,
     /// Priority after ModifyPriority (Showdown sets `move.priority` to it).
     priority: i32,
     prankster_boosted: bool,
@@ -91,9 +98,50 @@ struct ActiveMove {
     future_hit: bool,
 }
 
+impl ActiveMove {
+    /// `move.category = category` (with Shell Side Arm's `move.flags.contact = 1` for a
+    /// physical one): the data the move is read from follows.
+    fn set_category(&mut self, category: MoveCategory) {
+        self.category = category;
+        self.data = with_category(self.id, category);
+    }
+}
+
+/// The dex data of `id` with `category` (itself when that is the dex's): Photon Geyser and Shell
+/// Side Arm as physical moves (Shell Side Arm then makes contact). Kept for the program's
+/// lifetime, one copy per move.
+fn with_category(id: MoveId, category: MoveCategory) -> &'static MoveData {
+    use std::sync::OnceLock;
+    let data = id.data();
+    if data.category == category {
+        return data;
+    }
+    static PHOTON_GEYSER: OnceLock<MoveData> = OnceLock::new();
+    static SHELL_SIDE_ARM: OnceLock<MoveData> = OnceLock::new();
+    let (cell, contact) = match id {
+        moves::PHOTON_GEYSER => (&PHOTON_GEYSER, false),
+        moves::SHELL_SIDE_ARM => (&SHELL_SIDE_ARM, true),
+        _ => unreachable!("only Photon Geyser and Shell Side Arm change their category"),
+    };
+    assert_eq!(
+        category,
+        MoveCategory::Physical,
+        "{id:?} only becomes physical"
+    );
+    cell.get_or_init(|| {
+        let mut changed = data.clone();
+        changed.category = category;
+        if contact {
+            changed.flags = MoveFlags(changed.flags.bits() | MoveFlags::CONTACT.bits());
+        }
+        changed
+    })
+}
+
 impl PartialEq for ActiveMove {
     fn eq(&self, other: &Self) -> bool {
         self.id == other.id
+            && self.category == other.category
             && self.priority == other.priority
             && self.prankster_boosted == other.prankster_boosted
             && self.spread == other.spread
@@ -121,6 +169,7 @@ impl Eq for ActiveMove {}
 impl std::hash::Hash for ActiveMove {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         self.id.hash(state);
+        self.category.hash(state);
         self.priority.hash(state);
         self.prankster_boosted.hash(state);
         self.spread.hash(state);
@@ -251,6 +300,7 @@ pub(crate) fn run_move<const N: usize>(
         let recharge = ActiveMove {
             id: MoveId::NONE,
             data: MoveId::NONE.data(),
+            category: MoveId::NONE.data().category,
             priority: 0,
             prankster_boosted: false,
             spread: false,
@@ -284,6 +334,7 @@ pub(crate) fn run_move<const N: usize>(
         pokemon,
         id,
         ignore_ability: id.data().ignore_ability,
+        category: id.data().category,
     });
     let result = run_move_inner(b, user, move_index, target_loc, will_act);
     if !matches!(result, Ok(MoveStep::Suspended(_))) {
@@ -386,6 +437,7 @@ pub(crate) fn future_move_hit<const N: usize>(
     let mut mv = ActiveMove {
         id,
         data,
+        category: data.category,
         priority: 0,
         prankster_boosted: false,
         spread: false,
@@ -414,6 +466,7 @@ pub(crate) fn future_move_hit<const N: usize>(
         pokemon: source,
         id,
         ignore_ability: false,
+        category: data.category,
     });
     b.move_self_switch = false;
     if let HitOutcome::Suspended(_) = try_spread_move_hit(b, user, &mut mv, vec![slot], false)? {
@@ -444,6 +497,7 @@ pub(crate) fn resume_move<const N: usize>(
         pokemon,
         id: progress.mv.id,
         ignore_ability: progress.ignore_ability,
+        category: progress.mv.category,
     });
     b.raw_speed = progress.raw_speed.clone();
     let mut mv = progress.mv.clone();
@@ -514,6 +568,7 @@ fn run_move_inner<const N: usize>(
     let mut mv = ActiveMove {
         id,
         data: id.data(),
+        category: id.data().category,
         priority: b.move_priority(user, chosen),
         prankster_boosted: b.prankster_boosted(user, chosen),
         spread: false,
@@ -1004,6 +1059,12 @@ fn use_move<const N: usize>(
     // user's ability and status; a changed target type picks a new target (`getRandomTarget`).
     handlers::on_modify_type(b, user, mv)?;
     handlers::on_modify_move(b, user, target, mv)?;
+    // A category the move's ModifyMove chose is the active move's (`move.category`).
+    if let Some(active) = b.active_move.as_mut() {
+        if active.id == mv.id {
+            active.category = mv.category;
+        }
+    }
     ability_hooks::on_modify_type(b, user, mv);
     ability_hooks::on_modify_move(b, user, mv)?;
     // Throat Chop's `onModifyMove` (the user's volatile) returns `false` for a sound move: the
@@ -1126,11 +1187,13 @@ fn call_move<const N: usize>(
         pokemon,
         id,
         ignore_ability,
+        category: id.data().category,
     });
     let data = id.data();
     let mut mv = ActiveMove {
         id,
         data,
+        category: data.category,
         priority: caller.priority,
         prankster_boosted: caller.prankster_boosted,
         spread: false,
@@ -1200,10 +1263,12 @@ fn bounce_move<const N: usize>(
         pokemon,
         id,
         ignore_ability: false,
+        category: data.category,
     });
     let mut mv = ActiveMove {
         id,
         data,
+        category: data.category,
         priority: original.priority,
         prankster_boosted: false,
         spread: false,

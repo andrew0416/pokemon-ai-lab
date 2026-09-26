@@ -6,8 +6,8 @@
 //! survive the turn (the faint queue, what moved) lives here, not in `State`.
 
 use crate::dex::{
-    abilities, conditions, items, AbilityFlags, AbilityId, ItemId, MoveFlags, MoveId, Type,
-    TypeImmunities, NO_BOOSTS,
+    abilities, conditions, items, AbilityFlags, AbilityId, ItemId, MoveCategory, MoveFlags, MoveId,
+    Type, TypeImmunities, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
@@ -40,6 +40,9 @@ pub(crate) struct ActiveMoveRef {
     /// `activeMove.ignoreAbility`: the move's data flag (Sunsteel Strike), set by the user's
     /// Mold Breaker / Teravolt / Turboblaze in ModifyMove.
     pub ignore_ability: bool,
+    /// `activeMove.category`: the move's own, or the one its ModifyMove chose (Photon Geyser,
+    /// Shell Side Arm).
+    pub category: MoveCategory,
 }
 
 pub(crate) struct Battle<'a, const N: usize> {
@@ -145,6 +148,15 @@ impl<'a, const N: usize> Battle<'a, N> {
             busted: Vec::new(),
             history_readers,
             raw_speed: Vec::new(),
+        }
+    }
+
+    /// The category of `id` as the move in flight has it (`move.category` after ModifyMove:
+    /// Photon Geyser and Shell Side Arm can become physical), else the dex's.
+    pub fn move_category(&self, id: MoveId) -> MoveCategory {
+        match self.active_move {
+            Some(m) if m.id == id => m.category,
+            _ => id.data().category,
         }
     }
 
