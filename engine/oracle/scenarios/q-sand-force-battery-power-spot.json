@@ -1,0 +1,26 @@
+{
+ "description": "Opus Q unit 2: in sand, Snorlax's Sand Force (onBasePower 5325/4096 for Rock) Power Gem, also boosted by its ally Charjabug's Battery (onAllyBasePower 5325/4096, special), into Hariyama; Hariyama's Strength, boosted by its ally Stonjourner's Power Spot, into Snorlax. Sand Force makes Snorlax immune to the sandstorm; Charjabug and Hariyama take it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Sand Force", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Power Gem", "Protect"], "level": 50},
+   {"species": "Charjabug", "item": "", "ability": "Battery", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Stonjourner", "item": "", "ability": "Power Spot", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Strength", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "field": {"weather": "sandstorm", "weatherDuration": 4}
+ },
+ "turn": {"p1": "move powergem 2, move harden", "p2": "move harden, move strength 1"}
+}

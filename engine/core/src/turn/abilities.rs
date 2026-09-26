@@ -177,18 +177,59 @@ pub(crate) fn base_power_handlers<const N: usize>(
         a if a == abilities::STRONG_JAW => flag(MoveFlags::BITE, MOD_ONE_POINT_FIVE),
         a if a == abilities::MEGA_LAUNCHER => flag(MoveFlags::PULSE, MOD_ONE_POINT_FIVE),
         a if a == abilities::PUNK_ROCK => flag(MoveFlags::SOUND, MOD_ONE_POINT_THREE),
+        // Analytic (priority 21): `[5325, 4096]` unless another active Pokémon still has a move
+        // in the queue (`this.queue.willMove(target)` over `getAllActive()`).
+        a if a == abilities::ANALYTIC => {
+            let moves_later = b
+                .all_alive()
+                .into_iter()
+                .any(|s| s != user && b.will_move(s).is_some());
+            (!moves_later).then_some(5325)
+        }
+        // Toxic Boost / Flare Boost (priority 19): a poisoned user's physical moves, a burned
+        // user's special moves, 1.5x.
+        a if a == abilities::TOXIC_BOOST => {
+            let poisoned = b
+                .slot_mon(user)
+                .is_some_and(|m| matches!(m.status, Status::Poison | Status::Toxic));
+            (poisoned && data.category == MoveCategory::Physical).then_some(MOD_ONE_POINT_FIVE)
+        }
+        a if a == abilities::FLARE_BOOST => {
+            let burned = b.slot_mon(user).is_some_and(|m| m.status == Status::Burn);
+            (burned && data.category == MoveCategory::Special).then_some(MOD_ONE_POINT_FIVE)
+        }
+        // Sand Force (priority 21): `[5325, 4096]` for Rock, Ground and Steel moves while
+        // `this.field.isWeather('sandstorm')` (the field's effective weather).
+        a if a == abilities::SAND_FORCE => {
+            let sand = b.effective_weather() == Weather::Sand;
+            let typed = matches!(move_type, Type::Rock | Type::Ground | Type::Steel);
+            (sand && typed).then_some(5325)
+        }
         _ => None,
     };
     if let Some(modifier) = boost {
         let p = priority(ability.data().event_orders, "onBasePowerPriority");
         out.push(Handler::of(b, user, p, SUB_ABILITY, modifier));
     }
-    // Steely Spirit: `onAllyBasePower` of every active Pokémon on the user's side.
+    // `onAllyBasePower` of every active Pokémon on the user's side (`alliesAndSelf()`): Steely
+    // Spirit (the holder's own moves too); Battery (special moves) and Power Spot (every move)
+    // only for another Pokémon's move (`attacker !== this.effectState.target`). None is
+    // breakable.
     for holder in b.alive_slots(user.side) {
         let ability = ability_for_move(b, holder, user, data);
-        if ability == abilities::STEELY_SPIRIT && move_type == Type::Steel {
+        let modifier = match ability {
+            a if a == abilities::STEELY_SPIRIT => {
+                (move_type == Type::Steel).then_some(MOD_ONE_POINT_FIVE)
+            }
+            a if a == abilities::BATTERY => {
+                (holder != user && data.category == MoveCategory::Special).then_some(5325)
+            }
+            a if a == abilities::POWER_SPOT => (holder != user).then_some(5325),
+            _ => None,
+        };
+        if let Some(modifier) = modifier {
             let p = priority(ability.data().event_orders, "onAllyBasePowerPriority");
-            out.push(Handler::of(b, holder, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
+            out.push(Handler::of(b, holder, p, SUB_ABILITY, modifier));
         }
     }
     // Dry Skin: the target's `onSourceBasePower`, Fire moves `chainModify(1.25)`.
@@ -923,6 +964,30 @@ pub(crate) fn attack_direct(ability: AbilityId, data: &MoveData, attack: i32) ->
     }
 }
 
+/// The user's ability `onModifyCritRatio` as an addition to the move's crit ratio (the result
+/// is clamped to 0..=4): Super Luck `critRatio + 1`; Merciless `return 5` against a poisoned or
+/// badly poisoned target, which after the clamp is a sure critical hit whatever else adds to it.
+pub(crate) fn crit_ratio_bonus<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+) -> i32 {
+    match b.ability(user) {
+        a if a == abilities::SUPER_LUCK => 1,
+        a if a == abilities::MERCILESS => {
+            let poisoned = b
+                .slot_mon(target)
+                .is_some_and(|m| matches!(m.status, Status::Poison | Status::Toxic));
+            if poisoned {
+                5
+            } else {
+                0
+            }
+        }
+        _ => 0,
+    }
+}
+
 /// `ModifyAccuracy` handlers of abilities (moves with a numeric accuracy): the user's
 /// `onSourceModifyAccuracy`.
 pub(crate) fn accuracy_handlers<const N: usize>(
@@ -954,9 +1019,11 @@ pub(crate) fn modify_stab(ability: AbilityId, stab: bool) -> u32 {
     }
 }
 
-/// `ModifyDamage` handlers of abilities: the target's `onSourceModifyDamage` and every active
-/// Pokémon's `onAnyModifyDamage`. `type_mod` is the hit's clamped effectiveness exponent
-/// (`getMoveHitData(move).typeMod`); `move_type` is the type of the move being used.
+/// `ModifyDamage` handlers of abilities: the user's `onModifyDamage`, the target's
+/// `onSourceModifyDamage` and every active Pokémon's `onAnyModifyDamage`. `type_mod` is the
+/// hit's clamped effectiveness exponent (`getMoveHitData(move).typeMod`), `critical` whether it
+/// is a critical hit (`getMoveHitData(move).crit`); `move_type` is the type of the move being
+/// used.
 pub(crate) fn modify_damage_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
@@ -964,8 +1031,22 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
     data: &MoveData,
     move_type: Type,
     type_mod: i32,
+    critical: bool,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
+    // The user's own (priority 0): Sniper 1.5x on a critical hit, Tinted Lens 2x on a resisted
+    // hit (`typeMod < 0`), Neuroforce `[5120, 4096]` on a super-effective one.
+    let own = b.ability(user);
+    let own_modifier = match own {
+        a if a == abilities::SNIPER => critical.then_some(MOD_ONE_POINT_FIVE),
+        a if a == abilities::TINTED_LENS => (type_mod < 0).then_some(MOD_DOUBLE),
+        a if a == abilities::NEUROFORCE => (type_mod > 0).then_some(5120),
+        _ => None,
+    };
+    if let Some(modifier) = own_modifier {
+        let p = priority(own.data().event_orders, "onModifyDamagePriority");
+        out.push(Handler::of(b, user, p, SUB_ABILITY, modifier));
+    }
     let Some(defender) = b.slot_mon(target) else {
         return out;
     };

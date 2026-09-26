@@ -1048,6 +1048,19 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::MINUS, &["onModifySpA"]),
     (abilities::FUR_COAT, &["onModifyDef"]),
     (abilities::GRASS_PELT, &["onModifyDef"]),
+    // `abilities::base_power_handlers`, `modify_damage_handlers`, `crit_ratio_bonus`; Sand
+    // Force's `onImmunity` in `Battle::status_immune`.
+    (abilities::ANALYTIC, &["onBasePower"]),
+    (abilities::TOXIC_BOOST, &["onBasePower"]),
+    (abilities::FLARE_BOOST, &["onBasePower"]),
+    (abilities::SAND_FORCE, &["onBasePower", "onImmunity"]),
+    (abilities::BATTERY, &["onAllyBasePower"]),
+    (abilities::POWER_SPOT, &["onAllyBasePower"]),
+    (abilities::SNIPER, &["onModifyDamage"]),
+    (abilities::TINTED_LENS, &["onModifyDamage"]),
+    (abilities::NEUROFORCE, &["onModifyDamage"]),
+    (abilities::SUPER_LUCK, &["onModifyCritRatio"]),
+    (abilities::MERCILESS, &["onModifyCritRatio"]),
     (
         abilities::THICK_FAT,
         &["onSourceModifyAtk", "onSourceModifySpA"],

@@ -2464,9 +2464,11 @@ fn get_damage<const N: usize>(
     } else {
         0
     };
-    let crit_ratio =
-        (i32::from(data.crit_ratio) + item_events::crit_ratio_bonus(b.item(user)) + focus_energy)
-            .clamp(0, 4);
+    let crit_ratio = (i32::from(data.crit_ratio)
+        + item_events::crit_ratio_bonus(b.item(user))
+        + ability_events::crit_ratio_bonus(b, user, target)
+        + focus_energy)
+        .clamp(0, 4);
     let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit
         && !b.side_effect_active(target.side, SideEffect::LuckyChant)
         && !super::forme::shields_hit(b, user, target, mv.id);
@@ -2624,8 +2626,15 @@ fn get_damage<const N: usize>(
     };
     // ModifyDamage (all priority 0, so in Speed order): the target's abilities, items (Life
     // Orb, resist berries), screens (side conditions, Speed 0).
-    let mut final_mods =
-        ability_events::modify_damage_handlers(b, user, target, data, mv.move_type, type_mod);
+    let mut final_mods = ability_events::modify_damage_handlers(
+        b,
+        user,
+        target,
+        data,
+        mv.move_type,
+        type_mod,
+        critical,
+    );
     final_mods.extend(item_events::modify_damage_handlers(
         b,
         user,

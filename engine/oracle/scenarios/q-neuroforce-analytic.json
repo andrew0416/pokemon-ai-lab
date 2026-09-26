@@ -1,0 +1,23 @@
+{
+ "description": "Opus Q unit 2: Alakazam's Neuroforce (onModifyDamage 5120/4096 on a super-effective hit) Psyshock into a bulky Hariyama; Magnezone, the slowest, moves last: Analytic (onBasePower 5325/4096, no other active Pokémon has a move queued) Shock Wave into Blissey. Hariyama and Blissey only Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Alakazam", "item": "", "ability": "Neuroforce", "nature": "Timid",
+    "evs": {"hp": 32}, "moves": ["Psyshock", "Protect"], "level": 50},
+   {"species": "Magnezone", "item": "", "ability": "Analytic", "nature": "Quiet",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Shock Wave", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 31, "def": 32, "spe": 3}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move psyshock 1, move shockwave 2", "p2": "move harden, move harden"}
+}
