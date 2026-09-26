@@ -2502,6 +2502,11 @@ fn spread_move_hit<const N: usize>(
     //    substitute's -1) only sets a flag `get_damage` reads.
     let mut shielded = Vec::with_capacity(targets.len());
     for &t in targets {
+        // Gulp Missile's `onSourceTryPrimaryHit` (the user's, priority 0: before the
+        // substitute's -1): Surf fills Cramorant's throat.
+        if mv.id == moves::SURF {
+            super::forme::gulp_missile_catch(b, user);
+        }
         shielded.push(if substitute_takes_hit(b, user, mv, t) {
             Some(hit_substitute(b, user, mv, t, hit)?)
         } else {

@@ -456,7 +456,8 @@ pub(super) fn on_try_hit<const N: usize>(
 /// [`on_damaging_hit`] (`u32::MAX`: no order, after every ordered handler), or `None`. Rough
 /// Skin, Iron Barbs and Rattled are handled by `moves::damaging_hit` itself.
 pub(super) fn damaging_hit_order(ability: AbilityId) -> Option<u32> {
-    const HANDLED: [AbilityId; 27] = [
+    const HANDLED: [AbilityId; 28] = [
+        abilities::GULP_MISSILE,
         abilities::WANDERING_SPIRIT,
         abilities::CUTE_CHARM,
         abilities::SPICY_SPRAY,
@@ -546,6 +547,10 @@ pub(super) fn on_damaging_hit<const N: usize>(
                 };
                 b.try_set_status_from(attacker, status, Some(holder));
             }
+        }
+        // Gulp Missile (`forme::gulp_missile_spit`), contact or not.
+        a if a == abilities::GULP_MISSILE => {
+            super::super::forme::gulp_missile_spit(b, holder, attacker);
         }
         // Wandering Spirit: `if (this.checkMoveMakesContact(...)) this.skillSwap(source, target)`.
         a if a == abilities::WANDERING_SPIRIT => {

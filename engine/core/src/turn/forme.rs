@@ -58,8 +58,83 @@ pub fn temporary_forme_base(forme: SpeciesId) -> Option<SpeciesId> {
         f if f == species::DARMANITAN_ZEN => Some(species::DARMANITAN),
         f if f == species::DARMANITAN_GALAR_ZEN => Some(species::DARMANITAN_GALAR),
         f if f == species::CHERRIM_SUNSHINE => Some(species::CHERRIM),
+        f if f == species::CRAMORANT_GULPING || f == species::CRAMORANT_GORGING => {
+            Some(species::CRAMORANT)
+        }
         _ => None,
     }
+}
+
+// ---- Gulp Missile ------------------------------------------------------------------------------
+
+/// Gulp Missile catching its prey: its `onSourceTryPrimaryHit` for Surf (for each target of the
+/// hit, before the substitute's handler) and Dive's charging `onTryMove` (before `ChargeMove`):
+/// a Cramorant (`species.name === 'Cramorant'`) with Gulp Missile (`cantsuppress`) becomes
+/// Cramorant-Gorging at half its max HP or less, else Cramorant-Gulping (a temporary forme with
+/// Cramorant's types and stats).
+pub(crate) fn gulp_missile_catch<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) {
+    let Some(pokemon) = b.occupant(user) else {
+        return;
+    };
+    let mon = b.mon(pokemon);
+    if b.ability(user) != abilities::GULP_MISSILE || mon.species != species::CRAMORANT {
+        return;
+    }
+    let forme = if 2 * i32::from(mon.hp) <= i32::from(mon.max_hp) {
+        species::CRAMORANT_GORGING
+    } else {
+        species::CRAMORANT_GULPING
+    };
+    forme_change(b, user, forme, Change::Temporary);
+}
+
+/// Gulp Missile's `onDamagingHit` for the Cramorant in `holder` hit by the Pokémon in
+/// `attacker`: with an attacker that has HP and a holder that is not semi-invulnerable, a
+/// Cramorant-Gulping or -Gorging spits its prey: `this.damage(source.baseMaxhp / 4, source,
+/// target)` (Magic Guard stops it), then Gulping's `this.boost({def: -1}, source, target, null,
+/// true)` or Gorging's `source.trySetStatus('par', target, move)`, and it becomes Cramorant again
+/// (`formeChange('cramorant', move)`).
+pub(crate) fn gulp_missile_spit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    holder: SlotRef,
+    attacker: SlotRef,
+) {
+    let Some(pokemon) = b.occupant(holder) else {
+        return;
+    };
+    let forme = b.mon(pokemon).species;
+    let semi_invulnerable = [
+        Volatile::Fly,
+        Volatile::Bounce,
+        Volatile::Dive,
+        Volatile::Dig,
+        Volatile::PhantomForce,
+        Volatile::ShadowForce,
+    ]
+    .into_iter()
+    .any(|v| b.volatile(holder, v).active);
+    let full = forme == species::CRAMORANT_GULPING || forme == species::CRAMORANT_GORGING;
+    let Some(source) = b.alive(attacker) else {
+        return;
+    };
+    if semi_invulnerable || !full {
+        return;
+    }
+    let max_hp = f64::from(b.mon(source).max_hp);
+    b.damage(attacker, max_hp / 4.0, DamageSource::Indirect);
+    if forme == species::CRAMORANT_GULPING {
+        let mut drop = crate::dex::NO_BOOSTS;
+        drop[1] = -1;
+        b.boost_by(
+            attacker,
+            &drop,
+            Some(holder),
+            super::battle::BoostEffect::Ability(abilities::GULP_MISSILE),
+        );
+    } else {
+        b.try_set_status_from(attacker, crate::state::Status::Paralyze, Some(holder));
+    }
+    forme_change(b, holder, species::CRAMORANT, Change::Temporary);
 }
 
 /// Showdown `formeChange` for the Pokémon in `slot` (see the module docs).
@@ -782,21 +857,17 @@ mod tests {
         assert!(!data.flags.contains(crate::dex::AbilityFlags::BREAKABLE));
     }
 
-    /// The F19 abilities that stay refused, with the reason pinned here:
-    /// - Power Construct: Zygarde-Complete is permanent but regresses on fainting
-    ///   (`formeRegression`) to the set's species (Zygarde or Zygarde-10%, not in the state) with
-    ///   `updateMaxHp`, and it recomputes `canMegaEvo`;
-    /// - Gulp Missile: its `onSourceTryPrimaryHit` (Surf) needs the TryPrimaryHit step, and Dive's
-    ///   `onTryMove` changes the forme on the charging turn; left for after the Substitute work,
-    ///   which builds that step.
+    /// The F19 ability that stays refused, with the reason pinned here: Power Construct
+    /// (Zygarde-Complete is permanent but regresses on fainting (`formeRegression`) to the set's
+    /// species (Zygarde or Zygarde-10%, not in the state) with `updateMaxHp`, and it recomputes
+    /// `canMegaEvo`). Gulp Missile is implemented (Opus U: `gulp_missile_catch` / `_spit`).
     ///
     /// Battle Bond is supported only where it is inert ([`field_problem`]).
     #[test]
     fn unimplemented_forme_abilities_stay_refused() {
         use crate::turn::support::ability_supported_on_field;
-        for ability in [abilities::POWER_CONSTRUCT, abilities::GULP_MISSILE] {
-            assert!(!ability_supported_on_field(ability), "{ability:?}");
-        }
+        assert!(!ability_supported_on_field(abilities::POWER_CONSTRUCT));
+        assert!(ability_supported_on_field(abilities::GULP_MISSILE));
         assert_eq!(
             abilities::BATTLE_BOND.data().handlers,
             ["onModifyMove", "onSourceAfterFaint"]

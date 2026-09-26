@@ -1375,6 +1375,10 @@ pub(super) fn charge_try_move<const N: usize>(
     if b.remove_volatile(user, own) {
         return true;
     }
+    // Dive's `onTryMove`: Gulp Missile catches its prey before `ChargeMove` (Power Herb).
+    if mv.id == moves::DIVE {
+        super::super::forme::gulp_missile_catch(b, user);
+    }
     if mv.id == moves::METEOR_BEAM || mv.id == moves::ELECTRO_SHOT {
         let mut up = NO_BOOSTS;
         up[2] = 1;

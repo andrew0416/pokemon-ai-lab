@@ -357,7 +357,12 @@ pub(crate) fn residual_order(ability: AbilityId) -> (u32, u32) {
 
 /// Whether `ability` has an `onResidual` run by [`on_residual`] (`residual.rs` collects it).
 pub(crate) fn has_residual(ability: AbilityId) -> bool {
-    ability == abilities::SLOW_START || ability == abilities::CUD_CHEW
+    [
+        abilities::SLOW_START,
+        abilities::CUD_CHEW,
+        abilities::BAD_DREAMS,
+    ]
+    .contains(&ability)
 }
 
 /// An ability's `onResidual` for its holder in `slot` (the caller checked that the ability
@@ -366,6 +371,7 @@ pub(crate) fn has_residual(ability: AbilityId) -> bool {
 ///   one, and at 0 it is gone (`activeTurns` at the residual: the holder was active since the
 ///   turn started, `Battle::active_since_turn_start`).
 /// - Cud Chew: the remembered berry's counter ([`cud_chew_residual`]).
+/// - Bad Dreams: every foe not fainted that is asleep or has Comatose loses 1/8 of its max HP.
 pub(crate) fn on_residual<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
@@ -373,6 +379,21 @@ pub(crate) fn on_residual<const N: usize>(
 ) -> Result<(), super::TurnError> {
     if ability == abilities::CUD_CHEW {
         return cud_chew_residual(b, slot);
+    }
+    // Bad Dreams: `for (const target of pokemon.foes()) if (target.status === 'slp' ||
+    // target.hasAbility('comatose')) this.damage(target.baseMaxhp / 8, target, pokemon)`.
+    if ability == abilities::BAD_DREAMS {
+        for foe in b.alive_slots(slot.side.other()) {
+            let Some(mon) = b.slot_mon(foe) else {
+                continue;
+            };
+            let asleep = mon.status == Status::Sleep || b.ability(foe) == abilities::COMATOSE;
+            if asleep {
+                let max_hp = f64::from(mon.max_hp);
+                b.damage(foe, max_hp / 8.0, super::battle::DamageSource::Indirect);
+            }
+        }
+        return Ok(());
     }
     if ability == abilities::SLOW_START {
         let mut state = b.volatile(slot, Volatile::SlowStart);

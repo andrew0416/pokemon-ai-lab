@@ -1,0 +1,72 @@
+{
+ "description": "Gulp Missile on Dive's charging turn: Cramorant (full HP) becomes Cramorant-Gulping before going underground; Hariyama's Seismic Toss cannot hit it (semi-invulnerable), so nothing is spat.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Cramorant",
+    "item": "",
+    "ability": "Gulp Missile",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Surf",
+     "Dive"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Lanturn",
+    "item": "",
+    "ability": "Water Absorb",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Vaporeon",
+    "item": "",
+    "ability": "Water Absorb",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hariyama",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Seismic Toss",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move dive 2, move harden",
+  "p2": "move harden, move seismictoss 1"
+ }
+}

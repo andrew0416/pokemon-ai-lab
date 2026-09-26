@@ -1797,6 +1797,15 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // Opus U. Poison Puppeteer: `onAnyAfterSetStatus` in `abilities::poison_puppeteer` (from
     // `Battle::try_set_status` for a move's status). Dancer has no handlers: `moves::dance`.
     (abilities::POISON_PUPPETEER, &["onAnyAfterSetStatus"]),
+    // Opus U. Gulp Missile: `onSourceTryPrimaryHit` (Surf, `moves::spread_move_hit`'s step 0; Dive
+    // in `handlers::charge_try_move`) in `forme::gulp_missile_catch`, `onDamagingHit` in
+    // `forme::gulp_missile_spit` (`ability_hooks::on_damaging_hit`).
+    (
+        abilities::GULP_MISSILE,
+        &["onDamagingHit", "onSourceTryPrimaryHit"],
+    ),
+    // Opus U. Bad Dreams: `onResidual` in `abilities::on_residual`.
+    (abilities::BAD_DREAMS, &["onResidual"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -2275,10 +2284,13 @@ mod tests {
                     .iter()
                     .any(|h| h.contains("AfterSubDamage") || h.contains("TryPrimaryHit"))
             {
-                assert_eq!(id, abilities::AURA_BREAK);
+                assert!(
+                    [abilities::AURA_BREAK, abilities::GULP_MISSILE].contains(&id),
+                    "{id:?}"
+                );
             }
         }
-        assert!(!ability_supported_on_field(abilities::GULP_MISSILE));
+        assert!(ability_supported_on_field(abilities::GULP_MISSILE));
         assert!(ability_supported_on_field(abilities::INFILTRATOR));
         // Disguise and Ice Face read the substitute themselves (`hitSub`, `forme::hits_substitute`).
         for ability in [abilities::DISGUISE, abilities::ICE_FACE] {
