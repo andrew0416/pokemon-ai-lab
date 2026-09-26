@@ -19,9 +19,11 @@ import numpy as np
 NAMES = [
     "alive", "hp_fraction", "sleep", "freeze", "paralyze", "burn", "poison", "toxic",
     "offensive_stages", "defensive_stages", "accuracy_stages", "confusion", "leech_seed",
-    "substitute", "taunt", "encore", "perish_song", "yawn", "tailwind", "screens",
+    "substitute", "taunt", "encore", "perish_song", "yawn", "stall", "tailwind", "screens",
 ]
-HEURISTIC = [30, 100, -45, -50, -18, -14, -10, -16, 9, 6, 4, -12, -10, 12, -6, -8, -20, -25, 12, 8]
+HEURISTIC = [30, 100, -45, -50, -18, -14, -10, -16, 9, 6, 4, -12, -10, 12, -6, -8, -20, -25, -10, 12, 8]
+# Rows written before the `stall` feature existed have 20 entries: insert a 0 for it.
+STALL_INDEX = NAMES.index("stall")
 
 
 def main():
@@ -36,7 +38,10 @@ def main():
             if not line.strip():
                 continue
             r = json.loads(line)
-            X.append(r["features"])
+            feats = list(r["features"])
+            if len(feats) == len(NAMES) - 1:
+                feats.insert(STALL_INDEX, 0.0)
+            X.append(feats)
             y.append(r["target"])
             w.append(r.get("p", 1.0))
     X = np.array(X, dtype=float)

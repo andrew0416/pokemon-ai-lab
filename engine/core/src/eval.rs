@@ -65,6 +65,10 @@ impl Heuristic {
     const YAWN: f32 = 25.0;
     const TAILWIND: f32 = 12.0;
     const SCREEN: f32 = 8.0;
+    /// Protect (or a relative) used last turn: the `stall` counter makes the next one
+    /// unreliable (1/3), so the position is tempo down. Without this a one-turn game rates a
+    /// double Protect as free.
+    const STALL: f32 = 10.0;
 
     fn side_score<const N: usize>(state: &State<N>, side: SideId) -> f32 {
         let s = state.side(side);
@@ -114,6 +118,9 @@ impl Heuristic {
             if v.has(Volatile::Yawn) {
                 score -= Self::YAWN;
             }
+            if v.has(Volatile::Stall) {
+                score -= Self::STALL;
+            }
         }
         if s.effects[SideEffect::Tailwind as usize].is_active() {
             score += Self::TAILWIND;
@@ -138,7 +145,7 @@ impl<const N: usize> Evaluator<N> for Heuristic {
 }
 
 /// The number of [`features`] terms.
-pub const FEATURE_COUNT: usize = 20;
+pub const FEATURE_COUNT: usize = 21;
 
 /// Names of the [`features`] terms, in order.
 pub const FEATURE_NAMES: [&str; FEATURE_COUNT] = [
@@ -160,6 +167,7 @@ pub const FEATURE_NAMES: [&str; FEATURE_COUNT] = [
     "encore",
     "perish_song",
     "yawn",
+    "stall",
     "tailwind",
     "screens",
 ];
@@ -216,6 +224,7 @@ fn side_features<const N: usize>(state: &State<N>, side: SideId) -> [f32; FEATUR
             (15, Volatile::Encore),
             (16, Volatile::PerishSong),
             (17, Volatile::Yawn),
+            (18, Volatile::Stall),
         ] {
             if v.has(volatile) {
                 f[i] += 1.0;
@@ -223,7 +232,7 @@ fn side_features<const N: usize>(state: &State<N>, side: SideId) -> [f32; FEATUR
         }
     }
     if s.effects[SideEffect::Tailwind as usize].is_active() {
-        f[18] += 1.0;
+        f[19] += 1.0;
     }
     for screen in [
         SideEffect::Reflect,
@@ -231,7 +240,7 @@ fn side_features<const N: usize>(state: &State<N>, side: SideId) -> [f32; FEATUR
         SideEffect::AuroraVeil,
     ] {
         if s.effects[screen as usize].is_active() {
-            f[19] += 1.0;
+            f[20] += 1.0;
         }
     }
     f
@@ -259,6 +268,7 @@ impl Heuristic {
         -Self::ENCORE,
         -Self::PERISH_SONG,
         -Self::YAWN,
+        -Self::STALL,
         Self::TAILWIND,
         Self::SCREEN,
     ];
@@ -319,6 +329,14 @@ mod tests {
         state.side_mut(SideId::One).effects[SideEffect::Tailwind as usize] =
             crate::field::Effect { value: 0, turns: 3 };
         state.side_mut(SideId::One).party[1].hp = 40;
+        state.side_mut(SideId::Two).slots[0].volatiles.set(
+            Volatile::Stall,
+            crate::volatile::VolatileState {
+                active: true,
+                counter: 3,
+                ..crate::volatile::VolatileState::NONE
+            },
+        );
         let weighted = Weighted {
             weights: Heuristic::WEIGHTS,
         };
