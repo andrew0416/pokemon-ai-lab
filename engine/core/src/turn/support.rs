@@ -1061,6 +1061,12 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::NEUROFORCE, &["onModifyDamage"]),
     (abilities::SUPER_LUCK, &["onModifyCritRatio"]),
     (abilities::MERCILESS, &["onModifyCritRatio"]),
+    // Ruin abilities: `abilities::ruin_handler` in the Modify events of `get_damage`; `onStart`
+    // only announces them (`switching`).
+    (abilities::TABLETS_OF_RUIN, &["onAnyModifyAtk", "onStart"]),
+    (abilities::SWORD_OF_RUIN, &["onAnyModifyDef", "onStart"]),
+    (abilities::VESSEL_OF_RUIN, &["onAnyModifySpA", "onStart"]),
+    (abilities::BEADS_OF_RUIN, &["onAnyModifySpD", "onStart"]),
     (
         abilities::THICK_FAT,
         &["onSourceModifyAtk", "onSourceModifySpA"],

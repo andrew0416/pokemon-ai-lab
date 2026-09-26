@@ -1,0 +1,23 @@
+{
+ "description": "Opus Q unit 3: Chi-Yu (Beads of Ruin) and Ting-Lu (Vessel of Ruin) side by side. Chi-Yu's Shock Wave into Blissey: Chi-Yu's SpA 0.75 (its ally's Vessel), Blissey's SpD 0.75 (Beads). Alakazam's Secret Sword (special, against Def) into Ting-Lu: SpA 0.75 (Vessel), no Beads drop (Def). Ting-Lu and Blissey only Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Chi-Yu", "item": "", "ability": "Beads of Ruin", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Shock Wave", "Protect"], "level": 50},
+   {"species": "Ting-Lu", "item": "", "ability": "Vessel of Ruin", "nature": "Careful",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Calm",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Alakazam", "item": "", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Secret Sword", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move shockwave 1, move harden", "p2": "move harden, move secretsword 2"}
+}

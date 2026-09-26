@@ -792,6 +792,13 @@ pub(crate) fn attack_handlers<const N: usize>(
         let p = priority(ability.data().event_orders, name);
         out.push(Handler::of(b, user, p, SUB_CONDITION, MOD_ONE_POINT_FIVE));
     }
+    // Tablets of Ruin (`onAnyModifyAtk`) / Vessel of Ruin (`onAnyModifySpA`).
+    let (ruin, any_event) = if physical {
+        (abilities::TABLETS_OF_RUIN, "onAnyModifyAtkPriority")
+    } else {
+        (abilities::VESSEL_OF_RUIN, "onAnyModifySpAPriority")
+    };
+    out.extend(ruin_handler(b, ruin, user, any_event));
     // Protosynthesis / Quark Drive's condition (priority 5): 5325/4096 when the best stat is
     // the one the event is for (`ModifyAtk` for physical moves, `ModifySpA` for special ones,
     // whatever stat the move attacks with). A volatile, so no ability-ignoring move skips it.
@@ -874,6 +881,41 @@ pub(crate) fn paradox_volatile_of<const N: usize>(
         .then_some((abilities::QUARK_DRIVE, quark.counter))
 }
 
+/// A Ruin ability's `onAny<Stat>` handler for the Modify event of the stat it lowers
+/// (Tablets: ModifyAtk, Vessel: ModifySpA, Sword: ModifyDef, Beads: ModifySpD). `stat_holder`
+/// is the Pokémon whose stat the event modifies (the user for Atk / SpA, the target for Def /
+/// SpD); the handler is collected from every active Pokémon not at 0 HP (`alliesAndSelf()` and
+/// `foes()` of it) and is not breakable.
+///
+/// Nothing when `stat_holder` has the same ability (`source.hasAbility(...)` /
+/// `target.hasAbility(...)`). Otherwise every holder's handler runs, but only the first one in
+/// the event's order chains 0.75: it stores itself in `move.ruinedAtk` (etc.) and the others
+/// return. The handlers share a priority, so the first is the fastest holder (holders with the
+/// same Speed sit at the same place in the order): one handler at that holder's Speed.
+///
+/// The stored holder lasts for the whole move (Tablets / Vessel keep it; Sword / Beads replace
+/// it only once it no longer has the ability), so a later target or hit of the same move could
+/// in principle keep a holder that has meanwhile become slower than another holder; that only
+/// changes the result with two holders of the same Ruin ability whose Speed order flips between
+/// hits of one multi-hit move while three or more other factors chain, and is not modelled.
+fn ruin_handler<const N: usize>(
+    b: &Battle<'_, N>,
+    ruin: AbilityId,
+    stat_holder: SlotRef,
+    priority_name: &str,
+) -> Option<Handler> {
+    if b.ability(stat_holder) == ruin {
+        return None;
+    }
+    let holder = b
+        .all_alive()
+        .into_iter()
+        .filter(|&s| b.ability(s) == ruin)
+        .max_by_key(|&s| b.action_speed(s))?;
+    let p = priority(ruin.data().event_orders, priority_name);
+    Some(Handler::of(b, holder, p, SUB_ABILITY, MOD_THREE_QUARTERS))
+}
+
 /// `ModifyDef` or `ModifySpD` handlers of abilities (by the stat the move targets): the
 /// target's `onModifyDef`/`onModifySpD`.
 pub(crate) fn defense_handlers<const N: usize>(
@@ -909,6 +951,14 @@ pub(crate) fn defense_handlers<const N: usize>(
         let p = priority(ability.data().event_orders, "onModifyDefPriority");
         out.push(Handler::of(b, target, p, SUB_ABILITY, modifier));
     }
+    // Sword of Ruin (`onAnyModifyDef`) / Beads of Ruin (`onAnyModifySpD`), by the stat the
+    // move targets (Psyshock meets Sword of Ruin).
+    let (ruin, any_event) = if defense_stat == Stat::Def {
+        (abilities::SWORD_OF_RUIN, "onAnyModifyDefPriority")
+    } else {
+        (abilities::BEADS_OF_RUIN, "onAnyModifySpDPriority")
+    };
+    out.extend(ruin_handler(b, ruin, target, any_event));
     // Protosynthesis / Quark Drive's condition (priority 6): 5325/4096 on the best stat.
     let wanted = if defense_stat == Stat::Def { 1 } else { 3 };
     if let Some(v) = paradox_volatile_of(b, target).filter(|&(_, best)| best == wanted) {

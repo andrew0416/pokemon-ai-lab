@@ -400,6 +400,28 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onAnyTryPrimaryHit", "onStart"],
         StartEffect::None,
     ),
+    // The Ruin abilities only announce themselves on start; their `onAny*` stat handlers are in
+    // `abilities::ruin_handler`.
+    (
+        abilities::TABLETS_OF_RUIN,
+        &["onAnyModifyAtk", "onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::SWORD_OF_RUIN,
+        &["onAnyModifyDef", "onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::VESSEL_OF_RUIN,
+        &["onAnyModifySpA", "onStart"],
+        StartEffect::None,
+    ),
+    (
+        abilities::BEADS_OF_RUIN,
+        &["onAnyModifySpD", "onStart"],
+        StartEffect::None,
+    ),
     // `onSwitchInPriority: -2`; the condition's handlers act later (`abilities`).
     (
         abilities::PROTOSYNTHESIS,
