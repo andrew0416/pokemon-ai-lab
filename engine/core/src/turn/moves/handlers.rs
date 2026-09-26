@@ -686,6 +686,8 @@ pub(super) fn on_try_hit<const N: usize>(
             }
             false
         }
+        // Lock-On: `if (source.volatiles['lockon']) return false;`
+        moves::LOCK_ON => !b.volatile(user, Volatile::LockOn).active,
         // Foresight, Odor Sleuth: `if (target.volatiles['miracleeye']) return false;` Miracle
         // Eye: `if (target.volatiles['foresight']) return false;`
         moves::FORESIGHT | moves::ODOR_SLEUTH => !b.volatile(target, Volatile::MiracleEye).active,
@@ -1789,14 +1791,26 @@ pub(super) fn break_protect<const N: usize>(b: &mut Battle<'_, N>, target: SlotR
 }
 
 /// The `Accuracy` event's handlers that make a move hit `target` whatever its accuracy: Glaive
-/// Rush's drawback (`condition.onAccuracy() { return true; }`), and Minimize's (`if
-/// (move.flags['minimize']) return true;`) on the target.
+/// Rush's drawback (`condition.onAccuracy() { return true; }`) and Minimize's (`if
+/// (move.flags['minimize']) return true;`) on the target, and the user's Lock-On on it
+/// (`onSourceAccuracy`).
 pub(super) fn always_hit<const N: usize>(
     b: &Battle<'_, N>,
+    user: SlotRef,
     target: SlotRef,
     mv: &ActiveMove,
 ) -> bool {
-    b.volatile(target, Volatile::GlaiveRush).active || minimized(b, target, mv)
+    b.volatile(target, Volatile::GlaiveRush).active
+        || minimized(b, target, mv)
+        || locked_on(b, user, target)
+}
+
+/// Lock-On's `onSourceAccuracy` / `onSourceInvulnerability` for a move of its holder `user`: `if
+/// (move && source === this.effectState.target && target === this.effectState.source)` — the
+/// target is the Pokémon it locked on to (wherever it stands; not another Pokémon in its slot).
+fn locked_on<const N: usize>(b: &Battle<'_, N>, user: SlotRef, target: SlotRef) -> bool {
+    let lock = b.volatile(user, Volatile::LockOn);
+    lock.active && b.occupant(target) == Some(crate::volatile::decode_pokemon(lock.counter))
 }
 
 /// Minimize on `target` against a move with the `minimize` flag (Body Slam, Dragon Rush, Heavy
@@ -1982,7 +1996,8 @@ pub(super) fn self_on_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, 
 /// `hitStepInvulnerabilityEvent` for one target: Helping Hand always hits; a commanding
 /// Tatsugiri (Commander) is never hit; a semi-invulnerable target is not hit unless the move is
 /// one its state lets through, No Guard (`onAnyInvulnerability`, priority 1) is the user's or
-/// the target's ability, or the move is Toxic from a Poison type.
+/// the target's ability, the user locked on to it (Lock-On), or the move is Toxic from a Poison
+/// type.
 pub(super) fn invulnerable<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
@@ -2002,6 +2017,10 @@ pub(super) fn invulnerable<const N: usize>(
         return false;
     }
     if b.ability(user) == abilities::NO_GUARD || b.ability(target) == abilities::NO_GUARD {
+        return false;
+    }
+    // The user's Lock-On on the target (`onSourceInvulnerability`, priority 1: `return 0`).
+    if locked_on(b, user, target) {
         return false;
     }
     let passes: &[MoveId] = match state {
@@ -2815,6 +2834,24 @@ pub(super) fn on_hit<const N: usize>(
             } else {
                 HitResult::NotFail
             }
+        }
+        // Lock-On: `source.addVolatile('lockon', target)` (duration 2; its `effectState.source` is
+        // the target), returning nothing. `onTryHit` already failed a user that has one.
+        moves::LOCK_ON => {
+            if let Some(locked) = b.alive(target) {
+                if b.add_volatile(user, Volatile::LockOn) {
+                    let state = b.volatile(user, Volatile::LockOn);
+                    b.set_volatile_state(
+                        user,
+                        Volatile::LockOn,
+                        VolatileState {
+                            counter: crate::volatile::encode_pokemon(locked),
+                            ..state
+                        },
+                    );
+                }
+            }
+            return Ok(None);
         }
         // Forest's Curse (Grass), Trick-or-Treat (Ghost): `if (target.hasType(type)) return
         // false; if (!target.addType(type)) return false;` (the added type replaces an earlier

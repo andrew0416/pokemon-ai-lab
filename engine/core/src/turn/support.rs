@@ -1133,6 +1133,18 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // `getTypes()` reader include).
     (moves::FORESTS_CURSE, &["onHit"]),
     (moves::TRICK_OR_TREAT, &["onHit"]),
+    // Opus Z unit 4: Lock-On's `onTryHit` and `onHit` (`handlers::on_try_hit`, `on_hit`: the
+    // `lockon` volatile on the user, `Volatile::LockOn`), its `onSourceAccuracy`
+    // (`handlers::always_hit`) and `onSourceInvulnerability` (`handlers::invulnerable`).
+    (
+        moves::LOCK_ON,
+        &[
+            "condition.onSourceAccuracy",
+            "condition.onSourceInvulnerability",
+            "onHit",
+            "onTryHit",
+        ],
+    ),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do

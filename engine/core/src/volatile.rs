@@ -341,9 +341,15 @@ pub enum Volatile {
     /// ...) and `setSpecies` (forme changes, Mega Evolution, leaving the field) clear it. No
     /// duration; hidden in the canonical state (`getTypes(true)` leaves it out too).
     AddedType,
+    /// Lock-On on its user (`lockon`, duration 2, `noCopy`; `source.addVolatile('lockon',
+    /// target)`): the user's moves against the Pokémon it locked on to (`effectState.source`,
+    /// kept in `counter`: [`encode_pokemon`]; not a canonical field) never miss
+    /// (`onSourceAccuracy`) and reach it while semi-invulnerable (`onSourceInvulnerability`).
+    /// Added by name in the move's `onHit`, so the dex has no condition id.
+    LockOn,
 }
 
-pub const VOLATILE_COUNT: usize = 103;
+pub const VOLATILE_COUNT: usize = 104;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -450,6 +456,7 @@ impl Volatile {
         Volatile::Opportunist,
         Volatile::Minimize,
         Volatile::AddedType,
+        Volatile::LockOn,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -559,7 +566,8 @@ impl Volatile {
             | Volatile::CudChew
             | Volatile::RipenWeaken
             | Volatile::Opportunist
-            | Volatile::AddedType => ConditionId::NONE,
+            | Volatile::AddedType
+            | Volatile::LockOn => ConditionId::NONE,
         }
     }
 
@@ -669,6 +677,7 @@ impl Volatile {
             Volatile::Opportunist => "opportunistboosts",
             Volatile::Minimize => "minimize",
             Volatile::AddedType => "addedtype",
+            Volatile::LockOn => "lockon",
         }
     }
 
@@ -718,7 +727,8 @@ impl Volatile {
             | Volatile::PhantomForce
             | Volatile::ShadowForce
             | Volatile::AllySwitch
-            | Volatile::LaserFocus => 2,
+            | Volatile::LaserFocus
+            | Volatile::LockOn => 2,
             Volatile::Encore | Volatile::Taunt => 3,
             Volatile::PerishSong => 4,
             // Partial trapping's and Heal Block's `durationCallback` replace it when they start
@@ -838,7 +848,8 @@ impl Volatile {
             | Volatile::Trapped
             | Volatile::Trapper
             | Volatile::Attract
-            | Volatile::Octolock => Some(VolatileState {
+            | Volatile::Octolock
+            | Volatile::LockOn => Some(VolatileState {
                 counter: 0,
                 ..state
             }),
@@ -1052,6 +1063,7 @@ mod tests {
                         | Volatile::RipenWeaken
                         | Volatile::Opportunist
                         | Volatile::AddedType
+                        | Volatile::LockOn
                 ));
                 continue;
             }
@@ -1109,6 +1121,7 @@ mod tests {
             (Volatile::Rollout, moves::ROLLOUT),
             (Volatile::IceBall, moves::ICE_BALL),
             (Volatile::Minimize, moves::MINIMIZE),
+            (Volatile::LockOn, moves::LOCK_ON),
         ] {
             let data = id.data();
             assert_eq!(

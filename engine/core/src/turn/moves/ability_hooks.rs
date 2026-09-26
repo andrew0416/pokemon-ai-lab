@@ -136,8 +136,8 @@ pub(super) fn base_power_handlers<const N: usize>(
 /// handlers, all priority 0:
 /// - No Guard (`onAnyAccuracy`, not breakable) of an active Pokémon that is the move's user or
 ///   target returns `true`;
-/// - the target's Glaive Rush drawback and Minimize (a `minimize` move; `onAccuracy`) return
-///   `true`;
+/// - the target's Glaive Rush drawback and Minimize (a `minimize` move; `onAccuracy`), and the
+///   user's Lock-On on the target (`onSourceAccuracy`), return `true`;
 /// - Micle Berry's volatile on the user (`onSourceAccuracy`): `if (!move.ohko)` the volatile
 ///   ends, and while the accuracy is still a number it chains 4915/4096.
 ///
@@ -164,7 +164,7 @@ pub(super) fn accuracy_event<const N: usize>(
     let no_guard = [user, target]
         .into_iter()
         .any(|s| b.alive(s).is_some() && b.ability(s) == abilities::NO_GUARD);
-    if no_guard || handlers::always_hit(b, target, mv) {
+    if no_guard || handlers::always_hit(b, user, target, mv) {
         return None;
     }
     Some(modifier)

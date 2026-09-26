@@ -1,0 +1,78 @@
+{
+ "description": "Lock-On (Opus Z unit 4): in the setup turn Magnezone locks on to Snorlax, which then digs underground. Magnezone's Growl reaches Snorlax anyway (`onSourceInvulnerability` returns 0 for the locked target) and Chansey; Snorlax's Dig then hits Blissey at -1 Atk. Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Magnezone",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Lock-On",
+     "Growl"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Dig",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move lockon 1, move harden",
+   "move dig 2, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move growl, move harden",
+  "p2": "move dig 2, move harden"
+ }
+}
