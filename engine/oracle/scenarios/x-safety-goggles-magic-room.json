@@ -1,0 +1,29 @@
+{
+ "description": "Opus X unit B6: Magic Room makes every holder ignore Safety Goggles. After Bronzong's Magic Room (setup turn) and a patched sandstorm, Volcarona's Rage Powder draws Goggles Hariyama's Seismic Toss aimed at Goggles Dragonite (runStatusImmunity('powder') is false), and the sandstorm hurts both Goggles holders at the end of the turn.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Bronzong", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Magic Room", "Harden"], "level": 50},
+   {"species": "Hariyama", "item": "Safety Goggles", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Volcarona", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Rage Powder", "Harden"], "level": 50},
+   {"species": "Dragonite", "item": "Safety Goggles", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move magicroom, move harden", "move harden, move harden"]
+ ],
+ "patch": {
+  "field": {"weather": "sandstorm", "weatherDuration": 3}
+ },
+ "turn": {"p1": "move harden, move seismictoss 2", "p2": "move ragepowder, move harden"}
+}

@@ -426,14 +426,12 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// Showdown `dex.getImmunity(status, pokemon)` plus the supported `Immunity` handlers
     /// (`runStatusImmunity`).
     pub fn status_immune(&self, slot: SlotRef, immunity: TypeImmunities) -> bool {
-        let Some(mon) = self.slot_mon(slot) else {
-            return true;
-        };
-        if self.natural_immune(slot, immunity) {
+        if self.slot_mon(slot).is_none() || self.natural_immune(slot, immunity) {
             return true;
         }
-        // The item's `onImmunity` (Safety Goggles: sandstorm, powder).
-        if super::items::grants_immunity(mon.item, immunity) {
+        // The item's `onImmunity` (Safety Goggles: sandstorm, powder), skipped by `runEvent`
+        // while the holder ignores its item (Klutz, Magic Room): the effective item.
+        if super::items::grants_immunity(self.item(slot), immunity) {
             return true;
         }
         // Immunity handlers; each returns false for one immunity id, so order is irrelevant.

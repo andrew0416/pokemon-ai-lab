@@ -1,0 +1,26 @@
+{
+ "description": "Opus X unit B6: Klutz ignores Safety Goggles (ignoringItem skips the item's onImmunity and onTryHit). In a sandstorm, Volcarona's Rage Powder draws Klutz Lopunny's Seismic Toss aimed at Amoonguss (runStatusImmunity('powder') is false), Amoonguss's Spore puts Lopunny to sleep, and the sandstorm hurts Lopunny at the end of the turn.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Lopunny", "item": "Safety Goggles", "ability": "Klutz", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Volcarona", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Rage Powder"], "level": 50},
+   {"species": "Amoonguss", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Spore"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "field": {"weather": "sandstorm", "weatherDuration": 3}
+ },
+ "turn": {"p1": "move seismictoss 2, move harden", "p2": "move ragepowder, move spore 1"}
+}
