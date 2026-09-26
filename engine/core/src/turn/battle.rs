@@ -1068,6 +1068,8 @@ impl<'a, const N: usize> Battle<'a, N> {
                     counter: old.counter + 1,
                     ..old
                 },
+                // Laser Focus's `onRestart`: `this.effectState.duration = 2`.
+                Volatile::LaserFocus => VolatileState { duration: 2, ..old },
                 // Smack Down's `onRestart`: a holder in the air again (Fly, Bounce) comes down
                 // (`conditions::smack_down_lands`); it returns nothing.
                 Volatile::SmackDown => {

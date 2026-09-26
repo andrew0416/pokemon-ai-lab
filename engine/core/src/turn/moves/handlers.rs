@@ -1252,6 +1252,24 @@ pub(super) fn on_base_power<const N: usize>(
     }
 }
 
+/// The `onModifyCritRatio` of the user's volatiles: Focus Energy +2, Dragon Cheer +2 for a
+/// holder that was a Dragon type when it started, else +1 (the two exclude each other). `None`:
+/// Laser Focus, which returns 5 (the ratio then clamps to 4 whatever the other handlers add).
+pub(super) fn volatile_crit_ratio<const N: usize>(b: &Battle<'_, N>, user: SlotRef) -> Option<i32> {
+    if b.volatile(user, Volatile::LaserFocus).active {
+        return None;
+    }
+    let mut bonus = 0;
+    if b.volatile(user, Volatile::FocusEnergy).active {
+        bonus += 2;
+    }
+    let cheer = b.volatile(user, Volatile::DragonCheer);
+    if cheer.active {
+        bonus += if cheer.hidden != 0 { 2 } else { 1 };
+    }
+    Some(bonus)
+}
+
 /// BasePower handlers of the user's volatiles (`condition.onBasePower`): Helping Hand
 /// (priority 10) `chainModify(this.effectState.multiplier)`, 1.5 per application.
 pub(super) fn volatile_base_power<const N: usize>(
@@ -1878,14 +1896,36 @@ pub(super) fn on_hit<const N: usize>(
             }
         }
         // Psych Up: the user takes the target's stages (`source.boosts[i] = target.boosts[i]`, no
-        // boost events), then loses its critical-hit volatiles and copies the target's (of
-        // Dragon Cheer, Focus Energy, G-Max Chi Strike, Laser Focus only Focus Energy exists).
+        // boost events), then loses its critical-hit volatiles and copies the target's
+        // (`addVolatile`: Laser Focus with a fresh duration; Dragon Cheer keeps the target's
+        // `hasDragonType`; G-Max Chi Strike is off).
         moves::PSYCH_UP => {
             let boosts = b.state.slot(target).boosts;
             set_boosts(b, user, boosts);
-            b.remove_volatile(user, Volatile::FocusEnergy);
-            if b.volatile(target, Volatile::FocusEnergy).active {
-                b.add_volatile(user, Volatile::FocusEnergy);
+            const CRIT: [Volatile; 3] = [
+                Volatile::DragonCheer,
+                Volatile::FocusEnergy,
+                Volatile::LaserFocus,
+            ];
+            for volatile in CRIT {
+                b.remove_volatile(user, volatile);
+            }
+            for volatile in CRIT {
+                let copied = b.volatile(target, volatile);
+                if copied.active
+                    && b.add_volatile(user, volatile)
+                    && volatile == Volatile::DragonCheer
+                {
+                    let mine = b.volatile(user, volatile);
+                    b.set_volatile_state(
+                        user,
+                        volatile,
+                        VolatileState {
+                            hidden: copied.hidden,
+                            ..mine
+                        },
+                    );
+                }
             }
             HitResult::Success
         }

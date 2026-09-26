@@ -70,7 +70,7 @@ pub enum Volatile {
     /// item): Speed doubles while the holder has no item. No duration.
     Unburden,
     /// Focus Energy's condition (`focusenergy`, no duration): critical-hit ratio +2. Added by
-    /// Lansat Berry (the move Focus Energy itself is not supported yet).
+    /// the move and by Lansat Berry; it and Dragon Cheer exclude each other (`onStart`).
     FocusEnergy,
     /// Micle Berry's own condition (`micleberry`, duration 2): the holder's next accuracy check
     /// (`onSourceAccuracy`) is 4915/4096 and ends it.
@@ -246,9 +246,16 @@ pub enum Volatile {
     /// state) is active the holder cannot switch out (`onTrapPokemon`) and loses 1 Def and 1 SpD
     /// each turn; the residual deletes it once the source left, fainted or just switched in.
     Octolock,
+    /// Dragon Cheer (no duration): the holder's critical-hit ratio +2 if it was a Dragon type
+    /// when the condition started (`effectState.hasDragonType`, kept in `hidden`; not a canonical
+    /// field), else +1. It and Focus Energy exclude each other (`onStart`).
+    DragonCheer,
+    /// Laser Focus (duration 2; its `onRestart` sets the duration to 2 again): the holder's
+    /// critical-hit ratio becomes 5 (`onModifyCritRatio`), so its moves always crit.
+    LaserFocus,
 }
 
-pub const VOLATILE_COUNT: usize = 76;
+pub const VOLATILE_COUNT: usize = 78;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -328,6 +335,8 @@ impl Volatile {
         Volatile::Attract,
         Volatile::Nightmare,
         Volatile::Octolock,
+        Volatile::DragonCheer,
+        Volatile::LaserFocus,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -383,6 +392,8 @@ impl Volatile {
             Volatile::Attract => conditions::ATTRACT,
             Volatile::Nightmare => conditions::NIGHTMARE,
             Volatile::Octolock => conditions::OCTOLOCK,
+            Volatile::DragonCheer => conditions::DRAGONCHEER,
+            Volatile::LaserFocus => conditions::LASERFOCUS,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -494,6 +505,8 @@ impl Volatile {
             Volatile::Attract => "attract",
             Volatile::Nightmare => "nightmare",
             Volatile::Octolock => "octolock",
+            Volatile::DragonCheer => "dragoncheer",
+            Volatile::LaserFocus => "laserfocus",
         }
     }
 
@@ -542,7 +555,8 @@ impl Volatile {
             | Volatile::Dive
             | Volatile::PhantomForce
             | Volatile::ShadowForce
-            | Volatile::AllySwitch => 2,
+            | Volatile::AllySwitch
+            | Volatile::LaserFocus => 2,
             Volatile::Encore | Volatile::Taunt => 3,
             Volatile::PerishSong => 4,
             // Partial trapping's and Heal Block's `durationCallback` replace it when they start
@@ -585,7 +599,8 @@ impl Volatile {
             | Volatile::GorillaTactics
             | Volatile::Attract
             | Volatile::Nightmare
-            | Volatile::Octolock => 0,
+            | Volatile::Octolock
+            | Volatile::DragonCheer => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -857,6 +872,8 @@ mod tests {
             (Volatile::SmackDown, moves::SMACK_DOWN),
             (Volatile::Nightmare, moves::NIGHTMARE),
             (Volatile::Octolock, moves::OCTOLOCK),
+            (Volatile::DragonCheer, moves::DRAGON_CHEER),
+            (Volatile::LaserFocus, moves::LASER_FOCUS),
         ] {
             let data = id.data();
             assert_eq!(

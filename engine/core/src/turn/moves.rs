@@ -3026,19 +3026,18 @@ fn get_damage<const N: usize>(
     // Critical hit: ratio 1..4 ??1/24, 1/8, 1/2, always. `CriticalHit` handlers: Battle Armor
     // and Shell Armor (`onCriticalHit: false`, breakable). Showdown rolls first and then
     // cancels; not rolling gives the same distribution.
-    // ModifyCritRatio: the user's item (Scope Lens, Razor Claw) and its `focusenergy` volatile
-    // (+2, from Lansat Berry), all additive, then clamped to 0..4. Lucky Chant on the target's
-    // side is a `CriticalHit` handler too (`onCriticalHit: false`).
-    let focus_energy = if b.volatile(user, Volatile::FocusEnergy).active {
-        2
-    } else {
-        0
+    // ModifyCritRatio: the user's item (Scope Lens, Razor Claw), ability and volatiles (Focus
+    // Energy, Dragon Cheer; Laser Focus sets 5, and nothing lowers the ratio, so it ends at the
+    // clamp), then clamped to 0..4. Lucky Chant on the target's side is a `CriticalHit` handler
+    // too (`onCriticalHit: false`).
+    let crit_ratio = match handlers::volatile_crit_ratio(b, user) {
+        None => 4,
+        Some(bonus) => (i32::from(data.crit_ratio)
+            + item_events::crit_ratio_bonus(b.item(user))
+            + ability_events::crit_ratio_bonus(b, user, target)
+            + bonus)
+            .clamp(0, 4),
     };
-    let crit_ratio = (i32::from(data.crit_ratio)
-        + item_events::crit_ratio_bonus(b.item(user))
-        + ability_events::crit_ratio_bonus(b, user, target)
-        + focus_energy)
-        .clamp(0, 4);
     let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit
         && !b.side_effect_active(target.side, SideEffect::LuckyChant)
         && !super::forme::shields_hit(b, user, target, mv.id);

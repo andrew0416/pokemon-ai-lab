@@ -435,6 +435,17 @@ pub(crate) fn volatile_start<const N: usize>(
             }
             true
         }
+        // Focus Energy: `if (target.volatiles['dragoncheer']) return false;`
+        Volatile::FocusEnergy => !b.volatile(target, Volatile::DragonCheer).active,
+        // Dragon Cheer: `if (target.volatiles['focusenergy']) return false;` then
+        // `this.effectState.hasDragonType = target.hasType("Dragon");`
+        Volatile::DragonCheer => {
+            if b.volatile(target, Volatile::FocusEnergy).active {
+                return false;
+            }
+            new.hidden = u8::from(b.has_type(target, Type::Dragon));
+            true
+        }
         // Octolock: its `onStart` only logs; the source is kept for the trap and the residual.
         Volatile::Octolock => {
             let Some(source) = source else {

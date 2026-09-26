@@ -934,6 +934,28 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         &["secondaries.onHit", "secondary.onHit"],
     ),
     (moves::JAW_LOCK, &["onHit"]),
+    // Opus V unit 4, critical-hit volatiles: their `onStart` (`conditions::volatile_start`:
+    // Focus Energy and Dragon Cheer exclude each other, Dragon Cheer keeps `hasDragonType`),
+    // Laser Focus's `onRestart` (`Battle::add_volatile_from`), `onModifyCritRatio`
+    // (`handlers::volatile_crit_ratio`); Laser Focus's `onEnd` only logs. Psych Up copies all
+    // three.
+    (
+        moves::FOCUS_ENERGY,
+        &["condition.onModifyCritRatio", "condition.onStart"],
+    ),
+    (
+        moves::DRAGON_CHEER,
+        &["condition.onModifyCritRatio", "condition.onStart"],
+    ),
+    (
+        moves::LASER_FOCUS,
+        &[
+            "condition.onEnd",
+            "condition.onModifyCritRatio",
+            "condition.onRestart",
+            "condition.onStart",
+        ],
+    ),
     (
         moves::OCTOLOCK,
         &[

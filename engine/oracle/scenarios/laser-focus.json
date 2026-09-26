@@ -1,0 +1,79 @@
+{
+ "description": "Laser Focus (Opus V): after the setup turn (both use it: duration 2, 1 after the residual) Hypno's Strength always crits and its Laser Focus ends at this residual; Blissey's second Laser Focus restarts it (`onRestart`: duration 2 again, 1 after the residual). Rolls branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Hypno",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Laser Focus",
+     "Strength"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Laser Focus",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move laserfocus, move laserfocus",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move strength 1, move laserfocus",
+  "p2": "move harden, move harden"
+ }
+}
