@@ -49,6 +49,8 @@
 
 **7차 병합 (1) (2026-09-26, Opus R: 후속 9단위):** 중단 교체의 교체 전 Update 생략(`instaswitch_in`), 광역 탈출버튼·붉은카드 속도순, 매끄러운껍질 억제, 가드류 잠금 초기화, 다중 명중 재판정(오라클 `randomChance`도 `ceil(n)/d`로), 동시 기절 승자, 스피드 도구(+ `speed_stat` 효과 도구 수정), 무게 보정. 충돌 없음. 남은 보고 버그: 언너브의 열매 차단 시점(등장↔특성 시작 사이 Update), `trapped` 사전 검사의 원시 특성, 바디퍼지. 커버리지: 기술 676/938(라이브러리 206/206, 100%), 특성 257/321(라이브러리 66/66, 100%), 도구 491/583(라이브러리 60/60, 100%); 라이브러리 28팀 전 검사 통과.
 
+**자기대전 승률 (2026-09-26, WORKPLAN S19):** `lab-rollout`이 두 파티를 1턴 균형 정책(양쪽 같은 평가 함수, 모델 ①)으로 끝까지 두어 승률과 Wilson 구간을 낸다. 평가 값 척도 대신 경기 결과로 가디안·아쿠스타 선두를 비교하는 용도. 정책 자체는 깊이 1 평가 함수가 만들므로(상대가 한 마리 남았을 때 보조기 반복 등) '이 정책 아래의 승률'로만 읽는다. 배치 결과는 `runs/rollout-20260926/`(README).
+
 **상대 모델 ②·믿음 분포 (2026-09-26, WORKPLAN S16·S17):** `--believed-team`을 여러 개와 `--believed-weight`로 믿음 분포를, `--observed`로 지금까지 둔 턴(`setupTurns`) 뒤 상대가 본 우리 HP%를 주면 엔진 분포를 가능도로 사후 믿음을 만든다. 시연: 록슬라이드를 맞고 가디안이 55% 남은 관측은 표준 겁쟁이 배분과 모순 → 사후 0% → 2턴 차이 0(읽힘). **여러 턴(S18):** `--observed-turn k "Name:pct"`를 setup 턴마다 하나씩 주면 턴이 재생될 때마다 걸러 다음 턴은 남은 국면만 재생한다(`lab_scenario::scenario_positions_filtered`); 믿는 팀 재생에서 실제로 둔 선택이 불법인 국면은 그 믿음과 모순이라 탈락한다(`scenario_positions_consistent`). 시연(`gardevoir-vs-sand-owen.t3.json`, 2 setup 턴): 1턴에 고릴타만 관측되면 갱신 없음, 2턴 '가디안 52%'에서 표준 믿음 0%; 가디안이 끝까지 관측되지 않으면 69.2/30.8로 남고 3턴 최적 응답 +26.1 vs 실제 균형 −5.8(차이 +31.8 = 아직 안 읽힌 배분의 가치).
 
 **상대 모델 ③ (2026-09-26, WORKPLAN S13):** `lab-plan --believed-team`이 '상대가 믿는 우리 팀'에서 상대 균형 전략을 구해 실제 국면에서 우리 최적 응답을 낸다(S2 시나리오: 차이 +3.6). 깊이 1에서는 양쪽 방어가 지배적이라 평가 함수에 방어 템포 비용(`stall` 특징)을 넣는 중.
@@ -155,6 +157,8 @@ D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls m
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --believed-team a.json --believed-team b.json --believed-weight 0.7,0.3   # 믿음 분포(가중 혼합)
 D:/cargo-target/release/lab-plan.exe <setupTurns 있는 scenario> --side p1 --rolls median --believed-team a.json --believed-team b.json --believed-weight 0.7,0.3 --observed "Gardevoir:55,Rillaboom:65" --observed-tolerance 1.5   # 모델 ②: 관측(우리 HP%)으로 믿음 갱신 뒤 최적 응답 (Full 재생 2분; `--setup-rolls median --observed-tolerance 6`이면 5초, 허용 폭은 롤 범위만큼 넓게)
 D:/cargo-target/release/lab-plan.exe <setupTurns 2개 있는 scenario> --side p1 --rolls median --setup-rolls median --believed-team a.json --believed-team b.json --believed-weight 0.7,0.3 --observed-turn 1 "Rillaboom:65" --observed-turn 2 "Gardevoir:52,Rillaboom:30" --observed-tolerance 6   # 모델 ② 여러 턴: setup 턴마다 관측 하나, 턴이 재생될 때마다 걸러서 갱신 (S18; 1–3 s)
+cargo build --release -p lab-search --bin lab-rollout
+D:/cargo-target/release/lab-rollout.exe <scenario> --games 100 --seed 20260926 --threads 4 --out results.json   # 자기대전 승률(S19): 양쪽 1턴 균형 정책 + 정확 난수로 끝까지; 판당 20–25 s(단일 게임 스레드, 6코어). 같은 시드로 두 선두를 비교
 python engine/scripts/fit_eval.py runs/plan-20260926/fit/*.jsonl --out runs/plan-20260926/fit/weights.json   # lab-plan --dump-children 결과로 평가 가중치 적합
 LAB_ENGINE_STATS=1 D:/cargo-target/release/lab-turn.exe <scenario> --position 1 --rolls median   # 단계별 프런티어·재실행 수·시간
 D:/cargo-target/release/lab-turn.exe <scenario> --rolls median      # full|extremes|quartiles|median|pessimistic-p1|pessimistic-p2
@@ -230,7 +234,7 @@ cd engine/py && ../../.venv-doubles/Scripts/maturin.exe build --release -i ../..
 8. **[2026-09-26 이후의 우선순위]**
    - 평가 함수: 실제 경기(Sol 완주 기록, `runs/`) 결과와 `lab-plan` 값을 대조하고, 상태이상·휘발이 있는 국면의 표본을 모아 `fit_eval.py`로 적합(S12). 가디안 vs 아쿠스타 판정은 그 뒤(S15).
    - 상대 모델 ②: HP% 관측의 턴별 갱신은 S17·S18로 됐다. 남은 것은 행동 순서(스피드 비교)·도구/특성 노출·상태이상 관측, 로그에서 관측을 자동으로 뽑는 파서, 실제 국면 선택을 '가장 확률 높은 일치 국면' 대신 관측이 못 가르는 분기(수면 턴 수 등)를 믹스처로 두는 것. DESIGN.md "모델 ③·② 구현".
-   - 깊이 2에 혼합 전략(현재 `analyse_deep`은 루트 행렬 + 자식 균형), 전치표.
+   - 깊이 2에 혼합 전략(현재 `analyse_deep`은 루트 행렬 + 자식 균형), 전치표. `lab-rollout` 정책을 깊이 2(또는 `--child-nash`)로 바꿔 승률이 어떻게 움직이는지 보는 것이 평가 함수 의존을 줄이는 다음 단계.
    - 남은 엔진 버그: 언너브의 열매 차단 시점(등장↔특성 시작 사이 Update; `Battle`에 등장 중 미시작 포켓몬 목록 필요), `turn::trapped`의 원시 특성, 바디퍼지(포켓몬별 `weighthg` 상태). WORKPLAN §4 병합 행의 '범위 밖 버그' 목록.
    - 라이브러리 밖 커버리지는 Opus 웨이브로 계속(`COVERAGE.md` 미지원 목록 중 실전 빈도순).
 

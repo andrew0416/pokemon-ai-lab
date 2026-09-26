@@ -266,6 +266,22 @@ pub fn sample_turn<const N: usize>(
     Ok(outcomes(state, endings, Suspension))
 }
 
+/// [`resume_turn`] played `samples` times at random (see [`sample_turn`]): one path of the
+/// rest of the turn per sample after the mid-turn switches, merged by end state.
+pub fn sample_resume_turn<const N: usize>(
+    state: &mut State<N>,
+    suspension: &Suspension,
+    choices: [[Option<u8>; N]; 2],
+    samples: usize,
+    seed: u64,
+) -> Result<Vec<Outcome>, TurnError> {
+    let switches = check_mid_turn_switches(state, &choices)?;
+    let mut start = suspension.0.clone();
+    start.switches = switches;
+    let endings = sample_stages(state, samples, seed, start, run_stage)?;
+    Ok(outcomes(state, endings, Suspension))
+}
+
 /// Every outcome of the battle start (Showdown `runAction('start')` → `switchIn` for every
 /// lead → one batched `runSwitch`): the leads' start handlers in Speed order, Speed ties
 /// uniformly at random, Trace's target uniformly at random. `state` must hold the leads in
