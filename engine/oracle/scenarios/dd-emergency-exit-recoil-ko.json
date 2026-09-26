@@ -1,0 +1,101 @@
+{
+ "description": "Opus DD unit B27 (Opus N's `ee-recoil-ko`, whose refusal this lifts): Golisopod (+6 Atk, patched to 95 of 182 HP) knocks out Blissey with Double-Edge; the recoil (round(362 / 3) = 121) takes it from above half to 0. `applyRecoilDamage` has no HP guard, so Emergency Exit flags the fainting Golisopod; the fainted Pokemon keeps the flag and Showdown asks p2 for its replacement mid-turn (Shuckle's Seismic Toss still queued): Excadrill comes in and takes the Seismic Toss aimed at that position. p1 has no bench for Blissey.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Shuckle",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Seismic Toss",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Golisopod",
+    "item": "",
+    "ability": "Emergency Exit",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Double-Edge",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Metagross",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Excadrill",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "patch": {
+  "p2": {
+   "Golisopod": {
+    "hp": 95,
+    "boosts": {
+     "atk": 6
+    }
+   }
+  }
+ },
+ "turn": {
+  "p1": "move harden, move seismictoss 1",
+  "p2": "move doubleedge 1, move harden"
+ },
+ "midTurn": {
+  "p1": [],
+  "p2": [
+   "switch 3"
+  ]
+ }
+}

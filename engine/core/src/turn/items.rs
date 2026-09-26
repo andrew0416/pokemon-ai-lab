@@ -187,13 +187,12 @@ impl<const N: usize> Battle<'_, N> {
     /// (`sourceEffect.id !== 'electroshot'`) reads [`Battle::weather_for`] instead.
     ///
     /// Showdown's `activePokemon` lasts until `runAction`'s `clearActiveMove()`, after the
-    /// action's phazing step, and after a Dancer copy it is the last dancer; the engine's
-    /// `active_move` ends with the move and goes back to the original user after Dancer. The
-    /// gap never shows (Opus BB unit B25): only a Move's or a Weather's handler reads the weather
-    /// through Mega Sol, and none runs there — a dragged-in Pokémon's switch-in handlers belong
-    /// to its ability, item and side conditions (oracle `bb-mega-sol-roar-forecast`: Forecast's
-    /// `onStart` sees the rain), and the Update, faint and Emergency Exit steps have no weather
-    /// reader of that kind.
+    /// action's phazing step, and after a Dancer copy it is the last dancer; so does the
+    /// engine's `active_move` (Opus DD unit B26: `drag_outs` clears it). Nothing reads the
+    /// weather through Mega Sol in that window (Opus BB unit B25): only a Move's or a Weather's
+    /// handler does, and a dragged-in Pokémon's switch-in handlers belong to its ability, item
+    /// and side conditions (oracle `bb-mega-sol-roar-forecast`: Forecast's `onStart` sees the
+    /// rain).
     pub fn move_weather(&self, holder: SlotRef) -> Weather {
         let mega_sol = self.active_move.is_some_and(|m| {
             self.occupant(m.user) == Some(m.pokemon) && self.ability(m.user) == abilities::MEGA_SOL
@@ -517,16 +516,13 @@ pub(crate) fn eject_pack_use<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRe
     if !eject_pending(b, slot) || b.alive(slot).is_none() {
         return;
     }
-    // `getAllActive()` also holds a Pokémon at 0 HP whose faint is not processed; `faint()`
-    // clears its `switchFlag`, and the only flag set after that (Emergency Exit after the user's
-    // own recoil) is refused (`moves::user_emergency_exit`, oracle
-    // `x-switchflag-unprocessed-faint`), so the living actives are the same set here.
+    // `getAllActive()` also holds a Pokémon at 0 HP whose faint is not processed: a user its
+    // own recoil knocked out after Emergency Exit flagged it keeps the pack at AfterMove (oracle
+    // `dd-emergency-exit-recoil-eject-pack`).
     if super::residual::bench(b, slot.side).next().is_none()
         || b.volatile(slot, Volatile::Commanding).active
         || b.volatile(slot, Volatile::Commanded).active
-        || b.all_alive()
-            .iter()
-            .any(|&s| b.state.slot(s).switch_flag == SwitchFlag::Effect)
+        || b.any_active_switch_flag_true()
     {
         return;
     }
@@ -1504,12 +1500,10 @@ pub(crate) fn after_move_secondary<const N: usize>(
             return;
         }
         // `for (const pokemon of this.getAllActive()) if (pokemon.switchFlag === true) return;`
-        // — a 0-HP Pokémon not processed yet cannot carry the flag here (see
-        // `eject_pack_use`).
-        if b.all_alive()
-            .iter()
-            .any(|&s| b.state.slot(s).switch_flag == SwitchFlag::Effect)
-        {
+        // — a 0-HP Pokémon not processed yet included: the move's user its own recoil (before
+        // AfterMoveSecondary in Champions) knocked out after Emergency Exit flagged it (oracle
+        // `dd-emergency-exit-recoil-eject-button`).
+        if b.any_active_switch_flag_true() {
             return;
         }
         b.set_switch_flag(target, SwitchFlag::Effect);

@@ -1,0 +1,26 @@
+{
+ "description": "Opus DD unit B26 control for `dd-mold-breaker-roar-pastel-veil`: the same Roar from an Excadrill without Mold Breaker (Sand Force). The dragged-in Tauros meets Toxic Spikes (one layer, patched) and Ponyta-Galar's Pastel Veil blocks the poison (`onAllySetStatus`): Tauros stays healthy.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Excadrill", "item": "", "ability": "Sand Force", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Roar", "Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Ponyta-Galar", "item": "", "ability": "Pastel Veil", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Tauros", "item": "", "ability": "Sheer Force", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {"sides": {"p2": {"toxicspikes": null}}},
+ "turn": {"p1": "move roar 1, move harden", "p2": "move harden, move harden"}
+}

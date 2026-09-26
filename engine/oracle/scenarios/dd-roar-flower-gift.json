@@ -1,0 +1,26 @@
+{
+ "description": "Opus DD unit B26 control for `dd-mold-breaker-roar-flower-gift`: the same Roar from an Excadrill without Mold Breaker (Sand Force) in (patched) sun; the dragged-in Cherrim's Flower Gift runs its SwitchIn handler and Cherrim blooms (Cherrim-Sunshine).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Excadrill", "item": "", "ability": "Sand Force", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Roar", "Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Cherrim", "item": "", "ability": "Flower Gift", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {"field": {"weather": "sunnyday", "weatherDuration": 5}},
+ "turn": {"p1": "move roar 1, move harden", "p2": "move harden, move harden"}
+}

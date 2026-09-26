@@ -23,7 +23,7 @@ use lab_engine::field::{
 };
 use lab_engine::gimmick::Gimmick;
 use lab_engine::rules::Ruleset;
-use lab_engine::state::{BattleResult, Pokemon, SideId, State, Status, SwitchFlag, PARTY_SIZE};
+use lab_engine::state::{BattleResult, Pokemon, SideId, Slot, State, Status, PARTY_SIZE};
 use lab_engine::volatile::{Volatile, VolatileState};
 
 use crate::meta::{ScenarioMeta, SideMeta};
@@ -138,15 +138,11 @@ fn requests<const N: usize>(state: &State<N>) -> [&'static str; 2] {
     if state.result.is_over() {
         return ["", ""];
     }
-    // A mid-turn switch request (`Slot::switch_flag`, F6): `switch` for the requesting sides,
-    // `wait` (an empty `requestState`) for the others.
-    let flagged = [SideId::One, SideId::Two].map(|side| {
-        state
-            .side(side)
-            .slots
-            .iter()
-            .any(|slot| slot.switch_flag != SwitchFlag::None && slot.party_index.is_some())
-    });
+    // A mid-turn switch request (`Slot::must_switch_out`, F6; a fainted Pokémon Emergency
+    // Exit flagged after its own recoil included): `switch` for the requesting sides, `wait`
+    // (an empty `requestState`) for the others.
+    let flagged = [SideId::One, SideId::Two]
+        .map(|side| state.side(side).slots.iter().any(Slot::must_switch_out));
     if flagged.iter().any(|&f| f) {
         return flagged.map(|f| if f { "switch" } else { "" });
     }

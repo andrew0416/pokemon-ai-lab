@@ -6,7 +6,6 @@
 mod common;
 
 use common::assert_exact_parity;
-use lab_scenario::{run_decision_mid_turn, scenario_decision};
 
 /// Life Orb's recoil after the user's own attack takes it to half.
 #[test]
@@ -42,31 +41,4 @@ fn spread_status_emergency_exit_matches_showdown_exactly() {
 #[test]
 fn spread_failure_emergency_exit_matches_showdown_exactly() {
     assert_exact_parity("ee-spread-failed");
-}
-
-/// Recoil that knocks the user out from above half: Showdown's `applyRecoilDamage` has no HP
-/// guard, flags the fainting Emergency Exit holder and asks for a mid-turn switch of a fainted
-/// Pokémon; the engine refuses the turn.
-#[test]
-fn recoil_knock_out_emergency_exit_is_unsupported() {
-    let loaded = lab_scenario::load_scenario_file(
-        common::engine_dir().join("oracle/scenarios/ee-recoil-ko.json"),
-    )
-    .unwrap();
-    let positions = lab_scenario::scenario_positions(&loaded).unwrap();
-    assert_eq!(positions.len(), 1);
-    let position = &positions[0];
-    let mut state = position.state.clone();
-    let decision = scenario_decision(&loaded, position).unwrap();
-    let result = run_decision_mid_turn(&mut state, &position.order, &decision, &loaded.mid_turn);
-    match result {
-        Err(why) => assert!(
-            why.contains("Emergency Exit on a user its recoil knocked out"),
-            "{why}"
-        ),
-        Ok(outcomes) => panic!(
-            "expected an unsupported turn, got {} outcomes",
-            outcomes.len()
-        ),
-    }
 }

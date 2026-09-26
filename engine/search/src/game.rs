@@ -8,7 +8,7 @@ use lab_engine::dex::{moves, MoveCategory, MoveTarget};
 use lab_engine::field::SlotCondition;
 use lab_engine::instruction::Outcome;
 use lab_engine::rules::Ruleset;
-use lab_engine::state::{BattleResult, SideId, SlotRef, State, SwitchFlag};
+use lab_engine::state::{BattleResult, SideId, SlotRef, State};
 use lab_engine::turn::{
     enumerate_replacements, enumerate_turn_with, legal_joint_actions, resume_turn_with,
     side_must_replace, side_must_switch, EnumerateOptions, Suspension, TurnError,
@@ -165,11 +165,9 @@ pub fn asked_slots<const N: usize>(
         Decision::Replacement if side_must_replace(state, side) => (0..N)
             .filter(|&i| s.slots[i].party_index.is_none())
             .collect(),
-        Decision::MidTurn if side_must_switch(state, side) => (0..N)
-            .filter(|&i| {
-                s.slots[i].switch_flag != SwitchFlag::None && s.slots[i].party_index.is_some()
-            })
-            .collect(),
+        Decision::MidTurn if side_must_switch(state, side) => {
+            (0..N).filter(|&i| s.slots[i].must_switch_out()).collect()
+        }
         _ => Vec::new(),
     }
 }

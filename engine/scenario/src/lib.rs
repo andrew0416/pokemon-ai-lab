@@ -258,7 +258,8 @@ pub fn run_decision_with(
 }
 
 /// Whether `side` must send in a mid-turn switch (Showdown `request: switch` with actions
-/// still queued): a living occupant with `Slot::switch_flag`.
+/// still queued): `Slot::must_switch_out` (an occupant with `Slot::switch_flag`, or the
+/// flagged Pokémon that fainted there after its own recoil).
 pub fn side_must_switch<const N: usize>(state: &State<N>, side: SideId) -> bool {
     lab_engine::turn::side_must_switch(state, side)
 }

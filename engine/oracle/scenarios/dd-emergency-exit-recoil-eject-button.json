@@ -1,5 +1,5 @@
 {
- "description": "Opus X unit B3 (refused by the engine): the only way to an active 0-HP Pokemon with switchFlag === true. Golisopod (Emergency Exit, 76/150 HP) Head Smashes Weak Armor Chansey (Eject Pack): Weak Armor's Defense drop sets the pack's eject flag; the recoil knocks Golisopod out (faint() clears its switchFlag) and then runEvent('EmergencyExit'), which has no HP guard after recoil, flags it again. At AfterMove Chansey's pack sees Golisopod's switchFlag === true through getAllActive() (the faint is not processed yet) and stays; Showdown then asks p1 to replace the fainted Golisopod mid-turn, and the pack is used when the replacement switches in.",
+ "description": "Opus DD unit B27: Golisopod (Emergency Exit, 76/150 HP) Head Smashes Chansey (Eject Button; Harden first). In Champions' hit loop the recoil comes before AfterMoveSecondary: the recoil knocks Golisopod out and Emergency Exit flags it (no HP guard), so Chansey's Eject Button sees Golisopod's `switchFlag === true` through `getAllActive()` (its faint is not processed yet) and stays unused. Showdown then asks p1 to replace the fainted Golisopod mid-turn (Hariyama) before Snorlax moves; p2 is never asked. A crit knocks Chansey out too; a miss (80% accuracy) does nothing.",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [
@@ -14,7 +14,7 @@
  },
  "p2": {
   "team": [
-   {"species": "Chansey", "item": "Eject Pack", "ability": "Weak Armor", "nature": "Serious",
+   {"species": "Chansey", "item": "Eject Button", "ability": "Natural Cure", "nature": "Serious",
     "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
    {"species": "Swampert", "item": "", "ability": "Honey Gather", "nature": "Serious",
     "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},

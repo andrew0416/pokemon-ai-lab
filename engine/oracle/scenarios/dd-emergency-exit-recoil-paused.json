@@ -1,0 +1,101 @@
+{
+ "description": "Opus DD unit B27: `dd-emergency-exit-recoil-eject-pack` without mid-turn choices, so the turn stays paused at Showdown's mid-turn switch request for the fainted Golisopod that Emergency Exit flagged after its own recoil: p1's request is `switch` and p2's empty (`wait`), Snorlax's Harden still queued, Chansey's Eject Pack kept with its eject flag. A crit knocks Chansey out too; a miss (80% accuracy) ends the turn normally.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Golisopod",
+    "item": "",
+    "ability": "Emergency Exit",
+    "nature": "Serious",
+    "evs": {},
+    "moves": [
+     "Head Smash"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hariyama",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Chansey",
+    "item": "Eject Pack",
+    "ability": "Weak Armor",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Swampert",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "patch": {
+  "p1": {
+   "Golisopod": {
+    "hp": 76
+   }
+  }
+ },
+ "turn": {
+  "p1": "move headsmash 1, move harden",
+  "p2": "move harden, move harden"
+ }
+}

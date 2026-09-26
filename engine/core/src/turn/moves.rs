@@ -360,8 +360,8 @@ pub(crate) fn run_move<const N: usize>(
         return Ok(MoveStep::Done);
     }
     let id = super::lock::action_move_id(b.mon(pokemon), move_index);
-    // `setActiveMove`: set for the whole move, cleared when it ends. A Round's source effect
-    // gives the move that Round's `ignoreAbility` (`useMoveInner`: `move.ignoreAbility =
+    // `setActiveMove`: set for the whole move. A Round's source effect gives the move that
+    // Round's `ignoreAbility` (`useMoveInner`: `move.ignoreAbility =
     // sourceEffect.ignoreAbility`; the user's own Mold Breaker can still set it in ModifyMove).
     b.active_move = Some(ActiveMoveRef {
         user,
@@ -372,8 +372,11 @@ pub(crate) fn run_move<const N: usize>(
         infiltrates: false,
         parental_bond: false,
     });
+    // A finished move leaves its active move set (none after a failure's
+    // `clearActiveMove(true)`): Showdown clears it with `runAction`'s `clearActiveMove()`, after
+    // the phazing step, which the turn engine runs next (`drag_outs`, Opus DD unit B26).
     let result = run_move_inner(b, user, move_index, target_loc, will_act, round_source);
-    if !matches!(result, Ok(MoveStep::Suspended(_))) {
+    if result.is_err() {
         b.active_move = None;
     }
     result
@@ -562,8 +565,8 @@ pub(crate) fn resume_move<const N: usize>(
     handlers::on_after_move(b, user, pokemon, &mv);
     run_move_tail(b, user, &mv)?;
     // The action's `clearActiveMove()`: `battle.lastMove` (a multi-hit move is never called).
+    // The active move itself stays set through the phazing step (`drag_outs`), which clears it.
     b.record_battle_last_move(mv.id);
-    b.active_move = None;
     Ok(MoveStep::Done)
 }
 
@@ -618,6 +621,10 @@ fn dance<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> Result<(), Tur
         return Ok(());
     }
     let dancers = ability_events::dancers(b, active.pokemon)?;
+    // Showdown's `activeMove` once the copies are done: the last copy's (none if its BeforeMove
+    // stopped it: `clearActiveMove(true)`), until the action's `clearActiveMove()` after the
+    // phazing step; the user's own without a copy.
+    let mut last = Some(active);
     for (dancer, pokemon) in dancers {
         if b.faint_messages(true)? {
             break;
@@ -631,8 +638,9 @@ fn dance<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> Result<(), Tur
             user
         };
         run_external_move(b, dancer, active.id, loc_of(dancer, aim))?;
+        last = b.active_move;
     }
-    b.active_move = Some(active);
+    b.active_move = last;
     Ok(())
 }
 
@@ -704,10 +712,13 @@ fn run_external_move<const N: usize>(
             b.remove_volatile(user, Volatile::TwoTurnMove);
         }
         ability_events::charge_after_move(b, user, mv.id, mv.move_type);
+        // `clearActiveMove(true)`: no active move is left for the action's phazing step.
+        b.active_move = None;
         return Ok(());
     }
     if handlers::before_move_callback(b, user, &mv) {
         b.set_move_result(user, MoveResult::Failed);
+        b.active_move = None;
         return Ok(());
     }
     let no_lock = !b.volatile(user, Volatile::LockedMove).active;
@@ -811,12 +822,15 @@ fn run_move_inner<const N: usize>(
         }
         // MoveAborted (the move's type before ModifyType): Charge ends on an Electric move.
         ability_events::charge_after_move(b, user, mv.id, mv.move_type);
+        // `clearActiveMove(true)`.
+        b.active_move = None;
         return Ok(MoveStep::Done);
     }
     // The move's `beforeMoveCallback` (Focus Punch after losing focus): the move is not used
-    // (no PP, no `lastMove`, no MoveAborted) and counts as failed.
+    // (no PP, no `lastMove`, no MoveAborted) and counts as failed (`clearActiveMove(true)`).
     if handlers::before_move_callback(b, user, &mv) {
         b.set_move_result(user, MoveResult::Failed);
+        b.active_move = None;
         return Ok(MoveStep::Done);
     }
 
@@ -1657,7 +1671,7 @@ fn use_move_tail<const N: usize>(
         // MoveFail: High Jump Kick's crash.
         handlers::on_move_fail(b, user, mv);
         if checks_user {
-            user_emergency_exit(b, user, hp_before)?;
+            user_emergency_exit(b, user, hp_before);
         }
         return Ok(());
     }
@@ -1674,7 +1688,7 @@ fn use_move_tail<const N: usize>(
         // so the item handlers above never acted when it can).
         ability_events::magician(b, user, mv.id, hit_target_slots::<N>(mv.hit_targets))?;
         if checks_user {
-            user_emergency_exit(b, user, hp_before)?;
+            user_emergency_exit(b, user, hp_before);
         }
     }
     Ok(())
@@ -2657,7 +2671,7 @@ fn hit_loop<const N: usize>(
     // `directDamage` (which no Damage handler sees: Rock Head, Magic Guard, Endure, Sturdy) or
     // a `recoil` move's, then Emergency Exit on the user.
     if total > 0 {
-        apply_recoil_damage(b, user, mv, total)?;
+        apply_recoil_damage(b, user, mv, total);
     }
     // `gotAttacked` and `timesAttacked` (`hit - 1` = the hits made) for the last hit's
     // targets other than the user (after a later multi-accuracy miss, the previous hit's).
@@ -3241,7 +3255,7 @@ fn hit_substitute<const N: usize>(
         b.set_substitute_hp(target, (sub_hp - damage) as i16);
     }
     if damage != 0 {
-        apply_recoil_damage(b, user, mv, damage)?;
+        apply_recoil_damage(b, user, mv, damage);
     }
     if let Some(drain) = mv.data.drain {
         let amount = (f64::from(damage) * f64::from(drain.0) / f64::from(drain.1)).ceil();
@@ -3262,9 +3276,9 @@ fn apply_recoil_damage<const N: usize>(
     user: SlotRef,
     mv: &ActiveMove,
     damage: i32,
-) -> Result<(), TurnError> {
+) {
     let Some(pokemon) = b.alive(user) else {
-        return Ok(());
+        return;
     };
     let (hp_before, max_hp) = (b.mon(pokemon).hp, b.mon(pokemon).max_hp);
     if mv.data.struggle_recoil {
@@ -3281,44 +3295,30 @@ fn apply_recoil_damage<const N: usize>(
             .max(1.0);
         b.damage(user, amount, DamageSource::Recoil);
     } else {
-        return Ok(());
+        return;
     }
-    user_emergency_exit(b, user, hp_before)
+    user_emergency_exit(b, user, hp_before);
 }
 
 /// `if (pokemon.hp <= pokemon.maxhp / 2 && hpBefore > pokemon.maxhp / 2)
 /// runEvent('EmergencyExit', pokemon, pokemon)` for the move's user after its recoil
 /// (`applyRecoilDamage`), a MoveFail crash or AfterMoveSecondarySelf (Life Orb) in
 /// `useMoveInner`. Unlike the other Emergency Exit sites there is no `pokemon.hp` guard: a user
-/// the recoil knocked out is still flagged, and Showdown then asks for a mid-turn switch of the
-/// fainted Pokémon, which the engine does not model (unsupported). A crash or Life Orb never
-/// knocks out from above half. This is also the only way to an active Pokémon at 0 HP with
-/// `switchFlag === true`, which the `getAllActive()` checks of Eject Button and Eject Pack would
-/// see (oracle `x-switchflag-unprocessed-faint`: the pack stays at AfterMove); lifting the
-/// refusal needs those checks (`items::eject_pack_use`) to include such a Pokémon.
-fn user_emergency_exit<const N: usize>(
-    b: &mut Battle<'_, N>,
-    user: SlotRef,
-    hp_before: i16,
-) -> Result<(), TurnError> {
+/// the recoil knocked out (`faint()` already cleared its flag) is flagged again (a crash or
+/// Life Orb never knocks out from above half). It is then an active Pokémon at 0 HP with
+/// `switchFlag === true` until its faint is processed, which the `getAllActive()` checks of
+/// Eject Button and Eject Pack see ([`Battle::any_active_switch_flag_true`]); the fainted
+/// Pokémon keeps the flag, and Showdown asks for its replacement mid-turn
+/// ([`crate::state::Slot::must_switch_out`]; oracle `dd-emergency-exit-recoil-eject-pack`).
+fn user_emergency_exit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, hp_before: i16) {
     let Some(pokemon) = b.occupant(user) else {
-        return Ok(());
+        return;
     };
     let mon = b.mon(pokemon);
     let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
-    if !(2 * hp <= max_hp && 2 * i32::from(hp_before) > max_hp) {
-        return Ok(());
-    }
-    if hp > 0 {
+    if 2 * hp <= max_hp && 2 * i32::from(hp_before) > max_hp {
         super::switching::emergency_exit(b, user);
-    } else if super::switching::emergency_exit_acts(b, user) {
-        return Err(b.unsupported(format!(
-            "{}: Emergency Exit on a user its recoil knocked out (Showdown asks for a mid-turn \
-             switch of the fainted Pokémon)",
-            mon.species.data().name
-        )));
     }
-    Ok(())
 }
 
 /// `secondaries()` for a target whose substitute took the hit: `ModifySecondaries` runs without
