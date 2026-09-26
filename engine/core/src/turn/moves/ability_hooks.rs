@@ -448,7 +448,8 @@ pub(super) fn on_try_hit<const N: usize>(
 /// [`on_damaging_hit`] (`u32::MAX`: no order, after every ordered handler), or `None`. Rough
 /// Skin, Iron Barbs and Rattled are handled by `moves::damaging_hit` itself.
 pub(super) fn damaging_hit_order(ability: AbilityId) -> Option<u32> {
-    const HANDLED: [AbilityId; 24] = [
+    const HANDLED: [AbilityId; 25] = [
+        abilities::SPICY_SPRAY,
         abilities::CURSED_BODY,
         abilities::TOXIC_DEBRIS,
         abilities::PERISH_BODY,
@@ -534,6 +535,13 @@ pub(super) fn on_damaging_hit<const N: usize>(
                     _ => Status::Poison,
                 };
                 b.try_set_status_from(attacker, status, Some(holder));
+            }
+        }
+        // Spicy Spray (Mega Scovillain): `source.trySetStatus('brn', target)` on every damaging
+        // hit, contact or not.
+        a if a == abilities::SPICY_SPRAY => {
+            if attacker_statusable {
+                b.try_set_status_from(attacker, Status::Burn, Some(holder));
             }
         }
         // Effect Spore: contact and `source.runStatusImmunity('powder')`, then `this.random(100)`:

@@ -1105,6 +1105,10 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // Damp: `onAnyTryMove` in `moves::ability_hooks::on_try_move`, `onAnyDamage` (Aftermath
     // only) in `ability_hooks::on_damaging_hit`.
     (abilities::DAMP, &["onAnyDamage", "onAnyTryMove"]),
+    // Champions Mega abilities: Spicy Spray (`ability_hooks::on_damaging_hit`), Healer (Champions
+    // 1/2 `onResidual` in `residual.rs`).
+    (abilities::SPICY_SPRAY, &["onDamagingHit"]),
+    (abilities::HEALER, &["onResidual"]),
     (abilities::MOXIE, &["onSourceAfterFaint"]),
     (abilities::CHILLING_NEIGH, &["onSourceAfterFaint"]),
     (abilities::GRIM_NEIGH, &["onSourceAfterFaint"]),
