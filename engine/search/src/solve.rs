@@ -62,6 +62,10 @@ pub struct Config {
     pub exact_lines: bool,
     /// Stop with [`SearchError::Budget`] after this many turn enumerations.
     pub max_turns: Option<u64>,
+    /// Worker threads for the payoff matrix ([`Solver::analyse_mixed`], and [`Solver::analyse`]
+    /// with `exact_lines`); 0 uses the machine's parallelism. Each thread works on its own
+    /// copy of the state; the result does not depend on the count.
+    pub threads: usize,
 }
 
 impl Config {
@@ -80,7 +84,18 @@ impl Config {
             rolls: RollMode::Extremes,
             exact_lines: false,
             max_turns: None,
+            threads: 0,
         }
+    }
+
+    /// The thread count to use for `rows` independent rows.
+    pub fn worker_threads(&self, rows: usize) -> usize {
+        let n = if self.threads == 0 {
+            std::thread::available_parallelism().map_or(1, |n| n.get())
+        } else {
+            self.threads
+        };
+        n.clamp(1, rows.max(1))
     }
 }
 
@@ -143,7 +158,7 @@ pub struct Solver<'e, const N: usize, E: Evaluator<N> + ?Sized> {
     turns: u64,
 }
 
-impl<'e, const N: usize, E: Evaluator<N> + ?Sized> Solver<'e, N, E> {
+impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
     pub fn new(config: Config, evaluator: &'e E) -> Self {
         Solver {
             config,
@@ -188,6 +203,34 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized> Solver<'e, N, E> {
             };
             let mut best = f32::NEG_INFINITY;
             let mut new_lines = Vec::with_capacity(ours.len());
+            let threads = self.config.worker_threads(ours.len());
+            if self.config.exact_lines && threads > 1 {
+                // Every row is valued in full, so the rows are independent: the payoff matrix
+                // in parallel, then each line is its row's minimum.
+                let values = self.parallel_matrix(
+                    state, suspension, decision, &ours, &theirs, next_depth, threads,
+                )?;
+                for (r, &a) in ours.iter().enumerate() {
+                    let row = &values[r * theirs.len()..(r + 1) * theirs.len()];
+                    let (c, &worst) = row.iter().enumerate().fold((0, &f32::INFINITY), |m, x| {
+                        if x.1 < m.1 {
+                            x
+                        } else {
+                            m
+                        }
+                    });
+                    new_lines.push(Line {
+                        ours: a,
+                        value: worst,
+                        exact: true,
+                        reply: Some(theirs[c]),
+                    });
+                }
+                new_lines.sort_by(|x, y| y.value.total_cmp(&x.value));
+                ours = new_lines.iter().map(|l| l.ours).collect();
+                lines = new_lines;
+                continue;
+            }
             for &a in &ours {
                 let alpha = if self.config.exact_lines {
                     f32::NEG_INFINITY
@@ -415,6 +458,9 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized> Solver<'e, N, E> {
     }
 }
 
+/// One worker's rows of the payoff matrix with its node and turn counts.
+type RowValues = (Vec<f32>, u64, u64);
+
 /// The root decision solved as a zero-sum matrix game over both sides' choices, each pair
 /// valued by the exact chance node below it (deeper nodes by maximin as in [`Analysis`]).
 #[derive(Clone, Debug, PartialEq)]
@@ -461,7 +507,7 @@ impl<const N: usize> MixedAnalysis<N> {
     }
 }
 
-impl<'e, const N: usize, E: Evaluator<N> + ?Sized> Solver<'e, N, E> {
+impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
     /// Values every pair of choices at the root exactly (no cutoffs) and solves the matrix
     /// game by regret matching. `state` is left unchanged. Costs `ours × theirs` chance nodes,
     /// each with the full subtree of depth `config.depth - 1`.
@@ -486,22 +532,30 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized> Solver<'e, N, E> {
         } else {
             depth
         };
-        let mut values = Vec::with_capacity(ours.len() * theirs.len());
-        for &a in &ours {
-            for &b in &theirs {
-                let pair = self.pair(a, b);
-                let v = self.chance(
-                    state,
-                    decision,
-                    suspension,
-                    pair,
-                    next_depth,
-                    f32::NEG_INFINITY,
-                    f32::INFINITY,
-                )?;
-                values.push(v);
+        let threads = self.config.worker_threads(ours.len());
+        let values = if threads > 1 {
+            self.parallel_matrix(
+                state, suspension, decision, &ours, &theirs, next_depth, threads,
+            )?
+        } else {
+            let mut values = Vec::with_capacity(ours.len() * theirs.len());
+            for &a in &ours {
+                for &b in &theirs {
+                    let pair = self.pair(a, b);
+                    let v = self.chance(
+                        state,
+                        decision,
+                        suspension,
+                        pair,
+                        next_depth,
+                        f32::NEG_INFINITY,
+                        f32::INFINITY,
+                    )?;
+                    values.push(v);
+                }
             }
-        }
+            values
+        };
         let matrix = Matrix::new(ours.len(), theirs.len(), values);
         let equilibrium = nash::solve(&matrix, 20_000, 0.01);
         let maximin = matrix.maximin();
@@ -517,5 +571,64 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized> Solver<'e, N, E> {
             turns: self.turns,
             elapsed: started.elapsed(),
         })
+    }
+
+    /// The payoff matrix (`ours × theirs`, row-major, exact chance values) computed by
+    /// `threads` workers on their own copies of the state; node and turn counts are summed.
+    #[allow(clippy::too_many_arguments)]
+    fn parallel_matrix(
+        &mut self,
+        state: &State<N>,
+        suspension: Option<&Suspension>,
+        decision: Decision,
+        ours: &[Choice<N>],
+        theirs: &[Choice<N>],
+        depth: u32,
+        threads: usize,
+    ) -> Result<Vec<f32>, SearchError> {
+        let config = self.config;
+        let evaluator = self.evaluator;
+        let chunk = ours.len().div_ceil(threads.max(1)).max(1);
+        let results: Vec<Result<RowValues, SearchError>> = std::thread::scope(|scope| {
+            let handles: Vec<_> = ours
+                .chunks(chunk)
+                .map(|rows| {
+                    let mut local_state = state.clone();
+                    let suspension = suspension.cloned();
+                    scope.spawn(move || {
+                        let mut local = Solver::new(config, evaluator);
+                        let mut values = Vec::with_capacity(rows.len() * theirs.len());
+                        for &a in rows {
+                            for &b in theirs {
+                                let pair = local.pair(a, b);
+                                let v = local.chance(
+                                    &mut local_state,
+                                    decision,
+                                    suspension.as_ref(),
+                                    pair,
+                                    depth,
+                                    f32::NEG_INFINITY,
+                                    f32::INFINITY,
+                                )?;
+                                values.push(v);
+                            }
+                        }
+                        Ok((values, local.nodes, local.turns))
+                    })
+                })
+                .collect();
+            handles
+                .into_iter()
+                .map(|h| h.join().expect("a search thread panicked"))
+                .collect()
+        });
+        let mut values = Vec::with_capacity(ours.len() * theirs.len());
+        for result in results {
+            let (v, nodes, turns) = result?;
+            values.extend(v);
+            self.nodes += nodes;
+            self.turns += turns;
+        }
+        Ok(values)
     }
 }

@@ -5,6 +5,7 @@
 //!                 [--before <oracle-report.json>] [--top k] [--exact] [--all-targets]
 //!                 [--max-turns n] [--rolls full|extremes|quartiles|median|pessimistic]
 //!                 [--eval material|heuristic] [--position i] [--solve maximin|nash]
+//!                 [--threads n]
 //!
 //! The position is the scenario's (after switch-ins, setup turns and patch); with several
 //! initial states `--before` picks the one matching an oracle report, as `lab-turn` does.
@@ -138,6 +139,13 @@ fn run() -> Result<(), String> {
                     _ => return Err("--solve needs maximin or nash".into()),
                 };
             }
+            "--threads" => {
+                i += 1;
+                config.threads = args
+                    .get(i)
+                    .and_then(|s| s.parse().ok())
+                    .ok_or("--threads needs a number")?;
+            }
             "--exact" => config.exact_lines = true,
             "--all-targets" => config.pruning = Pruning::All,
             other if scenario.is_none() => scenario = Some(other.to_owned()),
@@ -171,7 +179,7 @@ fn run() -> Result<(), String> {
         roster(&loaded, &position, them)
     );
 
-    let evaluator: Box<dyn Evaluator<2>> = if eval == "material" {
+    let evaluator: Box<dyn Evaluator<2> + Sync> = if eval == "material" {
         Box::new(Material)
     } else {
         Box::new(Heuristic)
