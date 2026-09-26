@@ -6,13 +6,16 @@
 //!                 [--max-turns n] [--rolls full|extremes|quartiles|median|pessimistic]
 //!                 [--eval material|heuristic|file:<weights.json>] [--position i]
 //!                 [--solve maximin|nash|deep] [--dump-children <out.jsonl> [--beam b] [--outcomes k]]
-//!                 [--believed-team <team.json>]
+//!                 [--believed-team <team.json>]... [--believed-weight w1,w2,...]
 //!
 //! `--believed-team` is opponent model ③ at one turn (DESIGN.md): the opponent solves the
 //! matrix game on the team it believes we have (the same species, moves and order as ours, but
 //! the spreads, items and abilities it assumes) and plays that equilibrium strategy; our
 //! choices are then valued on the real position against it. The gap to the real equilibrium is
-//! what the concealed sets are worth this turn.
+//! what the concealed sets are worth this turn. Several `--believed-team` files with
+//! `--believed-weight` make a belief: the opponent's strategy is the weighted mixture of its
+//! equilibrium strategies on each believed position (no observation update yet; DESIGN.md
+//! "모델 ③·② 구현").
 //!                 [--threads n] [--plan "<turn 1> / <turn 2> / ..."]
 //!                 [--child-nash [--beam b] [--outcomes k]]
 //!
@@ -71,7 +74,8 @@ fn run() -> Result<(), String> {
     let mut solve = "maximin".to_owned();
     let mut plan: Option<String> = None;
     let mut dump_children: Option<String> = None;
-    let mut believed_team: Option<String> = None;
+    let mut believed_teams: Vec<String> = Vec::new();
+    let mut believed_weights: Vec<f32> = Vec::new();
     let mut pessimistic = false;
     let mut config = Config::new(Ruleset::CHAMPIONS_MC, us);
     let mut i = 0;
@@ -173,11 +177,20 @@ fn run() -> Result<(), String> {
             }
             "--believed-team" => {
                 i += 1;
-                believed_team = Some(
+                believed_teams.push(
                     args.get(i)
                         .cloned()
                         .ok_or("--believed-team needs a team file")?,
                 );
+            }
+            "--believed-weight" => {
+                i += 1;
+                let text = args.get(i).ok_or("--believed-weight needs w1,w2,...")?;
+                believed_weights = text
+                    .split(',')
+                    .map(|w| w.trim().parse::<f32>())
+                    .collect::<Result<Vec<f32>, _>>()
+                    .map_err(|e| format!("--believed-weight: {e}"))?;
             }
             "--threads" => {
                 i += 1;
@@ -253,22 +266,53 @@ fn run() -> Result<(), String> {
         Box::new(Heuristic)
     };
     let mut solver = Solver::new(config, evaluator.as_ref());
-    if let Some(team_path) = &believed_team {
-        // The believed position: the same scenario with our side's team file replaced.
-        let believed =
-            believed_position(&scenario, us, team_path, before.as_deref(), position_index)?;
-        let mut believed_state = believed.state.clone();
-        let mixed = solver
-            .analyse_mixed(&mut believed_state, None)
-            .map_err(|e| format!("believed position: {e}"))?;
-        let their_strategy: Vec<(Choice<2>, f32)> = mixed
-            .theirs
-            .iter()
-            .zip(&mixed.equilibrium.cols)
-            .map(|(c, &p)| (*c, p))
-            .collect();
+    if !believed_teams.is_empty() {
+        // Opponent model ③ with a belief: for each believed team (the same scenario with our
+        // side's team file replaced) the opponent's equilibrium strategy; the mixture by weight
+        // is what it plays; our best response is valued on the real position.
+        let weights: Vec<f32> = if believed_weights.is_empty() {
+            vec![1.0 / believed_teams.len() as f32; believed_teams.len()]
+        } else if believed_weights.len() == believed_teams.len() {
+            let total: f32 = believed_weights.iter().sum();
+            if total <= 0.0 {
+                return Err("--believed-weight must sum to a positive number".into());
+            }
+            believed_weights.iter().map(|w| w / total).collect()
+        } else {
+            return Err("--believed-weight needs one weight per --believed-team".into());
+        };
+        let mut mixture: Vec<(Choice<2>, f32)> = Vec::new();
+        let mut believed_values = Vec::new();
+        let mut dropped: Vec<String> = Vec::new();
+        let mut reference: Option<(Vec<Choice<2>>, Position, Decision)> = None;
+        for (team_path, &w) in believed_teams.iter().zip(&weights) {
+            let believed =
+                believed_position(&scenario, us, team_path, before.as_deref(), position_index)?;
+            let mut believed_state = believed.state.clone();
+            let mixed = solver
+                .analyse_mixed(&mut believed_state, None)
+                .map_err(|e| format!("believed position {team_path}: {e}"))?;
+            believed_values.push((team_path.clone(), w, mixed.equilibrium.value));
+            dropped.extend(mixed.unsupported.iter().cloned());
+            match &reference {
+                None => reference = Some((mixed.theirs.clone(), believed.clone(), mixed.decision)),
+                Some((theirs, _, _)) if *theirs != mixed.theirs => {
+                    return Err(format!(
+                        "believed team {team_path}: the opponent's choice list differs from the first believed team's (different species, moves or order); the beliefs must share it"
+                    ));
+                }
+                Some(_) => {}
+            }
+            for (c, &p) in mixed.theirs.iter().zip(&mixed.equilibrium.cols) {
+                match mixture.iter_mut().find(|(x, _)| x == c) {
+                    Some(entry) => entry.1 += w * p,
+                    None => mixture.push((*c, w * p)),
+                }
+            }
+        }
+        let (_, believed, believed_decision) = reference.expect("at least one believed team");
         let response = solver
-            .best_response(&mut state, None, &their_strategy)
+            .best_response(&mut state, None, &mixture)
             .map_err(|e| e.to_string())?;
         if state != position.state {
             return Err("the solver changed the position (bug)".into());
@@ -277,8 +321,7 @@ fn run() -> Result<(), String> {
             .analyse_mixed(&mut state, None)
             .map_err(|e| e.to_string())?;
         println!(
-            "opponent model 3: their equilibrium on the believed team ({team_path}; value {:+.1} from our side there), answered on the real position; real equilibrium {:+.1}; chance {:?}, rolls {:?}, eval {eval}: {} nodes, {} enumerations, {:.2} s",
-            mixed.equilibrium.value,
+            "opponent model 3: their equilibrium strategies on the believed teams, mixed by weight, answered on the real position; real equilibrium {:+.1}; chance {:?}, rolls {:?}, eval {eval}: {} nodes, {} enumerations, {:.2} s",
             real.equilibrium.value,
             config.chance,
             config.rolls,
@@ -286,12 +329,24 @@ fn run() -> Result<(), String> {
             response.turns,
             response.elapsed.as_secs_f64()
         );
-        println!("their strategy (from the believed matchup, >= 1%):");
-        for (choice, p) in mixed.their_support(0.01).iter().take(top) {
+        for (team_path, w, value) in &believed_values {
+            println!(
+                "  belief {:>5.1}%  {team_path}: equilibrium there {value:+.1} (from our side)",
+                w * 100.0
+            );
+        }
+        println!("their mixed strategy (>= 1%):");
+        let mut shown: Vec<(Choice<2>, f32)> = mixture
+            .iter()
+            .filter(|(_, p)| *p >= 0.01)
+            .copied()
+            .collect();
+        shown.sort_by(|a, b| b.1.total_cmp(&a.1));
+        for (choice, p) in shown.iter().take(top) {
             println!(
                 "  {:>5.1}%  {}",
                 p * 100.0,
-                describe(&believed, mixed.decision, them, choice)
+                describe(&believed, believed_decision, them, choice)
             );
         }
         println!(
@@ -307,9 +362,12 @@ fn run() -> Result<(), String> {
                 describe(&position, response.decision, us, choice)
             );
         }
-        if !response.unsupported.is_empty() || !mixed.unsupported.is_empty() {
+        if !response.unsupported.is_empty() || !dropped.is_empty() {
             println!("dropped pairs reaching effects the engine does not implement:");
-            for why in response.unsupported.iter().chain(&mixed.unsupported) {
+            let mut all: Vec<&String> = response.unsupported.iter().chain(&dropped).collect();
+            all.sort();
+            all.dedup();
+            for why in all {
                 println!("  - {why}");
             }
         }

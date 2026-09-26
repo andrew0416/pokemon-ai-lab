@@ -150,6 +150,7 @@ D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls m
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --plan "move hypnosis 1, move fakeout 2" --child-nash --beam 6 --outcomes 4   # 플랜 뒤 국면을 다음 턴 균형으로(수십 초)
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --solve deep --beam 6 --outcomes 4   # 깊이 2 근사(빔 6×6, 실전 파티 약 4.5분)
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --believed-team teams/rillaboom-slot-20260920/gardevoir-braverilla.believed-standard.json   # 상대 모델 ③: 상대가 믿는 우리 팀에서 푼 상대 전략 vs 실제 국면의 우리 최적 응답
+D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --believed-team a.json --believed-team b.json --believed-weight 0.7,0.3   # 믿음 분포(가중 혼합)
 python engine/scripts/fit_eval.py runs/plan-20260926/fit/*.jsonl --out runs/plan-20260926/fit/weights.json   # lab-plan --dump-children 결과로 평가 가중치 적합
 LAB_ENGINE_STATS=1 D:/cargo-target/release/lab-turn.exe <scenario> --position 1 --rolls median   # 단계별 프런티어·재실행 수·시간
 D:/cargo-target/release/lab-turn.exe <scenario> --rolls median      # full|extremes|quartiles|median|pessimistic-p1|pessimistic-p2
