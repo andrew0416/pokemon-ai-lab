@@ -3397,8 +3397,10 @@ fn get_damage<const N: usize>(
     );
     // ModifyDef / ModifySpD: sandstorm (Rock SpD) and snow (Ice Def), 1.5x applied directly.
     // `WeatherModifyDamage` reads `defender.effectiveWeather()` (Utility Umbrella hides sun and
-    // rain; sand and snow are the same for everyone).
-    let weather = b.weather_for(target);
+    // rain; sand and snow are the same for everyone). The readers are the weathers' handlers, so
+    // a Mega Sol user sees sun ([`Battle::move_weather`]): no sand / snow defense, and Mega Sol's
+    // own `onWeatherModifyDamage` (priority 1, a fast exit) applies sun's modifier once.
+    let weather = b.move_weather(target);
     if defense_stat == Stat::Spd && weather == Weather::Sand && defender.types.contains(&Type::Rock)
     {
         defense = modify(defense, MOD_ONE_POINT_FIVE);

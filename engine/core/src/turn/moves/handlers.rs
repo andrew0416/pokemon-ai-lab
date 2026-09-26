@@ -22,18 +22,15 @@ use super::super::queue::{Action, ActionKind};
 use super::super::TurnError;
 use super::{ActiveMove, Guard};
 
-/// Showdown `pokemon.effectiveWeather()` of `holder` while `user` is the Pokémon using a
-/// move: Utility Umbrella hides sun and rain from its holder. Mega Sol (every move of its
-/// holder sees sun) is not implemented.
+/// Showdown `pokemon.effectiveWeather()` of `holder` read by a move's handler while `user` is
+/// the Pokémon using it ([`Battle::move_weather`]): Utility Umbrella hides sun and rain from
+/// its holder, and a Mega Sol user sees sun.
 fn effective_weather<const N: usize>(
     b: &Battle<'_, N>,
-    user: SlotRef,
+    _user: SlotRef,
     holder: SlotRef,
 ) -> Result<Weather, TurnError> {
-    if b.ability(user) == abilities::MEGA_SOL {
-        return Err(b.unsupported("Mega Sol's weather for moves"));
-    }
-    Ok(b.weather_for(holder))
+    Ok(b.move_weather(holder))
 }
 
 /// The move's `onModifyType` (`useMoveInner`, right before its `onModifyMove`).
@@ -1565,10 +1562,10 @@ pub(super) fn on_base_power<const N: usize>(
             Some(2 * 4096)
         }
         // Solar Beam, Solar Blade: half power in rain, sand and snow (`pokemon.effectiveWeather()`,
-        // which Utility Umbrella changes).
+        // which Utility Umbrella and Mega Sol change).
         moves::SOLAR_BEAM | moves::SOLAR_BLADE
             if matches!(
-                b.weather_for(user),
+                b.move_weather(user),
                 Weather::Rain | Weather::HeavyRain | Weather::Sand | Weather::Snow
             ) =>
         {
@@ -1867,12 +1864,15 @@ pub(super) fn charge_try_move<const N: usize>(
         up[1] = 1;
         b.boost_by(user, &up, Some(user), BoostEffect::Move(mv.id));
     }
-    let weather = b.weather_for(user);
+    // `attacker.effectiveWeather(undefined, true)`: Mega Sol's sun for Solar Beam and Solar
+    // Blade, not for Electro Shot (`sourceEffect.id !== 'electroshot'`).
     let skip = match mv.id {
         i if i == moves::SOLAR_BEAM || i == moves::SOLAR_BLADE => {
-            matches!(weather, Weather::Sun | Weather::HarshSun)
+            matches!(b.move_weather(user), Weather::Sun | Weather::HarshSun)
         }
-        i if i == moves::ELECTRO_SHOT => matches!(weather, Weather::Rain | Weather::HeavyRain),
+        i if i == moves::ELECTRO_SHOT => {
+            matches!(b.weather_for(user), Weather::Rain | Weather::HeavyRain)
+        }
         _ => false,
     };
     if skip {

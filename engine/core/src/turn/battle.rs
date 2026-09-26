@@ -472,10 +472,15 @@ impl<'a, const N: usize> Battle<'a, N> {
             return overcoat;
         }
         if immunity == TypeImmunities::FRZ {
-            // Harsh sunlight (`sunnyday.onImmunity`, hidden by Utility Umbrella) and Magma
-            // Armor (breakable).
-            return matches!(self.weather_for(slot), Weather::Sun | Weather::HarshSun)
-                || self.ability_unless_broken(slot) == abilities::MAGMA_ARMOR;
+            // Harsh sunlight (`sunnyday.onImmunity`, only while the field's weather is sun:
+            // `pokemon.effectiveWeather() === 'sunnyday'`, which Utility Umbrella hides and a
+            // Mega Sol user's move shows, `Battle::move_weather`) and Magma Armor (breakable).
+            let sun = match self.effective_weather() {
+                Weather::Sun => self.move_weather(slot) == Weather::Sun,
+                Weather::HarshSun => self.move_weather(slot) == Weather::HarshSun,
+                _ => false,
+            };
+            return sun || self.ability_unless_broken(slot) == abilities::MAGMA_ARMOR;
         }
         // Ice Body's `onImmunity('hail')`: hail is not a supported weather.
         false

@@ -2128,6 +2128,10 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         abilities::PARENTAL_BOND,
         &["onPrepareHit", "onSourceModifySecondaries"],
     ),
+    // Opus AA unit 6. Mega Sol: `onWeatherModifyDamage` and its `effectiveWeather()` override
+    // (`Battle::move_weather`: the damage modifier and sand / snow defense in
+    // `moves::get_damage`, the move handlers, sun's freeze immunity).
+    (abilities::MEGA_SOL, &["onWeatherModifyDamage"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

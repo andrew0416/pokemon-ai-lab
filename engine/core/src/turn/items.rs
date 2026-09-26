@@ -86,13 +86,13 @@ pub(crate) fn inert_start(item: ItemId) -> bool {
 impl<const N: usize> Battle<'_, N> {
     /// Showdown `pokemon.effectiveWeather()` for the Pokémon in `slot`: the field's
     /// [`Battle::effective_weather`], except that Utility Umbrella hides sun and rain (and
-    /// their primal forms) from its holder. Sandstorm and snow are unaffected. (Mega Sol, which
-    /// makes its holder's moves see sun, is refused on the field.) Every per-Pokémon weather
-    /// effect reads this: the damage modifier (the defender's), Chlorophyll / Swift Swim, Solar
-    /// Power, Rain Dish, Dry Skin, Hydration, Leaf Guard, sun's freeze immunity and the move
-    /// handlers (Weather Ball, Thunder, Hurricane, Morning Sun...); effects that read the field
-    /// (`field.isWeather`: Sand Rush, Slush Rush, Blizzard, Aurora Veil, Shore Up, sandstorm
-    /// damage) read [`Battle::effective_weather`].
+    /// their primal forms) from its holder. Sandstorm and snow are unaffected. Every
+    /// per-Pokémon weather effect reads this — Chlorophyll / Swift Swim, Solar Power, Rain Dish,
+    /// Dry Skin, Hydration, Leaf Guard — except where the reading effect is a move or a weather
+    /// (the damage modifier and sand / snow defense, sun's freeze immunity, the move handlers:
+    /// Weather Ball, Thunder, Hurricane, Morning Sun...), which read [`Battle::move_weather`]
+    /// (Mega Sol); effects that read the field (`field.isWeather`: Sand Rush, Slush Rush,
+    /// Blizzard, Aurora Veil, Shore Up, sandstorm damage) read [`Battle::effective_weather`].
     pub fn weather_for(&self, slot: SlotRef) -> Weather {
         let weather = self.effective_weather();
         let hidden = matches!(
@@ -103,6 +103,23 @@ impl<const N: usize> Battle<'_, N> {
             Weather::None
         } else {
             weather
+        }
+    }
+
+    /// Showdown `holder.effectiveWeather()` when the reading effect (`this.battle.effect`) is a
+    /// move or a weather: `if (this.battle.activePokemon?.hasAbility('megasol') && ...) return
+    /// 'sunnyday';` — while a Pokémon with Mega Sol (as it acts: not suppressed, still active)
+    /// is using a move, everyone's weather is sun for it, whatever the field's (even none or a
+    /// suppressed one) and before Utility Umbrella's check. Electro Shot's own charge check
+    /// (`sourceEffect.id !== 'electroshot'`) reads [`Battle::weather_for`] instead.
+    pub fn move_weather(&self, holder: SlotRef) -> Weather {
+        let mega_sol = self.active_move.is_some_and(|m| {
+            self.occupant(m.user) == Some(m.pokemon) && self.ability(m.user) == abilities::MEGA_SOL
+        });
+        if mega_sol {
+            Weather::Sun
+        } else {
+            self.weather_for(holder)
         }
     }
 
