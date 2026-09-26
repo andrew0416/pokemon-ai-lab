@@ -459,6 +459,39 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::JUNGLE_HEALING, &["onHit"]),
     (moves::LUNAR_BLESSING, &["onHit"]),
     (moves::FLORAL_HEALING, &["onHit"]),
+    // Salt Cure: the secondary's `saltcure` volatile, its `onResidual` (order 13) in
+    // `residual.rs`; `onStart` / `onEnd` only log.
+    (
+        moves::SALT_CURE,
+        &[
+            "condition.onEnd",
+            "condition.onResidual",
+            "condition.onStart",
+        ],
+    ),
+    // Magnet Rise: `onTry` in `handlers::on_try`, `onImmunity` (Ground) in
+    // `Battle::is_grounded`; 5 turns (residual order 18); `onStart` / `onEnd` only log.
+    (
+        moves::MAGNET_RISE,
+        &[
+            "condition.onEnd",
+            "condition.onImmunity",
+            "condition.onStart",
+            "onTry",
+        ],
+    ),
+    // Ingrain: `onResidual` (order 7) in `residual.rs`, `onTrapPokemon` in
+    // `conditions::trapped`, `onDragOut` in `conditions::drag_out_blocked`, grounding in
+    // `Battle::is_grounded`; `onStart` only logs.
+    (
+        moves::INGRAIN,
+        &[
+            "condition.onDragOut",
+            "condition.onResidual",
+            "condition.onStart",
+            "condition.onTrapPokemon",
+        ],
+    ),
     // Mean Look, Block, Spider Web: `onHit` adds `trapped` linked to the user's `trapper`
     // (`conditions::add_trap`, `remove_linked_volatiles`; the trap in `conditions::trapped`).
     (moves::MEAN_LOOK, &["onHit"]),

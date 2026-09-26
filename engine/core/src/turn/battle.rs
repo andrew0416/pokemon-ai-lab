@@ -281,10 +281,11 @@ impl<'a, const N: usize> Battle<'a, N> {
         self.state.side(side).effects[effect as usize].is_active()
     }
 
-    /// Showdown `isGrounded` for the supported effects, in its order: Gravity, Iron Ball,
-    /// Flying, Levitate, Air Balloon.
+    /// Showdown `isGrounded` for the supported effects, in its order: Gravity, Ingrain, Iron
+    /// Ball, Flying, Levitate, Magnet Rise, Air Balloon.
     pub fn is_grounded(&self, slot: SlotRef) -> bool {
-        if self.field_active(FieldEffect::Gravity) {
+        if self.field_active(FieldEffect::Gravity) || self.volatile(slot, Volatile::Ingrain).active
+        {
             return true;
         }
         let item = self.item(slot);
@@ -296,6 +297,9 @@ impl<'a, const N: usize> Battle<'a, N> {
         }
         // `hasAbility('levitate') && !suppressingAbility(this)`.
         if self.ability(slot) == abilities::LEVITATE && !self.suppressing_ability(slot) {
+            return false;
+        }
+        if self.volatile(slot, Volatile::MagnetRise).active {
             return false;
         }
         !super::items::lifts(item)

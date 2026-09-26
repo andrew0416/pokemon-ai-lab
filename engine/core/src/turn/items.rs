@@ -866,8 +866,11 @@ pub(crate) fn after_move_secondary<const N: usize>(
             return;
         }
         // `target.useItem(source)`, then `runEvent('DragOut', source, target, move)`: the
-        // attacker's own Suction Cups (never suppressed by its own move).
-        if b.use_item(target) && b.ability(user) != abilities::SUCTION_CUPS {
+        // attacker's own Suction Cups (never suppressed by its own move) or Ingrain.
+        if b.use_item(target)
+            && b.ability(user) != abilities::SUCTION_CUPS
+            && !super::conditions::drag_out_blocked(b, user)
+        {
             b.force_switch.push(user);
         }
         return;

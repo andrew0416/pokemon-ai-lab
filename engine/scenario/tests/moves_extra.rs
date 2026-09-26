@@ -191,3 +191,29 @@ fn mean_look_ends_when_the_trapper_faints() {
 fn no_retreat_of_a_trapped_user_only_boosts() {
     assert_exact_parity("no-retreat-trapped");
 }
+
+/// Salt Cure's residual: 1/8 on a Steel type, 1/16 on others (Champions).
+#[test]
+fn salt_cure_residual_by_type() {
+    assert_exact_parity("salt-cure");
+    assert_exact_parity("salt-cure-plain");
+}
+
+/// Magnet Rise makes its user immune to Ground moves for 5 turns.
+#[test]
+fn magnet_rise_lifts_its_user() {
+    assert_exact_parity("magnet-rise");
+}
+
+/// Ingrain grounds a Levitate user (Earth Power hits), makes Magnet Rise fail, heals 1/16.
+#[test]
+fn ingrain_grounds_and_blocks_magnet_rise() {
+    assert_exact_parity("ingrain-magnet-rise");
+}
+
+/// Ingrain stops Roar (no drag, no failure) and the holder's own switch.
+#[test]
+fn ingrain_stops_roar_and_switching() {
+    assert_exact_parity("ingrain-roar");
+    assert_trapped_parity("ingrain-roar");
+}

@@ -468,6 +468,9 @@ pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option
     if volatiles.has(Volatile::Trapped) {
         return Some(format!("{name} is trapped (Mean Look, Block, Spider Web)"));
     }
+    if volatiles.has(Volatile::Ingrain) {
+        return Some(format!("{name} is rooted by Ingrain"));
+    }
     let trap = volatiles.get(Volatile::PartiallyTrapped);
     if trap.active {
         let source = decode_pokemon(trap.counter);
@@ -481,6 +484,12 @@ pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option
         }
     }
     None
+}
+
+/// The conditions' `onDragOut` on the Pokémon in `slot`: Ingrain returns `null` (no drag, and
+/// the move does not fail). Suction Cups is checked by the callers.
+pub(crate) fn drag_out_blocked<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
+    b.volatile(slot, Volatile::Ingrain).active
 }
 
 /// Mean Look, Block, Spider Web `onHit`: `target.addVolatile('trapped', source, move,

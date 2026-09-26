@@ -39,6 +39,8 @@ enum Kind {
     Item(PokemonRef, SlotRef, ItemId),
     /// Leech Seed's `onResidual` (order 8; no duration).
     LeechSeed(PokemonRef, SlotRef),
+    /// The `onResidual` of a volatile without a duration: Ingrain (order 7), Salt Cure (13).
+    VolatileEffect(PokemonRef, SlotRef, Volatile),
     /// A slot condition's `onResidual` on the standing occupant (Wish order 4; Revival
     /// Blessing's duration), slot-condition sub-order 3.
     SlotCondition(PokemonRef, SlotRef, SlotCondition),
@@ -171,6 +173,14 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                         kind: Kind::LeechSeed(pokemon, slot),
                     });
                 }
+                if matches!(volatile, Volatile::Ingrain | Volatile::SaltCure) {
+                    out.push(Handler {
+                        order: volatile.residual_order().unwrap_or(ORDER_DEFAULT),
+                        speed,
+                        sub_order: SUB_CONDITION,
+                        kind: Kind::VolatileEffect(pokemon, slot, volatile),
+                    });
+                }
                 if state.duration > 0 {
                     out.push(Handler {
                         order: volatile.residual_order().unwrap_or(ORDER_DEFAULT),
@@ -279,6 +289,7 @@ impl Kind {
             | Kind::StatusCure(p, s, _)
             | Kind::Item(p, s, _)
             | Kind::LeechSeed(p, s)
+            | Kind::VolatileEffect(p, s, _)
             | Kind::SlotCondition(p, s, _) => Some((p, s)),
             Kind::Forme(p, s, _) => Some((p, s)),
             Kind::Weather | Kind::FieldDuration(_) | Kind::SideDuration(..) => None,
@@ -475,6 +486,27 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
                 return Ok(true);
             }
             conditions::leech_seed_residual(b, slot);
+        }
+        Kind::VolatileEffect(pokemon, slot, volatile) => {
+            // Skipped if the volatile ended since the handlers were collected.
+            if !still_active(b, pokemon, slot) || !b.volatile(slot, volatile).active {
+                return Ok(true);
+            }
+            let max_hp = f64::from(b.mon(pokemon).max_hp);
+            match volatile {
+                // Ingrain: `this.heal(pokemon.baseMaxhp / 16)`.
+                Volatile::Ingrain => {
+                    b.heal(slot, max_hp / 16.0);
+                }
+                // Salt Cure (Champions): `this.damage(pokemon.baseMaxhp / (pokemon.hasType(['Water',
+                // 'Steel']) ? 8 : 16))`.
+                Volatile::SaltCure => {
+                    let tougher = b.has_type(slot, Type::Water) || b.has_type(slot, Type::Steel);
+                    let divisor = if tougher { 8.0 } else { 16.0 };
+                    b.damage(slot, max_hp / divisor, DamageSource::Indirect);
+                }
+                _ => {}
+            }
         }
         Kind::Forme(pokemon, slot, ability) => {
             // Skipped if the ability changed since the handlers were collected.

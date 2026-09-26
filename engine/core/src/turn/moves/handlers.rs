@@ -182,6 +182,10 @@ pub(super) fn on_try<const N: usize>(
         // No Retreat: `if (source.volatiles['noretreat']) return false;` (its other branch,
         // `delete move.volatileStatus` for a `trapped` user, is [`keeps_volatile_status`]).
         moves::NO_RETREAT => !b.volatile(user, Volatile::NoRetreat).active,
+        // Magnet Rise: `if (target.volatiles['smackdown'] || target.volatiles['ingrain']) return
+        // false;` (on itself; Smack Down's volatile is not implemented; its Gravity branch is for
+        // the Z-Move, Gravity's BeforeMove already stops the move).
+        moves::MAGNET_RISE => !b.volatile(first_target, Volatile::Ingrain).active,
         // Rest: fails asleep or with Comatose, at full HP, and with Insomnia or Vital Spirit
         // (`hasAbility`: the user's own ability, never suppressed by its own move).
         moves::REST => b.slot_mon(user).is_some_and(|m| {

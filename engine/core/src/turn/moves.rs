@@ -2135,6 +2135,7 @@ fn spread_move_hit<const N: usize>(
                 || b.alive(user).is_none()
                 || super::residual::bench(b, t.side).next().is_none()
                 || b.ability_unless_broken(t) == abilities::SUCTION_CUPS
+                || conditions::drag_out_blocked(b, t)
             {
                 continue;
             }
