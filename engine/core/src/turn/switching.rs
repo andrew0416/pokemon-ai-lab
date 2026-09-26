@@ -1293,7 +1293,8 @@ pub(crate) fn end_ability<const N: usize>(
 /// Trace's `onStart` → `Update`: copies the ability of a uniformly random adjacent foe whose
 /// ability lacks `notrace`, then that ability starts at once (`setAbility` → `Start`). With no
 /// traceable foe Trace keeps seeking on later Updates, which the engine cannot represent, so
-/// that (and the No Ability / Ability Shield edge cases) is unsupported.
+/// that (and the No Ability edge case) is unsupported. An effective Ability Shield stops the
+/// seeking: Trace stays.
 fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), TurnError> {
     let pokemon = b.alive(holder).expect("the holder is active");
     let foes = b.alive_slots(holder.side.other());
@@ -1304,8 +1305,11 @@ fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), T
     {
         return Err(b.unsupported("Trace next to No Ability"));
     }
-    if b.mon(pokemon).item == items::ABILITY_SHIELD {
-        return Err(b.unsupported("Trace holding Ability Shield"));
+    // `pokemon.hasItem('Ability Shield')` (the effective item: under Magic Room Trace seeks and
+    // the shield's `onSetAbility` is skipped too): `effectState.seek = false`, so Trace never
+    // copies (its `onUpdate` returns while `seek` is false, and only `onStart` sets it).
+    if b.item(holder) == items::ABILITY_SHIELD {
+        return Ok(());
     }
     let targets: Vec<SlotRef> = foes
         .into_iter()

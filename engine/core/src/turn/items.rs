@@ -161,7 +161,8 @@ pub(crate) fn start_handler_implemented(item: ItemId, handler: &str) -> bool {
         // White Herb, Mirror Herb, Eject Pack.
         "onAnySwitchIn" => any_switch_in_priority(item).is_some(),
         // Ability Shield: the only `setAbility` of a switch-in is the holder's own Trace, which
-        // is refused with the shield (`switching::trace`); a forme change skips the event.
+        // does not seek with an effective shield (`switching::trace`) and, under Magic Room,
+        // sets the ability past the skipped item; a forme change skips the event.
         "onSetAbility" => item == items::ABILITY_SHIELD,
         _ => false,
     }
