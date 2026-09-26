@@ -1129,6 +1129,31 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         moves::CHILLY_RECEPTION,
         &["condition.onBeforeMove", "priorityChargeCallback"],
     ),
+    // Opus Y unit 2: Tidy Up's `onHit`; Syrup Bomb's condition (`onStart` logs, `onUpdate`
+    // `conditions::syrup_bomb_update`, `onResidual` `conditions::syrup_bomb_residual`, `onEnd`
+    // logs); Curse (`onModifyMove` target, `onTryHit`, `onHit`, the non-Ghost `self` boosts
+    // `handlers::try_hit_self_boosts`, the condition's residual in `residual.rs`; its choice
+    // target is `nonGhostTarget` without the Ghost type: `moves::choice_target`).
+    (moves::TIDY_UP, &["onHit"]),
+    (
+        moves::SYRUP_BOMB,
+        &[
+            "condition.onEnd",
+            "condition.onResidual",
+            "condition.onStart",
+            "condition.onUpdate",
+        ],
+    ),
+    (
+        moves::CURSE,
+        &[
+            "condition.onResidual",
+            "condition.onStart",
+            "onHit",
+            "onModifyMove",
+            "onTryHit",
+        ],
+    ),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do
@@ -2578,15 +2603,11 @@ mod tests {
             assert!(ability_supported_on_field(ability), "{ability:?}");
         }
         // Shed Tail and Baton Pass pass the substitute on (`switching::copy_volatile_from`).
-        for id in [moves::SHED_TAIL, moves::BATON_PASS] {
+        // Tidy Up removes every substitute (`moves::handlers::on_hit`).
+        for id in [moves::SHED_TAIL, moves::BATON_PASS, moves::TIDY_UP] {
             assert_eq!(move_unsupported(id), None, "{id:?}");
         }
-        for id in [
-            moves::SKY_DROP,
-            moves::TIDY_UP,
-            moves::TRANSFORM,
-            moves::SPARKLY_SWIRL,
-        ] {
+        for id in [moves::SKY_DROP, moves::TRANSFORM, moves::SPARKLY_SWIRL] {
             assert!(move_unsupported(id).is_some(), "{id:?}");
         }
         assert_eq!(move_unsupported(moves::SUBSTITUTE), None);

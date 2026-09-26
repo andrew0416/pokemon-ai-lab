@@ -966,6 +966,16 @@ pub fn valid_target_loc(n: usize, user: SlotRef, loc: i8, target: MoveTarget) ->
     }
 }
 
+/// The target type a Pokémon chooses `id` with (Showdown `getMoves()`): Curse's is
+/// `nonGhostTarget` (`self`) for a Pokémon without the Ghost type, so it takes no target then.
+pub fn choice_target(mon: &crate::state::Pokemon, id: MoveId) -> MoveTarget {
+    let data = id.data();
+    match data.non_ghost_target {
+        Some(target) if !mon.types.contains(&Type::Ghost) => target,
+        _ => data.target,
+    }
+}
+
 /// Whether a move of this target type takes a chosen target in a format with `n` slots.
 pub fn takes_target(n: usize, target: MoveTarget) -> bool {
     n > 1
@@ -2728,7 +2738,13 @@ fn spread_move_hit<const N: usize>(
     }
     // selfDrops: boosts once, for the first target the move did not fail on; an effect
     // without boosts (Roost's, Outrage's volatile) is applied to the user for every such
-    // target. Sheer Force deleted `self`; Serene Grace doubled its chance.
+    // target. Sheer Force deleted `self`; Serene Grace doubled its chance. A `self` the move's
+    // `onTryHit` wrote (Curse from a non-Ghost) has no chance and only boosts.
+    if let Some(boosts) = handlers::try_hit_self_boosts(b, user, mv) {
+        if results.iter().any(|r| r.in_targets()) {
+            b.boost_by(user, &boosts, Some(user), BoostEffect::Move(mv.id));
+        }
+    }
     if let Some(effect) = data.self_effect.filter(|_| !mv.has_sheer_force) {
         let chance = u32::from(effect.chance) * mv.secondary_chance_factor;
         if effect.boosts != NO_BOOSTS {

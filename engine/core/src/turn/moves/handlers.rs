@@ -150,6 +150,18 @@ pub(super) fn on_modify_move<const N: usize>(
                 mv.accuracy = None;
             }
         }
+        // Curse: `if (!source.hasType('Ghost')) move.target = move.nonGhostTarget; else if
+        // (source.isAlly(target)) move.target = 'randomNormal';` (the caller then re-picks the
+        // target: the user, or a random foe).
+        moves::CURSE => {
+            if !b.has_type(user, Type::Ghost) {
+                if let Some(target) = mv.data.non_ghost_target {
+                    mv.target = target;
+                }
+            } else if target.is_some_and(|t| t.side == user.side) {
+                mv.target = MoveTarget::RandomNormal;
+            }
+        }
         // Struggle: `move.type = '???'` (typeless: `Type::None` for the move, which no type chart
         // entry, STAB or type-based handler matches).
         moves::STRUGGLE => mv.move_type = Type::None,
@@ -378,7 +390,25 @@ pub(super) fn keeps_volatile_status<const N: usize>(
     user: SlotRef,
     mv: &ActiveMove,
 ) -> bool {
-    mv.id != moves::NO_RETREAT || !b.volatile(user, Volatile::Trapped).active
+    match mv.id {
+        moves::NO_RETREAT => !b.volatile(user, Volatile::Trapped).active,
+        // Curse's `onTryHit` deletes `move.volatileStatus` for a user without the Ghost type (its
+        // type at the hit: Protean may have made it a Ghost since ModifyMove).
+        moves::CURSE => b.has_type(user, Type::Ghost),
+        _ => true,
+    }
+}
+
+/// The user's boosts a move's `onTryHit` put in `move.self` (applied once by `selfDrops`, after
+/// the effects, if the move did not fail on its target): Curse from a user without the Ghost type
+/// (`move.self = { boosts: { spe: -1, atk: 1, def: 1 } }`, no chance: always; Showdown still draws
+/// its `random(100)`, which decides nothing).
+pub(super) fn try_hit_self_boosts<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Option<[i8; BOOST_COUNT]> {
+    (mv.id == moves::CURSE && !b.has_type(user, Type::Ghost)).then_some([1, 1, 0, 0, -1, 0, 0])
 }
 
 /// The move's `onTryImmunity` (`hitStepTryImmunity`, per target). `false` = the target is
@@ -775,6 +805,12 @@ pub(super) fn on_try_hit<const N: usize>(
             let (hp, max_hp) = (i32::from(m.hp), i32::from(m.max_hp));
             !b.has_substitute(target) && 4 * hp > max_hp && max_hp != 1
         }),
+        // Curse: a Ghost's Curse fails on a target already cursed (`if (move.volatileStatus &&
+        // target.volatiles['curse']) return false;`); the non-Ghost branch only swaps the effects
+        // ([`keeps_volatile_status`], [`try_hit_self_boosts`], [`on_hit`]).
+        moves::CURSE => {
+            !b.has_type(user, Type::Ghost) || !b.volatile(target, Volatile::Curse).active
+        }
         // Shed Tail (on its user): `NOT_FAIL` when the side cannot switch
         // (`!this.canSwitch(source.side)`) or the user is `commanded`, with a substitute already
         // up, or at `Math.ceil(source.maxhp / 2)` HP or less.
@@ -2519,6 +2555,34 @@ pub(super) fn on_hit<const N: usize>(
             let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
             b.direct_damage(target, (max_hp / 4).max(1));
             return Ok(None);
+        }
+        // Curse (a Ghost's; the non-Ghost branch deleted `move.onHit`): `this.directDamage(
+        // source.maxhp / 2, source, source)` after the target got the curse (returns nothing).
+        moves::CURSE => {
+            if b.has_type(user, Type::Ghost) {
+                let max_hp = b.slot_mon(user).map_or(0, |m| i32::from(m.max_hp));
+                b.direct_damage(user, (max_hp / 2).max(1));
+            }
+            return Ok(None);
+        }
+        // Tidy Up: every active Pokémon (`getAllActive()`) loses its substitute
+        // (`removeVolatile`: not at 0 HP), both sides lose Spikes, Toxic Spikes, Stealth Rock and
+        // Sticky Web, then `this.boost({atk: 1, spe: 1}, pokemon, pokemon, null, false, true)`
+        // (the effect is the move); `!!boosted || success`.
+        moves::TIDY_UP => {
+            let mut removed = false;
+            for side in [SideId::One, SideId::Two] {
+                for slot in Battle::<N>::slots(side) {
+                    removed |= b.remove_volatile(slot, Volatile::Substitute);
+                }
+            }
+            removed |= remove_side_effects(b, target.side, &HAZARDS);
+            removed |= remove_side_effects(b, target.side.other(), &HAZARDS);
+            let mut up = NO_BOOSTS;
+            up[0] = 1;
+            up[4] = 1;
+            let boosted = b.boost_by(target, &up, Some(target), BoostEffect::Move(mv.id));
+            success(boosted || removed)
         }
         // Shed Tail: `this.directDamage(Math.ceil(target.maxhp / 2))` after its substitute started
         // (returns nothing; its `onTryHit` made sure the user survives it).

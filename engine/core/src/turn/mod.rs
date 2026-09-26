@@ -62,7 +62,7 @@ pub use abilities::trapped;
 pub use forme::temporary_forme_base;
 pub use legal::legal_joint_actions;
 pub use lock::{locked_move, Locked, RECHARGE_INDEX, STRUGGLE_INDEX};
-pub use moves::{takes_target, valid_target_loc};
+pub use moves::{choice_target, takes_target, valid_target_loc};
 pub use switching::{
     item_start_handler, species_start_handler, start_handler, switch_in_supported,
 };
@@ -1013,16 +1013,17 @@ pub(crate) fn check_side<const N: usize>(
                     return Err(invalid(reason));
                 }
                 let data = id.data();
-                let needs = takes_target(N, data.target);
+                let target_type = choice_target(mon, id);
+                let needs = takes_target(N, target_type);
                 let ok = if needs {
-                    target != 0 && valid_target_loc(N, slot, target, data.target)
+                    target != 0 && valid_target_loc(N, slot, target, target_type)
                 } else {
                     target == 0
                 };
                 if !ok {
                     return Err(invalid(format!(
-                        "target {target} for {} ({:?})",
-                        data.name, data.target
+                        "target {target} for {} ({target_type:?})",
+                        data.name
                     )));
                 }
                 match gimmick {

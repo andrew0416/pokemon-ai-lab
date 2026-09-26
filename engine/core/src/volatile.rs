@@ -334,9 +334,17 @@ pub enum Volatile {
     /// 107); its `onBeforeMove` only announces the move. Added by name, so the dex has no
     /// condition id.
     ChillyReception,
+    /// Syrup Bomb's secondary effect (`syrupbomb`, duration 4, residual order 14, `noCopy`): the
+    /// holder loses 1 Speed each turn (from the source); it ends once its source
+    /// (`effectState.source`, kept in `counter`: [`encode_pokemon`]; hidden in the canonical
+    /// state) is no longer active (`onUpdate`).
+    SyrupBomb,
+    /// A Ghost type's Curse on its target (`curse`, no duration, residual order 12): the holder
+    /// loses baseMaxhp / 4 each turn.
+    Curse,
 }
 
-pub const VOLATILE_COUNT: usize = 102;
+pub const VOLATILE_COUNT: usize = 104;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -442,6 +450,8 @@ impl Volatile {
         Volatile::RipenWeaken,
         Volatile::Opportunist,
         Volatile::ChillyReception,
+        Volatile::SyrupBomb,
+        Volatile::Curse,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -508,6 +518,8 @@ impl Volatile {
             Volatile::DefenseCurl => conditions::DEFENSECURL,
             Volatile::Rollout | Volatile::IceBall => ConditionId::NONE,
             Volatile::GastroAcid => conditions::GASTROACID,
+            Volatile::SyrupBomb => conditions::SYRUPBOMB,
+            Volatile::Curse => conditions::CURSE,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -659,6 +671,8 @@ impl Volatile {
             Volatile::RipenWeaken => "berryweaken",
             Volatile::Opportunist => "opportunistboosts",
             Volatile::ChillyReception => "chillyreception",
+            Volatile::SyrupBomb => "syrupbomb",
+            Volatile::Curse => "curse",
         }
     }
 
@@ -711,7 +725,7 @@ impl Volatile {
             | Volatile::AllySwitch
             | Volatile::LaserFocus => 2,
             Volatile::Encore | Volatile::Taunt => 3,
-            Volatile::PerishSong => 4,
+            Volatile::PerishSong | Volatile::SyrupBomb => 4,
             // Partial trapping's and Heal Block's `durationCallback` replace it when they start
             // (`conditions::volatile_start`).
             Volatile::Disable
@@ -774,7 +788,8 @@ impl Volatile {
             | Volatile::Truant
             | Volatile::CudChew
             | Volatile::RipenWeaken
-            | Volatile::Opportunist => 0,
+            | Volatile::Opportunist
+            | Volatile::Curse => 0,
             Volatile::Rollout | Volatile::IceBall => 1,
             Volatile::ZenMode => 0,
         }
@@ -790,7 +805,8 @@ impl Volatile {
             Volatile::MagnetRise => Some(18),
             Volatile::AquaRing => Some(6),
             Volatile::Nightmare => Some(11),
-            Volatile::Octolock => Some(14),
+            Volatile::Octolock | Volatile::SyrupBomb => Some(14),
+            Volatile::Curse => Some(12),
             Volatile::Taunt => Some(15),
             Volatile::Encore => Some(16),
             Volatile::Disable => Some(17),
@@ -826,7 +842,8 @@ impl Volatile {
             | Volatile::Trapped
             | Volatile::Trapper
             | Volatile::Attract
-            | Volatile::Octolock => Some(VolatileState {
+            | Volatile::Octolock
+            | Volatile::SyrupBomb => Some(VolatileState {
                 counter: 0,
                 ..state
             }),
@@ -920,7 +937,8 @@ impl Volatile {
             | Volatile::PowerShift
             | Volatile::GastroAcid
             | Volatile::Truant
-            | Volatile::ChillyReception => Passed::Copied,
+            | Volatile::ChillyReception
+            | Volatile::Curse => Passed::Copied,
             // `noCopy` conditions.
             Volatile::Spotlight
             | Volatile::Encore
@@ -947,7 +965,8 @@ impl Volatile {
             | Volatile::Stockpile
             | Volatile::Foresight
             | Volatile::MiracleEye
-            | Volatile::DefenseCurl => Passed::Dropped,
+            | Volatile::DefenseCurl
+            | Volatile::SyrupBomb => Passed::Dropped,
             // Ability and item state, not `pokemon.volatiles`.
             Volatile::ProteanUsed
             | Volatile::AngerShellUnchecked
@@ -1219,6 +1238,8 @@ mod tests {
             (Volatile::Rollout, moves::ROLLOUT),
             (Volatile::IceBall, moves::ICE_BALL),
             (Volatile::ChillyReception, moves::CHILLY_RECEPTION),
+            (Volatile::SyrupBomb, moves::SYRUP_BOMB),
+            (Volatile::Curse, moves::CURSE),
         ] {
             let data = id.data();
             assert_eq!(
