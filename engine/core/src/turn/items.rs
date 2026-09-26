@@ -912,6 +912,23 @@ pub(crate) fn mental_herb<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) 
     }
 }
 
+/// Berry Juice's `onUpdate` (not a berry: used, not eaten, so Unnerve and Gluttony do not
+/// apply): at half HP or less (`pokemon.hp <= pokemon.maxhp / 2`), `runEvent('TryHeal', ...,
+/// 20)` (Heal Block refuses; nothing implemented changes the amount), then `useItem()` and
+/// `this.heal(20)`.
+pub(crate) fn berry_juice<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let Some(mon) = b.slot_mon(slot) else {
+        return;
+    };
+    let half = 2 * i32::from(mon.hp) <= i32::from(mon.max_hp);
+    if b.item(slot) != items::BERRY_JUICE || !half || b.volatile(slot, Volatile::HealBlock).active {
+        return;
+    }
+    if b.use_item(slot) {
+        b.heal(slot, 20.0);
+    }
+}
+
 /// `ModifyCritRatio` of the user's item: Scope Lens and Razor Claw `return critRatio + 1`.
 pub(crate) fn crit_ratio_bonus(item: ItemId) -> i32 {
     i32::from(item == items::SCOPE_LENS || item == items::RAZOR_CLAW)

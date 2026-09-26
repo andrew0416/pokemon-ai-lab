@@ -1095,6 +1095,9 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     ),
     // Destiny Knot: `onAttract` in `conditions::add_attract` (Cute Charm's attraction).
     (items::DESTINY_KNOT, &["onAttract"]),
+    // Berry Juice (Opus W unit 3; `Past` in Champions, allowed by the engine): `onUpdate` in
+    // `update::update_event` → `items::berry_juice` (used, not eaten).
+    (items::BERRY_JUICE, &["onUpdate"]),
     // Eject Pack (Opus W unit 1): a stat drop sets its flag (`onAfterBoost` in
     // `items::after_boost`; the hidden `Volatile::EjectPack`, which `onEnd` and the used item
     // clear), the next switch-in batch (`onAnySwitchIn`, -4), Mega Evolution, move end or
