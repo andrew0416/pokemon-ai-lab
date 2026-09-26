@@ -685,6 +685,10 @@ fn run_mid_turn_switches<const N: usize>(
     // The last `instaswitch` action's `runAction` tail: `eachEvent('Update')` before the
     // queued `runSwitch` actions (see `switching::run_switch`).
     update::update_event(b)?;
+    // `runSwitch` takes every queued `runSwitch` action: `queue.peek()` is empty from here on
+    // when nothing else is left, i.e. for a batch requested after the residual (Emergency
+    // Exit, Eject Pack at the residual). Cud Chew reads it.
+    b.queue_done = pending.residual_done && b.queue.is_empty();
     let slots: Vec<SlotRef> = newcomers.iter().map(|n| n.0).collect();
     switching::run_switch_in(b, &slots)?;
     after_action(b, pending, &newcomers)

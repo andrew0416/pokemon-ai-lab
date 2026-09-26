@@ -104,8 +104,8 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// handler that only acts once started (Unnerve's `effectState.unnerved`) ignores them.
     pub unstarted: Vec<PokemonRef>,
     /// Showdown's `queue.peek()` is empty: the turn's actions are all done (the residual action
-    /// and what follows it in the same stage, or the `runSwitch` of a replacement batch). Cud
-    /// Chew's `onEatItem` reads it.
+    /// and what follows it in the same stage, or the `runSwitch` of a replacement batch or of a
+    /// mid-turn switch batch requested after the residual). Cud Chew's `onEatItem` reads it.
     pub queue_done: bool,
     /// The move in progress is external (`move.isExternal`: Dancer's copy): no Pressure PP, and
     /// no Dancer after it.
