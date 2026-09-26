@@ -6,7 +6,9 @@ mod ability_hooks;
 mod handlers;
 
 use handlers::HitResult;
-pub(crate) use handlers::{set_types, sleep_talk_calls, trick_item_start, trick_moves_item};
+pub(crate) use handlers::{
+    called_after_move_checked, set_types, sleep_talk_calls, trick_item_start, trick_moves_item,
+};
 
 use crate::damage::{
     damage_rolls, DamageInput, MOD_HALF, MOD_ONE, MOD_ONE_POINT_FIVE, MOD_ONE_POINT_THREE,

@@ -1,0 +1,26 @@
+{
+ "description": "Opus CC unit B18: Copycat calling Spit Up (its onAfterMove, formerly refused for a called move). Setup turn: Hypno and Jolteon each Stockpile once (+1 Def and SpD). The turn: Jolteon's Spit Up at Blissey is blocked by Protect and its own AfterMove ends its stockpile (it is still battle.lastMove); Hypno's Copycat calls Spit Up (battle.lastMove) at a random foe with its own layer, and runMove's AfterMove, which sees the called move, ends Hypno's stockpile: its onEnd takes back Hypno's two raises.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hypno", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Copycat", "Stockpile"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Protect", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Jolteon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Spit Up", "Stockpile"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move stockpile, move harden", "move stockpile, move harden"]
+ ],
+ "turn": {"p1": "move copycat, move protect", "p2": "move spitup 2, move harden"}
+}
