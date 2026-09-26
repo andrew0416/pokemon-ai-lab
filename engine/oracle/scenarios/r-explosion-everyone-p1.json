@@ -1,0 +1,26 @@
+{
+ "description": "Opus R unit 6: every Pokemon faints at once. p1's Weezing uses Explosion with its ally and both foes at 1 HP: the user is queued to faint first (selfdestruct 'always'), then the targets in target order (adjacent ally, then foes). faintMessages ends on the last dequeued entry, a p2 Pokemon, and checkWin gives the win to that entry's side when no side has a Pokemon left: p2 wins. Extremes mode (damage rolls min and max).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Weezing", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Explosion"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Snorlax": {"hp": 1}},
+  "p2": {"Chansey": {"hp": 1}, "Blissey": {"hp": 1}}
+ },
+ "turn": {
+  "p1": "move explosion, move harden",
+  "p2": "move harden, move harden"
+ }
+}

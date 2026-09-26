@@ -112,3 +112,11 @@ fn klutz_suppresses_shed_shell_against_shadow_tag() {
 fn multi_accuracy_reroll_applies_float_stages_before_modifiers() {
     assert_extremes_parity("r-triple-axel-evasion");
 }
+
+/// An Explosion that takes out every Pokémon: the user is queued to faint first, so the side of
+/// the last target dequeued wins (p2 when p1 explodes, p1 when p2 does), not a tie.
+#[test]
+fn everyone_fainting_at_once_goes_to_the_last_dequeued_side() {
+    assert_extremes_parity("r-explosion-everyone-p1");
+    assert_extremes_parity("r-explosion-everyone-p2");
+}
