@@ -1,0 +1,13 @@
+{
+ "description": "Opus CC verify-library-turns: library sand-owen (Tyranitar + Excadrill lead, Salamence + Indeedee back; order 5612 as in runs/plan-20260926) vs library coaching-panda (Rillaboom + Kingambit lead, Sneasler + Baxcalibur back), VGC Reg M-C (team preview keeps 4), both teams' published sets referenced from teams/library. Start: Sand Stream and Grassy Surge (Miracle Seed holder: no seed). Turn 1: Tyranitar Mega Evolves and aims Low Kick at Kingambit but Rillaboom's Fake Out flinches it; Kingambit's Sucker Punch hits Excadrill (Focus Sash) before Excadrill's High Horsepower (Sand Rush) hits Kingambit. Speeds 280 / 123 / 103 / 71: no ties.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "team": "../../../teams/library/doubles/m-c/sand-owen/team.json",
+  "order": "5612"
+ },
+ "p2": {
+  "team": "../../../teams/library/doubles/m-c/coaching-panda/team.json",
+  "order": "1234"
+ },
+ "turn": {"p1": "move lowkick 2 mega, move highhorsepower 2", "p2": "move fakeout 1, move suckerpunch 2"}
+}

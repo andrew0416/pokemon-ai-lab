@@ -1,0 +1,13 @@
+{
+ "description": "Opus CC verify-library-turns: library coaching-panda (Rillaboom + Kingambit lead, Sneasler + Baxcalibur back) vs library psy-sand-udon (Armarouge + Indeedee-F lead, Salamence + Sneasler back), VGC Reg M-C (team preview keeps 4), both teams' published sets referenced from teams/library. Start: Grassy Surge, then Indeedee-F's Psychic Surge replaces it. Turn 1: Armarouge's Expanding Force (spread in Psychic Terrain; Kingambit is immune) hits Rillaboom; Indeedee-F's Follow Me draws Rillaboom's High Horsepower and Kingambit's Kowtow Cleave (Black Glasses) aimed at Armarouge (Focus Sash, Weak Armor) into itself (Colbur Berry). Speeds 127 / 123 / 105 / 71: no ties.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "team": "../../../teams/library/doubles/m-c/coaching-panda/team.json",
+  "order": "1234"
+ },
+ "p2": {
+  "team": "../../../teams/library/doubles/m-c/psy-sand-udon/team.json",
+  "order": "1234"
+ },
+ "turn": {"p1": "move highhorsepower 1, move kowtowcleave 1", "p2": "move expandingforce 1, move followme"}
+}
