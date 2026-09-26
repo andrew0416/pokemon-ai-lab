@@ -1,0 +1,8 @@
+{
+ "derived_from": "teams/rillaboom-slot-20260920/gardevoir-braverilla.json",
+ "change": "slot 3 Gardevoir -> Starmie; the Starmie set is copied verbatim from teams/mc-panel/own-starmie.json (an ASSUMED spread from the earlier panel, not a published set)",
+ "purpose": "Gardevoir -> Mega Starmie comparison (AGENTS.md: 현재 비교 질문) with the search tool (engine/search, lab-plan)",
+ "created": "2026-09-26",
+ "spread_status": "assumed (Starmie); the other five sets are the base team's",
+ "validation": "not run through the Showdown validator here; lab-plan refuses unsupported effects rather than guessing"
+}
