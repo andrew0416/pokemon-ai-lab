@@ -435,6 +435,14 @@ pub(crate) fn volatile_start<const N: usize>(
             }
             true
         }
+        // Octolock: its `onStart` only logs; the source is kept for the trap and the residual.
+        Volatile::Octolock => {
+            let Some(source) = source else {
+                return false;
+            };
+            new.counter = encode_pokemon(source.pokemon);
+            true
+        }
         // Nightmare: `if (pokemon.status !== 'slp' && !pokemon.hasAbility('comatose')) return
         // false;`
         Volatile::Nightmare => {
@@ -623,7 +631,47 @@ pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option
             return Some(format!("{name} is partially trapped"));
         }
     }
+    // Octolock: `if (this.effectState.source?.isActive) pokemon.tryTrap();`
+    let octolock = volatiles.get(Volatile::Octolock);
+    if octolock.active {
+        let source = decode_pokemon(octolock.counter);
+        let source_active = state
+            .side(source.side)
+            .slots
+            .iter()
+            .any(|s| s.party_index == Some(source.party));
+        if source_active {
+            return Some(format!("{name} is trapped by Octolock"));
+        }
+    }
     None
+}
+
+/// Octolock's `onResidual` (order 14) on the Pokémon in `slot`: once its source is not active,
+/// has no HP or switched in this turn (`!source.activeTurns`), the volatile is deleted (no
+/// `onEnd`); otherwise `this.boost({def: -1, spd: -1}, pokemon, source, octolock)`.
+pub(crate) fn octolock_residual<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let lock = b.volatile(slot, Volatile::Octolock);
+    if !lock.active {
+        return;
+    }
+    let source = decode_pokemon(lock.counter);
+    let source_slot = Battle::<N>::slots(source.side)
+        .find(|&s| b.occupant(s) == Some(source))
+        .filter(|&s| b.mon(source).hp > 0 && b.active_since_turn_start(s));
+    let Some(source_slot) = source_slot else {
+        b.delete_volatile(slot, Volatile::Octolock);
+        return;
+    };
+    let mut drop = [0i8; BOOST_COUNT];
+    drop[1] = -1;
+    drop[3] = -1;
+    b.boost_by(
+        slot,
+        &drop,
+        Some(source_slot),
+        BoostEffect::Move(moves::OCTOLOCK),
+    );
 }
 
 /// The conditions' `onDragOut` on the Pokémon in `slot`: Ingrain returns `null` (no drag, and

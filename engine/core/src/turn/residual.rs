@@ -40,7 +40,7 @@ enum Kind {
     /// Leech Seed's `onResidual` (order 8; no duration).
     LeechSeed(PokemonRef, SlotRef),
     /// The `onResidual` of a volatile without a duration: Ingrain (order 7), Nightmare (11), Salt
-    /// Cure (13).
+    /// Cure (13), Octolock (14).
     VolatileEffect(PokemonRef, SlotRef, Volatile),
     /// A slot condition's `onResidual` (future moves order 3, Wish 4; Revival Blessing's
     /// duration), slot-condition sub-order 3. Showdown collects it for the Pokémon in the
@@ -194,7 +194,10 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                 }
                 if matches!(
                     volatile,
-                    Volatile::Ingrain | Volatile::SaltCure | Volatile::Nightmare
+                    Volatile::Ingrain
+                        | Volatile::SaltCure
+                        | Volatile::Nightmare
+                        | Volatile::Octolock
                 ) {
                     out.push(Handler {
                         order: volatile.residual_order().unwrap_or(ORDER_DEFAULT),
@@ -545,6 +548,7 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
                 Volatile::Nightmare => {
                     b.damage(slot, max_hp / 4.0, DamageSource::Indirect);
                 }
+                Volatile::Octolock => conditions::octolock_residual(b, slot),
                 _ => {}
             }
         }

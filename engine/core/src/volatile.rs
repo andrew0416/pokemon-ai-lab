@@ -241,9 +241,14 @@ pub enum Volatile {
     /// Comatose) holder loses baseMaxhp / 4 each turn. `cureStatus` / `clearStatus` of a sleeping
     /// holder and a new sleep's `onStart` remove it (`Battle::cure_status`).
     Nightmare,
+    /// Octolock on its target (no duration, residual order 14): while its source
+    /// (`effectState.source`, kept in `counter`: [`encode_pokemon`]; hidden in the canonical
+    /// state) is active the holder cannot switch out (`onTrapPokemon`) and loses 1 Def and 1 SpD
+    /// each turn; the residual deletes it once the source left, fainted or just switched in.
+    Octolock,
 }
 
-pub const VOLATILE_COUNT: usize = 75;
+pub const VOLATILE_COUNT: usize = 76;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -322,6 +327,7 @@ impl Volatile {
         Volatile::GorillaTactics,
         Volatile::Attract,
         Volatile::Nightmare,
+        Volatile::Octolock,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -376,6 +382,7 @@ impl Volatile {
             Volatile::SmackDown => conditions::SMACKDOWN,
             Volatile::Attract => conditions::ATTRACT,
             Volatile::Nightmare => conditions::NIGHTMARE,
+            Volatile::Octolock => conditions::OCTOLOCK,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -486,6 +493,7 @@ impl Volatile {
             Volatile::GorillaTactics => "gorillatactics",
             Volatile::Attract => "attract",
             Volatile::Nightmare => "nightmare",
+            Volatile::Octolock => "octolock",
         }
     }
 
@@ -576,7 +584,8 @@ impl Volatile {
             | Volatile::Commanded
             | Volatile::GorillaTactics
             | Volatile::Attract
-            | Volatile::Nightmare => 0,
+            | Volatile::Nightmare
+            | Volatile::Octolock => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -590,6 +599,7 @@ impl Volatile {
             Volatile::PartiallyTrapped | Volatile::SaltCure => Some(13),
             Volatile::MagnetRise => Some(18),
             Volatile::Nightmare => Some(11),
+            Volatile::Octolock => Some(14),
             Volatile::Taunt => Some(15),
             Volatile::Encore => Some(16),
             Volatile::Disable => Some(17),
@@ -618,7 +628,8 @@ impl Volatile {
             | Volatile::TwoTurnMove
             | Volatile::Trapped
             | Volatile::Trapper
-            | Volatile::Attract => Some(VolatileState {
+            | Volatile::Attract
+            | Volatile::Octolock => Some(VolatileState {
                 counter: 0,
                 ..state
             }),
@@ -845,6 +856,7 @@ mod tests {
             (Volatile::HealBlock, moves::HEAL_BLOCK),
             (Volatile::SmackDown, moves::SMACK_DOWN),
             (Volatile::Nightmare, moves::NIGHTMARE),
+            (Volatile::Octolock, moves::OCTOLOCK),
         ] {
             let data = id.data();
             assert_eq!(

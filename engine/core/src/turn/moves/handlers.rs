@@ -312,6 +312,8 @@ pub(super) fn on_try_immunity<const N: usize>(
         // Worry Seed: `if (target.ability === 'truant' || target.ability === 'insomnia') return
         // false;` (before accuracy).
         moves::WORRY_SEED => ![abilities::TRUANT, abilities::INSOMNIA].contains(&b.ability(target)),
+        // Octolock: `return this.dex.getImmunity('trapped', target);` (the types only: a Ghost).
+        moves::OCTOLOCK => !b.natural_immune(target, crate::dex::TypeImmunities::TRAPPED),
         // Dream Eater: `return target.status === 'slp' || target.hasAbility('comatose');`
         moves::DREAM_EATER => {
             b.slot_mon(target)
@@ -2192,6 +2194,14 @@ pub(super) fn on_hit<const N: usize>(
         moves::MEAN_LOOK | moves::BLOCK | moves::SPIDER_WEB => {
             success(super::super::conditions::add_trap(b, target, user))
         }
+        // Jaw Lock: `source.addVolatile('trapped', target, move, 'trapper');
+        // target.addVolatile('trapped', source, move, 'trapper');` (each end traps the other;
+        // returns nothing).
+        moves::JAW_LOCK => {
+            super::super::conditions::add_trap(b, user, target);
+            super::super::conditions::add_trap(b, target, user);
+            return Ok(None);
+        }
         // Heal Pulse: `this.heal(this.modify(target.baseMaxhp, 0.75))` from a Mega Launcher user
         // (`source.hasAbility`: its own ability), otherwise `this.heal(Math.ceil(target.baseMaxhp
         // * 0.5))`; `NOT_FAIL` when nothing is healed (full HP). Heal Block is not supported.
@@ -2743,14 +2753,20 @@ fn weather_heal<const N: usize>(
 /// Dire Claw and Tri Attack draw one of three statuses (`this.sample`) and `trySetStatus` it,
 /// so the draw happens even when the status then fails. Throat Chop: `target.addVolatile(
 /// 'throatchop')` (no `onRestart`: an existing one keeps its duration; a fainted target gets
-/// none).
+/// none). Anchor Shot, Spirit Shackle: `if (source.isActive) target.addVolatile('trapped',
+/// source, move, 'trapper');` (`conditions::add_trap`, which needs both with HP).
 pub(super) fn secondary_on_hit<const N: usize>(
     b: &mut Battle<'_, N>,
+    user: SlotRef,
     target: SlotRef,
     mv: &ActiveMove,
 ) {
     if mv.id == moves::THROAT_CHOP {
         b.add_volatile(target, Volatile::ThroatChop);
+        return;
+    }
+    if mv.id == moves::ANCHOR_SHOT || mv.id == moves::SPIRIT_SHACKLE {
+        super::super::conditions::add_trap(b, target, user);
         return;
     }
     // Burning Jealousy: `if (target?.statsRaisedThisTurn) target.trySetStatus('brn', source,

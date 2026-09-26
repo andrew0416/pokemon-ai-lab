@@ -921,6 +921,28 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::FELL_STINGER, &["onAfterMoveSecondarySelf"]),
     (moves::ORDER_UP, &["onAfterMoveSecondarySelf"]),
     (moves::RELIC_SONG, &["onAfterMoveSecondarySelf"]),
+    // Opus V unit 3, trapping moves (`conditions::add_trap`): Anchor Shot's and Spirit Shackle's
+    // secondary `onHit` (`handlers::secondary_on_hit`), Jaw Lock's `onHit` (both ends);
+    // Octolock (`handlers::on_try_immunity`, `conditions::volatile_start` / `trapped` /
+    // `octolock_residual`).
+    (
+        moves::ANCHOR_SHOT,
+        &["secondaries.onHit", "secondary.onHit"],
+    ),
+    (
+        moves::SPIRIT_SHACKLE,
+        &["secondaries.onHit", "secondary.onHit"],
+    ),
+    (moves::JAW_LOCK, &["onHit"]),
+    (
+        moves::OCTOLOCK,
+        &[
+            "condition.onResidual",
+            "condition.onStart",
+            "condition.onTrapPokemon",
+            "onTryImmunity",
+        ],
+    ),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do
