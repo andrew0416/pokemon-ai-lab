@@ -2953,7 +2953,10 @@ fn apply_recoil_damage<const N: usize>(
 /// `useMoveInner`. Unlike the other Emergency Exit sites there is no `pokemon.hp` guard: a user
 /// the recoil knocked out is still flagged, and Showdown then asks for a mid-turn switch of the
 /// fainted Pokémon, which the engine does not model (unsupported). A crash or Life Orb never
-/// knocks out from above half.
+/// knocks out from above half. This is also the only way to an active Pokémon at 0 HP with
+/// `switchFlag === true`, which the `getAllActive()` checks of Eject Button and Eject Pack would
+/// see (oracle `x-switchflag-unprocessed-faint`: the pack stays at AfterMove); lifting the
+/// refusal needs those checks (`items::eject_pack_use`) to include such a Pokémon.
 fn user_emergency_exit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
