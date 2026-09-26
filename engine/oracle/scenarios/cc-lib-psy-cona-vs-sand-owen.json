@@ -1,0 +1,13 @@
+{
+ "description": "Opus CC verify-library-turns: library psy-cona (Indeedee-F + Armarouge lead, Staraptor + Sneasler back) vs library sand-owen (Tyranitar + Excadrill lead, Salamence + Indeedee back; order 5612 as in runs/plan-20260926), VGC Reg M-C (team preview keeps 4), both teams' published sets referenced from teams/library. Start: Psychic Surge (Indeedee-F's Psychic Seed) and Sand Stream. Turn 1: Indeedee-F's Follow Me draws Excadrill's High Horsepower (Sand Rush) aimed at Armarouge; Armarouge's Expanding Force (Life Orb; Tyranitar is immune) hits Excadrill; Tyranitar Mega Evolves and Knocks Off Indeedee-F. Speeds 280 / 120 / 105 / 103: no ties.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "team": "../../../teams/library/doubles/m-c/psy-cona/team.json",
+  "order": "1234"
+ },
+ "p2": {
+  "team": "../../../teams/library/doubles/m-c/sand-owen/team.json",
+  "order": "5612"
+ },
+ "turn": {"p1": "move followme, move expandingforce 2", "p2": "move knockoff 1 mega, move highhorsepower 2"}
+}

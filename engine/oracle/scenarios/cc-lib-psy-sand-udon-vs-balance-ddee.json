@@ -1,0 +1,13 @@
+{
+ "description": "Opus CC verify-library-turns: library psy-sand-udon (Armarouge + Indeedee-F lead, Salamence + Sneasler back) vs library balance-ddee (Floette-Eternal + Sneasler lead, Incineroar + Rillaboom back; tournament team sheet, SP not public: the library file's zero SP), VGC Reg M-C (team preview keeps 4), both teams' sets referenced from teams/library. Start: Psychic Surge (Sneasler's Grassy Seed stays). Turn 1: Indeedee-F's Helping Hand boosts Armarouge's Expanding Force at both foes (Sneasler protects); Floette-Eternal Mega Evolves (Fairy Aura) and hits both foes with Dazzling Gleam. Speeds 140 / 127 / 122 / 105: no ties.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "team": "../../../teams/library/doubles/m-c/psy-sand-udon/team.json",
+  "order": "1234"
+ },
+ "p2": {
+  "team": "../../../teams/library/doubles/m-c/balance-ddee/team.json",
+  "order": "1234"
+ },
+ "turn": {"p1": "move expandingforce 1, move helpinghand -1", "p2": "move dazzlinggleam mega, move protect"}
+}

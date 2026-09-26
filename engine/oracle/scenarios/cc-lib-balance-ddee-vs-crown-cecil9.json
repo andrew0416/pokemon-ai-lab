@@ -1,0 +1,13 @@
+{
+ "description": "Opus CC verify-library-turns: library balance-ddee (Floette-Eternal + Sneasler lead, Incineroar + Rillaboom back) vs library crown-cecil9 (Arcanine-Hisui + Rillaboom lead, Floette-Eternal + Gholdengo back); both tournament team sheets with SP not public (the library files' zero SP), VGC Reg M-C (team preview keeps 4), sets referenced from teams/library. Start: Grassy Surge; Sneasler's Grassy Seed (+1 Def) starts Unburden. Turn 1: Floette Mega Evolves (Fairy Aura) and Rillaboom's Grassy Glide (+1 priority in Grassy Terrain) hits it; Sneasler's Close Combat hits Arcanine-Hisui (Focus Sash); Mega Floette's Dazzling Gleam hits both foes, knocking Arcanine-Hisui out before its Head Smash. Speeds 280 / 122 / 110 / 105: no ties. (A first version with Fake Out instead of Grassy Glide did not finish in 15 minutes: Fake Out's flinch and Close Combat's self-drop each draw random(100), 1.28 million branches.)",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "team": "../../../teams/library/doubles/m-c/balance-ddee/team.json",
+  "order": "1234"
+ },
+ "p2": {
+  "team": "../../../teams/library/doubles/m-c/crown-cecil9/team.json",
+  "order": "1234"
+ },
+ "turn": {"p1": "move dazzlinggleam mega, move closecombat 1", "p2": "move headsmash 1, move grassyglide 1"}
+}

@@ -2471,8 +2471,10 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
 }
 
 /// Why Sleep Talk cannot be simulated for a Pokémon with these moves: every move it may call
-/// must be supported, hit once (a multi-hit move would suspend Sleep Talk's own hit) and have
-/// no `onAfterMove` (Showdown runs the called move's AfterMove at the end of `runMove`).
+/// must be supported, hit once (a multi-hit move would suspend Sleep Talk's own hit) and have no
+/// `onAfterMove` except those checked for a called move (Showdown runs the called move's
+/// AfterMove at the end of `runMove`: `moves::called_after_move_checked`, Sparkling Aria and
+/// Spit Up; Rollout and Ice Ball stay refused).
 pub(crate) fn sleep_talk_problem(moves: &[MoveId]) -> Option<String> {
     for &id in moves {
         if !super::moves::sleep_talk_calls(id) {
@@ -2482,8 +2484,17 @@ pub(crate) fn sleep_talk_problem(moves: &[MoveId]) -> Option<String> {
         if let Some(why) = move_unsupported(id) {
             return Some(format!("Sleep Talk could call {why}"));
         }
-        if super::moves::is_multihit(id) || data.handlers.contains(&"onAfterMove") {
-            return Some(format!("Sleep Talk calling {}", data.name));
+        if super::moves::is_multihit(id) {
+            return Some(format!(
+                "Sleep Talk calling {} (a multi-hit move)",
+                data.name
+            ));
+        }
+        if !super::moves::called_after_move_checked(id) {
+            return Some(format!(
+                "Sleep Talk calling {} (its onAfterMove, unchecked for a called move)",
+                data.name
+            ));
         }
     }
     None
@@ -2863,6 +2874,40 @@ mod tests {
         let smart: Vec<MoveId> = MoveId::all().filter(|id| id.data().smart_target).collect();
         assert_eq!(smart, [moves::DRAGON_DARTS]);
         assert_eq!(move_unsupported(moves::DRAGON_DARTS), None);
+    }
+
+    /// The moves with their own `onAfterMove` (Opus CC unit B18): Sparkling Aria's and Spit Up's
+    /// are checked for a called move (oracle `cc-sleep-talk-sparkling-aria`,
+    /// `cc-copycat-spit-up`, `cc-mirror-move-sparkling-aria`), so Sleep Talk may call them;
+    /// Rollout and Ice Ball stay refused, and Sleep Talk never picks Beak Blast (`nosleeptalk`).
+    #[test]
+    fn called_moves_with_after_move_are_classified() {
+        use super::super::moves::{called_after_move_checked, sleep_talk_calls};
+        let after_move: Vec<MoveId> = MoveId::all()
+            .filter(|id| id.data().handlers.contains(&"onAfterMove"))
+            .collect();
+        assert_eq!(
+            after_move,
+            [
+                moves::BEAK_BLAST,
+                moves::ICE_BALL,
+                moves::ROLLOUT,
+                moves::SPARKLING_ARIA,
+                moves::SPIT_UP
+            ]
+        );
+        for id in after_move {
+            let checked = [moves::SPARKLING_ARIA, moves::SPIT_UP].contains(&id);
+            assert_eq!(called_after_move_checked(id), checked, "{id:?}");
+        }
+        assert!(called_after_move_checked(moves::SHOCK_WAVE));
+        assert!(!sleep_talk_calls(moves::BEAK_BLAST));
+        assert_eq!(
+            sleep_talk_problem(&[moves::SLEEP_TALK, moves::SPARKLING_ARIA, moves::SPIT_UP]),
+            None
+        );
+        let rollout = sleep_talk_problem(&[moves::SLEEP_TALK, moves::ROLLOUT]).unwrap();
+        assert!(rollout.contains("onAfterMove"), "{rollout}");
     }
 
     #[test]

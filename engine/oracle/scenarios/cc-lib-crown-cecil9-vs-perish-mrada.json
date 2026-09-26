@@ -1,0 +1,13 @@
+{
+ "description": "Opus CC verify-library-turns: library crown-cecil9 (Arcanine-Hisui + Rillaboom lead, Floette-Eternal + Gholdengo back) vs library perish-mrada (Gengar + Snorlax lead, Incineroar + Scrafty back); both tournament team sheets with SP not public (the library files' zero SP), VGC Reg M-C (team preview keeps 4), sets referenced from teams/library. Start: Grassy Surge. Turn 1: Rillaboom's Fake Out flinches Snorlax (its Yawn never comes); Gengar Mega Evolves (Shadow Tag) and uses Perish Song; Arcanine-Hisui's Head Smash (Rock Head) hits Mega Gengar. Speeds 150 / 110 / 105 / 45: no ties.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "team": "../../../teams/library/doubles/m-c/crown-cecil9/team.json",
+  "order": "1234"
+ },
+ "p2": {
+  "team": "../../../teams/library/doubles/m-c/perish-mrada/team.json",
+  "order": "1234"
+ },
+ "turn": {"p1": "move headsmash 1, move fakeout 2", "p2": "move perishsong mega, move yawn 1"}
+}

@@ -1,0 +1,31 @@
+{
+ "description": "Opus CC unit B18: Mirror Move calling Sparkling Aria (its onAfterMove, formerly refused for a called move). Setup turn: Primarina's Sparkling Aria hits nothing (Togekiss and Clefable protect, Vaporeon's Water Absorb takes it), so it is Primarina's lastMove. The turn: Togekiss (fastest) uses Mirror Move at Primarina, calling Sparkling Aria from Togekiss; Water Absorb makes Primarina and Vaporeon immune, so the burned Clefable is the one hit target: the secondary gives it the sparklingaria volatile and runMove's AfterMove, which sees the called move, removes it and cures the burn.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Togekiss", "item": "", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Mirror Move", "Protect"], "level": 50},
+   {"species": "Vaporeon", "item": "", "ability": "Water Absorb", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Primarina", "item": "", "ability": "Water Absorb", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "spe": 2}, "moves": ["Sparkling Aria", "Calm Mind"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move protect, move harden", "move sparklingaria, move protect"]
+ ],
+ "patch": {
+  "p2": {
+   "Clefable": {"status": "brn"}
+  }
+ },
+ "turn": {"p1": "move mirrormove 1, move harden", "p2": "move calmmind, move calmmind"}
+}

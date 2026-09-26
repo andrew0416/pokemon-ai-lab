@@ -1019,11 +1019,11 @@ pub(super) fn on_try_hit<const N: usize>(
 
 /// Why a move Copycat or Mirror Move would call (`useMove`, which the caller may not know) is not
 /// run: a move the engine does not support; a two-turn move or one that locks its user (the lock
-/// would name a move the user may not have; Rollout, Ice Ball); a move with its own `onAfterMove`, a
-/// `beforeTurnCallback` or a `priorityChargeCallback` (the queue actions belong to the caller;
-/// `runMove`'s AfterMove does see the called move, `Battle::called_move`, but the `onAfterMove`
-/// of a called move is not checked against Showdown). An Electric move while the user has
-/// Charge is run: Charge's `onAfterMove` sees the called move (oracle `x-copycat-charge`).
+/// would name a move the user may not have; Rollout, Ice Ball); a move with a
+/// `beforeTurnCallback` or a `priorityChargeCallback` (the queue actions belong to the caller);
+/// a move whose own `onAfterMove` is not checked for a called move
+/// ([`called_after_move_checked`]). An Electric move while the user has Charge is run: Charge's
+/// `onAfterMove` sees the called move (oracle `x-copycat-charge`).
 fn called_move_problem(id: MoveId) -> Option<String> {
     let data = id.data();
     if let Some(why) = super::super::support::move_unsupported(id) {
@@ -1031,15 +1031,36 @@ fn called_move_problem(id: MoveId) -> Option<String> {
     }
     let locks = data
         .self_effect
-        .is_some_and(|s| s.volatile_status == crate::dex::conditions::LOCKEDMOVE);
-    let own_actions = super::has_before_turn_callback(id)
-        || super::has_priority_charge_callback(id)
+        .is_some_and(|s| s.volatile_status == crate::dex::conditions::LOCKEDMOVE)
         || [moves::ROLLOUT, moves::ICE_BALL].contains(&id);
-    (data.flags.contains(MoveFlags::CHARGE)
-        || locks
-        || own_actions
-        || data.handlers.contains(&"onAfterMove"))
-    .then(|| format!("{} (a lock, own actions or AfterMove)", data.name))
+    let own_actions =
+        super::has_before_turn_callback(id) || super::has_priority_charge_callback(id);
+    let why = if data.flags.contains(MoveFlags::CHARGE) {
+        "a two-turn move"
+    } else if locks {
+        "a lock on the called move"
+    } else if own_actions {
+        "queue actions of its own"
+    } else if !called_after_move_checked(id) {
+        "its onAfterMove, unchecked for a called move"
+    } else {
+        return None;
+    };
+    Some(format!("{} ({why})", data.name))
+}
+
+/// Whether a move's own `onAfterMove` ([`on_after_move`]) is right when another move calls it
+/// (Sleep Talk, Copycat, Mirror Move: `useMove` inside the caller's hit). `runMove` then runs
+/// AfterMove with the battle's active move, the called one (`if (this.battle.activeMove) move =
+/// this.battle.activeMove`; `Battle::called_move`), for the caller's user. Checked with the
+/// oracle: Sparkling Aria (`cc-sleep-talk-sparkling-aria`, `cc-mirror-move-sparkling-aria`: its
+/// `hitTargets` are the called move's) and Spit Up (`cc-copycat-spit-up`: the caller's user
+/// loses its stockpile). The other moves with one are refused as called moves for other reasons
+/// (Beak Blast: its priority charge and `nosleeptalk` / `failcopycat`; Rollout, Ice Ball: the
+/// lock). A move without `onAfterMove` is trivially right.
+pub(crate) fn called_after_move_checked(id: MoveId) -> bool {
+    !id.data().handlers.contains(&"onAfterMove")
+        || [moves::SPARKLING_ARIA, moves::SPIT_UP].contains(&id)
 }
 
 /// Showdown `move.infiltrates`: the user's Infiltrator sets it in ModifyMove

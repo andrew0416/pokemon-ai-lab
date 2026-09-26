@@ -1507,15 +1507,27 @@ pub(crate) fn drag_in<const N: usize>(
 
 /// `runEvent('EmergencyExit', target)`: Emergency Exit / Wimp Out ask to switch out unless the
 /// side has no bench, the holder is being dragged out or already flagged; every other active
-/// Pokémon's `switchFlag` is cleared first (even Eject Button's).
+/// Pokémon's `switchFlag` is cleared first (even Eject Button's: [`clear_active_switch_flags`]).
 pub(crate) fn emergency_exit<const N: usize>(b: &mut Battle<'_, N>, target: SlotRef) {
     if !emergency_exit_acts(b, target) {
         return;
     }
-    for slot in b.all_alive() {
-        b.clear_switch_flag(slot);
-    }
+    clear_active_switch_flags(b);
     b.set_switch_flag(target, SwitchFlag::Effect);
+}
+
+/// Emergency Exit's and Wimp Out's `for (const side of this.sides) for (const active of
+/// side.active) active.switchFlag = false;`: every position of both sides, not only the living
+/// Pokémon — `side.active` also holds a Pokémon at 0 HP whose faint is not processed and a
+/// fainted one still holding its position. (The only such Pokémon with a flag is a user its
+/// own recoil knocked out after Emergency Exit flagged it, which `moves::user_emergency_exit`
+/// refuses; this keeps the loop Showdown's for when that refusal is lifted.)
+fn clear_active_switch_flags<const N: usize>(b: &mut Battle<'_, N>) {
+    for side in [crate::state::SideId::One, crate::state::SideId::Two] {
+        for slot in Battle::<N>::slots(side) {
+            b.clear_switch_flag(slot);
+        }
+    }
 }
 
 /// Whether `runEvent('EmergencyExit', target)` would flag the Pokémon in `target`: it has
@@ -1568,4 +1580,88 @@ pub(crate) fn emergency_exit_would_trigger<const N: usize>(
     hp_before: i16,
 ) -> bool {
     crossed_half(b, slot, hp_before) && emergency_exit_acts(b, slot)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::state::{SideId, State};
+
+    const P1A: SlotRef = SlotRef {
+        side: SideId::One,
+        slot: 0,
+    };
+    const P1B: SlotRef = SlotRef {
+        side: SideId::One,
+        slot: 1,
+    };
+    const P2A: SlotRef = SlotRef {
+        side: SideId::Two,
+        slot: 0,
+    };
+    const P2B: SlotRef = SlotRef {
+        side: SideId::Two,
+        slot: 1,
+    };
+
+    /// Two full parties (100 HP each), the first two members of each in the active positions;
+    /// the first member of side one has `ability`.
+    fn state_with(ability: AbilityId) -> State<2> {
+        let mut state = State::<2>::default();
+        for side in [SideId::One, SideId::Two] {
+            for (i, p) in state.side_mut(side).party.iter_mut().enumerate() {
+                p.species = SpeciesId(i as u16 + 1);
+                p.max_hp = 100;
+                p.hp = 100;
+            }
+            for s in 0..2 {
+                state.side_mut(side).slots[s].party_index = Some(s as u8);
+            }
+        }
+        state.side_mut(SideId::One).party[0].ability = ability;
+        state
+    }
+
+    /// Opus CC unit B17: Emergency Exit clears the `switchFlag` of every Pokémon in
+    /// `side.active` before flagging its holder, a Pokémon at 0 HP whose faint is not processed
+    /// and a fainted one still holding its position included (Showdown `onEmergencyExit`), not
+    /// only the living ones. No oracle scenario reaches the difference: the only such Pokémon
+    /// with a flag is a user its own recoil knocked out after Emergency Exit flagged it, which
+    /// the engine refuses (`moves::user_emergency_exit`, oracle `x-switchflag-unprocessed-faint`).
+    #[test]
+    fn emergency_exit_clears_every_active_positions_flag() {
+        let mut state = state_with(abilities::EMERGENCY_EXIT);
+        // A living ally flagged by its U-turn.
+        state.slot_mut(P1B).switch_flag = SwitchFlag::Move;
+        // A foe at 0 HP, its faint not processed yet, still flagged.
+        state.side_mut(SideId::Two).party[0].hp = 0;
+        state.slot_mut(P2A).switch_flag = SwitchFlag::Effect;
+        // A fainted foe still holding its position (processed faint), flagged.
+        state.side_mut(SideId::Two).party[1].hp = 0;
+        state.slot_mut(P2B).party_index = None;
+        state.slot_mut(P2B).fainted_occupant = Some(1);
+        state.slot_mut(P2B).switch_flag = SwitchFlag::Effect;
+        let mut chooser = super::super::branch::Chooser::new();
+        let mut b = Battle::new(&mut state, &mut chooser);
+        assert!(emergency_exit_acts(&b, P1A));
+        emergency_exit(&mut b, P1A);
+        assert_eq!(b.state.slot(P1A).switch_flag, SwitchFlag::Effect);
+        for slot in [P1B, P2A, P2B] {
+            assert_eq!(b.state.slot(slot).switch_flag, SwitchFlag::None, "{slot:?}");
+        }
+    }
+
+    /// An Emergency Exit that does not act (its holder is already flagged) clears nothing.
+    #[test]
+    fn emergency_exit_that_does_not_act_keeps_the_flags() {
+        let mut state = state_with(abilities::WIMP_OUT);
+        state.slot_mut(P1A).switch_flag = SwitchFlag::Move;
+        state.slot_mut(P2A).switch_flag = SwitchFlag::Effect;
+        let mut chooser = super::super::branch::Chooser::new();
+        let mut b = Battle::new(&mut state, &mut chooser);
+        assert!(!emergency_exit_acts(&b, P1A));
+        emergency_exit(&mut b, P1A);
+        assert_eq!(b.state.slot(P1A).switch_flag, SwitchFlag::Move);
+        assert_eq!(b.state.slot(P2A).switch_flag, SwitchFlag::Effect);
+    }
 }

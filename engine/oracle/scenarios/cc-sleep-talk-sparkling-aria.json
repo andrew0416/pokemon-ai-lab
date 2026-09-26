@@ -1,0 +1,32 @@
+{
+ "description": "Opus CC unit B18: Sleep Talk calling Sparkling Aria (its onAfterMove, formerly refused for a called move). The sleeping Primarina (3 turns left) has only Sparkling Aria to call; Garchomp and Clefable protect, so the burned ally Hitmontop is the one hit target: the secondary gives it the sparklingaria volatile and runMove's AfterMove, which sees the called move (`if (this.battle.activeMove) move = this.battle.activeMove`), removes it and cures the burn. The protected, burned Garchomp keeps its burn.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Primarina", "item": "", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32, "spe": 2}, "moves": ["Sleep Talk", "Sparkling Aria"], "level": 50},
+   {"species": "Hitmontop", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Bulk Up", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 2, "atk": 32, "def": 32}, "moves": ["Swords Dance", "Protect"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Primarina": {"status": "slp", "statusTime": 3},
+   "Hitmontop": {"status": "brn"}
+  },
+  "p2": {
+   "Garchomp": {"status": "brn"}
+  }
+ },
+ "turn": {"p1": "move sleeptalk, move bulkup", "p2": "move protect, move protect"}
+}
