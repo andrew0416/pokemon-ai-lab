@@ -844,6 +844,25 @@ pub(crate) fn skill_swap<const N: usize>(
     if b.item(target) == items::ABILITY_SHIELD || b.item(source) == items::ABILITY_SHIELD {
         return Ok(());
     }
+    // What the state is otherwise checked for before a turn: Symbiosis must be able to pass the
+    // item its new holder has, Rivalry needs every gender decided.
+    for (ability, holder) in [(source_ability, target), (target_ability, source)] {
+        let mut mon = b.slot_mon(holder).expect("an occupant").clone();
+        mon.ability = ability;
+        let why = symbiosis_problem(&mon).or_else(|| {
+            let undecided = b
+                .state
+                .sides
+                .iter()
+                .flat_map(|side| side.party.iter())
+                .any(|m| !m.species.is_none() && m.gender == Gender::Random);
+            (ability == abilities::RIVALRY && undecided)
+                .then(|| "Rivalry next to a Pokémon of undecided gender".to_owned())
+        });
+        if let Some(why) = why {
+            return Err(b.unsupported(format!("Wandering Spirit's swap: {why}")));
+        }
+    }
     super::switching::end_ability(b, source, source_ability)?;
     super::switching::end_ability(b, target, target_ability)?;
     b.apply(Instruction::SetAbility {
