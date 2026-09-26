@@ -1,0 +1,23 @@
+{
+ "description": "Opus S unit 7d: Mental Herb cures Attract. As s-cute-charm, with Snorlax holding Mental Herb: when Cute Charm attracts it (30%), the Update after its action uses the herb and removes Attract.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Clefable", "gender": "F", "item": "", "ability": "Cute Charm", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Hippowdon", "gender": "M", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "gender": "M", "item": "Mental Herb", "ability": "Thick Fat", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Double-Edge", "Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "move doubleedge 1, move harden"}
+}

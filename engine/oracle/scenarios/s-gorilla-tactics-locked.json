@@ -1,0 +1,26 @@
+{
+ "description": "Opus S unit 4: Gorilla Tactics locks into a status move too. Setup turn: Galarian Darmanitan uses Protect (choiceLock = protect). The turn: Protect is its only choice (DisableMove); the second Protect in a row succeeds with probability 1/3.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Darmanitan-Galar", "item": "", "ability": "Gorilla Tactics", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Double-Edge", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Hippowdon", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move protect, move harden", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move protect, move harden", "p2": "move harden, move harden"}
+}

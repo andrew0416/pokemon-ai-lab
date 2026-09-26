@@ -1,0 +1,27 @@
+{
+ "description": "Opus S unit 5: Infiltrator (move.infiltrates). Setup turn: Snorlax puts up a Substitute; p2's side then has Reflect. The turn: Dragapult (Infiltrator) Dragon Claws Snorlax itself through the Substitute and Reflect (full damage, the substitute untouched); Crobat (Infiltrator) Defogs Snorlax: the evasion drop reaches it through the Substitute (`!target.volatiles['substitute'] || move.infiltrates`) and the screen ends.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Dragapult", "item": "", "ability": "Infiltrator", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Dragon Claw", "Harden"], "level": 50},
+   {"species": "Crobat", "item": "", "ability": "Infiltrator", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Defog", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Substitute", "Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move harden, move harden", "move substitute, move harden"]
+ ],
+ "patch": {"sides": {"p2": {"reflect": 5}}},
+ "turn": {"p1": "move dragonclaw 1, move defog 1", "p2": "move harden, move harden"}
+}

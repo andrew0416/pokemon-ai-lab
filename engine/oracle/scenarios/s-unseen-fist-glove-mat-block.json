@@ -1,0 +1,23 @@
+{
+ "description": "Opus S unit 2: Mat Block checks HitProtect (blockStatus false); Punching Glove removes contact first. Greninja (fastest) uses Mat Block on its first turn and Blissey Protects: Urshifu's Ice Punch with Punching Glove (no contact after ModifyMove) is stopped on Greninja; Urshifu-Rapid-Strike's Close Combat (contact) goes through Blissey's Protect and Mat Block at a quarter.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Urshifu", "item": "Punching Glove", "ability": "Unseen Fist", "nature": "Jolly",
+    "evs": {"atk": 32, "spe": 32}, "moves": ["Ice Punch", "Protect"], "level": 50},
+   {"name": "Rapid", "species": "Urshifu-Rapid-Strike", "item": "", "ability": "Unseen Fist", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Close Combat", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Greninja", "item": "", "ability": "Torrent", "nature": "Timid",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Mat Block", "Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Protect", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move icepunch 1, move closecombat 2", "p2": "move matblock, move protect"}
+}

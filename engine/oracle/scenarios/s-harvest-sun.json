@@ -1,0 +1,24 @@
+{
+ "description": "Opus S unit 9a: Harvest in harsh sunlight always restores the berry. Torkoal's Drought sets sun at the start; Exeggutor (patched to 40 HP) eats its Sitrus Berry at the first Update, gets it back at the residual and eats it again at the following Update. Everyone Hardens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Exeggutor", "item": "Sitrus Berry", "ability": "Harvest", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Torkoal", "item": "", "ability": "Drought", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Hippowdon", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Exeggutor": {"hp": 40}}},
+ "turn": {"p1": "move harden, move harden", "p2": "move harden, move harden"}
+}

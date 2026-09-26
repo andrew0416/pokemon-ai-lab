@@ -1,0 +1,24 @@
+{
+ "description": "Opus S unit 5: Infiltrator through Safeguard and Mist (`effect.effectType === 'Move' && effect.infiltrates && !target.isAlly(source)`). p2's side has both. Crobat (Infiltrator, a Poison type: Toxic cannot miss) badly poisons Snorlax; Dragapult (Infiltrator) Charms Blissey (-2 Atk).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Dragapult", "item": "", "ability": "Infiltrator", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Charm", "Harden"], "level": 50},
+   {"species": "Crobat", "item": "", "ability": "Infiltrator", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Toxic", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"sides": {"p2": {"safeguard": 5, "mist": 5}}},
+ "turn": {"p1": "move charm 2, move toxic 1", "p2": "move harden, move harden"}
+}

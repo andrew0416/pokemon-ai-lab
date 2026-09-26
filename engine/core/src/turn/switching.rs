@@ -99,6 +99,14 @@ pub(crate) enum StartEffect {
     /// The forme abilities' `onStart` (`forme::on_start`): Ice Face, Schooling, Shields Down,
     /// Mimicry.
     Forme,
+    /// Supreme Overlord: `abilityState.fallen = min(side.totalFainted, 5)` when that is not 0
+    /// (`abilities::supreme_overlord_start`).
+    SupremeOverlord,
+    /// Commander's `onStart` (outside the SwitchIn event, which runs its `onAnySwitchIn`): its
+    /// `onUpdate` (`abilities::commander_update`).
+    Commander,
+    /// Gorilla Tactics: `abilityState.choiceLock = ""` (the lock volatile goes).
+    GorillaTactics,
 }
 
 /// Abilities with an implemented start, with the exact handler lists they were implemented
@@ -268,6 +276,18 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
     (
         abilities::MIMICRY,
         &["onStart", "onTerrainChange"],
+        StartEffect::Forme,
+    ),
+    // Flower Gift (`onSwitchInPriority: -2`): `onStart` runs its `onWeatherChange`
+    // (`forme::flower_gift`); its ModifyAtk / ModifySpD handlers are in `abilities`.
+    (
+        abilities::FLOWER_GIFT,
+        &[
+            "onAllyModifyAtk",
+            "onAllyModifySpD",
+            "onStart",
+            "onWeatherChange",
+        ],
         StartEffect::Forme,
     ),
     // F19 Zero to Hero: `onSwitchIn` only announces the Hero forme; `onSwitchOut` in
@@ -472,6 +492,35 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onSideConditionStart", "onStart", "onTryHit"],
         StartEffect::WindRider,
     ),
+    // Supreme Overlord: `onStart` counts the fallen, `onBasePower` in
+    // `abilities::base_power_handlers`, `onEnd` only logs (`end_ability` drops the state).
+    (
+        abilities::SUPREME_OVERLORD,
+        &["onBasePower", "onEnd", "onStart"],
+        StartEffect::SupremeOverlord,
+    ),
+    // Commander: `onStart` (a Start outside the SwitchIn event: Mega Evolution) and
+    // `onAnySwitchIn` (`run_switch_in`) both run its `onUpdate` (`abilities::commander_update`,
+    // also at every Update).
+    (
+        abilities::COMMANDER,
+        &["onAnySwitchIn", "onStart", "onUpdate"],
+        StartEffect::Commander,
+    ),
+    // Gorilla Tactics: `onStart` / `onEnd` reset the lock; the rest in `abilities`
+    // (`gorilla_*`) and `attack_handlers`.
+    (
+        abilities::GORILLA_TACTICS,
+        &[
+            "onBeforeMove",
+            "onDisableMove",
+            "onEnd",
+            "onModifyAtk",
+            "onModifyMove",
+            "onStart",
+        ],
+        StartEffect::GorillaTactics,
+    ),
 ];
 
 /// What `ability` does when it starts, or `None` if it has a switch-in handler that is not
@@ -568,17 +617,31 @@ fn switch_in_problem<const N: usize>(
     }
     // The newcomer next to the Pokémon it would be refused with (`abilities`).
     let suppresses = mon.ability.data().suppress_weather;
-    let paradox = mon.ability == abilities::PROTOSYNTHESIS;
+    let paradox = super::abilities::reacts_to_suppressor_end(mon.ability);
     if suppresses || paradox {
         let clash = b.all_alive().into_iter().any(|s| {
             let other = b.ability(s);
-            (suppresses && other == abilities::PROTOSYNTHESIS)
+            (suppresses && super::abilities::reacts_to_suppressor_end(other))
                 || (paradox && other.data().suppress_weather)
         });
         if clash {
             return Some(format!(
-                "{name}: Protosynthesis next to Air Lock / Cloud Nine (the suppressor's End \
-                 WeatherChange)"
+                "{name}: Protosynthesis / Flower Gift next to Air Lock / Cloud Nine (the \
+                 suppressor's End WeatherChange)"
+            ));
+        }
+    }
+    // A Rivalry holder needs every gender decided (`abilities::rivalry_problem`).
+    if on_field && mon.ability == abilities::RIVALRY {
+        let undecided = b
+            .state
+            .sides
+            .iter()
+            .flat_map(|side| side.party.iter())
+            .any(|m| !m.species.is_none() && m.gender == crate::dex::Gender::Random);
+        if undecided {
+            return Some(format!(
+                "{name}: Rivalry next to a Pokémon of undecided gender"
             ));
         }
     }
@@ -665,6 +728,8 @@ fn switch_in_as<const N: usize>(
         previous: Box::new(previous),
         party_index: Some(party_index),
     });
+    // `switchIn` queued the newcomer's `runSwitch` (a drag runs it at once).
+    b.awaiting_run_switch = true;
     Ok(())
 }
 
@@ -684,6 +749,8 @@ enum SwitchInHandler {
     Item(ItemId),
     /// `onAnySwitchIn` of a Pastel Veil holder already on the field: its `onStart` again.
     PastelVeilAny,
+    /// Commander's `onAnySwitchIn`: its `onUpdate` for the holder.
+    CommanderAny,
 }
 
 /// Showdown `runSwitch` for the Pokémon that just switched in: one `fieldEvent('SwitchIn')`
@@ -703,6 +770,8 @@ pub(crate) fn run_switch_in<const N: usize>(
     b: &mut Battle<'_, N>,
     newcomers: &[SlotRef],
 ) -> Result<(), TurnError> {
+    // `runSwitch` takes every queued `runSwitch` action at once.
+    b.awaiting_run_switch = false;
     // (priority, holder, sub-order, handler)
     let mut handlers: Vec<(i32, SlotRef, u32, SwitchInHandler)> = Vec::new();
     for &slot in newcomers {
@@ -712,12 +781,16 @@ pub(crate) fn run_switch_in<const N: usize>(
         let mon = b.mon(pokemon);
         handlers.push((0, slot, SUB_SLOT_CONDITION, SwitchInHandler::SlotConditions));
         handlers.push((0, slot, SUB_SIDE_CONDITION, SwitchInHandler::Hazards));
-        handlers.push((
-            switch_in_priority(mon.ability),
-            slot,
-            SUB_ABILITY,
-            SwitchInHandler::Ability(mon.ability),
-        ));
+        // `getCallback`: an ability with `onAnySwitchIn` has no `onStart` fallback in the
+        // SwitchIn event (Commander; Pastel Veil's are the same handler at the same priority).
+        if mon.ability != abilities::COMMANDER {
+            handlers.push((
+                switch_in_priority(mon.ability),
+                slot,
+                SUB_ABILITY,
+                SwitchInHandler::Ability(mon.ability),
+            ));
+        }
         // The effective item: `singleEvent('SwitchIn')` skips a suppressed item's handler.
         let item = b.item(slot);
         if let Some(priority) = super::items::switch_in_priority(item) {
@@ -732,6 +805,15 @@ pub(crate) fn run_switch_in<const N: usize>(
         }
         if !newcomers.contains(&slot) && mon.ability == abilities::PASTEL_VEIL {
             handlers.push((0, slot, SUB_ABILITY, SwitchInHandler::PastelVeilAny));
+        }
+        // Commander's `onAnySwitchIn` (priority -2) for every active holder, the newcomers
+        // included.
+        if mon.ability == abilities::COMMANDER {
+            let priority = super::abilities::priority(
+                mon.ability.data().event_orders,
+                "onAnySwitchInPriority",
+            );
+            handlers.push((priority, slot, SUB_ABILITY, SwitchInHandler::CommanderAny));
         }
     }
     // `speedOrder`: the holders by raw Speed, equal Speeds uniformly at random.
@@ -786,6 +868,11 @@ pub(crate) fn run_switch_in<const N: usize>(
             SwitchInHandler::PastelVeilAny => {
                 if b.ability(slot) == abilities::PASTEL_VEIL {
                     pastel_veil_cure(b, slot);
+                }
+            }
+            SwitchInHandler::CommanderAny => {
+                if b.ability(slot) == abilities::COMMANDER {
+                    super::abilities::commander_update(b, slot);
                 }
             }
         }
@@ -926,6 +1013,9 @@ pub(crate) fn start_ability<const N: usize>(
             }
         }
         StartEffect::Forme => super::forme::on_start(b, slot, ability)?,
+        StartEffect::SupremeOverlord => super::abilities::supreme_overlord_start(b, slot),
+        StartEffect::Commander => super::abilities::commander_update(b, slot),
+        StartEffect::GorillaTactics => b.delete_volatile(slot, Volatile::GorillaTactics),
     }
     Ok(())
 }
@@ -1047,6 +1137,22 @@ pub(crate) fn end_ability<const N: usize>(
     ]
     .contains(&ability)
     {
+        return Ok(());
+    }
+    // Supreme Overlord's `onEnd` only logs; its `abilityState.fallen` goes with the ability.
+    if ability == abilities::SUPREME_OVERLORD {
+        b.delete_volatile(slot, Volatile::SupremeOverlord);
+        return Ok(());
+    }
+    // Gorilla Tactics' `onEnd`: `pokemon.abilityState.choiceLock = ""`.
+    if ability == abilities::GORILLA_TACTICS {
+        b.delete_volatile(slot, Volatile::GorillaTactics);
+        return Ok(());
+    }
+    // Protean / Libero (no `onEnd`): their `abilityState.protean` / `.libero` goes with the
+    // ability.
+    if ability == abilities::PROTEAN || ability == abilities::LIBERO {
+        b.delete_volatile(slot, Volatile::ProteanUsed);
         return Ok(());
     }
     // Unburden: `pokemon.removeVolatile('unburden')`.

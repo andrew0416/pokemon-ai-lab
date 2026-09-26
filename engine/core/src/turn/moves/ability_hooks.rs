@@ -198,6 +198,12 @@ pub(super) fn on_modify_move<const N: usize>(
             active.ignore_ability = true;
         }
     }
+    // Infiltrator: `move.infiltrates = true`.
+    if ability == abilities::INFILTRATOR {
+        if let Some(active) = b.active_move.as_mut() {
+            active.infiltrates = true;
+        }
+    }
     if ability == abilities::SHEER_FORCE && sheer_force_deletes_secondaries(mv.data) {
         mv.has_sheer_force = true;
     }
@@ -223,6 +229,8 @@ pub(super) fn on_modify_move<const N: usize>(
     if ability == abilities::SCRAPPY || ability == abilities::MINDS_EYE {
         mv.scrappy = true;
     }
+    // Gorilla Tactics: the lock.
+    super::ability_events::gorilla_modify_move(b, user, mv.id);
     if b.active_move.is_some_and(|m| m.ignore_ability) {
         if let Some(why) = oblivious_bypassed(b, user, mv) {
             return Err(b.unsupported(why));
@@ -448,7 +456,9 @@ pub(super) fn on_try_hit<const N: usize>(
 /// [`on_damaging_hit`] (`u32::MAX`: no order, after every ordered handler), or `None`. Rough
 /// Skin, Iron Barbs and Rattled are handled by `moves::damaging_hit` itself.
 pub(super) fn damaging_hit_order(ability: AbilityId) -> Option<u32> {
-    const HANDLED: [AbilityId; 25] = [
+    const HANDLED: [AbilityId; 27] = [
+        abilities::WANDERING_SPIRIT,
+        abilities::CUTE_CHARM,
         abilities::SPICY_SPRAY,
         abilities::CURSED_BODY,
         abilities::TOXIC_DEBRIS,
@@ -535,6 +545,20 @@ pub(super) fn on_damaging_hit<const N: usize>(
                     _ => Status::Poison,
                 };
                 b.try_set_status_from(attacker, status, Some(holder));
+            }
+        }
+        // Wandering Spirit: `if (this.checkMoveMakesContact(...)) this.skillSwap(source, target)`.
+        a if a == abilities::WANDERING_SPIRIT => {
+            if contact {
+                super::ability_events::skill_swap(b, attacker, holder)?;
+            }
+        }
+        // Cute Charm: `if (this.checkMoveMakesContact(...)) if (this.randomChance(3, 10))
+        // source.addVolatile('attract', this.effectState.target)` (the draw is skipped when the
+        // attraction cannot land: `conditions::attract_fails`).
+        a if a == abilities::CUTE_CHARM => {
+            if contact && !conditions::attract_fails(b, attacker, holder)? && b.rng.chance(3, 10) {
+                conditions::add_attract(b, attacker, holder);
             }
         }
         // Spicy Spray (Mega Scovillain): `source.trySetStatus('brn', target)` on every damaging
@@ -744,6 +768,11 @@ pub(super) fn on_source_damaging_hit<const N: usize>(
     attacker: SlotRef,
     mv: &ActiveMove,
 ) {
+    // The handler was collected with the attacker's ability: one a DamagingHit handler replaced
+    // since (Mummy, Lingering Aroma, Wandering Spirit) is skipped (its `abilityState` moved on).
+    if b.ability(attacker) != ability {
+        return;
+    }
     if b.ability(target) == abilities::SHIELD_DUST || b.item(target) == items::COVERT_CLOAK {
         return;
     }

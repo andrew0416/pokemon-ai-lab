@@ -215,9 +215,31 @@ pub enum Volatile {
     /// (`isGrounded`, right after Ingrain). It only starts on a Pokémon that was airborne
     /// (Flying, Levitate, Magnet Rise, or in the air with Fly / Bounce, which it brings down).
     SmackDown,
+    /// Not a Showdown volatile: Supreme Overlord's `abilityState.fallen` (its `onStart` stores
+    /// `min(side.totalFainted, 5)` when that is not 0), kept in `counter`. No duration; hidden
+    /// in the canonical state.
+    SupremeOverlord,
+    /// Commander on Tatsugiri inside its Dondozo ally (`commanding`, no duration): it cannot be
+    /// hit (`hitStepInvulnerabilityEvent`, `onInvulnerability`), acts never (its choice is a
+    /// pass, a queued action is cancelled), and can be neither switched out (`onTrapPokemon`,
+    /// after Shed Shell) nor dragged out (`onDragOut`).
+    Commanding,
+    /// Commander on the Dondozo it commands (`commanded`, no duration): +2 in every stat when it
+    /// starts; trapped and not dragged out, as `commanding`, and it does not switch itself out
+    /// (`selfSwitch`, Eject Button).
+    Commanded,
+    /// Not a Showdown volatile: Gorilla Tactics' `abilityState.choiceLock`, the move (`mv`) its
+    /// holder is locked into since its first move after starting. No duration; hidden in the
+    /// canonical state.
+    GorillaTactics,
+    /// Attract (the move's `condition`, no duration; only Cute Charm adds it): 50% the holder
+    /// cannot move (BeforeMove, priority 2); it ends once its source (`effectState.source`, kept
+    /// in `counter`: [`encode_pokemon`]; hidden in the canonical state) is no longer active
+    /// (`onUpdate`).
+    Attract,
 }
 
-pub const VOLATILE_COUNT: usize = 69;
+pub const VOLATILE_COUNT: usize = 74;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -290,6 +312,11 @@ impl Volatile {
         Volatile::ShellTrap,
         Volatile::HealBlock,
         Volatile::SmackDown,
+        Volatile::SupremeOverlord,
+        Volatile::Commanding,
+        Volatile::Commanded,
+        Volatile::GorillaTactics,
+        Volatile::Attract,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -342,6 +369,7 @@ impl Volatile {
             Volatile::MagnetRise => conditions::MAGNETRISE,
             Volatile::HealBlock => conditions::HEALBLOCK,
             Volatile::SmackDown => conditions::SMACKDOWN,
+            Volatile::Attract => conditions::ATTRACT,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -366,7 +394,11 @@ impl Volatile {
             | Volatile::MirrorCoat
             | Volatile::FocusPunch
             | Volatile::BeakBlast
-            | Volatile::ShellTrap => ConditionId::NONE,
+            | Volatile::ShellTrap
+            | Volatile::SupremeOverlord
+            | Volatile::Commanding
+            | Volatile::Commanded
+            | Volatile::GorillaTactics => ConditionId::NONE,
         }
     }
 
@@ -442,6 +474,11 @@ impl Volatile {
             Volatile::ShellTrap => "shelltrap",
             Volatile::HealBlock => "healblock",
             Volatile::SmackDown => "smackdown",
+            Volatile::SupremeOverlord => "supremeoverlord",
+            Volatile::Commanding => "commanding",
+            Volatile::Commanded => "commanded",
+            Volatile::GorillaTactics => "gorillatactics",
+            Volatile::Attract => "attract",
         }
     }
 
@@ -526,7 +563,12 @@ impl Volatile {
             | Volatile::Trapper
             | Volatile::SaltCure
             | Volatile::Ingrain
-            | Volatile::SmackDown => 0,
+            | Volatile::SmackDown
+            | Volatile::SupremeOverlord
+            | Volatile::Commanding
+            | Volatile::Commanded
+            | Volatile::GorillaTactics
+            | Volatile::Attract => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -556,14 +598,18 @@ impl Volatile {
     /// application count).
     pub fn showdown_state(self, state: VolatileState) -> Option<VolatileState> {
         match self {
-            Volatile::ProteanUsed | Volatile::AngerShellUnchecked => None,
+            Volatile::ProteanUsed
+            | Volatile::AngerShellUnchecked
+            | Volatile::SupremeOverlord
+            | Volatile::GorillaTactics => None,
             // Two-turn move: the target location is not a canonical field.
             Volatile::Roost
             | Volatile::HelpingHand
             | Volatile::LeechSeed
             | Volatile::TwoTurnMove
             | Volatile::Trapped
-            | Volatile::Trapper => Some(VolatileState {
+            | Volatile::Trapper
+            | Volatile::Attract => Some(VolatileState {
                 counter: 0,
                 ..state
             }),
@@ -742,6 +788,10 @@ mod tests {
                         | Volatile::FocusPunch
                         | Volatile::BeakBlast
                         | Volatile::ShellTrap
+                        | Volatile::SupremeOverlord
+                        | Volatile::Commanding
+                        | Volatile::Commanded
+                        | Volatile::GorillaTactics
                 ));
                 continue;
             }

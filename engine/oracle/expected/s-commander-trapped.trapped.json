@@ -1,0 +1,148 @@
+{
+ "scenario": "s-commander-trapped.json",
+ "before": {
+  "schema": 1,
+  "turn": 1,
+  "ended": false,
+  "winner": "",
+  "field": {
+   "weather": "",
+   "weatherDuration": null,
+   "terrain": "",
+   "terrainDuration": null,
+   "pseudoWeather": {}
+  },
+  "sides": [
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Dondozo",
+      "species": "Dondozo",
+      "hp": 257,
+      "maxhp": 257,
+      "status": "",
+      "item": "shedshell",
+      "ability": "waterveil",
+      "slot": 1,
+      "pp": {
+       "bodypress": 12,
+       "protect": 8
+      },
+      "boosts": {
+       "atk": 2,
+       "def": 2,
+       "spa": 2,
+       "spd": 2,
+       "spe": 2
+      },
+      "volatiles": {
+       "commanded": {}
+      }
+     },
+     {
+      "name": "Snorlax",
+      "species": "Snorlax",
+      "hp": 267,
+      "maxhp": 267,
+      "status": "",
+      "item": "",
+      "ability": "thickfat",
+      "slot": null,
+      "pp": {
+       "harden": 20
+      }
+     },
+     {
+      "name": "Tatsugiri",
+      "species": "Tatsugiri",
+      "hp": 175,
+      "maxhp": 175,
+      "status": "",
+      "item": "",
+      "ability": "commander",
+      "slot": 0,
+      "pp": {
+       "dracometeor": 8,
+       "protect": 8
+      },
+      "boosts": {},
+      "volatiles": {
+       "commanding": {}
+      }
+     }
+    ]
+   },
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Arcanine",
+      "species": "Arcanine",
+      "hp": 197,
+      "maxhp": 197,
+      "status": "",
+      "item": "",
+      "ability": "justified",
+      "slot": 1,
+      "pp": {
+       "roar": 20,
+       "protect": 8
+      },
+      "boosts": {},
+      "volatiles": {}
+     },
+     {
+      "name": "Blissey",
+      "species": "Blissey",
+      "hp": 362,
+      "maxhp": 362,
+      "status": "",
+      "item": "",
+      "ability": "naturalcure",
+      "slot": null,
+      "pp": {
+       "harden": 20
+      }
+     },
+     {
+      "name": "Gengar",
+      "species": "Gengar",
+      "hp": 167,
+      "maxhp": 167,
+      "status": "",
+      "item": "",
+      "ability": "cursedbody",
+      "slot": 0,
+      "pp": {
+       "perishsong": 8,
+       "protect": 8
+      },
+      "boosts": {},
+      "volatiles": {}
+     }
+    ]
+   }
+  ]
+ },
+ "trapped": {
+  "p1": {
+   "Tatsugiri": true,
+   "Dondozo": true
+  },
+  "p2": {
+   "Gengar": false,
+   "Arcanine": false
+  }
+ }
+}

@@ -35,7 +35,8 @@ pub struct DamageInput {
     pub type_effectiveness: u32,
     /// Whether the physical burn penalty applies after type effectiveness.
     pub burned: bool,
-    /// Whether the move is reduced through Protect.
+    /// Whether the move goes through a protection at a quarter of its damage (Showdown
+    /// `getMoveHitData(move).bypassProtect`), applied after the final modifier.
     pub protected: bool,
     /// Chained final modifier, using [`MOD_ONE`] as 1x.
     pub final_modifier: u32,
@@ -117,10 +118,13 @@ pub fn damage_rolls(input: DamageInput) -> DamageRolls {
         if input.burned {
             damage /= 2;
         }
+        damage = apply_rounded_modifier(damage, input.final_modifier);
+        // Showdown `modifyDamage`: `bypassProtect` quarters the damage after `ModifyDamage`,
+        // then `if (!baseDamage) return 1`.
         if input.protected {
             damage = apply_rounded_modifier(damage, MOD_QUARTER);
         }
-        damage = apply_rounded_modifier(damage, input.final_modifier).max(1);
+        let damage = damage.max(1);
         result[index] = (damage & u32::from(u16::MAX)) as u16;
         index += 1;
     }

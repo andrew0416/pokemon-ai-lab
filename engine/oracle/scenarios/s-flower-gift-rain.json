@@ -1,0 +1,23 @@
+{
+ "description": "Opus S unit 7b: Flower Gift when the sun ends. Cherrim-Sunshine from the start (Drought); Ninetales' Rain Dance replaces the sun, and the WeatherChange turns Cherrim back; Snorlax's Double-Edge on Ninetales then has no Flower Gift boost (and rain halves nothing physical). Cherrim Protects, Blissey Hardens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Cherrim", "item": "", "ability": "Flower Gift", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Protect", "Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Double-Edge", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Ninetales", "item": "", "ability": "Drought", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Hyper Voice", "Rain Dance"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move protect, move doubleedge 1", "p2": "move raindance, move harden"}
+}

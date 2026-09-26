@@ -1,0 +1,23 @@
+{
+ "description": "Opus S unit 3 (Perish Song's Invulnerability check, shared with Commander): Aerodactyl (fastest) starts Fly and is semi-invulnerable when Gengar's Perish Song runs, so the song misses it (Fly's onInvulnerability) and gives the other three the count.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Cursed Body", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Perish Song", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Aerodactyl", "item": "", "ability": "Pressure", "nature": "Jolly",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Fly", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move perishsong, move harden", "p2": "move fly 1, move harden"}
+}

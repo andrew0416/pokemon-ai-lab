@@ -744,10 +744,10 @@ pub(crate) fn blunder_policy<const N: usize>(b: &mut Battle<'_, N>, user: SlotRe
 }
 
 /// Mental Herb's `onUpdate`: a holder with any of `attract`, `taunt`, `encore`, `torment`,
-/// `disable`, `healblock` uses the item (`useItem`) and loses all of them. Attract does not
-/// exist in the engine (its moves are refused), so the other five are checked.
+/// `disable`, `healblock` uses the item (`useItem`) and loses all of them.
 pub(crate) fn mental_herb<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
-    const CURED: [Volatile; 5] = [
+    const CURED: [Volatile; 6] = [
+        Volatile::Attract,
         Volatile::Taunt,
         Volatile::Encore,
         Volatile::Torment,
@@ -1087,6 +1087,13 @@ pub(crate) fn after_move_secondary<const N: usize>(
         {
             return;
         }
+        // Champions: `if (target.volatiles['commanding'] || target.volatiles['commanded'])
+        // return;`
+        if b.volatile(target, Volatile::Commanding).active
+            || b.volatile(target, Volatile::Commanded).active
+        {
+            return;
+        }
         if b.all_alive()
             .iter()
             .any(|&s| b.state.slot(s).switch_flag == SwitchFlag::Effect)
@@ -1149,6 +1156,7 @@ pub(crate) fn after_sub_damage<const N: usize>(b: &mut Battle<'_, N>, target: Sl
         new: ItemId::NONE,
     });
     super::abilities::unburden(b, target);
+    super::abilities::symbiosis(b, target);
 }
 
 /// The target's item `onHit` (`runEvent('Hit')` in `runMoveEffects`, after the move's own

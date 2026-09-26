@@ -1,0 +1,31 @@
+{
+ "description": "Opus S unit 1: Supreme Overlord. Setup turn 1: both p1 leads use Memento on Snorlax and faint (totalFainted 2). Setup turn 2: the replacements Kingambit and Blissey come in; Kingambit's onStart stores fallen 2. The turn: Kingambit's Kowtow Cleave (never misses) on Hippowdon has 4915/4096 power (onBasePower, priority 21).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Whimsicott", "item": "", "ability": "Chlorophyll", "nature": "Timid",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Memento"], "level": 50},
+   {"species": "Murkrow", "item": "", "ability": "Insomnia", "nature": "Jolly",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Memento"], "level": 50},
+   {"species": "Kingambit", "item": "", "ability": "Supreme Overlord", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Kowtow Cleave", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Hippowdon", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move memento 1, move memento 1", "move harden, move harden"],
+  ["switch 3, switch 4", ""]
+ ],
+ "turn": {"p1": "move kowtowcleave 2, move harden", "p2": "move harden, move harden"}
+}

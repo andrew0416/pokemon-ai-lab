@@ -50,6 +50,8 @@ enum Kind {
     /// A forme ability's `onResidual` (order 29, ability sub-order): Schooling, Shields Down,
     /// Hunger Switch (`forme::residual`).
     Forme(PokemonRef, SlotRef, AbilityId),
+    /// Harvest `onResidual` (order 28, sub-order 2).
+    Harvest(PokemonRef, SlotRef),
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -239,6 +241,12 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                     sub_order: 2,
                     kind: Kind::SpeedBoost(pokemon, slot),
                 }),
+                a if a == abilities::HARVEST => out.push(Handler {
+                    order: 28,
+                    speed,
+                    sub_order: 2,
+                    kind: Kind::Harvest(pokemon, slot),
+                }),
                 a if a == abilities::SHED_SKIN
                     || a == abilities::HYDRATION
                     || a == abilities::HEALER =>
@@ -311,7 +319,7 @@ impl Kind {
             | Kind::Item(p, s, _)
             | Kind::LeechSeed(p, s)
             | Kind::VolatileEffect(p, s, _) => Some((p, s)),
-            Kind::Forme(p, s, _) => Some((p, s)),
+            Kind::Forme(p, s, _) | Kind::Harvest(p, s) => Some((p, s)),
             Kind::Weather
             | Kind::FieldDuration(_)
             | Kind::SideDuration(..)
@@ -537,6 +545,13 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
                 return Ok(true);
             }
             super::forme::residual(b, slot, ability)?;
+        }
+        Kind::Harvest(pokemon, slot) => {
+            // Skipped if the ability changed since the handlers were collected.
+            if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != abilities::HARVEST {
+                return Ok(true);
+            }
+            ability_events::harvest(b, pokemon);
         }
         Kind::SpeedBoost(pokemon, slot) => {
             // Skipped if the ability changed since the handlers were collected.

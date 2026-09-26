@@ -267,8 +267,8 @@ fn unsupported_start_handlers_are_rejected() {
     };
 
     let mut s = loaded.state.clone();
-    // Supreme Overlord's onStart is not implemented.
-    s.active_mut(rillaboom).unwrap().ability = abilities::SUPREME_OVERLORD;
+    // Orichalcum Pulse's onStart (it sets sun) is not implemented.
+    s.active_mut(rillaboom).unwrap().ability = abilities::ORICHALCUM_PULSE;
     match expand_switch_ins(&s) {
         Err(SwitchInError::UnsupportedAbility {
             slot,
@@ -276,7 +276,7 @@ fn unsupported_start_handlers_are_rejected() {
             handler: "onStart",
         }) => {
             assert_eq!(slot, rillaboom);
-            assert_eq!(ability, abilities::SUPREME_OVERLORD);
+            assert_eq!(ability, abilities::ORICHALCUM_PULSE);
         }
         other => panic!("{other:?}"),
     }

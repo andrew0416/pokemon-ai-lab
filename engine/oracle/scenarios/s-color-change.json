@@ -1,0 +1,23 @@
+{
+ "description": "Opus S unit 9d: Color Change (onAfterMoveSecondary). Garchomp's Dragon Claw makes Kecleon a pure Dragon type; Kingdra's Dragon Pulse then hits it super effectively. Kecleon and Hippowdon Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Kecleon", "item": "", "ability": "Color Change", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Hippowdon", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Dragon Claw"], "level": 50},
+   {"species": "Kingdra", "item": "", "ability": "Sniper", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Dragon Pulse"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "move dragonclaw 1, move dragonpulse 1"}
+}

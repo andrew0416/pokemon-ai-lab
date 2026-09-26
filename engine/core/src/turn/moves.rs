@@ -5,8 +5,8 @@
 mod ability_hooks;
 mod handlers;
 
-pub(crate) use handlers::sleep_talk_calls;
 use handlers::HitResult;
+pub(crate) use handlers::{set_types, sleep_talk_calls, trick_item_start, trick_moves_item};
 
 use crate::damage::{
     damage_rolls, DamageInput, MOD_HALF, MOD_ONE, MOD_ONE_POINT_FIVE, MOD_ONE_POINT_THREE,
@@ -96,6 +96,10 @@ struct ActiveMove {
     /// the stored `moveData` (`new Move(data.moveData)`), which has no `onTry` and does not
     /// ignore type immunity.
     future_hit: bool,
+    /// The targets whose `getMoveHitData(move).bypassProtect` a `HitProtect` handler set (Unseen
+    /// Fist, Piercing Drill: a protection that would have stopped the move let it through), as a
+    /// bit per slot ([`target_bit`]): the move's damage to them is quartered.
+    bypass_protect: u8,
 }
 
 impl ActiveMove {
@@ -161,6 +165,7 @@ impl PartialEq for ActiveMove {
             && self.type_changer == other.type_changer
             && self.has_bounced == other.has_bounced
             && self.future_hit == other.future_hit
+            && self.bypass_protect == other.bypass_protect
     }
 }
 
@@ -189,6 +194,7 @@ impl std::hash::Hash for ActiveMove {
         self.type_changer.hash(state);
         self.has_bounced.hash(state);
         self.future_hit.hash(state);
+        self.bypass_protect.hash(state);
     }
 }
 
@@ -217,6 +223,8 @@ pub(crate) struct MoveProgress {
     last_hit: Vec<(SlotRef, LastHit)>,
     /// `ActiveMoveRef::ignore_ability` of the move in flight (Mold Breaker moves).
     ignore_ability: bool,
+    /// `ActiveMoveRef::infiltrates` of the move in flight (Infiltrator).
+    infiltrates: bool,
     /// [`Battle::raw_speed`] at the suspension: the action goes on in the next stage.
     raw_speed: Vec<PokemonRef>,
 }
@@ -321,6 +329,7 @@ pub(crate) fn run_move<const N: usize>(
             type_changer: AbilityId::NONE,
             has_bounced: false,
             future_hit: false,
+            bypass_protect: 0,
         };
         before_move(b, user, &recharge);
         // MoveAborted: Destiny Bond ends.
@@ -335,6 +344,7 @@ pub(crate) fn run_move<const N: usize>(
         id,
         ignore_ability: id.data().ignore_ability,
         category: id.data().category,
+        infiltrates: false,
     });
     let result = run_move_inner(b, user, move_index, target_loc, will_act);
     if !matches!(result, Ok(MoveStep::Suspended(_))) {
@@ -458,6 +468,7 @@ pub(crate) fn future_move_hit<const N: usize>(
         type_changer: AbilityId::NONE,
         has_bounced: false,
         future_hit: true,
+        bypass_protect: 0,
     };
     // `trySpreadMoveHit(..., notActive)`: `setActiveMove(move, source, target)`; the move ignores
     // no ability.
@@ -467,6 +478,7 @@ pub(crate) fn future_move_hit<const N: usize>(
         id,
         ignore_ability: false,
         category: data.category,
+        infiltrates: false,
     });
     b.move_self_switch = false;
     if let HitOutcome::Suspended(_) = try_spread_move_hit(b, user, &mut mv, vec![slot], false)? {
@@ -498,6 +510,7 @@ pub(crate) fn resume_move<const N: usize>(
         id: progress.mv.id,
         ignore_ability: progress.ignore_ability,
         category: progress.mv.category,
+        infiltrates: progress.infiltrates,
     });
     b.raw_speed = progress.raw_speed.clone();
     let mut mv = progress.mv.clone();
@@ -588,6 +601,7 @@ fn run_move_inner<const N: usize>(
         type_changer: AbilityId::NONE,
         has_bounced: false,
         future_hit: false,
+        bypass_protect: 0,
         target_loc,
     };
 
@@ -650,7 +664,7 @@ fn run_move_inner<const N: usize>(
 
 /// The BeforeMove handlers, by priority: Glaive Rush (100), recharge (11), sleep and freeze
 /// (10), flinch (8), Disable (7), Gravity and Throat Chop (6), Taunt (5), a foe's Imprison (4),
-/// confusion (3), paralysis (1), the Choice lock (0). `false` = the move is not used (no PP, no
+/// confusion (3), Attract (2), paralysis (1), the Choice lock and Gorilla Tactics (0). `false` = the move is not used (no PP, no
 /// `lastMove`).
 fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) -> bool {
     let pokemon = b.occupant(user).expect("checked");
@@ -720,12 +734,16 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
             }
         }
     }
+    // Attract (priority 2): half the time the holder cannot move.
+    if b.volatile(user, Volatile::Attract).active && b.rng.chance(1, 2) {
+        return false;
+    }
     // Champions paralysis: 1/8.
     if b.mon(pokemon).status == Status::Paralyze && b.rng.chance(1, 8) {
         return false;
     }
-    // The Choice lock (priority 0).
-    item_events::before_move(b, user, mv.id)
+    // The Choice lock and Gorilla Tactics (priority 0; both only fail the move).
+    item_events::before_move(b, user, mv.id) && ability_events::gorilla_before_move(b, user, mv.id)
 }
 
 /// Showdown `getConfusionDamage(pokemon, 40)`: a 40-power typeless physical hit with the
@@ -914,7 +932,7 @@ fn get_move_targets<const N: usize>(
                     None => return Ok(Vec::new()),
                 }
             }
-            if N > 1 && !mv.data.tracks_target {
+            if N > 1 && !ability_events::tracks_target(b, user, mv.data, mv.target) {
                 t = redirect_target(b, user, mv, t)?;
             }
             // `if (target.fainted && !move.flags['futuremove'])`: a future move may still be aimed
@@ -1197,6 +1215,7 @@ fn call_move<const N: usize>(
         id,
         ignore_ability,
         category: id.data().category,
+        infiltrates: false,
     });
     let data = id.data();
     let mut mv = ActiveMove {
@@ -1223,6 +1242,7 @@ fn call_move<const N: usize>(
         type_changer: AbilityId::NONE,
         has_bounced: false,
         future_hit: false,
+        bypass_protect: 0,
     };
     let target = get_random_target(b, user, data.target);
     let will_act = b.will_act();
@@ -1273,6 +1293,7 @@ fn bounce_move<const N: usize>(
         id,
         ignore_ability: false,
         category: data.category,
+        infiltrates: false,
     });
     let mut mv = ActiveMove {
         id,
@@ -1296,6 +1317,7 @@ fn bounce_move<const N: usize>(
         type_changer: AbilityId::NONE,
         has_bounced: true,
         future_hit: false,
+        bypass_protect: 0,
         // A bounced Parting Shot switches the bouncer out (`moveHit` sets the flag for the
         // copy's user).
         self_switch: data.self_switch == SelfSwitch::Yes,
@@ -1345,6 +1367,9 @@ fn use_move_tail<const N: usize>(
         && !mv.data.flags.contains(MoveFlags::FUTUREMOVE)
     {
         item_events::after_move_secondary_self(b, user, main_target, mv.data, mv.total_damage);
+        // Magician (an ability, sub-order 7, before the item's 8: it needs an empty-handed user,
+        // so the item handlers above never acted when it can).
+        ability_events::magician(b, user, mv.id, hit_target_slots::<N>(mv.hit_targets))?;
         if checks_user {
             user_emergency_exit(b, user, hp_before)?;
         }
@@ -1686,6 +1711,7 @@ fn try_spread_move_hit<const N: usize>(
         any_ok: false,
         last_hit: Vec::new(),
         ignore_ability: b.active_move.is_some_and(|a| a.ignore_ability),
+        infiltrates: b.active_move.is_some_and(|a| a.infiltrates),
         raw_speed: Vec::new(),
     };
     hit_loop(b, user, mv, Some(progress))
@@ -1800,6 +1826,16 @@ enum TryHit {
     Fail,
 }
 
+/// A protection's verdict on a move (its `onTryHit` through `checkMoveBypassesProtect`): it does
+/// not apply, it stops the move (`NOT_FAIL`), or it would have and a `HitProtect` handler let the
+/// move through (Unseen Fist, Piercing Drill).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Guard {
+    Open,
+    Blocked,
+    Bypassed,
+}
+
 fn try_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -1809,14 +1845,28 @@ fn try_hit<const N: usize>(
     if psychic_terrain_blocks(b, user, mv, target) {
         return Ok(TryHit::Fail);
     }
-    if guarded_by_side(b, user, mv, target) {
-        return Ok(TryHit::NotFail);
+    // `runEvent('HitProtect', source, target, move)` inside every `checkMoveBypassesProtect`
+    // (Wide Guard, Quick Guard, the protect family, Mat Block): Unseen Fist and Piercing Drill let
+    // a contact move through and set the target's `bypassProtect` (its damage is quartered).
+    let hit_protect = ability_events::hit_protect(b, user, mv.data);
+    let mut bypassed = false;
+    match guarded_by_side(b, user, mv, target, hit_protect) {
+        Guard::Blocked => return Ok(TryHit::NotFail),
+        Guard::Bypassed => bypassed = true,
+        Guard::Open => {}
     }
-    if handlers::protect_try_hit(b, user, mv, target) {
-        return Ok(TryHit::NotFail);
+    match handlers::protect_try_hit(b, user, mv, target, hit_protect) {
+        Guard::Blocked => return Ok(TryHit::NotFail),
+        Guard::Bypassed => bypassed = true,
+        Guard::Open => {}
     }
-    if handlers::side_guard_try_hit(b, user, mv, target) {
-        return Ok(TryHit::NotFail);
+    match handlers::side_guard_try_hit(b, user, mv, target, hit_protect) {
+        Guard::Blocked => return Ok(TryHit::NotFail),
+        Guard::Bypassed => bypassed = true,
+        Guard::Open => {}
+    }
+    if bypassed {
+        mv.bypass_protect |= target_bit::<N>(target);
     }
     // Magic Bounce (`onTryHit`, priority 1: after Psychic Terrain, the guards, Protect and the
     // side guards, before every priority-0 handler) uses a copy of the move back at its user,
@@ -1886,9 +1936,10 @@ fn guarded_by_side<const N: usize>(
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
-) -> bool {
+    hit_protect: bool,
+) -> Guard {
     if !mv.data.flags.contains(MoveFlags::PROTECT) {
-        return false;
+        return Guard::Open;
     }
     let spread = matches!(
         mv.target,
@@ -1896,10 +1947,16 @@ fn guarded_by_side<const N: usize>(
     );
     let guarded = (spread && b.side_effect_active(target.side, SideEffect::WideGuard))
         || (mv.priority > 0 && b.side_effect_active(target.side, SideEffect::QuickGuard));
-    if guarded {
-        handlers::reset_first_turn_lock(b, user);
+    if !guarded {
+        return Guard::Open;
     }
-    guarded
+    // `if (this.runEvent('HitProtect', source, target, move)) return;` comes before the
+    // "Outrage counter is reset" line, so a bypassed guard leaves the lock alone.
+    if hit_protect {
+        return Guard::Bypassed;
+    }
+    handlers::reset_first_turn_lock(b, user);
+    Guard::Blocked
 }
 
 /// Lightning Rod / Storm Drain `onTryHit`: a move of the absorbed type aimed at the holder
@@ -2228,6 +2285,8 @@ fn hit_loop<const N: usize>(
                         damage
                     };
                     ability_events::after_move_secondary(b, user, t, damage, total);
+                    ability_events::pickpocket(b, user, t, mv.data)?;
+                    ability_events::color_change(b, t, mv.move_type, mv.data.category);
                 }
                 item_events::AfterMoveSecondaryHandler::Item => {
                     item_events::after_move_secondary(b, user, t, mv.data.category);
@@ -2417,10 +2476,14 @@ fn spread_move_hit<const N: usize>(
                 }
             }
         }
-        // `if (moveData.selfSwitch) { if (canSwitch(source.side)) didSomething = true; else
-        // didSomething = combineResults(didSomething, false); }`
+        // `if (moveData.selfSwitch) { if (canSwitch(source.side) &&
+        // !source.volatiles['commanded']) didSomething = true; else didSomething =
+        // combineResults(didSomething, false); }`
         if data.self_switch != SelfSwitch::No {
-            note(super::residual::bench(b, user.side).next().is_some());
+            note(
+                super::residual::bench(b, user.side).next().is_some()
+                    && !b.volatile(user, Volatile::Commanded).active,
+            );
         }
         // `if (moveData.forceSwitch) { hitResult = !!this.battle.canSwitch(target.side);
         // didSomething = this.battle.combineResults(didSomething, hitResult); }`
@@ -2451,7 +2514,11 @@ fn spread_move_hit<const N: usize>(
     // (Parting Shot's `onHit` withdrew `selfSwitch` if its drops failed). It comes before the
     // targets' Emergency Exit, which clears every other active's flag: U-turn into a Pokémon it
     // takes below half leaves only that Pokémon switching.
-    if b.move_self_switch && b.alive(user).is_some() && results.iter().any(|r| *r != Hit::Failed) {
+    if b.move_self_switch
+        && b.alive(user).is_some()
+        && !b.volatile(user, Volatile::Commanded).active
+        && results.iter().any(|r| *r != Hit::Failed)
+    {
         b.set_switch_flag(user, SwitchFlag::Move);
     }
     // selfDrops: boosts once, for the first target the move did not fail on; an effect
@@ -2550,6 +2617,17 @@ fn spread_move_hit<const N: usize>(
                 || b.alive(t).is_none()
                 || b.alive(user).is_none()
                 || super::residual::bench(b, t.side).next().is_none()
+            {
+                continue;
+            }
+            // Commander's `commanding` / `commanded` `onDragOut` (priority 2, before Suction
+            // Cups) returns `false`: a status move (Roar, Whirlwind) fails on that target.
+            let commander = b.volatile(t, Volatile::Commanding).active
+                || b.volatile(t, Volatile::Commanded).active;
+            if commander && data.category == MoveCategory::Status {
+                results[i] = Hit::Failed;
+            }
+            if commander
                 || b.ability_unless_broken(t) == abilities::SUCTION_CUPS
                 || conditions::drag_out_blocked(b, t)
             {
@@ -2613,7 +2691,7 @@ fn substitute_takes_hit<const N: usize>(
     target != user
         && b.has_substitute(target)
         && !mv.data.flags.contains(MoveFlags::BYPASSSUB)
-        && !handlers::infiltrates(user, mv, target)
+        && !handlers::infiltrates(b, user, mv, target)
 }
 
 /// The substitute's `onTryPrimaryHit` (F11): `getDamage` for the target (no damage: `null`,
@@ -2855,6 +2933,7 @@ fn damaging_hit<const N: usize>(
                     new: ItemId::NONE,
                 });
                 ability_events::unburden(b, target);
+                ability_events::symbiosis(b, target);
             }
             // Weakness Policy, the absorbing items, Jaboca / Rowap Berry. The item may have
             // gone since the handlers were collected (a Jaboca Berry is eaten once).
@@ -3138,7 +3217,11 @@ fn get_damage<const N: usize>(
     ));
     // The target's volatiles (`onSourceModifyDamage`: Glaive Rush).
     final_mods.extend(handlers::volatile_modify_damage(b, target, mv));
-    if !critical && target != user && screen_applies(b, target.side, data.category) {
+    // The screens' `onAnyModifyDamage`: `if (!target.getMoveHitData(move).crit &&
+    // !move.infiltrates)`.
+    let infiltrates = b.active_move.is_some_and(|m| m.infiltrates);
+    if !critical && !infiltrates && target != user && screen_applies(b, target.side, data.category)
+    {
         let modifier = if N > 1 { 2732 } else { MOD_HALF };
         final_mods.push(Handler::global(0, SUB_SIDE_CONDITION, modifier));
     }
@@ -3156,7 +3239,8 @@ fn get_damage<const N: usize>(
         type_effectiveness,
         // `if (this.battle.gen < 6 || move.id !== 'facade')`: Facade keeps its power burned.
         burned: ability_events::burn_halves(&attacker, data) && mv.id != moves::FACADE,
-        protected: false,
+        // `getMoveHitData(move).bypassProtect` (Unseen Fist, Piercing Drill).
+        protected: mv.bypass_protect & target_bit::<N>(target) != 0,
         final_modifier,
     };
     let rolls = damage_rolls(input);

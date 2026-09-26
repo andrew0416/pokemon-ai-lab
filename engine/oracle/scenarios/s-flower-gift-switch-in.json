@@ -1,0 +1,25 @@
+{
+ "description": "Opus S unit 7b: Flower Gift's onStart. The sun is up from the start (Drought); Cherrim switches in for Blissey and its onStart (a WeatherChange single event) makes it Cherrim-Sunshine; then Snorlax's Double-Edge on Ninetales has Attack 1.5x. Ninetales and its Blissey Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"name": "Chansey", "species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Double-Edge", "Protect"], "level": 50},
+   {"species": "Cherrim", "item": "", "ability": "Flower Gift", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Protect", "Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Ninetales", "item": "", "ability": "Drought", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Harden", "Rain Dance"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "switch 3, move doubleedge 1", "p2": "move harden, move harden"}
+}

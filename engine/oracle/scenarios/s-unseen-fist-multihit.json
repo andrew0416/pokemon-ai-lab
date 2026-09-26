@@ -1,0 +1,23 @@
+{
+ "description": "Opus S unit 2: Unseen Fist through Protect with a multi-hit move: Urshifu-Rapid-Strike's Surging Strikes (three contact hits, always critical) goes through Blissey's Protect, every hit quartered (the target's bypassProtect lasts for the whole move). Urshifu protects; Snorlax Hardens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Urshifu", "item": "", "ability": "Unseen Fist", "nature": "Jolly",
+    "evs": {"atk": 32, "spe": 32}, "moves": ["Wicked Blow", "Protect"], "level": 50},
+   {"name": "Rapid", "species": "Urshifu-Rapid-Strike", "item": "", "ability": "Unseen Fist", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Surging Strikes", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Spiky Shield", "Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Protect", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move protect, move surgingstrikes 2", "p2": "move harden, move protect"}
+}

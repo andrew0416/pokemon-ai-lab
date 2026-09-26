@@ -16,8 +16,8 @@ use crate::damage::{
     MOD_ONE_POINT_TWO, MOD_THREE_QUARTERS,
 };
 use crate::dex::{
-    abilities, items, moves, AbilityFlags, AbilityId, ItemId, MoveCategory, MoveData, MoveFlags,
-    MoveId, Stat, Type, NO_BOOSTS,
+    abilities, items, moves, AbilityFlags, AbilityId, Gender, ItemId, MoveCategory, MoveData,
+    MoveFlags, MoveId, SpeciesId, Stat, Type, NO_BOOSTS,
 };
 use crate::field::{SideEffect, Weather};
 use crate::state::{Pokemon, PokemonRef, SideId, SlotRef, State, Status};
@@ -207,6 +207,31 @@ pub(crate) fn base_power_handlers<const N: usize>(
             let typed = matches!(move_type, Type::Rock | Type::Ground | Type::Steel);
             (sand && typed).then_some(5325)
         }
+        // Rivalry (priority 24): with both genders known (not genderless), 1.25x for the same
+        // gender, 0.75x for the other ([`rivalry_problem`] refuses an undecided gender).
+        a if a == abilities::RIVALRY => {
+            let gender = |slot: SlotRef| b.slot_mon(slot).map(|m| m.gender);
+            match (gender(user), gender(target)) {
+                (Some(mine), Some(theirs))
+                    if mine != Gender::Genderless && theirs != Gender::Genderless =>
+                {
+                    Some(if mine == theirs {
+                        5120
+                    } else {
+                        MOD_THREE_QUARTERS
+                    })
+                }
+                _ => None,
+            }
+        }
+        // Supreme Overlord (priority 21): `[powMod[fallen], 4096]` with the count its `onStart`
+        // stored ([`supreme_overlord_start`]).
+        a if a == abilities::SUPREME_OVERLORD => {
+            const POW_MOD: [u32; 6] = [4096, 4506, 4915, 5325, 5734, 6144];
+            let fallen = b.volatile(user, Volatile::SupremeOverlord);
+            (fallen.active && fallen.counter > 0)
+                .then(|| POW_MOD[usize::from(fallen.counter.min(5))])
+        }
         _ => None,
     };
     if let Some(modifier) = boost {
@@ -302,6 +327,188 @@ pub(crate) fn wind_rider_boost<const N: usize>(b: &mut Battle<'_, N>, holder: Sl
     )
 }
 
+/// `runEvent('HitProtect', attacker, defender, move)` in `checkMoveBypassesProtect`: the
+/// attacker's `onHitProtect` — Unseen Fist (Champions: its `onModifyMove` is removed) and
+/// Piercing Drill, neither breakable — returns `false` for a move with the `contact` flag (after
+/// ModifyMove: Punching Glove removes it; Protective Pads do not matter), which lets it through
+/// the protection and sets the target's `bypassProtect` (its damage is then quartered).
+pub(crate) fn hit_protect<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    data: &MoveData,
+) -> bool {
+    [abilities::UNSEEN_FIST, abilities::PIERCING_DRILL].contains(&b.ability(user))
+        && super::items::makes_contact(b, user, data)
+}
+
+/// The species' base species (`species.baseSpecies`; the dex leaves it unset on some bases).
+fn base_species(species: SpeciesId) -> SpeciesId {
+    let base = species.data().base_species;
+    if base.is_none() {
+        species
+    } else {
+        base
+    }
+}
+
+/// Commander's `onUpdate`, which its `onStart` and `onAnySwitchIn` also run, for the holder in
+/// `holder`:
+/// - doubles only; nothing while a `runSwitch` is the next action (`queue.peek()`: between a
+///   switch-in and its `runSwitch`, [`Battle::awaiting_run_switch`]);
+/// - `ally = pokemon.allies()[0]` (the other active Pokémon not fainted); nothing if the holder
+///   or the ally has a `switchFlag`;
+/// - unless the holder is a Tatsugiri (`baseSpecies.baseSpecies`, Megas included) next to a
+///   Dondozo, `commanding` ends (`removeVolatile`: no `onEnd`) — the ally fainted or is gone;
+/// - otherwise, if it is not commanding yet and the ally is not commanded already, its queued
+///   actions are cancelled (`queue.cancelAction`), it gets `commanding` and the ally gets
+///   `commanded`, whose `onStart` raises Atk, Def, SpA, SpD and Spe by 2 (the boost's source is
+///   the Tatsugiri: `addVolatile('commanded', pokemon)`). An ally that is `commanded` stays so
+///   when its Tatsugiri faints.
+pub(crate) fn commander_update<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) {
+    use crate::dex::species;
+    if N != 2 || b.awaiting_run_switch {
+        return;
+    }
+    let Some(pokemon) = b.alive(holder) else {
+        return;
+    };
+    let ally = b
+        .alive_slots(holder.side)
+        .into_iter()
+        .find(|&s| s != holder);
+    let flagged = |b: &Battle<'_, N>, slot: SlotRef| {
+        b.state.slot(slot).switch_flag != crate::state::SwitchFlag::None
+    };
+    if flagged(b, holder) || ally.is_some_and(|a| flagged(b, a)) {
+        return;
+    }
+    let commanding = b.volatile(holder, Volatile::Commanding).active;
+    let tatsugiri = base_species(b.mon(pokemon).species) == species::TATSUGIRI;
+    let dondozo = ally.filter(|&a| {
+        b.slot_mon(a)
+            .is_some_and(|m| base_species(m.species) == species::DONDOZO)
+    });
+    let (true, Some(ally)) = (tatsugiri, dondozo) else {
+        if commanding {
+            b.remove_volatile(holder, Volatile::Commanding);
+        }
+        return;
+    };
+    // `else { if (!ally.fainted) return; ... }`: the ally is never fainted here.
+    if commanding || b.volatile(ally, Volatile::Commanded).active {
+        return;
+    }
+    b.queue.retain(|action| action.pokemon != pokemon);
+    b.add_volatile(holder, Volatile::Commanding);
+    if b.add_volatile(ally, Volatile::Commanded) {
+        b.boost_by(
+            ally,
+            &[2, 2, 2, 2, 2, 0, 0],
+            Some(holder),
+            BoostEffect::Ability(abilities::COMMANDER),
+        );
+    }
+}
+
+/// Whether the move `data` (of target type `target` after ModifyMove) that `user` uses skips
+/// the `RedirectTarget` event (`move.tracksTarget`): Snipe Shot and Sky Drop by their data;
+/// Stalwart and Propeller Tail (`onModifyMove`, priority 1, not breakable) set it to `move.target
+/// !== 'scripted'` for every move of their holder, which also overrides the data. Their other
+/// half, `getTarget` keeping the `originalTarget` of the action (only different after Ally
+/// Switch), is refused in `handlers::swap_positions`.
+pub(crate) fn tracks_target<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    data: &MoveData,
+    target: crate::dex::MoveTarget,
+) -> bool {
+    if tracks_original_target(b.ability(user)) {
+        target != crate::dex::MoveTarget::Scripted
+    } else {
+        data.tracks_target
+    }
+}
+
+/// Stalwart and Propeller Tail: Showdown's `getTarget` aims at the action's `originalTarget`
+/// while it is active (`pokemon.hasAbility(['stalwart', 'propellertail'])`).
+pub(crate) fn tracks_original_target(ability: AbilityId) -> bool {
+    ability == abilities::STALWART || ability == abilities::PROPELLER_TAIL
+}
+
+/// Gorilla Tactics' `onModifyMove` for the move `id` its holder in `user` uses (any move but
+/// Struggle, called and status moves included): `if (pokemon.abilityState.choiceLock) return;
+/// pokemon.abilityState.choiceLock = move.id` ([`Volatile::GorillaTactics`]).
+pub(crate) fn gorilla_modify_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+) {
+    if b.ability(user) != abilities::GORILLA_TACTICS
+        || id == moves::STRUGGLE
+        || b.volatile(user, Volatile::GorillaTactics).active
+    {
+        return;
+    }
+    let state = VolatileState {
+        active: true,
+        mv: id,
+        ..VolatileState::NONE
+    };
+    b.set_volatile_state(user, Volatile::GorillaTactics, state);
+}
+
+/// Gorilla Tactics' `onBeforeMove` (priority 0): a move other than the locked one (and not
+/// Struggle) fails, with no PP spent. `false` = the move is not used. As with the Choice
+/// lock, only a lock set after the choice (never by a supported effect) reaches it: the other
+/// moves cannot be chosen ([`gorilla_disabled_move`]).
+pub(crate) fn gorilla_before_move<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+) -> bool {
+    let lock = b.volatile(user, Volatile::GorillaTactics);
+    !(b.ability(user) == abilities::GORILLA_TACTICS
+        && lock.active
+        && lock.mv != id
+        && id != moves::STRUGGLE)
+}
+
+/// Gorilla Tactics' `onDisableMove` (`endTurn`): while locked, every other move is disabled
+/// (not hidden).
+pub(crate) fn gorilla_disabled_move<const N: usize>(
+    state: &State<N>,
+    slot: SlotRef,
+    id: MoveId,
+) -> Option<String> {
+    let mon = state.active(slot)?;
+    let lock = state.slot(slot).volatiles.get(Volatile::GorillaTactics);
+    (mon.ability == abilities::GORILLA_TACTICS && lock.active && lock.mv != id).then(|| {
+        format!(
+            "{} is locked into {} by Gorilla Tactics",
+            mon.species.data().name,
+            lock.mv.data().name
+        )
+    })
+}
+
+/// Supreme Overlord's `onStart`: `if (pokemon.side.totalFainted)` the holder's
+/// `abilityState.fallen = Math.min(pokemon.side.totalFainted, 5)`, kept as
+/// [`Volatile::SupremeOverlord`] (the ability state is fresh at every switch-in and ability
+/// change, as the volatile is). The count is fixed from then on: later faints only count at the
+/// next start.
+pub(crate) fn supreme_overlord_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let fallen = b.state.side(slot.side).history.total_fainted.min(5);
+    if fallen == 0 || b.alive(slot).is_none() {
+        return;
+    }
+    let state = VolatileState {
+        active: true,
+        counter: u16::from(fallen),
+        ..VolatileState::NONE
+    };
+    b.set_volatile_state(slot, Volatile::SupremeOverlord, state);
+}
+
 /// `runEvent('AfterFaint', target, source, effect, length)` at the end of `faintMessages`
 /// (unless the battle ended there), for the source of the last faint taken from the queue when
 /// a move's damage caused it; `length` is how many faints were queued when the call began (a
@@ -344,6 +551,379 @@ pub(crate) fn after_faint<const N: usize>(
     let mut boosts = NO_BOOSTS;
     boosts[stat] = i8::try_from(length).unwrap_or(i8::MAX);
     b.boost_by(slot, &boosts, Some(slot), BoostEffect::Ability(effect));
+}
+
+/// Whether the engine can move `item` to another Pokémon (Symbiosis, Pickpocket, Magician): an
+/// item with `Start` / `End` handlers only if Trick could move it (the Start on the new holder
+/// is `moves::trick_item_start`), and not one whose other `TakeItem` handler is not
+/// implemented.
+pub(crate) fn item_moves(item: ItemId) -> bool {
+    let data = item.data();
+    let start_or_end = data
+        .handlers
+        .iter()
+        .any(|h| ["onStart", "onEnd"].contains(h));
+    let other_take_item = data.mega_stone.is_empty() && data.handlers.contains(&"onTakeItem");
+    !other_take_item && (!start_or_end || super::moves::trick_moves_item(item))
+}
+
+/// Why a Pokémon on the field cannot be simulated because of Symbiosis: it holds an item it
+/// could not pass ([`item_moves`]). The supported ways to give it another item (Trick,
+/// Pickpocket, Magician) only move items that pass.
+pub(crate) fn symbiosis_problem(mon: &Pokemon) -> Option<String> {
+    (mon.ability == abilities::SYMBIOSIS && !mon.item.is_none() && !item_moves(mon.item)).then(
+        || {
+            format!(
+                "{}: Symbiosis holding {} ({:?})",
+                mon.species.data().name,
+                mon.item.data().name,
+                mon.item.data().handlers
+            )
+        },
+    )
+}
+
+/// Symbiosis's `onAllyAfterUseItem` after the Pokémon in `receiver` used, ate or lost (Air
+/// Balloon) its item (`runEvent('AfterUseItem')`; the holder's own use changes nothing, as it
+/// then has no item to give):
+/// - nothing if the receiver has a `switchFlag` (Eject Button sets it before using the item);
+/// - for the active holder on the receiver's side (not breakable): `source.takeItem()` — the
+///   item's own TakeItem handler must let the holder part with it (a Mega Stone of its species
+///   stays); then its End on the holder (Mirror Herb forgets its copied raises);
+/// - the item's TakeItem with the receiver and `pokemon.setItem(myItem)` (the receiver needs HP):
+///   the receiver gets it and its Start runs (`moves::trick_item_start`), otherwise `source.item
+///   = myItem.id` gives it back.
+pub(crate) fn symbiosis<const N: usize>(b: &mut Battle<'_, N>, receiver: SlotRef) {
+    use crate::instruction::Instruction;
+    if b.occupant(receiver).is_none()
+        || b.state.slot(receiver).switch_flag != crate::state::SwitchFlag::None
+    {
+        return;
+    }
+    let holders: Vec<SlotRef> = b
+        .alive_slots(receiver.side)
+        .into_iter()
+        .filter(|&s| s != receiver && b.ability(s) == abilities::SYMBIOSIS)
+        .collect();
+    for holder in holders {
+        let item = b.raw_item(holder);
+        if item.is_none() || !b.item_can_be_taken(holder) {
+            continue;
+        }
+        let giver = b.occupant(holder).expect("an active holder");
+        b.apply(Instruction::SetItem {
+            target: giver,
+            old: item,
+            new: ItemId::NONE,
+        });
+        if item == items::MIRROR_HERB {
+            b.mirror_herb.retain(|&(p, _)| p != giver);
+        }
+        let taker = b.alive(receiver).filter(|&p| {
+            let mon = b.mon(p);
+            let base = base_species(mon.species);
+            mon.item.is_none()
+                && !item.data().cannot_be_taken
+                && !item.data().mega_stone.iter().any(|&(from, _)| from == base)
+        });
+        let Some(taker) = taker else {
+            b.apply(Instruction::SetItem {
+                target: giver,
+                old: ItemId::NONE,
+                new: item,
+            });
+            continue;
+        };
+        b.apply(Instruction::SetItem {
+            target: taker,
+            old: ItemId::NONE,
+            new: item,
+        });
+        super::moves::trick_item_start(b, receiver, item);
+    }
+}
+
+/// Why a battle with an active Rivalry holder cannot be simulated: a Pokémon of either party
+/// has an undecided gender ([`Gender::Random`]: no set gender, a species with a gender ratio;
+/// Showdown drew it with the battle's PRNG), which Rivalry's `onBasePower` would read.
+pub(crate) fn rivalry_problem<const N: usize>(state: &State<N>) -> Option<String> {
+    let rivalry = State::<N>::slot_refs()
+        .filter_map(|s| state.active(s))
+        .any(|m| m.hp > 0 && m.ability == abilities::RIVALRY);
+    if !rivalry {
+        return None;
+    }
+    let undecided = state
+        .sides
+        .iter()
+        .flat_map(|side| side.party.iter())
+        .find(|m| !m.species.is_none() && m.gender == Gender::Random)?;
+    Some(format!(
+        "Rivalry next to {} of undecided gender (give the set a gender)",
+        undecided.species.data().name
+    ))
+}
+
+/// `victim.takeItem(thief)` then `thief.setItem(item)` (Pickpocket, Magician; the thief holds
+/// nothing): the TakeItem event (the victim's Unburden, then the item's own handler: a Mega
+/// Stone of the victim's species or Booster Energy on a Paradox Pokémon stays), the item's End
+/// on the victim (Mirror Herb forgets its copied raises), then `setItem` on a thief with HP
+/// (its Start: `moves::trick_item_start`); a thief without HP makes the victim take it back
+/// (`victim.item = item.id`: no Start). Returns whether the thief got the item. An item the
+/// engine cannot move ([`item_moves`]) is unsupported.
+fn steal_item<const N: usize>(
+    b: &mut Battle<'_, N>,
+    victim: SlotRef,
+    thief: SlotRef,
+) -> Result<bool, super::TurnError> {
+    use crate::instruction::Instruction;
+    let (Some(holder), item) = (b.occupant(victim), b.raw_item(victim)) else {
+        return Ok(false);
+    };
+    if item.is_none() {
+        return Ok(false);
+    }
+    if !item_moves(item) {
+        return Err(b.unsupported(format!(
+            "an ability stealing {} ({:?})",
+            item.data().name,
+            item.data().handlers
+        )));
+    }
+    if !b.take_item(victim) {
+        return Ok(false);
+    }
+    if item == items::MIRROR_HERB {
+        b.mirror_herb.retain(|&(p, _)| p != holder);
+    }
+    let Some(taker) = b.alive(thief) else {
+        b.apply(Instruction::SetItem {
+            target: holder,
+            old: ItemId::NONE,
+            new: item,
+        });
+        return Ok(false);
+    };
+    b.apply(Instruction::SetItem {
+        target: taker,
+        old: ItemId::NONE,
+        new: item,
+    });
+    super::moves::trick_item_start(b, thief, item);
+    Ok(true)
+}
+
+/// Showdown `speedSort` of `slots` by `pokemon.speed` ([`Battle::event_speed`]), fastest first:
+/// equal Speeds are shuffled (uniformly) only when two of them are `relevant`, the only case in
+/// which their order can change the outcome.
+fn speed_sorted<const N: usize>(
+    b: &mut Battle<'_, N>,
+    mut slots: Vec<SlotRef>,
+    relevant: impl Fn(&Battle<'_, N>, SlotRef) -> bool,
+) -> Vec<SlotRef> {
+    slots.sort_by_key(|&s| std::cmp::Reverse(b.event_speed(s)));
+    let mut start = 0;
+    while start < slots.len() {
+        let speed = b.event_speed(slots[start]);
+        let end = (start..slots.len())
+            .find(|&i| b.event_speed(slots[i]) != speed)
+            .unwrap_or(slots.len());
+        let count = (start..end).filter(|&i| relevant(b, slots[i])).count();
+        if count >= 2 {
+            for k in start..end - 1 {
+                let pick = k + b.rng.uniform(end - k);
+                slots.swap(k, pick);
+            }
+        }
+        start = end;
+    }
+    slots
+}
+
+/// Pickpocket's `onAfterMoveSecondary` on the Pokémon in `target`, hit by `user`'s move `data`:
+/// a move with the `contact` flag (after ModifyMove: Punching Glove removes it; Protective Pads
+/// do not matter) from another Pokémon, a holder with no item (`target.item`, suppressed or
+/// not) that is neither switching out nor being dragged out, and a user without an Emergency
+/// Exit / Eject Button switch (`source.switchFlag === true`; a U-turn's does not count): the
+/// holder steals the user's item ([`steal_item`]).
+pub(crate) fn pickpocket<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    data: &MoveData,
+) -> Result<(), super::TurnError> {
+    use crate::state::SwitchFlag;
+    if target == user
+        || b.ability(target) != abilities::PICKPOCKET
+        || !super::items::makes_contact(b, user, data)
+        || !b.raw_item(target).is_none()
+        || b.state.slot(target).switch_flag != SwitchFlag::None
+        || b.force_switch.contains(&target)
+        || b.state.slot(user).switch_flag == SwitchFlag::Effect
+    {
+        return Ok(());
+    }
+    steal_item(b, user, target)?;
+    Ok(())
+}
+
+/// Magician's `onAfterMoveSecondarySelf` for the user in `user` of the damaging move `id`
+/// (after the item's handlers, which cannot act: Magician needs the user to hold nothing): the
+/// user steals the item of the first of `hit_targets` (the move's `hitTargets`, a substitute's
+/// owner included; itself excluded) in Speed order that gives one ([`steal_item`]). Nothing
+/// for a user with an Emergency Exit / Eject Button switch or holding an item (gems and Fling are
+/// refused).
+pub(crate) fn magician<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+    hit_targets: Vec<SlotRef>,
+) -> Result<(), super::TurnError> {
+    use crate::state::SwitchFlag;
+    if b.ability(user) != abilities::MAGICIAN
+        || b.state.slot(user).switch_flag == SwitchFlag::Effect
+        || !b.raw_item(user).is_none()
+        || id.data().category == MoveCategory::Status
+    {
+        return Ok(());
+    }
+    let targets: Vec<SlotRef> = hit_targets.into_iter().filter(|&t| t != user).collect();
+    let order = speed_sorted(b, targets, |b, s| {
+        !b.raw_item(s).is_none() && b.item_can_be_taken(s)
+    });
+    for victim in order {
+        if steal_item(b, victim, user)? {
+            break;
+        }
+    }
+    Ok(())
+}
+
+/// Showdown `battle.skillSwap(source, target)` (Wandering Spirit's `onDamagingHit`, with the
+/// attacker as `source`): nothing if either has fainted (processed: both are still in their
+/// slots at DamagingHit, even at 0 HP), either ability is `failskillswap`, or `SetAbility`
+/// fails for either (Ability Shield); otherwise each ability's End (`switching::end_ability`),
+/// the two trade places (the base abilities stay: they come back on switching out), and each
+/// new one starts (`switching::start_ability`: the target's first).
+pub(crate) fn skill_swap<const N: usize>(
+    b: &mut Battle<'_, N>,
+    source: SlotRef,
+    target: SlotRef,
+) -> Result<(), super::TurnError> {
+    use crate::instruction::Instruction;
+    let (Some(source_pokemon), Some(target_pokemon)) = (b.occupant(source), b.occupant(target))
+    else {
+        return Ok(());
+    };
+    let (source_ability, target_ability) = (b.ability(source), b.ability(target));
+    let fails = |a: AbilityId| a.data().flags.contains(AbilityFlags::FAILSKILLSWAP);
+    if fails(source_ability) || fails(target_ability) {
+        return Ok(());
+    }
+    // `runEvent('SetAbility')` on the target, then on the source: Ability Shield returns `null`.
+    if b.item(target) == items::ABILITY_SHIELD || b.item(source) == items::ABILITY_SHIELD {
+        return Ok(());
+    }
+    // What the state is otherwise checked for before a turn: Symbiosis must be able to pass the
+    // item its new holder has, Rivalry needs every gender decided.
+    for (ability, holder) in [(source_ability, target), (target_ability, source)] {
+        let mut mon = b.slot_mon(holder).expect("an occupant").clone();
+        mon.ability = ability;
+        let why = symbiosis_problem(&mon).or_else(|| {
+            let undecided = b
+                .state
+                .sides
+                .iter()
+                .flat_map(|side| side.party.iter())
+                .any(|m| !m.species.is_none() && m.gender == Gender::Random);
+            (ability == abilities::RIVALRY && undecided)
+                .then(|| "Rivalry next to a Pokémon of undecided gender".to_owned())
+        });
+        if let Some(why) = why {
+            return Err(b.unsupported(format!("Wandering Spirit's swap: {why}")));
+        }
+    }
+    super::switching::end_ability(b, source, source_ability)?;
+    super::switching::end_ability(b, target, target_ability)?;
+    b.apply(Instruction::SetAbility {
+        target: source_pokemon,
+        old: source_ability,
+        new: target_ability,
+    });
+    b.apply(Instruction::SetAbility {
+        target: target_pokemon,
+        old: target_ability,
+        new: source_ability,
+    });
+    super::switching::start_ability(b, source, target_ability)?;
+    super::switching::start_ability(b, target, source_ability)?;
+    Ok(())
+}
+
+/// Color Change's `onAfterMoveSecondary` for the Pokémon in `target`, hit by a damaging move of
+/// type `move_type` (after ModifyType): a holder with HP that is not already of that type
+/// becomes that type alone (`setType(type)`: not for `???`, nor on Arceus or Silvally; through
+/// Roost's filter, `moves::set_types`). Only its holder changes.
+pub(crate) fn color_change<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    move_type: Type,
+    category: MoveCategory,
+) {
+    let Some(pokemon) = b.alive(target) else {
+        return;
+    };
+    if b.ability(target) != abilities::COLOR_CHANGE
+        || category == MoveCategory::Status
+        || matches!(move_type, Type::None | Type::Unknown)
+        || b.has_type(target, move_type)
+        || [493, 773].contains(&b.mon(pokemon).species.data().num)
+    {
+        return;
+    }
+    super::moves::set_types(b, target, [move_type, Type::None]);
+}
+
+/// Harvest's `onResidual` for its holder: in harsh sunlight (`this.field.isWeather`: the field's
+/// effective weather) or on `this.randomChance(1, 2)`, a holder with HP, no item and a berry as
+/// `lastItem` gets it back (`setItem(lastItem)`: berries have no Start) and forgets it
+/// (`lastItem = ''`). The chance is not drawn when nothing could be restored (the outcome is
+/// the same either way).
+pub(crate) fn harvest<const N: usize>(b: &mut Battle<'_, N>, pokemon: PokemonRef) {
+    use crate::instruction::Instruction;
+    let mon = b.mon(pokemon);
+    let (item, last) = (mon.item, mon.last_item);
+    if mon.hp <= 0 || !item.is_none() || last.is_none() || !last.data().is_berry {
+        return;
+    }
+    let sun = b.effective_weather() == Weather::Sun;
+    if !sun && !b.rng.chance(1, 2) {
+        return;
+    }
+    b.apply(Instruction::SetItem {
+        target: pokemon,
+        old: ItemId::NONE,
+        new: last,
+    });
+    b.apply(Instruction::SetLastItem {
+        target: pokemon,
+        old: last,
+        new: ItemId::NONE,
+    });
+}
+
+/// Soul-Heart's `onAnyFaint` for one processed faint (`runEvent('Faint')` in `faintMessages`):
+/// every active holder not at 0 HP raises its SpA by 1 (`this.boost({spa: 1},
+/// this.effectState.target)`; `boost` does nothing at 0 HP, and fails once the holder's foes have
+/// no Pokémon left). Each only changes its holder.
+pub(crate) fn soul_heart<const N: usize>(b: &mut Battle<'_, N>) {
+    for slot in b.all_alive() {
+        if b.ability(slot) == abilities::SOUL_HEART {
+            let mut up = NO_BOOSTS;
+            up[2] = 1;
+            b.boost_by(slot, &up, None, BoostEffect::Ability(abilities::SOUL_HEART));
+        }
+    }
 }
 
 /// Anger Shell and Berserk (Champions): `onDamage` sets `abilityState.checked*` to
@@ -424,7 +1004,9 @@ pub(crate) fn after_move_secondary<const N: usize>(
 /// item's): the status cures of [`cured_on_update`] and Own Tempo's confusion cure
 /// (`removeVolatile('confusion')`). All are breakable: a move that ignores abilities suppresses
 /// them at the Update after its hit, and the Update after the action cures. Each only changes
-/// its holder, so their order across Pokémon does not matter.
+/// its holder, so their order across Pokémon does not matter. Commander's (not breakable,
+/// [`commander_update`]) changes its holder and its Dondozo ally only, and no other Update
+/// listener reads what it changes.
 pub(crate) fn on_update<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     let Some(pokemon) = b.alive(slot) else {
         return;
@@ -435,6 +1017,14 @@ pub(crate) fn on_update<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     }
     if ability == abilities::OWN_TEMPO && b.volatile(slot, Volatile::Confusion).active {
         b.remove_volatile(slot, Volatile::Confusion);
+    }
+    // Oblivious: `if (pokemon.volatiles['attract']) pokemon.removeVolatile('attract')` (its
+    // immunity keeps it from getting one; a move that ignores it could).
+    if ability == abilities::OBLIVIOUS && b.volatile(slot, Volatile::Attract).active {
+        b.remove_volatile(slot, Volatile::Attract);
+    }
+    if ability == abilities::COMMANDER {
+        commander_update(b, slot);
     }
 }
 
@@ -748,21 +1338,27 @@ pub(crate) fn booster_energy_kept(species: crate::dex::SpeciesId) -> bool {
     PARADOX.contains(&base)
 }
 
-/// Why a Protosynthesis holder and a weather-suppressing ability (Air Lock, Cloud Nine) cannot
-/// be on the field together: the suppressor leaving (fainting, switching out) runs its `onEnd`
-/// `WeatherChange`, which would start Protosynthesis in sun, and the engine does not run an
-/// ability's `End` there.
+/// The abilities whose `onWeatherChange` a weather suppressor's `onEnd` would run: Protosynthesis
+/// and Flower Gift (Ice Face ignores a suppressor's event).
+pub(crate) fn reacts_to_suppressor_end(ability: AbilityId) -> bool {
+    ability == abilities::PROTOSYNTHESIS || ability == abilities::FLOWER_GIFT
+}
+
+/// Why a Protosynthesis or Flower Gift holder and a weather-suppressing ability (Air Lock, Cloud
+/// Nine) cannot be on the field together: the suppressor leaving (fainting, switching out) runs
+/// its `onEnd` `WeatherChange`, which would start Protosynthesis or change Cherrim's forme in
+/// sun, and the engine does not run an ability's `End` there.
 pub(crate) fn paradox_suppressor_problem<const N: usize>(state: &State<N>) -> Option<String> {
     let actives: Vec<&Pokemon> = State::<N>::slot_refs()
         .filter_map(|s| state.active(s))
         .filter(|m| m.hp > 0)
         .collect();
-    let paradox = actives
-        .iter()
-        .any(|m| m.ability == abilities::PROTOSYNTHESIS);
+    let paradox = actives.iter().any(|m| reacts_to_suppressor_end(m.ability));
     let suppressor = actives.iter().any(|m| m.ability.data().suppress_weather);
     (paradox && suppressor).then(|| {
-        "Protosynthesis next to Air Lock / Cloud Nine (the suppressor's End WeatherChange)".into()
+        "Protosynthesis / Flower Gift next to Air Lock / Cloud Nine (the suppressor's End \
+         WeatherChange)"
+            .into()
     })
 }
 
@@ -832,6 +1428,20 @@ pub(crate) fn attack_handlers<const N: usize>(
     if let Some(modifier) = own_attack_modifier(b, user, target, attacker, physical, move_type) {
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, modifier));
+    }
+    // Gorilla Tactics (priority 1): `chainModify(1.5)` (Attack only; Dynamax is off).
+    if physical && ability == abilities::GORILLA_TACTICS {
+        let p = priority(ability.data().event_orders, event);
+        out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
+    }
+    // Flower Gift's `onAllyModifyAtk` (priority 3): 1.5x for each Cherrim on the user's side in
+    // the user's sun (Attack only).
+    if physical {
+        let orders = abilities::FLOWER_GIFT.data().event_orders;
+        let p = priority(orders, "onAllyModifyAtkPriority");
+        for holder in super::forme::flower_gift_holders(b, user, user, data) {
+            out.push(Handler::of(b, holder, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
+        }
     }
     // Flash Fire's volatile (a condition, priority 5): `if (move.type === 'Fire' &&
     // attacker.hasAbility('flashfire')) return this.chainModify(1.5)` (`move.type`: after
@@ -1006,6 +1616,15 @@ pub(crate) fn defense_handlers<const N: usize>(
     if let Some(modifier) = coat.filter(|_| defense_stat == Stat::Def) {
         let p = priority(ability.data().event_orders, "onModifyDefPriority");
         out.push(Handler::of(b, target, p, SUB_ABILITY, modifier));
+    }
+    // Flower Gift's `onAllyModifySpD` (priority 4): 1.5x for each Cherrim on the target's side
+    // in the target's sun.
+    if defense_stat == Stat::Spd {
+        let orders = abilities::FLOWER_GIFT.data().event_orders;
+        let p = priority(orders, "onAllyModifySpDPriority");
+        for holder in super::forme::flower_gift_holders(b, target, user, data) {
+            out.push(Handler::of(b, holder, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
+        }
     }
     // Sword of Ruin (`onAnyModifyDef`) / Beads of Ruin (`onAnyModifySpD`), by the stat the
     // move targets (Psyshock meets Sword of Ruin).

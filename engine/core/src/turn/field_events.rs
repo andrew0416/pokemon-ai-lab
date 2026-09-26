@@ -6,8 +6,8 @@
 //!
 //! Implemented handlers: the four Seeds' `onTerrainChange` (O92), Quark Drive's
 //! `onTerrainChange` and Protosynthesis's `onWeatherChange` (O72), Ice Face's `onWeatherChange`
-//! and Mimicry's `onTerrainChange` (F19, `forme.rs`). The other `onWeatherChange` (Forecast,
-//! Flower Gift) holders are refused on the
+//! and Mimicry's `onTerrainChange` (F19, `forme.rs`), Flower Gift's `onWeatherChange` (Opus S).
+//! The other `onWeatherChange` (Forecast) holders are refused on the
 //! field and at switch-in, which a test below pins, so these events cannot meet an
 //! unimplemented handler. Every implemented handler only changes its own holder, so the Speed
 //! order (and its random tie-breaks) cannot change the outcome and is not drawn.
@@ -97,7 +97,8 @@ mod tests {
             let implemented = id == abilities::PROTOSYNTHESIS
                 || id == abilities::QUARK_DRIVE
                 || id == abilities::ICE_FACE
-                || id == abilities::MIMICRY;
+                || id == abilities::MIMICRY
+                || id == abilities::FLOWER_GIFT;
             if reacts(id.data().handlers) && !implemented {
                 assert!(
                     !ability_supported_on_field(id) && !switch_in_supported(id),

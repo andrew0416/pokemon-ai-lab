@@ -1,0 +1,26 @@
+{
+ "description": "Opus S unit 7a: Soul-Heart (onAnyFaint, one boost per processed faint). Weavile's Glacial Lance knocks out both foes (patched to 1 HP); Magearna gets +1 SpA for each faint (+2). p2 keeps Furfrou on the bench.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Magearna", "item": "", "ability": "Soul-Heart", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Weavile", "item": "", "ability": "Pressure", "nature": "Jolly",
+    "evs": {"atk": 32, "spe": 32}, "moves": ["Glacial Lance", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Furfrou", "item": "", "ability": "Ball Fetch", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {"p2": {"Snorlax": {"hp": 1}, "Blissey": {"hp": 1}}},
+ "turn": {"p1": "move harden, move glaciallance", "p2": "move harden, move harden"}
+}

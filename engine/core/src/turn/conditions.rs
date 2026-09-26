@@ -577,9 +577,15 @@ pub(crate) fn disabled_move<const N: usize>(
 /// (`trapped`); partial trapping while its source is active (`if
 /// (this.effectState.source?.isActive) pokemon.tryTrap();`). Shed Shell's `onTrapPokemon`
 /// (priority -10, after every other handler: `pokemon.trapped = false`) frees its holder from
-/// all of them unless the item is suppressed.
+/// all of them unless the item is suppressed. Commander's `commanding` and `commanded`
+/// (priority -11, after Shed Shell) set `pokemon.trapped = true` without `tryTrap`: no type
+/// immunity or item frees them.
 pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option<String> {
     let mon = state.active(slot)?;
+    let commander = &state.slot(slot).volatiles;
+    if commander.has(Volatile::Commanding) || commander.has(Volatile::Commanded) {
+        return Some(format!("{} is in Commander", mon.species.data().name));
+    }
     let immune = mon
         .types
         .iter()
@@ -614,9 +620,76 @@ pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option
 }
 
 /// The conditions' `onDragOut` on the Pokémon in `slot`: Ingrain returns `null` (no drag, and
-/// the move does not fail). Suction Cups is checked by the callers.
+/// the move does not fail), Commander's `commanding` and `commanded` return `false` (every
+/// caller only drags on a truthy result). Suction Cups is checked by the callers.
 pub(crate) fn drag_out_blocked<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
     b.volatile(slot, Volatile::Ingrain).active
+        || b.volatile(slot, Volatile::Commanding).active
+        || b.volatile(slot, Volatile::Commanded).active
+}
+
+/// Whether `target.addVolatile('attract', source)` fails: the target has no HP or is attracted
+/// already (no `onRestart`), is immune (`runStatusImmunity('attract')`: Oblivious, breakable),
+/// a TryAddVolatile handler blocks it (Aroma Veil), or the condition's `onStart` fails: the two
+/// are not male and female (`pokemon.gender === 'M' && source.gender === 'F'` or the reverse;
+/// Destiny Knot's `onAttract` is refused on the field). An undecided gender
+/// (`Gender::Random`) is an error: Showdown drew it at random.
+pub(crate) fn attract_fails<const N: usize>(
+    b: &Battle<'_, N>,
+    target: SlotRef,
+    source: SlotRef,
+) -> Result<bool, TurnError> {
+    use crate::dex::Gender;
+    let (Some(attracted), Some(charmer)) = (b.alive(target), b.occupant(source)) else {
+        return Ok(true);
+    };
+    let genders = (b.mon(attracted).gender, b.mon(charmer).gender);
+    if genders.0 == Gender::Random || genders.1 == Gender::Random {
+        return Err(b.unsupported(format!(
+            "Attract between {} and {} with an undecided gender (give the sets a gender)",
+            b.mon(attracted).species.data().name,
+            b.mon(charmer).species.data().name
+        )));
+    }
+    let opposite = matches!(
+        genders,
+        (Gender::Male, Gender::Female) | (Gender::Female, Gender::Male)
+    );
+    Ok(b.volatile(target, Volatile::Attract).active
+        || b.ability_unless_broken(target) == abilities::OBLIVIOUS
+        || b.add_volatile_blocked(target, Volatile::Attract)
+        || !opposite)
+}
+
+/// `target.addVolatile('attract', source)` once [`attract_fails`] said it lands: the source is
+/// remembered for the condition's `onUpdate`.
+pub(crate) fn add_attract<const N: usize>(b: &mut Battle<'_, N>, target: SlotRef, source: SlotRef) {
+    let Some(charmer) = b.occupant(source) else {
+        return;
+    };
+    b.set_volatile_state(
+        target,
+        Volatile::Attract,
+        VolatileState {
+            active: true,
+            counter: encode_pokemon(charmer),
+            ..VolatileState::NONE
+        },
+    );
+}
+
+/// Attract's `onUpdate` on the Pokémon in `slot`: once its source is no longer active (switched
+/// out, or its faint processed), `removeVolatile('attract')` (the `onEnd` only logs).
+pub(crate) fn attract_update<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let attract = b.volatile(slot, Volatile::Attract);
+    if !attract.active {
+        return;
+    }
+    let source = decode_pokemon(attract.counter);
+    let active = Battle::<N>::slots(source.side).any(|s| b.occupant(s) == Some(source));
+    if !active {
+        b.remove_volatile(slot, Volatile::Attract);
+    }
 }
 
 /// Mean Look, Block, Spider Web `onHit`: `target.addVolatile('trapped', source, move,

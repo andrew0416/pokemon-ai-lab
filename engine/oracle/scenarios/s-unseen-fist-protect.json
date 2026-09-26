@@ -1,0 +1,23 @@
+{
+ "description": "Opus S unit 2: Unseen Fist (Champions onHitProtect). Urshifu's Wicked Blow (contact, always crits) goes through Snorlax's Spiky Shield at a quarter of its damage (bypassProtect, applied after ModifyDamage) and takes no Spiky Shield damage. Urshifu-Rapid-Strike's Aura Sphere (not contact) is stopped by Blissey's Protect.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Urshifu", "item": "", "ability": "Unseen Fist", "nature": "Jolly",
+    "evs": {"atk": 32, "spe": 32}, "moves": ["Wicked Blow", "Protect"], "level": 50},
+   {"name": "Rapid", "species": "Urshifu-Rapid-Strike", "item": "", "ability": "Unseen Fist", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Aura Sphere", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Spiky Shield", "Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Protect", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move wickedblow 1, move aurasphere 2", "p2": "move spikyshield, move protect"}
+}

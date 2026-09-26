@@ -1662,6 +1662,89 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
             "onTerrainChange",
         ],
     ),
+    // Opus S. Supreme Overlord: `onStart` in `abilities::supreme_overlord_start` (from
+    // `switching::start_ability`), `onBasePower` in `abilities::base_power_handlers`, `onEnd`
+    // (a log) in `switching::end_ability`.
+    (
+        abilities::SUPREME_OVERLORD,
+        &["onBasePower", "onEnd", "onStart"],
+    ),
+    // `onHitProtect` in `abilities::hit_protect` (read by `moves::try_hit`'s protections; the
+    // quartered damage is `ActiveMove::bypass_protect`). Champions removes Unseen Fist's
+    // `onModifyMove`.
+    (abilities::UNSEEN_FIST, &["onHitProtect"]),
+    (abilities::PIERCING_DRILL, &["onHitProtect"]),
+    // Commander: `onUpdate` (from `abilities::on_update`), `onAnySwitchIn`
+    // (`switching::run_switch_in`) and `onStart` (`switching::start_ability`) are all
+    // `abilities::commander_update`. The `commanding` / `commanded` conditions: invulnerability
+    // (`handlers::invulnerable`, Perish Song), forced pass (`check_side`, `legal`), trapping
+    // (`conditions::trapped`), `onDragOut` (`conditions::drag_out_blocked`, the phazing step),
+    // no self-switch or Eject Button for the commanded Pokémon.
+    (
+        abilities::COMMANDER,
+        &["onAnySwitchIn", "onStart", "onUpdate"],
+    ),
+    // Gorilla Tactics: `abilities::gorilla_modify_move` / `gorilla_before_move` /
+    // `gorilla_disabled_move` (ModifyMove, BeforeMove, DisableMove), `onModifyAtk` in
+    // `abilities::attack_handlers`, `onStart` / `onEnd` in `switching`.
+    (
+        abilities::GORILLA_TACTICS,
+        &[
+            "onBeforeMove",
+            "onDisableMove",
+            "onEnd",
+            "onModifyAtk",
+            "onModifyMove",
+            "onStart",
+        ],
+    ),
+    // Infiltrator: `onModifyMove` sets `ActiveMoveRef::infiltrates` (`ability_hooks`), read by
+    // the substitute (`moves::substitute_takes_hit`, Disguise / Ice Face `forme::hits_substitute`,
+    // Defog, Aromatherapy), the screens (`moves::get_damage`), Safeguard and Mist (`battle`).
+    (abilities::INFILTRATOR, &["onModifyMove"]),
+    // Stalwart, Propeller Tail: `move.tracksTarget` (`abilities::tracks_target`, read by
+    // `moves::get_move_targets`); `getTarget`'s original target after Ally Switch is refused
+    // (`handlers::swap_positions`).
+    (abilities::STALWART, &["onModifyMove"]),
+    (abilities::PROPELLER_TAIL, &["onModifyMove"]),
+    // Soul-Heart: `onAnyFaint` in `abilities::soul_heart` (from `Battle::faint_messages`).
+    (abilities::SOUL_HEART, &["onAnyFaint"]),
+    // Harvest: `onResidual` (order 28, sub-order 2) in `residual.rs` → `abilities::harvest`.
+    (abilities::HARVEST, &["onResidual"]),
+    // Pickpocket (`onAfterMoveSecondary`, `moves::hit_loop`) and Magician
+    // (`onAfterMoveSecondarySelf`, `moves::use_move_tail`): `abilities::pickpocket` /
+    // `magician`; an item the engine cannot move is refused when stolen.
+    (abilities::PICKPOCKET, &["onAfterMoveSecondary"]),
+    (abilities::MAGICIAN, &["onAfterMoveSecondarySelf"]),
+    // Color Change: `onAfterMoveSecondary` in `abilities::color_change` (`moves::hit_loop`).
+    (abilities::COLOR_CHANGE, &["onAfterMoveSecondary"]),
+    // Wandering Spirit: `onDamagingHit` in `ability_hooks::on_damaging_hit` →
+    // `abilities::skill_swap` (End / Start through `switching`).
+    (abilities::WANDERING_SPIRIT, &["onDamagingHit"]),
+    // Cute Charm: `onDamagingHit` in `ability_hooks::on_damaging_hit`, adding Attract
+    // (`conditions::add_attract`: BeforeMove in `moves::before_move`, `onUpdate` in
+    // `conditions::attract_update`; Mental Herb, Oblivious and Aroma Veil answer it).
+    (abilities::CUTE_CHARM, &["onDamagingHit"]),
+    // Rivalry: `onBasePower` in `abilities::base_power_handlers` (`Pokemon::gender`); an
+    // undecided gender next to it is refused (`abilities::rivalry_problem`).
+    (abilities::RIVALRY, &["onBasePower"]),
+    // Symbiosis: `onAllyAfterUseItem` in `abilities::symbiosis` (from every AfterUseItem site:
+    // `Battle::use_item`, `update::consume`, Air Balloon); an item it could not pass is refused
+    // (`forme::field_problem` → `abilities::symbiosis_problem`).
+    (abilities::SYMBIOSIS, &["onAllyAfterUseItem"]),
+    // Flower Gift: `onStart` / `onWeatherChange` in `forme::flower_gift` (switch-in,
+    // `field_events::weather_changed`), `onAllyModifyAtk` / `onAllyModifySpD` in
+    // `abilities::attack_handlers` / `defense_handlers`. Next to Air Lock / Cloud Nine it is
+    // refused (`abilities::paradox_suppressor_problem`).
+    (
+        abilities::FLOWER_GIFT,
+        &[
+            "onAllyModifyAtk",
+            "onAllyModifySpD",
+            "onStart",
+            "onWeatherChange",
+        ],
+    ),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -2001,6 +2084,9 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
     if let Some(why) = super::abilities::paradox_suppressor_problem(state) {
         return Err(why);
     }
+    if let Some(why) = super::abilities::rivalry_problem(state) {
+        return Err(why);
+    }
     Ok(())
 }
 
@@ -2059,7 +2145,8 @@ mod tests {
 
     /// The two-turn moves the engine runs are exactly `conditions::charge_volatile`'s (their
     /// semi-invulnerability is `handlers::invulnerable`, which No Guard's
-    /// `onAnyInvulnerability` answers); every other charge move and Commander stay refused.
+    /// `onAnyInvulnerability` answers); every other charge move stays refused. Commander's
+    /// `commanding` is in `handlers::invulnerable` too (Opus S).
     #[test]
     fn two_turn_moves_are_the_listed_ones() {
         use crate::dex::MoveFlags;
@@ -2077,7 +2164,7 @@ mod tests {
                 );
             }
         }
-        assert!(!ability_supported_on_field(abilities::COMMANDER));
+        assert!(ability_supported_on_field(abilities::COMMANDER));
     }
 
     /// Substitute (F11): every Showdown effect that reads a substitute or passes through one is
@@ -2087,7 +2174,8 @@ mod tests {
     ///   Arm, ...) is refused.
     /// - `TryPrimaryHit`: only Aura Break's `onAnyTryPrimaryHit` besides the substitute; the
     ///   gems' `onSourceTryPrimaryHit` and Gulp Missile are refused.
-    /// - `move.infiltrates`: Infiltrator and Present are refused (Pollen Puff is implemented).
+    /// - `move.infiltrates`: Infiltrator (`ActiveMoveRef::infiltrates`) and Pollen Puff are
+    ///   implemented, Present is refused.
     /// - Moves whose own code reads a substitute: Aromatherapy and Defog are implemented; Shed
     ///   Tail, Baton Pass, Sky Drop, Tidy Up, Transform, Sparkly Swirl are refused.
     /// - Disguise and Ice Face (`hitSub` in their handlers) are refused behind a substitute
@@ -2139,9 +2227,8 @@ mod tests {
                 assert_eq!(id, abilities::AURA_BREAK);
             }
         }
-        for ability in [abilities::INFILTRATOR, abilities::GULP_MISSILE] {
-            assert!(!ability_supported_on_field(ability), "{ability:?}");
-        }
+        assert!(!ability_supported_on_field(abilities::GULP_MISSILE));
+        assert!(ability_supported_on_field(abilities::INFILTRATOR));
         // Disguise and Ice Face read the substitute themselves (`hitSub`, `forme::hits_substitute`).
         for ability in [abilities::DISGUISE, abilities::ICE_FACE] {
             assert!(ability_supported_on_field(ability), "{ability:?}");

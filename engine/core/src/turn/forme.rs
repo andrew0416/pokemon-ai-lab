@@ -57,6 +57,7 @@ pub fn temporary_forme_base(forme: SpeciesId) -> Option<SpeciesId> {
         f if f == species::MORPEKO_HANGRY => Some(species::MORPEKO),
         f if f == species::DARMANITAN_ZEN => Some(species::DARMANITAN),
         f if f == species::DARMANITAN_GALAR_ZEN => Some(species::DARMANITAN_GALAR),
+        f if f == species::CHERRIM_SUNSHINE => Some(species::CHERRIM),
         _ => None,
     }
 }
@@ -202,16 +203,17 @@ fn shield_up(ability: AbilityId, species: SpeciesId, category: MoveCategory) -> 
 
 /// Showdown's `hitSub` test in the Disguise and Ice Face handlers: the target's substitute
 /// takes the hit (`target.volatiles['substitute'] && !move.flags['bypasssub'] &&
-/// !move.infiltrates`; Infiltrator sets `infiltrates` in the user's ModifyMove).
+/// !move.infiltrates`; Infiltrator sets `infiltrates` in the user's ModifyMove:
+/// `ActiveMoveRef::infiltrates`).
 fn hits_substitute<const N: usize>(
     b: &Battle<'_, N>,
-    user: SlotRef,
+    _user: SlotRef,
     target: SlotRef,
     id: MoveId,
 ) -> bool {
     b.state.slot(target).substitute_hp > 0
         && !id.data().flags.contains(MoveFlags::BYPASSSUB)
-        && b.ability(user) != abilities::INFILTRATOR
+        && !b.active_move.is_some_and(|m| m.infiltrates)
 }
 
 /// Whether the target's ability cancels a critical hit (`onCriticalHit` returning `false`) and
@@ -557,6 +559,10 @@ fn mimicry<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
 ///   battle, `source.bondTriggered`, which the state does not record) and Greninja-Ash (Water
 ///   Shuriken hits 3 times); on any other species (Greninja itself) both handlers do nothing.
 pub(crate) fn field_problem(mon: &crate::state::Pokemon) -> Option<String> {
+    // Symbiosis holding an item it could not pass (`abilities::item_moves`).
+    if let Some(why) = super::abilities::symbiosis_problem(mon) {
+        return Some(why);
+    }
     let bond_forme = mon.species == species::GRENINJA_BOND || mon.species == species::GRENINJA_ASH;
     (mon.ability == abilities::BATTLE_BOND && bond_forme).then(|| {
         format!(
@@ -581,17 +587,79 @@ pub(crate) fn on_start<const N: usize>(
         a if a == abilities::SCHOOLING => schooling(b, slot),
         a if a == abilities::SHIELDS_DOWN => shields_down(b, slot)?,
         a if a == abilities::MIMICRY => mimicry(b, slot),
+        // Flower Gift's `onStart` (`onSwitchInPriority: -2`): `singleEvent('WeatherChange')`,
+        // which no ability-ignoring move can suppress.
+        a if a == abilities::FLOWER_GIFT => flower_gift(b, slot, false),
         _ => {}
     }
     Ok(())
 }
 
 /// The forme abilities' `onWeatherChange` for the Pokémon in `slot`
-/// (`field_events::weather_changed`): Ice Face.
+/// (`field_events::weather_changed`): Ice Face, Flower Gift.
 pub(crate) fn weather_changed<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     if b.ability(slot) == abilities::ICE_FACE {
         ice_face_restore(b, slot);
     }
+    if b.ability(slot) == abilities::FLOWER_GIFT {
+        flower_gift(b, slot, true);
+    }
+}
+
+// ---- Flower Gift ------------------------------------------------------------------------------
+
+/// Flower Gift's `onWeatherChange` for the Pokémon in `slot` (also run by its `onStart`): a
+/// Cherrim (`baseSpecies.baseSpecies`) with HP takes the Sunshine forme in harsh sunlight
+/// (`pokemon.effectiveWeather()`: the suppressors and its own Utility Umbrella hide the sun) and
+/// goes back to Cherrim otherwise, temporarily (`formeChange(..., this.effect, false)`: the
+/// base returns when it leaves the field). The ability is breakable: in the WeatherChange event
+/// (`in_event`) a weather that an ability-ignoring move changes skips it.
+pub(crate) fn flower_gift<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, in_event: bool) {
+    let Some(pokemon) = b.alive(slot) else {
+        return;
+    };
+    let ability = if in_event {
+        b.ability_unless_broken(slot)
+    } else {
+        b.ability(slot)
+    };
+    let current = b.mon(pokemon).species;
+    if ability != abilities::FLOWER_GIFT
+        || (current != species::CHERRIM && current != species::CHERRIM_SUNSHINE)
+    {
+        return;
+    }
+    let sun = b.weather_for(slot) == Weather::Sun;
+    if sun && current != species::CHERRIM_SUNSHINE {
+        forme_change(b, slot, species::CHERRIM_SUNSHINE, Change::Temporary);
+    } else if !sun && current == species::CHERRIM_SUNSHINE {
+        forme_change(b, slot, species::CHERRIM, Change::Temporary);
+    }
+}
+
+/// Flower Gift's `onAllyModifyAtk` (priority 3) and `onAllyModifySpD` (priority 4) holders for
+/// the Pokémon in `slot` whose stat the event modifies: an active Cherrim (the holder's
+/// `baseSpecies.baseSpecies`, either forme) with Flower Gift on its side, itself included
+/// (`alliesAndSelf()`), as `user`'s move sees it (breakable), while the modified Pokémon is in
+/// harsh sunlight (`pokemon.effectiveWeather()`).
+pub(crate) fn flower_gift_holders<const N: usize>(
+    b: &Battle<'_, N>,
+    slot: SlotRef,
+    user: SlotRef,
+    data: &crate::dex::MoveData,
+) -> Vec<SlotRef> {
+    if b.weather_for(slot) != Weather::Sun {
+        return Vec::new();
+    }
+    b.alive_slots(slot.side)
+        .into_iter()
+        .filter(|&holder| {
+            super::abilities::ability_for_move(b, holder, user, data) == abilities::FLOWER_GIFT
+                && b.slot_mon(holder).is_some_and(|m| {
+                    m.species == species::CHERRIM || m.species == species::CHERRIM_SUNSHINE
+                })
+        })
+        .collect()
 }
 
 /// The abilities' `onTerrainChange` for the Pokémon in `slot` (`field_events::terrain_changed`,

@@ -20,7 +20,7 @@ use super::super::conditions::HAZARDS;
 use super::super::order::{boosted_stat, modify};
 use super::super::queue::{Action, ActionKind};
 use super::super::TurnError;
-use super::ActiveMove;
+use super::{ActiveMove, Guard};
 
 /// Showdown `pokemon.effectiveWeather()` of `holder` while `user` is the Pokémon using a
 /// move: Utility Umbrella hides sun and rain from its holder. Mega Sol (every move of its
@@ -709,11 +709,17 @@ fn skill_swap<const N: usize>(
     Ok(HitResult::Success)
 }
 
-/// Showdown `move.infiltrates` for the implemented moves: Pollen Puff's `onTryHit` sets it on a
-/// hit aimed at an ally (Infiltrator, which also sets it, is refused). It lets the move through
-/// a substitute.
-pub(super) fn infiltrates(user: SlotRef, mv: &ActiveMove, target: SlotRef) -> bool {
-    mv.id == moves::POLLEN_PUFF && target.side == user.side
+/// Showdown `move.infiltrates`: the user's Infiltrator sets it in ModifyMove
+/// (`ActiveMoveRef::infiltrates`); Pollen Puff's `onTryHit` sets it on a hit aimed at an ally.
+/// It lets the move through a substitute.
+pub(super) fn infiltrates<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    b.active_move.is_some_and(|m| m.infiltrates)
+        || (mv.id == moves::POLLEN_PUFF && target.side == user.side)
 }
 
 /// Whether the move's own `onTryHit` applies its `boosts` and deletes them (`delete
@@ -1158,14 +1164,16 @@ const PROTECTIONS: [(Volatile, bool); 7] = [
 /// through Protective Pads) is punished: Spiky Shield `this.damage(source.baseMaxhp / 8)`,
 /// Baneful Bunker / Burning Bulwark `source.trySetStatus('psn' / 'brn', target)`, King's Shield,
 /// Obstruct, Silk Trap `this.boost({atk: -1} / {def: -2} / {spe: -1}, source, target, move)`.
-/// The shields' `condition.onHit` only acts on Z- and Max Moves (off in Champions). Returns
-/// whether the move is blocked.
+/// The shields' `condition.onHit` only acts on Z- and Max Moves (off in Champions). With
+/// `hit_protect` (the user's `HitProtect` handler lets the move through: Unseen Fist, Piercing
+/// Drill) a shield that would stop the move does nothing (`Guard::Bypassed`).
 pub(super) fn protect_try_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
-) -> bool {
+    hit_protect: bool,
+) -> Guard {
     for (volatile, blocks_status) in PROTECTIONS {
         if !b.volatile(target, volatile).active {
             continue;
@@ -1174,6 +1182,9 @@ pub(super) fn protect_try_hit<const N: usize>(
             || !mv.data.flags.contains(MoveFlags::PROTECT);
         if bypassed {
             continue;
+        }
+        if hit_protect {
+            return Guard::Bypassed;
         }
         reset_first_turn_lock(b, user);
         let contact = super::item_events::makes_contact(b, user, mv.data)
@@ -1212,41 +1223,45 @@ pub(super) fn protect_try_hit<const N: usize>(
                 b.boost_by(user, &drop, Some(target), BoostEffect::Move(shield));
             }
         }
-        return true;
+        return Guard::Blocked;
     }
-    false
+    Guard::Open
 }
 
 /// The side conditions' `onTryHit` (priority 3, after the target's protect-family volatiles):
 /// Crafty Shield stops a status move unless it targets `self` or `all` (from anyone, the side's
 /// own Pokémon included); Mat Block stops a move that does not target `self` and that Protect
 /// without `blockStatus` would (`checkMoveBypassesProtect(move, source, target, false)`: a
-/// damaging move with the `protect` flag; `HitProtect` has no handler), resetting a locked move
-/// on its first turn as Protect does. Both return `NOT_FAIL`. Returns whether the move is
-/// stopped.
+/// damaging move with the `protect` flag, unless `hit_protect`: the user's `HitProtect` handler
+/// lets it through, `Guard::Bypassed`), resetting a locked move on its first turn as Protect
+/// does. Both return `NOT_FAIL` (`Guard::Blocked`).
 pub(super) fn side_guard_try_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
-) -> bool {
+    hit_protect: bool,
+) -> Guard {
     let side = target.side;
     let status = mv.data.category == MoveCategory::Status;
     if b.side_effect_active(side, SideEffect::CraftyShield)
         && status
         && !matches!(mv.target, MoveTarget::User | MoveTarget::All)
     {
-        return true;
+        return Guard::Blocked;
     }
     if b.side_effect_active(side, SideEffect::MatBlock)
         && mv.target != MoveTarget::User
         && !status
         && mv.data.flags.contains(MoveFlags::PROTECT)
     {
+        if hit_protect {
+            return Guard::Bypassed;
+        }
         reset_first_turn_lock(b, user);
-        return true;
+        return Guard::Blocked;
     }
-    false
+    Guard::Open
 }
 
 /// "Outrage counter is reset": the protect family, Mat Block, Quick Guard and Wide Guard, when
@@ -1451,15 +1466,22 @@ pub(super) fn self_on_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, 
     set_types(b, user, types);
 }
 
-/// `hitStepInvulnerabilityEvent` for one target: a semi-invulnerable target is not hit unless
-/// the move is one its state lets through, No Guard (`onAnyInvulnerability`, priority 1) is the
-/// user's or the target's ability, or the move is Toxic from a Poison type.
+/// `hitStepInvulnerabilityEvent` for one target: Helping Hand always hits; a commanding
+/// Tatsugiri (Commander) is never hit; a semi-invulnerable target is not hit unless the move is
+/// one its state lets through, No Guard (`onAnyInvulnerability`, priority 1) is the user's or
+/// the target's ability, or the move is Toxic from a Poison type.
 pub(super) fn invulnerable<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
+    if mv.id == moves::HELPING_HAND {
+        return false;
+    }
+    if b.volatile(target, Volatile::Commanding).active {
+        return true;
+    }
     let Some(state) = super::super::conditions::semi_invulnerable(b, target) else {
         return false;
     };
@@ -2002,7 +2024,7 @@ pub(super) fn on_hit<const N: usize>(
         moves::DEFOG => {
             let mut drop = NO_BOOSTS;
             drop[6] = -1;
-            let mut success = !b.has_substitute(target)
+            let mut success = (!b.has_substitute(target) || infiltrates(b, user, mv, target))
                 && b.boost_by(target, &drop, Some(user), BoostEffect::Move(mv.id));
             remove_side_effects(
                 b,
@@ -2154,8 +2176,9 @@ pub(super) fn current_slot<const N: usize>(
 /// actions follow them (Showdown's actions hold the Pokémon; a target location is read from the
 /// user's position when the move runs), as does the move in progress. Then `runEvent('Swap')`
 /// for the ally at its new position and the user at its own: Healing Wish's `onSwap` heals one
-/// that needs it. Snipe Shot (`tracksTarget`) keeps aiming at the Pokémon it was aimed at
-/// (`action.originalTarget`), which the queue does not hold: aimed at this side, it is refused.
+/// that needs it. Snipe Shot (`tracksTarget`), and any move of a Stalwart or Propeller Tail
+/// holder, keeps aiming at the Pokémon it was aimed at (`action.originalTarget`), which the queue
+/// does not hold: aimed at this side, it is refused.
 fn swap_positions<const N: usize>(
     b: &mut Battle<'_, N>,
     from: SlotRef,
@@ -2166,10 +2189,9 @@ fn swap_positions<const N: usize>(
             continue;
         };
         let id = super::super::lock::action_move_id(b.mon(action.pokemon), index);
-        if target != 0
-            && id.data().tracks_target
-            && super::at_loc(action.slot, target).side == from.side
-        {
+        let tracks = id.data().tracks_target
+            || super::super::abilities::tracks_original_target(b.mon(action.pokemon).ability);
+        if target != 0 && tracks && super::at_loc(action.slot, target).side == from.side {
             return Err(b.unsupported(format!(
                 "{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)",
                 id.data().name
@@ -2286,7 +2308,7 @@ fn trick<const N: usize>(
 /// Seeds, Room Service, White Herb, Air Balloon (its `onStart` only announces it), Utility
 /// Umbrella (its `onStart` / `onEnd` only run WeatherChange for a holder ignoring its item, and
 /// no implemented WeatherChange handler acts on sun or rain from it), Mirror Herb (`onEnd`).
-fn trick_moves_item(item: ItemId) -> bool {
+pub(crate) fn trick_moves_item(item: ItemId) -> bool {
     item.data().is_choice
         || super::super::field_events::seed_terrain(item).is_some()
         || [
@@ -2304,7 +2326,7 @@ fn trick_moves_item(item: ItemId) -> bool {
 /// or from this very move's ModifyMove); a Seed, Room Service and White Herb act as when their
 /// holder switches in (`items::switch_in_item`: used in its terrain, in Trick Room, with a
 /// lowered stat).
-fn trick_item_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
+pub(crate) fn trick_item_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
     if b.item(slot) != item {
         return;
     }
@@ -2333,9 +2355,10 @@ pub(super) fn on_hit_field<const N: usize>(
 ) -> Option<bool> {
     match mv.id {
         // Perish Song: every active Pokémon (side one first, slot order) gets the `perishsong`
-        // volatile unless `runEvent('TryHit')` returns `null` for it (it still counts as a
-        // success) or it already has one; fails when nobody was affected. No semi-invulnerable
-        // state exists (`Invulnerability`).
+        // volatile unless `runEvent('Invulnerability')` returns `false` for it (a miss: a
+        // semi-invulnerable or commanding Pokémon, [`invulnerable`]) or `runEvent('TryHit')`
+        // returns `null` (both still count as a success), or it already has one; fails when
+        // nobody was affected.
         moves::PERISH_SONG => {
             let mut result = false;
             for side in [SideId::One, SideId::Two] {
@@ -2343,7 +2366,9 @@ pub(super) fn on_hit_field<const N: usize>(
                     if b.alive(slot).is_none() {
                         continue;
                     }
-                    if perish_song_try_hit_null(b, user, mv, slot) {
+                    if invulnerable(b, user, mv, slot)
+                        || perish_song_try_hit_null(b, user, mv, slot)
+                    {
                         result = true;
                     } else if !b.volatile(slot, Volatile::PerishSong).active {
                         b.add_volatile(slot, Volatile::PerishSong);
@@ -2458,7 +2483,7 @@ fn set_hp<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, hp: i32) {
 /// replaced. On a Pokémon under Roost the stored types keep Roost's filter (Flying left out,
 /// Normal when nothing is left) and the volatile remembers the new types to restore when it
 /// ends (nothing to restore without Flying).
-fn set_types<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, types: [Type; 2]) {
+pub(crate) fn set_types<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, types: [Type; 2]) {
     let Some(pokemon) = b.occupant(slot) else {
         return;
     };
@@ -2541,7 +2566,10 @@ fn party_cure<const N: usize>(
                 if ability == immune_ability || ability == abilities::GOOD_AS_GOLD {
                     continue;
                 }
-                if id == moves::AROMATHERAPY && b.has_substitute(slot) {
+                if id == moves::AROMATHERAPY
+                    && b.has_substitute(slot)
+                    && !b.active_move.is_some_and(|m| m.infiltrates)
+                {
                     continue;
                 }
             }

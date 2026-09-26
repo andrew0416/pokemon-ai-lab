@@ -104,7 +104,7 @@ Protect (207), Fake Out (59), Encore (44), Gravity (40), Heat Wave (36), Hypnosi
 
 ## 특성
 
-- 전체 321개 중 지원 257개, 등장 효과만 미지원 0개, 미지원 64개.
+- 전체 321개 중 지원 275개, 등장 효과만 미지원 0개, 미지원 46개.
 - 라이브러리 사용 66개 중 지원 66개 (100%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
@@ -119,26 +119,15 @@ Grassy Surge (30), Intimidate (30), Competitive (28), Prankster (27), Technician
 ### 나머지 미지원 (이유별)
 
 - **미지원: callbacks [] are not implemented** (6): Corrosion, Dancer, Early Bird, Multitype, Persistent, RKS System
-- **미지원: callbacks ["onModifyMove"] are not implemented** (5): Infiltrator, Long Reach, Propeller Tail, Stalwart, Stench
-- **미지원: callbacks ["onResidual"] are not implemented** (5): Bad Dreams, Harvest, Moody, Pickup, Power Construct
+- **미지원: callbacks ["onResidual"] are not implemented** (4): Bad Dreams, Moody, Pickup, Power Construct
 - **미지원: callbacks ["onAnySetWeather", "onEnd", "onStart"] are not implemented** (3): Delta Stream, Desolate Land, Primordial Sea
-- **미지원: callbacks ["onAfterMoveSecondary"] are not implemented** (2): Color Change, Pickpocket
 - **미지원: callbacks ["onAllyFaint"] are not implemented** (2): Power of Alchemy, Receiver
-- **미지원: callbacks ["onDamagingHit"] are not implemented** (2): Cute Charm, Wandering Spirit
-- **미지원: callbacks ["onHitProtect"] are not implemented** (2): Piercing Drill, Unseen Fist
+- **미지원: callbacks ["onModifyMove"] are not implemented** (2): Long Reach, Stench
 - **미지원: callbacks ["onSwitchIn"] are not implemented** (2): Imposter, Tera Shift
-- **미지원: callbacks ["onAfterMoveSecondarySelf"] are not implemented** (1): Magician
 - **미지원: callbacks ["onAfterTerastallization"] are not implemented** (1): Teraform Zero
-- **미지원: callbacks ["onAllyAfterUseItem"] are not implemented** (1): Symbiosis
-- **미지원: callbacks ["onAllyModifyAtk", "onAllyModifySpD", "onStart", "onWeatherChange"] are not implemented** (1): Flower Gift
 - **미지원: callbacks ["onAllyTryHitSide", "onTryHit"] are not implemented** (1): Rebound
 - **미지원: callbacks ["onAnyAfterMega", "onAnyAfterMove", "onAnyAfterTerastallization", "onAnySwitchIn", "onEnd", "onFoeAfterBoost", "onResidual"] are not implemented** (1): Opportunist
 - **미지원: callbacks ["onAnyAfterSetStatus"] are not implemented** (1): Poison Puppeteer
-- **미지원: callbacks ["onAnyFaint"] are not implemented** (1): Soul-Heart
-- **미지원: callbacks ["onAnySwitchIn", "onStart", "onUpdate"] are not implemented** (1): Commander
-- **미지원: callbacks ["onBasePower", "onEnd", "onStart"] are not implemented** (1): Supreme Overlord
-- **미지원: callbacks ["onBasePower"] are not implemented** (1): Rivalry
-- **미지원: callbacks ["onBeforeMove", "onDisableMove", "onEnd", "onModifyAtk", "onModifyMove", "onStart"] are not implemented** (1): Gorilla Tactics
 - **미지원: callbacks ["onBeforeMove", "onStart"] are not implemented** (1): Truant
 - **미지원: callbacks ["onBeforeSwitchIn", "onDamagingHit", "onEnd", "onFaint"] are not implemented** (1): Illusion
 - **미지원: callbacks ["onChangeBoost", "onEatItem", "onSourceModifyDamage", "onTryEatItem", "onTryHeal"] are not implemented** (1): Ripen

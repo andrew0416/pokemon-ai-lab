@@ -1,0 +1,26 @@
+{
+ "description": "Opus S unit 1: Supreme Overlord counts the fallen only when it starts. Kingambit leads (totalFainted 0 at its start); setup turn 1: its ally Whimsicott uses Memento and faints (p1 has no bench). The turn: Kingambit's Kowtow Cleave on Hippowdon has no boost (fallen stays unset).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Kingambit", "item": "", "ability": "Supreme Overlord", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Kowtow Cleave", "Protect"], "level": 50},
+   {"species": "Whimsicott", "item": "", "ability": "Chlorophyll", "nature": "Timid",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Memento"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Hippowdon", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move protect, move memento 1", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move kowtowcleave 2, pass", "p2": "move harden, move harden"}
+}

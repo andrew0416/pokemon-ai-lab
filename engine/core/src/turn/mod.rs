@@ -878,6 +878,14 @@ pub(crate) fn check_side<const N: usize>(
             reason,
         };
         let occupant = state.active(slot).filter(|p| p.hp > 0);
+        // A commanding Tatsugiri (Commander) passes: Showdown's `getChoiceIndex` skips it and
+        // `choosePass` accepts it, whatever it is locked into.
+        if occupant.is_some() && state.slot(slot).volatiles.has(Volatile::Commanding) {
+            if slot_action != SlotAction::Pass {
+                return Err(invalid("commanding (Commander): must pass".into()));
+            }
+            continue;
+        }
         // A locked Pokémon: any move choice stands for the locked move, nothing else is
         // allowed (`trapped`), no PP is needed.
         if let (Some(locked), Some(mon)) = (lock::locked_move(state, slot), occupant) {
@@ -1042,6 +1050,10 @@ fn disabled<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> Opti
     }
     // Taunt and the other conditions' `onDisableMove`.
     if let Some(why) = conditions::disabled_move(state, slot, id) {
+        return Some(why);
+    }
+    // Gorilla Tactics' `onDisableMove`.
+    if let Some(why) = abilities::gorilla_disabled_move(state, slot, id) {
         return Some(why);
     }
     items::disabled_move(state, slot, id)

@@ -1,0 +1,24 @@
+{
+ "description": "Opus S unit 7a: Soul-Heart and the last foe. As s-soul-heart without a p2 bench: at the first faint the other foe is still queued (pokemonLeft 1), +1 SpA; at the second the foe side has no Pokemon left and the boost fails. p1 wins.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Magearna", "item": "", "ability": "Soul-Heart", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Weavile", "item": "", "ability": "Pressure", "nature": "Jolly",
+    "evs": {"atk": 32, "spe": 32}, "moves": ["Glacial Lance", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Snorlax": {"hp": 1}, "Blissey": {"hp": 1}}},
+ "turn": {"p1": "move harden, move glaciallance", "p2": "move harden, move harden"}
+}

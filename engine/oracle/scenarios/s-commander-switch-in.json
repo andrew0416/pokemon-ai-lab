@@ -1,0 +1,25 @@
+{
+ "description": "Opus S unit 3: Commander when Dondozo switches in. Tatsugiri chose Draco Meteor; Snorlax switches out for Dondozo first. The switch action's Update waits (the next action is the runSwitch); in the runSwitch, Tatsugiri's onAnySwitchIn (priority -2) commands: Dondozo +2 in every stat, Tatsugiri's queued Draco Meteor is cancelled. Garchomp's Dragon Claw at Tatsugiri then misses; Sylveon Hardens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Tatsugiri", "item": "", "ability": "Commander", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Draco Meteor", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Dondozo", "item": "", "ability": "Water Veil", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Body Press", "Protect"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Sylveon", "item": "", "ability": "Pixilate", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Dragon Claw", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move dracometeor 2, switch 3", "p2": "move harden, move dragonclaw 1"}
+}

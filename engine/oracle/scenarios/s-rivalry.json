@@ -1,0 +1,23 @@
+{
+ "description": "Opus S unit 8: Rivalry (onBasePower, priority 24) with Pokemon gender: Haxorus (set gender M) Dragon Claws Blissey (female-only species) at 0.75x; Nidoqueen (female-only) Drill Runs Blissey at 1.25x. Magnezone (genderless) Hardens with Blissey.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Haxorus", "gender": "M", "item": "", "ability": "Rivalry", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Dragon Claw", "Protect"], "level": 50},
+   {"species": "Nidoqueen", "item": "", "ability": "Rivalry", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Drill Run", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Magnezone", "item": "", "ability": "Sturdy", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move dragonclaw 2, move drillrun 2", "p2": "move harden, move harden"}
+}

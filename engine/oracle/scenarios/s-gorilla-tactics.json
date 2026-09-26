@@ -1,0 +1,23 @@
+{
+ "description": "Opus S unit 4: Gorilla Tactics. Galarian Darmanitan's Double-Edge on Snorlax with Attack 1.5x (onModifyAtk, priority 1) and its recoil; the move locks it (abilityState.choiceLock, not a volatile in Showdown's state). Blissey, Snorlax and Hippowdon Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Darmanitan-Galar", "item": "", "ability": "Gorilla Tactics", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Double-Edge", "Protect"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Hippowdon", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move doubleedge 1, move harden", "p2": "move harden, move harden"}
+}

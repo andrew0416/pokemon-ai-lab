@@ -1,0 +1,23 @@
+{
+ "description": "Opus S unit 9c: Wandering Spirit (onDamagingHit, contact: skillSwap). Gyarados (Intimidate) hits Runerigus with Payback: they trade abilities, and Intimidate starts on Runerigus (both foes -1 Atk). Machamp's Payback on the other Runerigus (named Spirit), which holds Ability Shield: no swap. The Runeriguses Harden.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Runerigus", "item": "", "ability": "Wandering Spirit", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"name": "Spirit", "species": "Runerigus", "item": "Ability Shield", "ability": "Wandering Spirit", "nature": "Jolly",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Gyarados", "item": "", "ability": "Intimidate", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Payback"], "level": 50},
+   {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Payback"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "move payback 1, move payback 2"}
+}
