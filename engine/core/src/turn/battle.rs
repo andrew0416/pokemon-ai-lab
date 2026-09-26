@@ -728,8 +728,21 @@ impl<'a, const N: usize> Battle<'a, N> {
 
     fn queue_faint(&mut self, pokemon: PokemonRef, slot: SlotRef, attacker: Option<PokemonRef>) {
         if !self.faint_queue.iter().any(|&(p, _, _)| p == pokemon) {
+            // `faint()`: `this.switchFlag = false` (only a flag set after this survives the
+            // faint: Emergency Exit after the user's own recoil).
+            self.clear_switch_flag(slot);
             self.faint_queue.push((pokemon, slot, attacker));
         }
+    }
+
+    /// Showdown `for (const pokemon of this.getAllActive()) if (pokemon.switchFlag === true)`
+    /// (Eject Button, Eject Pack): an active Pokémon with an Eject Button, Eject Pack or
+    /// Emergency Exit flag, a 0-HP one whose faint is not processed yet included (it is still in
+    /// its slot: Emergency Exit after its own recoil); a processed faint has left the slot.
+    pub fn any_active_switch_flag_true(&self) -> bool {
+        State::<N>::slot_refs().any(|slot| {
+            self.occupant(slot).is_some() && self.state.slot(slot).switch_flag == SwitchFlag::Effect
+        })
     }
 
     /// Showdown `faintMessages(lastFirst = false, forceCheck = false, checkWin)`. Returns
@@ -786,6 +799,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             // clearVolatile: the ability and types revert; the slot empties (isActive = false).
             self.clear_volatile(pokemon);
             let previous = self.state.slot(slot).clone();
+            let flag = previous.switch_flag;
             self.apply(Instruction::Switch {
                 slot,
                 previous: Box::new(previous),
@@ -796,6 +810,10 @@ impl<'a, const N: usize> Battle<'a, N> {
                 old: None,
                 new: Some(pokemon.party),
             });
+            // `clearVolatile(false)` keeps `switchFlag`: the fainted Pokémon Emergency Exit
+            // flagged after its own recoil still asks for a mid-turn replacement
+            // (`Slot::must_switch_out`).
+            self.set_switch_flag(slot, flag);
             // The rest of runEvent('Faint'): Soul-Heart (priority 1, before Destiny Bond, which
             // only faints its attacker: a holder it knocks out gets no boost either way), run
             // once the faint counts as processed (`pokemonLeft` dropped: `boost` needs

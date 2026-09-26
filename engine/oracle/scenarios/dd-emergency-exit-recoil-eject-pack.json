@@ -1,0 +1,31 @@
+{
+ "description": "Opus DD unit B27 (Opus X's B3 probe, whose refusal this lifts): Golisopod (Emergency Exit, 76/150 HP) Head Smashes Weak Armor Chansey (Eject Pack; Harden first, so Weak Armor's Defense drop sets the pack's eject flag). The recoil knocks Golisopod out (`faint()` clears its switchFlag) and `runEvent('EmergencyExit')`, which has no HP guard after recoil, flags it again. At AfterMove Chansey's pack sees Golisopod's `switchFlag === true` through `getAllActive()` (the faint is not processed yet) and stays. The fainted Golisopod keeps its flag (`clearVolatile(false)`), so Showdown asks p1 to replace it mid-turn (Snorlax's Harden still queued); Hariyama's switch-in uses the pack (`onAnySwitchIn`) and p2 switches Chansey out for Blissey before Snorlax moves. A crit knocks Chansey out too; a miss (80% accuracy) does nothing.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Golisopod", "item": "", "ability": "Emergency Exit", "nature": "Serious",
+    "evs": {}, "moves": ["Head Smash"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Chansey", "item": "Eject Pack", "ability": "Weak Armor", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Swampert", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {
+  "p1": {"Golisopod": {"hp": 76}}
+ },
+ "turn": {"p1": "move headsmash 1, move harden", "p2": "move harden, move harden"},
+ "midTurn": {"p1": ["switch 3"], "p2": ["switch 3"]}
+}

@@ -14,7 +14,7 @@ use lab_engine::action::{Gimmick, JointAction, SlotAction};
 use lab_engine::dex::{to_id, ItemId, MoveId, NO_BOOSTS};
 use lab_engine::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use lab_engine::instruction::Instruction;
-use lab_engine::state::{SideId, SlotRef, State, Status, SwitchFlag, BOOST_COUNT};
+use lab_engine::state::{SideId, SlotRef, State, Status, BOOST_COUNT};
 
 use crate::meta::ScenarioMeta;
 
@@ -356,10 +356,7 @@ pub fn parse_mid_turn<const N: usize>(
     text: &str,
 ) -> Result<[Option<u8>; N], String> {
     let mut out = [None; N];
-    let mut flagged = (0..N).filter(|&i| {
-        let slot = &state.side(side).slots[i];
-        slot.switch_flag != SwitchFlag::None && slot.party_index.is_some()
-    });
+    let mut flagged = (0..N).filter(|&i| state.side(side).slots[i].must_switch_out());
     for part in text.split(',').map(str::trim).filter(|p| !p.is_empty()) {
         let words: Vec<&str> = part.split_whitespace().collect();
         let Some(slot) = flagged.next() else {

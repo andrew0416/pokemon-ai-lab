@@ -45,7 +45,7 @@ use crate::field::FieldEffect;
 use crate::gimmick::Gimmick;
 use crate::instruction::Outcome;
 use crate::rules::{ActionError, Ruleset};
-use crate::state::{PokemonRef, SideId, SlotRef, State, SwitchFlag};
+use crate::state::{PokemonRef, SideId, SlotRef, State};
 use crate::volatile::Volatile;
 
 use battle::Battle;
@@ -180,11 +180,7 @@ fn check_mid_turn_switches<const N: usize>(
                     && !s.slots.iter().any(|slot| slot.party_index == Some(i))
             })
             .collect();
-        let flagged: Vec<usize> = (0..N)
-            .filter(|&i| {
-                s.slots[i].switch_flag != SwitchFlag::None && s.slots[i].party_index.is_some()
-            })
-            .collect();
+        let flagged: Vec<usize> = (0..N).filter(|&i| s.slots[i].must_switch_out()).collect();
         // Revival Blessing's slot asks for a fainted party member instead of a bench one.
         let reviving = |i: usize| {
             s.slot_conditions[i][crate::field::SlotCondition::RevivalBlessing as usize].is_active()
@@ -550,11 +546,11 @@ fn drag_outs<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), TurnError> {
 fn request_switches<const N: usize>(b: &mut Battle<'_, N>) -> bool {
     let mut any = false;
     for side in [SideId::One, SideId::Two] {
+        // `side.active.some(pokemon => pokemon && !!pokemon.switchFlag)`: a fainted Pokémon
+        // still holding its position counts (Emergency Exit after its own recoil).
         let flagged: Vec<SlotRef> = (0..N as u8)
             .map(|slot| SlotRef { side, slot })
-            .filter(|&slot| {
-                b.state.slot(slot).switch_flag != SwitchFlag::None && b.alive(slot).is_some()
-            })
+            .filter(|&slot| b.state.slot(slot).must_switch_out())
             .collect();
         if flagged.is_empty() {
             continue;
@@ -601,19 +597,20 @@ pub fn side_must_replace<const N: usize>(state: &State<N>, side: SideId) -> bool
 }
 
 /// Whether `side` must send in a mid-turn switch (Showdown `request: switch` with actions
-/// still queued; see [`resume_turn`]): a living occupant with [`SwitchFlag`] set.
+/// still queued; see [`resume_turn`]): a slot whose occupant has its `switch_flag` set, or
+/// whose flagged Pokémon fainted there (Emergency Exit after its own recoil:
+/// [`Slot::must_switch_out`](crate::state::Slot::must_switch_out)).
 pub fn side_must_switch<const N: usize>(state: &State<N>, side: SideId) -> bool {
     state
         .side(side)
         .slots
         .iter()
-        .any(|slot| slot.switch_flag != SwitchFlag::None && slot.party_index.is_some())
+        .any(crate::state::Slot::must_switch_out)
 }
 
-/// A slot whose living occupant has `switch_flag` set: the state is a suspended turn.
+/// A slot that must switch out ([`side_must_switch`]): the state is a suspended turn.
 fn pending_mid_turn_switch<const N: usize>(state: &State<N>) -> Option<SlotRef> {
-    State::<N>::slot_refs()
-        .find(|&r| state.slot(r).switch_flag != SwitchFlag::None && state.active_ref(r).is_some())
+    State::<N>::slot_refs().find(|&r| state.slot(r).must_switch_out())
 }
 
 /// A decision that cannot suspend (the battle start, a replacement) refuses a switch request
@@ -638,9 +635,23 @@ fn run_mid_turn_switches<const N: usize>(
     switches: Vec<(SlotRef, u8)>,
     pending: &mut Pending,
 ) -> Result<StageEnd, TurnError> {
+    // The outgoing Pokémon's action Speed; a fainted one still holding its position (Emergency
+    // Exit after its own recoil) has no boosts or handlers left.
     let mut switches: Vec<(SlotRef, u8, i32)> = switches
         .into_iter()
-        .map(|(slot, party_index)| (slot, party_index, b.action_speed(slot)))
+        .map(|(slot, party_index)| {
+            let speed = match (b.occupant(slot), b.state.slot(slot).fainted_occupant) {
+                (None, Some(party)) => switching::fainted_action_speed(
+                    b,
+                    PokemonRef {
+                        side: slot.side,
+                        party,
+                    },
+                ),
+                _ => b.action_speed(slot),
+            };
+            (slot, party_index, speed)
+        })
         .collect();
     let mut newcomers = Vec::with_capacity(switches.len());
     while !switches.is_empty() {

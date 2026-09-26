@@ -1572,7 +1572,7 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // and the residual phase's Update sites (F6), and on the move's user after its recoil,
     // after DamagingHit / AfterHit (Champions `spreadMoveHit`), after MoveFail and after
     // AfterMoveSecondarySelf (`moves::user_emergency_exit`; a user the recoil knocked out is
-    // refused). Suction Cups: `DragOut`.
+    // flagged too and replaced mid-turn). Suction Cups: `DragOut`.
     (abilities::EMERGENCY_EXIT, &["onEmergencyExit"]),
     (abilities::WIMP_OUT, &["onEmergencyExit"]),
     (abilities::SUCTION_CUPS, &["onDragOut"]),

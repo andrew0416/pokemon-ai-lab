@@ -516,16 +516,13 @@ pub(crate) fn eject_pack_use<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRe
     if !eject_pending(b, slot) || b.alive(slot).is_none() {
         return;
     }
-    // `getAllActive()` also holds a Pokémon at 0 HP whose faint is not processed; `faint()`
-    // clears its `switchFlag`, and the only flag set after that (Emergency Exit after the user's
-    // own recoil) is refused (`moves::user_emergency_exit`, oracle
-    // `x-switchflag-unprocessed-faint`), so the living actives are the same set here.
+    // `getAllActive()` also holds a Pokémon at 0 HP whose faint is not processed: a user its
+    // own recoil knocked out after Emergency Exit flagged it keeps the pack at AfterMove (oracle
+    // `dd-emergency-exit-recoil-eject-pack`).
     if super::residual::bench(b, slot.side).next().is_none()
         || b.volatile(slot, Volatile::Commanding).active
         || b.volatile(slot, Volatile::Commanded).active
-        || b.all_alive()
-            .iter()
-            .any(|&s| b.state.slot(s).switch_flag == SwitchFlag::Effect)
+        || b.any_active_switch_flag_true()
     {
         return;
     }
@@ -1503,12 +1500,10 @@ pub(crate) fn after_move_secondary<const N: usize>(
             return;
         }
         // `for (const pokemon of this.getAllActive()) if (pokemon.switchFlag === true) return;`
-        // — a 0-HP Pokémon not processed yet cannot carry the flag here (see
-        // `eject_pack_use`).
-        if b.all_alive()
-            .iter()
-            .any(|&s| b.state.slot(s).switch_flag == SwitchFlag::Effect)
-        {
+        // — a 0-HP Pokémon not processed yet included: the move's user its own recoil (before
+        // AfterMoveSecondary in Champions) knocked out after Emergency Exit flagged it (oracle
+        // `dd-emergency-exit-recoil-eject-button`).
+        if b.any_active_switch_flag_true() {
             return;
         }
         b.set_switch_flag(target, SwitchFlag::Effect);

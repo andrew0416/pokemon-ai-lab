@@ -357,12 +357,24 @@ pub struct Slot {
     pub history: SlotHistory,
     /// Showdown `switchFlag`: the occupant must be switched out by a mid-turn decision. Set
     /// when a self-switching move lands (`Move`, Showdown's move id) or by Eject Button /
-    /// Emergency Exit (`Effect`, Showdown's `true`), cleared by the switch (the slot resets)
-    /// or when the side has no bench to switch to. While set on a living occupant the side's
-    /// canonical `request` is `switch` (F6).
+    /// Emergency Exit (`Effect`, Showdown's `true`), cleared by the switch (the slot resets),
+    /// by a faint (`faint()`) or when the side has no bench to switch to. A fainted Pokémon
+    /// keeps it (`clearVolatile(false)`): Emergency Exit flags a user its own recoil knocked
+    /// out, and its replacement is then asked for mid-turn. While [`Slot::must_switch_out`] the
+    /// side's canonical `request` is `switch` (F6).
     pub switch_flag: SwitchFlag,
     pub substitute_hp: i16,
     pub dynamax: DynamaxState,
+}
+
+impl Slot {
+    /// Whether this position asks for a mid-turn switch (Showdown's `switchFlag` on
+    /// `side.active[pos]`): its occupant has [`Slot::switch_flag`], or the flagged Pokémon that
+    /// fainted here still holds the position (Emergency Exit after its own recoil).
+    pub fn must_switch_out(&self) -> bool {
+        self.switch_flag != SwitchFlag::None
+            && (self.party_index.is_some() || self.fainted_occupant.is_some())
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]

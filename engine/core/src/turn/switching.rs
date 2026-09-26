@@ -1523,9 +1523,8 @@ pub(crate) fn emergency_exit<const N: usize>(b: &mut Battle<'_, N>, target: Slot
 /// Emergency Exit's and Wimp Out's `for (const side of this.sides) for (const active of
 /// side.active) active.switchFlag = false;`: every position of both sides, not only the living
 /// Pokémon — `side.active` also holds a Pokémon at 0 HP whose faint is not processed and a
-/// fainted one still holding its position. (The only such Pokémon with a flag is a user its
-/// own recoil knocked out after Emergency Exit flagged it, which `moves::user_emergency_exit`
-/// refuses; this keeps the loop Showdown's for when that refusal is lifted.)
+/// fainted one still holding its position (the only such Pokémon with a flag is a user its
+/// own recoil knocked out after Emergency Exit flagged it: `moves::user_emergency_exit`).
 fn clear_active_switch_flags<const N: usize>(b: &mut Battle<'_, N>) {
     for side in [crate::state::SideId::One, crate::state::SideId::Two] {
         for slot in Battle::<N>::slots(side) {
@@ -1629,9 +1628,9 @@ mod tests {
     /// Opus CC unit B17: Emergency Exit clears the `switchFlag` of every Pokémon in
     /// `side.active` before flagging its holder, a Pokémon at 0 HP whose faint is not processed
     /// and a fainted one still holding its position included (Showdown `onEmergencyExit`), not
-    /// only the living ones. No oracle scenario reaches the difference: the only such Pokémon
-    /// with a flag is a user its own recoil knocked out after Emergency Exit flagged it, which
-    /// the engine refuses (`moves::user_emergency_exit`, oracle `x-switchflag-unprocessed-faint`).
+    /// only the living ones. The only such Pokémon with a flag is a user its own recoil knocked
+    /// out after Emergency Exit flagged it (`moves::user_emergency_exit`, oracle
+    /// `dd-emergency-exit-recoil-eject-pack`).
     #[test]
     fn emergency_exit_clears_every_active_positions_flag() {
         let mut state = state_with(abilities::EMERGENCY_EXIT);

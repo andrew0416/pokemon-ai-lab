@@ -214,13 +214,16 @@ function runTurn(battle, scenario) {
 
 // A mid-turn switch request (U-turn, Parting Shot, Eject Button, Emergency Exit, ...) pauses
 // the battle for a living Pokémon that must switch out (`forceSwitch` on an active with HP),
-// possibly after the residual phase. Every requesting side gets its next `midTurn` choice
-// (`{p1: ["switch 3"], p2: []}`); if one has none left the battle stays paused there and the
-// paused state (its `request` is `switch`) is the outcome. An end-of-turn replacement request
-// (for fainted Pokémon only) is the next decision, not handled here.
+// possibly after the residual phase, or for a fainted one flagged while actions are still
+// queued (Emergency Exit after its user's own recoil knocked it out: `checkFainted` only flags
+// fainted Pokémon once the queue is empty). Every requesting side gets its next `midTurn`
+// choice (`{p1: ["switch 3"], p2: []}`); if one has none left the battle stays paused there and
+// the paused state (its `request` is `switch`) is the outcome. An end-of-turn replacement
+// request (for fainted Pokémon only, the queue empty) is the next decision, not handled here.
 function midTurnRequest(side) {
 	if (side.requestState !== 'switch') return false;
-	return side.active.some((pokemon, i) => pokemon && pokemon.hp > 0 && side.activeRequest.forceSwitch[i]);
+	const queued = side.battle.queue.list.length > 0;
+	return side.active.some((pokemon, i) => pokemon && (pokemon.hp > 0 || queued) && side.activeRequest.forceSwitch[i]);
 }
 
 function applyMidTurn(battle, midTurn) {
