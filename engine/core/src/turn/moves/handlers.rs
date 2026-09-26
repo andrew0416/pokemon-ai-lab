@@ -825,10 +825,7 @@ pub(super) fn protect_try_hit<const N: usize>(
         if bypassed {
             continue;
         }
-        let locked = b.volatile(user, Volatile::LockedMove);
-        if locked.active && locked.duration == 2 {
-            b.delete_volatile(user, Volatile::LockedMove);
-        }
+        reset_first_turn_lock(b, user);
         let contact = super::item_events::makes_contact(b, user, mv.data)
             && b.item(user) != items::PROTECTIVE_PADS;
         if contact {
@@ -896,13 +893,22 @@ pub(super) fn side_guard_try_hit<const N: usize>(
         && !status
         && mv.data.flags.contains(MoveFlags::PROTECT)
     {
-        let locked = b.volatile(user, Volatile::LockedMove);
-        if locked.active && locked.duration == 2 {
-            b.delete_volatile(user, Volatile::LockedMove);
-        }
+        reset_first_turn_lock(b, user);
         return true;
     }
     false
+}
+
+/// "Outrage counter is reset": the protect family, Mat Block, Quick Guard and Wide Guard, when
+/// they stop a move, delete the user's `lockedmove` if it is on its first turn (duration 2),
+/// without its `onEnd` (no fatigue confusion): `const lockedmove =
+/// source.getVolatile('lockedmove'); if (lockedmove) { if
+/// (source.volatiles['lockedmove'].duration === 2) delete source.volatiles['lockedmove']; }`.
+pub(super) fn reset_first_turn_lock<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) {
+    let locked = b.volatile(user, Volatile::LockedMove);
+    if locked.active && locked.duration == 2 {
+        b.delete_volatile(user, Volatile::LockedMove);
+    }
 }
 
 /// `hitStepBreakProtect` for one target of a `breaksProtect` move (Feint): its protect-family

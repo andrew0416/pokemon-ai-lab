@@ -1544,7 +1544,7 @@ fn try_hit<const N: usize>(
     if psychic_terrain_blocks(b, user, mv, target) {
         return Ok(TryHit::Fail);
     }
-    if guarded_by_side(b, mv, target) {
+    if guarded_by_side(b, user, mv, target) {
         return Ok(TryHit::NotFail);
     }
     if handlers::protect_try_hit(b, user, mv, target) {
@@ -1612,21 +1612,29 @@ fn psychic_terrain_blocks<const N: usize>(
 /// Wide Guard / Quick Guard on the target's side (`onTryHit`, priority 4, `return
 /// this.NOT_FAIL`): spread moves, or moves with positive priority (after Prankster and the
 /// like), that Protect would block (`checkMoveBypassesProtect`: the `protect` flag; status
-/// moves too). They also cover a move from the target's own ally.
-fn guarded_by_side<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove, target: SlotRef) -> bool {
-    if mv.data.flags.contains(MoveFlags::PROTECT) {
-        let spread = matches!(
-            mv.target,
-            MoveTarget::AllAdjacent | MoveTarget::AllAdjacentFoes
-        );
-        if spread && b.side_effect_active(target.side, SideEffect::WideGuard) {
-            return true;
-        }
-        if mv.priority > 0 && b.side_effect_active(target.side, SideEffect::QuickGuard) {
-            return true;
-        }
+/// moves too). They also cover a move from the target's own ally. Like Protect, a guard that
+/// stops the move resets the user's locked move on its first turn
+/// ([`handlers::reset_first_turn_lock`]; no supported locking move is a spread or priority
+/// move today).
+fn guarded_by_side<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    if !mv.data.flags.contains(MoveFlags::PROTECT) {
+        return false;
     }
-    false
+    let spread = matches!(
+        mv.target,
+        MoveTarget::AllAdjacent | MoveTarget::AllAdjacentFoes
+    );
+    let guarded = (spread && b.side_effect_active(target.side, SideEffect::WideGuard))
+        || (mv.priority > 0 && b.side_effect_active(target.side, SideEffect::QuickGuard));
+    if guarded {
+        handlers::reset_first_turn_lock(b, user);
+    }
+    guarded
 }
 
 /// Lightning Rod / Storm Drain `onTryHit`: a move of the absorbed type aimed at the holder
@@ -3037,6 +3045,43 @@ mod tests {
         );
         assert_eq!(at_loc(P1A, -2), P1B);
         assert_eq!(loc_of(P1A, P1B), -2);
+    }
+
+    /// Protect, Mat Block, Quick Guard and Wide Guard reset a locked move only on its first
+    /// turn (`lockedmove` duration 2), by deletion: no fatigue confusion. No supported locking
+    /// move is a spread or priority move, so the guards' reset has no oracle scenario.
+    #[test]
+    fn a_stopped_first_turn_lock_is_deleted_without_confusion() {
+        use crate::volatile::VolatileState;
+        for (duration, kept) in [(2, false), (1, true)] {
+            let mut state = crate::state::State::<2>::default();
+            for side in [SideId::One, SideId::Two] {
+                for (i, p) in state.side_mut(side).party.iter_mut().enumerate() {
+                    p.species = crate::dex::SpeciesId(i as u16 + 1);
+                    p.max_hp = 100;
+                    p.hp = 100;
+                }
+                for s in 0..2 {
+                    state.side_mut(side).slots[s].party_index = Some(s as u8);
+                }
+            }
+            let lock = VolatileState {
+                active: true,
+                duration,
+                mv: moves::OUTRAGE,
+                hidden: 3,
+                ..VolatileState::NONE
+            };
+            state
+                .slot_mut(P1A)
+                .volatiles
+                .set(Volatile::LockedMove, lock);
+            let mut chooser = super::super::branch::Chooser::new();
+            let mut b = Battle::new(&mut state, &mut chooser);
+            handlers::reset_first_turn_lock(&mut b, P1A);
+            assert_eq!(b.volatile(P1A, Volatile::LockedMove).active, kept);
+            assert!(!b.volatile(P1A, Volatile::Confusion).active);
+        }
     }
 
     #[test]
