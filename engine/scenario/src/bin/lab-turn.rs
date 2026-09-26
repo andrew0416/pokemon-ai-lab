@@ -1,7 +1,7 @@
 //! Runs lab-engine's turn enumeration on an oracle scenario and writes a report in the
 //! oracle's format, so `engine/oracle/compare.cjs` can compare the two.
 //!
-//! Usage: lab-turn <scenario.json> [--before <oracle-report.json>] [--out <file>]
+//! Usage: lab-turn <scenario.json> [--before <oracle-report.json>] [--position <i>] [--out <file>]
 //!                 [--mc <samples> [--seed <n>]]
 //!                 [--rolls full|extremes|quartiles|median|pessimistic-p1|pessimistic-p2]
 //!
@@ -45,6 +45,7 @@ fn run() -> Result<(), String> {
     let mut scenario = None;
     let mut before = None;
     let mut out = None;
+    let mut position_index: Option<usize> = None;
     let mut samples: Option<usize> = None;
     let mut seed: u64 = 1;
     let mut options = EnumerateOptions::default();
@@ -58,6 +59,14 @@ fn run() -> Result<(), String> {
             "--out" => {
                 i += 1;
                 out = args.get(i).cloned();
+            }
+            "--position" => {
+                i += 1;
+                position_index = Some(
+                    args.get(i)
+                        .and_then(|s| s.parse::<usize>().ok())
+                        .ok_or("--position needs an index")?,
+                );
             }
             "--mc" => {
                 i += 1;
@@ -110,12 +119,12 @@ fn run() -> Result<(), String> {
         None => None,
     };
     let mut start = None;
-    for outcome in &states {
+    for (i, outcome) in states.iter().enumerate() {
         let key = canonical_json(&outcome.state, &loaded.meta).map_err(|e| e.to_string())?;
         let value: Value = serde_json::from_str(&key).expect("valid JSON");
         match &wanted {
             Some(w) if *w == value => start = Some(outcome.clone()),
-            None if states.len() == 1 => start = Some(outcome.clone()),
+            None if states.len() == 1 || position_index == Some(i) => start = Some(outcome.clone()),
             _ => {}
         }
     }
@@ -139,7 +148,7 @@ fn run() -> Result<(), String> {
             text
         }
         None => format!(
-            "{} initial states; pass --before <oracle report> to pick one",
+            "{} initial states; pass --before <oracle report> or --position <index> to pick one",
             states.len()
         ),
     })?;

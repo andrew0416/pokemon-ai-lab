@@ -414,3 +414,40 @@ fn mixed_analysis_matches_brute_force_payoffs() {
     assert!((sum - 1.0).abs() < 1e-4);
     assert!(!mixed.our_support(0.01).is_empty());
 }
+
+/// A one-turn plan is worth exactly its maximin line; a plan whose entry is illegal falls
+/// back to maximin and is reported broken.
+#[test]
+fn plan_evaluation_matches_the_lines() {
+    let position = position("eject-button-uturn");
+    let mut state = position.state.clone();
+    let mut config = Config::new(Ruleset::CHAMPIONS_MC, SideId::One);
+    config.rolls = RollMode::Full;
+    config.exact_lines = true;
+    let evaluator = Material;
+    let mut solver = Solver::new(config, &evaluator);
+    let analysis = solver.analyse(&mut state, None).unwrap();
+    for line in &analysis.lines {
+        let report = solver
+            .evaluate_plan(&mut state, None, &[line.ours])
+            .unwrap();
+        assert_eq!(state, position.state);
+        assert_eq!(report.broken, 0);
+        assert!(
+            (report.value - line.value).abs() < 1e-3,
+            "{:?}: plan {} line {}",
+            line.ours,
+            report.value,
+            line.value
+        );
+        // The worst reply comes first and carries the plan's value.
+        let (reply, worst) = report.replies[0];
+        assert!((worst - report.value).abs() < 1e-3);
+        assert_eq!(Some(reply), line.reply.or(Some(reply)));
+    }
+    let report = solver
+        .evaluate_plan(&mut state, None, &[Choice::WAIT])
+        .unwrap();
+    assert_eq!(report.broken, 1);
+    assert!((report.value - analysis.value).abs() < 1e-3, "{report:?}");
+}

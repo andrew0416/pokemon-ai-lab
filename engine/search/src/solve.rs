@@ -27,6 +27,14 @@ use crate::choice::Choice;
 use crate::game::{self, Decision, Pruning};
 use crate::nash::{self, Equilibrium, Matrix};
 
+/// What a chance node continues into: the maximin tree with `depth` turns left, or a fixed
+/// plan (`Solver::evaluate_plan`) at its next entry.
+#[derive(Clone, Copy, Debug)]
+enum Next<'p, const N: usize> {
+    Depth(u32),
+    Plan(&'p [Choice<N>], usize),
+}
+
 /// The value of a won battle (a lost one is its negative); a leaf evaluation must stay well
 /// inside `(-WIN, WIN)`. A faster win scores slightly higher (`WIN + remaining depth`).
 pub const WIN: f32 = 10_000.0;
@@ -106,6 +114,9 @@ pub enum SearchError {
     NoChoice(SideId),
     /// `Config::max_turns` was reached.
     Budget,
+    /// Every choice at the root runs into effects the engine does not implement (the
+    /// reasons, deduplicated). Elsewhere in the tree such pairs are dropped and reported.
+    Unsupported(Vec<String>),
 }
 
 impl fmt::Display for SearchError {
@@ -114,6 +125,13 @@ impl fmt::Display for SearchError {
             SearchError::Turn(e) => write!(f, "{e}"),
             SearchError::NoChoice(side) => write!(f, "{side:?} has no legal choice"),
             SearchError::Budget => write!(f, "the turn budget was reached"),
+            SearchError::Unsupported(reasons) => {
+                write!(
+                    f,
+                    "nothing evaluable: not implemented: {}",
+                    reasons.join("; ")
+                )
+            }
         }
     }
 }
@@ -149,6 +167,9 @@ pub struct Analysis<const N: usize> {
     /// Turn/replacement/resume enumerations.
     pub turns: u64,
     pub elapsed: Duration,
+    /// Effects the engine refused inside the tree; pairs hitting them were dropped.
+    pub unsupported: Vec<String>,
+    pub omitted_pairs: usize,
 }
 
 pub struct Solver<'e, const N: usize, E: Evaluator<N> + ?Sized> {
@@ -156,6 +177,12 @@ pub struct Solver<'e, const N: usize, E: Evaluator<N> + ?Sized> {
     evaluator: &'e E,
     nodes: u64,
     turns: u64,
+    plan_broken: u32,
+    /// Effects the engine refused somewhere in the tree (deduplicated); the pairs of choices
+    /// whose subtree hit one were dropped from the min/max.
+    unsupported: Vec<String>,
+    /// Pairs of choices dropped that way.
+    omitted_pairs: usize,
 }
 
 impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
@@ -165,7 +192,25 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             evaluator,
             nodes: 0,
             turns: 0,
+            plan_broken: 0,
+            unsupported: Vec::new(),
+            omitted_pairs: 0,
         }
+    }
+
+    fn note_unsupported(&mut self, why: String) {
+        self.omitted_pairs += 1;
+        if !self.unsupported.contains(&why) {
+            self.unsupported.push(why);
+        }
+    }
+
+    fn reset_counters(&mut self) {
+        self.nodes = 0;
+        self.turns = 0;
+        self.plan_broken = 0;
+        self.unsupported.clear();
+        self.omitted_pairs = 0;
     }
 
     /// Values every choice of ours at the decision `state` (with `suspension`, if the turn is
@@ -176,8 +221,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         suspension: Option<&Suspension>,
     ) -> Result<Analysis<N>, SearchError> {
         let started = Instant::now();
-        self.nodes = 0;
-        self.turns = 0;
+        self.reset_counters();
         let decision = game::decision(state, suspension)?;
         if let Decision::Over(result) = decision {
             return Ok(Analysis {
@@ -188,6 +232,8 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                 nodes: 0,
                 turns: 0,
                 elapsed: started.elapsed(),
+                unsupported: Vec::new(),
+                omitted_pairs: 0,
             });
         }
         let them = self.config.us.other();
@@ -219,6 +265,9 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                             m
                         }
                     });
+                    if worst == f32::INFINITY {
+                        continue;
+                    }
                     new_lines.push(Line {
                         ours: a,
                         value: worst,
@@ -242,8 +291,18 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                 let mut cut = false;
                 for &b in &theirs {
                     let pair = self.pair(a, b);
-                    let v =
-                        self.chance(state, decision, suspension, pair, next_depth, alpha, worst)?;
+                    let v = self.chance(
+                        state,
+                        decision,
+                        suspension,
+                        pair,
+                        Next::Depth(next_depth),
+                        alpha,
+                        worst,
+                    )?;
+                    if v.is_nan() {
+                        continue;
+                    }
                     if v < worst {
                         worst = v;
                         reply = Some(b);
@@ -252,6 +311,10 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                         cut = true;
                         break;
                     }
+                }
+                if worst == f32::INFINITY {
+                    // No reply could be evaluated against this choice.
+                    continue;
                 }
                 best = best.max(worst);
                 new_lines.push(Line {
@@ -277,6 +340,9 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             theirs = counts.into_iter().map(|(b, _)| b).collect();
             lines = new_lines;
         }
+        if lines.is_empty() {
+            return Err(SearchError::Unsupported(self.unsupported.clone()));
+        }
         let value = lines.first().map_or(f32::NEG_INFINITY, |l| l.value);
         Ok(Analysis {
             decision,
@@ -286,6 +352,8 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             nodes: self.nodes,
             turns: self.turns,
             elapsed: started.elapsed(),
+            unsupported: self.unsupported.clone(),
+            omitted_pairs: self.omitted_pairs,
         })
     }
 
@@ -365,16 +433,34 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                 let lo = alpha.max(best);
                 let hi = beta.min(worst);
                 let pair = self.pair(a, b);
-                let v = self.chance(state, decision, suspension, pair, next_depth, lo, hi)?;
+                let v = self.chance(
+                    state,
+                    decision,
+                    suspension,
+                    pair,
+                    Next::Depth(next_depth),
+                    lo,
+                    hi,
+                )?;
+                if v.is_nan() {
+                    continue;
+                }
                 worst = worst.min(v);
                 if worst <= lo {
                     break;
                 }
             }
+            if worst == f32::INFINITY {
+                continue;
+            }
             best = best.max(worst);
             if best >= beta {
                 break;
             }
+        }
+        if best == f32::NEG_INFINITY {
+            // Nothing here could be evaluated: the pair above is dropped.
+            return Ok(f32::NAN);
         }
         Ok(best)
     }
@@ -387,7 +473,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         decision: Decision,
         suspension: Option<&Suspension>,
         pair: [Choice<N>; 2],
-        depth: u32,
+        next: Next<'_, N>,
         alpha: f32,
         beta: f32,
     ) -> Result<f32, SearchError> {
@@ -397,28 +483,40 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             }
         }
         self.turns += 1;
-        let outcomes = game::transitions(
+        let outcomes = match game::transitions(
             state,
             self.config.ruleset,
             self.config.enumerate_options(),
             decision,
             suspension,
             pair,
-        )?;
+        ) {
+            Ok(outcomes) => outcomes,
+            Err(TurnError::Unsupported(why)) => {
+                // The pair cannot be valued; the caller drops it (NaN).
+                self.note_unsupported(why);
+                return Ok(f32::NAN);
+            }
+            Err(e) => return Err(e.into()),
+        };
         match self.config.chance {
             Chance::Worst => {
                 let mut worst = f32::INFINITY;
                 for outcome in &outcomes {
                     state.apply(&outcome.instructions);
-                    let v = self.value(
+                    let v = self.continue_at(
                         state,
                         outcome.suspension.as_ref(),
-                        depth,
+                        next,
                         alpha,
                         beta.min(worst),
                     );
                     state.reverse(&outcome.instructions);
-                    worst = worst.min(v?);
+                    let v = v?;
+                    if v.is_nan() {
+                        return Ok(f32::NAN);
+                    }
+                    worst = worst.min(v);
                     if worst <= alpha {
                         break;
                     }
@@ -435,15 +533,19 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                     let lo = ((alpha as f64 - (sum + rest * BOUND as f64)) / p).max(-BOUND as f64);
                     let hi = ((beta as f64 - (sum - rest * BOUND as f64)) / p).min(BOUND as f64);
                     state.apply(&outcome.instructions);
-                    let v = self.value(
+                    let v = self.continue_at(
                         state,
                         outcome.suspension.as_ref(),
-                        depth,
+                        next,
                         lo as f32,
                         hi as f32,
                     );
                     state.reverse(&outcome.instructions);
-                    sum += p * v? as f64;
+                    let v = v?;
+                    if v.is_nan() {
+                        return Ok(f32::NAN);
+                    }
+                    sum += p * v as f64;
                     remaining = rest;
                     if sum - remaining * BOUND as f64 >= beta as f64 {
                         return Ok((sum - remaining * BOUND as f64) as f32);
@@ -459,7 +561,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
 }
 
 /// One worker's rows of the payoff matrix with its node and turn counts.
-type RowValues = (Vec<f32>, u64, u64);
+type RowValues = (Vec<f32>, u64, u64, Vec<String>, usize);
 
 /// The root decision solved as a zero-sum matrix game over both sides' choices, each pair
 /// valued by the exact chance node below it (deeper nodes by maximin as in [`Analysis`]).
@@ -477,6 +579,11 @@ pub struct MixedAnalysis<const N: usize> {
     pub nodes: u64,
     pub turns: u64,
     pub elapsed: Duration,
+    /// Effects the engine refused in some cell; the columns (their replies) and then the rows
+    /// (our choices) containing such a cell were dropped before solving.
+    pub unsupported: Vec<String>,
+    pub omitted_theirs: usize,
+    pub omitted_ours: usize,
 }
 
 impl<const N: usize> MixedAnalysis<N> {
@@ -517,8 +624,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         suspension: Option<&Suspension>,
     ) -> Result<MixedAnalysis<N>, SearchError> {
         let started = Instant::now();
-        self.nodes = 0;
-        self.turns = 0;
+        self.reset_counters();
         let decision = game::decision(state, suspension)?;
         if matches!(decision, Decision::Over(_)) {
             return Err(SearchError::Turn(TurnError::BattleOver));
@@ -547,7 +653,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                         decision,
                         suspension,
                         pair,
-                        next_depth,
+                        Next::Depth(next_depth),
                         f32::NEG_INFINITY,
                         f32::INFINITY,
                     )?;
@@ -556,6 +662,11 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             }
             values
         };
+        let (ours, theirs, values, omitted_ours, omitted_theirs) =
+            drop_unevaluable(ours, theirs, values);
+        if ours.is_empty() || theirs.is_empty() {
+            return Err(SearchError::Unsupported(self.unsupported.clone()));
+        }
         let matrix = Matrix::new(ours.len(), theirs.len(), values);
         let equilibrium = nash::solve(&matrix, 20_000, 0.01);
         let maximin = matrix.maximin();
@@ -570,6 +681,9 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             nodes: self.nodes,
             turns: self.turns,
             elapsed: started.elapsed(),
+            unsupported: self.unsupported.clone(),
+            omitted_theirs,
+            omitted_ours,
         })
     }
 
@@ -606,14 +720,20 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                                     decision,
                                     suspension.as_ref(),
                                     pair,
-                                    depth,
+                                    Next::Depth(depth),
                                     f32::NEG_INFINITY,
                                     f32::INFINITY,
                                 )?;
                                 values.push(v);
                             }
                         }
-                        Ok((values, local.nodes, local.turns))
+                        Ok((
+                            values,
+                            local.nodes,
+                            local.turns,
+                            local.unsupported,
+                            local.omitted_pairs,
+                        ))
                     })
                 })
                 .collect();
@@ -624,11 +744,249 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         });
         let mut values = Vec::with_capacity(ours.len() * theirs.len());
         for result in results {
-            let (v, nodes, turns) = result?;
+            let (v, nodes, turns, reasons, omitted) = result?;
             values.extend(v);
             self.nodes += nodes;
             self.turns += turns;
+            self.omitted_pairs += omitted;
+            for why in reasons {
+                if !self.unsupported.contains(&why) {
+                    self.unsupported.push(why);
+                }
+            }
         }
         Ok(values)
     }
+
+    fn continue_at(
+        &mut self,
+        state: &mut State<N>,
+        suspension: Option<&Suspension>,
+        next: Next<'_, N>,
+        alpha: f32,
+        beta: f32,
+    ) -> Result<f32, SearchError> {
+        match next {
+            Next::Depth(depth) => self.value(state, suspension, depth, alpha, beta),
+            Next::Plan(plan, index) => self.plan_value(state, suspension, plan, index, alpha, beta),
+        }
+    }
+
+    /// Values a fixed plan of ours (one turn choice per entry, in the form `legal_choices`
+    /// produces) against a perfect-information opponent (model ①): at each turn our choice is
+    /// the plan's, the opponent answers with the reply that hurts us most, chance as
+    /// configured. Replacement and mid-turn switch decisions are not part of the plan and are
+    /// solved by maximin. A plan entry that is not legal in the position it reaches (the
+    /// actives changed) counts as broken there and the solver falls back to maximin for that
+    /// turn. After the plan's last turn the maximin tree continues for `config.depth - 1`
+    /// turns, then the evaluator. `state` is left unchanged.
+    pub fn evaluate_plan(
+        &mut self,
+        state: &mut State<N>,
+        suspension: Option<&Suspension>,
+        plan: &[Choice<N>],
+    ) -> Result<PlanReport<N>, SearchError> {
+        let started = Instant::now();
+        self.reset_counters();
+        let decision = game::decision(state, suspension)?;
+        if matches!(decision, Decision::Over(_)) {
+            return Err(SearchError::Turn(TurnError::BattleOver));
+        }
+        let them = self.config.us.other();
+        let theirs = self.choices(state, decision, them)?;
+        let (ours, broken_here) = self.plan_choices(state, decision, plan, 0)?;
+        let next = if decision == Decision::Turn {
+            Next::Plan(plan, 1)
+        } else {
+            Next::Plan(plan, 0)
+        };
+        let mut replies: Vec<(Choice<N>, f32)> = Vec::new();
+        let mut best = f32::NEG_INFINITY;
+        for &a in &ours {
+            let mut worst = f32::INFINITY;
+            let mut row = Vec::with_capacity(theirs.len());
+            for &b in &theirs {
+                let pair = self.pair(a, b);
+                let v = self.chance(
+                    state,
+                    decision,
+                    suspension,
+                    pair,
+                    next,
+                    f32::NEG_INFINITY,
+                    f32::INFINITY,
+                )?;
+                if v.is_nan() {
+                    continue;
+                }
+                worst = worst.min(v);
+                row.push((b, v));
+            }
+            if worst > best && worst != f32::INFINITY {
+                best = worst;
+                replies = row;
+            }
+        }
+        if best == f32::NEG_INFINITY {
+            return Err(SearchError::Unsupported(self.unsupported.clone()));
+        }
+        replies.sort_by(|x, y| x.1.total_cmp(&y.1));
+        Ok(PlanReport {
+            decision,
+            value: best,
+            replies,
+            broken: self.plan_broken + u32::from(broken_here),
+            nodes: self.nodes,
+            turns: self.turns,
+            elapsed: started.elapsed(),
+            unsupported: self.unsupported.clone(),
+            omitted_pairs: self.omitted_pairs,
+        })
+    }
+
+    /// Our choices at a plan node: the plan's entry when it is legal here, else every legal
+    /// choice (a broken plan). Non-turn decisions always take every legal choice.
+    fn plan_choices(
+        &mut self,
+        state: &State<N>,
+        decision: Decision,
+        plan: &[Choice<N>],
+        index: usize,
+    ) -> Result<(Vec<Choice<N>>, bool), SearchError> {
+        let legal = self.choices(state, decision, self.config.us)?;
+        if decision != Decision::Turn {
+            return Ok((legal, false));
+        }
+        match plan.get(index) {
+            Some(choice) if legal.contains(choice) => Ok((vec![*choice], false)),
+            Some(_) => Ok((legal, true)),
+            None => Ok((legal, false)),
+        }
+    }
+
+    /// The plan's value from a position: our plan entry (or maximin) against the worst reply.
+    fn plan_value(
+        &mut self,
+        state: &mut State<N>,
+        suspension: Option<&Suspension>,
+        plan: &[Choice<N>],
+        index: usize,
+        alpha: f32,
+        beta: f32,
+    ) -> Result<f32, SearchError> {
+        if index >= plan.len() {
+            // The plan is over: the ordinary tree for the remaining depth.
+            return self.value(
+                state,
+                suspension,
+                self.config.depth.saturating_sub(1),
+                alpha,
+                beta,
+            );
+        }
+        self.nodes += 1;
+        let decision = game::decision(state, suspension)?;
+        if let Decision::Over(result) = decision {
+            return Ok(self.terminal(result, self.config.depth));
+        }
+        let them = self.config.us.other();
+        let (ours, broken) = self.plan_choices(state, decision, plan, index)?;
+        if broken {
+            self.plan_broken += 1;
+        }
+        let theirs = self.choices(state, decision, them)?;
+        let next = if decision == Decision::Turn {
+            Next::Plan(plan, index + 1)
+        } else {
+            Next::Plan(plan, index)
+        };
+        let mut best = f32::NEG_INFINITY;
+        for &a in &ours {
+            let mut worst = f32::INFINITY;
+            for &b in &theirs {
+                let lo = alpha.max(best);
+                let hi = beta.min(worst);
+                let pair = self.pair(a, b);
+                let v = self.chance(state, decision, suspension, pair, next, lo, hi)?;
+                if v.is_nan() {
+                    continue;
+                }
+                worst = worst.min(v);
+                if worst <= lo {
+                    break;
+                }
+            }
+            if worst == f32::INFINITY {
+                continue;
+            }
+            best = best.max(worst);
+            if best >= beta {
+                break;
+            }
+        }
+        if best == f32::NEG_INFINITY {
+            return Ok(f32::NAN);
+        }
+        Ok(best)
+    }
+}
+
+/// Removes their replies (columns) with an unevaluable cell, then our choices (rows) still
+/// holding one. Returns the kept choices, the dense matrix and how many were dropped.
+#[allow(clippy::type_complexity)]
+fn drop_unevaluable<const N: usize>(
+    ours: Vec<Choice<N>>,
+    theirs: Vec<Choice<N>>,
+    values: Vec<f32>,
+) -> (Vec<Choice<N>>, Vec<Choice<N>>, Vec<f32>, usize, usize) {
+    let (n, m) = (ours.len(), theirs.len());
+    let keep_col: Vec<bool> = (0..m)
+        .map(|c| (0..n).all(|r| !values[r * m + c].is_nan()))
+        .collect();
+    let keep_row: Vec<bool> = (0..n)
+        .map(|r| (0..m).all(|c| !keep_col[c] || !values[r * m + c].is_nan()))
+        .collect();
+    let mut dense = Vec::new();
+    for r in 0..n {
+        if !keep_row[r] {
+            continue;
+        }
+        for c in 0..m {
+            if keep_col[c] {
+                dense.push(values[r * m + c]);
+            }
+        }
+    }
+    let omitted_theirs = keep_col.iter().filter(|k| !**k).count();
+    let omitted_ours = keep_row.iter().filter(|k| !**k).count();
+    let ours: Vec<Choice<N>> = ours
+        .into_iter()
+        .zip(&keep_row)
+        .filter(|(_, k)| **k)
+        .map(|(c, _)| c)
+        .collect();
+    let theirs: Vec<Choice<N>> = theirs
+        .into_iter()
+        .zip(&keep_col)
+        .filter(|(_, k)| **k)
+        .map(|(c, _)| c)
+        .collect();
+    (ours, theirs, dense, omitted_ours, omitted_theirs)
+}
+
+/// [`Solver::evaluate_plan`]'s result.
+#[derive(Clone, Debug, PartialEq)]
+pub struct PlanReport<const N: usize> {
+    pub decision: Decision,
+    /// The plan's value against the worst reply sequence (from our side).
+    pub value: f32,
+    /// The opponent's root replies with the value each leads to, worst first.
+    pub replies: Vec<(Choice<N>, f32)>,
+    /// How many positions along the way had a plan entry that was not legal there.
+    pub broken: u32,
+    pub nodes: u64,
+    pub turns: u64,
+    pub elapsed: Duration,
+    pub unsupported: Vec<String>,
+    pub omitted_pairs: usize,
 }

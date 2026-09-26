@@ -28,4 +28,6 @@ pub mod solve;
 pub use choice::{format_choice, format_switches, Choice};
 pub use game::{decision, legal_choices, transitions, Decision, Pruning};
 pub use nash::{Equilibrium, Matrix};
-pub use solve::{Analysis, Chance, Config, Line, MixedAnalysis, SearchError, Solver, WIN};
+pub use solve::{
+    Analysis, Chance, Config, Line, MixedAnalysis, PlanReport, SearchError, Solver, WIN,
+};

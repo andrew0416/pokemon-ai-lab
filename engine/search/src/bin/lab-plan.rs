@@ -5,7 +5,12 @@
 //!                 [--before <oracle-report.json>] [--top k] [--exact] [--all-targets]
 //!                 [--max-turns n] [--rolls full|extremes|quartiles|median|pessimistic]
 //!                 [--eval material|heuristic] [--position i] [--solve maximin|nash]
-//!                 [--threads n]
+//!                 [--threads n] [--plan "<turn 1> / <turn 2> / ..."]
+//!
+//! `--plan` values a fixed sequence of our turn choices (Showdown choice strings parsed
+//! against the starting position; a turn whose choice is no longer legal falls back to
+//! maximin and is counted as broken) against the reply that hurts us most at every turn;
+//! after the plan `--depth - 1` maximin turns follow.
 //!
 //! The position is the scenario's (after switch-ins, setup turns and patch); with several
 //! initial states `--before` picks the one matching an oracle report, as `lab-turn` does.
@@ -51,6 +56,7 @@ fn run() -> Result<(), String> {
     let mut position_index: Option<usize> = None;
     let mut eval = "heuristic".to_owned();
     let mut solve = "maximin".to_owned();
+    let mut plan: Option<String> = None;
     let mut pessimistic = false;
     let mut config = Config::new(Ruleset::CHAMPIONS_MC, us);
     let mut i = 0;
@@ -139,6 +145,10 @@ fn run() -> Result<(), String> {
                     _ => return Err("--solve needs maximin or nash".into()),
                 };
             }
+            "--plan" => {
+                i += 1;
+                plan = Some(args.get(i).cloned().ok_or("--plan needs the turns")?);
+            }
             "--threads" => {
                 i += 1;
                 config.threads = args
@@ -185,6 +195,60 @@ fn run() -> Result<(), String> {
         Box::new(Heuristic)
     };
     let mut solver = Solver::new(config, evaluator.as_ref());
+    if let Some(text) = &plan {
+        let order = &position.order[us.index()];
+        let mut choices = Vec::new();
+        for (n, segment) in text.split('/').map(str::trim).enumerate() {
+            let action = lab_scenario::parse_choice(&state, us, order, segment)
+                .map_err(|e| format!("plan turn {}: {e}", n + 1))?;
+            choices.push(Choice::Turn(action));
+        }
+        let report = solver
+            .evaluate_plan(&mut state, None, &choices)
+            .map_err(|e| e.to_string())?;
+        if state != position.state {
+            return Err("the solver changed the position (bug)".into());
+        }
+        println!(
+            "plan of {} turn(s), then {} maximin turn(s); chance {:?}, rolls {:?}, eval {eval}: {} nodes, {} enumerations, {:.2} s",
+            choices.len(),
+            config.depth.saturating_sub(1),
+            config.chance,
+            config.rolls,
+            report.nodes,
+            report.turns,
+            report.elapsed.as_secs_f64()
+        );
+        for (n, choice) in choices.iter().enumerate() {
+            println!(
+                "  turn {}: {}",
+                n + 1,
+                describe(&position, Decision::Turn, us, choice)
+            );
+        }
+        println!(
+            "value {:+.1} against the worst replies; broken at {} position(s)",
+            report.value, report.broken
+        );
+        if !report.unsupported.is_empty() {
+            println!(
+                "dropped {} pair(s) that reach effects the engine does not implement:",
+                report.omitted_pairs
+            );
+            for why in &report.unsupported {
+                println!("  - {why}");
+            }
+        }
+        println!("their turn-1 replies, worst for us first:");
+        for (reply, value) in report.replies.iter().take(top) {
+            println!(
+                "  {:>9}  {}",
+                format!("{value:+.1}"),
+                describe(&position, report.decision, them, reply)
+            );
+        }
+        return Ok(());
+    }
     if solve == "nash" {
         let mixed = solver
             .analyse_mixed(&mut state, None)
@@ -206,6 +270,15 @@ fn run() -> Result<(), String> {
             mixed.equilibrium.iterations,
             mixed.maximin.1
         );
+        if !mixed.unsupported.is_empty() {
+            println!(
+                "dropped {} of their replies and {} of our choices that reach effects the engine does not implement:",
+                mixed.omitted_theirs, mixed.omitted_ours
+            );
+            for why in &mixed.unsupported {
+                println!("  - {why}");
+            }
+        }
         println!("our mixed strategy (>= 1%):");
         for (choice, p) in mixed.our_support(0.01).iter().take(top) {
             println!(
@@ -275,6 +348,15 @@ fn run() -> Result<(), String> {
     }
     if analysis.lines.len() > top {
         println!("... {} more", analysis.lines.len() - top);
+    }
+    if !analysis.unsupported.is_empty() {
+        println!(
+            "dropped {} pair(s) that reach effects the engine does not implement:",
+            analysis.omitted_pairs
+        );
+        for why in &analysis.unsupported {
+            println!("  - {why}");
+        }
     }
     if let Some(turn) = &loaded.meta.turn {
         let own = match us {

@@ -694,9 +694,12 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
     while !frontier.is_empty() {
         // Value: (first-reached index, probability); keeps the output order deterministic.
         let mut next: HashMap<(State<N>, P), (usize, f64)> = HashMap::new();
+        let stage_started = std::time::Instant::now();
+        let mut runs = 0usize;
         for (mut work, pending, probability) in frontier {
             let mut chooser = Chooser::with_rolls(options.rolls);
             loop {
+                runs += 1;
                 chooser.begin_run();
                 let mut after = pending.clone();
                 let (result, log) = {
@@ -735,9 +738,11 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
         }
         if std::env::var_os("LAB_ENGINE_STATS").is_some() {
             eprintln!(
-                "lab-engine: stage frontier {} states, {} finished",
+                "lab-engine: stage frontier {} states, {} finished; {} replays in {:.1} ms",
                 next.len(),
-                finished.len()
+                finished.len(),
+                runs,
+                stage_started.elapsed().as_secs_f64() * 1000.0
             );
         }
         let mut staged: Vec<_> = next.into_iter().collect();
