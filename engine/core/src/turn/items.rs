@@ -929,9 +929,19 @@ pub(crate) fn berry_juice<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) 
     }
 }
 
-/// `ModifyCritRatio` of the user's item: Scope Lens and Razor Claw `return critRatio + 1`.
-pub(crate) fn crit_ratio_bonus(item: ItemId) -> i32 {
-    i32::from(item == items::SCOPE_LENS || item == items::RAZOR_CLAW)
+/// `ModifyCritRatio` of the user's item: Scope Lens and Razor Claw `return critRatio + 1`;
+/// Leek `critRatio + 2` for a holder whose base species (`user.baseSpecies.baseSpecies`) is
+/// Farfetch'd (either forme) or Sirfetch'd.
+pub(crate) fn crit_ratio_bonus(item: ItemId, holder: &Pokemon) -> i32 {
+    if item == items::SCOPE_LENS || item == items::RAZOR_CLAW {
+        return 1;
+    }
+    let base = holder.species.data().base_species;
+    let base = if base.is_none() { holder.species } else { base };
+    if item == items::LEEK && [species::FARFETCHD, species::SIRFETCHD].contains(&base) {
+        return 2;
+    }
+    0
 }
 
 /// King's Rock / Razor Fang `onModifyMove` (priority -1): a non-status move without a flinch

@@ -1004,6 +1004,8 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::MENTAL_HERB, &["fling.effect", "onUpdate"]),
     (items::SCOPE_LENS, &["onModifyCritRatio"]),
     (items::RAZOR_CLAW, &["onModifyCritRatio"]),
+    // Leek (Opus W unit 4): +2 for Farfetch'd / Sirfetch'd (`items::crit_ratio_bonus`).
+    (items::LEEK, &["onModifyCritRatio"]),
     (items::FOCUS_BAND, &["onDamage"]),
     (items::KINGS_ROCK, &["onModifyMove"]),
     (items::RAZOR_FANG, &["onModifyMove"]),
