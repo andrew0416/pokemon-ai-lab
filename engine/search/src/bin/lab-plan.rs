@@ -7,6 +7,7 @@
 //!                 [--eval material|heuristic|file:<weights.json>] [--position i]
 //!                 [--solve maximin|nash|deep] [--dump-children <out.jsonl> [--beam b] [--outcomes k]]
 //!                 [--believed-team <team.json>]... [--believed-weight w1,w2,...]
+//!                 [--observed "Name:pct,Name:pct" [--observed-tolerance 1.0]]
 //!
 //! `--believed-team` is opponent model ③ at one turn (DESIGN.md): the opponent solves the
 //! matrix game on the team it believes we have (the same species, moves and order as ours, but
@@ -14,8 +15,13 @@
 //! choices are then valued on the real position against it. The gap to the real equilibrium is
 //! what the concealed sets are worth this turn. Several `--believed-team` files with
 //! `--believed-weight` make a belief: the opponent's strategy is the weighted mixture of its
-//! equilibrium strategies on each believed position (no observation update yet; DESIGN.md
-//! "모델 ③·② 구현").
+//! equilibrium strategies on each believed position. With `--observed` (opponent model ② at one
+//! observation): the scenario's `setupTurns` are the turns played so far; the positions they lead
+//! to are filtered by what the opponent saw of our side (our Pokémon's HP percentages after those
+//! turns, `Name:pct`; a fainted Pokémon is 0), the real position is the most probable one that
+//! matches, and each believed team's weight is multiplied by the probability that its own replay
+//! of the same turns produced the observation (a belief the observation contradicts drops to 0).
+//! DESIGN.md "모델 ③·② 구현".
 //!                 [--threads n] [--plan "<turn 1> / <turn 2> / ..."]
 //!                 [--child-nash [--beam b] [--outcomes k]]
 //!
@@ -75,6 +81,8 @@ fn run() -> Result<(), String> {
     let mut plan: Option<String> = None;
     let mut dump_children: Option<String> = None;
     let mut believed_teams: Vec<String> = Vec::new();
+    let mut observed: Option<String> = None;
+    let mut observed_tolerance: f32 = 1.0;
     let mut believed_weights: Vec<f32> = Vec::new();
     let mut pessimistic = false;
     let mut config = Config::new(Ruleset::CHAMPIONS_MC, us);
@@ -183,6 +191,21 @@ fn run() -> Result<(), String> {
                         .ok_or("--believed-team needs a team file")?,
                 );
             }
+            "--observed" => {
+                i += 1;
+                observed = Some(
+                    args.get(i)
+                        .cloned()
+                        .ok_or("--observed needs Name:pct,...")?,
+                );
+            }
+            "--observed-tolerance" => {
+                i += 1;
+                observed_tolerance = args
+                    .get(i)
+                    .and_then(|s| s.parse().ok())
+                    .ok_or("--observed-tolerance needs a number")?;
+            }
             "--believed-weight" => {
                 i += 1;
                 let text = args.get(i).ok_or("--believed-weight needs w1,w2,...")?;
@@ -234,8 +257,30 @@ fn run() -> Result<(), String> {
     )?;
 
     let loaded = load_scenario_file(&scenario).map_err(|e| e.to_string())?;
-    let positions = scenario_positions(&loaded)?;
-    let position = pick_position(&loaded, positions, before.as_deref(), position_index)?;
+    let mut positions = scenario_positions(&loaded)?;
+    let observation = match &observed {
+        Some(text) => Some(parse_observation(text)?),
+        None => None,
+    };
+    if let Some(obs) = &observation {
+        let all = positions.len();
+        positions = matching_positions(&loaded, positions, us, obs, observed_tolerance);
+        if positions.is_empty() {
+            return Err(format!(
+                "no position after the setup turns matches --observed (of {all}); check the names, percentages and tolerance"
+            ));
+        }
+        positions.sort_by(|a, b| b.probability.total_cmp(&a.probability));
+        if positions.len() > 1 && position_index.is_none() {
+            println!(
+                "{} positions match the observation; taking the most probable (p={:.4}); pass --position to choose",
+                positions.len(),
+                positions[0].probability
+            );
+            positions.truncate(1);
+        }
+    }
+    let position = pick_position(&loaded, positions, before.as_deref(), position_index, us)?;
     let them = us.other();
     let mut state = position.state.clone();
 
@@ -285,9 +330,41 @@ fn run() -> Result<(), String> {
         let mut believed_values = Vec::new();
         let mut dropped: Vec<String> = Vec::new();
         let mut reference: Option<(Vec<Choice<2>>, Position, Decision)> = None;
-        for (team_path, &w) in believed_teams.iter().zip(&weights) {
-            let believed =
-                believed_position(&scenario, us, team_path, before.as_deref(), position_index)?;
+        // With an observation, each believed team's weight is multiplied by the probability
+        // that its own replay of the setup turns produced it (Bayes with the engine as the
+        // likelihood); the believed position is then the most probable matching one.
+        let mut posterior = weights.clone();
+        let mut believed_positions = Vec::with_capacity(believed_teams.len());
+        for (k, team_path) in believed_teams.iter().enumerate() {
+            let (bl, mut bpositions) = believed_loaded(&scenario, us, team_path)?;
+            if let Some(obs) = &observation {
+                let matching = matching_positions(&bl, bpositions, us, obs, observed_tolerance);
+                let likelihood: f64 = matching.iter().map(|p| p.probability).sum();
+                posterior[k] *= likelihood as f32;
+                bpositions = matching;
+                if bpositions.is_empty() {
+                    believed_positions.push(None);
+                    continue;
+                }
+                bpositions.sort_by(|a, b| b.probability.total_cmp(&a.probability));
+                bpositions.truncate(1);
+            }
+            let bp = pick_position(&bl, bpositions, before.as_deref(), position_index, us)?;
+            believed_positions.push(Some(bp));
+        }
+        let total: f32 = posterior.iter().sum();
+        if total <= 0.0 {
+            return Err("every believed team is contradicted by --observed".into());
+        }
+        for w in &mut posterior {
+            *w /= total;
+        }
+        for (k, team_path) in believed_teams.iter().enumerate() {
+            let w = posterior[k];
+            let Some(believed) = believed_positions[k].clone() else {
+                believed_values.push((team_path.clone(), w, f32::NAN));
+                continue;
+            };
             let mut believed_state = believed.state.clone();
             let mixed = solver
                 .analyse_mixed(&mut believed_state, None)
@@ -329,11 +406,20 @@ fn run() -> Result<(), String> {
             response.turns,
             response.elapsed.as_secs_f64()
         );
-        for (team_path, w, value) in &believed_values {
-            println!(
-                "  belief {:>5.1}%  {team_path}: equilibrium there {value:+.1} (from our side)",
-                w * 100.0
-            );
+        for (k, (team_path, w, value)) in believed_values.iter().enumerate() {
+            let prior = weights[k];
+            if observation.is_some() {
+                println!(
+                    "  belief {:>5.1}% -> {:>5.1}%  {team_path}: equilibrium there {value:+.1} (from our side)",
+                    prior * 100.0,
+                    (w * 100.0).max(0.0)
+                );
+            } else {
+                println!(
+                    "  belief {:>5.1}%  {team_path}: equilibrium there {value:+.1} (from our side)",
+                    w * 100.0
+                );
+            }
         }
         println!("their mixed strategy (>= 1%):");
         let mut shown: Vec<(Choice<2>, f32)> = mixture
@@ -712,15 +798,13 @@ fn run() -> Result<(), String> {
     Ok(())
 }
 
-/// The scenario with our side's team file replaced by `team_path`, loaded and positioned the
-/// same way as the real one (the same `--position` index or oracle `before`).
-fn believed_position(
+/// The scenario with our side's team file replaced by `team_path`, loaded, with every position
+/// after its setup turns (the callers filter and pick).
+fn believed_loaded(
     scenario: &str,
     us: SideId,
     team_path: &str,
-    before: Option<&str>,
-    index: Option<usize>,
-) -> Result<Position, String> {
+) -> Result<(lab_scenario::LoadedScenario, Vec<Position>), String> {
     let text = std::fs::read_to_string(scenario).map_err(|e| format!("{scenario}: {e}"))?;
     let mut json: Value = serde_json::from_str(&text).map_err(|e| format!("{scenario}: {e}"))?;
     let side = side_name(us);
@@ -740,7 +824,55 @@ fn believed_position(
     let loaded = lab_scenario::load_scenario_str(&json.to_string(), base_dir)
         .map_err(|e| format!("believed scenario: {e}"))?;
     let positions = scenario_positions(&loaded)?;
-    pick_position(&loaded, positions, before, index)
+    Ok((loaded, positions))
+}
+
+/// `Name:pct,Name:pct`: what the opponent saw of our side's Pokémon after the setup turns.
+fn parse_observation(text: &str) -> Result<Vec<(String, f32)>, String> {
+    text.split(',')
+        .map(|part| {
+            let (name, pct) = part
+                .trim()
+                .rsplit_once(':')
+                .ok_or_else(|| format!("--observed: {part:?} is not Name:pct"))?;
+            let pct: f32 = pct
+                .trim()
+                .trim_end_matches('%')
+                .parse()
+                .map_err(|_| format!("--observed: {pct:?} is not a percentage"))?;
+            Ok((name.trim().to_owned(), pct))
+        })
+        .collect()
+}
+
+/// The positions whose HP percentages of our named Pokémon match the observation within
+/// `tolerance` points (a fainted Pokémon is 0%).
+fn matching_positions(
+    loaded: &lab_scenario::LoadedScenario,
+    positions: Vec<Position>,
+    us: SideId,
+    observation: &[(String, f32)],
+    tolerance: f32,
+) -> Vec<Position> {
+    let meta = &loaded.meta.sides[us.index()];
+    positions
+        .into_iter()
+        .filter(|p| {
+            let side = p.state.side(us);
+            observation.iter().all(|(name, pct)| {
+                let Some(party) = meta.party_index(name) else {
+                    return false;
+                };
+                let mon = &side.party[party as usize];
+                let actual = if mon.hp <= 0 {
+                    0.0
+                } else {
+                    100.0 * f32::from(mon.hp) / f32::from(mon.max_hp.max(1))
+                };
+                (actual - pct).abs() <= tolerance
+            })
+        })
+        .collect()
 }
 
 fn pick_position(
@@ -748,6 +880,7 @@ fn pick_position(
     positions: Vec<Position>,
     before: Option<&str>,
     index: Option<usize>,
+    us: SideId,
 ) -> Result<Position, String> {
     if let Some(i) = index {
         let n = positions.len();
@@ -789,11 +922,27 @@ fn pick_position(
                         })
                     })
                     .collect();
+                let hp: Vec<String> = {
+                    let meta = &loaded.meta.sides[us.index()];
+                    let side = p.state.side(us);
+                    side.slots
+                        .iter()
+                        .filter_map(|slot| slot.party_index)
+                        .map(|party| {
+                            let mon = &side.party[party as usize];
+                            format!(
+                                "{}:{:.1}",
+                                meta.name(party).unwrap_or("?"),
+                                100.0 * f32::from(mon.hp) / f32::from(mon.max_hp.max(1))
+                            )
+                        })
+                        .collect()
+                };
                 text.push_str(&format!(
-                    "  {i}: p={:.4} {}
-",
+                    "  {i}: p={:.4} {} | our HP% {}\n",
                     p.probability,
-                    actives.join(", ")
+                    actives.join(", "),
+                    hp.join(",")
                 ));
             }
             Err(text)

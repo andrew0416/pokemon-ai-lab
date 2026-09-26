@@ -49,6 +49,8 @@
 
 **7차 병합 (1) (2026-09-26, Opus R: 후속 9단위):** 중단 교체의 교체 전 Update 생략(`instaswitch_in`), 광역 탈출버튼·붉은카드 속도순, 매끄러운껍질 억제, 가드류 잠금 초기화, 다중 명중 재판정(오라클 `randomChance`도 `ceil(n)/d`로), 동시 기절 승자, 스피드 도구(+ `speed_stat` 효과 도구 수정), 무게 보정. 충돌 없음. 남은 보고 버그: 언너브의 열매 차단 시점(등장↔특성 시작 사이 Update), `trapped` 사전 검사의 원시 특성, 바디퍼지. 커버리지: 기술 676/938(라이브러리 206/206, 100%), 특성 257/321(라이브러리 66/66, 100%), 도구 491/583(라이브러리 60/60, 100%); 라이브러리 28팀 전 검사 통과.
 
+**상대 모델 ②·믿음 분포 (2026-09-26, WORKPLAN S16·S17):** `--believed-team`을 여러 개와 `--believed-weight`로 믿음 분포를, `--observed`로 지금까지 둔 턴(`setupTurns`) 뒤 상대가 본 우리 HP%를 주면 엔진 분포를 가능도로 사후 믿음을 만든다. 시연: 록슬라이드를 맞고 가디안이 55% 남은 관측은 표준 겁쟁이 배분과 모순 → 사후 0% → 2턴 차이 0(읽힘).
+
 **상대 모델 ③ (2026-09-26, WORKPLAN S13):** `lab-plan --believed-team`이 '상대가 믿는 우리 팀'에서 상대 균형 전략을 구해 실제 국면에서 우리 최적 응답을 낸다(S2 시나리오: 차이 +3.6). 깊이 1에서는 양쪽 방어가 지배적이라 평가 함수에 방어 템포 비용(`stall` 특징)을 넣는 중.
 
 **깊이 2 근사 (2026-09-26, WORKPLAN S11):** `lab-plan --solve deep`이 루트 행렬로 고른 우리 선택 6개 × 응수 6개를 자식 균형으로 다시 평가한다(실전 파티 271 s). S2 시나리오 최선은 방어+속이기(마기라스) -101.8.
@@ -151,6 +153,7 @@ D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls m
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --solve deep --beam 6 --outcomes 4   # 깊이 2 근사(빔 6×6, 실전 파티 약 4.5분)
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --believed-team teams/rillaboom-slot-20260920/gardevoir-braverilla.believed-standard.json   # 상대 모델 ③: 상대가 믿는 우리 팀에서 푼 상대 전략 vs 실제 국면의 우리 최적 응답
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --believed-team a.json --believed-team b.json --believed-weight 0.7,0.3   # 믿음 분포(가중 혼합)
+D:/cargo-target/release/lab-plan.exe <setupTurns 있는 scenario> --side p1 --rolls median --believed-team a.json --believed-team b.json --believed-weight 0.7,0.3 --observed "Gardevoir:55,Rillaboom:65" --observed-tolerance 1.5   # 모델 ②: 관측(우리 HP%)으로 믿음 갱신 뒤 최적 응답
 python engine/scripts/fit_eval.py runs/plan-20260926/fit/*.jsonl --out runs/plan-20260926/fit/weights.json   # lab-plan --dump-children 결과로 평가 가중치 적합
 LAB_ENGINE_STATS=1 D:/cargo-target/release/lab-turn.exe <scenario> --position 1 --rolls median   # 단계별 프런티어·재실행 수·시간
 D:/cargo-target/release/lab-turn.exe <scenario> --rolls median      # full|extremes|quartiles|median|pessimistic-p1|pessimistic-p2
