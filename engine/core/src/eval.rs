@@ -137,6 +137,149 @@ impl<const N: usize> Evaluator<N> for Heuristic {
     }
 }
 
+/// The number of [`features`] terms.
+pub const FEATURE_COUNT: usize = 20;
+
+/// Names of the [`features`] terms, in order.
+pub const FEATURE_NAMES: [&str; FEATURE_COUNT] = [
+    "alive",
+    "hp_fraction",
+    "sleep",
+    "freeze",
+    "paralyze",
+    "burn",
+    "poison",
+    "toxic",
+    "offensive_stages",
+    "defensive_stages",
+    "accuracy_stages",
+    "confusion",
+    "leech_seed",
+    "substitute",
+    "taunt",
+    "encore",
+    "perish_song",
+    "yawn",
+    "tailwind",
+    "screens",
+];
+
+/// The position as side one's counts minus side two's, one entry per [`FEATURE_NAMES`]
+/// term: alive Pokémon, summed HP fractions, statused Pokémon per status, stat stages of the
+/// living actives (offensive: atk + spa + spe; defensive: def + spd; accuracy + evasion),
+/// volatiles of the living actives, Tailwind and screens up. [`Heuristic`] is the dot product
+/// with [`Heuristic::WEIGHTS`]; [`Weighted`] uses fitted weights.
+pub fn features<const N: usize>(state: &State<N>) -> [f32; FEATURE_COUNT] {
+    let one = side_features(state, SideId::One);
+    let two = side_features(state, SideId::Two);
+    let mut out = [0.0; FEATURE_COUNT];
+    for i in 0..FEATURE_COUNT {
+        out[i] = one[i] - two[i];
+    }
+    out
+}
+
+fn side_features<const N: usize>(state: &State<N>, side: SideId) -> [f32; FEATURE_COUNT] {
+    let s = state.side(side);
+    let mut f = [0.0f32; FEATURE_COUNT];
+    for p in s.party.iter().filter(|p| p.is_alive()) {
+        f[0] += 1.0;
+        f[1] += p.hp as f32 / p.max_hp.max(1) as f32;
+        let i = match p.status {
+            Status::Sleep => 2,
+            Status::Freeze => 3,
+            Status::Paralyze => 4,
+            Status::Burn => 5,
+            Status::Poison => 6,
+            Status::Toxic => 7,
+            _ => continue,
+        };
+        f[i] += 1.0;
+    }
+    for slot in &s.slots {
+        let Some(party) = slot.party_index else {
+            continue;
+        };
+        if !s.party[party as usize].is_alive() {
+            continue;
+        }
+        let b = &slot.boosts;
+        f[8] += f32::from(b[0] + b[2] + b[4]);
+        f[9] += f32::from(b[1] + b[3]);
+        f[10] += f32::from(b[5] + b[6]);
+        let v = &slot.volatiles;
+        for (i, volatile) in [
+            (11, Volatile::Confusion),
+            (12, Volatile::LeechSeed),
+            (13, Volatile::Substitute),
+            (14, Volatile::Taunt),
+            (15, Volatile::Encore),
+            (16, Volatile::PerishSong),
+            (17, Volatile::Yawn),
+        ] {
+            if v.has(volatile) {
+                f[i] += 1.0;
+            }
+        }
+    }
+    if s.effects[SideEffect::Tailwind as usize].is_active() {
+        f[18] += 1.0;
+    }
+    for screen in [
+        SideEffect::Reflect,
+        SideEffect::LightScreen,
+        SideEffect::AuroraVeil,
+    ] {
+        if s.effects[screen as usize].is_active() {
+            f[19] += 1.0;
+        }
+    }
+    f
+}
+
+impl Heuristic {
+    /// The weights that make `features · WEIGHTS` equal [`Heuristic::evaluate`] (statuses
+    /// and volatiles count negatively; substitute, Tailwind and screens positively).
+    pub const WEIGHTS: [f32; FEATURE_COUNT] = [
+        Material::ALIVE,
+        Material::HP,
+        -Self::SLEEP,
+        -Self::FREEZE,
+        -Self::PARALYZE,
+        -Self::BURN,
+        -Self::POISON,
+        -Self::TOXIC,
+        Self::OFFENSIVE_STAGE,
+        Self::DEFENSIVE_STAGE,
+        Self::ACCURACY_STAGE,
+        -Self::CONFUSION,
+        -Self::LEECH_SEED,
+        Self::SUBSTITUTE,
+        -Self::TAUNT,
+        -Self::ENCORE,
+        -Self::PERISH_SONG,
+        -Self::YAWN,
+        Self::TAILWIND,
+        Self::SCREEN,
+    ];
+}
+
+/// A linear evaluation over [`features`] with given weights (fitted offline, WORKPLAN S12).
+#[derive(Clone, Debug, PartialEq)]
+pub struct Weighted {
+    pub weights: [f32; FEATURE_COUNT],
+}
+
+impl<const N: usize> Evaluator<N> for Weighted {
+    fn evaluate(&self, state: &State<N>) -> f32 {
+        features(state)
+            .iter()
+            .zip(&self.weights)
+            .map(|(f, w)| f * w)
+            .sum()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -164,6 +307,23 @@ mod tests {
         let state = state();
         assert_eq!(Material.evaluate(&state), 0.0);
         assert_eq!(Heuristic.evaluate(&state), 0.0);
+    }
+
+    /// The feature vector with the heuristic's weights reproduces the heuristic exactly.
+    #[test]
+    fn features_times_weights_is_the_heuristic() {
+        let mut state = state();
+        state.side_mut(SideId::Two).party[0].status = Status::Sleep;
+        state.side_mut(SideId::Two).slots[1].boosts[0] = 2;
+        state.side_mut(SideId::One).slots[0].boosts[3] = -1;
+        state.side_mut(SideId::One).effects[SideEffect::Tailwind as usize] =
+            crate::field::Effect { value: 0, turns: 3 };
+        state.side_mut(SideId::One).party[1].hp = 40;
+        let weighted = Weighted {
+            weights: Heuristic::WEIGHTS,
+        };
+        assert!((weighted.evaluate(&state) - Heuristic.evaluate(&state)).abs() < 1e-3);
+        assert_eq!(FEATURE_NAMES.len(), FEATURE_COUNT);
     }
 
     /// Sleep, boosts, volatiles and side conditions move the score the way a player would

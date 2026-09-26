@@ -4,7 +4,8 @@
 //! Usage: lab-plan <scenario.json> [--side p1|p2] [--depth n] [--rng expect|worst]
 //!                 [--before <oracle-report.json>] [--top k] [--exact] [--all-targets]
 //!                 [--max-turns n] [--rolls full|extremes|quartiles|median|pessimistic]
-//!                 [--eval material|heuristic] [--position i] [--solve maximin|nash|deep]
+//!                 [--eval material|heuristic|file:<weights.json>] [--position i]
+//!                 [--solve maximin|nash|deep] [--dump-children <out.jsonl> [--beam b] [--outcomes k]]
 //!                 [--threads n] [--plan "<turn 1> / <turn 2> / ..."]
 //!                 [--child-nash [--beam b] [--outcomes k]]
 //!
@@ -30,7 +31,9 @@ use std::process::ExitCode;
 
 use serde_json::Value;
 
-use lab_engine::eval::{Evaluator, Heuristic, Material};
+use lab_engine::eval::{
+    features, Evaluator, Heuristic, Material, Weighted, FEATURE_COUNT, FEATURE_NAMES,
+};
 use lab_engine::rules::Ruleset;
 use lab_engine::state::SideId;
 use lab_engine::turn::RollMode;
@@ -60,6 +63,7 @@ fn run() -> Result<(), String> {
     let mut eval = "heuristic".to_owned();
     let mut solve = "maximin".to_owned();
     let mut plan: Option<String> = None;
+    let mut dump_children: Option<String> = None;
     let mut pessimistic = false;
     let mut config = Config::new(Ruleset::CHAMPIONS_MC, us);
     let mut i = 0;
@@ -138,7 +142,10 @@ fn run() -> Result<(), String> {
                 i += 1;
                 eval = match args.get(i).map(String::as_str) {
                     Some(e @ ("material" | "heuristic")) => e.to_owned(),
-                    _ => return Err("--eval needs material or heuristic".into()),
+                    Some(e) if e.starts_with("file:") => e.to_owned(),
+                    _ => {
+                        return Err("--eval needs material, heuristic or file:<weights.json>".into())
+                    }
                 };
             }
             "--solve" => {
@@ -151,6 +158,10 @@ fn run() -> Result<(), String> {
             "--plan" => {
                 i += 1;
                 plan = Some(args.get(i).cloned().ok_or("--plan needs the turns")?);
+            }
+            "--dump-children" => {
+                i += 1;
+                dump_children = Some(args.get(i).cloned().ok_or("--dump-children needs a file")?);
             }
             "--threads" => {
                 i += 1;
@@ -211,10 +222,87 @@ fn run() -> Result<(), String> {
 
     let evaluator: Box<dyn Evaluator<2> + Sync> = if eval == "material" {
         Box::new(Material)
+    } else if let Some(path) = eval.strip_prefix("file:") {
+        let text = std::fs::read_to_string(path).map_err(|e| format!("{path}: {e}"))?;
+        let value: Value = serde_json::from_str(&text).map_err(|e| format!("{path}: {e}"))?;
+        let mut weights = [0.0f32; FEATURE_COUNT];
+        for (i, name) in FEATURE_NAMES.iter().enumerate() {
+            weights[i] = value["weights"][*name]
+                .as_f64()
+                .ok_or_else(|| format!("{path}: weights.{name} missing"))?
+                as f32;
+        }
+        Box::new(Weighted { weights })
     } else {
         Box::new(Heuristic)
     };
     let mut solver = Solver::new(config, evaluator.as_ref());
+    if let Some(path) = &dump_children {
+        // Feature vectors of the positions one turn ahead, each with its next-turn equilibrium
+        // value as the fitting target (WORKPLAN S12): our `--beam` best choices by the root
+        // matrix, every reply, the `--outcomes` most probable outcomes of each pair.
+        let beam = config.reply_beam.unwrap_or(6);
+        let deep = solver
+            .analyse_deep(&mut state, None, beam)
+            .map_err(|e| e.to_string())?;
+        let decision = deep.decision;
+        let theirs =
+            lab_search::legal_choices(&state, config.ruleset, decision, them, config.pruning);
+        let mut out = String::new();
+        let mut rows = 0usize;
+        for line in &deep.lines {
+            for &b in &theirs {
+                let pair = match us {
+                    SideId::One => [line.ours, b],
+                    SideId::Two => [b, line.ours],
+                };
+                let Ok(mut outcomes) = lab_search::transitions(
+                    &mut state,
+                    config.ruleset,
+                    config.enumerate_options(),
+                    decision,
+                    None,
+                    pair,
+                ) else {
+                    continue;
+                };
+                outcomes.sort_by(|x, y| y.probability.total_cmp(&x.probability));
+                if let Some(cap) = config.outcome_cap {
+                    outcomes.truncate(cap);
+                }
+                for o in &outcomes {
+                    state.apply(&o.instructions);
+                    let target = solver.nash_value(&mut state, o.suspension.as_ref());
+                    let f = features(&state);
+                    let sign = if us == SideId::One { 1.0 } else { -1.0 };
+                    state.reverse(&o.instructions);
+                    let Ok(target) = target else { continue };
+                    if target.is_nan() {
+                        continue;
+                    }
+                    let f: Vec<f32> = f.iter().map(|x| x * sign).collect();
+                    out.push_str(
+                        &serde_json::to_string(&serde_json::json!({
+                            "features": f,
+                            "target": target,
+                            "p": o.probability,
+                            "ours": describe(&position, decision, us, &line.ours),
+                            "theirs": describe(&position, decision, them, &b),
+                        }))
+                        .expect("serializable"),
+                    );
+                    out.push('\n');
+                    rows += 1;
+                }
+            }
+        }
+        std::fs::write(path, out).map_err(|e| format!("{path}: {e}"))?;
+        println!(
+            "wrote {rows} child positions to {path} (features {:?}; targets: next-turn equilibrium from our side); {} nodes, {} enumerations",
+            FEATURE_NAMES, deep.nodes, deep.turns
+        );
+        return Ok(());
+    }
     if let Some(text) = &plan {
         let order = &position.order[us.index()];
         let mut choices = Vec::new();
