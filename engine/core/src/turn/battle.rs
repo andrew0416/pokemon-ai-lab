@@ -103,6 +103,17 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// [`Battle::awaiting_run_switch`], per Pokémon): their abilities have not started, so a
     /// handler that only acts once started (Unnerve's `effectState.unnerved`) ignores them.
     pub unstarted: Vec<PokemonRef>,
+    /// Showdown's `queue.peek()` is empty: the turn's actions are all done (the residual action
+    /// and what follows it in the same stage, or the `runSwitch` of a replacement batch). Cud
+    /// Chew's `onEatItem` reads it.
+    pub queue_done: bool,
+    /// The move in progress is external (`move.isExternal`: Dancer's copy): no Pressure PP, and
+    /// no Dancer after it.
+    pub external_move: bool,
+    /// Showdown `battle.activeTarget` of the move that just ran (the (redirected) target it was
+    /// used at; its user for a self-targeting move) with `useMove`'s result
+    /// (`moveDidSomething`); `None` until `useMove` got that far. Dancer reads both.
+    pub active_target: Option<(SlotRef, bool)>,
 }
 
 /// The readers of the hidden damage history present in a battle (any party member's moves;
@@ -178,6 +189,9 @@ impl<'a, const N: usize> Battle<'a, N> {
             raw_speed: Vec::new(),
             awaiting_run_switch: false,
             unstarted: Vec::new(),
+            queue_done: false,
+            external_move: false,
+            active_target: None,
         }
     }
 
@@ -555,8 +569,8 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// `battle.heal` for the heals whose effect Big Root's `onTryHeal` (priority 1) lists:
     /// `drain`, `leechseed`, `ingrain`, `aquaring`, `strengthsap`. The amount is normalized as
     /// in `heal` (at least 1, truncated), then `runEvent('TryHeal')` chains `[5324, 4096]` on a
-    /// holder of Big Root (nothing else supported answers TryHeal: Heal Block, Liquid Ooze and
-    /// Ripen are refused). Returns the HP restored.
+    /// holder of Big Root (Heal Block stops it in `heal`; Ripen only doubles a berry's heal,
+    /// `update::berry_heal`; Liquid Ooze is refused). Returns the HP restored.
     pub fn heal_rooted(&mut self, target: SlotRef, amount: f64) -> i32 {
         let amount = if amount > 0.0 && amount <= 1.0 {
             1.0
@@ -749,7 +763,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         // !target.isAlly(source)) return;`: an infiltrating move's status on a foe.
         let infiltrates = self.active_move.is_some_and(|m| m.infiltrates)
             && source.is_some_and(|s| s.side != target.side);
-        self.try_set_status_inner(target, status, source, infiltrates)
+        self.try_set_status_inner(target, status, source, infiltrates, true)
     }
 
     /// Showdown `trySetStatus(status, source)` → `setStatus` for the supported handlers: fails
@@ -762,17 +776,19 @@ impl<'a, const N: usize> Battle<'a, N> {
         status: Status,
         source: Option<SlotRef>,
     ) -> bool {
-        self.try_set_status_inner(target, status, source, false)
+        self.try_set_status_inner(target, status, source, false, false)
     }
 
     /// [`Battle::try_set_status_from`]; `infiltrates`: the status is an infiltrating move's
-    /// effect on a foe, which Safeguard lets through.
+    /// effect on a foe, which Safeguard lets through; `by_move`: the status's effect is the move
+    /// in progress (`effect.effectType === 'Move'`, Poison Puppeteer).
     fn try_set_status_inner(
         &mut self,
         target: SlotRef,
         status: Status,
         source: Option<SlotRef>,
         infiltrates: bool,
+        by_move: bool,
     ) -> bool {
         let Some(pokemon) = self.alive(target) else {
             return false;
@@ -828,6 +844,11 @@ impl<'a, const N: usize> Battle<'a, N> {
         });
         self.set_status_turns(pokemon, turns);
         self.after_set_status(target, status, source);
+        // Poison Puppeteer's `onAnyAfterSetStatus` (like Synchronize, priority 0; each changes
+        // a different Pokémon and Synchronize cannot poison the Poison-type source).
+        if by_move {
+            super::abilities::poison_puppeteer(self, target, status, source);
+        }
         // Lum Berry's `onAfterSetStatus` (priority -1: after Synchronize).
         super::update::after_set_status(self, target);
         true
@@ -1285,10 +1306,15 @@ impl<'a, const N: usize> Battle<'a, N> {
         let from_other = source.is_some_and(|s| s != target);
         let mut boost = *boosts;
 
-        // ChangeBoost: the target's own ability.
+        // ChangeBoost: the target's own ability (Ripen: a berry's boosts, `effect.isBerry`).
         match self.ability_unless_broken(target) {
             a if a == abilities::CONTRARY => boost.iter_mut().for_each(|b| *b = -*b),
             a if a == abilities::SIMPLE => boost.iter_mut().for_each(|b| *b *= 2),
+            a if a == abilities::RIPEN
+                && matches!(effect, BoostEffect::Item(item) if item.data().is_berry) =>
+            {
+                boost.iter_mut().for_each(|b| *b *= 2)
+            }
             _ => {}
         }
         // getCappedBoost.
@@ -1508,8 +1534,10 @@ impl<'a, const N: usize> Battle<'a, N> {
             new: ItemId::NONE,
         });
         // The only berries consumed through here are the resist berries, which Showdown eats
-        // (`eatItem`: `ateBerry = true`, Belch).
+        // (`eatItem`: `runEvent('EatItem')` after their empty `onEat`, then `ateBerry = true`,
+        // Belch). EatItem comes before the item is gone; nothing it runs reads the item.
         if item.data().is_berry {
+            super::abilities::eat_item_event(self, slot, item, false);
             self.record_ate_berry(pokemon);
         }
         // AfterUseItem: Unburden, an ally's Symbiosis.
@@ -1565,14 +1593,12 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// Showdown `pokemon.activeTurns > 0` during a turn: the Pokémon was already active when the
     /// turn started (`endTurn` counts every active Pokémon; `switchIn` resets it to 0).
     ///
-    /// `State` has no such counter. During a turn it equals `move_actions > 0`
-    /// (`activeMoveActions`, also reset by `switchIn`): every Pokémon active at the start of
-    /// the turn has a move action that runs `runMove` (which counts it) unless it switches
-    /// out or faints first, while a Pokémon that switched in during the turn cannot act again.
-    /// Mechanics that break this (a move from Dancer or Instruct after switching in, a
-    /// skipped action while staying in) must replace this with a real counter.
+    /// `State` has no such counter, but `activeTurns` is 0 exactly while the slot history's
+    /// `newlySwitched` is set (both reset by `switchIn`, both cleared by `endTurn`, the battle
+    /// start's included), which a move from Dancer after switching in does not change (it counts
+    /// `activeMoveActions`).
     pub fn active_since_turn_start(&self, slot: SlotRef) -> bool {
-        self.state.slot(slot).move_actions > 0
+        self.occupant(slot).is_some() && !self.state.slot(slot).history.newly_switched
     }
 
     /// `pokemon.switchFlag = <move id | true>` (F6): the occupant must switch out at the next

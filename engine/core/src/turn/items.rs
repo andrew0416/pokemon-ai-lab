@@ -950,7 +950,8 @@ pub(crate) fn has_damaging_hit(item: ItemId) -> bool {
 ///   SpD +1), Snowball (Ice, Atk +1): `if (move.type === ...) target.useItem()`.
 /// - Jaboca Berry (physical) / Rowap Berry (special): `source.hp && source.isActive &&
 ///   !source.hasAbility('magicguard')`, then `target.eatItem()` (which, for these two, works at
-///   0 HP) and `this.damage(source.baseMaxhp / 8, source, target)` (Ripen, 1/4, is refused).
+///   0 HP) and `this.damage(source.baseMaxhp / (target.hasAbility('ripen') ? 4 : 8), source,
+///   target)`.
 pub(crate) fn on_damaging_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -976,7 +977,13 @@ pub(crate) fn on_damaging_hit<const N: usize>(
                 && super::update::eat_item(b, target)
             {
                 let max_hp = f64::from(b.slot_mon(user).expect("alive").max_hp);
-                b.damage(user, max_hp / 8.0, DamageSource::Indirect);
+                // `source.baseMaxhp / (target.hasAbility('ripen') ? 4 : 8)`.
+                let divisor = if super::abilities::ripens(b, target) {
+                    4.0
+                } else {
+                    8.0
+                };
+                b.damage(user, max_hp / divisor, DamageSource::Indirect);
             }
             return;
         }
@@ -1183,7 +1190,7 @@ pub(crate) fn on_hit<const N: usize>(
         && super::update::eat_item(b, target)
     {
         let max_hp = f64::from(b.slot_mon(target).expect("the eater").max_hp);
-        b.heal(target, max_hp / 4.0);
+        super::update::berry_heal(b, target, max_hp / 4.0);
         return;
     }
     if user == target
@@ -1269,8 +1276,8 @@ pub(crate) fn on_residual<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, 
 
 /// Showdown `eatItem` for a held berry: `TryEatItem` (Unnerve, Anger Shell, Berserk:
 /// `abilities::try_eat_item`), then it is consumed and becomes `lastItem` (`AfterUseItem`:
-/// Unburden, in `Battle::use_item`). As One, Ripen, Cheek Pouch and Cud Chew are refused by
-/// `support`, and the resist berries' `onEat` is empty.
+/// Unburden, in `Battle::use_item`, after `EatItem`: Cheek Pouch, Cud Chew, Ripen). The resist
+/// berries' `onEat` is empty.
 fn eat_item<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> bool {
     // TryEatItem: the ability handlers (`abilities::try_eat_item`).
     super::abilities::try_eat_item(b, holder) && b.use_item(holder)

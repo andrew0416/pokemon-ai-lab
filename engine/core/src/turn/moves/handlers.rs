@@ -1903,6 +1903,9 @@ pub(super) fn on_hit<const N: usize>(
                             item.data().name
                         )));
                     }
+                    // `runEvent('EatItem', source, source, move, item)`: Cheek Pouch, Ripen (Cud
+                    // Chew ignores Bug Bite and Pluck).
+                    super::super::abilities::eat_item_event(b, user, item, true);
                     // `if (item.onEat) source.ateBerry = true;` (Belch).
                     if item.data().handlers.contains(&"onEat") {
                         b.record_ate_berry(eater);

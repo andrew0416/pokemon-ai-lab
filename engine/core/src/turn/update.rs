@@ -175,7 +175,26 @@ pub(crate) fn eat_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> 
     if !berry_on_eat(b, slot, pokemon, item) {
         return false;
     }
+    // `runEvent('EatItem')`: Cheek Pouch, Cud Chew, Ripen.
+    super::abilities::eat_item_event(b, slot, item, false);
     consume(b, slot, pokemon)
+}
+
+/// `battle.heal` for a heal whose effect is a berry: the amount is normalized (at least 1,
+/// truncated), then `runEvent('TryHeal')` doubles it for a Ripen holder (`chainModify(2)`) and
+/// Heal Block stops it (`Battle::heal`).
+pub(crate) fn berry_heal<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, amount: f64) {
+    let amount = if amount > 0.0 && amount <= 1.0 {
+        1.0
+    } else {
+        amount.trunc()
+    };
+    let factor = if super::abilities::ripens(b, slot) {
+        2.0
+    } else {
+        1.0
+    };
+    b.heal(slot, amount * factor);
 }
 
 /// The berry's `onEat` for `pokemon` in `slot`: its holder, or the user of Bug Bite / Pluck
@@ -191,14 +210,15 @@ pub(crate) fn berry_on_eat<const N: usize>(
     let mon = b.mon(pokemon);
     let max_hp = f64::from(mon.max_hp);
     let status = mon.status;
+    // The heals go through `berry_heal` (Ripen doubles them).
     if item == items::SITRUS_BERRY {
-        b.heal(slot, max_hp / 4.0);
+        berry_heal(b, slot, max_hp / 4.0);
     } else if item == items::ORAN_BERRY {
-        b.heal(slot, 10.0);
+        berry_heal(b, slot, 10.0);
     } else if let Some(&(_, disliked)) = FIGY_BERRIES.iter().find(|&&(i, _)| i == item) {
         // `if (pokemon.getNature().minus === stat) pokemon.addVolatile('confusion');` (a holder
         // with such a nature is refused before the turn: `berry_problem`; a Bug Bite user is not).
-        b.heal(slot, max_hp / 3.0);
+        berry_heal(b, slot, max_hp / 3.0);
         if b.mon(pokemon).nature.modifiers().1 == Some(disliked) {
             b.add_volatile(slot, Volatile::Confusion);
         }
@@ -230,7 +250,13 @@ pub(crate) fn berry_on_eat<const N: usize>(
         if let Some(index) = index {
             let slot_move = moves[index];
             let max = crate::state::champions_max_pp(slot_move.id);
-            let new = (slot_move.pp + 10).min(max);
+            // `const addedPP = pokemon.hasAbility('ripen') ? 20 : 10;`
+            let added = if super::abilities::ripens(b, slot) {
+                20
+            } else {
+                10
+            };
+            let new = (slot_move.pp + added).min(max);
             b.apply(Instruction::SetPp {
                 target: pokemon,
                 move_index: index as u8,

@@ -357,7 +357,7 @@ pub(crate) fn residual_order(ability: AbilityId) -> (u32, u32) {
 
 /// Whether `ability` has an `onResidual` run by [`on_residual`] (`residual.rs` collects it).
 pub(crate) fn has_residual(ability: AbilityId) -> bool {
-    ability == abilities::SLOW_START
+    ability == abilities::SLOW_START || ability == abilities::CUD_CHEW
 }
 
 /// An ability's `onResidual` for its holder in `slot` (the caller checked that the ability
@@ -365,11 +365,15 @@ pub(crate) fn has_residual(ability: AbilityId) -> bool {
 /// - Slow Start: `if (pokemon.activeTurns && this.effectState.counter)` the counter drops by
 ///   one, and at 0 it is gone (`activeTurns` at the residual: the holder was active since the
 ///   turn started, `Battle::active_since_turn_start`).
+/// - Cud Chew: the remembered berry's counter ([`cud_chew_residual`]).
 pub(crate) fn on_residual<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
     ability: AbilityId,
 ) -> Result<(), super::TurnError> {
+    if ability == abilities::CUD_CHEW {
+        return cud_chew_residual(b, slot);
+    }
     if ability == abilities::SLOW_START {
         let mut state = b.volatile(slot, Volatile::SlowStart);
         if b.active_since_turn_start(slot) && state.counter > 0 {
@@ -381,6 +385,181 @@ pub(crate) fn on_residual<const N: usize>(
         }
     }
     Ok(())
+}
+
+// ---- berries: Cheek Pouch, Cud Chew, Ripen; Poison Puppeteer; Dancer --------------------------
+
+/// `runEvent('EatItem', eater, source, effect, item)` after a berry's `onEat` (`eatItem`; Bug Bite
+/// and Pluck with the move as the effect: `stolen`), for the eater in `slot`: its ability's
+/// `onEatItem` (no other Pokémon's handler exists).
+/// - Cheek Pouch: `this.heal(pokemon.baseMaxhp / 3)` (TryHeal: Heal Block; its effect is the
+///   ability, so Ripen does not double it).
+/// - Cud Chew: a berry not eaten by Bug Bite or Pluck is remembered with `counter = 2`, one less
+///   when nothing is left in the queue (`!this.queue.peek()`: [`Battle::queue_done`]).
+/// - Ripen: `abilityState.berryWeaken` = the berry is a resist berry ([`Volatile::RipenWeaken`]).
+pub(crate) fn eat_item_event<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    item: ItemId,
+    stolen: bool,
+) {
+    let Some(pokemon) = b.occupant(slot) else {
+        return;
+    };
+    match b.ability(slot) {
+        a if a == abilities::CHEEK_POUCH => {
+            let max_hp = f64::from(b.mon(pokemon).max_hp);
+            b.heal(slot, max_hp / 3.0);
+        }
+        a if a == abilities::CUD_CHEW => {
+            if item.data().is_berry && !stolen {
+                let counter = if b.queue_done { 1 } else { 2 };
+                let state = VolatileState {
+                    active: true,
+                    counter: item.0,
+                    hidden: counter,
+                    ..VolatileState::NONE
+                };
+                b.set_volatile_state(slot, Volatile::CudChew, state);
+            }
+        }
+        a if a == abilities::RIPEN => {
+            if super::items::resist_berry(item).is_some() {
+                let state = VolatileState {
+                    active: true,
+                    ..VolatileState::NONE
+                };
+                b.set_volatile_state(slot, Volatile::RipenWeaken, state);
+            } else {
+                b.delete_volatile(slot, Volatile::RipenWeaken);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Whether Ripen doubles a berry's effect on the Pokémon in `slot` (its `onTryHeal` for a heal
+/// whose effect is a berry, `chainModify(2)`; its `onChangeBoost` for a berry's boosts; Leppa
+/// Berry's and Jaboca / Rowap Berry's own `hasAbility('ripen')`).
+pub(crate) fn ripens<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
+    b.ability(slot) == abilities::RIPEN
+}
+
+/// Ripen's `onSourceModifyDamage` (priority -1) for the Pokémon in `target` taking a hit: with
+/// `berryWeaken` set (a resist berry eaten in this very event, or earlier through Bug Bite or
+/// Pluck), it is cleared and the damage is halved once more. Not breakable.
+pub(crate) fn ripen_weaken<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+) -> Option<Handler> {
+    if b.ability(target) != abilities::RIPEN || !b.volatile(target, Volatile::RipenWeaken).active {
+        return None;
+    }
+    b.delete_volatile(target, Volatile::RipenWeaken);
+    let p = priority(
+        abilities::RIPEN.data().event_orders,
+        "onSourceModifyDamagePriority",
+    );
+    Some(Handler::of(b, target, p, SUB_ABILITY, MOD_HALF))
+}
+
+/// Cud Chew's `onResidual` for its holder in `slot`: with a remembered berry and HP, the counter
+/// drops; at 0 the berry is eaten again (`singleEvent('Eat')`: its `onEat`, skipped while the
+/// holder ignores its item; then `EatItem`, which would only remember it again) and forgotten;
+/// `ateBerry` for a berry with `onEat`. The held item and `lastItem` are untouched.
+fn cud_chew_residual<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+) -> Result<(), super::TurnError> {
+    let state = b.volatile(slot, Volatile::CudChew);
+    let Some(pokemon) = b.alive(slot) else {
+        return Ok(());
+    };
+    if !state.active {
+        return Ok(());
+    }
+    if state.hidden > 1 {
+        let next = VolatileState {
+            hidden: state.hidden - 1,
+            ..state
+        };
+        b.set_volatile_state(slot, Volatile::CudChew, next);
+        return Ok(());
+    }
+    let item = ItemId(state.counter);
+    b.delete_volatile(slot, Volatile::CudChew);
+    let empty = item.data().handlers.is_empty() || super::items::resist_berry(item).is_some();
+    if !empty
+        && !super::items::ignoring_item(b.state, slot)
+        && !super::update::berry_on_eat(b, slot, pokemon, item)
+    {
+        return Err(b.unsupported(format!("Cud Chew eating {}", item.data().name)));
+    }
+    if item.data().handlers.contains(&"onEat") {
+        b.record_ate_berry(pokemon);
+    }
+    Ok(())
+}
+
+/// Poison Puppeteer's `onAnyAfterSetStatus` after `status` landed on `target` from `source`
+/// through a move: if the source holds it (as it acts) and is a Pecharunt
+/// (`source.baseSpecies.name`), a poison or bad poison on another Pokémon also confuses it
+/// (`target.addVolatile('confusion')`: Own Tempo, Misty Terrain and Safeguard answer).
+pub(crate) fn poison_puppeteer<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    status: Status,
+    source: Option<SlotRef>,
+) {
+    let Some(source) = source.filter(|&s| s != target) else {
+        return;
+    };
+    let pecharunt = b
+        .slot_mon(source)
+        .is_some_and(|m| base_species(m.species) == crate::dex::species::PECHARUNT);
+    if pecharunt
+        && b.ability(source) == abilities::POISON_PUPPETEER
+        && matches!(status, Status::Poison | Status::Toxic)
+    {
+        b.add_volatile(target, Volatile::Confusion);
+    }
+}
+
+/// The Pokémon whose Dancer copies a dance move `user` (the Pokémon `mover`) just used: every
+/// other active Pokémon not fainted with Dancer (as it acts) that is not semi-invulnerable, by
+/// raw Speed from the slowest (`storedStats.spe`). Equal Speeds are ordered by how long each has
+/// had its ability (`abilityState.effectOrder`), which the state does not keep: unsupported.
+pub(crate) fn dancers<const N: usize>(
+    b: &Battle<'_, N>,
+    mover: PokemonRef,
+) -> Result<Vec<(SlotRef, PokemonRef)>, super::TurnError> {
+    let mut out: Vec<(SlotRef, PokemonRef, i16)> = Vec::new();
+    for slot in b.all_alive() {
+        let pokemon = b.alive(slot).expect("alive");
+        if pokemon == mover || b.ability(slot) != abilities::DANCER {
+            continue;
+        }
+        let semi_invulnerable = [
+            Volatile::Fly,
+            Volatile::Bounce,
+            Volatile::Dive,
+            Volatile::Dig,
+            Volatile::PhantomForce,
+            Volatile::ShadowForce,
+        ]
+        .into_iter()
+        .any(|v| b.volatile(slot, v).active);
+        if !semi_invulnerable {
+            out.push((slot, pokemon, b.mon(pokemon).stats[4]));
+        }
+    }
+    out.sort_by_key(|&(_, _, speed)| speed);
+    if out.windows(2).any(|w| w[0].2 == w[1].2) {
+        return Err(b.unsupported(
+            "two Dancers with the same Speed (Showdown orders them by abilityState.effectOrder)",
+        ));
+    }
+    Ok(out.into_iter().map(|(s, p, _)| (s, p)).collect())
 }
 
 /// The ability of the Pokémon in `holder` as the handlers of `user`'s move see it. Showdown

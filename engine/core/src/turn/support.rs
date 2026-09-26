@@ -1777,6 +1777,26 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // Opus U. Truant: `onStart` in `abilities::truant_start`, `onBeforeMove` in
     // `abilities::truant_before_move` (the `truant` volatile).
     (abilities::TRUANT, &["onBeforeMove", "onStart"]),
+    // Opus U. Cheek Pouch, Cud Chew (`onEatItem` in `abilities::eat_item_event`, from every
+    // EatItem site: `update::eat_item`, `Battle::use_item` for the resist berries, Bug Bite /
+    // Pluck; Cud Chew's `onResidual` in `abilities::on_residual`), Ripen (`onEatItem` too;
+    // `onTryHeal` in `update::berry_heal`, `onChangeBoost` in `Battle::boost_by`,
+    // `onSourceModifyDamage` in `abilities::ripen_weaken`; `onTryEatItem` only logs).
+    (abilities::CHEEK_POUCH, &["onEatItem"]),
+    (abilities::CUD_CHEW, &["onEatItem", "onResidual"]),
+    (
+        abilities::RIPEN,
+        &[
+            "onChangeBoost",
+            "onEatItem",
+            "onSourceModifyDamage",
+            "onTryEatItem",
+            "onTryHeal",
+        ],
+    ),
+    // Opus U. Poison Puppeteer: `onAnyAfterSetStatus` in `abilities::poison_puppeteer` (from
+    // `Battle::try_set_status` for a move's status). Dancer has no handlers: `moves::dance`.
+    (abilities::POISON_PUPPETEER, &["onAnyAfterSetStatus"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -1795,7 +1815,6 @@ fn listed<T: PartialEq + Copy>(table: &[(T, &[&str])], id: T) -> bool {
 /// abilities are implemented.
 const CORE_CHECKED_ABILITIES: &[AbilityId] = &[
     abilities::CORROSION,
-    abilities::DANCER,
     abilities::EARLY_BIRD,
     abilities::MULTITYPE,
     abilities::RKS_SYSTEM,

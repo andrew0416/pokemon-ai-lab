@@ -251,9 +251,17 @@ pub enum Volatile {
     /// Truant's own condition (`truant`, no duration, no handlers): the holder loafs at its next
     /// move attempt (Truant's `onBeforeMove` removes it and stops the move, or adds it).
     Truant,
+    /// Not a Showdown volatile: Cud Chew's `abilityState.berry` (the berry's `ItemId` in
+    /// `counter`) and `.counter` (in `hidden`): the berry is eaten again when the counter runs
+    /// out at a residual. No duration; hidden in the canonical state.
+    CudChew,
+    /// Not a Showdown volatile: Ripen's `abilityState.berryWeaken` (the last berry it ate was a
+    /// resist berry: the holder's next hit taken is halved once more). No duration; hidden in
+    /// the canonical state.
+    RipenWeaken,
 }
 
-pub const VOLATILE_COUNT: usize = 78;
+pub const VOLATILE_COUNT: usize = 80;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -335,6 +343,8 @@ impl Volatile {
         Volatile::NeutralizingGasEnding,
         Volatile::SlowStart,
         Volatile::Truant,
+        Volatile::CudChew,
+        Volatile::RipenWeaken,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -420,7 +430,9 @@ impl Volatile {
             | Volatile::GorillaTactics
             | Volatile::NeutralizingGasEnding
             | Volatile::SlowStart
-            | Volatile::Truant => ConditionId::NONE,
+            | Volatile::Truant
+            | Volatile::CudChew
+            | Volatile::RipenWeaken => ConditionId::NONE,
         }
     }
 
@@ -505,6 +517,8 @@ impl Volatile {
             Volatile::NeutralizingGasEnding => "neutralizinggasending",
             Volatile::SlowStart => "slowstartcounter",
             Volatile::Truant => "truant",
+            Volatile::CudChew => "cudchewberry",
+            Volatile::RipenWeaken => "berryweaken",
         }
     }
 
@@ -598,7 +612,9 @@ impl Volatile {
             | Volatile::GastroAcid
             | Volatile::NeutralizingGasEnding
             | Volatile::SlowStart
-            | Volatile::Truant => 0,
+            | Volatile::Truant
+            | Volatile::CudChew
+            | Volatile::RipenWeaken => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -633,7 +649,9 @@ impl Volatile {
             | Volatile::SupremeOverlord
             | Volatile::GorillaTactics
             | Volatile::NeutralizingGasEnding
-            | Volatile::SlowStart => None,
+            | Volatile::SlowStart
+            | Volatile::CudChew
+            | Volatile::RipenWeaken => None,
             // Two-turn move: the target location is not a canonical field.
             Volatile::Roost
             | Volatile::HelpingHand
@@ -827,6 +845,8 @@ mod tests {
                         | Volatile::NeutralizingGasEnding
                         | Volatile::SlowStart
                         | Volatile::Truant
+                        | Volatile::CudChew
+                        | Volatile::RipenWeaken
                 ));
                 continue;
             }

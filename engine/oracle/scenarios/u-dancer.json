@@ -1,0 +1,74 @@
+{
+ "description": "Dancer: Gardevoir's Feather Dance at Tauros is copied by the Dancers, slowest first: Oricorio-Pom-Pom (Gardevoir's ally) at Tauros, then Oricorio (Tauros's ally) at Gardevoir. Tauros's Swords Dance is copied by both Dancers on themselves. Copies spend no PP and set no lastMove.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Gardevoir",
+    "item": "",
+    "ability": "Synchronize",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Feather Dance",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Oricorio-Pom-Pom",
+    "item": "",
+    "ability": "Dancer",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Tauros",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Oricorio",
+    "item": "",
+    "ability": "Dancer",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 10
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move featherdance 1, move harden",
+  "p2": "move swordsdance, move harden"
+ }
+}

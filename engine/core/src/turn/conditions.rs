@@ -376,9 +376,9 @@ pub(crate) fn volatile_start<const N: usize>(
         // last move or when the last move's slot has no PP; `this.effectState.move =
         // pokemon.lastMove.id`.
         Volatile::Disable => {
-            let using_a_move = b
-                .active_move
-                .is_some_and(|m| m.user == target && b.occupant(target) == Some(m.pokemon));
+            let using_a_move = !b.external_move
+                && b.active_move
+                    .is_some_and(|m| m.user == target && b.occupant(target) == Some(m.pokemon));
             if b.will_move(target).is_some() || using_a_move {
                 new.duration -= 1;
             }

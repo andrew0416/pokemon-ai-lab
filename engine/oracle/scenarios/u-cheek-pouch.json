@@ -1,0 +1,77 @@
+{
+ "description": "Cheek Pouch: Dedenne (40 HP) eats its Sitrus Berry at the turn-start Update (+43) and Cheek Pouch's onEatItem heals 1/3 more (+58).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Dedenne",
+    "item": "Sitrus Berry",
+    "ability": "Cheek Pouch",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Metagross",
+    "item": "",
+    "ability": "Clear Body",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Dedenne": {
+    "hp": 40
+   }
+  }
+ },
+ "turn": {
+  "p1": "move harden, move harden",
+  "p2": "move harden, move harden"
+ }
+}

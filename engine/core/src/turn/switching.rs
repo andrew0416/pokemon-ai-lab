@@ -1206,6 +1206,16 @@ pub(crate) fn end_ability<const N: usize>(
         b.delete_volatile(slot, Volatile::SlowStart);
         return Ok(());
     }
+    // Cud Chew and Ripen (no `onEnd`): their `abilityState.berry` / `.berryWeaken` go with the
+    // ability.
+    if ability == abilities::CUD_CHEW {
+        b.delete_volatile(slot, Volatile::CudChew);
+        return Ok(());
+    }
+    if ability == abilities::RIPEN {
+        b.delete_volatile(slot, Volatile::RipenWeaken);
+        return Ok(());
+    }
     // Gorilla Tactics' `onEnd`: `pokemon.abilityState.choiceLock = ""`.
     if ability == abilities::GORILLA_TACTICS {
         b.delete_volatile(slot, Volatile::GorillaTactics);
