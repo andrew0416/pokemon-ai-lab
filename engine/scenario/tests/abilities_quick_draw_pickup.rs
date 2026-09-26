@@ -47,6 +47,36 @@ fn power_construct_completes_zygarde_at_half_hp() {
     assert_exact_parity("aa-power-construct");
 }
 
+/// A fainting Zygarde-Complete (Power Construct's `formeRegression` back to the set's forme,
+/// which the state does not keep) is refused; a Zygarde that stayed in its 50% forme faints as
+/// usual. The engine's own refusal: no oracle fixture.
+#[test]
+fn power_construct_complete_faint_is_refused() {
+    let loaded = lab_scenario::load_scenario_file(
+        common::engine_dir().join("oracle/scenarios/aa-power-construct-faint.json"),
+    )
+    .unwrap();
+    let positions = lab_scenario::scenario_positions(&loaded).unwrap();
+    let (mut refused, mut ran) = (0, 0);
+    for position in &positions {
+        let mut state = position.state.clone();
+        let decision = lab_scenario::scenario_decision(&loaded, position).unwrap();
+        match lab_scenario::run_decision_mid_turn(
+            &mut state,
+            &position.order,
+            &decision,
+            &loaded.mid_turn,
+        ) {
+            Ok(_) => ran += 1,
+            Err(why) => {
+                assert!(why.contains("Zygarde-Complete fainting"), "{why}");
+                refused += 1;
+            }
+        }
+    }
+    assert!(refused > 0 && ran > 0, "refused {refused}, ran {ran}");
+}
+
 /// `turn::trapped` for every active Pokémon of the scenario's position against Showdown's
 /// `pokemon.trapped`, and a switch choice of each trapped one is rejected
 /// (`ActionError::Trapped`) and never generated (as `abilities_library.rs`).
