@@ -1,0 +1,24 @@
+{
+ "description": "Burn Up (legal in Champions): Charizard's Burn Up knocks out Snorlax (patched to 1 HP) and leaves Charizard `???/Flying` (`self.onHit`: Fire becomes `???`); Arcanine's hits Blissey and leaves Arcanine `???`; Blissey's own Burn Up fails without a Fire type (`onTryMove` returns null). Arcanine's damage rolls and crits make the outcomes.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Arcanine", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Burn Up", "Harden"], "level": 50},
+   {"species": "Charizard", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Burn Up", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Burn Up", "Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Snorlax": {"hp": 1}}},
+ "turn": {"p1": "move burnup 1, move burnup 2", "p2": "move burnup 1, move harden"}
+}

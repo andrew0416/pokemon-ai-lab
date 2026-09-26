@@ -458,7 +458,9 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
                 return false;
             }
         }
-        Status::Freeze if !mv.data.flags.contains(MoveFlags::DEFROST) => {
+        // A `defrost` move goes on (and thaws in ModifyMove), except Burn Up from a Pokémon
+        // without the Fire type.
+        Status::Freeze if !handlers::thaws_user(b, user, mv.id) => {
             let time = b.mon(pokemon).status_turns - 1;
             b.set_status_turns(pokemon, time);
             if time <= 0 || b.rng.chance(1, 4) {
@@ -878,7 +880,8 @@ fn use_move<const N: usize>(
     deduct_pressure_pp(b, user, mv, &targets);
     // The move's own TryMove (`singleEvent('TryMove')`) returns `null` for a two-turn move's
     // charging turn (`attacker.addVolatile('twoturnmove', defender); return null;`) and for
-    // Double Shock without the Electric type: the move stops, and `useMove` stores that
+    // Double Shock / Burn Up without the Electric / Fire type: the move stops, and `useMove`
+    // stores that
     // `null` as the move's result (no failure for Stomping Tantrum and Temper Flare).
     if !handlers::charge_try_move(b, user, mv) || !handlers::null_try_move(b, user, mv) {
         if b.slot_history(user).move_this_turn_result == MoveResult::Undefined {

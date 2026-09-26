@@ -419,6 +419,10 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // Double Shock: `onTryMove` (`handlers::null_try_move`: no Electric type, `null`) and
     // `self.onHit` (`handlers::self_on_hit`: Electric becomes `???`, `Type::Unknown`).
     (moves::DOUBLE_SHOCK, &["onTryMove", "self.onHit"]),
+    // Burn Up: the same with Fire (`handlers::null_try_move`, `handlers::self_on_hit`); its
+    // `defrost` flag does not thaw a frozen user without the Fire type (`handlers::thaws_user`,
+    // the `frz` status's `onBeforeMove`).
+    (moves::BURN_UP, &["onTryMove", "self.onHit"]),
     // Belly Drum `onHit`; Clangorous Soul and Fillet Away: `onTry` (HP), `onTryHit` (the boosts,
     // then deleted: `handlers::boosts_applied_in_try_hit`), `onHit` (the HP cost); No Retreat:
     // `onTry`, the volatile's `onTrapPokemon` in `conditions::trapped` (`onStart` only logs).
