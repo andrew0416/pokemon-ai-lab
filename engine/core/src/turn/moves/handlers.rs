@@ -1474,6 +1474,22 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::Failure
             }
         }
+        // Heal Pulse: `this.heal(this.modify(target.baseMaxhp, 0.75))` from a Mega Launcher user
+        // (`source.hasAbility`: its own ability), otherwise `this.heal(Math.ceil(target.baseMaxhp
+        // * 0.5))`; `NOT_FAIL` when nothing is healed (full HP). Heal Block is not supported.
+        moves::HEAL_PULSE => {
+            let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
+            let amount = if b.ability(user) == abilities::MEGA_LAUNCHER {
+                modify(max_hp, 3072)
+            } else {
+                (max_hp + 1) / 2
+            };
+            if b.heal(target, f64::from(amount)) > 0 {
+                HitResult::Success
+            } else {
+                HitResult::NotFail
+            }
+        }
         // Pollen Puff: an ally is healed `Math.floor(target.baseMaxhp * 0.5)`; `NOT_FAIL` if
         // nothing is healed. A foe gets nothing more (`undefined`).
         moves::POLLEN_PUFF => {

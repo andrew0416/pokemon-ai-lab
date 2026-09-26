@@ -441,6 +441,8 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::JUNGLE_HEALING, &["onHit"]),
     (moves::LUNAR_BLESSING, &["onHit"]),
     (moves::FLORAL_HEALING, &["onHit"]),
+    // Heal Pulse: `handlers::on_hit` (half the target's max HP, 3/4 from a Mega Launcher user).
+    (moves::HEAL_PULSE, &["onHit"]),
     (moves::REST, &["onHit", "onTry"]),
     // `handlers::on_hit`: Psych Up, Speed Swap (the stored Speed, recalculated on leaving the
     // field in `Battle::clear_volatile`), Strength Sap, Pain Split, Spite, Reflect Type, Soak
