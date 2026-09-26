@@ -1,0 +1,78 @@
+{
+ "description": "Nature Power in Misty Terrain (Opus V): its `onTryHit` uses Moonblast at its target (`useMove(move, pokemon, {target})`); Dustox's Shield Dust drops Moonblast's SpA drop roll. Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Hypno",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spa": 32
+    },
+    "moves": [
+     "Nature Power",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Dustox",
+    "item": "",
+    "ability": "Shield Dust",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "field": {
+   "terrain": "mistyterrain",
+   "terrainDuration": 5
+  }
+ },
+ "turn": {
+  "p1": "move naturepower 1, move harden",
+  "p2": "move harden, move harden"
+ }
+}

@@ -1,0 +1,24 @@
+{
+ "description": "Nightmare ends when its holder wakes (Opus V): Gengar's Nightmare lands on Snorlax (patched asleep, 1 turn left), which then wakes at its own move (`cureStatus` removes `nightmare`) and uses Harden, so it takes no Nightmare damage; Hypno's Nightmare on Blissey (patched asleep, 3 turns) stays and costs a quarter of its max HP at the residual.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Nightmare", "Harden"], "level": 50},
+   {"species": "Hypno", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Nightmare", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Snorlax": {"status": "slp", "statusTime": 1}, "Blissey": {"status": "slp", "statusTime": 3}}},
+ "turn": {"p1": "move nightmare 1, move nightmare 2", "p2": "move harden, move harden"}
+}

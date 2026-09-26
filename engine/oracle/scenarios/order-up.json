@@ -1,0 +1,23 @@
+{
+ "description": "Order Up (Opus V): Tatsugiri-Droopy commands Dondozo from the battle start (+2 in every stat); Dondozo's Order Up then raises its Defense by 1 (the commanding Tatsugiri's forme: Droopy). Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Tatsugiri-Droopy", "item": "", "ability": "Commander", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Protect"], "level": 50},
+   {"species": "Dondozo", "item": "", "ability": "Water Veil", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Order Up", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "pass, move orderup 1", "p2": "move harden, move harden"}
+}

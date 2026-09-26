@@ -1,0 +1,82 @@
+{
+ "description": "Aqua Ring (Opus V): Hypno (patched to 100 HP) and Blissey (Big Root, patched to 200 HP) use it; at the residual (order 6) each heals baseMaxhp / 16, Blissey's times 5324/4096 (Big Root lists `aquaring`). Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Hypno",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Aqua Ring",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "Big Root",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Aqua Ring",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Hypno": {
+    "hp": 100
+   },
+   "Blissey": {
+    "hp": 200
+   }
+  }
+ },
+ "turn": {
+  "p1": "move aquaring, move aquaring",
+  "p2": "move harden, move harden"
+ }
+}

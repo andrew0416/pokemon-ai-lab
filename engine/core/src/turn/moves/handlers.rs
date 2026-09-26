@@ -153,6 +153,47 @@ pub(super) fn on_modify_move<const N: usize>(
         // Struggle: `move.type = '???'` (typeless: `Type::None` for the move, which no type chart
         // entry, STAB or type-based handler matches).
         moves::STRUGGLE => mv.move_type = Type::None,
+        // Rollout, Ice Ball: `if (pokemon.volatiles['rollout'] || pokemon.status === 'slp' ||
+        // !target) return; pokemon.addVolatile('rollout');` — the lock aims at
+        // `lastMoveTargetLoc`, the location the user chose (the called moves that would set it
+        // otherwise are refused: `called_move_problem`).
+        moves::ROLLOUT | moves::ICE_BALL => {
+            let volatile = rolling_volatile(mv.id);
+            let asleep = b.slot_mon(user).is_some_and(|m| m.status == Status::Sleep);
+            if b.volatile(user, volatile).active || asleep || target.is_none() {
+                return Ok(());
+            }
+            if b.add_volatile(user, volatile) {
+                let state = b.volatile(user, volatile);
+                b.set_volatile_state(
+                    user,
+                    volatile,
+                    VolatileState {
+                        counter: super::super::lock::encode_target_loc(mv.target_loc),
+                        ..state
+                    },
+                );
+            }
+        }
+        // Present: `const rand = this.random(10);` below 2: `move.heal = [1, 4]` and
+        // `move.infiltrates = true` (the power stays 0: [`move_heal`], [`infiltrates`]); below 6:
+        // 40 power; below 9: 80; else 120.
+        moves::PRESENT => {
+            mv.base_power = [0, 40, 80, 120][b.rng.weighted(&[0.2, 0.4, 0.3, 0.1])];
+        }
+        // Bleakwind Storm, Sandsear Storm, Wildbolt Storm: `if (target &&
+        // ['raindance', 'primordialsea'].includes(target.effectiveWeather())) move.accuracy =
+        // true;` (the target is the spread move's nominal one, a random foe).
+        moves::BLEAKWIND_STORM | moves::SANDSEAR_STORM | moves::WILDBOLT_STORM => {
+            if let Some(target) = target {
+                if matches!(
+                    effective_weather(b, user, target)?,
+                    Weather::Rain | Weather::HeavyRain
+                ) {
+                    mv.accuracy = None;
+                }
+            }
+        }
         // Thunder, Hurricane: `switch (target?.effectiveWeather())`: never misses in rain,
         // accuracy 50 in sun.
         moves::THUNDER | moves::HURRICANE => {
@@ -168,6 +209,50 @@ pub(super) fn on_modify_move<const N: usize>(
         _ => {}
     }
     Ok(())
+}
+
+/// Rollout's and Ice Ball's `basePowerCallback` (called for each hit's `getDamage`): the power
+/// doubles per earlier hit (`2 ** contactHitCount` once `hitCount` is set); the hit counts one
+/// more unless the user is asleep, and below the fifth the condition lasts one more turn
+/// (`duration = 2`); Defense Curl doubles it again.
+fn rolling_power<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+    base_power: i32,
+) -> i32 {
+    let volatile = rolling_volatile(id);
+    let state = b.volatile(user, volatile);
+    let mut power = base_power;
+    if state.active && state.hidden > 0 {
+        power <<= state.hidden;
+    }
+    let asleep = b.slot_mon(user).is_some_and(|m| m.status == Status::Sleep);
+    if state.active && !asleep {
+        let hits = state.hidden + 1;
+        b.set_volatile_state(
+            user,
+            volatile,
+            VolatileState {
+                hidden: hits,
+                duration: if hits < 5 { 2 } else { state.duration },
+                ..state
+            },
+        );
+    }
+    if b.volatile(user, Volatile::DefenseCurl).active {
+        power *= 2;
+    }
+    power.max(1)
+}
+
+/// Rollout's or Ice Ball's own condition.
+fn rolling_volatile(id: MoveId) -> Volatile {
+    if id == moves::ICE_BALL {
+        Volatile::IceBall
+    } else {
+        Volatile::Rollout
+    }
 }
 
 /// Showdown `pokemon.getStat(stat, false, true)` for battle stat `index` (0 Atk .. 3 SpD): the
@@ -263,6 +348,12 @@ pub(super) fn on_try<const N: usize>(
             !b.volatile(first_target, Volatile::Ingrain).active
                 && !b.volatile(first_target, Volatile::SmackDown).active
         }
+        // Stockpile: `if (source.volatiles['stockpile'] && source.volatiles['stockpile'].layers >=
+        // 3) return false;` Spit Up, Swallow: `return !!source.volatiles['stockpile'];`
+        moves::STOCKPILE => b.volatile(user, Volatile::Stockpile).counter < 3,
+        moves::SPIT_UP | moves::SWALLOW => b.volatile(user, Volatile::Stockpile).active,
+        // Stuff Cheeks: `return source.getItem().isBerry;` (the held item).
+        moves::STUFF_CHEEKS => b.raw_item(user).data().is_berry,
         // Rest: fails asleep or with Comatose, at full HP, and with Insomnia or Vital Spirit
         // (`hasAbility`: the user's own ability, never suppressed by its own move).
         moves::REST => b.slot_mon(user).is_some_and(|m| {
@@ -312,7 +403,57 @@ pub(super) fn on_try_immunity<const N: usize>(
         // Worry Seed: `if (target.ability === 'truant' || target.ability === 'insomnia') return
         // false;` (before accuracy).
         moves::WORRY_SEED => ![abilities::TRUANT, abilities::INSOMNIA].contains(&b.ability(target)),
+        // Synchronoise: `return target.hasType(source.getTypes());` (a type in common).
+        moves::SYNCHRONOISE => {
+            let mine = b.slot_mon(user).map_or([Type::None; 2], |m| m.types);
+            mine.into_iter()
+                .filter(|&t| t != Type::None)
+                .any(|t| b.has_type(target, t))
+        }
+        // Captivate: `return (pokemon.gender === 'M' && source.gender === 'F') || (pokemon.gender
+        // === 'F' && source.gender === 'M');` (an undecided gender is refused before:
+        // [`try_immunity_problem`]).
+        moves::CAPTIVATE => {
+            use crate::dex::Gender;
+            let gender = |s: SlotRef| b.slot_mon(s).map_or(Gender::Genderless, |m| m.gender);
+            matches!(
+                (gender(target), gender(user)),
+                (Gender::Male, Gender::Female) | (Gender::Female, Gender::Male)
+            )
+        }
+        // Octolock: `return this.dex.getImmunity('trapped', target);` (the types only: a Ghost).
+        moves::OCTOLOCK => !b.natural_immune(target, crate::dex::TypeImmunities::TRAPPED),
+        // Dream Eater: `return target.status === 'slp' || target.hasAbility('comatose');`
+        moves::DREAM_EATER => {
+            b.slot_mon(target)
+                .is_some_and(|m| m.status == Status::Sleep)
+                || b.ability(target) == abilities::COMATOSE
+        }
         _ => true,
+    }
+}
+
+/// Why the move's `onTryImmunity` cannot be decided for `targets`: Captivate between Pokémon of
+/// which one has an undecided gender (Showdown drew it at random when the battle started).
+pub(super) fn try_immunity_problem<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    targets: &[SlotRef],
+) -> Result<(), TurnError> {
+    if mv.id != moves::CAPTIVATE {
+        return Ok(());
+    }
+    let undecided = std::iter::once(user)
+        .chain(targets.iter().copied())
+        .filter_map(|s| b.slot_mon(s))
+        .find(|m| m.gender == crate::dex::Gender::Random);
+    match undecided {
+        Some(m) => Err(b.unsupported(format!(
+            "Captivate with {} of undecided gender (give the set a gender)",
+            m.species.data().name
+        ))),
+        None => Ok(()),
     }
 }
 
@@ -350,6 +491,13 @@ pub(super) fn damage_callback<const N: usize>(
                 .map_or(0, |d| i32::from(d.damage));
             let scaled = damage * 3 / 2;
             Some(if scaled == 0 { 1 } else { scaled })
+        }
+        // Psywave: `(this.random(50, 151) * pokemon.level) / 100`, which `pokemon.damage`
+        // truncates.
+        moves::PSYWAVE => {
+            let level = b.slot_mon(user).map_or(0, |m| i32::from(m.level));
+            let factor = 50 + b.rng.uniform(101) as i32;
+            Some(factor * level / 100)
         }
         // Counter, Mirror Coat: `pokemon.volatiles['counter'].damage || 1` (0 without the
         // condition, which `onTry` already failed on).
@@ -520,8 +668,41 @@ pub(super) fn on_try_hit<const N: usize>(
     user: SlotRef,
     target: SlotRef,
     mv: &mut ActiveMove,
-) -> bool {
-    match mv.id {
+) -> Result<bool, TurnError> {
+    Ok(match mv.id {
+        // Mirror Move: `const move = target.lastMove; if (!move?.flags['mirror'] || move.isZ ||
+        // move.isMax) return false; this.actions.useMove(move.id, pokemon, {target}); return
+        // null;` — either way Mirror Move itself stops here.
+        moves::MIRROR_MOVE => {
+            let copied = b.state.slot(target).last_move;
+            if !copied.is_none() && copied.data().flags.contains(MoveFlags::MIRROR) {
+                if let Some(why) = called_move_problem(b, user, copied) {
+                    return Err(b.unsupported(format!("Mirror Move calling {why}")));
+                }
+                super::call_move(b, user, mv, copied, Some(target))?;
+            }
+            false
+        }
+        // Foresight, Odor Sleuth: `if (target.volatiles['miracleeye']) return false;` Miracle
+        // Eye: `if (target.volatiles['foresight']) return false;`
+        moves::FORESIGHT | moves::ODOR_SLEUTH => !b.volatile(target, Volatile::MiracleEye).active,
+        moves::MIRACLE_EYE => !b.volatile(target, Volatile::Foresight).active,
+        // Nature Power: by the terrain, Thunderbolt, Energy Ball, Moonblast, Psychic, else Tri
+        // Attack, `useMove(move, pokemon, {target})`; `return null`.
+        moves::NATURE_POWER => {
+            let called = match b.terrain() {
+                Terrain::Electric => moves::THUNDERBOLT,
+                Terrain::Grassy => moves::ENERGY_BALL,
+                Terrain::Misty => moves::MOONBLAST,
+                Terrain::Psychic => moves::PSYCHIC,
+                Terrain::None => moves::TRI_ATTACK,
+            };
+            if let Some(why) = called_move_problem(b, user, called) {
+                return Err(b.unsupported(format!("Nature Power calling {why}")));
+            }
+            super::call_move(b, user, mv, called, Some(target))?;
+            false
+        }
         // Healing Wish: `if (!this.canSwitch(source.side)) return this.NOT_FAIL;` — the target
         // drops out and the user does not faint (`selfdestruct: 'ifHit'`).
         moves::HEALING_WISH => super::super::residual::bench(b, user.side).next().is_some(),
@@ -623,7 +804,37 @@ pub(super) fn on_try_hit<const N: usize>(
             }
         }
         _ => true,
+    })
+}
+
+/// Why a move Copycat or Mirror Move would call (`useMove`, which the caller may not know) is not
+/// run: a move the engine does not support; a two-turn move or one that locks its user (the lock
+/// would name a move the user may not have; Rollout, Ice Ball); a move with its own `onAfterMove`, a
+/// `beforeTurnCallback` or a `priorityChargeCallback` (`runMove`'s AfterMove and the queue
+/// actions belong to the caller); an Electric move while the user has Charge (Charge's
+/// `onAfterMove` would see the called move, the engine's the caller).
+fn called_move_problem<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+) -> Option<String> {
+    let data = id.data();
+    if let Some(why) = super::super::support::move_unsupported(id) {
+        return Some(why);
     }
+    let locks = data
+        .self_effect
+        .is_some_and(|s| s.volatile_status == crate::dex::conditions::LOCKEDMOVE);
+    let own_actions = super::has_before_turn_callback(id)
+        || super::has_priority_charge_callback(id)
+        || [moves::ROLLOUT, moves::ICE_BALL].contains(&id);
+    let charged = data.move_type == Type::Electric && b.volatile(user, Volatile::Charge).active;
+    (data.flags.contains(MoveFlags::CHARGE)
+        || locks
+        || own_actions
+        || data.handlers.contains(&"onAfterMove")
+        || charged)
+        .then(|| format!("{} (a lock, own actions, AfterMove or Charge)", data.name))
 }
 
 /// Showdown `pokemon.setAbility(ability, source)` from a move (Role Play, Entrainment, Simple
@@ -691,6 +902,7 @@ pub(super) fn infiltrates<const N: usize>(
 ) -> bool {
     b.active_move.is_some_and(|m| m.infiltrates)
         || (mv.id == moves::POLLEN_PUFF && target.side == user.side)
+        || (mv.id == moves::PRESENT && mv.base_power == 0)
 }
 
 /// Whether the move's own `onTryHit` applies its `boosts` and deletes them (`delete
@@ -702,7 +914,18 @@ pub(super) fn boosts_applied_in_try_hit(id: MoveId) -> bool {
 /// The move's `onAfterHit`, once per damaged target (`spreadMoveHit`, after `DamagingHit`;
 /// Champions runs it even if the user fainted). Knock Off's is in `moves.rs`; against a
 /// substitute the move's `onAfterSubDamage` ([`on_after_sub_damage`]) runs instead.
-pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
+pub(super) fn on_after_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    mv: &ActiveMove,
+) -> Result<(), TurnError> {
+    // Covet, Thief: `if (source.item || source.volatiles['gem']) return;` then
+    // `target.takeItem(source)` and the item goes to the user (`pass_item`; gems are not
+    // supported).
+    if (mv.id == moves::COVET || mv.id == moves::THIEF) && b.raw_item(user).is_none() {
+        pass_item(b, target, user, mv.data.name)?;
+    }
     // Ice Spinner: `this.field.clearTerrain();`
     if mv.id == moves::ICE_SPINNER {
         super::clear_terrain(b);
@@ -727,6 +950,60 @@ pub(super) fn on_after_hit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef,
             super::super::conditions::add_hazard(b, user.side.other(), hazard);
         }
     }
+    Ok(())
+}
+
+/// Moves the held item of the Pokémon in `giver` to the one in `taker` (Covet, Thief: from the
+/// target to the user; Bestow: from the user to the target): `giver.takeItem(taker)` — the
+/// TakeItem event (the giver's Unburden, the item's own handler: a Mega Stone of the giver's
+/// species or `onTakeItem: false` stays) and the item's End on the giver (Mirror Herb forgets
+/// its copied raises) — then `singleEvent('TakeItem', item, ..., taker)` (the item's handler with
+/// the new holder: a Mega Stone of its species is refused) and `taker.setItem(item)` (needs HP;
+/// the item's Start: `trick_item_start`); if either refuses, `giver.item = item.id` gives it back
+/// silently. Returns whether the taker got it. An item the engine cannot move
+/// (`abilities::item_moves`) is unsupported. (Opus S's `abilities::steal_item` has no second
+/// TakeItem check; this one stays local to the moves.)
+fn pass_item<const N: usize>(
+    b: &mut Battle<'_, N>,
+    giver: SlotRef,
+    taker: SlotRef,
+    by: &str,
+) -> Result<bool, TurnError> {
+    let (Some(holder), item) = (b.occupant(giver), b.raw_item(giver)) else {
+        return Ok(false);
+    };
+    if item.is_none() {
+        return Ok(false);
+    }
+    if !super::super::abilities::item_moves(item) {
+        return Err(b.unsupported(format!(
+            "{by} moving {} ({:?})",
+            item.data().name,
+            item.data().handlers
+        )));
+    }
+    if !b.take_item(giver) {
+        return Ok(false);
+    }
+    if item == items::MIRROR_HERB {
+        b.mirror_herb.retain(|&(p, _)| p != holder);
+    }
+    let receiver = b.alive(taker).filter(|&p| holds_freely(item, b.mon(p)));
+    let Some(receiver) = receiver else {
+        b.apply(Instruction::SetItem {
+            target: holder,
+            old: ItemId::NONE,
+            new: item,
+        });
+        return Ok(false);
+    };
+    b.apply(Instruction::SetItem {
+        target: receiver,
+        old: ItemId::NONE,
+        new: item,
+    });
+    trick_item_start(b, taker, item);
+    Ok(true)
 }
 
 /// The move's `onAfterSubDamage` (`singleEvent('AfterSubDamage', move)` in the substitute's
@@ -766,6 +1043,174 @@ pub(super) fn on_after_sub_damage<const N: usize>(
     }
 }
 
+/// The move's own `onAfterMoveSecondarySelf` (`useMoveInner` after a successful move that
+/// Sheer Force did not boost, before the user's item and ability handlers; `target` is
+/// `useMoveInner`'s target, the last of the move's targets):
+/// - Fell Stinger: `if (!target || target.fainted || target.hp <= 0) this.boost({atk: 3},
+///   pokemon, pokemon, move);`
+/// - Order Up: a user under `commanded` gets +1 in a stat by its Tatsugiri's forme
+///   (`tatsugiri.baseSpecies.forme`: Droopy Def, Stretchy Spe, anything else — Curly and the
+///   Mega formes — Atk). The Tatsugiri is `commanded`'s source; the state does not keep it, so
+///   it is the ally that is `commanding`; with none left (it fainted) the move is unsupported.
+/// - Relic Song: a Meloetta (`baseSpecies.baseSpecies`) changes to its other forme
+///   (`formeChange`, temporary: Aria ↔ Pirouette). A Meloetta that fainted during its own move
+///   would change forme off the field (unsupported).
+pub(super) fn after_move_secondary_self<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    mv: &ActiveMove,
+) -> Result<(), TurnError> {
+    use crate::dex::species;
+    match mv.id {
+        moves::FELL_STINGER => {
+            if b.alive(target).is_none() {
+                let mut up = NO_BOOSTS;
+                up[0] = 3;
+                b.boost_by(user, &up, Some(user), BoostEffect::Move(mv.id));
+            }
+        }
+        moves::ORDER_UP => {
+            if !b.volatile(user, Volatile::Commanded).active {
+                return Ok(());
+            }
+            let tatsugiri = b
+                .alive_slots(user.side)
+                .into_iter()
+                .find(|&s| s != user && b.volatile(s, Volatile::Commanding).active)
+                .and_then(|s| b.slot_mon(s))
+                .map(|m| m.species);
+            let Some(forme) = tatsugiri else {
+                return Err(b.unsupported(
+                    "Order Up from a commanded Dondozo whose Tatsugiri is gone (the source of \
+                     `commanded` is not in the state)",
+                ));
+            };
+            let stat = match forme {
+                f if f == species::TATSUGIRI_DROOPY => 1,
+                f if f == species::TATSUGIRI_STRETCHY => 4,
+                _ => 0,
+            };
+            let mut up = NO_BOOSTS;
+            up[stat] = 1;
+            b.boost_by(user, &up, Some(user), BoostEffect::Move(mv.id));
+        }
+        moves::RELIC_SONG => {
+            let Some(pokemon) = b.active_move.map(|m| m.pokemon) else {
+                return Ok(());
+            };
+            let current = b.mon(pokemon).species;
+            if ![species::MELOETTA, species::MELOETTA_PIROUETTE].contains(&current) {
+                return Ok(());
+            }
+            if b.occupant(user) != Some(pokemon) {
+                return Err(b.unsupported("Relic Song: Meloetta changing forme after fainting"));
+            }
+            let forme = if current == species::MELOETTA_PIROUETTE {
+                species::MELOETTA
+            } else {
+                species::MELOETTA_PIROUETTE
+            };
+            super::super::forme::forme_change(
+                b,
+                user,
+                forme,
+                super::super::forme::Change::Temporary,
+            );
+        }
+        _ => {}
+    }
+    Ok(())
+}
+
+/// The `heal` a move's `runMoveEffects` applies (`moveData.heal`), after its `onModifyMove`:
+/// Present's healing draw (power 0) heals a quarter.
+pub(super) fn move_heal(mv: &ActiveMove) -> Option<crate::dex::Fraction> {
+    if mv.id == moves::PRESENT {
+        return (mv.base_power == 0).then_some(crate::dex::Fraction(1, 4));
+    }
+    mv.data.heal
+}
+
+/// Secret Power's secondaries by terrain (its `onModifyMove` replaces `move.secondaries`).
+static SECRET_POWER_SECONDARIES: [crate::dex::Secondary; 4] = [
+    // Electric Terrain: paralysis (also the data's, without a terrain).
+    crate::dex::Secondary {
+        chance: 30,
+        status: Status::Paralyze,
+        volatile_status: crate::dex::ConditionId::NONE,
+        boosts: NO_BOOSTS,
+        self_boosts: NO_BOOSTS,
+    },
+    // Grassy Terrain: sleep.
+    crate::dex::Secondary {
+        chance: 30,
+        status: Status::Sleep,
+        volatile_status: crate::dex::ConditionId::NONE,
+        boosts: NO_BOOSTS,
+        self_boosts: NO_BOOSTS,
+    },
+    // Misty Terrain: -1 SpA.
+    crate::dex::Secondary {
+        chance: 30,
+        status: Status::None,
+        volatile_status: crate::dex::ConditionId::NONE,
+        boosts: [0, 0, -1, 0, 0, 0, 0],
+        self_boosts: NO_BOOSTS,
+    },
+    // Psychic Terrain: -1 Spe.
+    crate::dex::Secondary {
+        chance: 30,
+        status: Status::None,
+        volatile_status: crate::dex::ConditionId::NONE,
+        boosts: [0, 0, 0, 0, -1, 0, 0],
+        self_boosts: NO_BOOSTS,
+    },
+];
+
+/// The secondaries of the move being used (`move.secondaries` after its `onModifyMove`): Secret
+/// Power's depend on the terrain (read when they apply: nothing between its ModifyMove and its
+/// secondaries changes the terrain).
+pub(super) fn move_secondaries<const N: usize>(
+    b: &Battle<'_, N>,
+    mv: &ActiveMove,
+) -> &'static [crate::dex::Secondary] {
+    if mv.id == moves::SECRET_POWER {
+        let index = match b.terrain() {
+            Terrain::None => return mv.data.secondaries,
+            Terrain::Electric => 0,
+            Terrain::Grassy => 1,
+            Terrain::Misty => 2,
+            Terrain::Psychic => 3,
+        };
+        return &SECRET_POWER_SECONDARIES[index..=index];
+    }
+    mv.data.secondaries
+}
+
+/// The boosts a move's `runMoveEffects` applies (`moveData.boosts`), after its `onModifyMove`:
+/// Growth's are `{atk: 2, spa: 2}` in the user's sun (`pokemon.effectiveWeather()`: Utility
+/// Umbrella hides it). ModifyMove runs before the hit, but nothing between it and the effects of a
+/// move on its user can change the weather, so the weather is read here.
+pub(super) fn move_boosts<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Result<[i8; BOOST_COUNT], TurnError> {
+    if mv.id == moves::GROWTH
+        && matches!(
+            effective_weather(b, user, user)?,
+            Weather::Sun | Weather::HarshSun
+        )
+    {
+        let mut boosts = NO_BOOSTS;
+        boosts[0] = 2;
+        boosts[2] = 2;
+        return Ok(boosts);
+    }
+    Ok(mv.data.boosts)
+}
+
 /// The move's own `onAfterMove` (`runMove`, after `useMove`). Sparkling Aria: if the user
 /// fainted (processed), or the move has Sheer Force's `hasSheerForce`, every active Pokémon just
 /// loses the `sparklingaria` volatile; otherwise each hit target but the user that is still
@@ -780,6 +1225,14 @@ pub(super) fn on_after_move<const N: usize>(
     if mv.id == moves::BEAK_BLAST {
         if b.occupant(user) == Some(pokemon) {
             b.remove_volatile(user, Volatile::BeakBlast);
+        }
+        return;
+    }
+    // Spit Up: `pokemon.removeVolatile('stockpile')` (its `onEnd` takes the raises back),
+    // whether or not the move hit.
+    if mv.id == moves::SPIT_UP {
+        if b.occupant(user) == Some(pokemon) {
+            b.remove_volatile(user, Volatile::Stockpile);
         }
         return;
     }
@@ -832,13 +1285,17 @@ fn remove_side_effects<const N: usize>(
 /// `clampIntRange(basePower, 1)` (a fraction is floored, and 0 means no damage). `hit` is
 /// `move.hit`, the hit being made (1 for a single hit).
 pub(super) fn base_power_callback<const N: usize>(
-    b: &Battle<'_, N>,
+    b: &mut Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
     mv: &ActiveMove,
     base_power: i32,
     hit: u8,
 ) -> i32 {
+    if mv.id == moves::ROLLOUT || mv.id == moves::ICE_BALL {
+        return rolling_power(b, user, mv.id, base_power);
+    }
+    let b: &Battle<'_, N> = b;
     let hp = |s: SlotRef| {
         b.slot_mon(s)
             .map_or((0, 1), |m| (i32::from(m.hp), i32::from(m.max_hp)))
@@ -899,6 +1356,25 @@ pub(super) fn base_power_callback<const N: usize>(
         }
         // Last Respects: `50 + 50 * pokemon.side.totalFainted`.
         moves::LAST_RESPECTS => 50 + 50 * i32::from(b.state.side(user.side).history.total_fainted),
+        // Spit Up: `pokemon.volatiles['stockpile'].layers * 100` (its `onTry` needs the volatile).
+        moves::SPIT_UP => 100 * i32::from(b.volatile(user, Volatile::Stockpile).counter),
+        // Wake-Up Slap: `if (target.status === 'slp' || target.hasAbility('comatose')) return
+        // move.basePower * 2;` Smelling Salts: `if (target.status === 'par')` the same.
+        moves::WAKE_UP_SLAP | moves::SMELLING_SALTS => {
+            let doubled = if mv.id == moves::WAKE_UP_SLAP {
+                b.slot_mon(target)
+                    .is_some_and(|m| m.status == Status::Sleep)
+                    || b.ability(target) == abilities::COMATOSE
+            } else {
+                b.slot_mon(target)
+                    .is_some_and(|m| m.status == Status::Paralyze)
+            };
+            if doubled {
+                base_power * 2
+            } else {
+                base_power
+            }
+        }
         // Hex, Infernal Parade: `if (target.status || target.hasAbility('comatose'))` double.
         moves::HEX | moves::INFERNAL_PARADE => {
             let statused = b.slot_mon(target).is_some_and(|m| m.status != Status::None)
@@ -1042,13 +1518,23 @@ pub(super) fn modify_target<const N: usize>(
 /// The move's own `onBasePower` modifier (BasePower handler priority 0, after type items and
 /// terrain). Knock Off's is in `get_damage`.
 pub(super) fn on_base_power<const N: usize>(
-    b: &Battle<'_, N>,
+    b: &mut Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
     mv: &ActiveMove,
 ) -> Option<u32> {
+    // Fickle Beam: `if (this.randomChance(3, 10)) return this.chainModify(2);` (per target).
+    if mv.id == moves::FICKLE_BEAM {
+        return b.rng.chance(3, 10).then_some(2 * 4096);
+    }
     let target_mon = b.slot_mon(target);
     match mv.id {
+        // Barb Barrage: `if (target.status === 'psn' || target.status === 'tox')` double.
+        moves::BARB_BARRAGE
+            if target_mon.is_some_and(|m| matches!(m.status, Status::Poison | Status::Toxic)) =>
+        {
+            Some(2 * 4096)
+        }
         // Facade: `if (pokemon.status && pokemon.status !== 'slp') return this.chainModify(2);`
         moves::FACADE
             if b.slot_mon(user)
@@ -1076,6 +1562,8 @@ pub(super) fn on_base_power<const N: usize>(
         {
             Some(crate::damage::MOD_HALF)
         }
+        // Retaliate: `if (pokemon.side.faintedLastTurn) return this.chainModify(2);`
+        moves::RETALIATE if b.state.side(user.side).history.fainted_last_turn => Some(2 * 4096),
         // Lash Out: `if (source.statsLoweredThisTurn) return this.chainModify(2);`
         moves::LASH_OUT if b.state.slot(user).history.stats_lowered_this_turn => Some(2 * 4096),
         // Grav Apple: `if (this.field.getPseudoWeather('gravity')) return this.chainModify(1.5);`
@@ -1093,6 +1581,24 @@ pub(super) fn on_base_power<const N: usize>(
         }
         _ => None,
     }
+}
+
+/// The `onModifyCritRatio` of the user's volatiles: Focus Energy +2, Dragon Cheer +2 for a
+/// holder that was a Dragon type when it started, else +1 (the two exclude each other). `None`:
+/// Laser Focus, which returns 5 (the ratio then clamps to 4 whatever the other handlers add).
+pub(super) fn volatile_crit_ratio<const N: usize>(b: &Battle<'_, N>, user: SlotRef) -> Option<i32> {
+    if b.volatile(user, Volatile::LaserFocus).active {
+        return None;
+    }
+    let mut bonus = 0;
+    if b.volatile(user, Volatile::FocusEnergy).active {
+        bonus += 2;
+    }
+    let cheer = b.volatile(user, Volatile::DragonCheer);
+    if cheer.active {
+        bonus += if cheer.hidden != 0 { 2 } else { 1 };
+    }
+    Some(bonus)
 }
 
 /// BasePower handlers of the user's volatiles (`condition.onBasePower`): Helping Hand
@@ -1339,6 +1845,12 @@ pub(super) fn charge_try_move<const N: usize>(
         up[2] = 1;
         b.boost_by(user, &up, Some(user), BoostEffect::Move(mv.id));
     }
+    // Skull Bash: `this.boost({def: 1}, attacker, attacker, move)` before ChargeMove.
+    if mv.id == moves::SKULL_BASH {
+        let mut up = NO_BOOSTS;
+        up[1] = 1;
+        b.boost_by(user, &up, Some(user), BoostEffect::Move(mv.id));
+    }
     let weather = b.weather_for(user);
     let skip = match mv.id {
         i if i == moves::SOLAR_BEAM || i == moves::SOLAR_BLADE => {
@@ -1477,6 +1989,23 @@ pub(super) fn invulnerable<const N: usize>(
         _ => &[],
     };
     !passes.contains(&mv.id)
+}
+
+/// The `onNegateImmunity` of the target's volatiles for a move of type `ty` (`runImmunity`
+/// then treats the target as not immune): Foresight on a Ghost type (`if
+/// (pokemon.hasType('Ghost') && ['Normal', 'Fighting'].includes(type)) return false;`),
+/// Miracle Eye on a Dark type against Psychic.
+pub(super) fn immunity_negated<const N: usize>(
+    b: &Battle<'_, N>,
+    target: SlotRef,
+    ty: Type,
+) -> bool {
+    (b.volatile(target, Volatile::Foresight).active
+        && b.has_type(target, Type::Ghost)
+        && matches!(ty, Type::Normal | Type::Fighting))
+        || (b.volatile(target, Volatile::MiracleEye).active
+            && b.has_type(target, Type::Dark)
+            && ty == Type::Psychic)
 }
 
 /// Showdown `this.dex.getEffectiveness(attacking, defending)` for one defending type:
@@ -1728,6 +2257,8 @@ pub(super) fn on_hit<const N: usize>(
                     new: Status::Sleep,
                 });
                 b.set_status_turns(pokemon, 3);
+                // The `slp` condition's `onStart` removes Nightmare.
+                b.end_nightmare(pokemon);
                 super::super::update::after_set_status(b, target);
                 let max_hp = b.mon(pokemon).max_hp;
                 b.heal(target, f64::from(max_hp));
@@ -1735,14 +2266,36 @@ pub(super) fn on_hit<const N: usize>(
             }
         }
         // Psych Up: the user takes the target's stages (`source.boosts[i] = target.boosts[i]`, no
-        // boost events), then loses its critical-hit volatiles and copies the target's (of
-        // Dragon Cheer, Focus Energy, G-Max Chi Strike, Laser Focus only Focus Energy exists).
+        // boost events), then loses its critical-hit volatiles and copies the target's
+        // (`addVolatile`: Laser Focus with a fresh duration; Dragon Cheer keeps the target's
+        // `hasDragonType`; G-Max Chi Strike is off).
         moves::PSYCH_UP => {
             let boosts = b.state.slot(target).boosts;
             set_boosts(b, user, boosts);
-            b.remove_volatile(user, Volatile::FocusEnergy);
-            if b.volatile(target, Volatile::FocusEnergy).active {
-                b.add_volatile(user, Volatile::FocusEnergy);
+            const CRIT: [Volatile; 3] = [
+                Volatile::DragonCheer,
+                Volatile::FocusEnergy,
+                Volatile::LaserFocus,
+            ];
+            for volatile in CRIT {
+                b.remove_volatile(user, volatile);
+            }
+            for volatile in CRIT {
+                let copied = b.volatile(target, volatile);
+                if copied.active
+                    && b.add_volatile(user, volatile)
+                    && volatile == Volatile::DragonCheer
+                {
+                    let mine = b.volatile(user, volatile);
+                    b.set_volatile_state(
+                        user,
+                        volatile,
+                        VolatileState {
+                            hidden: copied.hidden,
+                            ..mine
+                        },
+                    );
+                }
             }
             HitResult::Success
         }
@@ -1939,6 +2492,19 @@ pub(super) fn on_hit<const N: usize>(
             super::clear_terrain(b);
             return Ok(None);
         }
+        // Wake-Up Slap: `if (target.status === 'slp') target.cureStatus();` Smelling Salts: the
+        // same for `par` (a Comatose target keeps sleeping; both return nothing).
+        moves::WAKE_UP_SLAP | moves::SMELLING_SALTS => {
+            let cured = if mv.id == moves::WAKE_UP_SLAP {
+                Status::Sleep
+            } else {
+                Status::Paralyze
+            };
+            if let Some(p) = b.alive(target).filter(|&p| b.mon(p).status == cured) {
+                b.cure_status(p);
+            }
+            return Ok(None);
+        }
         moves::TRICK | moves::SWITCHEROO => trick(b, user, target)?,
         moves::INSTRUCT => instruct(b, target)?,
         // Skill Swap: `return this.skillSwap(source, target);` (shared with Wandering Spirit).
@@ -2000,8 +2566,151 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::Failure
             } else {
                 let called = callable[b.rng.uniform(callable.len())];
-                super::call_move(b, user, mv, called)?;
+                super::call_move(b, user, mv, called, None)?;
                 HitResult::NotFail
+            }
+        }
+        // Freezy Frost: `for (const pokemon of this.getAllActive()) pokemon.clearBoosts();`
+        // (active Pokémon not yet processed as fainted). Returns nothing.
+        moves::FREEZY_FROST => {
+            for side in [SideId::One, SideId::Two] {
+                for slot in Battle::<N>::slots(side) {
+                    if b.occupant(slot).is_some() {
+                        clear_boosts(b, slot);
+                    }
+                }
+            }
+            return Ok(None);
+        }
+        // Magic Powder: `if (target.getTypes().join() === 'Psychic' || !target.setType('Psychic'))
+        // return false;` Camouflage: the same with the terrain's type (Normal without one) on
+        // the user. Conversion: the type of the user's first move (`target.hasType(type)` fails
+        // it). `setType` refuses Arceus and Silvally.
+        moves::MAGIC_POWDER | moves::CAMOUFLAGE | moves::CONVERSION => {
+            let Some(mon) = b.slot_mon(target) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let ty = match mv.id {
+                moves::MAGIC_POWDER => Type::Psychic,
+                moves::CAMOUFLAGE => match b.terrain() {
+                    Terrain::Electric => Type::Electric,
+                    Terrain::Grassy => Type::Grass,
+                    Terrain::Misty => Type::Fairy,
+                    Terrain::Psychic => Type::Psychic,
+                    Terrain::None => Type::Normal,
+                },
+                _ => mon.moves[0].id.data().move_type,
+            };
+            let already = if mv.id == moves::CONVERSION {
+                mon.types.contains(&ty)
+            } else {
+                mon.types == [ty, Type::None]
+            };
+            if already || [493, 773].contains(&mon.species.data().num) {
+                HitResult::Failure
+            } else {
+                set_types(b, target, [ty, Type::None]);
+                return Ok(None);
+            }
+        }
+        // Stuff Cheeks: `if (!this.boost({def: 2})) return null; pokemon.eatItem(true);`
+        moves::STUFF_CHEEKS => {
+            let mut up = NO_BOOSTS;
+            up[1] = 2;
+            if !b.boost_by(target, &up, Some(user), BoostEffect::Move(mv.id)) {
+                HitResult::Failure
+            } else {
+                super::super::update::eat_item_forced(b, target)?;
+                return Ok(None);
+            }
+        }
+        // Swallow: heals `this.modify(pokemon.maxhp, [0.25, 0.5, 1][layers - 1])`, then
+        // `pokemon.removeVolatile('stockpile')` (its `onEnd` takes the raises back); `success ||
+        // NOT_FAIL`.
+        moves::SWALLOW => {
+            let layers = b.volatile(target, Volatile::Stockpile).counter.max(1);
+            let modifier = [1024, 2048, 4096][usize::from(layers.min(3)) - 1];
+            let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
+            let healed = b.heal(target, f64::from(modify(max_hp, modifier))) > 0;
+            b.remove_volatile(target, Volatile::Stockpile);
+            if healed {
+                HitResult::Success
+            } else {
+                HitResult::NotFail
+            }
+        }
+        // Power Split: the user and the target both take the average of their stored Attack
+        // (`Math.floor((target.storedStats.atk + source.storedStats.atk) / 2)`) and of their
+        // stored SpA; Guard Split: of Defense and SpD. Returns nothing.
+        moves::POWER_SPLIT | moves::GUARD_SPLIT => {
+            let stats: [usize; 2] = if mv.id == moves::POWER_SPLIT {
+                [0, 2]
+            } else {
+                [1, 3]
+            };
+            let (Some(p), Some(q)) = (b.occupant(user), b.occupant(target)) else {
+                return Ok(Some(HitResult::Failure));
+            };
+            let (mine, theirs) = (b.mon(p).forme(), b.mon(q).forme());
+            for (pokemon, old) in [(q, theirs), (p, mine)] {
+                let mut new = old;
+                for stat in stats {
+                    new.stats[stat] =
+                        ((i32::from(mine.stats[stat]) + i32::from(theirs.stats[stat])) / 2) as i16;
+                }
+                if new != old {
+                    b.apply(Instruction::SetForme {
+                        target: pokemon,
+                        old,
+                        new,
+                    });
+                }
+            }
+            return Ok(None);
+        }
+        // Bestow: `if (target.item) return false;` then the user's item goes to the target
+        // (`source.takeItem()`, the item's TakeItem with the target, `target.setItem`; either
+        // refusal gives it back and fails the move).
+        moves::BESTOW => {
+            if !b.raw_item(target).is_none() {
+                HitResult::Failure
+            } else {
+                success(pass_item(b, user, target, mv.data.name)?)
+            }
+        }
+        // Acupressure: one of the target's stats below +6 (`for (stat in target.boosts)`: Atk, Def,
+        // SpA, SpD, Spe, accuracy, evasion), drawn uniformly (`this.sample`), is raised by 2
+        // (`this.boost`, from the user); `false` when all are at +6. It returns nothing otherwise.
+        moves::ACUPRESSURE => {
+            let boosts = b.state.slot(target).boosts;
+            let raisable: Vec<usize> = (0..BOOST_COUNT).filter(|&i| boosts[i] < 6).collect();
+            if raisable.is_empty() {
+                HitResult::Failure
+            } else {
+                let stat = raisable[b.rng.uniform(raisable.len())];
+                let mut up = NO_BOOSTS;
+                up[stat] = 2;
+                b.boost_by(target, &up, Some(user), BoostEffect::Move(mv.id));
+                return Ok(None);
+            }
+        }
+        // Copycat: `let move = this.lastMove; if (!move) return; if (move.flags['failcopycat'] ||
+        // move.isZ || move.isMax) return false; this.actions.useMove(move.id, pokemon);`
+        // (`battle.lastMove`: `State::last_move`; the called move's target is drawn afresh).
+        moves::COPYCAT => {
+            let copied = b.state.last_move;
+            if copied.is_none() {
+                return Ok(None);
+            }
+            let data = copied.data();
+            if data.flags.contains(MoveFlags::FAILCOPYCAT) || data.is_z || data.is_max {
+                HitResult::Failure
+            } else {
+                if let Some(why) = called_move_problem(b, user, copied) {
+                    return Err(b.unsupported(format!("Copycat calling {why}")));
+                }
+                super::call_move(b, user, mv, copied, None)?;
+                return Ok(None);
             }
         }
         // Defog: `if (!target.volatiles['substitute'] || move.infiltrates)` `this.boost({evasion:
@@ -2037,6 +2746,14 @@ pub(super) fn on_hit<const N: usize>(
         // 'trapper');`
         moves::MEAN_LOOK | moves::BLOCK | moves::SPIDER_WEB => {
             success(super::super::conditions::add_trap(b, target, user))
+        }
+        // Jaw Lock: `source.addVolatile('trapped', target, move, 'trapper');
+        // target.addVolatile('trapped', source, move, 'trapper');` (each end traps the other;
+        // returns nothing).
+        moves::JAW_LOCK => {
+            super::super::conditions::add_trap(b, user, target);
+            super::super::conditions::add_trap(b, target, user);
+            return Ok(None);
         }
         // Heal Pulse: `this.heal(this.modify(target.baseMaxhp, 0.75))` from a Mega Launcher user
         // (`source.hasAbility`: its own ability), otherwise `this.heal(Math.ceil(target.baseMaxhp
@@ -2347,8 +3064,8 @@ pub(super) fn on_hit_field<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
-) -> Option<bool> {
-    match mv.id {
+) -> Result<Option<bool>, TurnError> {
+    Ok(match mv.id {
         // Perish Song: every active Pokémon (side one first, slot order) gets the `perishsong`
         // volatile unless `runEvent('Invulnerability')` returns `false` for it (a miss: a
         // semi-invulnerable or commanding Pokémon, [`invulnerable`]) or `runEvent('TryHit')`
@@ -2401,6 +3118,78 @@ pub(super) fn on_hit_field<const N: usize>(
             }
             Some(success)
         }
+        // Teatime: every active Pokémon (`getAllActive`: side one first) that the Invulnerability
+        // event does not exclude and no TryHit handler stops, holding a berry (the held item),
+        // eats it (`eatItem(true)`: no TryEatItem). No berry: `NOT_FAIL` (the move result is
+        // `null`, and it does not succeed).
+        moves::TEATIME => {
+            let mut eaters = Vec::new();
+            for side in [SideId::One, SideId::Two] {
+                for slot in Battle::<N>::slots(side) {
+                    if b.alive(slot).is_none() || invulnerable(b, user, mv, slot) {
+                        continue;
+                    }
+                    if teatime_try_hit_blocks(b, user, mv, slot) {
+                        continue;
+                    }
+                    if b.raw_item(slot).data().is_berry {
+                        eaters.push(slot);
+                    }
+                }
+            }
+            if eaters.is_empty() {
+                b.set_move_result(user, MoveResult::Null);
+                return Ok(Some(false));
+            }
+            for slot in eaters {
+                super::super::update::eat_item_forced(b, slot)?;
+            }
+            Some(true)
+        }
+        // Flower Shield: every active Grass type (`getAllActive`: side one first) gets +1 Def
+        // (source: the user); `success` if any stage changed. Rototiller: the airborne ones
+        // (`!runImmunity('Ground')`) are skipped, every grounded Grass type gets +1 Atk / +1 SpA;
+        // it fails only with neither a grounded Grass type nor an airborne Pokémon (it returns
+        // nothing otherwise).
+        moves::FLOWER_SHIELD | moves::ROTOTILLER => {
+            let mut targets = Vec::new();
+            let mut airborne = false;
+            for side in [SideId::One, SideId::Two] {
+                for slot in b.alive_slots(side) {
+                    if mv.id == moves::ROTOTILLER && !b.is_grounded(slot) {
+                        airborne = true;
+                        continue;
+                    }
+                    if b.has_type(slot, Type::Grass) {
+                        targets.push(slot);
+                    }
+                }
+            }
+            if mv.id == moves::ROTOTILLER {
+                if targets.is_empty() && !airborne {
+                    return Ok(Some(false));
+                }
+                for slot in targets {
+                    b.boost_by(
+                        slot,
+                        &[1, 0, 1, 0, 0, 0, 0],
+                        Some(user),
+                        BoostEffect::Move(mv.id),
+                    );
+                }
+                return Ok(Some(true));
+            }
+            let mut success = false;
+            for slot in targets {
+                success |= b.boost_by(
+                    slot,
+                    &[0, 1, 0, 0, 0, 0, 0],
+                    Some(user),
+                    BoostEffect::Move(mv.id),
+                );
+            }
+            Some(success)
+        }
         // Haze: `for (const pokemon of this.getAllActive()) pokemon.clearBoosts();`
         moves::HAZE => {
             for side in [SideId::One, SideId::Two] {
@@ -2413,7 +3202,55 @@ pub(super) fn on_hit_field<const N: usize>(
             Some(true)
         }
         _ => None,
+    })
+}
+
+/// The move's `onHitSide` (moves aimed at a side; Wide Guard's and Quick Guard's are in
+/// `moves::try_move_hit_field`). Gear Up (+1 Atk / +1 SpA) and Magnetic Flux (+1 Def / +1 SpD):
+/// every active Pokémon of the user's side (`side.allies()`, the user included) with Plus or
+/// Minus (`hasAbility`) is boosted (source: the user); fails without one, else succeeds if any
+/// stage changed. `None` = the move has none.
+pub(super) fn on_hit_side<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Option<bool> {
+    let up = match mv.id {
+        moves::GEAR_UP => [1, 0, 1, 0, 0, 0, 0],
+        moves::MAGNETIC_FLUX => [0, 1, 0, 1, 0, 0, 0],
+        _ => return None,
+    };
+    let targets: Vec<SlotRef> = b
+        .alive_slots(user.side)
+        .into_iter()
+        .filter(|&s| [abilities::PLUS, abilities::MINUS].contains(&b.ability(s)))
+        .collect();
+    if targets.is_empty() {
+        return Some(false);
     }
+    let mut did = false;
+    for target in targets {
+        did |= b.boost_by(target, &up, Some(user), BoostEffect::Move(mv.id));
+    }
+    Some(did)
+}
+
+/// Whether a `TryHit` handler stops Teatime (`runEvent('TryHit', pokemon, source, move)` falsy)
+/// on `target`: Psychic Terrain against a Prankster-boosted Teatime on a grounded foe, and Good as
+/// Gold (a status move from another Pokémon). No other supported TryHit handler answers a Normal
+/// status move without the `protect`, sound, bullet or powder flags.
+fn teatime_try_hit_blocks<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    let psychic_terrain = b.terrain() == Terrain::Psychic
+        && mv.priority > 0
+        && target.side != user.side
+        && b.is_grounded(target);
+    let good_as_gold = target != user && b.ability_unless_broken(target) == abilities::GOOD_AS_GOLD;
+    psychic_terrain || good_as_gold
 }
 
 /// Whether a `TryHit` handler returns `null` for Perish Song on `target` (only `null` spares
@@ -2597,14 +3434,20 @@ fn weather_heal<const N: usize>(
 /// Dire Claw and Tri Attack draw one of three statuses (`this.sample`) and `trySetStatus` it,
 /// so the draw happens even when the status then fails. Throat Chop: `target.addVolatile(
 /// 'throatchop')` (no `onRestart`: an existing one keeps its duration; a fainted target gets
-/// none).
+/// none). Anchor Shot, Spirit Shackle: `if (source.isActive) target.addVolatile('trapped',
+/// source, move, 'trapper');` (`conditions::add_trap`, which needs both with HP).
 pub(super) fn secondary_on_hit<const N: usize>(
     b: &mut Battle<'_, N>,
+    user: SlotRef,
     target: SlotRef,
     mv: &ActiveMove,
 ) {
     if mv.id == moves::THROAT_CHOP {
         b.add_volatile(target, Volatile::ThroatChop);
+        return;
+    }
+    if mv.id == moves::ANCHOR_SHOT || mv.id == moves::SPIRIT_SHACKLE {
+        super::super::conditions::add_trap(b, target, user);
         return;
     }
     // Burning Jealousy: `if (target?.statsRaisedThisTurn) target.trySetStatus('brn', source,

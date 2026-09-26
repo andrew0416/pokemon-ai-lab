@@ -1,0 +1,78 @@
+{
+ "description": "Relic Song again (Opus V): after a first Relic Song (setup turn) Meloetta is Meloetta-Pirouette; the second one changes it back to Meloetta (Aria). Dustox has Shield Dust (no sleep roll), Gengar is immune. Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Meloetta",
+    "item": "",
+    "ability": "Serene Grace",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spa": 32
+    },
+    "moves": [
+     "Relic Song",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hypno",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Dustox",
+    "item": "",
+    "ability": "Shield Dust",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Gengar",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move relicsong, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move relicsong, move harden",
+  "p2": "move harden, move harden"
+ }
+}

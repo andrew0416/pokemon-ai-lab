@@ -1,0 +1,24 @@
+{
+ "description": "Growth in sun (Opus V): `onModifyMove` makes the boosts +2 Atk / +2 SpA under the user's sun (`effectiveWeather`). Venusaur gets +2/+2; Sunflora holds Utility Umbrella, which hides the sun from it, so it gets the usual +1/+1.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Venusaur", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Growth", "Harden"], "level": 50},
+   {"species": "Sunflora", "item": "Utility Umbrella", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 5}, "moves": ["Growth", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"field": {"weather": "sunnyday", "weatherDuration": 5}},
+ "turn": {"p1": "move growth, move growth", "p2": "move harden, move harden"}
+}

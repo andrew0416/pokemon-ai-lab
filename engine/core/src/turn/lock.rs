@@ -15,7 +15,8 @@ pub enum Locked {
     /// The `recharge` pseudo-move: the turn is spent recharging.
     Recharge,
     /// A two-turn move's second turn (`twoturnmove.onLockMove`), aimed at the target location
-    /// chosen when it started (`volatiles[move].targetLoc`).
+    /// chosen when it started (`volatiles[move].targetLoc`); also Rollout's and Ice Ball's later
+    /// turns (their condition's `onLockMove`, aimed at `lastMoveTargetLoc`).
     TwoTurn {
         id: MoveId,
         target: i8,
@@ -65,6 +66,20 @@ pub fn locked_move<const N: usize>(state: &State<N>, slot: SlotRef) -> Option<Lo
             id: charging.mv,
             target: decode_target_loc(charging.counter),
         });
+    }
+    // Rollout, Ice Ball (`onLockMove`): the same move at the target location chosen when it
+    // started (`lastMoveTargetLoc`), as a two-turn move's second turn.
+    for (volatile, id) in [
+        (Volatile::Rollout, moves::ROLLOUT),
+        (Volatile::IceBall, moves::ICE_BALL),
+    ] {
+        let rolling = volatiles.get(volatile);
+        if rolling.active {
+            return Some(Locked::TwoTurn {
+                id,
+                target: decode_target_loc(rolling.counter),
+            });
+        }
     }
     None
 }

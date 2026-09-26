@@ -1,0 +1,81 @@
+{
+ "description": "Power Split and Guard Split (Opus V): in the setup turn Shuckle and Machamp average their stored Attack and SpA, Blissey and Chansey their Defense and SpD; then Shuckle's Strength on Chansey and Machamp's Strength on Blissey use the averaged stats. Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Shuckle",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Power Split",
+     "Strength"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Guard Split",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Machamp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "spe": 2
+    },
+    "moves": [
+     "Strength",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move powersplit 1, move guardsplit 2",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move strength 2, move harden",
+  "p2": "move strength 2, move harden"
+ }
+}

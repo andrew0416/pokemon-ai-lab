@@ -115,7 +115,7 @@ pub struct HistoryReaders {
     pub times_attacked: bool,
     /// Stomping Tantrum, Temper Flare, the Metronome item (`moveLastTurnResult`).
     pub move_last_turn_result: bool,
-    /// Retaliate (`faintedLastTurn`; unsupported, so never set today).
+    /// Retaliate (`faintedLastTurn`).
     pub fainted_last_turn: bool,
     /// Burning Jealousy, Alluring Voice (`statsRaisedThisTurn`).
     pub stats_raised: bool,
@@ -125,6 +125,8 @@ pub struct HistoryReaders {
     pub ate_berry: bool,
     /// Last Resort (`moveSlot.used`).
     pub moves_used: bool,
+    /// Copycat (`battle.lastMove`: `State::last_move`).
+    pub last_move: bool,
 }
 
 impl HistoryReaders {
@@ -155,6 +157,8 @@ impl HistoryReaders {
                         readers.ate_berry = true;
                     } else if slot.id == m::LAST_RESORT {
                         readers.moves_used = true;
+                    } else if slot.id == m::COPYCAT {
+                        readers.last_move = true;
                     }
                 }
             }
@@ -460,6 +464,16 @@ impl<'a, const N: usize> Battle<'a, N> {
             && amount >= i32::from(mon.hp)
             && self.volatile(target, Volatile::Endure).active
         {
+            amount = i32::from(mon.hp) - 1;
+        }
+        // False Swipe, Hold Back (the move's own `onDamage`, priority -20: after Endure, before
+        // Sturdy): `if (damage >= target.hp) return target.hp - 1;` for the move's damage to its
+        // target (not a confusion self-hit, whose effect is not the move).
+        let holds_back = self.active_move.is_some_and(|m| {
+            [crate::dex::moves::FALSE_SWIPE, crate::dex::moves::HOLD_BACK].contains(&m.id)
+                && m.user != target
+        });
+        if source == DamageSource::Move && holds_back && amount >= i32::from(mon.hp) {
             amount = i32::from(mon.hp) - 1;
         }
         if source == DamageSource::Move
@@ -814,6 +828,11 @@ impl<'a, const N: usize> Battle<'a, N> {
             new: status,
         });
         self.set_status_turns(pokemon, turns);
+        // The `slp` condition's `onStart`: `target.removeVolatile('nightmare')` (one a Comatose
+        // holder kept after losing the ability).
+        if status == Status::Sleep {
+            self.end_nightmare(pokemon);
+        }
         self.after_set_status(target, status, source);
         // Lum Berry's `onAfterSetStatus` (priority -1: after Synchronize).
         super::update::after_set_status(self, target);
@@ -1002,11 +1021,15 @@ impl<'a, const N: usize> Battle<'a, N> {
         }
     }
 
-    /// Showdown `cureStatus` / `clearStatus`.
+    /// Showdown `cureStatus` / `clearStatus`: a sleeping Pokémon also loses Nightmare (`if
+    /// (this.status === 'slp' && this.removeVolatile('nightmare'))`).
     pub fn cure_status(&mut self, pokemon: PokemonRef) {
         let old = self.mon(pokemon).status;
         if self.mon(pokemon).hp == 0 || old == Status::None {
             return;
+        }
+        if old == Status::Sleep {
+            self.end_nightmare(pokemon);
         }
         self.apply(Instruction::ChangeStatus {
             target: pokemon,
@@ -1014,6 +1037,14 @@ impl<'a, const N: usize> Battle<'a, N> {
             new: Status::None,
         });
         self.set_status_turns(pokemon, 0);
+    }
+
+    /// `pokemon.removeVolatile('nightmare')` for an active `pokemon` (its sleep ends, or a new
+    /// sleep starts: the `slp` condition's `onStart`).
+    pub fn end_nightmare(&mut self, pokemon: PokemonRef) {
+        if let Some(slot) = State::<N>::slot_refs().find(|&s| self.occupant(s) == Some(pokemon)) {
+            self.remove_volatile(slot, Volatile::Nightmare);
+        }
     }
 
     // ---- volatiles -----------------------------------------------------------------------
@@ -1058,6 +1089,22 @@ impl<'a, const N: usize> Battle<'a, N> {
                     counter: old.counter + 1,
                     ..old
                 },
+                // Laser Focus's `onRestart`: `this.effectState.duration = 2`.
+                Volatile::LaserFocus => VolatileState { duration: 2, ..old },
+                // Power Trick's and Power Shift's `onRestart`: `pokemon.removeVolatile(...)` (its
+                // `onEnd` swaps back); it returns nothing, a success.
+                Volatile::PowerTrick | Volatile::PowerShift => {
+                    self.remove_volatile(target, volatile);
+                    return true;
+                }
+                // Stockpile's `onRestart`: `if (this.effectState.layers >= 3) return false;` then
+                // one more layer and its raises.
+                Volatile::Stockpile => {
+                    if old.counter >= 3 {
+                        return false;
+                    }
+                    super::conditions::stockpile_raise(self, target, old)
+                }
                 // Smack Down's `onRestart`: a holder in the air again (Fly, Bounce) comes down
                 // (`conditions::smack_down_lands`); it returns nothing.
                 Volatile::SmackDown => {
@@ -1182,6 +1229,14 @@ impl<'a, const N: usize> Battle<'a, N> {
         // onEnd.
         if volatile == Volatile::LockedMove && old.hidden <= 1 {
             self.add_volatile(target, Volatile::Confusion);
+        }
+        // Power Trick, Power Shift: the stored Attack and Defense trade places back.
+        if matches!(volatile, Volatile::PowerTrick | Volatile::PowerShift) {
+            super::conditions::swap_stored_stats(self, target, 0, 1);
+        }
+        // Stockpile: the raises that took are taken back.
+        if volatile == Volatile::Stockpile {
+            super::conditions::stockpile_end(self, target, old);
         }
         // `twoturnmove.onEnd`: the move's own volatile goes with it (an aborted second turn).
         if volatile == Volatile::TwoTurnMove {
@@ -1455,7 +1510,15 @@ impl<'a, const N: usize> Battle<'a, N> {
         viewer: SlotRef,
         as_attacker: bool,
     ) -> i8 {
-        let boost = self.state.slot(holder).boosts[stat];
+        let mut boost = self.state.slot(holder).boosts[stat];
+        // Foresight's and Miracle Eye's `onModifyBoost` on the holder: positive evasion is 0.
+        if stat == 6
+            && boost > 0
+            && (self.volatile(holder, Volatile::Foresight).active
+                || self.volatile(holder, Volatile::MiracleEye).active)
+        {
+            boost = 0;
+        }
         if viewer == holder || self.ability_unless_broken(viewer) != abilities::UNAWARE {
             return boost;
         }
@@ -1603,6 +1666,19 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// `pokemon.switchFlag = false`.
     pub fn clear_switch_flag(&mut self, slot: SlotRef) {
         self.set_switch_flag(slot, SwitchFlag::None);
+    }
+
+    /// The end of an action that used a move (`clearActiveMove()` after `runAction`, not a failed
+    /// one): `battle.lastMove = activeMove` (`State::last_move`), recorded only while a Copycat
+    /// is in a party.
+    pub fn record_battle_last_move(&mut self, id: MoveId) {
+        if !self.history_readers.last_move || id.is_none() {
+            return;
+        }
+        let old = self.state.last_move;
+        if old != id {
+            self.apply(Instruction::SetBattleLastMove { old, new: id });
+        }
     }
 
     pub fn set_last_move(&mut self, slot: SlotRef, id: MoveId) {

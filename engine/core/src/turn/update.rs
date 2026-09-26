@@ -193,6 +193,44 @@ pub(crate) fn eat_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> 
     consume(b, slot, pokemon)
 }
 
+/// Showdown `eatItem(true)` (Stuff Cheeks, Teatime) for the holder in `slot`: a held berry
+/// (`this.item`, whatever suppresses it) is eaten without `TryEatItem` (Unnerve and the healing
+/// berries' Heal Block check do not apply) by an active holder with HP: its `onEat`, then
+/// `lastItem` and AfterUseItem. A berry whose `onEat` is empty (the resist berries, Jaboca,
+/// Rowap, Custap, Enigma, the effectless ones) is just consumed. Returns whether it was eaten.
+/// A holder ignoring its item (Magic Room, Klutz) is unsupported.
+pub(crate) fn eat_item_forced<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+) -> Result<bool, TurnError> {
+    let Some(pokemon) = b.alive(slot) else {
+        return Ok(false);
+    };
+    let item = b.mon(pokemon).item;
+    if !item.data().is_berry {
+        return Ok(false);
+    }
+    if super::items::ignoring_item(b.state, slot) {
+        return Err(b.unsupported(format!(
+            "{} eaten by force while its holder ignores its item",
+            item.data().name
+        )));
+    }
+    let empty_on_eat = super::items::resist_berry(item).is_some()
+        || !item.data().handlers.contains(&"onEat")
+        || [
+            items::JABOCA_BERRY,
+            items::ROWAP_BERRY,
+            items::CUSTAP_BERRY,
+            items::ENIGMA_BERRY,
+        ]
+        .contains(&item);
+    if !empty_on_eat && !berry_on_eat(b, slot, pokemon, item) {
+        return Err(b.unsupported(format!("{} eaten by force", item.data().name)));
+    }
+    Ok(consume(b, slot, pokemon))
+}
+
 /// The berry's `onEat` for `pokemon` in `slot`: its holder, or the user of Bug Bite / Pluck
 /// eating the target's berry (`singleEvent('Eat', item, ..., source, source, move)`). `false` for
 /// a berry this does not implement (resist berries and effectless berries have an empty `onEat`

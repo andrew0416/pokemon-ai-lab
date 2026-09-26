@@ -245,8 +245,8 @@ pub(crate) fn slot_condition_residual<const N: usize>(
 }
 
 /// The two-turn moves the engine runs (`charge` flag) and their own volatile
-/// (`attacker.addVolatile(move.id)` in `twoturnmove`'s start). Other charge moves (Skull Bash,
-/// Razor Wind, Sky Drop, ... ) are refused.
+/// (`attacker.addVolatile(move.id)` in `twoturnmove`'s start). Other charge moves (Sky Drop,
+/// ...) are refused.
 pub(crate) fn charge_volatile(id: MoveId) -> Option<Volatile> {
     Some(match id {
         i if i == moves::SOLAR_BEAM => Volatile::SolarBeam,
@@ -260,6 +260,11 @@ pub(crate) fn charge_volatile(id: MoveId) -> Option<Volatile> {
         i if i == moves::DIVE => Volatile::Dive,
         i if i == moves::PHANTOM_FORCE => Volatile::PhantomForce,
         i if i == moves::SHADOW_FORCE => Volatile::ShadowForce,
+        i if i == moves::SKULL_BASH => Volatile::SkullBash,
+        i if i == moves::RAZOR_WIND => Volatile::RazorWind,
+        i if i == moves::FREEZE_SHOCK => Volatile::FreezeShock,
+        i if i == moves::ICE_BURN => Volatile::IceBurn,
+        i if i == moves::GEOMANCY => Volatile::Geomancy,
         _ => return None,
     })
 }
@@ -434,6 +439,42 @@ pub(crate) fn volatile_start<const N: usize>(
                 b.set_move_result(source.user, crate::state::MoveResult::Succeeded);
             }
             true
+        }
+        // Stockpile: `layers = 1`, then +1 Def / +1 SpD from itself, remembering which took.
+        Volatile::Stockpile => {
+            *new = stockpile_raise(b, target, *new);
+            true
+        }
+        // Power Trick, Power Shift: `onStart` swaps the stored Attack and Defense.
+        Volatile::PowerTrick | Volatile::PowerShift => {
+            swap_stored_stats(b, target, 0, 1);
+            true
+        }
+        // Focus Energy: `if (target.volatiles['dragoncheer']) return false;`
+        Volatile::FocusEnergy => !b.volatile(target, Volatile::DragonCheer).active,
+        // Dragon Cheer: `if (target.volatiles['focusenergy']) return false;` then
+        // `this.effectState.hasDragonType = target.hasType("Dragon");`
+        Volatile::DragonCheer => {
+            if b.volatile(target, Volatile::FocusEnergy).active {
+                return false;
+            }
+            new.hidden = u8::from(b.has_type(target, Type::Dragon));
+            true
+        }
+        // Octolock: its `onStart` only logs; the source is kept for the trap and the residual.
+        Volatile::Octolock => {
+            let Some(source) = source else {
+                return false;
+            };
+            new.counter = encode_pokemon(source.pokemon);
+            true
+        }
+        // Nightmare: `if (pokemon.status !== 'slp' && !pokemon.hasAbility('comatose')) return
+        // false;`
+        Volatile::Nightmare => {
+            b.slot_mon(target)
+                .is_some_and(|m| m.status == Status::Sleep)
+                || b.ability(target) == abilities::COMATOSE
         }
         // Substitute (F11): `this.effectState.hp = Math.floor(target.maxhp / 4)`; partial
         // trapping ends silently (`delete target.volatiles['partiallytrapped']`, no `onEnd`).
@@ -616,7 +657,117 @@ pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option
             return Some(format!("{name} is partially trapped"));
         }
     }
+    // Octolock: `if (this.effectState.source?.isActive) pokemon.tryTrap();`
+    let octolock = volatiles.get(Volatile::Octolock);
+    if octolock.active {
+        let source = decode_pokemon(octolock.counter);
+        let source_active = state
+            .side(source.side)
+            .slots
+            .iter()
+            .any(|s| s.party_index == Some(source.party));
+        if source_active {
+            return Some(format!("{name} is trapped by Octolock"));
+        }
+    }
     None
+}
+
+/// Stockpile's `onStart` / `onRestart` (below 3 layers; the move's `onTry` stops a fourth) for the
+/// Pokémon in `slot`: one more layer, then `this.boost({def: 1, spd: 1}, target, target)`, and
+/// each stat that changed counts one more for the `onEnd` to take back (`effectState.def--`).
+/// Returns the volatile's new state.
+pub(crate) fn stockpile_raise<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    state: VolatileState,
+) -> VolatileState {
+    let before = b.state.slot(slot).boosts;
+    let mut up = [0i8; BOOST_COUNT];
+    up[1] = 1;
+    up[3] = 1;
+    b.boost_by(slot, &up, Some(slot), BoostEffect::Move(moves::STOCKPILE));
+    let after = b.state.slot(slot).boosts;
+    let (mut def, mut spd) = (state.hidden & 3, (state.hidden >> 2) & 3);
+    if after[1] != before[1] {
+        def += 1;
+    }
+    if after[3] != before[3] {
+        spd += 1;
+    }
+    VolatileState {
+        counter: state.counter + 1,
+        hidden: def | (spd << 2),
+        ..state
+    }
+}
+
+/// Stockpile's `onEnd` for the Pokémon in `slot` whose volatile had `state`: `this.boost({def:
+/// effectState.def, spd: effectState.spd}, target, target)` for the raises that took.
+pub(crate) fn stockpile_end<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    state: VolatileState,
+) {
+    let (def, spd) = (state.hidden & 3, (state.hidden >> 2) & 3);
+    if def == 0 && spd == 0 {
+        return;
+    }
+    let mut down = [0i8; BOOST_COUNT];
+    down[1] = -(def as i8);
+    down[3] = -(spd as i8);
+    b.boost_by(slot, &down, Some(slot), BoostEffect::Move(moves::STOCKPILE));
+}
+
+/// `pokemon.storedStats[a]` and `[c]` (battle stat indices: 0 Atk .. 4 Spe) trade places for the
+/// Pokémon in `slot` (Power Trick, Power Shift). `setSpecies` recalculates them when it leaves
+/// the field (`Battle::clear_volatile`).
+pub(crate) fn swap_stored_stats<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    a: usize,
+    c: usize,
+) {
+    let Some(pokemon) = b.occupant(slot) else {
+        return;
+    };
+    let old = b.mon(pokemon).forme();
+    let mut new = old;
+    new.stats.swap(a, c);
+    if new != old {
+        b.apply(Instruction::SetForme {
+            target: pokemon,
+            old,
+            new,
+        });
+    }
+}
+
+/// Octolock's `onResidual` (order 14) on the Pokémon in `slot`: once its source is not active,
+/// has no HP or switched in this turn (`!source.activeTurns`), the volatile is deleted (no
+/// `onEnd`); otherwise `this.boost({def: -1, spd: -1}, pokemon, source, octolock)`.
+pub(crate) fn octolock_residual<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let lock = b.volatile(slot, Volatile::Octolock);
+    if !lock.active {
+        return;
+    }
+    let source = decode_pokemon(lock.counter);
+    let source_slot = Battle::<N>::slots(source.side)
+        .find(|&s| b.occupant(s) == Some(source))
+        .filter(|&s| b.mon(source).hp > 0 && b.active_since_turn_start(s));
+    let Some(source_slot) = source_slot else {
+        b.delete_volatile(slot, Volatile::Octolock);
+        return;
+    };
+    let mut drop = [0i8; BOOST_COUNT];
+    drop[1] = -1;
+    drop[3] = -1;
+    b.boost_by(
+        slot,
+        &drop,
+        Some(source_slot),
+        BoostEffect::Move(moves::OCTOLOCK),
+    );
 }
 
 /// The conditions' `onDragOut` on the Pokémon in `slot`: Ingrain returns `null` (no drag, and

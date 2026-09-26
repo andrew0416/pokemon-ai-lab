@@ -1,0 +1,83 @@
+{
+ "description": "Teatime (Opus V): every active berry holder eats its berry by force (`eatItem(true)`): Blissey (patched to 100 HP) its Sitrus Berry, Snorlax its Lum Berry (no effect), and Chansey its Oran Berry although Tyranitar's Unnerve is on the field (no TryEatItem); Hypno's Leftovers is no berry. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Hypno",
+    "item": "Leftovers",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Teatime",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "Sitrus Berry",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "Lum Berry",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Tyranitar",
+    "item": "Oran Berry",
+    "ability": "Unnerve",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Blissey": {
+    "hp": 100
+   }
+  },
+  "p2": {
+   "Tyranitar": {
+    "hp": 100
+   }
+  }
+ },
+ "turn": {
+  "p1": "move teatime, move harden",
+  "p2": "move harden, move harden"
+ }
+}

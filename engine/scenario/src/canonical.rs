@@ -468,6 +468,12 @@ fn volatile_fields(out: &mut String, volatile: Volatile, state: VolatileState, s
         out.push('}');
         return;
     }
+    // Stockpile keeps `effectState.layers` in `counter` (its `def` / `spd` are not canonical).
+    if volatile == Volatile::Stockpile {
+        write!(out, r#""layers":{}"#, state.counter).unwrap();
+        out.push('}');
+        return;
+    }
     let mut first = true;
     let mut field = |out: &mut String, text: String| {
         let sep = if first { "" } else { "," };

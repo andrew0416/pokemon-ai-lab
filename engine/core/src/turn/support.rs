@@ -906,6 +906,209 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "condition.onTryHit",
         ],
     ),
+    // Sleep readers (Opus V unit 1): Dream Eater's `onTryImmunity`
+    // (`handlers::on_try_immunity`); Nightmare's condition (`conditions::volatile_start`, its
+    // residual in `residual.rs`, removed with sleep by `Battle::cure_status`); Wake-Up Slap's
+    // and Smelling Salts' power (`handlers::base_power_callback`) and cure (`handlers::on_hit`).
+    (moves::DREAM_EATER, &["onTryImmunity"]),
+    (
+        moves::NIGHTMARE,
+        &["condition.onResidual", "condition.onStart"],
+    ),
+    (moves::WAKE_UP_SLAP, &["basePowerCallback", "onHit"]),
+    (moves::SMELLING_SALTS, &["basePowerCallback", "onHit"]),
+    // Opus V unit 2: Growth's `onModifyMove` boosts (`handlers::move_boosts`); the
+    // `onAfterMoveSecondarySelf` of Fell Stinger, Order Up and Relic Song
+    // (`handlers::after_move_secondary_self`).
+    (moves::GROWTH, &["onModifyMove"]),
+    (moves::FELL_STINGER, &["onAfterMoveSecondarySelf"]),
+    (moves::ORDER_UP, &["onAfterMoveSecondarySelf"]),
+    (moves::RELIC_SONG, &["onAfterMoveSecondarySelf"]),
+    // Opus V unit 3, trapping moves (`conditions::add_trap`): Anchor Shot's and Spirit Shackle's
+    // secondary `onHit` (`handlers::secondary_on_hit`), Jaw Lock's `onHit` (both ends);
+    // Octolock (`handlers::on_try_immunity`, `conditions::volatile_start` / `trapped` /
+    // `octolock_residual`).
+    (
+        moves::ANCHOR_SHOT,
+        &["secondaries.onHit", "secondary.onHit"],
+    ),
+    (
+        moves::SPIRIT_SHACKLE,
+        &["secondaries.onHit", "secondary.onHit"],
+    ),
+    (moves::JAW_LOCK, &["onHit"]),
+    // Opus V unit 4, critical-hit volatiles: their `onStart` (`conditions::volatile_start`:
+    // Focus Energy and Dragon Cheer exclude each other, Dragon Cheer keeps `hasDragonType`),
+    // Laser Focus's `onRestart` (`Battle::add_volatile_from`), `onModifyCritRatio`
+    // (`handlers::volatile_crit_ratio`); Laser Focus's `onEnd` only logs. Psych Up copies all
+    // three.
+    (
+        moves::FOCUS_ENERGY,
+        &["condition.onModifyCritRatio", "condition.onStart"],
+    ),
+    (
+        moves::DRAGON_CHEER,
+        &["condition.onModifyCritRatio", "condition.onStart"],
+    ),
+    (
+        moves::LASER_FOCUS,
+        &[
+            "condition.onEnd",
+            "condition.onModifyCritRatio",
+            "condition.onRestart",
+            "condition.onStart",
+        ],
+    ),
+    (
+        moves::OCTOLOCK,
+        &[
+            "condition.onResidual",
+            "condition.onStart",
+            "condition.onTrapPokemon",
+            "onTryImmunity",
+        ],
+    ),
+    // Opus V unit 5: Copycat's `onHit` (`battle.lastMove`: `State::last_move`) and Mirror Move's
+    // `onTryHit` (the target's `lastMove`) call a move through `moves::call_move`; Retaliate's
+    // `onBasePower` (`faintedLastTurn`: `SideHistory::fainted_last_turn`).
+    (moves::COPYCAT, &["onHit"]),
+    (moves::MIRROR_MOVE, &["onTryHit"]),
+    (moves::RETALIATE, &["onBasePower"]),
+    // Opus V unit 6: Aqua Ring (`residual.rs`, Big Root's `heal_rooted`); Covet and Thief
+    // `onAfterHit` and Bestow `onHit` (`handlers::pass_item`); False Swipe and Hold Back
+    // `onDamage` (`Battle::damage`, priority -20); Power Trick and Power Shift (the stored-stat
+    // swap in `conditions::volatile_start`, `Battle::remove_volatile` and the `onRestart` in
+    // `Battle::add_volatile_from`; `onCopy` is Baton Pass's, refused); Power Split, Guard Split
+    // and Acupressure `onHit`.
+    (
+        moves::AQUA_RING,
+        &["condition.onResidual", "condition.onStart"],
+    ),
+    (moves::COVET, &["onAfterHit"]),
+    (moves::THIEF, &["onAfterHit"]),
+    (moves::FALSE_SWIPE, &["onDamage"]),
+    (moves::HOLD_BACK, &["onDamage"]),
+    (
+        moves::POWER_TRICK,
+        &[
+            "condition.onCopy",
+            "condition.onEnd",
+            "condition.onRestart",
+            "condition.onStart",
+        ],
+    ),
+    (
+        moves::POWER_SHIFT,
+        &[
+            "condition.onCopy",
+            "condition.onEnd",
+            "condition.onRestart",
+            "condition.onStart",
+        ],
+    ),
+    (moves::POWER_SPLIT, &["onHit"]),
+    (moves::GUARD_SPLIT, &["onHit"]),
+    (moves::BESTOW, &["onHit"]),
+    (moves::ACUPRESSURE, &["onHit"]),
+    // Opus V unit 7: the other two-turn moves on the F9 machinery (`handlers::charge_try_move`;
+    // Skull Bash raises Defense before ChargeMove / Power Herb).
+    (moves::SKULL_BASH, &["onTryMove"]),
+    (moves::RAZOR_WIND, &["onTryMove"]),
+    (moves::FREEZE_SHOCK, &["onTryMove"]),
+    (moves::ICE_BURN, &["onTryMove"]),
+    (moves::GEOMANCY, &["onTryMove"]),
+    // Opus V unit 8: the storms' rain accuracy (`handlers::on_modify_move`, the nominal
+    // target's weather); Freezy Frost, Magic Powder, Camouflage, Conversion `onHit`; Teatime
+    // `onHitField` and Stuff Cheeks (`update::eat_item_forced`); Stockpile's volatile (`layers`,
+    // `conditions::stockpile_raise` / `stockpile_end`), Spit Up and Swallow.
+    (moves::BLEAKWIND_STORM, &["onModifyMove"]),
+    (moves::SANDSEAR_STORM, &["onModifyMove"]),
+    (moves::WILDBOLT_STORM, &["onModifyMove"]),
+    (moves::FREEZY_FROST, &["onHit"]),
+    (moves::MAGIC_POWDER, &["onHit"]),
+    (moves::CAMOUFLAGE, &["onHit"]),
+    (moves::CONVERSION, &["onHit"]),
+    (moves::TEATIME, &["onHitField"]),
+    (moves::STUFF_CHEEKS, &["onHit", "onTry"]),
+    (
+        moves::STOCKPILE,
+        &[
+            "condition.onEnd",
+            "condition.onRestart",
+            "condition.onStart",
+            "onTry",
+        ],
+    ),
+    (
+        moves::SPIT_UP,
+        &["basePowerCallback", "onAfterMove", "onTry"],
+    ),
+    (moves::SWALLOW, &["onHit", "onTry"]),
+    // Opus V unit 9a: Present's power draw and heal (`handlers::on_modify_move`, `move_heal`,
+    // `infiltrates`), Secret Power's terrain secondaries (`handlers::move_secondaries`), Nature
+    // Power's terrain move (`moves::call_move`), Psywave's `damageCallback`, Barb Barrage's and
+    // Fickle Beam's `onBasePower`, Synchronoise's and Captivate's `onTryImmunity`.
+    (moves::PRESENT, &["onModifyMove"]),
+    (moves::SECRET_POWER, &["onModifyMove"]),
+    (moves::NATURE_POWER, &["onTryHit"]),
+    (moves::PSYWAVE, &["damageCallback"]),
+    (moves::BARB_BARRAGE, &["onBasePower"]),
+    (moves::FICKLE_BEAM, &["onBasePower"]),
+    (moves::SYNCHRONOISE, &["onTryImmunity"]),
+    (moves::CAPTIVATE, &["onTryImmunity"]),
+    // Opus V unit 9b: Foresight / Odor Sleuth / Miracle Eye (their `onTryHit` in
+    // `handlers::on_try_hit`; the volatiles' `onNegateImmunity` in `handlers::immunity_negated`,
+    // `onModifyBoost` in `Battle::boost_seen`); Gear Up and Magnetic Flux `onHitSide`; Flower
+    // Shield and Rototiller `onHitField`.
+    (moves::ODOR_SLEUTH, &["onTryHit"]),
+    (
+        moves::FORESIGHT,
+        &[
+            "condition.onModifyBoost",
+            "condition.onNegateImmunity",
+            "condition.onStart",
+            "onTryHit",
+        ],
+    ),
+    (
+        moves::MIRACLE_EYE,
+        &[
+            "condition.onModifyBoost",
+            "condition.onNegateImmunity",
+            "condition.onStart",
+            "onTryHit",
+        ],
+    ),
+    (moves::GEAR_UP, &["onHitSide"]),
+    (moves::MAGNETIC_FLUX, &["onHitSide"]),
+    (moves::FLOWER_SHIELD, &["onHitField"]),
+    (moves::ROTOTILLER, &["onHitField"]),
+    // Opus V unit 9c: Rollout and Ice Ball (their condition: `onModifyMove` starts it,
+    // `basePowerCallback` counts the hits in `handlers::rolling_power`, `onLockMove` in
+    // `lock::locked_move`, `onResidual` in `residual.rs`; `onAfterMove` only acts in generations
+    // 7–8, where a hit could skip its contact count); Defense Curl's volatile (`onRestart`:
+    // `null`) doubles them.
+    (
+        moves::ROLLOUT,
+        &[
+            "basePowerCallback",
+            "condition.onResidual",
+            "condition.onStart",
+            "onAfterMove",
+            "onModifyMove",
+        ],
+    ),
+    (
+        moves::ICE_BALL,
+        &[
+            "basePowerCallback",
+            "condition.onResidual",
+            "condition.onStart",
+            "onAfterMove",
+            "onModifyMove",
+        ],
+    ),
+    (moves::DEFENSE_CURL, &["condition.onRestart"]),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do
@@ -1893,8 +2096,17 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     let sleep_moves = id == moves::SLEEP_TALK || id == moves::SNORE;
     // `breaksProtect` (`handlers::break_protect`) and crash damage (`handlers::on_move_fail`)
     // are implemented.
+    // Sleep Talk, Copycat and Mirror Move call moves through `moves::call_move` (the called move
+    // is checked when it is called: `handlers::called_move_problem`).
+    let calls_supported = [
+        moves::SLEEP_TALK,
+        moves::COPYCAT,
+        moves::MIRROR_MOVE,
+        moves::NATURE_POWER,
+    ]
+    .contains(&id);
     if m.smart_target
-        || (m.calls_move && id != moves::SLEEP_TALK)
+        || (m.calls_move && !calls_supported)
         || (m.sleep_usable && !sleep_moves)
         || m.steals_boosts
         || m.mind_blown_recoil
@@ -2217,7 +2429,7 @@ mod tests {
     /// - `TryPrimaryHit`: only Aura Break's `onAnyTryPrimaryHit` besides the substitute; the
     ///   gems' `onSourceTryPrimaryHit` and Gulp Missile are refused.
     /// - `move.infiltrates`: Infiltrator (`ActiveMoveRef::infiltrates`) and Pollen Puff are
-    ///   implemented, Present is refused.
+    ///   implemented, and Present's heal (`handlers::infiltrates`).
     /// - Moves whose own code reads a substitute: Aromatherapy and Defog are implemented; Shed
     ///   Tail, Baton Pass, Sky Drop, Tidy Up, Transform, Sparkly Swirl are refused.
     /// - Disguise and Ice Face (`hitSub` in their handlers) are refused behind a substitute
@@ -2282,7 +2494,6 @@ mod tests {
             moves::TIDY_UP,
             moves::TRANSFORM,
             moves::SPARKLY_SWIRL,
-            moves::PRESENT,
         ] {
             assert!(move_unsupported(id).is_some(), "{id:?}");
         }

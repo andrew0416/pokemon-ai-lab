@@ -1,0 +1,79 @@
+{
+ "description": "Dragon Cheer (Opus V): in the setup turn Dragonite cheers Hypno (not a Dragon: ratio +1) and Hypno cheers Dragonite (a Dragon when it starts: +2). Then Hypno's Strength crits 1/8 (ratio 2) and Dragonite's 1/2 (ratio 3). Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Hypno",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Dragon Cheer",
+     "Strength"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Dragonite",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Dragon Cheer",
+     "Strength"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move dragoncheer -2, move dragoncheer -1",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move strength 1, move strength 2",
+  "p2": "move harden, move harden"
+ }
+}

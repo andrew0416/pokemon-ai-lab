@@ -493,6 +493,7 @@ pub(crate) fn future_move_hit<const N: usize>(
         let max_hp = f64::from(b.mon(source).max_hp);
         b.damage(user, max_hp / 10.0, DamageSource::Indirect);
     }
+    // `this.activeMove = null`: the hit never becomes `battle.lastMove`.
     b.active_move = None;
     b.check_win(None);
     Ok(())
@@ -529,6 +530,8 @@ pub(crate) fn resume_move<const N: usize>(
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
     handlers::on_after_move(b, user, pokemon, &mv);
     run_move_tail(b, user, &mv);
+    // The action's `clearActiveMove()`: `battle.lastMove` (a multi-hit move is never called).
+    b.record_battle_last_move(mv.id);
     b.active_move = None;
     Ok(MoveStep::Done)
 }
@@ -659,6 +662,11 @@ fn run_move_inner<const N: usize>(
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
     handlers::on_after_move(b, user, pokemon, &mv);
     run_move_tail(b, user, &mv);
+    // The action's `clearActiveMove()`: `battle.lastMove` is the active move, a called move
+    // (Sleep Talk's, Copycat's) rather than its caller.
+    if let Some(active) = b.active_move {
+        b.record_battle_last_move(active.id);
+    }
     Ok(MoveStep::Done)
 }
 
@@ -1198,16 +1206,18 @@ fn use_move<const N: usize>(
     Ok(None)
 }
 
-/// Showdown `useMove(id, pokemon)` from a move's `onHit` (Sleep Talk): the called move takes
-/// the caller's priority and Prankster boost and ability suppression, its source effect is the
-/// caller (whose PP pays Pressure), its target is drawn afresh, and it runs `useMoveInner`
-/// without BeforeMove, PP or `lastMove`. The called move stays the active move. A multi-hit
-/// called move (it would suspend the caller) is unsupported.
+/// Showdown `useMove(id, pokemon, {target})` from a move's handler (Sleep Talk and Copycat
+/// `onHit`, Mirror Move `onTryHit`): the called move takes the caller's priority and Prankster
+/// boost and ability suppression, its source effect is the caller (whose PP pays Pressure), its
+/// target is `target` or, without one, drawn afresh, and it runs `useMoveInner` without
+/// BeforeMove, PP or `lastMove`. The called move stays the active move. A multi-hit called move
+/// (it would suspend the caller) is unsupported.
 fn call_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     caller: &ActiveMove,
     id: MoveId,
+    target: Option<SlotRef>,
 ) -> Result<(), TurnError> {
     let pokemon = b.occupant(user).expect("the caller's user is active");
     let ignore_ability = b.active_move.is_some_and(|m| m.ignore_ability);
@@ -1246,7 +1256,10 @@ fn call_move<const N: usize>(
         future_hit: false,
         bypass_protect: 0,
     };
-    let target = get_random_target(b, user, data.target);
+    let target = match target {
+        Some(t) => Some(t),
+        None => get_random_target(b, user, data.target),
+    };
     let will_act = b.will_act();
     if use_move(b, user, &mut mv, target, will_act)?.is_some() {
         return Err(b.unsupported(format!(
@@ -1368,6 +1381,9 @@ fn use_move_tail<const N: usize>(
     if !ability_hooks::sheer_force_skips(b, user, mv)
         && !mv.data.flags.contains(MoveFlags::FUTUREMOVE)
     {
+        // The move's own handler (`singleEvent`: Fell Stinger, Order Up, Relic Song), then
+        // `runEvent`.
+        handlers::after_move_secondary_self(b, user, main_target, mv)?;
         item_events::after_move_secondary_self(b, user, main_target, mv.data, mv.total_damage);
         // Magician (an ability, sub-order 7, before the item's 8: it needs an empty-handed user,
         // so the item handlers above never acted when it can).
@@ -1514,6 +1530,10 @@ fn try_move_hit_field<const N: usize>(
     if [moves::WIDE_GUARD, moves::QUICK_GUARD].contains(&mv.id) {
         b.add_volatile(user, Volatile::Stall);
     }
+    // The other `onHitSide` handlers (Gear Up, Magnetic Flux).
+    if let Some(r) = handlers::on_hit_side(b, user, mv) {
+        combine(r);
+    }
     if !data.weather.is_none() {
         let weather = weather_of(data.weather.id()).expect("checked by support");
         combine(set_weather(b, user, weather));
@@ -1526,7 +1546,7 @@ fn try_move_hit_field<const N: usize>(
         combine(add_pseudo_weather(b, data.pseudo_weather.id()));
     }
     // HitField: the move's onHitField (Haze).
-    if let Some(r) = handlers::on_hit_field(b, user, mv) {
+    if let Some(r) = handlers::on_hit_field(b, user, mv)? {
         combine(r);
     }
     Ok(outcome.unwrap_or(true))
@@ -1655,6 +1675,7 @@ fn try_spread_move_hit<const N: usize>(
         });
     }
     // 3. Move-specific immunities: powder, the move's `onTryImmunity`, Prankster vs Dark.
+    handlers::try_immunity_problem(b, user, mv, &targets)?;
     targets.retain(|&t| {
         let powder = mv.data.flags.contains(MoveFlags::POWDER)
             && t != user
@@ -1693,7 +1714,7 @@ fn try_spread_move_hit<const N: usize>(
     }
     // The hit's first step is the move's own `onTryHit` (Champions `spreadMoveHit`: on the
     // first target only; failing fails the move).
-    if !handlers::on_try_hit(b, user, hit[0], mv) {
+    if !handlers::on_try_hit(b, user, hit[0], mv)? {
         return Ok(HitOutcome::Finished {
             ok: false,
             total_damage: 0,
@@ -2009,6 +2030,11 @@ fn type_immune<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove, target: SlotR
     // Scrappy / Mind's Eye: `move.ignoreImmunity['Fighting'] = move.ignoreImmunity['Normal'] =
     // true` (keyed by the move's type when immunity is checked).
     if mv.scrappy && matches!(ty, Type::Fighting | Type::Normal) {
+        return false;
+    }
+    // `runEvent('NegateImmunity', target, type)`: Foresight on a Ghost against Normal and
+    // Fighting, Miracle Eye on a Dark type against Psychic (`handlers::immunity_negated`).
+    if handlers::immunity_negated(b, target, ty) {
         return false;
     }
     if ty == Type::Ground {
@@ -2417,13 +2443,15 @@ fn spread_move_hit<const N: usize>(
         }
         let mut did: Option<bool> = None;
         let mut note = |r: bool| did = Some(did.unwrap_or(false) || r);
-        if data.boosts != NO_BOOSTS
+        // `moveData.boosts` as the move's ModifyMove left them (Growth in sun).
+        let boosts = handlers::move_boosts(b, user, mv)?;
+        if boosts != NO_BOOSTS
             && b.alive(t).is_some()
             && !handlers::boosts_applied_in_try_hit(mv.id)
         {
-            note(b.boost_by(t, &data.boosts, Some(user), BoostEffect::Move(mv.id)));
+            note(b.boost_by(t, &boosts, Some(user), BoostEffect::Move(mv.id)));
         }
-        if let Some(heal) = data.heal {
+        if let Some(heal) = handlers::move_heal(mv) {
             let target_mon = b.occupant(t).map(|p| b.mon(p));
             let full = target_mon.is_none_or(|m| m.hp >= m.max_hp);
             if full {
@@ -2598,7 +2626,7 @@ fn spread_move_hit<const N: usize>(
             if let Some(volatile) = Volatile::from_condition(secondary.volatile_status) {
                 b.add_volatile(t, volatile);
             }
-            handlers::secondary_on_hit(b, t, mv);
+            handlers::secondary_on_hit(b, user, t, mv);
             if secondary.self_boosts != NO_BOOSTS {
                 b.boost_by(
                     user,
@@ -2663,9 +2691,9 @@ fn spread_move_hit<const N: usize>(
     }
     // AfterHit: the move's other `onAfterHit` handlers, per damaged target (Champions runs
     // them even if the user fainted).
-    for result in &results {
-        if let Hit::Damage(_) = result {
-            handlers::on_after_hit(b, user, mv);
+    for (i, &t) in targets.iter().enumerate() {
+        if let Hit::Damage(_) = results[i] {
+            handlers::on_after_hit(b, user, t, mv)?;
         }
     }
     // Champions `spreadMoveHit`, when a target took numeric damage: `if (pokemon.hp &&
@@ -3023,19 +3051,18 @@ fn get_damage<const N: usize>(
     // Critical hit: ratio 1..4 ??1/24, 1/8, 1/2, always. `CriticalHit` handlers: Battle Armor
     // and Shell Armor (`onCriticalHit: false`, breakable). Showdown rolls first and then
     // cancels; not rolling gives the same distribution.
-    // ModifyCritRatio: the user's item (Scope Lens, Razor Claw, Leek) and its `focusenergy`
-    // volatile (+2, from Lansat Berry), all additive, then clamped to 0..4. Lucky Chant on the
-    // target's side is a `CriticalHit` handler too (`onCriticalHit: false`).
-    let focus_energy = if b.volatile(user, Volatile::FocusEnergy).active {
-        2
-    } else {
-        0
+    // ModifyCritRatio: the user's item (Scope Lens, Razor Claw, Leek), ability and volatiles (Focus
+    // Energy, Dragon Cheer; Laser Focus sets 5, and nothing lowers the ratio, so it ends at the
+    // clamp), then clamped to 0..4. Lucky Chant on the target's side is a `CriticalHit` handler
+    // too (`onCriticalHit: false`).
+    let crit_ratio = match handlers::volatile_crit_ratio(b, user) {
+        None => 4,
+        Some(bonus) => (i32::from(data.crit_ratio)
+            + item_events::crit_ratio_bonus(b.item(user), &attacker)
+            + ability_events::crit_ratio_bonus(b, user, target)
+            + bonus)
+            .clamp(0, 4),
     };
-    let crit_ratio = (i32::from(data.crit_ratio)
-        + item_events::crit_ratio_bonus(b.item(user), &attacker)
-        + ability_events::crit_ratio_bonus(b, user, target)
-        + focus_energy)
-        .clamp(0, 4);
     let can_crit = !b.ability_unless_broken(target).data().cannot_be_crit
         && !b.side_effect_active(target.side, SideEffect::LuckyChant)
         && !super::forme::shields_hit(b, user, target, mv.id);

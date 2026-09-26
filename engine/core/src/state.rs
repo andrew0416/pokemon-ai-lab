@@ -400,6 +400,11 @@ pub struct State<const N: usize> {
     pub field: [Effect; FIELD_EFFECT_COUNT],
     pub turn: u16,
     pub result: BattleResult,
+    /// Showdown `battle.lastMove`: the active move at the end of the last action that used one
+    /// (a called move, not its caller; never a future move's hit), kept across turns.
+    /// Read by Copycat. Hidden from the canonical output; recorded only while a Copycat is in a
+    /// party (`turn::battle::HistoryReaders`), so it does not split positions otherwise.
+    pub last_move: MoveId,
 }
 
 impl<const N: usize> Default for State<N> {
@@ -409,6 +414,7 @@ impl<const N: usize> Default for State<N> {
             field: [Effect::NONE; FIELD_EFFECT_COUNT],
             turn: 0,
             result: BattleResult::Ongoing,
+            last_move: MoveId::NONE,
         }
     }
 }

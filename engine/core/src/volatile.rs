@@ -70,7 +70,7 @@ pub enum Volatile {
     /// item): Speed doubles while the holder has no item. No duration.
     Unburden,
     /// Focus Energy's condition (`focusenergy`, no duration): critical-hit ratio +2. Added by
-    /// Lansat Berry (the move Focus Energy itself is not supported yet).
+    /// the move and by Lansat Berry; it and Dragon Cheer exclude each other (`onStart`).
     FocusEnergy,
     /// Micle Berry's own condition (`micleberry`, duration 2): the holder's next accuracy check
     /// (`onSourceAccuracy`) is 4915/4096 and ends it.
@@ -248,9 +248,64 @@ pub enum Volatile {
     /// neither a canonical field. It stays after the item is gone until the next TryMove
     /// (`items::metronome_try_move`). The item's `condition` is not a named dex condition.
     Metronome,
+    /// Nightmare (the move's condition, no duration, residual order 11): a sleeping (or
+    /// Comatose) holder loses baseMaxhp / 4 each turn. `cureStatus` / `clearStatus` of a sleeping
+    /// holder and a new sleep's `onStart` remove it (`Battle::cure_status`).
+    Nightmare,
+    /// Octolock on its target (no duration, residual order 14): while its source
+    /// (`effectState.source`, kept in `counter`: [`encode_pokemon`]; hidden in the canonical
+    /// state) is active the holder cannot switch out (`onTrapPokemon`) and loses 1 Def and 1 SpD
+    /// each turn; the residual deletes it once the source left, fainted or just switched in.
+    Octolock,
+    /// Dragon Cheer (no duration): the holder's critical-hit ratio +2 if it was a Dragon type
+    /// when the condition started (`effectState.hasDragonType`, kept in `hidden`; not a canonical
+    /// field), else +1. It and Focus Energy exclude each other (`onStart`).
+    DragonCheer,
+    /// Laser Focus (duration 2; its `onRestart` sets the duration to 2 again): the holder's
+    /// critical-hit ratio becomes 5 (`onModifyCritRatio`), so its moves always crit.
+    LaserFocus,
+    /// Aqua Ring (no duration, residual order 6): heals baseMaxhp / 16 each turn (Big Root
+    /// applies).
+    AquaRing,
+    /// Power Trick (no duration): the holder's stored Attack and Defense trade places when it
+    /// starts and again when it ends (using the move again ends it: `onRestart`). Leaving the
+    /// field recalculates the stored stats anyway.
+    PowerTrick,
+    /// Power Shift: as [`Volatile::PowerTrick`] (the same swap in this Showdown version).
+    PowerShift,
+    /// The charging move's own volatile (as [`Volatile::SolarBeam`]; no condition data, no
+    /// duration) for Skull Bash, Razor Wind, Freeze Shock, Ice Burn and Geomancy.
+    SkullBash,
+    RazorWind,
+    FreezeShock,
+    IceBurn,
+    Geomancy,
+    /// Stockpile (no duration, `noCopy`): `effectState.layers` (1–3, kept in `counter` and written
+    /// as `layers`) and how many of its +1 Def / +1 SpD raises took (`effectState.def` / `.spd`,
+    /// negated; kept in `hidden`: Def in bits 0–1, SpD in bits 2–3; not canonical fields), which
+    /// its `onEnd` takes back. Spit Up and Swallow end it.
+    Stockpile,
+    /// Foresight / Odor Sleuth on their target (`foresight`, no duration, `noCopy`): a Ghost
+    /// holder loses its immunity to Normal and Fighting moves (`onNegateImmunity`) and its
+    /// positive evasion stages are ignored (`onModifyBoost`).
+    Foresight,
+    /// Miracle Eye on its target (`miracleeye`, no duration, `noCopy`): as Foresight, for a Dark
+    /// holder against Psychic moves.
+    MiracleEye,
+    /// Defense Curl (`defensecurl`, no duration, `noCopy`; its `onRestart` returns `null`):
+    /// Rollout and Ice Ball have double power.
+    DefenseCurl,
+    /// Rollout's own condition (`rollout`, duration 1, 2 again after each hit below the fifth):
+    /// the holder is locked into Rollout (`onLockMove`) aimed at the target location it chose
+    /// (`lastMoveTargetLoc`, kept in `counter` as `lock::encode_target_loc`); `hitCount` (=
+    /// `contactHitCount`) in `hidden`. Neither is a canonical field. Added by name, so the dex has
+    /// no condition id.
+    Rollout,
+    /// Ice Ball's own condition (`iceball`): as [`Volatile::Rollout`].
+    IceBall,
 }
 
-pub const VOLATILE_COUNT: usize = 76;
+pub const VOLATILE_COUNT: usize = 94;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -330,6 +385,24 @@ impl Volatile {
         Volatile::Attract,
         Volatile::EjectPack,
         Volatile::Metronome,
+        Volatile::Nightmare,
+        Volatile::Octolock,
+        Volatile::DragonCheer,
+        Volatile::LaserFocus,
+        Volatile::AquaRing,
+        Volatile::PowerTrick,
+        Volatile::PowerShift,
+        Volatile::SkullBash,
+        Volatile::RazorWind,
+        Volatile::FreezeShock,
+        Volatile::IceBurn,
+        Volatile::Geomancy,
+        Volatile::Stockpile,
+        Volatile::Foresight,
+        Volatile::MiracleEye,
+        Volatile::DefenseCurl,
+        Volatile::Rollout,
+        Volatile::IceBall,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -383,6 +456,18 @@ impl Volatile {
             Volatile::HealBlock => conditions::HEALBLOCK,
             Volatile::SmackDown => conditions::SMACKDOWN,
             Volatile::Attract => conditions::ATTRACT,
+            Volatile::Nightmare => conditions::NIGHTMARE,
+            Volatile::Octolock => conditions::OCTOLOCK,
+            Volatile::DragonCheer => conditions::DRAGONCHEER,
+            Volatile::LaserFocus => conditions::LASERFOCUS,
+            Volatile::AquaRing => conditions::AQUARING,
+            Volatile::PowerTrick => conditions::POWERTRICK,
+            Volatile::PowerShift => conditions::POWERSHIFT,
+            Volatile::Stockpile => conditions::STOCKPILE,
+            Volatile::Foresight => conditions::FORESIGHT,
+            Volatile::MiracleEye => conditions::MIRACLEEYE,
+            Volatile::DefenseCurl => conditions::DEFENSECURL,
+            Volatile::Rollout | Volatile::IceBall => ConditionId::NONE,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -413,7 +498,12 @@ impl Volatile {
             | Volatile::Commanded
             | Volatile::GorillaTactics
             | Volatile::EjectPack
-            | Volatile::Metronome => ConditionId::NONE,
+            | Volatile::Metronome
+            | Volatile::SkullBash
+            | Volatile::RazorWind
+            | Volatile::FreezeShock
+            | Volatile::IceBurn
+            | Volatile::Geomancy => ConditionId::NONE,
         }
     }
 
@@ -496,6 +586,24 @@ impl Volatile {
             Volatile::Attract => "attract",
             Volatile::EjectPack => "ejectpack",
             Volatile::Metronome => "metronome",
+            Volatile::Nightmare => "nightmare",
+            Volatile::Octolock => "octolock",
+            Volatile::DragonCheer => "dragoncheer",
+            Volatile::LaserFocus => "laserfocus",
+            Volatile::AquaRing => "aquaring",
+            Volatile::PowerTrick => "powertrick",
+            Volatile::PowerShift => "powershift",
+            Volatile::SkullBash => "skullbash",
+            Volatile::RazorWind => "razorwind",
+            Volatile::FreezeShock => "freezeshock",
+            Volatile::IceBurn => "iceburn",
+            Volatile::Geomancy => "geomancy",
+            Volatile::Stockpile => "stockpile",
+            Volatile::Foresight => "foresight",
+            Volatile::MiracleEye => "miracleeye",
+            Volatile::DefenseCurl => "defensecurl",
+            Volatile::Rollout => "rollout",
+            Volatile::IceBall => "iceball",
         }
     }
 
@@ -544,7 +652,8 @@ impl Volatile {
             | Volatile::Dive
             | Volatile::PhantomForce
             | Volatile::ShadowForce
-            | Volatile::AllySwitch => 2,
+            | Volatile::AllySwitch
+            | Volatile::LaserFocus => 2,
             Volatile::Encore | Volatile::Taunt => 3,
             Volatile::PerishSong => 4,
             // Partial trapping's and Heal Block's `durationCallback` replace it when they start
@@ -587,7 +696,23 @@ impl Volatile {
             | Volatile::GorillaTactics
             | Volatile::Attract
             | Volatile::EjectPack
-            | Volatile::Metronome => 0,
+            | Volatile::Metronome
+            | Volatile::Nightmare
+            | Volatile::Octolock
+            | Volatile::DragonCheer
+            | Volatile::AquaRing
+            | Volatile::PowerTrick
+            | Volatile::PowerShift
+            | Volatile::SkullBash
+            | Volatile::RazorWind
+            | Volatile::FreezeShock
+            | Volatile::IceBurn
+            | Volatile::Geomancy
+            | Volatile::Stockpile
+            | Volatile::Foresight
+            | Volatile::MiracleEye
+            | Volatile::DefenseCurl => 0,
+            Volatile::Rollout | Volatile::IceBall => 1,
             Volatile::ZenMode => 0,
         }
     }
@@ -600,6 +725,9 @@ impl Volatile {
             Volatile::LeechSeed => Some(8),
             Volatile::PartiallyTrapped | Volatile::SaltCure => Some(13),
             Volatile::MagnetRise => Some(18),
+            Volatile::AquaRing => Some(6),
+            Volatile::Nightmare => Some(11),
+            Volatile::Octolock => Some(14),
             Volatile::Taunt => Some(15),
             Volatile::Encore => Some(16),
             Volatile::Disable => Some(17),
@@ -629,7 +757,8 @@ impl Volatile {
             | Volatile::TwoTurnMove
             | Volatile::Trapped
             | Volatile::Trapper
-            | Volatile::Attract => Some(VolatileState {
+            | Volatile::Attract
+            | Volatile::Octolock => Some(VolatileState {
                 counter: 0,
                 ..state
             }),
@@ -649,7 +778,9 @@ impl Volatile {
             | Volatile::Counter
             | Volatile::MirrorCoat
             | Volatile::FocusPunch
-            | Volatile::ShellTrap => Some(VolatileState {
+            | Volatile::ShellTrap
+            | Volatile::Rollout
+            | Volatile::IceBall => Some(VolatileState {
                 counter: 0,
                 hidden: 0,
                 ..state
@@ -820,6 +951,13 @@ mod tests {
                         | Volatile::GorillaTactics
                         | Volatile::EjectPack
                         | Volatile::Metronome
+                        | Volatile::SkullBash
+                        | Volatile::RazorWind
+                        | Volatile::FreezeShock
+                        | Volatile::IceBurn
+                        | Volatile::Geomancy
+                        | Volatile::Rollout
+                        | Volatile::IceBall
                 ));
                 continue;
             }
@@ -863,6 +1001,19 @@ mod tests {
             (Volatile::ShellTrap, moves::SHELL_TRAP),
             (Volatile::HealBlock, moves::HEAL_BLOCK),
             (Volatile::SmackDown, moves::SMACK_DOWN),
+            (Volatile::Nightmare, moves::NIGHTMARE),
+            (Volatile::Octolock, moves::OCTOLOCK),
+            (Volatile::DragonCheer, moves::DRAGON_CHEER),
+            (Volatile::LaserFocus, moves::LASER_FOCUS),
+            (Volatile::AquaRing, moves::AQUA_RING),
+            (Volatile::PowerTrick, moves::POWER_TRICK),
+            (Volatile::PowerShift, moves::POWER_SHIFT),
+            (Volatile::Stockpile, moves::STOCKPILE),
+            (Volatile::Foresight, moves::FORESIGHT),
+            (Volatile::MiracleEye, moves::MIRACLE_EYE),
+            (Volatile::DefenseCurl, moves::DEFENSE_CURL),
+            (Volatile::Rollout, moves::ROLLOUT),
+            (Volatile::IceBall, moves::ICE_BALL),
         ] {
             let data = id.data();
             assert_eq!(

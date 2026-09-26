@@ -1,0 +1,24 @@
+{
+ "description": "Dream Eater (Opus V) on an awake Comatose Komala: the ability counts as sleep (`onTryImmunity`: `target.hasAbility('comatose')`), so Gengar's hit lands and drains (Gengar patched to 60 HP). Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Dream Eater", "Harden"], "level": 50},
+   {"species": "Hypno", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Komala", "item": "", "ability": "Comatose", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Gengar": {"hp": 60}}},
+ "turn": {"p1": "move dreameater 1, move harden", "p2": "move harden, move harden"}
+}

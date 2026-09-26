@@ -1,0 +1,24 @@
+{
+ "description": "Fell Stinger (Opus V): Scizor's knocks out Snorlax (patched to 1 HP), so its `onAfterMoveSecondarySelf` raises Scizor's Attack by 3; Heracross's leaves Blissey standing and gets nothing. Rolls and crits branch (p2 has no bench).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Scizor", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Fell Stinger", "Harden"], "level": 50},
+   {"species": "Heracross", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Fell Stinger", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Snorlax": {"hp": 1}}},
+ "turn": {"p1": "move fellstinger 1, move fellstinger 2", "p2": "move harden, move harden"}
+}
