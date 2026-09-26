@@ -1088,22 +1088,25 @@ pub(crate) fn drag_in<const N: usize>(
 /// side has no bench, the holder is being dragged out or already flagged; every other active
 /// Pokémon's `switchFlag` is cleared first (even Eject Button's).
 pub(crate) fn emergency_exit<const N: usize>(b: &mut Battle<'_, N>, target: SlotRef) {
-    if !matches!(
-        b.ability(target),
-        a if a == abilities::EMERGENCY_EXIT || a == abilities::WIMP_OUT
-    ) {
-        return;
-    }
-    if super::residual::bench(b, target.side).next().is_none()
-        || b.force_switch.contains(&target)
-        || b.state.slot(target).switch_flag != SwitchFlag::None
-    {
+    if !emergency_exit_acts(b, target) {
         return;
     }
     for slot in b.all_alive() {
         b.clear_switch_flag(slot);
     }
     b.set_switch_flag(target, SwitchFlag::Effect);
+}
+
+/// Whether `runEvent('EmergencyExit', target)` would flag the Pokémon in `target`: it has
+/// Emergency Exit or Wimp Out, its side has a bench (`canSwitch`), and it is neither being
+/// dragged out nor already flagged. Its HP is not checked (the handler does not).
+pub(crate) fn emergency_exit_acts<const N: usize>(b: &Battle<'_, N>, target: SlotRef) -> bool {
+    matches!(
+        b.ability(target),
+        a if a == abilities::EMERGENCY_EXIT || a == abilities::WIMP_OUT
+    ) && super::residual::bench(b, target.side).next().is_some()
+        && !b.force_switch.contains(&target)
+        && b.state.slot(target).switch_flag == SwitchFlag::None
 }
 
 /// Whether `hp_before` → the current HP crossed half (`hp <= maxhp / 2 && before > maxhp /
@@ -1143,9 +1146,5 @@ pub(crate) fn emergency_exit_would_trigger<const N: usize>(
     slot: SlotRef,
     hp_before: i16,
 ) -> bool {
-    let ability = b.ability(slot);
-    (ability == abilities::EMERGENCY_EXIT || ability == abilities::WIMP_OUT)
-        && crossed_half(b, slot, hp_before)
-        && super::residual::bench(b, slot.side).next().is_some()
-        && b.state.slot(slot).switch_flag == SwitchFlag::None
+    crossed_half(b, slot, hp_before) && emergency_exit_acts(b, slot)
 }

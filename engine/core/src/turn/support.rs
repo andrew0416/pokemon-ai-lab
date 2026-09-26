@@ -926,7 +926,10 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // DamagingHit (`moves::damaging_hit`, F15).
     (abilities::ROUGH_SKIN, &["onDamagingHit"]),
     // Emergency Exit / Wimp Out: `switching::emergency_exit` at the hit loop's, `runSwitch`'s
-    // and the residual phase's Update sites (F6). Suction Cups: `DragOut`.
+    // and the residual phase's Update sites (F6), and on the move's user after its recoil,
+    // after DamagingHit / AfterHit (Champions `spreadMoveHit`), after MoveFail and after
+    // AfterMoveSecondarySelf (`moves::user_emergency_exit`; a user the recoil knocked out is
+    // refused). Suction Cups: `DragOut`.
     (abilities::EMERGENCY_EXIT, &["onEmergencyExit"]),
     (abilities::WIMP_OUT, &["onEmergencyExit"]),
     (abilities::SUCTION_CUPS, &["onDragOut"]),
