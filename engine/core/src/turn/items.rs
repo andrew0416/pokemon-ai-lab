@@ -62,14 +62,15 @@ pub(crate) fn resist_berry(item: ItemId) -> Option<Type> {
 /// Acrobatics, Unburden, Mega Evolution: [`Battle::raw_item`]). Embargo and the Primal Orbs are
 /// not implemented. Klutz counts while it acts (`hasAbility('klutz')`: not under Gastro Acid or
 /// Neutralizing Gas); an `ignoreKlutz` item (Ability Shield) never asks, so the two checks do
-/// not recurse.
+/// not recurse. A Klutz holder with no item ignores its item too (`!getItem().ignoreKlutz` of
+/// the empty item): only a `singleEvent` for an item it does not hold can tell (Bug Bite's
+/// `Eat` of the stolen berry).
 pub(crate) fn ignoring_item<const N: usize>(state: &State<N>, slot: SlotRef) -> bool {
     let Some(mon) = state.active(slot) else {
         return false;
     };
     state.field[FieldEffect::MagicRoom as usize].is_active()
-        || (!mon.item.is_none()
-            && !mon.item.data().ignore_klutz
+        || (!mon.item.data().ignore_klutz
             && mon.ability == abilities::KLUTZ
             && !super::abilities::ignoring_ability(state, slot))
 }

@@ -1,0 +1,26 @@
+{
+ "description": "Opus X unit B8: Bug Bite reads the target's raw item (target.getItem()), so it takes a berry from a Klutz holder and the user eats it. Scizor (100 HP) Bug Bites Klutz Lopunny: the Sitrus Berry is taken and Scizor heals 1/4.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Scizor", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Bug Bite"], "level": 50},
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Lopunny", "item": "Sitrus Berry", "ability": "Klutz", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Swampert", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {"Scizor": {"hp": 100}}
+ },
+ "turn": {"p1": "move bugbite 1, move harden", "p2": "move harden, move harden"}
+}

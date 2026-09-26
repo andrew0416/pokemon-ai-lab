@@ -2429,15 +2429,19 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::Success
             }
         }
-        // Bug Bite, Pluck: a user with HP takes the target's berry (`takeItem`, even from a
-        // target the hit knocked out) and eats it itself (`singleEvent('Eat', item, ..., source,
-        // source, move)`: the berry's `onEat` on the user; no `TryEatItem`, no `lastItem`).
-        // Resist berries and berries without handlers have an empty `onEat`. Returns nothing.
+        // Bug Bite, Pluck: a user with HP takes the target's berry (`target.getItem()`: the raw
+        // item, also from a target ignoring it; `takeItem`, even from a target the hit knocked
+        // out) and eats it itself (`singleEvent('Eat', item, ..., source, source, move)`: the
+        // berry's `onEat` on the user; no `TryEatItem`, no `lastItem`). `singleEvent` skips the
+        // `onEat` while the user ignores its item (Klutz, Magic Room) and then returns `true`,
+        // so EatItem still runs. Resist berries and berries without handlers have an empty
+        // `onEat`. Returns nothing.
         moves::BUG_BITE | moves::PLUCK => {
-            let item = b.item(target);
+            let item = b.raw_item(target);
             if let Some(eater) = b.alive(user).filter(|_| item.data().is_berry) {
                 let empty = item.data().handlers.is_empty()
-                    || super::super::items::resist_berry(item).is_some();
+                    || super::super::items::resist_berry(item).is_some()
+                    || super::super::items::ignoring_item(b.state, user);
                 if b.take_item(target) {
                     if !empty && !super::super::update::berry_on_eat(b, user, eater, item) {
                         return Err(b.unsupported(format!(
