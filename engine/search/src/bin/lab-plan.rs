@@ -4,7 +4,7 @@
 //! Usage: lab-plan <scenario.json> [--side p1|p2] [--depth n] [--rng expect|worst]
 //!                 [--before <oracle-report.json>] [--top k] [--exact] [--all-targets]
 //!                 [--max-turns n] [--rolls full|extremes|quartiles|median|pessimistic]
-//!                 [--eval material|heuristic|file:<weights.json>] [--position i|max]
+//!                 [--eval material|heuristic|file:<weights.json>] [--position i|max] [--setup-lenient]
 //!                 [--solve maximin|nash|deep|deep-nash] [--dump-children <out.jsonl> [--beam b] [--outcomes k]]
 //!                 [--believed-team <team.json>]... [--believed-weight w1,w2,...]
 //!                 [--observed "Name:pct,Name:pct"] [--observed-turn k "Name:pct,..."]... [--observed-tolerance 1.0]
@@ -91,6 +91,10 @@ fn run() -> Result<(), String> {
     let mut position_index: Option<usize> = None;
     // `--position max`: the most probable initial state (batch runs over replayed setup turns).
     let mut position_max = false;
+    // `--setup-lenient`: drop the replayed positions in which a setup turn's choices are not
+    // legal (turns copied from a played game: the other branches may have a faint the game did
+    // not) instead of failing the replay.
+    let mut setup_lenient = false;
     let mut eval = "heuristic".to_owned();
     let mut solve = "maximin".to_owned();
     let mut plan: Option<String> = None;
@@ -141,6 +145,7 @@ fn run() -> Result<(), String> {
                     .and_then(|s| s.parse().ok())
                     .ok_or("--top needs a number")?;
             }
+            "--setup-lenient" => setup_lenient = true,
             "--position" => {
                 i += 1;
                 match args.get(i).map(String::as_str) {
@@ -335,8 +340,15 @@ fn run() -> Result<(), String> {
         &observations,
         observed_tolerance,
         setup_options,
-        Replay::Real,
+        if setup_lenient {
+            Replay::Believed
+        } else {
+            Replay::Real
+        },
     )?;
+    if positions.is_empty() {
+        return Err("no position survives the setup turns (with --setup-lenient every replayed branch made a recorded choice illegal)".into());
+    }
     if !observations.is_empty() {
         for (turn, matched, total, share) in &trace {
             println!(
