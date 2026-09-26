@@ -450,7 +450,7 @@ fn run_move_inner<const N: usize>(
 
 /// The BeforeMove handlers, by priority: Glaive Rush (100), recharge (11), sleep and freeze
 /// (10), flinch (8), Disable (7), Gravity and Throat Chop (6), Taunt (5), a foe's Imprison (4),
-/// confusion (3), paralysis (1), the Choice lock (0). `false` = the move is not used (no PP, no
+/// confusion (3), Attract (2), paralysis (1), the Choice lock and Gorilla Tactics (0). `false` = the move is not used (no PP, no
 /// `lastMove`).
 fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) -> bool {
     let pokemon = b.occupant(user).expect("checked");
@@ -519,6 +519,10 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
                 return false;
             }
         }
+    }
+    // Attract (priority 2): half the time the holder cannot move.
+    if b.volatile(user, Volatile::Attract).active && b.rng.chance(1, 2) {
+        return false;
     }
     // Champions paralysis: 1/8.
     if b.mon(pokemon).status == Status::Paralyze && b.rng.chance(1, 8) {

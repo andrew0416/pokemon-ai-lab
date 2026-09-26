@@ -701,10 +701,11 @@ pub(crate) fn blunder_policy<const N: usize>(b: &mut Battle<'_, N>, user: SlotRe
 }
 
 /// Mental Herb's `onUpdate`: a holder with any of `attract`, `taunt`, `encore`, `torment`,
-/// `disable`, `healblock` uses the item (`useItem`) and loses all of them. Attract and Heal
-/// Block do not exist in the engine (their moves are refused), so the other four are checked.
+/// `disable`, `healblock` uses the item (`useItem`) and loses all of them. Heal Block does not
+/// exist in the engine (its moves are refused), so the other five are checked.
 pub(crate) fn mental_herb<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
-    const CURED: [Volatile; 4] = [
+    const CURED: [Volatile; 5] = [
+        Volatile::Attract,
         Volatile::Taunt,
         Volatile::Encore,
         Volatile::Torment,

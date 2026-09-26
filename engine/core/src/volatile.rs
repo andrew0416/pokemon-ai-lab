@@ -206,9 +206,14 @@ pub enum Volatile {
     /// holder is locked into since its first move after starting. No duration; hidden in the
     /// canonical state.
     GorillaTactics,
+    /// Attract (the move's `condition`, no duration; only Cute Charm adds it): 50% the holder
+    /// cannot move (BeforeMove, priority 2); it ends once its source (`effectState.source`, kept
+    /// in `counter`: [`encode_pokemon`]; hidden in the canonical state) is no longer active
+    /// (`onUpdate`).
+    Attract,
 }
 
-pub const VOLATILE_COUNT: usize = 66;
+pub const VOLATILE_COUNT: usize = 67;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -278,6 +283,7 @@ impl Volatile {
         Volatile::Commanding,
         Volatile::Commanded,
         Volatile::GorillaTactics,
+        Volatile::Attract,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -328,6 +334,7 @@ impl Volatile {
             Volatile::SaltCure => conditions::SALTCURE,
             Volatile::Ingrain => conditions::INGRAIN,
             Volatile::MagnetRise => conditions::MAGNETRISE,
+            Volatile::Attract => conditions::ATTRACT,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -424,6 +431,7 @@ impl Volatile {
             Volatile::Commanding => "commanding",
             Volatile::Commanded => "commanded",
             Volatile::GorillaTactics => "gorillatactics",
+            Volatile::Attract => "attract",
         }
     }
 
@@ -503,7 +511,8 @@ impl Volatile {
             | Volatile::SupremeOverlord
             | Volatile::Commanding
             | Volatile::Commanded
-            | Volatile::GorillaTactics => 0,
+            | Volatile::GorillaTactics
+            | Volatile::Attract => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -542,7 +551,8 @@ impl Volatile {
             | Volatile::LeechSeed
             | Volatile::TwoTurnMove
             | Volatile::Trapped
-            | Volatile::Trapper => Some(VolatileState {
+            | Volatile::Trapper
+            | Volatile::Attract => Some(VolatileState {
                 counter: 0,
                 ..state
             }),

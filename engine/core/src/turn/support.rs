@@ -1566,6 +1566,10 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::PROPELLER_TAIL, &["onModifyMove"]),
     // Soul-Heart: `onAnyFaint` in `abilities::soul_heart` (from `Battle::faint_messages`).
     (abilities::SOUL_HEART, &["onAnyFaint"]),
+    // Cute Charm: `onDamagingHit` in `ability_hooks::on_damaging_hit`, adding Attract
+    // (`conditions::add_attract`: BeforeMove in `moves::before_move`, `onUpdate` in
+    // `conditions::attract_update`; Mental Herb, Oblivious and Aroma Veil answer it).
+    (abilities::CUTE_CHARM, &["onDamagingHit"]),
     // Rivalry: `onBasePower` in `abilities::base_power_handlers` (`Pokemon::gender`); an
     // undecided gender next to it is refused (`abilities::rivalry_problem`).
     (abilities::RIVALRY, &["onBasePower"]),
