@@ -354,6 +354,43 @@ pub fn scenario_positions_with(
     loaded: &LoadedScenario,
     options: EnumerateOptions,
 ) -> Result<Vec<Position>, String> {
+    scenario_positions_filtered(loaded, options, &mut |_, positions| positions)
+}
+
+/// [`scenario_positions_with`] with `filter(n, positions)` applied to the positions after each
+/// setup turn (`n` counts from 1); only what it returns is carried into the next turn. Positions
+/// carry joint probabilities, so the total probability of what survives every filter is the
+/// probability that the setup turns produced the observations the filters encode: the
+/// likelihood the opponent models of DESIGN.md "모델 ③·② 구현" weigh believed teams by. The
+/// scenario's patch is applied after the last turn, to what survives.
+pub fn scenario_positions_filtered(
+    loaded: &LoadedScenario,
+    options: EnumerateOptions,
+    filter: &mut dyn FnMut(usize, Vec<Position>) -> Vec<Position>,
+) -> Result<Vec<Position>, String> {
+    replay_setup_turns(loaded, options, false, filter)
+}
+
+/// [`scenario_positions_filtered`] for a replay of turns that were actually played on a
+/// scenario whose teams are only believed: a position in which a setup turn's choices are not
+/// legal (a Pokémon the choice moves with had already fainted there, say) is contradicted by
+/// the fact that they were made, so it is dropped with its probability instead of failing the
+/// replay. What remains sums to the probability that the believed teams produce the observed
+/// choices and observations. A choice illegal in every position leaves nothing, not an error.
+pub fn scenario_positions_consistent(
+    loaded: &LoadedScenario,
+    options: EnumerateOptions,
+    filter: &mut dyn FnMut(usize, Vec<Position>) -> Vec<Position>,
+) -> Result<Vec<Position>, String> {
+    replay_setup_turns(loaded, options, true, filter)
+}
+
+fn replay_setup_turns(
+    loaded: &LoadedScenario,
+    options: EnumerateOptions,
+    drop_illegal: bool,
+    filter: &mut dyn FnMut(usize, Vec<Position>) -> Vec<Position>,
+) -> Result<Vec<Position>, String> {
     let mut positions: Vec<Position> = initial_outcomes(loaded)
         .map_err(|e| e.to_string())?
         .into_iter()
@@ -369,17 +406,24 @@ pub fn scenario_positions_with(
     for (n, turn) in loaded.setup_turns.iter().enumerate() {
         let mut next: Vec<Position> = Vec::new();
         for position in &positions {
-            let decision = parse_decision(&position.state, &position.order, &turn.p1, &turn.p2)
-                .map_err(|e| format!("setup turn {}: {e}", n + 1))?;
+            let decision =
+                match parse_decision(&position.state, &position.order, &turn.p1, &turn.p2) {
+                    Ok(decision) => decision,
+                    Err(_) if drop_illegal => continue,
+                    Err(e) => return Err(format!("setup turn {}: {e}", n + 1)),
+                };
             let mut state = position.state.clone();
-            let outcomes = run_decision_mid_turn_with(
+            let outcomes = match run_decision_mid_turn_with(
                 &mut state,
                 &position.order,
                 &decision,
                 &turn.mid_turn,
                 options,
-            )
-            .map_err(|e| format!("setup turn {}: {e}", n + 1))?;
+            ) {
+                Ok(outcomes) => outcomes,
+                Err(_) if drop_illegal => continue,
+                Err(e) => return Err(format!("setup turn {}: {e}", n + 1)),
+            };
             for outcome in outcomes {
                 let mut end = state.clone();
                 end.apply(&outcome.instructions);
@@ -396,7 +440,7 @@ pub fn scenario_positions_with(
                 }
             }
         }
-        positions = next;
+        positions = filter(n + 1, next);
     }
     if let Some(patch) = &loaded.patch {
         for position in &mut positions {

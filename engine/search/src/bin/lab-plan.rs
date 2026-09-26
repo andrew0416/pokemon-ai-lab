@@ -7,7 +7,8 @@
 //!                 [--eval material|heuristic|file:<weights.json>] [--position i]
 //!                 [--solve maximin|nash|deep] [--dump-children <out.jsonl> [--beam b] [--outcomes k]]
 //!                 [--believed-team <team.json>]... [--believed-weight w1,w2,...]
-//!                 [--observed "Name:pct,Name:pct" [--observed-tolerance 1.0]] [--setup-rolls full|median|extremes|quartiles]
+//!                 [--observed "Name:pct,Name:pct"] [--observed-turn k "Name:pct,..."]... [--observed-tolerance 1.0]
+//!                 [--setup-rolls full|median|extremes|quartiles]
 //!
 //! `--believed-team` is opponent model ③ at one turn (DESIGN.md): the opponent solves the
 //! matrix game on the team it believes we have (the same species, moves and order as ours, but
@@ -15,13 +16,16 @@
 //! choices are then valued on the real position against it. The gap to the real equilibrium is
 //! what the concealed sets are worth this turn. Several `--believed-team` files with
 //! `--believed-weight` make a belief: the opponent's strategy is the weighted mixture of its
-//! equilibrium strategies on each believed position. With `--observed` (opponent model ② at one
-//! observation): the scenario's `setupTurns` are the turns played so far; the positions they lead
-//! to are filtered by what the opponent saw of our side (our Pokémon's HP percentages after those
-//! turns, `Name:pct`; a fainted Pokémon is 0), the real position is the most probable one that
-//! matches, and each believed team's weight is multiplied by the probability that its own replay
-//! of the same turns produced the observation (a belief the observation contradicts drops to 0).
-//! DESIGN.md "모델 ③·② 구현".
+//! equilibrium strategies on each believed position. `--observed` / `--observed-turn` are
+//! opponent model ②: the scenario's `setupTurns` are the turns played so far, and an observation
+//! is what the opponent saw of our side after one of them (our Pokémon's HP percentages,
+//! `Name:pct`; a fainted Pokémon is 0). `--observed-turn k ...` attaches one to setup turn `k`
+//! (repeatable, one per turn); `--observed ...` is the last setup turn's. The positions the
+//! setup turns lead to are filtered by each observation as soon as its turn is played, the real
+//! position is the most probable one that survives, and each believed team's weight is
+//! multiplied by the probability that its own replay of the same turns produced every
+//! observation (a belief an observation contradicts drops to 0; so does a believed position in
+//! which the choices actually made were not legal). DESIGN.md "모델 ③·② 구현".
 //!                 [--threads n] [--plan "<turn 1> / <turn 2> / ..."]
 //!                 [--child-nash [--beam b] [--outcomes k]]
 //!
@@ -53,7 +57,10 @@ use lab_engine::eval::{
 use lab_engine::rules::Ruleset;
 use lab_engine::state::SideId;
 use lab_engine::turn::RollMode;
-use lab_scenario::{canonical_json, load_scenario_file, scenario_positions_with, Position};
+use lab_scenario::{
+    canonical_json, load_scenario_file, scenario_positions_consistent, scenario_positions_filtered,
+    Position,
+};
 use lab_search::game::asked_slots;
 use lab_search::{
     format_choice, format_switches, Chance, Choice, Config, Decision, Pruning, Solver,
@@ -82,6 +89,7 @@ fn run() -> Result<(), String> {
     let mut dump_children: Option<String> = None;
     let mut believed_teams: Vec<String> = Vec::new();
     let mut observed: Option<String> = None;
+    let mut observed_turns: Vec<(usize, String)> = Vec::new();
     let mut observed_tolerance: f32 = 1.0;
     let mut setup_rolls = RollMode::Full;
     let mut believed_weights: Vec<f32> = Vec::new();
@@ -212,6 +220,19 @@ fn run() -> Result<(), String> {
                     }
                 };
             }
+            "--observed-turn" => {
+                i += 1;
+                let turn: usize = args
+                    .get(i)
+                    .and_then(|s| s.parse().ok())
+                    .ok_or("--observed-turn needs a setup turn number and Name:pct,...")?;
+                i += 1;
+                let text = args
+                    .get(i)
+                    .cloned()
+                    .ok_or("--observed-turn needs a setup turn number and Name:pct,...")?;
+                observed_turns.push((turn, text));
+            }
             "--observed-tolerance" => {
                 i += 1;
                 observed_tolerance = args
@@ -271,23 +292,54 @@ fn run() -> Result<(), String> {
 
     let loaded = load_scenario_file(&scenario).map_err(|e| e.to_string())?;
     let setup_options = lab_engine::turn::EnumerateOptions { rolls: setup_rolls };
-    let mut positions = scenario_positions_with(&loaded, setup_options)?;
-    let observation = match &observed {
-        Some(text) => Some(parse_observation(text)?),
-        None => None,
-    };
-    if let Some(obs) = &observation {
-        let all = positions.len();
-        positions = matching_positions(&loaded, positions, us, obs, observed_tolerance);
+    // Opponent model ②'s observations: (setup turn, what the opponent saw of our side then).
+    let mut observations: Vec<(usize, Vec<(String, f32)>)> = Vec::new();
+    for (turn, text) in &observed_turns {
+        observations.push((*turn, parse_observation(text)?));
+    }
+    if let Some(text) = &observed {
+        observations.push((loaded.setup_turns.len(), parse_observation(text)?));
+    }
+    observations.sort_by_key(|(turn, _)| *turn);
+    if let Some(pair) = observations.windows(2).find(|pair| pair[0].0 == pair[1].0) {
+        return Err(format!(
+            "two observations for setup turn {}; give one --observed-turn per turn",
+            pair[0].0
+        ));
+    }
+    if let Some((turn, _)) = observations
+        .iter()
+        .find(|(turn, _)| *turn == 0 || *turn > loaded.setup_turns.len())
+    {
+        return Err(format!(
+            "--observed-turn {turn}: the scenario has {} setup turns (an observation belongs to one of them)",
+            loaded.setup_turns.len()
+        ));
+    }
+    let (mut positions, trace) = observed_positions(
+        &loaded,
+        us,
+        &observations,
+        observed_tolerance,
+        setup_options,
+        Replay::Real,
+    )?;
+    if !observations.is_empty() {
+        for (turn, matched, total, share) in &trace {
+            println!(
+                "setup turn {turn}: {matched} of {total} positions match the observation ({:.1}% of the probability reaching the turn)",
+                share * 100.0
+            );
+        }
         if positions.is_empty() {
-            return Err(format!(
-                "no position after the setup turns matches --observed (of {all}); check the names, percentages and tolerance"
-            ));
+            return Err(
+                "no position after the setup turns matches the observations; check the names, percentages and tolerance (it must cover the roll spread of --setup-rolls)".into(),
+            );
         }
         positions.sort_by(|a, b| b.probability.total_cmp(&a.probability));
         if positions.len() > 1 && position_index.is_none() {
             println!(
-                "{} positions match the observation; taking the most probable (p={:.4}); pass --position to choose",
+                "{} positions survive the observations; taking the most probable (p={:.4}); pass --position to choose",
                 positions.len(),
                 positions[0].probability
             );
@@ -344,18 +396,24 @@ fn run() -> Result<(), String> {
         let mut believed_values = Vec::new();
         let mut dropped: Vec<String> = Vec::new();
         let mut reference: Option<(Vec<Choice<2>>, Position, Decision)> = None;
-        // With an observation, each believed team's weight is multiplied by the probability
-        // that its own replay of the setup turns produced it (Bayes with the engine as the
-        // likelihood); the believed position is then the most probable matching one.
+        // With observations, each believed team's weight is multiplied by the probability that
+        // its own replay of the setup turns produced all of them (Bayes with the engine as the
+        // likelihood); the believed position is then the most probable surviving one.
         let mut posterior = weights.clone();
         let mut believed_positions = Vec::with_capacity(believed_teams.len());
         for (k, team_path) in believed_teams.iter().enumerate() {
-            let (bl, mut bpositions) = believed_loaded(&scenario, us, team_path, setup_options)?;
-            if let Some(obs) = &observation {
-                let matching = matching_positions(&bl, bpositions, us, obs, observed_tolerance);
-                let likelihood: f64 = matching.iter().map(|p| p.probability).sum();
+            let bl = believed_loaded(&scenario, us, team_path)?;
+            let (mut bpositions, _) = observed_positions(
+                &bl,
+                us,
+                &observations,
+                observed_tolerance,
+                setup_options,
+                Replay::Believed,
+            )?;
+            if !observations.is_empty() {
+                let likelihood: f64 = bpositions.iter().map(|p| p.probability).sum();
                 posterior[k] *= likelihood as f32;
-                bpositions = matching;
                 if bpositions.is_empty() {
                     believed_positions.push(None);
                     continue;
@@ -368,7 +426,7 @@ fn run() -> Result<(), String> {
         }
         let total: f32 = posterior.iter().sum();
         if total <= 0.0 {
-            return Err("every believed team is contradicted by --observed".into());
+            return Err("every believed team is contradicted by the observations".into());
         }
         for w in &mut posterior {
             *w /= total;
@@ -422,7 +480,7 @@ fn run() -> Result<(), String> {
         );
         for (k, (team_path, w, value)) in believed_values.iter().enumerate() {
             let prior = weights[k];
-            if observation.is_some() {
+            if !observations.is_empty() {
                 println!(
                     "  belief {:>5.1}% -> {:>5.1}%  {team_path}: equilibrium there {value:+.1} (from our side)",
                     prior * 100.0,
@@ -812,14 +870,13 @@ fn run() -> Result<(), String> {
     Ok(())
 }
 
-/// The scenario with our side's team file replaced by `team_path`, loaded, with every position
-/// after its setup turns (the callers filter and pick).
+/// The scenario with our side's team file replaced by `team_path`, loaded (the callers replay
+/// its setup turns under the observations and pick).
 fn believed_loaded(
     scenario: &str,
     us: SideId,
     team_path: &str,
-    setup_options: lab_engine::turn::EnumerateOptions,
-) -> Result<(lab_scenario::LoadedScenario, Vec<Position>), String> {
+) -> Result<lab_scenario::LoadedScenario, String> {
     let text = std::fs::read_to_string(scenario).map_err(|e| format!("{scenario}: {e}"))?;
     let mut json: Value = serde_json::from_str(&text).map_err(|e| format!("{scenario}: {e}"))?;
     let side = side_name(us);
@@ -836,13 +893,56 @@ fn believed_loaded(
     let base_dir = std::path::Path::new(scenario)
         .parent()
         .unwrap_or(std::path::Path::new("."));
-    let loaded = lab_scenario::load_scenario_str(&json.to_string(), base_dir)
-        .map_err(|e| format!("believed scenario: {e}"))?;
-    let positions = scenario_positions_with(&loaded, setup_options)?;
-    Ok((loaded, positions))
+    lab_scenario::load_scenario_str(&json.to_string(), base_dir)
+        .map_err(|e| format!("believed scenario: {e}"))
 }
 
-/// `Name:pct,Name:pct`: what the opponent saw of our side's Pokémon after the setup turns.
+/// Per observed setup turn: `(turn, matched, total, share)`, see [`observed_positions`].
+type ObservationTrace = Vec<(usize, usize, usize, f64)>;
+
+/// Whose teams a replay of the setup turns runs on: the real ones, where a choice that is not
+/// legal is a scenario error, or a believed team's, where it contradicts the belief in that
+/// position and the position is dropped (`scenario_positions_consistent`).
+#[derive(Clone, Copy)]
+enum Replay {
+    Real,
+    Believed,
+}
+
+/// The positions after the setup turns that survive every observation, each applied as soon as
+/// its turn is played, with one `(turn, matched, total, share)` per observed turn: how many of
+/// the positions reaching that turn matched and the share of their probability they hold. The
+/// total probability of the result is the likelihood of the observations under this scenario's
+/// teams.
+fn observed_positions(
+    loaded: &lab_scenario::LoadedScenario,
+    us: SideId,
+    observations: &[(usize, Vec<(String, f32)>)],
+    tolerance: f32,
+    setup_options: lab_engine::turn::EnumerateOptions,
+    replay: Replay,
+) -> Result<(Vec<Position>, ObservationTrace), String> {
+    let mut trace = Vec::new();
+    let replay_fn = match replay {
+        Replay::Real => scenario_positions_filtered,
+        Replay::Believed => scenario_positions_consistent,
+    };
+    let positions = replay_fn(loaded, setup_options, &mut |turn, positions| {
+        let Some((_, observation)) = observations.iter().find(|(t, _)| *t == turn) else {
+            return positions;
+        };
+        let total = positions.len();
+        let reaching: f64 = positions.iter().map(|p| p.probability).sum();
+        let matching = matching_positions(loaded, positions, us, observation, tolerance);
+        let kept: f64 = matching.iter().map(|p| p.probability).sum();
+        let share = if reaching > 0.0 { kept / reaching } else { 0.0 };
+        trace.push((turn, matching.len(), total, share));
+        matching
+    })?;
+    Ok((positions, trace))
+}
+
+/// `Name:pct,Name:pct`: what the opponent saw of our side's Pokémon after a setup turn.
 fn parse_observation(text: &str) -> Result<Vec<(String, f32)>, String> {
     text.split(',')
         .map(|part| {
