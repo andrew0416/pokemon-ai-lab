@@ -31,7 +31,8 @@ pub(crate) enum DamageSource {
 }
 
 /// The move being used (Showdown `activeMove` with `activePokemon`), set for the whole of
-/// `runMove`; it decides whether breakable abilities are suppressed (`suppressingAbility`).
+/// `runMove` and the action's phazing step after it; it decides whether breakable abilities are
+/// suppressed (`suppressingAbility`).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) struct ActiveMoveRef {
     pub user: SlotRef,
@@ -60,7 +61,9 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// the Pokémon whose move's damage knocked them out (`faintData.source` when
     /// `faintData.effect` is a move; `None` otherwise), which Destiny Bond reads.
     faint_queue: Vec<(PokemonRef, SlotRef, Option<PokemonRef>)>,
-    /// The move in progress, if any (cleared when `runMove` ends).
+    /// The move in progress, if any: Showdown `activeMove`, cleared by a failed move
+    /// (`clearActiveMove(true)`) or after the action's phazing step (`clearActiveMove()`, the
+    /// turn engine's `drag_outs`).
     pub active_move: Option<ActiveMoveRef>,
     /// The actions of the turn not yet run (Showdown `queue.list`), see `queue.rs`.
     pub queue: Vec<super::queue::Action>,

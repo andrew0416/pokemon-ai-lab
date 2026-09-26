@@ -1,0 +1,26 @@
+{
+ "description": "Opus DD unit B26 (Opus BB's probe): Showdown keeps `battle.activeMove` until `runAction`'s `clearActiveMove()`, after the phazing step. Mold Breaker Excadrill Roars Snorlax out in (patched) sun and Cherrim is dragged in while the Roar is still active: `singleEvent` skips the breakable Flower Gift's SwitchIn handler (`suppressingAbility`), so Cherrim stays in its base forme.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Excadrill", "item": "", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Roar", "Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Cherrim", "item": "", "ability": "Flower Gift", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {"field": {"weather": "sunnyday", "weatherDuration": 5}},
+ "turn": {"p1": "move roar 1, move harden", "p2": "move harden, move harden"}
+}

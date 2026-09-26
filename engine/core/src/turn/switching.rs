@@ -1039,9 +1039,12 @@ pub(crate) fn run_switch_in<const N: usize>(
                     return Ok(());
                 }
             }
-            // `singleEvent` skips a suppressed ability (`ignoringAbility`) or one that changed.
+            // `singleEvent` skips a suppressed ability (`ignoringAbility`) or one that changed,
+            // and a breakable one while a move suppresses it (`eventid === 'SwitchIn' &&
+            // flags.breakable && suppressingAbility(target)`: a Pokémon dragged in by a Mold
+            // Breaker's Roar, whose move is active until the action's `clearActiveMove()`).
             SwitchInHandler::Ability(ability) => {
-                if b.ability(slot) == ability {
+                if b.ability_unless_broken(slot) == ability {
                     if ability == abilities::NEUTRALIZING_GAS {
                         super::abilities::neutralizing_gas_switch_in(b, slot);
                     } else {
@@ -1050,8 +1053,9 @@ pub(crate) fn run_switch_in<const N: usize>(
                 }
             }
             SwitchInHandler::Item(item) => super::items::switch_in_item(b, slot, item),
+            // The same `SwitchIn` event (breakable, like the holder's own).
             SwitchInHandler::PastelVeilAny => {
-                if b.ability(slot) == abilities::PASTEL_VEIL {
+                if b.ability_unless_broken(slot) == abilities::PASTEL_VEIL {
                     pastel_veil_cure(b, slot);
                 }
             }

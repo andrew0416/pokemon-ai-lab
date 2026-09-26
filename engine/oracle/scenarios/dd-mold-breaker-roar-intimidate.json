@@ -1,0 +1,25 @@
+{
+ "description": "Opus DD unit B26: Mold Breaker Excadrill Roars Snorlax out and Gyarados is dragged in while the Roar is still active (`clearActiveMove()` comes after the phazing step). Intimidate is not breakable, so it activates; its drop on Excadrill's ally Kingler runs TryBoost with Kingler's breakable Hyper Cutter suppressed (`suppressingAbility`: the target is not the Roar's user), so both Excadrill and Kingler lose one Attack stage.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Excadrill", "item": "", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Roar", "Harden"], "level": 50},
+   {"species": "Kingler", "item": "", "ability": "Hyper Cutter", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Gyarados", "item": "", "ability": "Intimidate", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "turn": {"p1": "move roar 1, move harden", "p2": "move harden, move harden"}
+}

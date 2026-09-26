@@ -1,0 +1,26 @@
+{
+ "description": "Opus DD unit B26: a damaging phazing move from Teravolt (Mold Breaker's twin). Zekrom's Dragon Tail hits Snorlax (90% accuracy, damage rolls, crits) and drags it out in (patched) sun; Cherrim comes in while the Dragon Tail is still the active move, so its breakable Flower Gift's SwitchIn handler is skipped and Cherrim stays in its base forme. A miss drags nothing.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Zekrom", "item": "", "ability": "Teravolt", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Dragon Tail", "Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Cherrim", "item": "", "ability": "Flower Gift", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {"field": {"weather": "sunnyday", "weatherDuration": 5}},
+ "turn": {"p1": "move dragontail 1, move harden", "p2": "move harden, move harden"}
+}

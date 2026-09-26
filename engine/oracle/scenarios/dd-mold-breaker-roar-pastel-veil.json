@@ -1,0 +1,26 @@
+{
+ "description": "Opus DD unit B26: Toxic Spikes (one layer, patched) on p2's side. Mold Breaker Excadrill Roars Snorlax out and Tauros is dragged in next to Pastel Veil Ponyta-Galar while the Roar is still active. Tauros (faster) runs the hazard first: Pastel Veil's `onAllySetStatus` is skipped (breakable, `suppressingAbility`), so Tauros is poisoned; then Pastel Veil's `onAnySwitchIn`, run in the same SwitchIn event, is skipped by `singleEvent` too, so Tauros stays poisoned and takes its poison damage at the residual.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Excadrill", "item": "", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Roar", "Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Ponyta-Galar", "item": "", "ability": "Pastel Veil", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Tauros", "item": "", "ability": "Sheer Force", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {"sides": {"p2": {"toxicspikes": null}}},
+ "turn": {"p1": "move roar 1, move harden", "p2": "move harden, move harden"}
+}

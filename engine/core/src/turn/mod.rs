@@ -522,7 +522,14 @@ fn after_action<const N: usize>(
 
 /// `runAction`'s phazing block right after a move: every Pokémon with `forceSwitchFlag`
 /// (Roar, Whirlwind, Dragon Tail, Circle Throw, Red Card) still standing is dragged out
-/// (`dragIn`: a uniformly random bench member switches in and runs its `runSwitch` at once).
+/// (`dragIn`: a uniformly random bench member switches in and runs its `runSwitch` at once),
+/// then `clearActiveMove()`. The move's active move is still set during the drags (Opus DD unit
+/// B26): a Mold Breaker user's phazing move, its user still active, suppresses the breakable
+/// abilities of everyone else (`suppressingAbility`) in the second `DragOut` (Suction Cups),
+/// the `SwitchIn` handlers (Flower Gift, Pastel Veil: `switching::run_switch_in`), the entry
+/// hazards' grounding (Levitate) and the boosts there (Intimidate against Hyper Cutter, Sticky
+/// Web against Clear Body). The attacker Red Card drags out is no longer active once replaced,
+/// so its replacement is not affected.
 fn drag_outs<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), TurnError> {
     let flagged = std::mem::take(&mut b.force_switch);
     for slot in flagged {
@@ -530,6 +537,7 @@ fn drag_outs<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), TurnError> {
             switching::drag_in(b, slot)?;
         }
     }
+    b.active_move = None;
     Ok(())
 }
 
