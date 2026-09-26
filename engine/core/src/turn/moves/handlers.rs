@@ -405,9 +405,10 @@ pub(super) fn on_try_immunity<const N: usize>(
         moves::WORRY_SEED => {
             ![abilities::TRUANT, abilities::INSOMNIA].contains(&b.raw_ability(target))
         }
-        // Synchronoise: `return target.hasType(source.getTypes());` (a type in common).
+        // Synchronoise: `return target.hasType(source.getTypes());` (a type in common; added
+        // types count on both sides).
         moves::SYNCHRONOISE => {
-            let mine = b.slot_mon(user).map_or([Type::None; 2], |m| m.types);
+            let mine = b.types(user);
             mine.into_iter()
                 .filter(|&t| t != Type::None)
                 .any(|t| b.has_type(target, t))
@@ -2403,9 +2404,10 @@ pub(super) fn on_hit<const N: usize>(
             }
         }
         // Reflect Type: fails for Arceus and Silvally users; the user takes the target's types
-        // (`getTypes(true)`: without an added type, which the engine never has; Roost's filter
-        // is already in the stored types) without `???` (`filter(type => type !== '???')`),
-        // failing if none is left; `setType` then clears the user's added type.
+        // (`getTypes(true)`: without the added type; Roost's filter is already in the stored
+        // types) without `???` (`filter(type => type !== '???')`); with none left it takes
+        // Normal if the target has an added type, else fails. `setType`, then `source.addedType =
+        // target.addedType`.
         moves::REFLECT_TYPE => {
             let Some(mon) = b.slot_mon(user) else {
                 return Ok(Some(HitResult::Failure));
@@ -2414,29 +2416,38 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::Failure
             } else {
                 let types = b.slot_mon(target).map_or([Type::None; 2], |m| m.types);
+                let added = b.added_type(target);
                 let mut kept = types
                     .into_iter()
                     .filter(|&t| t != Type::Unknown && t != Type::None);
-                let types = [
+                let mut types = [
                     kept.next().unwrap_or(Type::None),
                     kept.next().unwrap_or(Type::None),
                 ];
+                if types[0] == Type::None && added != Type::None {
+                    types[0] = Type::Normal;
+                }
                 if types[0] == Type::None {
                     HitResult::Failure
                 } else {
                     set_types(b, user, types);
+                    if added != Type::None {
+                        super::super::conditions::add_type(b, user, added);
+                    }
                     HitResult::Success
                 }
             }
         }
-        // Soak: fails (`null`) on a pure Water type (`getTypes().join() === 'Water'`) or an
-        // Arceus / Silvally (`setType` refuses); otherwise the target becomes pure Water.
+        // Soak: fails (`null`) on a pure Water type (`getTypes().join() === 'Water'`: no added
+        // type either) or an Arceus / Silvally (`setType` refuses); otherwise the target becomes
+        // pure Water.
         moves::SOAK => {
             let Some(mon) = b.slot_mon(target) else {
                 return Ok(Some(HitResult::Failure));
             };
             let water = [Type::Water, Type::None];
-            if mon.types == water || [493, 773].contains(&mon.species.data().num) {
+            let pure_water = b.types(target) == [Type::Water, Type::None, Type::None];
+            if pure_water || [493, 773].contains(&mon.species.data().num) {
                 HitResult::Failure
             } else {
                 set_types(b, target, water);
@@ -2633,10 +2644,12 @@ pub(super) fn on_hit<const N: usize>(
                 },
                 _ => mon.moves[0].id.data().move_type,
             };
+            // `target.hasType(type)` / `target.getTypes().join() === type` (an added type
+            // counts).
             let already = if mv.id == moves::CONVERSION {
-                mon.types.contains(&ty)
+                b.has_type(target, ty)
             } else {
-                mon.types == [ty, Type::None]
+                b.types(target) == [ty, Type::None, Type::None]
             };
             if already || [493, 773].contains(&mon.species.data().num) {
                 HitResult::Failure
@@ -2801,6 +2814,32 @@ pub(super) fn on_hit<const N: usize>(
                 HitResult::Success
             } else {
                 HitResult::NotFail
+            }
+        }
+        // Forest's Curse (Grass), Trick-or-Treat (Ghost): `if (target.hasType(type)) return
+        // false; if (!target.addType(type)) return false;` (the added type replaces an earlier
+        // one; `addType` only fails Terastallized, which is off); it returns nothing.
+        // Trick-or-Treat's "Curse Glitch" then aims a queued Curse of a target in the second
+        // position at -1 (`action.targetLoc = -1`); Curse is not supported, so that is refused.
+        moves::FORESTS_CURSE | moves::TRICK_OR_TREAT => {
+            let ty = if mv.id == moves::FORESTS_CURSE {
+                Type::Grass
+            } else {
+                Type::Ghost
+            };
+            if b.has_type(target, ty) {
+                HitResult::Failure
+            } else {
+                super::super::conditions::add_type(b, target, ty);
+                let queued_curse = b
+                    .queued_move(target)
+                    .is_some_and(|(id, ..)| id == moves::CURSE);
+                if mv.id == moves::TRICK_OR_TREAT && N == 2 && target.slot == 1 && queued_curse {
+                    return Err(b.unsupported(
+                        "Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)",
+                    ));
+                }
+                return Ok(None);
             }
         }
         // Pollen Puff: an ally is healed `Math.floor(target.baseMaxhp * 0.5)`; `NOT_FAIL` if
@@ -3344,13 +3383,14 @@ fn set_hp<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, hp: i32) {
 }
 
 /// Showdown `pokemon.setType(types)` (the caller has checked that it may): the types are
-/// replaced. On a Pokémon under Roost the stored types keep Roost's filter (Flying left out,
-/// Normal when nothing is left) and the volatile remembers the new types to restore when it
-/// ends (nothing to restore without Flying).
+/// replaced and the added type is gone (`this.addedType = ''`). On a Pokémon under Roost the
+/// stored types keep Roost's filter (Flying left out, Normal when nothing is left) and the
+/// volatile remembers the new types to restore when it ends (nothing to restore without Flying).
 pub(crate) fn set_types<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, types: [Type; 2]) {
     let Some(pokemon) = b.occupant(slot) else {
         return;
     };
+    super::super::conditions::clear_added_type(b, slot);
     let roost = b.volatile(slot, Volatile::Roost);
     let shown = if roost.active && types.contains(&Type::Flying) {
         let mut kept = types

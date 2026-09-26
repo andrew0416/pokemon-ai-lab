@@ -9,8 +9,8 @@ use crate::field::{Effect, SideEffect, SlotCondition, SlotEffect};
 use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SideId, SlotHistory, SlotRef, State, Status, BOOST_COUNT};
 use crate::volatile::{
-    decode_pokemon, decode_slot, decode_types, encode_pokemon, encode_slot, encode_types, Volatile,
-    VolatileState,
+    decode_pokemon, decode_slot, decode_type, decode_types, encode_pokemon, encode_slot,
+    encode_type, encode_types, Volatile, VolatileState,
 };
 
 use super::battle::{Battle, BoostEffect, DamageSource};
@@ -49,6 +49,46 @@ pub(crate) fn roost_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) 
             ..state
         },
     );
+}
+
+/// The type Forest's Curse or Trick-or-Treat added to the Pokémon in `slot` (Showdown
+/// `pokemon.addedType`, [`Volatile::AddedType`]); `Type::None` without one.
+pub(crate) fn added_type<const N: usize>(state: &State<N>, slot: SlotRef) -> Type {
+    let added = state.slot(slot).volatiles.get(Volatile::AddedType);
+    if added.active {
+        decode_type(added.counter)
+    } else {
+        Type::None
+    }
+}
+
+/// Showdown `pokemon.getTypes()` for the Pokémon in `slot`: its types (Roost's filter is already
+/// in them), then the added type; `Type::None` fills the rest (all of it for an empty slot).
+pub(crate) fn all_types<const N: usize>(state: &State<N>, slot: SlotRef) -> [Type; 3] {
+    match state.active(slot) {
+        Some(mon) => [mon.types[0], mon.types[1], added_type(state, slot)],
+        None => [Type::None; 3],
+    }
+}
+
+/// Showdown `pokemon.addType(type)` (Forest's Curse, Trick-or-Treat): the added type replaces any
+/// earlier one (Terastallization, which makes it fail, is off).
+pub(crate) fn add_type<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, ty: Type) {
+    b.set_volatile_state(
+        slot,
+        Volatile::AddedType,
+        VolatileState {
+            active: true,
+            counter: encode_type(ty),
+            ..VolatileState::NONE
+        },
+    );
+}
+
+/// `this.addedType = ''`: `setType` (Soak, Protean, Color Change, ...) and `setSpecies` (a forme
+/// change, Mega Evolution) drop the added type.
+pub(crate) fn clear_added_type<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    b.delete_volatile(slot, Volatile::AddedType);
 }
 
 /// The volatile's `onEnd` when its duration runs out in the residual (Showdown
@@ -630,8 +670,8 @@ pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option
     if commander.has(Volatile::Commanding) || commander.has(Volatile::Commanded) {
         return Some(format!("{} is in Commander", mon.species.data().name));
     }
-    let immune = mon
-        .types
+    // `getTypes()`: an added Ghost type (Trick-or-Treat) counts.
+    let immune = all_types(state, slot)
         .iter()
         .any(|t| t.immunities().contains(TypeImmunities::TRAPPED));
     if immune || (mon.item == items::SHED_SHELL && !super::items::ignoring_item(state, slot)) {

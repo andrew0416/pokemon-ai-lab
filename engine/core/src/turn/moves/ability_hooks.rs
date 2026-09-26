@@ -809,10 +809,11 @@ pub(super) fn on_source_damaging_hit<const N: usize>(
 /// Showdown `runEffectiveness(move)` for the implemented effectiveness handlers: per defending
 /// type, the chart then the move's own `onEffectiveness`, summed (not clamped).
 fn effectiveness<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove, target: SlotRef) -> i32 {
-    let Some(mon) = b.slot_mon(target) else {
+    if b.slot_mon(target).is_none() {
         return 0;
-    };
-    mon.types
+    }
+    // `getTypes()`: the added type too.
+    b.types(target)
         .iter()
         .filter(|&&t| t != Type::None)
         .map(|&t| {

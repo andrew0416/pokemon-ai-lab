@@ -1953,15 +1953,22 @@ fn prepare_hit_ability<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv:
     let pokemon = b.occupant(user).expect("the user is active");
     let mon = b.mon(pokemon);
     let new = [mv.move_type, Type::None];
-    if mon.types == new || [493, 773].contains(&mon.species.data().num) {
+    // `source.getTypes().join() !== type` (an added type counts).
+    if b.types(user) == [mv.move_type, Type::None, Type::None]
+        || [493, 773].contains(&mon.species.data().num)
+    {
         return;
     }
     let old = mon.types;
-    b.apply(crate::instruction::Instruction::SetTypes {
-        target: pokemon,
-        old,
-        new,
-    });
+    if old != new {
+        b.apply(crate::instruction::Instruction::SetTypes {
+            target: pokemon,
+            old,
+            new,
+        });
+    }
+    // `setType` drops the added type.
+    conditions::clear_added_type(b, user);
     b.add_volatile(user, Volatile::ProteanUsed);
 }
 
@@ -2186,10 +2193,11 @@ fn type_immune<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove, target: SlotR
     if ty == Type::Ground {
         return !b.is_grounded(target);
     }
-    let Some(mon) = b.slot_mon(target) else {
+    if b.slot_mon(target).is_none() {
         return true;
-    };
-    mon.types
+    }
+    // `getTypes()`: the added type too (Trick-or-Treat's Ghost).
+    b.types(target)
         .iter()
         .any(|&t| ty.against(t) == TypeRelation::Immune)
 }
@@ -3330,12 +3338,11 @@ fn get_damage<const N: usize>(
     // `WeatherModifyDamage` reads `defender.effectiveWeather()` (Utility Umbrella hides sun and
     // rain; sand and snow are the same for everyone).
     let weather = b.weather_for(target);
-    if defense_stat == Stat::Spd && weather == Weather::Sand && defender.types.contains(&Type::Rock)
-    {
+    // `this.hasType('Rock')` / `'Ice'` (an added type counts).
+    if defense_stat == Stat::Spd && weather == Weather::Sand && b.has_type(target, Type::Rock) {
         defense = modify(defense, MOD_ONE_POINT_FIVE);
     }
-    if defense_stat == Stat::Def && weather == Weather::Snow && defender.types.contains(&Type::Ice)
-    {
+    if defense_stat == Stat::Def && weather == Weather::Snow && b.has_type(target, Type::Ice) {
         defense = modify(defense, MOD_ONE_POINT_FIVE);
     }
     // Chained ModifyDef / ModifySpD handlers, applied after the direct weather boosts.
@@ -3349,16 +3356,17 @@ fn get_damage<const N: usize>(
         (Weather::Sun, Type::Water) | (Weather::Rain, Type::Fire) => MOD_HALF,
         _ => MOD_ONE,
     };
-    // The `???` type (Struggle's, `Type::None` here) never gets STAB.
-    let stab =
-        data.force_stab || (mv.move_type != Type::None && attacker.types.contains(&mv.move_type));
+    // The `???` type (Struggle's, `Type::None` here) never gets STAB; `pokemon.hasType(type)`
+    // counts an added type (Forest's Curse's Grass).
+    let stab = data.force_stab || (mv.move_type != Type::None && b.has_type(user, mv.move_type));
     let stab_modifier = ability_events::modify_stab(b.ability(user), stab);
     // runEffectiveness: per defending type, the chart then the move's onEffectiveness, then
     // the target's ability (Disguise returns 0, which ends the event) and item.
     let neutral = super::forme::shields_hit(b, user, target, mv.id);
     let arrows_neutral = handlers::thousand_arrows_neutral(b, mv, target);
-    let type_mod: i32 = defender
-        .types
+    // `for (const type of target.getTypes())`: the added type too.
+    let type_mod: i32 = b
+        .types(target)
         .iter()
         .filter(|&&t| t != Type::None)
         .map(|&t| {

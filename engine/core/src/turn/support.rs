@@ -1128,6 +1128,11 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "condition.onSourceModifyDamage",
         ],
     ),
+    // Opus Z unit 2: Forest's Curse and Trick-or-Treat `onHit` (`handlers::on_hit`: `addType`,
+    // the hidden `Volatile::AddedType`, which `Battle::types` / `has_type` and every
+    // `getTypes()` reader include).
+    (moves::FORESTS_CURSE, &["onHit"]),
+    (moves::TRICK_OR_TREAT, &["onHit"]),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do

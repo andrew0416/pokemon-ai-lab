@@ -335,9 +335,15 @@ pub enum Volatile {
     /// Supercell Slam, ...) never miss the holder (`onAccuracy`) and deal it double damage
     /// (`onSourceModifyDamage`).
     Minimize,
+    /// Not a Showdown volatile: `pokemon.addedType`, the type Forest's Curse (Grass) or
+    /// Trick-or-Treat (Ghost) added (`addType`), kept in `counter` ([`encode_type`]).
+    /// `getTypes()` appends it to the types (`conditions::all_types`); `setType` (Soak, Protean,
+    /// ...) and `setSpecies` (forme changes, Mega Evolution, leaving the field) clear it. No
+    /// duration; hidden in the canonical state (`getTypes(true)` leaves it out too).
+    AddedType,
 }
 
-pub const VOLATILE_COUNT: usize = 102;
+pub const VOLATILE_COUNT: usize = 103;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -443,6 +449,7 @@ impl Volatile {
         Volatile::RipenWeaken,
         Volatile::Opportunist,
         Volatile::Minimize,
+        Volatile::AddedType,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -551,7 +558,8 @@ impl Volatile {
             | Volatile::Truant
             | Volatile::CudChew
             | Volatile::RipenWeaken
-            | Volatile::Opportunist => ConditionId::NONE,
+            | Volatile::Opportunist
+            | Volatile::AddedType => ConditionId::NONE,
         }
     }
 
@@ -660,6 +668,7 @@ impl Volatile {
             Volatile::RipenWeaken => "berryweaken",
             Volatile::Opportunist => "opportunistboosts",
             Volatile::Minimize => "minimize",
+            Volatile::AddedType => "addedtype",
         }
     }
 
@@ -775,7 +784,8 @@ impl Volatile {
             | Volatile::CudChew
             | Volatile::RipenWeaken
             | Volatile::Opportunist
-            | Volatile::Minimize => 0,
+            | Volatile::Minimize
+            | Volatile::AddedType => 0,
             Volatile::Rollout | Volatile::IceBall => 1,
             Volatile::ZenMode => 0,
         }
@@ -818,7 +828,8 @@ impl Volatile {
             | Volatile::SlowStart
             | Volatile::CudChew
             | Volatile::RipenWeaken
-            | Volatile::Opportunist => None,
+            | Volatile::Opportunist
+            | Volatile::AddedType => None,
             // Two-turn move: the target location is not a canonical field.
             Volatile::Roost
             | Volatile::HelpingHand
@@ -898,15 +909,22 @@ pub fn encode_types(types: [Type; 2]) -> u16 {
 
 /// The types [`encode_types`] stored.
 pub fn decode_types(counter: u16) -> [Type; 2] {
-    // `Type::ALL` plus Double Shock's `???` (`Type::Unknown`, not in `ALL`).
-    let decode = |v: u16| {
-        Type::ALL
-            .into_iter()
-            .chain([Type::Unknown])
-            .find(|&t| u16::from(t as u8) == v)
-            .unwrap_or(Type::None)
-    };
-    [decode(counter >> 8), decode(counter & 0xff)]
+    [decode_type(counter >> 8), decode_type(counter & 0xff)]
+}
+
+/// One type in a `counter` ([`Volatile::AddedType`]).
+pub fn encode_type(ty: Type) -> u16 {
+    u16::from(ty as u8)
+}
+
+/// The type [`encode_type`] stored: `Type::ALL` plus Double Shock's `???` (`Type::Unknown`, not
+/// in `ALL`); anything else is `Type::None`.
+pub fn decode_type(value: u16) -> Type {
+    Type::ALL
+        .into_iter()
+        .chain([Type::Unknown])
+        .find(|&t| u16::from(t as u8) == value)
+        .unwrap_or(Type::None)
 }
 
 /// One volatile's state: Showdown's effect-state fields the canonical output writes
@@ -1033,6 +1051,7 @@ mod tests {
                         | Volatile::CudChew
                         | Volatile::RipenWeaken
                         | Volatile::Opportunist
+                        | Volatile::AddedType
                 ));
                 continue;
             }
@@ -1175,6 +1194,10 @@ mod tests {
         ] {
             assert_eq!(decode_types(encode_types(types)), types);
             assert_ne!(encode_types(types), 0);
+        }
+        for ty in [Type::Grass, Type::Ghost, Type::Normal] {
+            assert_eq!(decode_type(encode_type(ty)), ty);
+            assert_ne!(encode_type(ty), 0);
         }
     }
 }
