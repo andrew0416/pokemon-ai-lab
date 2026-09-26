@@ -1,0 +1,81 @@
+{
+ "description": "Cud Chew during the residual: the sandstorm takes Farigiraf (120 HP) below half, it eats its Sitrus Berry at the weather's Update with nothing left in the queue (counter 2 - 1), so Cud Chew's own residual (order 28) eats it again in the same residual.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Farigiraf",
+    "item": "Sitrus Berry",
+    "ability": "Cud Chew",
+    "nature": "Serious",
+    "evs": {
+     "hp": 31
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Tyranitar",
+    "item": "",
+    "ability": "Unnerve",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Metagross",
+    "item": "",
+    "ability": "Clear Body",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Rough Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Farigiraf": {
+    "hp": 120
+   }
+  },
+  "field": {
+   "weather": "sandstorm",
+   "weatherDuration": 3
+  }
+ },
+ "turn": {
+  "p1": "move harden, move harden",
+  "p2": "move harden, move harden"
+ }
+}

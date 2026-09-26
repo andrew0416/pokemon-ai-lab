@@ -1,0 +1,79 @@
+{
+ "description": "Gulp Missile: Cramorant at half HP or less uses Surf (its ally Lanturn and the foe Vaporeon absorb it, Hariyama takes it) and becomes Cramorant-Gorging at TryPrimaryHit; Hariyama's Seismic Toss then makes it spit: Hariyama loses 1/4 of its max HP and is paralyzed, and Cramorant is Cramorant again.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Cramorant",
+    "item": "",
+    "ability": "Gulp Missile",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Surf",
+     "Dive"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Lanturn",
+    "item": "",
+    "ability": "Water Absorb",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Vaporeon",
+    "item": "",
+    "ability": "Water Absorb",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hariyama",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Seismic Toss",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Cramorant": {
+    "hp": 80
+   }
+  }
+ },
+ "turn": {
+  "p1": "move surf, move harden",
+  "p2": "move harden, move seismictoss 1"
+ }
+}

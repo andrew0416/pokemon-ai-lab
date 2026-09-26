@@ -1,0 +1,23 @@
+{
+ "description": "Slow Start (counter 5 from the battle start): Regigigas's Speed is halved (120 -> 60), so Metagross (90) hardens first, and its Attack is halved for Tackle into the Def +1 Metagross. The residual lowers the hidden counter to 4.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Regigigas", "item": "", "ability": "Slow Start", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Tackle", "Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Metagross", "item": "", "ability": "Clear Body", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move tackle 1, move harden", "p2": "move harden, move harden"}
+}

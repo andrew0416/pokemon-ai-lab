@@ -1,0 +1,23 @@
+{
+ "description": "Gastro Acid fails on a cantsuppress ability (Mimikyu's Disguise: onTryHit returns false) and on an Ability Shield holder (Snorlax: onTryHit returns null); neither target gets the gastroacid volatile.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Crobat", "item": "", "ability": "Inner Focus", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Gastro Acid", "Harden"], "level": 50},
+   {"species": "Swalot", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Gastro Acid", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Mimikyu", "item": "", "ability": "Disguise", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "Ability Shield", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move gastroacid 1, move gastroacid 2", "p2": "move harden, move harden"}
+}

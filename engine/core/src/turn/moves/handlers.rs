@@ -355,7 +355,7 @@ pub(super) fn on_try<const N: usize>(
         // Stuff Cheeks: `return source.getItem().isBerry;` (the held item).
         moves::STUFF_CHEEKS => b.raw_item(user).data().is_berry,
         // Rest: fails asleep or with Comatose, at full HP, and with Insomnia or Vital Spirit
-        // (`hasAbility`: the user's own ability, never suppressed by its own move).
+        // (`hasAbility`: the user's own ability as it acts, never suppressed by its own move).
         moves::REST => b.slot_mon(user).is_some_and(|m| {
             m.status != Status::Sleep
                 && m.hp != m.max_hp
@@ -364,7 +364,7 @@ pub(super) fn on_try<const N: usize>(
                     abilities::INSOMNIA,
                     abilities::VITAL_SPIRIT,
                 ]
-                .contains(&m.ability)
+                .contains(&b.ability(user))
         }),
         _ => true,
     }
@@ -402,7 +402,9 @@ pub(super) fn on_try_immunity<const N: usize>(
         }
         // Worry Seed: `if (target.ability === 'truant' || target.ability === 'insomnia') return
         // false;` (before accuracy).
-        moves::WORRY_SEED => ![abilities::TRUANT, abilities::INSOMNIA].contains(&b.ability(target)),
+        moves::WORRY_SEED => {
+            ![abilities::TRUANT, abilities::INSOMNIA].contains(&b.raw_ability(target))
+        }
         // Synchronoise: `return target.hasType(source.getTypes());` (a type in common).
         moves::SYNCHRONOISE => {
             let mine = b.slot_mon(user).map_or([Type::None; 2], |m| m.types);
@@ -738,6 +740,15 @@ pub(super) fn on_try_hit<const N: usize>(
             }
             true
         }
+        // Gastro Acid: `if (target.getAbility().flags['cantsuppress']) return false; if
+        // (target.hasItem('Ability Shield')) return null;` (both fail the move on the target).
+        moves::GASTRO_ACID => {
+            !b.raw_ability(target)
+                .data()
+                .flags
+                .contains(AbilityFlags::CANTSUPPRESS)
+                && b.item(target) != items::ABILITY_SHIELD
+        }
         // Yawn: `if (target.status || !target.runStatusImmunity('slp')) return false;` (no type
         // or implemented `Immunity` handler covers sleep).
         moves::YAWN => b.slot_mon(target).is_some_and(|m| m.status == Status::None),
@@ -765,7 +776,7 @@ pub(super) fn on_try_hit<const N: usize>(
         // (target.getAbility().flags['failroleplay'] || source.getAbility().flags['cantsuppress'])
         // return false;` (the raw abilities).
         moves::ROLE_PLAY => {
-            let (mine, theirs) = (b.ability(user), b.ability(target));
+            let (mine, theirs) = (b.raw_ability(user), b.raw_ability(target));
             mine != theirs
                 && !theirs.data().flags.contains(AbilityFlags::FAILROLEPLAY)
                 && !mine.data().flags.contains(AbilityFlags::CANTSUPPRESS)
@@ -773,7 +784,7 @@ pub(super) fn on_try_hit<const N: usize>(
         // Entrainment: fails on the same ability, a `cantsuppress` or Truant target, or a
         // `noentrain` ability of the user (Dynamax is off).
         moves::ENTRAINMENT => {
-            let (mine, theirs) = (b.ability(user), b.ability(target));
+            let (mine, theirs) = (b.raw_ability(user), b.raw_ability(target));
             target != user
                 && mine != theirs
                 && !theirs.data().flags.contains(AbilityFlags::CANTSUPPRESS)
@@ -782,14 +793,14 @@ pub(super) fn on_try_hit<const N: usize>(
         }
         // Simple Beam: fails on a `cantsuppress`, Simple or Truant target.
         moves::SIMPLE_BEAM => {
-            let theirs = b.ability(target);
+            let theirs = b.raw_ability(target);
             !theirs.data().flags.contains(AbilityFlags::CANTSUPPRESS)
                 && theirs != abilities::SIMPLE
                 && theirs != abilities::TRUANT
         }
         // Worry Seed: fails on a `cantsuppress` target.
         moves::WORRY_SEED => !b
-            .ability(target)
+            .raw_ability(target)
             .data()
             .flags
             .contains(AbilityFlags::CANTSUPPRESS),
@@ -1840,6 +1851,10 @@ pub(super) fn charge_try_move<const N: usize>(
     if b.remove_volatile(user, own) {
         return true;
     }
+    // Dive's `onTryMove`: Gulp Missile catches its prey before `ChargeMove` (Power Herb).
+    if mv.id == moves::DIVE {
+        super::super::forme::gulp_missile_catch(b, user);
+    }
     if mv.id == moves::METEOR_BEAM || mv.id == moves::ELECTRO_SHOT {
         let mut up = NO_BOOSTS;
         up[2] = 1;
@@ -2431,6 +2446,9 @@ pub(super) fn on_hit<const N: usize>(
                             item.data().name
                         )));
                     }
+                    // `runEvent('EatItem', source, source, move, item)`: Cheek Pouch, Ripen (Cud
+                    // Chew ignores Bug Bite and Pluck).
+                    super::super::abilities::eat_item_event(b, user, item, true);
                     // `if (item.onEat) source.ateBerry = true;` (Belch).
                     if item.data().handlers.contains(&"onEat") {
                         b.record_ate_berry(eater);
@@ -2514,11 +2532,11 @@ pub(super) fn on_hit<const N: usize>(
         // Worry Seed: `target.setAbility('insomnia')`, then a sleeping target wakes
         // (`cureStatus`). A failed `setAbility` (`false` / `null`) is the move's failure.
         moves::ROLE_PLAY => {
-            let copied = b.ability(target);
+            let copied = b.raw_ability(target);
             success(set_ability(b, user, copied)?)
         }
         moves::ENTRAINMENT => {
-            let given = b.ability(user);
+            let given = b.raw_ability(user);
             success(set_ability(b, target, given)?)
         }
         moves::SIMPLE_BEAM => success(set_ability(b, target, abilities::SIMPLE)?),

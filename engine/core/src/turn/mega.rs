@@ -116,7 +116,11 @@ pub(crate) fn run_mega_evo<const N: usize>(
     });
     // setAbility → the new ability's `Start`.
     start_ability(b, slot, new.ability)?;
-    // AfterMega: the items' `onAnyAfterMega` (White Herb, Mirror Herb).
+    // AfterMega: the items' `onAnyAfterMega` (White Herb, Mirror Herb), Opportunist's (each acts
+    // on its own holder).
     super::items::any_after_mega(b, slot);
+    for holder in b.all_alive() {
+        super::abilities::opportunist_use(b, holder);
+    }
     Ok(())
 }

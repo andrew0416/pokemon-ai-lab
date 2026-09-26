@@ -1,0 +1,23 @@
+{
+ "description": "Truant's onStart after the battle start: under Neutralizing Gas Slaking hardens without Truant acting; Swalot's Gastro Acid on Weezing-Galar then runs Neutralizing Gas's End, which restarts Truant: Slaking was active since the turn started and has moved (moveThisTurnResult set), so it gets the truant volatile.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Weezing-Galar", "item": "", "ability": "Neutralizing Gas", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Slaking", "item": "", "ability": "Truant", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Swalot", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Gastro Acid"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "move gastroacid 1, move harden"}
+}

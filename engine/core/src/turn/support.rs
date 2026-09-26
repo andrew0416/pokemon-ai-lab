@@ -628,9 +628,17 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::REFLECT_TYPE, &["onHit"]),
     // Ability changes (`abilities::skill_swap`, `handlers::set_ability`: the old ability's End,
     // the new one's Start through `switching`; Ability Shield blocks): Skill Swap `onHit`; Role
-    // Play, Entrainment, Simple Beam `onTryHit` / `onHit`; Worry Seed `onTryImmunity` too. Gastro
-    // Acid (ability suppression) is not supported.
+    // Play, Entrainment, Simple Beam `onTryHit` / `onHit`; Worry Seed `onTryImmunity` too.
     (moves::SKILL_SWAP, &["onHit"]),
+    // Opus U. Gastro Acid: `onTryHit` in `handlers::on_try_hit` (a `cantsuppress` ability fails,
+    // an Ability Shield `null`s it); its condition's `onStart` in `conditions::volatile_start`
+    // (Ability Shield) and `abilities::gastro_acid_start` (the ability's `End`); the suppression
+    // is `abilities::ignoring_ability`. `condition.onCopy` only acts through Baton Pass, which
+    // is not supported.
+    (
+        moves::GASTRO_ACID,
+        &["condition.onCopy", "condition.onStart", "onTryHit"],
+    ),
     (moves::ROLE_PLAY, &["onHit", "onTryHit"]),
     (moves::ENTRAINMENT, &["onHit", "onTryHit"]),
     (moves::SIMPLE_BEAM, &["onHit", "onTryHit"]),
@@ -1990,6 +1998,80 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
             "onWeatherChange",
         ],
     ),
+    // Opus U. Neutralizing Gas: `onSwitchIn` in `abilities::neutralizing_gas_switch_in` (from
+    // `switching::run_switch_in`), `onEnd` in `abilities::neutralizing_gas_end` (switching out,
+    // `Battle::faint_messages`, `switching::end_ability`); every other ability reads
+    // `Battle::ability`, which is `NONE` while `abilities::ignoring_ability`.
+    (abilities::NEUTRALIZING_GAS, &["onEnd", "onSwitchIn"]),
+    // Opus U. Poison Heal: `onDamage` in `abilities::poison_heal` (the residual poison damage,
+    // `residual.rs`: nothing else deals `psn` / `tox` damage).
+    (abilities::POISON_HEAL, &["onDamage"]),
+    // Opus U. Slow Start: `onStart` / `onEnd` in `switching`, `onModifyAtk` in
+    // `abilities::attack_handlers`, `onModifySpe` in `Battle::speed_stat`, `onResidual` in
+    // `abilities::on_residual` (`abilities::slow_start_halves` reads the counter).
+    (
+        abilities::SLOW_START,
+        &[
+            "onEnd",
+            "onModifyAtk",
+            "onModifySpe",
+            "onResidual",
+            "onStart",
+        ],
+    ),
+    // Opus U. Truant: `onStart` in `abilities::truant_start`, `onBeforeMove` in
+    // `abilities::truant_before_move` (the `truant` volatile).
+    (abilities::TRUANT, &["onBeforeMove", "onStart"]),
+    // Opus U. Cheek Pouch, Cud Chew (`onEatItem` in `abilities::eat_item_event`, from every
+    // EatItem site: `update::eat_item`, `Battle::use_item` for the resist berries, Bug Bite /
+    // Pluck; Cud Chew's `onResidual` in `abilities::on_residual`), Ripen (`onEatItem` too;
+    // `onTryHeal` in `update::berry_heal`, `onChangeBoost` in `Battle::boost_by`,
+    // `onSourceModifyDamage` in `abilities::ripen_weaken`; `onTryEatItem` only logs).
+    (abilities::CHEEK_POUCH, &["onEatItem"]),
+    (abilities::CUD_CHEW, &["onEatItem", "onResidual"]),
+    (
+        abilities::RIPEN,
+        &[
+            "onChangeBoost",
+            "onEatItem",
+            "onSourceModifyDamage",
+            "onTryEatItem",
+            "onTryHeal",
+        ],
+    ),
+    // Opus U. Poison Puppeteer: `onAnyAfterSetStatus` in `abilities::poison_puppeteer` (from
+    // `Battle::try_set_status` for a move's status). Dancer has no handlers: `moves::dance`.
+    (abilities::POISON_PUPPETEER, &["onAnyAfterSetStatus"]),
+    // Opus U. Gulp Missile: `onSourceTryPrimaryHit` (Surf, `moves::spread_move_hit`'s step 0; Dive
+    // in `handlers::charge_try_move`) in `forme::gulp_missile_catch`, `onDamagingHit` in
+    // `forme::gulp_missile_spit` (`ability_hooks::on_damaging_hit`).
+    (
+        abilities::GULP_MISSILE,
+        &["onDamagingHit", "onSourceTryPrimaryHit"],
+    ),
+    // Opus U. Bad Dreams: `onResidual` in `abilities::on_residual`.
+    (abilities::BAD_DREAMS, &["onResidual"]),
+    // Opus U. Opportunist: `onFoeAfterBoost` in `abilities::opportunist_after_boost` (from
+    // `Battle::boost_by`); `onAnySwitchIn` (`switching::run_switch_in`), `onAnyAfterMega`
+    // (`mega`), `onAnyAfterMove` (`moves::run_move_tail`) and `onResidual`
+    // (`abilities::on_residual`) in `abilities::opportunist_use`; `onEnd` in
+    // `switching::end_ability`. `onAnyAfterTerastallization`: Terastallization is off.
+    (
+        abilities::OPPORTUNIST,
+        &[
+            "onAnyAfterMega",
+            "onAnyAfterMove",
+            "onAnyAfterTerastallization",
+            "onAnySwitchIn",
+            "onEnd",
+            "onFoeAfterBoost",
+            "onResidual",
+        ],
+    ),
+    // Opus U. Receiver / Power of Alchemy: `onAllyFaint` in `abilities::receiver` (from
+    // `Battle::faint_messages`).
+    (abilities::RECEIVER, &["onAllyFaint"]),
+    (abilities::POWER_OF_ALCHEMY, &["onAllyFaint"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -2008,7 +2090,6 @@ fn listed<T: PartialEq + Copy>(table: &[(T, &[&str])], id: T) -> bool {
 /// abilities are implemented.
 const CORE_CHECKED_ABILITIES: &[AbilityId] = &[
     abilities::CORROSION,
-    abilities::DANCER,
     abilities::EARLY_BIRD,
     abilities::MULTITYPE,
     abilities::RKS_SYSTEM,
@@ -2478,10 +2559,13 @@ mod tests {
                     .iter()
                     .any(|h| h.contains("AfterSubDamage") || h.contains("TryPrimaryHit"))
             {
-                assert_eq!(id, abilities::AURA_BREAK);
+                assert!(
+                    [abilities::AURA_BREAK, abilities::GULP_MISSILE].contains(&id),
+                    "{id:?}"
+                );
             }
         }
-        assert!(!ability_supported_on_field(abilities::GULP_MISSILE));
+        assert!(ability_supported_on_field(abilities::GULP_MISSILE));
         assert!(ability_supported_on_field(abilities::INFILTRATOR));
         // Disguise and Ice Face read the substitute themselves (`hitSub`, `forme::hits_substitute`).
         for ability in [abilities::DISGUISE, abilities::ICE_FACE] {

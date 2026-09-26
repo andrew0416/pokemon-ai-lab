@@ -1,0 +1,80 @@
+{
+ "description": "Dancer's copy goes through BeforeMove: the sleeping Oricorio (2 turns) tries to copy Gardevoir's Swords Dance and only spends a sleep turn (1 left); its own Harden later wakes it and goes through.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Gardevoir",
+    "item": "",
+    "ability": "Synchronize",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Oricorio",
+    "item": "",
+    "ability": "Dancer",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {
+   "Oricorio": {
+    "status": "slp",
+    "statusTime": 2
+   }
+  }
+ },
+ "turn": {
+  "p1": "move swordsdance, move harden",
+  "p2": "move harden, move harden"
+ }
+}

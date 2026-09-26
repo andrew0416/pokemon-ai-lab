@@ -103,6 +103,20 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// [`Battle::awaiting_run_switch`], per Pokémon): their abilities have not started, so a
     /// handler that only acts once started (Unnerve's `effectState.unnerved`) ignores them.
     pub unstarted: Vec<PokemonRef>,
+    /// Showdown's `queue.peek()` is empty: the turn's actions are all done (the residual action
+    /// and what follows it in the same stage, or the `runSwitch` of a replacement batch). Cud
+    /// Chew's `onEatItem` reads it.
+    pub queue_done: bool,
+    /// The move in progress is external (`move.isExternal`: Dancer's copy): no Pressure PP, and
+    /// no Dancer after it.
+    pub external_move: bool,
+    /// Showdown `battle.activeTarget` of the move that just ran (the (redirected) target it was
+    /// used at; its user for a self-targeting move) with `useMove`'s result
+    /// (`moveDidSomething`); `None` until `useMove` got that far. Dancer reads both.
+    pub active_target: Option<(SlotRef, bool)>,
+    /// Whether an ability can be suppressed in this battle (`abilities::suppression_possible`):
+    /// without it [`Battle::ability`] skips the `ignoringAbility` check.
+    pub suppression: bool,
 }
 
 /// The readers of the hidden damage history present in a battle (any party member's moves;
@@ -170,6 +184,7 @@ impl HistoryReaders {
 impl<'a, const N: usize> Battle<'a, N> {
     pub fn new(state: &'a mut State<N>, rng: &'a mut Chooser) -> Battle<'a, N> {
         let history_readers = HistoryReaders::of(state);
+        let suppression = super::abilities::suppression_possible(state);
         Battle {
             state,
             log: Vec::new(),
@@ -187,6 +202,10 @@ impl<'a, const N: usize> Battle<'a, N> {
             raw_speed: Vec::new(),
             awaiting_run_switch: false,
             unstarted: Vec::new(),
+            queue_done: false,
+            external_move: false,
+            active_target: None,
+            suppression,
         }
     }
 
@@ -246,7 +265,30 @@ impl<'a, const N: usize> Battle<'a, N> {
         out
     }
 
+    /// The ability whose handlers act for the occupant of `slot` (`hasAbility`, `runEvent`):
+    /// `NONE` while it is suppressed by Gastro Acid or Neutralizing Gas
+    /// (`abilities::ignoring_ability`; Showdown `ignoringAbility`).
     pub fn ability(&self, slot: SlotRef) -> AbilityId {
+        if self.suppression {
+            super::abilities::effective_ability(self.state, slot)
+        } else {
+            self.raw_ability(slot)
+        }
+    }
+
+    /// Showdown `pokemon.ignoringAbility()` for the occupant of `slot`
+    /// (`abilities::ignoring_ability`; checked only when suppression is possible at all).
+    pub fn ignoring_ability(&self, slot: SlotRef) -> bool {
+        if self.suppression {
+            super::abilities::ignoring_ability(self.state, slot)
+        } else {
+            self.occupant(slot).is_none()
+        }
+    }
+
+    /// Showdown `pokemon.ability` itself, suppressed or not (`getAbility()`): Skill Swap, Role
+    /// Play, Entrainment, Mummy, Wandering Spirit, Trace's target, an ability's `End`.
+    pub fn raw_ability(&self, slot: SlotRef) -> AbilityId {
         self.slot_mon(slot).map_or(AbilityId::NONE, |m| m.ability)
     }
 
@@ -319,15 +361,12 @@ impl<'a, const N: usize> Battle<'a, N> {
     }
 
     /// Showdown `field.suppressingWeather()`: an active Pokémon not processed as fainted (it may
-    /// be at 0 HP) has an ability with `suppressWeather` (Air Lock, Cloud Nine). Its
+    /// be at 0 HP) has an ability with `suppressWeather` (Air Lock, Cloud Nine) that it is not
+    /// ignoring (`!pokemon.ignoringAbility()`: Gastro Acid, Neutralizing Gas). Its
     /// `abilityState.ending` flag only matters inside its own `End` event, whose
-    /// `WeatherChange` has no implemented handler; Gastro Acid and Neutralizing Gas are not
-    /// supported.
+    /// `WeatherChange` has no implemented handler.
     pub fn weather_suppressed(&self) -> bool {
-        State::<N>::slot_refs().any(|slot| {
-            self.slot_mon(slot)
-                .is_some_and(|mon| mon.ability.data().suppress_weather)
-        })
+        State::<N>::slot_refs().any(|slot| self.ability(slot).data().suppress_weather)
     }
 
     pub fn terrain(&self) -> Terrain {
@@ -404,7 +443,8 @@ impl<'a, const N: usize> Battle<'a, N> {
         if immunity == TypeImmunities::SANDSTORM {
             // Sand Rush, Sand Force, Sand Veil (breakable): `onImmunity(type) { if (type ===
             // 'sandstorm') return false; }`.
-            let sand_ability = [abilities::SAND_RUSH, abilities::SAND_FORCE].contains(&mon.ability);
+            let sand_ability =
+                [abilities::SAND_RUSH, abilities::SAND_FORCE].contains(&self.ability(slot));
             let sand_veil = self.ability_unless_broken(slot) == abilities::SAND_VEIL;
             return sand_ability || sand_veil || overcoat;
         }
@@ -450,7 +490,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         super::abilities::on_damage(self, target, source == DamageSource::Move, multihit);
         let mut amount = (amount.floor() as i32).max(1);
         let mon = self.mon(pokemon);
-        let cancelled = match mon.ability {
+        let cancelled = match self.ability(target) {
             a if a == abilities::ROCK_HEAD => source == DamageSource::Recoil,
             a if a == abilities::MAGIC_GUARD => source != DamageSource::Move,
             _ => false,
@@ -567,8 +607,8 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// `battle.heal` for the heals whose effect Big Root's `onTryHeal` (priority 1) lists:
     /// `drain`, `leechseed`, `ingrain`, `aquaring`, `strengthsap`. The amount is normalized as
     /// in `heal` (at least 1, truncated), then `runEvent('TryHeal')` chains `[5324, 4096]` on a
-    /// holder of Big Root (nothing else supported answers TryHeal: Heal Block, Liquid Ooze and
-    /// Ripen are refused). Returns the HP restored.
+    /// holder of Big Root (Heal Block stops it in `heal`; Ripen only doubles a berry's heal,
+    /// `update::berry_heal`; Liquid Ooze is refused). Returns the HP restored.
     pub fn heal_rooted(&mut self, target: SlotRef, amount: f64) -> i32 {
         let amount = if amount > 0.0 && amount <= 1.0 {
             1.0
@@ -591,13 +631,14 @@ impl<'a, const N: usize> Battle<'a, N> {
     }
 
     /// Showdown `faintMessages(lastFirst = false, forceCheck = false, checkWin)`. Returns
-    /// whether the battle is over.
-    pub fn faint_messages(&mut self, check_win: bool) -> bool {
+    /// whether the battle is over; an error when a fainted Neutralizing Gas holder's `End`
+    /// restarts an ability the engine cannot start.
+    pub fn faint_messages(&mut self, check_win: bool) -> Result<bool, TurnError> {
         if self.state.result.is_over() {
-            return true;
+            return Ok(true);
         }
         if self.faint_queue.is_empty() {
-            return false;
+            return Ok(false);
         }
         let mut check_win = check_win;
         // `const length = this.faintQueue.length`, and `faintData`: the last entry taken from
@@ -620,6 +661,18 @@ impl<'a, const N: usize> Battle<'a, N> {
             if self.faint_queue.len() >= queue_left {
                 check_win = true;
             }
+            // Soul-Heart's `onAnyFaint` belongs to the Faint event, before the fainted Pokémon's
+            // ability `End`: its holders are the ones acting while a fainting Neutralizing Gas
+            // still suppresses them.
+            let hearts = super::abilities::soul_heart_holders(self);
+            // `singleEvent('End', ability)`: Neutralizing Gas's `onEnd` (unless it already ran:
+            // `abilityState.ending`) restarts the other abilities; it runs once the holder has
+            // left below (at 0 HP it is in no target list, and its `ending` excludes it).
+            let gas_ends = self.raw_ability(slot) == abilities::NEUTRALIZING_GAS
+                && !self.volatile(slot, Volatile::NeutralizingGasEnding).active;
+            // Receiver / Power of Alchemy (`onAllyFaint`) take `target.getAbility()`, the one it
+            // has before `clearVolatile` reverts it.
+            let fainted_ability = self.raw_ability(slot);
             // clearVolatile: the ability and types revert; the slot empties (isActive = false).
             self.clear_volatile(pokemon);
             let previous = self.state.slot(slot).clone();
@@ -637,11 +690,15 @@ impl<'a, const N: usize> Battle<'a, N> {
             // only faints its attacker: a holder it knocks out gets no boost either way), run
             // once the faint counts as processed (`pokemonLeft` dropped: `boost` needs
             // `foePokemonLeft()`).
-            super::abilities::soul_heart(self);
+            super::abilities::soul_heart(self, &hearts);
+            super::abilities::receiver(self, slot, fainted_ability)?;
             self.record_faint(pokemon.side);
+            if gas_ends {
+                super::abilities::neutralizing_gas_end(self, None)?;
+            }
         }
         if check_win && self.check_win(last) {
-            return true;
+            return Ok(true);
         }
         // `runEvent('AfterFaint', faintData.target, faintData.source, faintData.effect,
         // length)`: only the source's `onSourceAfterFaint` handlers exist, and they need a move's
@@ -649,7 +706,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         if let Some(source) = last_source {
             super::abilities::after_faint(self, source, length);
         }
-        false
+        Ok(false)
     }
 
     /// The party-side part of Showdown `clearVolatile` when a Pokémon leaves the field: the
@@ -750,7 +807,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         // !target.isAlly(source)) return;`: an infiltrating move's status on a foe.
         let infiltrates = self.active_move.is_some_and(|m| m.infiltrates)
             && source.is_some_and(|s| s.side != target.side);
-        self.try_set_status_inner(target, status, source, infiltrates)
+        self.try_set_status_inner(target, status, source, infiltrates, true)
     }
 
     /// Showdown `trySetStatus(status, source)` → `setStatus` for the supported handlers: fails
@@ -763,17 +820,19 @@ impl<'a, const N: usize> Battle<'a, N> {
         status: Status,
         source: Option<SlotRef>,
     ) -> bool {
-        self.try_set_status_inner(target, status, source, false)
+        self.try_set_status_inner(target, status, source, false, false)
     }
 
     /// [`Battle::try_set_status_from`]; `infiltrates`: the status is an infiltrating move's
-    /// effect on a foe, which Safeguard lets through.
+    /// effect on a foe, which Safeguard lets through; `by_move`: the status's effect is the move
+    /// in progress (`effect.effectType === 'Move'`, Poison Puppeteer).
     fn try_set_status_inner(
         &mut self,
         target: SlotRef,
         status: Status,
         source: Option<SlotRef>,
         infiltrates: bool,
+        by_move: bool,
     ) -> bool {
         let Some(pokemon) = self.alive(target) else {
             return false;
@@ -834,6 +893,11 @@ impl<'a, const N: usize> Battle<'a, N> {
             self.end_nightmare(pokemon);
         }
         self.after_set_status(target, status, source);
+        // Poison Puppeteer's `onAnyAfterSetStatus` (like Synchronize, priority 0; each changes
+        // a different Pokémon and Synchronize cannot poison the Poison-type source).
+        if by_move {
+            super::abilities::poison_puppeteer(self, target, status, source);
+        }
         // Lum Berry's `onAfterSetStatus` (priority -1: after Synchronize).
         super::update::after_set_status(self, target);
         true
@@ -1327,10 +1391,15 @@ impl<'a, const N: usize> Battle<'a, N> {
         let from_other = source.is_some_and(|s| s != target);
         let mut boost = *boosts;
 
-        // ChangeBoost: the target's own ability.
+        // ChangeBoost: the target's own ability (Ripen: a berry's boosts, `effect.isBerry`).
         match self.ability_unless_broken(target) {
             a if a == abilities::CONTRARY => boost.iter_mut().for_each(|b| *b = -*b),
             a if a == abilities::SIMPLE => boost.iter_mut().for_each(|b| *b *= 2),
+            a if a == abilities::RIPEN
+                && matches!(effect, BoostEffect::Item(item) if item.data().is_berry) =>
+            {
+                boost.iter_mut().for_each(|b| *b *= 2)
+            }
             _ => {}
         }
         // getCappedBoost.
@@ -1489,8 +1558,9 @@ impl<'a, const N: usize> Battle<'a, N> {
             );
         }
         // AfterBoost of items (after the target's ability): Adrenaline Orb, the foes' Mirror
-        // Herbs.
+        // Herbs; the foes' Opportunist (`onFoeAfterBoost`; each only adds to its own copies).
         super::items::after_boost(self, target, &boost, effect, atk_capped_to_zero);
+        super::abilities::opportunist_after_boost(self, target, &boost, effect);
         // `if (success)`: `statsRaisedThisTurn` / `statsLoweredThisTurn` from the boost table
         // that was applied (after the cap and TryBoost), while a move reads them.
         if changed {
@@ -1560,8 +1630,10 @@ impl<'a, const N: usize> Battle<'a, N> {
         // `clearEffectState(itemState)`: Eject Pack's flag goes with the item.
         self.delete_volatile(slot, Volatile::EjectPack);
         // The only berries consumed through here are the resist berries, which Showdown eats
-        // (`eatItem`: `ateBerry = true`, Belch).
+        // (`eatItem`: `runEvent('EatItem')` after their empty `onEat`, then `ateBerry = true`,
+        // Belch). EatItem comes before the item is gone; nothing it runs reads the item.
         if item.data().is_berry {
+            super::abilities::eat_item_event(self, slot, item, false);
             self.record_ate_berry(pokemon);
         }
         // AfterUseItem: Unburden, an ally's Symbiosis.
@@ -1619,14 +1691,12 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// Showdown `pokemon.activeTurns > 0` during a turn: the Pokémon was already active when the
     /// turn started (`endTurn` counts every active Pokémon; `switchIn` resets it to 0).
     ///
-    /// `State` has no such counter. During a turn it equals `move_actions > 0`
-    /// (`activeMoveActions`, also reset by `switchIn`): every Pokémon active at the start of
-    /// the turn has a move action that runs `runMove` (which counts it) unless it switches
-    /// out or faints first, while a Pokémon that switched in during the turn cannot act again.
-    /// Mechanics that break this (a move from Dancer or Instruct after switching in, a
-    /// skipped action while staying in) must replace this with a real counter.
+    /// `State` has no such counter, but `activeTurns` is 0 exactly while the slot history's
+    /// `newlySwitched` is set (both reset by `switchIn`, both cleared by `endTurn`, the battle
+    /// start's included), which a move from Dancer after switching in does not change (it counts
+    /// `activeMoveActions`).
     pub fn active_since_turn_start(&self, slot: SlotRef) -> bool {
-        self.state.slot(slot).move_actions > 0
+        self.occupant(slot).is_some() && !self.state.slot(slot).history.newly_switched
     }
 
     /// `pokemon.switchFlag = <move id | true>` (F6): the occupant must switch out at the next

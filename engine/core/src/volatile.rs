@@ -303,9 +303,36 @@ pub enum Volatile {
     Rollout,
     /// Ice Ball's own condition (`iceball`): as [`Volatile::Rollout`].
     IceBall,
+    /// Gastro Acid (`gastroacid`, no duration): the holder's ability is suppressed
+    /// (`Pokemon.ignoringAbility`, `abilities::ignoring_ability`) unless it is `cantsuppress`.
+    GastroAcid,
+    /// Not a Showdown volatile: Neutralizing Gas's `abilityState.ending` (its `onEnd` ran: the
+    /// holder no longer suppresses other abilities while it stays, and a second `End` does
+    /// nothing). No duration; hidden in the canonical state.
+    NeutralizingGasEnding,
+    /// Not a Showdown volatile: Slow Start's `abilityState.counter` (5 from its `onStart`, one
+    /// less at each residual of a turn the holder was active from the start; gone at 0), kept in
+    /// `counter`. No duration; hidden in the canonical state.
+    SlowStart,
+    /// Truant's own condition (`truant`, no duration, no handlers): the holder loafs at its next
+    /// move attempt (Truant's `onBeforeMove` removes it and stops the move, or adds it).
+    Truant,
+    /// Not a Showdown volatile: Cud Chew's `abilityState.berry` (the berry's `ItemId` in
+    /// `counter`) and `.counter` (in `hidden`): the berry is eaten again when the counter runs
+    /// out at a residual. No duration; hidden in the canonical state.
+    CudChew,
+    /// Not a Showdown volatile: Ripen's `abilityState.berryWeaken` (the last berry it ate was a
+    /// resist berry: the holder's next hit taken is halved once more). No duration; hidden in
+    /// the canonical state.
+    RipenWeaken,
+    /// Not a Showdown volatile: Opportunist's `effectState.boosts`, the foes' raises it copied
+    /// and has not used yet: 4 bits per stat (0..=12, more cannot change a stage), Atk..SpD in
+    /// `counter`, Spe and accuracy in `hidden`, evasion in `time`
+    /// (`abilities::opportunist_boosts`). No duration; hidden in the canonical state.
+    Opportunist,
 }
 
-pub const VOLATILE_COUNT: usize = 94;
+pub const VOLATILE_COUNT: usize = 101;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -403,6 +430,13 @@ impl Volatile {
         Volatile::DefenseCurl,
         Volatile::Rollout,
         Volatile::IceBall,
+        Volatile::GastroAcid,
+        Volatile::NeutralizingGasEnding,
+        Volatile::SlowStart,
+        Volatile::Truant,
+        Volatile::CudChew,
+        Volatile::RipenWeaken,
+        Volatile::Opportunist,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -468,6 +502,7 @@ impl Volatile {
             Volatile::MiracleEye => conditions::MIRACLEEYE,
             Volatile::DefenseCurl => conditions::DEFENSECURL,
             Volatile::Rollout | Volatile::IceBall => ConditionId::NONE,
+            Volatile::GastroAcid => conditions::GASTROACID,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -503,7 +538,13 @@ impl Volatile {
             | Volatile::RazorWind
             | Volatile::FreezeShock
             | Volatile::IceBurn
-            | Volatile::Geomancy => ConditionId::NONE,
+            | Volatile::Geomancy
+            | Volatile::NeutralizingGasEnding
+            | Volatile::SlowStart
+            | Volatile::Truant
+            | Volatile::CudChew
+            | Volatile::RipenWeaken
+            | Volatile::Opportunist => ConditionId::NONE,
         }
     }
 
@@ -604,6 +645,13 @@ impl Volatile {
             Volatile::DefenseCurl => "defensecurl",
             Volatile::Rollout => "rollout",
             Volatile::IceBall => "iceball",
+            Volatile::GastroAcid => "gastroacid",
+            Volatile::NeutralizingGasEnding => "neutralizinggasending",
+            Volatile::SlowStart => "slowstartcounter",
+            Volatile::Truant => "truant",
+            Volatile::CudChew => "cudchewberry",
+            Volatile::RipenWeaken => "berryweaken",
+            Volatile::Opportunist => "opportunistboosts",
         }
     }
 
@@ -711,7 +759,14 @@ impl Volatile {
             | Volatile::Stockpile
             | Volatile::Foresight
             | Volatile::MiracleEye
-            | Volatile::DefenseCurl => 0,
+            | Volatile::DefenseCurl
+            | Volatile::GastroAcid
+            | Volatile::NeutralizingGasEnding
+            | Volatile::SlowStart
+            | Volatile::Truant
+            | Volatile::CudChew
+            | Volatile::RipenWeaken
+            | Volatile::Opportunist => 0,
             Volatile::Rollout | Volatile::IceBall => 1,
             Volatile::ZenMode => 0,
         }
@@ -749,7 +804,12 @@ impl Volatile {
             | Volatile::AngerShellUnchecked
             | Volatile::SupremeOverlord
             | Volatile::GorillaTactics
-            | Volatile::EjectPack => None,
+            | Volatile::EjectPack
+            | Volatile::NeutralizingGasEnding
+            | Volatile::SlowStart
+            | Volatile::CudChew
+            | Volatile::RipenWeaken
+            | Volatile::Opportunist => None,
             // Two-turn move: the target location is not a canonical field.
             Volatile::Roost
             | Volatile::HelpingHand
@@ -958,6 +1018,12 @@ mod tests {
                         | Volatile::Geomancy
                         | Volatile::Rollout
                         | Volatile::IceBall
+                        | Volatile::NeutralizingGasEnding
+                        | Volatile::SlowStart
+                        | Volatile::Truant
+                        | Volatile::CudChew
+                        | Volatile::RipenWeaken
+                        | Volatile::Opportunist
                 ));
                 continue;
             }

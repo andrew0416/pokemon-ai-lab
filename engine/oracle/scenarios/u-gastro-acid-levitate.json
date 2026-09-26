@@ -1,0 +1,23 @@
+{
+ "description": "Gastro Acid suppresses Levitate: Crobat (fastest) uses Gastro Acid on Hydreigon (Levitate), which gets the gastroacid volatile; Garchomp's Stomping Tantrum then hits it (grounded: hasAbility('levitate') is false while its ability is ignored).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Crobat", "item": "", "ability": "Inner Focus", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Gastro Acid", "Harden"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Sand Veil", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Stomping Tantrum", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Hydreigon", "item": "", "ability": "Levitate", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move gastroacid 1, move stompingtantrum 1", "p2": "move harden, move harden"}
+}

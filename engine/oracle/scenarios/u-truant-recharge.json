@@ -1,0 +1,26 @@
+{
+ "description": "Truant and a recharge turn: Slaking's Hyper Beam (setup turn, into Blissey) gives it the truant volatile and mustrecharge; on the recharge turn mustrecharge's BeforeMove (priority 11) removes both, so the truant volatile is gone after it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Slaking", "item": "", "ability": "Truant", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Hyper Beam"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Metagross", "item": "", "ability": "Clear Body", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move hyperbeam 1, move harden", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move recharge 1, move harden", "p2": "move harden, move harden"}
+}

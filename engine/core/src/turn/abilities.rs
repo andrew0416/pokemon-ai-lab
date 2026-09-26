@@ -119,6 +119,626 @@ pub(crate) fn priority(orders: &[(&str, i16)], name: &str) -> i32 {
         .map_or(0, |&(_, p)| i32::from(p))
 }
 
+// ---- ability suppression (Gastro Acid, Neutralizing Gas) ------------------------------------
+
+/// Showdown `pokemon.ignoringAbility()` for the Pokémon in `slot` (no occupant: `true`, an
+/// inactive Pokémon ignores its ability): a `cantsuppress` ability never is; the `gastroacid`
+/// volatile suppresses; otherwise an Ability Shield (the effective item) or holding Neutralizing
+/// Gas itself protects, and any active Pokémon with Neutralizing Gas (raw: `pokemon.ability`)
+/// that is neither Gastro Acid'd nor ending (`abilityState.ending`,
+/// [`Volatile::NeutralizingGasEnding`]) suppresses it, unless it is commanding. Transform is not
+/// modelled (its `notransform` branch never applies).
+pub(crate) fn ignoring_ability<const N: usize>(state: &State<N>, slot: SlotRef) -> bool {
+    let Some(mon) = state.active(slot) else {
+        return true;
+    };
+    let volatiles = &state.slot(slot).volatiles;
+    let gastro_acid = volatiles.has(Volatile::GastroAcid);
+    // The common case first: nothing on the field suppresses anything.
+    if !gastro_acid && !neutralizing_gas_on_field(state) {
+        return false;
+    }
+    if mon
+        .ability
+        .data()
+        .flags
+        .contains(AbilityFlags::CANTSUPPRESS)
+    {
+        return false;
+    }
+    if gastro_acid {
+        return true;
+    }
+    let shielded = mon.item == items::ABILITY_SHIELD && !super::items::ignoring_item(state, slot);
+    if shielded || mon.ability == abilities::NEUTRALIZING_GAS {
+        return false;
+    }
+    !volatiles.has(Volatile::Commanding)
+}
+
+/// Whether an active Pokémon (fainted or not, until its faint is processed) suppresses the
+/// others' abilities with Neutralizing Gas: `pokemon.ability === 'neutralizinggas' &&
+/// !pokemon.volatiles['gastroacid'] && !pokemon.abilityState.ending`.
+fn neutralizing_gas_on_field<const N: usize>(state: &State<N>) -> bool {
+    State::<N>::slot_refs().any(|s| {
+        state
+            .active(s)
+            .is_some_and(|m| m.ability == abilities::NEUTRALIZING_GAS)
+            && !state.slot(s).volatiles.has(Volatile::GastroAcid)
+            && !state.slot(s).volatiles.has(Volatile::NeutralizingGasEnding)
+    })
+}
+
+/// Whether any ability can be suppressed in a stage from `state` on: a party member has
+/// Neutralizing Gas (its own or base ability: no effect gives it to another Pokémon, as it is
+/// `failskillswap`, `failroleplay`, `noentrain`, `notrace` and `noreceiver`), or a Gastro Acid
+/// volatile is up (one that lands during the stage sets the flag: [`gastro_acid_start`]). Only
+/// then does `Battle::ability` check.
+pub(crate) fn suppression_possible<const N: usize>(state: &State<N>) -> bool {
+    let gas = state
+        .sides
+        .iter()
+        .flat_map(|side| side.party.iter())
+        .any(|m| {
+            m.ability == abilities::NEUTRALIZING_GAS
+                || m.base_ability == abilities::NEUTRALIZING_GAS
+        });
+    gas || State::<N>::slot_refs().any(|s| state.slot(s).volatiles.has(Volatile::GastroAcid))
+}
+
+/// The ability whose handlers act for the Pokémon in `slot` (`hasAbility`, `runEvent`):
+/// `NONE` while it is suppressed ([`ignoring_ability`]).
+pub(crate) fn effective_ability<const N: usize>(state: &State<N>, slot: SlotRef) -> AbilityId {
+    match state.active(slot) {
+        Some(mon) if !ignoring_ability(state, slot) => mon.ability,
+        _ => AbilityId::NONE,
+    }
+}
+
+/// Neutralizing Gas's `onSwitchIn` (priority 2) for its holder in `holder`: its
+/// `abilityState.ending` starts false (a switch-in's volatiles are fresh). For the other active
+/// Pokémon (not behind an Ability Shield, not commanding) it only ends Illusion and the primal
+/// weathers, which are refused on the field. No ability's `End` runs: the suppressed abilities
+/// just stop acting ([`ignoring_ability`]).
+pub(crate) fn neutralizing_gas_switch_in<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) {
+    b.delete_volatile(holder, Volatile::NeutralizingGasEnding);
+}
+
+/// Neutralizing Gas's `onEnd` for a holder leaving the field or losing its ability (switching
+/// out, `setAbility`, Gastro Acid's `End`): `source` is its slot while it is still there, `None`
+/// once it has fainted and left (the caller then checks its `ending` itself, and the holder no
+/// longer counts: at 0 HP it is in no `foes()` list either).
+/// - Nothing if another active Pokémon has Neutralizing Gas that acts (`hasAbility`), or if the
+///   holder's `ending` is set already; otherwise `ending` is set (the holder stops suppressing).
+/// - Every other active Pokémon, by `speedSort` (`pokemon.speed`, ties at random), whose ability
+///   is not `cantsuppress` and that holds no Ability Shield (the effective item) runs its
+///   ability's `Start` again (`singleEvent('Start')`, skipped while it is still suppressed:
+///   `switching::start_ability`). Gluttony's `abilityState.gluttony = false` after its restart
+///   is state the engine does not keep, so that restart is unsupported.
+pub(crate) fn neutralizing_gas_end<const N: usize>(
+    b: &mut Battle<'_, N>,
+    source: Option<SlotRef>,
+) -> Result<(), super::TurnError> {
+    let others: Vec<SlotRef> = State::<N>::slot_refs()
+        .filter(|&s| Some(s) != source && b.occupant(s).is_some())
+        .collect();
+    if others
+        .iter()
+        .any(|&s| b.ability(s) == abilities::NEUTRALIZING_GAS)
+    {
+        return Ok(());
+    }
+    if let Some(source) = source {
+        if b.volatile(source, Volatile::NeutralizingGasEnding).active {
+            return Ok(());
+        }
+        let ending = VolatileState {
+            active: true,
+            ..VolatileState::NONE
+        };
+        b.set_volatile_state(source, Volatile::NeutralizingGasEnding, ending);
+    }
+    let restarting: Vec<SlotRef> = others
+        .into_iter()
+        .filter(|&s| {
+            !b.raw_ability(s)
+                .data()
+                .flags
+                .contains(AbilityFlags::CANTSUPPRESS)
+                && b.item(s) != items::ABILITY_SHIELD
+        })
+        .collect();
+    let acts = |b: &Battle<'_, N>, s: SlotRef| {
+        let ability = b.raw_ability(s);
+        b.ability(s) == ability
+            && super::switching::start_effect(ability) != Some(super::switching::StartEffect::None)
+    };
+    for &s in &restarting {
+        if b.alive(s).is_none() && acts(b, s) {
+            return Err(b.unsupported(format!(
+                "{} restarting after Neutralizing Gas at 0 HP",
+                b.raw_ability(s).data().name
+            )));
+        }
+    }
+    let order = speed_sorted(b, restarting, acts);
+    for slot in order {
+        let ability = b.raw_ability(slot);
+        if b.alive(slot).is_none() {
+            continue;
+        }
+        if ability == abilities::GLUTTONY {
+            return Err(b.unsupported(
+                "Gluttony restarting after Neutralizing Gas (its abilityState.gluttony = false)",
+            ));
+        }
+        super::switching::start_ability(b, slot, ability)?;
+    }
+    Ok(())
+}
+
+/// Gastro Acid's condition `onStart` once the volatile is added to the Pokémon in `slot` (its
+/// Ability Shield check is in `conditions::volatile_start`): the ability's `End`
+/// (`singleEvent('End')` runs even for a suppressed ability: `switching::end_ability`, with
+/// Neutralizing Gas's there).
+pub(crate) fn gastro_acid_start<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+) -> Result<(), super::TurnError> {
+    b.suppression = true;
+    let ability = b.raw_ability(slot);
+    super::switching::end_ability(b, slot, ability)
+}
+
+// ---- Poison Heal, Slow Start, Truant ----------------------------------------------------------
+
+/// Poison Heal's `onDamage` (priority 1, before every other Damage handler) for the poison or
+/// toxic damage of the Pokémon in `slot`: `this.heal(target.baseMaxhp / 8); return false;` — it
+/// heals instead (`battle.heal`: nothing at full HP, Heal Block stops it) and takes no damage.
+/// Returns whether it acted.
+pub(crate) fn poison_heal<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> bool {
+    let Some(mon) = b.slot_mon(slot) else {
+        return false;
+    };
+    if b.ability(slot) != abilities::POISON_HEAL {
+        return false;
+    }
+    let max_hp = f64::from(mon.max_hp);
+    b.heal(slot, max_hp / 8.0);
+    true
+}
+
+/// Slow Start's `onStart`: `this.effectState.counter = 5` ([`Volatile::SlowStart`]).
+pub(crate) fn slow_start_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.occupant(slot).is_none() {
+        return;
+    }
+    let state = VolatileState {
+        active: true,
+        counter: 5,
+        ..VolatileState::NONE
+    };
+    b.set_volatile_state(slot, Volatile::SlowStart, state);
+}
+
+/// Whether Slow Start halves the Attack (`onModifyAtk`, priority 5) and Speed (`onModifySpe`)
+/// of the Pokémon in `slot`: its ability acts and `effectState.counter` is not 0.
+pub(crate) fn slow_start_halves<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
+    b.ability(slot) == abilities::SLOW_START && b.volatile(slot, Volatile::SlowStart).counter > 0
+}
+
+/// Truant's `onStart` for the Pokémon in `slot`: `pokemon.removeVolatile('truant')`, then `if
+/// (pokemon.activeTurns && (pokemon.moveThisTurnResult !== undefined ||
+/// !this.queue.willMove(pokemon))) pokemon.addVolatile('truant')` — a holder that was already
+/// active when the turn started (`activeTurns`: not `newlySwitched`) and has moved this turn or
+/// has no move to come loafs at its next move.
+pub(crate) fn truant_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.alive(slot).is_none() {
+        return;
+    }
+    b.remove_volatile(slot, Volatile::Truant);
+    let history = b.state.slot(slot).history;
+    let moved = history.move_this_turn_result != crate::state::MoveResult::Undefined;
+    if !history.newly_switched && (moved || b.will_move(slot).is_none()) {
+        b.add_volatile(slot, Volatile::Truant);
+    }
+}
+
+/// Truant's `onBeforeMove` (priority 9: after the recharge turn, sleep and freeze, before
+/// flinching) for the Pokémon in `slot`: with the `truant` volatile it loafs (`removeVolatile`,
+/// `false`); otherwise it gets the volatile and moves. `false` = the move is not used.
+pub(crate) fn truant_before_move<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> bool {
+    if b.ability(slot) != abilities::TRUANT {
+        return true;
+    }
+    if b.remove_volatile(slot, Volatile::Truant) {
+        return false;
+    }
+    b.add_volatile(slot, Volatile::Truant);
+    true
+}
+
+/// The residual order and sub-order of an ability's `onResidual` (`onResidualOrder`, and
+/// `onResidualSubOrder` or the ability's effect-type sub-order).
+pub(crate) fn residual_order(ability: AbilityId) -> (u32, u32) {
+    let orders = ability.data().event_orders;
+    let order = orders
+        .iter()
+        .find(|(n, _)| *n == "onResidualOrder")
+        .map_or(super::order::ORDER_DEFAULT, |&(_, p)| p as u32);
+    let sub_order = orders
+        .iter()
+        .find(|(n, _)| *n == "onResidualSubOrder")
+        .map_or(SUB_ABILITY, |&(_, p)| p as u32);
+    (order, sub_order)
+}
+
+/// Whether `ability` has an `onResidual` run by [`on_residual`] (`residual.rs` collects it).
+pub(crate) fn has_residual(ability: AbilityId) -> bool {
+    [
+        abilities::SLOW_START,
+        abilities::CUD_CHEW,
+        abilities::BAD_DREAMS,
+        abilities::OPPORTUNIST,
+    ]
+    .contains(&ability)
+}
+
+/// An ability's `onResidual` for its holder in `slot` (the caller checked that the ability
+/// still acts):
+/// - Slow Start: `if (pokemon.activeTurns && this.effectState.counter)` the counter drops by
+///   one, and at 0 it is gone (`activeTurns` at the residual: the holder was active since the
+///   turn started, `Battle::active_since_turn_start`).
+/// - Cud Chew: the remembered berry's counter ([`cud_chew_residual`]).
+/// - Bad Dreams: every foe not fainted that is asleep or has Comatose loses 1/8 of its max HP.
+/// - Opportunist (order 29): its copied raises ([`opportunist_use`]).
+pub(crate) fn on_residual<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    ability: AbilityId,
+) -> Result<(), super::TurnError> {
+    if ability == abilities::CUD_CHEW {
+        return cud_chew_residual(b, slot);
+    }
+    if ability == abilities::OPPORTUNIST {
+        opportunist_use(b, slot);
+        return Ok(());
+    }
+    // Bad Dreams: `for (const target of pokemon.foes()) if (target.status === 'slp' ||
+    // target.hasAbility('comatose')) this.damage(target.baseMaxhp / 8, target, pokemon)`.
+    if ability == abilities::BAD_DREAMS {
+        for foe in b.alive_slots(slot.side.other()) {
+            let Some(mon) = b.slot_mon(foe) else {
+                continue;
+            };
+            let asleep = mon.status == Status::Sleep || b.ability(foe) == abilities::COMATOSE;
+            if asleep {
+                let max_hp = f64::from(mon.max_hp);
+                b.damage(foe, max_hp / 8.0, super::battle::DamageSource::Indirect);
+            }
+        }
+        return Ok(());
+    }
+    if ability == abilities::SLOW_START {
+        let mut state = b.volatile(slot, Volatile::SlowStart);
+        if b.active_since_turn_start(slot) && state.counter > 0 {
+            state.counter -= 1;
+            if state.counter == 0 {
+                state = VolatileState::NONE;
+            }
+            b.set_volatile_state(slot, Volatile::SlowStart, state);
+        }
+    }
+    Ok(())
+}
+
+// ---- berries: Cheek Pouch, Cud Chew, Ripen; Poison Puppeteer; Dancer --------------------------
+
+/// `runEvent('EatItem', eater, source, effect, item)` after a berry's `onEat` (`eatItem`; Bug Bite
+/// and Pluck with the move as the effect: `stolen`), for the eater in `slot`: its ability's
+/// `onEatItem` (no other Pokémon's handler exists).
+/// - Cheek Pouch: `this.heal(pokemon.baseMaxhp / 3)` (TryHeal: Heal Block; its effect is the
+///   ability, so Ripen does not double it).
+/// - Cud Chew: a berry not eaten by Bug Bite or Pluck is remembered with `counter = 2`, one less
+///   when nothing is left in the queue (`!this.queue.peek()`: [`Battle::queue_done`]).
+/// - Ripen: `abilityState.berryWeaken` = the berry is a resist berry ([`Volatile::RipenWeaken`]).
+pub(crate) fn eat_item_event<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    item: ItemId,
+    stolen: bool,
+) {
+    let Some(pokemon) = b.occupant(slot) else {
+        return;
+    };
+    match b.ability(slot) {
+        a if a == abilities::CHEEK_POUCH => {
+            let max_hp = f64::from(b.mon(pokemon).max_hp);
+            b.heal(slot, max_hp / 3.0);
+        }
+        a if a == abilities::CUD_CHEW => {
+            if item.data().is_berry && !stolen {
+                let counter = if b.queue_done { 1 } else { 2 };
+                let state = VolatileState {
+                    active: true,
+                    counter: item.0,
+                    hidden: counter,
+                    ..VolatileState::NONE
+                };
+                b.set_volatile_state(slot, Volatile::CudChew, state);
+            }
+        }
+        a if a == abilities::RIPEN => {
+            if super::items::resist_berry(item).is_some() {
+                let state = VolatileState {
+                    active: true,
+                    ..VolatileState::NONE
+                };
+                b.set_volatile_state(slot, Volatile::RipenWeaken, state);
+            } else {
+                b.delete_volatile(slot, Volatile::RipenWeaken);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Whether Ripen doubles a berry's effect on the Pokémon in `slot` (its `onTryHeal` for a heal
+/// whose effect is a berry, `chainModify(2)`; its `onChangeBoost` for a berry's boosts; Leppa
+/// Berry's and Jaboca / Rowap Berry's own `hasAbility('ripen')`).
+pub(crate) fn ripens<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
+    b.ability(slot) == abilities::RIPEN
+}
+
+/// Ripen's `onSourceModifyDamage` (priority -1) for the Pokémon in `target` taking a hit: with
+/// `berryWeaken` set (a resist berry eaten in this very event, or earlier through Bug Bite or
+/// Pluck), it is cleared and the damage is halved once more. Not breakable.
+pub(crate) fn ripen_weaken<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+) -> Option<Handler> {
+    if b.ability(target) != abilities::RIPEN || !b.volatile(target, Volatile::RipenWeaken).active {
+        return None;
+    }
+    b.delete_volatile(target, Volatile::RipenWeaken);
+    let p = priority(
+        abilities::RIPEN.data().event_orders,
+        "onSourceModifyDamagePriority",
+    );
+    Some(Handler::of(b, target, p, SUB_ABILITY, MOD_HALF))
+}
+
+/// Cud Chew's `onResidual` for its holder in `slot`: with a remembered berry and HP, the counter
+/// drops; at 0 the berry is eaten again (`singleEvent('Eat')`: its `onEat`, skipped while the
+/// holder ignores its item; then `EatItem`, which would only remember it again) and forgotten;
+/// `ateBerry` for a berry with `onEat`. The held item and `lastItem` are untouched.
+fn cud_chew_residual<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+) -> Result<(), super::TurnError> {
+    let state = b.volatile(slot, Volatile::CudChew);
+    let Some(pokemon) = b.alive(slot) else {
+        return Ok(());
+    };
+    if !state.active {
+        return Ok(());
+    }
+    if state.hidden > 1 {
+        let next = VolatileState {
+            hidden: state.hidden - 1,
+            ..state
+        };
+        b.set_volatile_state(slot, Volatile::CudChew, next);
+        return Ok(());
+    }
+    let item = ItemId(state.counter);
+    b.delete_volatile(slot, Volatile::CudChew);
+    let empty = item.data().handlers.is_empty() || super::items::resist_berry(item).is_some();
+    if !empty
+        && !super::items::ignoring_item(b.state, slot)
+        && !super::update::berry_on_eat(b, slot, pokemon, item)
+    {
+        return Err(b.unsupported(format!("Cud Chew eating {}", item.data().name)));
+    }
+    if item.data().handlers.contains(&"onEat") {
+        b.record_ate_berry(pokemon);
+    }
+    Ok(())
+}
+
+/// Poison Puppeteer's `onAnyAfterSetStatus` after `status` landed on `target` from `source`
+/// through a move: if the source holds it (as it acts) and is a Pecharunt
+/// (`source.baseSpecies.name`), a poison or bad poison on another Pokémon also confuses it
+/// (`target.addVolatile('confusion')`: Own Tempo, Misty Terrain and Safeguard answer).
+pub(crate) fn poison_puppeteer<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    status: Status,
+    source: Option<SlotRef>,
+) {
+    let Some(source) = source.filter(|&s| s != target) else {
+        return;
+    };
+    let pecharunt = b
+        .slot_mon(source)
+        .is_some_and(|m| base_species(m.species) == crate::dex::species::PECHARUNT);
+    if pecharunt
+        && b.ability(source) == abilities::POISON_PUPPETEER
+        && matches!(status, Status::Poison | Status::Toxic)
+    {
+        b.add_volatile(target, Volatile::Confusion);
+    }
+}
+
+/// The Pokémon whose Dancer copies a dance move `user` (the Pokémon `mover`) just used: every
+/// other active Pokémon not fainted with Dancer (as it acts) that is not semi-invulnerable, by
+/// raw Speed from the slowest (`storedStats.spe`). Equal Speeds are ordered by how long each has
+/// had its ability (`abilityState.effectOrder`), which the state does not keep: unsupported.
+pub(crate) fn dancers<const N: usize>(
+    b: &Battle<'_, N>,
+    mover: PokemonRef,
+) -> Result<Vec<(SlotRef, PokemonRef)>, super::TurnError> {
+    let mut out: Vec<(SlotRef, PokemonRef, i16)> = Vec::new();
+    for slot in b.all_alive() {
+        let pokemon = b.alive(slot).expect("alive");
+        if pokemon == mover || b.ability(slot) != abilities::DANCER {
+            continue;
+        }
+        let semi_invulnerable = [
+            Volatile::Fly,
+            Volatile::Bounce,
+            Volatile::Dive,
+            Volatile::Dig,
+            Volatile::PhantomForce,
+            Volatile::ShadowForce,
+        ]
+        .into_iter()
+        .any(|v| b.volatile(slot, v).active);
+        if !semi_invulnerable {
+            out.push((slot, pokemon, b.mon(pokemon).stats[4]));
+        }
+    }
+    out.sort_by_key(|&(_, _, speed)| speed);
+    if out.windows(2).any(|w| w[0].2 == w[1].2) {
+        return Err(b.unsupported(
+            "two Dancers with the same Speed (Showdown orders them by abilityState.effectOrder)",
+        ));
+    }
+    Ok(out.into_iter().map(|(s, p, _)| (s, p)).collect())
+}
+
+// ---- Opportunist, Receiver / Power of Alchemy -------------------------------------------------
+
+/// The copied raises Opportunist's [`Volatile::Opportunist`] holds (see there).
+pub(crate) fn opportunist_boosts(state: VolatileState) -> [i8; crate::state::BOOST_COUNT] {
+    let mut out = NO_BOOSTS;
+    for (stat, value) in out.iter_mut().enumerate() {
+        let bits = match stat {
+            0..=3 => state.counter >> (4 * stat),
+            4 | 5 => u16::from(state.hidden) >> (4 * (stat - 4)),
+            _ => u16::from(state.time),
+        };
+        *value = (bits & 0xf) as i8;
+    }
+    out
+}
+
+/// [`Volatile::Opportunist`] holding `boosts` (each 0..=12).
+fn opportunist_state(boosts: &[i8; crate::state::BOOST_COUNT]) -> VolatileState {
+    let nibble = |stat: usize| boosts[stat].clamp(0, 12) as u16;
+    VolatileState {
+        active: true,
+        counter: (0..4).map(|s| nibble(s) << (4 * s)).sum(),
+        hidden: (nibble(4) | (nibble(5) << 4)) as u8,
+        time: nibble(6) as u8,
+        ..VolatileState::NONE
+    }
+}
+
+/// Opportunist's `onFoeAfterBoost` after `target` got `boost` (after the cap and TryBoost) from
+/// `effect`: unless the effect is Opportunist or Mirror Herb, every active foe of the target
+/// holding Opportunist (as it acts) adds the positive stages to its copied raises (an empty
+/// table changes nothing when used, so none is kept).
+pub(crate) fn opportunist_after_boost<const N: usize>(
+    b: &mut Battle<'_, N>,
+    target: SlotRef,
+    boost: &[i8; crate::state::BOOST_COUNT],
+    effect: BoostEffect,
+) {
+    if effect == BoostEffect::Ability(abilities::OPPORTUNIST)
+        || effect == BoostEffect::Item(items::MIRROR_HERB)
+        || !boost.iter().any(|&stage| stage > 0)
+    {
+        return;
+    }
+    for holder in b.alive_slots(target.side.other()) {
+        if b.ability(holder) != abilities::OPPORTUNIST {
+            continue;
+        }
+        let state = b.volatile(holder, Volatile::Opportunist);
+        let mut copied = if state.active {
+            opportunist_boosts(state)
+        } else {
+            NO_BOOSTS
+        };
+        for (total, &stage) in copied.iter_mut().zip(boost) {
+            if stage > 0 {
+                *total = (*total + stage).min(12);
+            }
+        }
+        b.set_volatile_state(holder, Volatile::Opportunist, opportunist_state(&copied));
+    }
+}
+
+/// Opportunist's `onAnySwitchIn` (priority -3), `onAnyAfterMega`, `onAnyAfterMove` and
+/// `onResidual` (order 29) for its holder in `slot`: with copied raises, `this.boost(boosts,
+/// holder)` (its effect is Opportunist, which no Opportunist or Mirror Herb copies) and they are
+/// forgotten. Nothing while the ability is suppressed (the raises wait).
+pub(crate) fn opportunist_use<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.ability(slot) != abilities::OPPORTUNIST {
+        return;
+    }
+    let state = b.volatile(slot, Volatile::Opportunist);
+    if !state.active {
+        return;
+    }
+    b.delete_volatile(slot, Volatile::Opportunist);
+    if b.alive(slot).is_some() {
+        let boosts = opportunist_boosts(state);
+        b.boost_by(
+            slot,
+            &boosts,
+            Some(slot),
+            BoostEffect::Ability(abilities::OPPORTUNIST),
+        );
+    }
+}
+
+/// Receiver's and Power of Alchemy's `onAllyFaint` when the Pokémon in `fainted` (on the holder's
+/// side, already gone from its slot) fainted with `ability` (`target.getAbility()` while it still
+/// had it): a holder with HP (as its ability acts) takes the ability unless it is `noreceiver` or
+/// No Ability (`setAbility(ability, target)`: the holder's own `cantsuppress` or the new one's
+/// fails, as does Ability Shield (`SetAbility`); then the old ability's `End`, the new one with a
+/// fresh ability state, and its `Start`).
+pub(crate) fn receiver<const N: usize>(
+    b: &mut Battle<'_, N>,
+    fainted: SlotRef,
+    ability: AbilityId,
+) -> Result<(), super::TurnError> {
+    use crate::instruction::Instruction;
+    if ability.data().flags.contains(AbilityFlags::NORECEIVER) || ability == abilities::NO_ABILITY {
+        return Ok(());
+    }
+    for holder in b.alive_slots(fainted.side) {
+        if holder == fainted
+            || ![abilities::RECEIVER, abilities::POWER_OF_ALCHEMY].contains(&b.ability(holder))
+        {
+            continue;
+        }
+        let old = b.raw_ability(holder);
+        let locked = |a: AbilityId| a.data().flags.contains(AbilityFlags::CANTSUPPRESS);
+        if locked(ability) || locked(old) || b.item(holder) == items::ABILITY_SHIELD {
+            continue;
+        }
+        if !super::support::ability_supported_on_field(ability) {
+            return Err(b.unsupported(format!(
+                "Receiver gaining {} ({:?})",
+                ability.data().name,
+                ability.data().handlers
+            )));
+        }
+        super::switching::end_ability(b, holder, old)?;
+        let pokemon = b.occupant(holder).expect("alive");
+        b.apply(Instruction::SetAbility {
+            target: pokemon,
+            old,
+            new: ability,
+        });
+        super::switching::start_ability(b, holder, ability)?;
+    }
+    Ok(())
+}
+
 /// The ability of the Pokémon in `holder` as the handlers of `user`'s move see it. Showdown
 /// `suppressingAbility` (gen 8+): a move that ignores abilities (Sunsteel Strike, Moongeist
 /// Beam, or any move of a Mold Breaker user) skips the breakable abilities of everyone but its
@@ -482,7 +1102,8 @@ pub(crate) fn gorilla_disabled_move<const N: usize>(
 ) -> Option<String> {
     let mon = state.active(slot)?;
     let lock = state.slot(slot).volatiles.get(Volatile::GorillaTactics);
-    (mon.ability == abilities::GORILLA_TACTICS && lock.active && lock.mv != id).then(|| {
+    let acts = effective_ability(state, slot) == abilities::GORILLA_TACTICS;
+    (acts && lock.active && lock.mv != id).then(|| {
         format!(
             "{} is locked into {} by Gorilla Tactics",
             mon.species.data().name,
@@ -817,7 +1438,8 @@ pub(crate) fn skill_swap<const N: usize>(
     if b.occupant(source).is_none() || b.occupant(target).is_none() {
         return Ok(false);
     }
-    let (source_ability, target_ability) = (b.ability(source), b.ability(target));
+    // `source.getAbility()` / `target.getAbility()`: the raw abilities.
+    let (source_ability, target_ability) = (b.raw_ability(source), b.raw_ability(target));
     let fails = |a: AbilityId| a.data().flags.contains(AbilityFlags::FAILSKILLSWAP);
     if fails(source_ability) || fails(target_ability) {
         return Ok(false);
@@ -922,14 +1544,24 @@ pub(crate) fn harvest<const N: usize>(b: &mut Battle<'_, N>, pokemon: PokemonRef
 /// every active holder not at 0 HP raises its SpA by 1 (`this.boost({spa: 1},
 /// this.effectState.target)`; `boost` does nothing at 0 HP, and fails once the holder's foes have
 /// no Pokémon left). Each only changes its holder.
-pub(crate) fn soul_heart<const N: usize>(b: &mut Battle<'_, N>) {
-    for slot in b.all_alive() {
-        if b.ability(slot) == abilities::SOUL_HEART {
+pub(crate) fn soul_heart<const N: usize>(b: &mut Battle<'_, N>, holders: &[SlotRef]) {
+    for &slot in holders {
+        if b.alive(slot).is_some() && b.raw_ability(slot) == abilities::SOUL_HEART {
             let mut up = NO_BOOSTS;
             up[2] = 1;
             b.boost_by(slot, &up, None, BoostEffect::Ability(abilities::SOUL_HEART));
         }
     }
+}
+
+/// The active Soul-Heart holders whose `onAnyFaint` acts ([`soul_heart`]), taken while the
+/// fainting Pokémon is still in its slot (a fainting Neutralizing Gas holder still suppresses
+/// them in the Faint event).
+pub(crate) fn soul_heart_holders<const N: usize>(b: &Battle<'_, N>) -> Vec<SlotRef> {
+    b.all_alive()
+        .into_iter()
+        .filter(|&s| b.ability(s) == abilities::SOUL_HEART)
+        .collect()
 }
 
 /// Anger Shell and Berserk (Champions): `onDamage` sets `abilityState.checked*` to
@@ -1091,7 +1723,7 @@ pub(crate) fn try_eat_item<const N: usize>(b: &Battle<'_, N>, eater: SlotRef) ->
         return false;
     };
     let item = mon.item;
-    let pending = has_berserk_check(mon.ability)
+    let pending = has_berserk_check(b.ability(eater))
         && b.volatile(eater, Volatile::AngerShellUnchecked).active
         && HEALING_BERRIES.contains(&item);
     let unnerved = b.alive_slots(eater.side.other()).into_iter().any(|foe| {
@@ -1180,17 +1812,16 @@ pub fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> bool {
     if super::conditions::trapped(state, slot).is_some() {
         return true;
     }
+    // The foes' abilities as they act (a suppressed Shadow Tag traps nobody).
     let foe_traps = State::<N>::slot_refs().any(|s| {
         s.side != slot.side
-            && state.active(s).is_some_and(|m| {
-                m.hp > 0
-                    && [
-                        abilities::SHADOW_TAG,
-                        abilities::ARENA_TRAP,
-                        abilities::MAGNET_PULL,
-                    ]
-                    .contains(&m.ability)
-            })
+            && state.active(s).is_some_and(|m| m.hp > 0)
+            && [
+                abilities::SHADOW_TAG,
+                abilities::ARENA_TRAP,
+                abilities::MAGNET_PULL,
+            ]
+            .contains(&effective_ability(state, s))
     });
     if !foe_traps {
         return false;
@@ -1211,7 +1842,7 @@ fn trapped_in<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
         && b.alive_slots(slot.side.other())
             .into_iter()
             .any(|foe| match b.ability(foe) {
-                a if a == abilities::SHADOW_TAG => mon.ability != abilities::SHADOW_TAG,
+                a if a == abilities::SHADOW_TAG => b.ability(slot) != abilities::SHADOW_TAG,
                 a if a == abilities::ARENA_TRAP => b.is_grounded(slot),
                 a if a == abilities::MAGNET_PULL => mon.types.contains(&Type::Steel),
                 _ => false,
@@ -1408,12 +2039,13 @@ pub(crate) fn attack_handlers<const N: usize>(
     let Some(attacker) = b.slot_mon(user) else {
         return out;
     };
+    // The user's own ability as it acts (Gastro Acid, Neutralizing Gas).
+    let ability = b.ability(user);
     // Water Bubble: the user's Water moves `chainModify(2)` (no priority).
-    if attacker.ability == abilities::WATER_BUBBLE && move_type == Type::Water {
-        let p = priority(attacker.ability.data().event_orders, event);
+    if ability == abilities::WATER_BUBBLE && move_type == Type::Water {
+        let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_DOUBLE));
     }
-    let ability = attacker.ability;
     // Blaze, Torrent, Overgrow, Swarm: `attacker.hp <= attacker.maxhp / 3`.
     let pinch_type = match ability {
         a if a == abilities::BLAZE => Some(Type::Fire),
@@ -1434,9 +2066,17 @@ pub(crate) fn attack_handlers<const N: usize>(
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
     }
-    if let Some(modifier) = own_attack_modifier(b, user, target, attacker, physical, move_type) {
+    if let Some(modifier) =
+        own_attack_modifier(b, user, target, attacker, ability, physical, move_type)
+    {
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, modifier));
+    }
+    // Slow Start (priority 5): `if (this.effectState.counter) return this.chainModify(0.5)`
+    // (Attack only).
+    if physical && slow_start_halves(b, user) {
+        let p = priority(ability.data().event_orders, event);
+        out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_HALF));
     }
     // Gorilla Tactics (priority 1): `chainModify(1.5)` (Attack only; Dynamax is off).
     if physical && ability == abilities::GORILLA_TACTICS {
@@ -1508,11 +2148,12 @@ fn own_attack_modifier<const N: usize>(
     user: SlotRef,
     target: SlotRef,
     attacker: &Pokemon,
+    ability: AbilityId,
     physical: bool,
     move_type: Type,
 ) -> Option<u32> {
     let typed = |ty: Type, modifier: u32| (move_type == ty).then_some(modifier);
-    match attacker.ability {
+    match ability {
         a if a == abilities::HUGE_POWER || a == abilities::PURE_POWER => {
             physical.then_some(MOD_DOUBLE)
         }
@@ -1546,6 +2187,10 @@ pub(crate) fn paradox_volatile_of<const N: usize>(
     b: &Battle<'_, N>,
     slot: SlotRef,
 ) -> Option<(AbilityId, u16)> {
+    // `if (this.effectState.bestStat !== ... || pokemon.ignoringAbility()) return;`
+    if b.ignoring_ability(slot) {
+        return None;
+    }
     let proto = b.volatile(slot, Volatile::Protosynthesis);
     if proto.active {
         return Some((abilities::PROTOSYNTHESIS, proto.counter));
@@ -1680,11 +2325,11 @@ pub(crate) fn blocks_status(ability: AbilityId, status: Status) -> bool {
 }
 
 /// Whether a burned user's physical damage is halved: Showdown skips it for Guts
-/// (`!pokemon.hasAbility('guts')`).
-pub(crate) fn burn_halves(attacker: &Pokemon, data: &MoveData) -> bool {
+/// (`!pokemon.hasAbility('guts')`: `ability` is the user's as it acts).
+pub(crate) fn burn_halves(attacker: &Pokemon, ability: AbilityId, data: &MoveData) -> bool {
     attacker.status == Status::Burn
         && data.category == MoveCategory::Physical
-        && attacker.ability != abilities::GUTS
+        && ability != abilities::GUTS
 }
 
 /// The attacking stat after the handlers of the `ModifyAtk` event that return a new value

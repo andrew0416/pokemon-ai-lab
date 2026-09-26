@@ -53,6 +53,8 @@ enum Kind {
     Forme(PokemonRef, SlotRef, AbilityId),
     /// Harvest `onResidual` (order 28, sub-order 2).
     Harvest(PokemonRef, SlotRef),
+    /// Another ability's `onResidual` (`abilities::on_residual`: Slow Start), at its own order.
+    Ability(PokemonRef, SlotRef, AbilityId),
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -83,12 +85,12 @@ pub(crate) fn residual<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), Turn
         // Showdown `fieldEvent`: `faintMessages()` follows every handler except one whose
         // holder has already fainted (skipped) or whose effect's duration ran out (`End`, then
         // `continue`): a faint queued by an `End` (Perish Song) waits for the next handler.
-        if run(b, handler)? && b.faint_messages(true) {
+        if run(b, handler)? && b.faint_messages(true)? {
             return Ok(());
         }
     }
     // `runAction`'s `faintMessages()` after the residual action.
-    b.faint_messages(true);
+    b.faint_messages(true)?;
     Ok(())
 }
 
@@ -242,6 +244,8 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                     kind: Kind::Leftovers(pokemon, slot),
                 });
             }
+            // Gathered by the raw ability (`getAbility()`); a suppressed one is skipped when it
+            // runs (`singleEvent`: `ignoringAbility`).
             match mon.ability {
                 a if a == abilities::SPEED_BOOST => out.push(Handler {
                     order: 28,
@@ -264,6 +268,15 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                         speed,
                         sub_order: 3,
                         kind: Kind::StatusCure(pokemon, slot, a),
+                    })
+                }
+                a if ability_events::has_residual(a) => {
+                    let (order, sub_order) = ability_events::residual_order(a);
+                    out.push(Handler {
+                        order,
+                        speed,
+                        sub_order,
+                        kind: Kind::Ability(pokemon, slot, a),
                     })
                 }
                 a if super::forme::has_residual(a) => {
@@ -327,7 +340,7 @@ impl Kind {
             | Kind::Item(p, s, _)
             | Kind::LeechSeed(p, s)
             | Kind::VolatileEffect(p, s, _) => Some((p, s)),
-            Kind::Forme(p, s, _) | Kind::Harvest(p, s) => Some((p, s)),
+            Kind::Forme(p, s, _) | Kind::Harvest(p, s) | Kind::Ability(p, s, _) => Some((p, s)),
             Kind::Weather
             | Kind::FieldDuration(_)
             | Kind::SideDuration(..)
@@ -487,20 +500,25 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
                 return Ok(true);
             }
             let max_hp = f64::from(b.mon(pokemon).max_hp);
+            // Poison Heal (`onDamage`, priority 1) turns the poison damage into a heal.
             match b.mon(pokemon).status {
                 Status::Burn => {
-                    let damage = ability_events::burn_damage(b.mon(pokemon).ability, max_hp);
+                    let damage = ability_events::burn_damage(b.ability(slot), max_hp);
                     b.damage(slot, damage, DamageSource::Indirect);
                 }
                 Status::Poison => {
-                    b.damage(slot, max_hp / 8.0, DamageSource::Indirect);
+                    if !ability_events::poison_heal(b, slot) {
+                        b.damage(slot, max_hp / 8.0, DamageSource::Indirect);
+                    }
                 }
                 Status::Toxic => {
                     let stage = b.mon(pokemon).status_turns;
                     let stage = if stage < 15 { stage + 1 } else { stage };
                     b.set_status_turns(pokemon, stage);
                     let unit = (max_hp / 16.0).floor().max(1.0);
-                    b.damage(slot, unit * f64::from(stage), DamageSource::Indirect);
+                    if !ability_events::poison_heal(b, slot) {
+                        b.damage(slot, unit * f64::from(stage), DamageSource::Indirect);
+                    }
                 }
                 _ => {}
             }
@@ -566,22 +584,31 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
             }
         }
         Kind::Forme(pokemon, slot, ability) => {
-            // Skipped if the ability changed since the handlers were collected.
-            if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != ability {
+            // Skipped if the ability changed since the handlers were collected, or is
+            // suppressed (Gastro Acid, Neutralizing Gas).
+            if !still_active(b, pokemon, slot) || b.ability(slot) != ability {
                 return Ok(true);
             }
             super::forme::residual(b, slot, ability)?;
         }
+        Kind::Ability(pokemon, slot, ability) => {
+            // Skipped if the ability changed since the handlers were collected, or is
+            // suppressed.
+            if !still_active(b, pokemon, slot) || b.ability(slot) != ability {
+                return Ok(true);
+            }
+            ability_events::on_residual(b, slot, ability)?;
+        }
         Kind::Harvest(pokemon, slot) => {
             // Skipped if the ability changed since the handlers were collected.
-            if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != abilities::HARVEST {
+            if !still_active(b, pokemon, slot) || b.ability(slot) != abilities::HARVEST {
                 return Ok(true);
             }
             ability_events::harvest(b, pokemon);
         }
         Kind::SpeedBoost(pokemon, slot) => {
             // Skipped if the ability changed since the handlers were collected.
-            if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != abilities::SPEED_BOOST {
+            if !still_active(b, pokemon, slot) || b.ability(slot) != abilities::SPEED_BOOST {
                 return Ok(true);
             }
             // `if (pokemon.activeTurns) this.boost({spe: 1})`.
@@ -597,7 +624,7 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
             }
         }
         Kind::StatusCure(pokemon, slot, ability) => {
-            if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != ability {
+            if !still_active(b, pokemon, slot) || b.ability(slot) != ability {
                 return Ok(true);
             }
             // Healer (Champions): every adjacent ally not at 0 HP with a status is cured on

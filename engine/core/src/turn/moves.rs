@@ -529,7 +529,7 @@ pub(crate) fn resume_move<const N: usize>(
     use_move_tail(b, user, &mv, result, main_target)?;
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
     handlers::on_after_move(b, user, pokemon, &mv);
-    run_move_tail(b, user, &mv);
+    run_move_tail(b, user, &mv)?;
     // The action's `clearActiveMove()`: `battle.lastMove` (a multi-hit move is never called).
     b.record_battle_last_move(mv.id);
     b.active_move = None;
@@ -539,7 +539,11 @@ pub(crate) fn resume_move<const N: usize>(
 /// The end of Showdown `runMove` after `useMove`: `AfterMove` (a locked move on its last
 /// turn ends and, by fatigue, confuses; an Electric move ends Charge; White Herb and Mirror
 /// Herb act), then faints.
-fn run_move_tail<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
+fn run_move_tail<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Result<(), TurnError> {
     let locked = b.volatile(user, Volatile::LockedMove);
     if locked.active && locked.duration == 1 {
         b.remove_volatile(user, Volatile::LockedMove);
@@ -551,9 +555,142 @@ fn run_move_tail<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Acti
         .is_some_and(|m| b.occupant(m.user) == Some(m.pokemon))
     {
         item_events::any_after_move(b, user);
+        // Opportunist's `onAnyAfterMove` (each acts on its own holder).
+        for slot in b.all_alive() {
+            ability_events::opportunist_use(b, slot);
+        }
     }
-    b.faint_messages(true);
+    // Dancer, after AfterMove (`move.flags['dance'] && moveDidSomething && !move.isExternal`).
+    if !b.external_move {
+        dance(b, user)?;
+    }
+    b.faint_messages(true)?;
     b.check_win(None);
+    Ok(())
+}
+
+/// Showdown `runMove`'s Dancer step for the move the Pokémon in `user` just used (the battle's
+/// active move: a move another called is the one that counts): a `dance` move that did
+/// something ([`Battle::active_target`]) is copied by every Dancer
+/// (`ability_events::dancers`, slowest first). Before each, `faintMessages` (the battle may end;
+/// a fainted Dancer is skipped); a Dancer on the user's side copies it at the first dance's
+/// target when that is a foe of the Dancer, every other Dancer at the user; the copy is an
+/// external `runMove` ([`run_external_move`]).
+fn dance<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> Result<(), TurnError> {
+    let Some(active) = b.active_move else {
+        return Ok(());
+    };
+    let Some((first_target, true)) = b.active_target else {
+        return Ok(());
+    };
+    if !active.id.data().flags.contains(MoveFlags::DANCE) {
+        return Ok(());
+    }
+    let dancers = ability_events::dancers(b, active.pokemon)?;
+    for (dancer, pokemon) in dancers {
+        if b.faint_messages(true)? {
+            break;
+        }
+        if b.alive(dancer) != Some(pokemon) {
+            continue;
+        }
+        let aim = if first_target.side != dancer.side && user.side == dancer.side {
+            first_target
+        } else {
+            user
+        };
+        run_external_move(b, dancer, active.id, loc_of(dancer, aim))?;
+    }
+    b.active_move = Some(active);
+    Ok(())
+}
+
+/// Showdown `runMove(id, pokemon, targetLoc, {externalMove: true})` for Dancer's copy by the
+/// Pokémon at `user`: `activeMoveActions` counts it; no OverrideAction (Encore); the move is the
+/// dex's (its own priority, no Prankster boost); BeforeMove runs (sleep, paralysis, Truant, the
+/// Choice lock, ...); no PP is spent and `lastMove` stays; `useMove` with Dancer as the source
+/// effect (no Pressure PP, no ability suppression from it); a lock the copy started ends at once
+/// (`noLock`: Petal Dance's `lockedmove` is deleted); then AfterMove without Dancer. A multi-hit
+/// copy (it would suspend the stage) is unsupported.
+fn run_external_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+    target_loc: i8,
+) -> Result<(), TurnError> {
+    let pokemon = b.occupant(user).expect("the dancer is active");
+    b.increment_move_actions(user);
+    let target = get_target(b, user, id, target_loc);
+    let data = id.data();
+    b.active_move = Some(ActiveMoveRef {
+        user,
+        pokemon,
+        id,
+        ignore_ability: data.ignore_ability,
+        category: data.category,
+        infiltrates: false,
+    });
+    let mut mv = ActiveMove {
+        id,
+        data,
+        category: data.category,
+        priority: i32::from(data.priority),
+        prankster_boosted: false,
+        spread: false,
+        accuracy: data.accuracy,
+        has_sheer_force: false,
+        secondary_chance_factor: 1,
+        added_secondary: None,
+        total_damage: 0,
+        target: data.target,
+        move_type: data.move_type,
+        base_power: i32::from(data.base_power),
+        ignore_evasion: data.ignore_evasion,
+        scrappy: false,
+        hit_targets: 0,
+        source_effect: MoveId::NONE,
+        self_switch: data.self_switch == SelfSwitch::Yes,
+        type_changer: AbilityId::NONE,
+        has_bounced: false,
+        future_hit: false,
+        bypass_protect: 0,
+        target_loc,
+    };
+    let recharging = b.volatile(user, Volatile::MustRecharge).active;
+    let proceeds = before_move(b, user, &mv);
+    conditions::destiny_bond_before_move(b, user, mv.id, proceeds);
+    if !proceeds {
+        let result = if recharging {
+            MoveResult::Null
+        } else {
+            MoveResult::Failed
+        };
+        b.set_move_result(user, result);
+        if b.volatile(user, Volatile::TwoTurnMove).active {
+            b.remove_volatile(user, Volatile::TwoTurnMove);
+        }
+        ability_events::charge_after_move(b, user, mv.id, mv.move_type);
+        return Ok(());
+    }
+    if handlers::before_move_callback(b, user, &mv) {
+        b.set_move_result(user, MoveResult::Failed);
+        return Ok(());
+    }
+    let no_lock = !b.volatile(user, Volatile::LockedMove).active;
+    let outer = b.external_move;
+    b.external_move = true;
+    let will_act = b.will_act();
+    if use_move(b, user, &mut mv, target, will_act)?.is_some() {
+        return Err(b.unsupported(format!("Dancer copying {}: a multi-hit move", data.name)));
+    }
+    let user = handlers::current_slot(b, user, pokemon);
+    handlers::on_after_move(b, user, pokemon, &mv);
+    run_move_tail(b, user, &mv)?;
+    if no_lock {
+        b.delete_volatile(user, Volatile::LockedMove);
+    }
+    b.external_move = outer;
+    Ok(())
 }
 
 fn run_move_inner<const N: usize>(
@@ -661,7 +798,7 @@ fn run_move_inner<const N: usize>(
     let user = handlers::current_slot(b, user, pokemon);
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
     handlers::on_after_move(b, user, pokemon, &mv);
-    run_move_tail(b, user, &mv);
+    run_move_tail(b, user, &mv)?;
     // The action's `clearActiveMove()`: `battle.lastMove` is the active move, a called move
     // (Sleep Talk's, Copycat's) rather than its caller.
     if let Some(active) = b.active_move {
@@ -680,9 +817,11 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
     if b.volatile(user, Volatile::GlaiveRush).active {
         b.remove_volatile(user, Volatile::GlaiveRush);
     }
-    // mustrecharge (priority 11): the turn is spent recharging.
+    // mustrecharge (priority 11): the turn is spent recharging; Truant's volatile goes too
+    // (`pokemon.removeVolatile('truant')`), so the holder moves after its recharge turn.
     if b.volatile(user, Volatile::MustRecharge).active {
         b.remove_volatile(user, Volatile::MustRecharge);
+        b.remove_volatile(user, Volatile::Truant);
         return false;
     }
     match b.mon(pokemon).status {
@@ -708,6 +847,10 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
             }
         }
         _ => {}
+    }
+    // Truant (priority 9).
+    if !ability_events::truant_before_move(b, user) {
+        return false;
     }
     if b.volatile(user, Volatile::Flinch).active {
         return false;
@@ -1073,6 +1216,8 @@ fn use_move<const N: usize>(
     will_act: bool,
 ) -> Result<Option<MoveProgress>, TurnError> {
     let pokemon = b.occupant(user).expect("checked");
+    // Dancer's `activeTarget` and `moveDidSomething`: set once the move ran.
+    b.active_target = None;
     // `pokemon.moveThisTurnResult = undefined` (`useMove`); every early return below is a
     // failure (`false`).
     b.set_move_result(user, MoveResult::Undefined);
@@ -1202,6 +1347,7 @@ fn use_move<const N: usize>(
     // Emergency Exit could clear it. The request is made, or the flag dropped for a side
     // without a bench, after the action.
     b.finish_move_result(user, result);
+    b.active_target = Some((main_target, result));
     use_move_tail(b, user, mv, result, main_target)?;
     Ok(None)
 }
@@ -1408,8 +1554,8 @@ fn deduct_pressure_pp<const N: usize>(
     targets: &[SlotRef],
 ) {
     // `if (!sourceEffect || callerMoveForPressure)`: a bounced move's source effect is Magic
-    // Bounce, which has no PP.
-    if mv.has_bounced {
+    // Bounce, a Dancer copy's Dancer, neither of which has PP.
+    if mv.has_bounced || b.external_move {
         return;
     }
     let foe = user.side.other();
@@ -2241,7 +2387,7 @@ fn hit_loop<const N: usize>(
     }
     // The loop ended: `faintMessages(false, false, !pokemon.hp)`, recoil, AfterMoveSecondary.
     let user_fainted = b.alive(user).is_none();
-    b.faint_messages(user_fainted);
+    b.faint_messages(user_fainted)?;
     let total = progress.total_damage;
     // `if (move.totalDamage) this.applyRecoilDamage(move.totalDamage, move, pokemon)`: Struggle's
     // `directDamage` (which no Damage handler sees: Rock Head, Magic Guard, Endure, Sturdy) or
@@ -2388,6 +2534,11 @@ fn spread_move_hit<const N: usize>(
     //    substitute's -1) only sets a flag `get_damage` reads.
     let mut shielded = Vec::with_capacity(targets.len());
     for &t in targets {
+        // Gulp Missile's `onSourceTryPrimaryHit` (the user's, priority 0: before the
+        // substitute's -1): Surf fills Cramorant's throat.
+        if mv.id == moves::SURF {
+            super::forme::gulp_missile_catch(b, user);
+        }
         shielded.push(if substitute_takes_hit(b, user, mv, t) {
             Some(hit_substitute(b, user, mv, t, hit)?)
         } else {
@@ -2477,7 +2628,12 @@ fn spread_move_hit<const N: usize>(
         if let Some(volatile) = Volatile::from_condition(data.volatile_status)
             .filter(|_| handlers::keeps_volatile_status(b, user, mv))
         {
-            note(b.add_volatile(t, volatile));
+            let added = b.add_volatile(t, volatile);
+            // Gastro Acid's condition `onStart`: the suppressed ability's `End`.
+            if added && volatile == Volatile::GastroAcid {
+                ability_events::gastro_acid_start(b, t)?;
+            }
+            note(added);
         }
         // `if (moveData.slotCondition) hitResult = target.side.addSlotCondition(target,
         // moveData.slotCondition, source, move)` (Wish, Healing Wish, Revival Blessing).
@@ -3162,7 +3318,7 @@ fn get_damage<const N: usize>(
         atk_boost,
     );
     // ModifyAtk (physical) / ModifySpA (special), whatever stat the move attacks with.
-    let attack = ability_events::attack_direct(attacker.ability, data, attack);
+    let attack = ability_events::attack_direct(b.ability(user), data, attack);
     let mut attack_mods = ability_events::attack_handlers(b, user, target, data, mv.move_type);
     attack_mods.extend(item_events::attack_handlers(b, user, data));
     let attack = modify(attack, ability_events::chain(b, attack_mods));
@@ -3196,7 +3352,7 @@ fn get_damage<const N: usize>(
     // The `???` type (Struggle's, `Type::None` here) never gets STAB.
     let stab =
         data.force_stab || (mv.move_type != Type::None && attacker.types.contains(&mv.move_type));
-    let stab_modifier = ability_events::modify_stab(attacker.ability, stab);
+    let stab_modifier = ability_events::modify_stab(b.ability(user), stab);
     // runEffectiveness: per defending type, the chart then the move's onEffectiveness, then
     // the target's ability (Disguise returns 0, which ends the event) and item.
     let neutral = super::forme::shields_hit(b, user, target, mv.id);
@@ -3244,6 +3400,8 @@ fn get_damage<const N: usize>(
         type_mod,
         hit_substitute,
     ));
+    // Ripen's (priority -1): after a resist berry the item handlers just ate.
+    final_mods.extend(ability_events::ripen_weaken(b, target));
     // The target's volatiles (`onSourceModifyDamage`: Glaive Rush).
     final_mods.extend(handlers::volatile_modify_damage(b, target, mv));
     // The screens' `onAnyModifyDamage`: `if (!target.getMoveHitData(move).crit &&
@@ -3267,7 +3425,8 @@ fn get_damage<const N: usize>(
         stab_modifier,
         type_effectiveness,
         // `if (this.battle.gen < 6 || move.id !== 'facade')`: Facade keeps its power burned.
-        burned: ability_events::burn_halves(&attacker, data) && mv.id != moves::FACADE,
+        burned: ability_events::burn_halves(&attacker, b.ability(user), data)
+            && mv.id != moves::FACADE,
         // `getMoveHitData(move).bypassProtect` (Unseen Fist, Piercing Drill).
         protected: mv.bypass_protect & target_bit::<N>(target) != 0,
         final_modifier,

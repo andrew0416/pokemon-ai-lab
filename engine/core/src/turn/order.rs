@@ -60,7 +60,8 @@ impl<const N: usize> Battle<'_, N> {
         // `pokemon.effectiveWeather()` (Chlorophyll, Swift Swim); Sand Rush and Slush Rush read
         // `field.isWeather`, which Utility Umbrella does not touch either way.
         let weather = self.weather_for(slot);
-        let doubled = match mon.ability {
+        let ability = self.ability(slot);
+        let doubled = match ability {
             a if a == abilities::SAND_RUSH => weather == Weather::Sand,
             a if a == abilities::CHLOROPHYLL => weather == Weather::Sun,
             a if a == abilities::SWIFT_SWIM => weather == Weather::Rain,
@@ -71,13 +72,20 @@ impl<const N: usize> Battle<'_, N> {
             chain.push(2 * MOD_ONE);
         }
         // Quick Feet: `if (pokemon.status) return this.chainModify(1.5)`.
-        let quick_feet = mon.ability == abilities::QUICK_FEET;
+        let quick_feet = ability == abilities::QUICK_FEET;
         if quick_feet && mon.status != Status::None {
             chain.push(MOD_ONE_POINT_FIVE);
         }
+        // Slow Start: `if (this.effectState.counter) return this.chainModify(0.5)`.
+        if super::abilities::slow_start_halves(self, slot) {
+            chain.push(MOD_ONE / 2);
+        }
         // Unburden's volatile: `if (!pokemon.item && !pokemon.ignoringAbility())
-        // return this.chainModify(2)` (Gastro Acid and Neutralizing Gas are not supported).
-        if mon.item.is_none() && self.volatile(slot, Volatile::Unburden).active {
+        // return this.chainModify(2)`.
+        if mon.item.is_none()
+            && self.volatile(slot, Volatile::Unburden).active
+            && !self.ignoring_ability(slot)
+        {
             chain.push(2 * MOD_ONE);
         }
         // Protosynthesis / Quark Drive's condition: `chainModify(1.5)` when Speed is the best
@@ -88,7 +96,8 @@ impl<const N: usize> Battle<'_, N> {
         // The effective item (Choice Scarf, Iron Ball, Macho Brace, the Power items, Quick
         // Powder; none under Magic Room or a Klutz it does not ignore). The factors are powers of
         // two times at most two 1.5s (Quick Feet or a paradox condition, and Choice Scarf: 6144
-        // * 6144 / 4096 = 9216 exactly), so the chain is exact in any order.
+        // * 6144 / 4096 = 9216 exactly; Slow Start's and Iron Ball's halves keep it a multiple of
+        // 4096 / 16), so the chain is exact in any order.
         chain.extend(item_events::speed_modifier(self.item(slot), mon));
         if !chain.is_empty() {
             spe = modify(spe, chain_modifiers(&chain, 0, u32::MAX));

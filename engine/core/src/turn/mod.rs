@@ -472,6 +472,8 @@ fn run_replacements<const N: usize>(
     // The last `instaswitch` action's `runAction` tail: `eachEvent('Update')` before the
     // queued `runSwitch` actions (see `switching::run_switch`).
     update::update_event(b)?;
+    // `runSwitch` takes every queued `runSwitch` action: nothing is left in the queue.
+    b.queue_done = true;
     let slots: Vec<SlotRef> = newcomers.iter().map(|n| n.0).collect();
     switching::run_switch_in(b, &slots)?;
     if b.is_over() {
@@ -501,7 +503,7 @@ fn after_action<const N: usize>(
     pending: &mut Pending,
     newcomers: &[(SlotRef, i16)],
 ) -> Result<StageEnd, TurnError> {
-    if b.faint_messages(true) {
+    if b.faint_messages(true)? {
         pending.done = true;
         b.queue.clear();
         return Ok(StageEnd::Finished);
@@ -1364,6 +1366,8 @@ fn run_stage_inner<const N: usize>(
     }
 
     if !pending.residual_done {
+        // The residual action was the queue's last: `queue.peek()` is empty from here on.
+        b.queue_done = true;
         // `residualPokemon`: every active Pokémon's HP before the residual damage, for
         // Emergency Exit.
         let before: Vec<(SlotRef, i16)> = b

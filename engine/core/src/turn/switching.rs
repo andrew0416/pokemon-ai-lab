@@ -107,6 +107,11 @@ pub(crate) enum StartEffect {
     Commander,
     /// Gorilla Tactics: `abilityState.choiceLock = ""` (the lock volatile goes).
     GorillaTactics,
+    /// Slow Start: `effectState.counter = 5` (`abilities::slow_start_start`).
+    SlowStart,
+    /// Truant: the `truant` volatile goes, or comes for a holder that has already acted
+    /// (`abilities::truant_start`).
+    Truant,
 }
 
 /// Abilities with an implemented start, with the exact handler lists they were implemented
@@ -521,12 +526,57 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         ],
         StartEffect::GorillaTactics,
     ),
+    // Neutralizing Gas: no `onStart` (a `Start` does nothing); its `onSwitchIn` (priority 2) is
+    // `run_switch_in`'s (`abilities::neutralizing_gas_switch_in`), its `onEnd`
+    // `abilities::neutralizing_gas_end` (switching out, fainting, losing the ability, Gastro
+    // Acid); the suppression itself is `abilities::ignoring_ability`.
+    (
+        abilities::NEUTRALIZING_GAS,
+        &["onEnd", "onSwitchIn"],
+        StartEffect::None,
+    ),
+    // Opus U. Slow Start: `onStart` sets the counter, `onEnd` only logs (`end_ability` drops the
+    // counter with the ability state); `onModifyAtk` / `onModifySpe` / `onResidual` in
+    // `abilities` (`slow_start_halves`, `on_residual`).
+    (
+        abilities::SLOW_START,
+        &[
+            "onEnd",
+            "onModifyAtk",
+            "onModifySpe",
+            "onResidual",
+            "onStart",
+        ],
+        StartEffect::SlowStart,
+    ),
+    // Opus U. Truant: `onStart` (`abilities::truant_start`), `onBeforeMove`
+    // (`abilities::truant_before_move`, from `moves::before_move`).
+    (
+        abilities::TRUANT,
+        &["onBeforeMove", "onStart"],
+        StartEffect::Truant,
+    ),
+    // Opus U. Opportunist: no `onStart`; its `onAnySwitchIn` is `run_switch_in`'s
+    // (`SwitchInHandler::OpportunistAny`), the rest in `abilities::opportunist_*`.
+    (
+        abilities::OPPORTUNIST,
+        &[
+            "onAnyAfterMega",
+            "onAnyAfterMove",
+            "onAnyAfterTerastallization",
+            "onAnySwitchIn",
+            "onEnd",
+            "onFoeAfterBoost",
+            "onResidual",
+        ],
+        StartEffect::None,
+    ),
 ];
 
 /// What `ability` does when it starts, or `None` if it has a switch-in handler that is not
 /// implemented. `ModifySpe` handlers are allowed: the start order uses the stored Speed, which
-/// right after switching in is the raw stat. A `suppressWeather` ability outside the table is
-/// refused.
+/// right after switching in is the raw stat. Every handler is looked at (an `onModifySpe` does
+/// not hide a later `onStart`). A `suppressWeather` ability outside the table is refused.
 pub(crate) fn start_effect(ability: AbilityId) -> Option<StartEffect> {
     if let Some(&(_, _, effect)) = START_HANDLERS.iter().find(|(id, ..)| *id == ability) {
         return Some(effect);
@@ -535,10 +585,10 @@ pub(crate) fn start_effect(ability: AbilityId) -> Option<StartEffect> {
     if data.suppress_weather {
         return None;
     }
-    match start_handler(data.handlers) {
-        None | Some("onModifySpe") => Some(StartEffect::None),
-        Some(_) => None,
-    }
+    let unimplemented = (0..data.handlers.len())
+        .filter_map(|i| start_handler(&data.handlers[i..=i]))
+        .any(|h| h != "onModifySpe");
+    (!unimplemented).then_some(StartEffect::None)
 }
 
 /// Whether a Pokémon with this ability can switch in (its switch-in effect, if any, is
@@ -705,6 +755,12 @@ fn switch_in_as<const N: usize>(
             }
             super::abilities::on_switch_out(b, slot);
             super::forme::on_switch_out(b, slot);
+            // `singleEvent('End', oldActive.getAbility())` while it is still active: Neutralizing
+            // Gas's `onEnd` restarts the abilities it suppressed (no other ability's `End` acts
+            // on a Pokémon that leaves).
+            if b.raw_ability(slot) == abilities::NEUTRALIZING_GAS {
+                super::abilities::neutralizing_gas_end(b, Some(slot))?;
+            }
         }
         b.clear_volatile(outgoing);
     }
@@ -752,6 +808,8 @@ enum SwitchInHandler {
     PastelVeilAny,
     /// Commander's `onAnySwitchIn`: its `onUpdate` for the holder.
     CommanderAny,
+    /// Opportunist's `onAnySwitchIn` (priority -3): its copied raises.
+    OpportunistAny,
 }
 
 /// Showdown `runSwitch` for the Pokémon that just switched in: one `fieldEvent('SwitchIn')`
@@ -784,8 +842,9 @@ pub(crate) fn run_switch_in<const N: usize>(
         handlers.push((0, slot, SUB_SLOT_CONDITION, SwitchInHandler::SlotConditions));
         handlers.push((0, slot, SUB_SIDE_CONDITION, SwitchInHandler::Hazards));
         // `getCallback`: an ability with `onAnySwitchIn` has no `onStart` fallback in the
-        // SwitchIn event (Commander; Pastel Veil's are the same handler at the same priority).
-        if mon.ability != abilities::COMMANDER {
+        // SwitchIn event (Commander, Opportunist; Pastel Veil's are the same handler at the same
+        // priority).
+        if mon.ability != abilities::COMMANDER && mon.ability != abilities::OPPORTUNIST {
             handlers.push((
                 switch_in_priority(mon.ability),
                 slot,
@@ -807,6 +866,14 @@ pub(crate) fn run_switch_in<const N: usize>(
         }
         if !newcomers.contains(&slot) && mon.ability == abilities::PASTEL_VEIL {
             handlers.push((0, slot, SUB_ABILITY, SwitchInHandler::PastelVeilAny));
+        }
+        // Opportunist's `onAnySwitchIn` (priority -3) for every active holder.
+        if mon.ability == abilities::OPPORTUNIST {
+            let priority = super::abilities::priority(
+                mon.ability.data().event_orders,
+                "onAnySwitchInPriority",
+            );
+            handlers.push((priority, slot, SUB_ABILITY, SwitchInHandler::OpportunistAny));
         }
         // Commander's `onAnySwitchIn` (priority -2) for every active holder, the newcomers
         // included.
@@ -861,9 +928,14 @@ pub(crate) fn run_switch_in<const N: usize>(
                     return Ok(());
                 }
             }
+            // `singleEvent` skips a suppressed ability (`ignoringAbility`) or one that changed.
             SwitchInHandler::Ability(ability) => {
                 if b.ability(slot) == ability {
-                    start_ability(b, slot, ability)?;
+                    if ability == abilities::NEUTRALIZING_GAS {
+                        super::abilities::neutralizing_gas_switch_in(b, slot);
+                    } else {
+                        start_ability(b, slot, ability)?;
+                    }
                 }
             }
             SwitchInHandler::Item(item) => super::items::switch_in_item(b, slot, item),
@@ -877,6 +949,7 @@ pub(crate) fn run_switch_in<const N: usize>(
                     super::abilities::commander_update(b, slot);
                 }
             }
+            SwitchInHandler::OpportunistAny => super::abilities::opportunist_use(b, slot),
         }
     }
     Ok(())
@@ -927,12 +1000,16 @@ pub(crate) fn run_switch<const N: usize>(
     run_switch_in(b, &[slot])
 }
 
-/// `singleEvent('Start')` of `ability` for the Pokémon at `slot`.
+/// `singleEvent('Start')` of `ability` for the Pokémon at `slot`: nothing while the holder
+/// ignores its ability (`ignoringAbility`: Gastro Acid, Neutralizing Gas).
 pub(crate) fn start_ability<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
     ability: AbilityId,
 ) -> Result<(), TurnError> {
+    if b.ability(slot) != ability {
+        return Ok(());
+    }
     let Some(effect) = start_effect(ability) else {
         return Err(b.unsupported(format!(
             "ability {} starting ({:?})",
@@ -1018,6 +1095,8 @@ pub(crate) fn start_ability<const N: usize>(
         StartEffect::SupremeOverlord => super::abilities::supreme_overlord_start(b, slot),
         StartEffect::Commander => super::abilities::commander_update(b, slot),
         StartEffect::GorillaTactics => b.delete_volatile(slot, Volatile::GorillaTactics),
+        StartEffect::SlowStart => super::abilities::slow_start_start(b, slot),
+        StartEffect::Truant => super::abilities::truant_start(b, slot),
     }
     Ok(())
 }
@@ -1098,13 +1177,14 @@ fn once_per_battle<const N: usize>(
 fn weather_change<const N: usize>(b: &Battle<'_, N>) -> Result<(), TurnError> {
     for slot in b.all_alive() {
         let mon = b.slot_mon(slot).expect("alive");
-        let ability_handlers = if mon.ability == abilities::ICE_FACE {
+        let ability = b.ability(slot);
+        let ability_handlers = if ability == abilities::ICE_FACE {
             &[][..]
         } else {
-            mon.ability.data().handlers
+            ability.data().handlers
         };
         let handlers = [
-            (mon.ability.data().name, ability_handlers),
+            (ability.data().name, ability_handlers),
             (mon.item.data().name, mon.item.data().handlers),
             (mon.species.data().name, mon.species.data().handlers),
         ];
@@ -1118,10 +1198,12 @@ fn weather_change<const N: usize>(b: &Battle<'_, N>) -> Result<(), TurnError> {
 }
 
 /// `singleEvent('End')` of the ability the Pokémon at `slot` loses while staying active
-/// (`setAbility` during a forme change). Flash Fire's `onEnd` removes its volatile; Air Lock's
-/// and Cloud Nine's end their suppression (the new ability no longer suppresses) and run
-/// `WeatherChange`; Unnerve's has nothing to undo; an ability without `onEnd` does nothing.
-/// Any other `onEnd` is unsupported.
+/// (`setAbility` during a forme change, or Gastro Acid suppressing it: `End` runs even for a
+/// suppressed ability). Flash Fire's `onEnd` removes its volatile; Air Lock's and Cloud Nine's
+/// end their suppression (the new ability no longer suppresses) and run `WeatherChange`;
+/// Neutralizing Gas's restarts the abilities it suppressed (`abilities::neutralizing_gas_end`);
+/// Unnerve's has nothing to undo; an ability without `onEnd` does nothing. Any other `onEnd` is
+/// unsupported.
 pub(crate) fn end_ability<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
@@ -1144,6 +1226,26 @@ pub(crate) fn end_ability<const N: usize>(
     // Supreme Overlord's `onEnd` only logs; its `abilityState.fallen` goes with the ability.
     if ability == abilities::SUPREME_OVERLORD {
         b.delete_volatile(slot, Volatile::SupremeOverlord);
+        return Ok(());
+    }
+    // Slow Start's `onEnd` only logs; its `abilityState.counter` goes with the ability.
+    if ability == abilities::SLOW_START {
+        b.delete_volatile(slot, Volatile::SlowStart);
+        return Ok(());
+    }
+    // Opportunist's `onEnd`: `delete this.effectState.boosts`.
+    if ability == abilities::OPPORTUNIST {
+        b.delete_volatile(slot, Volatile::Opportunist);
+        return Ok(());
+    }
+    // Cud Chew and Ripen (no `onEnd`): their `abilityState.berry` / `.berryWeaken` go with the
+    // ability.
+    if ability == abilities::CUD_CHEW {
+        b.delete_volatile(slot, Volatile::CudChew);
+        return Ok(());
+    }
+    if ability == abilities::RIPEN {
+        b.delete_volatile(slot, Volatile::RipenWeaken);
         return Ok(());
     }
     // Gorilla Tactics' `onEnd`: `pokemon.abilityState.choiceLock = ""`.
@@ -1175,6 +1277,9 @@ pub(crate) fn end_ability<const N: usize>(
     if ability == abilities::AIR_LOCK || ability == abilities::CLOUD_NINE {
         return weather_change(b);
     }
+    if ability == abilities::NEUTRALIZING_GAS {
+        return super::abilities::neutralizing_gas_end(b, Some(slot));
+    }
     if ability.data().handlers.contains(&"onEnd") {
         return Err(b.unsupported(format!(
             "ability {} ending ({:?})",
@@ -1192,7 +1297,11 @@ pub(crate) fn end_ability<const N: usize>(
 fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), TurnError> {
     let pokemon = b.alive(holder).expect("the holder is active");
     let foes = b.alive_slots(holder.side.other());
-    if foes.iter().any(|&f| b.ability(f) == abilities::NO_ABILITY) {
+    // `foeActive.ability === 'noability'`, `target.getAbility()`: the raw abilities.
+    if foes
+        .iter()
+        .any(|&f| b.raw_ability(f) == abilities::NO_ABILITY)
+    {
         return Err(b.unsupported("Trace next to No Ability"));
     }
     if b.mon(pokemon).item == items::ABILITY_SHIELD {
@@ -1200,7 +1309,12 @@ fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), T
     }
     let targets: Vec<SlotRef> = foes
         .into_iter()
-        .filter(|&f| !b.ability(f).data().flags.contains(AbilityFlags::NOTRACE))
+        .filter(|&f| {
+            !b.raw_ability(f)
+                .data()
+                .flags
+                .contains(AbilityFlags::NOTRACE)
+        })
         .collect();
     if targets.is_empty() {
         return Err(
@@ -1208,7 +1322,7 @@ fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), T
         );
     }
     let target = targets[b.rng.uniform(targets.len())];
-    let copied = b.ability(target);
+    let copied = b.raw_ability(target);
     if copied.data().flags.contains(AbilityFlags::CANTSUPPRESS) {
         return Err(b.unsupported(format!(
             "Trace copying {} (cantsuppress: setAbility fails and Trace keeps seeking)",
