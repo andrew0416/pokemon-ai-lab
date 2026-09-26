@@ -3,9 +3,9 @@
 //! Showdown runs `eachEvent('Update')` after every action (`runAction`), after the damage of a
 //! hit (`hitStepMoveHitLoop`), after the weather's residual damage, before a healthy Pokémon
 //! switches out, and after a batch of switch-ins. Every active Pokémon is visited in stored
-//! Speed order with ties shuffled; none of the implemented listeners touches another Pokémon
-//! (Starf Berry's random stat is drawn independently per eater), so the order cannot change
-//! the outcome and no random draw is spent on it.
+//! Speed order with ties shuffled; of the implemented listeners only an item use next to an
+//! ally's Symbiosis touches another Pokémon (Starf Berry's random stat is drawn independently
+//! per eater), so only such a tie spends a random draw ([`update_event`]).
 //!
 //! Listeners implemented here: berries with `onUpdate` (Sitrus, Oran, the five Figy-type
 //! berries, the five pinch stat berries, Lansat, Starf, Lum, Miracle and the six one-status
@@ -75,15 +75,23 @@ pub(crate) fn berry_problem(mon: &Pokemon) -> Option<String> {
     None
 }
 
-/// Showdown `eachEvent('Update')`.
+/// Showdown `eachEvent('Update')`: the actives are sorted once by `pokemon.speed`
+/// (`speedSort(actives, (a, b) => b.speed - a.speed)`, ties shuffled), then each runs its
+/// handlers, collected at its own turn (`runEvent('Update', pokemon)`: its state as the earlier
+/// ones left it; an item it gains during its turn waits for the next Update).
+///
+/// Only Symbiosis links two Pokémon's handlers: the item one uses or eats is replaced by its
+/// ally's, which the ally then no longer has for its own turn (oracle `w-update-symbiosis-tie`).
+/// So a tie is drawn only between Pokémon on a side with an active Symbiosis holder; any other
+/// tie cannot change the outcome and keeps slot order.
 pub(crate) fn update_event<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), TurnError> {
-    let mut actives: Vec<(SlotRef, i32)> = b
-        .all_alive()
-        .into_iter()
-        .map(|s| (s, b.event_speed(s)))
-        .collect();
-    actives.sort_by_key(|&(_, speed)| std::cmp::Reverse(speed));
-    for (slot, _) in actives {
+    let actives = b.all_alive();
+    let actives = super::abilities::speed_sorted(b, actives, |b, slot| {
+        b.alive_slots(slot.side)
+            .into_iter()
+            .any(|s| b.ability(s) == abilities::SYMBIOSIS)
+    });
+    for slot in actives {
         if b.alive(slot).is_none() {
             continue;
         }
