@@ -670,45 +670,6 @@ fn change_ability<const N: usize>(
     Ok(())
 }
 
-/// Showdown `battle.skillSwap(source, target)`: fails on a fainted Pokémon or a `failskillswap`
-/// ability on either side; `runEvent('SetAbility')` on the target, then the user (Ability
-/// Shield: `null`, a failure); then both abilities' `End` (the user's first), the swap with
-/// fresh `abilityState`s, and the `Start` of the target's new ability, then the user's.
-fn skill_swap<const N: usize>(
-    b: &mut Battle<'_, N>,
-    user: SlotRef,
-    target: SlotRef,
-) -> Result<HitResult, TurnError> {
-    if b.alive(user).is_none() || b.alive(target).is_none() {
-        return Ok(HitResult::Failure);
-    }
-    let (mine, theirs) = (b.ability(user), b.ability(target));
-    let fails = |a: AbilityId| a.data().flags.contains(AbilityFlags::FAILSKILLSWAP);
-    if fails(mine) || fails(theirs) {
-        return Ok(HitResult::Failure);
-    }
-    if b.item(target) == items::ABILITY_SHIELD || b.item(user) == items::ABILITY_SHIELD {
-        return Ok(HitResult::Failure);
-    }
-    // Both abilities are already on the field, so both are supported there.
-    super::super::switching::end_ability(b, user, mine)?;
-    super::super::switching::end_ability(b, target, theirs)?;
-    for (slot, old, new) in [(user, mine, theirs), (target, theirs, mine)] {
-        let pokemon = b.occupant(slot).expect("checked");
-        b.delete_volatile(slot, Volatile::ProteanUsed);
-        if old != new {
-            b.apply(Instruction::SetAbility {
-                target: pokemon,
-                old,
-                new,
-            });
-        }
-    }
-    super::super::switching::start_ability(b, target, mine)?;
-    super::super::switching::start_ability(b, user, theirs)?;
-    Ok(HitResult::Success)
-}
-
 /// Showdown `move.infiltrates`: the user's Infiltrator sets it in ModifyMove
 /// (`ActiveMoveRef::infiltrates`); Pollen Puff's `onTryHit` sets it on a hit aimed at an ally.
 /// It lets the move through a substitute.
@@ -1954,8 +1915,8 @@ pub(super) fn on_hit<const N: usize>(
         }
         moves::TRICK | moves::SWITCHEROO => trick(b, user, target)?,
         moves::INSTRUCT => instruct(b, target)?,
-        // Skill Swap: `return this.skillSwap(source, target);`
-        moves::SKILL_SWAP => skill_swap(b, user, target)?,
+        // Skill Swap: `return this.skillSwap(source, target);` (shared with Wandering Spirit).
+        moves::SKILL_SWAP => success(super::super::abilities::skill_swap(b, user, target)?),
         // Role Play: `source.setAbility(target.ability, target)`; Entrainment:
         // `target.setAbility(source.ability, source)`; Simple Beam: `target.setAbility('simple')`;
         // Worry Seed: `target.setAbility('insomnia')`, then a sleeping target wakes

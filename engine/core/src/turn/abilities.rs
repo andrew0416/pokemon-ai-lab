@@ -799,30 +799,32 @@ pub(crate) fn magician<const N: usize>(
     Ok(())
 }
 
-/// Showdown `battle.skillSwap(source, target)` (Wandering Spirit's `onDamagingHit`, with the
-/// attacker as `source`): nothing if either has fainted (processed: both are still in their
-/// slots at DamagingHit, even at 0 HP), either ability is `failskillswap`, or `SetAbility`
-/// fails for either (Ability Shield); otherwise each ability's End (`switching::end_ability`),
-/// the two trade places (the base abilities stay: they come back on switching out), and each
-/// new one starts (`switching::start_ability`: the target's first).
+/// Showdown `battle.skillSwap(source, target)`, shared by the move Skill Swap (`source` its user)
+/// and Wandering Spirit's `onDamagingHit` (`source` the attacker, `target` the holder). Fails
+/// (`false`) if either has fainted (processed: both can still be in their slots at 0 HP, as at
+/// DamagingHit), either ability is `failskillswap`, or `SetAbility` fails for either (Ability
+/// Shield returns `null`: the target is asked first); otherwise each ability's End
+/// (`switching::end_ability`, the source's first; Protean's and Libero's used flag goes with
+/// its `abilityState`), the two trade places (the base abilities stay: they come back on
+/// switching out), and each new one starts (`switching::start_ability`: the target's first,
+/// as `singleEvent('Start', sourceAbility, target.abilityState, target)` comes first).
 pub(crate) fn skill_swap<const N: usize>(
     b: &mut Battle<'_, N>,
     source: SlotRef,
     target: SlotRef,
-) -> Result<(), super::TurnError> {
+) -> Result<bool, super::TurnError> {
     use crate::instruction::Instruction;
-    let (Some(source_pokemon), Some(target_pokemon)) = (b.occupant(source), b.occupant(target))
-    else {
-        return Ok(());
-    };
+    if b.occupant(source).is_none() || b.occupant(target).is_none() {
+        return Ok(false);
+    }
     let (source_ability, target_ability) = (b.ability(source), b.ability(target));
     let fails = |a: AbilityId| a.data().flags.contains(AbilityFlags::FAILSKILLSWAP);
     if fails(source_ability) || fails(target_ability) {
-        return Ok(());
+        return Ok(false);
     }
     // `runEvent('SetAbility')` on the target, then on the source: Ability Shield returns `null`.
     if b.item(target) == items::ABILITY_SHIELD || b.item(source) == items::ABILITY_SHIELD {
-        return Ok(());
+        return Ok(false);
     }
     // What the state is otherwise checked for before a turn: Symbiosis must be able to pass the
     // item its new holder has, Rivalry needs every gender decided.
@@ -840,24 +842,28 @@ pub(crate) fn skill_swap<const N: usize>(
                 .then(|| "Rivalry next to a Pokémon of undecided gender".to_owned())
         });
         if let Some(why) = why {
-            return Err(b.unsupported(format!("Wandering Spirit's swap: {why}")));
+            return Err(b.unsupported(format!("Skill Swap: {why}")));
         }
     }
+    // Both abilities are already on the field, so both are supported there.
     super::switching::end_ability(b, source, source_ability)?;
     super::switching::end_ability(b, target, target_ability)?;
-    b.apply(Instruction::SetAbility {
-        target: source_pokemon,
-        old: source_ability,
-        new: target_ability,
-    });
-    b.apply(Instruction::SetAbility {
-        target: target_pokemon,
-        old: target_ability,
-        new: source_ability,
-    });
-    super::switching::start_ability(b, source, target_ability)?;
+    for (slot, old, new) in [
+        (source, source_ability, target_ability),
+        (target, target_ability, source_ability),
+    ] {
+        let pokemon = b.occupant(slot).expect("checked");
+        if old != new {
+            b.apply(Instruction::SetAbility {
+                target: pokemon,
+                old,
+                new,
+            });
+        }
+    }
     super::switching::start_ability(b, target, source_ability)?;
-    Ok(())
+    super::switching::start_ability(b, source, target_ability)?;
+    Ok(true)
 }
 
 /// Color Change's `onAfterMoveSecondary` for the Pokémon in `target`, hit by a damaging move of

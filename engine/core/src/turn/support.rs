@@ -626,7 +626,7 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::PAIN_SPLIT, &["onHit"]),
     (moves::SPITE, &["onHit"]),
     (moves::REFLECT_TYPE, &["onHit"]),
-    // Ability changes (`handlers::skill_swap`, `handlers::set_ability`: the old ability's End,
+    // Ability changes (`abilities::skill_swap`, `handlers::set_ability`: the old ability's End,
     // the new one's Start through `switching`; Ability Shield blocks): Skill Swap `onHit`; Role
     // Play, Entrainment, Simple Beam `onTryHit` / `onHit`; Worry Seed `onTryImmunity` too. Gastro
     // Acid (ability suppression) is not supported.
