@@ -64,6 +64,13 @@ pub(super) fn on_modify_type<const N: usize>(
                 _ => return Ok(()),
             };
         }
+        // Aura Wheel: Dark for Morpeko-Hangry, else Electric (its data type).
+        moves::AURA_WHEEL => {
+            let hangry = b
+                .slot_mon(user)
+                .is_some_and(|m| m.species == crate::dex::species::MORPEKO_HANGRY);
+            mv.move_type = if hangry { Type::Dark } else { Type::Electric };
+        }
         // Terrain Pulse: `if (!pokemon.isGrounded()) return;` then the type of `field.terrain`.
         moves::TERRAIN_PULSE if b.is_grounded(user) => {
             mv.move_type = match b.terrain() {
@@ -77,6 +84,19 @@ pub(super) fn on_modify_type<const N: usize>(
         _ => {}
     }
     Ok(())
+}
+
+/// The ModifyType handlers of the user's volatiles (`runEvent('ModifyType')`, after its
+/// ability's): Electrify (priority -2) makes every move but Struggle Electric. A type an
+/// ability changed keeps its `typeChangerBoosted` (Showdown does not clear it).
+pub(super) fn volatile_modify_type<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &mut ActiveMove,
+) {
+    if b.volatile(user, Volatile::Electrify).active && mv.id != moves::STRUGGLE {
+        mv.move_type = Type::Electric;
+    }
 }
 
 /// The move's `onModifyMove` (`useMoveInner`, after the target is chosen and before
@@ -323,6 +343,13 @@ pub(super) fn on_try<const N: usize>(
                     base == crate::dex::species::DARKRAI
                 })
         }
+        // Aura Wheel: only a Morpeko (`species.baseSpecies`, either forme) uses it; otherwise
+        // `null` (a failure here, as Dark Void's).
+        moves::AURA_WHEEL => b.slot_mon(user).is_some_and(|m| {
+            let base = m.species.data().base_species;
+            let base = if base.is_none() { m.species } else { base };
+            base == crate::dex::species::MORPEKO
+        }),
         // Counter, Mirror Coat: `if (!source.volatiles['counter']) return false; if
         // (source.volatiles['counter'].slot === null) return false;`
         moves::COUNTER | moves::MIRROR_COAT => before_turn_volatile(mv.id)
@@ -688,6 +715,9 @@ pub(super) fn on_try_hit<const N: usize>(
         }
         // Lock-On: `if (source.volatiles['lockon']) return false;`
         moves::LOCK_ON => !b.volatile(user, Volatile::LockOn).active,
+        // Electrify: `if (!this.queue.willMove(target) && target.activeTurns) return false;` (a
+        // target that switched in this turn has no active turns yet).
+        moves::ELECTRIFY => b.will_move(target).is_some() || !b.active_since_turn_start(target),
         // Foresight, Odor Sleuth: `if (target.volatiles['miracleeye']) return false;` Miracle
         // Eye: `if (target.volatiles['foresight']) return false;`
         moves::FORESIGHT | moves::ODOR_SLEUTH => !b.volatile(target, Volatile::MiracleEye).active,
@@ -3557,6 +3587,29 @@ pub(super) fn secondary_on_hit<const N: usize>(
     }
     if mv.id == moves::ANCHOR_SHOT || mv.id == moves::SPIRIT_SHACKLE {
         super::super::conditions::add_trap(b, target, user);
+        return;
+    }
+    // Eerie Spell: `if (!target.hp) return;` then `target.deductPP(target.lastMove, 3)` (Z- and
+    // Max Moves are off): the slot is marked `used` (Last Resort), then loses up to 3 PP; nothing
+    // without a last move or its slot (Struggle).
+    if mv.id == moves::EERIE_SPELL {
+        let Some(pokemon) = b.alive(target) else {
+            return;
+        };
+        let last = b.state.slot(target).last_move;
+        let index = b.mon(pokemon).moves.iter().position(|m| m.id == last);
+        if let Some(i) = index.filter(|_| !last.is_none()) {
+            b.record_move_used(target, i);
+            let old = b.mon(pokemon).moves[i].pp;
+            if old > 0 {
+                b.apply(Instruction::SetPp {
+                    target: pokemon,
+                    move_index: i as u8,
+                    old,
+                    new: old.saturating_sub(3),
+                });
+            }
+        }
         return;
     }
     // Burning Jealousy: `if (target?.statsRaisedThisTurn) target.trySetStatus('brn', source,

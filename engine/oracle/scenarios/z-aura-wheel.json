@@ -1,0 +1,78 @@
+{
+ "description": "Aura Wheel (Opus Z unit 5): in the setup turn Morpeko (Full Belly) uses an Electric Aura Wheel, which cannot touch Hippowdon; Hunger Switch makes it Hangry at the residual. Now Aura Wheel is Dark (`onModifyType`) and hits, raising Morpeko's Speed; Pikachu's Aura Wheel fails (`onTry`: not a Morpeko) and never reaches Chansey. Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Morpeko",
+    "item": "",
+    "ability": "Hunger Switch",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Aura Wheel",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Pikachu",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Aura Wheel",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Hippowdon",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move aurawheel 1, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move aurawheel 1, move aurawheel 2",
+  "p2": "move harden, move harden"
+ }
+}

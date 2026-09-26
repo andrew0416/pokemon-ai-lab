@@ -347,9 +347,12 @@ pub enum Volatile {
     /// (`onSourceAccuracy`) and reach it while semi-invulnerable (`onSourceInvulnerability`).
     /// Added by name in the move's `onHit`, so the dex has no condition id.
     LockOn,
+    /// Electrify on its target (`electrify`, duration 1): the holder's moves but Struggle become
+    /// Electric (`onModifyType`, priority -2: after the type-changing abilities).
+    Electrify,
 }
 
-pub const VOLATILE_COUNT: usize = 104;
+pub const VOLATILE_COUNT: usize = 105;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -457,6 +460,7 @@ impl Volatile {
         Volatile::Minimize,
         Volatile::AddedType,
         Volatile::LockOn,
+        Volatile::Electrify,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -524,6 +528,7 @@ impl Volatile {
             Volatile::Rollout | Volatile::IceBall => ConditionId::NONE,
             Volatile::GastroAcid => conditions::GASTROACID,
             Volatile::Minimize => conditions::MINIMIZE,
+            Volatile::Electrify => conditions::ELECTRIFY,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -678,6 +683,7 @@ impl Volatile {
             Volatile::Minimize => "minimize",
             Volatile::AddedType => "addedtype",
             Volatile::LockOn => "lockon",
+            Volatile::Electrify => "electrify",
         }
     }
 
@@ -712,7 +718,8 @@ impl Volatile {
             | Volatile::MirrorCoat
             | Volatile::FocusPunch
             | Volatile::BeakBlast
-            | Volatile::ShellTrap => 1,
+            | Volatile::ShellTrap
+            | Volatile::Electrify => 1,
             Volatile::Stall
             | Volatile::LockedMove
             | Volatile::MustRecharge
@@ -1122,6 +1129,7 @@ mod tests {
             (Volatile::IceBall, moves::ICE_BALL),
             (Volatile::Minimize, moves::MINIMIZE),
             (Volatile::LockOn, moves::LOCK_ON),
+            (Volatile::Electrify, moves::ELECTRIFY),
         ] {
             let data = id.data();
             assert_eq!(

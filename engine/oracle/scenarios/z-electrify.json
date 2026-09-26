@@ -1,0 +1,73 @@
+{
+ "description": "Electrify (Opus Z unit 5): Hypno electrifies Snorlax (`electrify`, duration 1), whose Tackle then becomes Electric (`onModifyType`, priority -2) and cannot touch the Ground-type Hippowdon; Chansey's Tackle still hits it. The volatile ends at the residual. Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Hypno",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Electrify",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hippowdon",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Tackle",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Tackle",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move electrify 1, move harden",
+  "p2": "move tackle 2, move tackle 2"
+ }
+}

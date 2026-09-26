@@ -120,6 +120,15 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
     if b.field_active(FieldEffect::MagicRoom) {
         out.push(field(27, 6, Kind::FieldDuration(FieldEffect::MagicRoom)));
     }
+    // Fairy Lock: no `onFieldResidualOrder` (Showdown's default order, the field-condition
+    // sub-order); it ends silently.
+    if b.field_active(FieldEffect::FairyLock) {
+        out.push(field(
+            ORDER_DEFAULT,
+            SUB_FIELD_CONDITION,
+            Kind::FieldDuration(FieldEffect::FairyLock),
+        ));
+    }
     for side in [SideId::One, SideId::Two] {
         for (effect, order, sub_order) in [
             (SideEffect::Reflect, 26, 1),
@@ -789,6 +798,18 @@ mod tests {
         assert!(orders.contains(&("condition.onFieldResidualOrder", 27)));
         assert!(orders.contains(&("condition.onFieldResidualSubOrder", 5)));
         assert_eq!(moves::WONDER_ROOM.data().condition_duration, 5);
+    }
+
+    /// Fairy Lock's condition lasts 2 turns and has no residual order (`collect` uses the
+    /// default order).
+    #[test]
+    fn fairy_lock_residual_order_matches_the_dex() {
+        let data = crate::dex::moves::FAIRY_LOCK.data();
+        assert_eq!(data.condition_duration, 2);
+        assert!(!data
+            .event_orders
+            .iter()
+            .any(|(n, _)| n.contains("Residual")));
     }
 
     /// The side-condition residual orders hard-coded in `collect` are the dex's.

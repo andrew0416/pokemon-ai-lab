@@ -210,7 +210,8 @@ fn timed(effect: Effect, name: &str) -> Result<Option<u8>, CanonicalError> {
 
 fn field(out: &mut String, effects: &[Effect; FIELD_EFFECT_COUNT]) -> Result<(), CanonicalError> {
     // Pseudo-weathers the schema can write, in id order.
-    const PSEUDO: [(FieldEffect, &str); 4] = [
+    const PSEUDO: [(FieldEffect, &str); 5] = [
+        (FieldEffect::FairyLock, "fairylock"),
         (FieldEffect::Gravity, "gravity"),
         (FieldEffect::TrickRoom, "trickroom"),
         (FieldEffect::WonderRoom, "wonderroom"),

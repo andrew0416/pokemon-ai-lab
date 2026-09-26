@@ -678,6 +678,10 @@ pub(crate) fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> Option
         return None;
     }
     let name = mon.species.data().name;
+    // Fairy Lock (a field condition's `onTrapPokemon`: `pokemon.tryTrap()`, for everyone).
+    if state.field[crate::field::FieldEffect::FairyLock as usize].is_active() {
+        return Some(format!("{name} is trapped by Fairy Lock"));
+    }
     let volatiles = &state.slot(slot).volatiles;
     if volatiles.has(Volatile::NoRetreat) {
         return Some(format!("{name} is trapped by No Retreat"));

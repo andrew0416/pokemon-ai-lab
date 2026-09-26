@@ -239,6 +239,7 @@ fn patch_field<const N: usize>(state: &mut State<N>, f: &FieldPatch) -> Result<(
             "trickroom" => FieldEffect::TrickRoom,
             "wonderroom" => FieldEffect::WonderRoom,
             "magicroom" => FieldEffect::MagicRoom,
+            "fairylock" => FieldEffect::FairyLock,
             other => return Err(format!("field effect {other:?} is not supported")),
         };
         if state.field[effect as usize].is_active() {

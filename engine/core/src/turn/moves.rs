@@ -1239,6 +1239,8 @@ fn use_move<const N: usize>(
         }
     }
     ability_hooks::on_modify_type(b, user, mv);
+    // The user's Electrify (`onModifyTypePriority: -2`, after the abilities' handlers).
+    handlers::volatile_modify_type(b, user, mv);
     ability_hooks::on_modify_move(b, user, mv)?;
     // Throat Chop's `onModifyMove` (the user's volatile) returns `false` for a sound move: the
     // move is gone (`if (!move || pokemon.fainted) return false;`). Only a called move gets here
@@ -3573,17 +3575,18 @@ pub(crate) fn set_terrain<const N: usize>(
     true
 }
 
-/// Showdown `addPseudoWeather`: Gravity fails if up; Trick Room, Wonder Room and Magic Room
-/// end themselves on restart (`onFieldRestart`, no PseudoWeatherChange); a new one (5 turns:
-/// Persistent, which makes the rooms last 7, is refused) runs `PseudoWeatherChange`. Magic
-/// Room's `onFieldStart` runs every active item's End, which only logs; its suppression is
-/// `items::ignoring_item`.
+/// Showdown `addPseudoWeather`: Gravity and Fairy Lock fail if up (no `onFieldRestart`); Trick
+/// Room, Wonder Room and Magic Room end themselves on restart (`onFieldRestart`, no
+/// PseudoWeatherChange); a new one (5 turns, Fairy Lock 2: Persistent, which makes the rooms last
+/// 7, is refused) runs `PseudoWeatherChange`. Magic Room's `onFieldStart` runs every active
+/// item's End, which only logs; its suppression is `items::ignoring_item`. Fairy Lock's only logs.
 fn add_pseudo_weather<const N: usize>(b: &mut Battle<'_, N>, id: &str) -> bool {
     let effect = match id {
         "gravity" => FieldEffect::Gravity,
         "trickroom" => FieldEffect::TrickRoom,
         "wonderroom" => FieldEffect::WonderRoom,
         "magicroom" => FieldEffect::MagicRoom,
+        "fairylock" => FieldEffect::FairyLock,
         _ => unreachable!("checked by support"),
     };
     if b.field_active(effect) {
@@ -3596,7 +3599,12 @@ fn add_pseudo_weather<const N: usize>(b: &mut Battle<'_, N>, id: &str) -> bool {
         }
         return false;
     }
-    b.set_field(effect, Effect { value: 0, turns: 5 });
+    let turns = if effect == FieldEffect::FairyLock {
+        2
+    } else {
+        5
+    };
+    b.set_field(effect, Effect { value: 0, turns });
     // `runEvent('PseudoWeatherChange')`: Room Service.
     item_events::pseudo_weather_change(b);
     true

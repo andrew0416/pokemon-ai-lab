@@ -36,7 +36,8 @@ const ATE_UNCHANGED: [&str; 7] = [
 /// The user's ability `onModifyType` (`runEvent('ModifyType')`, after the move's own
 /// ModifyType and ModifyMove, before the ability's ModifyMove; WORKPLAN O70). A Pokémon has one
 /// ability, so the handlers' priorities (Normalize 1, the rest -1) never compete, and no other
-/// ModifyType handler (Electrify, Ion Deluge) is implemented.
+/// ModifyType handler competes with them: Electrify's (priority -2) runs after them
+/// (`handlers::volatile_modify_type`); Ion Deluge is not implemented.
 /// - Pixilate, Aerilate, Refrigerate, Galvanize, Dragonize: a Normal move (not in
 ///   [`ATE_UNCHANGED`], not a damaging Z-Move) becomes Fairy / Flying / Ice / Electric / Dragon,
 ///   and `move.typeChangerBoosted` is set to the ability.

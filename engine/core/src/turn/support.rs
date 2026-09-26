@@ -1145,6 +1145,25 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
             "onTryHit",
         ],
     ),
+    // Opus Z unit 5. Fairy Lock: the `fairylock` pseudo-weather (`FieldEffect::FairyLock`, 2
+    // turns, default residual order; `onFieldStart` only logs), its `onTrapPokemon` in
+    // `conditions::trapped`. Electrify: `onTryHit` in `handlers::on_try_hit`, the volatile's
+    // `onModifyType` in `handlers::volatile_modify_type` (`onStart` only logs). Aura Wheel:
+    // `onTry` and `onModifyType` in `handlers`. Eerie Spell: the secondary's `onHit`
+    // (`handlers::secondary_on_hit`).
+    (
+        moves::FAIRY_LOCK,
+        &["condition.onFieldStart", "condition.onTrapPokemon"],
+    ),
+    (
+        moves::ELECTRIFY,
+        &["condition.onModifyType", "condition.onStart", "onTryHit"],
+    ),
+    (moves::AURA_WHEEL, &["onModifyType", "onTry"]),
+    (
+        moves::EERIE_SPELL,
+        &["secondaries.onHit", "secondary.onHit"],
+    ),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do
@@ -2263,7 +2282,14 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         return why(&format!("side condition {}", m.side_condition.id()));
     }
     if !m.pseudo_weather.is_none()
-        && !["gravity", "trickroom", "wonderroom", "magicroom"].contains(&m.pseudo_weather.id())
+        && ![
+            "gravity",
+            "trickroom",
+            "wonderroom",
+            "magicroom",
+            "fairylock",
+        ]
+        .contains(&m.pseudo_weather.id())
     {
         return why(&format!("field effect {}", m.pseudo_weather.id()));
     }
@@ -2361,7 +2387,8 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
             x if x == FieldEffect::Gravity as usize
                 || x == FieldEffect::TrickRoom as usize
                 || x == FieldEffect::WonderRoom as usize
-                || x == FieldEffect::MagicRoom as usize =>
+                || x == FieldEffect::MagicRoom as usize
+                || x == FieldEffect::FairyLock as usize =>
             {
                 true
             }
