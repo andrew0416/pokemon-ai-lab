@@ -1159,6 +1159,9 @@ impl<'a, const N: usize> Battle<'a, N> {
                     counter: old.counter + 1,
                     ..old
                 },
+                // Charge's `onRestart` only announces it (the move, Electromorphosis, Wind Power):
+                // it returns nothing, a success, and the state stays.
+                Volatile::Charge => return true,
                 // Laser Focus's `onRestart`: `this.effectState.duration = 2`.
                 Volatile::LaserFocus => VolatileState { duration: 2, ..old },
                 // Power Trick's and Power Shift's `onRestart`: `pokemon.removeVolatile(...)` (its

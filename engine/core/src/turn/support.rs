@@ -1173,6 +1173,21 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // `handlers::fling_secondary`), `condition.onUpdate` (`conditions::fling_update`).
     (moves::BEAT_UP, &["basePowerCallback", "onModifyMove"]),
     (moves::FLING, &["condition.onUpdate", "onPrepareHit"]),
+    // Opus Y unit 5: Charge, the move of the `charge` volatile Electromorphosis and Wind Power
+    // already add (`condition.onBasePower` in `abilities::base_power_handlers`, `onAfterMove` /
+    // `onMoveAborted` in `abilities::charge_after_move`, `onRestart` in `Battle::add_volatile_from`,
+    // `onStart` / `onEnd` log); its +1 SpD is data.
+    (
+        moves::CHARGE,
+        &[
+            "condition.onAfterMove",
+            "condition.onBasePower",
+            "condition.onEnd",
+            "condition.onMoveAborted",
+            "condition.onRestart",
+            "condition.onStart",
+        ],
+    ),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do
