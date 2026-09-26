@@ -299,6 +299,19 @@ pub(super) fn on_try_move<const N: usize>(
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
+    // Damp (`onAnyTryMove`, breakable) of any active Pokémon not at 0 HP, the user's own
+    // included (a move never suppresses its user's ability): Explosion, Mind Blown, Misty
+    // Explosion and Self-Destruct fail, before `selfdestruct: 'always'` would faint the user.
+    let exploding = [
+        moves::EXPLOSION,
+        moves::MIND_BLOWN,
+        moves::MISTY_EXPLOSION,
+        moves::SELF_DESTRUCT,
+    ]
+    .contains(&mv.id);
+    if exploding && damp_active(b) {
+        return false;
+    }
     let kind = mv.data.target;
     let all_exception =
         [moves::PERISH_SONG, moves::FLOWER_SHIELD, moves::ROTOTILLER].contains(&mv.id);
@@ -316,6 +329,15 @@ pub(super) fn on_try_move<const N: usize>(
             || ability == abilities::ARMOR_TAIL;
         blocks && (target.side == holder.side || kind == MoveTarget::All)
     })
+}
+
+/// Whether an active Pokémon not at 0 HP has Damp as the move in progress sees it (its
+/// `onAny*` handlers come from every such Pokémon; breakable, so an ability-ignoring move skips
+/// every holder but its user).
+fn damp_active<const N: usize>(b: &Battle<'_, N>) -> bool {
+    b.all_alive()
+        .into_iter()
+        .any(|s| b.ability_unless_broken(s) == abilities::DAMP)
 }
 
 /// The target's ability `onTryHit` (`runEvent('TryHit')`, after Psychic Terrain and Protect;
@@ -623,9 +645,10 @@ pub(super) fn on_damaging_hit<const N: usize>(
             }
         }
         // Aftermath: a holder the hit fainted, contact: `this.damage(source.baseMaxhp / 4,
-        // source, target)` (Damp, which stops it, is refused on the field).
+        // source, target)`, which an active Damp (`onAnyDamage`: `effect.name ===
+        // 'Aftermath'`, breakable) turns into no damage.
         a if a == abilities::AFTERMATH => {
-            if holder_fainted && contact {
+            if holder_fainted && contact && !damp_active(b) {
                 if let Some(max_hp) = b.alive(attacker).map(|p| b.mon(p).max_hp) {
                     b.damage(attacker, f64::from(max_hp) / 4.0, DamageSource::Indirect);
                 }

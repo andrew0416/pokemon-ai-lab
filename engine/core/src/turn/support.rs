@@ -1102,6 +1102,9 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::WONDER_SKIN, &["onModifyAccuracy"]),
     (abilities::VICTORY_STAR, &["onAnyModifyAccuracy"]),
     (abilities::COMPOUND_EYES, &["onSourceModifyAccuracy"]),
+    // Damp: `onAnyTryMove` in `moves::ability_hooks::on_try_move`, `onAnyDamage` (Aftermath
+    // only) in `ability_hooks::on_damaging_hit`.
+    (abilities::DAMP, &["onAnyDamage", "onAnyTryMove"]),
     (abilities::MOXIE, &["onSourceAfterFaint"]),
     (abilities::CHILLING_NEIGH, &["onSourceAfterFaint"]),
     (abilities::GRIM_NEIGH, &["onSourceAfterFaint"]),
