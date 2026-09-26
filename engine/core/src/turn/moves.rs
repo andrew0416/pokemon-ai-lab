@@ -3679,8 +3679,14 @@ fn get_damage<const N: usize>(
     defense_mods.extend(item_events::defense_handlers(b, target, defense_stat));
     let defense = modify(defense, ability_events::chain(b, defense_mods));
 
-    // modifyDamage inputs.
+    // modifyDamage inputs. Sun's `onWeatherModifyDamage` first checks `move.id === 'hydrosteam'
+    // && attacker.effectiveWeather() === 'sunnyday'` (1.5x): the attacker's view, read by the
+    // weather (or by Mega Sol's handler, which runs sun's), so sun on the field without the
+    // attacker's Utility Umbrella, or a Mega Sol user (`Battle::move_weather`); otherwise the
+    // defender's view decides as for any Water move (0.5x in its sun).
+    let hydro_steam_sun = mv.id == moves::HYDRO_STEAM && b.move_weather(user) == Weather::Sun;
     let weather_modifier = match (weather, mv.move_type) {
+        _ if hydro_steam_sun => MOD_ONE_POINT_FIVE,
         (Weather::Sun, Type::Fire) | (Weather::Rain, Type::Water) => MOD_ONE_POINT_FIVE,
         (Weather::Sun, Type::Water) | (Weather::Rain, Type::Fire) => MOD_HALF,
         _ => MOD_ONE,
