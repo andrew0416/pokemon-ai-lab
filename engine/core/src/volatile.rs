@@ -164,9 +164,14 @@ pub enum Volatile {
     /// holder to its Zen forme and its end back (`turn/forme.rs`). It exists exactly while the
     /// holder is in a Zen forme.
     ZenMode,
+    /// Ally Switch's own condition (`allyswitch`, duration 2, `counterMax` 729): `counter` is
+    /// the success chance's denominator for the next use (3, then tripled per success);
+    /// `onRestart` succeeds with probability 1/`counter` or deletes it. Added by name in the
+    /// move's `onPrepareHit`, so the dex has no condition id.
+    AllySwitch,
 }
 
-pub const VOLATILE_COUNT: usize = 56;
+pub const VOLATILE_COUNT: usize = 57;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -226,6 +231,7 @@ impl Volatile {
         Volatile::ShadowForce,
         Volatile::Substitute,
         Volatile::ZenMode,
+        Volatile::AllySwitch,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -289,7 +295,8 @@ impl Volatile {
             | Volatile::Dig
             | Volatile::Dive
             | Volatile::PhantomForce
-            | Volatile::ShadowForce => ConditionId::NONE,
+            | Volatile::ShadowForce
+            | Volatile::AllySwitch => ConditionId::NONE,
         }
     }
 
@@ -352,6 +359,7 @@ impl Volatile {
             Volatile::ShadowForce => "shadowforce",
             Volatile::Substitute => "substitute",
             Volatile::ZenMode => "zenmode",
+            Volatile::AllySwitch => "allyswitch",
         }
     }
 
@@ -394,7 +402,8 @@ impl Volatile {
             | Volatile::Dig
             | Volatile::Dive
             | Volatile::PhantomForce
-            | Volatile::ShadowForce => 2,
+            | Volatile::ShadowForce
+            | Volatile::AllySwitch => 2,
             Volatile::Encore | Volatile::Taunt => 3,
             Volatile::PerishSong => 4,
             // Partial trapping's `durationCallback` replaces it when it starts
@@ -619,6 +628,7 @@ mod tests {
                         | Volatile::PhantomForce
                         | Volatile::ShadowForce
                         | Volatile::ZenMode
+                        | Volatile::AllySwitch
                 ));
                 continue;
             }
@@ -651,6 +661,7 @@ mod tests {
             (Volatile::BurningBulwark, moves::BURNING_BULWARK),
             (Volatile::LeechSeed, moves::LEECH_SEED),
             (Volatile::Substitute, moves::SUBSTITUTE),
+            (Volatile::AllySwitch, moves::ALLY_SWITCH),
         ] {
             let data = id.data();
             assert_eq!(

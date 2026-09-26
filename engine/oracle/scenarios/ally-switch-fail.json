@@ -1,0 +1,24 @@
+{
+ "description": "Ally Switch fails (NOT_FAIL) once its partner has fainted: Machamp's Fake Out (+3) knocks out Snorlax (patched to 1 HP) first; Mr. Mime still gets the allyswitch volatile (onPrepareHit) but stays in position a, where Gengar's Night Shade hits it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Mr. Mime", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Ally Switch", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Fake Out", "Protect"], "level": 50},
+   {"species": "Gengar", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Night Shade", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Snorlax": {"hp": 1}}},
+ "turn": {"p1": "move allyswitch, move seismictoss 1", "p2": "move fakeout 2, move nightshade 1"}
+}

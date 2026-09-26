@@ -903,6 +903,24 @@ impl<'a, const N: usize> Battle<'a, N> {
                     counter: old.counter + 1,
                     ..old
                 },
+                // Ally Switch's `onRestart`: `randomChance(1, counter)`, else `delete
+                // pokemon.volatiles['allyswitch']` (no `onEnd`) and fail; on success the counter
+                // triples below `counterMax` (729) and the duration is 2 again.
+                Volatile::AllySwitch => {
+                    if !self.rng.chance(1, u32::from(old.counter.max(1))) {
+                        self.delete_volatile(target, volatile);
+                        return false;
+                    }
+                    VolatileState {
+                        duration: 2,
+                        counter: if old.counter < STALL_COUNTER_MAX {
+                            old.counter * 3
+                        } else {
+                            old.counter
+                        },
+                        ..old
+                    }
+                }
                 // No onRestart.
                 _ => return false,
             }
@@ -917,7 +935,8 @@ impl<'a, const N: usize> Battle<'a, N> {
                 // Stall's first counter; Helping Hand's `onStart`: `multiplier = 1.5` (one
                 // application).
                 counter: match volatile {
-                    Volatile::Stall => 3,
+                    // Stall; Ally Switch's `onStart`: `this.effectState.counter = 3`.
+                    Volatile::Stall | Volatile::AllySwitch => 3,
                     Volatile::HelpingHand => 1,
                     _ => 0,
                 },

@@ -426,6 +426,7 @@ fn run_move_inner<const N: usize>(
     if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
         return Ok(MoveStep::Suspended(progress));
     }
+    let user = handlers::current_slot(b, user, pokemon);
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
     handlers::on_after_move(b, user, pokemon, &mv);
     run_move_tail(b, user, &mv);
@@ -922,6 +923,8 @@ fn use_move<const N: usize>(
             }
         }
     };
+    // Ally Switch moved the user (Showdown's steps below act on the Pokémon wherever it is).
+    let user = handlers::current_slot(b, user, pokemon);
     // `moveHit`: `if (move.selfSwitch && source.hp) source.switchFlag = move.id` once the move
     // did something (Parting Shot's `onHit` withdrew it if its drops failed). The request is
     // made, or the flag dropped for a side without a bench, after the action.
@@ -1290,6 +1293,13 @@ fn try_spread_move_hit<const N: usize>(
     // Destiny Bond's `onPrepareHit`: `return !pokemon.removeVolatile('destinybond');` (it
     // fails when used again while it is up).
     if mv.id == moves::DESTINY_BOND && b.remove_volatile(user, Volatile::DestinyBond) {
+        return Ok(HitOutcome::Finished {
+            ok: false,
+            total_damage: 0,
+        });
+    }
+    // The move's other `onPrepareHit` handlers (Ally Switch).
+    if !handlers::on_prepare_hit(b, user, mv) {
         return Ok(HitOutcome::Finished {
             ok: false,
             total_damage: 0,

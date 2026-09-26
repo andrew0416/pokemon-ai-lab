@@ -255,6 +255,18 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::SNORE, &["onTry"]),
     // Instruct: `onHit` in `handlers` (a new move action with order 3).
     (moves::INSTRUCT, &["onHit"]),
+    // Ally Switch: `onPrepareHit` in `handlers::on_prepare_hit` (the `allyswitch` volatile, its
+    // `onStart` / `onRestart` in `Battle::add_volatile_from`), `onHit` in `handlers::on_hit`
+    // (`handlers::swap_positions`).
+    (
+        moves::ALLY_SWITCH,
+        &[
+            "condition.onRestart",
+            "condition.onStart",
+            "onHit",
+            "onPrepareHit",
+        ],
+    ),
     (moves::GRASSY_GLIDE, &["onModifyPriority"]),
     (moves::LOW_KICK, &["basePowerCallback", "onTryHit"]),
     (moves::GRASS_KNOT, &["basePowerCallback", "onTryHit"]),

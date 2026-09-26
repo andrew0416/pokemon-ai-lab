@@ -188,8 +188,8 @@ fn pokemon<const N: usize>(
 }
 
 /// A changed slot is reset with `Switch` (which restores the old slot on reverse), then its
-/// non-default fields are set.
-fn slot_changes(out: &mut Vec<Instruction>, r: SlotRef, a: &Slot, b: &Slot) {
+/// non-default fields are set. Ally Switch uses it to exchange two slots.
+pub(crate) fn slot_changes(out: &mut Vec<Instruction>, r: SlotRef, a: &Slot, b: &Slot) {
     if a == b {
         return;
     }

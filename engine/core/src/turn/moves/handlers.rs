@@ -1427,6 +1427,24 @@ pub(super) fn on_hit<const N: usize>(
         }
         moves::TRICK | moves::SWITCHEROO => trick(b, user, target)?,
         moves::INSTRUCT => instruct(b, target)?,
+        // Ally Switch (on its user): `NOT_FAIL` outside doubles and triples, or when the other
+        // position's Pokémon has fainted; otherwise `swapPosition` (returns nothing). Triples'
+        // positions are not supported.
+        moves::ALLY_SWITCH => {
+            if N > 2 {
+                return Err(b.unsupported("Ally Switch in triples"));
+            }
+            let other = SlotRef {
+                side: target.side,
+                slot: 1 - target.slot.min(1),
+            };
+            if N != 2 || b.alive(other).is_none() {
+                HitResult::NotFail
+            } else {
+                swap_positions(b, target, other)?;
+                return Ok(None);
+            }
+        }
         // Sleep Talk: one of the user's moves Sleep Talk may call, uniformly at random, used
         // through `useMove` (`moves::call_move`); fails without one. It returns nothing.
         moves::SLEEP_TALK => {
@@ -1564,6 +1582,88 @@ fn instruct<const N: usize>(
         order: Some(3),
     });
     Ok(HitResult::Success)
+}
+
+/// The move's own `onPrepareHit` handlers other than the stall moves' (`trySpreadMoveHit`, before
+/// the user's ability's PrepareHit). Ally Switch: `return pokemon.addVolatile('allyswitch');`
+/// (its `onRestart` draws the 1/`counter` chance). `false` = the move fails.
+pub(super) fn on_prepare_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> bool {
+    match mv.id {
+        moves::ALLY_SWITCH => b.add_volatile(user, Volatile::AllySwitch),
+        _ => true,
+    }
+}
+
+/// Where `pokemon`, which started its move in `user`, stands now: Ally Switch moves it during the
+/// move, and Showdown's later steps follow the Pokémon. A user that fainted keeps its old slot.
+pub(super) fn current_slot<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    pokemon: PokemonRef,
+) -> SlotRef {
+    Battle::<N>::slots(user.side)
+        .find(|&s| b.occupant(s) == Some(pokemon))
+        .unwrap_or(user)
+}
+
+/// Showdown `swapPosition(pokemon, newPosition)` for the Pokémon in `from` and its ally in `to`
+/// (both standing): everything Showdown keeps on the Pokémon (boosts, volatiles, `lastMove`,
+/// damage history, switch flag, substitute) goes with it (the two slots trade places through
+/// [`super::super::diff::slot_changes`]); slot conditions stay with the position. Their queued
+/// actions follow them (Showdown's actions hold the Pokémon; a target location is read from the
+/// user's position when the move runs), as does the move in progress. Then `runEvent('Swap')`
+/// for the ally at its new position and the user at its own: Healing Wish's `onSwap` heals one
+/// that needs it. Snipe Shot (`tracksTarget`) keeps aiming at the Pokémon it was aimed at
+/// (`action.originalTarget`), which the queue does not hold: aimed at this side, it is refused.
+fn swap_positions<const N: usize>(
+    b: &mut Battle<'_, N>,
+    from: SlotRef,
+    to: SlotRef,
+) -> Result<(), TurnError> {
+    for action in &b.queue {
+        let ActionKind::Move { index, target, .. } = action.kind else {
+            continue;
+        };
+        let id = super::super::lock::action_move_id(b.mon(action.pokemon), index);
+        if target != 0
+            && id.data().tracks_target
+            && super::at_loc(action.slot, target).side == from.side
+        {
+            return Err(b.unsupported(format!(
+                "{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)",
+                id.data().name
+            )));
+        }
+    }
+    let (user, ally) = (b.occupant(from), b.occupant(to));
+    let (a, c) = (b.state.slot(from).clone(), b.state.slot(to).clone());
+    let mut swap = Vec::new();
+    super::super::diff::slot_changes(&mut swap, from, &a, &c);
+    super::super::diff::slot_changes(&mut swap, to, &c, &a);
+    for instruction in swap {
+        b.apply(instruction);
+    }
+    for action in &mut b.queue {
+        if Some(action.pokemon) == user {
+            action.slot = to;
+        } else if Some(action.pokemon) == ally {
+            action.slot = from;
+        }
+    }
+    if let Some(active) = b.active_move.as_mut() {
+        if Some(active.pokemon) == user {
+            active.user = to;
+        } else if Some(active.pokemon) == ally {
+            active.user = from;
+        }
+    }
+    super::super::conditions::slot_condition_switch_in(b, from);
+    super::super::conditions::slot_condition_switch_in(b, to);
+    Ok(())
 }
 
 /// Whether Sleep Talk's `onHit` may pick `id`: not `nosleeptalk` (Sleep Talk itself, Assist,
