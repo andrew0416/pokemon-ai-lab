@@ -54,15 +54,19 @@ pub enum SlotCondition {
     /// Revival Blessing: the user must pick a fainted party member to revive (a mid-turn
     /// decision); duration 1.
     RevivalBlessing,
+    /// Future Sight / Doom Desire (`futuremove`): the stored move hits whoever holds the
+    /// position at the residual of the turn after next.
+    FutureMove,
 }
 
-pub const SLOT_CONDITION_COUNT: usize = 3;
+pub const SLOT_CONDITION_COUNT: usize = 4;
 
 impl SlotCondition {
     pub const ALL: [SlotCondition; SLOT_CONDITION_COUNT] = [
         SlotCondition::Wish,
         SlotCondition::HealingWish,
         SlotCondition::RevivalBlessing,
+        SlotCondition::FutureMove,
     ];
 
     /// Showdown's condition id.
@@ -71,14 +75,21 @@ impl SlotCondition {
             SlotCondition::Wish => "wish",
             SlotCondition::HealingWish => "healingwish",
             SlotCondition::RevivalBlessing => "revivalblessing",
+            SlotCondition::FutureMove => "futuremove",
         }
     }
 }
 
+/// `SlotEffect::value` bit of a `futuremove` condition holding Doom Desire (Future Sight
+/// otherwise); the low bits are the user (`volatile::encode_pokemon`).
+pub const FUTURE_MOVE_DOOM_DESIRE: u16 = 0x8000;
+
 /// A slot condition's state: `value` is 0 while the condition is absent; Wish keeps the
 /// wisher's max HP there (it heals half of it, `effectState.hp`) and its starting turn in
 /// `turn` (`startingTurn`); Healing Wish keeps 1; Revival Blessing keeps 1 and its duration in
-/// `turn`.
+/// `turn`; a future move keeps its user (`volatile::encode_pokemon`, plus
+/// [`FUTURE_MOVE_DOOM_DESIRE`] for Doom Desire) and the turn it was used in `turn` (it hits at
+/// the residual of that turn + 2: `endingTurn`).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 pub struct SlotEffect {
     pub value: u16,

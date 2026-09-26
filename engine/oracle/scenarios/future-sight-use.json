@@ -1,0 +1,23 @@
+{
+ "description": "Future Sight and Doom Desire on use: the `onTry` adds the `futuremove` slot condition and returns NOT_FAIL (the move succeeds without hitting; no Life Orb recoil at use). Slowking's Future Sight goes to the Dark-type Umbreon's slot (the use ignores immunity); Bronzong's Doom Desire at the same slot fails (the condition is there).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Slowking", "item": "Life Orb", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Future Sight", "Protect"], "level": 50},
+   {"species": "Bronzong", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Doom Desire", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Umbreon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move futuresight 1, move doomdesire 1", "p2": "move harden, move harden"}
+}

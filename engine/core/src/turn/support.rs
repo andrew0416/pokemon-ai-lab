@@ -441,6 +441,12 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         &["condition.onSwap", "condition.onSwitchIn", "onTryHit"],
     ),
     (moves::REVIVAL_BLESSING, &["onTryHit"]),
+    // Future Sight, Doom Desire: `onTry` adds the `futuremove` slot condition
+    // (`conditions::start_future_move` from `moves::try_spread_move_hit`); the condition's
+    // `onResidual` (order 3) and `onEnd` are `conditions::slot_condition_residual` →
+    // `moves::future_move_hit`.
+    (moves::FUTURE_SIGHT, &["onTry"]),
+    (moves::DOOM_DESIRE, &["onTry"]),
     // Two-turn moves (F9): `onTryMove` in `handlers::charge_try_move`; the semi-invulnerable
     // ones' condition handlers in `handlers::invulnerable`, `volatile_modify_damage`,
     // `target_volatile_base_power` and the sandstorm residual (`onImmunity`).
@@ -1716,10 +1722,8 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     }
     let flags = m.flags;
     use crate::dex::MoveFlags as F;
-    // `cantusetwice` (Gigaton Hammer, Blood Moon) is implemented in `mod.rs::disabled`.
-    if flags.contains(F::FUTUREMOVE) {
-        return why("future move");
-    }
+    // `cantusetwice` (Gigaton Hammer, Blood Moon) is implemented in `mod.rs::disabled`. Future
+    // moves (`futuremove`) are Future Sight and Doom Desire, both implemented (their `onTry`).
     // The two-turn moves in `conditions::charge_volatile` are implemented (F9); the others
     // (Skull Bash, Razor Wind, Sky Drop, Geomancy, ...) are not.
     if flags.contains(F::CHARGE) && super::conditions::charge_volatile(id).is_none() {
@@ -2119,6 +2123,20 @@ mod tests {
             Volatile::from_condition(crate::dex::conditions::YAWN),
             Some(Volatile::Yawn)
         );
+    }
+
+    /// The `futuremove` moves are exactly the two implemented ones (their `onTry` and the
+    /// `futuremove` slot condition).
+    #[test]
+    fn future_moves_are_future_sight_and_doom_desire() {
+        use crate::dex::MoveFlags;
+        let future: Vec<MoveId> = MoveId::all()
+            .filter(|id| id.data().flags.contains(MoveFlags::FUTUREMOVE))
+            .collect();
+        assert_eq!(future, [moves::DOOM_DESIRE, moves::FUTURE_SIGHT]);
+        for id in future {
+            assert_eq!(move_unsupported(id), None, "{id:?}");
+        }
     }
 
     #[test]

@@ -379,8 +379,10 @@ fn side_json<const N: usize>(
         }
         out.push('{');
         let mut first = true;
-        // Alphabetical, as `Object.keys().sort()`: healingwish, revivalblessing, wish.
+        // Alphabetical, as `Object.keys().sort()`: futuremove, healingwish, revivalblessing,
+        // wish.
         for condition in [
+            SlotCondition::FutureMove,
             SlotCondition::HealingWish,
             SlotCondition::RevivalBlessing,
             SlotCondition::Wish,
@@ -397,6 +399,16 @@ fn side_json<const N: usize>(
                     write!(out, r#"{sep}"wish":{{"hp":{hp}}}"#).unwrap();
                 }
                 SlotCondition::HealingWish => write!(out, r#"{sep}"healingwish":{{}}"#).unwrap(),
+                // `Object.assign(..., {move, source, moveData})` on a condition without a
+                // duration: only `move` is a canonical field.
+                SlotCondition::FutureMove => {
+                    let id = if state.value & lab_engine::field::FUTURE_MOVE_DOOM_DESIRE != 0 {
+                        "doomdesire"
+                    } else {
+                        "futuresight"
+                    };
+                    write!(out, r#"{sep}"futuremove":{{"move":"{id}"}}"#).unwrap();
+                }
                 SlotCondition::RevivalBlessing => {
                     write!(
                         out,

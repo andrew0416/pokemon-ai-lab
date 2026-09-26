@@ -108,9 +108,52 @@ pub(crate) fn add_slot_condition<const N: usize>(
         },
         SlotCondition::HealingWish => SlotEffect { value: 1, turn: 0 },
         SlotCondition::RevivalBlessing => SlotEffect { value: 1, turn: 1 },
+        // Added by the moves' `onTry` ([`start_future_move`]), never by move data.
+        SlotCondition::FutureMove => unreachable!("no move data adds a futuremove"),
     };
     set_slot_condition(b, slot, condition, new);
     true
+}
+
+/// Future Sight's and Doom Desire's `onTry` at use: `target.side.addSlotCondition(target,
+/// 'futuremove')` at the target's position (fails when one is already there: no `onRestart`),
+/// storing the move, its user and the turn (`onStart`: `endingTurn = (turn - 1) + 2`). The move
+/// then returns `NOT_FAIL`: it succeeds without hitting.
+pub(crate) fn start_future_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+    id: MoveId,
+) -> bool {
+    if slot_condition(b, target, SlotCondition::FutureMove).is_active() {
+        return false;
+    }
+    let Some(source) = b.occupant(user) else {
+        return false;
+    };
+    let doom = if id == moves::DOOM_DESIRE {
+        crate::field::FUTURE_MOVE_DOOM_DESIRE
+    } else {
+        0
+    };
+    let new = SlotEffect {
+        value: encode_pokemon(source) | doom,
+        turn: b.state.turn,
+    };
+    set_slot_condition(b, target, SlotCondition::FutureMove, new);
+    true
+}
+
+/// The user and the move a `futuremove` condition stores.
+pub(crate) fn future_move_of(effect: SlotEffect) -> (PokemonRef, MoveId) {
+    let doom = effect.value & crate::field::FUTURE_MOVE_DOOM_DESIRE != 0;
+    let source = decode_pokemon(effect.value & !crate::field::FUTURE_MOVE_DOOM_DESIRE);
+    let id = if doom {
+        moves::DOOM_DESIRE
+    } else {
+        moves::FUTURE_SIGHT
+    };
+    (source, id)
 }
 
 /// Showdown `side.removeSlotCondition`: the condition's `End` on the Pokémon in the slot, then
@@ -151,17 +194,30 @@ pub(crate) fn slot_condition_switch_in<const N: usize>(b: &mut Battle<'_, N>, sl
 }
 
 /// Wish's `onResidual` (order 4): once the turn count passed its starting turn the condition
-/// ends (and heals); Revival Blessing's duration counts down.
+/// ends (and heals a standing occupant); Revival Blessing's duration counts down; a future move
+/// (order 3) hits once `getOverflowedTurnCount() >= endingTurn` (the turn it was used + 2,
+/// `moves::future_move_hit`), then ends. The handlers run for whoever holds the position, a
+/// fainted Pokémon not yet replaced included.
 pub(crate) fn slot_condition_residual<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
     condition: SlotCondition,
-) {
+) -> Result<(), TurnError> {
     let state = slot_condition(b, slot, condition);
     if !state.is_active() {
-        return;
+        return Ok(());
     }
     match condition {
+        SlotCondition::FutureMove => {
+            if b.state.turn < state.turn + 2 {
+                return Ok(());
+            }
+            // `removeSlotCondition`: `End` (the hit) while the condition is still there, then
+            // it is gone.
+            let (source, id) = future_move_of(state);
+            super::moves::future_move_hit(b, slot, source, id)?;
+            set_slot_condition(b, slot, condition, SlotEffect::NONE);
+        }
         SlotCondition::Wish => {
             if b.state.turn > state.turn {
                 remove_slot_condition(b, slot, condition);
@@ -184,6 +240,7 @@ pub(crate) fn slot_condition_residual<const N: usize>(
         }
         SlotCondition::HealingWish => {}
     }
+    Ok(())
 }
 
 /// The two-turn moves the engine runs (`charge` flag) and their own volatile
@@ -609,6 +666,13 @@ pub(crate) fn destiny_bond_faint<const N: usize>(
         return;
     };
     if attacker.side == slot.side || !b.volatile(slot, Volatile::DestinyBond).active {
+        return;
+    }
+    // `!effect.flags['futuremove']`: a Future Sight / Doom Desire hit (the move in flight when
+    // its faint is processed) does not take its user down.
+    if b.active_move
+        .is_some_and(|m| m.id.data().flags.contains(MoveFlags::FUTUREMOVE))
+    {
         return;
     }
     if let Some(source_slot) =

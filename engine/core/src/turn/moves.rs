@@ -85,6 +85,10 @@ struct ActiveMove {
     /// Showdown `move.hasBounced`: a copy Magic Bounce used back at the original user (it cannot
     /// be bounced again, pays no Pressure PP and adds no Choice lock).
     has_bounced: bool,
+    /// The hit of a future move (Future Sight, Doom Desire) at the residual: the move built from
+    /// the stored `moveData` (`new Move(data.moveData)`), which has no `onTry` and does not
+    /// ignore type immunity.
+    future_hit: bool,
 }
 
 impl PartialEq for ActiveMove {
@@ -108,6 +112,7 @@ impl PartialEq for ActiveMove {
             && self.target_loc == other.target_loc
             && self.type_changer == other.type_changer
             && self.has_bounced == other.has_bounced
+            && self.future_hit == other.future_hit
     }
 }
 
@@ -134,6 +139,7 @@ impl std::hash::Hash for ActiveMove {
         self.target_loc.hash(state);
         self.type_changer.hash(state);
         self.has_bounced.hash(state);
+        self.future_hit.hash(state);
     }
 }
 
@@ -264,6 +270,7 @@ pub(crate) fn run_move<const N: usize>(
             target_loc: 0,
             type_changer: AbilityId::NONE,
             has_bounced: false,
+            future_hit: false,
         };
         before_move(b, user, &recharge);
         // MoveAborted: Destiny Bond ends.
@@ -327,6 +334,103 @@ pub(crate) fn priority_charge_move<const N: usize>(
     if let Some(volatile) = handlers::priority_charge_volatile(id) {
         b.add_volatile(user, volatile);
     }
+}
+
+/// Showdown `futuremove.onEnd` (from the residual, once due) for the future move `id` of
+/// `source` stored at `slot`: nothing if the Pokémon there has fainted (or the position is
+/// empty) or is the source itself; otherwise it loses Protect and Endure, and `trySpreadMoveHit`
+/// runs a move built from the stored `moveData` (no `onTry`, no type-immunity exemption, priority
+/// 0, no ModifyType / ModifyMove: Mold Breaker and Scrappy do not apply; Normalize's owner's hit
+/// is Normal) with the source as the user: its current stats, boosts, ability and item if it is
+/// on the field (Showdown ignores an inactive source's ability and item and uses its stored
+/// stats; that case is unsupported). No PP, BeforeMove or AfterMoveSecondarySelf; only Life
+/// Orb's recoil follows, for an active holder, whether or not the move hit. Eject Button (which
+/// ignores future moves) and Red Card (its drag would wait for the end of the residual) on the
+/// target are unsupported.
+pub(crate) fn future_move_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    source: PokemonRef,
+    id: MoveId,
+) -> Result<(), TurnError> {
+    let Some(target) = b.alive(slot) else {
+        return Ok(());
+    };
+    if target == source {
+        return Ok(());
+    }
+    let data = id.data();
+    let Some(user) = Battle::<N>::slots(source.side).find(|&s| b.occupant(s) == Some(source))
+    else {
+        return Err(b.unsupported(format!(
+            "{} of {} hitting after its user left the field",
+            data.name,
+            b.mon(source).species.data().name
+        )));
+    };
+    if [items::EJECT_BUTTON, items::RED_CARD].contains(&b.item(slot)) {
+        return Err(b.unsupported(format!(
+            "{} hitting a holder of {}",
+            data.name,
+            b.item(slot).data().name
+        )));
+    }
+    b.remove_volatile(slot, Volatile::Protect);
+    b.remove_volatile(slot, Volatile::Endure);
+    // `if (data.source.hasAbility('normalize')) data.moveData.type = 'Normal';`
+    let move_type = if b.ability(user) == abilities::NORMALIZE {
+        Type::Normal
+    } else {
+        data.move_type
+    };
+    let mut mv = ActiveMove {
+        id,
+        data,
+        priority: 0,
+        prankster_boosted: false,
+        spread: false,
+        accuracy: data.accuracy,
+        has_sheer_force: false,
+        secondary_chance_factor: 1,
+        added_secondary: None,
+        total_damage: 0,
+        target: data.target,
+        move_type,
+        base_power: i32::from(data.base_power),
+        ignore_evasion: data.ignore_evasion,
+        scrappy: false,
+        hit_targets: 0,
+        source_effect: MoveId::NONE,
+        self_switch: false,
+        target_loc: 0,
+        type_changer: AbilityId::NONE,
+        has_bounced: false,
+        future_hit: true,
+    };
+    // `trySpreadMoveHit(..., notActive)`: `setActiveMove(move, source, target)`; the move ignores
+    // no ability.
+    b.active_move = Some(ActiveMoveRef {
+        user,
+        pokemon: source,
+        id,
+        ignore_ability: false,
+    });
+    b.move_self_switch = false;
+    if let HitOutcome::Suspended(_) = try_spread_move_hit(b, user, &mut mv, vec![slot], false)? {
+        return Err(b.unsupported(format!("{}: a multi-hit future move", data.name)));
+    }
+    // `if (data.source.isActive && data.source.hasItem('lifeorb'))` its
+    // `onAfterMoveSecondarySelf`: `source !== target`, not a status move, no `forceSwitchFlag`.
+    if b.alive(user) == Some(source)
+        && b.item(user) == items::LIFE_ORB
+        && !b.force_switch.contains(&user)
+    {
+        let max_hp = f64::from(b.mon(source).max_hp);
+        b.damage(user, max_hp / 10.0, DamageSource::Indirect);
+    }
+    b.active_move = None;
+    b.check_win(None);
+    Ok(())
 }
 
 /// The next hit of a suspended multi-hit move, then the move's tail once the hits are done.
@@ -428,6 +532,7 @@ fn run_move_inner<const N: usize>(
         self_switch: id.data().self_switch == SelfSwitch::Yes,
         type_changer: AbilityId::NONE,
         has_bounced: false,
+        future_hit: false,
         target_loc,
     };
 
@@ -755,7 +860,9 @@ fn get_move_targets<const N: usize>(
             if N > 1 && !mv.data.tracks_target {
                 t = redirect_target(b, user, mv, t)?;
             }
-            if b.alive(t).is_none() {
+            // `if (target.fainted && !move.flags['futuremove'])`: a future move may still be aimed
+            // at the position of a fainted ally.
+            if b.alive(t).is_none() && !mv.data.flags.contains(MoveFlags::FUTUREMOVE) {
                 return Ok(Vec::new());
             }
             vec![t]
@@ -1043,6 +1150,7 @@ fn call_move<const N: usize>(
         target_loc: 0,
         type_changer: AbilityId::NONE,
         has_bounced: false,
+        future_hit: false,
     };
     let target = get_random_target(b, user, data.target);
     let will_act = b.will_act();
@@ -1113,6 +1221,7 @@ fn bounce_move<const N: usize>(
         source_effect: MoveId::NONE,
         type_changer: AbilityId::NONE,
         has_bounced: true,
+        future_hit: false,
         // A bounced Parting Shot switches the bouncer out (`moveHit` sets the flag for the
         // copy's user).
         self_switch: data.self_switch == SelfSwitch::Yes,
@@ -1156,9 +1265,11 @@ fn use_move_tail<const N: usize>(
         }
         return Ok(());
     }
-    // AfterMoveSecondarySelf (skipped for a Sheer Force-boosted move): the user's item (Life
-    // Orb, Shell Bell, Throat Spray).
-    if !ability_hooks::sheer_force_skips(b, user, mv) {
+    // AfterMoveSecondarySelf (skipped for a Sheer Force-boosted move and a future move, which
+    // hits later): the user's item (Life Orb, Shell Bell, Throat Spray).
+    if !ability_hooks::sheer_force_skips(b, user, mv)
+        && !mv.data.flags.contains(MoveFlags::FUTUREMOVE)
+    {
         item_events::after_move_secondary_self(b, user, main_target, mv.data, mv.total_damage);
         if checks_user {
             user_emergency_exit(b, user, hp_before)?;
@@ -1328,6 +1439,17 @@ fn try_spread_move_hit<const N: usize>(
     will_act: bool,
 ) -> Result<HitOutcome, TurnError> {
     mv.spread = targets.len() > 1;
+
+    // Future Sight / Doom Desire at use: their `onTry` adds the `futuremove` slot condition at
+    // the target's position and returns `NOT_FAIL` (the move succeeds, nothing hits now), or
+    // fails when one is already there. Their hit later has no `onTry`.
+    if mv.data.flags.contains(MoveFlags::FUTUREMOVE) && !mv.future_hit {
+        let ok = conditions::start_future_move(b, user, targets[0], mv.id);
+        return Ok(HitOutcome::Finished {
+            ok,
+            total_damage: 0,
+        });
+    }
 
     // Try: the move's onTry (Fake Out, First Impression, Poltergeist), on the first target.
     // Sucker Punch / Thunderclap / Upper Hand `onTry`: the target must still have an attack
@@ -1549,7 +1671,10 @@ fn prepare_hit_ability<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv:
     }
     // `if (move.hasBounced || move.flags['futuremove'] || move.sourceEffect === 'snatch' ||
     // move.callsMove) return;` and `type !== '???'` (Struggle).
-    if mv.data.calls_move || mv.move_type == Type::None {
+    if mv.data.calls_move
+        || mv.move_type == Type::None
+        || mv.data.flags.contains(MoveFlags::FUTUREMOVE)
+    {
         return;
     }
     if b.volatile(user, Volatile::ProteanUsed).active {
@@ -1727,7 +1852,14 @@ fn absorbing_type(ability: AbilityId) -> Option<Type> {
 /// Showdown `runImmunity(move)`: type chart immunity and Ground vs ungrounded.
 fn type_immune<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove, target: SlotRef) -> bool {
     let ty = mv.move_type;
-    match mv.data.ignore_immunity {
+    // A future move's hit: its `moveData` has `ignoreImmunity: false` (Future Sight) or none
+    // (Doom Desire: `category === 'Status'`, false).
+    let ignore = if mv.future_hit {
+        IgnoreImmunity::No
+    } else {
+        mv.data.ignore_immunity
+    };
+    match ignore {
         IgnoreImmunity::All => return false,
         IgnoreImmunity::Type(t) if t == ty => return false,
         _ => {}
