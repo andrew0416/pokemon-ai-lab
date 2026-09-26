@@ -1828,24 +1828,41 @@ fn hit_loop<const N: usize>(
             ability_events::after_move_secondary(b, user, t, damage, total);
             item_events::after_move_secondary(b, user, t, mv.data.category);
         }
-        // `runEvent('EmergencyExit', target, pokemon)` for each target still standing whose
-        // HP this move took to half: `(hurtThisTurn || 0) + curDamage > maxhp / 2`, with
-        // `curDamage` the move's total damage for a single target, else the last hit's
-        // damage to it (a non-numeric result is skipped; a hit its substitute took or
-        // stopped counts 0).
-        for &(t, last) in &progress.last_hit.clone() {
+        // `runEvent('EmergencyExit', target, pokemon)` for each of the hit loop's targets still
+        // standing whose HP this move took to half: `(hurtThisTurn || 0) + curDamage > maxhp /
+        // 2`, with `curDamage` the move's total damage for a single target, else the target's
+        // entry of the loop's `damage` array: the last hit's numeric damage, and 0 for every
+        // other result (a status effect, a failure on that target, a hit its substitute took or
+        // stopped: `md === true || !md ? 0 : md`). A target the move did no damage to can still
+        // qualify when its HP dropped this turn without a Damage event (Pain Split, Substitute,
+        // Belly Drum) after it was last hurt above half. After a later hit's miss the array
+        // still holds the previous hit's values.
+        let damages: Vec<(SlotRef, i32)> = if ended_by_miss {
+            progress
+                .targets
+                .iter()
+                .map(|&t| {
+                    let last = progress.last_hit.iter().find(|&&(s, _)| s == t);
+                    let damage = match last {
+                        Some(&(_, LastHit::Damage(d))) => d,
+                        _ => 0,
+                    };
+                    (t, damage)
+                })
+                .collect()
+        } else {
+            progress
+                .targets
+                .iter()
+                .zip(&results)
+                .map(|(&t, r)| (t, if let Hit::Damage(d) = r { *d } else { 0 }))
+                .collect()
+        };
+        for (t, damage) in damages {
             let Some(pokemon) = b.alive(t) else {
                 continue;
             };
-            let damage = match last {
-                LastHit::Damage(d) => Some(d),
-                LastHit::Done => None,
-                LastHit::Substitute | LastHit::Blocked => Some(0),
-            };
-            let current = if mv.spread { damage } else { Some(total) };
-            let Some(current) = current else {
-                continue;
-            };
+            let current = if mv.spread { damage } else { total };
             let mon = b.mon(pokemon);
             let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
             let hurt = b.slot_history(t).hurt_this_turn.map_or(0, i32::from);

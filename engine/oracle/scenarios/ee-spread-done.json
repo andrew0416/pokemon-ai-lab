@@ -1,0 +1,27 @@
+{
+ "description": "Hit-loop Emergency Exit on a spread target the move did no damage to: Hariyama's Seismic Toss takes Golisopod (patched to 150 of 182 HP) to 100 (hurtThisTurn 100), then Golisopod's Pain Split with Shuckle (patched to 20 HP) sets it to 60 without a Damage event. Shuckle's Growl hits both foes (no damage: 0 in the hit loop's damage array); the check `hurtThisTurn + 0 > maxhp / 2 && hp <= maxhp / 2` flags Golisopod and Excadrill comes in. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss", "Harden"], "level": 50},
+   {"species": "Shuckle", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Growl", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Golisopod", "item": "", "ability": "Emergency Exit", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Pain Split", "Harden"], "level": 50},
+   {"species": "Metagross", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Excadrill", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "patch": {"p1": {"Shuckle": {"hp": 20}}, "p2": {"Golisopod": {"hp": 150}}},
+ "turn": {"p1": "move seismictoss 1, move growl", "p2": "move painsplit 2, move harden"},
+ "midTurn": {"p2": ["switch 3"]}
+}
