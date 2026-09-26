@@ -874,9 +874,11 @@ pub(crate) fn on_modify_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRe
 }
 
 /// `choicelock`'s `onBeforeMove` (priority 0, after paralysis): the lock ends once the item is
-/// no longer a Choice item; otherwise another move fails (no PP, no `lastMove`). `false` = the
-/// move is not used. The engine only lets a locked Pokémon choose its move
-/// ([`disabled_move`]), so the failure needs a lock set later in the turn.
+/// no longer a Choice item; otherwise another move fails (no PP, no `lastMove`), except Struggle
+/// (`move.id !== 'struggle'`: a locked Pokémon whose locked move is disabled too — Gigaton
+/// Hammer, Taunt, Disable — Struggles). `false` = the move is not used. The engine only lets a
+/// locked Pokémon choose its move ([`disabled_move`]), so the failure needs a lock set later in
+/// the turn.
 pub(crate) fn before_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -891,9 +893,10 @@ pub(crate) fn before_move<const N: usize>(
         b.remove_volatile(user, Volatile::ChoiceLock);
         return true;
     }
-    // `!pokemon.ignoringItem() && ... && move.id !== this.effectState.move`: a holder ignoring
-    // its item (Klutz, Magic Room) keeps the lock but is not held to it.
-    ignoring_item(b.state, user) || id.0 == lock.counter
+    // `!pokemon.ignoringItem() && ... && move.id !== this.effectState.move && move.id !==
+    // 'struggle'`: a holder ignoring its item (Klutz, Magic Room) keeps the lock but is not held
+    // to it.
+    ignoring_item(b.state, user) || id.0 == lock.counter || id == moves::STRUGGLE
 }
 
 /// The item `DisableMove` handlers `endTurn` runs for every active Pokémon: `choicelock`'s

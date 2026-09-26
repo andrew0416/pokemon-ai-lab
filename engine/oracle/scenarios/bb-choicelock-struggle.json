@@ -1,0 +1,27 @@
+{
+ "description": "Opus BB unit B15: `choicelock`'s `onBeforeMove` lets Struggle through (`move.id !== 'struggle'`). Choice Band Tinkaton uses Gigaton Hammer in the setup turn (HP patched after it); now Gigaton Hammer cannot be used twice in a row and the lock disables Calm Mind, so Tinkaton must Struggle, which hits a random foe instead of failing.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Tinkaton", "item": "Choice Band", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Gigaton Hammer", "Calm Mind"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move gigatonhammer 1, move harden", "move harden, move harden"]
+ ],
+ "patch": {"p2": {"Snorlax": {"hp": 250}}},
+ "turn": {"p1": "move struggle, move harden", "p2": "move harden, move harden"}
+}
