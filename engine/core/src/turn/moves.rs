@@ -2689,7 +2689,18 @@ fn spread_move_hit<const N: usize>(
         if let Some(volatile) = Volatile::from_condition(data.volatile_status)
             .filter(|_| handlers::keeps_volatile_status(b, user, mv))
         {
-            let added = b.add_volatile(t, volatile);
+            // Attract (the move): `target.addVolatile('attract', source)` remembers its source
+            // and checks the genders, Oblivious, Aroma Veil (`conditions::attract_fails`); its
+            // `onStart` runs the Attract event (Destiny Knot: `conditions::add_attract`).
+            let added = if volatile == Volatile::Attract {
+                let fails = conditions::attract_fails(b, t, user)?;
+                if !fails {
+                    conditions::add_attract(b, t, user);
+                }
+                !fails
+            } else {
+                b.add_volatile(t, volatile)
+            };
             // Gastro Acid's condition `onStart`: the suppressed ability's `End`.
             if added && volatile == Volatile::GastroAcid {
                 ability_events::gastro_acid_start(b, t)?;
@@ -3024,6 +3035,11 @@ fn apply_recoil_damage<const N: usize>(
     if mv.data.struggle_recoil {
         let amount = (f64::from(max_hp) / 4.0).round().max(1.0) as i32;
         b.direct_damage(user, amount);
+    } else if mv.data.mind_blown_recoil {
+        // Steel Beam: `Math.round(pokemon.maxhp / 2)` with the move's condition as the effect
+        // (not a move's damage, not `recoil`: Magic Guard stops it, Rock Head does not).
+        let amount = (f64::from(max_hp) / 2.0).round();
+        b.damage(user, amount, DamageSource::Indirect);
     } else if let Some(recoil) = mv.data.recoil {
         let amount = (f64::from(damage) * f64::from(recoil.0) / f64::from(recoil.1))
             .round()

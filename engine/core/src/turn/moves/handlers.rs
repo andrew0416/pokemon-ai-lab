@@ -534,6 +534,17 @@ pub(super) fn on_try_immunity<const N: usize>(
                 (Gender::Male, Gender::Female) | (Gender::Female, Gender::Male)
             )
         }
+        // Attract: `return (target.gender === 'M' && source.gender === 'F') || (target.gender ===
+        // 'F' && source.gender === 'M');` (an undecided gender is refused before:
+        // [`try_immunity_problem`]).
+        moves::ATTRACT => {
+            use crate::dex::Gender;
+            let gender = |s: SlotRef| b.slot_mon(s).map_or(Gender::Genderless, |m| m.gender);
+            matches!(
+                (gender(target), gender(user)),
+                (Gender::Male, Gender::Female) | (Gender::Female, Gender::Male)
+            )
+        }
         // Octolock: `return this.dex.getImmunity('trapped', target);` (the types only: a Ghost).
         moves::OCTOLOCK => !b.natural_immune(target, crate::dex::TypeImmunities::TRAPPED),
         // Dream Eater: `return target.status === 'slp' || target.hasAbility('comatose');`
@@ -554,7 +565,7 @@ pub(super) fn try_immunity_problem<const N: usize>(
     mv: &ActiveMove,
     targets: &[SlotRef],
 ) -> Result<(), TurnError> {
-    if mv.id != moves::CAPTIVATE {
+    if mv.id != moves::CAPTIVATE && mv.id != moves::ATTRACT {
         return Ok(());
     }
     let undecided = std::iter::once(user)
@@ -563,7 +574,8 @@ pub(super) fn try_immunity_problem<const N: usize>(
         .find(|m| m.gender == crate::dex::Gender::Random);
     match undecided {
         Some(m) => Err(b.unsupported(format!(
-            "Captivate with {} of undecided gender (give the set a gender)",
+            "{} with {} of undecided gender (give the set a gender)",
+            mv.data.name,
             m.species.data().name
         ))),
         None => Ok(()),
@@ -773,6 +785,16 @@ pub(super) fn on_move_fail<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef,
     if crash.contains(&mv.id) {
         let max_hp = b.slot_mon(user).map_or(0, |m| m.max_hp);
         b.damage(user, f64::from(max_hp) / 2.0, DamageSource::Indirect);
+    }
+    // Steel Beam: `if (move.multihit) return; this.damage(Math.round(source.maxhp / 2), source,
+    // source, this.dex.conditions.get('Steel Beam'));` (Magic Guard stops it).
+    if mv.id == moves::STEEL_BEAM {
+        let max_hp = b.slot_mon(user).map_or(0, |m| m.max_hp);
+        b.damage(
+            user,
+            (f64::from(max_hp) / 2.0).round(),
+            DamageSource::Indirect,
+        );
     }
 }
 

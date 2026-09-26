@@ -1191,6 +1191,22 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // Opus Y unit 6: Round (`onTry`: `Battle::prioritize_round`, the moved action's
     // `round_source`; `basePowerCallback` doubles it).
     (moves::ROUND, &["basePowerCallback", "onTry"]),
+    // Opus Y unit 7: Steel Beam (`mindBlownRecoil`: `moves::apply_recoil_damage`, also after a
+    // substitute took the hit; `onMoveFail`: `handlers::on_move_fail`). Attract, the move of the
+    // `attract` volatile Cute Charm already adds (`onTryImmunity` genders, `onStart`'s Attract
+    // event and Destiny Knot in `conditions::add_attract`, `onUpdate`, `onBeforeMove` 1/2,
+    // `onEnd` logs).
+    (moves::STEEL_BEAM, &["onMoveFail"]),
+    (
+        moves::ATTRACT,
+        &[
+            "condition.onBeforeMove",
+            "condition.onEnd",
+            "condition.onStart",
+            "condition.onUpdate",
+            "onTryImmunity",
+        ],
+    ),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do
@@ -2258,7 +2274,7 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
         || (m.calls_move && !calls_supported)
         || (m.sleep_usable && !sleep_moves)
         || m.steals_boosts
-        || m.mind_blown_recoil
+        || (m.mind_blown_recoil && id != moves::STEEL_BEAM)
         || (m.struggle_recoil && id != moves::STRUGGLE)
         || m.chloroblast_recoil
         || m.is_z
