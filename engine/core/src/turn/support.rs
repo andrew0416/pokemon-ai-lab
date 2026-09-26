@@ -2184,6 +2184,16 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     let m = id.data();
     let name = m.name;
     let why = |what: &str| Some(format!("move {name}: {what}"));
+    // Transform (Opus Z unit 7, evaluated and kept refused): `transformInto` copies the target's
+    // species, stored stats, types and added type, weight, boosts, critical-hit volatiles and
+    // ability, and replaces the moves with 5-PP virtual copies until the user leaves the field;
+    // the state keeps neither the base move slots nor a `transformed` flag (read by the next
+    // `transformInto`, among others).
+    if id == moves::TRANSFORM {
+        return why(
+            "transformInto (base move slots and the `transformed` flag are not in the state)",
+        );
+    }
     if !m.handlers.is_empty() && !listed(MOVES_WITH_HANDLERS, id) {
         return why(&format!("callbacks {:?} are not implemented", m.handlers));
     }
