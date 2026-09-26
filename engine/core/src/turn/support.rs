@@ -341,6 +341,8 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::ASSURANCE, &["basePowerCallback"]),
     (moves::PAYBACK, &["basePowerCallback"]),
     (moves::AVALANCHE, &["basePowerCallback"]),
+    // Revenge (Champions `Past`, not refused: the engine keeps no legality list).
+    (moves::REVENGE, &["basePowerCallback"]),
     (moves::STOMPING_TANTRUM, &["basePowerCallback"]),
     (moves::TEMPER_FLARE, &["basePowerCallback"]),
     (moves::RAGE_FIST, &["basePowerCallback"]),
@@ -499,6 +501,10 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::SUPERCELL_SLAM, &["onMoveFail"]),
     (moves::MISTY_EXPLOSION, &["onBasePower"]),
     (moves::FINAL_GAMBIT, &["damageCallback"]),
+    // Half the target's HP (`handlers::damage_callback`).
+    (moves::SUPER_FANG, &["damageCallback"]),
+    (moves::NATURES_MADNESS, &["damageCallback"]),
+    (moves::RUINATION, &["damageCallback"]),
     // Destiny Bond: `onPrepareHit` in `moves::try_spread_move_hit`, the volatile's
     // `onBeforeMove` / `onMoveAborted` in `conditions::destiny_bond_before_move`, its `onFaint`
     // in `Battle::faint_messages` (`conditions::destiny_bond_faint`); `onStart` only logs.

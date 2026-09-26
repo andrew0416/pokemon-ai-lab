@@ -244,6 +244,11 @@ pub(super) fn damage_callback<const N: usize>(
     match mv.id {
         // Endeavor: `return target.getUndynamaxedHP() - pokemon.hp;`
         moves::ENDEAVOR => Some(hp(b, target) - hp(b, user)),
+        // Super Fang: `clampIntRange(target.getUndynamaxedHP() / 2, 1)`; Nature's Madness,
+        // Ruination: the same floored (`spreadDamage` truncates the fraction anyway).
+        moves::SUPER_FANG | moves::NATURES_MADNESS | moves::RUINATION => {
+            Some((hp(b, target) / 2).max(1))
+        }
         // Final Gambit: `const damage = pokemon.hp; pokemon.faint(); return damage;`
         moves::FINAL_GAMBIT => {
             let damage = hp(b, user);
@@ -540,9 +545,9 @@ pub(super) fn base_power_callback<const N: usize>(
         {
             base_power * 2
         }
-        // Avalanche: `pokemon.attackedBy.some(p => p.source === target && p.damage > 0 &&
-        // p.thisTurn)`.
-        moves::AVALANCHE
+        // Avalanche, Revenge: `pokemon.attackedBy.some(p => p.source === target && p.damage > 0
+        // && p.thisTurn)`.
+        moves::AVALANCHE | moves::REVENGE
             if b.occupant(target)
                 .is_some_and(|t| b.state.slot(user).history.damaged_by(t)) =>
         {

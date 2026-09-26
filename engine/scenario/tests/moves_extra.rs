@@ -154,6 +154,19 @@ fn heat_crash_power_at_a_bracket_edge() {
     assert_exact_parity("heat-crash");
 }
 
+/// Super Fang, Ruination, Nature's Madness take half the target's HP (floored); Revenge doubles
+/// against a Pokémon that damaged its user this turn.
+#[test]
+fn half_hp_damage_callbacks_and_revenge_doubled() {
+    assert_exact_parity("super-fang");
+}
+
+/// Super Fang on 1 HP deals 1; Revenge keeps its power against a Pokémon that did not hit.
+#[test]
+fn super_fang_minimum_and_revenge_plain() {
+    assert_exact_parity("revenge-plain");
+}
+
 /// Mean Look, Block (a Ghost is immune), Spider Web; a trapped target cannot be trapped again.
 #[test]
 fn mean_look_block_spider_web_trap_with_linked_volatiles() {
