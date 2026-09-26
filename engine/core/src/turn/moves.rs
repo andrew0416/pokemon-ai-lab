@@ -1338,14 +1338,23 @@ fn try_spread_move_hit<const N: usize>(
     }
     // 1. TryHit: Psychic Terrain (priority 4), Protect (3), the target's ability (0). Each
     //    target's handlers only affect that target, so targets can be taken one at a time.
+    //    `trySpreadMoveHit`: when no target is left and none of them failed (every one was a
+    //    `NOT_FAIL` drop: Protect, the guards), `pokemon.moveThisTurnResult = null` — Stomping
+    //    Tantrum and Temper Flare do not double after a move that Protect blocked.
     let mut kept = Vec::with_capacity(targets.len());
+    let mut at_least_one_failure = false;
     for t in targets {
-        if try_hit(b, user, mv, t)? {
-            kept.push(t);
+        match try_hit(b, user, mv, t)? {
+            TryHit::Hit => kept.push(t),
+            TryHit::NotFail => {}
+            TryHit::Fail => at_least_one_failure = true,
         }
     }
     targets = kept;
     if targets.is_empty() {
+        if !at_least_one_failure {
+            b.set_move_result(user, MoveResult::Null);
+        }
         return Ok(HitOutcome::Finished {
             ok: false,
             total_damage: 0,
@@ -1517,20 +1526,33 @@ fn stall_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> bool {
 /// protect family (3, `handlers::protect_try_hit`: the target's volatiles, collected before its
 /// side's conditions), Crafty Shield and Mat Block (3, `handlers::side_guard_try_hit`), Magic
 /// Bounce (1), then the target's ability and item. `false` = the move fails on it.
+/// A target's verdict from the TryHit step (`hitStepTryHitEvent`): hit, dropped without a
+/// failure (Showdown `NOT_FAIL`: Protect and its family, Quick Guard, Wide Guard, Crafty
+/// Shield, Mat Block), or dropped as a failure (every `null`/`false` handler).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum TryHit {
+    Hit,
+    NotFail,
+    Fail,
+}
+
 fn try_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &mut ActiveMove,
     target: SlotRef,
-) -> Result<bool, TurnError> {
-    if blocked_by_try_hit(b, user, mv, target) {
-        return Ok(false);
+) -> Result<TryHit, TurnError> {
+    if psychic_terrain_blocks(b, user, mv, target) {
+        return Ok(TryHit::Fail);
+    }
+    if guarded_by_side(b, mv, target) {
+        return Ok(TryHit::NotFail);
     }
     if handlers::protect_try_hit(b, user, mv, target) {
-        return Ok(false);
+        return Ok(TryHit::NotFail);
     }
     if handlers::side_guard_try_hit(b, user, mv, target) {
-        return Ok(false);
+        return Ok(TryHit::NotFail);
     }
     // Magic Bounce (`onTryHit`, priority 1: after Psychic Terrain, the guards, Protect and the
     // side guards, before every priority-0 handler) uses a copy of the move back at its user,
@@ -1539,15 +1561,15 @@ fn try_hit<const N: usize>(
     // before or after the bounce, and none of them reads what a bounced status move changes.
     if magic_bounce_reflects(b, user, mv, target) {
         bounce_move(b, target, user, mv)?;
-        return Ok(false);
+        return Ok(TryHit::Fail);
     }
     // Sturdy `onTryHit`: OHKO moves fail (breakable).
     if mv.data.ohko != Ohko::No && b.ability_unless_broken(target) == abilities::STURDY {
-        return Ok(false);
+        return Ok(TryHit::Fail);
     }
     // The target's item `onTryHit` (Safety Goggles against powder).
     if item_events::try_hit_blocks(b, user, mv.data, target) {
-        return Ok(false);
+        return Ok(TryHit::Fail);
     }
     // Dry Skin `onTryHit` (breakable): another Pok챕mon's Water move heals the holder by 1/4
     // of its max HP (nothing at full HP) and fails on it (`return null`).
@@ -1557,36 +1579,42 @@ fn try_hit<const N: usize>(
     {
         let max_hp = f64::from(b.slot_mon(target).expect("a target").max_hp);
         b.heal(target, max_hp / 4.0);
-        return Ok(false);
+        return Ok(TryHit::Fail);
     }
     // Lightning Rod / Storm Drain `onTryHit` (breakable): the holder absorbs the move.
     if absorbed_by_ability(b, user, mv, target) {
-        return Ok(false);
+        return Ok(TryHit::Fail);
     }
     // The other abilities' `onTryHit` (absorbing and immunity abilities).
-    Ok(!ability_hooks::on_try_hit(b, user, mv, target))
+    if ability_hooks::on_try_hit(b, user, mv, target) {
+        Ok(TryHit::Fail)
+    } else {
+        Ok(TryHit::Hit)
+    }
 }
 
 /// The TryHit handlers of priority 4, which only fail the move: Psychic Terrain, Wide Guard,
 /// Quick Guard.
-fn blocked_by_try_hit<const N: usize>(
+/// Psychic Terrain's `onTryHit` (priority 4, `return null`: a failure): a priority move at a
+/// grounded foe.
+fn psychic_terrain_blocks<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
-    if b.terrain() == Terrain::Psychic
+    b.terrain() == Terrain::Psychic
         && mv.priority > 0
         && mv.target != MoveTarget::User
         && target.side != user.side
         && b.is_grounded(target)
-    {
-        return true;
-    }
-    // Wide Guard / Quick Guard on the target's side (`onTryHit`, priority 4): spread moves, or
-    // moves with positive priority (after Prankster and the like), that Protect would block
-    // (`checkMoveBypassesProtect`: the `protect` flag; status moves too). They also cover a
-    // move from the target's own ally.
+}
+
+/// Wide Guard / Quick Guard on the target's side (`onTryHit`, priority 4, `return
+/// this.NOT_FAIL`): spread moves, or moves with positive priority (after Prankster and the
+/// like), that Protect would block (`checkMoveBypassesProtect`: the `protect` flag; status
+/// moves too). They also cover a move from the target's own ally.
+fn guarded_by_side<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove, target: SlotRef) -> bool {
     if mv.data.flags.contains(MoveFlags::PROTECT) {
         let spread = matches!(
             mv.target,

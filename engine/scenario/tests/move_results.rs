@@ -11,6 +11,13 @@ use lab_engine::dex::moves;
 use lab_engine::state::{MoveResult, MoveSlot, SideId, SlotRef};
 use lab_scenario::{run_decision_mid_turn, scenario_decision};
 
+/// Every target blocked by Protect: `moveThisTurnResult` is null, so Stomping Tantrum next
+/// turn keeps its base power (the fixture's damage says so).
+#[test]
+fn a_move_blocked_by_protect_leaves_a_null_move_result() {
+    common::assert_exact_parity("tantrum-after-protect");
+}
+
 #[test]
 fn a_charging_turn_leaves_a_null_move_result() {
     let fixture = common::fixture("solar-beam-charge");

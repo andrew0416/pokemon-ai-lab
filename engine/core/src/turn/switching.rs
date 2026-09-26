@@ -782,6 +782,10 @@ pub(crate) fn run_switch<const N: usize>(
     party_index: u8,
 ) -> Result<(), TurnError> {
     switch_in(b, slot, party_index, true)?;
+    // The switch action's `runAction` tail runs `eachEvent('Update')` after `switchIn` queued
+    // `runSwitch` and before it runs: the newcomer's berries and other Update effects act
+    // before the entry hazards (a Sitrus holder at 20 HP eats first, then takes the rocks).
+    super::update::update_event(b)?;
     run_switch_in(b, &[slot])
 }
 

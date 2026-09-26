@@ -119,3 +119,10 @@ fn emergency_exit_from_residual_matches_showdown_exactly() {
 fn emergency_exit_from_hazards_matches_showdown_exactly() {
     assert_exact_parity("emergency-exit-hazard");
 }
+
+/// A chosen switch's `runAction` tail runs the Update before the newcomer's `runSwitch`: a
+/// Sitrus Berry holder at 20 HP eats the berry, then takes Stealth Rock, and lives.
+#[test]
+fn a_switch_runs_the_update_before_the_entry_hazards() {
+    assert_exact_parity("switch-update-sitrus");
+}
