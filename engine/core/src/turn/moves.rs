@@ -876,14 +876,11 @@ fn use_move<const N: usize>(
         get_move_targets(b, user, mv, target)?
     };
     deduct_pressure_pp(b, user, mv, &targets);
-    // The move's own TryMove (`singleEvent('TryMove')`): a two-turn move's charging turn.
-    if !handlers::charge_try_move(b, user, mv) {
-        b.finish_move_result(user, false);
-        return Ok(None);
-    }
-    // Double Shock's TryMove returns `null`: the move stops, and `useMove` stores that `null`
-    // as the move's result (no failure for Stomping Tantrum).
-    if !handlers::null_try_move(b, user, mv) {
+    // The move's own TryMove (`singleEvent('TryMove')`) returns `null` for a two-turn move's
+    // charging turn (`attacker.addVolatile('twoturnmove', defender); return null;`) and for
+    // Double Shock without the Electric type: the move stops, and `useMove` stores that
+    // `null` as the move's result (no failure for Stomping Tantrum and Temper Flare).
+    if !handlers::charge_try_move(b, user, mv) || !handlers::null_try_move(b, user, mv) {
         if b.slot_history(user).move_this_turn_result == MoveResult::Undefined {
             b.set_move_result(user, MoveResult::Null);
         }
