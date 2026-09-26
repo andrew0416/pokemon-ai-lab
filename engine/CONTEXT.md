@@ -43,6 +43,8 @@
 
 **등장 통합·기절 후 교체 (2026-09-26, WORKPLAN F4·F5 완료):** 등장 처리는 `core/src/turn/switching.rs` 하나다: `switch_in`(Showdown `switchIn`: 퇴장자 특성·타입 복귀, 기절 점유자 `fnt` 해제, 슬롯 배치), `run_switch_in`(일괄 `runSwitch`: 등장자들의 시작 핸들러를 **저장 속도(원시 스탯)** 내림차순, 동률은 균등 무작위, 특성이 바뀐 핸들러는 건너뜀), `start_ability`(날씨·필드·위협·트레이스). 첫 등장(`scenario/switch_in.rs`)은 상태 검증 뒤 `turn::enumerate_start`에 위임한다. 기절한 포켓몬은 `Slot::fainted_occupant`로 자리를 지키고(`checkFainted`가 `fnt`를 찍는 근거), 교체 결정은 `turn::enumerate_replacements(state, [[Option<party>; N]; 2])`: instaswitch(기절자 속도순, 동률 무작위) → 일괄 runSwitch → `endTurn`(턴 증가). 로더는 `setupTurns`를 엔진으로 재생하고(`scenario_positions`: 등장 → 설정 턴들 → 패치), Showdown의 `side.pokemon` 순서를 교체마다 갱신해 `switch N`을 해석한다(`advance_order`). `scenario_decision`이 `Decision::Turn`/`Replacement`를 고르고 `run_decision`이 실행한다. 시나리오 `ko-replace`(더블 KO → 양쪽 교체, 등장자 속도 동률로 2결과)가 정확 일치(`tests/replacement.rs`).
 
+**상대 모델 ③ (2026-09-26, WORKPLAN S13):** `lab-plan --believed-team`이 '상대가 믿는 우리 팀'에서 상대 균형 전략을 구해 실제 국면에서 우리 최적 응답을 낸다(S2 시나리오: 차이 +3.6). 깊이 1에서는 양쪽 방어가 지배적이라 평가 함수에 방어 템포 비용(`stall` 특징)을 넣는 중.
+
 **깊이 2 근사 (2026-09-26, WORKPLAN S11):** `lab-plan --solve deep`이 루트 행렬로 고른 우리 선택 6개 × 응수 6개를 자식 균형으로 다시 평가한다(실전 파티 271 s). S2 시나리오 최선은 방어+속이기(마기라스) -101.8.
 
 **플랜의 2턴 지평 (2026-09-26, WORKPLAN S10):** `lab-plan --plan "<턴1>" --child-nash`가 플랜 뒤 국면(최악 응수 6개 × 확률 상위 결과 4개)을 각각 다음 턴 행렬 게임 균형으로 평가한다(국면마다 수 초). S2 시나리오에서 최면술+속이기는 -130 → -181.7, 방어+그래스슬라이더는 -66.7 → -144.2로, 이 선두 조합 자체가 sand-owen의 마기라스+몰드류 선두에 불리하다는 S9 결론과 일치한다.
@@ -141,6 +143,8 @@ python engine/scripts/plan_sweep.py runs/plan-20260926 --rolls median --solve na
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --plan "move hypnosis 1, move fakeout 2 / move hypervoice, move grassyglide 1"   # 고정 플랜 vs 최악 응수
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --plan "move hypnosis 1, move fakeout 2" --child-nash --beam 6 --outcomes 4   # 플랜 뒤 국면을 다음 턴 균형으로(수십 초)
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --solve deep --beam 6 --outcomes 4   # 깊이 2 근사(빔 6×6, 실전 파티 약 4.5분)
+D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --believed-team teams/rillaboom-slot-20260920/gardevoir-braverilla.believed-standard.json   # 상대 모델 ③: 상대가 믿는 우리 팀에서 푼 상대 전략 vs 실제 국면의 우리 최적 응답
+python engine/scripts/fit_eval.py runs/plan-20260926/fit/*.jsonl --out runs/plan-20260926/fit/weights.json   # lab-plan --dump-children 결과로 평가 가중치 적합
 LAB_ENGINE_STATS=1 D:/cargo-target/release/lab-turn.exe <scenario> --position 1 --rolls median   # 단계별 프런티어·재실행 수·시간
 D:/cargo-target/release/lab-turn.exe <scenario> --rolls median      # full|extremes|quartiles|median|pessimistic-p1|pessimistic-p2
 node engine/oracle/marginals.cjs <showdown mc 보고서> "$TEMP/engine-mc.json"   # 큰 분포: 주변분포 비교
