@@ -58,6 +58,13 @@ pub fn temporary_forme_base(forme: SpeciesId) -> Option<SpeciesId> {
         f if f == species::DARMANITAN_ZEN => Some(species::DARMANITAN),
         f if f == species::DARMANITAN_GALAR_ZEN => Some(species::DARMANITAN_GALAR),
         f if f == species::CHERRIM_SUNSHINE => Some(species::CHERRIM),
+        // Forecast (Opus AA).
+        f if f == species::CASTFORM_SUNNY
+            || f == species::CASTFORM_RAINY
+            || f == species::CASTFORM_SNOWY =>
+        {
+            Some(species::CASTFORM)
+        }
         // Relic Song (`moves::handlers::after_move_secondary_self`).
         f if f == species::MELOETTA_PIROUETTE => Some(species::MELOETTA),
         f if f == species::CRAMORANT_GULPING || f == species::CRAMORANT_GORGING => {
@@ -680,7 +687,8 @@ fn mimicry<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
 
 /// Why a Pokémon cannot be on the field, if its forme ability makes it unsupported although
 /// the ability is supported for other species (`support::check_state`, and
-/// `switching::switch_in_problem` for a switch-in during a turn):
+/// `switching::switch_in_problem` for a switch-in during a turn) — or with the item it holds
+/// (Forecast with Utility Umbrella):
 /// - Battle Bond acts only for Greninja-Bond (`onSourceAfterFaint`: +1 Atk, SpA and Spe once per
 ///   battle, `source.bondTriggered`, which the state does not record) and Greninja-Ash (Water
 ///   Shuriken hits 3 times); on any other species (Greninja itself) both handlers do nothing.
@@ -688,6 +696,15 @@ pub(crate) fn field_problem(mon: &crate::state::Pokemon) -> Option<String> {
     // Symbiosis holding an item it could not pass (`abilities::item_moves`).
     if let Some(why) = super::abilities::symbiosis_problem(mon) {
         return Some(why);
+    }
+    // Forecast with Utility Umbrella: the umbrella's `onStart` / `onUpdate` / `onEnd` run
+    // WeatherChange on the holder in sun or rain when it starts or stops being ignored or is
+    // lost, which the engine does not run.
+    if mon.ability == abilities::FORECAST && mon.item == crate::dex::items::UTILITY_UMBRELLA {
+        return Some(format!(
+            "{}: Forecast holding Utility Umbrella (the umbrella's WeatherChange events)",
+            mon.species.data().name
+        ));
     }
     let bond_forme = mon.species == species::GRENINJA_BOND || mon.species == species::GRENINJA_ASH;
     (mon.ability == abilities::BATTLE_BOND && bond_forme).then(|| {
@@ -716,19 +733,56 @@ pub(crate) fn on_start<const N: usize>(
         // Flower Gift's `onStart` (`onSwitchInPriority: -2`): `singleEvent('WeatherChange')`,
         // which no ability-ignoring move can suppress.
         a if a == abilities::FLOWER_GIFT => flower_gift(b, slot, false),
+        // Forecast's `onStart` (`onSwitchInPriority: -2`): `singleEvent('WeatherChange')`.
+        a if a == abilities::FORECAST => forecast(b, slot),
         _ => {}
     }
     Ok(())
 }
 
 /// The forme abilities' `onWeatherChange` for the Pokémon in `slot`
-/// (`field_events::weather_changed`): Ice Face, Flower Gift.
+/// (`field_events::weather_changed`): Ice Face, Flower Gift, Forecast.
 pub(crate) fn weather_changed<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     if b.ability(slot) == abilities::ICE_FACE {
         ice_face_restore(b, slot);
     }
     if b.ability(slot) == abilities::FLOWER_GIFT {
         flower_gift(b, slot, true);
+    }
+    forecast(b, slot);
+}
+
+// ---- Forecast ---------------------------------------------------------------------------------
+
+/// Forecast's `onWeatherChange` for the Pokémon in `slot` (also run by its `onStart`; not
+/// breakable): a Castform (`baseSpecies.baseSpecies`; the engine has no Transform) takes the
+/// forme of `pokemon.effectiveWeather()` (the suppressors and its own Utility Umbrella hide the
+/// weather; Utility Umbrella holders are refused in [`field_problem`]): Castform-Sunny in sun,
+/// -Rainy in rain, -Snowy in snow, Castform otherwise — temporarily (`formeChange(forme,
+/// this.effect, false)`: the base returns when it leaves the field), and only when the forme
+/// differs.
+pub(crate) fn forecast<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let Some(pokemon) = b.occupant(slot) else {
+        return;
+    };
+    let current = b.mon(pokemon).species;
+    let castform = [
+        species::CASTFORM,
+        species::CASTFORM_SUNNY,
+        species::CASTFORM_RAINY,
+        species::CASTFORM_SNOWY,
+    ];
+    if b.ability(slot) != abilities::FORECAST || !castform.contains(&current) {
+        return;
+    }
+    let forme = match b.weather_for(slot) {
+        Weather::Sun | Weather::HarshSun => species::CASTFORM_SUNNY,
+        Weather::Rain | Weather::HeavyRain => species::CASTFORM_RAINY,
+        Weather::Snow => species::CASTFORM_SNOWY,
+        _ => species::CASTFORM,
+    };
+    if forme != current {
+        forme_change(b, slot, forme, Change::Temporary);
     }
 }
 

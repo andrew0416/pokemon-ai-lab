@@ -296,6 +296,13 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onStart", "onTerrainChange"],
         StartEffect::Forme,
     ),
+    // Forecast (`onSwitchInPriority: -2`): `onStart` runs its `onWeatherChange`
+    // (`forme::forecast`, Opus AA).
+    (
+        abilities::FORECAST,
+        &["onStart", "onWeatherChange"],
+        StartEffect::Forme,
+    ),
     // Flower Gift (`onSwitchInPriority: -2`): `onStart` runs its `onWeatherChange`
     // (`forme::flower_gift`); its ModifyAtk / ModifySpD handlers are in `abilities`.
     (
@@ -1187,11 +1194,11 @@ fn once_per_battle<const N: usize>(
 /// `onWeatherChange` handlers, in Speed order. Ice Face's returns at once for a source with
 /// `suppressWeather`; no other is implemented (Forecast, Flower Gift, Protosynthesis), so the
 /// event does nothing, and a handler that would run makes it unsupported.
-fn weather_change<const N: usize>(b: &Battle<'_, N>) -> Result<(), TurnError> {
+fn weather_change<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), TurnError> {
     for slot in b.all_alive() {
         let mon = b.slot_mon(slot).expect("alive");
         let ability = b.ability(slot);
-        let ability_handlers = if ability == abilities::ICE_FACE {
+        let ability_handlers = if ability == abilities::ICE_FACE || ability == abilities::FORECAST {
             &[][..]
         } else {
             ability.data().handlers
@@ -1206,6 +1213,10 @@ fn weather_change<const N: usize>(b: &Battle<'_, N>) -> Result<(), TurnError> {
                 return Err(b.unsupported(format!("{name}: onWeatherChange")));
             }
         }
+    }
+    // Forecast's `onWeatherChange` (each changes only its holder, so the Speed order is moot).
+    for slot in b.all_alive() {
+        super::forme::forecast(b, slot);
     }
     Ok(())
 }

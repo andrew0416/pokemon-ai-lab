@@ -2116,6 +2116,10 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::HADRON_ENGINE, &["onModifySpA", "onStart"]),
     (abilities::LIQUID_OOZE, &["onSourceTryHeal"]),
     (abilities::STICKY_HOLD, &["onTakeItem"]),
+    // Opus AA unit 4. Forecast: `onStart` (`switching::START_HANDLERS`) and `onWeatherChange`
+    // (`field_events::weather_changed`, Air Lock / Cloud Nine's `switching::weather_change`)
+    // in `forme::forecast`; with Utility Umbrella refused (`forme::field_problem`).
+    (abilities::FORECAST, &["onStart", "onWeatherChange"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
