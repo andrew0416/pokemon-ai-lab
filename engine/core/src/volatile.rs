@@ -237,9 +237,20 @@ pub enum Volatile {
     /// in `counter`: [`encode_pokemon`]; hidden in the canonical state) is no longer active
     /// (`onUpdate`).
     Attract,
+    /// Not a Showdown volatile: Eject Pack's `itemState.eject` (a stat of the holder was lowered
+    /// and the pack has not been used yet: `items::eject_pack_use`). It lives on the item's
+    /// state, which ends with the item (used, knocked off) and on switching out or fainting
+    /// (`onEnd`). No duration; hidden in the canonical state.
+    EjectPack,
+    /// The Metronome item's condition (`metronome`, no duration; its `onStart` adds it when the
+    /// holder switches in or gets the item): `mv` is `effectState.lastMove` and `counter`
+    /// `effectState.numConsecutive` (kept at 5 at most: only `min(numConsecutive, 5)` is read),
+    /// neither a canonical field. It stays after the item is gone until the next TryMove
+    /// (`items::metronome_try_move`). The item's `condition` is not a named dex condition.
+    Metronome,
 }
 
-pub const VOLATILE_COUNT: usize = 74;
+pub const VOLATILE_COUNT: usize = 76;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -317,6 +328,8 @@ impl Volatile {
         Volatile::Commanded,
         Volatile::GorillaTactics,
         Volatile::Attract,
+        Volatile::EjectPack,
+        Volatile::Metronome,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -398,7 +411,9 @@ impl Volatile {
             | Volatile::SupremeOverlord
             | Volatile::Commanding
             | Volatile::Commanded
-            | Volatile::GorillaTactics => ConditionId::NONE,
+            | Volatile::GorillaTactics
+            | Volatile::EjectPack
+            | Volatile::Metronome => ConditionId::NONE,
         }
     }
 
@@ -479,6 +494,8 @@ impl Volatile {
             Volatile::Commanded => "commanded",
             Volatile::GorillaTactics => "gorillatactics",
             Volatile::Attract => "attract",
+            Volatile::EjectPack => "ejectpack",
+            Volatile::Metronome => "metronome",
         }
     }
 
@@ -568,7 +585,9 @@ impl Volatile {
             | Volatile::Commanding
             | Volatile::Commanded
             | Volatile::GorillaTactics
-            | Volatile::Attract => 0,
+            | Volatile::Attract
+            | Volatile::EjectPack
+            | Volatile::Metronome => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -601,7 +620,8 @@ impl Volatile {
             Volatile::ProteanUsed
             | Volatile::AngerShellUnchecked
             | Volatile::SupremeOverlord
-            | Volatile::GorillaTactics => None,
+            | Volatile::GorillaTactics
+            | Volatile::EjectPack => None,
             // Two-turn move: the target location is not a canonical field.
             Volatile::Roost
             | Volatile::HelpingHand
@@ -611,6 +631,12 @@ impl Volatile {
             | Volatile::Trapper
             | Volatile::Attract => Some(VolatileState {
                 counter: 0,
+                ..state
+            }),
+            // Metronome: `lastMove` and `numConsecutive` are not canonical fields.
+            Volatile::Metronome => Some(VolatileState {
+                counter: 0,
+                mv: MoveId::NONE,
                 ..state
             }),
             // `bestStat` / `fromBooster` (Protosynthesis, Quark Drive) and the trapper /
@@ -792,6 +818,8 @@ mod tests {
                         | Volatile::Commanding
                         | Volatile::Commanded
                         | Volatile::GorillaTactics
+                        | Volatile::EjectPack
+                        | Volatile::Metronome
                 ));
                 continue;
             }

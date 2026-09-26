@@ -1,0 +1,27 @@
+{
+ "description": "Opus W unit 2 Metronome (item): Dragon Pulse hits (count 0), then Dragon Pulse into Blissey's Protect (count 1, but the move's result is null, not a success), then Dragon Pulse again: moveLastTurnResult is falsy, the count restarts at 0 (1.0x).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Kingdra", "item": "Metronome", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Dragon Pulse", "Aura Sphere"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move dragonpulse 1, move harden", "move harden, move harden"],
+  ["move dragonpulse 1, move harden", "move protect, move harden"]
+ ],
+ "turn": {"p1": "move dragonpulse 1, move harden", "p2": "move harden, move harden"}
+}

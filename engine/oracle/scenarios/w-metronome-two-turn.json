@@ -1,0 +1,26 @@
+{
+ "description": "Opus W unit 2 Metronome (item): Solar Beam charges (the charging turn stops before the condition's TryMove), then fires with `twoturnmove` up: a new move starts the count at 1, so the first Solar Beam hit is already 1.2x.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Venusaur", "item": "Metronome", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Solar Beam"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move solarbeam 1, move harden", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move solarbeam 1, move harden", "p2": "move harden, move harden"}
+}

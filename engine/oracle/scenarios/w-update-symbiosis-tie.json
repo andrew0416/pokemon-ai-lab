@@ -1,0 +1,24 @@
+{
+ "description": "Opus W unit 7, the Update pass order: Clefable and its Symbiosis ally Oranguru tie at 80 Speed, both below half HP with a Sitrus Berry (patched). At the turn-start Update, Showdown shuffles the tie: if Clefable eats first, Oranguru passes its Sitrus to it (Clefable eats that one after the first action; Oranguru heals nothing); if Oranguru eats first, both heal once. 1/2 each.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Clefable", "item": "Sitrus Berry", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Oranguru", "item": "Sitrus Berry", "ability": "Symbiosis", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Clefable": {"hp": 40}, "Oranguru": {"hp": 60}}},
+ "turn": {"p1": "move harden, move harden", "p2": "move harden, move harden"}
+}

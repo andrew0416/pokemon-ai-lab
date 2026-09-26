@@ -1159,6 +1159,8 @@ fn use_move<const N: usize>(
         b.finish_move_result(user, false);
         return Ok(None);
     }
+    // The Metronome item's condition (`onTryMovePriority: -2`, the last TryMove handler).
+    item_events::metronome_try_move(b, user, mv.id);
     // `selfdestruct: 'always'` (Explosion, Self-Destruct, Misty Explosion): the user faints now,
     // before its hits (even without a target), and attacks at 0 HP.
     if mv.data.selfdestruct == SelfDestruct::Always {
@@ -3021,16 +3023,16 @@ fn get_damage<const N: usize>(
     // Critical hit: ratio 1..4 ??1/24, 1/8, 1/2, always. `CriticalHit` handlers: Battle Armor
     // and Shell Armor (`onCriticalHit: false`, breakable). Showdown rolls first and then
     // cancels; not rolling gives the same distribution.
-    // ModifyCritRatio: the user's item (Scope Lens, Razor Claw) and its `focusenergy` volatile
-    // (+2, from Lansat Berry), all additive, then clamped to 0..4. Lucky Chant on the target's
-    // side is a `CriticalHit` handler too (`onCriticalHit: false`).
+    // ModifyCritRatio: the user's item (Scope Lens, Razor Claw, Leek) and its `focusenergy`
+    // volatile (+2, from Lansat Berry), all additive, then clamped to 0..4. Lucky Chant on the
+    // target's side is a `CriticalHit` handler too (`onCriticalHit: false`).
     let focus_energy = if b.volatile(user, Volatile::FocusEnergy).active {
         2
     } else {
         0
     };
     let crit_ratio = (i32::from(data.crit_ratio)
-        + item_events::crit_ratio_bonus(b.item(user))
+        + item_events::crit_ratio_bonus(b.item(user), &attacker)
         + ability_events::crit_ratio_bonus(b, user, target)
         + focus_energy)
         .clamp(0, 4);

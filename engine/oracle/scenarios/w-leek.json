@@ -1,0 +1,23 @@
+{
+ "description": "Opus W unit 4 Leek: Sirfetch'd and Machamp, both holding a Leek, Tackle Shuckle. Only Sirfetch'd gets +2 crit stages (1/2); Machamp stays at 1/24. Low damage keeps few distinct rolls.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Sirfetch’d", "item": "Leek", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32}, "moves": ["Tackle"], "level": 50},
+   {"species": "Machamp", "item": "Leek", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32}, "moves": ["Tackle"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Shuckle", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move tackle 1, move tackle 1", "p2": "move harden, move harden"}
+}

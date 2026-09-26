@@ -1,0 +1,29 @@
+{
+ "description": "Opus W unit 5 Autotomize: Scizor Autotomizes, then switches out (setup): clearVolatile's setSpecies restores its 118 kg. Back in this turn, it takes Machamp's Low Kick at 100 base power.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Scizor", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Autotomize", "Harden"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Low Kick", "Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move autotomize, move harden", "move harden, move harden"],
+  ["switch 3, move harden", "move harden, move harden"]
+ ],
+ "turn": {"p1": "switch 3, move harden", "p2": "move lowkick 1, move harden"}
+}

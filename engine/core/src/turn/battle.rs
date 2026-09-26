@@ -113,7 +113,7 @@ pub struct HistoryReaders {
     pub last_damaged_by: bool,
     /// Rage Fist (`timesAttacked`).
     pub times_attacked: bool,
-    /// Stomping Tantrum, Temper Flare (`moveLastTurnResult`).
+    /// Stomping Tantrum, Temper Flare, the Metronome item (`moveLastTurnResult`).
     pub move_last_turn_result: bool,
     /// Retaliate (`faintedLastTurn`; unsupported, so never set today).
     pub fainted_last_turn: bool,
@@ -132,6 +132,11 @@ impl HistoryReaders {
         let mut readers = HistoryReaders::default();
         for side in &state.sides {
             for mon in &side.party {
+                // The Metronome item's condition reads it; items only change hands, so a battle
+                // without one never gets one.
+                if mon.item == items::METRONOME {
+                    readers.move_last_turn_result = true;
+                }
                 for slot in &mon.moves {
                     use crate::dex::moves as m;
                     if slot.id == m::METAL_BURST || slot.id == m::COMEUPPANCE {
@@ -663,7 +668,9 @@ impl<'a, const N: usize> Battle<'a, N> {
                 new: species_types,
             });
         }
-        // `setSpecies` also recalculates the stored stats (Speed Swap's exchange ends).
+        // `setSpecies` also resets the weight (Autotomize) and recalculates the stored stats
+        // (Speed Swap's exchange ends).
+        self.reset_autotomize(pokemon);
         let mon = self.mon(pokemon);
         let stats = mon.forme_as(mon.species).stats;
         if mon.stats != stats {
@@ -1487,6 +1494,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             old: item,
             new: ItemId::NONE,
         });
+        // `clearEffectState(itemState)`: Eject Pack's flag goes with the item.
+        self.delete_volatile(slot, Volatile::EjectPack);
         // The only berries consumed through here are the resist berries, which Showdown eats
         // (`eatItem`: `ateBerry = true`, Belch).
         if item.data().is_berry {
@@ -1537,6 +1546,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             old,
             new: ItemId::NONE,
         });
+        // The item's state ends with it (Eject Pack's flag).
+        self.delete_volatile(slot, Volatile::EjectPack);
         true
     }
 

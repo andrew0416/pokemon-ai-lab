@@ -626,7 +626,7 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::PAIN_SPLIT, &["onHit"]),
     (moves::SPITE, &["onHit"]),
     (moves::REFLECT_TYPE, &["onHit"]),
-    // Ability changes (`handlers::skill_swap`, `handlers::set_ability`: the old ability's End,
+    // Ability changes (`abilities::skill_swap`, `handlers::set_ability`: the old ability's End,
     // the new one's Start through `switching`; Ability Shield blocks): Skill Swap `onHit`; Role
     // Play, Entrainment, Simple Beam `onTryHit` / `onHit`; Worry Seed `onTryImmunity` too. Gastro
     // Acid (ability suppression) is not supported.
@@ -717,6 +717,9 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::MOONLIGHT, &["onHit"]),
     (moves::SYNTHESIS, &["onHit"]),
     (moves::SHORE_UP, &["onHit"]),
+    // Autotomize (Opus W unit 5): `onTryHit` (Speed already at the cap) and `onHit` (the user's
+    // weight, `Pokemon::autotomized`) in `handlers`; its Speed +2 is the data `boosts`.
+    (moves::AUTOTOMIZE, &["onHit", "onTryHit"]),
     (moves::HAZE, &["onHitField"]),
     (moves::CLEAR_SMOG, &["onHit"]),
     (moves::TOPSY_TURVY, &["onHit"]),
@@ -1004,6 +1007,8 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::MENTAL_HERB, &["fling.effect", "onUpdate"]),
     (items::SCOPE_LENS, &["onModifyCritRatio"]),
     (items::RAZOR_CLAW, &["onModifyCritRatio"]),
+    // Leek (Opus W unit 4): +2 for Farfetch'd / Sirfetch'd (`items::crit_ratio_bonus`).
+    (items::LEEK, &["onModifyCritRatio"]),
     (items::FOCUS_BAND, &["onDamage"]),
     (items::KINGS_ROCK, &["onModifyMove"]),
     (items::RAZOR_FANG, &["onModifyMove"]),
@@ -1080,6 +1085,43 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     ),
     // AfterBoost (`Battle::boost_by` → `items::after_boost`).
     (items::ADRENALINE_ORB, &["onAfterBoost"]),
+    // Metronome (Opus W unit 2): `onStart` at switch-in and on `setItem` adds its condition
+    // (`items::metronome_start`), whose `onTryMove` (`items::metronome_try_move`, the last
+    // TryMove handler in `moves::use_move`) counts consecutive uses and whose `onModifyDamage`
+    // is in `items::modify_damage_handlers`.
+    (
+        items::METRONOME,
+        &[
+            "condition.onModifyDamage",
+            "condition.onStart",
+            "condition.onTryMove",
+            "onStart",
+        ],
+    ),
+    // Destiny Knot: `onAttract` in `conditions::add_attract` (Cute Charm's attraction).
+    (items::DESTINY_KNOT, &["onAttract"]),
+    // Berry Juice (Opus W unit 3; `Past` in Champions, allowed by the engine): `onUpdate` in
+    // `update::update_event` → `items::berry_juice` (used, not eaten).
+    (items::BERRY_JUICE, &["onUpdate"]),
+    // Eject Pack (Opus W unit 1): a stat drop sets its flag (`onAfterBoost` in
+    // `items::after_boost`; the hidden `Volatile::EjectPack`, which `onEnd` and the used item
+    // clear), the next switch-in batch (`onAnySwitchIn`, -4), Mega Evolution, move end or
+    // residual (order 29) uses it (`items::eject_pack_use`: `onUseItem` checks, `onUse` sets
+    // `switchFlag = true`), and the turn suspends for the switch (F6). A use during the battle
+    // start or a replacement, which cannot suspend, is refused (`turn::refuse_switch_request`).
+    (
+        items::EJECT_PACK,
+        &[
+            "onAfterBoost",
+            "onAnyAfterMega",
+            "onAnyAfterMove",
+            "onAnySwitchIn",
+            "onEnd",
+            "onResidual",
+            "onUse",
+            "onUseItem",
+        ],
+    ),
     // `Battle::weather_for` at every per-Pokémon weather read. The callbacks only run
     // WeatherChange on the holder (when the item starts being ignored, stops being ignored, or
     // ends in sun or rain), whose only implemented handler, Protosynthesis's, then changes

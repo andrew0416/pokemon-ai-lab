@@ -1,0 +1,26 @@
+{
+ "description": "Opus W unit 5 Autotomize: after one Autotomize (setup; Speed +2), Scizor weighs 118 - 100 = 18 kg, so Machamp's Low Kick has 40 base power instead of 100.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Scizor", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Autotomize", "Harden"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Low Kick", "Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move autotomize, move harden", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move harden, move harden", "p2": "move lowkick 1, move harden"}
+}

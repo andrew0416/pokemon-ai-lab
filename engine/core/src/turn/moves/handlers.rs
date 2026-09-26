@@ -612,6 +612,16 @@ pub(super) fn on_try_hit<const N: usize>(
             .data()
             .flags
             .contains(AbilityFlags::CANTSUPPRESS),
+        // Autotomize (on its user): `if ((!hasContrary && pokemon.boosts.spe === 6) ||
+        // (hasContrary && pokemon.boosts.spe === -6)) return false;` (`hasAbility`).
+        moves::AUTOTOMIZE => {
+            let speed = b.state.slot(target).boosts[4];
+            if b.ability(target) == abilities::CONTRARY {
+                speed != -6
+            } else {
+                speed != 6
+            }
+        }
         _ => true,
     }
 }
@@ -668,45 +678,6 @@ fn change_ability<const N: usize>(
         });
     }
     Ok(())
-}
-
-/// Showdown `battle.skillSwap(source, target)`: fails on a fainted Pokémon or a `failskillswap`
-/// ability on either side; `runEvent('SetAbility')` on the target, then the user (Ability
-/// Shield: `null`, a failure); then both abilities' `End` (the user's first), the swap with
-/// fresh `abilityState`s, and the `Start` of the target's new ability, then the user's.
-fn skill_swap<const N: usize>(
-    b: &mut Battle<'_, N>,
-    user: SlotRef,
-    target: SlotRef,
-) -> Result<HitResult, TurnError> {
-    if b.alive(user).is_none() || b.alive(target).is_none() {
-        return Ok(HitResult::Failure);
-    }
-    let (mine, theirs) = (b.ability(user), b.ability(target));
-    let fails = |a: AbilityId| a.data().flags.contains(AbilityFlags::FAILSKILLSWAP);
-    if fails(mine) || fails(theirs) {
-        return Ok(HitResult::Failure);
-    }
-    if b.item(target) == items::ABILITY_SHIELD || b.item(user) == items::ABILITY_SHIELD {
-        return Ok(HitResult::Failure);
-    }
-    // Both abilities are already on the field, so both are supported there.
-    super::super::switching::end_ability(b, user, mine)?;
-    super::super::switching::end_ability(b, target, theirs)?;
-    for (slot, old, new) in [(user, mine, theirs), (target, theirs, mine)] {
-        let pokemon = b.occupant(slot).expect("checked");
-        b.delete_volatile(slot, Volatile::ProteanUsed);
-        if old != new {
-            b.apply(Instruction::SetAbility {
-                target: pokemon,
-                old,
-                new,
-            });
-        }
-    }
-    super::super::switching::start_ability(b, target, mine)?;
-    super::super::switching::start_ability(b, user, theirs)?;
-    Ok(HitResult::Success)
 }
 
 /// Showdown `move.infiltrates`: the user's Infiltrator sets it in ModifyMove
@@ -1585,6 +1556,22 @@ pub(super) fn on_hit<const N: usize>(
             };
             weather_heal(b, target, modifier)
         }
+        // Autotomize: `if (pokemon.weighthg > 1) pokemon.weighthg = Math.max(1, pokemon.weighthg
+        // - 1000);` after its Speed +2 (the data `boosts`); it returns nothing.
+        moves::AUTOTOMIZE => {
+            if let Some(pokemon) = b.occupant(target) {
+                let mon = b.mon(pokemon);
+                if mon.weight_hg() > 1 {
+                    let old = mon.autotomized;
+                    b.apply(Instruction::SetAutotomized {
+                        target: pokemon,
+                        old,
+                        new: old + 1,
+                    });
+                }
+            }
+            return Ok(None);
+        }
         // Shore Up: 0.667 in sandstorm (`field.isWeather`, no Utility Umbrella), 0.5 otherwise.
         moves::SHORE_UP => {
             let modifier = if b.effective_weather() == Weather::Sand {
@@ -1954,8 +1941,8 @@ pub(super) fn on_hit<const N: usize>(
         }
         moves::TRICK | moves::SWITCHEROO => trick(b, user, target)?,
         moves::INSTRUCT => instruct(b, target)?,
-        // Skill Swap: `return this.skillSwap(source, target);`
-        moves::SKILL_SWAP => skill_swap(b, user, target)?,
+        // Skill Swap: `return this.skillSwap(source, target);` (shared with Wandering Spirit).
+        moves::SKILL_SWAP => success(super::super::abilities::skill_swap(b, user, target)?),
         // Role Play: `source.setAbility(target.ability, target)`; Entrainment:
         // `target.setAbility(source.ability, source)`; Simple Beam: `target.setAbility('simple')`;
         // Worry Seed: `target.setAbility('insomnia')`, then a sleeping target wakes
@@ -2307,7 +2294,8 @@ fn trick<const N: usize>(
 /// implemented for a new holder ([`trick_item_start`]) and an old one: the Choice items, the
 /// Seeds, Room Service, White Herb, Air Balloon (its `onStart` only announces it), Utility
 /// Umbrella (its `onStart` / `onEnd` only run WeatherChange for a holder ignoring its item, and
-/// no implemented WeatherChange handler acts on sun or rain from it), Mirror Herb (`onEnd`).
+/// no implemented WeatherChange handler acts on sun or rain from it), Mirror Herb (`onEnd`),
+/// Metronome (its `onStart` adds its condition; the old holder's goes at its next TryMove).
 pub(crate) fn trick_moves_item(item: ItemId) -> bool {
     item.data().is_choice
         || super::super::field_events::seed_terrain(item).is_some()
@@ -2317,16 +2305,23 @@ pub(crate) fn trick_moves_item(item: ItemId) -> bool {
             items::AIR_BALLOON,
             items::UTILITY_UMBRELLA,
             items::MIRROR_HERB,
+            items::METRONOME,
         ]
         .contains(&item)
 }
 
-/// `setItem`'s `singleEvent('Start', item)` on the new holder in `slot` (skipped while it ignores
-/// its item): a Choice item removes the holder's `choicelock` (a lock from its old Choice item,
-/// or from this very move's ModifyMove); a Seed, Room Service and White Herb act as when their
-/// holder switches in (`items::switch_in_item`: used in its terrain, in Trick Room, with a
-/// lowered stat).
+/// `setItem`'s `singleEvent('Start', item)` on the new holder in `slot` (skipped here while it
+/// ignores its item, except Metronome's): a Choice item removes the holder's `choicelock` (a
+/// lock from its old Choice item, or from this very move's ModifyMove); a Seed, Room Service and
+/// White Herb act as when their holder switches in (`items::switch_in_item`: used in its
+/// terrain, in Trick Room, with a lowered stat); Metronome adds its condition.
 pub(crate) fn trick_item_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
+    // `singleEvent('Start')` runs even for a holder ignoring its item (only other events skip
+    // it): Metronome's `onStart` adds its condition all the same.
+    if item == items::METRONOME {
+        super::super::items::metronome_start(b, slot);
+        return;
+    }
     if b.item(slot) != item {
         return;
     }

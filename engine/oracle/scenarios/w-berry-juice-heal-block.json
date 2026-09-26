@@ -1,0 +1,24 @@
+{
+ "description": "Opus W unit 3 Berry Juice: Snorlax's Heal Block first, then Machamp's Seismic Toss takes Clefable (patched to 120/202) to 70: TryHeal fails under Heal Block, so the juice is not used.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Machamp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Heal Block"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Clefable", "item": "Berry Juice", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "Berry Juice", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Clefable": {"hp": 120}}},
+ "turn": {"p1": "move seismictoss 1, move healblock", "p2": "move harden, move harden"}
+}

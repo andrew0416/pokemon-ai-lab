@@ -166,6 +166,13 @@ fn pokemon<const N: usize>(
             });
         }
     }
+    if a.autotomized != b.autotomized {
+        out.push(Instruction::SetAutotomized {
+            target: r,
+            old: a.autotomized,
+            new: b.autotomized,
+        });
+    }
     for (i, (ma, mb)) in a.moves.iter().zip(&b.moves).enumerate() {
         if ma.pp != mb.pp {
             out.push(Instruction::SetPp {
@@ -360,6 +367,8 @@ mod tests {
         })
         .unwrap()
         .types = [crate::dex::Type::Water, crate::dex::Type::None];
+        // Autotomize's weight loss.
+        to.side_mut(SideId::Two).party[0].autotomized = 1;
         // Damage history on a slot and faint counters on a side.
         to.slot_mut(me).history.times_attacked = 2;
         to.slot_mut(me).history.newly_switched = false;
