@@ -1159,6 +1159,8 @@ fn use_move<const N: usize>(
         b.finish_move_result(user, false);
         return Ok(None);
     }
+    // The Metronome item's condition (`onTryMovePriority: -2`, the last TryMove handler).
+    item_events::metronome_try_move(b, user, mv.id);
     // `selfdestruct: 'always'` (Explosion, Self-Destruct, Misty Explosion): the user faints now,
     // before its hits (even without a target), and attacks at 0 HP.
     if mv.data.selfdestruct == SelfDestruct::Always {

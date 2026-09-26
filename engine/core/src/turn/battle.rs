@@ -113,7 +113,7 @@ pub struct HistoryReaders {
     pub last_damaged_by: bool,
     /// Rage Fist (`timesAttacked`).
     pub times_attacked: bool,
-    /// Stomping Tantrum, Temper Flare (`moveLastTurnResult`).
+    /// Stomping Tantrum, Temper Flare, the Metronome item (`moveLastTurnResult`).
     pub move_last_turn_result: bool,
     /// Retaliate (`faintedLastTurn`; unsupported, so never set today).
     pub fainted_last_turn: bool,
@@ -132,6 +132,11 @@ impl HistoryReaders {
         let mut readers = HistoryReaders::default();
         for side in &state.sides {
             for mon in &side.party {
+                // The Metronome item's condition reads it; items only change hands, so a battle
+                // without one never gets one.
+                if mon.item == items::METRONOME {
+                    readers.move_last_turn_result = true;
+                }
                 for slot in &mon.moves {
                     use crate::dex::moves as m;
                     if slot.id == m::METAL_BURST || slot.id == m::COMEUPPANCE {

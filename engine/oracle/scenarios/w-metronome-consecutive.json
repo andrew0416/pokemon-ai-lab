@@ -1,0 +1,27 @@
+{
+ "description": "Opus W unit 2 Metronome (item): Kingdra's third consecutive successful Dragon Pulse into Blissey. The condition (added at switch-in) counts 0, 1, 2: this hit's damage is chained by 5734/4096 (1.4x).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Kingdra", "item": "Metronome", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Dragon Pulse", "Aura Sphere"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move dragonpulse 1, move harden", "move harden, move harden"],
+  ["move dragonpulse 1, move harden", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move dragonpulse 1, move harden", "p2": "move harden, move harden"}
+}

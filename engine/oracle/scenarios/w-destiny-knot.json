@@ -1,0 +1,23 @@
+{
+ "description": "Opus W unit 2 Destiny Knot: Machamp (male, Destiny Knot) Seismic Tosses Clefable (female, Cute Charm). 30%: Machamp is attracted, and its Destiny Knot (onAttract) attracts Clefable back; the slower Clefable then cannot move half the time.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Machamp", "item": "Destiny Knot", "ability": "Honey Gather", "nature": "Serious",
+    "gender": "M", "evs": {"hp": 32, "spe": 20}, "moves": ["Seismic Toss"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "gender": "M", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Clefable", "item": "", "ability": "Cute Charm", "nature": "Serious",
+    "gender": "F", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "gender": "F", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move seismictoss 1, move harden", "p2": "move harden, move harden"}
+}

@@ -7,10 +7,6 @@
 //! `ignoringItem` holds (Magic Room, or Klutz with an item that is not `ignoreKlutz`; work plan
 //! F17), when the runEvent loop skips item handlers. What reads `pokemon.item` itself (Knock
 //! Off, Trick, Acrobatics, Unburden, ...) uses [`Battle::raw_item`].
-//!
-//! Refused on purpose (not in `support`'s tables):
-//! - Metronome: its condition keeps `lastMove` and `numConsecutive` and reads
-//!   `moveLastTurnResult` (work plan F13); the item's `onStart` adds it at switch-in.
 
 use crate::damage::{MOD_DOUBLE, MOD_HALF, MOD_ONE_POINT_FIVE};
 use crate::dex::{
@@ -19,7 +15,9 @@ use crate::dex::{
 };
 use crate::field::{FieldEffect, Weather};
 use crate::instruction::Instruction;
-use crate::state::{Pokemon, PokemonRef, SlotRef, State, Status, SwitchFlag, BOOST_COUNT};
+use crate::state::{
+    MoveResult, Pokemon, PokemonRef, SlotRef, State, Status, SwitchFlag, BOOST_COUNT,
+};
 use crate::volatile::{Volatile, VolatileState};
 
 use super::abilities::{Handler, SUB_ABILITY, SUB_CONDITION, SUB_ITEM};
@@ -153,11 +151,12 @@ pub(crate) fn start_handler_implemented(item: ItemId, handler: &str) -> bool {
 
 /// `onSwitchInPriority` of an item whose `onStart` acts when its holder switches in (it runs
 /// in the batched `fieldEvent('SwitchIn')`, after the abilities' priority-0 handlers): the
-/// Seeds and Room Service (-1).
+/// Seeds and Room Service (-1), Booster Energy, Metronome (0).
 pub(crate) fn switch_in_priority(item: ItemId) -> Option<i32> {
     let acts = super::field_events::seed_terrain(item).is_some()
         || item == items::ROOM_SERVICE
-        || item == items::BOOSTER_ENERGY;
+        || item == items::BOOSTER_ENERGY
+        || item == items::METRONOME;
     acts.then(|| super::abilities::priority(item.data().event_orders, "onSwitchInPriority"))
 }
 
@@ -178,6 +177,7 @@ pub(crate) fn any_switch_in_priority(item: ItemId) -> Option<i32> {
 ///   event's target is the holder: `singleEvent('SwitchIn', ..., effectHolder)`).
 /// - Eject Pack `onAnySwitchIn`: [`eject_pack_use`] (an Intimidate or Sticky Web earlier in the
 ///   same batch set its flag).
+/// - Metronome `onStart`: [`metronome_start`].
 pub(crate) fn switch_in_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
     if b.item(slot) != item {
         return;
@@ -194,6 +194,7 @@ pub(crate) fn switch_in_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRe
         i if i == items::WHITE_HERB => white_herb(b, slot),
         i if i == items::MIRROR_HERB => mirror_herb_use(b, slot, slot),
         i if i == items::EJECT_PACK => eject_pack_use(b, slot),
+        i if i == items::METRONOME => metronome_start(b, slot),
         // Booster Energy's `onStart`: `started = true`, then its `onUpdate`.
         i if i == items::BOOSTER_ENERGY => super::abilities::booster_energy(b, slot),
         _ => {}
@@ -396,6 +397,74 @@ pub(crate) fn eject_pack_use<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRe
     }
     b.set_switch_flag(slot, SwitchFlag::Effect);
     b.use_item(slot);
+}
+
+// ---- Metronome ------------------------------------------------------------------------------
+
+/// The `metronome` condition's `onModifyDamage` factors by `min(numConsecutive, 5)`.
+const METRONOME_MODIFIERS: [u32; 6] = [4096, 4915, 5734, 6553, 7372, 8192];
+
+/// Metronome's `onStart` (its holder switches in, or gets the item: `setItem`'s Start):
+/// `pokemon.addVolatile('metronome')`, whose own `onStart` sets `lastMove = ''` and
+/// `numConsecutive = 0`; nothing if the condition is there already (no `onRestart`).
+pub(crate) fn metronome_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.alive(slot).is_none() || b.volatile(slot, Volatile::Metronome).active {
+        return;
+    }
+    b.set_volatile_state(
+        slot,
+        Volatile::Metronome,
+        VolatileState {
+            active: true,
+            ..VolatileState::NONE
+        },
+    );
+}
+
+/// The `metronome` condition's `onTryMove` (priority -2, after every implemented TryMove
+/// handler: only for a move none of them stopped; a charging turn stops before it) for the
+/// user in `user` of the move `id`:
+/// - without the item (`hasItem`: a suppressed one does not count) the condition goes;
+/// - a move that calls another (`callsMove`: Sleep Talk) changes nothing; the called move
+///   counts when it runs;
+/// - the same move as `lastMove` after a successful move last turn (`moveLastTurnResult`) adds
+///   one; otherwise, while `twoturnmove` is up (the attacking turn of a charging move), a new
+///   move starts at 1 and the same move adds one; otherwise the count is 0;
+/// - the move becomes `lastMove`.
+pub(crate) fn metronome_try_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, id: MoveId) {
+    let state = b.volatile(user, Volatile::Metronome);
+    if !state.active {
+        return;
+    }
+    if b.item(user) != items::METRONOME {
+        b.remove_volatile(user, Volatile::Metronome);
+        return;
+    }
+    if id.data().calls_move {
+        return;
+    }
+    let succeeded = b.slot_history(user).move_last_turn_result == MoveResult::Succeeded;
+    let count = if state.mv == id && succeeded {
+        state.counter + 1
+    } else if b.volatile(user, Volatile::TwoTurnMove).active {
+        if state.mv != id {
+            1
+        } else {
+            state.counter + 1
+        }
+    } else {
+        0
+    };
+    // Only `min(numConsecutive, 5)` is read: higher counts behave alike and merge.
+    b.set_volatile_state(
+        user,
+        Volatile::Metronome,
+        VolatileState {
+            counter: count.min(5),
+            mv: id,
+            ..state
+        },
+    );
 }
 
 /// `runEvent('PseudoWeatherChange')` after a new pseudo-weather starts (`addPseudoWeather`, not
@@ -1356,6 +1425,7 @@ fn eat_item<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> bool {
 /// `onModifyDamage` and the target's `onSourceModifyDamage`. `type_mod` is the hit's clamped
 /// effectiveness (`getMoveHitData(move).typeMod`).
 ///
+/// - Metronome's condition on the user: its count's factor ([`metronome_try_move`]).
 /// - Life Orb: `chainModify([5324, 4096])`.
 /// - Expert Belt: `chainModify([4915, 4096])` on a super-effective hit.
 /// - Resist berries: a hit of the berry's type (super effective, except for Chilan Berry)
@@ -1372,6 +1442,14 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
     hit_substitute: bool,
 ) -> Vec<Handler> {
     let mut out = Vec::new();
+    // The user's `metronome` condition (a condition's handler: sub-order 2; it acts whether or
+    // not the item is suppressed, as its TryMove already removed it then):
+    // `chainModify([dmgMod[min(numConsecutive, 5)], 4096])`.
+    let metronome = b.volatile(user, Volatile::Metronome);
+    if metronome.active {
+        let modifier = METRONOME_MODIFIERS[usize::from(metronome.counter.min(5))];
+        out.push(Handler::of(b, user, 0, SUB_CONDITION, modifier));
+    }
     match b.item(user) {
         i if i == items::LIFE_ORB => out.push(Handler::of(b, user, 0, SUB_ITEM, 5324)),
         i if i == items::EXPERT_BELT && type_mod > 0 => {

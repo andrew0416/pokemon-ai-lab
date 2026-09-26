@@ -2268,7 +2268,8 @@ fn trick<const N: usize>(
 /// implemented for a new holder ([`trick_item_start`]) and an old one: the Choice items, the
 /// Seeds, Room Service, White Herb, Air Balloon (its `onStart` only announces it), Utility
 /// Umbrella (its `onStart` / `onEnd` only run WeatherChange for a holder ignoring its item, and
-/// no implemented WeatherChange handler acts on sun or rain from it), Mirror Herb (`onEnd`).
+/// no implemented WeatherChange handler acts on sun or rain from it), Mirror Herb (`onEnd`),
+/// Metronome (its `onStart` adds its condition; the old holder's goes at its next TryMove).
 pub(crate) fn trick_moves_item(item: ItemId) -> bool {
     item.data().is_choice
         || super::super::field_events::seed_terrain(item).is_some()
@@ -2278,16 +2279,23 @@ pub(crate) fn trick_moves_item(item: ItemId) -> bool {
             items::AIR_BALLOON,
             items::UTILITY_UMBRELLA,
             items::MIRROR_HERB,
+            items::METRONOME,
         ]
         .contains(&item)
 }
 
-/// `setItem`'s `singleEvent('Start', item)` on the new holder in `slot` (skipped while it ignores
-/// its item): a Choice item removes the holder's `choicelock` (a lock from its old Choice item,
-/// or from this very move's ModifyMove); a Seed, Room Service and White Herb act as when their
-/// holder switches in (`items::switch_in_item`: used in its terrain, in Trick Room, with a
-/// lowered stat).
+/// `setItem`'s `singleEvent('Start', item)` on the new holder in `slot` (skipped here while it
+/// ignores its item, except Metronome's): a Choice item removes the holder's `choicelock` (a
+/// lock from its old Choice item, or from this very move's ModifyMove); a Seed, Room Service and
+/// White Herb act as when their holder switches in (`items::switch_in_item`: used in its
+/// terrain, in Trick Room, with a lowered stat); Metronome adds its condition.
 pub(crate) fn trick_item_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
+    // `singleEvent('Start')` runs even for a holder ignoring its item (only other events skip
+    // it): Metronome's `onStart` adds its condition all the same.
+    if item == items::METRONOME {
+        super::super::items::metronome_start(b, slot);
+        return;
+    }
     if b.item(slot) != item {
         return;
     }

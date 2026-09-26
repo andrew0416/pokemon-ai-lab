@@ -632,8 +632,8 @@ pub(crate) fn drag_out_blocked<const N: usize>(b: &Battle<'_, N>, slot: SlotRef)
 /// already (no `onRestart`), is immune (`runStatusImmunity('attract')`: Oblivious, breakable),
 /// a TryAddVolatile handler blocks it (Aroma Veil), or the condition's `onStart` fails: the two
 /// are not male and female (`pokemon.gender === 'M' && source.gender === 'F'` or the reverse;
-/// Destiny Knot's `onAttract` is refused on the field). An undecided gender
-/// (`Gender::Random`) is an error: Showdown drew it at random.
+/// the `Attract` event's only handler, Destiny Knot's, never fails it: [`add_attract`]). An
+/// undecided gender (`Gender::Random`) is an error: Showdown drew it at random.
 pub(crate) fn attract_fails<const N: usize>(
     b: &Battle<'_, N>,
     target: SlotRef,
@@ -662,7 +662,12 @@ pub(crate) fn attract_fails<const N: usize>(
 }
 
 /// `target.addVolatile('attract', source)` once [`attract_fails`] said it lands: the source is
-/// remembered for the condition's `onUpdate`.
+/// remembered for the condition's `onUpdate`. The condition's `onStart` then runs
+/// `runEvent('Attract', target, source)`: Destiny Knot on the target (`onAttract`, priority
+/// -100; skipped while its holder ignores its item) attracts the source back unless it is
+/// attracted already (`source.addVolatile('attract', target)`, with every check of
+/// [`attract_fails`]; the target is attracted by then, so a Destiny Knot on the source does
+/// nothing more).
 pub(crate) fn add_attract<const N: usize>(b: &mut Battle<'_, N>, target: SlotRef, source: SlotRef) {
     let Some(charmer) = b.occupant(source) else {
         return;
@@ -676,6 +681,13 @@ pub(crate) fn add_attract<const N: usize>(b: &mut Battle<'_, N>, target: SlotRef
             ..VolatileState::NONE
         },
     );
+    if b.item(target) == items::DESTINY_KNOT
+        && source != target
+        && !b.volatile(source, Volatile::Attract).active
+        && attract_fails(b, source, target) == Ok(false)
+    {
+        add_attract(b, source, target);
+    }
 }
 
 /// Attract's `onUpdate` on the Pokémon in `slot`: once its source is no longer active (switched

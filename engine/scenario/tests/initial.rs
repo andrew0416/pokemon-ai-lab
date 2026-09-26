@@ -9,6 +9,7 @@ use lab_engine::dex::{abilities, items, AbilityId};
 use lab_engine::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use lab_engine::gimmick::GimmickSet;
 use lab_engine::state::{SideId, SlotRef, State};
+use lab_engine::volatile::Volatile;
 use lab_engine::Doubles;
 use lab_scenario::{
     canonical_json, canonical_value, expand_switch_ins, initial_outcomes, load_scenario_file,
@@ -292,14 +293,19 @@ fn unsupported_start_handlers_are_rejected() {
         }
     }
 
-    // The Metronome item's `onStart` (it adds its counting condition) is not implemented (the
-    // Seeds' are since O92, Booster Energy's since O98).
+    // The Blue Orb's `onSwitchIn` (Primal Reversion) is not implemented (the Seeds' `onStart` are
+    // since O92, Booster Energy's since O98, Metronome's since Opus W: it adds its condition).
     let mut s = loaded.state.clone();
-    s.active_mut(rillaboom).unwrap().item = items::METRONOME;
+    s.active_mut(rillaboom).unwrap().item = items::BLUE_ORB;
     assert!(matches!(
         expand_switch_ins(&s),
         Err(SwitchInError::UnsupportedItem { .. })
     ));
+    let mut s = loaded.state.clone();
+    s.active_mut(rillaboom).unwrap().item = items::METRONOME;
+    for o in expand_switch_ins(&s).unwrap() {
+        assert!(o.state.slot(rillaboom).volatiles.has(Volatile::Metronome));
+    }
     let mut s = loaded.state.clone();
     s.active_mut(rillaboom).unwrap().item = items::BOOSTER_ENERGY;
     assert!(expand_switch_ins(&s).is_ok());

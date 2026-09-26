@@ -1080,6 +1080,21 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     ),
     // AfterBoost (`Battle::boost_by` → `items::after_boost`).
     (items::ADRENALINE_ORB, &["onAfterBoost"]),
+    // Metronome (Opus W unit 2): `onStart` at switch-in and on `setItem` adds its condition
+    // (`items::metronome_start`), whose `onTryMove` (`items::metronome_try_move`, the last
+    // TryMove handler in `moves::use_move`) counts consecutive uses and whose `onModifyDamage`
+    // is in `items::modify_damage_handlers`.
+    (
+        items::METRONOME,
+        &[
+            "condition.onModifyDamage",
+            "condition.onStart",
+            "condition.onTryMove",
+            "onStart",
+        ],
+    ),
+    // Destiny Knot: `onAttract` in `conditions::add_attract` (Cute Charm's attraction).
+    (items::DESTINY_KNOT, &["onAttract"]),
     // Eject Pack (Opus W unit 1): a stat drop sets its flag (`onAfterBoost` in
     // `items::after_boost`; the hidden `Volatile::EjectPack`, which `onEnd` and the used item
     // clear), the next switch-in batch (`onAnySwitchIn`, -4), Mega Evolution, move end or
