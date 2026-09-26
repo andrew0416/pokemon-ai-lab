@@ -2657,7 +2657,7 @@ fn get_damage<const N: usize>(
         final_modifier,
     };
     let rolls = damage_rolls(input);
-    Ok(Planned::Damage(i32::from(b.rng.roll(&rolls))))
+    Ok(Planned::Damage(i32::from(b.rng.roll(&rolls, user.side))))
 }
 
 /// A secondary whose only effect is the `flinch` volatile.

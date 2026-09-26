@@ -3,7 +3,8 @@
 //!
 //! Usage: lab-plan <scenario.json> [--side p1|p2] [--depth n] [--rng expect|worst]
 //!                 [--before <oracle-report.json>] [--top k] [--exact] [--all-targets]
-//!                 [--max-turns n] [--rolls full|extremes|quartiles]
+//!                 [--max-turns n] [--rolls full|extremes|quartiles|median|pessimistic]
+//!                 [--eval material|heuristic]
 //!
 //! The position is the scenario's (after switch-ins, setup turns and patch); with several
 //! initial states `--before` picks the one matching an oracle report, as `lab-turn` does.
@@ -11,14 +12,16 @@
 //! values every root choice fully instead of stopping once it falls below the best one.
 //! `--all-targets` keeps damaging moves aimed at an ally. `--rolls` picks the damage rolls the
 //! enumeration branches on (default `extremes`: min and max; `full` is exact but a turn with
-//! two spread moves has millions of outcomes). Choices print as Showdown choice
+//! two spread moves has millions of outcomes; `median` one roll; `pessimistic` the minimum for
+//! our attacks and the maximum against us). `--eval` picks the leaf evaluation (default
+//! `heuristic`: material plus status, stages, volatiles and side conditions). Choices print as Showdown choice
 //! strings against the position's party order, so they paste into a scenario's `turn`.
 
 use std::process::ExitCode;
 
 use serde_json::Value;
 
-use lab_engine::eval::Material;
+use lab_engine::eval::{Evaluator, Heuristic, Material};
 use lab_engine::rules::Ruleset;
 use lab_engine::state::SideId;
 use lab_engine::turn::RollMode;
@@ -44,6 +47,8 @@ fn run() -> Result<(), String> {
     let mut before = None;
     let mut us = SideId::One;
     let mut top = 10usize;
+    let mut eval = "heuristic".to_owned();
+    let mut pessimistic = false;
     let mut config = Config::new(Ruleset::CHAMPIONS_MC, us);
     let mut i = 0;
     while i < args.len() {
@@ -97,7 +102,23 @@ fn run() -> Result<(), String> {
                     Some("full") => RollMode::Full,
                     Some("extremes") => RollMode::Extremes,
                     Some("quartiles") => RollMode::Quartiles,
-                    _ => return Err("--rolls needs full, extremes or quartiles".into()),
+                    Some("median") => RollMode::Median,
+                    Some("pessimistic") => {
+                        pessimistic = true;
+                        RollMode::Extremes
+                    }
+                    _ => {
+                        return Err(
+                            "--rolls needs full, extremes, quartiles, median or pessimistic".into(),
+                        )
+                    }
+                };
+            }
+            "--eval" => {
+                i += 1;
+                eval = match args.get(i).map(String::as_str) {
+                    Some(e @ ("material" | "heuristic")) => e.to_owned(),
+                    _ => return Err("--eval needs material or heuristic".into()),
                 };
             }
             "--exact" => config.exact_lines = true,
@@ -108,10 +129,13 @@ fn run() -> Result<(), String> {
         i += 1;
     }
     config.us = us;
+    if pessimistic {
+        config.rolls = RollMode::Pessimistic(us);
+    }
     let scenario = scenario.ok_or(
         "usage: lab-plan <scenario.json> [--side p1|p2] [--depth n] [--rng expect|worst] \
          [--before report.json] [--top k] [--exact] [--all-targets] [--max-turns n] \
-         [--rolls full|extremes|quartiles]",
+         [--rolls full|extremes|quartiles|median|pessimistic] [--eval material|heuristic]",
     )?;
 
     let loaded = load_scenario_file(&scenario).map_err(|e| e.to_string())?;
@@ -130,8 +154,12 @@ fn run() -> Result<(), String> {
         roster(&loaded, &position, them)
     );
 
-    let evaluator = Material;
-    let mut solver = Solver::new(config, &evaluator);
+    let evaluator: Box<dyn Evaluator<2>> = if eval == "material" {
+        Box::new(Material)
+    } else {
+        Box::new(Heuristic)
+    };
+    let mut solver = Solver::new(config, evaluator.as_ref());
     let analysis = solver
         .analyse(&mut state, None)
         .map_err(|e| e.to_string())?;
@@ -139,7 +167,7 @@ fn run() -> Result<(), String> {
         return Err("the solver changed the position (bug)".into());
     }
     println!(
-        "decision {:?}, depth {}, chance {:?}, pruning {:?}, rolls {:?}: {} nodes, {} enumerations, {:.2} s",
+        "decision {:?}, depth {}, chance {:?}, pruning {:?}, rolls {:?}, eval {eval}: {} nodes, {} enumerations, {:.2} s",
         analysis.decision,
         analysis.depth,
         config.chance,

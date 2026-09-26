@@ -11,6 +11,8 @@
 //! Runs must be deterministic given the prefix, so the turn code may not branch on anything
 //! but the state and earlier choices.
 
+use crate::state::SideId;
+
 #[derive(Debug, Default)]
 pub(crate) struct Chooser {
     /// Choices to replay at the start of the next run.
@@ -40,16 +42,31 @@ pub enum RollMode {
     /// Rolls 85, 90, 95 and 100 (indices 0, 5, 10, 15), 1/4 each: the exact mean multiplier
     /// 92.5 with four support points; probabilities are approximate.
     Quartiles,
+    /// One roll, 92% (index 7): no roll branching at all; a "typical" line.
+    Median,
+    /// One roll: the minimum for every attack by `side` and the maximum for every attack
+    /// against it. The user's "최저난수 보장" criterion: a line that works here works under
+    /// every roll (accuracy, critical hits and secondary effects stay probabilistic).
+    Pessimistic(SideId),
 }
 
 impl RollMode {
-    /// The roll indices (into the ascending 16-roll table) the mode branches on.
-    pub fn indices(self) -> &'static [usize] {
+    /// The roll indices (into the ascending 16-roll table) the mode branches on for an
+    /// attack by `attacker`.
+    pub fn indices(self, attacker: SideId) -> &'static [usize] {
         match self {
             RollMode::Full => &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
             RollMode::Extremes => &[0, 15],
             RollMode::Quartiles => &[0, 5, 10, 15],
+            RollMode::Median => &[7],
+            RollMode::Pessimistic(side) if side == attacker => &[0],
+            RollMode::Pessimistic(_) => &[15],
         }
+    }
+
+    /// Whether the mode enumerates the exact distribution.
+    pub fn is_exact(self) -> bool {
+        self == RollMode::Full
     }
 }
 
@@ -72,14 +89,18 @@ impl Chooser {
         }
     }
 
-    /// One damage roll out of `rolls` (ascending, 85% first): in enumeration one branch per
-    /// distinct value among the rolls the mode selects, weighted by multiplicity; in sampling
-    /// one of the 16 uniformly.
-    pub fn roll(&mut self, rolls: &[u16; crate::damage::DAMAGE_ROLL_COUNT]) -> u16 {
+    /// One damage roll out of `rolls` (ascending, 85% first) for an attack by `attacker`: in
+    /// enumeration one branch per distinct value among the rolls the mode selects, weighted
+    /// by multiplicity; in sampling one of the 16 uniformly.
+    pub fn roll(
+        &mut self,
+        rolls: &[u16; crate::damage::DAMAGE_ROLL_COUNT],
+        attacker: SideId,
+    ) -> u16 {
         let indices = if self.random.is_some() {
-            RollMode::Full.indices()
+            RollMode::Full.indices(attacker)
         } else {
-            self.roll_mode.indices()
+            self.roll_mode.indices(attacker)
         };
         let mut values: Vec<(u16, u32)> = Vec::with_capacity(indices.len());
         for &i in indices {
@@ -240,13 +261,16 @@ mod tests {
             ),
             (RollMode::Extremes, vec![85, 100]),
             (RollMode::Quartiles, vec![85, 90, 95, 100]),
+            (RollMode::Median, vec![92]),
+            (RollMode::Pessimistic(SideId::One), vec![85]),
+            (RollMode::Pessimistic(SideId::Two), vec![100]),
         ] {
             let mut chooser = Chooser::with_rolls(mode);
             let mut seen = Vec::new();
             let mut total = 0.0;
             loop {
                 chooser.begin_run();
-                seen.push(chooser.roll(&rolls));
+                seen.push(chooser.roll(&rolls, SideId::One));
                 total += chooser.probability();
                 if !chooser.advance() {
                     break;
@@ -259,7 +283,12 @@ mod tests {
         let flat = [50u16; 16];
         let mut chooser = Chooser::with_rolls(RollMode::Extremes);
         chooser.begin_run();
-        assert_eq!(chooser.roll(&flat), 50);
+        assert_eq!(chooser.roll(&flat, SideId::One), 50);
+        assert!(!chooser.advance());
+        // Pessimistic: the other side's attacks take the maximum roll.
+        let mut chooser = Chooser::with_rolls(RollMode::Pessimistic(SideId::One));
+        chooser.begin_run();
+        assert_eq!(chooser.roll(&rolls, SideId::Two), 100);
         assert!(!chooser.advance());
         // A sampler draws from all 16 whatever the mode.
         let mut sampler = Chooser::sampler(7);
@@ -267,7 +296,7 @@ mod tests {
         let mut values = std::collections::HashSet::new();
         for _ in 0..500 {
             sampler.begin_run();
-            values.insert(sampler.roll(&rolls));
+            values.insert(sampler.roll(&rolls, SideId::One));
         }
         assert!(values.len() > 2, "{values:?}");
     }

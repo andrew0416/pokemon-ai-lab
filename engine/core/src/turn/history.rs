@@ -127,13 +127,19 @@ impl<const N: usize> Battle<'_, N> {
     /// for each side `faintedLastTurn = faintedThisTurn`, `faintedThisTurn = null`. An
     /// emptied slot (its occupant fainted) keeps the default it was reset to.
     pub(crate) fn end_turn_history(&mut self) {
+        // Carry-overs nobody in this battle reads are dropped (F18), as in `record_attack`.
+        let readers = self.history_readers;
         for slot in State::<N>::slot_refs() {
             if self.state.slot(slot).party_index.is_none() {
                 continue;
             }
             let mut history = self.slot_history(slot);
             history.newly_switched = false;
-            history.move_last_turn_result = history.move_this_turn_result;
+            history.move_last_turn_result = if readers.move_last_turn_result {
+                history.move_this_turn_result
+            } else {
+                MoveResult::Undefined
+            };
             history.move_this_turn_result = MoveResult::Undefined;
             history.hurt_this_turn = None;
             history.last_damaged_by = None;
@@ -142,7 +148,7 @@ impl<const N: usize> Battle<'_, N> {
         }
         for side in [SideId::One, SideId::Two] {
             let mut history = self.state.side(side).history;
-            history.fainted_last_turn = history.fainted_this_turn;
+            history.fainted_last_turn = readers.fainted_last_turn && history.fainted_this_turn;
             history.fainted_this_turn = false;
             self.set_side_history(side, history);
         }

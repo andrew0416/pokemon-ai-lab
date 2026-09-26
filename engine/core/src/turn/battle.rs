@@ -92,6 +92,10 @@ pub struct HistoryReaders {
     pub last_damaged_by: bool,
     /// Rage Fist (`timesAttacked`).
     pub times_attacked: bool,
+    /// Stomping Tantrum, Temper Flare (`moveLastTurnResult`).
+    pub move_last_turn_result: bool,
+    /// Retaliate (`faintedLastTurn`; unsupported, so never set today).
+    pub fainted_last_turn: bool,
 }
 
 impl HistoryReaders {
@@ -100,12 +104,15 @@ impl HistoryReaders {
         for side in &state.sides {
             for mon in &side.party {
                 for slot in &mon.moves {
-                    if slot.id == crate::dex::moves::METAL_BURST
-                        || slot.id == crate::dex::moves::COMEUPPANCE
-                    {
+                    use crate::dex::moves as m;
+                    if slot.id == m::METAL_BURST || slot.id == m::COMEUPPANCE {
                         readers.last_damaged_by = true;
-                    } else if slot.id == crate::dex::moves::RAGE_FIST {
+                    } else if slot.id == m::RAGE_FIST {
                         readers.times_attacked = true;
+                    } else if slot.id == m::STOMPING_TANTRUM || slot.id == m::TEMPER_FLARE {
+                        readers.move_last_turn_result = true;
+                    } else if slot.id == m::RETALIATE {
+                        readers.fainted_last_turn = true;
                     }
                 }
             }

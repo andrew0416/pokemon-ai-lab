@@ -135,14 +135,14 @@ pub struct Analysis<const N: usize> {
     pub elapsed: Duration,
 }
 
-pub struct Solver<'e, const N: usize, E: Evaluator<N>> {
+pub struct Solver<'e, const N: usize, E: Evaluator<N> + ?Sized> {
     pub config: Config,
     evaluator: &'e E,
     nodes: u64,
     turns: u64,
 }
 
-impl<'e, const N: usize, E: Evaluator<N>> Solver<'e, N, E> {
+impl<'e, const N: usize, E: Evaluator<N> + ?Sized> Solver<'e, N, E> {
     pub fn new(config: Config, evaluator: &'e E) -> Self {
         Solver {
             config,

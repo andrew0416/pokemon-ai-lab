@@ -2,10 +2,12 @@
 //! oracle's format, so `engine/oracle/compare.cjs` can compare the two.
 //!
 //! Usage: lab-turn <scenario.json> [--before <oracle-report.json>] [--out <file>]
-//!                 [--mc <samples> [--seed <n>]] [--rolls full|extremes|quartiles]
+//!                 [--mc <samples> [--seed <n>]]
+//!                 [--rolls full|extremes|quartiles|median|pessimistic-p1|pessimistic-p2]
 //!
 //! `--rolls extremes` branches only on the minimum and maximum damage roll (the oracle's
-//! `--mode extremes`; compare against such a report), `quartiles` on four rolls.
+//! `--mode extremes`; compare against such a report), `quartiles` on four rolls, `median` on
+//! one (92%), `pessimistic-pN` on one: the minimum for side N's attacks, the maximum against it.
 //!
 //! `--mc` samples the turn instead of enumerating it (`mode: "mc"`), for turns whose exact
 //! distribution is too large; compare such reports with `oracle/marginals.cjs`.
@@ -21,6 +23,7 @@ use std::time::Instant;
 use serde_json::{json, Value};
 
 use lab_engine::rules::Ruleset;
+use lab_engine::state::SideId;
 use lab_engine::turn::{sample_turn, EnumerateOptions, RollMode};
 use lab_scenario::{
     canonical_json, load_scenario_file, run_decision_mid_turn_with, scenario_decision,
@@ -78,7 +81,14 @@ fn run() -> Result<(), String> {
                     Some("full") => RollMode::Full,
                     Some("extremes") => RollMode::Extremes,
                     Some("quartiles") => RollMode::Quartiles,
-                    _ => return Err("--rolls needs full, extremes or quartiles".into()),
+                    Some("median") => RollMode::Median,
+                    Some("pessimistic-p1") => RollMode::Pessimistic(SideId::One),
+                    Some("pessimistic-p2") => RollMode::Pessimistic(SideId::Two),
+                    _ => {
+                        return Err("--rolls needs full, extremes, quartiles, median, \
+                                    pessimistic-p1 or pessimistic-p2"
+                            .into())
+                    }
                 };
             }
             other if scenario.is_none() => scenario = Some(other.to_owned()),
@@ -186,8 +196,10 @@ fn run() -> Result<(), String> {
             (None, RollMode::Full) => "engine",
             (None, RollMode::Extremes) => "extremes",
             (None, RollMode::Quartiles) => "quartiles",
+            (None, RollMode::Median) => "median",
+            (None, RollMode::Pessimistic(_)) => "pessimistic",
         },
-        "exact": samples.is_none() && options.rolls == RollMode::Full,
+        "exact": samples.is_none() && options.rolls.is_exact(),
         "engine": "lab-engine",
         "branches": samples.unwrap_or(outcomes.len()),
         "distinctOutcomes": merged.len(),
