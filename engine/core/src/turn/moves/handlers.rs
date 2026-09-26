@@ -168,6 +168,10 @@ pub(super) fn on_try<const N: usize>(
         moves::METAL_BURST | moves::COMEUPPANCE => {
             b.state.slot(user).history.last_damaged_by.is_some()
         }
+        // Counter, Mirror Coat: `if (!source.volatiles['counter']) return false; if
+        // (source.volatiles['counter'].slot === null) return false;`
+        moves::COUNTER | moves::MIRROR_COAT => before_turn_volatile(mv.id)
+            .is_some_and(|v| b.volatile(user, v).active && b.volatile(user, v).hidden != 0),
         // Clangorous Soul: `if (source.hp <= (source.maxhp * 33 / 100) || source.maxhp === 1)
         // return false;` Fillet Away: `source.hp <= source.maxhp / 2`.
         moves::CLANGOROUS_SOUL | moves::FILLET_AWAY => b.slot_mon(user).is_some_and(|m| {
@@ -271,8 +275,82 @@ pub(super) fn damage_callback<const N: usize>(
             let scaled = damage * 3 / 2;
             Some(if scaled == 0 { 1 } else { scaled })
         }
+        // Counter, Mirror Coat: `pokemon.volatiles['counter'].damage || 1` (0 without the
+        // condition, which `onTry` already failed on).
+        moves::COUNTER | moves::MIRROR_COAT => {
+            let recorded = before_turn_volatile(mv.id).map(|v| b.volatile(user, v));
+            match recorded {
+                Some(state) if state.active => Some(i32::from(state.counter).max(1)),
+                _ => Some(0),
+            }
+        }
         _ => None,
     }
+}
+
+/// The condition a move's `beforeTurnCallback` adds to its user at the start of the turn
+/// (`moves::before_turn_move`): Counter's `counter`, Mirror Coat's `mirrorcoat`.
+pub(super) fn before_turn_volatile(id: MoveId) -> Option<Volatile> {
+    match id {
+        moves::COUNTER => Some(Volatile::Counter),
+        moves::MIRROR_COAT => Some(Volatile::MirrorCoat),
+        _ => None,
+    }
+}
+
+/// Counter's and Mirror Coat's `condition.onDamagingHit` on the damaged `target`: a hit from a
+/// foe (`!source.isAlly(target)`) whose dex category (`this.getCategory(move)`: the move's own,
+/// not a category ModifyMove changed) is physical (Counter) or special (Mirror Coat) records
+/// the attacker's slot (`source.getSlot()`) and twice the damage, replacing an earlier hit.
+pub(super) fn counter_damaging_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+    damage: i32,
+) {
+    if user.side == target.side {
+        return;
+    }
+    let volatile = match mv.data.category {
+        MoveCategory::Physical => Volatile::Counter,
+        MoveCategory::Special => Volatile::MirrorCoat,
+        MoveCategory::Status => return,
+    };
+    let state = b.volatile(target, volatile);
+    if !state.active || b.occupant(target).is_none() {
+        return;
+    }
+    b.set_volatile_state(
+        target,
+        volatile,
+        VolatileState {
+            counter: (2 * damage).clamp(0, i32::from(u16::MAX)) as u16,
+            hidden: user.slot + 1,
+            ..state
+        },
+    );
+}
+
+/// Counter's and Mirror Coat's `condition.onRedirectTarget` (priority -1, after every other
+/// handler) for the move `mv` of its holder `user`: `if (move.id !== 'counter') return; if
+/// (source !== this.effectState.target || !this.effectState.slot) return; return
+/// this.getAtSlot(this.effectState.slot);` — the slot of the last foe that hit it, whoever
+/// stands there now (a fainted Pokémon there makes the move fail).
+pub(super) fn counter_redirect<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Option<SlotRef> {
+    let volatile = before_turn_volatile(mv.id)?;
+    let state = b.volatile(user, volatile);
+    if !state.active || state.hidden == 0 {
+        return None;
+    }
+    Some(SlotRef {
+        side: user.side.other(),
+        slot: state.hidden - 1,
+    })
 }
 
 /// The move's `onMoveFail` (`useMoveInner` when the move did not succeed on any target, after

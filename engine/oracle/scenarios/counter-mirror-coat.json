@@ -1,0 +1,23 @@
+{
+ "description": "Counter and Mirror Coat (beforeTurnMove, order 5). Talonflame's Night Shade (special) and Garchomp's Seismic Toss (physical) both hit Wobbuffet. Hariyama's Counter was not hit: onTry fails. Wobbuffet's Mirror Coat records only the special hit and returns 2 x 50 = 100 to Talonflame's slot. Counter and Mirror Coat draw a nominal random foe (merged).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Counter", "Protect"], "level": 50},
+   {"species": "Wobbuffet", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Mirror Coat", "Counter"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50},
+   {"species": "Talonflame", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Night Shade", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move counter, move mirrorcoat", "p2": "move seismictoss 2, move nightshade 2"}
+}

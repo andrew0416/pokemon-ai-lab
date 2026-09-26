@@ -362,6 +362,33 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         moves::COMEUPPANCE,
         &["damageCallback", "onModifyTarget", "onTry"],
     ),
+    // Counter, Mirror Coat (`target: scripted`): `beforeTurnCallback` is a `beforeTurnMove` queue
+    // action (order 5, `moves::before_turn_move`) adding the condition (`onStart`: nothing
+    // recorded yet); its `onDamagingHit` in `moves::damaging_hit`
+    // (`handlers::counter_damaging_hit`), its `onRedirectTarget` last in
+    // `moves::redirect_target`; `onTry` and `damageCallback` (2x the recorded damage, or 1).
+    (
+        moves::COUNTER,
+        &[
+            "beforeTurnCallback",
+            "condition.onDamagingHit",
+            "condition.onRedirectTarget",
+            "condition.onStart",
+            "damageCallback",
+            "onTry",
+        ],
+    ),
+    (
+        moves::MIRROR_COAT,
+        &[
+            "beforeTurnCallback",
+            "condition.onDamagingHit",
+            "condition.onRedirectTarget",
+            "condition.onStart",
+            "damageCallback",
+            "onTry",
+        ],
+    ),
     // Parting Shot: `onHit` drops Atk and SpA and withdraws the switch if that failed (F6).
     (moves::PARTING_SHOT, &["onHit"]),
     // Slot conditions (F12): `conditions::{add_slot_condition, slot_condition_residual,

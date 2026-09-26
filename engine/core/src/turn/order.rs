@@ -15,6 +15,8 @@ use super::battle::Battle;
 use super::items as item_events;
 
 /// Showdown action `order` values.
+/// `beforeTurnMove`: a move's `beforeTurnCallback` (Counter, Mirror Coat), before everything.
+pub(crate) const ORDER_BEFORE_TURN_MOVE: u32 = 5;
 pub(crate) const ORDER_SWITCH: u32 = 103;
 /// `megaEvo`: after switches, before every move.
 pub(crate) const ORDER_MEGA: u32 = 104;

@@ -189,9 +189,17 @@ pub enum Volatile {
     /// Magnet Rise (duration 5, residual order 18): the holder is not grounded (immune to
     /// Ground).
     MagnetRise,
+    /// Counter's own condition (duration 1), added by its `beforeTurnCallback` when the turn
+    /// starts: the last physical hit from a foe is recorded (`onDamagingHit`): twice its damage
+    /// in `counter` (Showdown `effectState.damage`) and the attacker's slot in `hidden`
+    /// (`effectState.slot`: 1 + the slot index on the holder's foe side; 0 = `null`). Both are
+    /// hidden in the canonical state. Added by name, so the dex has no condition id.
+    Counter,
+    /// Mirror Coat's condition: as [`Volatile::Counter`], for special hits.
+    MirrorCoat,
 }
 
-pub const VOLATILE_COUNT: usize = 62;
+pub const VOLATILE_COUNT: usize = 64;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -257,6 +265,8 @@ impl Volatile {
         Volatile::SaltCure,
         Volatile::Ingrain,
         Volatile::MagnetRise,
+        Volatile::Counter,
+        Volatile::MirrorCoat,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -326,7 +336,9 @@ impl Volatile {
             | Volatile::ShadowForce
             | Volatile::AllySwitch
             | Volatile::Trapped
-            | Volatile::Trapper => ConditionId::NONE,
+            | Volatile::Trapper
+            | Volatile::Counter
+            | Volatile::MirrorCoat => ConditionId::NONE,
         }
     }
 
@@ -395,6 +407,8 @@ impl Volatile {
             Volatile::SaltCure => "saltcure",
             Volatile::Ingrain => "ingrain",
             Volatile::MagnetRise => "magnetrise",
+            Volatile::Counter => "counter",
+            Volatile::MirrorCoat => "mirrorcoat",
         }
     }
 
@@ -424,7 +438,9 @@ impl Volatile {
             | Volatile::KingsShield
             | Volatile::Obstruct
             | Volatile::SilkTrap
-            | Volatile::BurningBulwark => 1,
+            | Volatile::BurningBulwark
+            | Volatile::Counter
+            | Volatile::MirrorCoat => 1,
             Volatile::Stall
             | Volatile::LockedMove
             | Volatile::MustRecharge
@@ -512,13 +528,16 @@ impl Volatile {
             }),
             // `bestStat` / `fromBooster` (Protosynthesis, Quark Drive) and the trapper /
             // `boundDivisor` (partial trapping) are not canonical fields.
-            Volatile::Protosynthesis | Volatile::QuarkDrive | Volatile::PartiallyTrapped => {
-                Some(VolatileState {
-                    counter: 0,
-                    hidden: 0,
-                    ..state
-                })
-            }
+            // Counter / Mirror Coat: neither `damage` nor `slot` is a canonical field.
+            Volatile::Protosynthesis
+            | Volatile::QuarkDrive
+            | Volatile::PartiallyTrapped
+            | Volatile::Counter
+            | Volatile::MirrorCoat => Some(VolatileState {
+                counter: 0,
+                hidden: 0,
+                ..state
+            }),
             _ => Some(state),
         }
     }
@@ -674,6 +693,8 @@ mod tests {
                         | Volatile::AllySwitch
                         | Volatile::Trapped
                         | Volatile::Trapper
+                        | Volatile::Counter
+                        | Volatile::MirrorCoat
                 ));
                 continue;
             }
@@ -710,6 +731,8 @@ mod tests {
             (Volatile::SaltCure, moves::SALT_CURE),
             (Volatile::Ingrain, moves::INGRAIN),
             (Volatile::MagnetRise, moves::MAGNET_RISE),
+            (Volatile::Counter, moves::COUNTER),
+            (Volatile::MirrorCoat, moves::MIRROR_COAT),
         ] {
             let data = id.data();
             assert_eq!(

@@ -52,7 +52,7 @@ use battle::Battle;
 use branch::Chooser;
 
 pub use branch::RollMode;
-use order::{ORDER_MEGA, ORDER_MOVE, ORDER_SWITCH};
+use order::{ORDER_BEFORE_TURN_MOVE, ORDER_MEGA, ORDER_MOVE, ORDER_SWITCH};
 use queue::{Action, ActionKind};
 
 pub use abilities::trapped;
@@ -1087,6 +1087,8 @@ impl<const N: usize> Battle<'_, N> {
         let (order, priority) = match action.kind {
             ActionKind::Switch { .. } => (ORDER_SWITCH, 0),
             ActionKind::Mega => (ORDER_MEGA, 0),
+            // Not a `move` choice: no priority (`getActionSpeed` only sets it for moves).
+            ActionKind::BeforeTurnMove { .. } => (ORDER_BEFORE_TURN_MOVE, 0),
             ActionKind::Move {
                 index: RECHARGE_INDEX,
                 ..
@@ -1145,6 +1147,17 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
                             slot,
                             pokemon,
                             kind: ActionKind::Mega,
+                            order: None,
+                        });
+                    }
+                    // `resolveAction`: a move with a `beforeTurnCallback` also queues a
+                    // `beforeTurnMove` action (the chosen move; Encore's override comes later).
+                    let id = lock::action_move_id(state.pokemon(pokemon), index);
+                    if moves::has_before_turn_callback(id) {
+                        queue.push(Action {
+                            slot,
+                            pokemon,
+                            kind: ActionKind::BeforeTurnMove { index },
                             order: None,
                         });
                     }
@@ -1263,6 +1276,9 @@ fn run_stage_inner<const N: usize>(
                 }
                 ActionKind::Mega => {
                     mega::run_mega_evo(b, action.slot)?;
+                }
+                ActionKind::BeforeTurnMove { index } => {
+                    moves::before_turn_move(b, action.slot, index);
                 }
             }
             return after_action(b, pending, &newcomers);

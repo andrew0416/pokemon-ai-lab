@@ -285,6 +285,28 @@ pub(crate) fn run_move<const N: usize>(
     result
 }
 
+/// Whether the move has a `beforeTurnCallback` the engine runs (Counter, Mirror Coat): its
+/// action queues a `beforeTurnMove` action too.
+pub(crate) fn has_before_turn_callback(id: MoveId) -> bool {
+    handlers::before_turn_volatile(id).is_some()
+}
+
+/// Showdown `runAction('beforeTurnMove')` for the move in `move_index` of the Pokémon at `user`
+/// (the caller checked it is active and not fainted): `getTarget` (a scripted move's random
+/// foe: never `null` in a battle that goes on, and it does not matter otherwise), then the
+/// move's `beforeTurnCallback`: Counter and Mirror Coat add their condition.
+pub(crate) fn before_turn_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    move_index: u8,
+) {
+    let pokemon = b.occupant(user).expect("the caller checked the user");
+    let id = super::lock::action_move_id(b.mon(pokemon), move_index);
+    if let Some(volatile) = handlers::before_turn_volatile(id) {
+        b.add_volatile(user, volatile);
+    }
+}
+
 /// The next hit of a suspended multi-hit move, then the move's tail once the hits are done.
 pub(crate) fn resume_move<const N: usize>(
     b: &mut Battle<'_, N>,
@@ -719,13 +741,28 @@ fn get_move_targets<const N: usize>(
 /// priority, then the holder's Speed (`compareRedirectOrder`), and the first whose holder is a
 /// valid target of the move's target type wins. Rage Powder skips powder-immune users. A tie
 /// between two valid holders is broken in Showdown by `effectOrder` (who entered the field or
-/// changed ability first), which the state does not record, so it is unsupported.
+/// changed ability first), which the state does not record, so it is unsupported. Last comes
+/// the user's own Counter / Mirror Coat condition (`onRedirectTarget`, priority -1): the slot
+/// of the foe whose hit it recorded, whoever stands there now.
 fn redirect_target<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
 ) -> Result<SlotRef, TurnError> {
+    let redirected = foe_redirect_target(b, user, mv)?;
+    Ok(redirected
+        .or_else(|| handlers::counter_redirect(b, user, mv))
+        .unwrap_or(target))
+}
+
+/// The `RedirectTarget` handlers of priority 0 and above ([`redirect_target`]): the new target,
+/// if one of them redirects.
+fn foe_redirect_target<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Result<Option<SlotRef>, TurnError> {
     // (priority, speed, holder), in Showdown's handler collection order: the user's side
     // (`onAny`), then each foe's `onFoe` volatiles and `onAny` ability.
     let mut handlers: Vec<(i8, i32, SlotRef)> = Vec::new();
@@ -754,7 +791,7 @@ fn redirect_target<const N: usize>(
         }
     }
     if handlers.is_empty() {
-        return Ok(target);
+        return Ok(None);
     }
     // Stable, so equal keys keep collection order.
     handlers.sort_by(|a, b| b.0.cmp(&a.0).then(b.1.cmp(&a.1)));
@@ -791,7 +828,7 @@ fn redirect_target<const N: usize>(
         }
         match winners.len() {
             0 => {}
-            1 => return Ok(winners[0]),
+            1 => return Ok(Some(winners[0])),
             _ => {
                 return Err(b.unsupported(format!(
                     "redirection tie between {} and {} (Showdown breaks it by effectOrder)",
@@ -804,7 +841,7 @@ fn redirect_target<const N: usize>(
         }
         i = j;
     }
-    Ok(target)
+    Ok(None)
 }
 
 // ---- use ---------------------------------------------------------------------------------------
@@ -2412,6 +2449,11 @@ fn damaging_hit<const N: usize>(
         Source(AbilityId),
     }
     const LAST: u32 = u32::MAX;
+    // Counter's and Mirror Coat's conditions (`onDamagingHit`, no order) only record the hit on
+    // their holder, which no other handler reads: they can run first.
+    for &(target, damage) in damaged {
+        handlers::counter_damaging_hit(b, user, mv, target, damage);
+    }
     let mut handlers: Vec<(u32, usize, Kind)> = Vec::new();
     for (index, &(target, _)) in damaged.iter().enumerate() {
         let Some(pokemon) = b.occupant(target) else {

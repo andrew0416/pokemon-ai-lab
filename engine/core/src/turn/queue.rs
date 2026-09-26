@@ -34,6 +34,12 @@ pub(crate) enum ActionKind {
     },
     /// Showdown `megaEvo`, queued before the Pokémon's move.
     Mega,
+    /// Showdown `beforeTurnMove` (order 5, before every switch and move): the chosen move's
+    /// `beforeTurnCallback` (Counter, Mirror Coat), queued with the move action. Neither
+    /// `willAct` nor `willMove` counts it.
+    BeforeTurnMove {
+        index: u8,
+    },
 }
 
 /// Showdown `queue.willAct()`: a move or switch is still to come.

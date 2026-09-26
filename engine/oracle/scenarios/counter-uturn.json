@@ -1,0 +1,26 @@
+{
+ "description": "Counter returns 2x the last physical hit to the attacker's slot, whoever stands there: Talonflame U-turns into Hariyama and switches to Snorlax (mid-turn), then Hariyama's Counter hits Snorlax for twice the U-turn damage. Garchomp's Night Shade (special) is not recorded. U-turn's rolls and crit branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hariyama", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Counter", "Protect"], "level": 50},
+   {"species": "Wobbuffet", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Mirror Coat", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Night Shade", "Protect"], "level": 50},
+   {"species": "Talonflame", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"atk": 32, "spe": 32}, "moves": ["U-turn", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "turn": {"p1": "move counter, move protect", "p2": "move nightshade 1, move uturn 1"},
+ "midTurn": {"p2": ["switch 3"]}
+}
