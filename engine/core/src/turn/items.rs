@@ -113,6 +113,15 @@ impl<const N: usize> Battle<'_, N> {
     /// is using a move, everyone's weather is sun for it, whatever the field's (even none or a
     /// suppressed one) and before Utility Umbrella's check. Electro Shot's own charge check
     /// (`sourceEffect.id !== 'electroshot'`) reads [`Battle::weather_for`] instead.
+    ///
+    /// Showdown's `activePokemon` lasts until `runAction`'s `clearActiveMove()`, after the
+    /// action's phazing step, and after a Dancer copy it is the last dancer; the engine's
+    /// `active_move` ends with the move and goes back to the original user after Dancer. The
+    /// gap never shows (Opus BB unit B25): only a Move's or a Weather's handler reads the weather
+    /// through Mega Sol, and none runs there — a dragged-in Pokémon's switch-in handlers belong
+    /// to its ability, item and side conditions (oracle `bb-mega-sol-roar-forecast`: Forecast's
+    /// `onStart` sees the rain), and the Update, faint and Emergency Exit steps have no weather
+    /// reader of that kind.
     pub fn move_weather(&self, holder: SlotRef) -> Weather {
         let mega_sol = self.active_move.is_some_and(|m| {
             self.occupant(m.user) == Some(m.pokemon) && self.ability(m.user) == abilities::MEGA_SOL
