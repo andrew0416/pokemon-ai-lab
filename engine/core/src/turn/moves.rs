@@ -706,6 +706,10 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
         }
         _ => {}
     }
+    // Truant (priority 9).
+    if !ability_events::truant_before_move(b, user) {
+        return false;
+    }
     if b.volatile(user, Volatile::Flinch).active {
         return false;
     }

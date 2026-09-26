@@ -1758,6 +1758,25 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // `Battle::faint_messages`, `switching::end_ability`); every other ability reads
     // `Battle::ability`, which is `NONE` while `abilities::ignoring_ability`.
     (abilities::NEUTRALIZING_GAS, &["onEnd", "onSwitchIn"]),
+    // Opus U. Poison Heal: `onDamage` in `abilities::poison_heal` (the residual poison damage,
+    // `residual.rs`: nothing else deals `psn` / `tox` damage).
+    (abilities::POISON_HEAL, &["onDamage"]),
+    // Opus U. Slow Start: `onStart` / `onEnd` in `switching`, `onModifyAtk` in
+    // `abilities::attack_handlers`, `onModifySpe` in `Battle::speed_stat`, `onResidual` in
+    // `abilities::on_residual` (`abilities::slow_start_halves` reads the counter).
+    (
+        abilities::SLOW_START,
+        &[
+            "onEnd",
+            "onModifyAtk",
+            "onModifySpe",
+            "onResidual",
+            "onStart",
+        ],
+    ),
+    // Opus U. Truant: `onStart` in `abilities::truant_start`, `onBeforeMove` in
+    // `abilities::truant_before_move` (the `truant` volatile).
+    (abilities::TRUANT, &["onBeforeMove", "onStart"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

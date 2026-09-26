@@ -76,6 +76,10 @@ impl<const N: usize> Battle<'_, N> {
         if quick_feet && mon.status != Status::None {
             chain.push(MOD_ONE_POINT_FIVE);
         }
+        // Slow Start: `if (this.effectState.counter) return this.chainModify(0.5)`.
+        if super::abilities::slow_start_halves(self, slot) {
+            chain.push(MOD_ONE / 2);
+        }
         // Unburden's volatile: `if (!pokemon.item && !pokemon.ignoringAbility())
         // return this.chainModify(2)`.
         if mon.item.is_none()
@@ -92,7 +96,8 @@ impl<const N: usize> Battle<'_, N> {
         // The effective item (Choice Scarf, Iron Ball, Macho Brace, the Power items, Quick
         // Powder; none under Magic Room or a Klutz it does not ignore). The factors are powers of
         // two times at most two 1.5s (Quick Feet or a paradox condition, and Choice Scarf: 6144
-        // * 6144 / 4096 = 9216 exactly), so the chain is exact in any order.
+        // * 6144 / 4096 = 9216 exactly; Slow Start's and Iron Ball's halves keep it a multiple of
+        // 4096 / 16), so the chain is exact in any order.
         chain.extend(item_events::speed_modifier(self.item(slot), mon));
         if !chain.is_empty() {
             spe = modify(spe, chain_modifiers(&chain, 0, u32::MAX));

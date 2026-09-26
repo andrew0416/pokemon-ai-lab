@@ -272,6 +272,117 @@ pub(crate) fn gastro_acid_start<const N: usize>(
     super::switching::end_ability(b, slot, ability)
 }
 
+// ---- Poison Heal, Slow Start, Truant ----------------------------------------------------------
+
+/// Poison Heal's `onDamage` (priority 1, before every other Damage handler) for the poison or
+/// toxic damage of the Pokémon in `slot`: `this.heal(target.baseMaxhp / 8); return false;` — it
+/// heals instead (`battle.heal`: nothing at full HP, Heal Block stops it) and takes no damage.
+/// Returns whether it acted.
+pub(crate) fn poison_heal<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> bool {
+    let Some(mon) = b.slot_mon(slot) else {
+        return false;
+    };
+    if b.ability(slot) != abilities::POISON_HEAL {
+        return false;
+    }
+    let max_hp = f64::from(mon.max_hp);
+    b.heal(slot, max_hp / 8.0);
+    true
+}
+
+/// Slow Start's `onStart`: `this.effectState.counter = 5` ([`Volatile::SlowStart`]).
+pub(crate) fn slow_start_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.occupant(slot).is_none() {
+        return;
+    }
+    let state = VolatileState {
+        active: true,
+        counter: 5,
+        ..VolatileState::NONE
+    };
+    b.set_volatile_state(slot, Volatile::SlowStart, state);
+}
+
+/// Whether Slow Start halves the Attack (`onModifyAtk`, priority 5) and Speed (`onModifySpe`)
+/// of the Pokémon in `slot`: its ability acts and `effectState.counter` is not 0.
+pub(crate) fn slow_start_halves<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
+    b.ability(slot) == abilities::SLOW_START && b.volatile(slot, Volatile::SlowStart).counter > 0
+}
+
+/// Truant's `onStart` for the Pokémon in `slot`: `pokemon.removeVolatile('truant')`, then `if
+/// (pokemon.activeTurns && (pokemon.moveThisTurnResult !== undefined ||
+/// !this.queue.willMove(pokemon))) pokemon.addVolatile('truant')` — a holder that was already
+/// active when the turn started (`activeTurns`: not `newlySwitched`) and has moved this turn or
+/// has no move to come loafs at its next move.
+pub(crate) fn truant_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.alive(slot).is_none() {
+        return;
+    }
+    b.remove_volatile(slot, Volatile::Truant);
+    let history = b.state.slot(slot).history;
+    let moved = history.move_this_turn_result != crate::state::MoveResult::Undefined;
+    if !history.newly_switched && (moved || b.will_move(slot).is_none()) {
+        b.add_volatile(slot, Volatile::Truant);
+    }
+}
+
+/// Truant's `onBeforeMove` (priority 9: after the recharge turn, sleep and freeze, before
+/// flinching) for the Pokémon in `slot`: with the `truant` volatile it loafs (`removeVolatile`,
+/// `false`); otherwise it gets the volatile and moves. `false` = the move is not used.
+pub(crate) fn truant_before_move<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> bool {
+    if b.ability(slot) != abilities::TRUANT {
+        return true;
+    }
+    if b.remove_volatile(slot, Volatile::Truant) {
+        return false;
+    }
+    b.add_volatile(slot, Volatile::Truant);
+    true
+}
+
+/// The residual order and sub-order of an ability's `onResidual` (`onResidualOrder`, and
+/// `onResidualSubOrder` or the ability's effect-type sub-order).
+pub(crate) fn residual_order(ability: AbilityId) -> (u32, u32) {
+    let orders = ability.data().event_orders;
+    let order = orders
+        .iter()
+        .find(|(n, _)| *n == "onResidualOrder")
+        .map_or(super::order::ORDER_DEFAULT, |&(_, p)| p as u32);
+    let sub_order = orders
+        .iter()
+        .find(|(n, _)| *n == "onResidualSubOrder")
+        .map_or(SUB_ABILITY, |&(_, p)| p as u32);
+    (order, sub_order)
+}
+
+/// Whether `ability` has an `onResidual` run by [`on_residual`] (`residual.rs` collects it).
+pub(crate) fn has_residual(ability: AbilityId) -> bool {
+    ability == abilities::SLOW_START
+}
+
+/// An ability's `onResidual` for its holder in `slot` (the caller checked that the ability
+/// still acts):
+/// - Slow Start: `if (pokemon.activeTurns && this.effectState.counter)` the counter drops by
+///   one, and at 0 it is gone (`activeTurns` at the residual: the holder was active since the
+///   turn started, `Battle::active_since_turn_start`).
+pub(crate) fn on_residual<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    ability: AbilityId,
+) -> Result<(), super::TurnError> {
+    if ability == abilities::SLOW_START {
+        let mut state = b.volatile(slot, Volatile::SlowStart);
+        if b.active_since_turn_start(slot) && state.counter > 0 {
+            state.counter -= 1;
+            if state.counter == 0 {
+                state = VolatileState::NONE;
+            }
+            b.set_volatile_state(slot, Volatile::SlowStart, state);
+        }
+    }
+    Ok(())
+}
+
 /// The ability of the Pokémon in `holder` as the handlers of `user`'s move see it. Showdown
 /// `suppressingAbility` (gen 8+): a move that ignores abilities (Sunsteel Strike, Moongeist
 /// Beam, or any move of a Mold Breaker user) skips the breakable abilities of everyone but its
@@ -1598,6 +1709,12 @@ pub(crate) fn attack_handlers<const N: usize>(
     {
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, modifier));
+    }
+    // Slow Start (priority 5): `if (this.effectState.counter) return this.chainModify(0.5)`
+    // (Attack only).
+    if physical && slow_start_halves(b, user) {
+        let p = priority(ability.data().event_orders, event);
+        out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_HALF));
     }
     // Gorilla Tactics (priority 1): `chainModify(1.5)` (Attack only; Dynamax is off).
     if physical && ability == abilities::GORILLA_TACTICS {

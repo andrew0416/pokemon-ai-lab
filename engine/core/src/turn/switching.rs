@@ -107,6 +107,11 @@ pub(crate) enum StartEffect {
     Commander,
     /// Gorilla Tactics: `abilityState.choiceLock = ""` (the lock volatile goes).
     GorillaTactics,
+    /// Slow Start: `effectState.counter = 5` (`abilities::slow_start_start`).
+    SlowStart,
+    /// Truant: the `truant` volatile goes, or comes for a holder that has already acted
+    /// (`abilities::truant_start`).
+    Truant,
 }
 
 /// Abilities with an implemented start, with the exact handler lists they were implemented
@@ -530,12 +535,33 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onEnd", "onSwitchIn"],
         StartEffect::None,
     ),
+    // Opus U. Slow Start: `onStart` sets the counter, `onEnd` only logs (`end_ability` drops the
+    // counter with the ability state); `onModifyAtk` / `onModifySpe` / `onResidual` in
+    // `abilities` (`slow_start_halves`, `on_residual`).
+    (
+        abilities::SLOW_START,
+        &[
+            "onEnd",
+            "onModifyAtk",
+            "onModifySpe",
+            "onResidual",
+            "onStart",
+        ],
+        StartEffect::SlowStart,
+    ),
+    // Opus U. Truant: `onStart` (`abilities::truant_start`), `onBeforeMove`
+    // (`abilities::truant_before_move`, from `moves::before_move`).
+    (
+        abilities::TRUANT,
+        &["onBeforeMove", "onStart"],
+        StartEffect::Truant,
+    ),
 ];
 
 /// What `ability` does when it starts, or `None` if it has a switch-in handler that is not
 /// implemented. `ModifySpe` handlers are allowed: the start order uses the stored Speed, which
-/// right after switching in is the raw stat. A `suppressWeather` ability outside the table is
-/// refused.
+/// right after switching in is the raw stat. Every handler is looked at (an `onModifySpe` does
+/// not hide a later `onStart`). A `suppressWeather` ability outside the table is refused.
 pub(crate) fn start_effect(ability: AbilityId) -> Option<StartEffect> {
     if let Some(&(_, _, effect)) = START_HANDLERS.iter().find(|(id, ..)| *id == ability) {
         return Some(effect);
@@ -544,10 +570,10 @@ pub(crate) fn start_effect(ability: AbilityId) -> Option<StartEffect> {
     if data.suppress_weather {
         return None;
     }
-    match start_handler(data.handlers) {
-        None | Some("onModifySpe") => Some(StartEffect::None),
-        Some(_) => None,
-    }
+    let unimplemented = (0..data.handlers.len())
+        .filter_map(|i| start_handler(&data.handlers[i..=i]))
+        .any(|h| h != "onModifySpe");
+    (!unimplemented).then_some(StartEffect::None)
 }
 
 /// Whether a Pokémon with this ability can switch in (its switch-in effect, if any, is
@@ -1042,6 +1068,8 @@ pub(crate) fn start_ability<const N: usize>(
         StartEffect::SupremeOverlord => super::abilities::supreme_overlord_start(b, slot),
         StartEffect::Commander => super::abilities::commander_update(b, slot),
         StartEffect::GorillaTactics => b.delete_volatile(slot, Volatile::GorillaTactics),
+        StartEffect::SlowStart => super::abilities::slow_start_start(b, slot),
+        StartEffect::Truant => super::abilities::truant_start(b, slot),
     }
     Ok(())
 }
@@ -1171,6 +1199,11 @@ pub(crate) fn end_ability<const N: usize>(
     // Supreme Overlord's `onEnd` only logs; its `abilityState.fallen` goes with the ability.
     if ability == abilities::SUPREME_OVERLORD {
         b.delete_volatile(slot, Volatile::SupremeOverlord);
+        return Ok(());
+    }
+    // Slow Start's `onEnd` only logs; its `abilityState.counter` goes with the ability.
+    if ability == abilities::SLOW_START {
+        b.delete_volatile(slot, Volatile::SlowStart);
         return Ok(());
     }
     // Gorilla Tactics' `onEnd`: `pokemon.abilityState.choiceLock = ""`.

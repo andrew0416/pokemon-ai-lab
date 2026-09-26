@@ -244,9 +244,16 @@ pub enum Volatile {
     /// holder no longer suppresses other abilities while it stays, and a second `End` does
     /// nothing). No duration; hidden in the canonical state.
     NeutralizingGasEnding,
+    /// Not a Showdown volatile: Slow Start's `abilityState.counter` (5 from its `onStart`, one
+    /// less at each residual of a turn the holder was active from the start; gone at 0), kept in
+    /// `counter`. No duration; hidden in the canonical state.
+    SlowStart,
+    /// Truant's own condition (`truant`, no duration, no handlers): the holder loafs at its next
+    /// move attempt (Truant's `onBeforeMove` removes it and stops the move, or adds it).
+    Truant,
 }
 
-pub const VOLATILE_COUNT: usize = 76;
+pub const VOLATILE_COUNT: usize = 78;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -326,6 +333,8 @@ impl Volatile {
         Volatile::Attract,
         Volatile::GastroAcid,
         Volatile::NeutralizingGasEnding,
+        Volatile::SlowStart,
+        Volatile::Truant,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -409,7 +418,9 @@ impl Volatile {
             | Volatile::Commanding
             | Volatile::Commanded
             | Volatile::GorillaTactics
-            | Volatile::NeutralizingGasEnding => ConditionId::NONE,
+            | Volatile::NeutralizingGasEnding
+            | Volatile::SlowStart
+            | Volatile::Truant => ConditionId::NONE,
         }
     }
 
@@ -492,6 +503,8 @@ impl Volatile {
             Volatile::Attract => "attract",
             Volatile::GastroAcid => "gastroacid",
             Volatile::NeutralizingGasEnding => "neutralizinggasending",
+            Volatile::SlowStart => "slowstartcounter",
+            Volatile::Truant => "truant",
         }
     }
 
@@ -583,7 +596,9 @@ impl Volatile {
             | Volatile::GorillaTactics
             | Volatile::Attract
             | Volatile::GastroAcid
-            | Volatile::NeutralizingGasEnding => 0,
+            | Volatile::NeutralizingGasEnding
+            | Volatile::SlowStart
+            | Volatile::Truant => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -617,7 +632,8 @@ impl Volatile {
             | Volatile::AngerShellUnchecked
             | Volatile::SupremeOverlord
             | Volatile::GorillaTactics
-            | Volatile::NeutralizingGasEnding => None,
+            | Volatile::NeutralizingGasEnding
+            | Volatile::SlowStart => None,
             // Two-turn move: the target location is not a canonical field.
             Volatile::Roost
             | Volatile::HelpingHand
@@ -809,6 +825,8 @@ mod tests {
                         | Volatile::Commanded
                         | Volatile::GorillaTactics
                         | Volatile::NeutralizingGasEnding
+                        | Volatile::SlowStart
+                        | Volatile::Truant
                 ));
                 continue;
             }
