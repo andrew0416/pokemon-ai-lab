@@ -819,6 +819,48 @@ pub(crate) fn magician<const N: usize>(
     Ok(())
 }
 
+/// Showdown `battle.skillSwap(source, target)` (Wandering Spirit's `onDamagingHit`, with the
+/// attacker as `source`): nothing if either has fainted (processed: both are still in their
+/// slots at DamagingHit, even at 0 HP), either ability is `failskillswap`, or `SetAbility`
+/// fails for either (Ability Shield); otherwise each ability's End (`switching::end_ability`),
+/// the two trade places (the base abilities stay: they come back on switching out), and each
+/// new one starts (`switching::start_ability`: the target's first).
+pub(crate) fn skill_swap<const N: usize>(
+    b: &mut Battle<'_, N>,
+    source: SlotRef,
+    target: SlotRef,
+) -> Result<(), super::TurnError> {
+    use crate::instruction::Instruction;
+    let (Some(source_pokemon), Some(target_pokemon)) = (b.occupant(source), b.occupant(target))
+    else {
+        return Ok(());
+    };
+    let (source_ability, target_ability) = (b.ability(source), b.ability(target));
+    let fails = |a: AbilityId| a.data().flags.contains(AbilityFlags::FAILSKILLSWAP);
+    if fails(source_ability) || fails(target_ability) {
+        return Ok(());
+    }
+    // `runEvent('SetAbility')` on the target, then on the source: Ability Shield returns `null`.
+    if b.item(target) == items::ABILITY_SHIELD || b.item(source) == items::ABILITY_SHIELD {
+        return Ok(());
+    }
+    super::switching::end_ability(b, source, source_ability)?;
+    super::switching::end_ability(b, target, target_ability)?;
+    b.apply(Instruction::SetAbility {
+        target: source_pokemon,
+        old: source_ability,
+        new: target_ability,
+    });
+    b.apply(Instruction::SetAbility {
+        target: target_pokemon,
+        old: target_ability,
+        new: source_ability,
+    });
+    super::switching::start_ability(b, source, target_ability)?;
+    super::switching::start_ability(b, target, source_ability)?;
+    Ok(())
+}
+
 /// Harvest's `onResidual` for its holder: in harsh sunlight (`this.field.isWeather`: the field's
 /// effective weather) or on `this.randomChance(1, 2)`, a holder with HP, no item and a berry as
 /// `lastItem` gets it back (`setItem(lastItem)`: berries have no Start) and forgets it

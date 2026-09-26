@@ -456,7 +456,8 @@ pub(super) fn on_try_hit<const N: usize>(
 /// [`on_damaging_hit`] (`u32::MAX`: no order, after every ordered handler), or `None`. Rough
 /// Skin, Iron Barbs and Rattled are handled by `moves::damaging_hit` itself.
 pub(super) fn damaging_hit_order(ability: AbilityId) -> Option<u32> {
-    const HANDLED: [AbilityId; 26] = [
+    const HANDLED: [AbilityId; 27] = [
+        abilities::WANDERING_SPIRIT,
         abilities::CUTE_CHARM,
         abilities::SPICY_SPRAY,
         abilities::CURSED_BODY,
@@ -544,6 +545,12 @@ pub(super) fn on_damaging_hit<const N: usize>(
                     _ => Status::Poison,
                 };
                 b.try_set_status_from(attacker, status, Some(holder));
+            }
+        }
+        // Wandering Spirit: `if (this.checkMoveMakesContact(...)) this.skillSwap(source, target)`.
+        a if a == abilities::WANDERING_SPIRIT => {
+            if contact {
+                super::ability_events::skill_swap(b, attacker, holder)?;
             }
         }
         // Cute Charm: `if (this.checkMoveMakesContact(...)) if (this.randomChance(3, 10))
@@ -761,6 +768,11 @@ pub(super) fn on_source_damaging_hit<const N: usize>(
     attacker: SlotRef,
     mv: &ActiveMove,
 ) {
+    // The handler was collected with the attacker's ability: one a DamagingHit handler replaced
+    // since (Mummy, Lingering Aroma, Wandering Spirit) is skipped (its `abilityState` moved on).
+    if b.ability(attacker) != ability {
+        return;
+    }
     if b.ability(target) == abilities::SHIELD_DUST || b.item(target) == items::COVERT_CLOAK {
         return;
     }

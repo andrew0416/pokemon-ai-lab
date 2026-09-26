@@ -1134,6 +1134,12 @@ pub(crate) fn end_ability<const N: usize>(
         b.delete_volatile(slot, Volatile::GorillaTactics);
         return Ok(());
     }
+    // Protean / Libero (no `onEnd`): their `abilityState.protean` / `.libero` goes with the
+    // ability.
+    if ability == abilities::PROTEAN || ability == abilities::LIBERO {
+        b.delete_volatile(slot, Volatile::ProteanUsed);
+        return Ok(());
+    }
     // Unburden: `pokemon.removeVolatile('unburden')`.
     if ability == abilities::UNBURDEN {
         b.remove_volatile(slot, Volatile::Unburden);
