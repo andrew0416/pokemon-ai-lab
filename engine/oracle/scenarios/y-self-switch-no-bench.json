@@ -1,0 +1,71 @@
+{
+ "description": "Opus Y unit 1 without a bench: p1 Jolteon's Baton Pass fails (onHit NOT_FAIL, the selfSwitch check fails it), Slowking-Galar's Chilly Reception sets snow and does not switch; p2 Cyclizar's Shed Tail fails in onTryHit (no substitute, no HP paid). Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Jolteon",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Baton Pass"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Slowking-Galar",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Chilly Reception"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Cyclizar",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Shed Tail"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hariyama",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move batonpass, move chillyreception",
+  "p2": "move shedtail, move harden"
+ }
+}

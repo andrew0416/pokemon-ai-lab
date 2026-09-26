@@ -303,13 +303,20 @@ impl SlotHistory {
 
 /// Showdown `switchFlag` values the engine tells apart: `false`, a move id (a self-switching
 /// move), `true` (Eject Button, Emergency Exit). Eject Button and Emergency Exit read the
-/// distinction.
+/// distinction. The move id also decides the switch's `sourceEffect` (`resolveAction`): a move
+/// whose `selfSwitch` is `'copyvolatile'` (Baton Pass) or `'shedtail'` (Shed Tail) makes the
+/// newcomer copy the outgoing Pokémon's boosts and volatiles (`copyVolatileFrom`), which the
+/// engine keeps as their own variants.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 pub enum SwitchFlag {
     #[default]
     None,
     Move,
     Effect,
+    /// A move with `selfSwitch: 'copyvolatile'` (Baton Pass).
+    CopyVolatile,
+    /// A move with `selfSwitch: 'shedtail'` (Shed Tail).
+    ShedTail,
 }
 
 /// A side's faint counters: `totalFainted` (capped at 100; Last Respects), `faintedThisTurn`

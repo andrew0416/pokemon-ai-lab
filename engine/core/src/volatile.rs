@@ -330,9 +330,13 @@ pub enum Volatile {
     /// `counter`, Spe and accuracy in `hidden`, evasion in `time`
     /// (`abilities::opportunist_boosts`). No duration; hidden in the canonical state.
     Opportunist,
+    /// Chilly Reception's condition (duration 1), added by its `priorityChargeCallback` (order
+    /// 107); its `onBeforeMove` only announces the move. Added by name, so the dex has no
+    /// condition id.
+    ChillyReception,
 }
 
-pub const VOLATILE_COUNT: usize = 101;
+pub const VOLATILE_COUNT: usize = 102;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -437,6 +441,7 @@ impl Volatile {
         Volatile::CudChew,
         Volatile::RipenWeaken,
         Volatile::Opportunist,
+        Volatile::ChillyReception,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -544,7 +549,8 @@ impl Volatile {
             | Volatile::Truant
             | Volatile::CudChew
             | Volatile::RipenWeaken
-            | Volatile::Opportunist => ConditionId::NONE,
+            | Volatile::Opportunist
+            | Volatile::ChillyReception => ConditionId::NONE,
         }
     }
 
@@ -652,6 +658,7 @@ impl Volatile {
             Volatile::CudChew => "cudchewberry",
             Volatile::RipenWeaken => "berryweaken",
             Volatile::Opportunist => "opportunistboosts",
+            Volatile::ChillyReception => "chillyreception",
         }
     }
 
@@ -686,7 +693,8 @@ impl Volatile {
             | Volatile::MirrorCoat
             | Volatile::FocusPunch
             | Volatile::BeakBlast
-            | Volatile::ShellTrap => 1,
+            | Volatile::ShellTrap
+            | Volatile::ChillyReception => 1,
             Volatile::Stall
             | Volatile::LockedMove
             | Volatile::MustRecharge
@@ -846,6 +854,135 @@ impl Volatile {
                 ..state
             }),
             _ => Some(state),
+        }
+    }
+}
+
+/// What Baton Pass's `copyVolatileFrom` does with a volatile of the Pokémon passing it.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Passed {
+    /// Copied with its effect state (`{...pokemon.volatiles[i], target: this}`).
+    Copied,
+    /// Not copied: the condition is `noCopy`, is engine state that is not one of Showdown's
+    /// `pokemon.volatiles` (an ability's or item's state, which the newcomer starts afresh), or
+    /// the outgoing Pokémon's ability `End` removed it before the copy (Unburden, Zen Mode).
+    Dropped,
+    /// Showdown would copy it, but the engine does not model the copy: Roost (the engine
+    /// changes the stored types instead of filtering them in `onType`), and the locks and
+    /// charges no Pokémon using Baton Pass can have (a locked move, recharge, a two-turn move,
+    /// Rollout).
+    Refused,
+}
+
+impl Volatile {
+    /// Whether Baton Pass copies this volatile (Showdown `noCopy`, checked against
+    /// `dex.conditions.getByID(id).noCopy` of the Champions mod).
+    pub fn baton_pass(self) -> Passed {
+        match self {
+            Volatile::Protect
+            | Volatile::Stall
+            | Volatile::Flinch
+            | Volatile::FollowMe
+            | Volatile::RagePowder
+            | Volatile::Confusion
+            | Volatile::PerishSong
+            | Volatile::Endure
+            | Volatile::Charge
+            | Volatile::FocusEnergy
+            | Volatile::MicleBerry
+            | Volatile::HelpingHand
+            | Volatile::Taunt
+            | Volatile::SparklingAria
+            | Volatile::ThroatChop
+            | Volatile::SpikyShield
+            | Volatile::BanefulBunker
+            | Volatile::KingsShield
+            | Volatile::Obstruct
+            | Volatile::SilkTrap
+            | Volatile::BurningBulwark
+            | Volatile::NoRetreat
+            | Volatile::LeechSeed
+            | Volatile::PartiallyTrapped
+            | Volatile::Substitute
+            | Volatile::AllySwitch
+            | Volatile::Ingrain
+            | Volatile::MagnetRise
+            | Volatile::FocusPunch
+            | Volatile::BeakBlast
+            | Volatile::ShellTrap
+            | Volatile::HealBlock
+            | Volatile::Metronome
+            | Volatile::Octolock
+            | Volatile::DragonCheer
+            | Volatile::LaserFocus
+            | Volatile::AquaRing
+            | Volatile::PowerTrick
+            | Volatile::PowerShift
+            | Volatile::GastroAcid
+            | Volatile::Truant
+            | Volatile::ChillyReception => Passed::Copied,
+            // `noCopy` conditions.
+            Volatile::Spotlight
+            | Volatile::Encore
+            | Volatile::FlashFire
+            | Volatile::ChoiceLock
+            | Volatile::Yawn
+            | Volatile::Disable
+            | Volatile::Torment
+            | Volatile::Imprison
+            | Volatile::GlaiveRush
+            | Volatile::Protosynthesis
+            | Volatile::QuarkDrive
+            | Volatile::DestinyBond
+            | Volatile::Trapped
+            | Volatile::Trapper
+            | Volatile::SaltCure
+            | Volatile::Counter
+            | Volatile::MirrorCoat
+            | Volatile::SmackDown
+            | Volatile::Commanding
+            | Volatile::Commanded
+            | Volatile::Attract
+            | Volatile::Nightmare
+            | Volatile::Stockpile
+            | Volatile::Foresight
+            | Volatile::MiracleEye
+            | Volatile::DefenseCurl => Passed::Dropped,
+            // Ability and item state, not `pokemon.volatiles`.
+            Volatile::ProteanUsed
+            | Volatile::AngerShellUnchecked
+            | Volatile::SupremeOverlord
+            | Volatile::GorillaTactics
+            | Volatile::EjectPack
+            | Volatile::NeutralizingGasEnding
+            | Volatile::SlowStart
+            | Volatile::CudChew
+            | Volatile::RipenWeaken
+            | Volatile::Opportunist => Passed::Dropped,
+            // Removed by the ability's `End` in `switchIn` before `copyVolatileFrom`.
+            Volatile::Unburden | Volatile::ZenMode => Passed::Dropped,
+            Volatile::Roost
+            | Volatile::LockedMove
+            | Volatile::MustRecharge
+            | Volatile::TwoTurnMove
+            | Volatile::SolarBeam
+            | Volatile::SolarBlade
+            | Volatile::MeteorBeam
+            | Volatile::ElectroShot
+            | Volatile::SkyAttack
+            | Volatile::Fly
+            | Volatile::Bounce
+            | Volatile::Dig
+            | Volatile::Dive
+            | Volatile::PhantomForce
+            | Volatile::ShadowForce
+            | Volatile::SkullBash
+            | Volatile::RazorWind
+            | Volatile::FreezeShock
+            | Volatile::IceBurn
+            | Volatile::Geomancy
+            | Volatile::Rollout
+            | Volatile::IceBall => Passed::Refused,
         }
     }
 }
@@ -1024,6 +1161,7 @@ mod tests {
                         | Volatile::CudChew
                         | Volatile::RipenWeaken
                         | Volatile::Opportunist
+                        | Volatile::ChillyReception
                 ));
                 continue;
             }
@@ -1080,6 +1218,7 @@ mod tests {
             (Volatile::DefenseCurl, moves::DEFENSE_CURL),
             (Volatile::Rollout, moves::ROLLOUT),
             (Volatile::IceBall, moves::ICE_BALL),
+            (Volatile::ChillyReception, moves::CHILLY_RECEPTION),
         ] {
             let data = id.data();
             assert_eq!(

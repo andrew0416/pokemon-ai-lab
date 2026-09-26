@@ -7,8 +7,7 @@
 //! handler lists that are implemented, and a test fails if the dex lists change.
 
 use crate::dex::{
-    abilities, items, moves, AbilityId, ItemId, MoveCategory, MoveId, MoveTarget, SelfSwitch, Type,
-    NO_BOOSTS,
+    abilities, items, moves, AbilityId, ItemId, MoveCategory, MoveId, MoveTarget, Type, NO_BOOSTS,
 };
 use crate::field::{FieldEffect, SideEffect, Weather, FIELD_EFFECT_COUNT, SIDE_EFFECT_COUNT};
 use crate::state::{SideId, SlotRef, State};
@@ -1117,6 +1116,19 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         ],
     ),
     (moves::DEFENSE_CURL, &["condition.onRestart"]),
+    // Opus Y unit 1: the volatile-passing switches (`switching::copy_volatile_from`, from the
+    // `SwitchFlag` the move leaves). Baton Pass's `onHit` fails without a bench or when
+    // `commanded`; Shed Tail's `onTryHit` / `onHit` (`handlers`), its substitute is the data's
+    // `volatileStatus`. Their `self.onHit` sets `skipBeforeSwitchOutEventFlag`, which the switch
+    // request sets for every flagged Pokémon anyway (no BeforeSwitchOut handler exists). Chilly
+    // Reception: `priorityChargeCallback` adds its condition, whose `onBeforeMove` only logs; the
+    // snow and the switch are data (`moves::try_move_hit_field`).
+    (moves::BATON_PASS, &["onHit", "self.onHit"]),
+    (moves::SHED_TAIL, &["onHit", "onTryHit", "self.onHit"]),
+    (
+        moves::CHILLY_RECEPTION,
+        &["condition.onBeforeMove", "priorityChargeCallback"],
+    ),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do
@@ -2167,13 +2179,7 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     // OHKO moves (`moves::accuracy_check`, `get_damage`, Sturdy) and self-destruction
     // (`selfdestruct`: `moves::use_move`, `spread_move_hit`) are implemented. Self-switching
     // moves suspend the turn for a decision (F6); the volatile-passing ones (Baton Pass, Shed
-    // Tail) are not implemented.
-    if matches!(
-        m.self_switch,
-        SelfSwitch::CopyVolatile | SelfSwitch::ShedTail
-    ) {
-        return why("switching with volatiles");
-    }
+    // Tail) copy on the switch (`switching::copy_volatile_from`).
     let sleep_moves = id == moves::SLEEP_TALK || id == moves::SNORE;
     // `breaksProtect` (`handlers::break_protect`) and crash damage (`handlers::on_move_fail`)
     // are implemented.
@@ -2571,9 +2577,11 @@ mod tests {
         for ability in [abilities::DISGUISE, abilities::ICE_FACE] {
             assert!(ability_supported_on_field(ability), "{ability:?}");
         }
+        // Shed Tail and Baton Pass pass the substitute on (`switching::copy_volatile_from`).
+        for id in [moves::SHED_TAIL, moves::BATON_PASS] {
+            assert_eq!(move_unsupported(id), None, "{id:?}");
+        }
         for id in [
-            moves::SHED_TAIL,
-            moves::BATON_PASS,
             moves::SKY_DROP,
             moves::TIDY_UP,
             moves::TRANSFORM,
@@ -2658,7 +2666,7 @@ mod tests {
             assert_eq!(move_unsupported(id), None, "{id:?}");
         }
         assert_eq!(move_unsupported(moves::U_TURN), None);
-        assert!(move_unsupported(moves::BATON_PASS).is_some());
+        assert_eq!(move_unsupported(moves::BATON_PASS), None);
         assert_eq!(move_unsupported(moves::WHIRLWIND), None);
         assert_eq!(move_unsupported(moves::FOLLOW_ME), None);
         assert_eq!(move_unsupported(moves::RAGE_POWDER), None);

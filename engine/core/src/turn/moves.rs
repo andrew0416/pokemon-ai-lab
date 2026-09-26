@@ -79,8 +79,9 @@ struct ActiveMove {
     /// Showdown `move.sourceEffect` for a move another move calls (Sleep Talk), whose PP pays
     /// Pressure's extra; `NONE` for a move used directly.
     source_effect: MoveId,
-    /// `move.selfSwitch` (U-turn, Parting Shot, ...): the user switches out once the move
-    /// landed (F6). Baton Pass and Shed Tail are refused.
+    /// `move.selfSwitch` (U-turn, Parting Shot, Baton Pass, Shed Tail, ...): the user switches
+    /// out once the move landed (F6); which kind of switch ([`self_switch_flag`]) follows the
+    /// move's data.
     self_switch: bool,
     /// The target location the user chose (`lastMoveTargetLoc`; 0 for a move without one or
     /// called by another): a two-turn move aims at it again on its second turn.
@@ -649,7 +650,7 @@ fn run_external_move<const N: usize>(
         scrappy: false,
         hit_targets: 0,
         source_effect: MoveId::NONE,
-        self_switch: data.self_switch == SelfSwitch::Yes,
+        self_switch: data.self_switch != SelfSwitch::No,
         type_changer: AbilityId::NONE,
         has_bounced: false,
         future_hit: false,
@@ -737,7 +738,7 @@ fn run_move_inner<const N: usize>(
         scrappy: false,
         hit_targets: 0,
         source_effect: MoveId::NONE,
-        self_switch: id.data().self_switch == SelfSwitch::Yes,
+        self_switch: id.data().self_switch != SelfSwitch::No,
         type_changer: AbilityId::NONE,
         has_bounced: false,
         future_hit: false,
@@ -1395,7 +1396,7 @@ fn call_move<const N: usize>(
         scrappy: false,
         hit_targets: 0,
         source_effect: caller.id,
-        self_switch: data.self_switch == SelfSwitch::Yes,
+        self_switch: data.self_switch != SelfSwitch::No,
         target_loc: 0,
         type_changer: AbilityId::NONE,
         has_bounced: false,
@@ -1481,7 +1482,7 @@ fn bounce_move<const N: usize>(
         bypass_protect: 0,
         // A bounced Parting Shot switches the bouncer out (`moveHit` sets the flag for the
         // copy's user).
-        self_switch: data.self_switch == SelfSwitch::Yes,
+        self_switch: data.self_switch != SelfSwitch::No,
         target_loc: 0,
     };
     let will_act = b.will_act();
@@ -1695,7 +1696,23 @@ fn try_move_hit_field<const N: usize>(
     if let Some(r) = handlers::on_hit_field(b, user, mv)? {
         combine(r);
     }
-    Ok(outcome.unwrap_or(true))
+    // `if (moveData.selfSwitch)` (Chilly Reception, aimed at the field: its target is the user):
+    // a success with a bench and no `commanded`, else a failure combined in.
+    if data.self_switch != SelfSwitch::No {
+        let can_switch = super::residual::bench(b, user.side).next().is_some()
+            && !b.volatile(user, Volatile::Commanded).active;
+        combine(can_switch);
+    }
+    let result = outcome.unwrap_or(true);
+    // The end of `runMoveEffects`: `source.switchFlag = move.id` once anything happened.
+    if result
+        && b.move_self_switch
+        && b.alive(user).is_some()
+        && !b.volatile(user, Volatile::Commanded).active
+    {
+        b.set_switch_flag(user, self_switch_flag(data.self_switch));
+    }
+    Ok(result)
 }
 
 /// Showdown `trySpreadMoveHit` (also for single-target moves).
@@ -2699,13 +2716,15 @@ fn spread_move_hit<const N: usize>(
     // !source.volatiles['commanded']) source.switchFlag = move.id` once anything happened
     // (Parting Shot's `onHit` withdrew `selfSwitch` if its drops failed). It comes before the
     // targets' Emergency Exit, which clears every other active's flag: U-turn into a Pokémon it
-    // takes below half leaves only that Pokémon switching.
+    // takes below half leaves only that Pokémon switching. A move with a `self` effect (Baton
+    // Pass, Shed Tail) sets it even when nothing happened (`!didAnything && ... &&
+    // !moveData.self` is the failure branch); without a bench the request clears it again.
     if b.move_self_switch
         && b.alive(user).is_some()
         && !b.volatile(user, Volatile::Commanded).active
-        && results.iter().any(|r| *r != Hit::Failed)
+        && (results.iter().any(|r| *r != Hit::Failed) || data.self_effect.is_some())
     {
-        b.set_switch_flag(user, SwitchFlag::Move);
+        b.set_switch_flag(user, self_switch_flag(data.self_switch));
     }
     // selfDrops: boosts once, for the first target the move did not fail on; an effect
     // without boosts (Roost's, Outrage's volatile) is applied to the user for every such
@@ -2863,6 +2882,16 @@ fn spread_move_hit<const N: usize>(
         }
     }
     Ok(results)
+}
+
+/// The `switchFlag` a self-switching move leaves on its user (`source.switchFlag = move.id`):
+/// the move's `selfSwitch` kind decides what the switch copies (`copyVolatileFrom`).
+fn self_switch_flag(kind: SelfSwitch) -> SwitchFlag {
+    match kind {
+        SelfSwitch::CopyVolatile => SwitchFlag::CopyVolatile,
+        SelfSwitch::ShedTail => SwitchFlag::ShedTail,
+        SelfSwitch::Yes | SelfSwitch::No => SwitchFlag::Move,
+    }
 }
 
 /// The substitute's `onTryPrimaryHit` guard (`if (target === source || move.flags['bypasssub']

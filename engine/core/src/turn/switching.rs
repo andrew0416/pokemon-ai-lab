@@ -748,6 +748,9 @@ fn switch_in_as<const N: usize>(
     if let Some(why) = switch_in_problem(b, incoming, on_field) {
         return Err(b.unsupported(why));
     }
+    // What the newcomer takes over (`copyVolatileFrom`): the outgoing Pokémon's slot state, and
+    // whether only its substitute passes (Shed Tail).
+    let mut passed: Option<(crate::state::Slot, bool)> = None;
     if let Some(outgoing) = b.occupant(slot) {
         if b.mon(outgoing).hp > 0 {
             if !skip_before_switch_out {
@@ -757,9 +760,21 @@ fn switch_in_as<const N: usize>(
             super::forme::on_switch_out(b, slot);
             // `singleEvent('End', oldActive.getAbility())` while it is still active: Neutralizing
             // Gas's `onEnd` restarts the abilities it suppressed (no other ability's `End` acts
-            // on a Pokémon that leaves).
+            // on a Pokémon that leaves; Unburden's and Zen Mode's remove volatiles that
+            // `copy_volatile_from` leaves out).
             if b.raw_ability(slot) == abilities::NEUTRALIZING_GAS {
                 super::abilities::neutralizing_gas_end(b, Some(slot))?;
+            }
+            // The switch's `sourceEffect` is the move its `switchFlag` names (`resolveAction`):
+            // Baton Pass (`'copyvolatile'`) or Shed Tail (`'shedtail'`) copy after the `End`
+            // events, before the outgoing Pokémon's `clearVolatile`.
+            let shed_tail = match b.state.slot(slot).switch_flag {
+                SwitchFlag::CopyVolatile => Some(false),
+                SwitchFlag::ShedTail => Some(true),
+                _ => None,
+            };
+            if let Some(shed_tail) = shed_tail {
+                passed = Some((b.state.slot(slot).clone(), shed_tail));
             }
         }
         b.clear_volatile(outgoing);
@@ -784,9 +799,85 @@ fn switch_in_as<const N: usize>(
         previous: Box::new(previous),
         party_index: Some(party_index),
     });
+    if let Some((from, shed_tail)) = passed {
+        copy_volatile_from(b, slot, &from, shed_tail)?;
+    }
     // `switchIn` queued the newcomer's `runSwitch` (a drag runs it at once).
     b.awaiting_run_switch = true;
     b.unstarted.push(incoming);
+    Ok(())
+}
+
+/// Showdown `pokemon.copyVolatileFrom(oldActive, switchCause)` for the newcomer now in `slot`,
+/// from the outgoing Pokémon's slot state `from`: Baton Pass passes the stat stages
+/// (`this.boosts = pokemon.boosts`) and every volatile that is not `noCopy`
+/// ([`Volatile::baton_pass`]) with its effect state (the substitute with its HP); Shed Tail
+/// (`shed_tail`) only the substitute. Then `singleEvent('Copy')` for each copied volatile:
+/// Power Trick and Power Shift swap the newcomer's stored Attack and Defense; Gastro Acid ends
+/// on a `cantsuppress` ability. No copied volatile is linked (`trapped` / `trapper` are
+/// `noCopy`), so no link moves. A volatile whose passing is not modelled is unsupported.
+fn copy_volatile_from<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    from: &crate::state::Slot,
+    shed_tail: bool,
+) -> Result<(), TurnError> {
+    use crate::volatile::{Passed, VolatileState};
+    let mut copied = Vec::new();
+    for (volatile, state) in from.volatiles.iter() {
+        if shed_tail && volatile != Volatile::Substitute {
+            continue;
+        }
+        match volatile.baton_pass() {
+            Passed::Dropped => continue,
+            Passed::Refused => {
+                return Err(
+                    b.unsupported(format!("Baton Pass passing the {} volatile", volatile.id()))
+                );
+            }
+            Passed::Copied => copied.push((volatile, state)),
+        }
+    }
+    if !shed_tail {
+        for (stat, &amount) in from.boosts.iter().enumerate() {
+            if amount != 0 {
+                b.apply(Instruction::Boost {
+                    target: slot,
+                    stat: stat as u8,
+                    amount,
+                });
+            }
+        }
+    }
+    for &(volatile, state) in &copied {
+        b.apply(Instruction::SetVolatile {
+            target: slot,
+            volatile,
+            old: VolatileState::NONE,
+            new: state,
+        });
+        if volatile == Volatile::Substitute {
+            b.set_substitute_hp(slot, from.substitute_hp);
+        }
+    }
+    for (volatile, _) in copied {
+        match volatile {
+            Volatile::PowerTrick | Volatile::PowerShift => {
+                super::conditions::swap_stored_stats(b, slot, 0, 1);
+            }
+            Volatile::GastroAcid => {
+                let locked = b
+                    .raw_ability(slot)
+                    .data()
+                    .flags
+                    .contains(AbilityFlags::CANTSUPPRESS);
+                if locked {
+                    b.remove_volatile(slot, Volatile::GastroAcid);
+                }
+            }
+            _ => {}
+        }
+    }
     Ok(())
 }
 

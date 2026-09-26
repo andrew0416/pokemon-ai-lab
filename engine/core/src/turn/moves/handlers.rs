@@ -531,6 +531,9 @@ pub(super) fn priority_charge_volatile(id: MoveId) -> Option<Volatile> {
         moves::FOCUS_PUNCH => Some(Volatile::FocusPunch),
         moves::BEAK_BLAST => Some(Volatile::BeakBlast),
         moves::SHELL_TRAP => Some(Volatile::ShellTrap),
+        // Chilly Reception: `source.addVolatile('chillyreception')` (its condition only announces
+        // the move in `onBeforeMove`).
+        moves::CHILLY_RECEPTION => Some(Volatile::ChillyReception),
         _ => None,
     }
 }
@@ -771,6 +774,18 @@ pub(super) fn on_try_hit<const N: usize>(
         moves::SUBSTITUTE => b.slot_mon(target).is_some_and(|m| {
             let (hp, max_hp) = (i32::from(m.hp), i32::from(m.max_hp));
             !b.has_substitute(target) && 4 * hp > max_hp && max_hp != 1
+        }),
+        // Shed Tail (on its user): `NOT_FAIL` when the side cannot switch
+        // (`!this.canSwitch(source.side)`) or the user is `commanded`, with a substitute already
+        // up, or at `Math.ceil(source.maxhp / 2)` HP or less.
+        moves::SHED_TAIL => b.slot_mon(target).is_some_and(|m| {
+            let (hp, max_hp) = (i32::from(m.hp), i32::from(m.max_hp));
+            super::super::residual::bench(b, target.side)
+                .next()
+                .is_some()
+                && !b.volatile(target, Volatile::Commanded).active
+                && !b.has_substitute(target)
+                && hp > (max_hp + 1) / 2
         }),
         // Role Play: `if (target.ability === source.ability) return false; if
         // (target.getAbility().flags['failroleplay'] || source.getAbility().flags['cantsuppress'])
@@ -2504,6 +2519,25 @@ pub(super) fn on_hit<const N: usize>(
             let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
             b.direct_damage(target, (max_hp / 4).max(1));
             return Ok(None);
+        }
+        // Shed Tail: `this.directDamage(Math.ceil(target.maxhp / 2))` after its substitute started
+        // (returns nothing; its `onTryHit` made sure the user survives it).
+        moves::SHED_TAIL => {
+            let max_hp = b.slot_mon(target).map_or(0, |m| i32::from(m.max_hp));
+            b.direct_damage(target, (max_hp + 1) / 2);
+            return Ok(None);
+        }
+        // Baton Pass: `if (!this.canSwitch(target.side) || target.volatiles['commanded'])
+        // return this.NOT_FAIL;` (the `selfSwitch` check then fails the move).
+        moves::BATON_PASS => {
+            let can_switch = super::super::residual::bench(b, target.side)
+                .next()
+                .is_some()
+                && !b.volatile(target, Volatile::Commanded).active;
+            if can_switch {
+                return Ok(None);
+            }
+            HitResult::NotFail
         }
         // Steel Roller: `this.field.clearTerrain();` (returns nothing: no effect on success).
         moves::STEEL_ROLLER => {

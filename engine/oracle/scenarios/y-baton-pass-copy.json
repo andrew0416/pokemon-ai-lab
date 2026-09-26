@@ -1,0 +1,102 @@
+{
+ "description": "Opus Y unit 1 Baton Pass onCopy (setup: Jolteon's Power Trick, then Ingrain): Shuckle (midTurn switch 3) gets powertrick, whose onCopy swaps its own stored Attack and Defense (Garchomp's Pound then meets Defense 30), and Ingrain, which heals it at the residual.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Jolteon",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Baton Pass",
+     "Power Trick",
+     "Ingrain"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Shuckle",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Pound",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hariyama",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move powertrick, move harden",
+   "move harden, move harden"
+  ],
+  [
+   "move ingrain, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move batonpass, move harden",
+  "p2": "move pound 1, move harden"
+ },
+ "midTurn": {
+  "p1": [
+   "switch 3"
+  ]
+ }
+}
