@@ -6,6 +6,13 @@
 //!                 [--max-turns n] [--rolls full|extremes|quartiles|median|pessimistic]
 //!                 [--eval material|heuristic|file:<weights.json>] [--position i]
 //!                 [--solve maximin|nash|deep] [--dump-children <out.jsonl> [--beam b] [--outcomes k]]
+//!                 [--believed-team <team.json>]
+//!
+//! `--believed-team` is opponent model ③ at one turn (DESIGN.md): the opponent solves the
+//! matrix game on the team it believes we have (the same species, moves and order as ours, but
+//! the spreads, items and abilities it assumes) and plays that equilibrium strategy; our
+//! choices are then valued on the real position against it. The gap to the real equilibrium is
+//! what the concealed sets are worth this turn.
 //!                 [--threads n] [--plan "<turn 1> / <turn 2> / ..."]
 //!                 [--child-nash [--beam b] [--outcomes k]]
 //!
@@ -64,6 +71,7 @@ fn run() -> Result<(), String> {
     let mut solve = "maximin".to_owned();
     let mut plan: Option<String> = None;
     let mut dump_children: Option<String> = None;
+    let mut believed_team: Option<String> = None;
     let mut pessimistic = false;
     let mut config = Config::new(Ruleset::CHAMPIONS_MC, us);
     let mut i = 0;
@@ -163,6 +171,14 @@ fn run() -> Result<(), String> {
                 i += 1;
                 dump_children = Some(args.get(i).cloned().ok_or("--dump-children needs a file")?);
             }
+            "--believed-team" => {
+                i += 1;
+                believed_team = Some(
+                    args.get(i)
+                        .cloned()
+                        .ok_or("--believed-team needs a team file")?,
+                );
+            }
             "--threads" => {
                 i += 1;
                 config.threads = args
@@ -237,6 +253,68 @@ fn run() -> Result<(), String> {
         Box::new(Heuristic)
     };
     let mut solver = Solver::new(config, evaluator.as_ref());
+    if let Some(team_path) = &believed_team {
+        // The believed position: the same scenario with our side's team file replaced.
+        let believed =
+            believed_position(&scenario, us, team_path, before.as_deref(), position_index)?;
+        let mut believed_state = believed.state.clone();
+        let mixed = solver
+            .analyse_mixed(&mut believed_state, None)
+            .map_err(|e| format!("believed position: {e}"))?;
+        let their_strategy: Vec<(Choice<2>, f32)> = mixed
+            .theirs
+            .iter()
+            .zip(&mixed.equilibrium.cols)
+            .map(|(c, &p)| (*c, p))
+            .collect();
+        let response = solver
+            .best_response(&mut state, None, &their_strategy)
+            .map_err(|e| e.to_string())?;
+        if state != position.state {
+            return Err("the solver changed the position (bug)".into());
+        }
+        let real = solver
+            .analyse_mixed(&mut state, None)
+            .map_err(|e| e.to_string())?;
+        println!(
+            "opponent model 3: their equilibrium on the believed team ({team_path}; value {:+.1} from our side there), answered on the real position; real equilibrium {:+.1}; chance {:?}, rolls {:?}, eval {eval}: {} nodes, {} enumerations, {:.2} s",
+            mixed.equilibrium.value,
+            real.equilibrium.value,
+            config.chance,
+            config.rolls,
+            response.nodes,
+            response.turns,
+            response.elapsed.as_secs_f64()
+        );
+        println!("their strategy (from the believed matchup, >= 1%):");
+        for (choice, p) in mixed.their_support(0.01).iter().take(top) {
+            println!(
+                "  {:>5.1}%  {}",
+                p * 100.0,
+                describe(&believed, mixed.decision, them, choice)
+            );
+        }
+        println!(
+            "our best responses on the real position (best value {:+.1}; the gap to the real equilibrium, {:+.1}, is what the hidden sets are worth this turn):",
+            response.lines[0].1,
+            response.lines[0].1 - real.equilibrium.value
+        );
+        for (rank, (choice, value)) in response.lines.iter().take(top).enumerate() {
+            println!(
+                "{:>3}  {:>9}  {}",
+                rank + 1,
+                format!("{value:+.1}"),
+                describe(&position, response.decision, us, choice)
+            );
+        }
+        if !response.unsupported.is_empty() || !mixed.unsupported.is_empty() {
+            println!("dropped pairs reaching effects the engine does not implement:");
+            for why in response.unsupported.iter().chain(&mixed.unsupported) {
+                println!("  - {why}");
+            }
+        }
+        return Ok(());
+    }
     if let Some(path) = &dump_children {
         // Feature vectors of the positions one turn ahead, each with its next-turn equilibrium
         // value as the fitting target (WORKPLAN S12): our `--beam` best choices by the root
@@ -574,6 +652,37 @@ fn run() -> Result<(), String> {
         }
     }
     Ok(())
+}
+
+/// The scenario with our side's team file replaced by `team_path`, loaded and positioned the
+/// same way as the real one (the same `--position` index or oracle `before`).
+fn believed_position(
+    scenario: &str,
+    us: SideId,
+    team_path: &str,
+    before: Option<&str>,
+    index: Option<usize>,
+) -> Result<Position, String> {
+    let text = std::fs::read_to_string(scenario).map_err(|e| format!("{scenario}: {e}"))?;
+    let mut json: Value = serde_json::from_str(&text).map_err(|e| format!("{scenario}: {e}"))?;
+    let side = side_name(us);
+    let team_abs = std::fs::canonicalize(team_path).map_err(|e| format!("{team_path}: {e}"))?;
+    json[side]["team"] = Value::String(
+        team_abs
+            .to_string_lossy()
+            .trim_start_matches(r"\\?\")
+            .to_owned(),
+    );
+    if let Some(desc) = json["description"].as_str() {
+        json["description"] = Value::String(format!("{desc} [believed {side} team: {team_path}]"));
+    }
+    let base_dir = std::path::Path::new(scenario)
+        .parent()
+        .unwrap_or(std::path::Path::new("."));
+    let loaded = lab_scenario::load_scenario_str(&json.to_string(), base_dir)
+        .map_err(|e| format!("believed scenario: {e}"))?;
+    let positions = scenario_positions(&loaded)?;
+    pick_position(&loaded, positions, before, index)
 }
 
 fn pick_position(

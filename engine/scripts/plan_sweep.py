@@ -50,6 +50,12 @@ def parse(text, entry):
     best = re.search(r"best value ([+-][0-9.]+)", text)
     if best:
         entry["best_value"] = float(best.group(1))
+    deep = re.search(r"^\s*1\s+([+-][0-9.]+)\s+([+-][0-9.]+)\s+(.*?)\s{2,}(.*)$", text, re.M)
+    if deep and "deep:" in text:
+        entry["deep_value"] = float(deep.group(1))
+        entry["deep_shallow"] = float(deep.group(2))
+        entry["deep_line"] = deep.group(3).strip()
+        entry["deep_reply"] = deep.group(4).strip()
     first = re.search(r"^\s*1\s+(<=)?([+-][0-9.]+)\s+(.*?)\s{2,}(.*)$", text, re.M)
     if first:
         entry["best_line"] = first.group(3).strip()
@@ -153,7 +159,7 @@ def lead_variants(a, sc, out_dir, extra, summary):
 
     p1_orders = variants(orders["p1"])
     p2_orders = variants(orders["p2"])
-    key = "equilibrium" if a.solve == "nash" else "best_value"
+    key = {"nash": "equilibrium", "deep": "deep_value"}.get(a.solve, "best_value")
     table = {}
     for o1 in p1_orders:
         for o2 in p2_orders:

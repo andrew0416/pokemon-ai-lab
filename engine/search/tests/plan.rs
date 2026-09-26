@@ -543,3 +543,39 @@ fn deep_analysis_agrees_with_lines_and_plans() {
         assert!(pair[0].deep >= pair[1].deep || pair[1].deep.is_nan());
     }
 }
+
+/// Answering the opponent's own equilibrium strategy on the same position is worth at least
+/// the equilibrium value (a best response cannot do worse than the equilibrium), and answering
+/// a pure strategy equals the corresponding matrix column's maximum.
+#[test]
+fn best_response_is_at_least_the_equilibrium() {
+    let position = position("eject-button-uturn");
+    let mut state = position.state.clone();
+    let mut config = Config::new(Ruleset::CHAMPIONS_MC, SideId::One);
+    config.rolls = RollMode::Full;
+    let evaluator = Material;
+    let mut solver = Solver::new(config, &evaluator);
+    let mixed = solver.analyse_mixed(&mut state, None).unwrap();
+    let strategy: Vec<(Choice<2>, f32)> = mixed
+        .theirs
+        .iter()
+        .zip(&mixed.equilibrium.cols)
+        .map(|(c, &p)| (*c, p))
+        .collect();
+    let response = solver.best_response(&mut state, None, &strategy).unwrap();
+    assert_eq!(state, position.state);
+    assert!(
+        response.lines[0].1 >= mixed.equilibrium.value - 0.05,
+        "{} vs {}",
+        response.lines[0].1,
+        mixed.equilibrium.value
+    );
+    for c in 0..mixed.theirs.len() {
+        let pure = vec![(mixed.theirs[c], 1.0f32)];
+        let response = solver.best_response(&mut state, None, &pure).unwrap();
+        let column_max = (0..mixed.ours.len())
+            .map(|r| mixed.matrix.at(r, c))
+            .fold(f32::NEG_INFINITY, f32::max);
+        assert!((response.lines[0].1 - column_max).abs() < 1e-3);
+    }
+}

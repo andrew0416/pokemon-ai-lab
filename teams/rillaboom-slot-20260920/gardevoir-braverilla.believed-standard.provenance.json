@@ -1,0 +1,7 @@
+{
+ "derived_from": "teams/rillaboom-slot-20260920/gardevoir-braverilla.json",
+ "created": "2026-09-26",
+ "purpose": "opponent model 3 demo (lab-plan --believed-team): what the opponent would assume our sets are",
+ "change": "Gardevoir: real Modest H32 B10 C24 -> assumed standard Timid H2 C32 S32 (DESIGN.md: the 32/32/2 rule). The other five sets already follow the 32/32/2 pattern and are unchanged.",
+ "status": "assumption, not a published set; never use as our real team"
+}

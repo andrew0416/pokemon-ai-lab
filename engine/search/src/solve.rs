@@ -1260,6 +1260,24 @@ pub struct PlanReport<const N: usize> {
     pub child: Option<ChildValues<N>>,
 }
 
+/// [`Solver::best_response`]'s result: our choices valued against a fixed mixed strategy
+/// of the opponent (opponent model ③ of DESIGN.md at one turn: the strategy comes from the
+/// matrix game on the team the opponent believes we have; the values are on the real
+/// position).
+#[derive(Clone, Debug, PartialEq)]
+pub struct BestResponse<const N: usize> {
+    pub decision: Decision,
+    /// Our choices with their expected value against the strategy, best first.
+    pub lines: Vec<(Choice<N>, f32)>,
+    /// The strategy that was answered (their choices with probabilities), as given.
+    pub strategy: Vec<(Choice<N>, f32)>,
+    pub nodes: u64,
+    pub turns: u64,
+    pub elapsed: Duration,
+    pub unsupported: Vec<String>,
+    pub omitted_pairs: usize,
+}
+
 /// [`Solver::analyse_deep`]'s result.
 #[derive(Clone, Debug, PartialEq)]
 pub struct DeepAnalysis<const N: usize> {
@@ -1299,4 +1317,84 @@ pub struct ChildValues<const N: usize> {
     pub replies: Vec<(Choice<N>, f32)>,
     pub beam: usize,
     pub outcome_cap: Option<usize>,
+}
+
+impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
+    /// Values every choice of ours on `state` against the opponent's fixed mixed `strategy`
+    /// (their choices with probabilities; choices missing from it have probability 0; pairs
+    /// the engine cannot value are dropped and the row is renormalised over what remains).
+    /// Depth and chance as configured. `state` is left unchanged.
+    pub fn best_response(
+        &mut self,
+        state: &mut State<N>,
+        suspension: Option<&Suspension>,
+        strategy: &[(Choice<N>, f32)],
+    ) -> Result<BestResponse<N>, SearchError> {
+        let started = Instant::now();
+        self.reset_counters();
+        let decision = game::decision(state, suspension)?;
+        if matches!(decision, Decision::Over(_)) {
+            return Err(SearchError::Turn(TurnError::BattleOver));
+        }
+        let ours = self.choices(state, decision, self.config.us)?;
+        let theirs: Vec<Choice<N>> = strategy
+            .iter()
+            .filter(|(_, p)| *p > 0.0)
+            .map(|(c, _)| *c)
+            .collect();
+        if theirs.is_empty() {
+            return Err(SearchError::NoChoice(self.config.us.other()));
+        }
+        let weights: Vec<f32> = strategy
+            .iter()
+            .filter(|(_, p)| *p > 0.0)
+            .map(|(_, p)| *p)
+            .collect();
+        let next_depth = if decision == Decision::Turn {
+            self.config.depth.max(1) - 1
+        } else {
+            self.config.depth.max(1)
+        };
+        let threads = self.config.worker_threads(ours.len() * theirs.len());
+        let values = self.parallel_matrix(
+            state,
+            suspension,
+            decision,
+            &ours,
+            &theirs,
+            Next::Depth(next_depth),
+            threads.max(1),
+        )?;
+        let m = theirs.len();
+        let mut lines: Vec<(Choice<N>, f32)> = Vec::with_capacity(ours.len());
+        for (r, &a) in ours.iter().enumerate() {
+            let mut sum = 0.0f64;
+            let mut mass = 0.0f64;
+            for (c, &w) in weights.iter().enumerate() {
+                let v = values[r * m + c];
+                if v.is_nan() {
+                    continue;
+                }
+                sum += f64::from(w) * f64::from(v);
+                mass += f64::from(w);
+            }
+            if mass > 0.0 {
+                lines.push((a, (sum / mass) as f32));
+            }
+        }
+        if lines.is_empty() {
+            return Err(SearchError::Unsupported(self.unsupported.clone()));
+        }
+        lines.sort_by(|x, y| y.1.total_cmp(&x.1));
+        Ok(BestResponse {
+            decision,
+            lines,
+            strategy: strategy.to_vec(),
+            nodes: self.nodes,
+            turns: self.turns,
+            elapsed: started.elapsed(),
+            unsupported: self.unsupported.clone(),
+            omitted_pairs: self.omitted_pairs,
+        })
+    }
 }
