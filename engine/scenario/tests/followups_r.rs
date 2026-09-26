@@ -139,3 +139,17 @@ fn klutz_keeps_power_items_and_drops_choice_scarf_speed() {
 fn magic_room_drops_iron_ball_speed() {
     assert_exact_parity("r-speed-items-magic-room");
 }
+
+/// ModifyWeight: Heavy Metal doubles the Heavy Slam user's weight (120 power, not 80); Light
+/// Metal halves the Low Kick target's (80, not 100).
+#[test]
+fn heavy_and_light_metal_change_weight_based_power() {
+    assert_exact_parity("r-weight-metal");
+}
+
+/// ModifyWeight: Float Stone halves the Low Kick target's weight (40 power, not 60); Mold
+/// Breaker ignores the target's Light Metal (100 power).
+#[test]
+fn float_stone_halves_weight_and_mold_breaker_ignores_light_metal() {
+    assert_exact_parity("r-weight-float-stone");
+}

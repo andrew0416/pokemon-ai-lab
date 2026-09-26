@@ -2653,7 +2653,7 @@ fn get_damage<const N: usize>(
     }
     let mut base_power = mv.base_power;
     if mv.id == moves::LOW_KICK || mv.id == moves::GRASS_KNOT {
-        base_power = weight_power(defender.species.data().weight_hg);
+        base_power = weight_power(b.weight(target));
     }
     base_power = handlers::base_power_callback(b, user, target, mv, base_power, hit);
     if base_power == 0 {
@@ -2920,8 +2920,8 @@ fn stat_index(stat: Stat) -> usize {
     }
 }
 
-/// Low Kick / Grass Knot base power from the target's weight (hectograms).
-fn weight_power(weight_hg: u16) -> i32 {
+/// Low Kick / Grass Knot base power from the target's weight (`getWeight()`, hectograms).
+fn weight_power(weight_hg: i32) -> i32 {
     match weight_hg.max(1) {
         w if w >= 2000 => 120,
         w if w >= 1000 => 100,

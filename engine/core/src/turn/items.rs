@@ -102,6 +102,32 @@ impl<const N: usize> Battle<'_, N> {
             weather
         }
     }
+
+    /// Showdown `pokemon.getWeight()`: `runEvent('ModifyWeight', pokemon, null, null,
+    /// pokemon.weighthg)`, then at least 1 hg. `weighthg` is the current forme's weight
+    /// (`setSpecies`; Autotomize, which lowers it until the next `setSpecies`, is refused by
+    /// `support`). Handlers by priority: Heavy Metal (1) doubles it; then, at priority 0, Light
+    /// Metal (ability) and Float Stone (item) each halve it with truncation. Heavy Metal and
+    /// Light Metal are breakable: a move that ignores abilities skips the target's, not its
+    /// user's own ([`Battle::ability_unless_broken`]); a suppressed Float Stone does nothing.
+    /// Read by Low Kick, Grass Knot, Heavy Slam and Heat Crash.
+    pub(crate) fn weight(&self, slot: SlotRef) -> i32 {
+        let Some(mon) = self.slot_mon(slot) else {
+            return 1;
+        };
+        let mut weight = i32::from(mon.species.data().weight_hg);
+        let ability = self.ability_unless_broken(slot);
+        if ability == abilities::HEAVY_METAL {
+            weight *= 2;
+        }
+        if ability == abilities::LIGHT_METAL {
+            weight /= 2;
+        }
+        if self.item(slot) == items::FLOAT_STONE {
+            weight /= 2;
+        }
+        weight.max(1)
+    }
 }
 
 /// Whether `handler`, one of the item's handlers that can fire around a switch-in, is
@@ -1329,5 +1355,16 @@ mod tests {
             .iter()
             .any(|(n, _)| n.starts_with("onResidual")));
         assert_eq!(items::THROAT_SPRAY.data().boosts, [0, 0, 1, 0, 0, 0, 0]);
+        // `Battle::weight`: Heavy Metal (priority 1) before Light Metal and Float Stone (0).
+        let ability_priority = |a: crate::dex::AbilityId| {
+            super::super::abilities::priority(a.data().event_orders, "onModifyWeightPriority")
+        };
+        assert_eq!(ability_priority(abilities::HEAVY_METAL), 1);
+        assert_eq!(ability_priority(abilities::LIGHT_METAL), 0);
+        assert_eq!(p(items::FLOAT_STONE, "onModifyWeightPriority"), 0);
+        // `speed_modifier`: Macho Brace and the Power items ignore Klutz, Iron Ball does not.
+        assert!(items::MACHO_BRACE.data().ignore_klutz);
+        assert!(items::POWER_WEIGHT.data().ignore_klutz);
+        assert!(!items::IRON_BALL.data().ignore_klutz);
     }
 }
