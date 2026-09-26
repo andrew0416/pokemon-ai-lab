@@ -99,6 +99,9 @@ pub(crate) enum StartEffect {
     /// The forme abilities' `onStart` (`forme::on_start`): Ice Face, Schooling, Shields Down,
     /// Mimicry.
     Forme,
+    /// Supreme Overlord: `abilityState.fallen = min(side.totalFainted, 5)` when that is not 0
+    /// (`abilities::supreme_overlord_start`).
+    SupremeOverlord,
 }
 
 /// Abilities with an implemented start, with the exact handler lists they were implemented
@@ -471,6 +474,13 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         abilities::WIND_RIDER,
         &["onSideConditionStart", "onStart", "onTryHit"],
         StartEffect::WindRider,
+    ),
+    // Supreme Overlord: `onStart` counts the fallen, `onBasePower` in
+    // `abilities::base_power_handlers`, `onEnd` only logs (`end_ability` drops the state).
+    (
+        abilities::SUPREME_OVERLORD,
+        &["onBasePower", "onEnd", "onStart"],
+        StartEffect::SupremeOverlord,
     ),
 ];
 
@@ -911,6 +921,7 @@ pub(crate) fn start_ability<const N: usize>(
             }
         }
         StartEffect::Forme => super::forme::on_start(b, slot, ability)?,
+        StartEffect::SupremeOverlord => super::abilities::supreme_overlord_start(b, slot),
     }
     Ok(())
 }
@@ -1032,6 +1043,11 @@ pub(crate) fn end_ability<const N: usize>(
     ]
     .contains(&ability)
     {
+        return Ok(());
+    }
+    // Supreme Overlord's `onEnd` only logs; its `abilityState.fallen` goes with the ability.
+    if ability == abilities::SUPREME_OVERLORD {
+        b.delete_volatile(slot, Volatile::SupremeOverlord);
         return Ok(());
     }
     // Unburden: `pokemon.removeVolatile('unburden')`.

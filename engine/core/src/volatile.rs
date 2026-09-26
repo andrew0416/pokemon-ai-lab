@@ -189,9 +189,13 @@ pub enum Volatile {
     /// Magnet Rise (duration 5, residual order 18): the holder is not grounded (immune to
     /// Ground).
     MagnetRise,
+    /// Not a Showdown volatile: Supreme Overlord's `abilityState.fallen` (its `onStart` stores
+    /// `min(side.totalFainted, 5)` when that is not 0), kept in `counter`. No duration; hidden
+    /// in the canonical state.
+    SupremeOverlord,
 }
 
-pub const VOLATILE_COUNT: usize = 62;
+pub const VOLATILE_COUNT: usize = 63;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -257,6 +261,7 @@ impl Volatile {
         Volatile::SaltCure,
         Volatile::Ingrain,
         Volatile::MagnetRise,
+        Volatile::SupremeOverlord,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -326,7 +331,8 @@ impl Volatile {
             | Volatile::ShadowForce
             | Volatile::AllySwitch
             | Volatile::Trapped
-            | Volatile::Trapper => ConditionId::NONE,
+            | Volatile::Trapper
+            | Volatile::SupremeOverlord => ConditionId::NONE,
         }
     }
 
@@ -395,6 +401,7 @@ impl Volatile {
             Volatile::SaltCure => "saltcure",
             Volatile::Ingrain => "ingrain",
             Volatile::MagnetRise => "magnetrise",
+            Volatile::SupremeOverlord => "supremeoverlord",
         }
     }
 
@@ -470,7 +477,8 @@ impl Volatile {
             | Volatile::Trapped
             | Volatile::Trapper
             | Volatile::SaltCure
-            | Volatile::Ingrain => 0,
+            | Volatile::Ingrain
+            | Volatile::SupremeOverlord => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -499,7 +507,9 @@ impl Volatile {
     /// application count).
     pub fn showdown_state(self, state: VolatileState) -> Option<VolatileState> {
         match self {
-            Volatile::ProteanUsed | Volatile::AngerShellUnchecked => None,
+            Volatile::ProteanUsed | Volatile::AngerShellUnchecked | Volatile::SupremeOverlord => {
+                None
+            }
             // Two-turn move: the target location is not a canonical field.
             Volatile::Roost
             | Volatile::HelpingHand
@@ -674,6 +684,7 @@ mod tests {
                         | Volatile::AllySwitch
                         | Volatile::Trapped
                         | Volatile::Trapper
+                        | Volatile::SupremeOverlord
                 ));
                 continue;
             }

@@ -1519,6 +1519,13 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
             "onTerrainChange",
         ],
     ),
+    // Opus S. Supreme Overlord: `onStart` in `abilities::supreme_overlord_start` (from
+    // `switching::start_ability`), `onBasePower` in `abilities::base_power_handlers`, `onEnd`
+    // (a log) in `switching::end_ability`.
+    (
+        abilities::SUPREME_OVERLORD,
+        &["onBasePower", "onEnd", "onStart"],
+    ),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

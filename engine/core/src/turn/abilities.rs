@@ -207,6 +207,14 @@ pub(crate) fn base_power_handlers<const N: usize>(
             let typed = matches!(move_type, Type::Rock | Type::Ground | Type::Steel);
             (sand && typed).then_some(5325)
         }
+        // Supreme Overlord (priority 21): `[powMod[fallen], 4096]` with the count its `onStart`
+        // stored ([`supreme_overlord_start`]).
+        a if a == abilities::SUPREME_OVERLORD => {
+            const POW_MOD: [u32; 6] = [4096, 4506, 4915, 5325, 5734, 6144];
+            let fallen = b.volatile(user, Volatile::SupremeOverlord);
+            (fallen.active && fallen.counter > 0)
+                .then(|| POW_MOD[usize::from(fallen.counter.min(5))])
+        }
         _ => None,
     };
     if let Some(modifier) = boost {
@@ -300,6 +308,24 @@ pub(crate) fn wind_rider_boost<const N: usize>(b: &mut Battle<'_, N>, holder: Sl
         Some(holder),
         BoostEffect::Ability(abilities::WIND_RIDER),
     )
+}
+
+/// Supreme Overlord's `onStart`: `if (pokemon.side.totalFainted)` the holder's
+/// `abilityState.fallen = Math.min(pokemon.side.totalFainted, 5)`, kept as
+/// [`Volatile::SupremeOverlord`] (the ability state is fresh at every switch-in and ability
+/// change, as the volatile is). The count is fixed from then on: later faints only count at the
+/// next start.
+pub(crate) fn supreme_overlord_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    let fallen = b.state.side(slot.side).history.total_fainted.min(5);
+    if fallen == 0 || b.alive(slot).is_none() {
+        return;
+    }
+    let state = VolatileState {
+        active: true,
+        counter: u16::from(fallen),
+        ..VolatileState::NONE
+    };
+    b.set_volatile_state(slot, Volatile::SupremeOverlord, state);
 }
 
 /// `runEvent('AfterFaint', target, source, effect, length)` at the end of `faintMessages`
