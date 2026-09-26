@@ -2216,7 +2216,7 @@ fn accuracy_check<const N: usize>(
             Ohko::Typed(t) if !b.has_type(user, t) => 20,
             _ => 30,
         };
-        if handlers::always_hit(b, target) {
+        if handlers::always_hit(b, target, mv) {
             return true;
         }
         return b.rng.chance((base + mine - theirs) as u32, 100);

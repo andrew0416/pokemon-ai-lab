@@ -1788,13 +1788,24 @@ pub(super) fn break_protect<const N: usize>(b: &mut Battle<'_, N>, target: SlotR
 }
 
 /// The `Accuracy` event's handlers that make a move hit `target` whatever its accuracy: Glaive
-/// Rush's drawback (`condition.onAccuracy() { return true; }`).
-pub(super) fn always_hit<const N: usize>(b: &Battle<'_, N>, target: SlotRef) -> bool {
-    b.volatile(target, Volatile::GlaiveRush).active
+/// Rush's drawback (`condition.onAccuracy() { return true; }`), and Minimize's (`if
+/// (move.flags['minimize']) return true;`) on the target.
+pub(super) fn always_hit<const N: usize>(
+    b: &Battle<'_, N>,
+    target: SlotRef,
+    mv: &ActiveMove,
+) -> bool {
+    b.volatile(target, Volatile::GlaiveRush).active || minimized(b, target, mv)
 }
 
-/// ModifyDamage handlers of the target's volatiles (`onSourceModifyDamage`): Glaive Rush's
-/// drawback `chainModify(2)` (priority 0).
+/// Minimize on `target` against a move with the `minimize` flag (Body Slam, Dragon Rush, Heavy
+/// Slam, ...): the move never misses it and deals double damage.
+fn minimized<const N: usize>(b: &Battle<'_, N>, target: SlotRef, mv: &ActiveMove) -> bool {
+    b.volatile(target, Volatile::Minimize).active && mv.data.flags.contains(MoveFlags::MINIMIZE)
+}
+
+/// ModifyDamage handlers of the target's volatiles (`onSourceModifyDamage`, all priority 0):
+/// Glaive Rush's drawback and Minimize (a `minimize` move) `chainModify(2)`.
 pub(super) fn volatile_modify_damage<const N: usize>(
     b: &Battle<'_, N>,
     target: SlotRef,
@@ -1802,6 +1813,9 @@ pub(super) fn volatile_modify_damage<const N: usize>(
 ) -> Vec<Handler> {
     let mut out = Vec::new();
     if b.volatile(target, Volatile::GlaiveRush).active {
+        out.push(Handler::of(b, target, 0, SUB_CONDITION, 2 * 4096));
+    }
+    if minimized(b, target, mv) {
         out.push(Handler::of(b, target, 0, SUB_CONDITION, 2 * 4096));
     }
     // Fly (Gust, Twister), Dig (Earthquake, Magnitude) and Dive (Surf, Whirlpool) take double

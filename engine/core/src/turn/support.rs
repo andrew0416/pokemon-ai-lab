@@ -1117,6 +1117,17 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         ],
     ),
     (moves::DEFENSE_CURL, &["condition.onRestart"]),
+    // Opus Z unit 1: Minimize's volatile (`onRestart`: `null`, like Defense Curl's), its
+    // `onAccuracy` (`handlers::always_hit`) and `onSourceModifyDamage`
+    // (`handlers::volatile_modify_damage`) for `minimize` moves.
+    (
+        moves::MINIMIZE,
+        &[
+            "condition.onAccuracy",
+            "condition.onRestart",
+            "condition.onSourceModifyDamage",
+        ],
+    ),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do

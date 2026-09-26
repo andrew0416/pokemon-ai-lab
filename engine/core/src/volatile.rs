@@ -330,9 +330,14 @@ pub enum Volatile {
     /// `counter`, Spe and accuracy in `hidden`, evasion in `time`
     /// (`abilities::opportunist_boosts`). No duration; hidden in the canonical state.
     Opportunist,
+    /// Minimize (`minimize`, no duration, `noCopy`; its `onRestart` returns `null`): moves with
+    /// the `minimize` flag (Body Slam, Dragon Rush, Flying Press, Heat Crash, Heavy Slam,
+    /// Supercell Slam, ...) never miss the holder (`onAccuracy`) and deal it double damage
+    /// (`onSourceModifyDamage`).
+    Minimize,
 }
 
-pub const VOLATILE_COUNT: usize = 101;
+pub const VOLATILE_COUNT: usize = 102;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -437,6 +442,7 @@ impl Volatile {
         Volatile::CudChew,
         Volatile::RipenWeaken,
         Volatile::Opportunist,
+        Volatile::Minimize,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -503,6 +509,7 @@ impl Volatile {
             Volatile::DefenseCurl => conditions::DEFENSECURL,
             Volatile::Rollout | Volatile::IceBall => ConditionId::NONE,
             Volatile::GastroAcid => conditions::GASTROACID,
+            Volatile::Minimize => conditions::MINIMIZE,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -652,6 +659,7 @@ impl Volatile {
             Volatile::CudChew => "cudchewberry",
             Volatile::RipenWeaken => "berryweaken",
             Volatile::Opportunist => "opportunistboosts",
+            Volatile::Minimize => "minimize",
         }
     }
 
@@ -766,7 +774,8 @@ impl Volatile {
             | Volatile::Truant
             | Volatile::CudChew
             | Volatile::RipenWeaken
-            | Volatile::Opportunist => 0,
+            | Volatile::Opportunist
+            | Volatile::Minimize => 0,
             Volatile::Rollout | Volatile::IceBall => 1,
             Volatile::ZenMode => 0,
         }
@@ -1080,6 +1089,7 @@ mod tests {
             (Volatile::DefenseCurl, moves::DEFENSE_CURL),
             (Volatile::Rollout, moves::ROLLOUT),
             (Volatile::IceBall, moves::ICE_BALL),
+            (Volatile::Minimize, moves::MINIMIZE),
         ] {
             let data = id.data();
             assert_eq!(
