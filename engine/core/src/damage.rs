@@ -26,6 +26,9 @@ pub struct DamageInput {
     /// Chained base-power modifier, using [`MOD_ONE`] as 1x.
     pub base_power_modifier: u32,
     pub spread: bool,
+    /// Parental Bond's second hit (not a spread hit): the base damage is quartered where the
+    /// spread modifier would apply (`move.multihitType === 'parentalbond' && move.hit > 1`).
+    pub parental_bond: bool,
     /// Weather modifier, using [`MOD_ONE`] as 1x.
     pub weather_modifier: u32,
     pub critical: bool,
@@ -52,6 +55,7 @@ impl DamageInput {
             defense,
             base_power_modifier: MOD_ONE,
             spread: false,
+            parental_bond: false,
             weather_modifier: MOD_ONE,
             critical: false,
             stab_modifier: MOD_ONE,
@@ -97,6 +101,8 @@ pub fn damage_rolls(input: DamageInput) -> DamageRolls {
 
     if input.spread {
         base_damage = apply_rounded_modifier(base_damage, MOD_THREE_QUARTERS);
+    } else if input.parental_bond {
+        base_damage = apply_rounded_modifier(base_damage, MOD_QUARTER);
     }
     if input.weather_modifier != MOD_ONE {
         base_damage = apply_rounded_modifier(base_damage, input.weather_modifier);

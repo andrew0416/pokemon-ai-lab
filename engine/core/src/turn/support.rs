@@ -2120,6 +2120,14 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // (`field_events::weather_changed`, Air Lock / Cloud Nine's `switching::weather_change`)
     // in `forme::forecast`; with Utility Umbrella refused (`forme::field_problem`).
     (abilities::FORECAST, &["onStart", "onWeatherChange"]),
+    // Opus AA unit 5. Parental Bond: `onPrepareHit` makes an eligible move hit twice
+    // (`moves::parental_bond_applies`, `decide_hits`; the second hit quartered in
+    // `damage::damage_rolls`), `onSourceModifySecondaries` in the secondaries loop (Secret
+    // Power's first hit). A called move that would hit twice is refused by `moves::call_move`.
+    (
+        abilities::PARENTAL_BOND,
+        &["onPrepareHit", "onSourceModifySecondaries"],
+    ),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

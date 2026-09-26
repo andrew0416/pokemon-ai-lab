@@ -47,6 +47,9 @@ pub(crate) struct ActiveMoveRef {
     /// through a substitute, the screens, Safeguard and Mist (Pollen Puff's own, on an ally, is
     /// `handlers::infiltrates`).
     pub infiltrates: bool,
+    /// `move.multihit` set by the user's Parental Bond in PrepareHit (Anger Shell and Berserk
+    /// read `effect.multihit`).
+    pub parental_bond: bool,
 }
 
 pub(crate) struct Battle<'a, const N: usize> {
@@ -503,7 +506,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         // change the damage; it changes nothing itself).
         let multihit = self
             .active_move
-            .is_some_and(|m| m.id.data().multihit.is_some());
+            .is_some_and(|m| m.id.data().multihit.is_some() || m.parental_bond);
         super::abilities::on_damage(self, target, source == DamageSource::Move, multihit);
         let mut amount = (amount.floor() as i32).max(1);
         let mon = self.mon(pokemon);
