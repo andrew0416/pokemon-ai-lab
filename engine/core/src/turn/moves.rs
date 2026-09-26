@@ -1848,11 +1848,11 @@ fn hit_loop<const N: usize>(
     // Champions `hitStepMoveHitLoop`: `eachEvent('Update')` after the recoil, then
     // AfterMoveSecondary (skipped for a Sheer Force-boosted move) for the targets of the last
     // hit it did not fail on (`targetsCopy`; after a later hit's miss, a fresh copy of every
-    // target). Per target, in Showdown's `subOrder` (Condition 2, Ability 7, Item 8): a
-    // thawing move thaws a frozen target (`frz`'s handler), Anger Shell / Berserk, then the
-    // target's item (Kee / Maranga Berry). The damage a target took is its last `attackedBy`
-    // entry, or `move.totalDamage` for a multi-hit move. Handlers of different targets act on
-    // their own holder only, so their Speed order does not matter.
+    // target), one event over all of them in Showdown's handler order
+    // (`items::after_move_secondary_order`: priority, holder Speed, then sub-order): a thawing
+    // move thaws a frozen target (`frz`'s handler), Anger Shell / Berserk, the target's item
+    // (Kee / Maranga Berry, Eject Button, Red Card). The damage a target took is its last
+    // `attackedBy` entry, or `move.totalDamage` for a multi-hit move.
     super::update::update_event(b)?;
     if !ability_hooks::sheer_force_skips(b, user, mv) {
         // `targetsCopy.filter(val => !!val)`: not a target its substitute shielded.
@@ -1867,21 +1867,30 @@ fn hit_loop<const N: usize>(
                 .map(|(&t, r)| (t, if let Hit::Damage(d) = r { *d } else { 0 }))
                 .collect()
         };
-        for (t, damage) in last_hit {
-            if mv.data.thaws_target {
-                if let Some(p) = b.alive(t) {
-                    if b.mon(p).status == Status::Freeze {
-                        b.cure_status(p);
+        let slots: Vec<SlotRef> = last_hit.iter().map(|&(t, _)| t).collect();
+        let order = item_events::after_move_secondary_order(b, &slots, mv.data.thaws_target);
+        for (i, handler) in order {
+            let (t, damage) = last_hit[i];
+            match handler {
+                item_events::AfterMoveSecondaryHandler::Thaw => {
+                    if let Some(p) = b.alive(t) {
+                        if b.mon(p).status == Status::Freeze {
+                            b.cure_status(p);
+                        }
                     }
                 }
+                item_events::AfterMoveSecondaryHandler::Ability => {
+                    let damage = if mv.data.multihit.is_some() {
+                        total
+                    } else {
+                        damage
+                    };
+                    ability_events::after_move_secondary(b, user, t, damage, total);
+                }
+                item_events::AfterMoveSecondaryHandler::Item => {
+                    item_events::after_move_secondary(b, user, t, mv.data.category);
+                }
             }
-            let damage = if mv.data.multihit.is_some() {
-                total
-            } else {
-                damage
-            };
-            ability_events::after_move_secondary(b, user, t, damage, total);
-            item_events::after_move_secondary(b, user, t, mv.data.category);
         }
         // `runEvent('EmergencyExit', target, pokemon)` for each of the hit loop's targets still
         // standing whose HP this move took to half: `(hurtThisTurn || 0) + curDamage > maxhp /

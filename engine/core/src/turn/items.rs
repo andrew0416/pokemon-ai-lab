@@ -20,7 +20,7 @@ use crate::instruction::Instruction;
 use crate::state::{PokemonRef, SlotRef, State, Status, SwitchFlag, BOOST_COUNT};
 use crate::volatile::{Volatile, VolatileState};
 
-use super::abilities::{Handler, SUB_ITEM};
+use super::abilities::{Handler, SUB_ABILITY, SUB_CONDITION, SUB_ITEM};
 use super::battle::{Battle, BoostEffect, DamageSource};
 use super::order::ORDER_DEFAULT;
 use super::TurnError;
@@ -934,6 +934,87 @@ pub(crate) fn on_damaging_hit<const N: usize>(
     if triggers {
         use_boost_item(b, target);
     }
+}
+
+/// A handler of the hit loop's `runEvent('AfterMoveSecondary', targets, ...)`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum AfterMoveSecondaryHandler {
+    /// The frozen status's handler (sub-order 2): a thawing move thaws its holder.
+    Thaw,
+    /// The target's ability (sub-order 7): Anger Shell, Berserk
+    /// (`abilities::after_move_secondary`).
+    Ability,
+    /// The target's item (sub-order 8): [`after_move_secondary`].
+    Item,
+}
+
+/// The order of Showdown's one `runEvent('AfterMoveSecondary', targets, source, move)` over the
+/// hit loop's targets (`findEventHandlers` concatenates every target's handlers, then
+/// `speedSort`): priority, high first (Eject Button's `onAfterMoveSecondaryPriority` 2, the
+/// others 0), then the holder's Speed (`pokemon.speed`, [`Battle::event_speed`]), high first,
+/// then sub-order (status 2, ability 7, item 8); ties are shuffled. Returns `(index into
+/// targets, handler)` pairs; a thaw handler exists only on a frozen target of a thawing move.
+///
+/// Each handler acts on its own holder, except that the first Eject Button to act flags its
+/// holder and so stops every later one (`pokemon.switchFlag === true`), and the first Red Card
+/// to drag the attacker stops every later one (`source.forceSwitchFlag`): the faster holder's
+/// item is the one used. A tie is drawn only among tied item handlers of two or more Eject
+/// Buttons or Red Cards, where it can change the outcome; other ties keep target order.
+pub(crate) fn after_move_secondary_order<const N: usize>(
+    b: &mut Battle<'_, N>,
+    targets: &[SlotRef],
+    thaws: bool,
+) -> Vec<(usize, AfterMoveSecondaryHandler)> {
+    // (priority, Speed, sub-order, target index, handler)
+    let mut handlers: Vec<(i32, i32, u32, usize, AfterMoveSecondaryHandler)> = Vec::new();
+    for (i, &t) in targets.iter().enumerate() {
+        let speed = b.event_speed(t);
+        let frozen = b.slot_mon(t).is_some_and(|m| m.status == Status::Freeze);
+        if thaws && frozen {
+            handlers.push((0, speed, SUB_CONDITION, i, AfterMoveSecondaryHandler::Thaw));
+        }
+        handlers.push((0, speed, SUB_ABILITY, i, AfterMoveSecondaryHandler::Ability));
+        let priority = super::abilities::priority(
+            b.item(t).data().event_orders,
+            "onAfterMoveSecondaryPriority",
+        );
+        handlers.push((
+            priority,
+            speed,
+            SUB_ITEM,
+            i,
+            AfterMoveSecondaryHandler::Item,
+        ));
+    }
+    // Stable: equal keys keep target order.
+    handlers.sort_by_key(|&(priority, speed, sub, _, _)| {
+        (std::cmp::Reverse(priority), std::cmp::Reverse(speed), sub)
+    });
+    let mut start = 0;
+    while start < handlers.len() {
+        let key = |h: &(i32, i32, u32, usize, AfterMoveSecondaryHandler)| (h.0, h.1, h.2);
+        let end = start
+            + handlers[start..]
+                .iter()
+                .take_while(|h| key(h) == key(&handlers[start]))
+                .count();
+        let exclusive = [items::EJECT_BUTTON, items::RED_CARD].iter().any(|&item| {
+            handlers[start..end]
+                .iter()
+                .filter(|h| h.4 == AfterMoveSecondaryHandler::Item && b.item(targets[h.3]) == item)
+                .count()
+                >= 2
+        });
+        if exclusive {
+            // `prng.shuffle` of the tied run: a uniformly random order.
+            for i in start..end - 1 {
+                let j = i + b.rng.uniform(end - i);
+                handlers.swap(i, j);
+            }
+        }
+        start = end;
+    }
+    handlers.into_iter().map(|h| (h.3, h.4)).collect()
 }
 
 /// The target's item `onAfterMoveSecondary` (`runEvent('AfterMoveSecondary')` at the end of the
