@@ -4,7 +4,7 @@
 
 ## 기술
 
-- 전체 938개 중 지원 766개, 등장 효과만 미지원 0개, 미지원 172개.
+- 전체 938개 중 지원 788개, 등장 효과만 미지원 0개, 미지원 150개.
 - 라이브러리 사용 206개 중 지원 206개 (100%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
@@ -18,9 +18,9 @@ Protect (207), Fake Out (59), Encore (44), Gravity (40), Heat Wave (36), Hypnosi
 
 ### 나머지 미지원 (이유별)
 
-- **미지원: a special mechanic** (41): 10,000,000 Volt Thunderbolt, Acid Downpour, All-Out Pummeling, Black Hole Eclipse, Bloom Doom, Breakneck Blitz, Catastropika, Chloroblast, Clangorous Soulblaze, Continental Crush, Corkscrew Crash, Devastating Drake, Dragon Darts, Extreme Evoboost, Gigavolt Havoc, G-Max Drum Solo, G-Max Fireball, G-Max Gravitas, G-Max Hydrosnipe, G-Max One Blow, G-Max Rapid Flow, G-Max Resonance, Hydro Vortex, Inferno Overdrive, Let's Snuggle Forever, Malicious Moonsault, Menacing Moonraze Maelstrom, Never-Ending Nightmare, Oceanic Operetta, Pulverizing Pancake, Savage Spin-Out, Searing Sunraze Smash, Shattered Psyche, Sinister Arrow Raid, Soul-Stealing 7-Star Strike, Spectral Thief, Stoked Sparksurfer, Subzero Slammer, Supersonic Skystrike, Tectonic Rage, Twinkle Tackle
+- **미지원: a special mechanic** (40): 10,000,000 Volt Thunderbolt, Acid Downpour, All-Out Pummeling, Black Hole Eclipse, Bloom Doom, Breakneck Blitz, Catastropika, Chloroblast, Clangorous Soulblaze, Continental Crush, Corkscrew Crash, Devastating Drake, Extreme Evoboost, Gigavolt Havoc, G-Max Drum Solo, G-Max Fireball, G-Max Gravitas, G-Max Hydrosnipe, G-Max One Blow, G-Max Rapid Flow, G-Max Resonance, Hydro Vortex, Inferno Overdrive, Let's Snuggle Forever, Malicious Moonsault, Menacing Moonraze Maelstrom, Never-Ending Nightmare, Oceanic Operetta, Pulverizing Pancake, Savage Spin-Out, Searing Sunraze Smash, Shattered Psyche, Sinister Arrow Raid, Soul-Stealing 7-Star Strike, Spectral Thief, Stoked Sparksurfer, Subzero Slammer, Supersonic Skystrike, Tectonic Rage, Twinkle Tackle
 - **미지원: callbacks ["self.onHit"] are not implemented** (38): G-Max Befuddle, G-Max Centiferno, G-Max Cuddle, G-Max Depletion, G-Max Finale, G-Max Foam Burst, G-Max Gold Rush, G-Max Malodor, G-Max Meltdown, G-Max Replenish, G-Max Sandblast, G-Max Smite, G-Max Stonesurge, G-Max Stun Shock, G-Max Sweetness, G-Max Tartness, G-Max Terror, G-Max Volt Crash, G-Max Wind Rage, Max Airstream, Max Darkness, Max Flare, Max Flutterby, Max Geyser, Max Hailstorm, Max Knuckle, Max Lightning, Max Mindstorm, Max Ooze, Max Overgrowth, Max Phantasm, Max Quake, Max Rockfall, Max Starfall, Max Steelspike, Max Strike, Max Wyrmwind, Sparkly Swirl
-- **미지원: callbacks ["onHit"] are not implemented** (13): Assist, Conversion 2, Doodle, Forest's Curse, Metronome, Mimic, Sappy Seed, Sketch, Thousand Waves, Tidy Up, Transform, Trick-or-Treat, Venom Drench
+- **미지원: callbacks ["onHit"] are not implemented** (9): Assist, Conversion 2, Doodle, Metronome, Mimic, Sappy Seed, Sketch, Thousand Waves, Venom Drench
 - **미지원: callbacks ["condition.onResidual", "condition.onSideEnd", "condition.onSideStart", "self.onHit"] are not implemented** (4): G-Max Cannonade, G-Max Vine Lash, G-Max Volcalith, G-Max Wildfire
 - **미지원: callbacks ["onAfterSubDamage", "onHit"] are not implemented** (4): Core Enforcer, Flame Burst, G-Max Snooze, Splintered Stormshards
 - **미지원: callbacks ["onBasePower"] are not implemented** (4): Collision Course, Electro Drift, Fusion Bolt, Fusion Flare
@@ -28,7 +28,6 @@ Protect (207), Fake Out (59), Encore (44), Gravity (40), Heat Wave (36), Hypnosi
 - **미지원: callbacks ["basePowerCallback"] are not implemented** (2): Pika Papow, Veevee Volley
 - **미지원: callbacks ["condition.onBasePower", "condition.onFieldEnd", "condition.onFieldStart"] are not implemented** (2): Mud Sport, Water Sport
 - **미지원: callbacks ["onModifyType", "onPrepareHit"] are not implemented** (2): Ivy Cudgel, Natural Gift
-- **미지원: callbacks ["onMoveFail"] are not implemented** (2): Mind Blown, Steel Beam
 - **미지원: callbacks ["onTry"] are not implemented** (2): Hyperspace Fury, Teleport
 - **미지원: callbacks ["onTryHit"] are not implemented** (2): Celebrate, Happy Hour
 - **미지원: self effect** (2): Baddy Bad, Glitzy Glow
@@ -39,53 +38,38 @@ Protect (207), Fake Out (59), Encore (44), Gravity (40), Heat Wave (36), Hypnosi
 - **미지원: callbacks ["basePowerCallback", "condition.onResidual", "condition.onSideEnd", "condition.onSideStart", "onModifyMove", "onPrepareHit"] are not implemented** (1): Fire Pledge
 - **미지원: callbacks ["basePowerCallback", "condition.onRestart", "condition.onStart"] are not implemented** (1): Fury Cutter
 - **미지원: callbacks ["basePowerCallback", "onModifyMove", "onModifyType", "onPrepareHit"] are not implemented** (1): Tera Blast
-- **미지원: callbacks ["basePowerCallback", "onModifyMove"] are not implemented** (1): Beat Up
-- **미지원: callbacks ["basePowerCallback", "onTry"] are not implemented** (1): Round
 - **미지원: callbacks ["beforeMoveCallback", "condition.onBeforeMove", "condition.onDamage", "condition.onEnd", "condition.onMoveAborted", "condition.onStart"] are not implemented** (1): Bide
 - **미지원: callbacks ["condition.onAccuracy", "condition.onEnd", "condition.onImmunity", "condition.onStart", "condition.onUpdate", "onTry"] are not implemented** (1): Telekinesis
-- **미지원: callbacks ["condition.onAccuracy", "condition.onRestart", "condition.onSourceModifyDamage"] are not implemented** (1): Minimize
-- **미지원: callbacks ["condition.onAfterMove", "condition.onBasePower", "condition.onEnd", "condition.onMoveAborted", "condition.onRestart", "condition.onStart"] are not implemented** (1): Charge
 - **미지원: callbacks ["condition.onAllyTryHitSide", "condition.onStart", "condition.onTryHit"] are not implemented** (1): Magic Coat
 - **미지원: callbacks ["condition.onAnyBasePower", "condition.onAnyDragOut", "condition.onAnyInvulnerability", "condition.onFaint", "condition.onFoeBeforeMove", "condition.onFoeTrapPokemon", "condition.onRedirectTarget", "onHit", "onModifyMove", "onMoveFail", "onTry", "onTryHit"] are not implemented** (1): Sky Drop
 - **미지원: callbacks ["condition.onAnyPrepareHit", "condition.onStart"] are not implemented** (1): Snatch
-- **미지원: callbacks ["condition.onAnySetStatus", "condition.onEnd", "condition.onResidual", "condition.onStart", "onTryHit"] are not implemented** (1): Uproar
 - **미지원: callbacks ["condition.onBasePower", "onTryHit"] are not implemented** (1): Me First
-- **미지원: callbacks ["condition.onBeforeMove", "condition.onEnd", "condition.onStart", "condition.onUpdate", "onTryImmunity"] are not implemented** (1): Attract
 - **미지원: callbacks ["condition.onBeforeMove", "condition.onFaint", "condition.onStart"] are not implemented** (1): Grudge
 - **미지원: callbacks ["condition.onBeforeMove", "condition.onHit", "condition.onStart"] are not implemented** (1): Rage
-- **미지원: callbacks ["condition.onBeforeMove", "priorityChargeCallback"] are not implemented** (1): Chilly Reception
 - **미지원: callbacks ["condition.onEffectiveness", "condition.onStart"] are not implemented** (1): Tar Shot
-- **미지원: callbacks ["condition.onEnd", "condition.onResidual", "condition.onStart", "condition.onUpdate"] are not implemented** (1): Syrup Bomb
 - **미지원: callbacks ["condition.onEnd", "condition.onStart"] are not implemented** (1): Embargo
 - **미지원: callbacks ["condition.onFieldStart", "condition.onModifyType"] are not implemented** (1): Ion Deluge
-- **미지원: callbacks ["condition.onFieldStart", "condition.onTrapPokemon"] are not implemented** (1): Fairy Lock
 - **미지원: callbacks ["condition.onModifyCritRatio", "condition.onRestart", "condition.onStart", "self.onHit"] are not implemented** (1): G-Max Chi Strike
-- **미지원: callbacks ["condition.onModifyType", "condition.onStart", "onTryHit"] are not implemented** (1): Electrify
-- **미지원: callbacks ["condition.onResidual", "condition.onStart", "onHit", "onModifyMove", "onTryHit"] are not implemented** (1): Curse
 - **미지원: callbacks ["condition.onSideStart", "condition.onSwitchIn", "self.onHit"] are not implemented** (1): G-Max Steelsurge
-- **미지원: callbacks ["condition.onSourceAccuracy", "condition.onSourceInvulnerability", "onHit", "onTryHit"] are not implemented** (1): Lock-On
 - **미지원: callbacks ["condition.onStart", "condition.onTryHit", "onHit", "onPrepareHit"] are not implemented** (1): Max Guard
 - **미지원: callbacks ["condition.onStart", "condition.onTryMove"] are not implemented** (1): Powder
 - **미지원: callbacks ["condition.onSwap", "condition.onSwitchIn", "onTryHit"] are not implemented** (1): Lunar Dance
-- **미지원: callbacks ["condition.onUpdate", "onPrepareHit"] are not implemented** (1): Fling
 - **미지원: callbacks ["damageCallback"] are not implemented** (1): Guardian of Alola
 - **미지원: callbacks ["onAfterMoveSecondarySelf"] are not implemented** (1): Polar Flare
-- **미지원: callbacks ["onHit", "onTryHit", "self.onHit"] are not implemented** (1): Shed Tail
 - **미지원: callbacks ["onHit", "onTryHit"] are not implemented** (1): Mind Reader
-- **미지원: callbacks ["onHit", "self.onHit"] are not implemented** (1): Baton Pass
 - **미지원: callbacks ["onModifyMove", "onModifyType"] are not implemented** (1): Tera Starstorm
 - **미지원: callbacks ["onModifyMove", "onUseMoveMessage"] are not implemented** (1): Magnitude
 - **미지원: callbacks ["onModifyMove"] are not implemented** (1): Light That Burns the Sky
-- **미지원: callbacks ["onModifyType", "onTry"] are not implemented** (1): Aura Wheel
+- **미지원: callbacks ["onMoveFail"] are not implemented** (1): Mind Blown
 - **미지원: callbacks ["onTry", "onTryHit"] are not implemented** (1): Splash
 - **미지원: callbacks ["onTryHit", "self.onHit"] are not implemented** (1): Psycho Shift
-- **미지원: callbacks ["secondaries.onHit", "secondary.onHit"] are not implemented** (1): Eerie Spell
 - **미지원: callbacks ["secondaries.self.onHit", "secondary.self.onHit"] are not implemented** (1): Genesis Supernova
 - **미지원: field effect iondeluge** (1): Plasma Fists
+- **미지원: transformInto (base move slots and the `transformed` flag are not in the state)** (1): Transform
 
 ## 특성
 
-- 전체 321개 중 지원 289개, 등장 효과만 미지원 0개, 미지원 32개.
+- 전체 321개 중 지원 309개, 등장 효과만 미지원 0개, 미지원 12개.
 - 라이브러리 사용 66개 중 지원 66개 (100%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
@@ -99,32 +83,17 @@ Grassy Surge (30), Intimidate (30), Competitive (28), Prankster (27), Technician
 
 ### 나머지 미지원 (이유별)
 
-- **미지원: callbacks [] are not implemented** (5): Corrosion, Early Bird, Multitype, Persistent, RKS System
 - **미지원: callbacks ["onAnySetWeather", "onEnd", "onStart"] are not implemented** (3): Delta Stream, Desolate Land, Primordial Sea
-- **미지원: callbacks ["onResidual"] are not implemented** (3): Moody, Pickup, Power Construct
-- **미지원: callbacks ["onModifyMove"] are not implemented** (2): Long Reach, Stench
+- **미지원: callbacks [] are not implemented** (3): Multitype, Persistent, RKS System
 - **미지원: callbacks ["onSwitchIn"] are not implemented** (2): Imposter, Tera Shift
 - **미지원: callbacks ["onAfterTerastallization"] are not implemented** (1): Teraform Zero
 - **미지원: callbacks ["onAllyTryHitSide", "onTryHit"] are not implemented** (1): Rebound
 - **미지원: callbacks ["onBeforeSwitchIn", "onDamagingHit", "onEnd", "onFaint"] are not implemented** (1): Illusion
 - **미지원: callbacks ["onDamage", "onTryHit"] are not implemented** (1): Mountaineer
-- **미지원: callbacks ["onFlinch"] are not implemented** (1): Steadfast
-- **미지원: callbacks ["onFractionalPriority", "onModifyMove"] are not implemented** (1): Mycelium Might
-- **미지원: callbacks ["onFractionalPriority"] are not implemented** (1): Quick Draw
-- **미지원: callbacks ["onHit"] are not implemented** (1): Anger Point
-- **미지원: callbacks ["onMaybeTrapPokemon", "onTrapPokemon"] are not implemented** (1): Run Away
-- **미지원: callbacks ["onModifyAtk", "onStart"] are not implemented** (1): Orichalcum Pulse
-- **미지원: callbacks ["onModifySpA", "onStart"] are not implemented** (1): Hadron Engine
-- **미지원: callbacks ["onModifySpe"] are not implemented** (1): Surge Surfer
-- **미지원: callbacks ["onPrepareHit", "onSourceModifySecondaries"] are not implemented** (1): Parental Bond
-- **미지원: callbacks ["onSourceTryHeal"] are not implemented** (1): Liquid Ooze
-- **미지원: callbacks ["onStart", "onWeatherChange"] are not implemented** (1): Forecast
-- **미지원: callbacks ["onTakeItem"] are not implemented** (1): Sticky Hold
-- **미지원: callbacks ["onWeatherModifyDamage"] are not implemented** (1): Mega Sol
 
 ## 도구
 
-- 전체 583개 중 지원 496개, 등장 효과만 미지원 0개, 미지원 87개.
+- 전체 583개 중 지원 497개, 등장 효과만 미지원 0개, 미지원 86개.
 - 라이브러리 사용 60개 중 지원 60개 (100%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
@@ -140,7 +109,7 @@ Life Orb (54), Sitrus Berry (53), Focus Sash (31), Choice Scarf (24), Roseli Ber
 
 - **미지원: callbacks ["onBasePower", "onTakeItem"] are not implemented** (24): Adamant Crystal, Cornerstone Mask, Draco Plate, Dread Plate, Earth Plate, Fist Plate, Flame Plate, Griseous Core, Hearthflame Mask, Icicle Plate, Insect Plate, Iron Plate, Lustrous Globe, Meadow Plate, Mind Plate, Pixie Plate, Sky Plate, Splash Plate, Spooky Plate, Stone Plate, Toxic Plate, Vile Vial, Wellspring Mask, Zap Plate
 - **미지원: callbacks ["onTakeItem"] are not implemented** (24): Bug Memory, Burn Drive, Chill Drive, Dark Memory, Douse Drive, Dragon Memory, Electric Memory, Fairy Memory, Fighting Memory, Fire Memory, Flying Memory, Ghost Memory, Grass Memory, Ground Memory, Ice Memory, Mail, Poison Memory, Psychic Memory, Rock Memory, Rusted Shield, Rusted Sword, Shock Drive, Steel Memory, Water Memory
-- **미지원: callbacks ["onSourceTryPrimaryHit"] are not implemented** (18): Bug Gem, Dark Gem, Dragon Gem, Electric Gem, Fairy Gem, Fighting Gem, Fire Gem, Flying Gem, Ghost Gem, Grass Gem, Ground Gem, Ice Gem, Normal Gem, Poison Gem, Psychic Gem, Rock Gem, Steel Gem, Water Gem
+- **미지원: callbacks ["onSourceTryPrimaryHit"] are not implemented** (17): Bug Gem, Dark Gem, Dragon Gem, Electric Gem, Fairy Gem, Fighting Gem, Fire Gem, Flying Gem, Ghost Gem, Grass Gem, Ground Gem, Ice Gem, Poison Gem, Psychic Gem, Rock Gem, Steel Gem, Water Gem
 - **미지원: callbacks ["onEat", "onUpdate"] are not implemented** (7): Bitter Berry, Burnt Berry, Ice Berry, Mint Berry, Mystery Berry, PRZ Cure Berry, PSN Cure Berry
 - **미지원: callbacks ["onBasePower"] are not implemented** (6): Adamant Orb, Griseous Orb, Lustrous Orb, Pink Bow, Polkadot Bow, Soul Dew
 - **미지원: callbacks ["onEat", "onResidual", "onTryEatItem"] are not implemented** (2): Berry, Gold Berry
