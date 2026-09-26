@@ -26,7 +26,12 @@
 //! cutoff; both are reported outside the win tally (AGENTS.md: 중단 경기는 승패 집계에서 제외).
 //! With `--threads k` (default: the machine's cores) `k` games run at once, each solving its
 //! matrix games on one thread; `--threads 1` runs the games in turn, each solving on all cores.
+//! The policy's strategies are cached across games by position (state and suspension hash), so
+//! the opening decision is solved once per initial state and repeated positions are reused;
+//! the policy is deterministic, so the cache changes nothing but the time.
 
+use std::collections::HashMap;
+use std::hash::{Hash, Hasher};
 use std::io::Write as _;
 use std::process::ExitCode;
 use std::sync::atomic::{AtomicUsize, Ordering};
@@ -47,7 +52,53 @@ use lab_scenario::{
     Position,
 };
 use lab_search::solve::SearchError;
-use lab_search::{format_choice, Choice, Config, Decision, Solver};
+use lab_search::{format_choice, Choice, Config, Decision, Equilibrium, Solver};
+
+/// Both sides' mixed strategies at one decision, as the policy produced them.
+#[derive(Clone)]
+struct Strategies {
+    ours: Vec<Choice<2>>,
+    theirs: Vec<Choice<2>>,
+    equilibrium: Equilibrium,
+}
+
+/// Strategies by position, shared by every game of the batch.
+struct StrategyCache {
+    entries: Mutex<HashMap<u64, Strategies>>,
+    hits: AtomicUsize,
+    misses: AtomicUsize,
+}
+
+impl StrategyCache {
+    fn new() -> StrategyCache {
+        StrategyCache {
+            entries: Mutex::new(HashMap::new()),
+            hits: AtomicUsize::new(0),
+            misses: AtomicUsize::new(0),
+        }
+    }
+
+    fn key(state: &State<2>, suspension: Option<&Suspension>) -> u64 {
+        let mut h = std::collections::hash_map::DefaultHasher::new();
+        state.hash(&mut h);
+        suspension.hash(&mut h);
+        h.finish()
+    }
+
+    fn get(&self, key: u64) -> Option<Strategies> {
+        let found = self.entries.lock().unwrap().get(&key).cloned();
+        if found.is_some() {
+            self.hits.fetch_add(1, Ordering::Relaxed);
+        } else {
+            self.misses.fetch_add(1, Ordering::Relaxed);
+        }
+        found
+    }
+
+    fn put(&self, key: u64, strategies: Strategies) {
+        self.entries.lock().unwrap().insert(key, strategies);
+    }
+}
 
 /// Which equilibrium the sides draw their choices from.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -296,6 +347,7 @@ fn run() -> Result<(), String> {
 
     let started = Instant::now();
     let next = AtomicUsize::new(0);
+    let cache = StrategyCache::new();
     let records: Mutex<Vec<GameRecord>> = Mutex::new(Vec::with_capacity(games));
     let stdout = Mutex::new(std::io::stdout());
     std::thread::scope(|scope| {
@@ -316,6 +368,7 @@ fn run() -> Result<(), String> {
                     max_turns,
                     policy,
                     beam,
+                    &cache,
                 );
                 if !quiet {
                     let mut o = stdout.lock().unwrap();
@@ -367,8 +420,12 @@ fn run() -> Result<(), String> {
             finished.iter().sum::<f64>() / finished.len() as f64
         }
     };
+    let (cache_hits, cache_misses) = (
+        cache.hits.load(Ordering::Relaxed),
+        cache.misses.load(Ordering::Relaxed),
+    );
     println!(
-        "\ntally: p1 {p1}, p2 {p2}, tie {ties} of {decided} decided; cutoff {cutoffs}, aborted {aborted}; p1 score {:.1}% (ties half; Wilson 95% {:.1}–{:.1}%), mean {:.1} turns, {:.1} s",
+        "\ntally: p1 {p1}, p2 {p2}, tie {ties} of {decided} decided; cutoff {cutoffs}, aborted {aborted}; p1 score {:.1}% (ties half; Wilson 95% {:.1}–{:.1}%), mean {:.1} turns, {:.1} s; strategy cache {cache_hits} hits / {cache_misses} solves",
         rate * 100.0,
         lo * 100.0,
         hi * 100.0,
@@ -407,6 +464,7 @@ fn run() -> Result<(), String> {
             "wilson95": [lo, hi],
             "mean_turns": if mean_turns.is_nan() { Value::Null } else { json!(mean_turns) },
             "elapsed_s": elapsed,
+            "strategy_cache": {"hits": cache_hits, "solves": cache_misses},
             "lab_search_version": env!("CARGO_PKG_VERSION"),
             "game_records": records.iter().map(|r| json!({
                 "game": r.index,
@@ -440,6 +498,7 @@ fn play_game(
     max_turns: u16,
     policy: Policy,
     beam: usize,
+    cache: &StrategyCache,
 ) -> GameRecord {
     let started = Instant::now();
     let seed =
@@ -466,16 +525,41 @@ fn play_game(
         if state.turn > max_turns {
             break Ending::Cutoff;
         }
-        // The policy: both sides' mixed strategies at this decision.
-        let strategies = match policy {
-            Policy::Nash => solver
-                .analyse_mixed(&mut state, suspension.as_ref())
-                .map(|m| (m.ours, m.theirs, m.equilibrium)),
-            Policy::DeepNash => solver
-                .analyse_deep_mixed(&mut state, suspension.as_ref(), beam)
-                .map(|d| (d.ours, d.theirs, d.equilibrium)),
+        // The policy: both sides' mixed strategies at this decision, from the batch's cache when
+        // another game reached the same position.
+        let key = StrategyCache::key(&state, suspension.as_ref());
+        let strategies = match cache.get(key) {
+            Some(s) => Ok(s),
+            None => {
+                let solved = match policy {
+                    Policy::Nash => {
+                        solver
+                            .analyse_mixed(&mut state, suspension.as_ref())
+                            .map(|m| Strategies {
+                                ours: m.ours,
+                                theirs: m.theirs,
+                                equilibrium: m.equilibrium,
+                            })
+                    }
+                    Policy::DeepNash => solver
+                        .analyse_deep_mixed(&mut state, suspension.as_ref(), beam)
+                        .map(|d| Strategies {
+                            ours: d.ours,
+                            theirs: d.theirs,
+                            equilibrium: d.equilibrium,
+                        }),
+                };
+                if let Ok(s) = &solved {
+                    cache.put(key, s.clone());
+                }
+                solved
+            }
         };
-        let (our_choices, their_choices, equilibrium) = match strategies {
+        let Strategies {
+            ours: our_choices,
+            theirs: their_choices,
+            equilibrium,
+        } = match strategies {
             Ok(s) => s,
             Err(SearchError::Unsupported(whys)) => {
                 break Ending::Aborted(format!("unsupported: {}", whys.join("; ")));
