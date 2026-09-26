@@ -6,8 +6,8 @@
 
 use crate::damage::MOD_ONE_POINT_FIVE;
 use crate::dex::{
-    abilities, items, moves, ItemId, MoveCategory, MoveFlags, MoveId, MoveTarget, Type,
-    TypeRelation, NO_BOOSTS,
+    abilities, items, moves, AbilityFlags, AbilityId, ItemId, MoveCategory, MoveFlags, MoveId,
+    MoveTarget, Type, TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
@@ -282,6 +282,9 @@ pub(super) fn on_try_immunity<const N: usize>(
             let hp = |s: SlotRef| b.slot_mon(s).map_or(0, |m| m.hp);
             hp(user) < hp(target)
         }
+        // Worry Seed: `if (target.ability === 'truant' || target.ability === 'insomnia') return
+        // false;` (before accuracy).
+        moves::WORRY_SEED => ![abilities::TRUANT, abilities::INSOMNIA].contains(&b.ability(target)),
         _ => true,
     }
 }
@@ -550,8 +553,133 @@ pub(super) fn on_try_hit<const N: usize>(
             let (hp, max_hp) = (i32::from(m.hp), i32::from(m.max_hp));
             !b.has_substitute(target) && 4 * hp > max_hp && max_hp != 1
         }),
+        // Role Play: `if (target.ability === source.ability) return false; if
+        // (target.getAbility().flags['failroleplay'] || source.getAbility().flags['cantsuppress'])
+        // return false;` (the raw abilities).
+        moves::ROLE_PLAY => {
+            let (mine, theirs) = (b.ability(user), b.ability(target));
+            mine != theirs
+                && !theirs.data().flags.contains(AbilityFlags::FAILROLEPLAY)
+                && !mine.data().flags.contains(AbilityFlags::CANTSUPPRESS)
+        }
+        // Entrainment: fails on the same ability, a `cantsuppress` or Truant target, or a
+        // `noentrain` ability of the user (Dynamax is off).
+        moves::ENTRAINMENT => {
+            let (mine, theirs) = (b.ability(user), b.ability(target));
+            target != user
+                && mine != theirs
+                && !theirs.data().flags.contains(AbilityFlags::CANTSUPPRESS)
+                && theirs != abilities::TRUANT
+                && !mine.data().flags.contains(AbilityFlags::NOENTRAIN)
+        }
+        // Simple Beam: fails on a `cantsuppress`, Simple or Truant target.
+        moves::SIMPLE_BEAM => {
+            let theirs = b.ability(target);
+            !theirs.data().flags.contains(AbilityFlags::CANTSUPPRESS)
+                && theirs != abilities::SIMPLE
+                && theirs != abilities::TRUANT
+        }
+        // Worry Seed: fails on a `cantsuppress` target.
+        moves::WORRY_SEED => !b
+            .ability(target)
+            .data()
+            .flags
+            .contains(AbilityFlags::CANTSUPPRESS),
         _ => true,
     }
+}
+
+/// Showdown `pokemon.setAbility(ability, source)` from a move (Role Play, Entrainment, Simple
+/// Beam, Worry Seed) on the Pokémon at `slot`: fails (`false`) without HP or when the new or the
+/// old ability is `cantsuppress`; `runEvent('SetAbility')` — Ability Shield (the effective item:
+/// Magic Room suppresses it, Klutz does not) returns `null`, a failure too; then the old
+/// ability's `End` (`switching::end_ability`), the new one with a fresh `abilityState` (Protean's
+/// and Libero's used flag go), and its `Start` (`switching::start_ability`: Intimidate, weather,
+/// Trace, ...). An ability the engine does not run on the field is unsupported.
+fn set_ability<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    ability: AbilityId,
+) -> Result<bool, TurnError> {
+    let Some(pokemon) = b.alive(slot) else {
+        return Ok(false);
+    };
+    let old = b.mon(pokemon).ability;
+    let locked = |a: AbilityId| a.data().flags.contains(AbilityFlags::CANTSUPPRESS);
+    if locked(ability) || locked(old) || b.item(slot) == items::ABILITY_SHIELD {
+        return Ok(false);
+    }
+    change_ability(b, slot, ability)?;
+    super::super::switching::start_ability(b, slot, ability)?;
+    Ok(true)
+}
+
+/// The part of `setAbility` / `skillSwap` between the SetAbility event and the new ability's
+/// `Start`: the old ability's `End`, then the new one with a fresh `abilityState`.
+fn change_ability<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    ability: AbilityId,
+) -> Result<(), TurnError> {
+    let pokemon = b.occupant(slot).expect("an active Pokémon");
+    let old = b.mon(pokemon).ability;
+    if !super::super::support::ability_supported_on_field(ability) {
+        return Err(b.unsupported(format!(
+            "{} gaining {} ({:?})",
+            b.mon(pokemon).species.data().name,
+            ability.data().name,
+            ability.data().handlers
+        )));
+    }
+    super::super::switching::end_ability(b, slot, old)?;
+    b.delete_volatile(slot, Volatile::ProteanUsed);
+    if old != ability {
+        b.apply(Instruction::SetAbility {
+            target: pokemon,
+            old,
+            new: ability,
+        });
+    }
+    Ok(())
+}
+
+/// Showdown `battle.skillSwap(source, target)`: fails on a fainted Pokémon or a `failskillswap`
+/// ability on either side; `runEvent('SetAbility')` on the target, then the user (Ability
+/// Shield: `null`, a failure); then both abilities' `End` (the user's first), the swap with
+/// fresh `abilityState`s, and the `Start` of the target's new ability, then the user's.
+fn skill_swap<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    target: SlotRef,
+) -> Result<HitResult, TurnError> {
+    if b.alive(user).is_none() || b.alive(target).is_none() {
+        return Ok(HitResult::Failure);
+    }
+    let (mine, theirs) = (b.ability(user), b.ability(target));
+    let fails = |a: AbilityId| a.data().flags.contains(AbilityFlags::FAILSKILLSWAP);
+    if fails(mine) || fails(theirs) {
+        return Ok(HitResult::Failure);
+    }
+    if b.item(target) == items::ABILITY_SHIELD || b.item(user) == items::ABILITY_SHIELD {
+        return Ok(HitResult::Failure);
+    }
+    // Both abilities are already on the field, so both are supported there.
+    super::super::switching::end_ability(b, user, mine)?;
+    super::super::switching::end_ability(b, target, theirs)?;
+    for (slot, old, new) in [(user, mine, theirs), (target, theirs, mine)] {
+        let pokemon = b.occupant(slot).expect("checked");
+        b.delete_volatile(slot, Volatile::ProteanUsed);
+        if old != new {
+            b.apply(Instruction::SetAbility {
+                target: pokemon,
+                old,
+                new,
+            });
+        }
+    }
+    super::super::switching::start_ability(b, target, mine)?;
+    super::super::switching::start_ability(b, user, theirs)?;
+    Ok(HitResult::Success)
 }
 
 /// Showdown `move.infiltrates` for the implemented moves: Pollen Puff's `onTryHit` sets it on a
@@ -1740,6 +1868,33 @@ pub(super) fn on_hit<const N: usize>(
         }
         moves::TRICK | moves::SWITCHEROO => trick(b, user, target)?,
         moves::INSTRUCT => instruct(b, target)?,
+        // Skill Swap: `return this.skillSwap(source, target);`
+        moves::SKILL_SWAP => skill_swap(b, user, target)?,
+        // Role Play: `source.setAbility(target.ability, target)`; Entrainment:
+        // `target.setAbility(source.ability, source)`; Simple Beam: `target.setAbility('simple')`;
+        // Worry Seed: `target.setAbility('insomnia')`, then a sleeping target wakes
+        // (`cureStatus`). A failed `setAbility` (`false` / `null`) is the move's failure.
+        moves::ROLE_PLAY => {
+            let copied = b.ability(target);
+            success(set_ability(b, user, copied)?)
+        }
+        moves::ENTRAINMENT => {
+            let given = b.ability(user);
+            success(set_ability(b, target, given)?)
+        }
+        moves::SIMPLE_BEAM => success(set_ability(b, target, abilities::SIMPLE)?),
+        moves::WORRY_SEED => {
+            let ok = set_ability(b, target, abilities::INSOMNIA)?;
+            if ok {
+                if let Some(p) = b
+                    .alive(target)
+                    .filter(|&p| b.mon(p).status == Status::Sleep)
+                {
+                    b.cure_status(p);
+                }
+            }
+            success(ok)
+        }
         // Ally Switch (on its user): `NOT_FAIL` outside doubles and triples, or when the other
         // position's Pokémon has fainted; otherwise `swapPosition` (returns nothing). Triples'
         // positions are not supported.

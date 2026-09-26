@@ -1,0 +1,23 @@
+{
+ "description": "Skill Swap: Gardevoir (Intimidate) and Torkoal (Drought, sun since the start) trade abilities. Both old abilities end, then the target's new one starts (Torkoal's Intimidate lowers Gardevoir's and Snorlax's Attack), then the user's (Gardevoir's Drought: the sun is already up, nothing).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Gardevoir", "item": "", "ability": "Intimidate", "nature": "Serious",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Skill Swap", "Protect"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Torkoal", "item": "", "ability": "Drought", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move skillswap 1, move harden", "p2": "move harden, move harden"}
+}

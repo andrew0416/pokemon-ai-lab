@@ -594,6 +594,15 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::PAIN_SPLIT, &["onHit"]),
     (moves::SPITE, &["onHit"]),
     (moves::REFLECT_TYPE, &["onHit"]),
+    // Ability changes (`handlers::skill_swap`, `handlers::set_ability`: the old ability's End,
+    // the new one's Start through `switching`; Ability Shield blocks): Skill Swap `onHit`; Role
+    // Play, Entrainment, Simple Beam `onTryHit` / `onHit`; Worry Seed `onTryImmunity` too. Gastro
+    // Acid (ability suppression) is not supported.
+    (moves::SKILL_SWAP, &["onHit"]),
+    (moves::ROLE_PLAY, &["onHit", "onTryHit"]),
+    (moves::ENTRAINMENT, &["onHit", "onTryHit"]),
+    (moves::SIMPLE_BEAM, &["onHit", "onTryHit"]),
+    (moves::WORRY_SEED, &["onHit", "onTryHit", "onTryImmunity"]),
     (moves::SOAK, &["onHit"]),
     (moves::ENDEAVOR, &["damageCallback", "onTryImmunity"]),
     // Leech Seed: `onTryImmunity` (Grass) in `handlers`, the volatile's `onResidual` in
