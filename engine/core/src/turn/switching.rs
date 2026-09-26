@@ -563,6 +563,22 @@ pub(crate) fn switch_in<const N: usize>(
     party_index: u8,
     on_field: bool,
 ) -> Result<(), TurnError> {
+    switch_in_as(b, slot, party_index, on_field, false)
+}
+
+/// [`switch_in`], or with `is_drag` the switch of `dragIn` (Roar, Dragon Tail, Red Card):
+/// `if (!oldActive.skipBeforeSwitchOutEventFlag && !isDrag) { runEvent('BeforeSwitchOut');
+/// eachEvent('Update'); }`, so a dragged-out Pokémon leaves without that Update (an Update
+/// condition that arose after the move's last Update, such as Outrage's fatigue confusion next
+/// to a Persim Berry, waits for the Update after the newcomer's `runSwitch`, when the dragged
+/// Pokémon is gone). `SwitchOut` still runs.
+fn switch_in_as<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    party_index: u8,
+    on_field: bool,
+    is_drag: bool,
+) -> Result<(), TurnError> {
     let incoming = PokemonRef {
         side: slot.side,
         party: party_index,
@@ -572,7 +588,9 @@ pub(crate) fn switch_in<const N: usize>(
     }
     if let Some(outgoing) = b.occupant(slot) {
         if b.mon(outgoing).hp > 0 {
-            super::update::update_event(b)?;
+            if !is_drag {
+                super::update::update_event(b)?;
+            }
             super::abilities::on_switch_out(b, slot);
             super::forme::on_switch_out(b, slot);
         }
@@ -1079,7 +1097,7 @@ pub(crate) fn drag_in<const N: usize>(
     if b.ability_unless_broken(slot) == abilities::SUCTION_CUPS {
         return Ok(false);
     }
-    switch_in(b, slot, bench[pick], true)?;
+    switch_in_as(b, slot, bench[pick], true, true)?;
     run_switch_in(b, &[slot])?;
     Ok(true)
 }
