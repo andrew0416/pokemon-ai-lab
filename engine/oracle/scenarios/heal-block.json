@@ -1,0 +1,24 @@
+{
+ "description": "Heal Block on both foes (5 turns): Umbreon's Moonlight (a heal move) cannot be used; Garchomp's Seismic Toss takes it below half, and its Sitrus Berry is not eaten (onTryEatItem asks TryHeal). Blissey's Mental Herb cures Heal Block at the Update after the move, so its Recover works.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Alakazam", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Heal Block", "Protect"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "Mental Herb", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Recover", "Protect"], "level": 50},
+   {"species": "Umbreon", "item": "Sitrus Berry", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Moonlight", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p2": {"Blissey": {"hp": 200}, "Umbreon": {"hp": 140}}},
+ "turn": {"p1": "move healblock, move seismictoss 2", "p2": "move recover, move moonlight"}
+}

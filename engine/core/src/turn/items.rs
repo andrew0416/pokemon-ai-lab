@@ -701,14 +701,15 @@ pub(crate) fn blunder_policy<const N: usize>(b: &mut Battle<'_, N>, user: SlotRe
 }
 
 /// Mental Herb's `onUpdate`: a holder with any of `attract`, `taunt`, `encore`, `torment`,
-/// `disable`, `healblock` uses the item (`useItem`) and loses all of them. Attract and Heal
-/// Block do not exist in the engine (their moves are refused), so the other four are checked.
+/// `disable`, `healblock` uses the item (`useItem`) and loses all of them. Attract does not
+/// exist in the engine (its moves are refused), so the other five are checked.
 pub(crate) fn mental_herb<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
-    const CURED: [Volatile; 4] = [
+    const CURED: [Volatile; 5] = [
         Volatile::Taunt,
         Volatile::Encore,
         Volatile::Torment,
         Volatile::Disable,
+        Volatile::HealBlock,
     ];
     if b.item(slot) != items::MENTAL_HERB || !CURED.iter().any(|&v| b.volatile(slot, v).active) {
         return;
@@ -1037,7 +1038,7 @@ pub(crate) fn on_hit<const N: usize>(
 ) {
     // Enigma Berry: `if (move && target.getMoveHitData(move).typeMod > 0) { if
     // (target.eatItem()) this.heal(target.baseMaxhp / 4); }`. Its `onTryEatItem` asks
-    // `runEvent('TryHeal')`, which no supported effect answers (Heal Block, Ripen are not).
+    // `runEvent('TryHeal')` (Heal Block: `update::eat_item` does not eat it).
     if b.item(target) == items::ENIGMA_BERRY
         && b.type_mod_of(target).is_some_and(|t| t > 0)
         && super::update::eat_item(b, target)

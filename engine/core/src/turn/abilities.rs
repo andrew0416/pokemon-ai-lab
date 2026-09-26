@@ -449,7 +449,8 @@ pub(crate) fn on_switch_out<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef
     match b.ability(slot) {
         a if a == abilities::REGENERATOR => {
             let max_hp = f64::from(b.mon(pokemon).max_hp);
-            b.heal(slot, max_hp / 3.0);
+            // `pokemon.heal`: no TryHeal, so Heal Block does not stop it.
+            b.heal_unblocked(slot, max_hp / 3.0);
         }
         a if a == abilities::NATURAL_CURE => b.cure_status(pokemon),
         _ => {}

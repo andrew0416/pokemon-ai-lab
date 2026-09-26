@@ -489,8 +489,18 @@ impl<'a, const N: usize> Battle<'a, N> {
     }
 
     /// Showdown `battle.heal`: fractions below 1 become 1, then truncate; nothing on a fainted
-    /// or full-HP Pokémon. Returns the HP restored.
+    /// or full-HP Pokémon; `runEvent('TryHeal')`: Heal Block on the target stops every heal
+    /// (`return false`, or `null` for an ally's Pollen Puff). Returns the HP restored.
     pub fn heal(&mut self, target: SlotRef, amount: f64) -> i32 {
+        if self.volatile(target, Volatile::HealBlock).active {
+            return 0;
+        }
+        self.heal_unblocked(target, amount)
+    }
+
+    /// Showdown `pokemon.heal` (no TryHeal event: Heal Block does not stop it): Regenerator,
+    /// Healing Wish.
+    pub fn heal_unblocked(&mut self, target: SlotRef, amount: f64) -> i32 {
         let Some(pokemon) = self.alive(target) else {
             return 0;
         };
@@ -987,6 +997,23 @@ impl<'a, const N: usize> Battle<'a, N> {
                     counter: old.counter + 1,
                     ..old
                 },
+                // Heal Block's `onRestart`: nothing from Psychic Noise; otherwise `if
+                // (!source.moveThisTurnResult) source.moveThisTurnResult = false;`. Either way it
+                // returns nothing, so `addVolatile` succeeds without changing the volatile.
+                Volatile::HealBlock => {
+                    let source = self
+                        .active_move
+                        .filter(|m| self.occupant(m.user) == Some(m.pokemon));
+                    if let Some(source) =
+                        source.filter(|m| m.id != crate::dex::moves::PSYCHIC_NOISE)
+                    {
+                        let result = self.state.slot(source.user).history.move_this_turn_result;
+                        if result != crate::state::MoveResult::Succeeded {
+                            self.set_move_result(source.user, crate::state::MoveResult::Failed);
+                        }
+                    }
+                    return true;
+                }
                 // Ally Switch's `onRestart`: `randomChance(1, counter)`, else `delete
                 // pokemon.volatiles['allyswitch']` (no `onEnd`) and fail; on success the counter
                 // triples below `counterMax` (729) and the duration is 2 again.

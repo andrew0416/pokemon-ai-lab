@@ -1380,6 +1380,20 @@ pub(super) fn null_try_move<const N: usize>(
     spent_type(mv.id).is_none_or(|t| b.has_type(user, t))
 }
 
+/// The move's own `onTryMove` of moves that fail with `false`. Pollen Puff: `if
+/// (source.isAlly(target) && source.volatiles['healblock']) return false;`. `false` = the move
+/// fails.
+pub(super) fn fail_try_move<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    !(mv.id == moves::POLLEN_PUFF
+        && target.side == user.side
+        && b.volatile(user, Volatile::HealBlock).active)
+}
+
 /// Burn Up used by a Pokémon without the Fire type does not thaw it: the `frz` status's
 /// `onBeforeMove` skips a `defrost` move only `if (move.flags['defrost'] && !(move.id ===
 /// 'burnup' && !pokemon.hasType('Fire')))` (Champions keeps the exception).

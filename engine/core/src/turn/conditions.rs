@@ -187,7 +187,8 @@ pub(crate) fn slot_condition_switch_in<const N: usize>(b: &mut Battle<'_, N>, sl
     let mon = b.mon(pokemon);
     if mon.hp < mon.max_hp || mon.status != Status::None {
         let max_hp = f64::from(mon.max_hp);
-        b.heal(slot, max_hp);
+        // `target.heal(target.maxhp)`: `pokemon.heal`, which Heal Block does not stop.
+        b.heal_unblocked(slot, max_hp);
         b.cure_status(pokemon);
         set_slot_condition(b, slot, SlotCondition::HealingWish, SlotEffect::NONE);
     }
@@ -398,6 +399,20 @@ pub(crate) fn volatile_start<const N: usize>(
             new.mv = last;
             true
         }
+        // Heal Block: `durationCallback`: 2 from Psychic Noise, else 5 (Persistent, 7, is
+        // refused); `onStart`: `source.moveThisTurnResult = true` (the user of the move adding
+        // it).
+        Volatile::HealBlock => {
+            if let Some(source) = source {
+                new.duration = if source.id == moves::PSYCHIC_NOISE {
+                    2
+                } else {
+                    5
+                };
+                b.set_move_result(source.user, crate::state::MoveResult::Succeeded);
+            }
+            true
+        }
         // Substitute (F11): `this.effectState.hp = Math.floor(target.maxhp / 4)`; partial
         // trapping ends silently (`delete target.volatiles['partiallytrapped']`, no `onEnd`).
         Volatile::Substitute => {
@@ -438,7 +453,17 @@ pub(crate) fn before_move_after_gravity<const N: usize>(
     let taunted = b.volatile(user, Volatile::Taunt).active
         && data.category == MoveCategory::Status
         && id != moves::ME_FIRST;
-    !throat_chopped(b.state, user, id) && !taunted && !imprisoned(b.state, user, id)
+    !throat_chopped(b.state, user, id)
+        && !heal_blocked(b.state, user, id)
+        && !taunted
+        && !imprisoned(b.state, user, id)
+}
+
+/// Heal Block's `onBeforeMove` (priority 6, with Gravity and Throat Chop: all only fail the
+/// move), `onModifyMove` (a called move) and `onDisableMove`: the holder's `heal` moves (Z- and
+/// Max Moves are off in Champions).
+pub(crate) fn heal_blocked<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> bool {
+    state.slot(slot).volatiles.has(Volatile::HealBlock) && id.data().flags.contains(MoveFlags::HEAL)
 }
 
 /// Throat Chop's `onBeforeMove` (priority 6), `onModifyMove` and `onDisableMove`: the holder's
@@ -497,6 +522,9 @@ pub(crate) fn disabled_move<const N: usize>(
     }
     if throat_chopped(state, slot, id) {
         return Some(format!("{} is disabled by Throat Chop", data.name));
+    }
+    if heal_blocked(state, slot, id) {
+        return Some(format!("{} is disabled by Heal Block", data.name));
     }
     None
 }

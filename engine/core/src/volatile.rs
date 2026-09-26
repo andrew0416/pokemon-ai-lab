@@ -208,9 +208,12 @@ pub enum Volatile {
     /// hitting the holder sets `gotHit` (`counter` 1, hidden) and moves the holder's Shell Trap to
     /// the front of the queue; without it Shell Trap stops (`onTryMove`).
     ShellTrap,
+    /// Heal Block (duration 5, 2 from Psychic Noise; residual order 20): the holder's `heal`
+    /// moves can be neither chosen nor used, and every `battle.heal` on it fails (`onTryHeal`).
+    HealBlock,
 }
 
-pub const VOLATILE_COUNT: usize = 67;
+pub const VOLATILE_COUNT: usize = 68;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -281,6 +284,7 @@ impl Volatile {
         Volatile::FocusPunch,
         Volatile::BeakBlast,
         Volatile::ShellTrap,
+        Volatile::HealBlock,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -331,6 +335,7 @@ impl Volatile {
             Volatile::SaltCure => conditions::SALTCURE,
             Volatile::Ingrain => conditions::INGRAIN,
             Volatile::MagnetRise => conditions::MAGNETRISE,
+            Volatile::HealBlock => conditions::HEALBLOCK,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -429,6 +434,7 @@ impl Volatile {
             Volatile::FocusPunch => "focuspunch",
             Volatile::BeakBlast => "beakblast",
             Volatile::ShellTrap => "shelltrap",
+            Volatile::HealBlock => "healblock",
         }
     }
 
@@ -480,9 +486,12 @@ impl Volatile {
             | Volatile::AllySwitch => 2,
             Volatile::Encore | Volatile::Taunt => 3,
             Volatile::PerishSong => 4,
-            // Partial trapping's `durationCallback` replaces it when it starts
+            // Partial trapping's and Heal Block's `durationCallback` replace it when they start
             // (`conditions::volatile_start`).
-            Volatile::Disable | Volatile::PartiallyTrapped | Volatile::MagnetRise => 5,
+            Volatile::Disable
+            | Volatile::PartiallyTrapped
+            | Volatile::MagnetRise
+            | Volatile::HealBlock => 5,
             Volatile::Confusion
             | Volatile::FlashFire
             | Volatile::ChoiceLock
@@ -525,6 +534,7 @@ impl Volatile {
             Volatile::Taunt => Some(15),
             Volatile::Encore => Some(16),
             Volatile::Disable => Some(17),
+            Volatile::HealBlock => Some(20),
             Volatile::ThroatChop => Some(22),
             Volatile::Yawn => Some(23),
             Volatile::PerishSong => Some(24),
@@ -765,6 +775,7 @@ mod tests {
             (Volatile::FocusPunch, moves::FOCUS_PUNCH),
             (Volatile::BeakBlast, moves::BEAK_BLAST),
             (Volatile::ShellTrap, moves::SHELL_TRAP),
+            (Volatile::HealBlock, moves::HEAL_BLOCK),
         ] {
             let data = id.data();
             assert_eq!(

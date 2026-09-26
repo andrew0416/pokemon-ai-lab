@@ -154,8 +154,15 @@ pub(crate) fn eat_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> 
     if !item.data().is_berry {
         return false;
     }
-    // TryEatItem: the eater's and its foes' ability handlers (`abilities::try_eat_item`).
+    // TryEatItem: the eater's and its foes' ability handlers (`abilities::try_eat_item`), and the
+    // healing berries' own `onTryEatItem` (Sitrus, Oran, the Figy berries, Enigma: `if
+    // (!this.runEvent('TryHeal', pokemon, ...)) return false;`), which Heal Block answers.
     if !super::abilities::try_eat_item(b, slot) {
+        return false;
+    }
+    if item.data().handlers.contains(&"onTryEatItem")
+        && b.volatile(slot, Volatile::HealBlock).active
+    {
         return false;
     }
     if !berry_on_eat(b, slot, pokemon, item) {

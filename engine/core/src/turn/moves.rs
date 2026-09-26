@@ -1073,6 +1073,10 @@ fn use_move<const N: usize>(
     if conditions::throat_chopped(b.state, user, mv.id) {
         return Ok(None);
     }
+    // Heal Block's `onModifyMove` does the same for a `heal` move.
+    if conditions::heal_blocked(b.state, user, mv.id) {
+        return Ok(None);
+    }
     if mv.target != base_target {
         target = get_random_target(b, user, mv.target);
     }
@@ -1126,9 +1130,12 @@ fn use_move<const N: usize>(
         }
         return Ok(None);
     }
-    // TryMove: Dazzling, Queenly Majesty, Armor Tail (`onFoeTryMove`).
+    // TryMove: the move's own that fail it (Pollen Puff under Heal Block), then Dazzling,
+    // Queenly Majesty, Armor Tail (`onFoeTryMove`).
     let try_move_target = targets.last().copied().unwrap_or(target);
-    if !ability_hooks::on_try_move(b, user, mv, try_move_target) {
+    if !handlers::fail_try_move(b, user, mv, try_move_target)
+        || !ability_hooks::on_try_move(b, user, mv, try_move_target)
+    {
         b.finish_move_result(user, false);
         return Ok(None);
     }

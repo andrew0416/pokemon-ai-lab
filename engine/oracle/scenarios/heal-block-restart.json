@@ -1,0 +1,27 @@
+{
+ "description": "Heal Block again on two foes that already have it: `onRestart` sets the user's moveThisTurnResult to false (setup turn 2), so turn 3's Stomping Tantrum doubles. Rolls and crits branch.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Alakazam", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Heal Block", "Stomping Tantrum"], "level": 50},
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50},
+   {"species": "Umbreon", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move healblock, move harden", "move harden, move harden"],
+  ["move healblock, move harden", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move stompingtantrum 2, move harden", "p2": "move harden, move harden"}
+}

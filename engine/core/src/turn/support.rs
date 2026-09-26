@@ -288,9 +288,26 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // `onAfterSubDamage` in `handlers::on_after_sub_damage`.
     (moves::ICE_SPINNER, &["onAfterHit", "onAfterSubDamage"]),
     (moves::STEEL_ROLLER, &["onAfterSubDamage", "onHit", "onTry"]),
-    // `onTryMove` only fails an ally-targeted use under Heal Block, which no supported effect
-    // adds.
+    // `onTryMove` fails an ally-targeted use under Heal Block (`handlers::fail_try_move`).
     (moves::POLLEN_PUFF, &["onHit", "onTryHit", "onTryMove"]),
+    // Heal Block (also Psychic Noise's secondary): the volatile's `durationCallback` and
+    // `onStart` in `conditions::volatile_start`, `onRestart` in `Battle::add_volatile_from`,
+    // `onBeforeMove` / `onModifyMove` / `onDisableMove` in `conditions::heal_blocked`,
+    // `onTryHeal` in `Battle::heal` (and the healing berries' `onTryEatItem`,
+    // `update::eat_item`); `onEnd` only logs.
+    (
+        moves::HEAL_BLOCK,
+        &[
+            "condition.durationCallback",
+            "condition.onBeforeMove",
+            "condition.onDisableMove",
+            "condition.onEnd",
+            "condition.onModifyMove",
+            "condition.onRestart",
+            "condition.onStart",
+            "condition.onTryHeal",
+        ],
+    ),
     (moves::TRICK, &["onHit", "onTryImmunity"]),
     (moves::SWITCHEROO, &["onHit", "onTryImmunity"]),
     // `condition.onStart` only fails for a Terastallized user; `onType` is applied as a type
