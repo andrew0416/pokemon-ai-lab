@@ -536,6 +536,20 @@ pub(crate) fn after_faint<const N: usize>(
     b.boost_by(slot, &boosts, Some(slot), BoostEffect::Ability(effect));
 }
 
+/// Soul-Heart's `onAnyFaint` for one processed faint (`runEvent('Faint')` in `faintMessages`):
+/// every active holder not at 0 HP raises its SpA by 1 (`this.boost({spa: 1},
+/// this.effectState.target)`; `boost` does nothing at 0 HP, and fails once the holder's foes have
+/// no Pokémon left). Each only changes its holder.
+pub(crate) fn soul_heart<const N: usize>(b: &mut Battle<'_, N>) {
+    for slot in b.all_alive() {
+        if b.ability(slot) == abilities::SOUL_HEART {
+            let mut up = NO_BOOSTS;
+            up[2] = 1;
+            b.boost_by(slot, &up, None, BoostEffect::Ability(abilities::SOUL_HEART));
+        }
+    }
+}
+
 /// Anger Shell and Berserk (Champions): `onDamage` sets `abilityState.checked*` to
 /// `!(effect.effectType === 'Move' && !effect.multihit)` — a single-hit move's damage (or a
 /// confusion self-hit) leaves the half-HP check pending until `AfterMoveSecondary`, and the

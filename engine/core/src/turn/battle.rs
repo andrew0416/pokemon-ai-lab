@@ -567,6 +567,11 @@ impl<'a, const N: usize> Battle<'a, N> {
                 old: None,
                 new: Some(pokemon.party),
             });
+            // The rest of runEvent('Faint'): Soul-Heart (priority 1, before Destiny Bond, which
+            // only faints its attacker: a holder it knocks out gets no boost either way), run
+            // once the faint counts as processed (`pokemonLeft` dropped: `boost` needs
+            // `foePokemonLeft()`).
+            super::abilities::soul_heart(self);
             self.record_faint(pokemon.side);
             last = Some(pokemon.side);
         }

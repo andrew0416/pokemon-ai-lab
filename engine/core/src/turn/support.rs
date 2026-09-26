@@ -1564,6 +1564,8 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // (`handlers::swap_positions`).
     (abilities::STALWART, &["onModifyMove"]),
     (abilities::PROPELLER_TAIL, &["onModifyMove"]),
+    // Soul-Heart: `onAnyFaint` in `abilities::soul_heart` (from `Battle::faint_messages`).
+    (abilities::SOUL_HEART, &["onAnyFaint"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
