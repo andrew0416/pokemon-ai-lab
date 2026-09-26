@@ -1,0 +1,26 @@
+{
+ "description": "B22: a recharge turn keeps the FractionalPriority of the recharging Pokemon. Setup turn: Clefable's Gravity (faster) then Sableye's (Stall) Hyper Beam on Snorlax, which cannot miss under Gravity, so Sableye must recharge. The turn: Sableye (Stall, -0.1) recharges after the slower Snorlax's Payback, which therefore sees a target that has not moved (50 base power); an engine that gives the recharge priority 0 lets Sableye act first and doubles Payback.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Sableye", "item": "", "ability": "Stall", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Hyper Beam", "Harden"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Gravity", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Payback", "Harden"], "level": 50},
+   {"species": "Torkoal", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move hyperbeam 1, move gravity", "move harden, move harden"]
+ ],
+ "turn": {"p1": "move recharge 1, move harden", "p2": "move payback 1, move harden"}
+}

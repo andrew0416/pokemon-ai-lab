@@ -1148,10 +1148,14 @@ impl<const N: usize> Battle<'_, N> {
             ActionKind::BeforeTurn => (ORDER_BEFORE_TURN, 0),
             ActionKind::BeforeTurnMove { .. } => (ORDER_BEFORE_TURN_MOVE, 0),
             ActionKind::PriorityCharge { .. } => (ORDER_PRIORITY_CHARGE, 0),
+            // The `recharge` pseudo-move: priority 0, but `getActionSpeed` runs
+            // `FractionalPriority` for it too (Stall's and Mycelium Might's -0.1; Quick Claw and
+            // Custap skip status moves), so a Stall holder recharges after everything at 0.
             ActionKind::Move {
                 index: RECHARGE_INDEX,
+                fractional_tenths,
                 ..
-            } => (ORDER_MOVE, 0),
+            } => (ORDER_MOVE, i32::from(fractional_tenths)),
             ActionKind::Move {
                 index,
                 fractional_tenths,
