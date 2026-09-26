@@ -208,15 +208,17 @@ fn timed(effect: Effect, name: &str) -> Result<Option<u8>, CanonicalError> {
     Ok(Some(effect.turns))
 }
 
+/// Pseudo-weathers the schema can write, in id order (`effects()` in `canonical.cjs` sorts the
+/// ids, and `canonicalKey` is the JSON text, so the order is part of the key).
+const PSEUDO: [(FieldEffect, &str); 5] = [
+    (FieldEffect::FairyLock, "fairylock"),
+    (FieldEffect::Gravity, "gravity"),
+    (FieldEffect::MagicRoom, "magicroom"),
+    (FieldEffect::TrickRoom, "trickroom"),
+    (FieldEffect::WonderRoom, "wonderroom"),
+];
+
 fn field(out: &mut String, effects: &[Effect; FIELD_EFFECT_COUNT]) -> Result<(), CanonicalError> {
-    // Pseudo-weathers the schema can write, in id order.
-    const PSEUDO: [(FieldEffect, &str); 5] = [
-        (FieldEffect::FairyLock, "fairylock"),
-        (FieldEffect::Gravity, "gravity"),
-        (FieldEffect::TrickRoom, "trickroom"),
-        (FieldEffect::WonderRoom, "wonderroom"),
-        (FieldEffect::MagicRoom, "magicroom"),
-    ];
     for (i, effect) in effects.iter().enumerate() {
         let known = i == FieldEffect::Weather as usize
             || i == FieldEffect::Terrain as usize
@@ -605,5 +607,12 @@ mod tests {
     #[test]
     fn side_conditions_are_in_id_order() {
         assert!(SIDE_CONDITIONS.windows(2).all(|w| w[0].1 < w[1].1));
+    }
+
+    /// Pseudo-weathers too (Magic Room used to come after the other rooms: a byte mismatch
+    /// with `canonicalKey` whenever it was up with Trick Room or Wonder Room).
+    #[test]
+    fn pseudo_weathers_are_in_id_order() {
+        assert!(PSEUDO.windows(2).all(|w| w[0].1 < w[1].1));
     }
 }
