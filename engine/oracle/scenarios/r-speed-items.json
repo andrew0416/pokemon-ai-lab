@@ -1,0 +1,22 @@
+{
+ "description": "Opus R unit 7: Speed-changing items decide who sets the weather and terrain last. Power Anklet halves Pikachu (110 -> 55) below Chansey (70), so Pikachu's Rain Dance comes after Chansey's Sunny Day; Quick Powder doubles Ditto (68 -> 136) and Macho Brace halves Jolteon (150 -> 75), so Jolteon's Grassy Terrain comes after Ditto's Electric Terrain. Without the items: sun and Electric Terrain. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Pikachu", "item": "Power Anklet", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Rain Dance"], "level": 50},
+   {"species": "Ditto", "item": "Quick Powder", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Electric Terrain"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Sunny Day"], "level": 50},
+   {"species": "Jolteon", "item": "Macho Brace", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Grassy Terrain"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move raindance, move electricterrain",
+  "p2": "move sunnyday, move grassyterrain"
+ }
+}

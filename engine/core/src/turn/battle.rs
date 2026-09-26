@@ -526,16 +526,18 @@ impl<'a, const N: usize> Battle<'a, N> {
         if self.faint_queue.is_empty() {
             return false;
         }
-        let mut last = None;
         let mut check_win = check_win;
         // `const length = this.faintQueue.length`, and `faintData`: the last entry taken from
-        // the queue, processed or not (for AfterFaint).
+        // the queue, processed or not: AfterFaint's source, and `checkWin(faintData)`'s winner
+        // when no side has a Pokémon left (the side of that entry's Pokémon).
         let length = self.faint_queue.len();
         let mut last_source = None;
+        let mut last = None;
         while !self.faint_queue.is_empty() {
             let queue_left = self.faint_queue.len();
             let (pokemon, slot, attacker) = self.faint_queue.remove(0);
             last_source = attacker;
+            last = Some(pokemon.side);
             if self.occupant(slot) != Some(pokemon) {
                 continue;
             }
@@ -559,7 +561,6 @@ impl<'a, const N: usize> Battle<'a, N> {
                 new: Some(pokemon.party),
             });
             self.record_faint(pokemon.side);
-            last = Some(pokemon.side);
         }
         if check_win && self.check_win(last) {
             return true;
@@ -616,8 +617,10 @@ impl<'a, const N: usize> Battle<'a, N> {
         }
     }
 
-    /// Showdown `checkWin(faintData)`: with every side out, the side of the last processed
-    /// faint wins (Gen 5+); `None` makes it a tie.
+    /// Showdown `checkWin(faintData)`: with every side out, the side of the last faint-queue
+    /// entry `faintMessages` dequeued wins (Gen 5+; Explosion that takes out everyone: the user
+    /// is queued first, so the last target's side wins); `None` (`checkWin()` without an entry)
+    /// makes it a tie.
     pub fn check_win(&mut self, last_faint: Option<SideId>) -> bool {
         if self.state.result.is_over() {
             return true;

@@ -1,10 +1,12 @@
-//! Item handlers (Showdown `data/items.ts`; the Champions mod overrides no callback of these
-//! items) for the items listed in `support`.
+//! Item handlers (Showdown `data/items.ts`; of these items the Champions mod only overrides
+//! Eject Button's `onAfterMoveSecondary`) for the items listed in `support`.
 //!
 //! Each function is one Showdown event; `moves.rs`, `battle.rs`, `order.rs`, `residual.rs` and
 //! `mod.rs` call it where Showdown runs that event. An item not handled here gets the event's
-//! neutral result. Items are read straight from the holder: Klutz holding an item is refused
-//! by `support` (Showdown's `ignoringItem`, work plan F17), so no handler here checks it.
+//! neutral result. Handlers read the effective item, [`Battle::item`]: `NONE` while Showdown's
+//! `ignoringItem` holds (Magic Room, or Klutz with an item that is not `ignoreKlutz`; work plan
+//! F17), when the runEvent loop skips item handlers. What reads `pokemon.item` itself (Knock
+//! Off, Trick, Acrobatics, Unburden, ...) uses [`Battle::raw_item`].
 //!
 //! Refused on purpose (not in `support`'s tables):
 //! - Metronome: its condition keeps `lastMove` and `numConsecutive` and reads
@@ -17,10 +19,10 @@ use crate::dex::{
 };
 use crate::field::{FieldEffect, Weather};
 use crate::instruction::Instruction;
-use crate::state::{PokemonRef, SlotRef, State, Status, SwitchFlag, BOOST_COUNT};
+use crate::state::{Pokemon, PokemonRef, SlotRef, State, Status, SwitchFlag, BOOST_COUNT};
 use crate::volatile::{Volatile, VolatileState};
 
-use super::abilities::{Handler, SUB_ITEM};
+use super::abilities::{Handler, SUB_ABILITY, SUB_CONDITION, SUB_ITEM};
 use super::battle::{Battle, BoostEffect, DamageSource};
 use super::order::ORDER_DEFAULT;
 use super::TurnError;
@@ -99,6 +101,32 @@ impl<const N: usize> Battle<'_, N> {
         } else {
             weather
         }
+    }
+
+    /// Showdown `pokemon.getWeight()`: `runEvent('ModifyWeight', pokemon, null, null,
+    /// pokemon.weighthg)`, then at least 1 hg. `weighthg` is the current forme's weight
+    /// (`setSpecies`; Autotomize, which lowers it until the next `setSpecies`, is refused by
+    /// `support`). Handlers by priority: Heavy Metal (1) doubles it; then, at priority 0, Light
+    /// Metal (ability) and Float Stone (item) each halve it with truncation. Heavy Metal and
+    /// Light Metal are breakable: a move that ignores abilities skips the target's, not its
+    /// user's own ([`Battle::ability_unless_broken`]); a suppressed Float Stone does nothing.
+    /// Read by Low Kick, Grass Knot, Heavy Slam and Heat Crash.
+    pub(crate) fn weight(&self, slot: SlotRef) -> i32 {
+        let Some(mon) = self.slot_mon(slot) else {
+            return 1;
+        };
+        let mut weight = i32::from(mon.species.data().weight_hg);
+        let ability = self.ability_unless_broken(slot);
+        if ability == abilities::HEAVY_METAL {
+            weight *= 2;
+        }
+        if ability == abilities::LIGHT_METAL {
+            weight /= 2;
+        }
+        if self.item(slot) == items::FLOAT_STONE {
+            weight /= 2;
+        }
+        weight.max(1)
     }
 }
 
@@ -324,12 +352,27 @@ pub(crate) fn stage_end_check<const N: usize>(b: &Battle<'_, N>) -> Result<(), T
 
 // ---- Speed, grounding, effectiveness, action order --------------------------------------------
 
-/// `ModifySpe` factor of the holder's item: Choice Scarf `chainModify(1.5)` (skipped while
-/// Dynamaxed, which `support` refuses); Iron Ball `chainModify(0.5)`.
-pub(crate) fn speed_modifier(item: ItemId) -> Option<u32> {
+/// `ModifySpe` factor of `holder`'s effective `item` ([`Battle::item`]: none under Magic Room,
+/// and under Klutz unless the item is `ignoreKlutz`): Choice Scarf `chainModify(1.5)` (skipped
+/// while Dynamaxed, which `support` refuses); Iron Ball, Macho Brace and the six Power items
+/// `chainModify(0.5)` (Macho Brace and the Power items ignore Klutz); Quick Powder
+/// `chainModify(2)` for an untransformed Ditto (`pokemon.species.name === 'Ditto'`; Transform
+/// and Imposter are refused by `support`).
+pub(crate) fn speed_modifier(item: ItemId, holder: &Pokemon) -> Option<u32> {
+    const HALVING: [ItemId; 8] = [
+        items::IRON_BALL,
+        items::MACHO_BRACE,
+        items::POWER_ANKLET,
+        items::POWER_BAND,
+        items::POWER_BELT,
+        items::POWER_BRACER,
+        items::POWER_LENS,
+        items::POWER_WEIGHT,
+    ];
     match item {
         i if i == items::CHOICE_SCARF => Some(MOD_ONE_POINT_FIVE),
-        i if i == items::IRON_BALL => Some(MOD_HALF),
+        i if HALVING.contains(&i) => Some(MOD_HALF),
+        i if i == items::QUICK_POWDER && holder.species == species::DITTO => Some(MOD_DOUBLE),
         _ => None,
     }
 }
@@ -936,6 +979,87 @@ pub(crate) fn on_damaging_hit<const N: usize>(
     }
 }
 
+/// A handler of the hit loop's `runEvent('AfterMoveSecondary', targets, ...)`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum AfterMoveSecondaryHandler {
+    /// The frozen status's handler (sub-order 2): a thawing move thaws its holder.
+    Thaw,
+    /// The target's ability (sub-order 7): Anger Shell, Berserk
+    /// (`abilities::after_move_secondary`).
+    Ability,
+    /// The target's item (sub-order 8): [`after_move_secondary`].
+    Item,
+}
+
+/// The order of Showdown's one `runEvent('AfterMoveSecondary', targets, source, move)` over the
+/// hit loop's targets (`findEventHandlers` concatenates every target's handlers, then
+/// `speedSort`): priority, high first (Eject Button's `onAfterMoveSecondaryPriority` 2, the
+/// others 0), then the holder's Speed (`pokemon.speed`, [`Battle::event_speed`]), high first,
+/// then sub-order (status 2, ability 7, item 8); ties are shuffled. Returns `(index into
+/// targets, handler)` pairs; a thaw handler exists only on a frozen target of a thawing move.
+///
+/// Each handler acts on its own holder, except that the first Eject Button to act flags its
+/// holder and so stops every later one (`pokemon.switchFlag === true`), and the first Red Card
+/// to drag the attacker stops every later one (`source.forceSwitchFlag`): the faster holder's
+/// item is the one used. A tie is drawn only among tied item handlers of two or more Eject
+/// Buttons or Red Cards, where it can change the outcome; other ties keep target order.
+pub(crate) fn after_move_secondary_order<const N: usize>(
+    b: &mut Battle<'_, N>,
+    targets: &[SlotRef],
+    thaws: bool,
+) -> Vec<(usize, AfterMoveSecondaryHandler)> {
+    // (priority, Speed, sub-order, target index, handler)
+    let mut handlers: Vec<(i32, i32, u32, usize, AfterMoveSecondaryHandler)> = Vec::new();
+    for (i, &t) in targets.iter().enumerate() {
+        let speed = b.event_speed(t);
+        let frozen = b.slot_mon(t).is_some_and(|m| m.status == Status::Freeze);
+        if thaws && frozen {
+            handlers.push((0, speed, SUB_CONDITION, i, AfterMoveSecondaryHandler::Thaw));
+        }
+        handlers.push((0, speed, SUB_ABILITY, i, AfterMoveSecondaryHandler::Ability));
+        let priority = super::abilities::priority(
+            b.item(t).data().event_orders,
+            "onAfterMoveSecondaryPriority",
+        );
+        handlers.push((
+            priority,
+            speed,
+            SUB_ITEM,
+            i,
+            AfterMoveSecondaryHandler::Item,
+        ));
+    }
+    // Stable: equal keys keep target order.
+    handlers.sort_by_key(|&(priority, speed, sub, _, _)| {
+        (std::cmp::Reverse(priority), std::cmp::Reverse(speed), sub)
+    });
+    let mut start = 0;
+    while start < handlers.len() {
+        let key = |h: &(i32, i32, u32, usize, AfterMoveSecondaryHandler)| (h.0, h.1, h.2);
+        let end = start
+            + handlers[start..]
+                .iter()
+                .take_while(|h| key(h) == key(&handlers[start]))
+                .count();
+        let exclusive = [items::EJECT_BUTTON, items::RED_CARD].iter().any(|&item| {
+            handlers[start..end]
+                .iter()
+                .filter(|h| h.4 == AfterMoveSecondaryHandler::Item && b.item(targets[h.3]) == item)
+                .count()
+                >= 2
+        });
+        if exclusive {
+            // `prng.shuffle` of the tied run: a uniformly random order.
+            for i in start..end - 1 {
+                let j = i + b.rng.uniform(end - i);
+                handlers.swap(i, j);
+            }
+        }
+        start = end;
+    }
+    handlers.into_iter().map(|h| (h.3, h.4)).collect()
+}
+
 /// The target's item `onAfterMoveSecondary` (`runEvent('AfterMoveSecondary')` at the end of the
 /// hit loop, skipped for a Sheer Force-boosted move): Kee Berry eats itself after a physical
 /// move (Present's heal, the only exception, is not a supported move), Maranga Berry after a
@@ -1231,5 +1355,16 @@ mod tests {
             .iter()
             .any(|(n, _)| n.starts_with("onResidual")));
         assert_eq!(items::THROAT_SPRAY.data().boosts, [0, 0, 1, 0, 0, 0, 0]);
+        // `Battle::weight`: Heavy Metal (priority 1) before Light Metal and Float Stone (0).
+        let ability_priority = |a: crate::dex::AbilityId| {
+            super::super::abilities::priority(a.data().event_orders, "onModifyWeightPriority")
+        };
+        assert_eq!(ability_priority(abilities::HEAVY_METAL), 1);
+        assert_eq!(ability_priority(abilities::LIGHT_METAL), 0);
+        assert_eq!(p(items::FLOAT_STONE, "onModifyWeightPriority"), 0);
+        // `speed_modifier`: Macho Brace and the Power items ignore Klutz, Iron Ball does not.
+        assert!(items::MACHO_BRACE.data().ignore_klutz);
+        assert!(items::POWER_WEIGHT.data().ignore_klutz);
+        assert!(!items::IRON_BALL.data().ignore_klutz);
     }
 }

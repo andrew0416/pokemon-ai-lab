@@ -1544,7 +1544,7 @@ fn try_hit<const N: usize>(
     if psychic_terrain_blocks(b, user, mv, target) {
         return Ok(TryHit::Fail);
     }
-    if guarded_by_side(b, mv, target) {
+    if guarded_by_side(b, user, mv, target) {
         return Ok(TryHit::NotFail);
     }
     if handlers::protect_try_hit(b, user, mv, target) {
@@ -1612,21 +1612,29 @@ fn psychic_terrain_blocks<const N: usize>(
 /// Wide Guard / Quick Guard on the target's side (`onTryHit`, priority 4, `return
 /// this.NOT_FAIL`): spread moves, or moves with positive priority (after Prankster and the
 /// like), that Protect would block (`checkMoveBypassesProtect`: the `protect` flag; status
-/// moves too). They also cover a move from the target's own ally.
-fn guarded_by_side<const N: usize>(b: &Battle<'_, N>, mv: &ActiveMove, target: SlotRef) -> bool {
-    if mv.data.flags.contains(MoveFlags::PROTECT) {
-        let spread = matches!(
-            mv.target,
-            MoveTarget::AllAdjacent | MoveTarget::AllAdjacentFoes
-        );
-        if spread && b.side_effect_active(target.side, SideEffect::WideGuard) {
-            return true;
-        }
-        if mv.priority > 0 && b.side_effect_active(target.side, SideEffect::QuickGuard) {
-            return true;
-        }
+/// moves too). They also cover a move from the target's own ally. Like Protect, a guard that
+/// stops the move resets the user's locked move on its first turn
+/// ([`handlers::reset_first_turn_lock`]; no supported locking move is a spread or priority
+/// move today).
+fn guarded_by_side<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    if !mv.data.flags.contains(MoveFlags::PROTECT) {
+        return false;
     }
-    false
+    let spread = matches!(
+        mv.target,
+        MoveTarget::AllAdjacent | MoveTarget::AllAdjacentFoes
+    );
+    let guarded = (spread && b.side_effect_active(target.side, SideEffect::WideGuard))
+        || (mv.priority > 0 && b.side_effect_active(target.side, SideEffect::QuickGuard));
+    if guarded {
+        handlers::reset_first_turn_lock(b, user);
+    }
+    guarded
 }
 
 /// Lightning Rod / Storm Drain `onTryHit`: a move of the absorbed type aimed at the holder
@@ -1751,6 +1759,68 @@ fn accuracy_check<const N: usize>(
     }
 }
 
+/// The accuracy re-roll of a later hit of a `multiaccuracy` move (Champions
+/// `hitStepMoveHitLoop`: Triple Kick, Triple Axel, Population Bomb), which differs from
+/// [`accuracy_check`]: the stages come first, in floating point: the user's accuracy stage and
+/// the target's evasion stage (unless the move ignores evasion) are each clamped and applied as
+/// `boostTable` factors (`[1, 4/3, 5/3, 2, 7/3, 8/3, 3]`) without truncation. Then
+/// `runEvent('ModifyAccuracy')` and `runEvent('Accuracy')`, whose chained modifiers
+/// (`chainModify`: Compound Eyes, Hustle, Wide Lens, Gravity, Micle Berry, ...) Showdown
+/// applies at the end of the event only to a non-negative integer relay value (`relayVar ===
+/// Math.abs(Math.floor(relayVar))`), so a fractional accuracy passes both events unchanged.
+/// Wonder Skin's direct 50 only answers status moves, which none of these is. Finally
+/// `randomChance(accuracy, 100)` is `random(100) < accuracy`: it succeeds `ceil(accuracy)`
+/// times in 100.
+fn multi_accuracy_check<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    let Some(base) = mv.accuracy else {
+        ability_hooks::accuracy_event(b, user, mv, target);
+        return true;
+    };
+    const BOOST_TABLE: [f64; 7] = [1.0, 4.0 / 3.0, 5.0 / 3.0, 2.0, 7.0 / 3.0, 8.0 / 3.0, 3.0];
+    let mut accuracy = f64::from(base);
+    let stage = i32::from(b.boost_seen(user, 5, target, true)).clamp(-6, 6);
+    if stage > 0 {
+        accuracy *= BOOST_TABLE[stage as usize];
+    } else {
+        accuracy /= BOOST_TABLE[(-stage) as usize];
+    }
+    if !mv.ignore_evasion {
+        let stage = i32::from(b.boost_seen(target, 6, user, false)).clamp(-6, 6);
+        if stage > 0 {
+            accuracy /= BOOST_TABLE[stage as usize];
+        } else if stage < 0 {
+            accuracy *= BOOST_TABLE[(-stage) as usize];
+        }
+    }
+    // `runEvent`'s final `this.modify(relayVar, this.event.modifier)`, for an integer only.
+    let integral = |x: f64| x >= 0.0 && x == x.floor();
+    if integral(accuracy) {
+        let mut accuracy_mods = ability_events::accuracy_handlers(b, user, target, mv.data);
+        accuracy_mods.extend(item_events::accuracy_handlers(b, user, target));
+        if b.field_active(FieldEffect::Gravity) {
+            accuracy_mods.push(Handler::global(0, SUB_FIELD_CONDITION, 6840));
+        }
+        accuracy = f64::from(modify(
+            accuracy as i32,
+            ability_events::chain(b, accuracy_mods),
+        ));
+    }
+    match ability_hooks::accuracy_event(b, user, mv, target) {
+        None => true,
+        Some(modifier) => {
+            if integral(accuracy) {
+                accuracy = f64::from(modify(accuracy as i32, modifier));
+            }
+            b.rng.chance(accuracy.ceil().clamp(0.0, 100.0) as u32, 100)
+        }
+    }
+}
+
 /// Showdown `hitStepMoveHitLoop` for a single hit.
 /// Showdown `hitStepMoveHitLoop`, one hit per call for a multi-hit move: the next hit
 /// (`multiaccuracy` moves re-roll accuracy from the second hit), then either a suspension
@@ -1772,7 +1842,7 @@ fn hit_loop<const N: usize>(
         && b.item(user) != items::LOADED_DICE;
     if hit > 1 && rerolls && !targets.is_empty() {
         let first = targets[0];
-        if !accuracy_check(b, user, mv, first) {
+        if !multi_accuracy_check(b, user, mv, first) {
             ended_by_miss = true;
         }
     }
@@ -1848,11 +1918,11 @@ fn hit_loop<const N: usize>(
     // Champions `hitStepMoveHitLoop`: `eachEvent('Update')` after the recoil, then
     // AfterMoveSecondary (skipped for a Sheer Force-boosted move) for the targets of the last
     // hit it did not fail on (`targetsCopy`; after a later hit's miss, a fresh copy of every
-    // target). Per target, in Showdown's `subOrder` (Condition 2, Ability 7, Item 8): a
-    // thawing move thaws a frozen target (`frz`'s handler), Anger Shell / Berserk, then the
-    // target's item (Kee / Maranga Berry). The damage a target took is its last `attackedBy`
-    // entry, or `move.totalDamage` for a multi-hit move. Handlers of different targets act on
-    // their own holder only, so their Speed order does not matter.
+    // target), one event over all of them in Showdown's handler order
+    // (`items::after_move_secondary_order`: priority, holder Speed, then sub-order): a thawing
+    // move thaws a frozen target (`frz`'s handler), Anger Shell / Berserk, the target's item
+    // (Kee / Maranga Berry, Eject Button, Red Card). The damage a target took is its last
+    // `attackedBy` entry, or `move.totalDamage` for a multi-hit move.
     super::update::update_event(b)?;
     if !ability_hooks::sheer_force_skips(b, user, mv) {
         // `targetsCopy.filter(val => !!val)`: not a target its substitute shielded.
@@ -1867,21 +1937,30 @@ fn hit_loop<const N: usize>(
                 .map(|(&t, r)| (t, if let Hit::Damage(d) = r { *d } else { 0 }))
                 .collect()
         };
-        for (t, damage) in last_hit {
-            if mv.data.thaws_target {
-                if let Some(p) = b.alive(t) {
-                    if b.mon(p).status == Status::Freeze {
-                        b.cure_status(p);
+        let slots: Vec<SlotRef> = last_hit.iter().map(|&(t, _)| t).collect();
+        let order = item_events::after_move_secondary_order(b, &slots, mv.data.thaws_target);
+        for (i, handler) in order {
+            let (t, damage) = last_hit[i];
+            match handler {
+                item_events::AfterMoveSecondaryHandler::Thaw => {
+                    if let Some(p) = b.alive(t) {
+                        if b.mon(p).status == Status::Freeze {
+                            b.cure_status(p);
+                        }
                     }
                 }
+                item_events::AfterMoveSecondaryHandler::Ability => {
+                    let damage = if mv.data.multihit.is_some() {
+                        total
+                    } else {
+                        damage
+                    };
+                    ability_events::after_move_secondary(b, user, t, damage, total);
+                }
+                item_events::AfterMoveSecondaryHandler::Item => {
+                    item_events::after_move_secondary(b, user, t, mv.data.category);
+                }
             }
-            let damage = if mv.data.multihit.is_some() {
-                total
-            } else {
-                damage
-            };
-            ability_events::after_move_secondary(b, user, t, damage, total);
-            item_events::after_move_secondary(b, user, t, mv.data.category);
         }
         // `runEvent('EmergencyExit', target, pokemon)` for each of the hit loop's targets still
         // standing whose HP this move took to half: `(hurtThisTurn || 0) + curDamage > maxhp /
@@ -2574,7 +2653,7 @@ fn get_damage<const N: usize>(
     }
     let mut base_power = mv.base_power;
     if mv.id == moves::LOW_KICK || mv.id == moves::GRASS_KNOT {
-        base_power = weight_power(defender.species.data().weight_hg);
+        base_power = weight_power(b.weight(target));
     }
     base_power = handlers::base_power_callback(b, user, target, mv, base_power, hit);
     if base_power == 0 {
@@ -2841,8 +2920,8 @@ fn stat_index(stat: Stat) -> usize {
     }
 }
 
-/// Low Kick / Grass Knot base power from the target's weight (hectograms).
-fn weight_power(weight_hg: u16) -> i32 {
+/// Low Kick / Grass Knot base power from the target's weight (`getWeight()`, hectograms).
+fn weight_power(weight_hg: i32) -> i32 {
     match weight_hg.max(1) {
         w if w >= 2000 => 120,
         w if w >= 1000 => 100,
@@ -3028,6 +3107,43 @@ mod tests {
         );
         assert_eq!(at_loc(P1A, -2), P1B);
         assert_eq!(loc_of(P1A, P1B), -2);
+    }
+
+    /// Protect, Mat Block, Quick Guard and Wide Guard reset a locked move only on its first
+    /// turn (`lockedmove` duration 2), by deletion: no fatigue confusion. No supported locking
+    /// move is a spread or priority move, so the guards' reset has no oracle scenario.
+    #[test]
+    fn a_stopped_first_turn_lock_is_deleted_without_confusion() {
+        use crate::volatile::VolatileState;
+        for (duration, kept) in [(2, false), (1, true)] {
+            let mut state = crate::state::State::<2>::default();
+            for side in [SideId::One, SideId::Two] {
+                for (i, p) in state.side_mut(side).party.iter_mut().enumerate() {
+                    p.species = crate::dex::SpeciesId(i as u16 + 1);
+                    p.max_hp = 100;
+                    p.hp = 100;
+                }
+                for s in 0..2 {
+                    state.side_mut(side).slots[s].party_index = Some(s as u8);
+                }
+            }
+            let lock = VolatileState {
+                active: true,
+                duration,
+                mv: moves::OUTRAGE,
+                hidden: 3,
+                ..VolatileState::NONE
+            };
+            state
+                .slot_mut(P1A)
+                .volatiles
+                .set(Volatile::LockedMove, lock);
+            let mut chooser = super::super::branch::Chooser::new();
+            let mut b = Battle::new(&mut state, &mut chooser);
+            handlers::reset_first_turn_lock(&mut b, P1A);
+            assert_eq!(b.volatile(P1A, Volatile::LockedMove).active, kept);
+            assert!(!b.volatile(P1A, Volatile::Confusion).active);
+        }
     }
 
     #[test]

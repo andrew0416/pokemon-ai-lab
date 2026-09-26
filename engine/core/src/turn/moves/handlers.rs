@@ -580,15 +580,11 @@ pub(super) fn base_power_callback<const N: usize>(
                 base_power
             }
         }
-        // Heavy Slam, Heat Crash: by `pokemon.getWeight()` against `target.getWeight()` (the
-        // species' weight, at least 1; no `ModifyWeight` handler is supported): 120 at 5x or
-        // more, 100 at 4x, 80 at 3x, 60 at 2x, else 40.
+        // Heavy Slam, Heat Crash: by `pokemon.getWeight()` against `target.getWeight()`
+        // (`Battle::weight`: ModifyWeight, at least 1): 120 at 5x or more, 100 at 4x, 80 at 3x,
+        // 60 at 2x, else 40.
         moves::HEAVY_SLAM | moves::HEAT_CRASH => {
-            let weight = |s: SlotRef| {
-                b.slot_mon(s)
-                    .map_or(1, |m| i32::from(m.species.data().weight_hg.max(1)))
-            };
-            let (mine, theirs) = (weight(user), weight(target));
+            let (mine, theirs) = (b.weight(user), b.weight(target));
             match mine {
                 w if w >= theirs * 5 => 120,
                 w if w >= theirs * 4 => 100,
@@ -825,10 +821,7 @@ pub(super) fn protect_try_hit<const N: usize>(
         if bypassed {
             continue;
         }
-        let locked = b.volatile(user, Volatile::LockedMove);
-        if locked.active && locked.duration == 2 {
-            b.delete_volatile(user, Volatile::LockedMove);
-        }
+        reset_first_turn_lock(b, user);
         let contact = super::item_events::makes_contact(b, user, mv.data)
             && b.item(user) != items::PROTECTIVE_PADS;
         if contact {
@@ -896,13 +889,22 @@ pub(super) fn side_guard_try_hit<const N: usize>(
         && !status
         && mv.data.flags.contains(MoveFlags::PROTECT)
     {
-        let locked = b.volatile(user, Volatile::LockedMove);
-        if locked.active && locked.duration == 2 {
-            b.delete_volatile(user, Volatile::LockedMove);
-        }
+        reset_first_turn_lock(b, user);
         return true;
     }
     false
+}
+
+/// "Outrage counter is reset": the protect family, Mat Block, Quick Guard and Wide Guard, when
+/// they stop a move, delete the user's `lockedmove` if it is on its first turn (duration 2),
+/// without its `onEnd` (no fatigue confusion): `const lockedmove =
+/// source.getVolatile('lockedmove'); if (lockedmove) { if
+/// (source.volatiles['lockedmove'].duration === 2) delete source.volatiles['lockedmove']; }`.
+pub(super) fn reset_first_turn_lock<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) {
+    let locked = b.volatile(user, Volatile::LockedMove);
+    if locked.active && locked.duration == 2 {
+        b.delete_volatile(user, Volatile::LockedMove);
+    }
 }
 
 /// `hitStepBreakProtect` for one target of a `breaksProtect` move (Feint): its protect-family

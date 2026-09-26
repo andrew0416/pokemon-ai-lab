@@ -1,0 +1,27 @@
+{
+ "description": "Opus R unit 3: Magic Room suppresses Shed Shell against a trapping ability. After Bronzong's Magic Room (setup turn), endTurn's TrapPokemon skips Snorlax's Shed Shell (ignoringItem), so Gothitelle's Shadow Tag traps both Snorlax and Bronzong; p2 is not trapped. The turn: Hardens. Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Bronzong", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Magic Room", "Harden"], "level": 50},
+   {"species": "Snorlax", "item": "Shed Shell", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Munchlax", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {"species": "Gothitelle", "item": "", "ability": "Shadow Tag", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "123"
+ },
+ "setupTurns": [
+  ["move magicroom, move harden", "move harden, move harden"]
+ ],
+ "turn": {
+  "p1": "move harden, move harden",
+  "p2": "move harden, move harden"
+ }
+}

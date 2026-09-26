@@ -172,10 +172,14 @@ class ScriptedPRNG {
 		const values = Array.from({length: n}, (_, k) => lo + k);
 		return this.decide(values, values.map(() => 1 / n));
 	}
+	// Showdown's PRNG: `this.random(denominator) < numerator`, an integer draw in [0, denominator),
+	// so a non-integer numerator (a multi-accuracy re-roll's float accuracy, e.g. 67.5) succeeds
+	// on ceil(numerator) of the denominator values. Integer numerators are unchanged.
 	randomChance(numerator, denominator) {
-		if (numerator >= denominator) return true;
-		if (numerator <= 0) return false;
-		const p = numerator / denominator;
+		const hits = Math.ceil(numerator);
+		if (hits >= denominator) return true;
+		if (hits <= 0) return false;
+		const p = hits / denominator;
 		return this.decide([true, false], [p, 1 - p]);
 	}
 	sample(items) {

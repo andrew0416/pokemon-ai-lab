@@ -600,18 +600,33 @@ pub(crate) fn switch_in<const N: usize>(
     switch_in_as(b, slot, party_index, on_field, false)
 }
 
-/// [`switch_in`], or with `is_drag` the switch of `dragIn` (Roar, Dragon Tail, Red Card):
-/// `if (!oldActive.skipBeforeSwitchOutEventFlag && !isDrag) { runEvent('BeforeSwitchOut');
-/// eachEvent('Update'); }`, so a dragged-out Pokémon leaves without that Update (an Update
-/// condition that arose after the move's last Update, such as Outrage's fatigue confusion next
-/// to a Persim Berry, waits for the Update after the newcomer's `runSwitch`, when the dragged
-/// Pokémon is gone). `SwitchOut` still runs.
+/// [`switch_in`] for an `instaswitch` answering a mid-turn switch request (U-turn, Eject
+/// Button, Emergency Exit, ...): `runAction`'s tail already ran `BeforeSwitchOut` for every
+/// flagged Pokémon when it made the request and set `skipBeforeSwitchOutEventFlag`, so the
+/// outgoing Pokémon leaves without `switchIn`'s BeforeSwitchOut and its Update (with two
+/// switches in one batch, the second leaves before any Update sees the first newcomer or the
+/// first leaver's absence, e.g. an Unnerve that no longer blocks its berry).
+pub(crate) fn instaswitch_in<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    party_index: u8,
+    on_field: bool,
+) -> Result<(), TurnError> {
+    switch_in_as(b, slot, party_index, on_field, true)
+}
+
+/// [`switch_in`], or with `skip_before_switch_out` the switch of `dragIn` (Roar, Dragon Tail,
+/// Red Card) or of an [`instaswitch_in`]: `if (!oldActive.skipBeforeSwitchOutEventFlag &&
+/// !isDrag) { runEvent('BeforeSwitchOut'); eachEvent('Update'); }`, so a dragged-out Pokémon
+/// leaves without that Update (an Update condition that arose after the move's last Update,
+/// such as Outrage's fatigue confusion next to a Persim Berry, waits for the Update after the
+/// newcomer's `runSwitch`, when the dragged Pokémon is gone). `SwitchOut` still runs.
 fn switch_in_as<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
     party_index: u8,
     on_field: bool,
-    is_drag: bool,
+    skip_before_switch_out: bool,
 ) -> Result<(), TurnError> {
     let incoming = PokemonRef {
         side: slot.side,
@@ -622,7 +637,7 @@ fn switch_in_as<const N: usize>(
     }
     if let Some(outgoing) = b.occupant(slot) {
         if b.mon(outgoing).hp > 0 {
-            if !is_drag {
+            if !skip_before_switch_out {
                 super::update::update_event(b)?;
             }
             super::abilities::on_switch_out(b, slot);

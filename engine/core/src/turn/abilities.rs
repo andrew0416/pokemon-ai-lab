@@ -561,16 +561,20 @@ pub(crate) fn flower_veil_first<const N: usize>(
 /// `pokemon.trapped` as `endTurn` sets it before the choices (`runEvent('TrapPokemon')`). The
 /// state between turns is the state `endTurn` saw (after the replacements), so it is derived
 /// here instead of stored. Implemented handlers:
+/// - the conditions' `onTrapPokemon` (`conditions::trapped`): No Retreat, Mean Look / Block /
+///   Spider Web (`trapped`), Ingrain, partial trapping while its source is active;
 /// - the foes' `onFoeTrapPokemon` (every foe not at 0 HP is adjacent in singles and doubles):
 ///   Shadow Tag traps a Pokémon without Shadow Tag, Arena Trap a grounded one, Magnet Pull a
 ///   Steel type, each through `tryTrap`, which the Ghost type's `trapped` immunity stops (no
 ///   `Immunity` handler covers `trapped`);
-/// - Shed Shell's `onTrapPokemon` (priority -10, after every other): `pokemon.trapped = false`.
+/// - Shed Shell's `onTrapPokemon` (priority -10, after every other): `pokemon.trapped = false`,
+///   unless the item is suppressed (Magic Room, Klutz: `ignoringItem` skips the handler).
 ///
-/// `onFoeMaybeTrapPokemon` only sets the `maybeTrapped` display flag. Other trapping effects
-/// (Mean Look, partial trapping, Ingrain, Fairy Lock, ...) are not implemented. A switch the
-/// move request forbids is rejected by `Ruleset::validate_slot_action` (`ActionError::Trapped`),
-/// so `Ruleset::joint_actions` never generates it; forced switches (replacements) ignore it.
+/// `onFoeMaybeTrapPokemon` only sets the `maybeTrapped` display flag. Fairy Lock, Jaw Lock,
+/// Octolock and the trapping moves Anchor Shot, Spirit Shackle and Thousand Waves are not
+/// implemented. A switch the move request forbids is rejected by
+/// `Ruleset::validate_slot_action` (`ActionError::Trapped`), so `Ruleset::joint_actions` never
+/// generates it; forced switches (replacements) ignore it.
 pub fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> bool {
     // The conditions' `TrapPokemon` handlers (No Retreat, partial trapping).
     if super::conditions::trapped(state, slot).is_some() {
@@ -612,7 +616,8 @@ fn trapped_in<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
                 a if a == abilities::MAGNET_PULL => mon.types.contains(&Type::Steel),
                 _ => false,
             });
-    trapped && mon.item != items::SHED_SHELL
+    // The effective item: a suppressed Shed Shell's handler does not run.
+    trapped && b.item(slot) != items::SHED_SHELL
 }
 
 // ---- Protosynthesis / Quark Drive / Booster Energy (WORKPLAN O72, O98) ------------------------

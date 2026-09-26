@@ -1,0 +1,22 @@
+{
+ "description": "Opus R unit 8: ModifyWeight. Blissey's Float Stone halves its weight (468 -> 234 hg): Pikachu's Low Kick has 20 power (40 without). Hitmonlee's Mold Breaker ignores Scizor's Light Metal (breakable): its Low Kick sees 1180 hg, 100 power. Damage rolls and critical hits.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Hitmonlee", "item": "", "ability": "Mold Breaker", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Low Kick"], "level": 50},
+   {"species": "Pikachu", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Low Kick"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "Float Stone", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Scizor", "item": "", "ability": "Light Metal", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move lowkick 2, move lowkick 1",
+  "p2": "move harden, move harden"
+ }
+}

@@ -1,0 +1,27 @@
+{
+ "description": "Opus R unit 5: multi-accuracy re-roll order. Weavile (Compound Eyes) uses Triple Axel on Skarmory at +1 evasion. First hit (hitStepAccuracy): ModifyAccuracy 90 -> 117, then the -1 net stage truncates to 87. Hits 2 and 3 (Champions hitStepMoveHitLoop): 90 / (4/3) = 67.5 as a float first; ModifyAccuracy's chained Compound Eyes is dropped because the relay value is not an integer, and randomChance(67.5, 100) = random(100) < 67.5 succeeds 68 times in 100. Extremes mode (damage rolls min and max).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Weavile", "item": "", "ability": "Compound Eyes", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Triple Axel"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Skarmory", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {
+   "Skarmory": {"boosts": {"evasion": 1}}
+  }
+ },
+ "turn": {
+  "p1": "move tripleaxel 1, move harden",
+  "p2": "move harden, move harden"
+ }
+}

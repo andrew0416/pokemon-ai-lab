@@ -1,0 +1,22 @@
+{
+ "description": "Opus R unit 8: ModifyWeight. Bronzong's Heavy Metal doubles its weight (1870 -> 3740 hg) for Heavy Slam against Blissey (468 hg): ratio 7.99, 120 power (80 without). Scizor's Light Metal halves its weight (1180 -> 590 hg) against Pikachu's Low Kick: 80 power (100 without). Damage rolls and critical hits.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Bronzong", "item": "", "ability": "Heavy Metal", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Heavy Slam"], "level": 50},
+   {"species": "Pikachu", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Low Kick"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Scizor", "item": "", "ability": "Light Metal", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move heavyslam 1, move lowkick 2",
+  "p2": "move harden, move harden"
+ }
+}
