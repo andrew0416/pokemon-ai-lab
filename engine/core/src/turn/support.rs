@@ -7,8 +7,7 @@
 //! handler lists that are implemented, and a test fails if the dex lists change.
 
 use crate::dex::{
-    abilities, items, moves, AbilityId, ItemId, MoveCategory, MoveId, MoveTarget, SelfSwitch, Type,
-    NO_BOOSTS,
+    abilities, items, moves, AbilityId, ItemId, MoveCategory, MoveId, MoveTarget, Type, NO_BOOSTS,
 };
 use crate::field::{FieldEffect, SideEffect, Weather, FIELD_EFFECT_COUNT, SIDE_EFFECT_COUNT};
 use crate::state::{SideId, SlotRef, State};
@@ -1164,6 +1163,97 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         moves::EERIE_SPELL,
         &["secondaries.onHit", "secondary.onHit"],
     ),
+    // Opus Y unit 1: the volatile-passing switches (`switching::copy_volatile_from`, from the
+    // `SwitchFlag` the move leaves). Baton Pass's `onHit` fails without a bench or when
+    // `commanded`; Shed Tail's `onTryHit` / `onHit` (`handlers`), its substitute is the data's
+    // `volatileStatus`. Their `self.onHit` sets `skipBeforeSwitchOutEventFlag`, which the switch
+    // request sets for every flagged Pokémon anyway (no BeforeSwitchOut handler exists). Chilly
+    // Reception: `priorityChargeCallback` adds its condition, whose `onBeforeMove` only logs; the
+    // snow and the switch are data (`moves::try_move_hit_field`).
+    (moves::BATON_PASS, &["onHit", "self.onHit"]),
+    (moves::SHED_TAIL, &["onHit", "onTryHit", "self.onHit"]),
+    (
+        moves::CHILLY_RECEPTION,
+        &["condition.onBeforeMove", "priorityChargeCallback"],
+    ),
+    // Opus Y unit 2: Tidy Up's `onHit`; Syrup Bomb's condition (`onStart` logs, `onUpdate`
+    // `conditions::syrup_bomb_update`, `onResidual` `conditions::syrup_bomb_residual`, `onEnd`
+    // logs); Curse (`onModifyMove` target, `onTryHit`, `onHit`, the non-Ghost `self` boosts
+    // `handlers::try_hit_self_boosts`, the condition's residual in `residual.rs`; its choice
+    // target is `nonGhostTarget` without the Ghost type: `moves::choice_target`).
+    (moves::TIDY_UP, &["onHit"]),
+    (
+        moves::SYRUP_BOMB,
+        &[
+            "condition.onEnd",
+            "condition.onResidual",
+            "condition.onStart",
+            "condition.onUpdate",
+        ],
+    ),
+    (
+        moves::CURSE,
+        &[
+            "condition.onResidual",
+            "condition.onStart",
+            "onHit",
+            "onModifyMove",
+            "onTryHit",
+        ],
+    ),
+    // Opus Y unit 3: Uproar (`onTryHit` wakes both sides' actives; the `self` volatile locks the
+    // user, `lock::locked_move`; `onAnySetStatus` in `Battle::set_status_blocked`; `onResidual`
+    // in `residual.rs`; `onStart` / `onEnd` log).
+    (
+        moves::UPROAR,
+        &[
+            "condition.onAnySetStatus",
+            "condition.onEnd",
+            "condition.onResidual",
+            "condition.onStart",
+            "onTryHit",
+        ],
+    ),
+    // Beat Up: `onModifyMove` (`move.allies`, the hit count: `handlers::beat_up_powers`, refused
+    // when Showdown's bench order would matter) and `basePowerCallback`. Fling: `onPrepareHit`
+    // (`handlers::on_prepare_hit`; the thrown item's effect in `handlers::on_hit` and
+    // `handlers::fling_secondary`), `condition.onUpdate` (`conditions::fling_update`).
+    (moves::BEAT_UP, &["basePowerCallback", "onModifyMove"]),
+    (moves::FLING, &["condition.onUpdate", "onPrepareHit"]),
+    // Opus Y unit 5: Charge, the move of the `charge` volatile Electromorphosis and Wind Power
+    // already add (`condition.onBasePower` in `abilities::base_power_handlers`, `onAfterMove` /
+    // `onMoveAborted` in `abilities::charge_after_move`, `onRestart` in `Battle::add_volatile_from`,
+    // `onStart` / `onEnd` log); its +1 SpD is data.
+    (
+        moves::CHARGE,
+        &[
+            "condition.onAfterMove",
+            "condition.onBasePower",
+            "condition.onEnd",
+            "condition.onMoveAborted",
+            "condition.onRestart",
+            "condition.onStart",
+        ],
+    ),
+    // Opus Y unit 6: Round (`onTry`: `Battle::prioritize_round`, the moved action's
+    // `round_source`; `basePowerCallback` doubles it).
+    (moves::ROUND, &["basePowerCallback", "onTry"]),
+    // Opus Y unit 7: Steel Beam (`mindBlownRecoil`: `moves::apply_recoil_damage`, also after a
+    // substitute took the hit; `onMoveFail`: `handlers::on_move_fail`). Attract, the move of the
+    // `attract` volatile Cute Charm already adds (`onTryImmunity` genders, `onStart`'s Attract
+    // event and Destiny Knot in `conditions::add_attract`, `onUpdate`, `onBeforeMove` 1/2,
+    // `onEnd` logs).
+    (moves::STEEL_BEAM, &["onMoveFail"]),
+    (
+        moves::ATTRACT,
+        &[
+            "condition.onBeforeMove",
+            "condition.onEnd",
+            "condition.onStart",
+            "condition.onUpdate",
+            "onTryImmunity",
+        ],
+    ),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do
@@ -1250,7 +1340,7 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     // `items::attack_handlers` / `defense_handlers`, the power items in
     // `items::base_power_handlers`; Punching Glove's `onModifyMove` (no contact) is
     // `items::makes_contact`. Mental Herb: `onUpdate` in `update::update_event`
-    // (`items::mental_herb`); `fling.effect` needs Fling, which is not supported.
+    // (`items::mental_herb`); `fling.effect` is Fling's `onHit` (`moves::handlers::on_hit`).
     (items::CLEAR_AMULET, &["onTryBoost"]),
     (items::ABILITY_SHIELD, &["onSetAbility"]),
     (items::BIG_ROOT, &["onTryHeal"]),
@@ -1312,8 +1402,8 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::PSYCHIC_SEED, &["onStart", "onTerrainChange"]),
     // Stage items (`items.rs`): White Herb and Mirror Herb at every switch-in batch
     // (`onAnySwitchIn`), Mega Evolution, move end (`onAnyAfterMove`) and residual (order 29);
-    // White Herb's `onStart` only runs from those; `fling.effect` needs Fling, which is not
-    // supported; Terastallization (`onAnyAfterTerastallization`) is off. Mirror Herb's copied
+    // White Herb's `onStart` only runs from those; `fling.effect` is Fling's `onHit`
+    // (`moves::handlers::on_hit`); Terastallization (`onAnyAfterTerastallization`) is off. Mirror Herb's copied
     // raises (`onFoeAfterBoost`) are refused past a stage end (`items::stage_end_check`); its
     // `onEnd` forgets them with the item.
     (
@@ -2224,13 +2314,7 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     // OHKO moves (`moves::accuracy_check`, `get_damage`, Sturdy) and self-destruction
     // (`selfdestruct`: `moves::use_move`, `spread_move_hit`) are implemented. Self-switching
     // moves suspend the turn for a decision (F6); the volatile-passing ones (Baton Pass, Shed
-    // Tail) are not implemented.
-    if matches!(
-        m.self_switch,
-        SelfSwitch::CopyVolatile | SelfSwitch::ShedTail
-    ) {
-        return why("switching with volatiles");
-    }
+    // Tail) copy on the switch (`switching::copy_volatile_from`).
     let sleep_moves = id == moves::SLEEP_TALK || id == moves::SNORE;
     // `breaksProtect` (`handlers::break_protect`) and crash damage (`handlers::on_move_fail`)
     // are implemented.
@@ -2248,7 +2332,7 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     if (m.calls_move && !calls_supported)
         || (m.sleep_usable && !sleep_moves)
         || m.steals_boosts
-        || m.mind_blown_recoil
+        || (m.mind_blown_recoil && id != moves::STEEL_BEAM)
         || (m.struggle_recoil && id != moves::STRUGGLE)
         || m.chloroblast_recoil
         || m.is_z
@@ -2335,7 +2419,7 @@ pub(crate) fn sleep_talk_problem(moves: &[MoveId]) -> Option<String> {
         if let Some(why) = move_unsupported(id) {
             return Some(format!("Sleep Talk could call {why}"));
         }
-        if data.multihit.is_some() || data.handlers.contains(&"onAfterMove") {
+        if super::moves::is_multihit(id) || data.handlers.contains(&"onAfterMove") {
             return Some(format!("Sleep Talk calling {}", data.name));
         }
     }
@@ -2637,14 +2721,12 @@ mod tests {
         for ability in [abilities::DISGUISE, abilities::ICE_FACE] {
             assert!(ability_supported_on_field(ability), "{ability:?}");
         }
-        for id in [
-            moves::SHED_TAIL,
-            moves::BATON_PASS,
-            moves::SKY_DROP,
-            moves::TIDY_UP,
-            moves::TRANSFORM,
-            moves::SPARKLY_SWIRL,
-        ] {
+        // Shed Tail and Baton Pass pass the substitute on (`switching::copy_volatile_from`).
+        // Tidy Up removes every substitute (`moves::handlers::on_hit`).
+        for id in [moves::SHED_TAIL, moves::BATON_PASS, moves::TIDY_UP] {
+            assert_eq!(move_unsupported(id), None, "{id:?}");
+        }
+        for id in [moves::SKY_DROP, moves::TRANSFORM, moves::SPARKLY_SWIRL] {
             assert!(move_unsupported(id).is_some(), "{id:?}");
         }
         assert_eq!(move_unsupported(moves::SUBSTITUTE), None);
@@ -2732,7 +2814,7 @@ mod tests {
             assert_eq!(move_unsupported(id), None, "{id:?}");
         }
         assert_eq!(move_unsupported(moves::U_TURN), None);
-        assert!(move_unsupported(moves::BATON_PASS).is_some());
+        assert_eq!(move_unsupported(moves::BATON_PASS), None);
         assert_eq!(move_unsupported(moves::WHIRLWIND), None);
         assert_eq!(move_unsupported(moves::FOLLOW_ME), None);
         assert_eq!(move_unsupported(moves::RAGE_POWDER), None);

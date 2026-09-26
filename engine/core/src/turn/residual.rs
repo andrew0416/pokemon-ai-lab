@@ -40,7 +40,7 @@ enum Kind {
     /// Leech Seed's `onResidual` (order 8; no duration).
     LeechSeed(PokemonRef, SlotRef),
     /// The `onResidual` of a volatile without a duration: Aqua Ring (order 6), Ingrain (7),
-    /// Nightmare (11), Salt Cure (13), Octolock (14).
+    /// Nightmare (11), Curse (12), Salt Cure (13), Octolock (14).
     VolatileEffect(PokemonRef, SlotRef, Volatile),
     /// A slot condition's `onResidual` (future moves order 3, Wish 4; Revival Blessing's
     /// duration), slot-condition sub-order 3. Showdown collects it for the Pokémon in the
@@ -210,6 +210,7 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                         | Volatile::Nightmare
                         | Volatile::Octolock
                         | Volatile::AquaRing
+                        | Volatile::Curse
                 ) {
                     out.push(Handler {
                         order: volatile.residual_order().unwrap_or(ORDER_DEFAULT),
@@ -219,10 +220,16 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                     });
                 }
                 if state.duration > 0 {
+                    // Uproar's `onResidualSubOrder: 1`; the others take the condition's.
+                    let sub_order = if volatile == Volatile::Uproar {
+                        1
+                    } else {
+                        SUB_CONDITION
+                    };
                     out.push(Handler {
                         order: volatile.residual_order().unwrap_or(ORDER_DEFAULT),
                         speed,
-                        sub_order: SUB_CONDITION,
+                        sub_order,
                         kind: Kind::VolatileDuration(pokemon, slot, volatile),
                     });
                 }
@@ -482,6 +489,18 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
                     }
                 }
                 Volatile::PartiallyTrapped => conditions::partially_trapped_residual(b, slot),
+                // Uproar: `if (target.volatiles['throatchop']) { target.removeVolatile('uproar');
+                // return; }` then `if (target.lastMove?.id === 'struggle') delete
+                // target.volatiles['uproar'];` (both ends only log).
+                Volatile::Uproar => {
+                    if b.volatile(slot, Volatile::ThroatChop).active {
+                        b.remove_volatile(slot, volatile);
+                    } else if b.state.slot(slot).last_move == crate::dex::moves::STRUGGLE {
+                        b.delete_volatile(slot, volatile);
+                    }
+                }
+                // Syrup Bomb: `this.boost({spe: -1}, pokemon, this.effectState.source)`.
+                Volatile::SyrupBomb => conditions::syrup_bomb_residual(b, slot)?,
                 // Rollout, Ice Ball: `if (target.lastMove && target.lastMove.id === 'struggle')
                 // delete target.volatiles['rollout'];` (no lock after Struggle).
                 Volatile::Rollout | Volatile::IceBall => {
@@ -584,6 +603,11 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
                     b.damage(slot, max_hp / 4.0, DamageSource::Indirect);
                 }
                 Volatile::Octolock => conditions::octolock_residual(b, slot),
+                // Curse: `this.damage(pokemon.baseMaxhp / 4)` (the condition's damage: Magic Guard
+                // stops it).
+                Volatile::Curse => {
+                    b.damage(slot, max_hp / 4.0, DamageSource::Indirect);
+                }
                 // Aqua Ring: `this.heal(pokemon.baseMaxhp / 16)` (its effect is listed by Big
                 // Root).
                 Volatile::AquaRing => {

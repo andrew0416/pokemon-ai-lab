@@ -350,9 +350,29 @@ pub enum Volatile {
     /// Electrify on its target (`electrify`, duration 1): the holder's moves but Struggle become
     /// Electric (`onModifyType`, priority -2: after the type-changing abilities).
     Electrify,
+    /// Chilly Reception's condition (duration 1), added by its `priorityChargeCallback` (order
+    /// 107); its `onBeforeMove` only announces the move. Added by name, so the dex has no
+    /// condition id.
+    ChillyReception,
+    /// Syrup Bomb's secondary effect (`syrupbomb`, duration 4, residual order 14, `noCopy`): the
+    /// holder loses 1 Speed each turn (from the source); it ends once its source
+    /// (`effectState.source`, kept in `counter`: [`encode_pokemon`]; hidden in the canonical
+    /// state) is no longer active (`onUpdate`).
+    SyrupBomb,
+    /// A Ghost type's Curse on its target (`curse`, no duration, residual order 12): the holder
+    /// loses baseMaxhp / 4 each turn.
+    Curse,
+    /// Uproar on its user (`uproar`, duration 3, residual order 28 / sub-order 1): the user is
+    /// locked into Uproar (`onLockMove`) and nobody on the field can fall asleep
+    /// (`onAnySetStatus`); it ends early under Throat Chop or after Struggle.
+    Uproar,
+    /// Fling's condition on its user (`fling`, no duration), from its PrepareHit until the next
+    /// Update throws the held item (`onUpdate`: `conditions::fling_update`). Added by name, so the
+    /// dex has no condition id.
+    Fling,
 }
 
-pub const VOLATILE_COUNT: usize = 105;
+pub const VOLATILE_COUNT: usize = 110;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -461,6 +481,11 @@ impl Volatile {
         Volatile::AddedType,
         Volatile::LockOn,
         Volatile::Electrify,
+        Volatile::ChillyReception,
+        Volatile::SyrupBomb,
+        Volatile::Curse,
+        Volatile::Uproar,
+        Volatile::Fling,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -529,6 +554,9 @@ impl Volatile {
             Volatile::GastroAcid => conditions::GASTROACID,
             Volatile::Minimize => conditions::MINIMIZE,
             Volatile::Electrify => conditions::ELECTRIFY,
+            Volatile::SyrupBomb => conditions::SYRUPBOMB,
+            Volatile::Curse => conditions::CURSE,
+            Volatile::Uproar => conditions::UPROAR,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -572,7 +600,9 @@ impl Volatile {
             | Volatile::RipenWeaken
             | Volatile::Opportunist
             | Volatile::AddedType
-            | Volatile::LockOn => ConditionId::NONE,
+            | Volatile::LockOn
+            | Volatile::ChillyReception
+            | Volatile::Fling => ConditionId::NONE,
         }
     }
 
@@ -684,6 +714,11 @@ impl Volatile {
             Volatile::AddedType => "addedtype",
             Volatile::LockOn => "lockon",
             Volatile::Electrify => "electrify",
+            Volatile::ChillyReception => "chillyreception",
+            Volatile::SyrupBomb => "syrupbomb",
+            Volatile::Curse => "curse",
+            Volatile::Uproar => "uproar",
+            Volatile::Fling => "fling",
         }
     }
 
@@ -719,7 +754,8 @@ impl Volatile {
             | Volatile::FocusPunch
             | Volatile::BeakBlast
             | Volatile::ShellTrap
-            | Volatile::Electrify => 1,
+            | Volatile::Electrify
+            | Volatile::ChillyReception => 1,
             Volatile::Stall
             | Volatile::LockedMove
             | Volatile::MustRecharge
@@ -736,8 +772,8 @@ impl Volatile {
             | Volatile::AllySwitch
             | Volatile::LaserFocus
             | Volatile::LockOn => 2,
-            Volatile::Encore | Volatile::Taunt => 3,
-            Volatile::PerishSong => 4,
+            Volatile::Encore | Volatile::Taunt | Volatile::Uproar => 3,
+            Volatile::PerishSong | Volatile::SyrupBomb => 4,
             // Partial trapping's and Heal Block's `durationCallback` replace it when they start
             // (`conditions::volatile_start`).
             Volatile::Disable
@@ -802,7 +838,9 @@ impl Volatile {
             | Volatile::RipenWeaken
             | Volatile::Opportunist
             | Volatile::Minimize
-            | Volatile::AddedType => 0,
+            | Volatile::AddedType
+            | Volatile::Curse
+            | Volatile::Fling => 0,
             Volatile::Rollout | Volatile::IceBall => 1,
             Volatile::ZenMode => 0,
         }
@@ -818,7 +856,9 @@ impl Volatile {
             Volatile::MagnetRise => Some(18),
             Volatile::AquaRing => Some(6),
             Volatile::Nightmare => Some(11),
-            Volatile::Octolock => Some(14),
+            Volatile::Octolock | Volatile::SyrupBomb => Some(14),
+            Volatile::Curse => Some(12),
+            Volatile::Uproar => Some(28),
             Volatile::Taunt => Some(15),
             Volatile::Encore => Some(16),
             Volatile::Disable => Some(17),
@@ -856,7 +896,8 @@ impl Volatile {
             | Volatile::Trapper
             | Volatile::Attract
             | Volatile::Octolock
-            | Volatile::LockOn => Some(VolatileState {
+            | Volatile::LockOn
+            | Volatile::SyrupBomb => Some(VolatileState {
                 counter: 0,
                 ..state
             }),
@@ -884,6 +925,146 @@ impl Volatile {
                 ..state
             }),
             _ => Some(state),
+        }
+    }
+}
+
+/// What Baton Pass's `copyVolatileFrom` does with a volatile of the Pokémon passing it.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Passed {
+    /// Copied with its effect state (`{...pokemon.volatiles[i], target: this}`).
+    Copied,
+    /// Not copied: the condition is `noCopy`, is engine state that is not one of Showdown's
+    /// `pokemon.volatiles` (an ability's or item's state, which the newcomer starts afresh), or
+    /// the outgoing Pokémon's ability `End` removed it before the copy (Unburden, Zen Mode).
+    Dropped,
+    /// Showdown would copy it, but the engine does not model the copy: Roost (the engine
+    /// changes the stored types instead of filtering them in `onType`), and the locks and
+    /// charges no Pokémon using Baton Pass can have (a locked move, recharge, a two-turn move,
+    /// Rollout).
+    Refused,
+}
+
+impl Volatile {
+    /// Whether Baton Pass copies this volatile (Showdown `noCopy`, checked against
+    /// `dex.conditions.getByID(id).noCopy` of the Champions mod).
+    pub fn baton_pass(self) -> Passed {
+        match self {
+            Volatile::Protect
+            | Volatile::Stall
+            | Volatile::Flinch
+            | Volatile::FollowMe
+            | Volatile::RagePowder
+            | Volatile::Confusion
+            | Volatile::PerishSong
+            | Volatile::Endure
+            | Volatile::Charge
+            | Volatile::FocusEnergy
+            | Volatile::MicleBerry
+            | Volatile::HelpingHand
+            | Volatile::Taunt
+            | Volatile::SparklingAria
+            | Volatile::ThroatChop
+            | Volatile::SpikyShield
+            | Volatile::BanefulBunker
+            | Volatile::KingsShield
+            | Volatile::Obstruct
+            | Volatile::SilkTrap
+            | Volatile::BurningBulwark
+            | Volatile::NoRetreat
+            | Volatile::LeechSeed
+            | Volatile::PartiallyTrapped
+            | Volatile::Substitute
+            | Volatile::AllySwitch
+            | Volatile::Ingrain
+            | Volatile::MagnetRise
+            | Volatile::FocusPunch
+            | Volatile::BeakBlast
+            | Volatile::ShellTrap
+            | Volatile::HealBlock
+            | Volatile::Metronome
+            | Volatile::Octolock
+            | Volatile::DragonCheer
+            | Volatile::LaserFocus
+            | Volatile::AquaRing
+            | Volatile::PowerTrick
+            | Volatile::PowerShift
+            | Volatile::GastroAcid
+            | Volatile::Truant
+            | Volatile::ChillyReception
+            | Volatile::Curse
+            | Volatile::Fling
+            // Electrify (duration 1, no `noCopy`).
+            | Volatile::Electrify => Passed::Copied,
+            // `noCopy` conditions.
+            Volatile::Spotlight
+            | Volatile::Encore
+            | Volatile::FlashFire
+            | Volatile::ChoiceLock
+            | Volatile::Yawn
+            | Volatile::Disable
+            | Volatile::Torment
+            | Volatile::Imprison
+            | Volatile::GlaiveRush
+            | Volatile::Protosynthesis
+            | Volatile::QuarkDrive
+            | Volatile::DestinyBond
+            | Volatile::Trapped
+            | Volatile::Trapper
+            | Volatile::SaltCure
+            | Volatile::Counter
+            | Volatile::MirrorCoat
+            | Volatile::SmackDown
+            | Volatile::Commanding
+            | Volatile::Commanded
+            | Volatile::Attract
+            | Volatile::Nightmare
+            | Volatile::Stockpile
+            | Volatile::Foresight
+            | Volatile::MiracleEye
+            | Volatile::DefenseCurl
+            | Volatile::SyrupBomb
+            // Minimize and Lock-On are `noCopy` (Opus Z).
+            | Volatile::Minimize
+            | Volatile::LockOn => Passed::Dropped,
+            // Ability and item state, not `pokemon.volatiles`.
+            Volatile::ProteanUsed
+            | Volatile::AngerShellUnchecked
+            | Volatile::SupremeOverlord
+            | Volatile::GorillaTactics
+            | Volatile::EjectPack
+            | Volatile::NeutralizingGasEnding
+            | Volatile::SlowStart
+            | Volatile::CudChew
+            | Volatile::RipenWeaken
+            | Volatile::Opportunist
+            // `pokemon.addedType` is not a volatile; the newcomer keeps its own types.
+            | Volatile::AddedType => Passed::Dropped,
+            // Removed by the ability's `End` in `switchIn` before `copyVolatileFrom`.
+            Volatile::Unburden | Volatile::ZenMode => Passed::Dropped,
+            Volatile::Roost
+            | Volatile::LockedMove
+            | Volatile::MustRecharge
+            | Volatile::TwoTurnMove
+            | Volatile::SolarBeam
+            | Volatile::SolarBlade
+            | Volatile::MeteorBeam
+            | Volatile::ElectroShot
+            | Volatile::SkyAttack
+            | Volatile::Fly
+            | Volatile::Bounce
+            | Volatile::Dig
+            | Volatile::Dive
+            | Volatile::PhantomForce
+            | Volatile::ShadowForce
+            | Volatile::SkullBash
+            | Volatile::RazorWind
+            | Volatile::FreezeShock
+            | Volatile::IceBurn
+            | Volatile::Geomancy
+            | Volatile::Rollout
+            | Volatile::IceBall
+            | Volatile::Uproar => Passed::Refused,
         }
     }
 }
@@ -1071,6 +1252,8 @@ mod tests {
                         | Volatile::Opportunist
                         | Volatile::AddedType
                         | Volatile::LockOn
+                        | Volatile::ChillyReception
+                        | Volatile::Fling
                 ));
                 continue;
             }
@@ -1130,6 +1313,10 @@ mod tests {
             (Volatile::Minimize, moves::MINIMIZE),
             (Volatile::LockOn, moves::LOCK_ON),
             (Volatile::Electrify, moves::ELECTRIFY),
+            (Volatile::ChillyReception, moves::CHILLY_RECEPTION),
+            (Volatile::SyrupBomb, moves::SYRUP_BOMB),
+            (Volatile::Curse, moves::CURSE),
+            (Volatile::Uproar, moves::UPROAR),
         ] {
             let data = id.data();
             assert_eq!(

@@ -97,9 +97,13 @@ pub(crate) fn update_event<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), 
         if b.alive(slot).is_none() {
             continue;
         }
-        // Its conditions' `onUpdate` (sub-order 2: Attract), the ability's (7), the item's (8);
-        // a Pokémon has one ability, so the two ability calls never both act.
+        // Its conditions' `onUpdate` (sub-order 2: Attract, Syrup Bomb, Fling; Attract and Syrup
+        // Bomb only remove themselves, Fling throws the item before the item's own handlers
+        // below), the ability's (7), the item's (8); a Pokémon has one ability, so the two
+        // ability calls never both act.
         super::conditions::attract_update(b, slot);
+        super::conditions::syrup_bomb_update(b, slot);
+        super::conditions::fling_update(b, slot)?;
         super::abilities::on_update(b, slot);
         super::forme::on_update(b, slot);
         // The item's handlers were collected with the Pokémon's item at the start of its turn

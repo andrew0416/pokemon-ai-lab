@@ -79,8 +79,9 @@ pub(crate) struct ActiveMove {
     /// Showdown `move.sourceEffect` for a move another move calls (Sleep Talk), whose PP pays
     /// Pressure's extra; `NONE` for a move used directly.
     source_effect: MoveId,
-    /// `move.selfSwitch` (U-turn, Parting Shot, ...): the user switches out once the move
-    /// landed (F6). Baton Pass and Shed Tail are refused.
+    /// `move.selfSwitch` (U-turn, Parting Shot, Baton Pass, Shed Tail, ...): the user switches
+    /// out once the move landed (F6); which kind of switch ([`self_switch_flag`]) follows the
+    /// move's data.
     self_switch: bool,
     /// The target location the user chose (`lastMoveTargetLoc`; 0 for a move without one or
     /// called by another): a two-turn move aims at it again on its second turn.
@@ -100,6 +101,10 @@ pub(crate) struct ActiveMove {
     /// Fist, Piercing Drill: a protection that would have stopped the move let it through), as a
     /// bit per slot ([`target_bit`]): the move's damage to them is quartered.
     bypass_protect: u8,
+    /// Beat Up's `move.allies` as their hits' base powers (`5 + floor(baseAtk / 10)` of each
+    /// ally's set species, in hit order; 0 past the last), fixed by its `onModifyMove`
+    /// ([`handlers::beat_up_powers`]). All 0 for any other move.
+    beat_up: [u8; 6],
 }
 
 impl ActiveMove {
@@ -166,6 +171,7 @@ impl PartialEq for ActiveMove {
             && self.has_bounced == other.has_bounced
             && self.future_hit == other.future_hit
             && self.bypass_protect == other.bypass_protect
+            && self.beat_up == other.beat_up
     }
 }
 
@@ -195,6 +201,7 @@ impl std::hash::Hash for ActiveMove {
         self.has_bounced.hash(state);
         self.future_hit.hash(state);
         self.bypass_protect.hash(state);
+        self.beat_up.hash(state);
     }
 }
 
@@ -296,13 +303,15 @@ enum LastHit {
 
 /// Showdown `runMove` for the move in `move_index`. `will_act` is `queue.willAct()`. A
 /// multi-hit move returns `MoveStep::Suspended` after its first hit; the turn engine resumes
-/// it with [`resume_move`] as its own stage.
+/// it with [`resume_move`] as its own stage. `round_source`: the action's source effect is a
+/// Round that moved it up (`queue::ActionKind::Move::round_source`).
 pub(crate) fn run_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     move_index: u8,
     target_loc: i8,
     will_act: bool,
+    round_source: Option<bool>,
 ) -> Result<MoveStep, TurnError> {
     let pokemon = b.occupant(user).expect("the caller checked the user");
     b.increment_move_actions(user);
@@ -333,6 +342,7 @@ pub(crate) fn run_move<const N: usize>(
             has_bounced: false,
             future_hit: false,
             bypass_protect: 0,
+            beat_up: [0; 6],
         };
         before_move(b, user, &recharge);
         // MoveAborted: Destiny Bond ends.
@@ -340,16 +350,18 @@ pub(crate) fn run_move<const N: usize>(
         return Ok(MoveStep::Done);
     }
     let id = super::lock::action_move_id(b.mon(pokemon), move_index);
-    // `setActiveMove`: set for the whole move, cleared when it ends.
+    // `setActiveMove`: set for the whole move, cleared when it ends. A Round's source effect
+    // gives the move that Round's `ignoreAbility` (`useMoveInner`: `move.ignoreAbility =
+    // sourceEffect.ignoreAbility`; the user's own Mold Breaker can still set it in ModifyMove).
     b.active_move = Some(ActiveMoveRef {
         user,
         pokemon,
         id,
-        ignore_ability: id.data().ignore_ability,
+        ignore_ability: round_source.unwrap_or(id.data().ignore_ability),
         category: id.data().category,
         infiltrates: false,
     });
-    let result = run_move_inner(b, user, move_index, target_loc, will_act);
+    let result = run_move_inner(b, user, move_index, target_loc, will_act, round_source);
     if !matches!(result, Ok(MoveStep::Suspended(_))) {
         b.active_move = None;
     }
@@ -472,6 +484,7 @@ pub(crate) fn future_move_hit<const N: usize>(
         has_bounced: false,
         future_hit: true,
         bypass_protect: 0,
+        beat_up: [0; 6],
     };
     // `trySpreadMoveHit(..., notActive)`: `setActiveMove(move, source, target)`; the move ignores
     // no ability.
@@ -652,11 +665,12 @@ fn run_external_move<const N: usize>(
         scrappy: false,
         hit_targets: 0,
         source_effect: MoveId::NONE,
-        self_switch: data.self_switch == SelfSwitch::Yes,
+        self_switch: data.self_switch != SelfSwitch::No,
         type_changer: AbilityId::NONE,
         has_bounced: false,
         future_hit: false,
         bypass_protect: 0,
+        beat_up: [0; 6],
         target_loc,
     };
     let recharging = b.volatile(user, Volatile::MustRecharge).active;
@@ -705,6 +719,7 @@ fn run_move_inner<const N: usize>(
     move_index: u8,
     target_loc: i8,
     will_act: bool,
+    round_source: Option<bool>,
 ) -> Result<MoveStep, TurnError> {
     let pokemon = b.occupant(user).expect("the caller checked the user");
     let chosen = super::lock::action_move_id(b.mon(pokemon), move_index);
@@ -742,12 +757,19 @@ fn run_move_inner<const N: usize>(
         ignore_evasion: id.data().ignore_evasion,
         scrappy: false,
         hit_targets: 0,
-        source_effect: MoveId::NONE,
-        self_switch: id.data().self_switch == SelfSwitch::Yes,
+        // `move.sourceEffect = sourceEffect.id` (Round), which Pressure's extra PP charges to
+        // the same Round slot.
+        source_effect: if round_source.is_some() {
+            moves::ROUND
+        } else {
+            MoveId::NONE
+        },
+        self_switch: id.data().self_switch != SelfSwitch::No,
         type_changer: AbilityId::NONE,
         has_bounced: false,
         future_hit: false,
         bypass_protect: 0,
+        beat_up: [0; 6],
         target_loc,
     };
 
@@ -802,6 +824,12 @@ fn run_move_inner<const N: usize>(
         return Ok(MoveStep::Suspended(progress));
     }
     let user = handlers::current_slot(b, user, pokemon);
+    // Fling's user knocked out before an Update threw its item (Jaboca Berry, say): Showdown's
+    // `fling.onUpdate` then runs on a 0-HP user, whose `setItem('')` and `removeVolatile` fail
+    // while `lastItem` and AfterUseItem still happen.
+    if b.volatile(user, Volatile::Fling).active && b.alive(user).is_none() {
+        return Err(b.unsupported("Fling's user fainted before its item was thrown"));
+    }
     // `if (this.battle.activeMove) move = this.battle.activeMove;`: the AfterMove events see the
     // move a calling move (Sleep Talk, Copycat) used, not the caller.
     let called = b.called_move.take();
@@ -972,6 +1000,16 @@ pub fn valid_target_loc(n: usize, user: SlotRef, loc: i8, target: MoveTarget) ->
         MoveTarget::AdjacentFoe => adjacent && is_foe,
         MoveTarget::Any => !is_self,
         _ => false,
+    }
+}
+
+/// The target type a Pokémon chooses `id` with (Showdown `getMoves()`): Curse's is
+/// `nonGhostTarget` (`self`) for a Pokémon without the Ghost type, so it takes no target then.
+pub fn choice_target(mon: &crate::state::Pokemon, id: MoveId) -> MoveTarget {
+    let data = id.data();
+    match data.non_ghost_target {
+        Some(target) if !mon.types.contains(&Type::Ghost) => target,
+        _ => data.target,
     }
 }
 
@@ -1451,12 +1489,13 @@ fn call_move<const N: usize>(
         scrappy: false,
         hit_targets: 0,
         source_effect: caller.id,
-        self_switch: data.self_switch == SelfSwitch::Yes,
+        self_switch: data.self_switch != SelfSwitch::No,
         target_loc: 0,
         type_changer: AbilityId::NONE,
         has_bounced: false,
         future_hit: false,
         bypass_protect: 0,
+        beat_up: [0; 6],
     };
     let target = match target {
         Some(t) => Some(t),
@@ -1537,9 +1576,10 @@ fn bounce_move<const N: usize>(
         has_bounced: true,
         future_hit: false,
         bypass_protect: 0,
+        beat_up: [0; 6],
         // A bounced Parting Shot switches the bouncer out (`moveHit` sets the flag for the
         // copy's user).
-        self_switch: data.self_switch == SelfSwitch::Yes,
+        self_switch: data.self_switch != SelfSwitch::No,
         target_loc: 0,
     };
     let will_act = b.will_act();
@@ -1753,7 +1793,23 @@ fn try_move_hit_field<const N: usize>(
     if let Some(r) = handlers::on_hit_field(b, user, mv)? {
         combine(r);
     }
-    Ok(outcome.unwrap_or(true))
+    // `if (moveData.selfSwitch)` (Chilly Reception, aimed at the field: its target is the user):
+    // a success with a bench and no `commanded`, else a failure combined in.
+    if data.self_switch != SelfSwitch::No {
+        let can_switch = super::residual::bench(b, user.side).next().is_some()
+            && !b.volatile(user, Volatile::Commanded).active;
+        combine(can_switch);
+    }
+    let result = outcome.unwrap_or(true);
+    // The end of `runMoveEffects`: `source.switchFlag = move.id` once anything happened.
+    if result
+        && b.move_self_switch
+        && b.alive(user).is_some()
+        && !b.volatile(user, Volatile::Commanded).active
+    {
+        b.set_switch_flag(user, self_switch_flag(data.self_switch));
+    }
+    Ok(result)
 }
 
 /// Showdown `trySpreadMoveHit` (also for single-target moves).
@@ -1799,6 +1855,11 @@ fn try_spread_move_hit<const N: usize>(
             });
         }
     }
+    // Round's `onTry`: the first queued Round moves up with this one as its source effect.
+    if mv.id == moves::ROUND {
+        let ignore_ability = b.active_move.is_some_and(|m| m.ignore_ability);
+        b.prioritize_round(ignore_ability);
+    }
     if !handlers::on_try(b, user, mv, targets[0]) {
         return Ok(HitOutcome::Finished {
             ok: false,
@@ -1832,7 +1893,7 @@ fn try_spread_move_hit<const N: usize>(
             total_damage: 0,
         });
     }
-    // The move's other `onPrepareHit` handlers (Ally Switch).
+    // The move's other `onPrepareHit` handlers (Ally Switch, Fling).
     if !handlers::on_prepare_hit(b, user, mv) {
         return Ok(HitOutcome::Finished {
             ok: false,
@@ -1985,6 +2046,10 @@ fn hit_target_slots<const N: usize>(bits: u8) -> Vec<SlotRef> {
 /// moves Showdown's 35/35/15/15 draw (Skill Link: always the maximum; Loaded Dice: 4 or 5
 /// evenly, and 4–10 evenly for a 10-hit move).
 fn decide_hits<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) -> u8 {
+    // Beat Up: `move.multihit = move.allies.length` (a number: no draw, no Skill Link).
+    if mv.id == moves::BEAT_UP {
+        return mv.beat_up.iter().filter(|&&p| p != 0).count().max(1) as u8;
+    }
     let Some((low, high)) = mv.data.multihit else {
         return 1;
     };
@@ -2587,8 +2652,8 @@ fn hit_loop<const N: usize>(
                 }
                 item_events::AfterMoveSecondaryHandler::Ability => {
                     // Berserk / Anger Shell: `move.multihit && !move.smartTarget ?
-                    // move.totalDamage : lastAttackedBy.damage`.
-                    let damage = if mv.data.multihit.is_some() && !smart {
+                    // move.totalDamage : lastAttackedBy.damage` (Beat Up counts as multihit).
+                    let damage = if is_multihit(mv.id) && !smart {
                         total
                     } else {
                         damage
@@ -2768,7 +2833,18 @@ fn spread_move_hit<const N: usize>(
         if let Some(volatile) = Volatile::from_condition(data.volatile_status)
             .filter(|_| handlers::keeps_volatile_status(b, user, mv))
         {
-            let added = b.add_volatile(t, volatile);
+            // Attract (the move): `target.addVolatile('attract', source)` remembers its source
+            // and checks the genders, Oblivious, Aroma Veil (`conditions::attract_fails`); its
+            // `onStart` runs the Attract event (Destiny Knot: `conditions::add_attract`).
+            let added = if volatile == Volatile::Attract {
+                let fails = conditions::attract_fails(b, t, user)?;
+                if !fails {
+                    conditions::add_attract(b, t, user);
+                }
+                !fails
+            } else {
+                b.add_volatile(t, volatile)
+            };
             // Gastro Acid's condition `onStart`: the suppressed ability's `End`.
             if added && volatile == Volatile::GastroAcid {
                 ability_events::gastro_acid_start(b, t)?;
@@ -2839,17 +2915,25 @@ fn spread_move_hit<const N: usize>(
     // !source.volatiles['commanded']) source.switchFlag = move.id` once anything happened
     // (Parting Shot's `onHit` withdrew `selfSwitch` if its drops failed). It comes before the
     // targets' Emergency Exit, which clears every other active's flag: U-turn into a Pokémon it
-    // takes below half leaves only that Pokémon switching.
+    // takes below half leaves only that Pokémon switching. A move with a `self` effect (Baton
+    // Pass, Shed Tail) sets it even when nothing happened (`!didAnything && ... &&
+    // !moveData.self` is the failure branch); without a bench the request clears it again.
     if b.move_self_switch
         && b.alive(user).is_some()
         && !b.volatile(user, Volatile::Commanded).active
-        && results.iter().any(|r| *r != Hit::Failed)
+        && (results.iter().any(|r| *r != Hit::Failed) || data.self_effect.is_some())
     {
-        b.set_switch_flag(user, SwitchFlag::Move);
+        b.set_switch_flag(user, self_switch_flag(data.self_switch));
     }
     // selfDrops: boosts once, for the first target the move did not fail on; an effect
     // without boosts (Roost's, Outrage's volatile) is applied to the user for every such
-    // target. Sheer Force deleted `self`; Serene Grace doubled its chance.
+    // target. Sheer Force deleted `self`; Serene Grace doubled its chance. A `self` the move's
+    // `onTryHit` wrote (Curse from a non-Ghost) has no chance and only boosts.
+    if let Some(boosts) = handlers::try_hit_self_boosts(b, user, mv) {
+        if results.iter().any(|r| r.in_targets()) {
+            b.boost_by(user, &boosts, Some(user), BoostEffect::Move(mv.id));
+        }
+    }
     if let Some(effect) = data.self_effect.filter(|_| !mv.has_sheer_force) {
         let chance = u32::from(effect.chance) * mv.secondary_chance_factor;
         if effect.boosts != NO_BOOSTS {
@@ -2888,9 +2972,12 @@ fn spread_move_hit<const N: usize>(
             .into_iter()
             .map(|s| (s, u32::from(s.chance) * mv.secondary_chance_factor))
             .collect();
+        // Fling's appended secondary comes last (its PrepareHit runs after ModifyMove).
+        let flung = handlers::fling_secondary(b, user, mv, t);
         let added: Vec<(&Secondary, u32)> = mv
             .added_secondary
             .iter()
+            .chain(flung.iter())
             .map(|s| (s, u32::from(s.chance)))
             .collect();
         for (secondary, chance) in own.into_iter().chain(added) {
@@ -3005,6 +3092,22 @@ fn spread_move_hit<const N: usize>(
     Ok(results)
 }
 
+/// Showdown `move.multihit` is set: a multi-hit move of the dex, or Beat Up (its `onModifyMove`
+/// sets it to the number of allies, even 1).
+pub(crate) fn is_multihit(id: MoveId) -> bool {
+    id.data().multihit.is_some() || id == moves::BEAT_UP
+}
+
+/// The `switchFlag` a self-switching move leaves on its user (`source.switchFlag = move.id`):
+/// the move's `selfSwitch` kind decides what the switch copies (`copyVolatileFrom`).
+fn self_switch_flag(kind: SelfSwitch) -> SwitchFlag {
+    match kind {
+        SelfSwitch::CopyVolatile => SwitchFlag::CopyVolatile,
+        SelfSwitch::ShedTail => SwitchFlag::ShedTail,
+        SelfSwitch::Yes | SelfSwitch::No => SwitchFlag::Move,
+    }
+}
+
 /// The substitute's `onTryPrimaryHit` guard (`if (target === source || move.flags['bypasssub']
 /// || move.infiltrates) return;`): whether `target`'s substitute takes this hit. Sound moves
 /// carry `bypasssub` in the data.
@@ -3076,6 +3179,11 @@ fn apply_recoil_damage<const N: usize>(
     if mv.data.struggle_recoil {
         let amount = (f64::from(max_hp) / 4.0).round().max(1.0) as i32;
         b.direct_damage(user, amount);
+    } else if mv.data.mind_blown_recoil {
+        // Steel Beam: `Math.round(pokemon.maxhp / 2)` with the move's condition as the effect
+        // (not a move's damage, not `recoil`: Magic Guard stops it, Rock Head does not).
+        let amount = (f64::from(max_hp) / 2.0).round();
+        b.damage(user, amount, DamageSource::Indirect);
     } else if let Some(recoil) = mv.data.recoil {
         let amount = (f64::from(damage) * f64::from(recoil.0) / f64::from(recoil.1))
             .round()

@@ -62,7 +62,7 @@ pub use abilities::trapped;
 pub use forme::temporary_forme_base;
 pub use legal::legal_joint_actions;
 pub use lock::{locked_move, Locked, RECHARGE_INDEX, STRUGGLE_INDEX};
-pub use moves::{takes_target, valid_target_loc};
+pub use moves::{choice_target, takes_target, valid_target_loc};
 pub use switching::{
     item_start_handler, species_start_handler, start_handler, switch_in_supported,
 };
@@ -1017,16 +1017,17 @@ pub(crate) fn check_side<const N: usize>(
                     return Err(invalid(reason));
                 }
                 let data = id.data();
-                let needs = takes_target(N, data.target);
+                let target_type = choice_target(mon, id);
+                let needs = takes_target(N, target_type);
                 let ok = if needs {
-                    target != 0 && valid_target_loc(N, slot, target, data.target)
+                    target != 0 && valid_target_loc(N, slot, target, target_type)
                 } else {
                     target == 0
                 };
                 if !ok {
                     return Err(invalid(format!(
-                        "target {target} for {} ({:?})",
-                        data.name, data.target
+                        "target {target} for {} ({target_type:?})",
+                        data.name
                     )));
                 }
                 match gimmick {
@@ -1138,7 +1139,7 @@ pub struct Suspension(Pending);
 impl<const N: usize> Battle<'_, N> {
     /// Showdown's sort key of a queued action: (order, priority in tenths including the
     /// fractional priority, speed).
-    fn action_key(&self, action: &Action) -> (u32, i32, i32) {
+    pub(crate) fn action_key(&self, action: &Action) -> (u32, i32, i32) {
         let in_slot = self.alive(action.slot) == Some(action.pokemon);
         let (order, priority) = match action.kind {
             ActionKind::Switch { .. } => (ORDER_SWITCH, 0),
@@ -1244,6 +1245,7 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
                         index,
                         target,
                         fractional_tenths: items::fractional_priority_tenths(state, slot),
+                        round_source: None,
                     }
                 }
                 SlotAction::Switch { party_index } => ActionKind::Switch { party_index },
@@ -1337,10 +1339,15 @@ fn run_stage_inner<const N: usize>(
         if b.alive(action.slot) == Some(action.pokemon) {
             let mut newcomers = Vec::new();
             match action.kind {
-                ActionKind::Move { index, target, .. } => {
+                ActionKind::Move {
+                    index,
+                    target,
+                    round_source,
+                    ..
+                } => {
                     let will_act = b.will_act();
                     if let moves::MoveStep::Suspended(progress) =
-                        moves::run_move(b, action.slot, index, target, will_act)?
+                        moves::run_move(b, action.slot, index, target, will_act, round_source)?
                     {
                         pending.in_progress = Some(progress);
                         return Ok(StageEnd::Continue);

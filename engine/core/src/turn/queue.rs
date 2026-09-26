@@ -28,6 +28,11 @@ pub(crate) enum ActionKind {
         target: i8,
         /// Showdown `action.fractionalPriority`, fixed when the action is queued.
         fractional_tenths: i8,
+        /// Showdown `action.sourceEffect` when it is a Round that moved this action up (Round's
+        /// `onTry`: `queue.prioritizeAction(action, move)`): the move then has
+        /// `sourceEffect === 'round'` (double power) and that Round's `ignoreAbility` (the
+        /// bool). `None` otherwise.
+        round_source: Option<bool>,
     },
     Switch {
         party_index: u8,
@@ -97,6 +102,44 @@ impl<const N: usize> Battle<'_, N> {
     /// Showdown `queue.prioritizeAction`: the action runs next (order 3).
     pub fn prioritize_action(&mut self, index: usize) {
         self.queue[index].order = Some(3);
+    }
+
+    /// Round's `onTry`: among the queued move actions choosing Round (Showdown walks
+    /// `queue.list`, sorted by order, priority and Speed with ties at random, and takes the first),
+    /// the first is prioritized (order 3) with the Round in progress as its source effect
+    /// (`ignore_ability`: that Round's `ignoreAbility`). Ties for first are drawn uniformly.
+    pub fn prioritize_round(&mut self, ignore_ability: bool) {
+        let rounds: Vec<usize> = (0..self.queue.len())
+            .filter(|&i| {
+                let action = self.queue[i];
+                matches!(action.kind, ActionKind::Move { index, .. }
+                    if super::lock::action_move_id(self.mon(action.pokemon), index)
+                        == crate::dex::moves::ROUND)
+            })
+            .collect();
+        if rounds.is_empty() {
+            return;
+        }
+        let keys: Vec<(u32, i32, i32)> = rounds
+            .iter()
+            .map(|&i| self.action_key(&self.queue[i]))
+            .collect();
+        let best = keys
+            .iter()
+            .copied()
+            .min_by(|x, y| x.0.cmp(&y.0).then(y.1.cmp(&x.1)).then(y.2.cmp(&x.2)))
+            .expect("non-empty");
+        let tied: Vec<usize> = (0..rounds.len()).filter(|&k| keys[k] == best).collect();
+        let pick = if tied.len() == 1 {
+            tied[0]
+        } else {
+            tied[self.rng.uniform(tied.len())]
+        };
+        let index = rounds[pick];
+        self.queue[index].order = Some(3);
+        if let ActionKind::Move { round_source, .. } = &mut self.queue[index].kind {
+            *round_source = Some(ignore_ability);
+        }
     }
 
     /// Quash's `action.order = 201`: after every ordinary move.

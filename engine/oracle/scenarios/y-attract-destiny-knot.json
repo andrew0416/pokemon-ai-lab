@@ -1,0 +1,76 @@
+{
+ "description": "Opus Y unit 7 Attract on a Destiny Knot holder: the attract condition's onStart runs the Attract event, so Garchomp's Destiny Knot attracts Jolteon back.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Jolteon",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Attract",
+     "Harden"
+    ],
+    "level": 50,
+    "gender": "F"
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50,
+    "gender": "M"
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "Destiny Knot",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50,
+    "gender": "M"
+   },
+   {
+    "species": "Hariyama",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50,
+    "gender": "M"
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move attract 1, move harden",
+  "p2": "move harden, move harden"
+ }
+}

@@ -67,6 +67,10 @@ pub fn locked_move<const N: usize>(state: &State<N>, slot: SlotRef) -> Option<Lo
             target: decode_target_loc(charging.counter),
         });
     }
+    // Uproar (`onLockMove: 'uproar'`): a `randomNormal` move, so no target is kept.
+    if volatiles.has(Volatile::Uproar) {
+        return Some(Locked::Move(moves::UPROAR));
+    }
     // Rollout, Ice Ball (`onLockMove`): the same move at the target location chosen when it
     // started (`lastMoveTargetLoc`), as a two-turn move's second turn.
     for (volatile, id) in [

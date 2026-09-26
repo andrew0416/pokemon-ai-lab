@@ -507,7 +507,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         // change the damage; it changes nothing itself).
         let multihit = self
             .active_move
-            .is_some_and(|m| m.id.data().multihit.is_some());
+            .is_some_and(|m| super::moves::is_multihit(m.id));
         super::abilities::on_damage(self, target, source == DamageSource::Move, multihit);
         let mut amount = (amount.floor() as i32).max(1);
         let mon = self.mon(pokemon);
@@ -1004,7 +1004,13 @@ impl<'a, const N: usize> Battle<'a, N> {
                 _ => {}
             }
         }
-        false
+        // Uproar's `onAnySetStatus` (`if (status.id === 'slp') return null;`) on any active
+        // Pokémon with HP (`alliesAndSelf()` / `foes()`), the holder included.
+        status == Status::Sleep
+            && self
+                .all_alive()
+                .into_iter()
+                .any(|s| self.volatile(s, Volatile::Uproar).active)
     }
 
     /// Safeguard on `target`'s side against an effect from `source` (its `onSetStatus` and
@@ -1179,6 +1185,9 @@ impl<'a, const N: usize> Battle<'a, N> {
                     counter: old.counter + 1,
                     ..old
                 },
+                // Charge's `onRestart` only announces it (the move, Electromorphosis, Wind Power):
+                // it returns nothing, a success, and the state stays.
+                Volatile::Charge => return true,
                 // Laser Focus's `onRestart`: `this.effectState.duration = 2`.
                 Volatile::LaserFocus => VolatileState { duration: 2, ..old },
                 // Power Trick's and Power Shift's `onRestart`: `pokemon.removeVolatile(...)` (its

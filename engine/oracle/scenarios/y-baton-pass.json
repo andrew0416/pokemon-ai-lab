@@ -1,0 +1,116 @@
+{
+ "description": "Opus Y unit 1 Baton Pass (setup: Jolteon's Substitute, Stockpile, Magnet Rise; patch +2 Atk): Jolteon passes to Clefable (midTurn switch 3), which gets the stat stages (Stockpile's +1 Def / +1 SpD too), the substitute with its HP and Magnet Rise with its duration, but not the noCopy stockpile volatile; Garchomp's Earth Power at it then fails (ungrounded). Deterministic.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Jolteon",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Baton Pass",
+     "Substitute",
+     "Stockpile",
+     "Magnet Rise"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Earth Power",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hariyama",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move substitute, move harden",
+   "move harden, move harden"
+  ],
+  [
+   "move stockpile, move harden",
+   "move harden, move harden"
+  ],
+  [
+   "move magnetrise, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "patch": {
+  "p1": {
+   "Jolteon": {
+    "boosts": {
+     "atk": 2
+    }
+   }
+  }
+ },
+ "turn": {
+  "p1": "move batonpass, move harden",
+  "p2": "move earthpower 1, move harden"
+ },
+ "midTurn": {
+  "p1": [
+   "switch 3"
+  ]
+ }
+}

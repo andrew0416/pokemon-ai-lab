@@ -8,7 +8,7 @@ use crate::rules::Ruleset;
 use crate::state::{SideId, SlotRef, State};
 
 use super::lock::{self, Locked, RECHARGE_INDEX, STRUGGLE_INDEX};
-use super::{check_side, disabled, support, takes_target, valid_target_loc};
+use super::{check_side, choice_target, disabled, support, takes_target, valid_target_loc};
 
 /// Every joint action `side` may choose in `state` under `ruleset`, in the form the turn runs
 /// it (a locked Pokémon has its one forced action; Struggle when no move is usable; every
@@ -91,11 +91,11 @@ fn slot_candidates<const N: usize>(state: &State<N>, slot: SlotRef) -> Vec<SlotA
             continue;
         }
         usable = true;
-        let data = id.data();
-        if takes_target(N, data.target) {
+        let target_type = choice_target(mon, id);
+        if takes_target(N, target_type) {
             let n = N as i8;
             for loc in (-n..=n).filter(|&loc| loc != 0) {
-                if valid_target_loc(N, slot, loc, data.target) {
+                if valid_target_loc(N, slot, loc, target_type) {
                     out.push(SlotAction::Move {
                         index: index as u8,
                         target: loc,
