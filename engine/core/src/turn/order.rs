@@ -8,7 +8,7 @@
 use crate::damage::{chain_modifiers, MOD_ONE, MOD_ONE_POINT_FIVE};
 use crate::dex::{abilities, moves, AbilityId, MoveCategory, MoveFlags, MoveId, Type};
 use crate::field::{FieldEffect, SideEffect, Terrain, Weather};
-use crate::state::{SlotRef, Status};
+use crate::state::{PokemonRef, SlotRef, State, Status};
 use crate::volatile::Volatile;
 
 use super::battle::Battle;
@@ -126,19 +126,38 @@ impl<const N: usize> Battle<'_, N> {
     }
 
     /// Showdown `pokemon.speed`, which sorts event handlers (`resolvePriority`) and the actives
-    /// of `eachEvent`: `updateSpeed()` sets it to the action Speed between actions, and
-    /// `setSpecies` to the raw stored Speed (no stages or modifiers, not negated by Trick Room)
-    /// for the rest of the action in which the Pokémon changed forme ([`Battle::raw_speed`];
-    /// Stance Change before the user's own attack can reorder, and so re-round, its three-factor
-    /// ModifyDamage chain: `stance-change-raw-speed`). Other Speed changes within an action (a
-    /// Speed drop, paralysis) show at once here, where Showdown waits for `updateSpeed()`.
+    /// of `eachEvent`: `updateSpeed()` sets it to the action Speed between actions, at the
+    /// residual and at the turn start — the stage boundaries, so [`Battle::speed_snapshot`]
+    /// (taken when the stage's `Battle` is built) is what a Speed change within the action
+    /// (a Speed drop, paralysis) does not reach until the next stage (`f-speed-snapshot-eject-pack`).
+    /// `setSpecies` sets it to the raw stored Speed (no stages or modifiers, not negated by
+    /// Trick Room) for the rest of the action in which the Pokémon changed forme
+    /// ([`Battle::raw_speed`]; Stance Change before the user's own attack can reorder, and so
+    /// re-round, its three-factor ModifyDamage chain: `stance-change-raw-speed`). A Pokémon that
+    /// entered during this stage has no snapshot and is read live (Showdown: `switchIn` leaves
+    /// `pokemon.speed` at the raw value from `setSpecies`, refreshed before the next move action;
+    /// approximated). Showdown skips the refresh when the next queued action is not a move
+    /// (a switch after a Speed change in the previous action): not modelled.
     pub(crate) fn event_speed(&self, slot: SlotRef) -> i32 {
-        match self.occupant(slot) {
-            Some(pokemon) if self.raw_speed.contains(&pokemon) => {
-                i32::from(self.mon(pokemon).stats[4])
-            }
-            _ => self.action_speed(slot),
+        let Some(pokemon) = self.occupant(slot) else {
+            return self.action_speed(slot);
+        };
+        if self.raw_speed.contains(&pokemon) {
+            return i32::from(self.mon(pokemon).stats[4]);
         }
+        match self.speed_snapshot.iter().find(|(p, _)| *p == pokemon) {
+            Some(&(_, speed)) => speed,
+            None => self.action_speed(slot),
+        }
+    }
+
+    /// `updateSpeed()`: records every active's action Speed as its `pokemon.speed` for the
+    /// coming stage ([`Battle::event_speed`]).
+    pub(crate) fn snapshot_speeds(&mut self) {
+        let snapshot: Vec<(PokemonRef, i32)> = State::<N>::slot_refs()
+            .filter_map(|slot| Some((self.occupant(slot)?, self.action_speed(slot))))
+            .collect();
+        self.speed_snapshot = snapshot;
     }
 
     /// Records a `setSpecies` of the Pokémon in `slot` for [`Battle::event_speed`].

@@ -1,0 +1,28 @@
+{
+ "description": "B2: Speed-sorted handlers inside one action use the Speed from the last updateSpeed (between actions), not the live Speed. Froslass's Icy Wind lowers both p2 actives, each holding an Eject Pack: Swampert (Speed 100) and Blissey (Speed 99) become 66 and 66 after the drop. At the AfterMove Showdown still sorts them by the pre-drop speeds, so Swampert always ejects first and Blissey follows at the replacement's switch-in batch; an engine reading the live Speed sees a tie and draws the order. A miss leaves only the other holder to switch. Damage rolls: extremes.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Froslass", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Icy Wind"], "level": 50},
+   {"species": "Clefable", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 8}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Swampert", "item": "Eject Pack", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 20}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "Eject Pack", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 24}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "1234"
+ },
+ "turn": {"p1": "move icywind, move harden", "p2": "move harden, move harden"},
+ "midTurn": {"p2": ["switch 3", "switch 4"]}
+}

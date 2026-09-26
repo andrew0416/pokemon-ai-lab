@@ -239,6 +239,8 @@ pub(crate) struct MoveProgress {
     infiltrates: bool,
     /// [`Battle::raw_speed`] at the suspension: the action goes on in the next stage.
     raw_speed: Vec<PokemonRef>,
+    /// [`Battle::speed_snapshot`] at the suspension (the same action, so the same `pokemon.speed`).
+    speed_snapshot: Vec<(PokemonRef, i32)>,
     /// Showdown `move.smartTarget` still on when the hits start (Dragon Darts with both of its
     /// smart targets left): hit `n` strikes `targets[n - 1]` alone, and `targets` keeps both.
     smart: bool,
@@ -540,6 +542,7 @@ pub(crate) fn resume_move<const N: usize>(
         parental_bond: progress.mv.parental_bond,
     });
     b.raw_speed = progress.raw_speed.clone();
+    b.speed_snapshot = progress.speed_snapshot.clone();
     let mut mv = progress.mv.clone();
     let result = match hit_loop(b, user, &mv, Some(progress))? {
         HitOutcome::Suspended(progress) => return Ok(MoveStep::Suspended(progress)),
@@ -2054,6 +2057,7 @@ fn try_spread_move_hit<const N: usize>(
         ignore_ability: b.active_move.is_some_and(|a| a.ignore_ability),
         infiltrates: b.active_move.is_some_and(|a| a.infiltrates),
         raw_speed: Vec::new(),
+        speed_snapshot: Vec::new(),
         smart,
     };
     hit_loop(b, user, mv, Some(progress))
@@ -2620,6 +2624,7 @@ fn hit_loop<const N: usize>(
                 return hit_loop(b, user, mv, Some(progress));
             }
             progress.raw_speed = b.raw_speed.clone();
+            progress.speed_snapshot = b.speed_snapshot.clone();
             return Ok(HitOutcome::Suspended(progress));
         }
     }

@@ -102,6 +102,11 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// ([`Battle::event_speed`]). A stage is one action, so this starts empty with every stage;
     /// a multi-hit move suspended between hits carries it in its `MoveProgress`.
     pub raw_speed: Vec<PokemonRef>,
+    /// Showdown `pokemon.speed` of each active at the start of this stage (`updateSpeed()`
+    /// between actions, at the residual and at the turn start): the Speed that sorts event
+    /// handlers for the rest of the action ([`Battle::event_speed`]). A newcomer of this stage
+    /// has no entry and is read live. Carried across a suspended action by `MoveProgress`.
+    pub speed_snapshot: Vec<(PokemonRef, i32)>,
     /// A Pokémon switched in (`switching::switch_in`) and its `runSwitch` has not run yet:
     /// Showdown's `queue.peek()` is a `runSwitch` action (the Update that ends a switch action,
     /// or a batch of `instaswitch` actions, comes before it). Commander's `onUpdate` waits.
@@ -204,7 +209,7 @@ impl<'a, const N: usize> Battle<'a, N> {
     pub fn new(state: &'a mut State<N>, rng: &'a mut Chooser) -> Battle<'a, N> {
         let history_readers = HistoryReaders::of(state);
         let suppression = super::abilities::suppression_possible(state);
-        Battle {
+        let mut b = Battle {
             state,
             log: Vec::new(),
             rng,
@@ -220,6 +225,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             busted: Vec::new(),
             history_readers,
             raw_speed: Vec::new(),
+            speed_snapshot: Vec::new(),
             awaiting_run_switch: false,
             unstarted: Vec::new(),
             queue_done: false,
@@ -227,7 +233,9 @@ impl<'a, const N: usize> Battle<'a, N> {
             called_move: None,
             active_target: None,
             suppression,
-        }
+        };
+        b.snapshot_speeds();
+        b
     }
 
     /// The category of `id` as the move in flight has it (`move.category` after ModifyMove:
