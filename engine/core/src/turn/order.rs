@@ -103,6 +103,31 @@ impl<const N: usize> Battle<'_, N> {
         }
     }
 
+    /// Showdown `pokemon.speed`, which sorts event handlers (`resolvePriority`) and the actives
+    /// of `eachEvent`: `updateSpeed()` sets it to the action Speed between actions, and
+    /// `setSpecies` to the raw stored Speed (no stages or modifiers, not negated by Trick Room)
+    /// for the rest of the action in which the Pokémon changed forme ([`Battle::raw_speed`];
+    /// Stance Change before the user's own attack can reorder, and so re-round, its three-factor
+    /// ModifyDamage chain: `stance-change-raw-speed`). Other Speed changes within an action (a
+    /// Speed drop, paralysis) show at once here, where Showdown waits for `updateSpeed()`.
+    pub(crate) fn event_speed(&self, slot: SlotRef) -> i32 {
+        match self.occupant(slot) {
+            Some(pokemon) if self.raw_speed.contains(&pokemon) => {
+                i32::from(self.mon(pokemon).stats[4])
+            }
+            _ => self.action_speed(slot),
+        }
+    }
+
+    /// Records a `setSpecies` of the Pokémon in `slot` for [`Battle::event_speed`].
+    pub(crate) fn species_set(&mut self, slot: SlotRef) {
+        if let Some(pokemon) = self.occupant(slot) {
+            if !self.raw_speed.contains(&pokemon) {
+                self.raw_speed.push(pokemon);
+            }
+        }
+    }
+
     /// Priority of `id` used by the Pokémon in `slot` (ModifyPriority handlers): the move's own
     /// (`singleEvent`: Grassy Glide), then the user's ability (`runEvent`: Prankster, Gale
     /// Wings, Triage; each adds to the priority it is given).

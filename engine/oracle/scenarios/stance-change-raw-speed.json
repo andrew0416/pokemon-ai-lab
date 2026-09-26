@@ -1,0 +1,24 @@
+{
+ "description": "Raw Speed after a mid-action forme change: Aegislash (+2 Speed: action Speed 160) takes the Blade forme in its Smart Strike's ModifyMove; `setSpecies` sets `pokemon.speed` to the raw stored Speed (80) until the next `updateSpeed()`. The ModifyDamage handlers are then sorted by their holders' `pokemon.speed`: Clefable's Multiscale (112), Metagross's Friend Guard (90), Aegislash's Expert Belt (80), and the chain 2048, 3072, 4915 gives 1843/4096 where the live-Speed order (Expert Belt first) gives 1844. Damage rolls and crits make the outcomes.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Aegislash", "item": "Expert Belt", "ability": "Stance Change", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Smart Strike", "King's Shield"], "level": 50},
+   {"species": "Shuckle", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Clefable", "item": "", "ability": "Multiscale", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Metagross", "item": "", "ability": "Friend Guard", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"p1": {"Aegislash": {"boosts": {"spe": 2}}}},
+ "turn": {"p1": "move smartstrike 1, move harden", "p2": "move harden, move harden"}
+}

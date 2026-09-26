@@ -162,6 +162,8 @@ pub(crate) struct MoveProgress {
     last_hit: Vec<(SlotRef, LastHit)>,
     /// `ActiveMoveRef::ignore_ability` of the move in flight (Mold Breaker moves).
     ignore_ability: bool,
+    /// [`Battle::raw_speed`] at the suspension: the action goes on in the next stage.
+    raw_speed: Vec<PokemonRef>,
 }
 
 /// How far a move got: finished, or suspended before its next hit.
@@ -295,6 +297,7 @@ pub(crate) fn resume_move<const N: usize>(
         id: progress.mv.id,
         ignore_ability: progress.ignore_ability,
     });
+    b.raw_speed = progress.raw_speed.clone();
     let mut mv = progress.mv.clone();
     let result = match hit_loop(b, user, &mv, Some(progress))? {
         HitOutcome::Suspended(progress) => return Ok(MoveStep::Suspended(progress)),
@@ -731,11 +734,11 @@ fn redirect_target<const N: usize>(
     };
     for s in Battle::<N>::slots(user.side) {
         if absorbs(b, s) {
-            handlers.push((0, b.action_speed(s), s));
+            handlers.push((0, b.event_speed(s), s));
         }
     }
     for s in b.alive_slots(user.side.other()) {
-        let speed = b.action_speed(s);
+        let speed = b.event_speed(s);
         if b.volatile(s, Volatile::FollowMe).active {
             handlers.push((1, speed, s));
         }
@@ -1399,6 +1402,7 @@ fn try_spread_move_hit<const N: usize>(
         any_ok: false,
         last_hit: Vec::new(),
         ignore_ability: b.active_move.is_some_and(|a| a.ignore_ability),
+        raw_speed: Vec::new(),
     };
     hit_loop(b, user, mv, Some(progress))
 }
@@ -1757,6 +1761,7 @@ fn hit_loop<const N: usize>(
         // single-target move; every target fainted stops any.
         if hit_ok && hit < progress.hits && !targets.is_empty() && (user_standing || !single) {
             progress.targets = targets;
+            progress.raw_speed = b.raw_speed.clone();
             return Ok(HitOutcome::Suspended(progress));
         }
     }

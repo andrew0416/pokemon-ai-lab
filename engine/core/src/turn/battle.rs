@@ -82,6 +82,12 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// Which damage-history fields anything in this battle can read (F18): fields nobody reads
     /// are not recorded, so positions that differ only in them merge (`history.rs`).
     pub history_readers: HistoryReaders,
+    /// Pokémon whose species changed during the current action (Stance Change, Disguise, Mega
+    /// Evolution, ...): Showdown's `setSpecies` sets their `pokemon.speed` to the raw stored
+    /// Speed until the next `updateSpeed()`, which comes after the action
+    /// ([`Battle::event_speed`]). A stage is one action, so this starts empty with every stage;
+    /// a multi-hit move suspended between hits carries it in its `MoveProgress`.
+    pub raw_speed: Vec<PokemonRef>,
 }
 
 /// The readers of the hidden damage history present in a battle (any party member's moves;
@@ -131,6 +137,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             force_switch: Vec::new(),
             busted: Vec::new(),
             history_readers,
+            raw_speed: Vec::new(),
         }
     }
 
