@@ -1,0 +1,24 @@
+{
+ "description": "Opus BB unit B24: Utility Umbrella's End on a Flower Gift holder in (patched) sun. Choice Scarf Weavile Tricks the umbrella away from Cherrim: the End's WeatherChange turns it into Cherrim-Sunshine. Mold Breaker Excadrill's Trick takes the umbrella of the other Cherrim (Bloom): the move ignores abilities, so `runEvent('WeatherChange')` skips the breakable Flower Gift and Bloom stays Cherrim. Each Cherrim gets the Choice item (its Start removes a `choicelock`).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Weavile", "item": "Choice Scarf", "ability": "Pressure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Trick", "Harden"], "level": 50},
+   {"species": "Excadrill", "item": "Choice Band", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Trick", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Cherrim", "item": "Utility Umbrella", "ability": "Flower Gift", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Cherrim", "name": "Bloom", "item": "Utility Umbrella", "ability": "Flower Gift",
+    "nature": "Serious", "evs": {"hp": 32, "spe": 2}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"field": {"weather": "sunnyday", "weatherDuration": 5}},
+ "turn": {"p1": "move trick 1, move trick 2", "p2": "move harden, move harden"}
+}

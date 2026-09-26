@@ -966,8 +966,9 @@ pub(crate) fn syrup_bomb_residual<const N: usize>(
 /// Fling's condition `onUpdate` on the Pokémon in `slot` (its user): `const item =
 /// pokemon.getItem(); pokemon.setItem(''); pokemon.lastItem = item.id; pokemon.usedItemThisTurn =
 /// true; this.runEvent('AfterUseItem', pokemon, null, null, item); pokemon.removeVolatile('fling');`
-/// — the item goes without being used (`setItem`: its `End` runs: Mirror Herb forgets its copied
-/// raises, Eject Pack's flag ends; Utility Umbrella's WeatherChange in sun or rain is refused),
+/// — the item goes without being used (`setItem`: a fresh item state, then the item's `End`:
+/// Mirror Herb forgets its copied raises, Eject Pack's flag ends, Utility Umbrella runs
+/// WeatherChange in sun or rain, `items::umbrella_end`),
 /// becomes `lastItem`, and Unburden and an ally's Symbiosis react. (`usedItemThisTurn` is only
 /// read by Pickup, which is not implemented.)
 pub(crate) fn fling_update<const N: usize>(
@@ -981,26 +982,18 @@ pub(crate) fn fling_update<const N: usize>(
         return Ok(());
     };
     let item = b.raw_item(slot);
-    if item == items::UTILITY_UMBRELLA
-        && matches!(
-            b.effective_weather(),
-            crate::field::Weather::Sun | crate::field::Weather::Rain
-        )
-    {
-        return Err(b.unsupported(
-            "Fling throwing Utility Umbrella in sun or rain (its End's WeatherChange)",
-        ));
-    }
     if !item.is_none() {
         b.apply(Instruction::SetItem {
             target: pokemon,
             old: item,
             new: crate::dex::ItemId::NONE,
         });
+        super::items::fresh_item_state(b, pokemon);
         b.delete_volatile(slot, Volatile::EjectPack);
         if item == items::MIRROR_HERB {
             b.mirror_herb.retain(|&(p, _)| p != pokemon);
         }
+        super::items::umbrella_end(b, slot, item);
     }
     let last = b.mon(pokemon).last_item;
     if last != item {

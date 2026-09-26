@@ -1,0 +1,23 @@
+{
+ "description": "Opus BB unit B21: King's Rock's `onModifyMove` (priority -1) appends its 10% flinch before Serene Grace's (priority -2) doubles every secondary chance, so Togekiss's Seismic Toss (no secondaries of its own; fixed 50 damage) flinches the slower Snorlax 20% of the time (no Harden). Blissey's Razor Fang Seismic Toss on Chansey (no Serene Grace) stays 10%.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Togekiss", "item": "King's Rock", "ability": "Serene Grace", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss", "Harden"], "level": 50},
+   {"species": "Blissey", "item": "Razor Fang", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 12}, "moves": ["Seismic Toss", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move seismictoss 1, move seismictoss 2", "p2": "move harden, move harden"}
+}

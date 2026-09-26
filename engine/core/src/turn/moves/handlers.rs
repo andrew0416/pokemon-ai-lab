@@ -2719,6 +2719,10 @@ pub(super) fn on_hit<const N: usize>(
                     old: ItemId::NONE,
                     new: last,
                 });
+                // `setItem`'s Start: Utility Umbrella's (a flung one comes back).
+                if last == items::UTILITY_UMBRELLA {
+                    trick_item_start(b, target, last);
+                }
                 HitResult::Success
             }
         }
@@ -3401,7 +3405,10 @@ pub(crate) fn sleep_talk_calls(id: MoveId) -> bool {
 /// item's `Start` on its new holder ([`trick_item_start`]). Each `takeItem` of a held item first
 /// runs the holder's ability TakeItem handler (Unburden adds its volatile even if the trade then
 /// fails; a target with Sticky Hold made the move fail in `onTryImmunity`, and the user's own
-/// `source.takeItem()` is no other Pokémon's) and then the item's `End` on its old holder.
+/// `source.takeItem()` is no other Pokémon's) and, if the item lets go, the item's `End` on its
+/// old holder, which holds nothing then (Utility Umbrella's WeatherChange) — also when the trade
+/// then fails and the taken items go back silently (`target.item = yourItem.id`, the state
+/// `takeItem` left: an umbrella whose End ran stays `inactive`).
 /// Items with `Start` / `End` handlers move only if [`trick_moves_item`]; an item with another
 /// TakeItem handler is not implemented.
 fn trick<const N: usize>(
@@ -3422,39 +3429,64 @@ fn trick<const N: usize>(
             return Err(b.unsupported(format!("Trick moving {} ({:?})", data.name, data.handlers)));
         }
     }
-    // `target.takeItem(source)`, then `source.takeItem()`: the TakeItem event (Unburden).
-    for (slot, item) in [(target, yours), (user, mine)] {
-        if !item.is_none() {
-            super::super::abilities::unburden(b, slot);
+    // `target.takeItem(source)`, then `source.takeItem()`: the TakeItem event (Unburden), then,
+    // for an item that lets go, `item = ''` and its `End` on the old holder: Mirror Herb forgets
+    // its copied raises (none can be pending inside Trick's own action); Utility Umbrella runs
+    // WeatherChange (`items::umbrella_end`).
+    let mut taken = [false; 2];
+    for (i, (slot, item)) in [(target, yours), (user, mine)].into_iter().enumerate() {
+        if item.is_none() {
+            continue;
         }
-    }
-    let taken = |slot: SlotRef, item: ItemId| item.is_none() || b.item_can_be_taken(slot);
-    if !taken(target, yours) || !taken(user, mine) || (yours.is_none() && mine.is_none()) {
-        return Ok(HitResult::Failure);
-    }
-    let received = |item: ItemId, receiver: SlotRef| {
-        item.is_none() || b.slot_mon(receiver).is_some_and(|m| holds_freely(item, m))
-    };
-    if !received(mine, target) || !received(yours, user) {
-        return Ok(HitResult::Failure);
-    }
-    // The taken items' `End` on their old holders: Mirror Herb forgets its copied raises (none
-    // can be pending inside Trick's own action); Utility Umbrella's changes nothing.
-    for (slot, item) in [(target, yours), (user, mine)] {
-        if item == items::MIRROR_HERB {
-            if let Some(holder) = b.occupant(slot) {
-                b.mirror_herb.retain(|&(p, _)| p != holder);
-            }
+        super::super::abilities::unburden(b, slot);
+        if !b.item_can_be_taken(slot) {
+            continue;
         }
-    }
-    for (slot, old, new) in [(target, yours, mine), (user, mine, yours)] {
+        taken[i] = true;
         let pokemon = b.occupant(slot).expect("an active Pokémon");
         b.apply(Instruction::SetItem {
             target: pokemon,
-            old,
-            new,
+            old: item,
+            new: ItemId::NONE,
         });
+        if item == items::MIRROR_HERB {
+            b.mirror_herb.retain(|&(p, _)| p != pokemon);
+        }
+        if super::super::items::umbrella_end(b, slot, item) {
+            b.umbrella_inactive.push(pokemon);
+        }
+    }
+    let kept = |i: usize, item: ItemId| !item.is_none() && !taken[i];
+    let received = |item: ItemId, receiver: SlotRef| {
+        item.is_none() || b.slot_mon(receiver).is_some_and(|m| holds_freely(item, m))
+    };
+    let fails = kept(0, yours)
+        || kept(1, mine)
+        || (yours.is_none() && mine.is_none())
+        || !received(mine, target)
+        || !received(yours, user);
+    if fails {
+        // `if (yourItem) target.item = yourItem.id; if (myItem) source.item = myItem.id;`.
+        for (i, (slot, item)) in [(target, yours), (user, mine)].into_iter().enumerate() {
+            if taken[i] {
+                let pokemon = b.occupant(slot).expect("an active Pokémon");
+                b.apply(Instruction::SetItem {
+                    target: pokemon,
+                    old: ItemId::NONE,
+                    new: item,
+                });
+            }
+        }
+        return Ok(HitResult::Failure);
+    }
+    for (slot, new) in [(target, mine), (user, yours)] {
         if !new.is_none() {
+            let pokemon = b.occupant(slot).expect("an active Pokémon");
+            b.apply(Instruction::SetItem {
+                target: pokemon,
+                old: ItemId::NONE,
+                new,
+            });
             trick_item_start(b, slot, new);
         }
     }
@@ -3464,9 +3496,9 @@ fn trick<const N: usize>(
 /// Whether Trick can move `item` although it has `Start` / `End` handlers, because those are
 /// implemented for a new holder ([`trick_item_start`]) and an old one: the Choice items, the
 /// Seeds, Room Service, White Herb, Air Balloon (its `onStart` only announces it), Utility
-/// Umbrella (its `onStart` / `onEnd` only run WeatherChange for a holder ignoring its item, and
-/// no implemented WeatherChange handler acts on sun or rain from it), Mirror Herb (`onEnd`),
-/// Metronome (its `onStart` adds its condition; the old holder's goes at its next TryMove).
+/// Umbrella (its `onStart` / `onEnd` / `onUpdate` WeatherChange: `items::umbrella_start`,
+/// `umbrella_end`, `umbrella_update`), Mirror Herb (`onEnd`), Metronome (its `onStart` adds its
+/// condition; the old holder's goes at its next TryMove).
 pub(crate) fn trick_moves_item(item: ItemId) -> bool {
     item.data().is_choice
         || super::super::field_events::seed_terrain(item).is_some()
@@ -3487,13 +3519,20 @@ pub(crate) fn trick_moves_item(item: ItemId) -> bool {
 /// old Choice item, or from this very move's ModifyMove); Metronome adds its condition; White
 /// Herb is used on a lowered stat (`items::white_herb_start`: its `Use` is suppressed then); a
 /// Seed and Room Service are used in their terrain / in Trick Room, but they check
-/// `!pokemon.ignoringItem()` themselves (`items::switch_in_item`'s effective-item check).
-/// Mirror Herb has no `onStart`.
+/// `!pokemon.ignoringItem()` themselves (`items::switch_in_item`'s effective-item check);
+/// Utility Umbrella runs WeatherChange for a holder that ignores it (`items::umbrella_start`).
+/// Mirror Herb has no `onStart`. `setItem` also gives the holder a fresh item state (an
+/// umbrella's `inactive` mark is gone).
 pub(crate) fn trick_item_start<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, item: ItemId) {
     if b.raw_item(slot) != item {
         return;
     }
-    if item.data().is_choice {
+    if let Some(pokemon) = b.occupant(slot) {
+        super::super::items::fresh_item_state(b, pokemon);
+    }
+    if item == items::UTILITY_UMBRELLA {
+        super::super::items::umbrella_start(b, slot);
+    } else if item.data().is_choice {
         b.remove_volatile(slot, Volatile::ChoiceLock);
     } else if item == items::METRONOME {
         super::super::items::metronome_start(b, slot);

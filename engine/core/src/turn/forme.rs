@@ -694,7 +694,7 @@ fn mimicry<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
 /// Why a Pokémon cannot be on the field, if its forme ability makes it unsupported although
 /// the ability is supported for other species (`support::check_state`, and
 /// `switching::switch_in_problem` for a switch-in during a turn) — or with the item it holds
-/// (Forecast with Utility Umbrella):
+/// (Symbiosis):
 /// - Battle Bond acts only for Greninja-Bond (`onSourceAfterFaint`: +1 Atk, SpA and Spe once per
 ///   battle, `source.bondTriggered`, which the state does not record) and Greninja-Ash (Water
 ///   Shuriken hits 3 times); on any other species (Greninja itself) both handlers do nothing.
@@ -702,15 +702,6 @@ pub(crate) fn field_problem(mon: &crate::state::Pokemon) -> Option<String> {
     // Symbiosis holding an item it could not pass (`abilities::item_moves`).
     if let Some(why) = super::abilities::symbiosis_problem(mon) {
         return Some(why);
-    }
-    // Forecast with Utility Umbrella: the umbrella's `onStart` / `onUpdate` / `onEnd` run
-    // WeatherChange on the holder in sun or rain when it starts or stops being ignored or is
-    // lost, which the engine does not run.
-    if mon.ability == abilities::FORECAST && mon.item == crate::dex::items::UTILITY_UMBRELLA {
-        return Some(format!(
-            "{}: Forecast holding Utility Umbrella (the umbrella's WeatherChange events)",
-            mon.species.data().name
-        ));
     }
     let bond_forme = mon.species == species::GRENINJA_BOND || mon.species == species::GRENINJA_ASH;
     (mon.ability == abilities::BATTLE_BOND && bond_forme).then(|| {
@@ -763,7 +754,7 @@ pub(crate) fn weather_changed<const N: usize>(b: &mut Battle<'_, N>, slot: SlotR
 /// Forecast's `onWeatherChange` for the Pokémon in `slot` (also run by its `onStart`; not
 /// breakable): a Castform (`baseSpecies.baseSpecies`; the engine has no Transform) takes the
 /// forme of `pokemon.effectiveWeather()` (the suppressors and its own Utility Umbrella hide the
-/// weather; Utility Umbrella holders are refused in [`field_problem`]): Castform-Sunny in sun,
+/// weather; the umbrella's own WeatherChange: `items::umbrella_end`): Castform-Sunny in sun,
 /// -Rainy in rain, -Snowy in snow, Castform otherwise — temporarily (`formeChange(forme,
 /// this.effect, false)`: the base returns when it leaves the field), and only when the forme
 /// differs.

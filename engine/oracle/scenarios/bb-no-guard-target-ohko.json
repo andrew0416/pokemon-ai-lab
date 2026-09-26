@@ -1,0 +1,23 @@
+{
+ "description": "Opus BB unit B13: the target's No Guard (`onAnyAccuracy`: `target === this.effectState.target`) also makes an OHKO move hit. Glaceon's Sheer Cold (30%, Ice user) always KOs No Guard Golurk; Rhyperior's Horn Drill on Snorlax (no No Guard) stays 30%.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Glaceon", "item": "", "ability": "Snow Cloak", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 2}, "moves": ["Sheer Cold", "Harden"], "level": 50},
+   {"species": "Rhyperior", "item": "", "ability": "Solid Rock", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Horn Drill", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Golurk", "item": "", "ability": "No Guard", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move sheercold 1, move horndrill 2", "p2": "move harden, move harden"}
+}

@@ -1386,9 +1386,20 @@ fn use_move<const N: usize>(
         item_events::on_modify_move(b, user, mv.id);
     }
     // Stench (the user's ability, ModifyMove priority -1, sub-order 7) and King's Rock / Razor
-    // Fang (the item, -1, 8) append the same flinch: whichever comes second finds it there.
-    mv.added_secondary =
-        item_events::added_secondary(b.item(user), b.ability(user) == abilities::STENCH, mv.data);
+    // Fang (the item, -1, 8) append the same flinch: whichever comes second finds it there. They
+    // run after Sheer Force (priority 0), which deleted the move's secondaries (a move that had
+    // its own flinch gets the added one), and before Serene Grace (-2), which doubles it.
+    let own: &[Secondary] = if mv.has_sheer_force {
+        &[]
+    } else {
+        handlers::move_secondaries(b, mv)
+    };
+    mv.added_secondary = item_events::added_secondary(
+        b.item(user),
+        b.ability(user) == abilities::STENCH,
+        mv.data,
+        own,
+    );
     // ModifyTarget (`useMoveInner`, before a random target would be drawn): Metal Burst and
     // Comeuppance aim at the slot of the foe that last damaged the user this turn.
     if let Some(scripted) = handlers::modify_target(b, user, mv) {
@@ -2419,25 +2430,33 @@ fn accuracy_check<const N: usize>(
     mv: &ActiveMove,
     target: SlotRef,
 ) -> bool {
-    // OHKO moves bypass every accuracy modifier: 30 (Sheer Cold 20 for a non-Ice user) plus the
-    // level difference; a target of higher level, or of the type of a typed OHKO move (Sheer
-    // Cold vs Ice), is immune. Then the `Accuracy` event: Glaive Rush's drawback hits anyway;
-    // Micle Berry skips OHKO moves (`if (!move.ohko)`). No semi-invulnerable state exists.
+    // OHKO moves bypass every accuracy modifier (`hitStepAccuracy`): against a target that is
+    // not semi-invulnerable, 30 (Sheer Cold 20 for a non-Ice user) plus the level difference,
+    // and a target of higher level, or of the type of a typed OHKO move (Sheer Cold vs Ice), is
+    // immune; a semi-invulnerable target (reached through No Guard or Lock-On) skips all that
+    // and keeps the move's own accuracy. Then `runEvent('Accuracy')` as for any move: No Guard
+    // (the user's or the target's), Glaive Rush's drawback, Minimize and Lock-On make it hit;
+    // Micle Berry skips OHKO moves (`if (!move.ohko)`).
     if mv.data.ohko != Ohko::No {
-        let level = |s: SlotRef| b.slot_mon(s).map_or(0, |m| i32::from(m.level));
-        let (mine, theirs) = (level(user), level(target));
-        let immune_type = matches!(mv.data.ohko, Ohko::Typed(t) if b.has_type(target, t));
-        if mine < theirs || immune_type {
-            return false;
-        }
-        let base = match mv.data.ohko {
-            Ohko::Typed(t) if !b.has_type(user, t) => 20,
-            _ => 30,
+        let accuracy = if conditions::semi_invulnerable(b, target).is_some() {
+            i32::from(mv.accuracy.unwrap_or(30))
+        } else {
+            let level = |s: SlotRef| b.slot_mon(s).map_or(0, |m| i32::from(m.level));
+            let (mine, theirs) = (level(user), level(target));
+            let immune_type = matches!(mv.data.ohko, Ohko::Typed(t) if b.has_type(target, t));
+            if mine < theirs || immune_type {
+                return false;
+            }
+            let base = match mv.data.ohko {
+                Ohko::Typed(t) if !b.has_type(user, t) => 20,
+                _ => 30,
+            };
+            base + mine - theirs
         };
-        if handlers::always_hit(b, user, target, mv) {
-            return true;
-        }
-        return b.rng.chance((base + mine - theirs) as u32, 100);
+        return match ability_hooks::accuracy_event(b, user, mv, target) {
+            None => true,
+            Some(modifier) => b.rng.chance(modify(accuracy, modifier).max(0) as u32, 100),
+        };
     }
     // `accuracy = true` without the `Accuracy` event: a status move on the user, and (gen 8+)
     // Toxic used by a Poison type.
@@ -3037,27 +3056,22 @@ fn spread_move_hit<const N: usize>(
             }
             Hit::Done | Hit::Damage(_) => {}
         }
-        // Secondaries: Sheer Force / Shield Dust (`ability_hooks::secondaries`) decide the
-        // move's own, Serene Grace doubles their chance, Covert Cloak (`ModifySecondaries`)
-        // drops some, and King's Rock's added flinch comes last (ModifyMove priority -1: after
-        // Serene Grace, and even through Sheer Force).
+        // Secondaries (`ability_hooks::secondaries`): the move's own (Sheer Force deleted them)
+        // and King's Rock's appended flinch (ModifyMove priority -1: after Sheer Force, so even
+        // through it), their chances doubled by Serene Grace (-2), less what the target's
+        // ModifySecondaries drops: Shield Dust there, Covert Cloak (`keeps_secondary`) below.
         // Parental Bond's `onSourceModifySecondaries`: on Secret Power's first hit only flinch
         // secondaries stay (`move.id === 'secretpower' && move.hit < 2`).
         let first_bond_hit = mv.parental_bond && mv.id == moves::SECRET_POWER && hit < 2;
         let own: Vec<(&Secondary, u32)> = ability_hooks::secondaries(b, mv, t)
             .into_iter()
-            .filter(|s| !first_bond_hit || s.volatile_status == crate::dex::conditions::FLINCH)
-            .map(|s| (s, u32::from(s.chance) * mv.secondary_chance_factor))
+            .filter(|(s, _)| !first_bond_hit || s.volatile_status == crate::dex::conditions::FLINCH)
             .collect();
-        // Fling's appended secondary comes last (its PrepareHit runs after ModifyMove).
+        // Fling's appended secondary comes last (its PrepareHit runs after ModifyMove, so Serene
+        // Grace does not double it).
         let flung = handlers::fling_secondary(b, user, mv, t);
-        let added: Vec<(&Secondary, u32)> = mv
-            .added_secondary
-            .iter()
-            .chain(flung.iter())
-            .map(|s| (s, u32::from(s.chance)))
-            .collect();
-        for (secondary, chance) in own.into_iter().chain(added) {
+        let flung = flung.iter().map(|s| (s, u32::from(s.chance)));
+        for (secondary, chance) in own.into_iter().chain(flung) {
             if !item_events::keeps_secondary(b, t, secondary) {
                 continue;
             }
@@ -3672,8 +3686,14 @@ fn get_damage<const N: usize>(
     defense_mods.extend(item_events::defense_handlers(b, target, defense_stat));
     let defense = modify(defense, ability_events::chain(b, defense_mods));
 
-    // modifyDamage inputs.
+    // modifyDamage inputs. Sun's `onWeatherModifyDamage` first checks `move.id === 'hydrosteam'
+    // && attacker.effectiveWeather() === 'sunnyday'` (1.5x): the attacker's view, read by the
+    // weather (or by Mega Sol's handler, which runs sun's), so sun on the field without the
+    // attacker's Utility Umbrella, or a Mega Sol user (`Battle::move_weather`); otherwise the
+    // defender's view decides as for any Water move (0.5x in its sun).
+    let hydro_steam_sun = mv.id == moves::HYDRO_STEAM && b.move_weather(user) == Weather::Sun;
     let weather_modifier = match (weather, mv.move_type) {
+        _ if hydro_steam_sun => MOD_ONE_POINT_FIVE,
         (Weather::Sun, Type::Fire) | (Weather::Rain, Type::Water) => MOD_ONE_POINT_FIVE,
         (Weather::Sun, Type::Water) | (Weather::Rain, Type::Fire) => MOD_HALF,
         _ => MOD_ONE,
@@ -3902,7 +3922,8 @@ pub(crate) fn set_terrain<const N: usize>(
 /// Room, Wonder Room and Magic Room end themselves on restart (`onFieldRestart`, no
 /// PseudoWeatherChange); a new one (5 turns, Fairy Lock 2: Persistent, which makes the rooms last
 /// 7, is refused) runs `PseudoWeatherChange`. Magic Room's `onFieldStart` runs every active
-/// item's End, which only logs; its suppression is `items::ignoring_item`. Fairy Lock's only logs.
+/// item's End, which `singleEvent` skips (every holder ignores its item once Magic Room is up);
+/// its suppression is `items::ignoring_item`. Fairy Lock's only logs.
 fn add_pseudo_weather<const N: usize>(b: &mut Battle<'_, N>, id: &str) -> bool {
     let effect = match id {
         "gravity" => FieldEffect::Gravity,

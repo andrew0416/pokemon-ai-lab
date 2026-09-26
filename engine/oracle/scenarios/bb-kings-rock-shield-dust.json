@@ -1,0 +1,23 @@
+{
+ "description": "Opus BB unit B20: King's Rock's appended flinch is one of `move.secondaries`, so the target's `ModifySecondaries` removes it: Gengar's King's Rock Seismic Toss never flinches Shield Dust Chansey. Mold Breaker Alakazam's King's Rock Seismic Toss ignores the breakable Shield Dust of Snorlax and flinches it 10% of the time. Both targets are slower (Harden shows the flinch).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Alakazam", "item": "King's Rock", "ability": "Mold Breaker", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss", "Harden"], "level": 50},
+   {"species": "Gengar", "item": "King's Rock", "ability": "Cursed Body", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Seismic Toss", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Shield Dust", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Shield Dust", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move seismictoss 1, move seismictoss 2", "p2": "move harden, move harden"}
+}

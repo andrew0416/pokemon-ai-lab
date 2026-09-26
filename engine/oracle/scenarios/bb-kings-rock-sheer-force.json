@@ -1,0 +1,23 @@
+{
+ "description": "Opus BB unit B21: Sheer Force's `onModifyMove` (priority 0) deletes Headbutt's 30% flinch before King's Rock's (priority -1) looks for a flinch secondary; finding none, King's Rock appends its own 10% flinch, so Nidoking's Headbutt still flinches the slower Snorlax 10% of the time (Sheer Force's power boost stays).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Nidoking", "item": "King's Rock", "ability": "Sheer Force", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Headbutt", "Harden"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move headbutt 1, move harden", "p2": "move harden, move harden"}
+}

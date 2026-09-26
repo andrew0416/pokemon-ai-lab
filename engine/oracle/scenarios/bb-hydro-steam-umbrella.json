@@ -1,0 +1,24 @@
+{
+ "description": "Opus BB unit B23: Hydro Steam's sun boost reads the attacker's `effectiveWeather()`, the Water 0.5x the defender's. Blastoise holds Utility Umbrella: its Hydro Steam falls through to the defender's view, sun, so Snorlax takes 0.5x. Chansey's Hydro Steam into Utility Umbrella Blissey is boosted 1.5x (the defender's umbrella does not matter). Sun is patched.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Blastoise", "item": "Utility Umbrella", "ability": "Torrent", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Hydro Steam", "Harden"], "level": 50},
+   {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Hydro Steam", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Blissey", "item": "Utility Umbrella", "ability": "Natural Cure", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {"field": {"weather": "sunnyday", "weatherDuration": 5}},
+ "turn": {"p1": "move hydrosteam 1, move hydrosteam 2", "p2": "move harden, move harden"}
+}

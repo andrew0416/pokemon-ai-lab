@@ -7,7 +7,8 @@
 //! Implemented handlers: the four Seeds' `onTerrainChange` (O92), Quark Drive's
 //! `onTerrainChange` and Protosynthesis's `onWeatherChange` (O72), Ice Face's `onWeatherChange`
 //! and Mimicry's `onTerrainChange` (F19, `forme.rs`), Flower Gift's `onWeatherChange` (Opus S),
-//! Forecast's `onWeatherChange` (Opus AA). Any other `onWeatherChange` holder is refused on the
+//! Forecast's `onWeatherChange` (Opus AA); Utility Umbrella runs the same handlers on its holder
+//! alone (`weather_changed_at`, Opus BB). Any other `onWeatherChange` holder is refused on the
 //! field and at switch-in, which a test below pins, so these events cannot meet an
 //! unimplemented handler. Every implemented handler only changes its own holder, so the Speed
 //! order (and its random tie-breaks) cannot change the outcome and is not drawn.
@@ -55,15 +56,25 @@ pub(crate) fn terrain_changed<const N: usize>(b: &mut Battle<'_, N>) {
     }
 }
 
-/// Showdown `eachEvent('WeatherChange')`: Protosynthesis's, Ice Face's, Flower Gift's and
-/// Forecast's `onWeatherChange` (`forme::weather_changed`).
+/// Showdown `eachEvent('WeatherChange')`: every active Pokémon's handlers
+/// ([`weather_changed_at`]).
 pub(crate) fn weather_changed<const N: usize>(b: &mut Battle<'_, N>) {
     for slot in b.all_alive() {
-        if b.ability(slot) == abilities::PROTOSYNTHESIS {
-            super::abilities::paradox_change(b, slot);
-        }
-        super::forme::weather_changed(b, slot);
+        weather_changed_at(b, slot);
     }
+}
+
+/// The `onWeatherChange` handlers of the Pokémon in `slot`: Protosynthesis's, then Ice Face's,
+/// Flower Gift's and Forecast's (`forme::weather_changed`; a Pokémon has one ability). Also
+/// Utility Umbrella's `runEvent('WeatherChange', pokemon, pokemon, item)` on its holder alone
+/// (`items::umbrella_end`, `umbrella_start`, `umbrella_update`; `WeatherChange` collects no
+/// `onAlly` / `onFoe` / `onAny` handlers). The handlers check the holder's HP themselves (a
+/// Castform knocked out by Knock Off still changes forme, as Forecast only asks `isActive`).
+pub(crate) fn weather_changed_at<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.ability(slot) == abilities::PROTOSYNTHESIS {
+        super::abilities::paradox_change(b, slot);
+    }
+    super::forme::weather_changed(b, slot);
 }
 
 #[cfg(test)]
