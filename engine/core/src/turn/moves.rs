@@ -528,7 +528,7 @@ pub(crate) fn resume_move<const N: usize>(
     use_move_tail(b, user, &mv, result, main_target)?;
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
     handlers::on_after_move(b, user, pokemon, &mv);
-    run_move_tail(b, user, &mv);
+    run_move_tail(b, user, &mv)?;
     b.active_move = None;
     Ok(MoveStep::Done)
 }
@@ -536,7 +536,11 @@ pub(crate) fn resume_move<const N: usize>(
 /// The end of Showdown `runMove` after `useMove`: `AfterMove` (a locked move on its last
 /// turn ends and, by fatigue, confuses; an Electric move ends Charge; White Herb and Mirror
 /// Herb act), then faints.
-fn run_move_tail<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &ActiveMove) {
+fn run_move_tail<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+) -> Result<(), TurnError> {
     let locked = b.volatile(user, Volatile::LockedMove);
     if locked.active && locked.duration == 1 {
         b.remove_volatile(user, Volatile::LockedMove);
@@ -549,8 +553,9 @@ fn run_move_tail<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Acti
     {
         item_events::any_after_move(b, user);
     }
-    b.faint_messages(true);
+    b.faint_messages(true)?;
     b.check_win(None);
+    Ok(())
 }
 
 fn run_move_inner<const N: usize>(
@@ -658,7 +663,7 @@ fn run_move_inner<const N: usize>(
     let user = handlers::current_slot(b, user, pokemon);
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
     handlers::on_after_move(b, user, pokemon, &mv);
-    run_move_tail(b, user, &mv);
+    run_move_tail(b, user, &mv)?;
     Ok(MoveStep::Done)
 }
 
@@ -2213,7 +2218,7 @@ fn hit_loop<const N: usize>(
     }
     // The loop ended: `faintMessages(false, false, !pokemon.hp)`, recoil, AfterMoveSecondary.
     let user_fainted = b.alive(user).is_none();
-    b.faint_messages(user_fainted);
+    b.faint_messages(user_fainted)?;
     let total = progress.total_damage;
     // `if (move.totalDamage) this.applyRecoilDamage(move.totalDamage, move, pokemon)`: Struggle's
     // `directDamage` (which no Damage handler sees: Rock Head, Magic Guard, Endure, Sturdy) or
@@ -2447,7 +2452,12 @@ fn spread_move_hit<const N: usize>(
         if let Some(volatile) = Volatile::from_condition(data.volatile_status)
             .filter(|_| handlers::keeps_volatile_status(b, user, mv))
         {
-            note(b.add_volatile(t, volatile));
+            let added = b.add_volatile(t, volatile);
+            // Gastro Acid's condition `onStart`: the suppressed ability's `End`.
+            if added && volatile == Volatile::GastroAcid {
+                ability_events::gastro_acid_start(b, t)?;
+            }
+            note(added);
         }
         // `if (moveData.slotCondition) hitResult = target.side.addSlotCondition(target,
         // moveData.slotCondition, source, move)` (Wish, Healing Wish, Revival Blessing).
@@ -3133,7 +3143,7 @@ fn get_damage<const N: usize>(
         atk_boost,
     );
     // ModifyAtk (physical) / ModifySpA (special), whatever stat the move attacks with.
-    let attack = ability_events::attack_direct(attacker.ability, data, attack);
+    let attack = ability_events::attack_direct(b.ability(user), data, attack);
     let mut attack_mods = ability_events::attack_handlers(b, user, target, data, mv.move_type);
     attack_mods.extend(item_events::attack_handlers(b, user, data));
     let attack = modify(attack, ability_events::chain(b, attack_mods));
@@ -3167,7 +3177,7 @@ fn get_damage<const N: usize>(
     // The `???` type (Struggle's, `Type::None` here) never gets STAB.
     let stab =
         data.force_stab || (mv.move_type != Type::None && attacker.types.contains(&mv.move_type));
-    let stab_modifier = ability_events::modify_stab(attacker.ability, stab);
+    let stab_modifier = ability_events::modify_stab(b.ability(user), stab);
     // runEffectiveness: per defending type, the chart then the move's onEffectiveness, then
     // the target's ability (Disguise returns 0, which ends the event) and item.
     let neutral = super::forme::shields_hit(b, user, target, mv.id);
@@ -3238,7 +3248,8 @@ fn get_damage<const N: usize>(
         stab_modifier,
         type_effectiveness,
         // `if (this.battle.gen < 6 || move.id !== 'facade')`: Facade keeps its power burned.
-        burned: ability_events::burn_halves(&attacker, data) && mv.id != moves::FACADE,
+        burned: ability_events::burn_halves(&attacker, b.ability(user), data)
+            && mv.id != moves::FACADE,
         // `getMoveHitData(move).bypassProtect` (Unseen Fist, Piercing Drill).
         protected: mv.bypass_protect & target_bit::<N>(target) != 0,
         final_modifier,

@@ -62,13 +62,18 @@ pub(crate) fn resist_berry(item: ItemId) -> Option<Type> {
 /// item that is not `ignoreKlutz`. While it holds, item handlers do not run and `hasItem` is
 /// false ([`Battle::item`] is `NONE`); `pokemon.item` itself is unaffected (Knock Off, Trick,
 /// Acrobatics, Unburden, Mega Evolution: [`Battle::raw_item`]). Embargo and the Primal Orbs are
-/// not implemented.
+/// not implemented. Klutz counts while it acts (`hasAbility('klutz')`: not under Gastro Acid or
+/// Neutralizing Gas); an `ignoreKlutz` item (Ability Shield) never asks, so the two checks do
+/// not recurse.
 pub(crate) fn ignoring_item<const N: usize>(state: &State<N>, slot: SlotRef) -> bool {
     let Some(mon) = state.active(slot) else {
         return false;
     };
     state.field[FieldEffect::MagicRoom as usize].is_active()
-        || (mon.ability == abilities::KLUTZ && !mon.item.is_none() && !mon.item.data().ignore_klutz)
+        || (!mon.item.is_none()
+            && !mon.item.data().ignore_klutz
+            && mon.ability == abilities::KLUTZ
+            && !super::abilities::ignoring_ability(state, slot))
 }
 
 /// Whether an item's `onStart` does nothing when its holder switches in (Showdown runs item
@@ -431,7 +436,9 @@ pub(crate) fn fractional_priority_tenths<const N: usize>(state: &State<N>, slot:
         mon.item
     };
     match constant_fractional_tenths(item) {
-        0 => super::order::fractional_priority_tenths(mon.ability),
+        0 => super::order::fractional_priority_tenths(super::abilities::effective_ability(
+            state, slot,
+        )),
         item => item,
     }
 }
@@ -472,7 +479,7 @@ pub(crate) fn custap<const N: usize>(
     let mon = b.mon(pokemon);
     let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
     // `abilityState.gluttony` is set on switch-in: always set here (see `update.rs`).
-    let pinch = 4 * hp <= max_hp || (2 * hp <= max_hp && mon.ability == abilities::GLUTTONY);
+    let pinch = 4 * hp <= max_hp || (2 * hp <= max_hp && b.ability(slot) == abilities::GLUTTONY);
     (current <= 0 && pinch && super::update::eat_item(b, slot)).then_some(1)
 }
 
@@ -1248,7 +1255,7 @@ pub(crate) fn on_residual<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, 
         i if i == items::MICLE_BERRY => {
             let hp = i32::from(mon.hp);
             let max = i32::from(mon.max_hp);
-            let pinch = 4 * hp <= max || (2 * hp <= max && mon.ability == abilities::GLUTTONY);
+            let pinch = 4 * hp <= max || (2 * hp <= max && b.ability(slot) == abilities::GLUTTONY);
             if pinch {
                 super::update::eat_item(b, slot);
             }

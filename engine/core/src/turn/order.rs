@@ -60,7 +60,8 @@ impl<const N: usize> Battle<'_, N> {
         // `pokemon.effectiveWeather()` (Chlorophyll, Swift Swim); Sand Rush and Slush Rush read
         // `field.isWeather`, which Utility Umbrella does not touch either way.
         let weather = self.weather_for(slot);
-        let doubled = match mon.ability {
+        let ability = self.ability(slot);
+        let doubled = match ability {
             a if a == abilities::SAND_RUSH => weather == Weather::Sand,
             a if a == abilities::CHLOROPHYLL => weather == Weather::Sun,
             a if a == abilities::SWIFT_SWIM => weather == Weather::Rain,
@@ -71,13 +72,16 @@ impl<const N: usize> Battle<'_, N> {
             chain.push(2 * MOD_ONE);
         }
         // Quick Feet: `if (pokemon.status) return this.chainModify(1.5)`.
-        let quick_feet = mon.ability == abilities::QUICK_FEET;
+        let quick_feet = ability == abilities::QUICK_FEET;
         if quick_feet && mon.status != Status::None {
             chain.push(MOD_ONE_POINT_FIVE);
         }
         // Unburden's volatile: `if (!pokemon.item && !pokemon.ignoringAbility())
-        // return this.chainModify(2)` (Gastro Acid and Neutralizing Gas are not supported).
-        if mon.item.is_none() && self.volatile(slot, Volatile::Unburden).active {
+        // return this.chainModify(2)`.
+        if mon.item.is_none()
+            && self.volatile(slot, Volatile::Unburden).active
+            && !super::abilities::ignoring_ability(self.state, slot)
+        {
             chain.push(2 * MOD_ONE);
         }
         // Protosynthesis / Quark Drive's condition: `chainModify(1.5)` when Speed is the best

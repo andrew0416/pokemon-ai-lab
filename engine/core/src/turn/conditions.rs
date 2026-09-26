@@ -446,6 +446,9 @@ pub(crate) fn volatile_start<const N: usize>(
             b.delete_volatile(target, Volatile::PartiallyTrapped);
             true
         }
+        // Gastro Acid: `if (pokemon.hasItem('Ability Shield')) return false;` (the ability's
+        // `End` follows once it is added: `abilities::gastro_acid_start`).
+        Volatile::GastroAcid => b.item(target) != items::ABILITY_SHIELD,
         _ => true,
     }
 }
@@ -1007,21 +1010,21 @@ pub(crate) fn entry_hazards<const N: usize>(
     let web_reflects = present.contains(&SideEffect::StickyWeb)
         && grounded
         && !boots
-        && mon.ability == abilities::MIRROR_ARMOR;
+        && b.ability(slot) == abilities::MIRROR_ARMOR;
     let damage: f64 = present
         .iter()
         .map(|&h| hazard_damage(b, slot, h))
         .filter(|&d| d > 0.0)
         .map(|d| d.floor().max(1.0))
         .sum();
-    let can_faint = mon.ability != abilities::MAGIC_GUARD && damage >= f64::from(mon.hp);
+    let can_faint = b.ability(slot) != abilities::MAGIC_GUARD && damage >= f64::from(mon.hp);
     if can_faint && (toxic_spikes_act || web_reflects) {
         return Err(b.unsupported(format!(
             "{} switching into hazards whose order (Showdown effectOrder) decides the outcome",
             mon.species.data().name
         )));
     }
-    if poisons && mon.ability == abilities::SYNCHRONIZE {
+    if poisons && b.ability(slot) == abilities::SYNCHRONIZE {
         return Err(b.unsupported(
             "Toxic Spikes poisoning a Synchronize holder (Synchronize ignores Toxic Spikes)",
         ));
@@ -1074,7 +1077,7 @@ pub(crate) fn entry_hazards<const N: usize>(
             }
             _ => {}
         }
-        if b.faint_messages(true) {
+        if b.faint_messages(true)? {
             break;
         }
     }

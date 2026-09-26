@@ -483,7 +483,7 @@ fn after_action<const N: usize>(
     pending: &mut Pending,
     newcomers: &[(SlotRef, i16)],
 ) -> Result<StageEnd, TurnError> {
-    if b.faint_messages(true) {
+    if b.faint_messages(true)? {
         pending.done = true;
         b.queue.clear();
         return Ok(StageEnd::Finished);

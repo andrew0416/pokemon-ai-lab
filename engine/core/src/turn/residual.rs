@@ -82,12 +82,12 @@ pub(crate) fn residual<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), Turn
         // Showdown `fieldEvent`: `faintMessages()` follows every handler except one whose
         // holder has already fainted (skipped) or whose effect's duration ran out (`End`, then
         // `continue`): a faint queued by an `End` (Perish Song) waits for the next handler.
-        if run(b, handler)? && b.faint_messages(true) {
+        if run(b, handler)? && b.faint_messages(true)? {
             return Ok(());
         }
     }
     // `runAction`'s `faintMessages()` after the residual action.
-    b.faint_messages(true);
+    b.faint_messages(true)?;
     Ok(())
 }
 
@@ -234,6 +234,8 @@ fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
                     kind: Kind::Leftovers(pokemon, slot),
                 });
             }
+            // Gathered by the raw ability (`getAbility()`); a suppressed one is skipped when it
+            // runs (`singleEvent`: `ignoringAbility`).
             match mon.ability {
                 a if a == abilities::SPEED_BOOST => out.push(Handler {
                     order: 28,
@@ -474,7 +476,7 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
             let max_hp = f64::from(b.mon(pokemon).max_hp);
             match b.mon(pokemon).status {
                 Status::Burn => {
-                    let damage = ability_events::burn_damage(b.mon(pokemon).ability, max_hp);
+                    let damage = ability_events::burn_damage(b.ability(slot), max_hp);
                     b.damage(slot, damage, DamageSource::Indirect);
                 }
                 Status::Poison => {
@@ -540,22 +542,23 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
             }
         }
         Kind::Forme(pokemon, slot, ability) => {
-            // Skipped if the ability changed since the handlers were collected.
-            if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != ability {
+            // Skipped if the ability changed since the handlers were collected, or is
+            // suppressed (Gastro Acid, Neutralizing Gas).
+            if !still_active(b, pokemon, slot) || b.ability(slot) != ability {
                 return Ok(true);
             }
             super::forme::residual(b, slot, ability)?;
         }
         Kind::Harvest(pokemon, slot) => {
             // Skipped if the ability changed since the handlers were collected.
-            if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != abilities::HARVEST {
+            if !still_active(b, pokemon, slot) || b.ability(slot) != abilities::HARVEST {
                 return Ok(true);
             }
             ability_events::harvest(b, pokemon);
         }
         Kind::SpeedBoost(pokemon, slot) => {
             // Skipped if the ability changed since the handlers were collected.
-            if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != abilities::SPEED_BOOST {
+            if !still_active(b, pokemon, slot) || b.ability(slot) != abilities::SPEED_BOOST {
                 return Ok(true);
             }
             // `if (pokemon.activeTurns) this.boost({spe: 1})`.
@@ -571,7 +574,7 @@ fn run<const N: usize>(b: &mut Battle<'_, N>, handler: Handler) -> Result<bool, 
             }
         }
         Kind::StatusCure(pokemon, slot, ability) => {
-            if !still_active(b, pokemon, slot) || b.mon(pokemon).ability != ability {
+            if !still_active(b, pokemon, slot) || b.ability(slot) != ability {
                 return Ok(true);
             }
             // Healer (Champions): every adjacent ally not at 0 HP with a status is cured on

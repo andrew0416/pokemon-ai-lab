@@ -237,9 +237,16 @@ pub enum Volatile {
     /// in `counter`: [`encode_pokemon`]; hidden in the canonical state) is no longer active
     /// (`onUpdate`).
     Attract,
+    /// Gastro Acid (`gastroacid`, no duration): the holder's ability is suppressed
+    /// (`Pokemon.ignoringAbility`, `abilities::ignoring_ability`) unless it is `cantsuppress`.
+    GastroAcid,
+    /// Not a Showdown volatile: Neutralizing Gas's `abilityState.ending` (its `onEnd` ran: the
+    /// holder no longer suppresses other abilities while it stays, and a second `End` does
+    /// nothing). No duration; hidden in the canonical state.
+    NeutralizingGasEnding,
 }
 
-pub const VOLATILE_COUNT: usize = 74;
+pub const VOLATILE_COUNT: usize = 76;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -317,6 +324,8 @@ impl Volatile {
         Volatile::Commanded,
         Volatile::GorillaTactics,
         Volatile::Attract,
+        Volatile::GastroAcid,
+        Volatile::NeutralizingGasEnding,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -370,6 +379,7 @@ impl Volatile {
             Volatile::HealBlock => conditions::HEALBLOCK,
             Volatile::SmackDown => conditions::SMACKDOWN,
             Volatile::Attract => conditions::ATTRACT,
+            Volatile::GastroAcid => conditions::GASTROACID,
             // Micle Berry is an item's condition: the dex exports no named condition for it.
             Volatile::PerishSong
             | Volatile::ProteanUsed
@@ -398,7 +408,8 @@ impl Volatile {
             | Volatile::SupremeOverlord
             | Volatile::Commanding
             | Volatile::Commanded
-            | Volatile::GorillaTactics => ConditionId::NONE,
+            | Volatile::GorillaTactics
+            | Volatile::NeutralizingGasEnding => ConditionId::NONE,
         }
     }
 
@@ -479,6 +490,8 @@ impl Volatile {
             Volatile::Commanded => "commanded",
             Volatile::GorillaTactics => "gorillatactics",
             Volatile::Attract => "attract",
+            Volatile::GastroAcid => "gastroacid",
+            Volatile::NeutralizingGasEnding => "neutralizinggasending",
         }
     }
 
@@ -568,7 +581,9 @@ impl Volatile {
             | Volatile::Commanding
             | Volatile::Commanded
             | Volatile::GorillaTactics
-            | Volatile::Attract => 0,
+            | Volatile::Attract
+            | Volatile::GastroAcid
+            | Volatile::NeutralizingGasEnding => 0,
             Volatile::ZenMode => 0,
         }
     }
@@ -601,7 +616,8 @@ impl Volatile {
             Volatile::ProteanUsed
             | Volatile::AngerShellUnchecked
             | Volatile::SupremeOverlord
-            | Volatile::GorillaTactics => None,
+            | Volatile::GorillaTactics
+            | Volatile::NeutralizingGasEnding => None,
             // Two-turn move: the target location is not a canonical field.
             Volatile::Roost
             | Volatile::HelpingHand
@@ -792,6 +808,7 @@ mod tests {
                         | Volatile::Commanding
                         | Volatile::Commanded
                         | Volatile::GorillaTactics
+                        | Volatile::NeutralizingGasEnding
                 ));
                 continue;
             }

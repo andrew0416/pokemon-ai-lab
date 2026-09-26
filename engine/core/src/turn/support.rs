@@ -628,9 +628,17 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     (moves::REFLECT_TYPE, &["onHit"]),
     // Ability changes (`handlers::skill_swap`, `handlers::set_ability`: the old ability's End,
     // the new one's Start through `switching`; Ability Shield blocks): Skill Swap `onHit`; Role
-    // Play, Entrainment, Simple Beam `onTryHit` / `onHit`; Worry Seed `onTryImmunity` too. Gastro
-    // Acid (ability suppression) is not supported.
+    // Play, Entrainment, Simple Beam `onTryHit` / `onHit`; Worry Seed `onTryImmunity` too.
     (moves::SKILL_SWAP, &["onHit"]),
+    // Opus U. Gastro Acid: `onTryHit` in `handlers::on_try_hit` (a `cantsuppress` ability fails,
+    // an Ability Shield `null`s it); its condition's `onStart` in `conditions::volatile_start`
+    // (Ability Shield) and `abilities::gastro_acid_start` (the ability's `End`); the suppression
+    // is `abilities::ignoring_ability`. `condition.onCopy` only acts through Baton Pass, which
+    // is not supported.
+    (
+        moves::GASTRO_ACID,
+        &["condition.onCopy", "condition.onStart", "onTryHit"],
+    ),
     (moves::ROLE_PLAY, &["onHit", "onTryHit"]),
     (moves::ENTRAINMENT, &["onHit", "onTryHit"]),
     (moves::SIMPLE_BEAM, &["onHit", "onTryHit"]),
@@ -1745,6 +1753,11 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
             "onWeatherChange",
         ],
     ),
+    // Opus U. Neutralizing Gas: `onSwitchIn` in `abilities::neutralizing_gas_switch_in` (from
+    // `switching::run_switch_in`), `onEnd` in `abilities::neutralizing_gas_end` (switching out,
+    // `Battle::faint_messages`, `switching::end_ability`); every other ability reads
+    // `Battle::ability`, which is `NONE` while `abilities::ignoring_ability`.
+    (abilities::NEUTRALIZING_GAS, &["onEnd", "onSwitchIn"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {

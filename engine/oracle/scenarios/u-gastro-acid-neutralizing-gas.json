@@ -1,0 +1,23 @@
+{
+ "description": "Gastro Acid on the Neutralizing Gas holder: Crobat's Gastro Acid runs Weezing-Galar's End (abilityState.ending), which restarts Gyarados's Intimidate (suppressed since the battle start): Weezing's and Snorlax's Attack -1.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Weezing-Galar", "item": "", "ability": "Neutralizing Gas", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Gyarados", "item": "", "ability": "Intimidate", "nature": "Serious",
+    "evs": {"hp": 32}, "moves": ["Harden"], "level": 50},
+   {"species": "Crobat", "item": "", "ability": "Inner Focus", "nature": "Serious",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Gastro Acid"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "turn": {"p1": "move harden, move harden", "p2": "move harden, move gastroacid 1"}
+}

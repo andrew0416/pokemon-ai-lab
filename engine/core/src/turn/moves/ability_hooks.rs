@@ -723,7 +723,8 @@ pub(super) fn on_damaging_hit<const N: usize>(
         // 0 HP; the attacker's Ability Shield `onSetAbility` returns `null`, blocking it): the
         // old ability's `End` (`switching::end_ability`), then the new one, which has no start.
         a if a == abilities::MUMMY || a == abilities::LINGERING_AROMA => {
-            let old = b.ability(attacker);
+            // `source.getAbility()`: the attacker's raw ability.
+            let old = b.raw_ability(attacker);
             let locked = old.data().flags.contains(AbilityFlags::CANTSUPPRESS)
                 || old == a
                 || b.item(attacker) == items::ABILITY_SHIELD;

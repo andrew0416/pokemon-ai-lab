@@ -237,7 +237,16 @@ impl<'a, const N: usize> Battle<'a, N> {
         out
     }
 
+    /// The ability whose handlers act for the occupant of `slot` (`hasAbility`, `runEvent`):
+    /// `NONE` while it is suppressed by Gastro Acid or Neutralizing Gas
+    /// (`abilities::ignoring_ability`; Showdown `ignoringAbility`).
     pub fn ability(&self, slot: SlotRef) -> AbilityId {
+        super::abilities::effective_ability(self.state, slot)
+    }
+
+    /// Showdown `pokemon.ability` itself, suppressed or not (`getAbility()`): Skill Swap, Role
+    /// Play, Entrainment, Mummy, Wandering Spirit, Trace's target, an ability's `End`.
+    pub fn raw_ability(&self, slot: SlotRef) -> AbilityId {
         self.slot_mon(slot).map_or(AbilityId::NONE, |m| m.ability)
     }
 
@@ -310,15 +319,12 @@ impl<'a, const N: usize> Battle<'a, N> {
     }
 
     /// Showdown `field.suppressingWeather()`: an active Pokémon not processed as fainted (it may
-    /// be at 0 HP) has an ability with `suppressWeather` (Air Lock, Cloud Nine). Its
+    /// be at 0 HP) has an ability with `suppressWeather` (Air Lock, Cloud Nine) that it is not
+    /// ignoring (`!pokemon.ignoringAbility()`: Gastro Acid, Neutralizing Gas). Its
     /// `abilityState.ending` flag only matters inside its own `End` event, whose
-    /// `WeatherChange` has no implemented handler; Gastro Acid and Neutralizing Gas are not
-    /// supported.
+    /// `WeatherChange` has no implemented handler.
     pub fn weather_suppressed(&self) -> bool {
-        State::<N>::slot_refs().any(|slot| {
-            self.slot_mon(slot)
-                .is_some_and(|mon| mon.ability.data().suppress_weather)
-        })
+        State::<N>::slot_refs().any(|slot| self.ability(slot).data().suppress_weather)
     }
 
     pub fn terrain(&self) -> Terrain {
@@ -395,7 +401,8 @@ impl<'a, const N: usize> Battle<'a, N> {
         if immunity == TypeImmunities::SANDSTORM {
             // Sand Rush, Sand Force, Sand Veil (breakable): `onImmunity(type) { if (type ===
             // 'sandstorm') return false; }`.
-            let sand_ability = [abilities::SAND_RUSH, abilities::SAND_FORCE].contains(&mon.ability);
+            let sand_ability =
+                [abilities::SAND_RUSH, abilities::SAND_FORCE].contains(&self.ability(slot));
             let sand_veil = self.ability_unless_broken(slot) == abilities::SAND_VEIL;
             return sand_ability || sand_veil || overcoat;
         }
@@ -441,7 +448,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         super::abilities::on_damage(self, target, source == DamageSource::Move, multihit);
         let mut amount = (amount.floor() as i32).max(1);
         let mon = self.mon(pokemon);
-        let cancelled = match mon.ability {
+        let cancelled = match self.ability(target) {
             a if a == abilities::ROCK_HEAD => source == DamageSource::Recoil,
             a if a == abilities::MAGIC_GUARD => source != DamageSource::Move,
             _ => false,
@@ -572,13 +579,14 @@ impl<'a, const N: usize> Battle<'a, N> {
     }
 
     /// Showdown `faintMessages(lastFirst = false, forceCheck = false, checkWin)`. Returns
-    /// whether the battle is over.
-    pub fn faint_messages(&mut self, check_win: bool) -> bool {
+    /// whether the battle is over; an error when a fainted Neutralizing Gas holder's `End`
+    /// restarts an ability the engine cannot start.
+    pub fn faint_messages(&mut self, check_win: bool) -> Result<bool, TurnError> {
         if self.state.result.is_over() {
-            return true;
+            return Ok(true);
         }
         if self.faint_queue.is_empty() {
-            return false;
+            return Ok(false);
         }
         let mut check_win = check_win;
         // `const length = this.faintQueue.length`, and `faintData`: the last entry taken from
@@ -601,6 +609,15 @@ impl<'a, const N: usize> Battle<'a, N> {
             if self.faint_queue.len() >= queue_left {
                 check_win = true;
             }
+            // Soul-Heart's `onAnyFaint` belongs to the Faint event, before the fainted Pokémon's
+            // ability `End`: its holders are the ones acting while a fainting Neutralizing Gas
+            // still suppresses them.
+            let hearts = super::abilities::soul_heart_holders(self);
+            // `singleEvent('End', ability)`: Neutralizing Gas's `onEnd` (unless it already ran:
+            // `abilityState.ending`) restarts the other abilities; it runs once the holder has
+            // left below (at 0 HP it is in no target list, and its `ending` excludes it).
+            let gas_ends = self.raw_ability(slot) == abilities::NEUTRALIZING_GAS
+                && !self.volatile(slot, Volatile::NeutralizingGasEnding).active;
             // clearVolatile: the ability and types revert; the slot empties (isActive = false).
             self.clear_volatile(pokemon);
             let previous = self.state.slot(slot).clone();
@@ -618,11 +635,14 @@ impl<'a, const N: usize> Battle<'a, N> {
             // only faints its attacker: a holder it knocks out gets no boost either way), run
             // once the faint counts as processed (`pokemonLeft` dropped: `boost` needs
             // `foePokemonLeft()`).
-            super::abilities::soul_heart(self);
+            super::abilities::soul_heart(self, &hearts);
             self.record_faint(pokemon.side);
+            if gas_ends {
+                super::abilities::neutralizing_gas_end(self, None)?;
+            }
         }
         if check_win && self.check_win(last) {
-            return true;
+            return Ok(true);
         }
         // `runEvent('AfterFaint', faintData.target, faintData.source, faintData.effect,
         // length)`: only the source's `onSourceAfterFaint` handlers exist, and they need a move's
@@ -630,7 +650,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         if let Some(source) = last_source {
             super::abilities::after_faint(self, source, length);
         }
-        false
+        Ok(false)
     }
 
     /// The party-side part of Showdown `clearVolatile` when a Pokémon leaves the field: the

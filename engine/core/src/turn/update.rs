@@ -118,7 +118,7 @@ fn item_wants_eating<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
     // `pokemon.hp <= pokemon.maxhp / 2` and `/ 4`, in integers.
     let half = 2 * hp <= max_hp;
     // Gluttony's `abilityState.gluttony` is set on switch-in and on damage: always set here.
-    let pinch = 4 * hp <= max_hp || (half && mon.ability == abilities::GLUTTONY);
+    let pinch = 4 * hp <= max_hp || (half && b.ability(slot) == abilities::GLUTTONY);
     if item == items::SITRUS_BERRY || item == items::ORAN_BERRY {
         half
     } else if FIGY_BERRIES.iter().any(|&(i, _)| i == item)

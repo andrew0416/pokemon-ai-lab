@@ -1,0 +1,121 @@
+{
+ "scenario": "u-neutralizing-gas-shadow-tag.json",
+ "before": {
+  "schema": 1,
+  "turn": 1,
+  "ended": false,
+  "winner": "",
+  "field": {
+   "weather": "",
+   "weatherDuration": null,
+   "terrain": "",
+   "terrainDuration": null,
+   "pseudoWeather": {}
+  },
+  "sides": [
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Blissey",
+      "species": "Blissey",
+      "hp": 362,
+      "maxhp": 362,
+      "status": "",
+      "item": "",
+      "ability": "naturalcure",
+      "slot": null,
+      "pp": {
+       "harden": 20
+      }
+     },
+     {
+      "name": "Snorlax",
+      "species": "Snorlax",
+      "hp": 267,
+      "maxhp": 267,
+      "status": "",
+      "item": "",
+      "ability": "thickfat",
+      "slot": 1,
+      "pp": {
+       "harden": 20
+      },
+      "boosts": {},
+      "volatiles": {}
+     },
+     {
+      "name": "Weezing",
+      "species": "Weezing-Galar",
+      "hp": 172,
+      "maxhp": 172,
+      "status": "",
+      "item": "",
+      "ability": "neutralizinggas",
+      "slot": 0,
+      "pp": {
+       "harden": 20
+      },
+      "boosts": {},
+      "volatiles": {}
+     }
+    ]
+   },
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Gothitelle",
+      "species": "Gothitelle",
+      "hp": 177,
+      "maxhp": 177,
+      "status": "",
+      "item": "",
+      "ability": "shadowtag",
+      "slot": 0,
+      "pp": {
+       "harden": 20
+      },
+      "boosts": {},
+      "volatiles": {}
+     },
+     {
+      "name": "Metagross",
+      "species": "Metagross",
+      "hp": 187,
+      "maxhp": 187,
+      "status": "",
+      "item": "",
+      "ability": "clearbody",
+      "slot": 1,
+      "pp": {
+       "harden": 20
+      },
+      "boosts": {},
+      "volatiles": {}
+     }
+    ]
+   }
+  ]
+ },
+ "trapped": {
+  "p1": {
+   "Weezing": false,
+   "Snorlax": false
+  },
+  "p2": {
+   "Gothitelle": false,
+   "Metagross": false
+  }
+ }
+}

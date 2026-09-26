@@ -521,6 +521,15 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         ],
         StartEffect::GorillaTactics,
     ),
+    // Neutralizing Gas: no `onStart` (a `Start` does nothing); its `onSwitchIn` (priority 2) is
+    // `run_switch_in`'s (`abilities::neutralizing_gas_switch_in`), its `onEnd`
+    // `abilities::neutralizing_gas_end` (switching out, fainting, losing the ability, Gastro
+    // Acid); the suppression itself is `abilities::ignoring_ability`.
+    (
+        abilities::NEUTRALIZING_GAS,
+        &["onEnd", "onSwitchIn"],
+        StartEffect::None,
+    ),
 ];
 
 /// What `ability` does when it starts, or `None` if it has a switch-in handler that is not
@@ -705,6 +714,12 @@ fn switch_in_as<const N: usize>(
             }
             super::abilities::on_switch_out(b, slot);
             super::forme::on_switch_out(b, slot);
+            // `singleEvent('End', oldActive.getAbility())` while it is still active: Neutralizing
+            // Gas's `onEnd` restarts the abilities it suppressed (no other ability's `End` acts
+            // on a Pokémon that leaves).
+            if b.raw_ability(slot) == abilities::NEUTRALIZING_GAS {
+                super::abilities::neutralizing_gas_end(b, Some(slot))?;
+            }
         }
         b.clear_volatile(outgoing);
     }
@@ -861,9 +876,14 @@ pub(crate) fn run_switch_in<const N: usize>(
                     return Ok(());
                 }
             }
+            // `singleEvent` skips a suppressed ability (`ignoringAbility`) or one that changed.
             SwitchInHandler::Ability(ability) => {
                 if b.ability(slot) == ability {
-                    start_ability(b, slot, ability)?;
+                    if ability == abilities::NEUTRALIZING_GAS {
+                        super::abilities::neutralizing_gas_switch_in(b, slot);
+                    } else {
+                        start_ability(b, slot, ability)?;
+                    }
                 }
             }
             SwitchInHandler::Item(item) => super::items::switch_in_item(b, slot, item),
@@ -927,12 +947,16 @@ pub(crate) fn run_switch<const N: usize>(
     run_switch_in(b, &[slot])
 }
 
-/// `singleEvent('Start')` of `ability` for the Pokémon at `slot`.
+/// `singleEvent('Start')` of `ability` for the Pokémon at `slot`: nothing while the holder
+/// ignores its ability (`ignoringAbility`: Gastro Acid, Neutralizing Gas).
 pub(crate) fn start_ability<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
     ability: AbilityId,
 ) -> Result<(), TurnError> {
+    if b.ability(slot) != ability {
+        return Ok(());
+    }
     let Some(effect) = start_effect(ability) else {
         return Err(b.unsupported(format!(
             "ability {} starting ({:?})",
@@ -1098,13 +1122,14 @@ fn once_per_battle<const N: usize>(
 fn weather_change<const N: usize>(b: &Battle<'_, N>) -> Result<(), TurnError> {
     for slot in b.all_alive() {
         let mon = b.slot_mon(slot).expect("alive");
-        let ability_handlers = if mon.ability == abilities::ICE_FACE {
+        let ability = b.ability(slot);
+        let ability_handlers = if ability == abilities::ICE_FACE {
             &[][..]
         } else {
-            mon.ability.data().handlers
+            ability.data().handlers
         };
         let handlers = [
-            (mon.ability.data().name, ability_handlers),
+            (ability.data().name, ability_handlers),
             (mon.item.data().name, mon.item.data().handlers),
             (mon.species.data().name, mon.species.data().handlers),
         ];
@@ -1118,10 +1143,12 @@ fn weather_change<const N: usize>(b: &Battle<'_, N>) -> Result<(), TurnError> {
 }
 
 /// `singleEvent('End')` of the ability the Pokémon at `slot` loses while staying active
-/// (`setAbility` during a forme change). Flash Fire's `onEnd` removes its volatile; Air Lock's
-/// and Cloud Nine's end their suppression (the new ability no longer suppresses) and run
-/// `WeatherChange`; Unnerve's has nothing to undo; an ability without `onEnd` does nothing.
-/// Any other `onEnd` is unsupported.
+/// (`setAbility` during a forme change, or Gastro Acid suppressing it: `End` runs even for a
+/// suppressed ability). Flash Fire's `onEnd` removes its volatile; Air Lock's and Cloud Nine's
+/// end their suppression (the new ability no longer suppresses) and run `WeatherChange`;
+/// Neutralizing Gas's restarts the abilities it suppressed (`abilities::neutralizing_gas_end`);
+/// Unnerve's has nothing to undo; an ability without `onEnd` does nothing. Any other `onEnd` is
+/// unsupported.
 pub(crate) fn end_ability<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
@@ -1175,6 +1202,9 @@ pub(crate) fn end_ability<const N: usize>(
     if ability == abilities::AIR_LOCK || ability == abilities::CLOUD_NINE {
         return weather_change(b);
     }
+    if ability == abilities::NEUTRALIZING_GAS {
+        return super::abilities::neutralizing_gas_end(b, Some(slot));
+    }
     if ability.data().handlers.contains(&"onEnd") {
         return Err(b.unsupported(format!(
             "ability {} ending ({:?})",
@@ -1192,7 +1222,11 @@ pub(crate) fn end_ability<const N: usize>(
 fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), TurnError> {
     let pokemon = b.alive(holder).expect("the holder is active");
     let foes = b.alive_slots(holder.side.other());
-    if foes.iter().any(|&f| b.ability(f) == abilities::NO_ABILITY) {
+    // `foeActive.ability === 'noability'`, `target.getAbility()`: the raw abilities.
+    if foes
+        .iter()
+        .any(|&f| b.raw_ability(f) == abilities::NO_ABILITY)
+    {
         return Err(b.unsupported("Trace next to No Ability"));
     }
     if b.mon(pokemon).item == items::ABILITY_SHIELD {
@@ -1200,7 +1234,12 @@ fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), T
     }
     let targets: Vec<SlotRef> = foes
         .into_iter()
-        .filter(|&f| !b.ability(f).data().flags.contains(AbilityFlags::NOTRACE))
+        .filter(|&f| {
+            !b.raw_ability(f)
+                .data()
+                .flags
+                .contains(AbilityFlags::NOTRACE)
+        })
         .collect();
     if targets.is_empty() {
         return Err(
@@ -1208,7 +1247,7 @@ fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), T
         );
     }
     let target = targets[b.rng.uniform(targets.len())];
-    let copied = b.ability(target);
+    let copied = b.raw_ability(target);
     if copied.data().flags.contains(AbilityFlags::CANTSUPPRESS) {
         return Err(b.unsupported(format!(
             "Trace copying {} (cantsuppress: setAbility fails and Trace keeps seeking)",

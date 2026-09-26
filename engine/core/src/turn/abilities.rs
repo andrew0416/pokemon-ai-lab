@@ -119,6 +119,159 @@ pub(crate) fn priority(orders: &[(&str, i16)], name: &str) -> i32 {
         .map_or(0, |&(_, p)| i32::from(p))
 }
 
+// ---- ability suppression (Gastro Acid, Neutralizing Gas) ------------------------------------
+
+/// Showdown `pokemon.ignoringAbility()` for the Pokémon in `slot` (no occupant: `true`, an
+/// inactive Pokémon ignores its ability): a `cantsuppress` ability never is; the `gastroacid`
+/// volatile suppresses; otherwise an Ability Shield (the effective item) or holding Neutralizing
+/// Gas itself protects, and any active Pokémon with Neutralizing Gas (raw: `pokemon.ability`)
+/// that is neither Gastro Acid'd nor ending (`abilityState.ending`,
+/// [`Volatile::NeutralizingGasEnding`]) suppresses it, unless it is commanding. Transform is not
+/// modelled (its `notransform` branch never applies).
+pub(crate) fn ignoring_ability<const N: usize>(state: &State<N>, slot: SlotRef) -> bool {
+    let Some(mon) = state.active(slot) else {
+        return true;
+    };
+    let volatiles = &state.slot(slot).volatiles;
+    let gastro_acid = volatiles.has(Volatile::GastroAcid);
+    // The common case first: nothing on the field suppresses anything.
+    if !gastro_acid && !neutralizing_gas_on_field(state) {
+        return false;
+    }
+    if mon
+        .ability
+        .data()
+        .flags
+        .contains(AbilityFlags::CANTSUPPRESS)
+    {
+        return false;
+    }
+    if gastro_acid {
+        return true;
+    }
+    let shielded = mon.item == items::ABILITY_SHIELD && !super::items::ignoring_item(state, slot);
+    if shielded || mon.ability == abilities::NEUTRALIZING_GAS {
+        return false;
+    }
+    !volatiles.has(Volatile::Commanding)
+}
+
+/// Whether an active Pokémon (fainted or not, until its faint is processed) suppresses the
+/// others' abilities with Neutralizing Gas: `pokemon.ability === 'neutralizinggas' &&
+/// !pokemon.volatiles['gastroacid'] && !pokemon.abilityState.ending`.
+fn neutralizing_gas_on_field<const N: usize>(state: &State<N>) -> bool {
+    State::<N>::slot_refs().any(|s| {
+        state
+            .active(s)
+            .is_some_and(|m| m.ability == abilities::NEUTRALIZING_GAS)
+            && !state.slot(s).volatiles.has(Volatile::GastroAcid)
+            && !state.slot(s).volatiles.has(Volatile::NeutralizingGasEnding)
+    })
+}
+
+/// The ability whose handlers act for the Pokémon in `slot` (`hasAbility`, `runEvent`):
+/// `NONE` while it is suppressed ([`ignoring_ability`]).
+pub(crate) fn effective_ability<const N: usize>(state: &State<N>, slot: SlotRef) -> AbilityId {
+    match state.active(slot) {
+        Some(mon) if !ignoring_ability(state, slot) => mon.ability,
+        _ => AbilityId::NONE,
+    }
+}
+
+/// Neutralizing Gas's `onSwitchIn` (priority 2) for its holder in `holder`: its
+/// `abilityState.ending` starts false (a switch-in's volatiles are fresh). For the other active
+/// Pokémon (not behind an Ability Shield, not commanding) it only ends Illusion and the primal
+/// weathers, which are refused on the field. No ability's `End` runs: the suppressed abilities
+/// just stop acting ([`ignoring_ability`]).
+pub(crate) fn neutralizing_gas_switch_in<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) {
+    b.delete_volatile(holder, Volatile::NeutralizingGasEnding);
+}
+
+/// Neutralizing Gas's `onEnd` for a holder leaving the field or losing its ability (switching
+/// out, `setAbility`, Gastro Acid's `End`): `source` is its slot while it is still there, `None`
+/// once it has fainted and left (the caller then checks its `ending` itself, and the holder no
+/// longer counts: at 0 HP it is in no `foes()` list either).
+/// - Nothing if another active Pokémon has Neutralizing Gas that acts (`hasAbility`), or if the
+///   holder's `ending` is set already; otherwise `ending` is set (the holder stops suppressing).
+/// - Every other active Pokémon, by `speedSort` (`pokemon.speed`, ties at random), whose ability
+///   is not `cantsuppress` and that holds no Ability Shield (the effective item) runs its
+///   ability's `Start` again (`singleEvent('Start')`, skipped while it is still suppressed:
+///   `switching::start_ability`). Gluttony's `abilityState.gluttony = false` after its restart
+///   is state the engine does not keep, so that restart is unsupported.
+pub(crate) fn neutralizing_gas_end<const N: usize>(
+    b: &mut Battle<'_, N>,
+    source: Option<SlotRef>,
+) -> Result<(), super::TurnError> {
+    let others: Vec<SlotRef> = State::<N>::slot_refs()
+        .filter(|&s| Some(s) != source && b.occupant(s).is_some())
+        .collect();
+    if others
+        .iter()
+        .any(|&s| b.ability(s) == abilities::NEUTRALIZING_GAS)
+    {
+        return Ok(());
+    }
+    if let Some(source) = source {
+        if b.volatile(source, Volatile::NeutralizingGasEnding).active {
+            return Ok(());
+        }
+        let ending = VolatileState {
+            active: true,
+            ..VolatileState::NONE
+        };
+        b.set_volatile_state(source, Volatile::NeutralizingGasEnding, ending);
+    }
+    let restarting: Vec<SlotRef> = others
+        .into_iter()
+        .filter(|&s| {
+            !b.raw_ability(s)
+                .data()
+                .flags
+                .contains(AbilityFlags::CANTSUPPRESS)
+                && b.item(s) != items::ABILITY_SHIELD
+        })
+        .collect();
+    let acts = |b: &Battle<'_, N>, s: SlotRef| {
+        let ability = b.raw_ability(s);
+        b.ability(s) == ability
+            && super::switching::start_effect(ability) != Some(super::switching::StartEffect::None)
+    };
+    for &s in &restarting {
+        if b.alive(s).is_none() && acts(b, s) {
+            return Err(b.unsupported(format!(
+                "{} restarting after Neutralizing Gas at 0 HP",
+                b.raw_ability(s).data().name
+            )));
+        }
+    }
+    let order = speed_sorted(b, restarting, acts);
+    for slot in order {
+        let ability = b.raw_ability(slot);
+        if b.alive(slot).is_none() {
+            continue;
+        }
+        if ability == abilities::GLUTTONY {
+            return Err(b.unsupported(
+                "Gluttony restarting after Neutralizing Gas (its abilityState.gluttony = false)",
+            ));
+        }
+        super::switching::start_ability(b, slot, ability)?;
+    }
+    Ok(())
+}
+
+/// Gastro Acid's condition `onStart` once the volatile is added to the Pokémon in `slot` (its
+/// Ability Shield check is in `conditions::volatile_start`): the ability's `End`
+/// (`singleEvent('End')` runs even for a suppressed ability: `switching::end_ability`, with
+/// Neutralizing Gas's there).
+pub(crate) fn gastro_acid_start<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+) -> Result<(), super::TurnError> {
+    let ability = b.raw_ability(slot);
+    super::switching::end_ability(b, slot, ability)
+}
+
 /// The ability of the Pokémon in `holder` as the handlers of `user`'s move see it. Showdown
 /// `suppressingAbility` (gen 8+): a move that ignores abilities (Sunsteel Strike, Moongeist
 /// Beam, or any move of a Mold Breaker user) skips the breakable abilities of everyone but its
@@ -482,7 +635,8 @@ pub(crate) fn gorilla_disabled_move<const N: usize>(
 ) -> Option<String> {
     let mon = state.active(slot)?;
     let lock = state.slot(slot).volatiles.get(Volatile::GorillaTactics);
-    (mon.ability == abilities::GORILLA_TACTICS && lock.active && lock.mv != id).then(|| {
+    let acts = effective_ability(state, slot) == abilities::GORILLA_TACTICS;
+    (acts && lock.active && lock.mv != id).then(|| {
         format!(
             "{} is locked into {} by Gorilla Tactics",
             mon.species.data().name,
@@ -815,7 +969,8 @@ pub(crate) fn skill_swap<const N: usize>(
     else {
         return Ok(());
     };
-    let (source_ability, target_ability) = (b.ability(source), b.ability(target));
+    // `source.getAbility()` / `target.getAbility()`: the raw abilities.
+    let (source_ability, target_ability) = (b.raw_ability(source), b.raw_ability(target));
     let fails = |a: AbilityId| a.data().flags.contains(AbilityFlags::FAILSKILLSWAP);
     if fails(source_ability) || fails(target_ability) {
         return Ok(());
@@ -916,14 +1071,24 @@ pub(crate) fn harvest<const N: usize>(b: &mut Battle<'_, N>, pokemon: PokemonRef
 /// every active holder not at 0 HP raises its SpA by 1 (`this.boost({spa: 1},
 /// this.effectState.target)`; `boost` does nothing at 0 HP, and fails once the holder's foes have
 /// no Pokémon left). Each only changes its holder.
-pub(crate) fn soul_heart<const N: usize>(b: &mut Battle<'_, N>) {
-    for slot in b.all_alive() {
-        if b.ability(slot) == abilities::SOUL_HEART {
+pub(crate) fn soul_heart<const N: usize>(b: &mut Battle<'_, N>, holders: &[SlotRef]) {
+    for &slot in holders {
+        if b.alive(slot).is_some() && b.raw_ability(slot) == abilities::SOUL_HEART {
             let mut up = NO_BOOSTS;
             up[2] = 1;
             b.boost_by(slot, &up, None, BoostEffect::Ability(abilities::SOUL_HEART));
         }
     }
+}
+
+/// The active Soul-Heart holders whose `onAnyFaint` acts ([`soul_heart`]), taken while the
+/// fainting Pokémon is still in its slot (a fainting Neutralizing Gas holder still suppresses
+/// them in the Faint event).
+pub(crate) fn soul_heart_holders<const N: usize>(b: &Battle<'_, N>) -> Vec<SlotRef> {
+    b.all_alive()
+        .into_iter()
+        .filter(|&s| b.ability(s) == abilities::SOUL_HEART)
+        .collect()
 }
 
 /// Anger Shell and Berserk (Champions): `onDamage` sets `abilityState.checked*` to
@@ -1085,7 +1250,7 @@ pub(crate) fn try_eat_item<const N: usize>(b: &Battle<'_, N>, eater: SlotRef) ->
         return false;
     };
     let item = mon.item;
-    let pending = has_berserk_check(mon.ability)
+    let pending = has_berserk_check(b.ability(eater))
         && b.volatile(eater, Volatile::AngerShellUnchecked).active
         && HEALING_BERRIES.contains(&item);
     let unnerved = b.alive_slots(eater.side.other()).into_iter().any(|foe| {
@@ -1174,17 +1339,16 @@ pub fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> bool {
     if super::conditions::trapped(state, slot).is_some() {
         return true;
     }
+    // The foes' abilities as they act (a suppressed Shadow Tag traps nobody).
     let foe_traps = State::<N>::slot_refs().any(|s| {
         s.side != slot.side
-            && state.active(s).is_some_and(|m| {
-                m.hp > 0
-                    && [
-                        abilities::SHADOW_TAG,
-                        abilities::ARENA_TRAP,
-                        abilities::MAGNET_PULL,
-                    ]
-                    .contains(&m.ability)
-            })
+            && state.active(s).is_some_and(|m| m.hp > 0)
+            && [
+                abilities::SHADOW_TAG,
+                abilities::ARENA_TRAP,
+                abilities::MAGNET_PULL,
+            ]
+            .contains(&effective_ability(state, s))
     });
     if !foe_traps {
         return false;
@@ -1205,7 +1369,7 @@ fn trapped_in<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
         && b.alive_slots(slot.side.other())
             .into_iter()
             .any(|foe| match b.ability(foe) {
-                a if a == abilities::SHADOW_TAG => mon.ability != abilities::SHADOW_TAG,
+                a if a == abilities::SHADOW_TAG => b.ability(slot) != abilities::SHADOW_TAG,
                 a if a == abilities::ARENA_TRAP => b.is_grounded(slot),
                 a if a == abilities::MAGNET_PULL => mon.types.contains(&Type::Steel),
                 _ => false,
@@ -1402,12 +1566,13 @@ pub(crate) fn attack_handlers<const N: usize>(
     let Some(attacker) = b.slot_mon(user) else {
         return out;
     };
+    // The user's own ability as it acts (Gastro Acid, Neutralizing Gas).
+    let ability = b.ability(user);
     // Water Bubble: the user's Water moves `chainModify(2)` (no priority).
-    if attacker.ability == abilities::WATER_BUBBLE && move_type == Type::Water {
-        let p = priority(attacker.ability.data().event_orders, event);
+    if ability == abilities::WATER_BUBBLE && move_type == Type::Water {
+        let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_DOUBLE));
     }
-    let ability = attacker.ability;
     // Blaze, Torrent, Overgrow, Swarm: `attacker.hp <= attacker.maxhp / 3`.
     let pinch_type = match ability {
         a if a == abilities::BLAZE => Some(Type::Fire),
@@ -1428,7 +1593,9 @@ pub(crate) fn attack_handlers<const N: usize>(
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
     }
-    if let Some(modifier) = own_attack_modifier(b, user, target, attacker, physical, move_type) {
+    if let Some(modifier) =
+        own_attack_modifier(b, user, target, attacker, ability, physical, move_type)
+    {
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, modifier));
     }
@@ -1502,11 +1669,12 @@ fn own_attack_modifier<const N: usize>(
     user: SlotRef,
     target: SlotRef,
     attacker: &Pokemon,
+    ability: AbilityId,
     physical: bool,
     move_type: Type,
 ) -> Option<u32> {
     let typed = |ty: Type, modifier: u32| (move_type == ty).then_some(modifier);
-    match attacker.ability {
+    match ability {
         a if a == abilities::HUGE_POWER || a == abilities::PURE_POWER => {
             physical.then_some(MOD_DOUBLE)
         }
@@ -1540,6 +1708,10 @@ pub(crate) fn paradox_volatile_of<const N: usize>(
     b: &Battle<'_, N>,
     slot: SlotRef,
 ) -> Option<(AbilityId, u16)> {
+    // `if (this.effectState.bestStat !== ... || pokemon.ignoringAbility()) return;`
+    if ignoring_ability(b.state, slot) {
+        return None;
+    }
     let proto = b.volatile(slot, Volatile::Protosynthesis);
     if proto.active {
         return Some((abilities::PROTOSYNTHESIS, proto.counter));
@@ -1674,11 +1846,11 @@ pub(crate) fn blocks_status(ability: AbilityId, status: Status) -> bool {
 }
 
 /// Whether a burned user's physical damage is halved: Showdown skips it for Guts
-/// (`!pokemon.hasAbility('guts')`).
-pub(crate) fn burn_halves(attacker: &Pokemon, data: &MoveData) -> bool {
+/// (`!pokemon.hasAbility('guts')`: `ability` is the user's as it acts).
+pub(crate) fn burn_halves(attacker: &Pokemon, ability: AbilityId, data: &MoveData) -> bool {
     attacker.status == Status::Burn
         && data.category == MoveCategory::Physical
-        && attacker.ability != abilities::GUTS
+        && ability != abilities::GUTS
 }
 
 /// The attacking stat after the handlers of the `ModifyAtk` event that return a new value
