@@ -275,7 +275,7 @@ pub(super) fn secondaries<const N: usize>(
     if mv.has_sheer_force {
         return Vec::new();
     }
-    let all = mv.data.secondaries;
+    let all = super::handlers::move_secondaries(b, mv);
     if b.ability_unless_broken(target) == abilities::SHIELD_DUST {
         return all.iter().filter(|s| s.self_boosts != NO_BOOSTS).collect();
     }

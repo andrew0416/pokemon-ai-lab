@@ -1669,6 +1669,7 @@ fn try_spread_move_hit<const N: usize>(
         });
     }
     // 3. Move-specific immunities: powder, the move's `onTryImmunity`, Prankster vs Dark.
+    handlers::try_immunity_problem(b, user, mv, &targets)?;
     targets.retain(|&t| {
         let powder = mv.data.flags.contains(MoveFlags::POWDER)
             && t != user
@@ -2439,7 +2440,7 @@ fn spread_move_hit<const N: usize>(
         {
             note(b.boost_by(t, &boosts, Some(user), BoostEffect::Move(mv.id)));
         }
-        if let Some(heal) = data.heal {
+        if let Some(heal) = handlers::move_heal(mv) {
             let target_mon = b.occupant(t).map(|p| b.mon(p));
             let full = target_mon.is_none_or(|m| m.hp >= m.max_hp);
             if full {

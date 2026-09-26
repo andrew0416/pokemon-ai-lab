@@ -153,6 +153,12 @@ pub(super) fn on_modify_move<const N: usize>(
         // Struggle: `move.type = '???'` (typeless: `Type::None` for the move, which no type chart
         // entry, STAB or type-based handler matches).
         moves::STRUGGLE => mv.move_type = Type::None,
+        // Present: `const rand = this.random(10);` below 2: `move.heal = [1, 4]` and
+        // `move.infiltrates = true` (the power stays 0: [`move_heal`], [`infiltrates`]); below 6:
+        // 40 power; below 9: 80; else 120.
+        moves::PRESENT => {
+            mv.base_power = [0, 40, 80, 120][b.rng.weighted(&[0.2, 0.4, 0.3, 0.1])];
+        }
         // Bleakwind Storm, Sandsear Storm, Wildbolt Storm: `if (target &&
         // ['raindance', 'primordialsea'].includes(target.effectiveWeather())) move.accuracy =
         // true;` (the target is the spread move's nominal one, a random foe).
@@ -331,6 +337,24 @@ pub(super) fn on_try_immunity<const N: usize>(
         // Worry Seed: `if (target.ability === 'truant' || target.ability === 'insomnia') return
         // false;` (before accuracy).
         moves::WORRY_SEED => ![abilities::TRUANT, abilities::INSOMNIA].contains(&b.ability(target)),
+        // Synchronoise: `return target.hasType(source.getTypes());` (a type in common).
+        moves::SYNCHRONOISE => {
+            let mine = b.slot_mon(user).map_or([Type::None; 2], |m| m.types);
+            mine.into_iter()
+                .filter(|&t| t != Type::None)
+                .any(|t| b.has_type(target, t))
+        }
+        // Captivate: `return (pokemon.gender === 'M' && source.gender === 'F') || (pokemon.gender
+        // === 'F' && source.gender === 'M');` (an undecided gender is refused before:
+        // [`try_immunity_problem`]).
+        moves::CAPTIVATE => {
+            use crate::dex::Gender;
+            let gender = |s: SlotRef| b.slot_mon(s).map_or(Gender::Genderless, |m| m.gender);
+            matches!(
+                (gender(target), gender(user)),
+                (Gender::Male, Gender::Female) | (Gender::Female, Gender::Male)
+            )
+        }
         // Octolock: `return this.dex.getImmunity('trapped', target);` (the types only: a Ghost).
         moves::OCTOLOCK => !b.natural_immune(target, crate::dex::TypeImmunities::TRAPPED),
         // Dream Eater: `return target.status === 'slp' || target.hasAbility('comatose');`
@@ -340,6 +364,30 @@ pub(super) fn on_try_immunity<const N: usize>(
                 || b.ability(target) == abilities::COMATOSE
         }
         _ => true,
+    }
+}
+
+/// Why the move's `onTryImmunity` cannot be decided for `targets`: Captivate between Pokémon of
+/// which one has an undecided gender (Showdown drew it at random when the battle started).
+pub(super) fn try_immunity_problem<const N: usize>(
+    b: &Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    targets: &[SlotRef],
+) -> Result<(), TurnError> {
+    if mv.id != moves::CAPTIVATE {
+        return Ok(());
+    }
+    let undecided = std::iter::once(user)
+        .chain(targets.iter().copied())
+        .filter_map(|s| b.slot_mon(s))
+        .find(|m| m.gender == crate::dex::Gender::Random);
+    match undecided {
+        Some(m) => Err(b.unsupported(format!(
+            "Captivate with {} of undecided gender (give the set a gender)",
+            m.species.data().name
+        ))),
+        None => Ok(()),
     }
 }
 
@@ -377,6 +425,13 @@ pub(super) fn damage_callback<const N: usize>(
                 .map_or(0, |d| i32::from(d.damage));
             let scaled = damage * 3 / 2;
             Some(if scaled == 0 { 1 } else { scaled })
+        }
+        // Psywave: `(this.random(50, 151) * pokemon.level) / 100`, which `pokemon.damage`
+        // truncates.
+        moves::PSYWAVE => {
+            let level = b.slot_mon(user).map_or(0, |m| i32::from(m.level));
+            let factor = 50 + b.rng.uniform(101) as i32;
+            Some(factor * level / 100)
         }
         // Counter, Mirror Coat: `pokemon.volatiles['counter'].damage || 1` (0 without the
         // condition, which `onTry` already failed on).
@@ -560,6 +615,22 @@ pub(super) fn on_try_hit<const N: usize>(
                 }
                 super::call_move(b, user, mv, copied, Some(target))?;
             }
+            false
+        }
+        // Nature Power: by the terrain, Thunderbolt, Energy Ball, Moonblast, Psychic, else Tri
+        // Attack, `useMove(move, pokemon, {target})`; `return null`.
+        moves::NATURE_POWER => {
+            let called = match b.terrain() {
+                Terrain::Electric => moves::THUNDERBOLT,
+                Terrain::Grassy => moves::ENERGY_BALL,
+                Terrain::Misty => moves::MOONBLAST,
+                Terrain::Psychic => moves::PSYCHIC,
+                Terrain::None => moves::TRI_ATTACK,
+            };
+            if let Some(why) = called_move_problem(b, user, called) {
+                return Err(b.unsupported(format!("Nature Power calling {why}")));
+            }
+            super::call_move(b, user, mv, called, Some(target))?;
             false
         }
         // Healing Wish: `if (!this.canSwitch(source.side)) return this.NOT_FAIL;` — the target
@@ -789,6 +860,7 @@ pub(super) fn infiltrates<const N: usize>(
 ) -> bool {
     b.active_move.is_some_and(|m| m.infiltrates)
         || (mv.id == moves::POLLEN_PUFF && target.side == user.side)
+        || (mv.id == moves::PRESENT && mv.base_power == 0)
 }
 
 /// Whether the move's own `onTryHit` applies its `boosts` and deletes them (`delete
@@ -1007,6 +1079,71 @@ pub(super) fn after_move_secondary_self<const N: usize>(
         _ => {}
     }
     Ok(())
+}
+
+/// The `heal` a move's `runMoveEffects` applies (`moveData.heal`), after its `onModifyMove`:
+/// Present's healing draw (power 0) heals a quarter.
+pub(super) fn move_heal(mv: &ActiveMove) -> Option<crate::dex::Fraction> {
+    if mv.id == moves::PRESENT {
+        return (mv.base_power == 0).then_some(crate::dex::Fraction(1, 4));
+    }
+    mv.data.heal
+}
+
+/// Secret Power's secondaries by terrain (its `onModifyMove` replaces `move.secondaries`).
+static SECRET_POWER_SECONDARIES: [crate::dex::Secondary; 4] = [
+    // Electric Terrain: paralysis (also the data's, without a terrain).
+    crate::dex::Secondary {
+        chance: 30,
+        status: Status::Paralyze,
+        volatile_status: crate::dex::ConditionId::NONE,
+        boosts: NO_BOOSTS,
+        self_boosts: NO_BOOSTS,
+    },
+    // Grassy Terrain: sleep.
+    crate::dex::Secondary {
+        chance: 30,
+        status: Status::Sleep,
+        volatile_status: crate::dex::ConditionId::NONE,
+        boosts: NO_BOOSTS,
+        self_boosts: NO_BOOSTS,
+    },
+    // Misty Terrain: -1 SpA.
+    crate::dex::Secondary {
+        chance: 30,
+        status: Status::None,
+        volatile_status: crate::dex::ConditionId::NONE,
+        boosts: [0, 0, -1, 0, 0, 0, 0],
+        self_boosts: NO_BOOSTS,
+    },
+    // Psychic Terrain: -1 Spe.
+    crate::dex::Secondary {
+        chance: 30,
+        status: Status::None,
+        volatile_status: crate::dex::ConditionId::NONE,
+        boosts: [0, 0, 0, 0, -1, 0, 0],
+        self_boosts: NO_BOOSTS,
+    },
+];
+
+/// The secondaries of the move being used (`move.secondaries` after its `onModifyMove`): Secret
+/// Power's depend on the terrain (read when they apply: nothing between its ModifyMove and its
+/// secondaries changes the terrain).
+pub(super) fn move_secondaries<const N: usize>(
+    b: &Battle<'_, N>,
+    mv: &ActiveMove,
+) -> &'static [crate::dex::Secondary] {
+    if mv.id == moves::SECRET_POWER {
+        let index = match b.terrain() {
+            Terrain::None => return mv.data.secondaries,
+            Terrain::Electric => 0,
+            Terrain::Grassy => 1,
+            Terrain::Misty => 2,
+            Terrain::Psychic => 3,
+        };
+        return &SECRET_POWER_SECONDARIES[index..=index];
+    }
+    mv.data.secondaries
 }
 
 /// The boosts a move's `runMoveEffects` applies (`moveData.boosts`), after its `onModifyMove`:
@@ -1335,13 +1472,23 @@ pub(super) fn modify_target<const N: usize>(
 /// The move's own `onBasePower` modifier (BasePower handler priority 0, after type items and
 /// terrain). Knock Off's is in `get_damage`.
 pub(super) fn on_base_power<const N: usize>(
-    b: &Battle<'_, N>,
+    b: &mut Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
     mv: &ActiveMove,
 ) -> Option<u32> {
+    // Fickle Beam: `if (this.randomChance(3, 10)) return this.chainModify(2);` (per target).
+    if mv.id == moves::FICKLE_BEAM {
+        return b.rng.chance(3, 10).then_some(2 * 4096);
+    }
     let target_mon = b.slot_mon(target);
     match mv.id {
+        // Barb Barrage: `if (target.status === 'psn' || target.status === 'tox')` double.
+        moves::BARB_BARRAGE
+            if target_mon.is_some_and(|m| matches!(m.status, Status::Poison | Status::Toxic)) =>
+        {
+            Some(2 * 4096)
+        }
         // Facade: `if (pokemon.status && pokemon.status !== 'slp') return this.chainModify(2);`
         moves::FACADE
             if b.slot_mon(user)

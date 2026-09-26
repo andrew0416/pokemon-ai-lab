@@ -1041,6 +1041,18 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
         &["basePowerCallback", "onAfterMove", "onTry"],
     ),
     (moves::SWALLOW, &["onHit", "onTry"]),
+    // Opus V unit 9a: Present's power draw and heal (`handlers::on_modify_move`, `move_heal`,
+    // `infiltrates`), Secret Power's terrain secondaries (`handlers::move_secondaries`), Nature
+    // Power's terrain move (`moves::call_move`), Psywave's `damageCallback`, Barb Barrage's and
+    // Fickle Beam's `onBasePower`, Synchronoise's and Captivate's `onTryImmunity`.
+    (moves::PRESENT, &["onModifyMove"]),
+    (moves::SECRET_POWER, &["onModifyMove"]),
+    (moves::NATURE_POWER, &["onTryHit"]),
+    (moves::PSYWAVE, &["damageCallback"]),
+    (moves::BARB_BARRAGE, &["onBasePower"]),
+    (moves::FICKLE_BEAM, &["onBasePower"]),
+    (moves::SYNCHRONOISE, &["onTryImmunity"]),
+    (moves::CAPTIVATE, &["onTryImmunity"]),
 ];
 
 /// Items that raise one type's moves by 4915/4096 (`onBasePower`, priority 15) and do
@@ -1991,7 +2003,13 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     // are implemented.
     // Sleep Talk, Copycat and Mirror Move call moves through `moves::call_move` (the called move
     // is checked when it is called: `handlers::called_move_problem`).
-    let calls_supported = [moves::SLEEP_TALK, moves::COPYCAT, moves::MIRROR_MOVE].contains(&id);
+    let calls_supported = [
+        moves::SLEEP_TALK,
+        moves::COPYCAT,
+        moves::MIRROR_MOVE,
+        moves::NATURE_POWER,
+    ]
+    .contains(&id);
     if m.smart_target
         || (m.calls_move && !calls_supported)
         || (m.sleep_usable && !sleep_moves)
@@ -2316,7 +2334,7 @@ mod tests {
     /// - `TryPrimaryHit`: only Aura Break's `onAnyTryPrimaryHit` besides the substitute; the
     ///   gems' `onSourceTryPrimaryHit` and Gulp Missile are refused.
     /// - `move.infiltrates`: Infiltrator (`ActiveMoveRef::infiltrates`) and Pollen Puff are
-    ///   implemented, Present is refused.
+    ///   implemented, and Present's heal (`handlers::infiltrates`).
     /// - Moves whose own code reads a substitute: Aromatherapy and Defog are implemented; Shed
     ///   Tail, Baton Pass, Sky Drop, Tidy Up, Transform, Sparkly Swirl are refused.
     /// - Disguise and Ice Face (`hitSub` in their handlers) are refused behind a substitute
@@ -2381,7 +2399,6 @@ mod tests {
             moves::TIDY_UP,
             moves::TRANSFORM,
             moves::SPARKLY_SWIRL,
-            moves::PRESENT,
         ] {
             assert!(move_unsupported(id).is_some(), "{id:?}");
         }
