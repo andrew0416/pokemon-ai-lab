@@ -7,11 +7,10 @@
 //! abilities skips them like Showdown's `runEvent` does.
 
 use crate::dex::{
-    abilities, items, moves, AbilityFlags, AbilityId, MoveCategory, MoveFlags, MoveTarget, Ohko,
-    Secondary, Type, TypeImmunities, NO_BOOSTS,
+    abilities, items, moves, AbilityId, MoveCategory, MoveFlags, MoveTarget, Ohko, Secondary, Type,
+    TypeImmunities, NO_BOOSTS,
 };
 use crate::field::{SideEffect, Terrain, Weather};
-use crate::instruction::Instruction;
 use crate::state::{SlotRef, Status};
 use crate::volatile::Volatile;
 
@@ -695,26 +694,16 @@ pub(super) fn on_damaging_hit<const N: usize>(
                 b.add_volatile(holder, Volatile::PerishSong);
             }
         }
-        // Mummy, Lingering Aroma: unless the attacker's ability is `cantsuppress` or already
-        // this one, contact: `source.setAbility(this ability, target)` (nothing on an attacker at
-        // 0 HP; the attacker's Ability Shield `onSetAbility` returns `null`, blocking it): the
-        // old ability's `End` (`switching::end_ability`), then the new one, which has no start.
-        a if a == abilities::MUMMY || a == abilities::LINGERING_AROMA => {
-            // `source.getAbility()`: the attacker's raw ability.
-            let old = b.raw_ability(attacker);
-            let locked = old.data().flags.contains(AbilityFlags::CANTSUPPRESS)
-                || old == a
-                || b.item(attacker) == items::ABILITY_SHIELD;
-            if !locked && contact {
-                if let Some(pokemon) = b.alive(attacker) {
-                    super::super::switching::end_ability(b, attacker, old)?;
-                    b.apply(Instruction::SetAbility {
-                        target: pokemon,
-                        old,
-                        new: a,
-                    });
-                }
-            }
+        // Mummy, Lingering Aroma: unless the attacker's ability (`source.getAbility()`: the raw
+        // one) is already this one (or `cantsuppress`, which `setAbility` refuses too), contact:
+        // `source.setAbility(this ability, target)` (`abilities::set_ability`: nothing on an
+        // attacker at 0 HP; its Ability Shield blocks it; the old ability's `End`, then the new
+        // one, which has no start).
+        a if (a == abilities::MUMMY || a == abilities::LINGERING_AROMA)
+            && b.raw_ability(attacker) != a
+            && contact =>
+        {
+            super::super::abilities::set_ability(b, attacker, a)?;
         }
         _ => {}
     }

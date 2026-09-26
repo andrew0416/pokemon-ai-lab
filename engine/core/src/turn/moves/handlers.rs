@@ -6,15 +6,15 @@
 
 use crate::damage::MOD_ONE_POINT_FIVE;
 use crate::dex::{
-    abilities, items, moves, AbilityFlags, AbilityId, ItemId, MoveCategory, MoveFlags, MoveId,
-    MoveTarget, Type, TypeRelation, NO_BOOSTS,
+    abilities, items, moves, AbilityFlags, ItemId, MoveCategory, MoveFlags, MoveId, MoveTarget,
+    Type, TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
 use crate::instruction::Instruction;
 use crate::state::{MoveResult, Pokemon, PokemonRef, SideId, SlotRef, Status, BOOST_COUNT};
 use crate::volatile::{Volatile, VolatileState};
 
-use super::super::abilities::{Handler, SUB_CONDITION};
+use super::super::abilities::{set_ability, Handler, SUB_CONDITION};
 use super::super::battle::{Battle, BoostEffect, DamageSource};
 use super::super::conditions::HAZARDS;
 use super::super::order::{boosted_stat, modify};
@@ -843,60 +843,6 @@ fn called_move_problem(id: MoveId) -> Option<String> {
         || own_actions
         || data.handlers.contains(&"onAfterMove"))
     .then(|| format!("{} (a lock, own actions or AfterMove)", data.name))
-}
-
-/// Showdown `pokemon.setAbility(ability, source)` from a move (Role Play, Entrainment, Simple
-/// Beam, Worry Seed) on the Pokémon at `slot`: fails (`false`) without HP or when the new or the
-/// old ability is `cantsuppress`; `runEvent('SetAbility')` — Ability Shield (the effective item:
-/// Magic Room suppresses it, Klutz does not) returns `null`, a failure too; then the old
-/// ability's `End` (`switching::end_ability`), the new one with a fresh `abilityState` (Protean's
-/// and Libero's used flag go), and its `Start` (`switching::start_ability`: Intimidate, weather,
-/// Trace, ...). An ability the engine does not run on the field is unsupported.
-fn set_ability<const N: usize>(
-    b: &mut Battle<'_, N>,
-    slot: SlotRef,
-    ability: AbilityId,
-) -> Result<bool, TurnError> {
-    let Some(pokemon) = b.alive(slot) else {
-        return Ok(false);
-    };
-    let old = b.mon(pokemon).ability;
-    let locked = |a: AbilityId| a.data().flags.contains(AbilityFlags::CANTSUPPRESS);
-    if locked(ability) || locked(old) || b.item(slot) == items::ABILITY_SHIELD {
-        return Ok(false);
-    }
-    change_ability(b, slot, ability)?;
-    super::super::switching::start_ability(b, slot, ability)?;
-    Ok(true)
-}
-
-/// The part of `setAbility` / `skillSwap` between the SetAbility event and the new ability's
-/// `Start`: the old ability's `End`, then the new one with a fresh `abilityState`.
-fn change_ability<const N: usize>(
-    b: &mut Battle<'_, N>,
-    slot: SlotRef,
-    ability: AbilityId,
-) -> Result<(), TurnError> {
-    let pokemon = b.occupant(slot).expect("an active Pokémon");
-    let old = b.mon(pokemon).ability;
-    if !super::super::support::ability_supported_on_field(ability) {
-        return Err(b.unsupported(format!(
-            "{} gaining {} ({:?})",
-            b.mon(pokemon).species.data().name,
-            ability.data().name,
-            ability.data().handlers
-        )));
-    }
-    super::super::switching::end_ability(b, slot, old)?;
-    b.delete_volatile(slot, Volatile::ProteanUsed);
-    if old != ability {
-        b.apply(Instruction::SetAbility {
-            target: pokemon,
-            old,
-            new: ability,
-        });
-    }
-    Ok(())
 }
 
 /// Showdown `move.infiltrates`: the user's Infiltrator sets it in ModifyMove
