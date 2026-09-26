@@ -2072,6 +2072,16 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // `Battle::faint_messages`).
     (abilities::RECEIVER, &["onAllyFaint"]),
     (abilities::POWER_OF_ALCHEMY, &["onAllyFaint"]),
+    // Opus AA unit 1. Steadfast: `onFlinch` in the flinch BeforeMove (`abilities::steadfast`).
+    // Anger Point: `onHit` in the Hit event (`abilities::anger_point`, reading
+    // `Battle::hit_crit`). Stench: `onModifyMove` appends King's Rock's flinch
+    // (`items::added_secondary`). Long Reach: `onModifyMove` removes contact
+    // (`items::makes_contact`). Corrosion (`Battle::try_set_status_from`) and Early Bird (the
+    // sleep BeforeMove in `moves::before_move`) have no callbacks.
+    (abilities::STEADFAST, &["onFlinch"]),
+    (abilities::ANGER_POINT, &["onHit"]),
+    (abilities::STENCH, &["onModifyMove"]),
+    (abilities::LONG_REACH, &["onModifyMove"]),
 ];
 
 pub(crate) fn type_boost_item(item: ItemId) -> Option<Type> {
@@ -2086,11 +2096,10 @@ fn listed<T: PartialEq + Copy>(table: &[(T, &[&str])], id: T) -> bool {
 }
 
 /// Abilities without callbacks that Showdown's core checks by name (`hasAbility`), with
-/// behaviour not implemented here. Levitate (grounding) and the `onCriticalHit: false`
-/// abilities are implemented.
+/// behaviour not implemented here. Levitate (grounding), the `onCriticalHit: false` abilities,
+/// Corrosion (`setStatus`) and Early Bird (the `slp` BeforeMove) are implemented; Multitype and
+/// RKS System belong to Arceus and Silvally (`Past` in Champions), Persistent is CAP.
 const CORE_CHECKED_ABILITIES: &[AbilityId] = &[
-    abilities::CORROSION,
-    abilities::EARLY_BIRD,
     abilities::MULTITYPE,
     abilities::RKS_SYSTEM,
     abilities::PERSISTENT,

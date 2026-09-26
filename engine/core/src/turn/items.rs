@@ -722,7 +722,8 @@ pub(crate) fn base_power_handlers<const N: usize>(
 }
 
 /// Whether the move being used has the `contact` flag after ModifyMove: Punching Glove's
-/// `onModifyMove` (priority 1) deletes it from a punching move. Every reader of
+/// `onModifyMove` (priority 1) deletes it from a punching move, the user's Long Reach from every
+/// move. Every reader of
 /// `move.flags['contact']` (and `checkMoveMakesContact`, which adds the Protective Pads check)
 /// goes through this. The glove's holder is the user, whose item cannot change during its own
 /// move (a supported effect that takes or gives items needs an empty-handed user).
@@ -733,6 +734,8 @@ pub(crate) fn makes_contact<const N: usize>(
 ) -> bool {
     data.flags.contains(MoveFlags::CONTACT)
         && !(data.flags.contains(MoveFlags::PUNCH) && b.item(user) == items::PUNCHING_GLOVE)
+        // Long Reach's `onModifyMove`: `delete move.flags['contact']`.
+        && b.ability(user) != abilities::LONG_REACH
 }
 
 // ---- defensive stat items ----------------------------------------------------------------------
@@ -964,11 +967,12 @@ pub(crate) fn crit_ratio_bonus(item: ItemId, holder: &Pokemon) -> i32 {
     0
 }
 
-/// King's Rock / Razor Fang `onModifyMove` (priority -1): a non-status move without a flinch
-/// secondary gets `{chance: 10, volatileStatus: 'flinch'}` appended to its secondaries.
-/// (Serene Grace, priority -2, would double it; it is refused by `support`.)
-pub(crate) fn added_secondary(item: ItemId, data: &MoveData) -> Option<Secondary> {
-    let flinch_item = item == items::KINGS_ROCK || item == items::RAZOR_FANG;
+/// King's Rock / Razor Fang `onModifyMove` (priority -1), and the user's Stench (`stench`; the
+/// ability's `onModifyMove`, also priority -1, is the same code): a non-status move without a
+/// flinch secondary gets `{chance: 10, volatileStatus: 'flinch'}` appended to its secondaries.
+/// Both at once append one: the second finds the first's flinch.
+pub(crate) fn added_secondary(item: ItemId, stench: bool, data: &MoveData) -> Option<Secondary> {
+    let flinch_item = stench || item == items::KINGS_ROCK || item == items::RAZOR_FANG;
     let has_flinch = data
         .secondaries
         .iter()
@@ -1381,10 +1385,12 @@ pub(crate) fn on_hit<const N: usize>(
         super::update::berry_heal(b, target, max_hp / 4.0);
         return;
     }
+    // `this.checkMoveMakesContact(move, source, target)`: the contact flag after ModifyMove
+    // (Long Reach removes it; Punching Glove and Protective Pads need an item the user lacks).
     if user == target
         || b.item(target) != items::STICKY_BARB
         || !b.raw_item(user).is_none()
-        || !data.flags.contains(MoveFlags::CONTACT)
+        || !makes_contact(b, user, data)
     {
         return;
     }

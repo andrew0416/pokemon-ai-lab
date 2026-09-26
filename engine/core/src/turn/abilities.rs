@@ -358,6 +358,41 @@ pub(crate) fn truant_before_move<const N: usize>(b: &mut Battle<'_, N>, slot: Sl
     true
 }
 
+// ---- Opus AA: Steadfast, Anger Point ------------------------------------------------------------
+
+/// Steadfast's `onFlinch` (`runEvent('Flinch', pokemon)` in the flinch condition's BeforeMove)
+/// for the flinching Pokémon in `slot`: `this.boost({spe: 1})` — the event's target, with no
+/// source (the event has none).
+pub(crate) fn steadfast<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if b.alive(slot).is_none() || b.ability(slot) != abilities::STEADFAST {
+        return;
+    }
+    let mut up = NO_BOOSTS;
+    up[4] = 1;
+    b.boost_by(slot, &up, None, BoostEffect::Ability(abilities::STEADFAST));
+}
+
+/// Anger Point's `onHit` (`runEvent('Hit')` on the target, after its volatiles' handlers and
+/// before its item's): `if (!target.hp) return; if (move?.effectType === 'Move' &&
+/// target.getMoveHitData(move).crit) this.boost({atk: 12}, target, target);` — a critical hit
+/// maxes the holder's Attack (not breakable).
+pub(crate) fn anger_point<const N: usize>(b: &mut Battle<'_, N>, target: SlotRef) {
+    if b.alive(target).is_none()
+        || b.ability(target) != abilities::ANGER_POINT
+        || !b.hit_was_crit(target)
+    {
+        return;
+    }
+    let mut up = NO_BOOSTS;
+    up[0] = 12;
+    b.boost_by(
+        target,
+        &up,
+        Some(target),
+        BoostEffect::Ability(abilities::ANGER_POINT),
+    );
+}
+
 /// The residual order and sub-order of an ability's `onResidual` (`onResidualOrder`, and
 /// `onResidualSubOrder` or the ability's effect-type sub-order).
 pub(crate) fn residual_order(ability: AbilityId) -> (u32, u32) {

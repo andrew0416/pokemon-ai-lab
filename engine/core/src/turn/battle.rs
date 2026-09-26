@@ -71,6 +71,10 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// cleared at the start of every hit (`None`: not computed, as for fixed-damage and
     /// status moves). Read by Weakness Policy and Enigma Berry.
     pub hit_type_mod: [[Option<i8>; N]; 2],
+    /// Showdown `target.getMoveHitData(move).crit` of the hit in progress, per side and slot:
+    /// set by `getDamage` for every target it computes damage for, cleared with
+    /// [`Battle::hit_type_mod`]. Read by Anger Point's `onHit`.
+    pub hit_crit: [[bool; N]; 2],
     /// Mirror Herb's `effectState.boosts` per holder: the foes' raises it copied and has not
     /// used yet (`ready`). Showdown keeps them on the item across events; the engine keeps
     /// them only within a stage and refuses a stage that ends with one pending
@@ -194,6 +198,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             queue: Vec::new(),
             battle_start: false,
             hit_type_mod: [[None; N]; 2],
+            hit_crit: [[false; N]; 2],
             mirror_herb: Vec::new(),
             move_self_switch: false,
             force_switch: Vec::new(),
@@ -221,6 +226,11 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// The hit's `typeMod` against `target` ([`Battle::hit_type_mod`]).
     pub fn type_mod_of(&self, target: SlotRef) -> Option<i32> {
         self.hit_type_mod[target.side.index()][usize::from(target.slot)].map(i32::from)
+    }
+
+    /// Whether the hit in progress was a critical hit on `target` ([`Battle::hit_crit`]).
+    pub fn hit_was_crit(&self, target: SlotRef) -> bool {
+        self.hit_crit[target.side.index()][usize::from(target.slot)]
     }
 
     pub fn apply(&mut self, instruction: Instruction) {
@@ -852,7 +862,12 @@ impl<'a, const N: usize> Battle<'a, N> {
             Status::Sleep => TypeImmunities::EMPTY,
             Status::None | Status::Fainted => return false,
         };
-        if immunity != TypeImmunities::EMPTY && self.status_immune(target, immunity) {
+        // `!(source?.hasAbility('corrosion') && ['tox', 'psn'].includes(status.id))`: a
+        // Corrosion source's poison skips `runStatusImmunity` (the Poison and Steel types). With
+        // no source Showdown takes the target itself (`if (!source) source = this`: Toxic Orb).
+        let corrosion = matches!(status, Status::Poison | Status::Toxic)
+            && self.ability(source.unwrap_or(target)) == abilities::CORROSION;
+        if immunity != TypeImmunities::EMPTY && !corrosion && self.status_immune(target, immunity) {
             return false;
         }
         if self.set_status_blocked(target, status) {

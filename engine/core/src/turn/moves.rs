@@ -826,7 +826,10 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
     }
     match b.mon(pokemon).status {
         Status::Sleep => {
-            let time = b.mon(pokemon).status_turns - 1;
+            // `if (pokemon.hasAbility('earlybird')) pokemon.statusState.time--;` before the
+            // usual decrement: Early Bird sleeps half as long.
+            let early_bird = i8::from(b.ability(user) == abilities::EARLY_BIRD);
+            let time = b.mon(pokemon).status_turns - 1 - early_bird;
             b.set_status_turns(pokemon, time);
             if time <= 0 {
                 b.cure_status(pokemon);
@@ -853,6 +856,8 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
         return false;
     }
     if b.volatile(user, Volatile::Flinch).active {
+        // `runEvent('Flinch', pokemon)`: Steadfast.
+        ability_events::steadfast(b, user);
         return false;
     }
     // Disable (priority 7).
@@ -1268,7 +1273,10 @@ fn use_move<const N: usize>(
     if !mv.has_bounced {
         item_events::on_modify_move(b, user, mv.id);
     }
-    mv.added_secondary = item_events::added_secondary(b.item(user), mv.data);
+    // Stench (the user's ability, ModifyMove priority -1, sub-order 7) and King's Rock / Razor
+    // Fang (the item, -1, 8) append the same flinch: whichever comes second finds it there.
+    mv.added_secondary =
+        item_events::added_secondary(b.item(user), b.ability(user) == abilities::STENCH, mv.data);
     // ModifyTarget (`useMoveInner`, before a random target would be drawn): Metal Burst and
     // Comeuppance aim at the slot of the foe that last damaged the user this turn.
     if let Some(scripted) = handlers::modify_target(b, user, mv) {
@@ -2529,6 +2537,7 @@ fn spread_move_hit<const N: usize>(
     let data = mv.data;
     // `getMoveHitData(move).typeMod` is (re)computed by this hit's `getDamage`.
     b.hit_type_mod = [[None; N]; 2];
+    b.hit_crit = [[false; N]; 2];
     // 0. `tryPrimaryHitEvent` for every target first: a substitute takes the hit
     //    (`hit_substitute`). Aura Break's `onAnyTryPrimaryHit` (priority 0, before the
     //    substitute's -1) only sets a flag `get_damage` reads.
@@ -2683,8 +2692,10 @@ fn spread_move_hit<const N: usize>(
             Some(HitResult::NotFail) | None => {}
         }
         // `runEvent('Hit')`: the target's volatiles (Focus Punch, Beak Blast, Shell Trap;
-        // condition sub-order 2), then its item (Sticky Barb, 8).
+        // condition sub-order 2), its ability (Anger Point, 7), then its item (Sticky Barb,
+        // Enigma Berry, 8).
         handlers::volatile_on_hit(b, user, t, mv);
+        ability_events::anger_point(b, t);
         item_events::on_hit(b, user, t, data);
         // `selfdestruct: 'ifHit'` (Memento, Final Gambit): the user faints once the move reached
         // this target (`damage[i] !== false`, before the effects' result is combined in).
@@ -3432,6 +3443,7 @@ fn get_damage<const N: usize>(
         final_modifier,
     };
     let rolls = damage_rolls(input);
+    b.hit_crit[target.side.index()][usize::from(target.slot)] = critical;
     Ok(Planned::Damage(i32::from(b.rng.roll(&rolls, user.side))))
 }
 
