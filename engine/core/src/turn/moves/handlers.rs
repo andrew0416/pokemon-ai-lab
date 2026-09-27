@@ -3142,7 +3142,11 @@ pub(super) fn on_hit<const N: usize>(
         // false; if (!target.addType(type)) return false;` (the added type replaces an earlier
         // one; `addType` only fails Terastallized, which is off); it returns nothing.
         // Trick-or-Treat's "Curse Glitch" then aims a queued Curse of a target in the second
-        // position at -1 (`action.targetLoc = -1`); Curse is not supported, so that is refused.
+        // position at -1 (`if (target.side.active.length === 2 && target.position === 1) { const
+        // action = this.queue.willMove(target); if (action && action.move.id === 'curse')
+        // action.targetLoc = -1; }`): its ally's position. The now Ghost Curse's ModifyMove turns
+        // an ally target into `randomNormal` and useMove draws a random foe again, as for a
+        // Ghost's Curse aimed at no one; `originalTarget` stays.
         moves::FORESTS_CURSE | moves::TRICK_OR_TREAT => {
             let ty = if mv.id == moves::FORESTS_CURSE {
                 Type::Grass
@@ -3157,9 +3161,11 @@ pub(super) fn on_hit<const N: usize>(
                     .queued_move(target)
                     .is_some_and(|(id, ..)| id == moves::CURSE);
                 if mv.id == moves::TRICK_OR_TREAT && N == 2 && target.slot == 1 && queued_curse {
-                    return Err(b.unsupported(
-                        "Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)",
-                    ));
+                    if let Some(i) = b.will_move(target) {
+                        if let ActionKind::Move { target: loc, .. } = &mut b.queue[i].kind {
+                            *loc = -1;
+                        }
+                    }
                 }
                 return Ok(None);
             }

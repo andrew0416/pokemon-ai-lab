@@ -49,6 +49,10 @@
   "Fling's user fainted before its item was thrown": {
    "board": "R16-fling-user-fainted", "fixture": "rr-fling-innards-out",
    "what": "Showdown's `eachEvent('Update')` in the hit loop (sim/battle-actions.ts:967) still holds the 0-HP user (its faint is processed after the loop), so Fling's condition `onUpdate` runs on it: `setItem('')` fails (`!this.hp`) and the item stays, `lastItem` is set, AfterUseItem runs (an ally's Symbiosis takes its item back when `setItem` fails on the fainted user), `removeVolatile` fails. `update::update_event` adds such users to the Update (`conditions::fling_update_fainted`); the never-firing guard in `moves::run_move_inner` is gone. Also `oo-fling-innards-out-symbiosis`."
+  },
+  "Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)": {
+   "board": "R17-trick-or-treat-curse", "fixture": "rr-trick-or-treat-curse-glitch",
+   "what": "Trick-or-Treat's `onHit` sets `action.targetLoc = -1` for a queued Curse of a target in the second position (data/moves.ts:19928; Champions only makes the move standard): the queued action now aims at the ally position; the Ghost Curse's ModifyMove turns an ally target into `randomNormal` and useMove draws a random foe (`handlers::on_modify_move`, already implemented). Also `oo-trick-or-treat-curse-first-slot` (no glitch in the first position)."
   }
  },
  "entries": {
@@ -231,10 +235,6 @@
   "Nature Power calling {}": {
    "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
    "why": "Nature Power is not standard (E8)."
-  },
-  "Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)": {
-   "reachable": "yes", "kind": "mechanic", "board": "R17-trick-or-treat-curse", "repro": "rr-trick-or-treat-curse-glitch",
-   "why": "Trick-or-Treat (Gourgeist) and Curse (Snorlax and others) are both standard; the target in the second position with Curse queued gets `targetLoc = -1`."
   },
   "Baton Pass passing the {} volatile": {
    "reachable": "no", "kind": "invariant", "board": "R18-baton-pass-volatiles",

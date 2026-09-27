@@ -125,11 +125,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R14-called-multi-hit",
     ),
     (
-        "rr-trick-or-treat-curse-glitch",
-        "Trick-or-Treat's Curse Glitch",
-        "R17-trick-or-treat-curse",
-    ),
-    (
         "rr-copycat-two-turn",
         "Copycat calling Solar Beam (a two-turn move)",
         "R21-copycat-called-moves",
@@ -352,8 +347,10 @@ fn fling_user_fainted_by_innards_out() {
     assert_exact_parity("rr-fling-innards-out");
 }
 
+/// Trick-or-Treat's Curse Glitch: Snorlax in the second position gets its queued Curse aimed at -1
+/// (its ally); the now Ghost Curse re-draws a random foe (was refused; board R17,
+/// `oo_trick_or_treat_curse.rs`).
 #[test]
-#[ignore = "refused: Trick-or-Treat's Curse Glitch (board R17-trick-or-treat-curse)"]
 fn trick_or_treat_curse_glitch() {
     assert_exact_parity("rr-trick-or-treat-curse-glitch");
 }
