@@ -188,11 +188,56 @@ pub struct Analysis<const N: usize> {
     pub omitted_pairs: usize,
 }
 
+/// Where a search spent its work (`lab-plan --stats`, `engine/scripts/search_bench.py`): the
+/// transposition table of child equilibria, the matrix games solved and the time in the turn
+/// enumeration. Times are summed over worker threads (CPU time, not wall time).
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct SearchStats {
+    /// [`Solver::nash_value`] lookups answered by the table.
+    pub tt_hits: u64,
+    /// Lookups that solved the position's matrix game (and stored it).
+    pub tt_misses: u64,
+    /// Matrix games solved by regret matching (roots and children).
+    pub nash_solves: u64,
+    /// Their RM+ iterations, summed.
+    pub nash_iterations: u64,
+    pub nash_seconds: f64,
+    /// Time inside `game::transitions` (turn enumeration).
+    pub enumerate_seconds: f64,
+}
+
+impl SearchStats {
+    fn add(&mut self, other: &SearchStats) {
+        self.tt_hits += other.tt_hits;
+        self.tt_misses += other.tt_misses;
+        self.nash_solves += other.nash_solves;
+        self.nash_iterations += other.nash_iterations;
+        self.nash_seconds += other.nash_seconds;
+        self.enumerate_seconds += other.enumerate_seconds;
+    }
+}
+
+impl fmt::Display for SearchStats {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "tt {} hits / {} misses; {} matrix games ({} RM+ iterations, {:.2} s); enumeration {:.2} s (thread-summed)",
+            self.tt_hits,
+            self.tt_misses,
+            self.nash_solves,
+            self.nash_iterations,
+            self.nash_seconds,
+            self.enumerate_seconds
+        )
+    }
+}
+
 pub struct Solver<'e, const N: usize, E: Evaluator<N> + ?Sized> {
     pub config: Config,
     evaluator: &'e E,
     nodes: u64,
     turns: u64,
+    stats: SearchStats,
     plan_broken: u32,
     /// Effects the engine refused somewhere in the tree (deduplicated); the pairs of choices
     /// whose subtree hit one were dropped from the min/max.
@@ -215,8 +260,24 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             plan_broken: 0,
             unsupported: Vec::new(),
             omitted_pairs: 0,
+            stats: SearchStats::default(),
             nash_cache: std::collections::HashMap::new(),
         }
+    }
+
+    /// The work counters since the last analysis started.
+    pub fn stats(&self) -> SearchStats {
+        self.stats
+    }
+
+    /// Solves a matrix game (RM+, 20 000 iterations, tolerance 0.01), counted in the stats.
+    fn solve_matrix(&mut self, matrix: &Matrix) -> Equilibrium {
+        let started = Instant::now();
+        let equilibrium = nash::solve(matrix, 20_000, 0.01);
+        self.stats.nash_solves += 1;
+        self.stats.nash_iterations += equilibrium.iterations as u64;
+        self.stats.nash_seconds += started.elapsed().as_secs_f64();
+        equilibrium
     }
 
     fn note_unsupported(&mut self, why: String) {
@@ -232,6 +293,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         self.plan_broken = 0;
         self.unsupported.clear();
         self.omitted_pairs = 0;
+        self.stats = SearchStats::default();
     }
 
     /// Values every choice of ours at the decision `state` (with `suspension`, if the turn is
@@ -510,14 +572,17 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             }
         }
         self.turns += 1;
-        let outcomes = match game::transitions(
+        let started = Instant::now();
+        let transitions = game::transitions(
             state,
             self.config.ruleset,
             self.config.enumerate_options(),
             decision,
             suspension,
             pair,
-        ) {
+        );
+        self.stats.enumerate_seconds += started.elapsed().as_secs_f64();
+        let outcomes = match transitions {
             Ok(outcomes) => outcomes,
             Err(TurnError::Unsupported(why)) => {
                 // The pair cannot be valued; the caller drops it (NaN).
@@ -602,7 +667,15 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
 
 /// One worker's cells `(index, value)` of the payoff matrix with its node and turn counts,
 /// the unsupported reasons it met and the pairs it dropped.
-type CellValues = (Vec<(usize, f32)>, u64, u64, Vec<String>, usize, u32);
+type CellValues = (
+    Vec<(usize, f32)>,
+    u64,
+    u64,
+    Vec<String>,
+    usize,
+    u32,
+    SearchStats,
+);
 
 /// The root decision solved as a zero-sum matrix game over both sides' choices, each pair
 /// valued by the exact chance node below it (deeper nodes by maximin as in [`Analysis`]).
@@ -793,7 +866,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             return Err(SearchError::Unsupported(self.unsupported.clone()));
         }
         let matrix = Matrix::new(ours.len(), theirs.len(), values);
-        let equilibrium = nash::solve(&matrix, 20_000, 0.01);
+        let equilibrium = self.solve_matrix(&matrix);
         let maximin = matrix.maximin();
         Ok(MixedAnalysis {
             decision,
@@ -866,6 +939,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                             local.unsupported,
                             local.omitted_pairs,
                             local.plan_broken,
+                            local.stats,
                         ))
                     })
                 })
@@ -877,7 +951,8 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         });
         let mut values = vec![f32::NAN; cells];
         for result in results {
-            let (cells, nodes, turns, reasons, omitted, broken) = result?;
+            let (cells, nodes, turns, reasons, omitted, broken, stats) = result?;
+            self.stats.add(&stats);
             for (i, v) in cells {
                 values[i] = v;
             }
@@ -924,8 +999,10 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         }
         let key = (state.clone(), suspension.cloned());
         if let Some(&v) = self.nash_cache.get(&key) {
+            self.stats.tt_hits += 1;
             return Ok(v);
         }
+        self.stats.tt_misses += 1;
         let them = self.config.us.other();
         let ours = self.choices(state, decision, self.config.us)?;
         let theirs = self.choices(state, decision, them)?;
@@ -964,7 +1041,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             f32::NAN
         } else {
             let matrix = Matrix::new(ours.len(), theirs.len(), values);
-            nash::solve(&matrix, 20_000, 0.01).value
+            self.solve_matrix(&matrix).value
         };
         self.nash_cache.insert(key, value);
         Ok(value)
@@ -1033,7 +1110,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             return Err(SearchError::Unsupported(self.unsupported.clone()));
         }
         let matrix = Matrix::new(ours.len(), theirs.len(), values);
-        let equilibrium = nash::solve(&matrix, 20_000, 0.01);
+        let equilibrium = self.solve_matrix(&matrix);
         let maximin = matrix.maximin();
         Ok(DeepMixedAnalysis {
             decision,

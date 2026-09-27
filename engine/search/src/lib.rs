@@ -18,15 +18,23 @@
 //!   inverse of `lab_scenario::parse_choice`.
 //! - `node` (feature `scenario`, on by default): a position as a library value stepped by
 //!   choice strings, over the scenario loader; the core of the Python API (`engine/py`).
+//! - `model` (feature `scenario`): opponent models ② and ③ over scenario files (believed teams,
+//!   observations of the setup turns, the mixture of positions they cannot tell apart), the
+//!   start position of a search and the child dump for evaluator fitting — `lab-plan`'s logic.
+//! - `rollout` (feature `scenario`): self-play under an equilibrium policy — `lab-rollout`'s
+//!   logic (board PY3a: the binaries only parse arguments and print).
 //!
-//! Not here yet: opponent models ② and ③ (belief about our spreads and its update), plan
-//! conditions, the spread-grid tables, transposition tables, mixed strategies.
+//! Not here yet: plan conditions, the spread-grid tables.
 
 pub mod choice;
 pub mod game;
+#[cfg(feature = "scenario")]
+pub mod model;
 pub mod nash;
 #[cfg(feature = "scenario")]
 pub mod node;
+#[cfg(feature = "scenario")]
+pub mod rollout;
 pub mod solve;
 
 pub use choice::{format_choice, format_switches, Choice};

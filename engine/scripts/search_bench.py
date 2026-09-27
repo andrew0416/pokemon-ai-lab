@@ -130,6 +130,30 @@ def parse(text):
     return entry
 
 
+def process_cpu_seconds(p):
+    """User + kernel CPU time of a finished child (Windows `GetProcessTimes`; None elsewhere).
+    Less sensitive to other sessions' load than wall time, blind to parallel speed-ups."""
+    if os.name != "nt":
+        return None
+    import ctypes
+    from ctypes import wintypes
+
+    handle = getattr(p, "_handle", None)
+    if handle is None:
+        return None
+    times = [wintypes.FILETIME() for _ in range(4)]
+    ok = ctypes.windll.kernel32.GetProcessTimes(
+        wintypes.HANDLE(int(handle)), *[ctypes.byref(t) for t in times]
+    )
+    if not ok:
+        return None
+
+    def seconds(ft):
+        return ((ft.dwHighDateTime << 32) | ft.dwLowDateTime) / 1e7
+
+    return seconds(times[2]) + seconds(times[3])
+
+
 def show_path(path):
     rel = os.path.relpath(path, ROOT)
     return (rel if not rel.startswith("..") else str(pathlib.Path(path).resolve())).replace("\\", "/")
@@ -141,16 +165,18 @@ def run_case(exe, plan_dir, case, mode, extra, timeout):
     args = [str(scenario_path), "--side", "p1", "--rolls", "median", "--top", "3"]
     args += position + MODES[mode](plan) + extra
     t0 = time.perf_counter()
-    p = subprocess.run(
+    p = subprocess.Popen(
         [exe] + args,
-        capture_output=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
         text=True,
         encoding="utf-8",
         errors="replace",
-        timeout=timeout,
     )
+    stdout, stderr = p.communicate(timeout=timeout)
     wall = time.perf_counter() - t0
-    text = (p.stdout or "") + (p.stderr or "")
+    cpu = process_cpu_seconds(p)
+    text = (stdout or "") + (stderr or "")
     entry = {
         "case": name,
         "mode": mode,
@@ -161,6 +187,7 @@ def run_case(exe, plan_dir, case, mode, extra, timeout):
         ],
         "returncode": p.returncode,
         "wall_s": round(wall, 3),
+        "cpu_s": None if cpu is None else round(cpu, 3),
     }
     entry.update(parse(text))
     if p.returncode != 0:
@@ -190,7 +217,7 @@ def bench(opts):
                 e = run_case(opts.exe, plan_dir, case, mode, extra, opts.timeout)
                 runs.append(e)
                 print(
-                    f"{case[0]:>15} {mode:>9}: {e['wall_s']:8.2f} s wall, "
+                    f"{case[0]:>15} {mode:>9}: {e['wall_s']:8.2f} s wall, cpu {e['cpu_s']} s, "
                     f"{e.get('nodes', '?')} nodes, {e.get('enumerations', '?')} enumerations, "
                     f"value {e.get('value', e.get('plan_value', '?'))}"
                     + (f"  ERROR {e['error'][:200]}" if "error" in e else ""),
@@ -250,8 +277,10 @@ def table(opts):
             speed = f" ({base / r['wall_s']:.2f}x)" if base and r is not None else ""
             v = r.get("value", r.get("plan_value"))
             vtxt = f"{v:+.1f}" if isinstance(v, (int, float)) else "?"
+            cpu = r.get("cpu_s")
+            cputxt = f", cpu {cpu:.0f} s" if isinstance(cpu, (int, float)) else ""
             cells.append(
-                f"{r['wall_s']:.1f} s{speed}, {r.get('enumerations', '?')} enum, v {vtxt}"
+                f"{r['wall_s']:.1f} s{speed}{cputxt}, {r.get('enumerations', '?')} enum, v {vtxt}"
             )
         print(f"| {case} | {mode} | " + " | ".join(cells) + " |")
 
