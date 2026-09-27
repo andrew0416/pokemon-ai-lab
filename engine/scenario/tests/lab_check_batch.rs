@@ -29,8 +29,14 @@ fn batch_mode_reads_gzipped_files_and_keeps_the_ids() {
     // the corpus's scenarios do).
     let scenario_gz = dir.join("quash.json.gz");
     let report_gz = dir.join("quash.report.json.gz");
-    gzip(&engine_dir().join("oracle/scenarios/quash.json"), &scenario_gz);
-    gzip(&engine_dir().join("oracle/expected/quash.turn.json"), &report_gz);
+    gzip(
+        &engine_dir().join("oracle/scenarios/quash.json"),
+        &scenario_gz,
+    );
+    gzip(
+        &engine_dir().join("oracle/expected/quash.turn.json"),
+        &report_gz,
+    );
     // A report of another scenario: the `before` state is not among the positions.
     let other = engine_dir().join("oracle/expected/quash.turn.json");
     let jobs = [
