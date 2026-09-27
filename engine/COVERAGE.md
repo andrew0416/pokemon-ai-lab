@@ -4,7 +4,7 @@
 
 ## 기술
 
-- 전체 938개 중 지원 788개, 등장 효과만 미지원 0개, 미지원 150개.
+- 전체 938개 중 지원 789개, 등장 효과만 미지원 0개, 미지원 149개.
 - 라이브러리 사용 206개 중 지원 206개 (100%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
@@ -65,11 +65,10 @@ Protect (207), Fake Out (59), Encore (44), Gravity (40), Heat Wave (36), Hypnosi
 - **미지원: callbacks ["onTryHit", "self.onHit"] are not implemented** (1): Psycho Shift
 - **미지원: callbacks ["secondaries.self.onHit", "secondary.self.onHit"] are not implemented** (1): Genesis Supernova
 - **미지원: field effect iondeluge** (1): Plasma Fists
-- **미지원: transformInto (base move slots and the `transformed` flag are not in the state)** (1): Transform
 
 ## 특성
 
-- 전체 321개 중 지원 309개, 등장 효과만 미지원 0개, 미지원 12개.
+- 전체 321개 중 지원 311개, 등장 효과만 미지원 0개, 미지원 10개.
 - 라이브러리 사용 66개 중 지원 66개 (100%).
 
 ### 라이브러리에서 쓰이는데 미지원 (사용 횟수순)
@@ -85,11 +84,10 @@ Grassy Surge (30), Intimidate (30), Competitive (28), Prankster (27), Technician
 
 - **미지원: callbacks ["onAnySetWeather", "onEnd", "onStart"] are not implemented** (3): Delta Stream, Desolate Land, Primordial Sea
 - **미지원: callbacks [] are not implemented** (3): Multitype, Persistent, RKS System
-- **미지원: callbacks ["onSwitchIn"] are not implemented** (2): Imposter, Tera Shift
 - **미지원: callbacks ["onAfterTerastallization"] are not implemented** (1): Teraform Zero
 - **미지원: callbacks ["onAllyTryHitSide", "onTryHit"] are not implemented** (1): Rebound
-- **미지원: callbacks ["onBeforeSwitchIn", "onDamagingHit", "onEnd", "onFaint"] are not implemented** (1): Illusion
 - **미지원: callbacks ["onDamage", "onTryHit"] are not implemented** (1): Mountaineer
+- **미지원: callbacks ["onSwitchIn"] are not implemented** (1): Tera Shift
 
 ## 도구
 
