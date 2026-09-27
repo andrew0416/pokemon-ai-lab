@@ -126,6 +126,11 @@
    "board": "B36-refusal-messages",
    "fixture": "oo-figy-berry-confusion",
    "what": "Stale: confusion is implemented and `update::berry_on_eat` already confuses the eater of a Figy-type berry its nature dislikes (the Bug Bite / Pluck path was checked by `pluck-incinerate`). `update::berry_problem` is gone (with its call in `support::check_state` and `switching::switch_in_problem`); the holder's own Update eating matches the oracle (`oo-figy-berry-confusion`: Figy Berry, Timid Snorlax). The Figy-type berries are not standard."
+  },
+  "Beat Up with benched allies of different power {} (their order in Showdown's side.pokemon depends on the switches so far, which the state does not keep)": {
+   "board": "R9-beat-up-order",
+   "fixture": "ss-beat-up-switched-bench",
+   "what": "`Side::party_order` (`Instruction::SetPartyOrder`, hidden, recorded while a Beat Up is in a party) keeps Showdown's `side.pokemon` order: `switchIn` exchanges the newcomer's position with the replaced Pokémon's, Ally Switch the two active positions; Beat Up hits in it (also `ss-beat-up-ally-switch`, `rr-beat-up-bench`)."
   }
  },
  "entries": {
@@ -211,13 +216,6 @@
    "kind": "invariant",
    "board": "R8-encore-edges",
    "why": "Transform is `failencore`, `failcopycat`, `nosleeptalk` and `failinstruct`, so an encored Pokémon can only run it by choosing it, and the Champions Encore replaces that queued action with the encored move first (a Mental Herb holder is cured at once); Imposter transforms on switch-in, when Encore is gone (`noCopy`)."
-  },
-  "Beat Up with benched allies of different power {} (their order in Showdown's side.pokemon depends on the switches so far, which the state does not keep)": {
-   "reachable": "yes",
-   "kind": "mechanic",
-   "board": "R9-beat-up-order",
-   "repro": "rr-beat-up-bench",
-   "why": "Beat Up (standard) with two eligible benched allies of different base Attack: the hit order follows `side.pokemon`, which switches reorder."
   },
   "{} after the battle start (its once-per-battle flag is not in the state)": {
    "reachable": "yes",

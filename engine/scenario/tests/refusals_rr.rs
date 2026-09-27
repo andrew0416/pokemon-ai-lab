@@ -50,11 +50,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R5-future-move-edges",
     ),
     (
-        "rr-beat-up-bench",
-        "Beat Up with benched allies of different power",
-        "R9-beat-up-order",
-    ),
-    (
         "rr-supersweet-syrup-switch",
         "Supersweet Syrup after the battle start",
         "R10-once-per-battle-flags",
@@ -217,9 +212,9 @@ fn encore_into_counter() {
 }
 
 /// An `--mode extremes` fixture: three hits with their rolls and critical hits are about
-/// 6.6 million branches in full mode (`fullBranchEstimate`).
+/// 6.6 million branches in full mode (`fullBranchEstimate`). Hits in `Side::party_order`
+/// (board R9; `ss_party_order.rs` has the reordered cases).
 #[test]
-#[ignore = "refused: Beat Up with benched allies of different power {} (board R9-beat-up-order)"]
 fn beat_up_bench_order() {
     assert_extremes_parity("rr-beat-up-bench");
 }

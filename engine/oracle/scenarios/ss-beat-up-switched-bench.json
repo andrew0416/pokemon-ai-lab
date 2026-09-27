@@ -1,0 +1,110 @@
+{
+ "description": "SS R9b: Beat Up after a switch reordered Showdown's side.pokemon. Snorlax (position 2) switches out for Clefable (position 4) in the setup turn, so side.pokemon is Weavile, Clefable, Garchomp, Snorlax: the hits are 17, 12, 18, 16 in that order (the party order would give Snorlax before Garchomp). Mudsdale's Stamina raises its Defense after each hit, so the order shows in the damage.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Weavile",
+    "item": "",
+    "ability": "Pressure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Beat Up",
+     "Protect",
+     "Swords Dance"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Rough Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Swords Dance"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Mudsdale",
+    "item": "",
+    "ability": "Stamina",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "def": 32
+    },
+    "moves": [
+     "Rest",
+     "Scary Face"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Oranguru",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move swordsdance, switch 4",
+   "move rest, move calmmind"
+  ]
+ ],
+ "turn": {
+  "p1": "move beatup 1, move protect",
+  "p2": "move scaryface 2, move calmmind"
+ }
+}
