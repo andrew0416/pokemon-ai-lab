@@ -75,3 +75,28 @@ fn vgc_scenarios_keep_four_members_at_level_50() {
     let custom = scenario.replace(VGC_FORMAT, DOUBLES_FORMAT);
     assert!(load_scenario_str(&custom, Path::new(".")).is_err());
 }
+
+/// Board B31: the custom game adjusts no level, so Showdown plays a set without `level` at
+/// level 100 (same Champions stats, about twice the damage). The loader refuses such a set
+/// instead of loading it as level 50; in the VGC format (`Adjust Level = 50`) it loads.
+#[test]
+fn a_set_without_level_is_level_100_in_the_custom_game() {
+    let team = r#"[{"species": "Gardevoir", "ability": "Trace", "nature": "Modest",
+        "moves": ["Hypnosis"]}, {"species": "Rillaboom", "ability": "Grassy Surge",
+        "nature": "Brave", "moves": ["Grassy Glide"]}]"#;
+    let scenario = |format: &str| {
+        format!(r#"{{"format": "{format}", "p1": {{"team": {team}}}, "p2": {{"team": {team}}}}}"#)
+    };
+    let error = load_scenario_str(&scenario(DOUBLES_FORMAT), Path::new("."))
+        .unwrap_err()
+        .to_string();
+    assert!(error.contains("level 100"), "{error}");
+    let loaded = load_scenario_str(&scenario(VGC_FORMAT), Path::new(".")).unwrap();
+    assert!(loaded
+        .state
+        .side(SideId::One)
+        .party
+        .iter()
+        .filter(|p| !p.species.is_none())
+        .all(|p| p.level == 50));
+}

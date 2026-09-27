@@ -138,7 +138,10 @@ impl fmt::Display for SetProblem {
             SetProblem::NoMoves => write!(f, "no moves"),
             SetProblem::TooManyMoves(n) => write!(f, "{n} moves (at most 4)"),
             SetProblem::UnsupportedLevel(level) => {
-                write!(f, "level {level}: Champions stats are computed at level 50")
+                write!(
+                    f,
+                    "level {level}: the engine plays at level 50 (in the custom game a set                      without \"level\" is level 100 in Showdown; write \"level\": 50)"
+                )
             }
             SetProblem::StatPoints(StatPointError::PerStat { stat, value }) => {
                 write!(f, "{value} SP in {stat:?} (at most 32 per stat)")

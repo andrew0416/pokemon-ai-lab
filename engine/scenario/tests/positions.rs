@@ -77,3 +77,23 @@ fn an_illegal_setup_choice_fails_the_replay_unless_the_teams_are_only_believed()
     assert!(none.is_empty());
     assert_eq!(turns, 1, "the filter still runs on the (empty) turn");
 }
+
+/// Board B29: a setup turn that pauses for a mid-turn switch without a `midTurn` choice is not
+/// a position (the suspension cannot be carried into the next turn). The strict replay says
+/// so; on believed teams the outcome is dropped, like an illegal choice.
+#[test]
+fn a_setup_turn_left_waiting_for_a_mid_turn_switch_is_refused() {
+    let path = common::engine_dir().join("oracle/scenarios/uturn-pause.json");
+    let mut scenario: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(&path).unwrap()).unwrap();
+    let turn = scenario["turn"].clone();
+    scenario["setupTurns"] = serde_json::json!([[turn["p1"], turn["p2"]]]);
+    let loaded = load_scenario_str(&scenario.to_string(), path.parent().unwrap()).unwrap();
+    let error = scenario_positions(&loaded).unwrap_err();
+    assert!(
+        error.contains("setup turn 1") && error.contains("midTurn"),
+        "{error}"
+    );
+    let believed = scenario_positions_consistent(&loaded, FULL, &mut |_, p| p).unwrap();
+    assert!(believed.is_empty());
+}

@@ -195,6 +195,16 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
             for set in &mut team {
                 set.level = Some(50);
             }
+        } else {
+            // The custom game adjusts nothing: Showdown plays a set without `level` at level
+            // 100 (the Champions stats stay the same, damage about doubles), so such a set
+            // must not load silently as level 50 (board B31). It is refused like any other
+            // level-100 set; the file has to say `"level": 50`.
+            for set in &mut team {
+                if set.level.is_none() {
+                    set.level = Some(100);
+                }
+            }
         }
         let (built, meta) = build_picked_side::<2>(side, &team, spec.order.as_deref(), picked)?;
         state.sides[side.index()] = built;
@@ -468,6 +478,18 @@ fn replay_setup_turns(
                 Err(e) => return Err(format!("setup turn {}: {e}", n + 1)),
             };
             for outcome in outcomes {
+                // A setup turn that still waits for a mid-turn switch is not a position: the
+                // suspension cannot be carried into the next turn (board B29). On believed
+                // teams the choices that were made contradict such an outcome.
+                if outcome.suspension.is_some() {
+                    if drop_illegal {
+                        continue;
+                    }
+                    return Err(format!(
+                        "setup turn {}: the turn pauses for a mid-turn switch that has no                          choice; give it in the setup turn's third element (`midTurn`)",
+                        n + 1
+                    ));
+                }
                 let mut end = state.clone();
                 end.apply(&outcome.instructions);
                 let mut order = position.order.clone();
