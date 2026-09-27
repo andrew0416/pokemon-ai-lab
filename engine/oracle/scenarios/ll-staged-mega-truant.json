@@ -1,0 +1,27 @@
+{
+ "description": "Opus LL V10 (staged serializer): a value set in one stage of the turn decides a later stage. Champions `formeChange` sets `moveThisTurnResult = true` on Mega Evolution ('Mega Evolution counts as an action for Truant'); the megaEvo action runs first, then Jolteon (Truant, faster) Entrains the Mega Gardevoir: Truant's onStart sees `activeTurns` 2 and `moveThisTurnResult !== undefined`, adds the `truant` volatile, and the Gardevoir loafs instead of using Moonblast. Two setup turns: Jolteon moves in the first and loafs in the second, so it can move in the decision turn.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Jolteon", "item": "", "ability": "Truant", "nature": "Timid",
+    "evs": {"hp": 32, "spe": 32}, "moves": ["Entrainment", "Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Gardevoir", "item": "Gardevoirite", "ability": "Honey Gather", "nature": "Modest",
+    "evs": {"hp": 32, "spa": 32}, "moves": ["Moonblast", "Calm Mind"], "level": 50},
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move harden, move harden", "move calmmind, move harden"],
+  ["move harden, move harden", "move calmmind, move harden"]
+ ],
+ "turn": {"p1": "move entrainment 1, move harden", "p2": "move moonblast 1 mega, move harden"}
+}

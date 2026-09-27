@@ -31,7 +31,7 @@
 use crate::dex::SpeciesId;
 use crate::gimmick::{mega_evolution, Gimmick};
 use crate::instruction::Instruction;
-use crate::state::{Pokemon, SlotRef};
+use crate::state::{MoveResult, Pokemon, SlotRef};
 
 use super::battle::Battle;
 use super::support::ability_supported_on_field;
@@ -118,6 +118,11 @@ pub(crate) fn run_mega_evo<const N: usize>(
         side: slot.side,
         gimmick: Gimmick::Mega,
     });
+    // Champions `formeChange` (permanent, from the Mega Stone): `this.moveThisTurnResult = true;
+    // // Mega Evolution counts as an action for Truant`, before `setAbility`. The Pokémon's own
+    // move overwrites it (`runMove`); until then a Truant it gains this turn (Entrainment, Skill
+    // Swap) sees it as having acted and loafs (V10, `ll-staged-mega-truant`).
+    b.set_move_result(slot, MoveResult::Succeeded);
     // setAbility → the new ability's `Start`.
     start_ability(b, slot, new.ability)?;
     // AfterMega: the items' `onAnyAfterMega` (White Herb, Mirror Herb), Opportunist's (each acts

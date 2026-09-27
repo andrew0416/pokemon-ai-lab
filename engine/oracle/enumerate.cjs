@@ -11,7 +11,7 @@
 //                                    [--samples N] [--max-branches N] [--keep-nominal-draws] [--out file]
 //                                    [--collapse-secondaries] [--traces]
 //                                    [--setup-walks N] [--setup-max-branches N] [--estimate N]
-//                                    [--staged]
+//                                    [--staged] [--setup-staged-max-branches N]
 //
 // Modes:
 //   full      every branch with its exact probability (the parity reference)
@@ -41,9 +41,13 @@
 // and `setupStates[k]` (canonical state after setup turn k) keep only the branch of the start or of
 // that setup turn that ends in the pinned state, instead of the scenario seed's natural path. The
 // branch is found by replaying `startTrace`/`setupTraces[k]` (a trace from an earlier report) if
-// given and still valid, else by up to --setup-walks random walks, else by a depth-first
-// enumeration of up to --setup-max-branches branches (extremes mode). The report's `startTrace`
-// and `setupTraces` are the branches used.
+// given and still valid, else by up to --setup-walks random walks, else (a setup turn) by a staged
+// search of that turn, in extremes mode and then with every roll, each up to
+// --setup-staged-max-branches runs, dropping stage states that can no longer end in the pin (V3: a
+// heavy lead turn, which no report ever supplies a trace for, stays reachable; `findPinnedStaged`),
+// else by a depth-first enumeration of up to
+// --setup-max-branches branches (extremes mode). The report's `startTrace` and `setupTraces` are the
+// branches used, `setupSearch` how each pinned setup turn was found.
 
 const fs = require('node:fs');
 const path = require('node:path');
@@ -55,7 +59,8 @@ const {canonical, canonicalKey} = require('./canonical.cjs');
 function parseArgs(argv) {
 	const args = {
 		mode: 'full', samples: 20000, maxBranches: 500000, out: null, file: null, keepNominalDraws: false,
-		collapse: false, traces: false, setupWalks: 2000, setupMaxBranches: 200000, roll: null,
+		collapse: false, traces: false, setupWalks: 2000, setupMaxBranches: 200000, setupStagedMaxBranches: 200000,
+		roll: null,
 	};
 	for (let i = 0; i < argv.length; i++) {
 		const a = argv[i];
@@ -69,6 +74,7 @@ function parseArgs(argv) {
 		else if (a === '--traces') args.traces = true;
 		else if (a === '--setup-walks') args.setupWalks = Number(argv[++i]);
 		else if (a === '--setup-max-branches') args.setupMaxBranches = Number(argv[++i]);
+		else if (a === '--setup-staged-max-branches') args.setupStagedMaxBranches = Number(argv[++i]);
 		else if (a === '--estimate') args.estimate = Number(argv[++i]);
 		else if (a === '--staged') args.staged = true;
 		else if (!args.file) args.file = a;
@@ -178,7 +184,7 @@ function chooseTeams(battle, scenario) {
 // Builds the battle up to the decision point and returns its serialized snapshot. `opts` (the
 // command-line options) only matter for pinned states: how their branches are searched.
 function buildSnapshot(scenario, baseDir, opts = {}) {
-	const traces = {start: null, setup: []};
+	const traces = {start: null, setup: [], search: []};
 	let battle;
 	if (scenario.startState) {
 		const found = findPinned(() => newBattle(scenario, baseDir), b => chooseTeams(b, scenario),
@@ -197,13 +203,16 @@ function buildSnapshot(scenario, baseDir, opts = {}) {
 			const found = findPinned(() => restore(snapshot), b => {
 				b.makeChoices(c1, c2);
 				applyMidTurn(b, midTurn);
-			}, pins[k], known[k], {...opts, what: `setup turn ${k + 1}`});
+			}, pins[k], known[k], {...opts, what: `setup turn ${k + 1}`},
+			{snapshot, turn: {p1: c1, p2: c2}, midTurn});
 			battle = found.battle;
 			traces.setup.push(found.trace);
+			traces.search.push(found.how);
 		} else {
 			battle.makeChoices(c1, c2);
 			applyMidTurn(battle, midTurn);
 			traces.setup.push(null);
+			traces.search.push(null);
 		}
 	}
 	applyPatch(battle, scenario.patch);
@@ -243,9 +252,11 @@ function mulberry32(seed) {
 // Finds a branch of `run(battle)` (one step played on a fresh battle from `make()`) that ends in
 // the canonical state `pin`: the recorded `trace` if it still leads there, else random walks that
 // draw every decision by its probability (quick for the likely outcomes a recorded game mostly
-// has), else a depth-first enumeration in extremes mode (pins recorded under min/max rolls are
-// reachable there). Returns that branch's battle, with a real PRNG again, and its trace.
-function findPinned(make, run, pin, trace, opts) {
+// has), else, for a setup turn (`staged`: {snapshot, turn, midTurn}), the staged enumeration of
+// that turn (`findPinnedStaged`), else a depth-first enumeration in extremes mode (pins recorded
+// under min/max rolls are reachable there). Returns that branch's battle, with a real PRNG again,
+// its trace and how it was found (`how`).
+function findPinned(make, run, pin, trace, opts, staged = null) {
 	const target = stableKey(pin);
 	const settings = {collapse: !!opts.collapse, nominal: !opts.keepNominalDraws};
 	const attempt = prng => {
@@ -254,39 +265,186 @@ function findPinned(make, run, pin, trace, opts) {
 		run(battle);
 		return battle;
 	};
-	const found = (battle, prng) => {
+	const found = (battle, prng, how) => {
 		battle.prng = new PRNG(DEFAULT_SEED);
-		return {battle, trace: {...traceMode(prng), ...settings, prefix: prng.trace.map(t => t.choice)}};
+		return {battle, how, trace: {...traceMode(prng), ...settings, prefix: prng.trace.map(t => t.choice)}};
 	};
 	if (trace && trace.collapse === settings.collapse && trace.nominal === settings.nominal) {
 		try {
 			const prng = new ScriptedPRNG(trace.prefix, trace.mode, trace.roll ?? null);
 			const battle = attempt(prng);
-			if (stableKey(canonical(battle)) === target) return found(battle, prng);
+			if (stableKey(canonical(battle)) === target) return found(battle, prng, 'trace');
 		} catch (e) {
 			if (!(e instanceof ExhaustedTrace)) throw e;
 		}
 	}
 	const rng = mulberry32(0x5eed);
 	const walks = opts.setupWalks ?? 2000;
+	const walkStart = Date.now();
 	for (let i = 0; i < walks; i++) {
 		const prng = new WalkPRNG(rng, 'extremes');
 		const battle = attempt(prng);
-		if (stableKey(canonical(battle)) === target) return found(battle, prng);
+		if (stableKey(canonical(battle)) === target) return found(battle, prng, `walk ${i + 1}`);
+	}
+	const stagedCap = opts.setupStagedMaxBranches ?? 200000;
+	let tried = `${walks} walks`;
+	if (process.env.LAB_ORACLE_PROGRESS) {
+		console.error(`${opts.what}: ${walks} walks missed the pin (${Math.round((Date.now() - walkStart) / 1000)} s)`);
+	}
+	// Extremes first (lab-parity pins its outcomes from the engine's min/max-roll distribution); when
+	// no extremes branch ends in the pin, every roll (a pin with a middle roll: one recorded under
+	// another roll mode, or by an engine that drew a roll the oracle's reduced modes do not).
+	for (const mode of staged && stagedCap > 0 ? ['extremes', 'full'] : []) {
+		const search = findPinnedStaged(staged, pin, target, {...opts, searchMode: mode}, stagedCap);
+		tried += `, staged ${mode} search ${search.note}`;
+		if (search.prefix) {
+			const prng = new ScriptedPRNG(search.prefix, mode);
+			const battle = attempt(prng);
+			if (stableKey(canonical(battle)) === target) return found(battle, prng, `staged ${mode} search (${search.note})`);
+			throw new Error(`${opts.what}: the staged search's branch does not replay the pinned state`);
+		}
+		if (!search.complete) break; // over the cap: the depth-first enumeration below is the last resort
+		if (mode === 'full') throw new Error(`${opts.what}: no branch reaches the pinned state (${tried})`);
 	}
 	const cap = opts.setupMaxBranches ?? 200000;
 	let prefix = [];
 	let branches = 0;
 	while (prefix) {
 		if (++branches > cap) {
-			throw new Error(`${opts.what}: pinned state not found (${walks} walks, more than ${cap} branches)`);
+			throw new Error(`${opts.what}: pinned state not found (${tried}, more than ${cap} branches)`);
 		}
 		const prng = new ScriptedPRNG(prefix, 'extremes');
 		const battle = attempt(prng);
-		if (stableKey(canonical(battle)) === target) return found(battle, prng);
+		if (stableKey(canonical(battle)) === target) return found(battle, prng, `depth-first branch ${branches}`);
 		prefix = nextPrefix(prng.trace);
 	}
-	throw new Error(`${opts.what}: no branch reaches the pinned state (${walks} walks, ${branches} branches)`);
+	throw new Error(`${opts.what}: no branch reaches the pinned state (${tried}, ${branches} branches)`);
+}
+
+// The staged search of one pinned setup turn (roll mode `opts.searchMode`, default extremes): the
+// turn run one action at a time as in enumerateStaged, depth first, the stage states closest to the pin first (`pinDistance`), each
+// distinct stage state expanded once (its future does not depend on how it was reached: the staged
+// enumeration's merge), stage states that `pinPruner` shows cannot end in the pin dropped, and
+// stopped at the first outcome equal to the pin. Complete (every distinct stage state is expanded
+// unless the pin is found first), and it keeps only the visited keys and the pending siblings along
+// one path, where the breadth-first enumeration keeps whole stage frontiers. Returns {prefix, note}
+// (the branch, which replays the turn unstaged), {complete: true, note} (no branch ends in the pin)
+// or {note} (over `cap` runs).
+function findPinnedStaged(staged, pin, target, opts, cap) {
+	const crypto = require('node:crypto');
+	const scenario = {turn: staged.turn, midTurn: staged.midTurn};
+	const o = {mode: opts.searchMode || 'extremes', collapse: opts.collapse, keepNominalDraws: opts.keepNominalDraws};
+	const prune = pinPruner(pin);
+	const distance = pinDistance(pin);
+	const visited = new Set();
+	let runs = 0;
+	let expanded = 0;
+	let merged = 0;
+	let pruned = 0;
+	const started = Date.now();
+	const note = () => `${runs} runs, ${expanded} states expanded, ${merged} merged, ${pruned} pruned, ` +
+		`${Math.round((Date.now() - started) / 1000)} s`;
+	const stack = [[{snapshot: staged.snapshot, prefix: [], used: {p1: 0, p2: 0}, start: true}]];
+	while (stack.length) {
+		const level = stack[stack.length - 1];
+		const entry = level.pop();
+		if (!level.length) stack.pop();
+		expanded++;
+		const children = [];
+		let stagePrefix = [];
+		while (stagePrefix) {
+			if (++runs > cap) return {note: `over ${cap} runs (${note()})`};
+			const {battle, prng, used, more} = runStage(entry, stagePrefix, scenario, o);
+			const prefix = entry.prefix.concat(prng.trace.map(t => t.choice));
+			if (more) {
+				if (prune(battle)) {
+					pruned++;
+				} else {
+					battle.prng = new PRNG(DEFAULT_SEED);
+					const state = battle.toJSON();
+					const key = crypto.createHash('sha256').update(stageKey(state, used)).digest('base64');
+					if (visited.has(key)) {
+						merged++;
+					} else {
+						visited.add(key);
+						children.push({packed: pack(JSON.stringify(state)), prefix, used, start: false, score: distance(battle)});
+					}
+				}
+			} else if (stableKey(canonical(battle)) === target) {
+				return {prefix, note: note()};
+			}
+			stagePrefix = nextPrefix(prng.trace);
+		}
+		if (children.length) {
+			children.sort((a, b) => b.score - a.score); // pop() takes the closest first
+			stack.push(children);
+		}
+		if (process.env.LAB_ORACLE_PROGRESS && expanded % 500 === 0) console.error(`${opts.what}: staged search ${note()}`);
+	}
+	return {complete: true, note: note()};
+}
+
+// How far a stage state looks from the pinned outcome (a search order only, not a bound): HP below
+// the pin (only healing brings it back) weighs more than HP above it (damage still to come), then
+// status, item, boosts and the field.
+function pinDistance(pin) {
+	const want = new Map();
+	pin.sides.forEach((side, i) => {
+		for (const mon of side.pokemon) want.set(`p${i + 1}|${mon.name}`, mon);
+	});
+	return battle => {
+		const f = battle.field;
+		let d = ((f.weather || '') !== pin.field.weather ? 1 : 0) + ((f.terrain || '') !== pin.field.terrain ? 1 : 0);
+		for (const side of battle.sides) {
+			for (const mon of side.pokemon) {
+				const pinned = want.get(`${side.id}|${mon.name}`);
+				if (!pinned) continue;
+				const hp = (mon.hp - pinned.hp) / Math.max(1, mon.maxhp);
+				d += hp < 0 ? -8 * hp : hp;
+				if ((mon.status || '') !== pinned.status) d += 1;
+				if ((mon.item || '') !== pinned.item) d += 0.5;
+				if (mon.isActive && pinned.boosts) {
+					for (const k of ['atk', 'def', 'spa', 'spd', 'spe', 'accuracy', 'evasion']) {
+						d += 0.25 * Math.abs((mon.boosts[k] || 0) - (pinned.boosts[k] || 0));
+					}
+				}
+			}
+		}
+		return d;
+	};
+}
+
+// Sound pruning for a pinned turn: a stage state that already contradicts the pin in something that
+// cannot change back before the turn ends. Within one turn (1) a fainted Pokémon stays fainted,
+// unless its side knows Revival Blessing; (2) move PP only goes down, unless PP can come back or the
+// move slots can change: a Leppa Berry anywhere (held or last held: Harvest, Recycle, Pickup, Fling,
+// Bug Bite), or Transform / Imposter (a transformed Pokémon's pinned PP are the copied moves'). The
+// pin is a canonical state (Pokémon keyed by side and name).
+function pinPruner(pin) {
+	const want = new Map();
+	pin.sides.forEach((side, i) => {
+		for (const mon of side.pokemon) want.set(`p${i + 1}|${mon.name}`, mon);
+	});
+	return battle => {
+		const all = battle.sides.flatMap(side => side.pokemon);
+		const ppMonotone = !all.some(mon => mon.item === 'leppaberry' || mon.lastItem === 'leppaberry' ||
+			mon.baseAbility === 'imposter' || mon.ability === 'imposter' || mon.transformed ||
+			mon.baseMoveSlots.some(m => m.id === 'transform'));
+		for (const side of battle.sides) {
+			const revival = side.pokemon.some(mon => mon.baseMoveSlots.some(m => m.id === 'revivalblessing'));
+			for (const mon of side.pokemon) {
+				const pinned = want.get(`${side.id}|${mon.name}`);
+				if (!pinned) continue;
+				if (!mon.hp && pinned.hp > 0 && !revival) return true;
+				if (!ppMonotone) continue;
+				for (const slot of mon.moveSlots) {
+					const pp = pinned.pp?.[slot.id];
+					if (pp !== undefined && slot.pp < pp) return true;
+				}
+			}
+		}
+		return false;
+	};
 }
 
 // ---- exact collapse of secondary-effect rolls ----------------------------------------------
@@ -476,8 +634,15 @@ function estimateBranches(scenario, snapshot, opts, walks) {
 		msPerBranch: +(ms / walks).toFixed(3)};
 }
 
+// Showdown's serializer (sim/state.ts) writes a reference to a dex Move as `[DataMove:<id>]` (the
+// class's name, `Dex.Move = DataMove`) but `fromRef` only reads `[Move:<id>]`, so a plain Move object
+// in the battle state comes back as that literal string. The only one there is between two actions
+// is a queued switch's `sourceEffect` (the self-switch move, from `switchFlag`), which a two-switch
+// mid-turn commit carries across a stage of the staged enumeration: its `|switch|` log line then
+// read `[from] [DataMove:uturn]`, and a Baton Pass / Shed Tail switch would lose its `selfSwitch`
+// copy flag. Between turns (the plain enumeration's snapshots) no such object exists. (V10)
 function restore(snapshot) {
-	return Battle.fromJSON(snapshot);
+	return Battle.fromJSON(snapshot.replaceAll('"[DataMove:', '"[Move:'));
 }
 
 function runTurn(battle, scenario) {
@@ -676,9 +841,39 @@ function midTurnRound(battle, midTurn, used) {
 	});
 }
 
+// One branch of one stage of a staged turn: the entry's state restored and its next step run with
+// `stagePrefix` as the scripted decisions (the turn's choices at the start, a round of mid-turn
+// switch choices, or the next queued action). `more`: the turn goes on from this state.
+function runStage(entry, stagePrefix, scenario, opts) {
+	const battle = restore(entry.packed ? unpack(entry.packed) : entry.snapshot);
+	const prng = new ScriptedPRNG(stagePrefix, opts.mode, opts.roll ?? null);
+	instrument(battle, prng, opts);
+	battle.turnLoop = steppedTurnLoop;
+	const used = {...entry.used};
+	if (entry.start) battle.makeChoices(scenario.turn.p1, scenario.turn.p2);
+	else if (battle.sides.some(midTurnRequest)) midTurnRound(battle, scenario.midTurn, used);
+	else battle.turnLoop();
+	return {battle, prng, used, more: stageState(battle, scenario.midTurn, used) === 'continue'};
+}
+
+// What identifies a stage state for merging: its serialization, log and PRNG aside, and the mid-turn
+// choices used so far.
+function stageKey(state, used) {
+	const keyed = {used};
+	for (const [k, v] of Object.entries(state)) if (!STAGE_KEY_SKIP.has(k)) keyed[k] = v;
+	return JSON.stringify(keyed);
+}
+
+// A stage state waits in the frontier deflated (a snapshot is tens of kilobytes of JSON, most of it
+// the log; heavy turns keep tens of thousands of them).
+const zlib = require('node:zlib');
+const pack = text => zlib.deflateRawSync(text, {level: 1});
+const unpack = packed => zlib.inflateRawSync(packed).toString();
+
 function enumerateStaged(scenario, snapshot, opts) {
 	const {mode, maxBranches} = opts;
 	const crypto = require('node:crypto');
+	const started = Date.now();
 	const outcomes = new Map();
 	const perRoll = mode === 'fixed' ? 16 : 8;
 	let branches = 0;
@@ -697,31 +892,22 @@ function enumerateStaged(scenario, snapshot, opts) {
 			let stagePrefix = [];
 			while (stagePrefix) {
 				if (++branches > maxBranches) throw new Error(`more than ${maxBranches} branches; use --mode extremes or mc`);
-				const battle = restore(entry.snapshot);
-				const prng = new ScriptedPRNG(stagePrefix, mode, opts.roll ?? null);
-				instrument(battle, prng, opts);
-				battle.turnLoop = steppedTurnLoop;
-				const used = {...entry.used};
-				if (entry.start) battle.makeChoices(scenario.turn.p1, scenario.turn.p2);
-				else if (battle.sides.some(midTurnRequest)) midTurnRound(battle, scenario.midTurn, used);
-				else battle.turnLoop();
+				const {battle, prng, used, more} = runStage(entry, stagePrefix, scenario, opts);
 				const p = prng.trace.reduce((acc, t) => acc * t.weights[t.choice], entry.p);
 				approximate ||= prng.approximate;
 				fullEstimate += perRoll ** prng.rolls;
 				const prefix = entry.prefix.concat(prng.trace.map(t => t.choice));
 				maxDepth = Math.max(maxDepth, prefix.length);
-				if (stageState(battle, scenario.midTurn, used) === 'continue') {
+				if (more) {
 					battle.prng = new PRNG(DEFAULT_SEED);
 					const state = battle.toJSON();
-					const keyed = {used};
-					for (const [k, v] of Object.entries(state)) if (!STAGE_KEY_SKIP.has(k)) keyed[k] = v;
-					const key = crypto.createHash('sha256').update(JSON.stringify(keyed)).digest('base64');
+					const key = crypto.createHash('sha256').update(stageKey(state, used)).digest('base64');
 					const found = next.get(key);
 					if (found) {
 						found.p += p;
 						merged++;
 					} else {
-						next.set(key, {snapshot: JSON.stringify(state), p, prefix, used, start: false});
+						next.set(key, {packed: pack(JSON.stringify(state)), p, prefix, used, start: false});
 					}
 				} else {
 					const state = canonical(battle);
@@ -745,6 +931,10 @@ function enumerateStaged(scenario, snapshot, opts) {
 		}
 		frontier = [...next.values()];
 		maxFrontier = Math.max(maxFrontier, frontier.length);
+		if (process.env.LAB_ORACLE_PROGRESS) {
+			console.error(`staged: stage ${stages}, frontier ${frontier.length}, ${branches} runs, ${merged} merged, ` +
+				`${outcomes.size} outcomes, ${Math.round((Date.now() - started) / 1000)} s`);
+		}
 	}
 	return {branches, maxDepth, approximate, outcomes, fullEstimate, staged: {stages, maxFrontier, merged}};
 }
@@ -847,6 +1037,7 @@ function main() {
 		report.setupMs = Math.round(setupMs);
 		report.startTrace = traces.start;
 		report.setupTraces = traces.setup;
+		report.setupSearch = traces.search;
 	}
 	const text = JSON.stringify(report, null, 1);
 	if (args.out) fs.writeFileSync(args.out, text);
@@ -867,5 +1058,8 @@ function sourceCommit() {
 
 module.exports = {
 	buildSnapshot, enumerate, enumerateStaged, monteCarlo, ScriptedPRNG, nextPrefix, loadTeam, readJSON, sourceCommit,
+	// the staged enumeration's pieces, for check-roundtrip.cjs (V10)
+	DEFAULT_SEED, instrument, restore, steppedTurnLoop, stageState, midTurnRequest, midTurnRound, mulberry32,
+	ExhaustedTrace,
 };
 if (require.main === module) main();
