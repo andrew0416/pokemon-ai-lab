@@ -131,8 +131,8 @@ impl<const N: usize> Battle<'_, N> {
     /// (taken when the stage's `Battle` is built) is what a Speed change within the action
     /// (a Speed drop, paralysis) does not reach until the next stage (`f-speed-snapshot-eject-pack`).
     /// `setSpecies` sets it to the raw stored Speed (no stages or modifiers, not negated by
-    /// Trick Room) for the rest of the action in which the Pokémon changed forme
-    /// ([`Battle::raw_speed`]; Stance Change before the user's own attack can reorder, and so
+    /// Trick Room; the value at that moment) for the rest of the action in which the Pokémon
+    /// changed forme ([`Battle::raw_speed`]; Stance Change before the user's own attack can reorder, and so
     /// re-round, its three-factor ModifyDamage chain: `stance-change-raw-speed`). A Pokémon that
     /// entered during this stage has no snapshot and is read live (Showdown: `switchIn` leaves
     /// `pokemon.speed` at the raw value from `setSpecies`, refreshed before the next move action;
@@ -142,8 +142,8 @@ impl<const N: usize> Battle<'_, N> {
         let Some(pokemon) = self.occupant(slot) else {
             return self.action_speed(slot);
         };
-        if self.raw_speed.contains(&pokemon) {
-            return i32::from(self.mon(pokemon).stats[4]);
+        if let Some(&(_, speed)) = self.raw_speed.iter().find(|(p, _)| *p == pokemon) {
+            return speed;
         }
         match self.speed_snapshot.iter().find(|(p, _)| *p == pokemon) {
             Some(&(_, speed)) => speed,
@@ -160,12 +160,22 @@ impl<const N: usize> Battle<'_, N> {
         self.speed_snapshot = snapshot;
     }
 
-    /// Records a `setSpecies` of the Pokémon in `slot` for [`Battle::event_speed`].
+    /// Records a `setSpecies` of the Pokémon in `slot` for [`Battle::event_speed`]:
+    /// `this.speed = this.storedStats.spe`, its stored Speed now.
     pub(crate) fn species_set(&mut self, slot: SlotRef) {
         if let Some(pokemon) = self.occupant(slot) {
-            if !self.raw_speed.contains(&pokemon) {
-                self.raw_speed.push(pokemon);
-            }
+            let speed = i32::from(self.mon(pokemon).stats[4]);
+            self.species_set_speed(pokemon, speed);
+        }
+    }
+
+    /// Records a `setSpecies` that left `pokemon.speed` at `speed` (Transform: the stored Speed
+    /// `setSpecies` computed for the target's species from the user's own set, before
+    /// `transformInto` copies the target's stored stats over it).
+    pub(crate) fn species_set_speed(&mut self, pokemon: PokemonRef, speed: i32) {
+        match self.raw_speed.iter_mut().find(|(p, _)| *p == pokemon) {
+            Some(entry) => entry.1 = speed,
+            None => self.raw_speed.push((pokemon, speed)),
         }
     }
 

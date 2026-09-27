@@ -9,8 +9,8 @@ use crate::dex::{AbilityId, ItemId, MoveId, Type};
 use crate::field::{Effect, FieldEffect, SideEffect, SlotCondition, SlotEffect};
 use crate::gimmick::Gimmick;
 use crate::state::{
-    BattleResult, Forme, PokemonRef, SideHistory, SideId, Slot, SlotHistory, SlotRef, State,
-    Status, SwitchFlag,
+    BattleResult, Forme, MoveSlot, PokemonRef, SideHistory, SideId, Slot, SlotHistory, SlotRef,
+    State, Status, SwitchFlag, TransformBase,
 };
 use crate::volatile::{Volatile, VolatileState};
 
@@ -81,6 +81,25 @@ pub enum Instruction {
         move_index: u8,
         old: u8,
         new: u8,
+    },
+    /// Replaces all four move slots (Transform's virtual copies, and the own slots coming back
+    /// when a transformed Pokémon leaves the field).
+    SetMoves {
+        target: PokemonRef,
+        old: [MoveSlot; 4],
+        new: [MoveSlot; 4],
+    },
+    /// `Pokemon::transformed` (Showdown `transformed` with the base kept for `clearVolatile`).
+    SetTransformed {
+        target: PokemonRef,
+        old: Option<TransformBase>,
+        new: Option<TransformBase>,
+    },
+    /// `Pokemon::illusion` (Showdown `pokemon.illusion`, as a flag).
+    SetIllusion {
+        target: PokemonRef,
+        old: bool,
+        new: bool,
     },
     /// Replaces the slot wholesale; `previous` restores boosts/volatiles on reverse (boxed:
     /// a `Slot` carries every volatile's state and would dominate the enum's size).
@@ -229,6 +248,11 @@ impl<const N: usize> State<N> {
                 new,
                 ..
             } => self.pokemon_mut(target).moves[move_index as usize].pp = new,
+            Instruction::SetMoves { target, new, .. } => self.pokemon_mut(target).moves = new,
+            Instruction::SetTransformed { target, new, .. } => {
+                self.pokemon_mut(target).transformed = new
+            }
+            Instruction::SetIllusion { target, new, .. } => self.pokemon_mut(target).illusion = new,
             Instruction::Switch {
                 slot, party_index, ..
             } => {
@@ -309,6 +333,11 @@ impl<const N: usize> State<N> {
                 old,
                 ..
             } => self.pokemon_mut(target).moves[move_index as usize].pp = old,
+            Instruction::SetMoves { target, old, .. } => self.pokemon_mut(target).moves = old,
+            Instruction::SetTransformed { target, old, .. } => {
+                self.pokemon_mut(target).transformed = old
+            }
+            Instruction::SetIllusion { target, old, .. } => self.pokemon_mut(target).illusion = old,
             Instruction::Switch {
                 slot, ref previous, ..
             } => *self.slot_mut(slot) = previous.as_ref().clone(),
@@ -429,6 +458,34 @@ mod tests {
                 old: state.pokemon(foe_mon).types,
                 new: [Type::Water, Type::None],
             },
+            // Transform: the base kept, the virtual copies in place.
+            Instruction::SetTransformed {
+                target: foe_mon,
+                old: None,
+                new: Some(crate::state::TransformBase {
+                    species: state.pokemon(foe_mon).species,
+                    moves: state.pokemon(foe_mon).moves,
+                }),
+            },
+            Instruction::SetIllusion {
+                target: my_mon,
+                old: false,
+                new: true,
+            },
+            Instruction::SetMoves {
+                target: foe_mon,
+                old: state.pokemon(foe_mon).moves,
+                new: [
+                    crate::state::MoveSlot {
+                        id: crate::dex::moves::PROTECT,
+                        pp: 5,
+                        disabled: false,
+                    },
+                    Default::default(),
+                    Default::default(),
+                    Default::default(),
+                ],
+            },
             Instruction::Boost {
                 target: me,
                 stat: 0,
@@ -517,6 +574,9 @@ mod tests {
         assert_eq!(state.pokemon(my_mon).species, species::TYRANITAR_MEGA);
         assert_eq!(state.pokemon(my_mon).ability, abilities::SAND_STREAM);
         assert_eq!(state.pokemon(foe_mon).types, [Type::Water, Type::None]);
+        assert!(state.pokemon(foe_mon).transformed.is_some());
+        assert!(state.pokemon(my_mon).illusion);
+        assert_eq!(state.pokemon(foe_mon).moves[0].pp, 5);
         assert_eq!(state.active(foe).unwrap().status_turns, 3);
         assert!(state.slot(foe).volatiles.has(Volatile::Flinch));
         assert!(state

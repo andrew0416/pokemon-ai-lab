@@ -1,0 +1,11 @@
+{
+ "description": "EE2: `pokemon.illusion` outlives a switch-out, and Neutralizing Gas skips the next BeforeSwitchIn. Zoroark starts under Illusion. Setup turn 1: it switches out for Blissey (being called back, its Illusion `End` keeps the illusion). Setup turn 2: Weezing-Galar (Neutralizing Gas) and Ditto (Limber) come in for Snorlax and Hariyama; Neutralizing Gas ends only the active Pokemon's illusions. The turn: Zoroark switches back in while the gas suppresses its ability, so `onBeforeSwitchIn` does not run and the old illusion stays; Ditto's Transform at it fails.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Hariyama", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Bulk Up"], "level": 50}, {"species": "Weezing-Galar", "item": "", "ability": "Neutralizing Gas", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Ditto", "item": "", "ability": "Limber", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}], "order": "1234"},
+ "p2": {"team": [{"species": "Zoroark", "item": "", "ability": "Illusion", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Nasty Plot"], "level": 50}, {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}, {"species": "Blissey", "item": "", "ability": "Natural Cure", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "123"},
+ "setupTurns": [
+  ["move harden, move bulkup", "switch 3, move swordsdance"],
+  ["switch 3, switch 4", "move harden, move swordsdance"]
+ ],
+ "turn": {"p1": "move harden, move transform 1", "p2": "switch 3, move swordsdance"}
+}

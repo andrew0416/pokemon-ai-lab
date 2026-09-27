@@ -240,7 +240,7 @@ pub(crate) struct MoveProgress {
     /// `ActiveMoveRef::infiltrates` of the move in flight (Infiltrator).
     infiltrates: bool,
     /// [`Battle::raw_speed`] at the suspension: the action goes on in the next stage.
-    raw_speed: Vec<PokemonRef>,
+    raw_speed: Vec<(PokemonRef, i32)>,
     /// [`Battle::speed_snapshot`] at the suspension (the same action, so the same `pokemon.speed`).
     speed_snapshot: Vec<(PokemonRef, i32)>,
     /// Showdown `move.smartTarget` still on when the hits start (Dragon Darts with both of its

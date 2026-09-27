@@ -33,6 +33,7 @@ mod queue;
 mod residual;
 mod support;
 mod switching;
+mod transform;
 mod update;
 
 use std::collections::HashMap;
@@ -293,6 +294,9 @@ pub fn enumerate_start<const N: usize>(state: &mut State<N>) -> Result<Vec<Outco
                 return Err(b.unsupported(why));
             }
         }
+        // Each lead's `switchIn` runs its `BeforeSwitchIn` (Illusion, EE2) before the batched
+        // `runSwitch`.
+        abilities::illusion_leads(b, &leads);
         b.battle_start = true;
         switching::run_switch_in(b, &leads)?;
         b.battle_start = false;

@@ -1,0 +1,10 @@
+{
+ "description": "EE1: Imposter switching in opposite a healthy foe during a turn. Setup: Chansey's Memento faints it (p2's right position keeps the fainted Chansey). The turn: Pelipper switches out for Imposter Ditto in p1's right position; the foe opposite it is Garchomp (`side.foe.active[0]`), so Ditto transforms at once (the switch comes before Garchomp's Swords Dance, so no stages are copied), then Garchomp raises its Attack.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Pelipper", "item": "", "ability": "Keen Eye", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Ditto", "item": "", "ability": "Imposter", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}], "order": "123"},
+ "p2": {"team": [{"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}, {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Memento"], "level": 50}], "order": "12"},
+ "setupTurns": [
+  ["move harden, move harden", "move swordsdance, move memento 1"]
+ ],
+ "turn": {"p1": "move harden, switch 3", "p2": "move swordsdance, pass"}
+}

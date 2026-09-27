@@ -1,0 +1,7 @@
+{
+ "description": "EE1: Transform into a forme-changed target, whose forme ability then does nothing. Start: Torkoal's Drought sets sun and Castform (Forecast) becomes Castform-Sunny. The turn: Ditto (Limber; Choice Scarf and Speed SP so that it never ties with Castform) transforms into it first (species Castform-Sunny, Fire type, Forecast); Torkoal's Rain Dance then turns the real Castform Rainy, but Forecast returns at once for a transformed Pokemon (`pokemon.transformed`), so Ditto stays Castform-Sunny.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Ditto", "item": "Choice Scarf", "ability": "Limber", "nature": "Serious", "evs": {"hp": 32, "spe": 32}, "moves": ["Transform"], "level": 50}, {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "12"},
+ "p2": {"team": [{"species": "Castform", "item": "", "ability": "Forecast", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Torkoal", "item": "", "ability": "Drought", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Rain Dance"], "level": 50}], "order": "12"},
+ "turn": {"p1": "move transform 1, move harden", "p2": "move harden, move raindance"}
+}

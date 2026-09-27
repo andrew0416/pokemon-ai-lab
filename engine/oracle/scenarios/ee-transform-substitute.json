@@ -1,0 +1,10 @@
+{
+ "description": "EE1: Transform against a substitute. Setup: Chansey makes a substitute (a quarter of its HP) while Pelipper switches out for Ditto (Limber). The turn: Ditto's Transform at Chansey fails (a status move without `bypasssub` stops at the substitute), so Ditto stays a Ditto with its Transform PP spent; Snorlax Hardens, Garchomp Swords Dances.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Ditto", "item": "", "ability": "Limber", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}, {"species": "Pelipper", "item": "", "ability": "Keen Eye", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "13"},
+ "p2": {"team": [{"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}, {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Substitute", "Harden"], "level": 50}], "order": "12"},
+ "setupTurns": [
+  ["move harden, switch 3", "move swordsdance, move substitute"]
+ ],
+ "turn": {"p1": "move harden, move transform 2", "p2": "move swordsdance, move harden"}
+}

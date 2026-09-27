@@ -300,6 +300,10 @@ fn beat_up_powers<const N: usize>(b: &Battle<'_, N>, user: SlotRef) -> Result<[u
 /// Mimikyu-Busted, Eiscue-Noice).
 fn set_species(mon: &Pokemon) -> crate::dex::SpeciesId {
     use crate::dex::species;
+    // A transformed Pokémon's set is its own (EE1): the species it returns to.
+    if let Some(base) = mon.transformed {
+        return base.species;
+    }
     if let Some(&(from, _)) = mon
         .item
         .data()
@@ -1275,7 +1279,10 @@ pub(super) fn after_move_secondary_self<const N: usize>(
                 return Ok(());
             };
             let current = b.mon(pokemon).species;
-            if ![species::MELOETTA, species::MELOETTA_PIROUETTE].contains(&current) {
+            // `pokemon.baseSpecies.baseSpecies === 'Meloetta' && !pokemon.transformed`.
+            if ![species::MELOETTA, species::MELOETTA_PIROUETTE].contains(&current)
+                || b.mon(pokemon).transformed.is_some()
+            {
                 return Ok(());
             }
             if b.occupant(user) != Some(pokemon) {
@@ -1584,9 +1591,9 @@ pub(super) fn base_power_callback<const N: usize>(
         moves::TRIPLE_KICK => 10 * i32::from(hit),
         // Water Shuriken: 5 more for an untransformed Greninja-Ash with Battle Bond.
         moves::WATER_SHURIKEN => {
-            let ash = b
-                .slot_mon(user)
-                .is_some_and(|m| m.species == crate::dex::species::GRENINJA_ASH);
+            let ash = b.slot_mon(user).is_some_and(|m| {
+                m.species == crate::dex::species::GRENINJA_ASH && m.transformed.is_none()
+            });
             if ash && b.ability(user) == abilities::BATTLE_BOND {
                 base_power + 5
             } else {
@@ -2851,6 +2858,8 @@ pub(super) fn on_hit<const N: usize>(
         moves::INSTRUCT => instruct(b, target)?,
         // Skill Swap: `return this.skillSwap(source, target);` (shared with Wandering Spirit).
         moves::SKILL_SWAP => success(super::super::abilities::skill_swap(b, user, target)?),
+        // Transform: `return pokemon.transformInto(target);` (EE1).
+        moves::TRANSFORM => success(super::super::transform::transform_into(b, user, target)?),
         // Role Play: `source.setAbility(target.ability, target)`; Entrainment:
         // `target.setAbility(source.ability, source)`; Simple Beam: `target.setAbility('simple')`;
         // Worry Seed: `target.setAbility('insomnia')`, then a sleeping target wakes
@@ -3548,8 +3557,9 @@ pub(crate) fn trick_item_start<const N: usize>(b: &mut Battle<'_, N>, slot: Slot
 /// (`item.megaStone?.[holder.baseSpecies.baseSpecies]`).
 fn holds_freely(item: ItemId, holder: &Pokemon) -> bool {
     let data = item.data();
-    let base = holder.species.data().base_species;
-    let base = if base.is_none() { holder.species } else { base };
+    let own = holder.untransformed_species();
+    let base = own.data().base_species;
+    let base = if base.is_none() { own } else { base };
     !data.cannot_be_taken && !data.mega_stone.iter().any(|&(from, _)| from == base)
 }
 

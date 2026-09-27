@@ -133,7 +133,21 @@ pub struct Pokemon {
     /// switch-out or fainting.
     pub ability: AbilityId,
     pub base_ability: AbilityId,
+    /// The current move slots (Showdown `moveSlots`): the Pokémon's own, or while it is
+    /// transformed the 5-PP virtual copies of its target's ([`Pokemon::transformed`]).
     pub moves: [MoveSlot; 4],
+    /// Showdown `transformed`, with what `clearVolatile` restores when the Pokémon leaves the
+    /// field (switching out, fainting): `setSpecies(baseSpecies)` and `moveSlots =
+    /// baseMoveSlots.slice()` (EE1: Transform, Imposter). `None` while not transformed; only an
+    /// active Pokémon can be transformed.
+    pub transformed: Option<TransformBase>,
+    /// Showdown `pokemon.illusion` as a flag (EE2: Illusion): set by Illusion's
+    /// `onBeforeSwitchIn` when a Pokémon that has not fainted comes after this one in party
+    /// order, cleared by the ability's `End` (a damaging hit, Neutralizing Gas coming in, Gastro
+    /// Acid, losing the ability; not switching out, when `beingCalledBack` keeps it) and by
+    /// fainting. Only `transformInto` reads it (it fails while either Pokémon is under Illusion);
+    /// which Pokémon the disguise shows changes nothing the engine models.
+    pub illusion: bool,
     /// Activation modes this individual can use (Mega Stone, Z-Crystal, Tera type, ...),
     /// filled in from species/item data. The ruleset and the side's usage further restrict it.
     pub gimmicks: GimmickSet,
@@ -189,6 +203,24 @@ impl Pokemon {
         self.ability = forme.ability;
         self.base_ability = forme.base_ability;
     }
+
+    /// The species Showdown's `pokemon.baseSpecies` checks see: while transformed, the species
+    /// the Pokémon returns to (a transformed Ditto is still a Ditto to Light Ball, Eviolite,
+    /// Mega Stones, Commander, ...); otherwise its current species, whose `baseSpecies` the
+    /// callers look up in the dex.
+    pub fn untransformed_species(&self) -> SpeciesId {
+        self.transformed.map_or(self.species, |base| base.species)
+    }
+}
+
+/// What a transformed Pokémon gets back when it leaves the field (Showdown `baseSpecies` and
+/// `baseMoveSlots` while `transformed`): its base species (types and stored stats follow from it
+/// and the set) and its own move slots with the PP they had when it transformed (the virtual
+/// copies' PP is spent instead).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub struct TransformBase {
+    pub species: SpeciesId,
+    pub moves: [MoveSlot; 4],
 }
 
 /// What a forme change rewrites at once (Showdown `setSpecies` + the ability part of

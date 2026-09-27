@@ -647,8 +647,8 @@ pub(crate) fn stage_end_check<const N: usize>(b: &Battle<'_, N>) -> Result<(), T
 /// and under Klutz unless the item is `ignoreKlutz`): Choice Scarf `chainModify(1.5)` (skipped
 /// while Dynamaxed, which `support` refuses); Iron Ball, Macho Brace and the six Power items
 /// `chainModify(0.5)` (Macho Brace and the Power items ignore Klutz); Quick Powder
-/// `chainModify(2)` for an untransformed Ditto (`pokemon.species.name === 'Ditto'`; Transform
-/// and Imposter are refused by `support`).
+/// `chainModify(2)` for an untransformed Ditto (`pokemon.species.name === 'Ditto' &&
+/// !pokemon.transformed`).
 pub(crate) fn speed_modifier(item: ItemId, holder: &Pokemon) -> Option<u32> {
     const HALVING: [ItemId; 8] = [
         items::IRON_BALL,
@@ -663,7 +663,12 @@ pub(crate) fn speed_modifier(item: ItemId, holder: &Pokemon) -> Option<u32> {
     match item {
         i if i == items::CHOICE_SCARF => Some(MOD_ONE_POINT_FIVE),
         i if HALVING.contains(&i) => Some(MOD_HALF),
-        i if i == items::QUICK_POWDER && holder.species == species::DITTO => Some(MOD_DOUBLE),
+        i if i == items::QUICK_POWDER
+            && holder.species == species::DITTO
+            && holder.transformed.is_none() =>
+        {
+            Some(MOD_DOUBLE)
+        }
         _ => None,
     }
 }
@@ -820,7 +825,10 @@ pub(crate) fn attack_handlers<const N: usize>(
     } else {
         (items::CHOICE_SPECS, "onModifySpAPriority")
     };
-    let base = b.slot_mon(user).map(|m| base_species(m.species));
+    // `pokemon.baseSpecies`: a transformed holder's own species.
+    let base = b
+        .slot_mon(user)
+        .map(|m| base_species(m.untransformed_species()));
     let doubled = match item {
         i if i == items::LIGHT_BALL => base == Some(species::PIKACHU),
         i if i == items::THICK_CLUB => {
@@ -916,16 +924,22 @@ pub(crate) fn defense_handlers<const N: usize>(
     };
     let modifier = match item {
         i if i == items::ASSAULT_VEST => (defense_stat == Stat::Spd).then_some(MOD_ONE_POINT_FIVE),
-        i if i == items::EVIOLITE => mon.species.data().nfe.then_some(MOD_ONE_POINT_FIVE),
+        // Eviolite: `pokemon.baseSpecies.nfe` (a transformed holder's own species).
+        i if i == items::EVIOLITE => mon
+            .untransformed_species()
+            .data()
+            .nfe
+            .then_some(MOD_ONE_POINT_FIVE),
         // Deep Sea Scale: `onModifySpD` for Clamperl (`pokemon.baseSpecies.name`); Metal
         // Powder: `onModifyDef` for Ditto (`pokemon.species.name === 'Ditto' &&
-        // !pokemon.transformed`: Transform is not supported). Both 2x at priority 2.
+        // !pokemon.transformed`). Both 2x at priority 2.
         i if i == items::DEEP_SEA_SCALE => (defense_stat == Stat::Spd
-            && base_species(mon.species) == species::CLAMPERL)
+            && base_species(mon.untransformed_species()) == species::CLAMPERL)
             .then_some(MOD_DOUBLE),
-        i if i == items::METAL_POWDER => {
-            (defense_stat == Stat::Def && mon.species == species::DITTO).then_some(MOD_DOUBLE)
-        }
+        i if i == items::METAL_POWDER => (defense_stat == Stat::Def
+            && mon.species == species::DITTO
+            && mon.transformed.is_none())
+        .then_some(MOD_DOUBLE),
         _ => None,
     };
     if let Some(modifier) = modifier {
@@ -1126,8 +1140,9 @@ pub(crate) fn crit_ratio_bonus(item: ItemId, holder: &Pokemon) -> i32 {
     if item == items::SCOPE_LENS || item == items::RAZOR_CLAW {
         return 1;
     }
-    let base = holder.species.data().base_species;
-    let base = if base.is_none() { holder.species } else { base };
+    let own = holder.untransformed_species();
+    let base = own.data().base_species;
+    let base = if base.is_none() { own } else { base };
     if item == items::LEEK && [species::FARFETCHD, species::SIRFETCHD].contains(&base) {
         return 2;
     }

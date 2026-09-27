@@ -436,7 +436,8 @@ pub(super) fn on_try_hit<const N: usize>(
 /// [`on_damaging_hit`] (`u32::MAX`: no order, after every ordered handler), or `None`. Rough
 /// Skin, Iron Barbs and Rattled are handled by `moves::damaging_hit` itself.
 pub(super) fn damaging_hit_order(ability: AbilityId) -> Option<u32> {
-    const HANDLED: [AbilityId; 28] = [
+    const HANDLED: [AbilityId; 29] = [
+        abilities::ILLUSION,
         abilities::GULP_MISSILE,
         abilities::WANDERING_SPIRIT,
         abilities::CUTE_CHARM,
@@ -526,6 +527,12 @@ pub(super) fn on_damaging_hit<const N: usize>(
                     _ => Status::Poison,
                 };
                 b.try_set_status_from(attacker, status, Some(holder));
+            }
+        }
+        // Illusion (EE2): `if (target.illusion) this.singleEvent('End', Illusion, ...)`.
+        a if a == abilities::ILLUSION => {
+            if let Some(pokemon) = b.occupant(holder) {
+                super::ability_events::illusion_end(b, pokemon);
             }
         }
         // Gulp Missile (`forme::gulp_missile_spit`), contact or not.

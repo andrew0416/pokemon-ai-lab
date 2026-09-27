@@ -629,6 +629,9 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // the new one's Start through `switching`; Ability Shield blocks): Skill Swap `onHit`; Role
     // Play, Entrainment, Simple Beam `onTryHit` / `onHit`; Worry Seed `onTryImmunity` too.
     (moves::SKILL_SWAP, &["onHit"]),
+    // EE1 Transform: `onHit` is `transformInto` (`transform::transform_into`); a substitute
+    // blocks it as any status move (and `transformInto` checks the target's own).
+    (moves::TRANSFORM, &["onHit"]),
     // Opus U. Gastro Acid: `onTryHit` in `handlers::on_try_hit` (a `cantsuppress` ability fails,
     // an Ability Shield `null`s it); its condition's `onStart` in `conditions::volatile_start`
     // (Ability Shield) and `abilities::gastro_acid_start` (the ability's `End`); the suppression
@@ -2145,6 +2148,16 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // `Battle::faint_messages`, `switching::end_ability`); every other ability reads
     // `Battle::ability`, which is `NONE` while `abilities::ignoring_ability`.
     (abilities::NEUTRALIZING_GAS, &["onEnd", "onSwitchIn"]),
+    // EE1 Imposter: `onSwitchIn` (`transform::imposter`, from `switching::run_switch_in`).
+    (abilities::IMPOSTER, &["onSwitchIn"]),
+    // EE2 Illusion: `onBeforeSwitchIn` (`abilities::illusion_before_switch_in`, from
+    // `switching::switch_in_as` and `turn::enumerate_start`), `onDamagingHit`
+    // (`ability_hooks::on_damaging_hit`), `onEnd` (`switching::end_ability`, Neutralizing Gas's
+    // `onSwitchIn`), `onFaint` (`Battle::faint_messages`): `abilities::illusion_end`.
+    (
+        abilities::ILLUSION,
+        &["onBeforeSwitchIn", "onDamagingHit", "onEnd", "onFaint"],
+    ),
     // Opus U. Poison Heal: `onDamage` in `abilities::poison_heal` (the residual poison damage,
     // `residual.rs`: nothing else deals `psn` / `tox` damage).
     (abilities::POISON_HEAL, &["onDamage"]),
@@ -2338,16 +2351,6 @@ pub(crate) fn move_unsupported(id: MoveId) -> Option<String> {
     let m = id.data();
     let name = m.name;
     let why = |what: &str| Some(format!("move {name}: {what}"));
-    // Transform (Opus Z unit 7, evaluated and kept refused): `transformInto` copies the target's
-    // species, stored stats, types and added type, weight, boosts, critical-hit volatiles and
-    // ability, and replaces the moves with 5-PP virtual copies until the user leaves the field;
-    // the state keeps neither the base move slots nor a `transformed` flag (read by the next
-    // `transformInto`, among others).
-    if id == moves::TRANSFORM {
-        return why(
-            "transformInto (base move slots and the `transformed` flag are not in the state)",
-        );
-    }
     if !m.handlers.is_empty() && !listed(MOVES_WITH_HANDLERS, id) {
         return why(&format!("callbacks {:?} are not implemented", m.handlers));
     }
@@ -2573,6 +2576,19 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
     }
     for side in [SideId::One, SideId::Two] {
         let s = state.side(side);
+        // Only an active Pokémon can be transformed (leaving the field reverts it, EE1).
+        for (party, mon) in s.party.iter().enumerate() {
+            let active = s
+                .slots
+                .iter()
+                .any(|slot| slot.party_index == Some(party as u8));
+            if mon.transformed.is_some() && !active {
+                return Err(format!(
+                    "{}: transformed off the field",
+                    mon.species.data().name
+                ));
+            }
+        }
         for i in 0..SIDE_EFFECT_COUNT {
             if s.effects[i].is_active() && !SUPPORTED_SIDE_EFFECTS.iter().any(|&e| e as usize == i)
             {
@@ -2738,7 +2754,8 @@ mod tests {
     /// - `move.infiltrates`: Infiltrator (`ActiveMoveRef::infiltrates`) and Pollen Puff are
     ///   implemented, and Present's heal (`handlers::infiltrates`).
     /// - Moves whose own code reads a substitute: Aromatherapy and Defog are implemented; Shed
-    ///   Tail, Baton Pass, Sky Drop, Tidy Up, Transform, Sparkly Swirl are refused.
+    ///   Tail, Baton Pass, Tidy Up and Transform (EE1: `transformInto` fails on a substitute) are
+    ///   implemented; Sky Drop, Sparkly Swirl are refused.
     /// - Disguise and Ice Face (`hitSub` in their handlers) are refused behind a substitute
     ///   (`check_state`, and `moves::hit_substitute` at run time).
     #[test]
@@ -2803,10 +2820,15 @@ mod tests {
         }
         // Shed Tail and Baton Pass pass the substitute on (`switching::copy_volatile_from`).
         // Tidy Up removes every substitute (`moves::handlers::on_hit`).
-        for id in [moves::SHED_TAIL, moves::BATON_PASS, moves::TIDY_UP] {
+        for id in [
+            moves::SHED_TAIL,
+            moves::BATON_PASS,
+            moves::TIDY_UP,
+            moves::TRANSFORM,
+        ] {
             assert_eq!(move_unsupported(id), None, "{id:?}");
         }
-        for id in [moves::SKY_DROP, moves::TRANSFORM, moves::SPARKLY_SWIRL] {
+        for id in [moves::SKY_DROP, moves::SPARKLY_SWIRL] {
             assert!(move_unsupported(id).is_some(), "{id:?}");
         }
         assert_eq!(move_unsupported(moves::SUBSTITUTE), None);

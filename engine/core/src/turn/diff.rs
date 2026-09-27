@@ -179,16 +179,44 @@ fn pokemon<const N: usize>(
             new: b.autotomized,
         });
     }
-    for (i, (ma, mb)) in a.moves.iter().zip(&b.moves).enumerate() {
-        if ma.pp != mb.pp {
-            out.push(Instruction::SetPp {
-                target: r,
-                move_index: i as u8,
-                old: ma.pp,
-                new: mb.pp,
-            });
+    if a.transformed != b.transformed {
+        out.push(Instruction::SetTransformed {
+            target: r,
+            old: a.transformed,
+            new: b.transformed,
+        });
+    }
+    if a.illusion != b.illusion {
+        out.push(Instruction::SetIllusion {
+            target: r,
+            old: a.illusion,
+            new: b.illusion,
+        });
+    }
+    // Transform replaces the move slots wholesale (and leaving the field brings them back);
+    // otherwise only PP changes.
+    let same_moves = a
+        .moves
+        .iter()
+        .zip(&b.moves)
+        .all(|(ma, mb)| ma.id == mb.id && ma.disabled == mb.disabled);
+    if !same_moves {
+        out.push(Instruction::SetMoves {
+            target: r,
+            old: a.moves,
+            new: b.moves,
+        });
+    } else {
+        for (i, (ma, mb)) in a.moves.iter().zip(&b.moves).enumerate() {
+            if ma.pp != mb.pp {
+                out.push(Instruction::SetPp {
+                    target: r,
+                    move_index: i as u8,
+                    old: ma.pp,
+                    new: mb.pp,
+                });
+            }
         }
-        debug_assert!(ma.id == mb.id && ma.disabled == mb.disabled);
     }
     debug_assert!(
         a.level == b.level
@@ -377,6 +405,20 @@ mod tests {
         .types = [crate::dex::Type::Water, crate::dex::Type::None];
         // Autotomize's weight loss.
         to.side_mut(SideId::Two).party[0].autotomized = 1;
+        // Transform (EE1): the base kept, the move slots replaced; a PP change elsewhere.
+        let transformed = &mut to.side_mut(SideId::Two).party[1];
+        transformed.transformed = Some(crate::state::TransformBase {
+            species: transformed.species,
+            moves: transformed.moves,
+        });
+        transformed.moves[0] = crate::state::MoveSlot {
+            id: crate::dex::moves::PROTECT,
+            pp: 5,
+            disabled: false,
+        };
+        to.side_mut(SideId::One).party[3].moves[1].pp = 7;
+        // Illusion (EE2).
+        to.side_mut(SideId::One).party[4].illusion = true;
         // Damage history on a slot and faint counters on a side.
         to.slot_mut(me).history.times_attacked = 2;
         to.slot_mut(me).history.newly_switched = false;

@@ -1,0 +1,7 @@
+{
+ "description": "EE2: Neutralizing Gas ends Illusion. p2's Zoroark leads with Garchomp after it (illusion set). The turn: Snorlax switches out for Weezing-Galar, whose Neutralizing Gas `onSwitchIn` runs Illusion's `End` on Zoroark; Zoroark's Nasty Plot and Garchomp's Swords Dance, then Ditto (Limber) transforms into Zoroark (+2 SpA; its copied Illusion is suppressed like every other ability).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Ditto", "item": "", "ability": "Limber", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}, {"species": "Weezing-Galar", "item": "", "ability": "Neutralizing Gas", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "123"},
+ "p2": {"team": [{"species": "Zoroark", "item": "", "ability": "Illusion", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Nasty Plot"], "level": 50}, {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}], "order": "12"},
+ "turn": {"p1": "switch 3, move transform 1", "p2": "move nastyplot, move swordsdance"}
+}

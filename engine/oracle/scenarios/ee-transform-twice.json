@@ -1,0 +1,7 @@
+{
+ "description": "EE1: Transform needs neither Pokemon transformed already. p1's Imposter Ditto (Choice Scarf) starts transformed into p2's Ditto (Limber) opposite it: a Ditto again, with a 5-PP copy of Transform. The turn: p1's Ditto (faster: Choice Scarf) uses that Transform on Chansey and fails (the user is transformed; PP 5 -> 4, choice lock on Transform, which it knows); p2's Ditto's Transform at p1's Ditto fails (the target is transformed; PP 12 -> 11).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Ditto", "item": "Choice Scarf", "ability": "Imposter", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}, {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "12"},
+ "p2": {"team": [{"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Ditto", "item": "", "ability": "Limber", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}], "order": "12"},
+ "turn": {"p1": "move transform 1, move harden", "p2": "move harden, move transform 1"}
+}

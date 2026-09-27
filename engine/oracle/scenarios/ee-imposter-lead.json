@@ -1,0 +1,7 @@
+{
+ "description": "EE1: Imposter Ditto leads in p1's right slot and transforms into the opposite foe, Incineroar in p2's left slot (Showdown `side.foe.active[length - 1 - position]`). Ditto (Speed 100) starts before Incineroar (80; its Iron Ball keeps the order the same by action Speed): it transforms (species, stored stats, types, 5-PP copies of the target's moves) and gains Intimidate, whose Start lowers both foes' Attack; then Incineroar's Intimidate lowers Snorlax and the transformed Ditto. The turn: Ditto uses its copied Protect (PP 5 -> 4), Incineroar Taunts Snorlax; the transformed Ditto (80 Speed) and Incineroar (40 with Iron Ball) do not tie.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Ditto", "item": "", "ability": "Imposter", "nature": "Serious", "evs": {"hp": 32, "spe": 32}, "moves": ["Transform"], "level": 50}], "order": "12"},
+ "p2": {"team": [{"species": "Incineroar", "item": "Iron Ball", "ability": "Intimidate", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Protect", "Taunt", "Flare Blitz"], "level": 50}, {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "12"},
+ "turn": {"p1": "move harden, move protect", "p2": "move taunt 1, move harden"}
+}

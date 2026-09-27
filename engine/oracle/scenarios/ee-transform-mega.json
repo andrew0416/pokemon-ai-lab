@@ -1,0 +1,10 @@
+{
+ "description": "EE1: Transform into a boosted Mega with a changed type. Setup: Charizard Mega Evolves (X) and Dragon Dances (+1 Atk, +1 Spe); Pelipper Soaks it (pure Water); Snorlax switches out for Ditto (Limber). The turn: Charizard Protects first, Ditto's Transform (no `protect` flag) still copies it: species Charizard-Mega-X, the stored stats, the stages (+1 Atk, +1 Spe), the Soaked type (Water, printed since it differs from the species'), Tough Claws, and 5-PP copies of its moves; HP and max HP stay Ditto's.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Pelipper", "item": "", "ability": "Keen Eye", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Soak", "Harden"], "level": 50}, {"species": "Ditto", "item": "", "ability": "Limber", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}], "order": "123"},
+ "p2": {"team": [{"species": "Charizard", "item": "Charizardite X", "ability": "Blaze", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Dragon Dance", "Protect", "Flare Blitz"], "level": 50}, {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "12"},
+ "setupTurns": [
+  ["switch 3, move soak 1", "move dragondance mega, move harden"]
+ ],
+ "turn": {"p1": "move transform 1, move harden", "p2": "move protect, move harden"}
+}

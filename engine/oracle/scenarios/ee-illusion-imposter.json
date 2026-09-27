@@ -1,0 +1,7 @@
+{
+ "description": "EE2: Illusion stops Transform. p2's Zoroark leads in the left position with a Pokemon after it in party order (its ally Garchomp), so Illusion's `onBeforeSwitchIn` sets `pokemon.illusion`. p1's Imposter Ditto in the right position faces it (`side.foe.active[0]`): `transformInto` fails on the target's illusion, so Ditto stays a Ditto. The turn: Ditto's own Transform at Zoroark fails the same way (PP 12 -> 11); the others Harden / Swords Dance.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Ditto", "item": "", "ability": "Imposter", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}], "order": "12"},
+ "p2": {"team": [{"species": "Zoroark", "item": "", "ability": "Illusion", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Nasty Plot"], "level": 50}, {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}], "order": "12"},
+ "turn": {"p1": "move harden, move transform 1", "p2": "move nastyplot, move swordsdance"}
+}
