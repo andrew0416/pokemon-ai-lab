@@ -977,7 +977,11 @@ fn before_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, mv: &Active
 
 /// Showdown `getConfusionDamage(pokemon, 40)`: a 40-power typeless physical hit with the
 /// user's own boosted Attack against its own boosted Defense, truncated to 16 bits, then the
-/// usual 85–100% roll, at least 1.
+/// usual 85–100% roll (`battle.randomizer`), at least 1. The roll goes through
+/// `Chooser::roll` like every other damage roll, so the reduced
+/// roll modes (`Extremes`, `Fixed`, `Median`, `Pessimistic`) reduce it as the oracle's modes do
+/// (JJ-heavy-turn-parity: it drew all 16 before). For `Pessimistic` the self-hit counts as an
+/// attack against the confused Pokémon's side (the maximum when that side is the pessimist).
 fn confusion_damage<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> i32 {
     let mon = b.slot_mon(user).expect("checked");
     let boosts = b.state.slot(user).boosts;
@@ -988,8 +992,10 @@ fn confusion_damage<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef) -> i32
     let level = i32::from(mon.level);
     let base = ((2 * level / 5 + 2) * 40 * attack / defense) / 50 + 2;
     let base = base & 0xffff;
-    let roll = 100 - b.rng.uniform(16) as i32;
-    (base * roll / 100).max(1)
+    // `tr(tr(baseDamage * (100 - random(16))) / 100)`: ascending index i is the multiplier 85 + i.
+    let rolls: crate::damage::DamageRolls =
+        std::array::from_fn(|i| (base * (85 + i as i32) / 100).max(1) as u16);
+    i32::from(b.rng.roll(&rolls, user.side.other()))
 }
 
 // ---- targets --------------------------------------------------------------------------------

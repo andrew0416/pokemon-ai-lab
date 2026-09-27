@@ -7,19 +7,35 @@
 // merged by their canonical form (canonical.cjs), which lab-engine must reproduce exactly.
 //
 // Usage:
-//   node engine/oracle/enumerate.cjs <scenario.json> [--mode full|extremes|mc] [--samples N]
-//                                    [--max-branches N] [--keep-nominal-draws] [--out file]
+//   node engine/oracle/enumerate.cjs <scenario.json> [--mode full|extremes|fixed|mc] [--roll K]
+//                                    [--samples N] [--max-branches N] [--keep-nominal-draws] [--out file]
 //                                    [--collapse-secondaries] [--traces]
-//                                    [--setup-walks N] [--setup-max-branches N]
+//                                    [--setup-walks N] [--setup-max-branches N] [--estimate N]
+//                                    [--staged]
 //
 // Modes:
 //   full      every branch with its exact probability (the parity reference)
 //   extremes  damage rolls only take the min and max roll; probabilities are NOT exact
+//   fixed     every damage roll takes roll K (--roll, 0..15, lab-engine's ascending index:
+//             0 = 85% (the minimum), 7 = 92% (the engine's `Median`), 15 = 100% (the maximum);
+//             Showdown's `random(16)` then returns 15 - K). No roll branching at all, everything
+//             else exact: lab-engine's `RollMode::Fixed(K)` reproduces it exactly
+//             (JJ-heavy-turn-parity: turns too heavy even for `extremes`). The report has `roll`.
 //   mc        N natural PRNG runs, empirical frequencies (cross-checks `full`)
 //
 // --collapse-secondaries: a secondary effect's or self-drop's `random(100) < chance` draw becomes
 // one two-way decision (exact; see collapsedActions). --traces: every outcome carries the
 // scripted-PRNG trace of its first branch, which replays it (`setupTraces` below).
+//
+// --staged: the turn is enumerated one action at a time, identical states merging between actions
+// (same distribution, far fewer runs on heavy turns; see enumerateStaged). The report has
+// `staged: {stages, maxFrontier, merged}`.
+//
+// --estimate N: instead of enumerating, N uniform random walks through the decision tree of the
+// given mode estimate how many branches the enumeration would run (Knuth's estimator: the mean of
+// the product of the option counts along a walk; unbiased, but noisy on lopsided trees). The
+// report is {mode, roll, estimate: {walks, branches, stderr, maxDepth, msPerBranch}, ...}: how heavy
+// a turn is for the plain enumeration of each mode (a diagnostic; the staged runs are far smaller).
 //
 // Pinned positions (FF-parity-harness): `startState` (canonical state after the leads' switch-ins)
 // and `setupStates[k]` (canonical state after setup turn k) keep only the branch of the start or of
@@ -39,12 +55,13 @@ const {canonical, canonicalKey} = require('./canonical.cjs');
 function parseArgs(argv) {
 	const args = {
 		mode: 'full', samples: 20000, maxBranches: 500000, out: null, file: null, keepNominalDraws: false,
-		collapse: false, traces: false, setupWalks: 2000, setupMaxBranches: 200000,
+		collapse: false, traces: false, setupWalks: 2000, setupMaxBranches: 200000, roll: null,
 	};
 	for (let i = 0; i < argv.length; i++) {
 		const a = argv[i];
 		if (a === '--mode') args.mode = argv[++i];
 		else if (a === '--samples') args.samples = Number(argv[++i]);
+		else if (a === '--roll') args.roll = Number(argv[++i]);
 		else if (a === '--max-branches') args.maxBranches = Number(argv[++i]);
 		else if (a === '--out') args.out = argv[++i];
 		else if (a === '--keep-nominal-draws') args.keepNominalDraws = true;
@@ -52,11 +69,17 @@ function parseArgs(argv) {
 		else if (a === '--traces') args.traces = true;
 		else if (a === '--setup-walks') args.setupWalks = Number(argv[++i]);
 		else if (a === '--setup-max-branches') args.setupMaxBranches = Number(argv[++i]);
+		else if (a === '--estimate') args.estimate = Number(argv[++i]);
+		else if (a === '--staged') args.staged = true;
 		else if (!args.file) args.file = a;
 		else throw new Error(`unexpected argument ${a}`);
 	}
-	if (!args.file) throw new Error('usage: enumerate.cjs <scenario.json> [--mode full|extremes|mc]');
-	if (!['full', 'extremes', 'mc'].includes(args.mode)) throw new Error(`unknown mode ${args.mode}`);
+	if (!args.file) throw new Error('usage: enumerate.cjs <scenario.json> [--mode full|extremes|fixed|mc]');
+	if (!['full', 'extremes', 'fixed', 'mc'].includes(args.mode)) throw new Error(`unknown mode ${args.mode}`);
+	if ((args.mode === 'fixed') !== (args.roll !== null)) throw new Error('--roll K goes with --mode fixed (and only there)');
+	if (args.mode === 'fixed' && !(Number.isInteger(args.roll) && args.roll >= 0 && args.roll <= 15)) {
+		throw new Error(`--roll needs an index 0..15, got ${args.roll}`);
+	}
 	return args;
 }
 
@@ -233,11 +256,11 @@ function findPinned(make, run, pin, trace, opts) {
 	};
 	const found = (battle, prng) => {
 		battle.prng = new PRNG(DEFAULT_SEED);
-		return {battle, trace: {mode: prng.mode, ...settings, prefix: prng.trace.map(t => t.choice)}};
+		return {battle, trace: {...traceMode(prng), ...settings, prefix: prng.trace.map(t => t.choice)}};
 	};
 	if (trace && trace.collapse === settings.collapse && trace.nominal === settings.nominal) {
 		try {
-			const prng = new ScriptedPRNG(trace.prefix, trace.mode);
+			const prng = new ScriptedPRNG(trace.prefix, trace.mode, trace.roll ?? null);
 			const battle = attempt(prng);
 			if (stableKey(canonical(battle)) === target) return found(battle, prng);
 		} catch (e) {
@@ -310,14 +333,19 @@ class ExhaustedTrace extends Error {}
 
 // Replays `prefix` (one chosen index per decision point), then takes index 0 for every new
 // decision point, recording each point's weights so the caller can advance the odometer.
+// `roll`: the fixed roll index of `fixed` mode (lab-engine's ascending index, 0 = 85%).
 class ScriptedPRNG {
-	constructor(prefix, mode) {
+	constructor(prefix, mode, roll = null) {
 		this.prefix = prefix;
 		this.mode = mode;
+		this.roll = roll;
+		if (mode === 'fixed' && !(Number.isInteger(roll) && roll >= 0 && roll <= 15)) {
+			throw new Error(`fixed mode needs a roll index 0..15, got ${roll}`);
+		}
 		this.trace = []; // {weights, choice}
 		this.approximate = false;
 		this.nextIsRoll = false;
-		this.rolls = 0; // damage rolls collapsed to min/max (extremes mode)
+		this.rolls = 0; // damage rolls collapsed to min/max (extremes mode) or fixed (fixed mode)
 	}
 	decide(values, weights) {
 		const i = this.trace.length;
@@ -340,6 +368,12 @@ class ScriptedPRNG {
 				this.approximate = true;
 				this.rolls++;
 				return this.decide([0, 15], [0.5, 0.5]);
+			}
+			// Showdown's roll r is the multiplier 100 - r: the engine's ascending index K is r = 15 - K.
+			if (this.mode === 'fixed' && n === 16) {
+				this.approximate = true;
+				this.rolls++;
+				return lo + 15 - this.roll;
 			}
 		}
 		const values = Array.from({length: n}, (_, k) => lo + k);
@@ -402,6 +436,44 @@ class WalkPRNG extends ScriptedPRNG {
 		this.trace.push({weights, choice});
 		return values[choice];
 	}
+}
+
+// A uniform random walk (every option equally likely, whatever its weight): Knuth's estimator.
+class UniformWalkPRNG extends ScriptedPRNG {
+	constructor(rng, mode, roll) {
+		super([], mode, roll);
+		this.rng = rng;
+	}
+	decide(values, weights) {
+		const choice = Math.min(values.length - 1, Math.floor(this.rng() * values.length));
+		this.trace.push({weights, choice});
+		return values[choice];
+	}
+}
+
+// Estimates the number of branches `enumerate(scenario, snapshot, opts)` would run from `walks`
+// uniform random walks (see --estimate).
+function estimateBranches(scenario, snapshot, opts, walks) {
+	const rng = mulberry32(0xe57);
+	let sum = 0;
+	let sumSq = 0;
+	let maxDepth = 0;
+	const started = process.hrtime.bigint();
+	for (let i = 0; i < walks; i++) {
+		const battle = restore(snapshot);
+		const prng = new UniformWalkPRNG(rng, opts.mode, opts.roll ?? null);
+		instrument(battle, prng, opts);
+		runTurn(battle, scenario);
+		const product = prng.trace.reduce((acc, t) => acc * t.weights.length, 1);
+		sum += product;
+		sumSq += product * product;
+		maxDepth = Math.max(maxDepth, prng.trace.length);
+	}
+	const ms = Number(process.hrtime.bigint() - started) / 1e6;
+	const mean = sum / walks;
+	const sd = Math.sqrt(Math.max(0, sumSq / walks - mean * mean));
+	return {walks, branches: Math.round(mean), stderr: Math.round(sd / Math.sqrt(walks)), maxDepth,
+		msPerBranch: +(ms / walks).toFixed(3)};
 }
 
 function restore(snapshot) {
@@ -471,6 +543,11 @@ function tagDamageRolls(battle, prng) {
 	};
 }
 
+// A trace's mode fields: `{mode}`, plus `roll` in fixed mode (a replay needs it).
+function traceMode(prng) {
+	return prng.mode === 'fixed' ? {mode: prng.mode, roll: prng.roll} : {mode: prng.mode};
+}
+
 function nextPrefix(trace) {
 	for (let i = trace.length - 1; i >= 0; i--) {
 		if (trace[i].choice + 1 < trace[i].weights.length) {
@@ -492,17 +569,19 @@ function enumerate(scenario, snapshot, opts, maxBranchesArg, keepNominalDrawsArg
 	let branches = 0;
 	let approximate = false;
 	let maxDepth = 0;
-	// Extremes mode: each branch with r collapsed rolls stands for about 8^r full-mode branches.
+	// Extremes mode: each branch with r collapsed rolls stands for about 8^r full-mode branches;
+	// fixed mode: 16^r.
+	const perRoll = mode === 'fixed' ? 16 : 8;
 	let fullEstimate = 0;
 	while (prefix) {
 		if (++branches > maxBranches) throw new Error(`more than ${maxBranches} branches; use --mode extremes or mc`);
 		const battle = restore(snapshot);
-		const prng = new ScriptedPRNG(prefix, mode);
+		const prng = new ScriptedPRNG(prefix, mode, opts.roll ?? null);
 		instrument(battle, prng, opts);
 		const {state, log} = runTurn(battle, scenario);
 		const p = prng.trace.reduce((acc, t) => acc * t.weights[t.choice], 1);
 		approximate ||= prng.approximate;
-		fullEstimate += 8 ** prng.rolls;
+		fullEstimate += perRoll ** prng.rolls;
 		maxDepth = Math.max(maxDepth, prng.trace.length);
 		const key = canonicalKey(state);
 		const entry = outcomes.get(key);
@@ -513,7 +592,7 @@ function enumerate(scenario, snapshot, opts, maxBranchesArg, keepNominalDrawsArg
 			const outcome = {p, branches: 1, state, log};
 			if (opts.traces) {
 				outcome.trace = {
-					mode, collapse: !!opts.collapse, nominal: !opts.keepNominalDraws,
+					...traceMode(prng), collapse: !!opts.collapse, nominal: !opts.keepNominalDraws,
 					prefix: prng.trace.map(t => t.choice),
 				};
 			}
@@ -522,6 +601,152 @@ function enumerate(scenario, snapshot, opts, maxBranchesArg, keepNominalDrawsArg
 		prefix = nextPrefix(prng.trace);
 	}
 	return {branches, maxDepth, approximate, outcomes, fullEstimate};
+}
+
+// ---- staged enumeration (--staged) ---------------------------------------------------------
+//
+// A doubles turn with a Speed tie between active Pokémon (a mirror match) or several spread moves
+// makes the plain enumeration above run the product of every action's branch counts: every
+// `speedSort` tie in an `eachEvent('Update')` after every hit is a 50/50 decision that mostly
+// changes nothing, and each is re-enumerated under every combination of the other actions'
+// decisions. With --staged the turn runs one queued action at a time (`steppedTurnLoop`, Showdown's
+// `turnLoop` stopping after each action); between actions the battle is serialized, branches that
+// reach the same serialized state (the log and the PRNG aside) merge with their probabilities
+// added, and the next action is enumerated once from each distinct state: the engine's stage
+// frontier. Every branch still runs Showdown's own code from a Showdown snapshot, and a merged
+// state's future does not depend on which branch reached it, so the distribution is the same as
+// the plain enumeration's (checked against the oracle fixtures); only the number of runs drops, to
+// about the sum over actions of (distinct states before it) x (its own branches). What the plain
+// enumeration trusts in Showdown (`Battle.fromJSON` of a snapshot between turns) this also trusts
+// between actions. An outcome's trace is the concatenated decisions of one path through the
+// stages, which replays the turn unstaged.
+
+// Showdown's `Battle.turnLoop` (sim/battle.ts) running one queued action per call: the loop's
+// `while` becomes the caller's, which serializes the battle between the calls. The two log lines
+// the real loop adds on entry (`|` and `|t:|`) are left out (log only; `turnLog` drops them).
+function steppedTurnLoop() {
+	if (this.requestState) this.requestState = '';
+	if (!this.midTurn) {
+		this.queue.insertChoice({choice: 'beforeTurn'});
+		this.queue.addChoice({choice: 'residual'});
+		this.midTurn = true;
+	}
+	const action = this.queue.shift();
+	if (action) {
+		this.runAction(action);
+		if (this.requestState || this.ended) return;
+		if (this.queue.list.length) return; // between two actions: the next stage resumes here
+	}
+	this.endTurn();
+	this.midTurn = false;
+	this.queue.clear();
+}
+
+// Serialized-battle fields that only concern the log, the PRNG or the client, left out of the
+// merge key (a merged state keeps the first branch's values, consistent with its own log).
+const STAGE_KEY_SKIP = new Set([
+	'log', 'inputLog', 'messageLog', 'sentLogPos', 'sentEnd', 'sentRequests', 'lastMoveLine', 'prng',
+	'prngSeed', 'hints',
+]);
+
+// What the turn does after a stage: 'continue' (between two actions, or a mid-turn switch request
+// the scenario's `midTurn` answers next) or 'done' (the turn is over, or waits for a choice the
+// scenario does not make: that state is the outcome, as in `runTurn`).
+function stageState(battle, midTurn, used) {
+	if (battle.ended) return 'done';
+	const requesting = battle.sides.filter(midTurnRequest);
+	if (requesting.length) {
+		const answered = requesting.every(side => ((midTurn && midTurn[side.id]) || [])[used[side.id]] !== undefined);
+		return answered ? 'continue' : 'done';
+	}
+	if (battle.midTurn && !battle.requestState && battle.queue.list.length) return 'continue';
+	return 'done';
+}
+
+// One round of `applyMidTurn`: every requesting side makes its next `midTurn` choice; the last one
+// commits them and runs the next action (through `steppedTurnLoop`).
+function midTurnRound(battle, midTurn, used) {
+	const requesting = battle.sides.filter(midTurnRequest);
+	const choices = requesting.map(side => ((midTurn && midTurn[side.id]) || [])[used[side.id]]);
+	requesting.forEach((side, i) => {
+		used[side.id]++;
+		if (!battle.choose(side.id, choices[i])) {
+			throw new Error(`${side.id}: mid-turn choice "${choices[i]}" rejected: ${battle.log.slice(-1)}`);
+		}
+	});
+}
+
+function enumerateStaged(scenario, snapshot, opts) {
+	const {mode, maxBranches} = opts;
+	const crypto = require('node:crypto');
+	const outcomes = new Map();
+	const perRoll = mode === 'fixed' ? 16 : 8;
+	let branches = 0;
+	let approximate = false;
+	let maxDepth = 0;
+	let fullEstimate = 0;
+	let stages = 0;
+	let maxFrontier = 1;
+	let merged = 0;
+	const logStart = JSON.parse(snapshot).log.length;
+	let frontier = [{snapshot, p: 1, prefix: [], used: {p1: 0, p2: 0}, start: true}];
+	while (frontier.length) {
+		stages++;
+		const next = new Map();
+		for (const entry of frontier) {
+			let stagePrefix = [];
+			while (stagePrefix) {
+				if (++branches > maxBranches) throw new Error(`more than ${maxBranches} branches; use --mode extremes or mc`);
+				const battle = restore(entry.snapshot);
+				const prng = new ScriptedPRNG(stagePrefix, mode, opts.roll ?? null);
+				instrument(battle, prng, opts);
+				battle.turnLoop = steppedTurnLoop;
+				const used = {...entry.used};
+				if (entry.start) battle.makeChoices(scenario.turn.p1, scenario.turn.p2);
+				else if (battle.sides.some(midTurnRequest)) midTurnRound(battle, scenario.midTurn, used);
+				else battle.turnLoop();
+				const p = prng.trace.reduce((acc, t) => acc * t.weights[t.choice], entry.p);
+				approximate ||= prng.approximate;
+				fullEstimate += perRoll ** prng.rolls;
+				const prefix = entry.prefix.concat(prng.trace.map(t => t.choice));
+				maxDepth = Math.max(maxDepth, prefix.length);
+				if (stageState(battle, scenario.midTurn, used) === 'continue') {
+					battle.prng = new PRNG(DEFAULT_SEED);
+					const state = battle.toJSON();
+					const keyed = {used};
+					for (const [k, v] of Object.entries(state)) if (!STAGE_KEY_SKIP.has(k)) keyed[k] = v;
+					const key = crypto.createHash('sha256').update(JSON.stringify(keyed)).digest('base64');
+					const found = next.get(key);
+					if (found) {
+						found.p += p;
+						merged++;
+					} else {
+						next.set(key, {snapshot: JSON.stringify(state), p, prefix, used, start: false});
+					}
+				} else {
+					const state = canonical(battle);
+					const key = canonicalKey(state);
+					const found = outcomes.get(key);
+					if (found) {
+						found.p += p;
+						found.branches++;
+					} else {
+						const outcome = {p, branches: 1, state, log: turnLog(battle.log.slice(logStart))};
+						if (opts.traces) {
+							outcome.trace = {
+								...traceMode(prng), collapse: !!opts.collapse, nominal: !opts.keepNominalDraws, prefix,
+							};
+						}
+						outcomes.set(key, outcome);
+					}
+				}
+				stagePrefix = nextPrefix(prng.trace);
+			}
+		}
+		frontier = [...next.values()];
+		maxFrontier = Math.max(maxFrontier, frontier.length);
+	}
+	return {branches, maxDepth, approximate, outcomes, fullEstimate, staged: {stages, maxFrontier, merged}};
 }
 
 function monteCarlo(scenario, snapshot, samples) {
@@ -567,9 +792,30 @@ function main() {
 	const started = process.hrtime.bigint();
 	const {snapshot, before, traces} = buildSnapshot(scenario, baseDir, args);
 	const setupMs = Number(process.hrtime.bigint() - started) / 1e6;
+	if (args.estimate) {
+		if (args.mode === 'mc') throw new Error('--estimate goes with an enumerating mode');
+		const estimate = estimateBranches(scenario, snapshot, args, args.estimate);
+		const report = {
+			scenario: path.relative(root, scenarioPath).replaceAll('\\', '/'),
+			mode: args.mode,
+			...(args.mode === 'fixed' ? {roll: args.roll} : {}),
+			collapseSecondaries: !!args.collapse,
+			estimate,
+			setupMs: Math.round(setupMs),
+			startTrace: traces.start,
+			setupTraces: traces.setup,
+		};
+		const text = JSON.stringify(report, null, 1);
+		if (args.out) fs.writeFileSync(args.out, text);
+		else process.stdout.write(text + '\n');
+		console.error(`${args.mode}${args.mode === 'fixed' ? ` ${args.roll}` : ''}: about ${estimate.branches} ` +
+			`branches (± ${estimate.stderr}, ${estimate.walks} walks, ${estimate.msPerBranch} ms each)`);
+		return;
+	}
+	if (args.staged && args.mode === 'mc') throw new Error('--staged goes with an enumerating mode');
 	const result = args.mode === 'mc' ?
 		monteCarlo(scenario, snapshot, args.samples) :
-		enumerate(scenario, snapshot, args);
+		args.staged ? enumerateStaged(scenario, snapshot, args) : enumerate(scenario, snapshot, args);
 	const elapsedMs = Number(process.hrtime.bigint() - started) / 1e6;
 	const outcomes = [...result.outcomes.values()]
 		.sort((a, b) => b.p - a.p)
@@ -582,6 +828,7 @@ function main() {
 		format: scenario.format,
 		turn: scenario.turn,
 		mode: args.mode,
+		...(args.mode === 'fixed' ? {roll: args.roll} : {}),
 		nominalTargetDraws: args.mode === 'mc' || args.keepNominalDraws ? 'kept' : 'collapsed',
 		exact: args.mode === 'full' && !result.approximate,
 		showdownCommit: sourceCommit(),
@@ -594,7 +841,8 @@ function main() {
 		outcomes,
 	};
 	if (args.collapse) report.collapseSecondaries = true;
-	if (args.mode === 'extremes') report.fullBranchEstimate = result.fullEstimate;
+	if (result.staged) report.staged = result.staged;
+	if (args.mode === 'extremes' || args.mode === 'fixed') report.fullBranchEstimate = result.fullEstimate;
 	if (scenario.startState || (scenario.setupStates || []).some(Boolean)) {
 		report.setupMs = Math.round(setupMs);
 		report.startTrace = traces.start;
@@ -603,7 +851,7 @@ function main() {
 	const text = JSON.stringify(report, null, 1);
 	if (args.out) fs.writeFileSync(args.out, text);
 	else process.stdout.write(text + '\n');
-	console.error(`${args.mode}: ${result.branches} branches -> ${outcomes.length} outcomes, ` +
+	console.error(`${args.mode}${args.mode === 'fixed' ? ` ${args.roll}` : ''}: ${result.branches} branches -> ${outcomes.length} outcomes, ` +
 		`total p=${total.toFixed(12)}, ${Math.round(elapsedMs)} ms`);
 }
 
@@ -617,5 +865,7 @@ function sourceCommit() {
 	}
 }
 
-module.exports = {buildSnapshot, enumerate, monteCarlo, ScriptedPRNG, nextPrefix, loadTeam, readJSON, sourceCommit};
+module.exports = {
+	buildSnapshot, enumerate, enumerateStaged, monteCarlo, ScriptedPRNG, nextPrefix, loadTeam, readJSON, sourceCommit,
+};
 if (require.main === module) main();
