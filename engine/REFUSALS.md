@@ -1,6 +1,6 @@
 # 턴 엔진 거부 목록 (자동 생성)
 
-`python engine/scripts/refusals.py`가 `engine/core/src/turn/`의 거부 지점(`b.unsupported(...)`, `TurnError::Unsupported`, FF의 `Battle::refused`, `check_state`와 정적 지원 검사 등 메시지를 만드는 함수)을 소스에서 뽑고 `engine/scripts/refusals.classification.json`의 분류를 붙여 만든다. 직접 편집하지 않는다. `--check`는 새 거부가 분류 없이 추가되거나 분류가 낡으면 실패한다.
+`python engine/scripts/refusals.py`가 `engine/core/src/turn/`의 거부 지점(`b.unsupported(...)`, `TurnError::Unsupported`, `check_state`와 정적 지원 검사 등 메시지를 만드는 함수)을 소스에서 뽑고 `engine/scripts/refusals.classification.json`의 분류를 붙여 만든다. 직접 편집하지 않는다. `--check`는 새 거부가 분류 없이 추가되거나 분류가 낡으면 실패한다.
 
 범위: Champions 모드(Showdown `9e317a6`)에서 `isNonstandard`가 null인 종(메가 포함, 배틀 중 폼은 기본 종이 표준일 때만), 그 종의 특성(+심플빔·고민씨가 주는 심플·불면), `learnsets.ts`의 기술(+표준 플래그 기술·발버둥), 표준 도구. 테라·다이맥스·Z는 규칙셋이 막는다. 목록은 `refusals.universe.json`, 근거 검사는 아래 '근거'.
 

@@ -14,7 +14,7 @@ Usage (from the repository root or anywhere; paths are relative to this file):
 
 What is extracted (`engine/core/src/turn/**.rs`, test modules skipped):
 - every `.unsupported(...)`, `TurnError::Unsupported(...)` and `map_err(TurnError::Unsupported)`
-  call site and FF's `refused.get_or_insert_with(...)` (checked in `items::stage_end_check`);
+  call site;
 - the messages of the *producer* functions whose strings those sites forward (the list is in the
   classification file: `check_state`, the static gate `move_unsupported`, `mega_target`, ...).
 
@@ -595,7 +595,7 @@ def render(entries, classification, results, problems, fixed=None, proposed=None
     w("# 턴 엔진 거부 목록 (자동 생성)")
     w("")
     w("`python engine/scripts/refusals.py`가 `engine/core/src/turn/`의 거부 지점(`b.unsupported(...)`, "
-      "`TurnError::Unsupported`, FF의 `Battle::refused`, `check_state`와 정적 지원 검사 등 메시지를 만드는 함수)을 "
+      "`TurnError::Unsupported`, `check_state`와 정적 지원 검사 등 메시지를 만드는 함수)을 "
       "소스에서 뽑고 `engine/scripts/refusals.classification.json`의 분류를 붙여 만든다. 직접 편집하지 않는다. "
       "`--check`는 새 거부가 분류 없이 추가되거나 분류가 낡으면 실패한다.")
     w("")
