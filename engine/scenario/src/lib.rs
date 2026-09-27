@@ -18,6 +18,7 @@
 pub mod canonical;
 pub mod decision;
 pub mod error;
+pub mod from_canonical;
 pub mod json;
 pub mod meta;
 pub mod parity;
@@ -47,6 +48,7 @@ pub use decision::{
     PartyOrder, PatchJson,
 };
 pub use error::{LoadError, ScenarioError, SetProblem, TeamProblem};
+pub use from_canonical::{canonical_json_hidden, state_from_canonical, Rebuilt, HIDDEN_KEY};
 pub use json::{ScenarioJson, TeamSet};
 pub use meta::{MemberMeta, ScenarioMeta, SideMeta};
 pub use switch_in::{

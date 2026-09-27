@@ -133,6 +133,8 @@ pub fn build_pokemon(set: &TeamSet) -> Result<(Pokemon, MemberMeta), SetProblem>
         team_index: 0,
         gender,
         tera_type,
+        species,
+        ability,
     };
     Ok((pokemon, meta))
 }

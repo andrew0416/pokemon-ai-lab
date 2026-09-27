@@ -89,6 +89,7 @@ dependencies = [
  "lab-scenario",
  "lab-search",
  "pyo3",
+ "serde_json",
 ]
 
 [[package]]

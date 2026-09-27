@@ -19,7 +19,11 @@ use pyo3::prelude::*;
 use ::lab_engine::eval::{Heuristic, FEATURE_COUNT, FEATURE_NAMES};
 use ::lab_engine::state::{BattleResult, SideId};
 use ::lab_engine::turn::EnumerateOptions;
-use lab_scenario::{load_scenario_file, load_scenario_str, LoadError, LoadedScenario};
+use lab_scenario::canonical::format_ruleset;
+use lab_scenario::{
+    apply_patch, canonical_json_hidden, load_scenario_file, load_scenario_str,
+    state_from_canonical, LoadError, LoadedScenario, PatchJson, ScenarioError, ScenarioMeta,
+};
 use lab_search::nash::{self as rm, Matrix};
 use lab_search::node::{
     decision_name, parse_pruning, parse_rolls, scenario_nodes, weights_by_name, NashTurn as RsNash,
@@ -45,6 +49,43 @@ fn py_err(e: NodeError) -> PyErr {
         NodeError::Invalid(why) => PyValueError::new_err(why),
         NodeError::Unsupported(why) => Unsupported::new_err(why),
     }
+}
+
+fn scenario_err(e: ScenarioError) -> PyErr {
+    match e {
+        ScenarioError::Unsupported(why) => Unsupported::new_err(why),
+        ScenarioError::Invalid(why) => PyValueError::new_err(why),
+    }
+}
+
+/// A JSON argument: a dict (or any `json.dumps`-able value) or the JSON text itself.
+fn json_arg(value: &Bound<'_, PyAny>) -> PyResult<serde_json::Value> {
+    let text = match value.extract::<String>() {
+        Ok(text) => text,
+        Err(_) => value
+            .py()
+            .import("json")?
+            .call_method1("dumps", (value,))?
+            .extract::<String>()?,
+    };
+    serde_json::from_str(&text).map_err(|e| PyValueError::new_err(format!("bad JSON: {e}")))
+}
+
+/// A position rebuilt from canonical JSON on `base` (a state of the same battle).
+fn node_from_canonical(
+    base: &::lab_engine::Doubles,
+    meta: &Arc<ScenarioMeta>,
+    value: &serde_json::Value,
+) -> PyResult<Node<2>> {
+    let rebuilt = state_from_canonical(base, meta, value).map_err(scenario_err)?;
+    let ruleset = format_ruleset(&meta.format).map_err(|e| PyValueError::new_err(e.to_string()))?;
+    Ok(Node {
+        state: rebuilt.state,
+        order: rebuilt.order,
+        suspension: None,
+        meta: Arc::clone(meta),
+        ruleset,
+    })
 }
 
 fn load_err(e: LoadError) -> PyErr {
@@ -319,6 +360,22 @@ impl Scenario {
             .collect())
     }
 
+    /// A position built from canonical JSON (schema 1; a dict or the JSON text), as
+    /// `Position.state_json()` writes it, with or without its `x-hidden` member: the scenario's
+    /// teams supply what the canonical form leaves out (level, nature, Stat Points, move
+    /// order). Hidden state the canonical form does not carry takes the defaults
+    /// `engine/scenario/src/from_canonical.rs` lists; what has none (a transformed Pokémon, a
+    /// pending future move, volatiles such as Leech Seed whose source is not canonical, a
+    /// mid-turn switch) raises `Unsupported` unless `x-hidden` gives it. Genders the teams leave
+    /// to chance stay undecided (`Position.from_canonical` on a position keeps its genders).
+    #[allow(clippy::wrong_self_convention)] // the Python API name
+    fn from_canonical(&self, state: &Bound<'_, PyAny>) -> PyResult<Position> {
+        let value = json_arg(state)?;
+        let meta = Arc::new(self.loaded.meta.clone());
+        let node = node_from_canonical(&self.loaded.state, &meta, &value)?;
+        Ok(Position { node: node.into() })
+    }
+
     fn __repr__(&self) -> String {
         let names = |side: usize| -> String {
             self.loaded.meta.sides[side]
@@ -420,8 +477,48 @@ impl Position {
     }
 
     /// The state as the oracle's canonical JSON (schema 1, `engine/oracle/canonical.cjs`).
-    fn state_json(&self) -> PyResult<String> {
-        with_node!(&self.node, n => n.state_json().map_err(py_err))
+    /// `hidden=True` appends the engine's `x-hidden` member: the state the canonical form
+    /// leaves out (party order, hazard order, volatile payloads, ...), so that
+    /// `from_canonical` gives back this exact position; the rest of the string is unchanged.
+    #[pyo3(signature = (hidden = false))]
+    fn state_json(&self, hidden: bool) -> PyResult<String> {
+        if !hidden {
+            return with_node!(&self.node, n => n.state_json().map_err(py_err));
+        }
+        with_node!(&self.node, n => {
+            canonical_json_hidden(&n.state, &n.meta, Some(&n.order)).map_err(scenario_err)
+        })
+    }
+
+    /// Another position of the same battle built from canonical JSON (a dict or the JSON
+    /// text, `x-hidden` optional; see `Scenario.from_canonical`): this position supplies the
+    /// set data, genders included. Edit `state_json(hidden=True)` and put it back to change a
+    /// position by hand. A suspended turn is not carried.
+    #[allow(clippy::wrong_self_convention)] // the Python API name
+    fn from_canonical(&self, state: &Bound<'_, PyAny>) -> PyResult<Position> {
+        let value = json_arg(state)?;
+        with_node!(&self.node, n => {
+            let node = node_from_canonical(&n.state, &n.meta, &value)?;
+            Ok(Position { node: node.into() })
+        })
+    }
+
+    /// This position with an oracle `patch` applied (the scenario files' `patch` format:
+    /// `{"p1": {name: {"hp", "status", "statusTime", "boosts", "item"}}, "p2": ..., "sides":
+    /// {"p1": {"tailwind": 3}}, "field": {"weather", "weatherDuration", "terrain",
+    /// "terrainDuration", "pseudoWeather": {"trickroom": 5}}}`; a dict or the JSON text).
+    fn with_patch(&self, patch: &Bound<'_, PyAny>) -> PyResult<Position> {
+        let value = json_arg(patch)?;
+        let patch: PatchJson = serde_json::from_value(value)
+            .map_err(|e| PyValueError::new_err(format!("patch: {e}")))?;
+        with_node!(&self.node, n => {
+            if n.suspension.is_some() {
+                return Err(PyValueError::new_err("a suspended turn cannot be patched"));
+            }
+            let mut node = n.clone();
+            apply_patch(&mut node.state, &node.meta, &patch).map_err(PyValueError::new_err)?;
+            Ok(Position { node: node.into() })
+        })
     }
 
     /// The heuristic evaluation from `side`'s point of view (HP-bar units, 100 = one full
