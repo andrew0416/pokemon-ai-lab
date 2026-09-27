@@ -1,8 +1,21 @@
 {
- "description": "R0 refusal repro (board R13): Snorlax's Attract on Umbreon, neither set with a gender (Showdown drew both at team creation; Attract works only between male and female). The engine refuses (`try_immunity_problem`). [Since board R13b (Opus SS): genders decided in the initial distribution; the fixture is oracle/gender-mix.cjs's mixture over the 2^k assignments.]",
+ "description": "SS R10a: Supersweet Syrup acts once per battle (`pokemon.syrupTriggered`). Hydrapple leads (both foes' evasion -1 at the start), switches out for Umbreon in the setup turn and comes back in the decision turn (position 3 after the switch): its onStart returns at once, the foes' evasion stays at -1.",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [
+   {
+    "species": "Hydrapple",
+    "item": "",
+    "ability": "Supersweet Syrup",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect"
+    ],
+    "level": 50
+   },
    {
     "species": "Snorlax",
     "item": "",
@@ -12,15 +25,15 @@
      "hp": 32
     },
     "moves": [
-     "Attract",
+     "Curse",
      "Protect"
     ],
     "level": 50
    },
    {
-    "species": "Clefable",
+    "species": "Umbreon",
     "item": "",
-    "ability": "Magic Guard",
+    "ability": "Inner Focus",
     "nature": "Serious",
     "evs": {
      "hp": 32
@@ -32,14 +45,14 @@
     "level": 50
    }
   ],
-  "order": "12"
+  "order": "123"
  },
  "p2": {
   "team": [
    {
-    "species": "Umbreon",
+    "species": "Clefable",
     "item": "",
-    "ability": "Inner Focus",
+    "ability": "Magic Guard",
     "nature": "Serious",
     "evs": {
      "hp": 32
@@ -67,8 +80,14 @@
   ],
   "order": "12"
  },
+ "setupTurns": [
+  [
+   "switch 3, move curse",
+   "move calmmind, move swordsdance"
+  ]
+ ],
  "turn": {
-  "p1": "move attract 1, move calmmind",
+  "p1": "switch 3, move curse",
   "p2": "move calmmind, move swordsdance"
  }
 }

@@ -10,9 +10,9 @@
 
 use std::fmt;
 
-use lab_engine::dex::{AbilityId, ItemId, SpeciesId};
+use lab_engine::dex::{AbilityId, Gender, ItemId, SpeciesId};
 use lab_engine::field::Effect;
-use lab_engine::state::{SideId, SlotRef, State, Status, BOOST_COUNT, PARTY_SIZE};
+use lab_engine::state::{PokemonRef, SideId, SlotRef, State, Status, BOOST_COUNT, PARTY_SIZE};
 use lab_engine::turn::{
     enumerate_start, item_start_handler, species_start_handler, start_handler, switch_in_supported,
     TurnError,
@@ -225,29 +225,103 @@ fn validate<const N: usize>(state: &State<N>) -> Result<(), SwitchInError> {
 
 /// Weighted states after the leads' start-of-battle effects. `state` must be a fresh start
 /// (as [`crate::load_scenario_file`] builds it). Outcomes are in first-reached order.
+///
+/// Undecided genders are decided first where something in the battle reads them
+/// ([`decide_genders`]): each gender assignment is its own start, weighted by its probability.
 pub fn expand_switch_ins<const N: usize>(
     state: &State<N>,
 ) -> Result<Vec<InitialOutcome<N>>, SwitchInError> {
     validate(state)?;
-    let mut work = state.clone();
-    let outcomes = enumerate_start(&mut work).map_err(|e| match e {
-        TurnError::Unsupported(what) => SwitchInError::Unsupported { what },
-        other => SwitchInError::Unsupported {
-            what: other.to_string(),
-        },
-    })?;
-    debug_assert_eq!(work, *state);
-    Ok(outcomes
-        .into_iter()
-        .map(|o| {
-            let mut end = state.clone();
+    let mut out = Vec::new();
+    for decided in decide_genders(state) {
+        let mut work = decided.state.clone();
+        let outcomes = enumerate_start(&mut work).map_err(|e| match e {
+            TurnError::Unsupported(what) => SwitchInError::Unsupported { what },
+            other => SwitchInError::Unsupported {
+                what: other.to_string(),
+            },
+        })?;
+        debug_assert_eq!(work, decided.state);
+        out.extend(outcomes.into_iter().map(|o| {
+            let mut end = decided.state.clone();
             end.apply(&o.instructions);
             InitialOutcome {
-                probability: o.probability,
+                probability: decided.probability * o.probability,
                 state: end,
             }
+        }));
+    }
+    Ok(out)
+}
+
+/// Board R13b: Showdown's Pokemon constructor gives a set without a gender and a species without
+/// a fixed one `this.battle.sample(['M', 'F'])` (sim/pokemon.ts): a fair coin, not the species'
+/// gender ratio, drawn when the players join and never changed. The loader leaves such a member
+/// [`Gender::Random`]; if the battle can read a gender ([`gender_readers`]), every such member of
+/// both parties is decided here, all 2^k assignments at 1/2^k each (p1's party, then p2's, in
+/// party order; male before female). Otherwise nothing reads it and the state stays as it is (one
+/// start: states that differ only in a gender nothing reads would split positions for nothing).
+/// The oracle is `oracle/gender-mix.cjs` (enumerate.cjs keeps its seed's draw).
+pub fn decide_genders<const N: usize>(state: &State<N>) -> Vec<InitialOutcome<N>> {
+    let undecided: Vec<PokemonRef> = [SideId::One, SideId::Two]
+        .into_iter()
+        .flat_map(|side| {
+            state
+                .side(side)
+                .party
+                .iter()
+                .enumerate()
+                .filter(|(_, m)| !m.species.is_none() && m.gender == Gender::Random)
+                .map(move |(i, _)| PokemonRef {
+                    side,
+                    party: i as u8,
+                })
         })
-        .collect())
+        .collect();
+    if undecided.is_empty() || !gender_readers(state) {
+        return vec![InitialOutcome {
+            probability: 1.0,
+            state: state.clone(),
+        }];
+    }
+    let variants = 1usize << undecided.len();
+    (0..variants)
+        .map(|bits| {
+            let mut decided = state.clone();
+            for (k, &pokemon) in undecided.iter().enumerate() {
+                decided.pokemon_mut(pokemon).gender = if bits >> k & 1 == 1 {
+                    Gender::Female
+                } else {
+                    Gender::Male
+                };
+            }
+            InitialOutcome {
+                probability: 1.0 / variants as f64,
+                state: decided,
+            }
+        })
+        .collect()
+}
+
+/// Whether anything in the battle can read a gender: Attract or Captivate among a party's moves
+/// (Transform copies moves from Pokémon in the battle), Cute Charm or Rivalry as a party
+/// member's ability (Skill Swap, Trace, Role Play, ... only move abilities between party
+/// members) or as the ability of a Mega forme an item in the battle gives.
+fn gender_readers<const N: usize>(state: &State<N>) -> bool {
+    use lab_engine::dex::{abilities, moves};
+    let reads = |a: AbilityId| a == abilities::CUTE_CHARM || a == abilities::RIVALRY;
+    let mons = || state.sides.iter().flat_map(|side| side.party.iter());
+    mons().any(|mon| {
+        mon.moves
+            .iter()
+            .any(|s| s.id == moves::ATTRACT || s.id == moves::CAPTIVATE)
+            || reads(mon.ability)
+            || reads(mon.base_ability)
+            || mons().any(|holder| {
+                lab_engine::gimmick::mega_evolution(mon.species, holder.item)
+                    .is_some_and(|mega| mega.data().abilities.iter().any(|&a| reads(a)))
+            })
+    })
 }
 
 /// [`expand_switch_ins`] for a loaded scenario.

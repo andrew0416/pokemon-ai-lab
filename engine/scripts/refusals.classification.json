@@ -147,6 +147,16 @@
    "board": "R5-future-move-edges",
    "fixture": "rr-future-sight-red-card",
    "what": "Red Card's `onAfterMoveSecondary` flags the active user (`forceSwitchFlag`); `residual::residual` runs `runAction`'s phazing step after the residual action (before its `faintMessages`), which drags it out. A user hitting from the bench is not active: the card stays (`uu-future-sight-user-left-red-card`)."
+  },
+  "Beat Up with benched allies of different power {} (their order in Showdown's side.pokemon depends on the switches so far, which the state does not keep)": {
+   "board": "R9-beat-up-order",
+   "fixture": "ss-beat-up-switched-bench",
+   "what": "`Side::party_order` (`Instruction::SetPartyOrder`, hidden, recorded while a Beat Up is in a party) keeps Showdown's `side.pokemon` order: `switchIn` exchanges the newcomer's position with the replaced Pokémon's, Ally Switch the two active positions; Beat Up hits in it (also `ss-beat-up-ally-switch`, `rr-beat-up-bench`)."
+  },
+  "{} after the battle start (its once-per-battle flag is not in the state)": {
+   "board": "R10-once-per-battle-flags",
+   "fixture": "rr-supersweet-syrup-switch",
+   "what": "`SideHistory::{sword_boost, shield_boost, syrup_triggered}` (party bitmasks, hidden) keep Showdown's `pokemon.swordBoost` / `.shieldBoost` / `.syrupTriggered`: the first `onStart` sets the flag and acts, later starts return at once (also `ss-supersweet-syrup-once`)."
   }
  },
  "entries": {
@@ -169,11 +179,10 @@
    "why": "Forwards `mega_target` for a Mega choice; none of its messages is reachable: `{}: ability {} ({})` (every Mega ability is supported, E1; Trace since R1), `{} holding {} has no Mega Evolution` and `{}: species callbacks {}`."
   },
   "check_turn: -> support::check_state(state)": {
-   "reachable": "yes",
+   "reachable": "no",
    "kind": "forward",
    "board": "R13-attract-gender",
-   "repro": "rr-rivalry-undecided-gender",
-   "why": "Forwards `check_state`: reachable through the Rivalry gender check (R13); its `{}: ability {} ({})` is not since R1 (Trace on the field is supported)."
+   "why": "Forwards `check_state`: its Rivalry gender check is unreachable since R13b (the initial distribution decides the genders a Rivalry holder could read); its `{}: ability {} ({})` is not since R1 (Trace on the field is supported)."
   },
   "Trace next to No Ability": {
    "reachable": "no",
@@ -205,20 +214,6 @@
    "board": "R8-encore-edges",
    "why": "Transform is `failencore`, `failcopycat`, `nosleeptalk` and `failinstruct`, so an encored Pokémon can only run it by choosing it, and the Champions Encore replaces that queued action with the encored move first (a Mental Herb holder is cured at once); Imposter transforms on switch-in, when Encore is gone (`noCopy`)."
   },
-  "Beat Up with benched allies of different power {} (their order in Showdown's side.pokemon depends on the switches so far, which the state does not keep)": {
-   "reachable": "yes",
-   "kind": "mechanic",
-   "board": "R9-beat-up-order",
-   "repro": "rr-beat-up-bench",
-   "why": "Beat Up (standard) with two eligible benched allies of different base Attack: the hit order follows `side.pokemon`, which switches reorder."
-  },
-  "{} after the battle start (its once-per-battle flag is not in the state)": {
-   "reachable": "yes",
-   "kind": "mechanic",
-   "board": "R10-once-per-battle-flags",
-   "repro": "rr-supersweet-syrup-switch",
-   "why": "Supersweet Syrup (Hydrapple) starting after the battle start (a switch-in, a Skill Swap); `pokemon.syrupTriggered` is not in the state. Intrepid Sword and Dauntless Shield are not standard."
-  },
   "{}: Battle Bond (its once-per-battle `bondTriggered` is not in the state)": {
    "reachable": "no",
    "kind": "past-only",
@@ -238,32 +233,28 @@
    "why": "A source leaves the field only by a switch or a drag, and every action ends with an Update in which Syrup Bomb's `onUpdate` removes the volatile; a fainted source stays in place until the replacement after the residual."
   },
   "Attract between {} and {} with an undecided gender (give the sets a gender)": {
-   "reachable": "yes",
-   "kind": "input",
+   "reachable": "no",
+   "kind": "invariant",
    "board": "R13-attract-gender",
-   "repro": "rr-cute-charm-undecided-gender",
-   "why": "Cute Charm (Clefable, Milotic, Lopunny, Wigglytuff) next to a set without a gender: Showdown drew the gender at team creation (`battle.sample(['M', 'F'])`), the scenario does not say which."
+   "why": "Cute Charm / Destiny Knot / Attract's volatile between sets without a gender. The scenario crate's initial distribution decides every undecided gender (Showdown's `battle.sample(['M', 'F'])` at team creation, a fair coin per set) whenever a party has Attract / Captivate or a Cute Charm / Rivalry holder or Mega forme (`lab_scenario::decide_genders`, board R13b; fixtures mixed by `oracle/gender-mix.cjs`), so a loaded battle never reads an undecided gender; the guard is left for hand-made states."
   },
   "{} with {} of undecided gender (give the set a gender)": {
-   "reachable": "yes",
-   "kind": "input",
+   "reachable": "no",
+   "kind": "invariant",
    "board": "R13-attract-gender",
-   "repro": "rr-attract-undecided-gender",
-   "why": "Attract (standard) between sets without a gender (Captivate is not standard)."
+   "why": "Attract's onTryImmunity between sets without a gender. The scenario crate's initial distribution decides every undecided gender (Showdown's `battle.sample(['M', 'F'])` at team creation, a fair coin per set) whenever a party has Attract / Captivate or a Cute Charm / Rivalry holder or Mega forme (`lab_scenario::decide_genders`, board R13b; fixtures mixed by `oracle/gender-mix.cjs`), so a loaded battle never reads an undecided gender; the guard is left for hand-made states."
   },
   "Rivalry next to {} of undecided gender (give the set a gender)": {
-   "reachable": "yes",
-   "kind": "input",
+   "reachable": "no",
+   "kind": "invariant",
    "board": "R13-attract-gender",
-   "repro": "rr-rivalry-undecided-gender",
-   "why": "Rivalry (Luxray, Pyroar) on the field next to a set without a gender."
+   "why": "Rivalry on the field next to a set without a gender. The scenario crate's initial distribution decides every undecided gender (Showdown's `battle.sample(['M', 'F'])` at team creation, a fair coin per set) whenever a party has Attract / Captivate or a Cute Charm / Rivalry holder or Mega forme (`lab_scenario::decide_genders`, board R13b; fixtures mixed by `oracle/gender-mix.cjs`), so a loaded battle never reads an undecided gender; the guard is left for hand-made states."
   },
   "{}: Rivalry next to a Pokémon of undecided gender": {
-   "reachable": "yes",
-   "kind": "input",
+   "reachable": "no",
+   "kind": "invariant",
    "board": "R13-attract-gender",
-   "repro": "rr-rivalry-switch-in-undecided-gender",
-   "why": "A Rivalry holder switching in next to a set without a gender."
+   "why": "A Rivalry holder switching in next to a set without a gender. The scenario crate's initial distribution decides every undecided gender (Showdown's `battle.sample(['M', 'F'])` at team creation, a fair coin per set) whenever a party has Attract / Captivate or a Cute Charm / Rivalry holder or Mega forme (`lab_scenario::decide_genders`, board R13b; fixtures mixed by `oracle/gender-mix.cjs`), so a loaded battle never reads an undecided gender; the guard is left for hand-made states."
   },
   "switch_in_as: -> why": {
    "reachable": "yes",

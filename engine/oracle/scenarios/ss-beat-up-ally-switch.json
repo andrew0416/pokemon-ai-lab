@@ -1,5 +1,5 @@
 {
- "description": "R0 refusal repro (board R9): Weavile's Beat Up with its paralysed ally out of it and two benched allies of different power (Garchomp 18, Clefable 12); Showdown hits in `side.pokemon` order (here the team order: no switch yet). The engine does not keep that order and refuses. [Since board R9 (Opus SS): Side::party_order.]",
+ "description": "SS R9b: Beat Up after a switch and an Ally Switch. Setup turn 1: Snorlax (position 2) switches out for Farigiraf (position 4): Weavile, Farigiraf, Garchomp, Snorlax. Setup turn 2: Farigiraf's Ally Switch puts it in position 1 (swapPosition): Farigiraf, Weavile, Garchomp, Snorlax. Weavile (now p1b) hits 14, 17, 18, 16 in that order (the party order would give Snorlax before Garchomp) into Mudsdale's Stamina.",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [
@@ -13,7 +13,8 @@
     },
     "moves": [
      "Beat Up",
-     "Protect"
+     "Protect",
+     "Swords Dance"
     ],
     "level": 50
    },
@@ -46,15 +47,15 @@
     "level": 50
    },
    {
-    "species": "Clefable",
+    "species": "Farigiraf",
     "item": "",
-    "ability": "Magic Guard",
+    "ability": "Armor Tail",
     "nature": "Serious",
     "evs": {
      "hp": 32
     },
     "moves": [
-     "Calm Mind",
+     "Ally Switch",
      "Protect"
     ],
     "level": 50
@@ -65,17 +66,17 @@
  "p2": {
   "team": [
    {
-    "species": "Umbreon",
+    "species": "Mudsdale",
     "item": "",
-    "ability": "Inner Focus",
+    "ability": "Stamina",
     "nature": "Serious",
     "evs": {
      "hp": 32,
      "def": 32
     },
     "moves": [
-     "Calm Mind",
-     "Protect"
+     "Rest",
+     "Scary Face"
     ],
     "level": 50
    },
@@ -96,15 +97,18 @@
   ],
   "order": "12"
  },
- "patch": {
-  "p1": {
-   "Snorlax": {
-    "status": "par"
-   }
-  }
- },
+ "setupTurns": [
+  [
+   "move swordsdance, switch 4",
+   "move rest, move calmmind"
+  ],
+  [
+   "move protect, move allyswitch",
+   "move rest, move calmmind"
+  ]
+ ],
  "turn": {
-  "p1": "move beatup 1, move curse",
-  "p2": "move calmmind, move calmmind"
+  "p1": "move protect, move beatup 1",
+  "p2": "move scaryface 1, move calmmind"
  }
 }

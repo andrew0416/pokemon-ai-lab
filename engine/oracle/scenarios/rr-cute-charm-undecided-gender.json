@@ -1,5 +1,5 @@
 {
- "description": "R0 refusal repro (board R13): Garchomp's Dragon Claw (contact) hits Milotic (Cute Charm, 30% to attract), neither set with a gender. The engine refuses once Cute Charm asks whether the attraction can land (`attract_fails`).",
+ "description": "R0 refusal repro (board R13): Garchomp's Dragon Claw (contact) hits Milotic (Cute Charm, 30% to attract), neither set with a gender. The engine refuses once Cute Charm asks whether the attraction can land (`attract_fails`). [Since board R13b (Opus SS): genders decided in the initial distribution; the fixture is oracle/gender-mix.cjs's mixture over the 2^k assignments.]",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [

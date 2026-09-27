@@ -169,7 +169,7 @@ pub(super) fn on_modify_move<const N: usize>(
         }
         // Beat Up: `move.allies = pokemon.side.pokemon.filter(ally => ally === pokemon ||
         // !ally.fainted && !ally.status); move.multihit = move.allies.length;`
-        moves::BEAT_UP => mv.beat_up = beat_up_powers(b, user)?,
+        moves::BEAT_UP => mv.beat_up = beat_up_powers(b, user),
         // Curse: `if (!source.hasType('Ghost')) move.target = move.nonGhostTarget; else if
         // (source.isAlly(target)) move.target = 'randomNormal';` (the caller then re-picks the
         // target: the user, or a random foe).
@@ -243,57 +243,33 @@ pub(super) fn on_modify_move<const N: usize>(
     Ok(())
 }
 
-/// Beat Up's `move.allies` (its `onModifyMove`) as hit powers: `side.pokemon` in order, the user
-/// and every Pokémon that has not fainted and has no status. Showdown's `side.pokemon` puts the
-/// active positions first (in slot order), then the bench in an order the switches so far decided,
-/// which the state does not keep: with two or more eligible benched Pokémon of different power
-/// the hit order is unknown and the move is unsupported.
-fn beat_up_powers<const N: usize>(b: &Battle<'_, N>, user: SlotRef) -> Result<[u8; 6], TurnError> {
+/// Beat Up's `move.allies` (its `onModifyMove`) as hit powers: `side.pokemon` in order
+/// (`Side::party_order`: the active positions, then the bench in the order the switches so far
+/// left it), the user and every Pokémon that has not fainted and has no status.
+fn beat_up_powers<const N: usize>(b: &Battle<'_, N>, user: SlotRef) -> [u8; 6] {
     let side = b.state.side(user.side);
     let user_pokemon = b.occupant(user);
-    let eligible = |party: u8| {
+    debug_assert!(
+        b.history_readers.party_order,
+        "a Beat Up user makes it recorded"
+    );
+    let mut out = [0u8; 6];
+    let mut hits = 0;
+    for &party in &side.party_order {
+        let mon = &side.party[usize::from(party)];
+        if mon.species.is_none() {
+            continue;
+        }
         let pokemon = PokemonRef {
             side: user.side,
             party,
         };
-        let mon = b.mon(pokemon);
-        Some(pokemon) == user_pokemon || (mon.hp > 0 && mon.status == Status::None)
-    };
-    let power = |party: u8| {
-        let mon = &side.party[usize::from(party)];
-        5 + set_species(mon).data().base_stats[1] / 10
-    };
-    let mut powers = Vec::new();
-    for slot in &side.slots {
-        if let Some(party) = slot.party_index.or(slot.fainted_occupant) {
-            if eligible(party) {
-                powers.push(power(party));
-            }
+        if Some(pokemon) == user_pokemon || (mon.hp > 0 && mon.status == Status::None) {
+            out[hits] = 5 + set_species(mon).data().base_stats[1] / 10;
+            hits += 1;
         }
     }
-    let mut bench = Vec::new();
-    for party in 0..side.party.len() as u8 {
-        let placed = side
-            .slots
-            .iter()
-            .any(|s| s.party_index == Some(party) || s.fainted_occupant == Some(party));
-        if !placed && !side.party[usize::from(party)].species.is_none() && eligible(party) {
-            bench.push(power(party));
-        }
-    }
-    if bench.windows(2).any(|w| w[0] != w[1]) {
-        return Err(b.unsupported(format!(
-            "Beat Up with benched allies of different power {bench:?} (their order in \
-             Showdown's side.pokemon depends on the switches so far, which the state does not \
-             keep)"
-        )));
-    }
-    powers.extend(bench);
-    let mut out = [0u8; 6];
-    for (i, p) in powers.into_iter().take(6).enumerate() {
-        out[i] = p;
-    }
-    Ok(out)
+    out
 }
 
 /// The species of the Pokémon's set (Showdown `set.species`), which Beat Up reads: its species
@@ -3401,6 +3377,12 @@ fn swap_positions<const N: usize>(
     }
     // The ability states move with the Pokémon.
     b.swap_ability_state_order(&order, from, to);
+    // `side.pokemon[pokemon.position] = target; side.pokemon[newPosition] = pokemon` (the
+    // positions hold their occupants, fainted ones included).
+    let at = |s: &crate::state::Slot| s.party_index.or(s.fainted_occupant);
+    if let (Some(x), Some(y)) = (at(&a), at(&c)) {
+        b.swap_party_order(from.side, x, y);
+    }
     for action in &mut b.queue {
         if Some(action.pokemon) == user {
             action.slot = to;

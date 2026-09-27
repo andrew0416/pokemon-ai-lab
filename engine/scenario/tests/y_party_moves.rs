@@ -4,7 +4,6 @@
 mod common;
 
 use common::assert_exact_parity;
-use lab_engine::turn::TurnError;
 use lab_scenario::{load_scenario_file, run_decision, scenario_decision, scenario_positions};
 
 /// Uproar wakes sleeping Pokémon and starts its three-turn lock.
@@ -85,9 +84,10 @@ fn beat_up_hits_per_ally() {
     assert_exact_parity("y-beat-up");
 }
 
-/// Two benched allies of different power: their order is Showdown state the engine lacks.
+/// Two benched allies of different power: they hit in `Side::party_order` (board R9, SS), here
+/// the team order since nothing switched; the move used to be refused.
 #[test]
-fn beat_up_with_an_unknown_bench_order_is_unsupported() {
+fn beat_up_with_benched_allies_of_different_power() {
     let loaded = load_scenario_file(
         common::engine_dir().join("oracle/scenarios/y-beat-up-bench-order.json"),
     )
@@ -95,8 +95,6 @@ fn beat_up_with_an_unknown_bench_order_is_unsupported() {
     let position = scenario_positions(&loaded).unwrap().remove(0);
     let mut state = position.state.clone();
     let decision = scenario_decision(&loaded, &position).unwrap();
-    match run_decision(&mut state, &decision) {
-        Err(TurnError::Unsupported(what)) => assert!(what.contains("Beat Up"), "{what}"),
-        other => panic!("expected Unsupported, got {other:?}"),
-    }
+    let outcomes = run_decision(&mut state, &decision).unwrap();
+    assert!(!outcomes.is_empty());
 }

@@ -1,5 +1,5 @@
 {
- "description": "R0 refusal repro (board R10): Hydrapple switches in during the decision turn; Supersweet Syrup lowers both foes' evasion once per battle (`pokemon.syrupTriggered`). The engine keeps no such flag and refuses the ability after the battle start.",
+ "description": "R0 refusal repro (board R10): Hydrapple switches in during the decision turn; Supersweet Syrup lowers both foes' evasion once per battle (`pokemon.syrupTriggered`). The engine keeps no such flag and refuses the ability after the battle start. [Since board R10 (Opus SS): SideHistory::syrup_triggered.]",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [

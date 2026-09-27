@@ -8,7 +8,7 @@ use common::{assert_exact_parity, fixture, start};
 use lab_engine::dex::abilities;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::SideId;
-use lab_engine::turn::{enumerate_turn, TurnError};
+use lab_engine::turn::enumerate_turn;
 use lab_scenario::scenario_choices;
 
 // ---- O55 onDamagingHit -------------------------------------------------------------------------
@@ -181,10 +181,10 @@ fn regenerator_and_natural_cure_match_showdown() {
     assert_exact_parity("o54-regenerator-natural-cure");
 }
 
-/// Intrepid Sword acts once per battle (`pokemon.swordBoost`); the state does not record it, so
-/// a switch-in after the battle start is refused.
+/// Intrepid Sword acts once per battle (`pokemon.swordBoost`, `SideHistory::sword_boost`, board
+/// R10a): a switch-in after the battle start boosts Attack unless the flag is already set.
 #[test]
-fn intrepid_sword_after_the_start_is_refused() {
+fn intrepid_sword_after_the_start_acts_once() {
     let name = "o68-download-sword-shield";
     let fixture = fixture(name);
     let (loaded, position) = start(name, &fixture);
@@ -199,8 +199,23 @@ fn intrepid_sword_after_the_start_is_refused() {
     let mon = &mut state.side_mut(SideId::One).party[porygon2];
     mon.ability = abilities::INTREPID_SWORD;
     mon.base_ability = abilities::INTREPID_SWORD;
-    match enumerate_turn(&mut state, Ruleset::CHAMPIONS_MC, choices) {
-        Err(TurnError::Unsupported(why)) => assert!(why.contains("Intrepid Sword"), "{why}"),
-        other => panic!("expected Unsupported, got {other:?}"),
-    }
+    // Porygon2's Attack stage in every outcome (it switches in during the turn).
+    let atk_stages = |state: &mut lab_engine::Doubles| -> Vec<i8> {
+        let outcomes = enumerate_turn(state, Ruleset::CHAMPIONS_MC, choices).unwrap();
+        outcomes
+            .iter()
+            .map(|o| {
+                let mut end = state.clone();
+                end.apply(&o.instructions);
+                let side = end.side(SideId::One);
+                side.slots
+                    .iter()
+                    .find(|s| s.party_index == Some(porygon2 as u8))
+                    .map_or(0, |s| s.boosts[0])
+            })
+            .collect()
+    };
+    assert!(atk_stages(&mut state).iter().all(|&a| a == 1));
+    state.side_mut(SideId::One).history.sword_boost |= 1 << porygon2;
+    assert!(atk_stages(&mut state).iter().all(|&a| a == 0));
 }

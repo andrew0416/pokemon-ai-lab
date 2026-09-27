@@ -290,6 +290,9 @@ pub struct HistoryReaders {
     /// only copied from Pokémon in the battle, abilities only move between them), or a Mega
     /// forme with one of the abilities that a Mega Stone in the battle gives.
     pub ability_order: bool,
+    /// Beat Up (`side.pokemon` order: `Side::party_order`), which only comes from a party's
+    /// moves (Transform copies a Pokémon in the battle; Metronome and Assist are `Past`).
+    pub party_order: bool,
 }
 
 impl HistoryReaders {
@@ -330,6 +333,15 @@ impl HistoryReaders {
                     } else if slot.id == m::INSTRUCT {
                         readers.last_move_target_loc = true;
                     }
+                }
+                let own = mon.transformed.map(|base| base.moves);
+                if mon
+                    .moves
+                    .iter()
+                    .chain(own.iter().flatten())
+                    .any(|s| s.id == crate::dex::moves::BEAT_UP)
+                {
+                    readers.party_order = true;
                 }
             }
         }

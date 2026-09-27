@@ -34,36 +34,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "hitting after its user left the field, whose position holds Tyranitar with Unnerve",
         "R5c-future-move-absent-user-occupant",
     ),
-    (
-        "rr-beat-up-bench",
-        "Beat Up with benched allies of different power",
-        "R9-beat-up-order",
-    ),
-    (
-        "rr-supersweet-syrup-switch",
-        "Supersweet Syrup after the battle start",
-        "R10-once-per-battle-flags",
-    ),
-    (
-        "rr-cute-charm-undecided-gender",
-        "with an undecided gender (give the sets a gender)",
-        "R13-attract-gender",
-    ),
-    (
-        "rr-attract-undecided-gender",
-        "Attract with Snorlax of undecided gender",
-        "R13-attract-gender",
-    ),
-    (
-        "rr-rivalry-undecided-gender",
-        "Rivalry next to Luxray of undecided gender",
-        "R13-attract-gender",
-    ),
-    (
-        "rr-rivalry-switch-in-undecided-gender",
-        "Luxray: Rivalry next to a Pokémon of undecided gender",
-        "R13-attract-gender",
-    ),
 ];
 
 /// Each repro still reaches its refusal from the oracle fixture's position (the scenario is
@@ -184,15 +154,16 @@ fn encore_into_counter() {
 }
 
 /// An `--mode extremes` fixture: three hits with their rolls and critical hits are about
-/// 6.6 million branches in full mode (`fullBranchEstimate`).
+/// 6.6 million branches in full mode (`fullBranchEstimate`). Hits in `Side::party_order`
+/// (board R9; `ss_party_order.rs` has the reordered cases).
 #[test]
-#[ignore = "refused: Beat Up with benched allies of different power {} (board R9-beat-up-order)"]
 fn beat_up_bench_order() {
     assert_extremes_parity("rr-beat-up-bench");
 }
 
+/// Board R10: the first start after the battle start acts (`SideHistory::syrup_triggered`;
+/// `ss_once_per_battle.rs` has the second start).
 #[test]
-#[ignore = "refused: {} after the battle start (its once-per-battle flag is not in the state) (board R10-once-per-battle-flags)"]
 fn supersweet_syrup_after_the_start() {
     assert_exact_parity("rr-supersweet-syrup-switch");
 }
@@ -202,30 +173,6 @@ fn supersweet_syrup_after_the_start() {
 #[test]
 fn recycle_a_seed() {
     assert_exact_parity("rr-recycle-seed");
-}
-
-#[test]
-#[ignore = "refused: Attract between {} and {} with an undecided gender (board R13-attract-gender)"]
-fn cute_charm_with_undecided_genders() {
-    assert_exact_parity("rr-cute-charm-undecided-gender");
-}
-
-#[test]
-#[ignore = "refused: {} with {} of undecided gender (board R13-attract-gender)"]
-fn attract_with_undecided_genders() {
-    assert_exact_parity("rr-attract-undecided-gender");
-}
-
-#[test]
-#[ignore = "refused: Rivalry next to {} of undecided gender (board R13-attract-gender)"]
-fn rivalry_with_undecided_genders() {
-    assert_exact_parity("rr-rivalry-undecided-gender");
-}
-
-#[test]
-#[ignore = "refused: {}: Rivalry next to a Pokémon of undecided gender (board R13-attract-gender)"]
-fn rivalry_switching_in_with_undecided_genders() {
-    assert_exact_parity("rr-rivalry-switch-in-undecided-gender");
 }
 
 #[test]

@@ -1,5 +1,5 @@
 {
- "description": "R0 refusal repro (board R13): Luxray (Rivalry) switches in during the turn next to sets without a gender. The engine refuses the switch-in (`switch_in_problem`).",
+ "description": "R0 refusal repro (board R13): Luxray (Rivalry) switches in during the turn next to sets without a gender. The engine refuses the switch-in (`switch_in_problem`). [Since board R13b (Opus SS): genders decided in the initial distribution; the fixture is oracle/gender-mix.cjs's mixture over the 2^k assignments.]",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [

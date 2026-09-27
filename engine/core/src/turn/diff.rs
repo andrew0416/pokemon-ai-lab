@@ -41,6 +41,13 @@ pub(crate) fn instructions<const N: usize>(from: &State<N>, to: &State<N>) -> Ve
                 "a spent gimmick cannot come back"
             );
         }
+        if a.party_order != b.party_order {
+            out.push(Instruction::SetPartyOrder {
+                side,
+                old: a.party_order,
+                new: b.party_order,
+            });
+        }
         if a.history != b.history {
             out.push(Instruction::SetSideHistory {
                 side,

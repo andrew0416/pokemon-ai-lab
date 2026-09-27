@@ -112,9 +112,11 @@ pub struct Pokemon {
     pub nature: Nature,
     pub stat_points: StatPoints,
     /// Showdown `pokemon.gender`: the set's (`M`, `F`, `N`), else the species' fixed one;
-    /// [`Gender::Random`] when neither decides (Showdown then draws `M` or `F` with the battle's
-    /// PRNG, which the state cannot know: what reads the gender refuses it). Never changes, so
-    /// it does not split positions.
+    /// [`Gender::Random`] when neither decides (Showdown then draws `M` or `F`, a fair coin, with
+    /// the battle's PRNG when the players join). The scenario crate's initial distribution
+    /// decides it whenever something in the battle reads it (board R13b,
+    /// `lab_scenario::decide_genders`), so an undecided gender only remains where nothing reads
+    /// it; the turn engine refuses to read one (a hand-made state). Never changes in a battle.
     pub gender: Gender,
     pub status: Status,
     /// Showdown `statusState.time` for sleep and freeze, `statusState.stage` for toxic.
@@ -371,6 +373,16 @@ pub struct SideHistory {
     /// The order the side's entry hazards were set in (Showdown's side-condition
     /// `effectOrder`; board R2). Hidden from the canonical output.
     pub hazard_order: crate::field::HazardOrder,
+    /// Showdown's once-per-battle ability flags per party member (bit `1 << party index`),
+    /// never cleared (board R10a): `pokemon.swordBoost` (Intrepid Sword), `pokemon.shieldBoost`
+    /// (Dauntless Shield) and `pokemon.syrupTriggered` (Supersweet Syrup), set by the ability's
+    /// first `onStart`, which then does nothing on the Pokémon's later starts (a switch-in, a
+    /// Skill Swap). Only those starts write them, so a battle without the abilities never does.
+    /// Hidden from the canonical output (`canonical.cjs` does not print them); a pinned scenario
+    /// restores them by replaying its setup turns.
+    pub sword_boost: u8,
+    pub shield_boost: u8,
+    pub syrup_triggered: u8,
 }
 
 /// Active-position state that resets on switch-out.
@@ -439,7 +451,25 @@ pub struct Side<const N: usize> {
     pub history: SideHistory,
     /// Slot conditions per position (F12): Wish, Healing Wish, Revival Blessing.
     pub slot_conditions: [[SlotEffect; SLOT_CONDITION_COUNT]; N],
+    /// Showdown's `side.pokemon` order as party indices (board R9a): `party_order[i]` is the
+    /// party member at Showdown position `i`. It starts as the party itself (the team preview
+    /// order, [`IDENTITY_ORDER`]); every switch-in exchanges the newcomer's position with that
+    /// of the Pokémon it replaces, an occupant or a fainted one (`switchIn`), and Ally Switch
+    /// exchanges the two active positions (`swapPosition`). The first `N` entries are therefore
+    /// the slots' Pokémon; what the state adds is the order of the bench, which the switches so
+    /// far decided. Empty party entries stay at the end. Only Beat Up reads it
+    /// (`move.allies`), so it is recorded only while a Beat Up can be used
+    /// (`turn::battle::HistoryReaders::party_order`) and stays the identity otherwise, which keeps
+    /// states that differ only in it from splitting. Hidden from the canonical output
+    /// (`canonical.cjs` sorts `side.pokemon` by name); a pinned scenario restores it because
+    /// its setup turns are replayed and which Pokémon each switch brought in is in the pinned
+    /// states.
+    pub party_order: [u8; PARTY_SIZE],
 }
+
+/// The party order at the battle start: Showdown's `side.pokemon` is the team preview order,
+/// which the party array keeps.
+pub const IDENTITY_ORDER: [u8; PARTY_SIZE] = [0, 1, 2, 3, 4, 5];
 
 impl<const N: usize> Default for Side<N> {
     fn default() -> Self {
@@ -450,6 +480,7 @@ impl<const N: usize> Default for Side<N> {
             gimmicks_used: GimmickSet::EMPTY,
             history: SideHistory::default(),
             slot_conditions: [[SlotEffect::NONE; SLOT_CONDITION_COUNT]; N],
+            party_order: IDENTITY_ORDER,
         }
     }
 }

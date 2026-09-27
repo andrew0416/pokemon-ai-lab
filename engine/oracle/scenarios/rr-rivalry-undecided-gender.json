@@ -1,5 +1,5 @@
 {
- "description": "R0 refusal repro (board R13): Luxray (Rivalry) on the field and sets without a gender (Showdown draws each at team creation). The engine's `check_state` refuses before the turn.",
+ "description": "R0 refusal repro (board R13): Luxray (Rivalry) on the field and sets without a gender (Showdown draws each at team creation). The engine's `check_state` refuses before the turn. [Since board R13b (Opus SS): genders decided in the initial distribution; the fixture is oracle/gender-mix.cjs's mixture over the 2^k assignments.]",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [

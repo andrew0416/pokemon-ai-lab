@@ -222,6 +222,29 @@ impl<const N: usize> Battle<'_, N> {
         }
     }
 
+    // ---- side.pokemon order (R9a) ---------------------------------------------------------------
+
+    /// Showdown `switchIn`'s `side.pokemon[pokemon.position] = pokemon; side.pokemon[oldActive
+    /// .position] = oldActive`: `incoming` took `outgoing`'s position (an occupant, or a fainted
+    /// Pokémon holding it) and `outgoing` took `incoming`'s. Ally Switch (`swapPosition`)
+    /// exchanges two positions the same way. Recorded only while a Beat Up can be used
+    /// ([`super::battle::HistoryReaders::party_order`]).
+    pub(crate) fn swap_party_order(&mut self, side: SideId, outgoing: u8, incoming: u8) {
+        if !self.history_readers.party_order || outgoing == incoming {
+            return;
+        }
+        let old = self.state.side(side).party_order;
+        let (Some(a), Some(b)) = (
+            old.iter().position(|&p| p == outgoing),
+            old.iter().position(|&p| p == incoming),
+        ) else {
+            return;
+        };
+        let mut new = old;
+        new.swap(a, b);
+        self.apply(Instruction::SetPartyOrder { side, old, new });
+    }
+
     // ---- abilityState.effectOrder (R4) --------------------------------------------------------
 
     /// The occupied slots in the order their occupants' ability states started (Showdown
