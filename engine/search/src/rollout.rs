@@ -174,6 +174,9 @@ pub struct RolloutSettings {
     /// [`Policy::DeepNash`]'s beam.
     pub beam: usize,
     pub master_seed: u64,
+    /// [`Policy::Nash`] by double oracle ([`Solver::analyse_mixed_lazy`]): the same policy
+    /// within the equilibrium solver's tolerance from a fraction of the pairs.
+    pub lazy: bool,
 }
 
 /// One game: the equilibrium policy on both sides, exact chance, until the battle ends. The
@@ -220,6 +223,13 @@ pub fn play_game<E: Evaluator<2> + ?Sized + Sync>(
             Some(s) => Ok(s),
             None => {
                 let solved = match settings.policy {
+                    Policy::Nash if settings.lazy => solver
+                        .analyse_mixed_lazy(&mut state, suspension.as_ref())
+                        .map(|m| Strategies {
+                            ours: m.ours,
+                            theirs: m.theirs,
+                            equilibrium: m.equilibrium,
+                        }),
                     Policy::Nash => {
                         solver
                             .analyse_mixed(&mut state, suspension.as_ref())

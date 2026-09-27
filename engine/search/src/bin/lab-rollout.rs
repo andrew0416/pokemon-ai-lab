@@ -11,7 +11,7 @@
 //!                    [--rolls median|extremes|quartiles|full|pessimistic]
 //!                    [--eval material|heuristic|file:<weights.json>]
 //!                    [--setup-rolls full|median|extremes|quartiles] [--position i]
-//!                    [--out results.json] [--quiet]
+//!                    [--out results.json] [--quiet] [--lazy]
 //!
 //! The start is the scenario's position (after switch-ins, setup turns and patch); with several
 //! initial states one is drawn per game by its probability (`--position` fixes one). `--rolls`
@@ -73,6 +73,7 @@ fn run() -> Result<(), String> {
     let mut position_index: Option<usize> = None;
     let mut out: Option<String> = None;
     let mut quiet = false;
+    let mut lazy = false;
     let mut i = 0;
     while i < args.len() {
         match args[i].as_str() {
@@ -132,6 +133,7 @@ fn run() -> Result<(), String> {
                 out = Some(args.get(i).cloned().ok_or("--out needs a file")?);
             }
             "--quiet" => quiet = true,
+            "--lazy" => lazy = true,
             other if other.starts_with("--") => return Err(format!("unknown option {other}")),
             other => scenario = Some(other.to_owned()),
         }
@@ -177,6 +179,7 @@ fn run() -> Result<(), String> {
     config.threads = if game_threads == 1 { 0 } else { 1 };
     config.outcome_cap = outcomes;
     let policy_text = match policy {
+        Policy::Nash if lazy => "nash depth 1 (double oracle)".to_owned(),
         Policy::Nash => "nash depth 1".to_owned(),
         Policy::DeepNash => format!("deep-nash beam {beam} outcomes {outcomes:?}"),
     };
@@ -201,6 +204,7 @@ fn run() -> Result<(), String> {
         policy,
         beam,
         master_seed: seed,
+        lazy,
     };
     let stdout = Mutex::new(std::io::stdout());
     let (records, cache) = run_games(
@@ -287,7 +291,7 @@ fn run() -> Result<(), String> {
     }
 
     if let Some(path) = out {
-        let report = json!({
+        let mut report = json!({
             "scenario": scenario,
             "description": loaded.meta.description,
             "format": loaded.meta.format,
@@ -316,6 +320,9 @@ fn run() -> Result<(), String> {
                 "decisions": r.decisions,
             })).collect::<Vec<_>>(),
         });
+        if lazy && policy == Policy::Nash {
+            report["policy"]["double_oracle"] = json!(true);
+        }
         let text = serde_json::to_string_pretty(&report).map_err(|e| e.to_string())?;
         std::fs::write(&path, text).map_err(|e| format!("{path}: {e}"))?;
         println!("written {path}");

@@ -32,14 +32,16 @@
 //! DESIGN.md "모델 ③·② 구현".
 //!                 [--threads n] [--plan "<turn 1> / <turn 2> / ..."]
 //!                 [--child-nash [--beam b] [--outcomes k]]
-//!                 [--stats] [--no-transposition] [--no-dominance] [--full-children]
+//!                 [--stats] [--no-transposition] [--no-dominance] [--full-children] [--lazy]
 //!
 //! `--stats` adds a line with the search's work (transposition-table hits, matrix games and
 //! their RM+ time, enumeration time summed over threads). `--no-transposition` and
 //! `--no-dominance` turn off the child-equilibrium table (S24a) and the dominance reduction of
 //! child matrix games (S24d), `--full-children` values every cell of every child game instead
 //! of double oracle over lazily valued cells (S24d), to check that they change nothing but the
-//! time (within the equilibrium solver's tolerance).
+//! time (within the equilibrium solver's tolerance). `--lazy` solves `--solve nash`'s root the
+//! same way (double oracle): a fraction of the pairs, the equilibrium within tolerance, but no
+//! full matrix, so the pure maximin is only over the rows valued in full.
 //!
 //! `--plan` values a fixed sequence of our turn choices (Showdown choice strings parsed
 //! against the starting position; a turn whose choice is no longer legal falls back to
@@ -108,6 +110,7 @@ fn run() -> Result<(), String> {
     let mut believed_weights: Vec<f32> = Vec::new();
     let mut pessimistic = false;
     let mut show_stats = false;
+    let mut lazy_root = false;
     let mut config = Config::new(Ruleset::CHAMPIONS_MC, us);
     let mut i = 0;
     while i < args.len() {
@@ -282,6 +285,7 @@ fn run() -> Result<(), String> {
             "--no-transposition" => config.transposition = false,
             "--no-dominance" => config.dominance = false,
             "--full-children" => config.double_oracle = false,
+            "--lazy" => lazy_root = true,
             "--beam" => {
                 i += 1;
                 config.reply_beam = Some(
@@ -727,7 +731,18 @@ fn run() -> Result<(), String> {
         return Ok(());
     }
     if solve == "nash" {
-        let (mixed, note) = analyse_positions(&mut solver, &position, &survivors, "position")?;
+        // `--lazy`: the root by double oracle (not over a mixture of surviving positions,
+        // which averages full matrices).
+        let lazy = lazy_root && survivors.len() <= 1;
+        let (mixed, note) = if lazy {
+            let mut state = position.state.clone();
+            let mixed = solver
+                .analyse_mixed_lazy(&mut state, None)
+                .map_err(|e| e.to_string())?;
+            (mixed, None)
+        } else {
+            analyse_positions(&mut solver, &position, &survivors, "position")?
+        };
         if let Some(note) = note {
             println!("{note}");
         }
@@ -739,15 +754,30 @@ fn run() -> Result<(), String> {
         if show_stats {
             println!("search stats: {}", solver.stats());
         }
-        println!(
-            "matrix {}x{}; equilibrium value {:+.1} (exploitability {:.3}, {} RM+ iterations); pure maximin {:+.1}",
-            mixed.matrix.rows,
-            mixed.matrix.cols,
-            mixed.equilibrium.value,
-            mixed.equilibrium.exploitability,
-            mixed.equilibrium.iterations,
-            mixed.maximin.1
-        );
+        let valued = mixed.matrix.values.iter().filter(|v| !v.is_nan()).count();
+        if lazy && valued < mixed.matrix.values.len() {
+            println!(
+                "matrix {}x{} ({} of {} pairs valued, double oracle); equilibrium value {:+.1} (exploitability in the full game {:.3}, {} RM+ iterations); pure maximin over the rows valued in full {:+.1} (a lower bound)",
+                mixed.matrix.rows,
+                mixed.matrix.cols,
+                valued,
+                mixed.matrix.values.len(),
+                mixed.equilibrium.value,
+                mixed.equilibrium.exploitability,
+                mixed.equilibrium.iterations,
+                mixed.maximin.1
+            );
+        } else {
+            println!(
+                "matrix {}x{}; equilibrium value {:+.1} (exploitability {:.3}, {} RM+ iterations); pure maximin {:+.1}",
+                mixed.matrix.rows,
+                mixed.matrix.cols,
+                mixed.equilibrium.value,
+                mixed.equilibrium.exploitability,
+                mixed.equilibrium.iterations,
+                mixed.maximin.1
+            );
+        }
         if !mixed.unsupported.is_empty() {
             println!(
                 "dropped {} of their replies and {} of our choices that reach effects the engine does not implement:",

@@ -87,3 +87,57 @@ fn reductions_keep_child_values() {
         }
     }
 }
+
+/// The root by double oracle (`lab-plan --solve nash --lazy`): its value agrees with the full
+/// analysis within both exploitabilities, the exploitability it reports is its strategies'
+/// own in the full matrix, and every pair it valued has the full analysis' value.
+#[test]
+fn lazy_root_matches_the_full_matrix() {
+    let mut lazy_roots = 0;
+    for name in [
+        "aa-power-construct",
+        "ability-change-fails",
+        "eject-button-uturn",
+        "spread-damage",
+    ] {
+        let mut config = Config::new(Ruleset::CHAMPIONS_MC, SideId::One);
+        config.rolls = RollMode::Median;
+        config.threads = 2;
+        let evaluator = Heuristic;
+        let mut solver = Solver::new(config, &evaluator);
+        let mut state = state(name);
+        let full = solver.analyse_mixed(&mut state, None).unwrap();
+        let lazy = solver.analyse_mixed_lazy(&mut state, None).unwrap();
+        assert_eq!(full.ours, lazy.ours, "{name}");
+        assert_eq!(full.theirs, lazy.theirs, "{name}");
+        let (x, y) = (&lazy.equilibrium.rows, &lazy.equilibrium.cols);
+        let m = &full.matrix;
+        let row_best = (0..m.rows)
+            .map(|r| (0..m.cols).map(|c| y[c] * m.at(r, c)).sum::<f32>())
+            .fold(f32::NEG_INFINITY, f32::max);
+        let col_best = (0..m.cols)
+            .map(|c| (0..m.rows).map(|r| x[r] * m.at(r, c)).sum::<f32>())
+            .fold(f32::INFINITY, f32::min);
+        let exploitability = row_best - col_best;
+        assert!(
+            (exploitability - lazy.equilibrium.exploitability).abs() <= 1e-2,
+            "{name}: reported {} vs {exploitability} in the full matrix",
+            lazy.equilibrium.exploitability
+        );
+        assert!(
+            (full.equilibrium.value - lazy.equilibrium.value).abs()
+                <= full.equilibrium.exploitability + lazy.equilibrium.exploitability + 1e-2,
+            "{name}: {} full vs {} lazy",
+            full.equilibrium.value,
+            lazy.equilibrium.value
+        );
+        for (a, b) in lazy.matrix.values.iter().zip(&full.matrix.values) {
+            assert!(a.is_nan() || a == b, "{name}: {a} vs {b}");
+        }
+        lazy_roots += usize::from(lazy.matrix.values.iter().any(|v| v.is_nan()));
+    }
+    assert!(
+        lazy_roots > 0,
+        "some root is solved without valuing every pair"
+    );
+}

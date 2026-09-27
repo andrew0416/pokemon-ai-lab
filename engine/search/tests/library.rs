@@ -169,6 +169,7 @@ fn rollout_games_are_deterministic() {
         policy: Policy::Nash,
         beam: 2,
         master_seed: 11,
+        lazy: false,
     };
     let cache = StrategyCache::new();
     let a = play_game(
@@ -202,6 +203,30 @@ fn rollout_games_are_deterministic() {
         vec![0, 1, 2]
     );
     assert_eq!(records[1].decisions, a.decisions);
+    // The double-oracle policy is deterministic too.
+    let lazy = RolloutSettings {
+        lazy: true,
+        ..settings
+    };
+    let x = play_game(
+        &loaded,
+        &positions,
+        &weights,
+        &lazy,
+        &evaluator,
+        1,
+        &StrategyCache::new(),
+    );
+    let y = play_game(
+        &loaded,
+        &positions,
+        &weights,
+        &lazy,
+        &evaluator,
+        1,
+        &StrategyCache::new(),
+    );
+    assert_eq!(x.decisions, y.decisions);
     let (p, lo, hi) = wilson(5.0, 10);
     assert!((p - 0.5).abs() < 1e-12 && lo < p && p < hi);
 }

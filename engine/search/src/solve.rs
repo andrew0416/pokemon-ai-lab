@@ -760,6 +760,8 @@ struct LazyGame<const N: usize> {
     full: bool,
     rounds: usize,
     asked: usize,
+    /// The restricted equilibrium the game ended with and its full-game exploitability.
+    last: Option<(Equilibrium, f32)>,
 }
 
 /// What a lazy game does after a round.
@@ -775,6 +777,9 @@ enum StepOutcome {
 struct Step {
     outcome: StepOutcome,
     solved: Option<Equilibrium>,
+    /// The restricted equilibrium's exploitability in the full game (exact: the restricted
+    /// rows and columns are valued in full); the full solve's own for a full game.
+    exploitability: f32,
 }
 
 impl<const N: usize> LazyGame<N> {
@@ -792,6 +797,7 @@ impl<const N: usize> LazyGame<N> {
             full: false,
             rounds: 0,
             asked: 0,
+            last: None,
         };
         if full {
             game.go_full();
@@ -853,6 +859,7 @@ impl<const N: usize> LazyGame<N> {
                 return Step {
                     outcome: StepOutcome::Full,
                     solved: None,
+                    exploitability: f32::NAN,
                 };
             }
             let values: Vec<f32> = self
@@ -866,6 +873,7 @@ impl<const N: usize> LazyGame<N> {
                 return Step {
                     outcome: StepOutcome::Value(f32::NAN),
                     solved: None,
+                    exploitability: f32::NAN,
                 };
             }
             let matrix = Matrix::new(ours.len(), theirs.len(), values);
@@ -874,9 +882,11 @@ impl<const N: usize> LazyGame<N> {
             } else {
                 nash::solve(&matrix, 20_000, 0.01)
             };
+            let exploitability = eq.exploitability;
             return Step {
                 outcome: StepOutcome::Value(eq.value),
                 solved: Some(eq),
+                exploitability,
             };
         }
         let at = |r: usize, c: usize| self.known[r * m + c].expect("a restricted row or column");
@@ -928,6 +938,7 @@ impl<const N: usize> LazyGame<N> {
         Step {
             outcome,
             solved: Some(eq),
+            exploitability,
         }
     }
 }
@@ -1062,6 +1073,133 @@ fn beam_indices(value: &[f32], support: &[f32], beam: usize, descending: bool) -
 }
 
 impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
+    /// [`Solver::analyse_mixed`] by double oracle over lazily valued cells (`lab-plan --solve
+    /// nash --lazy`, `lab-rollout --lazy`; board S24d): the same equilibrium within the
+    /// solver's tolerance from a fraction of the pairs. The result differs in what it knows:
+    /// `matrix` holds NaN for the pairs never valued (every row and column that ever entered
+    /// the restricted game is valued in full), `equilibrium.exploitability` is the exact
+    /// exploitability in the full game, and `maximin` is the best pure row among the rows
+    /// valued in full (a lower bound on the full game's pure maximin). A root that meets an
+    /// unevaluable pair, or would value most of its pairs anyway, falls back to
+    /// [`Solver::analyse_mixed`].
+    pub fn analyse_mixed_lazy(
+        &mut self,
+        state: &mut State<N>,
+        suspension: Option<&Suspension>,
+    ) -> Result<MixedAnalysis<N>, SearchError> {
+        let started = Instant::now();
+        self.reset_counters();
+        let decision = game::decision(state, suspension)?;
+        if matches!(decision, Decision::Over(_)) {
+            return Err(SearchError::Turn(TurnError::BattleOver));
+        }
+        let them = self.config.us.other();
+        let ours = self.choices(state, decision, self.config.us)?;
+        let theirs = self.choices(state, decision, them)?;
+        let depth = self.config.depth.max(1);
+        let next_depth = if decision == Decision::Turn {
+            depth - 1
+        } else {
+            depth
+        };
+        let jobs = [(
+            0,
+            ChildJob {
+                state: state.clone(),
+                suspension: suspension.cloned(),
+                decision,
+            },
+        )];
+        let mut games = [Ok(LazyGame::new(
+            ours.clone(),
+            theirs.clone(),
+            next_depth,
+            false,
+        ))];
+        let value = self.drive_games(&jobs, &mut games).pop().expect("one game");
+        let [game] = games;
+        let game = game?;
+        value?;
+        let (n, m) = (ours.len(), theirs.len());
+        let restricted = game.last.clone().filter(|_| !game.full);
+        let Some((eq, exploitability)) = restricted else {
+            // Valued in full after all (an unevaluable pair, or most pairs needed): the full
+            // analysis from the known cells, as `analyse_mixed` would finish it.
+            let values: Vec<f32> = game
+                .known
+                .iter()
+                .map(|v| v.expect("a full game knows every cell"))
+                .collect();
+            let (ours, theirs, values, omitted_ours, omitted_theirs) =
+                drop_unevaluable(ours, theirs, values);
+            if ours.is_empty() || theirs.is_empty() {
+                return Err(SearchError::Unsupported(self.unsupported.clone()));
+            }
+            let matrix = Matrix::new(ours.len(), theirs.len(), values);
+            let equilibrium = self.solve_matrix(&matrix);
+            let maximin = matrix.maximin();
+            return Ok(MixedAnalysis {
+                decision,
+                ours,
+                theirs,
+                matrix,
+                equilibrium,
+                maximin,
+                depth,
+                nodes: self.nodes,
+                turns: self.turns,
+                elapsed: started.elapsed(),
+                unsupported: self.unsupported.clone(),
+                omitted_theirs,
+                omitted_ours,
+            });
+        };
+        let mut rows = vec![0.0f32; n];
+        for (&r, &p) in game.rows.iter().zip(&eq.rows) {
+            rows[r] = p;
+        }
+        let mut cols = vec![0.0f32; m];
+        for (&c, &p) in game.cols.iter().zip(&eq.cols) {
+            cols[c] = p;
+        }
+        let values: Vec<f32> = game.known.iter().map(|v| v.unwrap_or(f32::NAN)).collect();
+        let matrix = Matrix::new(n, m, values);
+        let maximin = game
+            .rows
+            .iter()
+            .map(|&r| {
+                let worst = (0..m)
+                    .map(|c| matrix.at(r, c))
+                    .fold(f32::INFINITY, f32::min);
+                (r, worst)
+            })
+            .fold(
+                (0, f32::NEG_INFINITY),
+                |best, x| if x.1 > best.1 { x } else { best },
+            );
+        Ok(MixedAnalysis {
+            decision,
+            ours,
+            theirs,
+            matrix,
+            equilibrium: Equilibrium {
+                rows,
+                cols,
+                value: eq.value,
+                exploitability,
+                iterations: eq.iterations,
+            },
+            maximin,
+            depth,
+            nodes: self.nodes,
+            turns: self.turns,
+            elapsed: started.elapsed(),
+            unsupported: self.unsupported.clone(),
+            omitted_theirs: 0,
+            omitted_ours: 0,
+        })
+    }
+
     /// Values every pair of choices at the root exactly (no cutoffs) and solves the matrix
     /// game by regret matching. `state` is left unchanged. Costs `ours × theirs` chance nodes,
     /// each with the full subtree of depth `config.depth - 1`.
@@ -1431,6 +1569,17 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                 LazyGame::new(ours, theirs, next_depth, !self.config.double_oracle)
             }));
         }
+        self.drive_games(jobs, &mut games)
+    }
+
+    /// Runs `games` (one per job) to their values: each round the cells every open game asks
+    /// for are valued in one pool batch, then every open game takes its next step in
+    /// parallel. A game ending on a restricted equilibrium keeps it in `LazyGame::last`.
+    fn drive_games(
+        &mut self,
+        jobs: &[(usize, ChildJob<N>)],
+        games: &mut [Result<LazyGame<N>, SearchError>],
+    ) -> Vec<Result<f32, SearchError>> {
         let mut results: Vec<Option<Result<f32, SearchError>>> = games
             .iter()
             .map(|g| g.as_ref().err().map(|e| Err(e.clone())))
@@ -1449,7 +1598,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             if tasks.is_empty() {
                 break;
             }
-            let values = self.child_cells(jobs, &games, &tasks);
+            let values = self.child_cells(jobs, games, &tasks);
             for (&(j, i), value) in tasks.iter().zip(values) {
                 if results[j].is_some() {
                     continue;
@@ -1467,7 +1616,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             // responses (double oracle), or its full game once every cell is known.
             let open: Vec<usize> = (0..games.len()).filter(|&j| results[j].is_none()).collect();
             let dominance = self.config.dominance;
-            let games_ref = &games;
+            let games_ref = &*games;
             let steps = self.par_map(
                 &open,
                 || (),
@@ -1486,7 +1635,12 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                 }
                 self.stats.nash_seconds += seconds;
                 match step.outcome {
-                    StepOutcome::Value(v) => results[j] = Some(Ok(v)),
+                    StepOutcome::Value(v) => {
+                        if !game.full {
+                            game.last = step.solved.map(|eq| (eq, step.exploitability));
+                        }
+                        results[j] = Some(Ok(v));
+                    }
                     StepOutcome::Grow { row, col } => game.grow(row, col),
                     StepOutcome::Full => game.go_full(),
                 }
