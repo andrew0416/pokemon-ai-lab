@@ -37,6 +37,10 @@
   "redirection tie between {} and {} (Showdown breaks it by effectOrder)": {
    "board": "R4-redirection-tie", "fixture": "rr-redirect-tie",
    "what": "Two redirectors of one priority at equal Speed: Showdown sorts the RedirectTarget handlers with `compareRedirectOrder` in a stable sort (no tie shuffle), so the holder whose `abilityState.effectOrder` is lower (switched in or last had an ability set first) wins, whatever the move and the order of use. New hidden `Slot::ability_order` (restarted by switch-in, `setAbility`, Skill Swap, Transform, Mega Evolution and other permanent forme changes; carried by Ally Switch), recorded only while a redirector can be in the battle; also `oo-redirect-tie-swapped`, `oo-redirect-tie-worry-seed`, `oo-lightningrod-tie`."
+  },
+  "{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)": {
+   "board": "R7-ally-switch-target", "fixture": "rr-ally-switch-snipe-shot",
+   "what": "A tracking move (Snipe Shot; any move of a Stalwart or Propeller Tail holder) aimed at a Pokémon Ally Switch moved: the queued move action now holds Showdown's `originalTarget` (`resolveAction`: the Pokémon at `targetLoc` when queued) and `moves::get_target` aims at it while it is active (`getTarget`), else at the position. Also `ally-switch-snipe-shot`, `s-stalwart-ally-switch` (fixtures, were refused), `oo-ally-switch-stalwart` (Archaludon), `oo-snipe-shot-target-switched` (a target that left the field: the position)."
   }
  },
  "entries": {
@@ -107,10 +111,6 @@
   "Instruct repeating {}, which the target does not know": {
    "reachable": "no", "kind": "invariant", "board": "R6-instruct",
    "why": "Showdown sets `lastMove` only in `runMove` (not for called moves), so a last move outside the move slots is Struggle or Transform; both are `failinstruct` (E11), which now fails Instruct before the slot lookup (fixed in this audit: `rr-instruct-struggle`)."
-  },
-  "{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)": {
-   "reachable": "yes", "kind": "mechanic", "board": "R7-ally-switch-target", "repro": "rr-ally-switch-snipe-shot",
-   "why": "Ally Switch (standard) swaps the side a Snipe Shot (Inteleon) or a Stalwart holder's move (Archaludon, Mega Skarmory) aims at; Showdown keeps the original target, which the queue does not hold."
   },
   "Encore replacing a queued action with {} (a callback action it would queue)": {
    "reachable": "yes", "kind": "mechanic", "board": "R8-encore-edges", "repro": "rr-encore-counter",

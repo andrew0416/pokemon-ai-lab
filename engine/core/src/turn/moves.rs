@@ -310,6 +310,14 @@ enum LastHit {
     Blocked,
 }
 
+/// Where a move action aims: its `targetLoc` and its `originalTarget` (the Pokémon there when it
+/// was queued; [`super::queue::ActionKind::Move`]).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub(crate) struct Aim {
+    pub loc: i8,
+    pub original: Option<PokemonRef>,
+}
+
 /// Showdown `runMove` for the move in `move_index`. `will_act` is `queue.willAct()`. A
 /// multi-hit move returns `MoveStep::Suspended` after its first hit; the turn engine resumes
 /// it with [`resume_move`] as its own stage. `round_source`: the action's source effect is a
@@ -318,7 +326,7 @@ pub(crate) fn run_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     move_index: u8,
-    target_loc: i8,
+    aim: Aim,
     will_act: bool,
     round_source: Option<bool>,
 ) -> Result<MoveStep, TurnError> {
@@ -375,7 +383,7 @@ pub(crate) fn run_move<const N: usize>(
     // A finished move leaves its active move set (none after a failure's
     // `clearActiveMove(true)`): Showdown clears it with `runAction`'s `clearActiveMove()`, after
     // the phazing step, which the turn engine runs next (`drag_outs`, Opus DD unit B26).
-    let result = run_move_inner(b, user, move_index, target_loc, will_act, round_source);
+    let result = run_move_inner(b, user, move_index, aim, will_act, round_source);
     if result.is_err() {
         b.active_move = None;
     }
@@ -659,7 +667,15 @@ fn run_external_move<const N: usize>(
 ) -> Result<(), TurnError> {
     let pokemon = b.occupant(user).expect("the dancer is active");
     b.increment_move_actions(user);
-    let target = get_target(b, user, id, target_loc);
+    let target = get_target(
+        b,
+        user,
+        id,
+        Aim {
+            loc: target_loc,
+            original: None,
+        },
+    );
     let data = id.data();
     b.active_move = Some(ActiveMoveRef {
         user,
@@ -745,7 +761,7 @@ fn run_move_inner<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     move_index: u8,
-    target_loc: i8,
+    aim: Aim,
     will_act: bool,
     round_source: Option<bool>,
 ) -> Result<MoveStep, TurnError> {
@@ -768,7 +784,7 @@ fn run_move_inner<const N: usize>(
         let target = get_random_target(b, user, encore.mv.data().target);
         (encore.mv, index as u8, target)
     } else {
-        (chosen, move_index, get_target(b, user, chosen, target_loc))
+        (chosen, move_index, get_target(b, user, chosen, aim))
     };
     let mut mv = ActiveMove {
         id,
@@ -802,7 +818,7 @@ fn run_move_inner<const N: usize>(
         future_hit: false,
         bypass_protect: 0,
         beat_up: [0; 6],
-        target_loc,
+        target_loc: aim.loc,
     };
 
     // `pokemon.moveThisTurnResult = willTryMove`: `false` from every BeforeMove handler
@@ -1015,7 +1031,7 @@ fn loc_of(user: SlotRef, target: SlotRef) -> i8 {
     }
 }
 
-fn at_loc(user: SlotRef, loc: i8) -> SlotRef {
+pub(crate) fn at_loc(user: SlotRef, loc: i8) -> SlotRef {
     let side = if loc < 0 {
         user.side
     } else {
@@ -1084,8 +1100,22 @@ fn get_target<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     id: MoveId,
-    loc: i8,
+    aim: Aim,
 ) -> Option<SlotRef> {
+    // `if (tracksTarget && originalTarget?.isActive) return originalTarget;`: the dex move's
+    // `tracksTarget` (Snipe Shot) or `pokemon.hasAbility(['stalwart', 'propellertail'])` (their
+    // ModifyMove comes later); the Pokémon it was aimed at when queued, wherever it stands now
+    // (Ally Switch). One that left the field or fainted is not active.
+    if let Some(original) = aim.original {
+        if id.data().tracks_target || ability_events::tracks_original_target(b.ability(user)) {
+            if let Some(slot) =
+                crate::state::State::<N>::slot_refs().find(|&s| b.alive(s) == Some(original))
+            {
+                return Some(slot);
+            }
+        }
+    }
+    let loc = aim.loc;
     let target = id.data().target;
     // `if (move.smartTarget) { const curTarget = pokemon.getAtLoc(targetLoc); return curTarget &&
     // !curTarget.fainted ? curTarget : this.getRandomTarget(pokemon, move); }` (Dragon Darts:

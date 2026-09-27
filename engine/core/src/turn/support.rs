@@ -2101,8 +2101,8 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     // Defog, Aromatherapy), the screens (`moves::get_damage`), Safeguard and Mist (`battle`).
     (abilities::INFILTRATOR, &["onModifyMove"]),
     // Stalwart, Propeller Tail: `move.tracksTarget` (`abilities::tracks_target`, read by
-    // `moves::get_move_targets`); `getTarget`'s original target after Ally Switch is refused
-    // (`handlers::swap_positions`).
+    // `moves::get_move_targets`) and `getTarget`'s original target after Ally Switch
+    // (`moves::get_target`).
     (abilities::STALWART, &["onModifyMove"]),
     (abilities::PROPELLER_TAIL, &["onModifyMove"]),
     // Soul-Heart: `onAnyFaint` in `abilities::soul_heart` (from `Battle::faint_messages`).

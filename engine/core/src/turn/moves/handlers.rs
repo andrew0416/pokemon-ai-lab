@@ -3248,6 +3248,7 @@ fn instruct<const N: usize>(
         kind: ActionKind::Move {
             index: index as u8,
             target: 0,
+            original: None,
             fractional_tenths,
             round_source: None,
         },
@@ -3360,20 +3361,8 @@ fn swap_positions<const N: usize>(
     from: SlotRef,
     to: SlotRef,
 ) -> Result<(), TurnError> {
-    for action in &b.queue {
-        let ActionKind::Move { index, target, .. } = action.kind else {
-            continue;
-        };
-        let id = super::super::lock::action_move_id(b.mon(action.pokemon), index);
-        let tracks = id.data().tracks_target
-            || super::super::abilities::tracks_original_target(b.mon(action.pokemon).ability);
-        if target != 0 && tracks && super::at_loc(action.slot, target).side == from.side {
-            return Err(b.unsupported(format!(
-                "{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)",
-                id.data().name
-            )));
-        }
-    }
+    // A queued move that tracks its target keeps aiming at the Pokémon (`action.originalTarget`,
+    // `moves::get_target`); the others aim at the position (`targetLoc`).
     let (user, ally) = (b.occupant(from), b.occupant(to));
     let (a, c) = (b.state.slot(from).clone(), b.state.slot(to).clone());
     let order = b.ability_state_order();

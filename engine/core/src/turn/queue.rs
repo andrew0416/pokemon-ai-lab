@@ -26,6 +26,11 @@ pub(crate) enum ActionKind {
     Move {
         index: u8,
         target: i8,
+        /// Showdown `action.originalTarget`: the Pokémon at `target` when the action was queued
+        /// (`resolveAction`: `pokemon.getAtLoc(action.targetLoc)`), `None` without a chosen
+        /// location. `getTarget` aims a tracking move (Snipe Shot, any move of a Stalwart or
+        /// Propeller Tail holder) at it while it is active, wherever Ally Switch moved it.
+        original: Option<PokemonRef>,
         /// Showdown `action.fractionalPriority`, fixed when the action is queued.
         fractional_tenths: i8,
         /// Showdown `action.sourceEffect` when it is a Round that moved this action up (Round's

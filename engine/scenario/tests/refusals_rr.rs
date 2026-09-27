@@ -80,11 +80,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R6-instruct",
     ),
     (
-        "rr-ally-switch-snipe-shot",
-        "Snipe Shot aimed at a side whose Pokémon Ally Switch swapped",
-        "R7-ally-switch-target",
-    ),
-    (
         "rr-encore-counter",
         "Encore replacing a queued action with Counter",
         "R8-encore-edges",
@@ -288,8 +283,9 @@ fn instruct_a_quick_draw_holder() {
     assert_exact_parity("rr-instruct-quick-draw");
 }
 
+/// Inteleon's Snipe Shot aimed at Starmie follows it through Ally Switch (`getTarget` returns the
+/// action's `originalTarget` while it is active; was refused; board R7, `oo_ally_switch_target.rs`).
 #[test]
-#[ignore = "refused: {} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target) (board R7-ally-switch-target)"]
 fn snipe_shot_after_ally_switch() {
     assert_exact_parity("rr-ally-switch-snipe-shot");
 }

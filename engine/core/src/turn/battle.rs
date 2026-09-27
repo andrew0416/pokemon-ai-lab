@@ -1698,6 +1698,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             self.queue[i].kind = ActionKind::Move {
                 index: new_index as u8,
                 target: 0,
+                original: None,
                 fractional_tenths: fractional,
                 round_source: None,
             };

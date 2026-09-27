@@ -1,5 +1,5 @@
 {
- "description": "Unsupported (Opus S unit 6): Duraludon (Stalwart) aims Dragon Pulse at position a; Mr. Mime's Ally Switch moves the target first, and Showdown's getTarget keeps aiming at the original target (action.originalTarget), which the engine's queue does not hold. No fixture.",
+ "description": "Opus S unit 6 / Opus OO R7: Duraludon (Stalwart) aims Dragon Pulse at position a; Mr. Mime's Ally Switch moves the target first, and Showdown's getTarget keeps aiming at the original target (action.originalTarget): the Fairy is immune (was unsupported).",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [

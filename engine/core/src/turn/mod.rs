@@ -1321,6 +1321,9 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
                     ActionKind::Move {
                         index,
                         target,
+                        original: (target != 0)
+                            .then(|| state.active_ref(moves::at_loc(slot, target)))
+                            .flatten(),
                         fractional_tenths: items::fractional_priority_tenths(state, slot, id),
                         round_source: None,
                     }
@@ -1450,12 +1453,17 @@ fn run_stage_inner<const N: usize>(
                 ActionKind::Move {
                     index,
                     target,
+                    original,
                     round_source,
                     ..
                 } => {
                     let will_act = b.will_act();
+                    let aim = moves::Aim {
+                        loc: target,
+                        original,
+                    };
                     if let moves::MoveStep::Suspended(progress) =
-                        moves::run_move(b, action.slot, index, target, will_act, round_source)?
+                        moves::run_move(b, action.slot, index, aim, will_act, round_source)?
                     {
                         pending.in_progress = Some(progress);
                         return Ok(StageEnd::Continue);
