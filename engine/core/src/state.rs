@@ -436,7 +436,25 @@ pub struct Side<const N: usize> {
     pub history: SideHistory,
     /// Slot conditions per position (F12): Wish, Healing Wish, Revival Blessing.
     pub slot_conditions: [[SlotEffect; SLOT_CONDITION_COUNT]; N],
+    /// Showdown's `side.pokemon` order as party indices (board R9a): `party_order[i]` is the
+    /// party member at Showdown position `i`. It starts as the party itself (the team preview
+    /// order, [`IDENTITY_ORDER`]); every switch-in exchanges the newcomer's position with that
+    /// of the Pokémon it replaces, an occupant or a fainted one (`switchIn`), and Ally Switch
+    /// exchanges the two active positions (`swapPosition`). The first `N` entries are therefore
+    /// the slots' Pokémon; what the state adds is the order of the bench, which the switches so
+    /// far decided. Empty party entries stay at the end. Only Beat Up reads it
+    /// (`move.allies`), so it is recorded only while a Beat Up can be used
+    /// (`turn::battle::HistoryReaders::party_order`) and stays the identity otherwise, which keeps
+    /// states that differ only in it from splitting. Hidden from the canonical output
+    /// (`canonical.cjs` sorts `side.pokemon` by name); a pinned scenario restores it because
+    /// its setup turns are replayed and which Pokémon each switch brought in is in the pinned
+    /// states.
+    pub party_order: [u8; PARTY_SIZE],
 }
+
+/// The party order at the battle start: Showdown's `side.pokemon` is the team preview order,
+/// which the party array keeps.
+pub const IDENTITY_ORDER: [u8; PARTY_SIZE] = [0, 1, 2, 3, 4, 5];
 
 impl<const N: usize> Default for Side<N> {
     fn default() -> Self {
@@ -447,6 +465,7 @@ impl<const N: usize> Default for Side<N> {
             gimmicks_used: GimmickSet::EMPTY,
             history: SideHistory::default(),
             slot_conditions: [[SlotEffect::NONE; SLOT_CONDITION_COUNT]; N],
+            party_order: IDENTITY_ORDER,
         }
     }
 }

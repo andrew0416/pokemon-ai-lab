@@ -10,7 +10,7 @@ use crate::field::{Effect, FieldEffect, SideEffect, SlotCondition, SlotEffect};
 use crate::gimmick::Gimmick;
 use crate::state::{
     BattleResult, Forme, MoveSlot, PokemonRef, SideHistory, SideId, Slot, SlotHistory, SlotRef,
-    State, Status, SwitchFlag, TransformBase,
+    State, Status, SwitchFlag, TransformBase, PARTY_SIZE,
 };
 use crate::volatile::{Volatile, VolatileState};
 
@@ -167,6 +167,12 @@ pub enum Instruction {
         old: u8,
         new: u8,
     },
+    /// `Side::party_order` (Showdown `side.pokemon` order, hidden; Beat Up).
+    SetPartyOrder {
+        side: SideId,
+        old: [u8; PARTY_SIZE],
+        new: [u8; PARTY_SIZE],
+    },
     SetField {
         effect: FieldEffect,
         old: Effect,
@@ -300,6 +306,7 @@ impl<const N: usize> State<N> {
             Instruction::SetAbilityOrder { target, new, .. } => {
                 self.slot_mut(target).ability_order = new
             }
+            Instruction::SetPartyOrder { side, new, .. } => self.side_mut(side).party_order = new,
             Instruction::SetField { effect, new, .. } => self.field[effect as usize] = new,
             Instruction::SetSideEffect {
                 side, effect, new, ..
@@ -386,6 +393,7 @@ impl<const N: usize> State<N> {
             Instruction::SetAbilityOrder { target, old, .. } => {
                 self.slot_mut(target).ability_order = old
             }
+            Instruction::SetPartyOrder { side, old, .. } => self.side_mut(side).party_order = old,
             Instruction::SetField { effect, old, .. } => self.field[effect as usize] = old,
             Instruction::SetSideEffect {
                 side, effect, old, ..
@@ -545,6 +553,11 @@ mod tests {
                 old: 0,
                 new: 2,
             },
+            Instruction::SetPartyOrder {
+                side: SideId::One,
+                old: crate::state::IDENTITY_ORDER,
+                new: [0, 3, 2, 1, 4, 5],
+            },
             Instruction::SetItem {
                 target: foe_mon,
                 old: ItemId::NONE,
@@ -609,6 +622,7 @@ mod tests {
         assert_eq!(state.active(foe).unwrap().status_turns, 3);
         assert!(state.slot(foe).volatiles.has(Volatile::Flinch));
         assert_eq!(state.slot(foe).ability_order, 2);
+        assert_eq!(state.side(SideId::One).party_order, [0, 3, 2, 1, 4, 5]);
         assert!(state
             .side(SideId::One)
             .gimmicks_used

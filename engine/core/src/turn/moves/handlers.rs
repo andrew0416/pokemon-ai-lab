@@ -3401,6 +3401,12 @@ fn swap_positions<const N: usize>(
     }
     // The ability states move with the Pokémon.
     b.swap_ability_state_order(&order, from, to);
+    // `side.pokemon[pokemon.position] = target; side.pokemon[newPosition] = pokemon` (the
+    // positions hold their occupants, fainted ones included).
+    let at = |s: &crate::state::Slot| s.party_index.or(s.fainted_occupant);
+    if let (Some(x), Some(y)) = (at(&a), at(&c)) {
+        b.swap_party_order(from.side, x, y);
+    }
     for action in &mut b.queue {
         if Some(action.pokemon) == user {
             action.slot = to;

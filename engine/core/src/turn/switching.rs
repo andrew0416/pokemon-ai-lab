@@ -831,11 +831,16 @@ fn switch_in_as<const N: usize>(
         }
     }
     let previous = b.state.slot(slot).clone();
+    let outgoing = previous.party_index.or(previous.fainted_occupant);
     b.apply(Instruction::Switch {
         slot,
         previous: Box::new(previous),
         party_index: Some(party_index),
     });
+    // `side.pokemon[pokemon.position] = pokemon; side.pokemon[oldActive.position] = oldActive`.
+    if let Some(outgoing) = outgoing {
+        b.swap_party_order(slot.side, outgoing, party_index);
+    }
     // `pokemon.abilityState = initEffectState(...)`: the newcomer's ability state is the latest.
     b.restart_ability_state(slot);
     if let Some((from, shed_tail)) = passed {
