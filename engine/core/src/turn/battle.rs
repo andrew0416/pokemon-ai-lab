@@ -2287,9 +2287,20 @@ impl<'a, const N: usize> Battle<'a, N> {
         }
     }
 
+    /// Sets a side condition. An entry hazard that starts or ends also updates the side's
+    /// [`crate::field::HazardOrder`] (Showdown `effectOrder`: the order its `onSwitchIn` runs).
     pub fn set_side_effect(&mut self, side: SideId, effect: SideEffect, new: Effect) {
         let old = self.state.side(side).effects[effect as usize];
         if old != new {
+            if old.is_active() != new.is_active() {
+                let mut history = self.state.side(side).history;
+                history.hazard_order = history.hazard_order.changed(
+                    &self.state.side(side).effects,
+                    effect,
+                    new.is_active(),
+                );
+                self.set_side_history(side, history);
+            }
             self.apply(Instruction::SetSideEffect {
                 side,
                 effect,

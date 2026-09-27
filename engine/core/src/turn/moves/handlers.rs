@@ -3637,6 +3637,9 @@ pub(super) fn on_hit_field<const N: usize>(
                 SideEffect::LuckyChant,
             ];
             let (mine, theirs) = (user.side, user.side.other());
+            // The effect states move whole, `effectOrder` included: every hazard is on the list,
+            // so each side takes the other's hazard order.
+            let orders = [mine, theirs].map(|s| b.state.side(s).history.hazard_order);
             let mut success = false;
             for effect in SWAPPED {
                 let a = b.state.side(mine).effects[effect as usize];
@@ -3644,6 +3647,11 @@ pub(super) fn on_hit_field<const N: usize>(
                 success |= a.is_active() || c.is_active();
                 b.set_side_effect(mine, effect, c);
                 b.set_side_effect(theirs, effect, a);
+            }
+            for (side, order) in [(mine, orders[1]), (theirs, orders[0])] {
+                let mut history = b.state.side(side).history;
+                history.hazard_order = order;
+                b.set_side_history(side, history);
             }
             Some(success)
         }

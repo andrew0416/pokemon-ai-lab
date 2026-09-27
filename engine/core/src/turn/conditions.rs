@@ -1216,15 +1216,9 @@ pub(crate) fn partially_trapped_residual<const N: usize>(b: &mut Battle<'_, N>, 
 
 // ---- entry hazards ------------------------------------------------------------------------------
 
-/// The entry hazards, in the order the engine runs their `onSwitchIn`. Showdown runs them in the
-/// order they were set (`effectOrder`), which the state does not keep; [`entry_hazards`] refuses
-/// the switch-ins where the order would show.
-pub(crate) const HAZARDS: [SideEffect; 4] = [
-    SideEffect::StealthRock,
-    SideEffect::Spikes,
-    SideEffect::ToxicSpikes,
-    SideEffect::StickyWeb,
-];
+/// The entry hazards. [`entry_hazards`] runs them in the order they were set
+/// (`SideHistory::hazard_order`, Showdown `effectOrder`).
+pub(crate) const HAZARDS: [SideEffect; 4] = crate::field::HAZARDS;
 
 /// Most layers a hazard stacks to (its `onSideRestart`); Stealth Rock and Sticky Web have no
 /// restart handler, so a second use fails.
@@ -1321,46 +1315,26 @@ fn hazard_damage<const N: usize>(b: &Battle<'_, N>, slot: SlotRef, effect: SideE
 /// stops; Sticky Web: -1 Speed to a grounded holder without Boots, from the foe in slot 0
 /// (Defiant and Mirror Armor react).
 ///
-/// Showdown runs several hazards in the order they were set. The order only shows when a
-/// damaging hazard can knock the newcomer out and Toxic Spikes (status or absorption) or Sticky
-/// Web against Mirror Armor (the reflected drop) also act on it; that case is unsupported.
+/// Showdown runs several hazards in the order they were set (`effectOrder`, kept in
+/// `SideHistory::hazard_order`): it shows when a damaging hazard knocks the newcomer out before
+/// Toxic Spikes (status or absorption) or Sticky Web (Mirror Armor's reflected drop) acts.
 /// Synchronize ignores Toxic Spikes' poison (`Battle::try_set_status_from_toxic_spikes`).
 pub(crate) fn entry_hazards<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
 ) -> Result<(), TurnError> {
     let side = slot.side;
-    let present: Vec<SideEffect> = HAZARDS
-        .into_iter()
-        .filter(|&h| b.side_effect_active(side, h))
-        .collect();
+    // `speedSort`: the side conditions' handlers tie on order, priority, speed and sub-order,
+    // so `effectOrder` (the order they were set) decides.
+    let present: Vec<SideEffect> = {
+        let s = b.state.side(side);
+        s.history.hazard_order.sorted(&s.effects)
+    };
     let Some(pokemon) = b.alive(slot) else {
         return Ok(());
     };
     if present.is_empty() {
         return Ok(());
-    }
-    let mon = b.mon(pokemon);
-    let grounded = b.is_grounded(slot);
-    // `pokemon.hasItem('heavydutyboots')` (Klutz, Magic Room: no Boots).
-    let boots = b.item(slot) == items::HEAVY_DUTY_BOOTS;
-    let toxic_spikes_act = present.contains(&SideEffect::ToxicSpikes) && grounded;
-    let web_reflects = present.contains(&SideEffect::StickyWeb)
-        && grounded
-        && !boots
-        && b.ability(slot) == abilities::MIRROR_ARMOR;
-    let damage: f64 = present
-        .iter()
-        .map(|&h| hazard_damage(b, slot, h))
-        .filter(|&d| d > 0.0)
-        .map(|d| d.floor().max(1.0))
-        .sum();
-    let can_faint = b.ability(slot) != abilities::MAGIC_GUARD && damage >= f64::from(mon.hp);
-    if can_faint && (toxic_spikes_act || web_reflects) {
-        return Err(b.unsupported(format!(
-            "{} switching into hazards whose order (Showdown effectOrder) decides the outcome",
-            mon.species.data().name
-        )));
     }
     let foe_lead = SlotRef {
         side: side.other(),

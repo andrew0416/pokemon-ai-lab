@@ -30,11 +30,6 @@ fn any_fixture(name: &str) -> Value {
 /// (scenario, text the refusal must contain, board task).
 const REFUSED: &[(&str, &str, &str)] = &[
     (
-        "rr-hazard-order",
-        "switching into hazards whose order (Showdown effectOrder) decides the outcome",
-        "R2-hazard-effect-order",
-    ),
-    (
         "rr-emergency-exit-replacement",
         "Emergency Exit of a replacement hit by entry hazards",
         "R3-emergency-exit-replacement",
@@ -155,13 +150,15 @@ fn trace_under_passed_gastro_acid() {
     assert_exact_parity("rr-trace-gastro-acid-baton-pass");
 }
 
-// ---- still refused: Showdown's answer, for the board task that implements it --------------
-
+/// Stealth Rock set before Toxic Spikes: a Poison-type newcomer at 5 HP is knocked out by the
+/// rocks before it can absorb the spikes, which stay (was refused; board R2, Opus TT; the
+/// other order is `tt_queue.rs`).
 #[test]
-#[ignore = "refused: {} switching into hazards whose order (Showdown effectOrder) decides the outcome (board R2-hazard-effect-order)"]
 fn hazard_order() {
     assert_exact_parity("rr-hazard-order");
 }
+
+// ---- still refused: Showdown's answer, for the board task that implements it --------------
 
 #[test]
 #[ignore = "refused: Emergency Exit of a replacement hit by entry hazards (board R3-emergency-exit-replacement)"]
