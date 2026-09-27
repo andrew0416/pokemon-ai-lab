@@ -1170,9 +1170,9 @@ fn get_move_targets<const N: usize>(
             t.extend(b.alive_slots(user.side.other()));
             t
         }
-        MoveTarget::AllAdjacentFoes => b.alive_slots(user.side.other()),
+        MoveTarget::AllAdjacentFoes => b.alive_slots(user.side.other()).to_vec(),
         // `alliesAndSelf()`: every active Pokémon on the user's side that has not fainted.
-        MoveTarget::Allies => b.alive_slots(user.side),
+        MoveTarget::Allies => b.alive_slots(user.side).to_vec(),
         _ => {
             let mut t = target;
             if b.alive(t).is_none() && t.side != user.side {
@@ -1715,19 +1715,21 @@ fn deduct_pressure_pp<const N: usize>(
         return;
     }
     let foe = user.side.other();
-    let pressure_targets: Vec<SlotRef> = if mv.data.flags.contains(MoveFlags::MUSTPRESSURE) {
-        b.alive_slots(foe)
+    let pressure = |pressure_targets: &[SlotRef]| {
+        pressure_targets
+            .iter()
+            .filter(|t| t.side != user.side && b.ability(**t) == abilities::PRESSURE)
+            .count()
+    };
+    let extra = if mv.data.flags.contains(MoveFlags::MUSTPRESSURE) {
+        pressure(&b.alive_slots(foe))
     } else {
         match mv.target {
-            MoveTarget::All => b.alive_slots(foe),
-            MoveTarget::FoeSide | MoveTarget::AllySide | MoveTarget::AllyTeam => Vec::new(),
-            _ => targets.to_vec(),
+            MoveTarget::All => pressure(&b.alive_slots(foe)),
+            MoveTarget::FoeSide | MoveTarget::AllySide | MoveTarget::AllyTeam => 0,
+            _ => pressure(targets),
         }
     };
-    let extra = pressure_targets
-        .iter()
-        .filter(|t| t.side != user.side && b.ability(**t) == abilities::PRESSURE)
-        .count();
     if extra == 0 {
         return;
     }

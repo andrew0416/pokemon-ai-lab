@@ -1162,8 +1162,28 @@ impl VolatileState {
 }
 
 /// All volatiles of one slot.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Volatiles(pub [VolatileState; VOLATILE_COUNT]);
+
+const _: () = assert!(VOLATILE_COUNT < u8::MAX as usize, "indices hash as u8");
+
+/// Hashes the entries that differ from [`VolatileState::NONE`], each with its index, then a
+/// terminator: the same information as hashing every entry (the array is determined by its
+/// non-`NONE` entries), so this agrees with `Eq` and keeps the hash as discriminating as the
+/// derived one (the search keys caches by hash values alone), but the ~110 unset entries per slot
+/// no longer dominate the cost of hashing a state (the turn enumeration merges identical positions
+/// by hashing whole states; Opus GG).
+impl std::hash::Hash for Volatiles {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        for (i, v) in self.0.iter().enumerate() {
+            if *v != VolatileState::NONE {
+                state.write_u8(i as u8);
+                v.hash(state);
+            }
+        }
+        state.write_u8(u8::MAX);
+    }
+}
 
 /// Manual: `Default` is only derived for arrays of up to 32 elements.
 impl Default for Volatiles {

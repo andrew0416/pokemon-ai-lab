@@ -30,6 +30,97 @@ pub(crate) enum DamageSource {
     Indirect,
 }
 
+/// Active positions in order, kept inline: what [`Battle::alive_slots`] and
+/// [`Battle::all_alive`] return. Every event walks them, and as `Vec`s their heap allocations
+/// were a large share of a turn's cost (Opus GG). Derefs to a slice; iterates by value like a
+/// `Vec`.
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct SlotList {
+    len: u8,
+    slots: [SlotRef; SlotList::CAPACITY],
+}
+
+impl SlotList {
+    /// Both sides' positions for up to three active Pokémon a side.
+    pub const CAPACITY: usize = 6;
+    const FILLER: SlotRef = SlotRef {
+        side: SideId::One,
+        slot: 0,
+    };
+
+    pub fn new() -> SlotList {
+        SlotList {
+            len: 0,
+            slots: [Self::FILLER; Self::CAPACITY],
+        }
+    }
+
+    pub fn push(&mut self, slot: SlotRef) {
+        self.slots[usize::from(self.len)] = slot;
+        self.len += 1;
+    }
+}
+
+impl Default for SlotList {
+    fn default() -> Self {
+        SlotList::new()
+    }
+}
+
+impl std::ops::Deref for SlotList {
+    type Target = [SlotRef];
+
+    fn deref(&self) -> &[SlotRef] {
+        &self.slots[..usize::from(self.len)]
+    }
+}
+
+impl std::ops::DerefMut for SlotList {
+    fn deref_mut(&mut self) -> &mut [SlotRef] {
+        &mut self.slots[..usize::from(self.len)]
+    }
+}
+
+impl IntoIterator for SlotList {
+    type Item = SlotRef;
+    type IntoIter = std::iter::Take<std::array::IntoIter<SlotRef, { SlotList::CAPACITY }>>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.slots.into_iter().take(usize::from(self.len))
+    }
+}
+
+impl<'a> IntoIterator for &'a SlotList {
+    type Item = &'a SlotRef;
+    type IntoIter = std::slice::Iter<'a, SlotRef>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
+}
+
+impl Extend<SlotRef> for SlotList {
+    fn extend<I: IntoIterator<Item = SlotRef>>(&mut self, iter: I) {
+        for slot in iter {
+            self.push(slot);
+        }
+    }
+}
+
+impl FromIterator<SlotRef> for SlotList {
+    fn from_iter<I: IntoIterator<Item = SlotRef>>(iter: I) -> Self {
+        let mut out = SlotList::new();
+        out.extend(iter);
+        out
+    }
+}
+
+impl From<SlotList> for Vec<SlotRef> {
+    fn from(list: SlotList) -> Vec<SlotRef> {
+        list.to_vec()
+    }
+}
+
 /// The move being used (Showdown `activeMove` with `activePokemon`), set for the whole of
 /// `runMove` and the action's phazing step after it; it decides whether breakable abilities are
 /// suppressed (`suppressingAbility`).
@@ -148,6 +239,22 @@ pub(crate) struct Battle<'a, const N: usize> {
     pub suppression: bool,
 }
 
+/// The context [`Battle::new`] derives from the state before a run (see [`Battle::replay`]).
+#[derive(Clone, Debug)]
+pub(crate) struct RunStart {
+    history_readers: HistoryReaders,
+    suppression: bool,
+    speed_snapshot: Vec<(PokemonRef, i32)>,
+}
+
+/// Buffers a finished run hands to the next ([`Battle::into_buffers`], [`Battle::replay`]).
+#[derive(Debug, Default)]
+pub(crate) struct RunBuffers {
+    /// The finished run's instructions (the next run clears them).
+    pub log: Vec<Instruction>,
+    speed_snapshot: Vec<(PokemonRef, i32)>,
+}
+
 /// The readers of the hidden damage history present in a battle (any party member's moves;
 /// see `history::record_attack`).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -219,11 +326,77 @@ impl HistoryReaders {
 
 impl<'a, const N: usize> Battle<'a, N> {
     pub fn new(state: &'a mut State<N>, rng: &'a mut Chooser) -> Battle<'a, N> {
+        Battle::recycle(state, rng, RunBuffers::default())
+    }
+
+    /// [`Battle::new`] with an earlier run's buffers ([`Battle::into_buffers`]): the log is kept
+    /// as it is (a sampled turn's stages log into one), the Speed snapshot is taken again.
+    pub fn recycle(
+        state: &'a mut State<N>,
+        rng: &'a mut Chooser,
+        mut buffers: RunBuffers,
+    ) -> Battle<'a, N> {
         let history_readers = HistoryReaders::of(state);
         let suppression = super::abilities::suppression_possible(state);
-        let mut b = Battle {
+        buffers.speed_snapshot.clear();
+        let mut b = Battle::with(state, rng, history_readers, suppression, buffers);
+        b.snapshot_speeds();
+        b
+    }
+
+    /// A battle for another run from the position `start` was taken from (the state restored to
+    /// it): the same context as [`Battle::new`] would derive, without deriving it again, and the
+    /// previous run's buffers for the log and the Speed snapshot (a staged enumeration replays
+    /// many runs from each position; Opus GG).
+    pub fn replay(
+        state: &'a mut State<N>,
+        rng: &'a mut Chooser,
+        start: &RunStart,
+        mut buffers: RunBuffers,
+    ) -> Battle<'a, N> {
+        buffers.log.clear();
+        buffers.speed_snapshot.clear();
+        buffers
+            .speed_snapshot
+            .extend_from_slice(&start.speed_snapshot);
+        Battle::with(
             state,
-            log: Vec::new(),
+            rng,
+            start.history_readers,
+            start.suppression,
+            buffers,
+        )
+    }
+
+    /// What [`Battle::replay`] reuses: the context this battle started with. Call it before the
+    /// run changes anything.
+    pub fn run_start(&self) -> RunStart {
+        RunStart {
+            history_readers: self.history_readers,
+            suppression: self.suppression,
+            speed_snapshot: self.speed_snapshot.clone(),
+        }
+    }
+
+    /// The log (the run's instructions) and the Speed snapshot's buffer, for the next
+    /// [`Battle::replay`].
+    pub fn into_buffers(self) -> RunBuffers {
+        RunBuffers {
+            log: self.log,
+            speed_snapshot: self.speed_snapshot,
+        }
+    }
+
+    fn with(
+        state: &'a mut State<N>,
+        rng: &'a mut Chooser,
+        history_readers: HistoryReaders,
+        suppression: bool,
+        buffers: RunBuffers,
+    ) -> Battle<'a, N> {
+        Battle {
+            state,
+            log: buffers.log,
             rng,
             faint_queue: Vec::new(),
             active_move: None,
@@ -239,7 +412,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             busted: Vec::new(),
             history_readers,
             raw_speed: Vec::new(),
-            speed_snapshot: Vec::new(),
+            speed_snapshot: buffers.speed_snapshot,
             awaiting_run_switch: false,
             unstarted: Vec::new(),
             queue_done: false,
@@ -247,9 +420,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             called_move: None,
             active_target: None,
             suppression,
-        };
-        b.snapshot_speeds();
-        b
+        }
     }
 
     /// The category of `id` as the move in flight has it (`move.category` after ModifyMove:
@@ -301,13 +472,13 @@ impl<'a, const N: usize> Battle<'a, N> {
     }
 
     /// Showdown `side.allies()` + self order is slot order; foes are the other side's slots.
-    pub fn alive_slots(&self, side: SideId) -> Vec<SlotRef> {
+    pub fn alive_slots(&self, side: SideId) -> SlotList {
         Self::slots(side)
             .filter(|&s| self.alive(s).is_some())
             .collect()
     }
 
-    pub fn all_alive(&self) -> Vec<SlotRef> {
+    pub fn all_alive(&self) -> SlotList {
         let mut out = self.alive_slots(SideId::One);
         out.extend(self.alive_slots(SideId::Two));
         out

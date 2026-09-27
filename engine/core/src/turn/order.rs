@@ -182,9 +182,14 @@ impl<const N: usize> Battle<'_, N> {
     /// `updateSpeed()`: records every active's action Speed as its `pokemon.speed` for the
     /// coming stage ([`Battle::event_speed`]).
     pub(crate) fn snapshot_speeds(&mut self) {
-        let snapshot: Vec<(PokemonRef, i32)> = State::<N>::slot_refs()
-            .filter_map(|slot| Some((self.occupant(slot)?, self.action_speed(slot))))
-            .collect();
+        // Into the old snapshot's buffer, which is empty while the Speeds are computed (as a
+        // freshly collected one would leave it).
+        let mut snapshot = std::mem::take(&mut self.speed_snapshot);
+        snapshot.clear();
+        snapshot.extend(
+            State::<N>::slot_refs()
+                .filter_map(|slot| Some((self.occupant(slot)?, self.action_speed(slot)))),
+        );
         self.speed_snapshot = snapshot;
     }
 

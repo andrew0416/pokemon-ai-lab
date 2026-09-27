@@ -27,6 +27,7 @@ mod items;
 pub mod legal;
 pub mod lock;
 mod mega;
+mod merge;
 mod moves;
 mod order;
 mod queue;
@@ -36,7 +37,6 @@ mod switching;
 mod transform;
 mod update;
 
-use std::collections::HashMap;
 use std::fmt;
 use std::hash::Hash;
 
@@ -49,8 +49,9 @@ use crate::rules::{ActionError, Ruleset};
 use crate::state::{PokemonRef, SideId, SlotRef, State};
 use crate::volatile::Volatile;
 
-use battle::Battle;
+use battle::{Battle, RunBuffers, RunStart};
 use branch::Chooser;
+use merge::Merger;
 
 pub use branch::RollMode;
 use order::{
@@ -765,48 +766,50 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
     // intermediate positions, not with the number of random paths. Within a stage every
     // random path is enumerated by replay.
     let mut frontier: Vec<(State<N>, P, f64)> = vec![(state.clone(), start, 1.0)];
-    let mut finished: Vec<Ending<N, P>> = Vec::new();
-    let mut finished_index: HashMap<(State<N>, Option<P>), usize> = HashMap::new();
+    // Both merge in first-reached order, which keeps the output order deterministic.
+    let mut finished: Merger<N, Option<P>> = Merger::new();
+    // The runs' log and Speed snapshot buffers, handed from run to run.
+    let mut buffers = RunBuffers::default();
     while !frontier.is_empty() {
-        // Value: (first-reached index, probability); keeps the output order deterministic.
-        let mut next: HashMap<(State<N>, P), (usize, f64)> = HashMap::new();
+        let mut next: Merger<N, P> = Merger::new();
         let stage_started = std::time::Instant::now();
         let mut runs = 0usize;
         for (mut work, pending, probability) in frontier {
             let mut chooser = Chooser::with_rolls(options.rolls);
+            // Every run starts from `work` (a run's instructions are reversed after it), so the
+            // context `Battle::new` derives is the same for all of them: the first run derives
+            // it and the others replay it, reusing the previous run's pending buffers too.
+            let mut start: Option<RunStart> = None;
+            let mut after = pending.clone();
             loop {
                 runs += 1;
                 chooser.begin_run();
-                let mut after = pending.clone();
-                let (result, log) = {
-                    let mut b = Battle::new(&mut work, &mut chooser);
+                after.clone_from(&pending);
+                let result = {
+                    let mut b = match &start {
+                        Some(start) => Battle::replay(&mut work, &mut chooser, start, buffers),
+                        None => {
+                            buffers.log.clear();
+                            Battle::recycle(&mut work, &mut chooser, buffers)
+                        }
+                    };
+                    if start.is_none() {
+                        start = Some(b.run_start());
+                    }
                     let result = stage(&mut b, &mut after);
-                    (result, std::mem::take(&mut b.log))
+                    buffers = b.into_buffers();
+                    result
                 };
                 let end = result?;
                 let p = probability * chooser.probability();
                 match end {
-                    StageEnd::Continue => {
-                        let order = next.len();
-                        next.entry((work.clone(), after)).or_insert((order, 0.0)).1 += p;
-                    }
+                    StageEnd::Continue => next.add(&work, &after, p),
                     StageEnd::Finished | StageEnd::Suspended => {
-                        let kept = (end == StageEnd::Suspended).then_some(after);
-                        let key = (work.clone(), kept);
-                        match finished_index.get(&key) {
-                            Some(&i) => finished[i].probability += p,
-                            None => {
-                                finished_index.insert(key.clone(), finished.len());
-                                finished.push(Ending {
-                                    end: work.clone(),
-                                    pending: key.1,
-                                    probability: p,
-                                });
-                            }
-                        }
+                        let kept = (end == StageEnd::Suspended).then(|| after.clone());
+                        finished.add(&work, &kept, p);
                     }
                 }
-                work.reverse(&log);
+                work.reverse(&buffers.log);
                 if !chooser.advance() {
                     break;
                 }
@@ -821,14 +824,24 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
                 stage_started.elapsed().as_secs_f64() * 1000.0
             );
         }
-        let mut staged: Vec<_> = next.into_iter().collect();
-        staged.sort_unstable_by_key(|(_, (order, _))| *order);
-        frontier = staged
-            .into_iter()
-            .map(|((s, q), (_, p))| (s, q, p))
-            .collect();
+        frontier = next.into_entries();
     }
-    Ok(finished)
+    Ok(endings(finished))
+}
+
+/// The merged end positions as [`Ending`]s, in first-reached order.
+fn endings<const N: usize, P: Hash + Eq + Clone>(
+    finished: Merger<N, Option<P>>,
+) -> Vec<Ending<N, P>> {
+    finished
+        .into_entries()
+        .into_iter()
+        .map(|(end, pending, probability)| Ending {
+            end,
+            pending,
+            probability,
+        })
+        .collect()
 }
 
 /// Monte Carlo counterpart of [`enumerate_stages`].
@@ -840,46 +853,48 @@ fn sample_stages<const N: usize, P: Clone + Eq + Hash>(
     mut stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<StageEnd, TurnError>,
 ) -> Result<Vec<Ending<N, P>>, TurnError> {
     let mut chooser = Chooser::sampler(seed);
-    let mut finished: Vec<Ending<N, P>> = Vec::new();
-    let mut index: HashMap<(State<N>, Option<P>), usize> = HashMap::new();
+    let mut finished: Merger<N, Option<P>> = Merger::new();
     let weight = 1.0 / samples as f64;
+    #[cfg(debug_assertions)]
     let begin = state.clone();
+    // One buffer set for every stage: the stages of a sample log into one list.
+    let mut buffers = RunBuffers::default();
     for _ in 0..samples {
         let mut pending = start.clone();
-        let mut log = Vec::new();
+        buffers.log.clear();
         let mut result = Ok(StageEnd::Continue);
         while matches!(result, Ok(StageEnd::Continue)) {
             chooser.begin_run();
-            let mut b = Battle::new(state, &mut chooser);
+            let mut b = Battle::recycle(state, &mut chooser, buffers);
             result = stage(&mut b, &mut pending);
-            log.append(&mut b.log);
+            buffers = b.into_buffers();
         }
         let end = match result {
             Ok(end) => end,
             Err(error) => {
-                state.reverse(&log);
+                state.reverse(&buffers.log);
                 return Err(error);
             }
         };
-        let key = (
-            state.clone(),
-            (end == StageEnd::Suspended).then_some(pending),
-        );
-        match index.get(&key) {
-            Some(&i) => finished[i].probability += weight,
-            None => {
-                index.insert(key.clone(), finished.len());
-                finished.push(Ending {
-                    end: key.0,
-                    pending: key.1,
-                    probability: weight,
-                });
-            }
+        let kept = (end == StageEnd::Suspended).then_some(pending);
+        if samples == 1 {
+            // A single path (what `lab-rollout` asks for every turn): nothing to merge.
+            let ending = Ending {
+                end: state.clone(),
+                pending: kept,
+                probability: weight,
+            };
+            state.reverse(&buffers.log);
+            #[cfg(debug_assertions)]
+            debug_assert_eq!(*state, begin);
+            return Ok(vec![ending]);
         }
-        state.reverse(&log);
+        finished.add(state, &kept, weight);
+        state.reverse(&buffers.log);
     }
+    #[cfg(debug_assertions)]
     debug_assert_eq!(*state, begin);
-    Ok(finished)
+    Ok(endings(finished))
 }
 
 /// Validates the choices and that everything in play is implemented. Returns the choices as
@@ -1123,7 +1138,7 @@ fn disabled<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> Opti
 /// The rest of a turn between stages: the actions not yet run, a multi-hit move suspended
 /// between two hits, and whether the turn is over. (Fainted Pokémon still holding a position
 /// are in the state: `Slot::fainted_occupant`.)
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 struct Pending {
     queue: Vec<Action>,
     in_progress: Option<moves::MoveProgress>,
@@ -1137,6 +1152,46 @@ struct Pending {
     /// The residual phase ran (the turn suspended after it for an Emergency Exit switch): the
     /// end of the turn only remains.
     residual_done: bool,
+}
+
+/// By hand for `clone_from`, which reuses the queue's allocation: the enumeration resets its
+/// per-run copy of the pending work from the position's before every run (Opus GG).
+impl Clone for Pending {
+    fn clone(&self) -> Self {
+        let Pending {
+            queue,
+            in_progress,
+            done,
+            fractional_drawn,
+            switches,
+            residual_done,
+        } = self;
+        Pending {
+            queue: queue.clone(),
+            in_progress: in_progress.clone(),
+            done: *done,
+            fractional_drawn: *fractional_drawn,
+            switches: switches.clone(),
+            residual_done: *residual_done,
+        }
+    }
+
+    fn clone_from(&mut self, source: &Self) {
+        let Pending {
+            queue,
+            in_progress,
+            done,
+            fractional_drawn,
+            switches,
+            residual_done,
+        } = source;
+        self.queue.clone_from(queue);
+        self.in_progress.clone_from(in_progress);
+        self.done = *done;
+        self.fractional_drawn = *fractional_drawn;
+        self.switches.clone_from(switches);
+        self.residual_done = *residual_done;
+    }
 }
 
 impl Pending {
@@ -1336,6 +1391,24 @@ fn run_stage<const N: usize>(
     Ok(end)
 }
 
+/// The queue index of the action that runs next, given the queue's sort keys: the best by
+/// (order asc, priority desc, speed desc), uniformly at random among equals.
+fn pick_action<const N: usize>(b: &mut Battle<'_, N>, keys: &[(u32, i32, i32)]) -> usize {
+    let best = keys
+        .iter()
+        .copied()
+        .min_by(|x, y| x.0.cmp(&y.0).then(y.1.cmp(&x.1)).then(y.2.cmp(&x.2)))
+        .expect("non-empty");
+    let tied = keys.iter().filter(|&&k| k == best).count();
+    let nth = b.rng.uniform(tied);
+    keys.iter()
+        .enumerate()
+        .filter(|&(_, &k)| k == best)
+        .nth(nth)
+        .map(|(i, _)| i)
+        .expect("a tied action")
+}
+
 fn run_stage_inner<const N: usize>(
     b: &mut Battle<'_, N>,
     pending: &mut Pending,
@@ -1354,15 +1427,20 @@ fn run_stage_inner<const N: usize>(
         };
     }
     if !b.queue.is_empty() {
-        // Best action by (order asc, priority desc, speed desc), ties uniformly at random.
-        let keys: Vec<(u32, i32, i32)> = b.queue.iter().map(|a| b.action_key(a)).collect();
-        let best = keys
-            .iter()
-            .copied()
-            .min_by(|x, y| x.0.cmp(&y.0).then(y.1.cmp(&x.1)).then(y.2.cmp(&x.2)))
-            .expect("non-empty");
-        let tied: Vec<usize> = (0..b.queue.len()).filter(|&i| keys[i] == best).collect();
-        let pick = tied[b.rng.uniform(tied.len())];
+        // Best action by (order asc, priority desc, speed desc), ties uniformly at random. The
+        // keys stay on the stack for a queue of usual length (this runs for every action).
+        const INLINE: usize = 24;
+        let n = b.queue.len();
+        let pick = if n <= INLINE {
+            let mut keys = [(0u32, 0i32, 0i32); INLINE];
+            for (key, action) in keys.iter_mut().zip(&b.queue) {
+                *key = b.action_key(action);
+            }
+            pick_action(b, &keys[..n])
+        } else {
+            let keys: Vec<(u32, i32, i32)> = b.queue.iter().map(|a| b.action_key(a)).collect();
+            pick_action(b, &keys)
+        };
         let action = b.queue.remove(pick);
 
         // `runAction` skips a Pokémon that is no longer active or has fainted.
