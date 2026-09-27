@@ -31,7 +31,6 @@
 //! the policy is deterministic, so the cache changes nothing but the time.
 
 use std::collections::HashMap;
-use std::hash::{Hash, Hasher};
 use std::io::Write as _;
 use std::process::ExitCode;
 use std::sync::atomic::{AtomicUsize, Ordering};
@@ -62,9 +61,14 @@ struct Strategies {
     equilibrium: Equilibrium,
 }
 
+/// A position: the state and what the turn still waits for.
+type PositionKey = (State<2>, Option<Suspension>);
+
 /// Strategies by position, shared by every game of the batch.
 struct StrategyCache {
-    entries: Mutex<HashMap<u64, Strategies>>,
+    /// Keyed by the position itself: a 64-bit hash alone would hand one position another's
+    /// strategies on a collision (board B32).
+    entries: Mutex<HashMap<PositionKey, Strategies>>,
     hits: AtomicUsize,
     misses: AtomicUsize,
 }
@@ -78,15 +82,12 @@ impl StrategyCache {
         }
     }
 
-    fn key(state: &State<2>, suspension: Option<&Suspension>) -> u64 {
-        let mut h = std::collections::hash_map::DefaultHasher::new();
-        state.hash(&mut h);
-        suspension.hash(&mut h);
-        h.finish()
+    fn key(state: &State<2>, suspension: Option<&Suspension>) -> PositionKey {
+        (state.clone(), suspension.cloned())
     }
 
-    fn get(&self, key: u64) -> Option<Strategies> {
-        let found = self.entries.lock().unwrap().get(&key).cloned();
+    fn get(&self, key: &PositionKey) -> Option<Strategies> {
+        let found = self.entries.lock().unwrap().get(key).cloned();
         if found.is_some() {
             self.hits.fetch_add(1, Ordering::Relaxed);
         } else {
@@ -95,7 +96,7 @@ impl StrategyCache {
         found
     }
 
-    fn put(&self, key: u64, strategies: Strategies) {
+    fn put(&self, key: PositionKey, strategies: Strategies) {
         self.entries.lock().unwrap().insert(key, strategies);
     }
 }
@@ -528,7 +529,7 @@ fn play_game(
         // The policy: both sides' mixed strategies at this decision, from the batch's cache when
         // another game reached the same position.
         let key = StrategyCache::key(&state, suspension.as_ref());
-        let strategies = match cache.get(key) {
+        let strategies = match cache.get(&key) {
             Some(s) => Ok(s),
             None => {
                 let solved = match policy {

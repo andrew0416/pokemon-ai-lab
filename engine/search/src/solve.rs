@@ -199,10 +199,10 @@ pub struct Solver<'e, const N: usize, E: Evaluator<N> + ?Sized> {
     unsupported: Vec<String>,
     /// Pairs of choices dropped that way.
     omitted_pairs: usize,
-    /// [`Solver::nash_value`] results by position hash (identical children recur across
-    /// replies and outcomes; a hash collision would return a wrong value, which is accepted
-    /// for this approximate valuation).
-    nash_cache: std::collections::HashMap<u64, f32>,
+    /// [`Solver::nash_value`] results by position (identical children recur across replies and
+    /// outcomes). The key is the position itself, not its hash: a 64-bit hash alone would hand
+    /// one position another's value on a collision (board B32).
+    nash_cache: std::collections::HashMap<(State<N>, Option<Suspension>), f32>,
 }
 
 impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
@@ -922,13 +922,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         if let Decision::Over(result) = decision {
             return Ok(self.terminal(result, 0));
         }
-        let key = {
-            use std::hash::{Hash, Hasher};
-            let mut h = std::collections::hash_map::DefaultHasher::new();
-            state.hash(&mut h);
-            suspension.hash(&mut h);
-            h.finish()
-        };
+        let key = (state.clone(), suspension.cloned());
         if let Some(&v) = self.nash_cache.get(&key) {
             return Ok(v);
         }
