@@ -160,6 +160,10 @@ def collect(corpus, sources):
             if not scenario.exists():
                 raise SystemExit(f"{row_file}: no scenario {scenario}")
             plan, excluded = plan_of(row)
+            # A source can discard positions for good (V12: a pin the old engine recorded that
+            # Showdown never reaches); the reason is kept like an oracle failure's.
+            if stem in src.get("discarded", {}):
+                plan, excluded = [], f"discarded: {src['discarded'][stem]}"
             entry_id = f"{src['set']}/{stem}"
             m = parity_sweep.NAME.match(f"{stem}.json")
             entries[entry_id] = {
