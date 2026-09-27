@@ -22,3 +22,11 @@ fn hazards_run_in_the_order_they_were_set() {
 fn court_change_keeps_the_hazard_order() {
     assert_exact_parity("tt-hazard-order-court-change");
 }
+
+/// B44a: Fling's condition `onUpdate` sets `usedItemThisTurn` on the user, so its itemless
+/// ally with Pickup picks the flung Hard Stone up at the residual (the engine did not record
+/// it, and Diggersby stayed itemless).
+#[test]
+fn pickup_picks_up_a_flung_item() {
+    assert_exact_parity("tt-fling-pickup");
+}

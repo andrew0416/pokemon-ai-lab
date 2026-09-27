@@ -969,8 +969,8 @@ pub(crate) fn syrup_bomb_residual<const N: usize>(
 /// — the item goes without being used (`setItem`: a fresh item state, then the item's `End`:
 /// Mirror Herb forgets its copied raises, Eject Pack's flag ends, Utility Umbrella runs
 /// WeatherChange in sun or rain, `items::umbrella_end`),
-/// becomes `lastItem`, and Unburden and an ally's Symbiosis react. (`usedItemThisTurn` is only
-/// read by Pickup, which is not implemented.)
+/// becomes `lastItem` with `usedItemThisTurn` (an adjacent Pickup holder can pick it up at the
+/// residual: oracle `tt-fling-pickup`), and Unburden and an ally's Symbiosis react.
 pub(crate) fn fling_update<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
@@ -1003,6 +1003,8 @@ pub(crate) fn fling_update<const N: usize>(
             new: item,
         });
     }
+    // `pokemon.usedItemThisTurn = true` (Pickup).
+    b.record_used_item(slot);
     super::abilities::unburden(b, slot);
     super::abilities::symbiosis(b, slot);
     b.remove_volatile(slot, Volatile::Fling);

@@ -130,8 +130,8 @@ impl<const N: usize> Battle<'_, N> {
         self.set_slot_history(slot, history);
     }
 
-    /// `pokemon.usedItemThisTurn = true` (`useItem`, `eatItem`) for the Pokémon in `slot`, for a
-    /// battle with Pickup (F18).
+    /// `pokemon.usedItemThisTurn = true` (`useItem`, `eatItem`, Fling's condition) for the
+    /// Pokémon in `slot`, for a battle with Pickup (F18).
     pub(crate) fn record_used_item(&mut self, slot: SlotRef) {
         if !self.history_readers.used_item || self.occupant(slot).is_none() {
             return;
