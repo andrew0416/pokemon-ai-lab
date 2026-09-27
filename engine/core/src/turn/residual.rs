@@ -792,8 +792,19 @@ pub(crate) fn end_turn<const N: usize>(b: &mut Battle<'_, N>) {
             old: turn,
             new: turn + 1,
         });
+        // `maybeTriggerEndlessBattleClause`: "the turn limit is not a part of Endless Battle
+        // Clause": `if (this.turn > 1000) this.tie()`, whatever is left on either side.
+        if turn + 1 > TURN_LIMIT && !b.state.result.is_over() {
+            b.apply(Instruction::SetResult {
+                old: b.state.result,
+                new: crate::state::BattleResult::Tie,
+            });
+        }
     }
 }
+
+/// Showdown's last turn: `endTurn` ties the battle once `battle.turn` passes it.
+pub const TURN_LIMIT: u16 = 1000;
 
 /// A side has an empty active slot and a healthy Pokémon on the bench.
 pub(crate) fn needs_replacement<const N: usize>(b: &Battle<'_, N>, side: SideId) -> bool {
