@@ -14,7 +14,10 @@ path = "src/lib.rs"
 # `default-features = false`.
 [features]
 default = ["cli"]
-cli = ["lab-scenario", "serde_json"]
+# `node`: positions stepped by choice strings over the scenario loader (the Python API's core,
+# `engine/py`).
+scenario = ["lab-scenario"]
+cli = ["scenario", "serde_json"]
 
 [dependencies]
 lab-engine = { path = "../core" }
