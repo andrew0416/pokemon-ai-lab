@@ -27,6 +27,7 @@ mod items;
 pub mod legal;
 pub mod lock;
 mod mega;
+mod merge;
 mod moves;
 mod order;
 mod queue;
@@ -35,7 +36,6 @@ mod support;
 mod switching;
 mod update;
 
-use std::collections::HashMap;
 use std::fmt;
 use std::hash::Hash;
 
@@ -50,6 +50,7 @@ use crate::volatile::Volatile;
 
 use battle::Battle;
 use branch::Chooser;
+use merge::Merger;
 
 pub use branch::RollMode;
 use order::{
@@ -761,11 +762,10 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
     // intermediate positions, not with the number of random paths. Within a stage every
     // random path is enumerated by replay.
     let mut frontier: Vec<(State<N>, P, f64)> = vec![(state.clone(), start, 1.0)];
-    let mut finished: Vec<Ending<N, P>> = Vec::new();
-    let mut finished_index: HashMap<(State<N>, Option<P>), usize> = HashMap::new();
+    // Both merge in first-reached order, which keeps the output order deterministic.
+    let mut finished: Merger<N, Option<P>> = Merger::new();
     while !frontier.is_empty() {
-        // Value: (first-reached index, probability); keeps the output order deterministic.
-        let mut next: HashMap<(State<N>, P), (usize, f64)> = HashMap::new();
+        let mut next: Merger<N, P> = Merger::new();
         let stage_started = std::time::Instant::now();
         let mut runs = 0usize;
         for (mut work, pending, probability) in frontier {
@@ -782,24 +782,10 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
                 let end = result?;
                 let p = probability * chooser.probability();
                 match end {
-                    StageEnd::Continue => {
-                        let order = next.len();
-                        next.entry((work.clone(), after)).or_insert((order, 0.0)).1 += p;
-                    }
+                    StageEnd::Continue => next.add(&work, after, p),
                     StageEnd::Finished | StageEnd::Suspended => {
                         let kept = (end == StageEnd::Suspended).then_some(after);
-                        let key = (work.clone(), kept);
-                        match finished_index.get(&key) {
-                            Some(&i) => finished[i].probability += p,
-                            None => {
-                                finished_index.insert(key.clone(), finished.len());
-                                finished.push(Ending {
-                                    end: work.clone(),
-                                    pending: key.1,
-                                    probability: p,
-                                });
-                            }
-                        }
+                        finished.add(&work, kept, p);
                     }
                 }
                 work.reverse(&log);
@@ -817,14 +803,22 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
                 stage_started.elapsed().as_secs_f64() * 1000.0
             );
         }
-        let mut staged: Vec<_> = next.into_iter().collect();
-        staged.sort_unstable_by_key(|(_, (order, _))| *order);
-        frontier = staged
-            .into_iter()
-            .map(|((s, q), (_, p))| (s, q, p))
-            .collect();
+        frontier = next.into_entries();
     }
-    Ok(finished)
+    Ok(endings(finished))
+}
+
+/// The merged end positions as [`Ending`]s, in first-reached order.
+fn endings<const N: usize, P: Hash + Eq>(finished: Merger<N, Option<P>>) -> Vec<Ending<N, P>> {
+    finished
+        .into_entries()
+        .into_iter()
+        .map(|(end, pending, probability)| Ending {
+            end,
+            pending,
+            probability,
+        })
+        .collect()
 }
 
 /// Monte Carlo counterpart of [`enumerate_stages`].
@@ -836,8 +830,7 @@ fn sample_stages<const N: usize, P: Clone + Eq + Hash>(
     mut stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<StageEnd, TurnError>,
 ) -> Result<Vec<Ending<N, P>>, TurnError> {
     let mut chooser = Chooser::sampler(seed);
-    let mut finished: Vec<Ending<N, P>> = Vec::new();
-    let mut index: HashMap<(State<N>, Option<P>), usize> = HashMap::new();
+    let mut finished: Merger<N, Option<P>> = Merger::new();
     let weight = 1.0 / samples as f64;
     let begin = state.clone();
     for _ in 0..samples {
@@ -857,25 +850,15 @@ fn sample_stages<const N: usize, P: Clone + Eq + Hash>(
                 return Err(error);
             }
         };
-        let key = (
-            state.clone(),
+        finished.add(
+            state,
             (end == StageEnd::Suspended).then_some(pending),
+            weight,
         );
-        match index.get(&key) {
-            Some(&i) => finished[i].probability += weight,
-            None => {
-                index.insert(key.clone(), finished.len());
-                finished.push(Ending {
-                    end: key.0,
-                    pending: key.1,
-                    probability: weight,
-                });
-            }
-        }
         state.reverse(&log);
     }
     debug_assert_eq!(*state, begin);
-    Ok(finished)
+    Ok(endings(finished))
 }
 
 /// Validates the choices and that everything in play is implemented. Returns the choices as
