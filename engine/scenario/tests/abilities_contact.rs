@@ -8,7 +8,7 @@ use common::{assert_exact_parity, fixture, start};
 use lab_engine::dex::abilities;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::SideId;
-use lab_engine::turn::{enumerate_turn, TurnError};
+use lab_engine::turn::enumerate_turn;
 use lab_scenario::scenario_choices;
 
 // ---- O55 onDamagingHit -------------------------------------------------------------------------
