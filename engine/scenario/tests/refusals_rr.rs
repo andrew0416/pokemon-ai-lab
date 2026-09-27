@@ -95,11 +95,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R10-once-per-battle-flags",
     ),
     (
-        "rr-recycle-seed",
-        "Recycle restoring Grassy Seed (its onStart)",
-        "R11-item-restart",
-    ),
-    (
         "rr-cute-charm-undecided-gender",
         "with an undecided gender (give the sets a gender)",
         "R13-attract-gender",
@@ -310,8 +305,9 @@ fn supersweet_syrup_after_the_start() {
     assert_exact_parity("rr-supersweet-syrup-switch");
 }
 
+/// Recycle gives back a Grassy Seed used at the battle start; setItem's Start uses it again in the
+/// Grassy Terrain (was refused; board R11, `oo_item_restart.rs`).
 #[test]
-#[ignore = "refused: Recycle restoring {} (its onStart) (board R11-item-restart)"]
 fn recycle_a_seed() {
     assert_exact_parity("rr-recycle-seed");
 }

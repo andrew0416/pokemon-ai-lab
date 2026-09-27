@@ -4,8 +4,8 @@
 
 범위: Champions 모드(Showdown `9e317a6`)에서 `isNonstandard`가 null인 종(메가 포함, 배틀 중 폼은 기본 종이 표준일 때만), 그 종의 특성(+심플빔·고민씨가 주는 심플·불면), `learnsets.ts`의 기술(+표준 플래그 기술·발버둥), 표준 도구. 테라·다이맥스·Z는 규칙셋이 막는다. 목록은 `refusals.universe.json`, 근거 검사는 아래 '근거'.
 
-- 거부 호출 71곳(함수 45개). 키 113개 = 호출에 쓰인 메시지 61개 + 다른 함수의 메시지를 전달하는 호출 7개 + 메시지 생산 함수(`producers`)의 메시지 45개.
-- 도달 가능 32개, 도달 불가능 81개, 미확인 0개.
+- 거부 호출 70곳(함수 45개). 키 112개 = 호출에 쓰인 메시지 60개 + 다른 함수의 메시지를 전달하는 호출 7개 + 메시지 생산 함수(`producers`)의 메시지 45개.
+- 도달 가능 31개, 도달 불가능 81개, 미확인 0개.
 
 ## 도달 가능 (Champions 표준 범위)
 
@@ -26,7 +26,6 @@
 | `stage_end_check: -> what.clone()` | items.rs::stage_end_check | forward | `rr-encore-counter` | full: 1 | R8-encore-edges | Forwards `Battle::refused`, set only by the Encore message above. |
 | `Beat Up with benched allies of different power {} (their order in Showdown's side.pokemon depends on the switches so far, which the state does not keep)` | moves/handlers.rs::beat_up_powers | mechanic | `rr-beat-up-bench` | extremes: 28 | R9-beat-up-order | Beat Up (standard) with two eligible benched allies of different base Attack: the hit order follows `side.pokemon`, which switches reorder. |
 | `{} after the battle start (its once-per-battle flag is not in the state)` | switching.rs::once_per_battle | mechanic | `rr-supersweet-syrup-switch` | full: 1 | R10-once-per-battle-flags | Supersweet Syrup (Hydrapple) starting after the battle start (a switch-in, a Skill Swap); `pokemon.syrupTriggered` is not in the state. Intrepid Sword and Dauntless Shield are not standard. |
-| `Recycle restoring {} (its onStart)` | moves/handlers.rs::on_hit | mechanic | `rr-recycle-seed` | full: 1 | R11-item-restart | Recycle (standard) bringing back a Terrain Seed, White Herb or Metronome, whose `onStart` acts on the new holder. |
 | `Attract between {} and {} with an undecided gender (give the sets a gender)` | conditions.rs::attract_fails | input | `rr-cute-charm-undecided-gender` | full: 2 | R13-attract-gender | Cute Charm (Clefable, Milotic, Lopunny, Wigglytuff) next to a set without a gender: Showdown drew the gender at team creation (`battle.sample(['M', 'F'])`), the scenario does not say which. |
 | `Rivalry next to {} of undecided gender (give the set a gender)` | abilities.rs::rivalry_problem (producer) | input | `rr-rivalry-undecided-gender` | full: 22 | R13-attract-gender | Rivalry (Luxray, Pyroar) on the field next to a set without a gender. |
 | `switch_in_as: -> why` | switching.rs::switch_in_as | forward | `rr-rivalry-switch-in-undecided-gender` | full: 1 | R13-attract-gender | Forwards `switch_in_problem`: reachable only through its Rivalry gender message; the others are E1, E2, E3, E8. |
@@ -54,6 +53,7 @@
 | `Instruct repeating {}, which the target does not know (Struggle, Transform)` | R6-instruct | `rr-instruct-struggle` (full: 29) | Instruct checks the last move's flags (`failinstruct`, charge, recharge, Z, Max) before looking for its slot, as Showdown does; the refusal stays for a last move outside the slots that the flags do not fail, which no standard battle has (E11). |
 | `redirection tie between {} and {} (Showdown breaks it by effectOrder)` | R4-redirection-tie | `rr-redirect-tie` (full: 1) | Two redirectors of one priority at equal Speed: Showdown sorts the RedirectTarget handlers with `compareRedirectOrder` in a stable sort (no tie shuffle), so the holder whose `abilityState.effectOrder` is lower (switched in or last had an ability set first) wins, whatever the move and the order of use. New hidden `Slot::ability_order` (restarted by switch-in, `setAbility`, Skill Swap, Transform, Mega Evolution and other permanent forme changes; carried by Ally Switch), recorded only while a redirector can be in the battle; also `oo-redirect-tie-swapped`, `oo-redirect-tie-worry-seed`, `oo-lightningrod-tie`. |
 | `{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)` | R7-ally-switch-target | `rr-ally-switch-snipe-shot` (full: 17) | A tracking move (Snipe Shot; any move of a Stalwart or Propeller Tail holder) aimed at a Pokémon Ally Switch moved: the queued move action now holds Showdown's `originalTarget` (`resolveAction`: the Pokémon at `targetLoc` when queued) and `moves::get_target` aims at it while it is active (`getTarget`), else at the position. Also `ally-switch-snipe-shot`, `s-stalwart-ally-switch` (fixtures, were refused), `oo-ally-switch-stalwart` (Archaludon), `oo-snipe-shot-target-switched` (a target that left the field: the position). |
+| `Recycle restoring {} (its onStart)` | R11-item-restart | `rr-recycle-seed` (full: 1) | Recycle is `pokemon.lastItem = ""; pokemon.setItem(item, source, move)`: the item is held again and `setItem`'s Start runs for every item with an `onStart` (`handlers::trick_item_start`, which Trick already used: Seeds, Room Service, White Herb, Metronome, the Choice items, Booster Energy, Utility Umbrella, Air Balloon). Also `oo-recycle-white-herb`, `oo-recycle-metronome`. |
 
 ## 미확인
 
@@ -184,7 +184,7 @@
 | R8-encore-edges | `Encore replacing a queued action with {} (a callback action it would queue)`<br>`stage_end_check: -> what.clone()` | `Encore into a move the user no longer has`<br>`Transform by an encored Pokémon (the encored move leaves the move slots)` |
 | R9-beat-up-order | `Beat Up with benched allies of different power {} (their order in Showdown's side.pokemon depends on the switches so far, which the state does not keep)` | — |
 | R10-once-per-battle-flags | `{} after the battle start (its once-per-battle flag is not in the state)` | `{}: Battle Bond (its once-per-battle `bondTriggered` is not in the state)` |
-| R11-item-restart | `Recycle restoring {} (its onStart)` | `Pickup restoring {} (its Start / End for a new holder)` |
+| R11-item-restart | — | `Pickup restoring {} (its Start / End for a new holder)` |
 | R12-syrup-bomb-source | — | `Syrup Bomb's residual with its source neither active nor fainted in place` |
 | R13-attract-gender | `Attract between {} and {} with an undecided gender (give the sets a gender)`<br>`{} with {} of undecided gender (give the set a gender)`<br>`switch_in_as: -> why`<br>`{}: Rivalry next to a Pokémon of undecided gender`<br>`Rivalry next to {} of undecided gender (give the set a gender)` | `Skill Swap: {}` |
 | R14-called-multi-hit | `check_side: -> why`<br>`{} called by {}: a multi-hit called move`<br>`Sleep Talk calling {} (a multi-hit move)` | `Sleep Talk calling {} (its onAfterMove, unchecked for a called move)` |

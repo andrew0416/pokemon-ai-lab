@@ -41,6 +41,10 @@
   "{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)": {
    "board": "R7-ally-switch-target", "fixture": "rr-ally-switch-snipe-shot",
    "what": "A tracking move (Snipe Shot; any move of a Stalwart or Propeller Tail holder) aimed at a Pokémon Ally Switch moved: the queued move action now holds Showdown's `originalTarget` (`resolveAction`: the Pokémon at `targetLoc` when queued) and `moves::get_target` aims at it while it is active (`getTarget`), else at the position. Also `ally-switch-snipe-shot`, `s-stalwart-ally-switch` (fixtures, were refused), `oo-ally-switch-stalwart` (Archaludon), `oo-snipe-shot-target-switched` (a target that left the field: the position)."
+  },
+  "Recycle restoring {} (its onStart)": {
+   "board": "R11-item-restart", "fixture": "rr-recycle-seed",
+   "what": "Recycle is `pokemon.lastItem = \"\"; pokemon.setItem(item, source, move)`: the item is held again and `setItem`'s Start runs for every item with an `onStart` (`handlers::trick_item_start`, which Trick already used: Seeds, Room Service, White Herb, Metronome, the Choice items, Booster Energy, Utility Umbrella, Air Balloon). Also `oo-recycle-white-herb`, `oo-recycle-metronome`."
   }
  },
  "entries": {
@@ -139,10 +143,6 @@
   "{}: Battle Bond (its once-per-battle `bondTriggered` is not in the state)": {
    "reachable": "no", "kind": "past-only", "board": "R10-once-per-battle-flags",
    "why": "Only Greninja-Bond and Greninja-Ash (not standard, E8) are refused; standard Greninja's Battle Bond does nothing."
-  },
-  "Recycle restoring {} (its onStart)": {
-   "reachable": "yes", "kind": "mechanic", "board": "R11-item-restart", "repro": "rr-recycle-seed",
-   "why": "Recycle (standard) bringing back a Terrain Seed, White Herb or Metronome, whose `onStart` acts on the new holder."
   },
   "Pickup restoring {} (its Start / End for a new holder)": {
    "reachable": "no", "kind": "static", "board": "R11-item-restart",

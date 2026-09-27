@@ -2698,8 +2698,12 @@ pub(super) fn on_hit<const N: usize>(
             }
             HitResult::Success
         }
-        // Recycle: fails with an item or without a `lastItem`; otherwise `lastItem` goes back to
-        // being held (`setItem`: its `Start` event runs; an item whose `onStart` acts is refused).
+        // Recycle: fails with an item or without a `lastItem`; otherwise `pokemon.lastItem = '';
+        // pokemon.setItem(item, source, move)`: the item is held again with a fresh item state and
+        // its `Start` runs ([`trick_item_start`], every item with an `onStart`: a Seed in its
+        // terrain and Room Service in Trick Room are used again, White Herb on a lowered stage,
+        // Metronome's condition, a Choice item drops a `choicelock`, Booster Energy, Utility
+        // Umbrella's WeatherChange; Air Balloon only announces itself).
         moves::RECYCLE => {
             let Some(pokemon) = b.alive(target) else {
                 return Ok(Some(HitResult::Failure));
@@ -2708,14 +2712,6 @@ pub(super) fn on_hit<const N: usize>(
             if !item.is_none() || last.is_none() {
                 HitResult::Failure
             } else {
-                if last.data().handlers.contains(&"onStart")
-                    && !super::super::items::inert_start(last)
-                {
-                    return Err(b.unsupported(format!(
-                        "Recycle restoring {} (its onStart)",
-                        last.data().name
-                    )));
-                }
                 b.apply(Instruction::SetLastItem {
                     target: pokemon,
                     old: last,
@@ -2726,8 +2722,7 @@ pub(super) fn on_hit<const N: usize>(
                     old: ItemId::NONE,
                     new: last,
                 });
-                // `setItem`'s Start: Utility Umbrella's (a flung one comes back).
-                if last == items::UTILITY_UMBRELLA {
+                if last.data().handlers.contains(&"onStart") {
                     trick_item_start(b, target, last);
                 }
                 HitResult::Success
