@@ -717,5 +717,350 @@
    "board": "R20-generic-guards",
    "why": "No standard move is refused (E1)."
   }
+ },
+ "loader": {
+  "LoadError::Json": {
+   "class": "input",
+   "why": "Malformed JSON, a wrong value type, or a field the loader does not know (`deny_unknown_fields` on every scenario and set shape: an unknown field could change the battle, so it is refused, not dropped).",
+   "test": "loader_refusals.rs::an_unknown_scenario_field_is_refused"
+  },
+  "LoadError::Io": {
+   "class": "input",
+   "why": "A team or scenario file that cannot be read."
+  },
+  "LoadError::UnsupportedFormat": {
+   "class": "unsupported",
+   "why": "Only the Champions doubles custom game and VGC 2026 Reg M-C load; Champions singles (`gen9championsbssregmc`) is a format Showdown plays (board II-singles-loader, on hold: singles keeps only the structure).",
+   "test": "loader_refusals.rs::a_singles_format_is_refused",
+   "board": "II-singles-loader"
+  },
+  "LoadError::Unsupported: setupStates": {
+   "class": "input",
+   "why": "More pinned setup states than setup turns: a file error.",
+   "test": "loader_refusals.rs::scenario_field_values_are_checked"
+  },
+  "LoadError::Unsupported: setupRolls": {
+   "class": "input",
+   "why": "`setupRolls` other than `full` / `extremes`: the file format has no other value (the oracle's reports use those two).",
+   "test": "loader_refusals.rs::scenario_field_values_are_checked"
+  },
+  "LoadError::Unsupported: team": {
+   "class": "input",
+   "why": "A side's `team` that is neither a path nor an inline array.",
+   "test": "loader_refusals.rs::scenario_field_values_are_checked"
+  },
+  "replay_setup_turn: setup turn {}: the turn pauses for a mid-turn switch that has no choice; give it in the setup turn's third element (`midTurn`)": {
+   "class": "input",
+   "why": "A setup turn left waiting for a mid-turn switch nobody gave (board B29): the file must give it; `scenario_positions_consistent` drops such outcomes instead."
+  },
+  "pinned: none of {} position(s) has the pinned canonical state{}": {
+   "class": "input",
+   "why": "A pinned `startState` / `setupStates` entry no replayed position has: a wrong pin, or the engine diverging from the game the pin came from (the parity pipeline reports it as `setup:`; not a refusal of a legal battle)."
+  },
+  "scenario_decision: the scenario has no turn": {
+   "class": "input",
+   "why": "A scenario without `turn` asked for its decision."
+  },
+  "scenario_choices: the scenario has no turn": {
+   "class": "input",
+   "why": "A scenario without `turn` asked for its choices."
+  },
+  "SetProblem::UnknownSpecies": {
+   "class": "input",
+   "why": "A species name the Champions dex does not have (Showdown would not either)."
+  },
+  "SetProblem::TemporaryForme": {
+   "class": "unsupported",
+   "why": "A temporary in-battle forme (Aegislash-Blade, Darmanitan-Zen, ...) as a set's species: the custom game (no validator) keeps it as the base species, which the state cannot tell from the forme reached in battle. VGC's validator refuses such sets, so only the custom game reaches it.",
+   "test": "loader_refusals.rs::a_temporary_forme_as_species_is_refused"
+  },
+  "SetProblem::UnknownItem": {
+   "class": "input",
+   "why": "An item name the dex does not have."
+  },
+  "SetProblem::MissingAbility": {
+   "class": "input",
+   "why": "A set without an ability: the loader asks for it (Showdown would fall back to no ability)."
+  },
+  "SetProblem::UnknownAbility": {
+   "class": "input",
+   "why": "An ability name the dex does not have."
+  },
+  "SetProblem::MissingNature": {
+   "class": "input",
+   "why": "A set without a nature: the loader asks for it (Showdown would pick a neutral one)."
+  },
+  "SetProblem::UnknownNature": {
+   "class": "input",
+   "why": "A nature name that does not exist."
+  },
+  "SetProblem::UnsupportedLevel": {
+   "class": "unsupported",
+   "why": "A level other than 50 in the custom game (a set without `level` is 100 there, board B31): Showdown plays it, the engine's stat formula is the level-50 one. VGC's `Adjust Level = 50` never reaches it.",
+   "test": "loader_refusals.rs::a_level_other_than_50_is_refused"
+  },
+  "SetProblem::InvalidIv": {
+   "class": "input",
+   "why": "An IV above 31 (IVs have no term in the Champions formula and are only range-checked)."
+  },
+  "SetProblem::UnknownGender": {
+   "class": "input",
+   "why": "A gender other than M, F or N. Showdown ignores an unknown one (`genders[set.gender]` falls back to the species'); the loader is stricter on garbage input."
+  },
+  "SetProblem::UnknownTeraType": {
+   "class": "input",
+   "why": "A Tera type that is not a type (kept as sidecar data only; Tera is off under M-C)."
+  },
+  "SetProblem::NoMoves": {
+   "class": "input",
+   "why": "A set without moves."
+  },
+  "SetProblem::TooManyMoves": {
+   "class": "input",
+   "why": "More than four moves."
+  },
+  "SetProblem::UnknownMove": {
+   "class": "input",
+   "why": "A move name the dex does not have."
+  },
+  "SetProblem::DuplicateMove": {
+   "class": "input",
+   "why": "The same move twice in a set (the validator refuses it; move slots are addressed by move id)."
+  },
+  "SetProblem::StatPoints": {
+   "class": "input",
+   "why": "More than 32 SP in a stat or 66 in total: not a Champions set (Showdown's `evs` are SP here)."
+  },
+  "TeamProblem::Empty": {
+   "class": "input",
+   "why": "A side without Pokémon."
+  },
+  "TeamProblem::TooLarge": {
+   "class": "input",
+   "why": "More than six Pokémon."
+  },
+  "TeamProblem::Order": {
+   "class": "forward",
+   "why": "Carries a team preview message of `picked_order` (keys `picked_order: ...`)."
+  },
+  "TeamProblem::DuplicateName": {
+   "class": "unsupported",
+   "why": "Two members of a side with the same name (a shared nickname, or one species twice in the custom game): Showdown plays it, canonical states key Pokémon by name.",
+   "test": "loader_refusals.rs::a_name_twice_on_a_side_is_refused"
+  },
+  "picked_order: {} is not a team position": {
+   "class": "input",
+   "why": "Team preview choice with a non-number (Showdown's `parseInt` gives NaN and refuses it; it would read `2x` as 2, which the loader refuses)."
+  },
+  "picked_order: no Pokémon in slot {}": {
+   "class": "input",
+   "why": "Team preview choice beyond the team (Showdown: `You do not have a Pokémon in slot N`)."
+  },
+  "picked_order: the Pokémon in slot {} can only switch in once": {
+   "class": "input",
+   "why": "Team preview choice naming a member twice (Showdown's own message)."
+  },
+  "picked_order: you must choose exactly {} Pokémon": {
+   "class": "input",
+   "why": "A bracketed team preview choice with more members than the format keeps (Showdown: `You must choose exactly N Pokémon`). Bracketed choices themselves load since A4 (`vv-bracketed-preview`).",
+   "test": "loader_refusals.rs::bracketed_team_preview_follows_choose_team"
+  },
+  "apply_patch: unknown side {}": {
+   "class": "input",
+   "why": "A patch side other than p1 / p2."
+  },
+  "apply_patch: side condition {}: hazards take no duration": {
+   "class": "input",
+   "why": "A hazard patch with a duration (hazards do not expire)."
+  },
+  "apply_patch: side condition {} is not supported": {
+   "class": "input",
+   "why": "A patch side condition outside the engine's side effects: every `SideEffect` is patchable (the list covers all 15), so the id names something the engine has no state for (Past effects)."
+  },
+  "apply_patch: side condition {}: give a duration (Light Clay on the source changes it)": {
+   "class": "input",
+   "why": "A screen patch without its duration (Light Clay on `enumerate.cjs`'s source would change it)."
+  },
+  "patch_mon: {} has no Pokémon named {}": {
+   "class": "input",
+   "why": "A patch for a name the side does not have."
+  },
+  "patch_mon: {}: status {}": {
+   "class": "input",
+   "why": "A patch status that is not a status id."
+  },
+  "patch_mon: {}: a sleep patch needs statusTime": {
+   "class": "input",
+   "why": "A sleep patch without its remaining turns."
+  },
+  "patch_mon: {}: unknown item {}": {
+   "class": "input",
+   "why": "A patch item the dex does not have."
+  },
+  "patch_mon: boosts on inactive {}": {
+   "class": "input",
+   "why": "Boosts patched on a benched Pokémon (they live on the slot)."
+  },
+  "patch_mon: {}: unknown boost {}": {
+   "class": "input",
+   "why": "A boost name that is not a stat."
+  },
+  "patch_field: weather {} is not supported": {
+   "class": "input",
+   "why": "A patch weather other than the four the moves and abilities of the standard range set; the primal weathers are Past-only (refusal audit E8).",
+   "test": "loader_refusals.rs::a_bad_patch_is_invalid"
+  },
+  "patch_field: a weather patch needs weatherDuration": {
+   "class": "input",
+   "why": "A weather patch without its duration."
+  },
+  "patch_field: terrain {} is not supported": {
+   "class": "input",
+   "why": "A terrain that does not exist."
+  },
+  "patch_field: a terrain patch needs terrainDuration": {
+   "class": "input",
+   "why": "A terrain patch without its duration."
+  },
+  "patch_field: field effect {} is not supported": {
+   "class": "input",
+   "why": "A pseudo-weather outside the engine's field effects (every `FieldEffect` besides weather and terrain is patchable)."
+  },
+  "patch_field: {} is already up (Showdown would fail or end it)": {
+   "class": "input",
+   "why": "Patching a pseudo-weather that is already up: `enumerate.cjs`'s `addPseudoWeather` would fail or toggle it."
+  },
+  "switch_position: {}: bad switch": {
+   "class": "input",
+   "why": "A `switch` without a number."
+  },
+  "switch_position: {}: switch positions start at 1": {
+   "class": "input",
+   "why": "`switch 0`."
+  },
+  "switch_position: {}: no Pokémon in position {}": {
+   "class": "input",
+   "why": "A switch beyond the side's Pokémon (Showdown refuses it too)."
+  },
+  "parse_replacement: {}: no empty slot left to fill": {
+   "class": "input",
+   "why": "More replacements than empty slots."
+  },
+  "parse_replacement: {}: not a replacement choice": {
+   "class": "input",
+   "why": "A replacement decision answered with something else."
+  },
+  "parse_mid_turn: {}: no slot left that must switch out": {
+   "class": "input",
+   "why": "More mid-turn switches than flagged slots."
+  },
+  "parse_mid_turn: {}: not a mid-turn switch choice": {
+   "class": "input",
+   "why": "A mid-turn switch answered with something else."
+  },
+  "parse_choice: {}: expected {} actions": {
+   "class": "input",
+   "why": "A choice string with the wrong number of actions."
+  },
+  "parse_choice: {}: empty slot": {
+   "class": "input",
+   "why": "A move for an empty slot."
+  },
+  "parse_choice: {}: unknown move": {
+   "class": "input",
+   "why": "A move id the dex does not have."
+  },
+  "parse_choice: {}: not a known move": {
+   "class": "input",
+   "why": "A move the Pokémon does not have (Showdown: `doesn't have a move matching`)."
+  },
+  "parse_choice: {}: unknown word {}": {
+   "class": "input",
+   "why": "A word the choice syntax does not have."
+  },
+  "parse_choice: {}: not a choice": {
+   "class": "input",
+   "why": "Not a choice."
+  },
+  "SwitchInError::UnsupportedSlotCount": {
+   "class": "unreachable",
+   "why": "Only `State<1>` and `State<2>` exist; the loader builds `State<2>` (shape)."
+  },
+  "SwitchInError::UnsupportedSpecies": {
+   "class": "unreachable",
+   "why": "No standard species has species callbacks (refusal audit E2), so neither `onBattleStart` nor a start handler of a species is reached."
+  },
+  "SwitchInError::UnsupportedAbility": {
+   "class": "unreachable",
+   "why": "No standard ability is refused at switch-in (COVERAGE.md: 등장 효과만 미지원 0; audit E1)."
+  },
+  "SwitchInError::UnsupportedItem": {
+   "class": "unreachable",
+   "why": "No standard item is refused at switch-in (COVERAGE.md: 등장 효과만 미지원 0; audit E1)."
+  },
+  "SwitchInError::Unsupported": {
+   "class": "forward",
+   "why": "Carries the turn engine's refusal during the start (`enumerate_start`); those keys are in the turn engine's list above. (A non-`Unsupported` `TurnError` there is an invariant and is carried the same way.)"
+  },
+  "SwitchInError::NotInitial": {
+   "class": "unreachable",
+   "why": "The loader always builds a fresh state (leads placed, nothing started); only a hand-built state reaches it."
+  },
+  "CanonicalError::UnknownFormat": {
+   "class": "unreachable",
+   "why": "`format_ruleset` accepts the two formats the loader loads; any other is refused at load (`LoadError::UnsupportedFormat`) first."
+  },
+  "CanonicalError::Meta": {
+   "class": "unreachable",
+   "why": "The sidecar and the state come from the same load; they disagree only for a hand-built pair."
+  },
+  "CanonicalError::Unrepresentable: weather value {}": {
+   "class": "unreachable",
+   "why": "Only the primal weathers (Desolate Land, Primordial Sea, Delta Stream) have no canonical id; their abilities are not standard (audit E8)."
+  },
+  "CanonicalError::Unrepresentable: terrain value {}": {
+   "class": "unreachable",
+   "why": "Every `Terrain` value has an id (invariant)."
+  },
+  "CanonicalError::Unrepresentable: inactive {} with value {}": {
+   "class": "unreachable",
+   "why": "The engine clears an effect whole when it ends (invariant)."
+  },
+  "CanonicalError::Unrepresentable: {} without a duration": {
+   "class": "unreachable",
+   "why": "A permanent weather or terrain: the primal weathers only (audit E8)."
+  },
+  "CanonicalError::Unrepresentable: pseudo-weather field effect #{}": {
+   "class": "unreachable",
+   "why": "Every `FieldEffect` besides weather and terrain is in `PSEUDO` (5 of 7; invariant)."
+  },
+  "CanonicalError::Unrepresentable: {} side effect #{}": {
+   "class": "unreachable",
+   "why": "`SIDE_CONDITIONS` lists all 15 `SideEffect`s (invariant)."
+  },
+  "CanonicalError::Unrepresentable: {} slot {} Dynamax": {
+   "class": "unreachable",
+   "why": "Dynamax is off under the M-C ruleset."
+  },
+  "CanonicalError::Unrepresentable: {} slot {} substitute HP {} without its volatile": {
+   "class": "unreachable",
+   "why": "The engine sets the substitute's HP and volatile together (invariant)."
+  },
+  "CanonicalError::Unrepresentable: {} with a duration": {
+   "class": "unreachable",
+   "why": "Hazards are set `PERMANENT` (invariant)."
+  },
+  "CanonicalError::Unrepresentable: {} {}: {}": {
+   "class": "forward",
+   "why": "Carries a Pokémon's message (`pokemon: ...`, `types_string: ...`)."
+  },
+  "pokemon: disabled move {}": {
+   "class": "unreachable",
+   "why": "Nothing in the engine sets `MoveSlot::disabled` (Disable is a volatile); invariant."
+  },
+  "types_string: no types (Showdown `???`)": {
+   "class": "unreachable",
+   "why": "A Pokémon that loses its types becomes `Type::Unknown` (`???`: Burn Up, Double Shock), never two `Type::None`s; invariant."
+  }
  }
 }
