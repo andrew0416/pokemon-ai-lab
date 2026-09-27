@@ -316,29 +316,33 @@ def build_game(args, corpus, entries, progress):
         progress(entry, row)
 
 
+def merge_build_row(corpus, entry):
+    """The entry with its build row (if any) merged in: build status, stored files, sizes."""
+    e = dict(entry)
+    row_file = corpus / "build" / "rows" / e["set"] / f"{e['stem']}.json"
+    if e["excluded"]:
+        e["build"] = "excluded"
+    elif row_file.exists():
+        row = read_json(row_file)
+        e["build"] = row["status"]
+        e["teams"] = row.get("teams")
+        if row["status"] == "ok":
+            e["scenario"] = row["scenario"]
+            e["scenario_bytes"] = row["scenario_bytes"]
+            e["scenario_gz_bytes"] = row["scenario_gz_bytes"]
+            e["reports"] = row["reports"]
+            e["oracle_seconds"] = round(sum(a["seconds"] for a in row["attempts"]), 1)
+        else:
+            e["build_error"] = row.get("error")
+    else:
+        e["build"] = "pending"
+    return e
+
+
 def write_index(corpus, entries, extra):
     """corpus.json: every entry with its build row merged in."""
-    out = []
-    for entry in sorted(entries.values(), key=lambda e: (e["set"], e["game"], e["step"])):
-        e = dict(entry)
-        row_file = corpus / "build" / "rows" / e["set"] / f"{e['stem']}.json"
-        if e["excluded"]:
-            e["build"] = "excluded"
-        elif row_file.exists():
-            row = read_json(row_file)
-            e["build"] = row["status"]
-            e["teams"] = row.get("teams")
-            if row["status"] == "ok":
-                e["scenario"] = row["scenario"]
-                e["scenario_bytes"] = row["scenario_bytes"]
-                e["scenario_gz_bytes"] = row["scenario_gz_bytes"]
-                e["reports"] = row["reports"]
-                e["oracle_seconds"] = round(sum(a["seconds"] for a in row["attempts"]), 1)
-            else:
-                e["build_error"] = row.get("error")
-        else:
-            e["build"] = "pending"
-        out.append(e)
+    out = [merge_build_row(corpus, entry)
+           for entry in sorted(entries.values(), key=lambda e: (e["set"], e["game"], e["step"]))]
     index = dict(extra)
     index["positions"] = out
     index["totals"] = totals(out)
@@ -483,6 +487,9 @@ def exe_info(path):
 def cmd_check(args):
     corpus = args.corpus.resolve()
     index = read_json(corpus / "corpus.json")
+    # A build still running has written its finished positions' rows but not the index yet.
+    index["positions"] = [merge_build_row(corpus, e) if e.get("build") == "pending" else e
+                          for e in index["positions"]]
     out = (args.out or corpus / "check").resolve()
     (out / "rows").mkdir(parents=True, exist_ok=True)
     entries = [e for e in index["positions"] if e.get("build") == "ok"
