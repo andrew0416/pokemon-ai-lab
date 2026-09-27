@@ -1,0 +1,26 @@
+{
+ "description": "Opus JJ JJ-heavy-turn-parity, reduced from the V2 parity position dbl-kickoff-aveornot-vs-kickoff-balmung.a.random.g000.s09 (a confused Floette's Protect): the confusion self-hit's damage roll (`getConfusionDamage` -> `battle.randomizer`) is a damage roll like any other, so the oracle's extremes / fixed modes reduce it; the engine drew all 16 (`uniform(16)`) in every roll mode. Blissey (slower) confuses Garchomp in the setup turn; in the decision turn the confused Garchomp uses Swords Dance (a 33% self-hit is the only damage). Fixtures: `.turn.json` (full), `.extremes.json`, `.fixed0/.fixed7/.fixed15.json`.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Confuse Ray", "Calm Mind"], "level": 50},
+   {"species": "Metagross", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32, "def": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"hp": 32, "atk": 32, "spe": 2}, "moves": ["Swords Dance"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Impish",
+    "evs": {"hp": 32, "def": 32, "spd": 2}, "moves": ["Calm Mind"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  ["move confuseray 1, move calmmind", "move swordsdance, move calmmind"]
+ ],
+ "turn": {"p1": "move calmmind, move calmmind", "p2": "move swordsdance, move calmmind"}
+}
