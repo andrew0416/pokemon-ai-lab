@@ -40,11 +40,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R5c-future-move-absent-user-occupant",
     ),
     (
-        "rr-future-sight-red-card",
-        "Future Sight hitting a holder of Red Card",
-        "R5-future-move-edges",
-    ),
-    (
         "rr-beat-up-bench",
         "Beat Up with benched allies of different power",
         "R9-beat-up-order",
@@ -164,12 +159,6 @@ fn hazard_order() {
 #[test]
 fn redirection_tie() {
     assert_exact_parity("rr-redirect-tie");
-}
-
-#[test]
-#[ignore = "refused: {} hitting a holder of {} (board R5-future-move-edges)"]
-fn future_sight_on_a_red_card_holder() {
-    assert_exact_parity("rr-future-sight-red-card");
 }
 
 #[test]

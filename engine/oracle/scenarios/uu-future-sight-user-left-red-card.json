@@ -1,0 +1,98 @@
+{
+ "description": "Board R5b: rr-future-sight-user-left with Clefable holding Red Card: the user hits from the bench (`source.isActive` false), so the card is not used and nothing is dragged.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Slowking",
+    "item": "",
+    "ability": "Own Tempo",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Future Sight",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Clefable",
+    "item": "Red Card",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Gourgeist",
+    "item": "",
+    "ability": "Insomnia",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Trick-or-Treat"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move futuresight 1, move calmmind",
+   "move calmmind, move protect"
+  ],
+  [
+   "switch 3, move protect",
+   "move calmmind, move trickortreat 2"
+  ]
+ ],
+ "turn": {
+  "p1": "move curse, move calmmind",
+  "p2": "move calmmind, move protect"
+ }
+}

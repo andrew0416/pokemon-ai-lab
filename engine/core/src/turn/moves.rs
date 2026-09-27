@@ -478,13 +478,8 @@ pub(crate) fn future_move_hit<const N: usize>(
         None => Some(AbsentUser::place(b, slot, source, id)?),
     };
     let user = on_field.unwrap_or_else(|| absent.as_ref().expect("placed").slot);
-    if b.item(slot) == items::RED_CARD {
-        return Err(b.unsupported(format!(
-            "{} hitting a holder of {}",
-            data.name,
-            b.item(slot).data().name
-        )));
-    }
+    // A Red Card on the target drags the (active) user out after the residual
+    // (`residual::residual` runs the phazing step): board R5b.
     b.remove_volatile(slot, Volatile::Protect);
     b.remove_volatile(slot, Volatile::Endure);
     // `if (data.source.hasAbility('normalize')) data.moveData.type = 'Normal';`
@@ -673,6 +668,7 @@ impl AbsentUser {
                 new: ItemId::NONE,
             });
         }
+        b.absent_user = Some(slot);
         Ok(AbsentUser {
             slot,
             source,
@@ -683,6 +679,7 @@ impl AbsentUser {
 
     /// The position and the user back as they were before [`AbsentUser::place`].
     fn remove<const N: usize>(self, b: &mut Battle<'_, N>) {
+        b.absent_user = None;
         let mut undo = Vec::new();
         super::diff::slot_changes(
             &mut undo,

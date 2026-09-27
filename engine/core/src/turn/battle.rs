@@ -219,6 +219,9 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// and what follows it in the same stage, or the `runSwitch` of a replacement batch or of a
     /// mid-turn switch batch requested after the residual). Cud Chew's `onEatItem` reads it.
     pub queue_done: bool,
+    /// The position a future move's benched user stands in for its hit (`moves::AbsentUser`):
+    /// inactive in Showdown (`source.isActive` is false), which Red Card checks.
+    pub absent_user: Option<SlotRef>,
     /// The move in progress is external (`move.isExternal`: Dancer's copy): no Pressure PP, and
     /// no Dancer after it.
     pub external_move: bool,
@@ -447,6 +450,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             awaiting_run_switch: false,
             unstarted: Vec::new(),
             queue_done: false,
+            absent_user: None,
             external_move: false,
             called_move: None,
             called_suspension: None,

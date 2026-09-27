@@ -137,6 +137,11 @@
    "board": "R5-future-move-edges",
    "fixture": "rr-future-sight-user-left",
    "what": "The benched (switched-out or fainted) user is seated in a position of its side for the hit only (`moves::AbsentUser`): a fresh slot (no stages or volatiles), its ability and item cleared (`ignoringAbility`/`ignoringItem` for an inactive Pokémon), everything restored after the hit (nothing the hit does to an inactive source lands). Also `uu-future-sight-user-left-item` (Twisted Spoon, Regenerator, a Calm Mind stage ignored) and `uu-future-sight-user-fainted` (fainted user, empty position)."
+  },
+  "{} hitting a holder of {}": {
+   "board": "R5-future-move-edges",
+   "fixture": "rr-future-sight-red-card",
+   "what": "Red Card's `onAfterMoveSecondary` flags the active user (`forceSwitchFlag`); `residual::residual` runs `runAction`'s phazing step after the residual action (before its `faintMessages`), which drags it out. A user hitting from the bench is not active: the card stays (`uu-future-sight-user-left-red-card`)."
   }
  },
  "entries": {
@@ -189,13 +194,6 @@
    "board": "R2-hazard-effect-order",
    "repro": "rr-hazard-order",
    "why": "Stealth Rock / Spikes with Toxic Spikes (or Sticky Web against Mirror Armor, Corviknight) on one side and a newcomer the damage can knock out: Showdown runs them in the order they were set (a Poison type knocked out first leaves the Toxic Spikes), which the state does not keep."
-  },
-  "{} hitting a holder of {}": {
-   "reachable": "yes",
-   "kind": "mechanic",
-   "board": "R5-future-move-edges",
-   "repro": "rr-future-sight-red-card",
-   "why": "Future Sight hitting a Red Card holder: the card drags the user out after the residual. (Eject Button ignores future moves and is no longer refused: fixed in this audit, `rr-future-sight-eject-button`.)"
   },
   "{}: a multi-hit future move": {
    "reachable": "no",

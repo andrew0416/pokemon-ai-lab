@@ -577,8 +577,10 @@ fn after_action<const N: usize>(
 /// hazards' grounding (Levitate) and the boosts there (Intimidate against Hyper Cutter, Sticky
 /// Web against Clear Body). The attacker Red Card drags out is no longer active once replaced,
 /// so its replacement is not affected.
-fn drag_outs<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), TurnError> {
-    let flagged = std::mem::take(&mut b.force_switch);
+pub(super) fn drag_outs<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), TurnError> {
+    let mut flagged = std::mem::take(&mut b.force_switch);
+    // `for (const side of this.sides) for (const pokemon of side.active)`: position order.
+    flagged.sort_by_key(|slot| (slot.side.index(), slot.slot));
     for slot in flagged {
         if b.alive(slot).is_some() {
             switching::drag_in(b, slot)?;

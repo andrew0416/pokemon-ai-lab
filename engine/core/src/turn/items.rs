@@ -1531,7 +1531,9 @@ pub(crate) fn after_move_secondary<const N: usize>(
         return;
     }
     if item == items::RED_CARD {
+        // `!source.isActive`: a future move's user hitting from the bench.
         if user == target
+            || b.absent_user == Some(user)
             || b.alive(user).is_none()
             || b.alive(target).is_none()
             || category == MoveCategory::Status

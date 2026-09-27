@@ -51,3 +51,16 @@ fn future_sight_after_its_user_left_ignores_its_item_and_stages() {
 fn future_sight_after_its_user_fainted() {
     assert_exact_parity("uu-future-sight-user-fainted");
 }
+
+/// Future Sight hits a Red Card holder: the card drags Slowking out after the residual (the
+/// phazing step of the residual action; board R5b).
+#[test]
+fn future_sight_on_a_red_card_holder() {
+    assert_exact_parity("rr-future-sight-red-card");
+}
+
+/// From the bench the user is not active: the Red Card stays unused.
+#[test]
+fn future_sight_from_the_bench_on_a_red_card_holder() {
+    assert_exact_parity("uu-future-sight-user-left-red-card");
+}
