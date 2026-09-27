@@ -165,6 +165,8 @@ D:/cargo-target/release/lab-check.exe <scenario.json> <oracle-report.json>   # �
 node engine/oracle/enumerate.cjs <scenario.json> --mode fixed --roll 7 --staged --out <report.json>   # 무거운 턴: 피해 난수 고정 + 단계별 열거(JJ); 엔진 쪽은 lab-turn --rolls fixed-7 / RollMode::Fixed(7)
 node engine/oracle/check-staged.cjs   # 단계별 열거가 plain fixture 전부와 같은 분포인지 재확인(오라클 스크립트를 고친 뒤)
 PYTHONUTF8=1 python engine/scripts/refusals.py --check   # 거부 목록(REFUSALS.md)과 분류가 소스와 맞는지; 거부를 더하거나 없앤 뒤
+python engine/scripts/parity_corpus.py check runs/parity-corpus-20260927 --jobs 2 --check D:/cargo-target/release/lab-check.exe --out runs/parity-corpus-20260927/check-<커밋>   # 실전 1,776국면 전수 재대조(약 10분; exit 0 = 전부 일치) — 턴 엔진을 고친 뒤
+python engine/scripts/parity_features.py runs/parity-corpus-20260927   # 말뭉치가 건드린 기술·특성·휘발 집계(features.md)
 PYTHONUTF8=1 .venv-doubles/Scripts/python.exe -m pytest engine/py/tests   # 파이썬 API(설치된 wheel 대상; 빌드는 engine/py/README.md)
 python engine/scripts/plan_sweep.py runs/plan-20260926 --rolls median --solve nash --exe D:/cargo-target/release/lab-plan.exe   # 실행 디렉터리의 *-vs-*.json 전부(시작 상태별) → out/, summary.<solve>.<rolls>.json
 D:/cargo-target/release/lab-plan.exe <scenario> --side p1 --position 1 --rolls median --plan "move hypnosis 1, move fakeout 2 / move hypervoice, move grassyglide 1"   # 고정 플랜 vs 최악 응수
