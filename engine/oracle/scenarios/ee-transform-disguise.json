@@ -1,0 +1,10 @@
+{
+ "description": "EE1: a transformed Pokemon ignores a `notransform` ability, and has its target's weight. Setup: Pelipper switches out for Ditto (Limber). The turn: Mimikyu Swords Dances, Ditto transforms into it and gets Disguise, but `ignoringAbility()` is true for a `notransform` ability while transformed; so Snorlax's Heavy Slam at its ally deals damage (Steel on Ghost/Fairy, 120 power against Mimikyu's 0.7 kg) instead of busting a disguise.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Heavy Slam", "Harden"], "level": 50}, {"species": "Ditto", "item": "", "ability": "Limber", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}, {"species": "Pelipper", "item": "", "ability": "Keen Eye", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "13"},
+ "p2": {"team": [{"species": "Mimikyu", "item": "", "ability": "Disguise", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}, {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "12"},
+ "setupTurns": [
+  ["move harden, switch 3", "move swordsdance, move harden"]
+ ],
+ "turn": {"p1": "move heavyslam -2, move transform 1", "p2": "move swordsdance, move harden"}
+}

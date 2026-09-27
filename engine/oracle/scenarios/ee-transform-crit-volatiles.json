@@ -1,0 +1,10 @@
+{
+ "description": "EE1: Transform's critical-hit volatiles. Setup: Pelipper switches out for Ditto (Limber), Dragonite's Dragon Cheer gives its ally Ditto `dragoncheer`, Garchomp uses Focus Energy. The turn: after Garchomp's Swords Dance, Ditto transforms into it: `transformInto` removes Ditto's Dragon Cheer (and Focus Energy, Laser Focus), then adds each one Garchomp has (Focus Energy), and copies its +2 Attack.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Dragonite", "item": "", "ability": "Inner Focus", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Dragon Cheer", "Harden"], "level": 50}, {"species": "Ditto", "item": "", "ability": "Limber", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}, {"species": "Pelipper", "item": "", "ability": "Keen Eye", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "13"},
+ "p2": {"team": [{"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Focus Energy", "Swords Dance"], "level": 50}, {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "12"},
+ "setupTurns": [
+  ["move dragoncheer -2, switch 3", "move focusenergy, move harden"]
+ ],
+ "turn": {"p1": "move harden, move transform 1", "p2": "move swordsdance, move harden"}
+}

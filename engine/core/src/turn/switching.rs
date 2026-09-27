@@ -555,6 +555,9 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
         &["onEnd", "onSwitchIn"],
         StartEffect::None,
     ),
+    // EE1 Imposter: no `onStart` (a `Start` does nothing); its `onSwitchIn` is
+    // `run_switch_in`'s (`transform::imposter`), so it acts only when its holder switches in.
+    (abilities::IMPOSTER, &["onSwitchIn"], StartEffect::None),
     // Opus U. Slow Start: `onStart` sets the counter, `onEnd` only logs (`end_ability` drops the
     // counter with the ability state); `onModifyAtk` / `onModifySpe` / `onResidual` in
     // `abilities` (`slow_start_halves`, `on_residual`).
@@ -1047,6 +1050,8 @@ pub(crate) fn run_switch_in<const N: usize>(
                 if b.ability_unless_broken(slot) == ability {
                     if ability == abilities::NEUTRALIZING_GAS {
                         super::abilities::neutralizing_gas_switch_in(b, slot);
+                    } else if ability == abilities::IMPOSTER {
+                        super::transform::imposter(b, slot)?;
                     } else {
                         start_ability(b, slot, ability)?;
                     }

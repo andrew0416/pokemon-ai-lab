@@ -123,6 +123,7 @@ pub fn build_pokemon(set: &TeamSet) -> Result<(Pokemon, MemberMeta), SetProblem>
         ability,
         base_ability: ability,
         moves,
+        transformed: None,
         gimmicks: structural_gimmicks(species, item),
         gigantamax_factor: false,
     };

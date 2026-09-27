@@ -1,0 +1,12 @@
+{
+ "description": "EE1: a transformed Ditto leaving and coming back. Setup turn 1: Ditto (Limber) transforms into Garchomp after its Swords Dance (Transform PP 12 -> 11, +2 Atk copied). Setup turn 2: it uses its copied Swords Dance (5 -> 4 PP). Setup turn 3: it switches out for Pelipper: clearVolatile restores the species, types, stored stats, ability and its own move slots (Transform at 11 PP), and the stages go. The turn: Ditto switches back in as a Ditto with its own moves; Garchomp's Swords Dance at +6 fails.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Ditto", "item": "", "ability": "Limber", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}, {"species": "Pelipper", "item": "", "ability": "Keen Eye", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "123"},
+ "p2": {"team": [{"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Swords Dance", "Dragon Claw"], "level": 50}, {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "12"},
+ "setupTurns": [
+  ["move harden, move transform 1", "move swordsdance, move harden"],
+  ["move harden, move swordsdance", "move swordsdance, move harden"],
+  ["move harden, switch 3", "move swordsdance, move harden"]
+ ],
+ "turn": {"p1": "move harden, switch 3", "p2": "move swordsdance, move harden"}
+}

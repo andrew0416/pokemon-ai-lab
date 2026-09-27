@@ -1,0 +1,11 @@
+{
+ "description": "EE1: a transformed Pokemon fainting reverts (`faintMessages` -> `clearVolatile`). Setup: Ditto (Limber) transforms into Garchomp; then (patch) Ditto is at 1 HP. The turn: Garchomp's Dragon Claw knocks the transformed Ditto out: it faints as a Ditto again, with its own move slots (Transform at 11 PP) and ability; p1 then has to replace it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}, {"species": "Ditto", "item": "", "ability": "Limber", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}, {"species": "Pelipper", "item": "", "ability": "Keen Eye", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "123"},
+ "p2": {"team": [{"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Swords Dance", "Dragon Claw"], "level": 50}, {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "12"},
+ "setupTurns": [
+  ["move harden, move transform 1", "move swordsdance, move harden"]
+ ],
+ "patch": {"p1": {"Ditto": {"hp": 1}}},
+ "turn": {"p1": "move harden, move swordsdance", "p2": "move dragonclaw 2, move harden"}
+}

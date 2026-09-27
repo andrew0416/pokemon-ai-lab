@@ -1,0 +1,10 @@
+{
+ "description": "EE1: Stance Change does nothing for a transformed Pokemon (`attacker.transformed`). Setup: Ditto (Limber, Choice Scarf: faster than Aegislash once transformed; the lock on Transform ends as it no longer knows it) transforms into Aegislash (Shield Forme) while Aegislash uses King's Shield. The turn: the transformed Ditto's copied Shadow Claw hits Garchomp from Aegislash's Shield Forme stats it copied (no Blade Forme), while Aegislash itself Swords Dances.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Ditto", "item": "Choice Scarf", "ability": "Limber", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}, {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "12"},
+ "p2": {"team": [{"species": "Aegislash", "item": "", "ability": "Stance Change", "nature": "Serious", "evs": {"hp": 32}, "moves": ["King's Shield", "Shadow Claw", "Swords Dance"], "level": 50}, {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "12"},
+ "setupTurns": [
+  ["move transform 1, move harden", "move kingsshield, move harden"]
+ ],
+ "turn": {"p1": "move shadowclaw 2, move harden", "p2": "move swordsdance, move harden"}
+}

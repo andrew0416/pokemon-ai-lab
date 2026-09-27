@@ -33,6 +33,7 @@ mod queue;
 mod residual;
 mod support;
 mod switching;
+mod transform;
 mod update;
 
 use std::collections::HashMap;

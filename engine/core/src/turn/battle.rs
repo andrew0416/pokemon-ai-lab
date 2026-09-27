@@ -106,11 +106,11 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// are not recorded, so positions that differ only in them merge (`history.rs`).
     pub history_readers: HistoryReaders,
     /// Pokémon whose species changed during the current action (Stance Change, Disguise, Mega
-    /// Evolution, ...): Showdown's `setSpecies` sets their `pokemon.speed` to the raw stored
-    /// Speed until the next `updateSpeed()`, which comes after the action
-    /// ([`Battle::event_speed`]). A stage is one action, so this starts empty with every stage;
-    /// a multi-hit move suspended between hits carries it in its `MoveProgress`.
-    pub raw_speed: Vec<PokemonRef>,
+    /// Evolution, Transform, ...) with the `pokemon.speed` Showdown's `setSpecies` gave them (the
+    /// raw stored Speed at that moment) until the next `updateSpeed()`, which comes after the
+    /// action ([`Battle::event_speed`]). A stage is one action, so this starts empty with every
+    /// stage; a multi-hit move suspended between hits carries it in its `MoveProgress`.
+    pub raw_speed: Vec<(PokemonRef, i32)>,
     /// Showdown `pokemon.speed` of each active at the start of this stage (`updateSpeed()`
     /// between actions, at the residual and at the turn start): the Speed that sorts event
     /// handlers for the rest of the action ([`Battle::event_speed`]). A newcomer of this stage
@@ -783,8 +783,10 @@ impl<'a, const N: usize> Battle<'a, N> {
             // `singleEvent('End', ability)`: Neutralizing Gas's `onEnd` (unless it already ran:
             // `abilityState.ending`) restarts the other abilities; it runs once the holder has
             // left below (at 0 HP it is in no target list, and its `ending` excludes it).
+            // A transformed holder's `onEnd` returns at once (`if (source.transformed) return`).
             let gas_ends = self.raw_ability(slot) == abilities::NEUTRALIZING_GAS
-                && !self.volatile(slot, Volatile::NeutralizingGasEnding).active;
+                && !self.volatile(slot, Volatile::NeutralizingGasEnding).active
+                && self.mon(pokemon).transformed.is_none();
             // Receiver / Power of Alchemy (`onAllyFaint`) take `target.getAbility()`, the one it
             // has before `clearVolatile` reverts it.
             let fainted_ability = self.raw_ability(slot);
@@ -840,7 +842,9 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// The party-side part of Showdown `clearVolatile` when a Pokémon leaves the field: the
     /// ability reverts to its base and `setSpecies(baseSpecies)` restores the species' types
     /// (a permanent forme stays: Champions never regresses one; a temporary forme returns to its
-    /// base species, `forme::revert_on_leave`). Slot state is reset by the caller's `Switch`.
+    /// base species, `forme::revert_on_leave`; a transformed Pokémon gets its base species and
+    /// own move slots back, `transform::revert_on_leave`). Slot state is reset by the caller's
+    /// `Switch`.
     pub fn clear_volatile(&mut self, pokemon: PokemonRef) {
         // `removeLinkedVolatiles` for its linked volatiles (Mean Look's `trapped` / `trapper`),
         // while it still holds its slot.
@@ -856,6 +860,7 @@ impl<'a, const N: usize> Battle<'a, N> {
                 new,
             });
         }
+        super::transform::revert_on_leave(self, pokemon);
         super::forme::revert_on_leave(self, pokemon);
         let mon = self.mon(pokemon);
         let species_types = mon.species.data().types;
@@ -1796,12 +1801,14 @@ impl<'a, const N: usize> Battle<'a, N> {
             return false;
         }
         // Booster Energy stays with a Paradox Pokémon (its `onTakeItem`).
-        if mon.item == items::BOOSTER_ENERGY && super::abilities::booster_energy_kept(mon.species) {
+        // (`source.baseSpecies`: a transformed holder's own species.)
+        let own = mon.untransformed_species();
+        if mon.item == items::BOOSTER_ENERGY && super::abilities::booster_energy_kept(own) {
             return false;
         }
         // Mega Stones: `onTakeItem(item, source) { return !item.megaStone?.[source.baseSpecies.baseSpecies]; }`
-        let base = mon.species.data().base_species;
-        let base = if base.is_none() { mon.species } else { base };
+        let base = own.data().base_species;
+        let base = if base.is_none() { own } else { base };
         !item.mega_stone.iter().any(|&(from, _)| from == base)
     }
 

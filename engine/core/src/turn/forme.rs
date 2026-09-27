@@ -412,8 +412,8 @@ pub(crate) fn ice_face_restore<const N: usize>(b: &mut Battle<'_, N>, slot: Slot
 
 // ---- Stance Change ----------------------------------------------------------------------------
 
-/// Stance Change's `onModifyMove` (priority 1) for the user in `user` using `id`: an Aegislash
-/// (`species.baseSpecies`) takes the Shield forme for King's Shield and the Blade forme for any
+/// Stance Change's `onModifyMove` (priority 1) for the user in `user` using `id`: an untransformed
+/// Aegislash (`species.baseSpecies`) takes the Shield forme for King's Shield and the Blade forme for any
 /// damaging move, temporarily (`formeChange(targetForme)`); other status moves change nothing.
 /// It runs in `useMoveInner`, so a move stopped in BeforeMove changes nothing, while a move
 /// called by Sleep Talk does.
@@ -421,7 +421,8 @@ pub(crate) fn stance_change<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef
     let Some(mon) = b.slot_mon(user) else {
         return;
     };
-    if mon.species.data().base_species != species::AEGISLASH {
+    // `attacker.species.baseSpecies !== 'Aegislash' || attacker.transformed`.
+    if mon.species.data().base_species != species::AEGISLASH || mon.transformed.is_some() {
         return;
     }
     let kings_shield = id == crate::dex::moves::KINGS_SHIELD;
@@ -449,7 +450,9 @@ pub(crate) fn on_switch_out<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef
     let Some(mon) = b.alive(slot).map(|p| b.mon(p)) else {
         return;
     };
+    // A transformed Palafin: `baseSpecies` is its own (and Zero to Hero is `notransform`).
     if mon.ability == abilities::ZERO_TO_HERO
+        && mon.transformed.is_none()
         && mon.species.data().base_species == species::PALAFIN
         && mon.species != species::PALAFIN_HERO
     {
@@ -466,7 +469,8 @@ fn schooling<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     let Some(mon) = b.alive(slot).map(|p| b.mon(p)) else {
         return;
     };
-    if mon.species.data().base_species != species::WISHIWASHI {
+    // `pokemon.transformed` returns too.
+    if mon.species.data().base_species != species::WISHIWASHI || mon.transformed.is_some() {
         return;
     }
     // `pokemon.hp > pokemon.maxhp / 4`.
@@ -487,7 +491,8 @@ fn shields_down<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> Result<
     let Some(mon) = b.alive(slot).map(|p| b.mon(p)) else {
         return Ok(());
     };
-    if mon.species.data().base_species != species::MINIOR {
+    // `pokemon.transformed` returns too.
+    if mon.species.data().base_species != species::MINIOR || mon.transformed.is_some() {
         return Ok(());
     }
     // `pokemon.hp > pokemon.maxhp / 2`.
@@ -509,8 +514,11 @@ fn shields_down<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> Result<
 /// Shields Down's `onSetStatus` (every status, from any source) and `onTryAddVolatile` (Yawn):
 /// whether the holder in `slot` is protected, i.e. is Minior-Meteor. Not breakable.
 pub(crate) fn shields_up<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
+    // `if (target.species.id !== 'miniormeteor' || target.transformed) return;`
     b.slot_mon(slot).is_some_and(|m| {
-        m.ability == abilities::SHIELDS_DOWN && m.species == species::MINIOR_METEOR
+        m.ability == abilities::SHIELDS_DOWN
+            && m.species == species::MINIOR_METEOR
+            && m.transformed.is_none()
     })
 }
 
@@ -543,14 +551,15 @@ fn hunger_switch<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
 /// the `battleOnly` forme) and `clearVolatile` (the volatiles go, `setSpecies(baseSpecies)`)
 /// give the same as [`revert_on_leave`].
 fn zen_mode<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
-    let Some((forme, hp, max_hp)) = b
+    let Some((forme, hp, max_hp, transformed)) = b
         .alive(slot)
         .map(|p| b.mon(p))
-        .map(|m| (m.species, m.hp, m.max_hp))
+        .map(|m| (m.species, m.hp, m.max_hp, m.transformed.is_some()))
     else {
         return;
     };
-    if forme.data().base_species != species::DARMANITAN {
+    // `pokemon.baseSpecies.baseSpecies !== 'Darmanitan' || pokemon.transformed`.
+    if forme.data().base_species != species::DARMANITAN || transformed {
         return;
     }
     let zen = [species::DARMANITAN_ZEN, species::DARMANITAN_GALAR_ZEN].contains(&forme);
@@ -612,8 +621,8 @@ pub(crate) fn residual<const N: usize>(
     Ok(())
 }
 
-/// Power Construct's `onResidual` (order 29; `cantsuppress`) for its holder in `slot`: a Zygarde
-/// (`baseSpecies.baseSpecies`; the engine has no Transform) with HP, not already Complete, at
+/// Power Construct's `onResidual` (order 29; `cantsuppress`) for its holder in `slot`: an
+/// untransformed Zygarde (`baseSpecies.baseSpecies`) with HP, not already Complete, at
 /// half its max HP or less becomes Zygarde-Complete for good (`formeChange('Zygarde-Complete',
 /// this.effect, true)`: stats, `updateMaxHp` keeping the HP lost so far, and the forme's
 /// ability — Power Construct again, which has no End or Start). Refused: a holder whose item
@@ -625,8 +634,10 @@ fn power_construct<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> Resu
     let Some((forme, hp, max_hp, item)) = b
         .alive(slot)
         .map(|p| b.mon(p))
+        .filter(|m| m.transformed.is_none())
         .map(|m| (m.species, m.hp, m.max_hp, m.item))
     else {
+        // `pokemon.transformed` returns too.
         return Ok(());
     };
     let base = forme.data().base_species;
@@ -673,11 +684,10 @@ fn mimicry<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
         Terrain::Grassy => [Type::Grass, Type::None],
         Terrain::Misty => [Type::Fairy, Type::None],
         Terrain::Psychic => [Type::Psychic, Type::None],
+        // `pokemon.baseSpecies.types`: a transformed Pokémon's own species (EE1).
         Terrain::None => {
-            temporary_forme_base(mon.species)
-                .unwrap_or(mon.species)
-                .data()
-                .types
+            let base = mon.untransformed_species();
+            temporary_forme_base(base).unwrap_or(base).data().types
         }
     };
     let num = mon.species.data().num;
@@ -752,7 +762,7 @@ pub(crate) fn weather_changed<const N: usize>(b: &mut Battle<'_, N>, slot: SlotR
 // ---- Forecast ---------------------------------------------------------------------------------
 
 /// Forecast's `onWeatherChange` for the Pokémon in `slot` (also run by its `onStart`; not
-/// breakable): a Castform (`baseSpecies.baseSpecies`; the engine has no Transform) takes the
+/// breakable): an untransformed Castform (`baseSpecies.baseSpecies`) takes the
 /// forme of `pokemon.effectiveWeather()` (the suppressors and its own Utility Umbrella hide the
 /// weather; the umbrella's own WeatherChange: `items::umbrella_end`): Castform-Sunny in sun,
 /// -Rainy in rain, -Snowy in snow, Castform otherwise — temporarily (`formeChange(forme,
@@ -763,6 +773,10 @@ pub(crate) fn forecast<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
         return;
     };
     let current = b.mon(pokemon).species;
+    // `pokemon.transformed` returns too.
+    if b.mon(pokemon).transformed.is_some() {
+        return;
+    }
     let castform = [
         species::CASTFORM,
         species::CASTFORM_SUNNY,
@@ -801,8 +815,10 @@ pub(crate) fn flower_gift<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, 
         b.ability(slot)
     };
     let current = b.mon(pokemon).species;
+    // `pokemon.transformed` returns too.
     if ability != abilities::FLOWER_GIFT
         || (current != species::CHERRIM && current != species::CHERRIM_SUNSHINE)
+        || b.mon(pokemon).transformed.is_some()
     {
         return;
     }
@@ -832,8 +848,11 @@ pub(crate) fn flower_gift_holders<const N: usize>(
         .into_iter()
         .filter(|&holder| {
             super::abilities::ability_for_move(b, holder, user, data) == abilities::FLOWER_GIFT
+                // `this.effectState.target.baseSpecies.baseSpecies !== 'Cherrim'`: a transformed
+                // holder's own species.
                 && b.slot_mon(holder).is_some_and(|m| {
-                    m.species == species::CHERRIM || m.species == species::CHERRIM_SUNSHINE
+                    let base = m.untransformed_species();
+                    base == species::CHERRIM || base == species::CHERRIM_SUNSHINE
                 })
         })
         .collect()

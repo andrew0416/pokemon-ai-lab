@@ -1,0 +1,11 @@
+{
+ "description": "EE1: Transform copies the real types of a roosting target and its added type. Setup turn 1: Snorlax's Night Shade takes 50 HP from Corviknight, Pelipper's Trick-or-Treat adds Ghost to it. Setup turn 2: Pelipper switches out for Ditto (Limber). The turn: Corviknight Roosts (Flying left out: it shows as Steel); Ditto's Transform takes `roost.typeWas` (Flying/Steel) and the added Ghost; so Hippowdon's High Horsepower (Ground) and Snorlax's Body Slam at its ally Ditto (Normal) both miss out on it (immune).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Night Shade", "Harden", "Body Slam"], "level": 50}, {"species": "Pelipper", "item": "", "ability": "Keen Eye", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Trick-or-Treat"], "level": 50}, {"species": "Ditto", "item": "", "ability": "Limber", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}], "order": "123"},
+ "p2": {"team": [{"species": "Corviknight", "item": "", "ability": "Mirror Armor", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Roost", "Bulk Up"], "level": 50}, {"species": "Hippowdon", "item": "", "ability": "Sand Force", "nature": "Serious", "evs": {"hp": 32}, "moves": ["High Horsepower", "Slack Off"], "level": 50}], "order": "12"},
+ "setupTurns": [
+  ["move nightshade 1, move trickortreat 1", "move bulkup, move slackoff"],
+  ["move harden, switch 3", "move bulkup, move slackoff"]
+ ],
+ "turn": {"p1": "move bodyslam -2, move transform 1", "p2": "move roost, move highhorsepower 2"}
+}

@@ -122,16 +122,20 @@ pub(crate) fn priority(orders: &[(&str, i16)], name: &str) -> i32 {
 // ---- ability suppression (Gastro Acid, Neutralizing Gas) ------------------------------------
 
 /// Showdown `pokemon.ignoringAbility()` for the Pokémon in `slot` (no occupant: `true`, an
-/// inactive Pokémon ignores its ability): a `cantsuppress` ability never is; the `gastroacid`
-/// volatile suppresses; otherwise an Ability Shield (the effective item) or holding Neutralizing
-/// Gas itself protects, and any active Pokémon with Neutralizing Gas (raw: `pokemon.ability`)
-/// that is neither Gastro Acid'd nor ending (`abilityState.ending`,
-/// [`Volatile::NeutralizingGasEnding`]) suppresses it, unless it is commanding. Transform is not
-/// modelled (its `notransform` branch never applies).
+/// inactive Pokémon ignores its ability): a transformed Pokémon ignores a `notransform` ability
+/// (Disguise, Ice Face, Neutralizing Gas, Protosynthesis, ...; EE1); a `cantsuppress` ability
+/// never is; the `gastroacid` volatile suppresses; otherwise an Ability Shield (the effective
+/// item) or holding Neutralizing Gas itself protects, and any active Pokémon with Neutralizing
+/// Gas (raw: `pokemon.ability`) that is neither Gastro Acid'd, transformed nor ending
+/// (`abilityState.ending`, [`Volatile::NeutralizingGasEnding`]) suppresses it, unless it is
+/// commanding.
 pub(crate) fn ignoring_ability<const N: usize>(state: &State<N>, slot: SlotRef) -> bool {
     let Some(mon) = state.active(slot) else {
         return true;
     };
+    if mon.transformed.is_some() && mon.ability.data().flags.contains(AbilityFlags::NOTRANSFORM) {
+        return true;
+    }
     let volatiles = &state.slot(slot).volatiles;
     let gastro_acid = volatiles.has(Volatile::GastroAcid);
     // The common case first: nothing on the field suppresses anything.
@@ -158,12 +162,12 @@ pub(crate) fn ignoring_ability<const N: usize>(state: &State<N>, slot: SlotRef) 
 
 /// Whether an active Pokémon (fainted or not, until its faint is processed) suppresses the
 /// others' abilities with Neutralizing Gas: `pokemon.ability === 'neutralizinggas' &&
-/// !pokemon.volatiles['gastroacid'] && !pokemon.abilityState.ending`.
+/// !pokemon.volatiles['gastroacid'] && !pokemon.transformed && !pokemon.abilityState.ending`.
 fn neutralizing_gas_on_field<const N: usize>(state: &State<N>) -> bool {
     State::<N>::slot_refs().any(|s| {
         state
             .active(s)
-            .is_some_and(|m| m.ability == abilities::NEUTRALIZING_GAS)
+            .is_some_and(|m| m.ability == abilities::NEUTRALIZING_GAS && m.transformed.is_none())
             && !state.slot(s).volatiles.has(Volatile::GastroAcid)
             && !state.slot(s).volatiles.has(Volatile::NeutralizingGasEnding)
     })
@@ -171,9 +175,10 @@ fn neutralizing_gas_on_field<const N: usize>(state: &State<N>) -> bool {
 
 /// Whether any ability can be suppressed in a stage from `state` on: a party member has
 /// Neutralizing Gas (its own or base ability: no effect gives it to another Pokémon, as it is
-/// `failskillswap`, `failroleplay`, `noentrain`, `notrace` and `noreceiver`), or a Gastro Acid
-/// volatile is up (one that lands during the stage sets the flag: [`gastro_acid_start`]). Only
-/// then does `Battle::ability` check.
+/// `failskillswap`, `failroleplay`, `noentrain`, `notrace` and `noreceiver`), a party member is
+/// transformed (a `notransform` ability is ignored; a Transform during the stage sets the flag:
+/// `transform::transform_into`), or a Gastro Acid volatile is up (one that lands during the stage
+/// sets the flag: [`gastro_acid_start`]). Only then does `Battle::ability` check.
 pub(crate) fn suppression_possible<const N: usize>(state: &State<N>) -> bool {
     let gas = state
         .sides
@@ -182,6 +187,7 @@ pub(crate) fn suppression_possible<const N: usize>(state: &State<N>) -> bool {
         .any(|m| {
             m.ability == abilities::NEUTRALIZING_GAS
                 || m.base_ability == abilities::NEUTRALIZING_GAS
+                || m.transformed.is_some()
         });
     gas || State::<N>::slot_refs().any(|s| state.slot(s).volatiles.has(Volatile::GastroAcid))
 }
@@ -219,6 +225,10 @@ pub(crate) fn neutralizing_gas_end<const N: usize>(
     b: &mut Battle<'_, N>,
     source: Option<SlotRef>,
 ) -> Result<(), super::TurnError> {
+    // `if (source.transformed) return;` (EE1).
+    if source.is_some_and(|s| b.slot_mon(s).is_some_and(|m| m.transformed.is_some())) {
+        return Ok(());
+    }
     let others: Vec<SlotRef> = State::<N>::slot_refs()
         .filter(|&s| Some(s) != source && b.occupant(s).is_some())
         .collect();
@@ -718,7 +728,7 @@ pub(crate) fn poison_puppeteer<const N: usize>(
     };
     let pecharunt = b
         .slot_mon(source)
-        .is_some_and(|m| base_species(m.species) == crate::dex::species::PECHARUNT);
+        .is_some_and(|m| base_species(m.untransformed_species()) == crate::dex::species::PECHARUNT);
     if pecharunt
         && b.ability(source) == abilities::POISON_PUPPETEER
         && matches!(status, Status::Poison | Status::Toxic)
@@ -1203,10 +1213,11 @@ pub(crate) fn commander_update<const N: usize>(b: &mut Battle<'_, N>, holder: Sl
         return;
     }
     let commanding = b.volatile(holder, Volatile::Commanding).active;
-    let tatsugiri = base_species(b.mon(pokemon).species) == species::TATSUGIRI;
+    // `baseSpecies`: a transformed Pokémon's own species.
+    let tatsugiri = base_species(b.mon(pokemon).untransformed_species()) == species::TATSUGIRI;
     let dondozo = ally.filter(|&a| {
         b.slot_mon(a)
-            .is_some_and(|m| base_species(m.species) == species::DONDOZO)
+            .is_some_and(|m| base_species(m.untransformed_species()) == species::DONDOZO)
     });
     let (true, Some(ally)) = (tatsugiri, dondozo) else {
         if commanding {
@@ -1447,7 +1458,7 @@ pub(crate) fn symbiosis<const N: usize>(b: &mut Battle<'_, N>, receiver: SlotRef
         }
         let taker = b.alive(receiver).filter(|&p| {
             let mon = b.mon(p);
-            let base = base_species(mon.species);
+            let base = base_species(mon.untransformed_species());
             mon.item.is_none()
                 && !item.data().cannot_be_taken
                 && !item.data().mega_stone.iter().any(|&(from, _)| from == base)
@@ -2142,7 +2153,9 @@ pub(crate) fn paradox_change<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRe
 /// Protosynthesis holder outside sun or a Quark Drive holder outside Electric Terrain uses the
 /// item (`useItem`: `lastItem`, Unburden), then `addVolatile` with `fromBooster`.
 pub(crate) fn booster_energy<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
-    if b.item(slot) != items::BOOSTER_ENERGY || b.alive(slot).is_none() {
+    // `if (!this.effectState.started || pokemon.transformed) return;`
+    let transformed = b.slot_mon(slot).is_some_and(|m| m.transformed.is_some());
+    if b.item(slot) != items::BOOSTER_ENERGY || b.alive(slot).is_none() || transformed {
         return;
     }
     let Some((volatile, holds)) = paradox(b, b.ability(slot)) else {
