@@ -1,5 +1,5 @@
 {
- "description": "R0 refusal repro (board R13): Snorlax's Attract on Umbreon, neither set with a gender (Showdown drew both at team creation; Attract works only between male and female). The engine refuses (`try_immunity_problem`).",
+ "description": "R0 refusal repro (board R13): Snorlax's Attract on Umbreon, neither set with a gender (Showdown drew both at team creation; Attract works only between male and female). The engine refuses (`try_immunity_problem`). [Since board R13b (Opus SS): genders decided in the initial distribution; the fixture is oracle/gender-mix.cjs's mixture over the 2^k assignments.]",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [

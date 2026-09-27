@@ -32,15 +32,41 @@ fn the_loader_resolves_gender() {
     assert_eq!(genders(SideId::Two), [Gender::Genderless, Gender::Female]);
 }
 
-/// A gender Showdown would draw at random is refused next to Rivalry.
+/// A gender Showdown would draw at random is decided in the initial distribution next to Rivalry
+/// (board R13b, SS: every assignment at 1/2^k); the engine still refuses to read one in a
+/// hand-made state.
 #[test]
-fn rivalry_with_an_undecided_gender_is_unsupported() {
+fn rivalry_with_an_undecided_gender() {
     let loaded =
         load_scenario_file(common::engine_dir().join("oracle/scenarios/s-rivalry-undecided.json"))
             .unwrap();
-    let position = scenario_positions(&loaded).unwrap().remove(0);
+    let positions = scenario_positions(&loaded).unwrap();
+    assert!(positions.len() > 1);
+    let position = positions[0].clone();
+    for side in &position.state.sides {
+        assert!(side
+            .party
+            .iter()
+            .all(|m| m.species.is_none() || m.gender != Gender::Random));
+    }
     let mut state = position.state.clone();
     let decision = scenario_decision(&loaded, &position).unwrap();
+    run_decision(&mut state, &decision).unwrap();
+
+    let mut state = position.state.clone();
+    let undecided = loaded
+        .state
+        .sides
+        .iter()
+        .enumerate()
+        .find_map(|(side, s)| {
+            s.party
+                .iter()
+                .position(|m| !m.species.is_none() && m.gender == Gender::Random)
+                .map(|party| (side, party))
+        })
+        .expect("an undecided set");
+    state.sides[undecided.0].party[undecided.1].gender = Gender::Random;
     match run_decision(&mut state, &decision) {
         Err(TurnError::Unsupported(what)) => assert!(what.contains("undecided gender"), "{what}"),
         other => panic!("expected Unsupported, got {other:?}"),

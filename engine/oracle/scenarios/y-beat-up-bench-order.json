@@ -1,5 +1,5 @@
 {
- "description": "Opus Y unit 3 Beat Up with two benched allies of different power (Clefable 12, Hariyama 18): their order in Showdown's side.pokemon is not in the engine state, so the move is refused (no oracle fixture).",
+ "description": "Opus Y unit 3 Beat Up with two benched allies of different power (Clefable 12, Hariyama 18): their order in Showdown's side.pokemon is not in the engine state, so the move is refused (no oracle fixture). [Since board R9 (Opus SS) the engine hits in Side::party_order instead of refusing.]",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [

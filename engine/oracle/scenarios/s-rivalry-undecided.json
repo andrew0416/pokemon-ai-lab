@@ -1,5 +1,5 @@
 {
- "description": "Unsupported (Opus S unit 8): Haxorus has Rivalry but no set gender, and its species has a gender ratio: Showdown draws its gender with the battle's PRNG, which the state does not know. No fixture.",
+ "description": "Unsupported (Opus S unit 8): Haxorus has Rivalry but no set gender, and its species has a gender ratio: Showdown draws its gender with the battle's PRNG, which the state does not know. No fixture. [Since board R13b (Opus SS) the initial distribution decides the gender (1/2 each).]",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [

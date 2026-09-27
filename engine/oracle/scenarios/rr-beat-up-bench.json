@@ -1,5 +1,5 @@
 {
- "description": "R0 refusal repro (board R9): Weavile's Beat Up with its paralysed ally out of it and two benched allies of different power (Garchomp 18, Clefable 12); Showdown hits in `side.pokemon` order (here the team order: no switch yet). The engine does not keep that order and refuses.",
+ "description": "R0 refusal repro (board R9): Weavile's Beat Up with its paralysed ally out of it and two benched allies of different power (Garchomp 18, Clefable 12); Showdown hits in `side.pokemon` order (here the team order: no switch yet). The engine does not keep that order and refuses. [Since board R9 (Opus SS): Side::party_order.]",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [
