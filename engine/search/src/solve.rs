@@ -1132,6 +1132,18 @@ fn deep_beams<const N: usize>(
     )
 }
 
+/// How many deep levels a decision inside the tree uses (board S24c): a turn one, a
+/// replacement or mid-turn switch none (a one-turn equilibrium already looks through it to the
+/// next turn). The one place the depth budget is counted, so a cost budget (a turn 1, a
+/// replacement a fraction, as PokaiTrainer grows its subgames) can replace the per-level
+/// lists later without touching the recursion.
+fn level_cost(decision: Decision) -> usize {
+    match decision {
+        Decision::Turn => 1,
+        Decision::MidTurn | Decision::Replacement | Decision::Over(_) => 0,
+    }
+}
+
 /// One level of a deep mixed analysis ([`Solver::analyse_deep_mixed_levels`], board S24c):
 /// how many choices of each side's shallow ranking enter the level's matrix (besides the
 /// shallow support, [`MIXED_SUPPORT`]) and how many of a pair's most probable outcomes are
@@ -1988,11 +2000,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             .flat_map(|&a| theirs.iter().map(move |&b| (a, b)))
             .map(|(a, b)| self.pair(a, b))
             .collect();
-        let rest = if decision == Decision::Turn {
-            &levels[1..]
-        } else {
-            levels
-        };
+        let rest = &levels[level_cost(decision).min(levels.len())..];
         let values = self.nash_cells(
             state,
             decision,
