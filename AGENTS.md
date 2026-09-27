@@ -95,3 +95,4 @@
 - 엔진 범위: Champions 모드(`vendor/pokemon-showdown` `data/mods/champions`, 커밋 9e317a6)에서 표준인 종·기술·특성·도구의 거부는 0이다(딧토 변신·임포스터, 조로아크 일루전 포함). `Past`·CAP·G맥스·LGPE·테라·다이맥스는 구현하지 않는다.
 - 검증: 손으로 만든 1턴 fixture 외에 실전 중반 국면 검증(`lab-parity` → `engine/scripts/parity_sweep.py` → `lab-check`)이 있다. 2026-09-27 측정은 691 국면 중 687 정확 일치, 불일치 4는 버그 3개로 수정됨(`runs/parity-20260927/README.md`). 비교하지 못한 범위(6만 분기 초과 턴, 압정·벽·대타·혼란·씨뿌리기 미등장)를 함께 적는다. '일치율'은 그 표본의 결과이며 엔진 전체의 증명이 아니다.
 - 파이썬에서 쓰려면 `engine/py`(`engine/py/README.md`): 더블만, 시나리오 로드·합법 선택·정확 분포·샘플·canonical JSON·평가·1턴 균형.
+- 남은 일의 정본은 prog 보드(`python D:/tools/prog/prog.py --project pokemon-ai-lab show`)다. 새 todo(에이전트 보고의 범위 밖·미확인·한계, 코드의 거부 사유 포함)는 발견 즉시 의존성(`depends_on`)과 함께 올리고, 사용자 결정이 필요한 것은 `prog block`으로 표시한다. 보드에 없는 일을 '남은 것 없음'으로 보고하지 않는다.
