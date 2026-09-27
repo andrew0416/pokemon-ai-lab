@@ -24,6 +24,9 @@ pub mod parity;
 pub mod switch_in;
 pub mod team;
 
+use std::collections::hash_map::DefaultHasher;
+use std::collections::HashMap;
+use std::hash::{Hash, Hasher};
 use std::path::Path;
 
 use serde_json::Value;
@@ -459,6 +462,10 @@ fn replay_setup_turns(
     for (n, turn) in loaded.setup_turns.iter().enumerate() {
         let pin = loaded.setup_states.get(n).and_then(|pin| pin.as_ref());
         let mut next: Vec<Position> = Vec::new();
+        // Equal (state, order) positions merge in first-reached order; the index finds the
+        // earlier one by hash instead of scanning `next` (Opus KK: a pinned setup turn with
+        // 37,686 outcomes spent 144 s in the scan).
+        let mut index: HashMap<u64, Vec<usize>> = HashMap::new();
         // Whether an outcome of this turn still waits for a mid-turn switch (board B29).
         let mut paused = false;
         for position in &positions {
@@ -504,13 +511,24 @@ fn replay_setup_turns(
                 let mut order = position.order.clone();
                 advance_order(&mut order, &outcome.instructions);
                 let p = position.probability * outcome.probability;
-                match next.iter_mut().find(|q| q.state == end && q.order == order) {
-                    Some(existing) => existing.probability += p,
-                    None => next.push(Position {
-                        probability: p,
-                        state: end,
-                        order,
-                    }),
+                let mut hasher = DefaultHasher::new();
+                end.hash(&mut hasher);
+                order.hash(&mut hasher);
+                let bucket = index.entry(hasher.finish()).or_default();
+                match bucket
+                    .iter()
+                    .copied()
+                    .find(|&i| next[i].state == end && next[i].order == order)
+                {
+                    Some(i) => next[i].probability += p,
+                    None => {
+                        bucket.push(next.len());
+                        next.push(Position {
+                            probability: p,
+                            state: end,
+                            order,
+                        });
+                    }
                 }
             }
         }
