@@ -32,12 +32,14 @@
 //! DESIGN.md "모델 ③·② 구현".
 //!                 [--threads n] [--plan "<turn 1> / <turn 2> / ..."]
 //!                 [--child-nash [--beam b] [--outcomes k]]
-//!                 [--stats] [--no-transposition] [--no-dominance]
+//!                 [--stats] [--no-transposition] [--no-dominance] [--full-children]
 //!
 //! `--stats` adds a line with the search's work (transposition-table hits, matrix games and
 //! their RM+ time, enumeration time summed over threads). `--no-transposition` and
 //! `--no-dominance` turn off the child-equilibrium table (S24a) and the dominance reduction of
-//! child matrix games (S24d), to check that they change nothing but the time.
+//! child matrix games (S24d), `--full-children` values every cell of every child game instead
+//! of double oracle over lazily valued cells (S24d), to check that they change nothing but the
+//! time (within the equilibrium solver's tolerance).
 //!
 //! `--plan` values a fixed sequence of our turn choices (Showdown choice strings parsed
 //! against the starting position; a turn whose choice is no longer legal falls back to
@@ -279,6 +281,7 @@ fn run() -> Result<(), String> {
             "--child-nash" => config.child_nash = true,
             "--no-transposition" => config.transposition = false,
             "--no-dominance" => config.dominance = false,
+            "--full-children" => config.double_oracle = false,
             "--beam" => {
                 i += 1;
                 config.reply_beam = Some(

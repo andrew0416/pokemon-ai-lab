@@ -100,6 +100,10 @@ pub struct Config {
     /// iteration. Root games keep the full matrix, so their reported strategies and the
     /// deep-nash beams taken from them do not change.
     pub dominance: bool,
+    /// Solve child matrix games by double oracle over lazily valued cells ([`LazyGame`],
+    /// board S24d): the value within the solver's tolerance from a fraction of the cells.
+    /// Off: every cell of every child is valued (`lab-plan --full-children`).
+    pub double_oracle: bool,
 }
 
 impl Config {
@@ -124,6 +128,7 @@ impl Config {
             outcome_cap: Some(4),
             transposition: true,
             dominance: true,
+            double_oracle: true,
         }
     }
 
@@ -727,6 +732,206 @@ fn cap_outcomes(mut outcomes: Vec<Outcome>, cap: Option<usize>) -> Vec<Outcome> 
     }
 }
 
+/// A lazy child game is valued in full once it has asked for more than this share of its
+/// cells (double oracle then saves little) or after [`LAZY_MAX_ROUNDS`] rounds.
+const LAZY_FULL_SHARE: f64 = 0.6;
+const LAZY_MAX_ROUNDS: usize = 64;
+/// Double oracle stops once the restricted equilibrium's exploitability in the full game is
+/// at most this (evaluation points; the full RM+ solve typically ends at 0.02–0.08), or when
+/// neither side's best response is new.
+const LAZY_TOLERANCE: f32 = 0.05;
+
+/// A child's matrix game (our choices × theirs) whose cells are valued on demand: double
+/// oracle (McMahan, Gordon & Blum 2003) over a restricted set of rows and columns that grows
+/// by the full game's best responses to the restricted equilibrium. Every row and column in
+/// the restricted set is valued in full, so the best responses — and the exploitability of
+/// the restricted equilibrium in the full game, which bounds the error of its value — are
+/// exact. On the bench's positions it values 11–17% of the cells of a full game with the
+/// value within 0.04 of the full solve (board S24d).
+struct LazyGame<const N: usize> {
+    ours: Vec<Choice<N>>,
+    theirs: Vec<Choice<N>>,
+    next_depth: u32,
+    known: Vec<Option<f32>>,
+    requested: Vec<bool>,
+    pending: Vec<usize>,
+    rows: Vec<usize>,
+    cols: Vec<usize>,
+    full: bool,
+    rounds: usize,
+    asked: usize,
+}
+
+/// What a lazy game does after a round.
+enum StepOutcome {
+    Value(f32),
+    Grow {
+        row: Option<usize>,
+        col: Option<usize>,
+    },
+    Full,
+}
+
+struct Step {
+    outcome: StepOutcome,
+    solved: Option<Equilibrium>,
+}
+
+impl<const N: usize> LazyGame<N> {
+    fn new(ours: Vec<Choice<N>>, theirs: Vec<Choice<N>>, next_depth: u32, full: bool) -> Self {
+        let cells = ours.len() * theirs.len();
+        let mut game = LazyGame {
+            ours,
+            theirs,
+            next_depth,
+            known: vec![None; cells],
+            requested: vec![false; cells],
+            pending: Vec::new(),
+            rows: Vec::new(),
+            cols: Vec::new(),
+            full: false,
+            rounds: 0,
+            asked: 0,
+        };
+        if full {
+            game.go_full();
+        } else {
+            game.grow(Some(0), Some(0));
+        }
+        game
+    }
+
+    fn request(&mut self, i: usize) {
+        if !self.requested[i] {
+            self.requested[i] = true;
+            self.pending.push(i);
+            self.asked += 1;
+        }
+    }
+
+    /// The cells asked for since the last call, in ascending order.
+    fn take_requests(&mut self) -> Vec<usize> {
+        let mut pending = std::mem::take(&mut self.pending);
+        pending.sort_unstable();
+        pending
+    }
+
+    /// Adds a row and/or a column to the restricted game and asks for all their cells.
+    fn grow(&mut self, row: Option<usize>, col: Option<usize>) {
+        let (n, m) = (self.ours.len(), self.theirs.len());
+        self.rounds += 1;
+        if let Some(r) = row {
+            self.rows.push(r);
+            for c in 0..m {
+                self.request(r * m + c);
+            }
+        }
+        if let Some(c) = col {
+            self.cols.push(c);
+            for r in 0..n {
+                self.request(r * m + c);
+            }
+        }
+        if self.asked as f64 > LAZY_FULL_SHARE * (n * m) as f64 || self.rounds > LAZY_MAX_ROUNDS {
+            self.go_full();
+        }
+    }
+
+    fn go_full(&mut self) {
+        self.full = true;
+        for i in 0..self.known.len() {
+            self.request(i);
+        }
+    }
+
+    /// The next step once every requested cell is known.
+    fn step(&self, dominance: bool) -> Step {
+        let m = self.theirs.len();
+        if self.full || self.known.iter().flatten().any(|v| v.is_nan()) {
+            if !self.full {
+                // An unevaluable pair: `drop_unevaluable` needs the whole matrix.
+                return Step {
+                    outcome: StepOutcome::Full,
+                    solved: None,
+                };
+            }
+            let values: Vec<f32> = self
+                .known
+                .iter()
+                .map(|v| v.expect("a full game knows every cell"))
+                .collect();
+            let (ours, theirs, values, _, _) =
+                drop_unevaluable(self.ours.clone(), self.theirs.clone(), values);
+            if ours.is_empty() || theirs.is_empty() {
+                return Step {
+                    outcome: StepOutcome::Value(f32::NAN),
+                    solved: None,
+                };
+            }
+            let matrix = Matrix::new(ours.len(), theirs.len(), values);
+            let eq = if dominance {
+                nash::solve_reduced(&matrix, 20_000, 0.01)
+            } else {
+                nash::solve(&matrix, 20_000, 0.01)
+            };
+            return Step {
+                outcome: StepOutcome::Value(eq.value),
+                solved: Some(eq),
+            };
+        }
+        let at = |r: usize, c: usize| self.known[r * m + c].expect("a restricted row or column");
+        let mut sub = Vec::with_capacity(self.rows.len() * self.cols.len());
+        for &r in &self.rows {
+            for &c in &self.cols {
+                sub.push(at(r, c));
+            }
+        }
+        let eq = nash::solve(
+            &Matrix::new(self.rows.len(), self.cols.len(), sub),
+            20_000,
+            0.001,
+        );
+        // Best responses in the full game: every row against their restricted strategy (the
+        // restricted columns are known in full), every column against ours.
+        let mut best_row = (0, f32::NEG_INFINITY);
+        for r in 0..self.ours.len() {
+            let v: f32 = self
+                .cols
+                .iter()
+                .zip(&eq.cols)
+                .map(|(&c, &p)| p * at(r, c))
+                .sum();
+            if v > best_row.1 {
+                best_row = (r, v);
+            }
+        }
+        let mut best_col = (0, f32::INFINITY);
+        for c in 0..m {
+            let v: f32 = self
+                .rows
+                .iter()
+                .zip(&eq.rows)
+                .map(|(&r, &p)| p * at(r, c))
+                .sum();
+            if v < best_col.1 {
+                best_col = (c, v);
+            }
+        }
+        let exploitability = best_row.1 - best_col.1;
+        let row = (!self.rows.contains(&best_row.0) && best_row.1 > eq.value).then_some(best_row.0);
+        let col = (!self.cols.contains(&best_col.0) && best_col.1 < eq.value).then_some(best_col.0);
+        let outcome = if exploitability <= LAZY_TOLERANCE || (row.is_none() && col.is_none()) {
+            StepOutcome::Value(eq.value)
+        } else {
+            StepOutcome::Grow { row, col }
+        };
+        Step {
+            outcome,
+            solved: Some(eq),
+        }
+    }
+}
+
 /// The root decision solved as a zero-sum matrix game over both sides' choices, each pair
 /// valued by the exact chance node below it (deeper nodes by maximin as in [`Analysis`]).
 #[derive(Clone, Debug, PartialEq)]
@@ -1208,107 +1413,126 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         Ok(out)
     }
 
-    /// Each child's one-turn equilibrium value ([`Solver::nash_value`] without the table):
-    /// the cells of all their matrices in one parallel batch, then their RM+ solves in
-    /// parallel. Results in job order; a child's error is its first failing cell's.
+    /// Each child's one-turn equilibrium value ([`Solver::nash_value`] without the table),
+    /// all children at once: their cells on the worker pool, their matrix games solved in
+    /// parallel. With [`Config::double_oracle`] a child's game is solved by double oracle over
+    /// lazily valued cells ([`LazyGame`]); otherwise (and for a child whose lazy game meets an
+    /// unevaluable cell or grows past [`LAZY_FULL_SHARE`] of its cells) every cell is valued.
+    /// Results in job order; a child's error is its first failing cell's.
     fn solve_children(&mut self, jobs: &[(usize, ChildJob<N>)]) -> Vec<Result<f32, SearchError>> {
-        type Prepared<const N: usize> = Result<(Vec<Choice<N>>, Vec<Choice<N>>, u32), SearchError>;
         let them = self.config.us.other();
-        let mut prepared: Vec<Prepared<N>> = Vec::with_capacity(jobs.len());
-        let mut tasks: Vec<(usize, usize)> = Vec::new();
-        for (j, (_, job)) in jobs.iter().enumerate() {
+        let mut games: Vec<Result<LazyGame<N>, SearchError>> = Vec::with_capacity(jobs.len());
+        for (_, job) in jobs {
             let choices = self
                 .choices(&job.state, job.decision, self.config.us)
                 .and_then(|ours| Ok((ours, self.choices(&job.state, job.decision, them)?)));
-            prepared.push(choices.map(|(ours, theirs)| {
-                tasks.extend((0..ours.len() * theirs.len()).map(|i| (j, i)));
+            games.push(choices.map(|(ours, theirs)| {
                 let next_depth = if job.decision == Decision::Turn { 0 } else { 1 };
-                (ours, theirs, next_depth)
+                LazyGame::new(ours, theirs, next_depth, !self.config.double_oracle)
             }));
         }
-        let config = self.config;
-        let evaluator = self.evaluator;
-        let prepared_ref = &prepared;
-        let outs = self.par_map(
-            &tasks,
-            HashMap::<usize, State<N>>::new,
-            |states, &(j, i)| {
-                let job = &jobs[j].1;
-                let (ours, theirs, next_depth) = prepared_ref[j]
-                    .as_ref()
-                    .expect("tasks come from prepared jobs");
-                let state = states.entry(j).or_insert_with(|| job.state.clone());
-                let mut local = Solver::new(config, evaluator);
-                let (a, b) = (ours[i / theirs.len()], theirs[i % theirs.len()]);
-                let pair = local.pair(a, b);
-                let value = local.chance(
-                    state,
-                    job.decision,
-                    job.suspension.as_ref(),
-                    pair,
-                    Next::Depth(*next_depth),
-                    f32::NEG_INFINITY,
-                    f32::INFINITY,
-                );
-                CellOut::from_solver(value, local)
-            },
-        );
-        let mut cells: Vec<Result<Vec<f32>, SearchError>> =
-            prepared.iter().map(|_| Ok(Vec::new())).collect();
-        for (&(j, _), out) in tasks.iter().zip(outs) {
-            self.absorb(&out);
-            if let Ok(values) = &mut cells[j] {
-                match out.value {
-                    Ok(v) => values.push(v),
-                    Err(e) => cells[j] = Err(e),
+        let mut results: Vec<Option<Result<f32, SearchError>>> = games
+            .iter()
+            .map(|g| g.as_ref().err().map(|e| Err(e.clone())))
+            .collect();
+        loop {
+            // The cells every open game asks for this round, valued in one batch.
+            let mut tasks: Vec<(usize, usize)> = Vec::new();
+            for (j, game) in games.iter_mut().enumerate() {
+                if results[j].is_some() {
+                    continue;
+                }
+                if let Ok(game) = game {
+                    tasks.extend(game.take_requests().into_iter().map(|i| (j, i)));
+                }
+            }
+            if tasks.is_empty() {
+                break;
+            }
+            let values = self.child_cells(jobs, &games, &tasks);
+            for (&(j, i), value) in tasks.iter().zip(values) {
+                if results[j].is_some() {
+                    continue;
+                }
+                match value {
+                    Ok(v) => {
+                        if let Ok(game) = &mut games[j] {
+                            game.known[i] = Some(v);
+                        }
+                    }
+                    Err(e) => results[j] = Some(Err(e)),
+                }
+            }
+            // Each open game's next step, in parallel: its restricted equilibrium and best
+            // responses (double oracle), or its full game once every cell is known.
+            let open: Vec<usize> = (0..games.len()).filter(|&j| results[j].is_none()).collect();
+            let dominance = self.config.dominance;
+            let games_ref = &games;
+            let steps = self.par_map(
+                &open,
+                || (),
+                |_, &j| {
+                    let game = games_ref[j].as_ref().expect("open games are prepared");
+                    let started = Instant::now();
+                    let step = game.step(dominance);
+                    (step, started.elapsed().as_secs_f64())
+                },
+            );
+            for (&j, (step, seconds)) in open.iter().zip(steps) {
+                let game = games[j].as_mut().expect("open games are prepared");
+                if let Some(eq) = &step.solved {
+                    self.stats.nash_solves += 1;
+                    self.stats.nash_iterations += eq.iterations as u64;
+                }
+                self.stats.nash_seconds += seconds;
+                match step.outcome {
+                    StepOutcome::Value(v) => results[j] = Some(Ok(v)),
+                    StepOutcome::Grow { row, col } => game.grow(row, col),
+                    StepOutcome::Full => game.go_full(),
                 }
             }
         }
-        // The matrix games, solved in parallel.
-        let games: Vec<Result<Option<Matrix>, SearchError>> = prepared
+        results
             .into_iter()
-            .zip(cells)
-            .map(|(prep, cells)| {
-                let (ours, theirs, _) = prep?;
-                let values = cells?;
-                let (ours, theirs, values, _, _) = drop_unevaluable(ours, theirs, values);
-                Ok(if ours.is_empty() || theirs.is_empty() {
-                    None
-                } else {
-                    Some(Matrix::new(ours.len(), theirs.len(), values))
-                })
-            })
-            .collect();
-        let dominance = self.config.dominance;
-        let solved = self.par_map(
-            &games,
-            || (),
-            |_, game| match game {
-                Ok(Some(matrix)) => {
-                    let started = Instant::now();
-                    let eq = if dominance {
-                        nash::solve_reduced(matrix, 20_000, 0.01)
-                    } else {
-                        nash::solve(matrix, 20_000, 0.01)
-                    };
-                    Ok(Some((eq, started.elapsed().as_secs_f64())))
-                }
-                Ok(None) => Ok(None),
-                Err(e) => Err(e.clone()),
-            },
-        );
-        solved
-            .into_iter()
-            .map(|r| {
-                r.map(|solved| match solved {
-                    Some((eq, seconds)) => {
-                        self.stats.nash_solves += 1;
-                        self.stats.nash_iterations += eq.iterations as u64;
-                        self.stats.nash_seconds += seconds;
-                        eq.value
-                    }
-                    None => f32::NAN,
-                })
+            .map(|r| r.expect("every child game ends with a value or an error"))
+            .collect()
+    }
+
+    /// Values child cells `(job, cell)` on the pool, merging the workers' counters in task
+    /// order.
+    fn child_cells(
+        &mut self,
+        jobs: &[(usize, ChildJob<N>)],
+        games: &[Result<LazyGame<N>, SearchError>],
+        tasks: &[(usize, usize)],
+    ) -> Vec<Result<f32, SearchError>> {
+        let config = self.config;
+        let evaluator = self.evaluator;
+        let outs = self.par_map(tasks, HashMap::<usize, State<N>>::new, |states, &(j, i)| {
+            let job = &jobs[j].1;
+            let game = games[j].as_ref().expect("tasks come from prepared games");
+            let state = states.entry(j).or_insert_with(|| job.state.clone());
+            let mut local = Solver::new(config, evaluator);
+            let (a, b) = (
+                game.ours[i / game.theirs.len()],
+                game.theirs[i % game.theirs.len()],
+            );
+            let pair = local.pair(a, b);
+            let value = local.chance(
+                state,
+                job.decision,
+                job.suspension.as_ref(),
+                pair,
+                Next::Depth(game.next_depth),
+                f32::NEG_INFINITY,
+                f32::INFINITY,
+            );
+            CellOut::from_solver(value, local)
+        });
+        outs.into_iter()
+            .map(|out| {
+                self.absorb(&out);
+                out.value
             })
             .collect()
     }
