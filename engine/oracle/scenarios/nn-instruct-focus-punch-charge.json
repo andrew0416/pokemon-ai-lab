@@ -1,0 +1,81 @@
+{
+ "description": "B34 (Opus NN): Snorlax used Curse in the setup turn. In the decision turn it chooses Focus Punch (its `priorityChargeMove` starts the `focuspunch` condition before the moves), and Oranguru instructs it first: Instruct fails on a target with `focuspunch` (or `beakblast`, `shelltrap`) whatever its last move, so Curse is not repeated; then Focus Punch hits Umbreon.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Oranguru",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Instruct",
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Focus Punch",
+     "Curse"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move calmmind, move curse",
+   "move calmmind, move calmmind"
+  ]
+ ],
+ "turn": {
+  "p1": "move instruct -2, move focuspunch 1",
+  "p2": "move calmmind, move calmmind"
+ }
+}

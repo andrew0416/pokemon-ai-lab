@@ -3193,7 +3193,9 @@ pub(super) fn on_hit<const N: usize>(
 }
 
 /// Instruct `onHit`: the target repeats its last move right away. It fails without a last move,
-/// or when that move has `failinstruct`, `charge` or `recharge`, is a Z- or Max move, or its
+/// or when that move has `failinstruct`, `charge` or `recharge`, is a Z- or Max move, while the
+/// target charges Focus Punch, Beak Blast or Shell Trap (`target.volatiles['focuspunch']` ...,
+/// whatever its last move: B34, oracle `nn-instruct-focus-punch-charge`), or when the move's
 /// slot has no PP (a last move the target does not know, one Copycat called and locked it into,
 /// passes this check); otherwise a move action for it goes to the front of the queue
 /// (`queue.prioritizeAction(queue.resolveAction(...))`: order 3) and runs as a full `runMove`
@@ -3224,7 +3226,14 @@ fn instruct<const N: usize>(
         || data.flags.contains(MoveFlags::CHARGE)
         || data.flags.contains(MoveFlags::RECHARGE)
         || data.is_z
-        || data.is_max;
+        || data.is_max
+        || [
+            Volatile::BeakBlast,
+            Volatile::FocusPunch,
+            Volatile::ShellTrap,
+        ]
+        .into_iter()
+        .any(|v| b.volatile(target, v).active);
     if blocked {
         return Ok(HitResult::Failure);
     }

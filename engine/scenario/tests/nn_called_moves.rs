@@ -84,6 +84,13 @@ fn instruct_chilly_reception_runs_only_its_charge_callback() {
     assert_exact_parity("nn-instruct-chilly-reception");
 }
 
+/// Instruct on Snorlax while it charges Focus Punch (B34): Instruct fails on a target with the
+/// `focuspunch` condition, so its last move (Curse) is not repeated.
+#[test]
+fn instruct_fails_on_a_focus_punch_charge() {
+    assert_exact_parity("nn-instruct-focus-punch-charge");
+}
+
 /// Copycat calls Uproar (setup): Umbreon keeps Uproar's `uproar` volatile, whose `onLockMove`
 /// locks it into a move it does not know (the engine rejected that choice before).
 #[test]
