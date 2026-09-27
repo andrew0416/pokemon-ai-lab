@@ -49,6 +49,6 @@ pub use choice::{format_choice, format_switches, Choice};
 pub use game::{decision, legal_choices, transitions, Decision, Pruning};
 pub use nash::{Equilibrium, Matrix};
 pub use solve::{
-    Analysis, BestResponse, Chance, ChildValues, Config, DeepAnalysis, DeepLine, DeepMixedAnalysis,
-    Line, MixedAnalysis, PlanReport, SearchError, Solver, MIXED_SUPPORT, WIN,
+    Analysis, BestResponse, Chance, ChildValues, Config, DeepAnalysis, DeepLevel, DeepLine,
+    DeepMixedAnalysis, Line, MixedAnalysis, PlanReport, SearchError, Solver, MIXED_SUPPORT, WIN,
 };
