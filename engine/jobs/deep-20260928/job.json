@@ -1,0 +1,9 @@
+{
+  "solve": "deep-nash",
+  "rolls": "median",
+  "side": "p1",
+  "leads": "fixed",
+  "extra": "--beam 4 --outcomes 4",
+  "timeout_minutes": "300",
+  "note": "engine test case (Gardevoir vs Starmie leads); values are evaluation scores, not verdicts. Local reference: sand-owen deep-nash beam 4 = 3.5 min on 6 cores."
+}

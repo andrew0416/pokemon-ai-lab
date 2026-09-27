@@ -6,6 +6,10 @@
 name: search
 
 on:
+  # engine/jobs/<job>/job.json 이 바뀌어 푸시되면 그 잡을 job.json 의 인자로 자동 실행한다(버튼 불필요).
+  push:
+    paths:
+      - "engine/jobs/*/job.json"
   workflow_dispatch:
     inputs:
       job:
@@ -42,17 +46,36 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     outputs:
-      scenarios: ${{ steps.list.outputs.scenarios }}
+      matrix: ${{ steps.list.outputs.matrix }}
+      params: ${{ steps.list.outputs.params }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - id: list
         run: |
           python3 - <<'EOF' >> "$GITHUB_OUTPUT"
-          import json, pathlib, os
-          job = "${{ inputs.job }}"; only = "${{ inputs.only }}"
-          files = sorted(p.name for p in pathlib.Path("engine/jobs", job).glob("*-vs-*.json") if only in p.name)
-          assert files, f"no *-vs-*.json in engine/jobs/{job}"
-          print("scenarios=" + json.dumps(files))
+          import json, pathlib, subprocess
+          event = "${{ github.event_name }}"
+          defaults = {"solve": "nash", "rolls": "median", "side": "p1", "leads": "fixed", "extra": "", "only": "", "timeout_minutes": "300"}
+          if event == "workflow_dispatch":
+              jobs = ["${{ inputs.job }}"]
+              inputs = {"solve": "${{ inputs.solve }}", "rolls": "${{ inputs.rolls }}", "side": "${{ inputs.side }}",
+                        "leads": "${{ inputs.leads }}", "extra": "${{ inputs.extra }}", "only": "${{ inputs.only }}",
+                        "timeout_minutes": "${{ inputs.timeout_minutes }}"}
+              params = {j: {**defaults, **{k: v for k, v in inputs.items() if v}} for j in jobs}
+          else:
+              changed = subprocess.check_output(["git", "diff", "--name-only", "${{ github.event.before }}", "${{ github.sha }}"], text=True).split()
+              jobs = sorted({pathlib.Path(c).parent.name for c in changed if c.startswith("engine/jobs/") and c.endswith("/job.json") and pathlib.Path(c).exists()})
+              params = {j: {**defaults, **json.load(open(f"engine/jobs/{j}/job.json"))} for j in jobs}
+          include = []
+          for j in jobs:
+              only = params[j]["only"]
+              files = sorted(p.name for p in pathlib.Path("engine/jobs", j).glob("*-vs-*.json") if only in p.name)
+              assert files, f"no *-vs-*.json in engine/jobs/{j}"
+              include += [{"job": j, "scenario": f} for f in files]
+          print("matrix=" + json.dumps({"include": include}))
+          print("params=" + json.dumps(params))
           EOF
 
   plan:
@@ -62,8 +85,15 @@ jobs:
     strategy:
       fail-fast: false
       max-parallel: 20
-      matrix:
-        scenario: ${{ fromJSON(needs.prepare.outputs.scenarios) }}
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    env:
+      JOB: ${{ matrix.job }}
+      SOLVE: ${{ fromJSON(needs.prepare.outputs.params)[matrix.job].solve }}
+      ROLLS: ${{ fromJSON(needs.prepare.outputs.params)[matrix.job].rolls }}
+      SIDE: ${{ fromJSON(needs.prepare.outputs.params)[matrix.job].side }}
+      LEADS: ${{ fromJSON(needs.prepare.outputs.params)[matrix.job].leads }}
+      EXTRA: ${{ fromJSON(needs.prepare.outputs.params)[matrix.job].extra }}
+      TIMEOUT_MINUTES: ${{ fromJSON(needs.prepare.outputs.params)[matrix.job].timeout_minutes }}
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -80,22 +110,17 @@ jobs:
           nproc; lscpu | grep -i "model name" || true
       - name: run
         run: |
-          python3 engine/scripts/plan_sweep.py "engine/jobs/${{ inputs.job }}" \
-            --exe engine/target/release/lab-plan \
-            --solve "${{ inputs.solve }}" --rolls "${{ inputs.rolls }}" --side "${{ inputs.side }}" \
-            --leads "${{ inputs.leads }}" --only "${{ matrix.scenario }}" \
-            --timeout $(( ${{ fromJSON(inputs.timeout_minutes) }} * 60 - 600 )) \
-            --extra "${{ inputs.extra }}"
+          python3 engine/scripts/plan_sweep.py "engine/jobs/$JOB"             --exe engine/target/release/lab-plan             --solve "$SOLVE" --rolls "$ROLLS" --side "$SIDE"             --leads "$LEADS" --only "${{ matrix.scenario }}"             --timeout $(( TIMEOUT_MINUTES * 60 - 600 ))             --extra "$EXTRA"
       - name: record provenance
         run: |
           python3 - <<'EOF'
           import json, subprocess, os, platform
-          job = "engine/jobs/${{ inputs.job }}"
+          job = "engine/jobs/" + os.environ["JOB"]
           meta = {
             "commit": subprocess.check_output(["git","rev-parse","HEAD"], text=True).strip(),
-            "scenario": "${{ matrix.scenario }}",
-            "solve": "${{ inputs.solve }}", "rolls": "${{ inputs.rolls }}", "side": "${{ inputs.side }}",
-            "leads": "${{ inputs.leads }}", "extra": "${{ inputs.extra }}",
+            "job": os.environ["JOB"], "scenario": "${{ matrix.scenario }}",
+            "solve": os.environ["SOLVE"], "rolls": os.environ["ROLLS"], "side": os.environ["SIDE"],
+            "leads": os.environ["LEADS"], "extra": os.environ["EXTRA"],
             "runner": platform.platform(), "cpus": os.cpu_count(),
             "run_id": "${{ github.run_id }}", "run_attempt": "${{ github.run_attempt }}",
           }
@@ -104,11 +129,11 @@ jobs:
           EOF
       - uses: actions/upload-artifact@v4
         with:
-          name: plan-${{ matrix.scenario }}
+          name: plan-${{ matrix.job }}-${{ matrix.scenario }}
           path: |
-            engine/jobs/${{ inputs.job }}/out/**
-            engine/jobs/${{ inputs.job }}/leads/**
-            engine/jobs/${{ inputs.job }}/summary.*.json
+            engine/jobs/${{ matrix.job }}/out/**
+            engine/jobs/${{ matrix.job }}/leads/**
+            engine/jobs/${{ matrix.job }}/summary.*.json
           if-no-files-found: error
 
   collect:
@@ -125,5 +150,5 @@ jobs:
         run: python3 engine/scripts/actions_job.py merge artifacts merged
       - uses: actions/upload-artifact@v4
         with:
-          name: summary-${{ inputs.job }}-${{ inputs.solve }}-${{ inputs.rolls }}
+          name: summary-${{ github.run_number }}
           path: merged

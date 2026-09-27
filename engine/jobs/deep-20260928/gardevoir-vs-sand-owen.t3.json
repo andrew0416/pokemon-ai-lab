@@ -1,0 +1,22 @@
+{
+ "description": "gardevoir-braverilla (Gardevoir + Rillaboom lead, Milotic + Sableye back) vs library sand-owen (Tyranitar + Excadrill lead, Salamence + Indeedee back), VGC Reg M-C. Two turns played (setup): turn 1 Hyper Voice + Mega and Fake Out on Excadrill vs Rock Slide + Mega and Protect; turn 2 Protect and Grassy Glide on Excadrill vs Rock Slide and Iron Head on Gardevoir; the decision is turn 3. Demo of lab-plan --observed-turn (opponent model 2 over two turns); the turn-2 choices are illustrative, not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "team": "../../../teams/rillaboom-slot-20260920/gardevoir-braverilla.json",
+  "order": "3521"
+ },
+ "p2": {
+  "team": "../../../teams/library/doubles/m-c/sand-owen/team.json",
+  "order": "5612"
+ },
+ "setupTurns": [
+  [
+   "move hypervoice mega, move fakeout 2",
+   "move rockslide mega, move protect"
+  ],
+  [
+   "move protect, move grassyglide 2",
+   "move rockslide, move ironhead 1"
+  ]
+ ]
+}

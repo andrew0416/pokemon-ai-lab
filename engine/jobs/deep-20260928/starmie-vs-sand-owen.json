@@ -1,0 +1,12 @@
+{
+ "description": "starmie-braverilla (Starmie + Rillaboom lead, Milotic + Sableye back) vs library sand-owen (Tyranitar + Excadrill lead, Salamence + Indeedee back), VGC Reg M-C, turn 1. Team files are the repository's (referenced).",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "team": "../../../teams/rillaboom-slot-20260920/starmie-braverilla.json",
+  "order": "3521"
+ },
+ "p2": {
+  "team": "../../../teams/library/doubles/m-c/sand-owen/team.json",
+  "order": "5612"
+ }
+}
