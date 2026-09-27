@@ -1,5 +1,5 @@
 {
- "description": "Sableye's Prankster Quash sends Rillaboom's Grassy Glide (+1 on Grassy Terrain) to the back of the turn, so Tyranitar's Stone Edge hits Rillaboom first. Excadrill Protects.",
+ "description": "Quash on a target that has already moved fails (`queue.willMove(target)` is null; board B37 corrected this description): Rillaboom's Grassy Glide (+1 on Grassy Terrain, Speed 94) goes before Sableye's Prankster Quash (+1, Speed 70) and hits Tyranitar, so the Quash has no action left to send back and fails; then Tyranitar's Stone Edge hits Rillaboom. Excadrill Protects. Quash that does move its target's action to the back (order 201) is `ll-staged-quash-order`.",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [
