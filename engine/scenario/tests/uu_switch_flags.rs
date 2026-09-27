@@ -64,3 +64,16 @@ fn future_sight_on_a_red_card_holder() {
 fn future_sight_from_the_bench_on_a_red_card_holder() {
     assert_exact_parity("uu-future-sight-user-left-red-card");
 }
+
+/// Copycat calls U-turn after Scizor's U-turn, both into Protect: nobody switches. The called
+/// move's `selfSwitch` does not leak into Copycat's own `runMoveEffects` tail (board B41).
+#[test]
+fn copycat_calling_a_blocked_u_turn_does_not_switch() {
+    assert_exact_parity("uu-copycat-uturn-protected");
+}
+
+/// The same with both U-turns hitting: each user switches out (Togekiss by its called U-turn).
+#[test]
+fn copycat_calling_u_turn_switches() {
+    assert_exact_parity("uu-copycat-uturn-hits");
+}

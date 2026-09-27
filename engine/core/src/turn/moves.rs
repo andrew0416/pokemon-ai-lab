@@ -769,6 +769,8 @@ fn finish_called<const N: usize>(
         main_target,
     } = frame;
     let mut caller = progress.mv.clone();
+    // The caller's own `move.selfSwitch` again (see `call_move`).
+    b.move_self_switch = caller.self_switch;
     let user = handlers::current_slot(b, user, pokemon);
     let ok = match hit_loop_rest(b, user, &caller, progress, results, false)? {
         HitOutcome::Finished { ok, total_damage } => {
@@ -1823,6 +1825,9 @@ fn call_move<const N: usize>(
         None => get_random_target(b, user, data.target),
     };
     let will_act = b.will_act();
+    // `move.selfSwitch` belongs to each move object: the called move's (U-turn's) must not be
+    // read back by the caller's own `runMoveEffects` tail (board B41, `uu-copycat-uturn-protected`).
+    let caller_self_switch = b.move_self_switch;
     if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
         if ![moves::COPYCAT, moves::SLEEP_TALK].contains(&caller.id) {
             return Err(b.unsupported(format!(
@@ -1833,6 +1838,7 @@ fn call_move<const N: usize>(
         b.called_suspension = Some(progress);
         return Ok(());
     }
+    b.move_self_switch = caller_self_switch;
     // It stays the active move: the caller's AfterMove sees it (`run_move_tail`).
     b.called_move = Some(mv);
     Ok(())
