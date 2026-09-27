@@ -1,5 +1,5 @@
 {
- "description": "O35 refused case (no fixture): Sleep Talk could call Bullet Seed, a multi-hit move that would suspend Sleep Talk's own hit, which the engine does not model.",
+ "description": "O35: a sleeping Garchomp's Sleep Talk calls Bullet Seed (2-5 hits) at a random foe; the called move's later hits are stages of Sleep Talk's action (refused until R14, Opus NN; extremes fixture).",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [

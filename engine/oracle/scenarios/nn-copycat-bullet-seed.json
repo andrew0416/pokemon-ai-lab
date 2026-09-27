@@ -1,0 +1,74 @@
+{
+ "description": "R14 (Opus NN): Breloom's Bullet Seed into Snorlax's Protect, then the slower Umbreon's Copycat calls Bullet Seed (2-5 hits, 35/35/15/15) at a random foe (Breloom or Clefable): each hit of the called move is a stage; after the last, the called move's tail, Copycat's hit-loop tail and AfterMove (battle lastMove Bullet Seed). Extremes fixture (the exact distribution multiplies up to five damage rolls in one action).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Copycat",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Breloom",
+    "item": "",
+    "ability": "Poison Heal",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Bullet Seed",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move copycat, move protect",
+  "p2": "move bulletseed 2, move calmmind"
+ }
+}

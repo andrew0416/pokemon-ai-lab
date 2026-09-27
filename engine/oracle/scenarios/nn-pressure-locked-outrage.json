@@ -1,0 +1,80 @@
+{
+ "description": "R21 (Opus NN): Garchomp's Outrage (setup turn) locks it; in the decision turn its locked Outrage aims at a random foe, Clefable or Mewtwo (Pressure), both protecting. Showdown's runMove passes the lockedmove condition as the source effect of a locked move, which has no PP, so Pressure takes no extra PP on a locked turn (the engine charged it).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Rough Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Outrage",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Mewtwo",
+    "item": "",
+    "ability": "Pressure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move outrage, move curse",
+   "move calmmind, move calmmind"
+  ]
+ ],
+ "turn": {
+  "p1": "move outrage 1, move curse",
+  "p2": "move protect, move protect"
+ }
+}

@@ -18,6 +18,42 @@
   "R22-forced-eat-ignored-item": "Teatime / Stuff Cheeks (eatItem(true)) for a holder that ignores its item (Klutz, Magic Room): the Eat event is skipped, the berry still goes and EatItem still runs; eat_item_forced also never runs EatItem (Cheek Pouch, Cud Chew, Ripen), unverified."
  },
  "fixed": {
+  "Instruct repeating {} (its lastMoveTargetLoc is not kept)": {
+   "board": "R6-instruct", "fixture": "rr-instruct-target",
+   "what": "`Slot::last_move_target_loc` (`Instruction::SetLastMoveTargetLoc`, hidden, recorded while an Instruct is in a party) keeps `moveUsed`'s target location; the instructed action aims at it (also `o38-instruct-target`)."
+  },
+  "Instruct on a Quick Claw holder": {
+   "board": "R6-instruct", "fixture": "rr-instruct-quick-claw",
+   "what": "Quick Claw's fractional priority is drawn again for the instructed action (see Quick Draw)."
+  },
+  "Instruct on a Quick Draw holder": {
+   "board": "R6-instruct", "fixture": "rr-instruct-quick-draw",
+   "what": "Instruct's `resolveAction` runs `FractionalPriority` for the new action (Quick Draw, Quick Claw, Custap Berry, the constants) as the turn's first stage does."
+  },
+  "Instruct repeating {}, which the target does not know": {
+   "board": "R6-instruct", "fixture": "nn-instruct-called-raging-fury",
+   "what": "A last move outside the slots became reachable with R21 (Copycat calling Raging Fury, which is not `failinstruct`, locks its user into it). The instructed action holds the move id: `runMove` spends no PP while the user is locked and fails with `cant nopp` otherwise (`deductPP` finds no slot)."
+  },
+  "Encore replacing a queued action with {} (a callback action it would queue)": {
+   "board": "R8-encore-edges", "fixture": "rr-encore-counter",
+   "what": "The Champions Encore's `changeAction` also queues the encored move's `beforeTurnMove` (Counter, Mirror Coat) or `priorityChargeMove` (Focus Punch, Beak Blast, Chilly Reception) action, which runs next (`Battle::encore_change_action`; `nn-encore-counter-hit`, `nn-encore-focus-punch-hit`, `nn-encore-beak-blast-hit`); the new action's target is drawn when it is queued. `Battle::refused` (FF) and its `stage_end_check` forward are gone."
+  },
+  "Sleep Talk calling {} (a multi-hit move)": {
+   "board": "R14-called-multi-hit", "fixture": "rr-sleep-talk-multihit",
+   "what": "A multi-hit move Copycat or Sleep Talk calls suspends after its first hit like a chosen one; the caller's hit loop stops after its `spreadMoveHit` (`moves::CallerFrame` in the called move's `MoveProgress`) and, once the called hits and `useMoveInner` tail are done, goes on with its hit-loop tail, its own `useMoveInner` tail and AfterMove with the called move active (`moves::finish_called`; `nn-sleep-talk-double-hit-life-orb`, `nn-copycat-bullet-seed`, `rr-copycat-multihit`)."
+  },
+  "a two-turn move": {
+   "board": "R21-copycat-called-moves", "fixture": "rr-copycat-two-turn",
+   "what": "Copycat calling a charge move: `twoturnmove` starts aimed at the drawn target (`getLocOf(defender)` for a called move, `handlers::charge_try_move`) and the second turn runs the locked move the user does not know, without PP (`nn-copycat-solar-beam-lock`)."
+  },
+  "a lock on the called move": {
+   "board": "R21-copycat-called-moves", "fixture": "rr-copycat-outrage",
+   "what": "Copycat calling Outrage, Petal Dance, Thrash, Raging Fury (or Uproar, which was let through and then rejected as an unknown locked move): the caller's user is locked into the called move, which its next actions run without PP (`ActionKind::Move` holds `action.moveid`; `lock::queued_move_id`; `nn-copycat-outrage-lock`, `nn-copycat-uproar-lock`)."
+  },
+  "queue actions of its own": {
+   "board": "R21-copycat-called-moves", "fixture": "rr-copycat-mirror-coat",
+   "what": "Copycat calling Mirror Coat or Chilly Reception: a called move queues no action (`useMove` resolves none), so Mirror Coat fails in `onTry` without its condition and Chilly Reception needs none."
+  },
   "{}: no PP left when used": {
    "board": "R15-no-pp-when-used", "fixture": "rr-spite-no-pp",
    "what": "Spite / Eerie Spell taking the last PP after the choice: now Showdown's `cant ... nopp` (the move fails, no `lastMove`, no MoveAborted) in `moves::run_move_inner`."
@@ -44,6 +80,10 @@
   }
  },
  "entries": {
+  "a Rollout lock on the called move": {
+   "reachable": "no", "kind": "past-only", "board": "R21-copycat-called-moves",
+   "why": "Rollout and Ice Ball are not standard (E8); the target location their lock keeps for a called move is unverified."
+  },
   "{}: ability {} ({})": {
    "reachable": "no", "kind": "static", "board": "R1-trace-seeking",
    "why": "`check_state`, `mega_target` and `switch_in_problem` refuse an ability `ability_supported_on_field` rejects; every standard ability is supported on the field (E1), Trace too since R1 (its seeking `onUpdate` is `switching::trace_update`), so neither a Trace Mega (Alakazam-Mega, both Meowstic Megas) nor a Trace that never started is refused."
@@ -92,37 +132,9 @@
    "reachable": "no", "kind": "invariant", "board": "R5-future-move-edges",
    "why": "The hit loop suspends only between hits of a multi-hit move. The only standard future move is Future Sight (one hit; Doom Desire is not standard, E8), and Parental Bond skips `futuremove` moves."
   },
-  "Instruct repeating {} (its lastMoveTargetLoc is not kept)": {
-   "reachable": "yes", "kind": "mechanic", "board": "R6-instruct", "repro": "rr-instruct-target",
-   "why": "Instruct (Oranguru) on a Pokémon whose last move takes a target (any single-target move): Showdown repeats it at `lastMoveTargetLoc`, which the state does not keep."
-  },
-  "Instruct on a Quick Claw holder": {
-   "reachable": "yes", "kind": "mechanic", "board": "R6-instruct", "repro": "rr-instruct-quick-claw",
-   "why": "Quick Claw is standard; `resolveAction` draws its fractional priority again for the instructed action."
-  },
-  "Instruct on a Quick Draw holder": {
-   "reachable": "yes", "kind": "mechanic", "board": "R6-instruct", "repro": "rr-instruct-quick-draw",
-   "why": "Quick Draw (Slowbro-Galar) is standard; a non-status instructed move draws it again."
-  },
-  "Instruct repeating {}, which the target does not know": {
-   "reachable": "no", "kind": "invariant", "board": "R6-instruct",
-   "why": "Showdown sets `lastMove` only in `runMove` (not for called moves), so a last move outside the move slots is Struggle or Transform; both are `failinstruct` (E11), which now fails Instruct before the slot lookup (fixed in this audit: `rr-instruct-struggle`)."
-  },
   "{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)": {
    "reachable": "yes", "kind": "mechanic", "board": "R7-ally-switch-target", "repro": "rr-ally-switch-snipe-shot",
    "why": "Ally Switch (standard) swaps the side a Snipe Shot (Inteleon) or a Stalwart holder's move (Archaludon, Mega Skarmory) aims at; Showdown keeps the original target, which the queue does not hold."
-  },
-  "Encore replacing a queued action with {} (a callback action it would queue)": {
-   "reachable": "yes", "kind": "mechanic", "board": "R8-encore-edges", "repro": "rr-encore-counter",
-   "why": "The Champions Encore replaces the target's queued action (`queue.changeAction`); an encored Counter, Mirror Coat, Focus Punch, Beak Blast or Chilly Reception (none `failencore`, E10) queues its callback action too."
-  },
-  "stage_end_check: -> what.clone()": {
-   "reachable": "yes", "kind": "forward", "board": "R8-encore-edges", "repro": "rr-encore-counter",
-   "why": "Forwards `Battle::refused`, set only by the Encore message above."
-  },
-  "Encore into a move the user no longer has": {
-   "reachable": "no", "kind": "invariant", "board": "R8-encore-edges",
-   "why": "Move slots change only through Transform (refused while encored; Encore is `noCopy` and ends on switching) and Mimic / Sketch (not standard, E8), so an encored move stays in the slots."
   },
   "Transform by an encored Pokémon (the encored move leaves the move slots)": {
    "reachable": "no", "kind": "invariant", "board": "R8-encore-edges",
@@ -177,16 +189,12 @@
    "why": "Symbiosis part: every standard item moves (E3). Rivalry part: the Rivalry holder is on the field before Skill Swap runs, so `check_state` (at the turn start) or `switch_in_problem` (on its switch-in) already refused an undecided gender."
   },
   "{} called by {}: a multi-hit called move": {
-   "reachable": "yes", "kind": "mechanic", "board": "R14-called-multi-hit", "repro": "rr-copycat-multihit",
-   "why": "Copycat calling one of the 14 standard multi-hit moves (Double Hit, Bullet Seed, Scale Shot, Population Bomb, ...): the hits of a called move cannot suspend between stages. (Sleep Talk is refused earlier, below.)"
-  },
-  "Sleep Talk calling {} (a multi-hit move)": {
-   "reachable": "yes", "kind": "mechanic", "board": "R14-called-multi-hit", "repro": "rr-sleep-talk-multihit",
-   "why": "Choosing Sleep Talk with a multi-hit move in the slots (none is `nosleeptalk`)."
+   "reachable": "no", "kind": "past-only", "board": "R14-called-multi-hit",
+   "why": "Copycat's and Sleep Talk's called multi-hit moves suspend between their hits (the caller waits in `CallerFrame`; fixed: `rr-copycat-multihit`, `nn-copycat-bullet-seed`); only Mirror Move, which calls from `onTryHit` and is not standard (E8), is still refused."
   },
   "check_side: -> why": {
-   "reachable": "yes", "kind": "forward", "board": "R14-called-multi-hit", "repro": "rr-sleep-talk-multihit",
-   "why": "Forwards `move_unsupported` (Struggle, the chosen move: E1) and `sleep_talk_problem` (reachable: multi-hit)."
+   "reachable": "no", "kind": "forward", "board": "R14-called-multi-hit",
+   "why": "Forwards `move_unsupported` (Struggle, the chosen move: E1) and `sleep_talk_problem`, whose remaining messages are unreachable (`Sleep Talk could call {}`: E1; an unchecked onAfterMove: E12). The multi-hit one is fixed (`rr-sleep-talk-multihit`)."
   },
   "Sleep Talk calling {} (its onAfterMove, unchecked for a called move)": {
    "reachable": "no", "kind": "static", "board": "R14-called-multi-hit",
@@ -197,24 +205,12 @@
    "why": "Forwards the static gate for the user's own moves: no standard move is refused (E1)."
   },
   "Copycat calling {}": {
-   "reachable": "yes", "kind": "mechanic", "board": "R21-copycat-called-moves", "repro": "rr-copycat-two-turn",
-   "why": "Copycat (standard) calling the last move used in the battle: a two-turn move (Solar Beam, Fly, Dig, Dive, ...; `rr-copycat-two-turn`), a locking move (Outrage, Petal Dance, Thrash, Raging Fury; `rr-copycat-outrage`) or one with its own queued action (Mirror Coat, Chilly Reception are not `failcopycat`; `rr-copycat-mirror-coat`)."
+   "reachable": "no", "kind": "static", "board": "R21-copycat-called-moves",
+   "why": "Copycat (standard) calls `battle.lastMove`, and `called_move_problem` refuses no standard move any more: `move_unsupported` refuses none (E1), Rollout and Ice Ball are not standard (E8), and Beak Blast, the one standard move with an onAfterMove unchecked for a called move, is `failcopycat` (E12). Called two-turn, locking and queue-action moves run (fixed: `rr-copycat-two-turn`, `rr-copycat-outrage`, `rr-copycat-mirror-coat`)."
   },
   "{} ({})": {
-   "reachable": "yes", "kind": "forward", "board": "R21-copycat-called-moves", "repro": "rr-copycat-two-turn",
-   "why": "`called_move_problem`'s wrapper of its reasons (the move and why)."
-  },
-  "a two-turn move": {
-   "reachable": "yes", "kind": "mechanic", "board": "R21-copycat-called-moves", "repro": "rr-copycat-two-turn",
-   "why": "Copycat calling a standard charge move (10 of them, none `failcopycat`)."
-  },
-  "a lock on the called move": {
-   "reachable": "yes", "kind": "mechanic", "board": "R21-copycat-called-moves", "repro": "rr-copycat-outrage",
-   "why": "Copycat calling Outrage, Petal Dance, Thrash or Raging Fury (`lockedmove`)."
-  },
-  "queue actions of its own": {
-   "reachable": "yes", "kind": "mechanic", "board": "R21-copycat-called-moves", "repro": "rr-copycat-mirror-coat",
-   "why": "Copycat calling Mirror Coat or Chilly Reception (Counter, Focus Punch and Beak Blast are `failcopycat`, E10)."
+   "reachable": "no", "kind": "forward", "board": "R21-copycat-called-moves",
+   "why": "`called_move_problem`'s wrapper of its reasons (the move and why); none of them is reachable (see `Copycat calling {}`)."
   },
   "its onAfterMove, unchecked for a called move": {
    "reachable": "no", "kind": "static", "board": "R21-copycat-called-moves",

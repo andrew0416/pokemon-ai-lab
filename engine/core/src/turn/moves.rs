@@ -246,6 +246,26 @@ pub(crate) struct MoveProgress {
     /// Showdown `move.smartTarget` still on when the hits start (Dragon Darts with both of its
     /// smart targets left): hit `n` strikes `targets[n - 1]` alone, and `targets` keeps both.
     smart: bool,
+    /// For a move another move called (Copycat, Sleep Talk: `useMove` from its `onHit`), the
+    /// calling move, which waits for the called move's hits: [`finish_called`].
+    caller: Option<Box<CallerFrame>>,
+}
+
+/// A calling move (Copycat, Sleep Talk) stopped right after the `spreadMoveHit` of its one hit,
+/// whose `onHit` called a multi-hit move that suspended between its hits (R14). Once the called
+/// move's hits and its `useMoveInner` tail are done, the caller's hit loop goes on from there
+/// ([`hit_loop_rest`]), then its own `useMoveInner` tail and `runMove`'s AfterMove with the
+/// called move as the active move. What the caller's `spreadMoveHit` still did after its `onHit`
+/// (the target's Hit event, `self` and secondary effects of a self-targeting status move with
+/// none) did nothing and ran before the suspension.
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+pub(crate) struct CallerFrame {
+    /// The caller's hit loop after its hit (`mv` is the calling move).
+    progress: MoveProgress,
+    /// That hit's results.
+    results: Vec<Hit>,
+    /// The caller's main target (`use_move` sets it as the suspension passes).
+    main_target: SlotRef,
 }
 
 /// How far a move got: finished, or suspended before its next hit.
@@ -262,7 +282,7 @@ enum HitOutcome {
 }
 
 /// Per-target result of a hit (Showdown's `damage[i]`: a number, `true`, or `false`).
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 enum Hit {
     Failed,
     /// Hit without damage (status moves).
@@ -310,21 +330,22 @@ enum LastHit {
     Blocked,
 }
 
-/// Showdown `runMove` for the move in `move_index`. `will_act` is `queue.willAct()`. A
-/// multi-hit move returns `MoveStep::Suspended` after its first hit; the turn engine resumes
-/// it with [`resume_move`] as its own stage. `round_source`: the action's source effect is a
+/// Showdown `runMove` for the queued move `id` (`action.moveid`; `MoveId::NONE` is the `recharge`
+/// pseudo-move). `will_act` is `queue.willAct()`. A multi-hit move returns
+/// `MoveStep::Suspended` after its first hit; the turn engine resumes it with [`resume_move`] as
+/// its own stage. `round_source`: the action's source effect is a
 /// Round that moved it up (`queue::ActionKind::Move::round_source`).
 pub(crate) fn run_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
-    move_index: u8,
+    id: MoveId,
     target_loc: i8,
     will_act: bool,
     round_source: Option<bool>,
 ) -> Result<MoveStep, TurnError> {
     let pokemon = b.occupant(user).expect("the caller checked the user");
     b.increment_move_actions(user);
-    if move_index == super::lock::RECHARGE_INDEX {
+    if id.is_none() {
         // The `recharge` pseudo-move: BeforeMove (`mustrecharge`, priority 11) ends it.
         let recharge = ActiveMove {
             id: MoveId::NONE,
@@ -359,7 +380,6 @@ pub(crate) fn run_move<const N: usize>(
         conditions::destiny_bond_before_move(b, user, MoveId::NONE, false);
         return Ok(MoveStep::Done);
     }
-    let id = super::lock::action_move_id(b.mon(pokemon), move_index);
     // `setActiveMove`: set for the whole move. A Round's source effect gives the move that
     // Round's `ignoreAbility` (`useMoveInner`: `move.ignoreAbility =
     // sourceEffect.ignoreAbility`; the user's own Mold Breaker can still set it in ModifyMove).
@@ -375,7 +395,7 @@ pub(crate) fn run_move<const N: usize>(
     // A finished move leaves its active move set (none after a failure's
     // `clearActiveMove(true)`): Showdown clears it with `runAction`'s `clearActiveMove()`, after
     // the phazing step, which the turn engine runs next (`drag_outs`, Opus DD unit B26).
-    let result = run_move_inner(b, user, move_index, target_loc, will_act, round_source);
+    let result = run_move_inner(b, user, id, target_loc, will_act, round_source);
     if result.is_err() {
         b.active_move = None;
     }
@@ -388,17 +408,11 @@ pub(crate) fn has_before_turn_callback(id: MoveId) -> bool {
     handlers::before_turn_volatile(id).is_some()
 }
 
-/// Showdown `runAction('beforeTurnMove')` for the move in `move_index` of the Pokémon at `user`
-/// (the caller checked it is active and not fainted): `getTarget` (a scripted move's random
-/// foe: never `null` in a battle that goes on, and it does not matter otherwise), then the
-/// move's `beforeTurnCallback`: Counter and Mirror Coat add their condition.
-pub(crate) fn before_turn_move<const N: usize>(
-    b: &mut Battle<'_, N>,
-    user: SlotRef,
-    move_index: u8,
-) {
-    let pokemon = b.occupant(user).expect("the caller checked the user");
-    let id = super::lock::action_move_id(b.mon(pokemon), move_index);
+/// Showdown `runAction('beforeTurnMove')` for the move `id` of the Pokémon at `user` (the caller
+/// checked it is active and not fainted): `getTarget` (a scripted move's random foe: never
+/// `null` in a battle that goes on, and it does not matter otherwise), then the move's
+/// `beforeTurnCallback`: Counter and Mirror Coat add their condition.
+pub(crate) fn before_turn_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, id: MoveId) {
     if let Some(volatile) = handlers::before_turn_volatile(id) {
         b.add_volatile(user, volatile);
     }
@@ -410,17 +424,14 @@ pub(crate) fn has_priority_charge_callback(id: MoveId) -> bool {
     handlers::priority_charge_volatile(id).is_some()
 }
 
-/// Showdown `runAction('priorityChargeMove')` for the move in `move_index` of the Pokémon at
-/// `user` (the caller checked it is active and not fainted): the move's
-/// `priorityChargeCallback` adds its condition (`focuspunch`, `beakblast`, `shelltrap`), whatever
-/// the user's status.
+/// Showdown `runAction('priorityChargeMove')` for the move `id` of the Pokémon at `user` (the
+/// caller checked it is active and not fainted): the move's `priorityChargeCallback` adds its
+/// condition (`focuspunch`, `beakblast`, `shelltrap`), whatever the user's status.
 pub(crate) fn priority_charge_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
-    move_index: u8,
+    id: MoveId,
 ) {
-    let pokemon = b.occupant(user).expect("the caller checked the user");
-    let id = super::lock::action_move_id(b.mon(pokemon), move_index);
     if let Some(volatile) = handlers::priority_charge_volatile(id) {
         b.add_volatile(user, volatile);
     }
@@ -548,9 +559,14 @@ pub(crate) fn resume_move<const N: usize>(
     });
     b.raw_speed = progress.raw_speed.clone();
     b.speed_snapshot = progress.speed_snapshot.clone();
+    let mut progress = progress;
+    let caller = progress.caller.take();
     let mut mv = progress.mv.clone();
     let result = match hit_loop(b, user, &mv, Some(progress))? {
-        HitOutcome::Suspended(progress) => return Ok(MoveStep::Suspended(progress)),
+        HitOutcome::Suspended(mut progress) => {
+            progress.caller = caller;
+            return Ok(MoveStep::Suspended(progress));
+        }
         HitOutcome::Finished { ok, total_damage } => {
             mv.total_damage = total_damage;
             if !ok {
@@ -559,6 +575,10 @@ pub(crate) fn resume_move<const N: usize>(
             ok
         }
     };
+    if let Some(frame) = caller {
+        finish_called(b, user, pokemon, mv, result, main_target, *frame)?;
+        return Ok(MoveStep::Done);
+    }
     b.finish_move_result(user, result);
     use_move_tail(b, user, &mv, result, main_target)?;
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
@@ -568,6 +588,57 @@ pub(crate) fn resume_move<const N: usize>(
     // The active move itself stays set through the phazing step (`drag_outs`), which clears it.
     b.record_battle_last_move(mv.id);
     Ok(MoveStep::Done)
+}
+
+/// The rest of a calling move's action (Copycat, Sleep Talk) once the multi-hit move it called is
+/// done (R14): the called move's `useMove` ends (its result, its `useMoveInner` tail: Life Orb,
+/// Shell Bell, `selfBoost`), the caller's `onHit` returns and its hit loop goes on after its hit
+/// ([`hit_loop_rest`]: the Update, `faintMessages`, AfterMoveSecondary and Emergency Exit on its
+/// target, the user), its own `useMove` ends, then `runMove`'s AfterMove with the called move as
+/// the active move (`battle.lastMove`). No PP, and the user's `lastMove` is the caller's.
+fn finish_called<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    pokemon: PokemonRef,
+    called: ActiveMove,
+    result: bool,
+    called_target: SlotRef,
+    frame: CallerFrame,
+) -> Result<(), TurnError> {
+    // The called move's `useMove`, after its hits (as `use_move`).
+    let user = handlers::current_slot(b, user, pokemon);
+    b.finish_move_result(user, result);
+    b.active_target = Some((called_target, result));
+    use_move_tail(b, user, &called, result, called_target)?;
+    // The caller's hit loop, then its `useMove`.
+    let CallerFrame {
+        progress,
+        results,
+        main_target,
+    } = frame;
+    let mut caller = progress.mv.clone();
+    let user = handlers::current_slot(b, user, pokemon);
+    let ok = match hit_loop_rest(b, user, &caller, progress, results, false)? {
+        HitOutcome::Finished { ok, total_damage } => {
+            caller.total_damage = total_damage;
+            if !ok {
+                caller.hit_targets = 0;
+            }
+            ok
+        }
+        HitOutcome::Suspended(_) => unreachable!("a calling move hits once"),
+    };
+    let user = handlers::current_slot(b, user, pokemon);
+    b.finish_move_result(user, ok);
+    b.active_target = Some((main_target, ok));
+    use_move_tail(b, user, &caller, ok, main_target)?;
+    // `runMove`: `if (this.battle.activeMove) move = this.battle.activeMove;` — the AfterMove
+    // events see the called move, which the action's `clearActiveMove()` makes
+    // `battle.lastMove`.
+    handlers::on_after_move(b, user, pokemon, &called);
+    run_move_tail(b, user, &called)?;
+    b.record_battle_last_move(called.id);
+    Ok(())
 }
 
 /// The end of Showdown `runMove` after `useMove`: `AfterMove` (a locked move on its last
@@ -744,31 +815,24 @@ fn run_external_move<const N: usize>(
 fn run_move_inner<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
-    move_index: u8,
+    chosen: MoveId,
     target_loc: i8,
     will_act: bool,
     round_source: Option<bool>,
 ) -> Result<MoveStep, TurnError> {
     let pokemon = b.occupant(user).expect("the caller checked the user");
-    let chosen = super::lock::action_move_id(b.mon(pokemon), move_index);
     // OverrideAction (Encore, not for Struggle): the encored move replaces the chosen one,
     // keeping the chosen move's priority and Prankster boost; its target is drawn afresh. Under
     // Champions an Encore that starts while the action is queued has already replaced the
     // action itself (`Battle::encore_change_action`), so this only remains for a Mental Herb
     // holder and for actions chosen while already encored.
     let encore = b.volatile(user, Volatile::Encore);
-    let struggle = move_index == super::lock::STRUGGLE_INDEX;
-    let (id, move_index, target) = if !struggle && encore.active && encore.mv != chosen {
-        let index = b
-            .mon(pokemon)
-            .moves
-            .iter()
-            .position(|m| m.id == encore.mv)
-            .ok_or_else(|| b.unsupported("Encore into a move the user no longer has"))?;
+    let struggle = chosen == moves::STRUGGLE;
+    let (id, target) = if !struggle && encore.active && encore.mv != chosen {
         let target = get_random_target(b, user, encore.mv.data().target);
-        (encore.mv, index as u8, target)
+        (encore.mv, target)
     } else {
-        (chosen, move_index, get_target(b, user, chosen, target_loc))
+        (chosen, get_target(b, user, chosen, target_loc))
     };
     let mut mv = ActiveMove {
         id,
@@ -837,19 +901,26 @@ fn run_move_inner<const N: usize>(
         return Ok(MoveStep::Done);
     }
 
-    // A locked move (Outrage's later turns) costs no PP, nor does Struggle (`deductPP` finds no
+    // A locked move (Outrage's later turns, a two-turn move's second turn, also one Copycat
+    // called that the user does not know) costs no PP, nor does Struggle (`deductPP` finds no
     // slot, and Struggle goes on anyway).
     if super::lock::locked_move(b.state, user).is_none() && !struggle {
-        let pp = b.mon(pokemon).moves[move_index as usize].pp;
-        // `if (!pokemon.deductPP(baseMove, null, target) && move.id !== 'struggle')`: Spite or
-        // Eerie Spell took the last PP after the move was chosen. `cant ... nopp`,
+        // `if (!pokemon.deductPP(baseMove, null, target) && move.id !== 'struggle')`: `deductPP`
+        // finds the move's slot by id (`getMoveData`); none, or no PP left (Spite or Eerie Spell
+        // took the last PP after the move was chosen), is `cant ... nopp`,
         // `clearActiveMove(true)`, `moveThisTurnResult = false`; no `lastMove`, no MoveAborted
         // (oracle `rr-spite-no-pp`).
-        if pp == 0 {
+        let slot_pp = b
+            .mon(pokemon)
+            .moves
+            .iter()
+            .position(|m| m.id == id)
+            .map(|i| (i as u8, b.mon(pokemon).moves[i].pp));
+        let Some((move_index, pp)) = slot_pp.filter(|&(_, pp)| pp > 0) else {
             b.set_move_result(user, MoveResult::Failed);
             b.active_move = None;
             return Ok(MoveStep::Done);
-        }
+        };
         b.apply(crate::instruction::Instruction::SetPp {
             target: pokemon,
             move_index,
@@ -859,7 +930,10 @@ fn run_move_inner<const N: usize>(
         // `deductPP`: `moveSlot.used = true` (Last Resort).
         b.record_move_used(user, usize::from(move_index));
     }
+    // `pokemon.moveUsed(move, targetLoc)`: the action's target location (for an encored move
+    // that replaced the chosen one, still the chosen one's).
     b.set_last_move(user, id);
+    b.set_last_move_target_loc(user, target_loc);
 
     if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
         return Ok(MoveStep::Suspended(progress));
@@ -1076,6 +1150,22 @@ pub fn takes_target(n: usize, target: MoveTarget) -> bool {
                 | MoveTarget::AdjacentAllyOrSelf
                 | MoveTarget::AdjacentFoe
         )
+}
+
+/// Showdown `resolveAction`'s target location for a move action queued without one (Champions
+/// Encore's `changeAction`): `getRandomTarget` draws it now for a move that takes a chosen
+/// target; 0 for any other (a spread, self or random move draws its target when it runs, and its
+/// location is read by nothing).
+pub(crate) fn resolved_target_loc<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+) -> i8 {
+    let target = id.data().target;
+    if !takes_target(N, target) {
+        return 0;
+    }
+    get_random_target(b, user, target).map_or(0, |t| loc_of(user, t))
 }
 
 /// Showdown `getTarget`. The returned slot may hold a fainted Pok챕mon (Showdown returns
@@ -1452,12 +1542,16 @@ fn use_move<const N: usize>(
         get_move_targets(b, user, mv, target)?
     };
     deduct_pressure_pp(b, user, mv, &targets);
+    // TryMove's target: the last of the targets (after redirection), else the one aimed at.
+    let try_move_target = targets.last().copied().unwrap_or(target);
     // The move's own TryMove (`singleEvent('TryMove')`) returns `null` for a two-turn move's
     // charging turn (`attacker.addVolatile('twoturnmove', defender); return null;`) and for
     // Double Shock / Burn Up without the Electric / Fire type: the move stops, and `useMove`
     // stores that
     // `null` as the move's result (no failure for Stomping Tantrum and Temper Flare).
-    if !handlers::charge_try_move(b, user, mv) || !handlers::null_try_move(b, user, mv) {
+    if !handlers::charge_try_move(b, user, mv, try_move_target)
+        || !handlers::null_try_move(b, user, mv)
+    {
         if b.slot_history(user).move_this_turn_result == MoveResult::Undefined {
             b.set_move_result(user, MoveResult::Null);
         }
@@ -1465,7 +1559,6 @@ fn use_move<const N: usize>(
     }
     // TryMove: the move's own that fail it (Pollen Puff under Heal Block), then Dazzling,
     // Queenly Majesty, Armor Tail (`onFoeTryMove`).
-    let try_move_target = targets.last().copied().unwrap_or(target);
     if !handlers::fail_try_move(b, user, mv, try_move_target)
         || !ability_hooks::on_try_move(b, user, mv, try_move_target)
     {
@@ -1496,7 +1589,12 @@ fn use_move<const N: usize>(
                 ok
             }
             HitOutcome::Suspended(mut progress) => {
-                progress.main_target = main_target;
+                // A move this one called suspended (Copycat's): this move's own main target
+                // waits with it in the caller frame.
+                match progress.caller.as_deref_mut() {
+                    Some(frame) => frame.main_target = main_target,
+                    None => progress.main_target = main_target,
+                }
                 return Ok(Some(progress));
             }
         }
@@ -1517,7 +1615,9 @@ fn use_move<const N: usize>(
 /// boost and ability suppression, its source effect is the caller (whose PP pays Pressure), its
 /// target is `target` or, without one, drawn afresh, and it runs `useMoveInner` without
 /// BeforeMove, PP or `lastMove`. The called move stays the active move. A multi-hit called move
-/// (it would suspend the caller) is unsupported.
+/// of Copycat or Sleep Talk suspends after its first hit like a chosen one: its progress waits
+/// in [`Battle::called_suspension`] until the caller's hit loop takes it and suspends with it
+/// (R14); Mirror Move's is unsupported (it calls from `onTryHit`).
 fn call_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -1570,11 +1670,15 @@ fn call_move<const N: usize>(
         None => get_random_target(b, user, data.target),
     };
     let will_act = b.will_act();
-    if use_move(b, user, &mut mv, target, will_act)?.is_some() {
-        return Err(b.unsupported(format!(
-            "{} called by {}: a multi-hit called move",
-            data.name, caller.data.name
-        )));
+    if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
+        if ![moves::COPYCAT, moves::SLEEP_TALK].contains(&caller.id) {
+            return Err(b.unsupported(format!(
+                "{} called by {}: a multi-hit called move",
+                data.name, caller.data.name
+            )));
+        }
+        b.called_suspension = Some(progress);
+        return Ok(());
     }
     // It stays the active move: the caller's AfterMove sees it (`run_move_tail`).
     b.called_move = Some(mv);
@@ -1722,8 +1826,15 @@ fn deduct_pressure_pp<const N: usize>(
     targets: &[SlotRef],
 ) {
     // `if (!sourceEffect || callerMoveForPressure)`: a bounced move's source effect is Magic
-    // Bounce, a Dancer copy's Dancer, neither of which has PP.
-    if mv.has_bounced || b.external_move {
+    // Bounce, a Dancer copy's Dancer, neither of which has PP; nor has the `lockedmove` condition,
+    // which `runMove` passes as the source effect of a locked Pokémon's move (Outrage's later
+    // turns, a two-turn move's second, Uproar: oracle `nn-pressure-locked-outrage`). The lock is
+    // the one `runMove` saw: nothing between its check and this one starts or ends a lock. A move
+    // another called pays through its caller (Copycat), locked or not.
+    if mv.has_bounced
+        || b.external_move
+        || (mv.source_effect.is_none() && super::lock::locked_move(b.state, user).is_some())
+    {
         return;
     }
     let foe = user.side.other();
@@ -2103,6 +2214,7 @@ fn try_spread_move_hit<const N: usize>(
         raw_speed: Vec::new(),
         speed_snapshot: Vec::new(),
         smart,
+        caller: None,
     };
     hit_loop(b, user, mv, Some(progress))
 }
@@ -2605,7 +2717,7 @@ fn hit_loop<const N: usize>(
 ) -> Result<HitOutcome, TurnError> {
     let mut progress = progress.expect("a hit loop starts with its progress");
     let hit = progress.hit + 1;
-    let mut targets = progress.targets.clone();
+    let targets = progress.targets.clone();
     // Champions `hitStepMoveHitLoop` with `move.smartTarget` and two targets: `targetsCopy =
     // [targets[hit - 1]]`, each dart strikes one of them.
     let smart = progress.smart;
@@ -2656,9 +2768,39 @@ fn hit_loop<const N: usize>(
         }
         let hit_ok = results.iter().any(|r| r.ok());
         progress.any_ok |= hit_ok;
+        // This hit's `onHit` (Copycat's, Sleep Talk's) called a multi-hit move that suspended
+        // after its first hit: the calling move stops here and goes on once the called move's
+        // hits are done ([`finish_called`]).
+        if let Some(mut called) = b.called_suspension.take() {
+            called.caller = Some(Box::new(CallerFrame {
+                progress,
+                results,
+                main_target: user,
+            }));
+            return Ok(HitOutcome::Suspended(called));
+        }
+    }
+    hit_loop_rest(b, user, mv, progress, results, ended_by_miss)
+}
+
+/// The rest of a hit of [`hit_loop`] after its `spreadMoveHit` (or its multi-accuracy miss): the
+/// Update, the next hit's suspension, or the loop's end.
+fn hit_loop_rest<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    mut progress: MoveProgress,
+    results: Vec<Hit>,
+    ended_by_miss: bool,
+) -> Result<HitOutcome, TurnError> {
+    let smart = progress.smart;
+    if !ended_by_miss {
+        let hit = progress.hit;
+        let hit_ok = results.iter().any(|r| r.ok());
         // `eachEvent('Update')` after the hit's damage (berries eat before faints are
         // processed).
         super::update::update_event(b)?;
+        let mut targets = progress.targets.clone();
         targets.retain(|&t| b.alive(t).is_some());
         let single = progress.targets.len() == 1;
         let user_standing = b.alive(user).is_some();
@@ -3830,10 +3972,9 @@ fn flinch_observable_later<const N: usize>(
         return true;
     }
     let queued_switcher = b.queue.iter().any(|action| {
-        let super::queue::ActionKind::Move { index, .. } = action.kind else {
+        let super::queue::ActionKind::Move { id, .. } = action.kind else {
             return false;
         };
-        let id = super::lock::action_move_id(b.mon(action.pokemon), index);
         !id.is_none()
             && (id.data().self_switch != SelfSwitch::No
                 || id == moves::REVIVAL_BLESSING

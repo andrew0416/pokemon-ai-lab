@@ -1,0 +1,85 @@
+{
+ "description": "R21 (Opus NN): setup turn 1 Snorlax's Crunch knocks out Shedinja (p2 keeps Exploud alone); setup turn 2 Exploud uses Uproar and the slower Umbreon's Copycat calls it, getting Uproar's `uproar` volatile (onLockMove: 'uproar'). Decision turn: Umbreon is locked into Uproar, which it does not know (the engine rejected that choice as a locked move it does not know).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Copycat",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Crunch",
+     "Protect",
+     "Curse"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Exploud",
+    "item": "",
+    "ability": "Soundproof",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Uproar",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Shedinja",
+    "item": "",
+    "ability": "Wonder Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move protect, move crunch 2",
+   "move protect, move swordsdance"
+  ],
+  [
+   "move copycat, move protect",
+   "move uproar, pass"
+  ]
+ ],
+ "turn": {
+  "p1": "move 1, move curse",
+  "p2": "move uproar, pass"
+ }
+}

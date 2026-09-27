@@ -1,0 +1,80 @@
+{
+ "description": "R8 (Opus NN): Snorlax used Counter in the setup turn. In the decision turn Sableye's Prankster Encore replaces its queued Curse with Counter (Champions `queue.changeAction`), and `resolveAction` also queues Counter's `beforeTurnMove`, which runs next and gives Snorlax the `counter` condition; Umbreon's Foul Play then hits it, so its Counter (priority -5) returns double the damage to Umbreon (without the condition it would fail).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Sableye",
+    "item": "",
+    "ability": "Prankster",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Encore",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Foul Play",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Counter",
+     "Curse"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move calmmind, move protect",
+   "move counter, move protect"
+  ]
+ ],
+ "turn": {
+  "p1": "move encore 1, move foulplay 1",
+  "p2": "move curse, move calmmind"
+ }
+}

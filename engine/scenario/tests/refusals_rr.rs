@@ -55,29 +55,9 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R5-future-move-edges",
     ),
     (
-        "rr-instruct-target",
-        "Instruct repeating Dragon Claw (its lastMoveTargetLoc is not kept)",
-        "R6-instruct",
-    ),
-    (
-        "rr-instruct-quick-claw",
-        "Instruct on a Quick Claw holder",
-        "R6-instruct",
-    ),
-    (
-        "rr-instruct-quick-draw",
-        "Instruct on a Quick Draw holder",
-        "R6-instruct",
-    ),
-    (
         "rr-ally-switch-snipe-shot",
         "Snipe Shot aimed at a side whose Pokémon Ally Switch swapped",
         "R7-ally-switch-target",
-    ),
-    (
-        "rr-encore-counter",
-        "Encore replacing a queued action with Counter",
-        "R8-encore-edges",
     ),
     (
         "rr-beat-up-bench",
@@ -115,16 +95,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R13-attract-gender",
     ),
     (
-        "rr-copycat-multihit",
-        "Double Hit called by Copycat: a multi-hit called move",
-        "R14-called-multi-hit",
-    ),
-    (
-        "rr-sleep-talk-multihit",
-        "Sleep Talk calling Double Hit (a multi-hit move)",
-        "R14-called-multi-hit",
-    ),
-    (
         "rr-fling-innards-out",
         "Fling's user fainted before its item was thrown",
         "R16-fling-user-fainted",
@@ -133,21 +103,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "rr-trick-or-treat-curse-glitch",
         "Trick-or-Treat's Curse Glitch",
         "R17-trick-or-treat-curse",
-    ),
-    (
-        "rr-copycat-two-turn",
-        "Copycat calling Solar Beam (a two-turn move)",
-        "R21-copycat-called-moves",
-    ),
-    (
-        "rr-copycat-outrage",
-        "Copycat calling Outrage (a lock on the called move)",
-        "R21-copycat-called-moves",
-    ),
-    (
-        "rr-copycat-mirror-coat",
-        "Copycat calling Mirror Coat (queue actions of its own)",
-        "R21-copycat-called-moves",
     ),
     (
         "rr-teatime-klutz",
@@ -263,19 +218,16 @@ fn future_sight_on_a_red_card_holder() {
 }
 
 #[test]
-#[ignore = "refused: Instruct repeating {} (its lastMoveTargetLoc is not kept) (board R6-instruct)"]
 fn instruct_a_targeted_move() {
     assert_exact_parity("rr-instruct-target");
 }
 
 #[test]
-#[ignore = "refused: Instruct on a Quick Claw holder (board R6-instruct)"]
 fn instruct_a_quick_claw_holder() {
     assert_exact_parity("rr-instruct-quick-claw");
 }
 
 #[test]
-#[ignore = "refused: Instruct on a Quick Draw holder (board R6-instruct)"]
 fn instruct_a_quick_draw_holder() {
     assert_exact_parity("rr-instruct-quick-draw");
 }
@@ -287,7 +239,6 @@ fn snipe_shot_after_ally_switch() {
 }
 
 #[test]
-#[ignore = "refused: Encore replacing a queued action with {} (a callback action it would queue) (board R8-encore-edges)"]
 fn encore_into_counter() {
     assert_exact_parity("rr-encore-counter");
 }
@@ -337,13 +288,11 @@ fn rivalry_switching_in_with_undecided_genders() {
 }
 
 #[test]
-#[ignore = "refused: {} called by {}: a multi-hit called move (board R14-called-multi-hit)"]
 fn copycat_a_multi_hit_move() {
     assert_exact_parity("rr-copycat-multihit");
 }
 
 #[test]
-#[ignore = "refused: Sleep Talk calling {} (a multi-hit move) (board R14-called-multi-hit)"]
 fn sleep_talk_with_a_multi_hit_move() {
     assert_exact_parity("rr-sleep-talk-multihit");
 }
@@ -364,7 +313,6 @@ fn trick_or_treat_curse_glitch() {
 }
 
 #[test]
-#[ignore = "refused: Copycat calling {} — a two-turn move (board R21-copycat-called-moves)"]
 fn copycat_a_two_turn_move() {
     assert_exact_parity("rr-copycat-two-turn");
 }
@@ -373,13 +321,11 @@ fn copycat_a_two_turn_move() {
 /// and two random targets) is about 540,800 branches (`fullBranchEstimate`), over the oracle's
 /// 500,000 limit.
 #[test]
-#[ignore = "refused: Copycat calling {} — a lock on the called move (board R21-copycat-called-moves)"]
 fn copycat_outrage() {
     assert_extremes_parity("rr-copycat-outrage");
 }
 
 #[test]
-#[ignore = "refused: Copycat calling {} — queue actions of its own (board R21-copycat-called-moves)"]
 fn copycat_mirror_coat() {
     assert_exact_parity("rr-copycat-mirror-coat");
 }
@@ -395,7 +341,6 @@ fn teatime_with_klutz() {
 /// Instruct on a Pokémon whose last move is Counter: Showdown's `resolveAction(...)[0]` is the
 /// `beforeTurnMove` action, so Counter never runs (no PP); the engine runs it.
 #[test]
-#[ignore = "mismatch: Instruct repeating a move with a beforeTurnCallback runs only the callback in Showdown (not on the board yet)"]
 fn instruct_counter_runs_only_its_callback() {
     assert_exact_parity("rr-x-instruct-counter");
 }

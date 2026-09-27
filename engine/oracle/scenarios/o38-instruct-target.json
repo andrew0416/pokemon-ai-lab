@@ -1,5 +1,5 @@
 {
- "description": "O38 refused case (no fixture): Clefable instructs Garchomp after its single-target Dragon Claw; Showdown aims the repeat at lastMoveTargetLoc, which the engine does not keep.",
+ "description": "O38: Clefable instructs Garchomp after its single-target Dragon Claw; Showdown aims the repeat at lastMoveTargetLoc (refused until R6, Opus NN: `Slot::last_move_target_loc`).",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [
