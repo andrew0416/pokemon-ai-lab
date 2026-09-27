@@ -30,7 +30,7 @@ use lab_scenario::parity::{
 };
 use lab_scenario::{
     canonical_value, load_scenario_file, run_decision_mid_turn_with, scenario_decision,
-    scenario_positions,
+    scenario_positions, ScenarioError,
 };
 
 fn main() -> ExitCode {
@@ -87,14 +87,15 @@ fn failure(status: &str, error: impl Into<String>) -> Value {
     json!({"status": status, "error": error.into()})
 }
 
-/// `unsupported` for the engine's `TurnError::Unsupported` ("not implemented: …"), else
-/// `engine-error`.
-fn engine_failure(error: String) -> Value {
-    if error.contains("not implemented") {
-        failure("unsupported", error)
+/// `unsupported` for what the engine does not implement ([`ScenarioError::Unsupported`]),
+/// else `engine-error`; `prefix` goes before the message.
+fn engine_failure(prefix: &str, error: ScenarioError) -> Value {
+    let status = if error.is_unsupported() {
+        "unsupported"
     } else {
-        failure("engine-error", error)
-    }
+        "engine-error"
+    };
+    failure(status, format!("{prefix}{error}"))
 }
 
 fn check(scenario: &str, report_path: &str, tolerance: f64) -> Value {
@@ -136,7 +137,7 @@ fn check(scenario: &str, report_path: &str, tolerance: f64) -> Value {
     };
     let positions = match scenario_positions(&loaded) {
         Ok(p) => p,
-        Err(e) => return engine_failure(format!("setup: {e}")),
+        Err(e) => return engine_failure("setup: ", e),
     };
     let before = &report["before"];
     let mut matching = Vec::new();
@@ -177,7 +178,7 @@ fn check(scenario: &str, report_path: &str, tolerance: f64) -> Value {
             options,
         ) {
             Ok(o) => o,
-            Err(e) => return engine_failure(e),
+            Err(e) => return engine_failure("", e),
         };
         match engine_distribution(&loaded.meta, &mut state, &outcomes) {
             Ok(d) => distributions.push(d),

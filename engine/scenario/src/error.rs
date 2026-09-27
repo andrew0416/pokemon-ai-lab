@@ -5,6 +5,10 @@ use std::path::PathBuf;
 
 use lab_engine::state::SideId;
 use lab_engine::stats::StatPointError;
+use lab_engine::turn::TurnError;
+
+use crate::canonical::CanonicalError;
+use crate::switch_in::SwitchInError;
 
 #[derive(Debug)]
 pub enum LoadError {
@@ -140,7 +144,8 @@ impl fmt::Display for SetProblem {
             SetProblem::UnsupportedLevel(level) => {
                 write!(
                     f,
-                    "level {level}: the engine plays at level 50 (in the custom game a set                      without \"level\" is level 100 in Showdown; write \"level\": 50)"
+                    "level {level}: the engine plays at level 50 (in the custom game a set \
+                     without \"level\" is level 100 in Showdown; write \"level\": 50)"
                 )
             }
             SetProblem::StatPoints(StatPointError::PerStat { stat, value }) => {
@@ -170,6 +175,112 @@ impl std::error::Error for LoadError {
             LoadError::Io { error, .. } => Some(error),
             LoadError::Json { error, .. } => Some(error),
             _ => None,
+        }
+    }
+}
+
+/// Why the positions of a scenario (or a decision run from one) could not be produced
+/// (`scenario_positions*`, `run_decision_mid_turn*`). The message is the text these functions
+/// returned as a `String` before (board T1); the variant says whose fault it is, so callers
+/// (the search's `Node`, `lab-check`) do not read the text to tell.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ScenarioError {
+    /// Something the scenario needs that the engine does not implement: the turn engine's
+    /// `TurnError::Unsupported`, a switch-in handler, a slot count, a state with no canonical
+    /// form yet.
+    Unsupported(String),
+    /// Anything else: a choice that does not parse or is not legal in a replayed position, a
+    /// pinned state no position has, a patch that cannot be applied, a turn that pauses for a
+    /// mid-turn switch nobody gave.
+    Invalid(String),
+}
+
+impl ScenarioError {
+    /// The message.
+    pub fn message(&self) -> &str {
+        match self {
+            ScenarioError::Unsupported(m) | ScenarioError::Invalid(m) => m,
+        }
+    }
+
+    /// Whether the engine does not implement something the scenario needs.
+    pub fn is_unsupported(&self) -> bool {
+        matches!(self, ScenarioError::Unsupported(_))
+    }
+
+    /// The same error with `suffix` after its message.
+    pub fn suffixed(self, suffix: &str) -> Self {
+        match self {
+            ScenarioError::Unsupported(m) => ScenarioError::Unsupported(m + suffix),
+            ScenarioError::Invalid(m) => ScenarioError::Invalid(m + suffix),
+        }
+    }
+
+    /// The same error with `prefix` before its message (`"setup turn 2: …"`).
+    pub fn context(self, prefix: impl fmt::Display) -> Self {
+        match self {
+            ScenarioError::Unsupported(m) => ScenarioError::Unsupported(format!("{prefix}: {m}")),
+            ScenarioError::Invalid(m) => ScenarioError::Invalid(format!("{prefix}: {m}")),
+        }
+    }
+}
+
+impl fmt::Display for ScenarioError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.message())
+    }
+}
+
+impl std::error::Error for ScenarioError {}
+
+impl From<String> for ScenarioError {
+    fn from(message: String) -> Self {
+        ScenarioError::Invalid(message)
+    }
+}
+
+impl From<&str> for ScenarioError {
+    fn from(message: &str) -> Self {
+        ScenarioError::Invalid(message.to_owned())
+    }
+}
+
+/// For callers that only want the text (`?` in a function returning `Result<_, String>`).
+impl From<ScenarioError> for String {
+    fn from(e: ScenarioError) -> Self {
+        match e {
+            ScenarioError::Unsupported(m) | ScenarioError::Invalid(m) => m,
+        }
+    }
+}
+
+impl From<TurnError> for ScenarioError {
+    fn from(e: TurnError) -> Self {
+        match e {
+            TurnError::Unsupported(_) => ScenarioError::Unsupported(e.to_string()),
+            other => ScenarioError::Invalid(other.to_string()),
+        }
+    }
+}
+
+impl From<SwitchInError> for ScenarioError {
+    fn from(e: SwitchInError) -> Self {
+        match e {
+            SwitchInError::NotInitial { .. } => ScenarioError::Invalid(e.to_string()),
+            SwitchInError::UnsupportedSlotCount(_)
+            | SwitchInError::UnsupportedAbility { .. }
+            | SwitchInError::UnsupportedItem { .. }
+            | SwitchInError::UnsupportedSpecies { .. }
+            | SwitchInError::Unsupported { .. } => ScenarioError::Unsupported(e.to_string()),
+        }
+    }
+}
+
+impl From<CanonicalError> for ScenarioError {
+    fn from(e: CanonicalError) -> Self {
+        match e {
+            CanonicalError::Unrepresentable { .. } => ScenarioError::Unsupported(e.to_string()),
+            other => ScenarioError::Invalid(other.to_string()),
         }
     }
 }

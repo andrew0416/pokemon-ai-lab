@@ -46,7 +46,7 @@ pub use decision::{
     advance_order, apply_patch, initial_order, parse_choice, parse_mid_turn, parse_replacement,
     PartyOrder, PatchJson,
 };
-pub use error::{LoadError, SetProblem, TeamProblem};
+pub use error::{LoadError, ScenarioError, SetProblem, TeamProblem};
 pub use json::{ScenarioJson, TeamSet};
 pub use meta::{MemberMeta, ScenarioMeta, SideMeta};
 pub use switch_in::{expand_switch_ins, initial_outcomes, InitialOutcome, SwitchInError};
@@ -322,7 +322,7 @@ pub fn run_decision_mid_turn(
     order: &[PartyOrder; 2],
     decision: &Decision,
     mid_turn: &[Vec<String>; 2],
-) -> Result<Vec<Outcome>, String> {
+) -> Result<Vec<Outcome>, ScenarioError> {
     run_decision_mid_turn_with(
         state,
         order,
@@ -339,8 +339,8 @@ pub fn run_decision_mid_turn_with(
     decision: &Decision,
     mid_turn: &[Vec<String>; 2],
     options: EnumerateOptions,
-) -> Result<Vec<Outcome>, String> {
-    let outcomes = run_decision_with(state, decision, options).map_err(|e| e.to_string())?;
+) -> Result<Vec<Outcome>, ScenarioError> {
+    let outcomes = run_decision_with(state, decision, options)?;
     let mut done = Vec::new();
     let mut work: Vec<(Outcome, [usize; 2])> = outcomes.into_iter().map(|o| (o, [0, 0])).collect();
     while let Some((outcome, used)) = work.pop() {
@@ -372,8 +372,7 @@ pub fn run_decision_mid_turn_with(
             done.push(outcome);
             continue;
         }
-        let resumed = resume_turn_with(&mut paused, &suspension, choices, options)
-            .map_err(|e| e.to_string())?;
+        let resumed = resume_turn_with(&mut paused, &suspension, choices, options)?;
         for r in resumed {
             let mut instructions = outcome.instructions.clone();
             instructions.extend(r.instructions);
@@ -393,7 +392,7 @@ pub fn run_decision_mid_turn_with(
 /// The positions the scenario's decision is made in: every initial outcome (the leads'
 /// switch-in effects), then every outcome of the setup turns, then the patch. Positions
 /// with the same state and party order merge.
-pub fn scenario_positions(loaded: &LoadedScenario) -> Result<Vec<Position>, String> {
+pub fn scenario_positions(loaded: &LoadedScenario) -> Result<Vec<Position>, ScenarioError> {
     scenario_positions_with(loaded, EnumerateOptions::default())
 }
 
@@ -403,7 +402,7 @@ pub fn scenario_positions(loaded: &LoadedScenario) -> Result<Vec<Position>, Stri
 pub fn scenario_positions_with(
     loaded: &LoadedScenario,
     options: EnumerateOptions,
-) -> Result<Vec<Position>, String> {
+) -> Result<Vec<Position>, ScenarioError> {
     scenario_positions_filtered(loaded, options, &mut |_, positions| positions)
 }
 
@@ -417,7 +416,7 @@ pub fn scenario_positions_filtered(
     loaded: &LoadedScenario,
     options: EnumerateOptions,
     filter: &mut dyn FnMut(usize, Vec<Position>) -> Vec<Position>,
-) -> Result<Vec<Position>, String> {
+) -> Result<Vec<Position>, ScenarioError> {
     replay_setup_turns(loaded, options, false, filter)
 }
 
@@ -431,7 +430,7 @@ pub fn scenario_positions_consistent(
     loaded: &LoadedScenario,
     options: EnumerateOptions,
     filter: &mut dyn FnMut(usize, Vec<Position>) -> Vec<Position>,
-) -> Result<Vec<Position>, String> {
+) -> Result<Vec<Position>, ScenarioError> {
     replay_setup_turns(loaded, options, true, filter)
 }
 
@@ -440,9 +439,8 @@ fn replay_setup_turns(
     options: EnumerateOptions,
     drop_illegal: bool,
     filter: &mut dyn FnMut(usize, Vec<Position>) -> Vec<Position>,
-) -> Result<Vec<Position>, String> {
-    let mut positions: Vec<Position> = initial_outcomes(loaded)
-        .map_err(|e| e.to_string())?
+) -> Result<Vec<Position>, ScenarioError> {
+    let mut positions: Vec<Position> = initial_outcomes(loaded)?
         .into_iter()
         .map(|o| Position {
             order: [
@@ -454,7 +452,7 @@ fn replay_setup_turns(
         })
         .collect();
     if let Some(pin) = &loaded.start_state {
-        positions = pinned(&loaded.meta, positions, pin).map_err(|e| format!("startState: {e}"))?;
+        positions = pinned(&loaded.meta, positions, pin).map_err(|e| e.context("startState"))?;
     }
     let options = EnumerateOptions {
         rolls: loaded.setup_rolls.unwrap_or(options.rolls),
@@ -484,13 +482,11 @@ fn replay_setup_turns(
                         drop_illegal,
                     )?;
                     pinned(&loaded.meta, exact, pin).map_err(|_| {
-                        format!(
-                            "setup turn {}: {e} (nor in the turn's exact distribution)",
-                            n + 1
-                        )
+                        e.context(format_args!("setup turn {}", n + 1))
+                            .suffixed(" (nor in the turn's exact distribution)")
                     })?
                 }
-                Err(e) => return Err(format!("setup turn {}: {e}", n + 1)),
+                Err(e) => return Err(e.context(format_args!("setup turn {}", n + 1))),
             };
         }
         positions = filter(n + 1, next);
@@ -513,7 +509,7 @@ fn replay_setup_turn(
     options: EnumerateOptions,
     pin: Option<&Value>,
     drop_illegal: bool,
-) -> Result<Vec<Position>, String> {
+) -> Result<Vec<Position>, ScenarioError> {
     let mut next: Vec<Position> = Vec::new();
     // Equal (state, order) positions merge in first-reached order; the index finds the earlier
     // one by hash instead of scanning `next` (Opus KK: a pinned setup turn with 37,686 outcomes
@@ -525,7 +521,7 @@ fn replay_setup_turn(
         let decision = match parse_decision(&position.state, &position.order, &turn.p1, &turn.p2) {
             Ok(decision) => decision,
             Err(_) if drop_illegal => continue,
-            Err(e) => return Err(format!("setup turn {}: {e}", n + 1)),
+            Err(e) => return Err(ScenarioError::Invalid(format!("setup turn {}: {e}", n + 1))),
         };
         let mut state = position.state.clone();
         let outcomes = match run_decision_mid_turn_with(
@@ -537,7 +533,7 @@ fn replay_setup_turn(
         ) {
             Ok(outcomes) => outcomes,
             Err(_) if drop_illegal => continue,
-            Err(e) => return Err(format!("setup turn {}: {e}", n + 1)),
+            Err(e) => return Err(e.context(format_args!("setup turn {}", n + 1))),
         };
         for outcome in outcomes {
             // A setup turn that still waits for a mid-turn switch is not a position: the
@@ -550,9 +546,7 @@ fn replay_setup_turn(
                 // U-turn that hit where the game's missed), so a paused one is only refused if
                 // it is the pinned state itself.
                 let refused = match pin {
-                    Some(pin) => {
-                        canonical_value(&end, &loaded.meta).map_err(|e| e.to_string())? == *pin
-                    }
+                    Some(pin) => canonical_value(&end, &loaded.meta)? == *pin,
                     None => !drop_illegal,
                 };
                 if refused {
@@ -585,10 +579,11 @@ fn replay_setup_turn(
         }
     }
     if paused {
-        return Err(format!(
-            "setup turn {}: the turn pauses for a mid-turn switch that has no choice; give                  it in the setup turn's third element (`midTurn`)",
+        return Err(ScenarioError::Invalid(format!(
+            "setup turn {}: the turn pauses for a mid-turn switch that has no choice; give \
+          it in the setup turn's third element (`midTurn`)",
             n + 1
-        ));
+        )));
     }
     Ok(next)
 }
@@ -601,12 +596,12 @@ fn pinned(
     meta: &ScenarioMeta,
     positions: Vec<Position>,
     pin: &Value,
-) -> Result<Vec<Position>, String> {
+) -> Result<Vec<Position>, ScenarioError> {
     let candidates = positions.len();
     let mut kept = Vec::new();
     let mut closest: Option<(usize, Vec<String>)> = None;
     for position in positions {
-        let value = canonical_value(&position.state, meta).map_err(|e| e.to_string())?;
+        let value = canonical_value(&position.state, meta)?;
         if value == *pin {
             kept.push(position);
             continue;
@@ -617,13 +612,13 @@ fn pinned(
         }
     }
     if kept.is_empty() {
-        return Err(format!(
+        return Err(ScenarioError::Invalid(format!(
             "none of {candidates} position(s) has the pinned canonical state{}",
             match closest {
                 Some((_, diffs)) => format!("; closest differs at {}", diffs.join(", ")),
                 None => String::new(),
             }
-        ));
+        )));
     }
     let total: f64 = kept.iter().map(|p| p.probability).sum();
     if total > 0.0 {
@@ -645,7 +640,7 @@ pub fn scenario_decision(loaded: &LoadedScenario, position: &Position) -> Result
 }
 
 /// [`scenario_positions`] without the party orders.
-pub fn scenario_states(loaded: &LoadedScenario) -> Result<Vec<InitialOutcome<2>>, String> {
+pub fn scenario_states(loaded: &LoadedScenario) -> Result<Vec<InitialOutcome<2>>, ScenarioError> {
     Ok(scenario_positions(loaded)?
         .into_iter()
         .map(|p| InitialOutcome {

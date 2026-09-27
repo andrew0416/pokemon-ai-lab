@@ -92,7 +92,7 @@ fn every_reachable_refusal_is_refused() {
         let decision = scenario_decision(&loaded, &position).unwrap();
         match run_decision_mid_turn(&mut state, &position.order, &decision, &loaded.mid_turn) {
             Err(why) => assert!(
-                why.contains(expected),
+                why.is_unsupported() && why.message().contains(expected),
                 "{name} ({board}): refused with `{why}`, expected `{expected}`"
             ),
             Ok(outcomes) => panic!(

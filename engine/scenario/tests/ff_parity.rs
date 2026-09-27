@@ -78,6 +78,8 @@ fn unreachable_pin_is_an_error() {
     let loaded =
         lab_scenario::load_scenario_str(&scenario.to_string(), path.parent().unwrap()).unwrap();
     let error = scenario_positions(&loaded).unwrap_err();
+    assert!(!error.is_unsupported(), "{error}");
+    let error = error.message();
     assert!(error.starts_with("setup turn 3: none of"), "{error}");
     assert!(error.contains("Tyranitar].hp: 1 vs"), "{error}");
 }

@@ -30,7 +30,7 @@ use lab_scenario::canonical::format_ruleset;
 use lab_scenario::{
     advance_order, canonical_json, parse_choice, parse_mid_turn, parse_replacement,
     scenario_positions_consistent, scenario_positions_with, LoadedScenario, PartyOrder,
-    ScenarioMeta,
+    ScenarioError, ScenarioMeta,
 };
 
 use crate::game::{self, asked_slots, Decision, Pruning};
@@ -78,14 +78,12 @@ impl From<SearchError> for NodeError {
     }
 }
 
-/// An error message from the string-typed scenario functions: `TurnError::Unsupported`
-/// (`"not implemented: ..."`) and the unsupported switch-in handlers (`"... that is not
-/// implemented"`) are [`NodeError::Unsupported`], the rest [`NodeError::Invalid`].
-fn classify(message: String) -> NodeError {
-    if message.contains("not implemented") {
-        NodeError::Unsupported(message)
-    } else {
-        NodeError::Invalid(message)
+impl From<ScenarioError> for NodeError {
+    fn from(e: ScenarioError) -> Self {
+        match e {
+            ScenarioError::Unsupported(why) => NodeError::Unsupported(why),
+            ScenarioError::Invalid(why) => NodeError::Invalid(why),
+        }
     }
 }
 
@@ -227,8 +225,7 @@ pub fn scenario_nodes(
         scenario_positions_consistent(loaded, setup, &mut |_, positions| positions)
     } else {
         scenario_positions_with(loaded, setup)
-    }
-    .map_err(classify)?;
+    }?;
     Ok(positions
         .into_iter()
         .map(|p| {
@@ -880,5 +877,44 @@ mod tests {
             nash.analysis.equilibrium.value
         );
         assert!(nash.ours.contains(&"move uturn 1, move harden".to_owned()));
+    }
+
+    /// Board T1: the scenario functions' errors arrive typed. A Shields Down core colour at
+    /// the start is not implemented (`Unsupported`); a setup choice no position accepts is
+    /// the scenario's fault (`Invalid`). Neither is told apart by its text any more.
+    #[test]
+    fn scenario_errors_keep_their_kind() {
+        let team = |lead: &str, ability: &str| {
+            format!(
+                r#"{{"team": [
+                  {{"species": "{lead}", "item": "", "ability": "{ability}", "nature": "Hardy",
+                   "evs": {{"hp": 32}}, "moves": ["Calm Mind"], "level": 50}},
+                  {{"species": "Blissey", "item": "", "ability": "Honey Gather", "nature": "Bold",
+                   "evs": {{"hp": 32}}, "moves": ["Calm Mind"], "level": 50}}], "order": "12"}}"#
+            )
+        };
+        let scenario = |p1: &str, setup: &str| {
+            format!(
+                r#"{{"format": "gen9championsdoublescustomgame", "p1": {p1},
+                    "p2": {p2}, {setup}
+                    "turn": {{"p1": "move calmmind, move calmmind",
+                              "p2": "move calmmind, move calmmind"}}}}"#,
+                p2 = team("Snorlax", "Honey Gather")
+            )
+        };
+        let load = |json: String| {
+            let loaded = load_scenario_str(&json, &scenarios()).unwrap();
+            scenario_nodes(&loaded, EXACT, false).unwrap_err()
+        };
+        let unsupported = load(scenario(&team("Minior-Orange", "Shields Down"), ""));
+        assert!(
+            matches!(unsupported, NodeError::Unsupported(_)),
+            "{unsupported:?}"
+        );
+        let invalid = load(scenario(
+            &team("Snorlax", "Honey Gather"),
+            r#""setupTurns": [["switch 6, move calmmind", "move calmmind, move calmmind"]],"#,
+        ));
+        assert!(matches!(invalid, NodeError::Invalid(_)), "{invalid:?}");
     }
 }
