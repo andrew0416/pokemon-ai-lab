@@ -127,6 +127,81 @@ pub fn solve(matrix: &Matrix, max_iterations: usize, tolerance: f32) -> Equilibr
     })
 }
 
+/// The rows and columns that survive iterated weak dominance (board S24d): a row is removed
+/// when another surviving row is at least as good in every surviving column (for an exact
+/// duplicate, the later one goes), a column when another is at most as bad in every surviving
+/// row, until nothing changes. Removing weakly dominated strategies keeps the value of a
+/// zero-sum game, and every equilibrium of the reduced game is one of the full game.
+pub fn undominated(matrix: &Matrix) -> (Vec<usize>, Vec<usize>) {
+    let (n, m) = (matrix.rows, matrix.cols);
+    let v = &matrix.values;
+    let mut rows: Vec<usize> = (0..n).collect();
+    let mut cols: Vec<usize> = (0..m).collect();
+    loop {
+        let before = (rows.len(), cols.len());
+        // Rows: r goes if some other surviving q has v[q][c] >= v[r][c] for every column
+        // (q before r when they are equal everywhere, so one of a duplicate pair stays).
+        let mut keep = Vec::with_capacity(rows.len());
+        for (i, &r) in rows.iter().enumerate() {
+            let dominated = rows.iter().enumerate().any(|(k, &q)| {
+                q != r
+                    && cols.iter().all(|&c| v[q * m + c] >= v[r * m + c])
+                    && (k < i || cols.iter().any(|&c| v[q * m + c] > v[r * m + c]))
+            });
+            if !dominated {
+                keep.push(r);
+            }
+        }
+        rows = keep;
+        let mut keep = Vec::with_capacity(cols.len());
+        for (i, &c) in cols.iter().enumerate() {
+            let dominated = cols.iter().enumerate().any(|(k, &q)| {
+                q != c
+                    && rows.iter().all(|&r| v[r * m + q] <= v[r * m + c])
+                    && (k < i || rows.iter().any(|&r| v[r * m + q] < v[r * m + c]))
+            });
+            if !dominated {
+                keep.push(c);
+            }
+        }
+        cols = keep;
+        if (rows.len(), cols.len()) == before {
+            return (rows, cols);
+        }
+    }
+}
+
+/// [`solve`] on the game reduced by [`undominated`], its strategies extended with zeros and
+/// the value and exploitability measured on the full matrix. The value agrees with [`solve`]'s
+/// within both solutions' exploitability; the reduced game is usually several times smaller,
+/// so each iteration is cheaper and fewer are needed.
+pub fn solve_reduced(matrix: &Matrix, max_iterations: usize, tolerance: f32) -> Equilibrium {
+    let (rows, cols) = undominated(matrix);
+    if rows.len() == matrix.rows && cols.len() == matrix.cols {
+        return solve(matrix, max_iterations, tolerance);
+    }
+    let mut values = Vec::with_capacity(rows.len() * cols.len());
+    for &r in &rows {
+        for &c in &cols {
+            values.push(matrix.at(r, c));
+        }
+    }
+    let reduced = solve(
+        &Matrix::new(rows.len(), cols.len(), values),
+        max_iterations,
+        tolerance,
+    );
+    let mut row_p = vec![0.0f64; matrix.rows];
+    for (&r, &p) in rows.iter().zip(&reduced.rows) {
+        row_p[r] = f64::from(p);
+    }
+    let mut col_p = vec![0.0f64; matrix.cols];
+    for (&c, &p) in cols.iter().zip(&reduced.cols) {
+        col_p[c] = f64::from(p);
+    }
+    evaluate(matrix, &row_p, &col_p, reduced.iterations)
+}
+
 /// Regret matching: the positive regrets normalised (uniform when none is positive).
 fn strategy_into(regret: &[f64], out: &mut [f64]) {
     let total: f64 = regret.iter().sum();
@@ -311,6 +386,67 @@ mod tests {
             let a = solve(&matrix, iterations, 0.01);
             let b = solve_reference(&matrix, iterations, 0.01);
             assert_eq!(a, b, "{n}x{m}");
+        }
+    }
+
+    #[test]
+    fn dominance_removes_dominated_and_duplicate_strategies() {
+        // Row 1 is dominated by row 0, row 2 duplicates row 0; column 2 is worse for the
+        // column player than column 0 everywhere.
+        let game = Matrix::new(
+            3,
+            3,
+            vec![
+                3.0, -1.0, 5.0, //
+                2.0, -1.0, 4.0, //
+                3.0, -1.0, 5.0,
+            ],
+        );
+        let (rows, cols) = undominated(&game);
+        assert_eq!(rows, vec![0]);
+        assert_eq!(cols, vec![1]);
+        let eq = solve_reduced(&game, 1000, 1e-4);
+        assert_eq!(eq.value, -1.0);
+        assert_eq!(eq.rows, vec![1.0, 0.0, 0.0]);
+        // Matching pennies has nothing to remove.
+        let pennies = Matrix::new(2, 2, vec![1.0, -1.0, -1.0, 1.0]);
+        assert_eq!(undominated(&pennies), (vec![0, 1], vec![0, 1]));
+    }
+
+    /// The reduced game's value is the full game's, within the two solutions' exploitability,
+    /// on random games padded with dominated and duplicate rows and columns.
+    #[test]
+    fn reduced_solve_keeps_the_value() {
+        let mut x: u64 = 0x9e37_79b9_7f4a_7c15;
+        let mut next = move || {
+            x ^= x >> 12;
+            x ^= x << 25;
+            x ^= x >> 27;
+            ((x.wrapping_mul(0x2545_f491_4f6c_dd1d) >> 40) as f32 / (1u64 << 24) as f32) * 200.0
+                - 100.0
+        };
+        for (n, m) in [(4, 3), (12, 9), (30, 25)] {
+            let mut values: Vec<f32> = (0..n * m).map(|_| next()).collect();
+            // Dominated copies of the first row and column, and an exact duplicate row.
+            let mut rows = n;
+            let first: Vec<f32> = values[..m].to_vec();
+            values.extend(first.iter().map(|v| v - 3.0));
+            values.extend(first.iter());
+            rows += 2;
+            let mut full = Vec::with_capacity(rows * (m + 1));
+            for r in 0..rows {
+                full.extend(&values[r * m..(r + 1) * m]);
+                full.push(values[r * m] + 7.0);
+            }
+            let game = Matrix::new(rows, m + 1, full);
+            let (kept_rows, kept_cols) = undominated(&game);
+            assert!(kept_rows.len() <= n && kept_cols.len() <= m, "{n}x{m}");
+            let a = solve(&game, 20_000, 0.001);
+            let b = solve_reduced(&game, 20_000, 0.001);
+            assert!(
+                (a.value - b.value).abs() <= a.exploitability + b.exploitability + 1e-3,
+                "{n}x{m}: {a:?} vs {b:?}"
+            );
         }
     }
 

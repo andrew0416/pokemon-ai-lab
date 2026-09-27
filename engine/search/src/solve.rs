@@ -94,6 +94,12 @@ pub struct Config {
     /// Reuse child equilibrium values by position ([`crate::tt`]); off only to check that the
     /// table changes nothing but the time.
     pub transposition: bool,
+    /// Solve child matrix games (the depth-2 children of `deep`, `deep-nash`, `--child-nash`)
+    /// on the game reduced by iterated weak dominance ([`nash::solve_reduced`], board S24d):
+    /// the same value within the solver's tolerance, several times fewer cells per RM+
+    /// iteration. Root games keep the full matrix, so their reported strategies and the
+    /// deep-nash beams taken from them do not change.
+    pub dominance: bool,
 }
 
 impl Config {
@@ -117,6 +123,7 @@ impl Config {
             reply_beam: Some(6),
             outcome_cap: Some(4),
             transposition: true,
+            dominance: true,
         }
     }
 
@@ -1272,13 +1279,18 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                 })
             })
             .collect();
+        let dominance = self.config.dominance;
         let solved = self.par_map(
             &games,
             || (),
             |_, game| match game {
                 Ok(Some(matrix)) => {
                     let started = Instant::now();
-                    let eq = nash::solve(matrix, 20_000, 0.01);
+                    let eq = if dominance {
+                        nash::solve_reduced(matrix, 20_000, 0.01)
+                    } else {
+                        nash::solve(matrix, 20_000, 0.01)
+                    };
                     Ok(Some((eq, started.elapsed().as_secs_f64())))
                 }
                 Ok(None) => Ok(None),
