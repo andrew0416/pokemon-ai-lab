@@ -1194,7 +1194,7 @@ pub(crate) fn start_ability<const N: usize>(
         StartEffect::Trace => trace(b, slot)?,
         StartEffect::WeatherChange => weather_change(b)?,
         StartEffect::Download => download(b, slot),
-        StartEffect::OncePerBattle => once_per_battle(b, slot, ability)?,
+        StartEffect::OncePerBattle => once_per_battle(b, slot, ability),
         // Costar: `const ally = pokemon.allies()[0]` (not fainted); every stage copied (the
         // critical-hit volatiles it also copies do not exist in the engine).
         StartEffect::Costar => {
@@ -1287,20 +1287,25 @@ fn download<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
 
 /// Intrepid Sword (`this.boost({atk: 1}, pokemon)`), Dauntless Shield (`{def: 1}`) and
 /// Supersweet Syrup (`this.boost({evasion: -1}, target, pokemon, null, true)` for every
-/// adjacent foe not fainted; a substitute makes a foe immune) act once per battle: Showdown sets `pokemon.swordBoost` / `.shieldBoost` / `.syrupTriggered` for good.
-/// The state does not record those flags, so they act at the battle start (when no Pokémon has
-/// been on the field yet) and a later start is refused.
-fn once_per_battle<const N: usize>(
-    b: &mut Battle<'_, N>,
-    slot: SlotRef,
-    ability: AbilityId,
-) -> Result<(), TurnError> {
-    if !b.battle_start {
-        return Err(b.unsupported(format!(
-            "{} after the battle start (its once-per-battle flag is not in the state)",
-            ability.data().name
-        )));
+/// adjacent foe not fainted; a substitute makes a foe immune) act once per battle: `if
+/// (pokemon.swordBoost) return; pokemon.swordBoost = true;` (`.shieldBoost`,
+/// `.syrupTriggered`), the flags of `SideHistory` (board R10a).
+fn once_per_battle<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, ability: AbilityId) {
+    let Some(pokemon) = b.occupant(slot) else {
+        return;
+    };
+    let bit = 1u8 << pokemon.party;
+    let mut history = b.state.side(slot.side).history;
+    let flag = match ability {
+        a if a == abilities::INTREPID_SWORD => &mut history.sword_boost,
+        a if a == abilities::DAUNTLESS_SHIELD => &mut history.shield_boost,
+        _ => &mut history.syrup_triggered,
+    };
+    if *flag & bit != 0 {
+        return;
     }
+    *flag |= bit;
+    b.set_side_history(slot.side, history);
     let mut boosts = NO_BOOSTS;
     match ability {
         a if a == abilities::INTREPID_SWORD => boosts[0] = 1,
@@ -1312,11 +1317,10 @@ fn once_per_battle<const N: usize>(
                     b.boost_by(foe, &boosts, Some(slot), BoostEffect::Ability(ability));
                 }
             }
-            return Ok(());
+            return;
         }
     }
     b.boost_by(slot, &boosts, Some(slot), BoostEffect::Ability(ability));
-    Ok(())
 }
 
 /// Showdown `eachEvent('WeatherChange', airlock | cloudnine)`: every active Pokémon's

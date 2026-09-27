@@ -50,11 +50,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R5-future-move-edges",
     ),
     (
-        "rr-supersweet-syrup-switch",
-        "Supersweet Syrup after the battle start",
-        "R10-once-per-battle-flags",
-    ),
-    (
         "rr-cute-charm-undecided-gender",
         "with an undecided gender (give the sets a gender)",
         "R13-attract-gender",
@@ -219,8 +214,9 @@ fn beat_up_bench_order() {
     assert_extremes_parity("rr-beat-up-bench");
 }
 
+/// Board R10: the first start after the battle start acts (`SideHistory::syrup_triggered`;
+/// `ss_once_per_battle.rs` has the second start).
 #[test]
-#[ignore = "refused: {} after the battle start (its once-per-battle flag is not in the state) (board R10-once-per-battle-flags)"]
 fn supersweet_syrup_after_the_start() {
     assert_exact_parity("rr-supersweet-syrup-switch");
 }

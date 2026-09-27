@@ -131,6 +131,11 @@
    "board": "R9-beat-up-order",
    "fixture": "ss-beat-up-switched-bench",
    "what": "`Side::party_order` (`Instruction::SetPartyOrder`, hidden, recorded while a Beat Up is in a party) keeps Showdown's `side.pokemon` order: `switchIn` exchanges the newcomer's position with the replaced Pokémon's, Ally Switch the two active positions; Beat Up hits in it (also `ss-beat-up-ally-switch`, `rr-beat-up-bench`)."
+  },
+  "{} after the battle start (its once-per-battle flag is not in the state)": {
+   "board": "R10-once-per-battle-flags",
+   "fixture": "rr-supersweet-syrup-switch",
+   "what": "`SideHistory::{sword_boost, shield_boost, syrup_triggered}` (party bitmasks, hidden) keep Showdown's `pokemon.swordBoost` / `.shieldBoost` / `.syrupTriggered`: the first `onStart` sets the flag and acts, later starts return at once (also `ss-supersweet-syrup-once`)."
   }
  },
  "entries": {
@@ -216,13 +221,6 @@
    "kind": "invariant",
    "board": "R8-encore-edges",
    "why": "Transform is `failencore`, `failcopycat`, `nosleeptalk` and `failinstruct`, so an encored Pokémon can only run it by choosing it, and the Champions Encore replaces that queued action with the encored move first (a Mental Herb holder is cured at once); Imposter transforms on switch-in, when Encore is gone (`noCopy`)."
-  },
-  "{} after the battle start (its once-per-battle flag is not in the state)": {
-   "reachable": "yes",
-   "kind": "mechanic",
-   "board": "R10-once-per-battle-flags",
-   "repro": "rr-supersweet-syrup-switch",
-   "why": "Supersweet Syrup (Hydrapple) starting after the battle start (a switch-in, a Skill Swap); `pokemon.syrupTriggered` is not in the state. Intrepid Sword and Dauntless Shield are not standard."
   },
   "{}: Battle Bond (its once-per-battle `bondTriggered` is not in the state)": {
    "reachable": "no",

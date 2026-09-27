@@ -368,6 +368,16 @@ pub struct SideHistory {
     /// in the battle (`eatItem`, or Bug Bite / Pluck's stolen one). Never cleared. Read by Belch;
     /// recorded only while it is in the battle (`HistoryReaders`).
     pub ate_berry: u8,
+    /// Showdown's once-per-battle ability flags per party member (bit `1 << party index`),
+    /// never cleared (board R10a): `pokemon.swordBoost` (Intrepid Sword), `pokemon.shieldBoost`
+    /// (Dauntless Shield) and `pokemon.syrupTriggered` (Supersweet Syrup), set by the ability's
+    /// first `onStart`, which then does nothing on the Pokémon's later starts (a switch-in, a
+    /// Skill Swap). Only those starts write them, so a battle without the abilities never does.
+    /// Hidden from the canonical output (`canonical.cjs` does not print them); a pinned scenario
+    /// restores them by replaying its setup turns.
+    pub sword_boost: u8,
+    pub shield_boost: u8,
+    pub syrup_triggered: u8,
 }
 
 /// Active-position state that resets on switch-out.
