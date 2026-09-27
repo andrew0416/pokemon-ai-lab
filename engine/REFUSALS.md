@@ -4,14 +4,13 @@
 
 범위: Champions 모드(Showdown `9e317a6`)에서 `isNonstandard`가 null인 종(메가 포함, 배틀 중 폼은 기본 종이 표준일 때만), 그 종의 특성(+심플빔·고민씨가 주는 심플·불면), `learnsets.ts`의 기술(+표준 플래그 기술·발버둥), 표준 도구. 테라·다이맥스·Z는 규칙셋이 막는다. 목록은 `refusals.universe.json`, 근거 검사는 아래 '근거'.
 
-- 거부 호출 58곳(함수 42개). 키 96개 = 호출에 쓰인 메시지 50개 + 다른 함수의 메시지를 전달하는 호출 6개 + 메시지 생산 함수(`producers`)의 메시지 40개.
-- 도달 가능 12개, 도달 불가능 84개, 미확인 0개.
+- 거부 호출 57곳(함수 41개). 키 95개 = 호출에 쓰인 메시지 49개 + 다른 함수의 메시지를 전달하는 호출 6개 + 메시지 생산 함수(`producers`)의 메시지 40개.
+- 도달 가능 11개, 도달 불가능 84개, 미확인 0개.
 
 ## 도달 가능 (Champions 표준 범위)
 
 | 키 | 지점 | 종류 | 재현 시나리오 | 오라클 결과 수 | 보드 | 이유 |
 |---|---|---|---|---|---|---|
-| `{} switching into hazards whose order (Showdown effectOrder) decides the outcome` | conditions.rs::entry_hazards | mechanic | `rr-hazard-order` | full: 1 | R2-hazard-effect-order | Stealth Rock / Spikes with Toxic Spikes (or Sticky Web against Mirror Armor, Corviknight) on one side and a newcomer the damage can knock out: Showdown runs them in the order they were set (a Poison type knocked out first leaves the Toxic Spikes), which the state does not keep. |
 | `Emergency Exit of a replacement hit by entry hazards` | mod.rs::run_replacements | mechanic | `rr-emergency-exit-replacement` | full: 1 | R3-emergency-exit-replacement | Golisopod (Emergency Exit) replacing a fainted Pokémon onto Stealth Rock / Spikes that take it to half: Showdown asks for another switch before the turn ends; the replacement decision cannot suspend. |
 | `{} hitting a holder of {}` | moves.rs::future_move_hit | mechanic | `rr-future-sight-red-card` | full: 10 | R5-future-move-edges | Future Sight hitting a Red Card holder: the card drags the user out after the residual. (Eject Button ignores future moves and is no longer refused: fixed in this audit, `rr-future-sight-eject-button`.) |
 | `{} of {} hitting after its user left the field` | moves.rs::future_move_hit | mechanic | `rr-future-sight-user-left` | full: 20 | R5-future-move-edges | Future Sight whose user switched out or fainted before the hit: Showdown uses the benched user's stored stats (no ability or item); the engine has no attacker off the field. |
@@ -50,6 +49,7 @@
 | `Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)` | R17-trick-or-treat-curse | `rr-trick-or-treat-curse-glitch` (full: 2) | Trick-or-Treat's `onHit` sets `action.targetLoc = -1` for a queued Curse of a target in the second position (data/moves.ts:19928; Champions only makes the move standard): the queued action now aims at the ally position; the Ghost Curse's ModifyMove turns an ally target into `randomNormal` and useMove draws a random foe (`handlers::on_modify_move`, already implemented). Also `oo-trick-or-treat-curse-first-slot` (no glitch in the first position). |
 | `{} eaten by force while its holder ignores its item` | R22-forced-eat-ignored-item | `rr-teatime-klutz` (full: 1) | `eatItem(true)` (sim/pokemon.ts:1768) for a holder that ignores its item: `singleEvent('Eat')` is suppressed (sim/battle.ts:607: item handlers but Start, TakeItem and SetAbility), the berry is still consumed with `lastItem` and AfterUseItem. `update::eat_item_forced` skips `berry_on_eat` for such a holder instead of refusing. Also `oo-teatime-magic-room`. |
 | `{}: {} would confuse a {} nature (confusion is not implemented)` | B36-refusal-messages | `oo-figy-berry-confusion` (full: 24) | Stale: confusion is implemented and `update::berry_on_eat` already confuses the eater of a Figy-type berry its nature dislikes (the Bug Bite / Pluck path was checked by `pluck-incinerate`). `update::berry_problem` is gone (with its call in `support::check_state` and `switching::switch_in_problem`); the holder's own Update eating matches the oracle (`oo-figy-berry-confusion`: Figy Berry, Timid Snorlax). The Figy-type berries are not standard. |
+| `{} switching into hazards whose order (Showdown effectOrder) decides the outcome` | R2-hazard-effect-order | `rr-hazard-order` (full: 1) | `SideHistory::hazard_order` (`field::HazardOrder`) keeps the order each side's hazards were set in (Showdown side-condition `effectOrder`; kept through removal and Court Change); `conditions::entry_hazards` runs them in that order. |
 
 ## 미확인
 
@@ -176,7 +176,6 @@
 | 보드 | 도달 가능 | 도달 불가능 |
 |---|---|---|
 | R1-trace-seeking | — | `check_side: -> mega::mega_target(mon)`<br>`Trace next to No Ability`<br>`Trace copying {} (cantsuppress: setAbility fails and Trace keeps seeking)`<br>`Trace copying {} ({})`<br>`{}: ability {} ({})` |
-| R2-hazard-effect-order | `{} switching into hazards whose order (Showdown effectOrder) decides the outcome` | — |
 | R3-emergency-exit-replacement | `Emergency Exit of a replacement hit by entry hazards` | — |
 | R5-future-move-edges | `{} of {} hitting after its user left the field`<br>`{} hitting a holder of {}` | `{}: a multi-hit future move` |
 | R8-encore-edges | — | `Transform by an encored Pokémon (the encored move leaves the move slots)` |

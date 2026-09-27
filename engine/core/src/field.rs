@@ -46,6 +46,73 @@ pub enum SideEffect {
 
 pub const SIDE_EFFECT_COUNT: usize = 15;
 
+/// The entry hazards, in the index order of [`HazardOrder`].
+pub const HAZARDS: [SideEffect; 4] = [
+    SideEffect::StealthRock,
+    SideEffect::Spikes,
+    SideEffect::ToxicSpikes,
+    SideEffect::StickyWeb,
+];
+
+/// The order a side's entry hazards were set in (Showdown's side-condition
+/// `effectState.effectOrder`): their `onSwitchIn` handlers tie on everything else, so a
+/// newcomer meets them in that order. Two bits per hazard of [`HAZARDS`], holding its rank
+/// among the side's active hazards (0 = first set); an inactive hazard holds 0 and the active
+/// ones are numbered densely, so equal orders compare equal. Hidden from the canonical output
+/// (`SideHistory::hazard_order`).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub struct HazardOrder(pub u8);
+
+impl HazardOrder {
+    fn index(effect: SideEffect) -> Option<usize> {
+        HAZARDS.iter().position(|&h| h == effect)
+    }
+
+    /// The rank of `effect` (meaningful while it is active).
+    pub fn rank(self, effect: SideEffect) -> u8 {
+        Self::index(effect).map_or(0, |i| (self.0 >> (2 * i)) & 3)
+    }
+
+    fn with_rank(self, i: usize, rank: u8) -> HazardOrder {
+        HazardOrder((self.0 & !(3 << (2 * i))) | ((rank & 3) << (2 * i)))
+    }
+
+    /// The order after `effect` turned active (`added`) or inactive on a side whose effects were
+    /// `effects` before the change: a new hazard comes after the others; a removed one leaves
+    /// its rank and the later ones move up. Not a hazard: unchanged.
+    pub fn changed(self, effects: &[Effect], effect: SideEffect, added: bool) -> HazardOrder {
+        let Some(i) = Self::index(effect) else {
+            return self;
+        };
+        let active = |h: SideEffect| effects[h as usize].is_active();
+        if added {
+            let others = HAZARDS
+                .iter()
+                .filter(|&&h| h != effect && active(h))
+                .count() as u8;
+            return self.with_rank(i, others);
+        }
+        let removed = self.rank(effect);
+        let mut out = self.with_rank(i, 0);
+        for (j, &h) in HAZARDS.iter().enumerate() {
+            if h != effect && active(h) && self.rank(h) > removed {
+                out = out.with_rank(j, self.rank(h) - 1);
+            }
+        }
+        out
+    }
+
+    /// The active hazards of `effects`, in the order they were set.
+    pub fn sorted(self, effects: &[Effect]) -> Vec<SideEffect> {
+        let mut present: Vec<SideEffect> = HAZARDS
+            .into_iter()
+            .filter(|&h| effects[h as usize].is_active())
+            .collect();
+        present.sort_by_key(|&h| self.rank(h));
+        present
+    }
+}
+
 /// Slot conditions (Showdown `side.slotConditions[position]`, WORKPLAN F12): they belong to the
 /// position and outlast the Pokémon that stood there.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]

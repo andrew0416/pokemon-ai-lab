@@ -89,7 +89,14 @@ pub fn apply_patch<const N: usize>(
                 if duration.is_some() {
                     return Err(format!("side condition {id}: hazards take no duration"));
                 }
-                state.side_mut(side).effects[effect as usize] = Effect {
+                let s = state.side_mut(side);
+                if !s.effects[effect as usize].is_active() {
+                    // Set in id order (the oracle's `applyPatch` sorts them the same way): the
+                    // order the newcomers meet them in (Showdown `effectOrder`).
+                    s.history.hazard_order =
+                        s.history.hazard_order.changed(&s.effects, effect, true);
+                }
+                s.effects[effect as usize] = Effect {
                     value: layers,
                     turns: Effect::PERMANENT,
                 };

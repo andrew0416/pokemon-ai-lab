@@ -1,0 +1,105 @@
+{
+ "description": "TT R2a: the reverse of rr-hazard-order. Toxic Spikes (Glimmora, setup turn 1) then Stealth Rock (Garchomp, setup turn 2) on p2's side; Arbok (Poison, grounded) patched to 5 HP switches in and meets the Toxic Spikes first (Showdown effectOrder): it absorbs them, then the rocks knock it out.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Rough Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Stealth Rock",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Glimmora",
+    "item": "",
+    "ability": "Toxic Debris",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Toxic Spikes",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Arbok",
+    "item": "",
+    "ability": "Shed Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Gastro Acid"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "setupTurns": [
+  [
+   "move protect, move toxicspikes",
+   "move calmmind, move calmmind"
+  ],
+  [
+   "move stealthrock, move protect",
+   "move calmmind, move calmmind"
+  ]
+ ],
+ "patch": {
+  "p2": {
+   "Arbok": {
+    "hp": 5
+   }
+  }
+ },
+ "turn": {
+  "p1": "move protect, move protect",
+  "p2": "switch 3, move calmmind"
+ }
+}

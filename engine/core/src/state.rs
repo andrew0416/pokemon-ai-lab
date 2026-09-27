@@ -368,6 +368,9 @@ pub struct SideHistory {
     /// in the battle (`eatItem`, or Bug Bite / Pluck's stolen one). Never cleared. Read by Belch;
     /// recorded only while it is in the battle (`HistoryReaders`).
     pub ate_berry: u8,
+    /// The order the side's entry hazards were set in (Showdown's side-condition
+    /// `effectOrder`; board R2). Hidden from the canonical output.
+    pub hazard_order: crate::field::HazardOrder,
 }
 
 /// Active-position state that resets on switch-out.

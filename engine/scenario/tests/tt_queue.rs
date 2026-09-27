@@ -1,0 +1,41 @@
+//! Opus TT (wave 15, lane L2): the order of hazards and queued actions (Showdown `effectOrder`
+//! and `battle-queue.ts`) and two small item/ability windows, each against the oracle's exact
+//! distribution.
+
+mod common;
+
+use common::assert_exact_parity;
+
+/// R2a: Toxic Spikes set before Stealth Rock. The newcomer (Arbok, Poison, 5 HP) meets them in
+/// that order (`effectOrder`): it absorbs the spikes, then the rocks knock it out. The other
+/// order is `rr-hazard-order` (`refusals_rr.rs`).
+#[test]
+fn hazards_run_in_the_order_they_were_set() {
+    assert_exact_parity("tt-hazard-order-toxic-first");
+}
+
+/// R2a: Court Change moves the effect states whole, `effectOrder` included. Stealth Rock then
+/// Toxic Spikes on p1's side move to p2's; Arbok (5 HP) meets the rocks first and faints, the
+/// spikes stay (the swap's own order, Toxic Spikes before Stealth Rock, would let it absorb
+/// them).
+#[test]
+fn court_change_keeps_the_hazard_order() {
+    assert_exact_parity("tt-hazard-order-court-change");
+}
+
+/// B44a: Fling's condition `onUpdate` sets `usedItemThisTurn` on the user, so its itemless
+/// ally with Pickup picks the flung Hard Stone up at the residual (the engine did not record
+/// it, and Diggersby stayed itemless).
+#[test]
+fn pickup_picks_up_a_flung_item() {
+    assert_exact_parity("tt-fling-pickup");
+}
+
+/// B25a (no bug; regression lock): Mega Sol's sun belongs to the active Pokémon. In rain, Mega
+/// Meganium's Aqua Step hits as in sun (0.5x); Oricorio's Dancer copy runs with Oricorio as the
+/// active Pokémon (`runMove`: `setActiveMove`) and sees the rain (1.5x). Oracle recorded with
+/// `--collapse-secondaries` (Aqua Step's 100% Speed raise: exact).
+#[test]
+fn mega_sol_sun_ends_with_the_users_move() {
+    assert_exact_parity("tt-mega-sol-dancer");
+}

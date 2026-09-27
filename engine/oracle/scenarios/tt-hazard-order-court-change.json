@@ -1,0 +1,110 @@
+{
+ "description": "TT R2a: Court Change keeps the hazard order. p2 sets Stealth Rock (Garchomp, setup turn 1) then Toxic Spikes (Glimmora, setup turn 2) on p1 side; Cinderace moves both to p2 side with Court Change (setup turn 3). Arbok (Poison, 5 HP) switches in: the rocks, set first, knock it out and the Toxic Spikes stay.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Cinderace",
+    "item": "",
+    "ability": "Blaze",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Court Change",
+     "Protect",
+     "Bulk Up"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Rough Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Stealth Rock",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Glimmora",
+    "item": "",
+    "ability": "Toxic Debris",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Toxic Spikes",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Arbok",
+    "item": "",
+    "ability": "Shed Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Gastro Acid"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "setupTurns": [
+  [
+   "move bulkup, move calmmind",
+   "move stealthrock, move protect"
+  ],
+  [
+   "move bulkup, move calmmind",
+   "move stealthrock, move toxicspikes"
+  ],
+  [
+   "move courtchange, move calmmind",
+   "move protect, move protect"
+  ]
+ ],
+ "patch": {
+  "p2": {
+   "Arbok": {
+    "hp": 5
+   }
+  }
+ },
+ "turn": {
+  "p1": "move protect, move protect",
+  "p2": "switch 3, move protect"
+ }
+}

@@ -138,7 +138,9 @@ function applyPatch(battle, patch) {
 			}
 			if (p.item !== undefined) mon.item = p.item;
 		}
-		for (const [id, duration] of Object.entries(patch.sides?.[sideId] || {})) {
+		// In id order, as the engine's patch does: the order hazards are set in is the order a
+		// newcomer meets them (`effectOrder`).
+		for (const [id, duration] of Object.entries(patch.sides?.[sideId] || {}).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))) {
 			side.addSideCondition(id, side.active[0]);
 			if (duration !== null) side.sideConditions[id].duration = duration;
 		}
