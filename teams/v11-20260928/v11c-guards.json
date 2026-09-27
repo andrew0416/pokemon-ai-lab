@@ -1,0 +1,126 @@
+[
+  {
+    "name": "",
+    "species": "Pawmot",
+    "item": "Focus Sash",
+    "ability": "Volt Absorb",
+    "gender": "",
+    "nature": "Jolly",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Revival Blessing",
+      "Volt Switch",
+      "Nuzzle",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Hawlucha",
+    "item": "Sitrus Berry",
+    "ability": "Unburden",
+    "gender": "",
+    "nature": "Jolly",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Quick Guard",
+      "Brave Bird",
+      "Close Combat",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Meowstic",
+    "item": "Light Clay",
+    "ability": "Prankster",
+    "gender": "",
+    "nature": "Bold",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 32,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Safeguard",
+      "Light Screen",
+      "Reflect",
+      "Fake Out"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Gardevoir",
+    "item": "Leftovers",
+    "ability": "Synchronize",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Healing Wish",
+      "Hyper Voice",
+      "Moonblast",
+      "Protect"
+    ]
+  }
+]

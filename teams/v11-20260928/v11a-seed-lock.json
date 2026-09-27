@@ -1,0 +1,126 @@
+[
+  {
+    "name": "",
+    "species": "Venusaur",
+    "item": "Leftovers",
+    "ability": "Chlorophyll",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 2,
+      "spa": 32,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Leech Seed",
+      "Petal Dance",
+      "Sleep Powder",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Salamence",
+    "item": "Lum Berry",
+    "ability": "Intimidate",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Outrage",
+      "Thrash",
+      "Dragon Claw",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Drampa",
+    "item": "Sitrus Berry",
+    "ability": "Berserk",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Uproar",
+      "Outrage",
+      "Draco Meteor",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Annihilape",
+    "item": "Leftovers",
+    "ability": "Defiant",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Raging Fury",
+      "Drain Punch",
+      "Bulk Up",
+      "Protect"
+    ]
+  }
+]
