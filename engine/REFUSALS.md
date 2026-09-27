@@ -4,8 +4,8 @@
 
 범위: Champions 모드(Showdown `9e317a6`)에서 `isNonstandard`가 null인 종(메가 포함, 배틀 중 폼은 기본 종이 표준일 때만), 그 종의 특성(+심플빔·고민씨가 주는 심플·불면), `learnsets.ts`의 기술(+표준 플래그 기술·발버둥), 표준 도구. 테라·다이맥스·Z는 규칙셋이 막는다. 목록은 `refusals.universe.json`, 근거 검사는 아래 '근거'.
 
-- 거부 호출 70곳(함수 45개). 키 112개 = 호출에 쓰인 메시지 60개 + 다른 함수의 메시지를 전달하는 호출 7개 + 메시지 생산 함수(`producers`)의 메시지 45개.
-- 도달 가능 31개, 도달 불가능 81개, 미확인 0개.
+- 거부 호출 68곳(함수 44개). 키 111개 = 호출에 쓰인 메시지 59개 + 다른 함수의 메시지를 전달하는 호출 7개 + 메시지 생산 함수(`producers`)의 메시지 45개.
+- 도달 가능 30개, 도달 불가능 81개, 미확인 0개.
 
 ## 도달 가능 (Champions 표준 범위)
 
@@ -34,7 +34,6 @@
 | `Sleep Talk calling {} (a multi-hit move)` | support.rs::sleep_talk_problem (producer) | mechanic | `rr-sleep-talk-multihit` | full: 1 | R14-called-multi-hit | Choosing Sleep Talk with a multi-hit move in the slots (none is `nosleeptalk`). |
 | `check_side: -> why` | mod.rs::check_side | forward | `rr-sleep-talk-multihit` | full: 1 | R14-called-multi-hit | Forwards `move_unsupported` (Struggle, the chosen move: E1) and `sleep_talk_problem` (reachable: multi-hit). |
 | `{} called by {}: a multi-hit called move` | moves.rs::call_move | mechanic | `rr-copycat-multihit` | full: 22 | R14-called-multi-hit | Copycat calling one of the 14 standard multi-hit moves (Double Hit, Bullet Seed, Scale Shot, Population Bomb, ...): the hits of a called move cannot suspend between stages. (Sleep Talk is refused earlier, below.) |
-| `Fling's user fainted before its item was thrown` | moves.rs::run_move_inner<br>update.rs::update_event | mechanic | `rr-fling-innards-out` | full: 1 | R16-fling-user-fainted | Fling knocking out Mega Victreebel (Innards Out), whose damage faints the user before the Update that throws the item. The `run_move_inner` guard never fired (the hit loop's faint processing clears the volatile first) and the engine answered wrongly; this audit added the guard in `update_event`. |
 | `Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)` | moves/handlers.rs::on_hit | mechanic | `rr-trick-or-treat-curse-glitch` | full: 2 | R17-trick-or-treat-curse | Trick-or-Treat (Gourgeist) and Curse (Snorlax and others) are both standard; the target in the second position with Curse queued gets `targetLoc = -1`. |
 | `Copycat calling {}` | moves/handlers.rs::on_hit | mechanic | `rr-copycat-two-turn` | full: 1 | R21-copycat-called-moves | Copycat (standard) calling the last move used in the battle: a two-turn move (Solar Beam, Fly, Dig, Dive, ...; `rr-copycat-two-turn`), a locking move (Outrage, Petal Dance, Thrash, Raging Fury; `rr-copycat-outrage`) or one with its own queued action (Mirror Coat, Chilly Reception are not `failcopycat`; `rr-copycat-mirror-coat`). |
 | `a lock on the called move` | moves/handlers.rs::called_move_problem (producer) | mechanic | `rr-copycat-outrage` | extremes: 81 | R21-copycat-called-moves | Copycat calling Outrage, Petal Dance, Thrash or Raging Fury (`lockedmove`). |
@@ -54,6 +53,7 @@
 | `redirection tie between {} and {} (Showdown breaks it by effectOrder)` | R4-redirection-tie | `rr-redirect-tie` (full: 1) | Two redirectors of one priority at equal Speed: Showdown sorts the RedirectTarget handlers with `compareRedirectOrder` in a stable sort (no tie shuffle), so the holder whose `abilityState.effectOrder` is lower (switched in or last had an ability set first) wins, whatever the move and the order of use. New hidden `Slot::ability_order` (restarted by switch-in, `setAbility`, Skill Swap, Transform, Mega Evolution and other permanent forme changes; carried by Ally Switch), recorded only while a redirector can be in the battle; also `oo-redirect-tie-swapped`, `oo-redirect-tie-worry-seed`, `oo-lightningrod-tie`. |
 | `{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)` | R7-ally-switch-target | `rr-ally-switch-snipe-shot` (full: 17) | A tracking move (Snipe Shot; any move of a Stalwart or Propeller Tail holder) aimed at a Pokémon Ally Switch moved: the queued move action now holds Showdown's `originalTarget` (`resolveAction`: the Pokémon at `targetLoc` when queued) and `moves::get_target` aims at it while it is active (`getTarget`), else at the position. Also `ally-switch-snipe-shot`, `s-stalwart-ally-switch` (fixtures, were refused), `oo-ally-switch-stalwart` (Archaludon), `oo-snipe-shot-target-switched` (a target that left the field: the position). |
 | `Recycle restoring {} (its onStart)` | R11-item-restart | `rr-recycle-seed` (full: 1) | Recycle is `pokemon.lastItem = ""; pokemon.setItem(item, source, move)`: the item is held again and `setItem`'s Start runs for every item with an `onStart` (`handlers::trick_item_start`, which Trick already used: Seeds, Room Service, White Herb, Metronome, the Choice items, Booster Energy, Utility Umbrella, Air Balloon). Also `oo-recycle-white-herb`, `oo-recycle-metronome`. |
+| `Fling's user fainted before its item was thrown` | R16-fling-user-fainted | `rr-fling-innards-out` (full: 1) | Showdown's `eachEvent('Update')` in the hit loop (sim/battle-actions.ts:967) still holds the 0-HP user (its faint is processed after the loop), so Fling's condition `onUpdate` runs on it: `setItem('')` fails (`!this.hp`) and the item stays, `lastItem` is set, AfterUseItem runs (an ally's Symbiosis takes its item back when `setItem` fails on the fainted user), `removeVolatile` fails. `update::update_event` adds such users to the Update (`conditions::fling_update_fainted`); the never-firing guard in `moves::run_move_inner` is gone. Also `oo-fling-innards-out-symbiosis`. |
 
 ## 미확인
 
@@ -188,7 +188,6 @@
 | R12-syrup-bomb-source | — | `Syrup Bomb's residual with its source neither active nor fainted in place` |
 | R13-attract-gender | `Attract between {} and {} with an undecided gender (give the sets a gender)`<br>`{} with {} of undecided gender (give the set a gender)`<br>`switch_in_as: -> why`<br>`{}: Rivalry next to a Pokémon of undecided gender`<br>`Rivalry next to {} of undecided gender (give the set a gender)` | `Skill Swap: {}` |
 | R14-called-multi-hit | `check_side: -> why`<br>`{} called by {}: a multi-hit called move`<br>`Sleep Talk calling {} (a multi-hit move)` | `Sleep Talk calling {} (its onAfterMove, unchecked for a called move)` |
-| R16-fling-user-fainted | `Fling's user fainted before its item was thrown` | — |
 | R17-trick-or-treat-curse | `Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)` | — |
 | R18-baton-pass-volatiles | — | `Baton Pass passing the {} volatile` |
 | R19-transformed-off-field | — | `Transform copying {} ({})`<br>`{}: transformed off the field` |

@@ -1009,6 +1009,32 @@ pub(crate) fn fling_update<const N: usize>(
     Ok(())
 }
 
+/// Fling's condition `onUpdate` on its user at 0 HP in `slot`, its faint not processed yet (a
+/// reaction to the hit knocked it out before the hit loop's Update: Innards Out): `setItem('')`
+/// fails (`!this.hp`), so the item stays held, but `lastItem` is set (`usedItemThisTurn` too, which
+/// the faint's slot reset drops) and `runEvent('AfterUseItem')` runs: Unburden's `addVolatile` fails
+/// at 0 HP, and an ally's Symbiosis takes its item and gets it back when `setItem` fails on the
+/// fainted Pokémon (`abilities::symbiosis`). `removeVolatile('fling')` fails too; the faint's
+/// `clearVolatile` ends it.
+pub(crate) fn fling_update_fainted<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
+    if !b.volatile(slot, Volatile::Fling).active {
+        return;
+    }
+    let Some(pokemon) = b.occupant(slot) else {
+        return;
+    };
+    let item = b.raw_item(slot);
+    let last = b.mon(pokemon).last_item;
+    if last != item {
+        b.apply(Instruction::SetLastItem {
+            target: pokemon,
+            old: last,
+            new: item,
+        });
+    }
+    super::abilities::symbiosis(b, slot);
+}
+
 /// Mean Look, Block, Spider Web `onHit`: `target.addVolatile('trapped', source, move,
 /// 'trapper')`. Fails on a fainted target, one already trapped (no `onRestart`) or one immune to
 /// `trapped` (`runStatusImmunity`: a Ghost type); otherwise the target gets `trapped` (its

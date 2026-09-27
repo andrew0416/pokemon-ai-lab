@@ -125,11 +125,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R14-called-multi-hit",
     ),
     (
-        "rr-fling-innards-out",
-        "Fling's user fainted before its item was thrown",
-        "R16-fling-user-fainted",
-    ),
-    (
         "rr-trick-or-treat-curse-glitch",
         "Trick-or-Treat's Curse Glitch",
         "R17-trick-or-treat-curse",
@@ -348,11 +343,11 @@ fn sleep_talk_with_a_multi_hit_move() {
     assert_exact_parity("rr-sleep-talk-multihit");
 }
 
-/// The `run_move_inner` guard never fired here (the hit loop's faint processing clears the
-/// Fling volatile first) and the engine answered without the thrown item's `lastItem`; the
-/// Update now refuses it.
+/// Fling knocks out Mega Victreebel, whose Innards Out knocks out Snorlax before the hit loop's
+/// Update: Fling's condition runs on the 0-HP user (`setItem('')` fails, `lastItem` is set). Was
+/// refused (and before the audit answered without `lastItem`); board R16,
+/// `oo_fling_user_fainted.rs`.
 #[test]
-#[ignore = "refused: Fling's user fainted before its item was thrown (board R16-fling-user-fainted)"]
 fn fling_user_fainted_by_innards_out() {
     assert_exact_parity("rr-fling-innards-out");
 }

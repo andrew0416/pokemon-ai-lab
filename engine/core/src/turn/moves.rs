@@ -881,12 +881,8 @@ fn run_move_inner<const N: usize>(
         return Ok(MoveStep::Suspended(progress));
     }
     let user = handlers::current_slot(b, user, pokemon);
-    // Fling's user knocked out before an Update threw its item (Jaboca Berry, say): Showdown's
-    // `fling.onUpdate` then runs on a 0-HP user, whose `setItem('')` and `removeVolatile` fail
-    // while `lastItem` and AfterUseItem still happen.
-    if b.volatile(user, Volatile::Fling).active && b.alive(user).is_none() {
-        return Err(b.unsupported("Fling's user fainted before its item was thrown"));
-    }
+    // (Fling's user knocked out before its item was thrown gets the item's Update at 0 HP inside
+    // the hit loop, `update::update_event`; the faint then clears the volatile.)
     // `if (this.battle.activeMove) move = this.battle.activeMove;`: the AfterMove events see the
     // move a calling move (Sleep Talk, Copycat) used, not the caller.
     let called = b.called_move.take();

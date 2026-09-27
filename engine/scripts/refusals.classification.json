@@ -45,6 +45,10 @@
   "Recycle restoring {} (its onStart)": {
    "board": "R11-item-restart", "fixture": "rr-recycle-seed",
    "what": "Recycle is `pokemon.lastItem = \"\"; pokemon.setItem(item, source, move)`: the item is held again and `setItem`'s Start runs for every item with an `onStart` (`handlers::trick_item_start`, which Trick already used: Seeds, Room Service, White Herb, Metronome, the Choice items, Booster Energy, Utility Umbrella, Air Balloon). Also `oo-recycle-white-herb`, `oo-recycle-metronome`."
+  },
+  "Fling's user fainted before its item was thrown": {
+   "board": "R16-fling-user-fainted", "fixture": "rr-fling-innards-out",
+   "what": "Showdown's `eachEvent('Update')` in the hit loop (sim/battle-actions.ts:967) still holds the 0-HP user (its faint is processed after the loop), so Fling's condition `onUpdate` runs on it: `setItem('')` fails (`!this.hp`) and the item stays, `lastItem` is set, AfterUseItem runs (an ally's Symbiosis takes its item back when `setItem` fails on the fainted user), `removeVolatile` fails. `update::update_event` adds such users to the Update (`conditions::fling_update_fainted`); the never-firing guard in `moves::run_move_inner` is gone. Also `oo-fling-innards-out-symbiosis`."
   }
  },
  "entries": {
@@ -227,10 +231,6 @@
   "Nature Power calling {}": {
    "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
    "why": "Nature Power is not standard (E8)."
-  },
-  "Fling's user fainted before its item was thrown": {
-   "reachable": "yes", "kind": "mechanic", "board": "R16-fling-user-fainted", "repro": "rr-fling-innards-out",
-   "why": "Fling knocking out Mega Victreebel (Innards Out), whose damage faints the user before the Update that throws the item. The `run_move_inner` guard never fired (the hit loop's faint processing clears the volatile first) and the engine answered wrongly; this audit added the guard in `update_event`."
   },
   "Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)": {
    "reachable": "yes", "kind": "mechanic", "board": "R17-trick-or-treat-curse", "repro": "rr-trick-or-treat-curse-glitch",

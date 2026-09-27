@@ -1,0 +1,92 @@
+{
+ "description": "R16 Fling's user fainted before its item was thrown (Opus OO): as rr-fling-innards-out, with Oranguru (Symbiosis, Sitrus Berry) next to Snorlax. The Update after the hit runs Fling's condition on the 0-HP Snorlax: setItem('') fails (the Iron Ball stays), lastItem is set, and AfterUseItem lets Symbiosis take Oranguru's berry, whose setItem on the 0-HP Snorlax fails too, so Oranguru keeps it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "Iron Ball",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Fling",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Oranguru",
+    "item": "Sitrus Berry",
+    "ability": "Symbiosis",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Victreebel",
+    "item": "Victreebelite",
+    "ability": "Chlorophyll",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Swords Dance"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move protect, move calmmind",
+   "move protect mega, move calmmind"
+  ]
+ ],
+ "patch": {
+  "p1": {
+   "Snorlax": {
+    "hp": 3
+   }
+  },
+  "p2": {
+   "Victreebel": {
+    "hp": 5
+   }
+  }
+ },
+ "turn": {
+  "p1": "move fling 1, move calmmind",
+  "p2": "move swordsdance, move calmmind"
+ }
+}
