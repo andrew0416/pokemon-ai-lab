@@ -3,11 +3,13 @@
 //!
 //! Usage: lab-turn <scenario.json> [--before <oracle-report.json>] [--position <i>] [--out <file>]
 //!                 [--mc <samples> [--seed <n>]]
-//!                 [--rolls full|extremes|quartiles|median|pessimistic-p1|pessimistic-p2]
+//!                 [--rolls full|extremes|quartiles|median|pessimistic-p1|pessimistic-p2|fixed-<k>]
 //!
 //! `--rolls extremes` branches only on the minimum and maximum damage roll (the oracle's
 //! `--mode extremes`; compare against such a report), `quartiles` on four rolls, `median` on
-//! one (92%), `pessimistic-pN` on one: the minimum for side N's attacks, the maximum against it.
+//! one (92%), `pessimistic-pN` on one: the minimum for side N's attacks, the maximum against it,
+//! `fixed-<k>` on one for every attack: roll index k (0 = 85%, 15 = 100%; the oracle's
+//! `--mode fixed --roll k`, compared exactly).
 //!
 //! `--mc` samples the turn instead of enumerating it (`mode: "mc"`), for turns whose exact
 //! distribution is too large; compare such reports with `oracle/marginals.cjs`.
@@ -93,9 +95,14 @@ fn run() -> Result<(), String> {
                     Some("median") => RollMode::Median,
                     Some("pessimistic-p1") => RollMode::Pessimistic(SideId::One),
                     Some("pessimistic-p2") => RollMode::Pessimistic(SideId::Two),
+                    Some(fixed) if fixed.starts_with("fixed-") => fixed["fixed-".len()..]
+                        .parse::<u8>()
+                        .ok()
+                        .and_then(RollMode::fixed)
+                        .ok_or("--rolls fixed-<k> needs a roll index 0..15")?,
                     _ => {
                         return Err("--rolls needs full, extremes, quartiles, median, \
-                                    pessimistic-p1 or pessimistic-p2"
+                                    pessimistic-p1, pessimistic-p2 or fixed-<k>"
                             .into())
                     }
                 };
@@ -207,6 +214,7 @@ fn run() -> Result<(), String> {
             (None, RollMode::Quartiles) => "quartiles",
             (None, RollMode::Median) => "median",
             (None, RollMode::Pessimistic(_)) => "pessimistic",
+            (None, RollMode::Fixed(_)) => "fixed",
         },
         "exact": samples.is_none() && options.rolls.is_exact(),
         "engine": "lab-engine",
@@ -215,6 +223,10 @@ fn run() -> Result<(), String> {
         "totalProbability": total,
         "elapsedMs": elapsed.as_secs_f64() * 1000.0,
     });
+    let mut header = header;
+    if let (None, RollMode::Fixed(k)) = (samples, options.rolls) {
+        header["roll"] = json!(k);
+    }
     let header = serde_json::to_string(&header).expect("serializable");
     let mut text = header[..header.len() - 1].to_owned();
     text.push_str(r#","before":"#);

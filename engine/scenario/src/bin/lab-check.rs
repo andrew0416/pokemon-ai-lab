@@ -1,6 +1,7 @@
 //! Checks lab-engine against one `enumerate.cjs` report of a scenario: the engine replays the
 //! scenario to the report's `before` state, enumerates the decision in the report's roll mode
-//! (`full` → exact, `extremes` → min/max rolls) and compares the canonical outcome
+//! (`full` → exact, `extremes` → min/max rolls, `fixed` with the report's `roll` k → every
+//! damage roll at index k, `RollMode::Fixed(k)`) and compares the canonical outcome
 //! distributions exactly (the comparator of the fixture tests, `lab_scenario::parity`).
 //!
 //! Usage: lab-check <scenario.json> <oracle-report.json> [--out verdict.json] [--tolerance p]
@@ -105,10 +106,23 @@ fn check(scenario: &str, report_path: &str, tolerance: f64) -> Value {
         Err(e) => return failure("engine-error", format!("{report_path}: {e}")),
     };
     let mode = report["mode"].as_str().unwrap_or("");
+    let roll = report["roll"].as_u64();
     let options = EnumerateOptions {
         rolls: match mode {
             "full" => RollMode::Full,
             "extremes" => RollMode::Extremes,
+            "fixed" => match roll
+                .and_then(|k| u8::try_from(k).ok())
+                .and_then(RollMode::fixed)
+            {
+                Some(rolls) => rolls,
+                None => {
+                    return failure(
+                        "engine-error",
+                        format!("report mode \"fixed\" with roll {}", report["roll"]),
+                    )
+                }
+            },
             other => return failure("engine-error", format!("report mode {other:?}")),
         },
     };
@@ -192,6 +206,7 @@ fn check(scenario: &str, report_path: &str, tolerance: f64) -> Value {
     json!({
         "status": status,
         "mode": mode,
+        "roll": roll,
         "engineOutcomes": comparison.engine_outcomes,
         "oracleOutcomes": comparison.oracle_outcomes,
         "onlyEngine": comparison.only_engine.len(),

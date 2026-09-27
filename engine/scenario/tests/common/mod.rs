@@ -135,6 +135,24 @@ pub fn assert_extremes_parity(name: &str) {
     );
 }
 
+/// Parity with the oracle's `--mode fixed --roll k` fixture (`oracle/expected/<name>.fixed<k>.json`,
+/// every damage roll at index k, everything else enumerated) under `RollMode::Fixed(k)`: exact
+/// (JJ-heavy-turn-parity).
+pub fn assert_fixed_parity(name: &str, roll: u8) {
+    let path = engine_dir().join(format!("oracle/expected/{name}.fixed{roll}.json"));
+    let text = std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("{path:?}: {e}"));
+    let fixture: Value = serde_json::from_str(&text).unwrap();
+    assert_eq!(fixture["mode"], "fixed", "{name}: not a fixed-roll fixture");
+    assert_eq!(fixture["roll"], roll, "{name}: fixture roll");
+    assert_parity_with(
+        name,
+        &fixture,
+        EnumerateOptions {
+            rolls: RollMode::fixed(roll).expect("roll index 0..15"),
+        },
+    );
+}
+
 fn assert_parity_with(name: &str, fixture: &Value, options: EnumerateOptions) {
     let (loaded, position) = start(name, fixture);
     let mut state = position.state.clone();

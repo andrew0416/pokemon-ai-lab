@@ -1,0 +1,13 @@
+{
+ "description": "Opus JJ JJ-heavy-turn-parity: a Speed-tie mirror, the kind of turn the parity sweeps' extremes runs could not finish. Library balance-ddee (Floette-Eternal + Rillaboom lead) vs library crown-cecil9 (Floette-Eternal + Rillaboom lead): Floette 122 = Floette 122 and Rillaboom 105 = Rillaboom 105, so every Update after every hit and the queue order shuffle a tie. Both Grassy Surges start (tie). Turn 1: both Floettes use Dazzling Gleam (spread), p1 Rillaboom High Horsepower into p2 Floette, p2 Rillaboom Wood Hammer (recoil) into p1 Floette. Fixtures: `.fixed0/.fixed7/.fixed15.json` (every damage roll at index 0, 7, 15; everything else enumerated) against RollMode::Fixed(k).",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "team": "../../../teams/library/doubles/m-c/balance-ddee/team.json",
+  "order": "1423"
+ },
+ "p2": {
+  "team": "../../../teams/library/doubles/m-c/crown-cecil9/team.json",
+  "order": "3214"
+ },
+ "turn": {"p1": "move dazzlinggleam, move highhorsepower 1", "p2": "move dazzlinggleam, move woodhammer 1"}
+}

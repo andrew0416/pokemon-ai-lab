@@ -48,19 +48,36 @@ pub enum RollMode {
     /// against it. The user's "최저난수 보장" criterion: a line that works here works under
     /// every roll (accuracy, critical hits and secondary effects stay probabilistic).
     Pessimistic(SideId),
+    /// One roll for every attack of both sides: index `k` (< 16) of the ascending table, i.e.
+    /// the multiplier `85 + k` % (0 = the minimum, 7 = [`RollMode::Median`], 15 = the
+    /// maximum). The oracle's `--mode fixed --roll k` (JJ-heavy-turn-parity): with the rolls
+    /// out of the branching, turns too heavy for `Extremes` are still compared exactly
+    /// (everything else stays enumerated with its probability). Constructed by
+    /// [`RollMode::fixed`]; [`RollMode::indices`] panics for `k >= 16`.
+    Fixed(u8),
 }
 
+/// The 16 roll indices in order (the table [`RollMode::indices`] borrows from).
+static ROLL_INDICES: [usize; crate::damage::DAMAGE_ROLL_COUNT] =
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+
 impl RollMode {
+    /// [`RollMode::Fixed`] at roll index `k`, if `k < 16`.
+    pub fn fixed(k: u8) -> Option<RollMode> {
+        (usize::from(k) < crate::damage::DAMAGE_ROLL_COUNT).then_some(RollMode::Fixed(k))
+    }
+
     /// The roll indices (into the ascending 16-roll table) the mode branches on for an
     /// attack by `attacker`.
     pub fn indices(self, attacker: SideId) -> &'static [usize] {
         match self {
-            RollMode::Full => &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+            RollMode::Full => &ROLL_INDICES,
             RollMode::Extremes => &[0, 15],
             RollMode::Quartiles => &[0, 5, 10, 15],
             RollMode::Median => &[7],
             RollMode::Pessimistic(side) if side == attacker => &[0],
             RollMode::Pessimistic(_) => &[15],
+            RollMode::Fixed(k) => std::slice::from_ref(&ROLL_INDICES[usize::from(k)]),
         }
     }
 
@@ -273,6 +290,9 @@ mod tests {
             (RollMode::Median, vec![92]),
             (RollMode::Pessimistic(SideId::One), vec![85]),
             (RollMode::Pessimistic(SideId::Two), vec![100]),
+            (RollMode::Fixed(0), vec![85]),
+            (RollMode::Fixed(7), vec![92]),
+            (RollMode::Fixed(15), vec![100]),
         ] {
             let mut chooser = Chooser::with_rolls(mode);
             let mut seen = Vec::new();
@@ -299,6 +319,17 @@ mod tests {
         chooser.begin_run();
         assert_eq!(chooser.roll(&rolls, SideId::Two), 100);
         assert!(!chooser.advance());
+        // Fixed: the same index for both sides' attacks; only 0..16 constructs.
+        for k in 0..16u8 {
+            let mode = RollMode::fixed(k).expect("in range");
+            assert_eq!(mode.indices(SideId::One), &[usize::from(k)]);
+            assert_eq!(mode.indices(SideId::Two), &[usize::from(k)]);
+        }
+        assert_eq!(RollMode::fixed(16), None);
+        assert_eq!(
+            RollMode::Fixed(7).indices(SideId::Two),
+            RollMode::Median.indices(SideId::Two)
+        );
         // A sampler draws from all 16 whatever the mode.
         let mut sampler = Chooser::sampler(7);
         sampler.roll_mode = RollMode::Extremes;
