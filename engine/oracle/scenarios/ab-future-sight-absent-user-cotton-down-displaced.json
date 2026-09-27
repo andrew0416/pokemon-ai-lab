@@ -1,0 +1,98 @@
+{
+ "description": "Refusal repro (board R5c): Slowking's Future Sight hits Eldegoss (Cotton Down) after Slowking switched out for Tyranitar: every position of Slowking's side is held, and Cotton Down would reach the Pokémon the engine moves out of its position for the hit, so it refuses.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Slowking",
+    "item": "",
+    "ability": "Own Tempo",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Future Sight",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Tyranitar",
+    "item": "",
+    "ability": "Unnerve",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Rock Slide"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Eldegoss",
+    "item": "",
+    "ability": "Cotton Down",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Gourgeist",
+    "item": "",
+    "ability": "Insomnia",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Trick-or-Treat"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move futuresight 1, move calmmind",
+   "move calmmind, move protect"
+  ],
+  [
+   "switch 3, move protect",
+   "move calmmind, move trickortreat 2"
+  ]
+ ],
+ "turn": {
+  "p1": "move protect, move calmmind",
+  "p2": "move calmmind, move protect"
+ }
+}

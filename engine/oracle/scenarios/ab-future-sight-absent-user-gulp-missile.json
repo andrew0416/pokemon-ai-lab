@@ -1,0 +1,105 @@
+{
+ "description": "Board R5c: Cramorant (Gulp Missile) catches prey with Surf on turn 2 (Cramorant-Gulping); Slowking's Future Sight hits it on turn 3 after Slowking switched out: Gulp Missile does nothing for an inactive source (no damage, no Defense drop, it stays Gulping).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Slowking",
+    "item": "",
+    "ability": "Own Tempo",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Future Sight",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Tyranitar",
+    "item": "",
+    "ability": "Unnerve",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Rock Slide"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Cramorant",
+    "item": "",
+    "ability": "Gulp Missile",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Surf",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Vaporeon",
+    "item": "",
+    "ability": "Water Absorb",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move futuresight 1, move calmmind",
+   "move protect, move calmmind"
+  ],
+  [
+   "switch 3, move protect",
+   "move surf, move calmmind"
+  ]
+ ],
+ "turn": {
+  "p1": "move protect, move calmmind",
+  "p2": "move protect, move calmmind"
+ },
+ "patch": {
+  "p1": {
+   "Tyranitar": {
+    "hp": 150
+   }
+  }
+ }
+}

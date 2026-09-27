@@ -1380,8 +1380,10 @@ pub(crate) fn on_damaging_hit<const N: usize>(
             } else {
                 MoveCategory::Special
             };
+            // `source.isActive`: not a future move's user hitting from the bench.
             if category == wanted
                 && b.alive(user).is_some()
+                && b.absent_user != Some(user)
                 && b.ability(user) != abilities::MAGIC_GUARD
                 && super::update::eat_item(b, target)
             {

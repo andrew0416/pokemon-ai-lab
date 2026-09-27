@@ -1,0 +1,84 @@
+{
+ "description": "Board R5c: Slowking's Future Sight (turn 1) hits Eldegoss (Cotton Down) at the end of turn 3 after Kingambit knocked Slowking out on turn 2 (no bench: its position stays empty). Cotton Down's getAllActive() leaves out the inactive user: Umbreon and Kingambit get Speed -1.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Slowking",
+    "item": "",
+    "ability": "Own Tempo",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Future Sight",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Eldegoss",
+    "item": "",
+    "ability": "Cotton Down",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Cotton Guard",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Kingambit",
+    "item": "Black Glasses",
+    "ability": "Pressure",
+    "nature": "Adamant",
+    "evs": {
+     "atk": 32
+    },
+    "moves": [
+     "Kowtow Cleave",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move futuresight 1, move calmmind",
+   "move cottonguard, move protect"
+  ],
+  [
+   "move calmmind, move calmmind",
+   "move cottonguard, move kowtowcleave 1"
+  ]
+ ],
+ "turn": {
+  "p1": "pass, move calmmind",
+  "p2": "move cottonguard, move protect"
+ }
+}
