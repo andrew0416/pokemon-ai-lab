@@ -14,6 +14,39 @@ fn pinned_mid_game_position_sand_owen_turn_8() {
     common::assert_exact_parity("ff-pinned-sand-owen-t8");
 }
 
+/// Turn 6 of a random-policy game (library balance-ddee vs crown-cecil9) with a mid-turn switch:
+/// Parting Shot at the user's own ally, then the user switches out (`midTurn`); a Throat Chop
+/// volatile, stat stages and Mega Floette on the field.
+#[test]
+fn pinned_mid_game_position_parting_shot_mid_turn() {
+    common::assert_exact_parity("ff-pinned-parting-shot-midturn");
+}
+
+/// Reduced from a sweep mismatch (crown-cecil9 vs perish-mrada, random game 0, decision 3):
+/// Good as Gold's `onTryHit` returns `null` for another Pokémon's status move, so Perish Song
+/// spares Gholdengo; the engine used to give it `perishsong`.
+#[test]
+fn perish_song_spares_good_as_gold() {
+    common::assert_exact_parity("ff-perish-song-good-as-gold");
+}
+
+/// Reduced from a sweep mismatch (gardevoir-braverilla vs psy-cona, random game 2, decision 3):
+/// the Champions mod's Encore replaces the target's queued action (`queue.changeAction`), so the
+/// encored Protect moves at +4, before the faster partner, and can succeed; the engine kept the
+/// chosen move's priority 0 (base game `onOverrideAction`), so the Protect came last and failed.
+#[test]
+fn champions_encore_changes_the_queued_action() {
+    common::assert_exact_parity("ff-encore-protect-stall");
+}
+
+/// Reduced from a sweep mismatch (starmie-braverilla vs sand-owen, random game 2, decision 3): a
+/// flinch on a target that already moved is still on it when a later U-turn stops the turn, so
+/// the paused state shows it; the engine's F18 shortcut skipped that roll.
+#[test]
+fn flinch_on_a_mover_shows_in_a_paused_turn() {
+    common::assert_exact_parity("ff-flinch-before-uturn-pause");
+}
+
 /// The pins leave exactly one position (the recorded game's), with probability 1.
 #[test]
 fn pinned_setup_turns_leave_one_position() {

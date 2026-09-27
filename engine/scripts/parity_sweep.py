@@ -2,10 +2,10 @@
 lab-engine (`lab-check`) on every position scenario of a directory and tabulates how often the
 engine's outcome distribution matches Showdown's exactly.
 
-Usage: python engine/scripts/parity_sweep.py <scenario-dir> [--mode full] [--fallback extremes]
-           [--max-branches 5000] [--fallback-max-branches 60000] [--jobs N] [--out <dir>]
-           [--check <lab-check.exe>] [--timeout 1800] [--keep-reports mismatch|all|none]
-           [--limit N] [--pattern '*.json']
+Usage: python engine/scripts/parity_sweep.py <scenario-dir> [--strategy auto|full-first]
+           [--mode full] [--fallback extremes] [--max-branches 5000] [--fallback-max-branches 60000]
+           [--jobs N] [--out <dir>] [--check <lab-check.exe>] [--timeout 1800]
+           [--keep-reports mismatch|all|none] [--limit N] [--pattern '*.json'] [--resume]
 
 The scenarios are the ones `lab-parity` writes (`<name>.<policy>.g<game>.s<step>.json`: a game's
 earlier decisions as `setupTurns` pinned by `setupStates`), but any oracle scenario works. The
@@ -13,15 +13,19 @@ positions of one game run in step order on one worker, and each oracle report's 
 (`--traces`) are written into the next position's `startTrace`/`setupTraces`, so Showdown replays
 a pinned setup turn as one branch instead of searching for it; games run in parallel (`--jobs`).
 
-Per position: `enumerate.cjs --mode <mode> --collapse-secondaries --traces` with a branch cap; if
-it overflows, again with `--fallback` (default `extremes`, damage rolls min/max on both sides);
-then `lab-check <scenario> <report>` in the report's mode. The status of a position is lab-check's
+Per position (`--strategy auto`, the default): `enumerate.cjs --mode extremes --collapse-secondaries
+--traces` (damage rolls min/max on both sides) capped at --fallback-max-branches; when its
+`fullBranchEstimate` is at most --max-branches, `--mode full` as well (capped at 4x that) and the
+exact report is the one compared. `--strategy full-first`: `--mode <mode>` capped at
+--max-branches, on overflow `--fallback`. Then `lab-check <scenario> <report>` in the report's
+mode. The status of a position is lab-check's
 (`match`, `mismatch`, `unsupported`, `engine-error`, `no-position`, `ambiguous`) or the oracle's
 failure (`oracle-overflow`, `oracle-setup-failed`, `oracle-timeout`, `oracle-error`).
 
 Output (`--out`, default `<scenario-dir>/../sweep`): `summary.json` (every position's row and the
-totals), `summary.md` (tables), `checks/<stem>.check.json` (lab-check verdicts), and oracle
-reports under `reports/` (by default only for positions that did not match).
+totals), `summary.md` (tables), `rows/<stem>.json` (one row per position; `--resume` reuses them),
+`checks/<stem>.check.json` (lab-check verdicts), and oracle reports under `reports/` (by default
+only for positions that did not match).
 
 Needs LAB_ROOT (the checkout with vendor/pokemon-showdown) when run from a worktree.
 """
@@ -106,9 +110,19 @@ def sweep_game(args, paths, out, progress):
     rows = []
     start_trace = None
     setup_traces = {}
+    unreachable = None  # (setup turn, message) the oracle could not reach in this game
     for i, path in enumerate(paths):
         scenario = read_json(path)
         row = position_meta(path, scenario)
+        # Later positions replay the same setup turn: they cannot be reached either.
+        if unreachable and not (args.resume and (out / "rows" / f"{path.name[:-5]}.json").exists()):
+            row["status"] = "oracle-setup-failed"
+            row["error"] = f"{unreachable[1]} (not retried: an earlier position of this game failed there)"
+            (out / "rows" / f"{path.name[:-5]}.json").write_text(json.dumps(row, ensure_ascii=False),
+                                                                encoding="utf-8")
+            rows.append(row)
+            progress(row)
+            continue
         # Traces found so far make the oracle replay the pinned setup turns directly.
         changed = False
         if scenario.get("startState") is not None and start_trace and scenario.get("startTrace") != start_trace:
@@ -128,21 +142,46 @@ def sweep_game(args, paths, out, progress):
             path.write_text(json.dumps(scenario, indent=1, ensure_ascii=False), encoding="utf-8")
 
         stem = path.name[:-len(".json")]
+        row_file = out / "rows" / f"{stem}.json"
+        if args.resume and row_file.exists():
+            rows.append(read_json(row_file))
+            if rows[-1]["status"] == "oracle-setup-failed" and not unreachable:
+                unreachable = (0, rows[-1].get("error", ""))
+            progress(rows[-1])
+            continue
         report = None
-        for mode, cap in [(args.mode, args.max_branches)] + ([(args.fallback, args.fallback_max_branches)]
-                                                             if args.fallback and args.fallback != args.mode else []):
+        attempts = row.setdefault("oracle_attempts", [])
+
+        def attempt(mode, cap):
             candidate = out / "reports" / f"{stem}.{mode}.json"
             ok, failure, message, elapsed = run_oracle(args, path, candidate, mode, cap)
-            row.setdefault("oracle_attempts", []).append(
-                {"mode": mode, "cap": cap, "ok": ok, "status": failure, "message": message, "seconds": round(elapsed, 1)})
-            if ok:
-                report = candidate
-                break
-            if failure != "oracle-overflow":
-                break
+            attempts.append({"mode": mode, "cap": cap, "ok": ok, "status": failure, "message": message,
+                             "seconds": round(elapsed, 1)})
+            return candidate if ok else None
+
+        if args.strategy == "auto":
+            # Extremes first; full as well when the extremes run says it fits (no wasted full runs).
+            report = attempt("extremes", args.fallback_max_branches)
+            if report is not None:
+                estimate = read_json(report).get("fullBranchEstimate")
+                if estimate is not None and estimate <= args.max_branches:
+                    full = attempt("full", 4 * args.max_branches)
+                    if full is not None:
+                        report.unlink(missing_ok=True)
+                        report = full
+        else:
+            for mode, cap in [(args.mode, args.max_branches)] + ([(args.fallback, args.fallback_max_branches)]
+                                                                 if args.fallback and args.fallback != args.mode else []):
+                report = attempt(mode, cap)
+                if report is not None or attempts[-1]["status"] != "oracle-overflow":
+                    break
         if report is None:
-            row["status"] = row["oracle_attempts"][-1]["status"]
-            row["error"] = row["oracle_attempts"][-1]["message"]
+            row["status"] = attempts[-1]["status"]
+            row["error"] = attempts[-1]["message"]
+            m = re.search(r"(startState|setup turn (\d+))", row["error"])
+            if row["status"] == "oracle-setup-failed" and m:
+                unreachable = (int(m.group(2) or 0), row["error"])
+            row_file.write_text(json.dumps(row, ensure_ascii=False), encoding="utf-8")
             rows.append(row)
             progress(row)
             continue
@@ -177,6 +216,7 @@ def sweep_game(args, paths, out, progress):
         keep = args.keep_reports == "all" or (args.keep_reports == "mismatch" and row["status"] != "match")
         if not keep:
             report.unlink(missing_ok=True)
+        row_file.write_text(json.dumps(row, ensure_ascii=False), encoding="utf-8")
         rows.append(row)
         progress(row)
     return rows
@@ -201,6 +241,7 @@ def write_summary(args, out, rows, elapsed):
     compared = counts["match"] + counts["mismatch"]
     summary = {
         "scenario_dir": str(args.dir),
+        "strategy": args.strategy,
         "mode": args.mode,
         "fallback": args.fallback,
         "max_branches": args.max_branches,
@@ -218,8 +259,12 @@ def write_summary(args, out, rows, elapsed):
     lines = [
         "# Parity sweep",
         "",
-        f"`{args.dir}`: {len(rows)} positions, oracle `--mode {args.mode}` (cap {args.max_branches}) "
-        f"then `{args.fallback}` (cap {args.fallback_max_branches}), `--collapse-secondaries`; {elapsed:.0f} s.",
+        f"`{args.dir}`: {len(rows)} positions, strategy `{args.strategy}` "
+        + (f"(extremes capped at {args.fallback_max_branches} branches, full as well when its estimate is at most "
+           f"{args.max_branches})" if args.strategy == "auto" else
+           f"(`--mode {args.mode}` capped at {args.max_branches}, then `{args.fallback}` capped at "
+           f"{args.fallback_max_branches})")
+        + f", `--collapse-secondaries`; {elapsed:.0f} s.",
         "",
         "| positions | exact match | mismatch | unsupported | oracle failed | engine error | no position | ambiguous |",
         "|---|---|---|---|---|---|---|---|",
@@ -268,12 +313,14 @@ def main():
     ap.add_argument("--keep-reports", default="mismatch", choices=["mismatch", "all", "none"])
     ap.add_argument("--limit", type=int, help="only the first N games")
     ap.add_argument("--pattern", default="*.json")
+    ap.add_argument("--strategy", default="auto", choices=["auto", "full-first"])
+    ap.add_argument("--resume", action="store_true", help="reuse rows/<stem>.json of positions already swept")
     args = ap.parse_args()
     if args.fallback == "none":
         args.fallback = None
     out = args.out or (args.dir.parent / "sweep")
-    (out / "reports").mkdir(parents=True, exist_ok=True)
-    (out / "checks").mkdir(parents=True, exist_ok=True)
+    for sub in ("reports", "checks", "rows"):
+        (out / sub).mkdir(parents=True, exist_ok=True)
 
     games = {}
     for path in sorted(args.dir.iterdir()):

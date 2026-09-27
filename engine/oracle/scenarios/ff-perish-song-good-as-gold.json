@@ -1,0 +1,62 @@
+{
+ "description": "Opus FF FF-parity-harness (reduced from runs/parity-20260927 crown-cecil9-vs-perish-mrada random game 0, decision 3): Perish Song against Good as Gold. Showdown's Good as Gold `onTryHit` returns null for another Pokémon's status move, so Perish Song's `runEvent('TryHit')` spares Gholdengo (-immune) while Gengar, Snorlax and Incineroar get perish3. Speeds 130 / 50 / 104 / 80: no ties.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "name": "Gengar",
+    "species": "Gengar",
+    "ability": "Cursed Body",
+    "nature": "Hardy",
+    "moves": [
+     "Perish Song",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "name": "Snorlax",
+    "species": "Snorlax",
+    "ability": "Thick Fat",
+    "nature": "Hardy",
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Gholdengo",
+    "species": "Gholdengo",
+    "ability": "Good as Gold",
+    "nature": "Hardy",
+    "moves": [
+     "Nasty Plot",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "name": "Incineroar",
+    "species": "Incineroar",
+    "ability": "Blaze",
+    "nature": "Hardy",
+    "moves": [
+     "Protect",
+     "Taunt"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move perishsong, move protect",
+  "p2": "move nastyplot, move protect"
+ }
+}

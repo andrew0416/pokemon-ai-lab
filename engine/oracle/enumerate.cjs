@@ -317,6 +317,7 @@ class ScriptedPRNG {
 		this.trace = []; // {weights, choice}
 		this.approximate = false;
 		this.nextIsRoll = false;
+		this.rolls = 0; // damage rolls collapsed to min/max (extremes mode)
 	}
 	decide(values, weights) {
 		const i = this.trace.length;
@@ -337,6 +338,7 @@ class ScriptedPRNG {
 			this.nextIsRoll = false;
 			if (this.mode === 'extremes' && n === 16) {
 				this.approximate = true;
+				this.rolls++;
 				return this.decide([0, 15], [0.5, 0.5]);
 			}
 		}
@@ -490,6 +492,8 @@ function enumerate(scenario, snapshot, opts, maxBranchesArg, keepNominalDrawsArg
 	let branches = 0;
 	let approximate = false;
 	let maxDepth = 0;
+	// Extremes mode: each branch with r collapsed rolls stands for about 8^r full-mode branches.
+	let fullEstimate = 0;
 	while (prefix) {
 		if (++branches > maxBranches) throw new Error(`more than ${maxBranches} branches; use --mode extremes or mc`);
 		const battle = restore(snapshot);
@@ -498,6 +502,7 @@ function enumerate(scenario, snapshot, opts, maxBranchesArg, keepNominalDrawsArg
 		const {state, log} = runTurn(battle, scenario);
 		const p = prng.trace.reduce((acc, t) => acc * t.weights[t.choice], 1);
 		approximate ||= prng.approximate;
+		fullEstimate += 8 ** prng.rolls;
 		maxDepth = Math.max(maxDepth, prng.trace.length);
 		const key = canonicalKey(state);
 		const entry = outcomes.get(key);
@@ -516,7 +521,7 @@ function enumerate(scenario, snapshot, opts, maxBranchesArg, keepNominalDrawsArg
 		}
 		prefix = nextPrefix(prng.trace);
 	}
-	return {branches, maxDepth, approximate, outcomes};
+	return {branches, maxDepth, approximate, outcomes, fullEstimate};
 }
 
 function monteCarlo(scenario, snapshot, samples) {
@@ -589,6 +594,7 @@ function main() {
 		outcomes,
 	};
 	if (args.collapse) report.collapseSecondaries = true;
+	if (args.mode === 'extremes') report.fullBranchEstimate = result.fullEstimate;
 	if (scenario.startState || (scenario.setupStates || []).some(Boolean)) {
 		report.setupMs = Math.round(setupMs);
 		report.startTrace = traces.start;
