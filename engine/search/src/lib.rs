@@ -16,6 +16,8 @@
 //!   mixed strategy for each side.
 //! - [`choice`]: choices in Showdown's choice-string form (`move hypervoice 1, switch 3`), the
 //!   inverse of `lab_scenario::parse_choice`.
+//! - `node` (feature `scenario`, on by default): a position as a library value stepped by
+//!   choice strings, over the scenario loader; the core of the Python API (`engine/py`).
 //!
 //! Not here yet: opponent models ② and ③ (belief about our spreads and its update), plan
 //! conditions, the spread-grid tables, transposition tables, mixed strategies.
@@ -23,6 +25,8 @@
 pub mod choice;
 pub mod game;
 pub mod nash;
+#[cfg(feature = "scenario")]
+pub mod node;
 pub mod solve;
 
 pub use choice::{format_choice, format_switches, Choice};

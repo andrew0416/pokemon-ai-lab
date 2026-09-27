@@ -23,6 +23,8 @@ name = "lab-engine-py"
 version = "0.1.0"
 dependencies = [
  "lab-engine",
+ "lab-scenario",
+ "lab-search",
  "pyo3",
 ]
 
