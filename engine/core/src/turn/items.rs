@@ -635,7 +635,8 @@ pub(crate) fn stage_end_check<const N: usize>(b: &Battle<'_, N>) -> Result<(), T
         let mon = b.mon(pokemon);
         if mon.hp > 0 && mon.item == items::MIRROR_HERB {
             return Err(b.unsupported(format!(
-                "{}: Mirror Herb keeps copied boosts past the end of a stage (its effectState                  persists until the next trigger)",
+                "{}: Mirror Herb keeps copied boosts past the end of a stage (its effectState \
+                 persists until the next trigger)",
                 mon.species.data().name
             )));
         }

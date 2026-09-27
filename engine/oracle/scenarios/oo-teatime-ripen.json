@@ -1,0 +1,74 @@
+{
+ "description": "B35 forced eating runs EatItem (Opus OO): Polteageist's Teatime makes Flapple (Ripen) eat its Occa Berry by force; runEvent('EatItem') lets Ripen set berryWeaken (a resist berry), so Snorlax's Facade on Flapple later in the turn is halved once more (Ripen's onSourceModifyDamage), though it is not Fire-type.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Polteageist",
+    "item": "",
+    "ability": "Cursed Body",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Teatime",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Flapple",
+    "item": "Occa Berry",
+    "ability": "Ripen",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Dragon Dance",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Facade",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move teatime, move dragondance",
+  "p2": "move facade 2, move calmmind"
+ }
+}

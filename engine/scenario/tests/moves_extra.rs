@@ -107,9 +107,11 @@ fn ally_switch_fails_without_a_standing_partner() {
     assert_exact_parity("ally-switch-fail");
 }
 
+/// Snipe Shot tracks its original target (`action.originalTarget`) through Ally Switch (Opus OO
+/// R7; was unsupported).
 #[test]
-fn ally_switch_under_a_snipe_shot_is_unsupported() {
-    assert_unsupported("ally-switch-snipe-shot", "tracks its original target");
+fn snipe_shot_follows_its_target_through_ally_switch() {
+    assert_exact_parity("ally-switch-snipe-shot");
 }
 
 /// Crafty Shield blocks status moves (the side's own ally's too) before Magic Bounce acts;

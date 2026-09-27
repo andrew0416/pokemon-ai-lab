@@ -283,7 +283,9 @@ fn beat_up_powers<const N: usize>(b: &Battle<'_, N>, user: SlotRef) -> Result<[u
     }
     if bench.windows(2).any(|w| w[0] != w[1]) {
         return Err(b.unsupported(format!(
-            "Beat Up with benched allies of different power {bench:?} (their order in Showdown's              side.pokemon depends on the switches so far, which the state does not keep)"
+            "Beat Up with benched allies of different power {bench:?} (their order in \
+             Showdown's side.pokemon depends on the switches so far, which the state does not \
+             keep)"
         )));
     }
     powers.extend(bench);
@@ -2703,8 +2705,12 @@ pub(super) fn on_hit<const N: usize>(
             }
             HitResult::Success
         }
-        // Recycle: fails with an item or without a `lastItem`; otherwise `lastItem` goes back to
-        // being held (`setItem`: its `Start` event runs; an item whose `onStart` acts is refused).
+        // Recycle: fails with an item or without a `lastItem`; otherwise `pokemon.lastItem = '';
+        // pokemon.setItem(item, source, move)`: the item is held again with a fresh item state and
+        // its `Start` runs ([`trick_item_start`], every item with an `onStart`: a Seed in its
+        // terrain and Room Service in Trick Room are used again, White Herb on a lowered stage,
+        // Metronome's condition, a Choice item drops a `choicelock`, Booster Energy, Utility
+        // Umbrella's WeatherChange; Air Balloon only announces itself).
         moves::RECYCLE => {
             let Some(pokemon) = b.alive(target) else {
                 return Ok(Some(HitResult::Failure));
@@ -2713,14 +2719,6 @@ pub(super) fn on_hit<const N: usize>(
             if !item.is_none() || last.is_none() {
                 HitResult::Failure
             } else {
-                if last.data().handlers.contains(&"onStart")
-                    && !super::super::items::inert_start(last)
-                {
-                    return Err(b.unsupported(format!(
-                        "Recycle restoring {} (its onStart)",
-                        last.data().name
-                    )));
-                }
                 b.apply(Instruction::SetLastItem {
                     target: pokemon,
                     old: last,
@@ -2731,8 +2729,7 @@ pub(super) fn on_hit<const N: usize>(
                     old: ItemId::NONE,
                     new: last,
                 });
-                // `setItem`'s Start: Utility Umbrella's (a flung one comes back).
-                if last == items::UTILITY_UMBRELLA {
+                if last.data().handlers.contains(&"onStart") {
                     trick_item_start(b, target, last);
                 }
                 HitResult::Success
@@ -3152,7 +3149,11 @@ pub(super) fn on_hit<const N: usize>(
         // false; if (!target.addType(type)) return false;` (the added type replaces an earlier
         // one; `addType` only fails Terastallized, which is off); it returns nothing.
         // Trick-or-Treat's "Curse Glitch" then aims a queued Curse of a target in the second
-        // position at -1 (`action.targetLoc = -1`); Curse is not supported, so that is refused.
+        // position at -1 (`if (target.side.active.length === 2 && target.position === 1) { const
+        // action = this.queue.willMove(target); if (action && action.move.id === 'curse')
+        // action.targetLoc = -1; }`): its ally's position. The now Ghost Curse's ModifyMove turns
+        // an ally target into `randomNormal` and useMove draws a random foe again, as for a
+        // Ghost's Curse aimed at no one; `originalTarget` stays.
         moves::FORESTS_CURSE | moves::TRICK_OR_TREAT => {
             let ty = if mv.id == moves::FORESTS_CURSE {
                 Type::Grass
@@ -3167,9 +3168,11 @@ pub(super) fn on_hit<const N: usize>(
                     .queued_move(target)
                     .is_some_and(|(id, ..)| id == moves::CURSE);
                 if mv.id == moves::TRICK_OR_TREAT && N == 2 && target.slot == 1 && queued_curse {
-                    return Err(b.unsupported(
-                        "Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)",
-                    ));
+                    if let Some(i) = b.will_move(target) {
+                        if let ActionKind::Move { target: loc, .. } = &mut b.queue[i].kind {
+                            *loc = -1;
+                        }
+                    }
                 }
                 return Ok(None);
             }
@@ -3265,6 +3268,9 @@ fn instruct<const N: usize>(
         ActionKind::Move {
             id: last,
             target: b.state.slot(target).last_move_target_loc,
+            // The instructed action is built here, not by `resolveAction`: no
+            // `originalTarget` (board B46).
+            original: None,
             fractional_tenths,
             round_source: None,
         }
@@ -3382,27 +3388,19 @@ fn swap_positions<const N: usize>(
     from: SlotRef,
     to: SlotRef,
 ) -> Result<(), TurnError> {
-    for action in &b.queue {
-        let ActionKind::Move { id, target, .. } = action.kind else {
-            continue;
-        };
-        let tracks = id.data().tracks_target
-            || super::super::abilities::tracks_original_target(b.mon(action.pokemon).ability);
-        if target != 0 && tracks && super::at_loc(action.slot, target).side == from.side {
-            return Err(b.unsupported(format!(
-                "{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)",
-                id.data().name
-            )));
-        }
-    }
+    // A queued move that tracks its target keeps aiming at the Pokémon (`action.originalTarget`,
+    // `moves::get_target`); the others aim at the position (`targetLoc`).
     let (user, ally) = (b.occupant(from), b.occupant(to));
     let (a, c) = (b.state.slot(from).clone(), b.state.slot(to).clone());
+    let order = b.ability_state_order();
     let mut swap = Vec::new();
     super::super::diff::slot_changes(&mut swap, from, &a, &c);
     super::super::diff::slot_changes(&mut swap, to, &c, &a);
     for instruction in swap {
         b.apply(instruction);
     }
+    // The ability states move with the Pokémon.
+    b.swap_ability_state_order(&order, from, to);
     for action in &mut b.queue {
         if Some(action.pokemon) == user {
             action.slot = to;

@@ -1,0 +1,75 @@
+{
+ "description": "R4 redirection tie (Opus OO): Lightning Rod on both sides at equal Speed 130 (Raichu p1b, Manectric p2b). Pikachu's Thunderbolt aimed at Snorlax is taken by the holder whose ability state started first, Raichu (p1b switched in before p2b), not the user's own ally Manectric, whose handler Showdown collects first.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Raichu",
+    "item": "",
+    "ability": "Lightning Rod",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Pikachu",
+    "item": "",
+    "ability": "Static",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Thunderbolt",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Manectric",
+    "item": "",
+    "ability": "Lightning Rod",
+    "nature": "Serious",
+    "evs": {
+     "hp": 27,
+     "spe": 5
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move calmmind, move calmmind",
+  "p2": "move thunderbolt 1, move calmmind"
+ }
+}

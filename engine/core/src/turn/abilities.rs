@@ -1018,6 +1018,8 @@ pub(crate) fn replace_ability<const N: usize>(
             new: ability,
         });
     }
+    // The fresh `abilityState` (even for the same ability) starts after every other one.
+    b.restart_ability_state(slot);
 }
 
 /// The ability of the Pokémon in `holder` as the handlers of `user`'s move see it. Showdown
@@ -1317,7 +1319,7 @@ pub(crate) fn commander_update<const N: usize>(b: &mut Battle<'_, N>, holder: Sl
 /// Stalwart and Propeller Tail (`onModifyMove`, priority 1, not breakable) set it to `move.target
 /// !== 'scripted'` for every move of their holder, which also overrides the data. Their other
 /// half, `getTarget` keeping the `originalTarget` of the action (only different after Ally
-/// Switch), is refused in `handlers::swap_positions`.
+/// Switch), is in `moves::get_target`.
 pub(crate) fn tracks_target<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,

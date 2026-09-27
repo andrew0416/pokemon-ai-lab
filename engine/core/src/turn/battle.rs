@@ -282,6 +282,11 @@ pub struct HistoryReaders {
     pub last_move_target_loc: bool,
     /// Pickup (`usedItemThisTurn`).
     pub used_item: bool,
+    /// A redirection tie (`abilityState.effectOrder`: `Slot::ability_order`): Follow Me, Rage
+    /// Powder, Spotlight, Lightning Rod or Storm Drain, which only come from a party (moves are
+    /// only copied from Pokémon in the battle, abilities only move between them), or a Mega
+    /// forme with one of the abilities that a Mega Stone in the battle gives.
+    pub ability_order: bool,
 }
 
 impl HistoryReaders {
@@ -325,7 +330,29 @@ impl HistoryReaders {
                 }
             }
         }
+        readers.ability_order = Self::redirector_possible(state);
         readers
+    }
+
+    /// Whether a `RedirectTarget` handler of the same priority can be on two Pokémon
+    /// ([`HistoryReaders::ability_order`]).
+    fn redirector_possible<const N: usize>(state: &State<N>) -> bool {
+        use crate::dex::moves as m;
+        let redirects = |a: AbilityId| a == abilities::LIGHTNING_ROD || a == abilities::STORM_DRAIN;
+        let mons = || state.sides.iter().flat_map(|side| side.party.iter());
+        mons().any(|mon| {
+            let own = mon.transformed.map(|base| base.moves);
+            mon.moves
+                .iter()
+                .chain(own.iter().flatten())
+                .any(|s| matches!(s.id, m::FOLLOW_ME | m::RAGE_POWDER | m::SPOTLIGHT))
+                || redirects(mon.ability)
+                || redirects(mon.base_ability)
+                || mons().any(|holder| {
+                    crate::gimmick::mega_evolution(mon.untransformed_species(), holder.item)
+                        .is_some_and(|mega| mega.data().abilities.iter().any(|&a| redirects(a)))
+                })
+        })
     }
 }
 
@@ -1668,6 +1695,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             self.queue[i].kind = ActionKind::Move {
                 id: encored,
                 target: target_loc,
+                original: None,
                 fractional_tenths: fractional,
                 round_source: None,
             };

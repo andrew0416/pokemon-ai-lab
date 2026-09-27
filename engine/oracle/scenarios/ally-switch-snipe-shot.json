@@ -1,5 +1,5 @@
 {
- "description": "Unsupported: Snipe Shot (tracksTarget) aimed at position a keeps aiming at Mr. Mime after Ally Switch moves it (Showdown's action.originalTarget), which the engine's queue does not hold. No fixture.",
+ "description": "Snipe Shot (tracksTarget) aimed at position a keeps aiming at Mr. Mime after Ally Switch moves it: Showdown's getTarget returns the action's originalTarget while it is active (Opus OO R7; was unsupported).",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [

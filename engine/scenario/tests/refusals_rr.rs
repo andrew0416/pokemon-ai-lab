@@ -40,11 +40,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R3-emergency-exit-replacement",
     ),
     (
-        "rr-redirect-tie",
-        "redirection tie between Clefable and Ariados",
-        "R4-redirection-tie",
-    ),
-    (
         "rr-future-sight-user-left",
         "hitting after its user left the field",
         "R5-future-move-edges",
@@ -55,11 +50,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R5-future-move-edges",
     ),
     (
-        "rr-ally-switch-snipe-shot",
-        "Snipe Shot aimed at a side whose Pokémon Ally Switch swapped",
-        "R7-ally-switch-target",
-    ),
-    (
         "rr-beat-up-bench",
         "Beat Up with benched allies of different power",
         "R9-beat-up-order",
@@ -68,11 +58,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "rr-supersweet-syrup-switch",
         "Supersweet Syrup after the battle start",
         "R10-once-per-battle-flags",
-    ),
-    (
-        "rr-recycle-seed",
-        "Recycle restoring Grassy Seed (its onStart)",
-        "R11-item-restart",
     ),
     (
         "rr-cute-charm-undecided-gender",
@@ -93,21 +78,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "rr-rivalry-switch-in-undecided-gender",
         "Luxray: Rivalry next to a Pokémon of undecided gender",
         "R13-attract-gender",
-    ),
-    (
-        "rr-fling-innards-out",
-        "Fling's user fainted before its item was thrown",
-        "R16-fling-user-fainted",
-    ),
-    (
-        "rr-trick-or-treat-curse-glitch",
-        "Trick-or-Treat's Curse Glitch",
-        "R17-trick-or-treat-curse",
-    ),
-    (
-        "rr-teatime-klutz",
-        "Sitrus Berry eaten by force while its holder ignores its item",
-        "R22-forced-eat-ignored-item",
     ),
 ];
 
@@ -199,8 +169,10 @@ fn emergency_exit_of_a_replacement() {
     assert_exact_parity("rr-emergency-exit-replacement");
 }
 
+/// Follow Me (Clefable, p2a) and Rage Powder (Ariados, p2b) at equal Speed: Showdown's
+/// `compareRedirectOrder` puts the holder whose ability state started first (Clefable) first, so
+/// Follow Me takes the move whoever moved first (was refused; board R4, `oo_redirection_tie.rs`).
 #[test]
-#[ignore = "refused: redirection tie between {} and {} (Showdown breaks it by effectOrder) (board R4-redirection-tie)"]
 fn redirection_tie() {
     assert_exact_parity("rr-redirect-tie");
 }
@@ -232,8 +204,9 @@ fn instruct_a_quick_draw_holder() {
     assert_exact_parity("rr-instruct-quick-draw");
 }
 
+/// Inteleon's Snipe Shot aimed at Starmie follows it through Ally Switch (`getTarget` returns the
+/// action's `originalTarget` while it is active; was refused; board R7, `oo_ally_switch_target.rs`).
 #[test]
-#[ignore = "refused: {} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target) (board R7-ally-switch-target)"]
 fn snipe_shot_after_ally_switch() {
     assert_exact_parity("rr-ally-switch-snipe-shot");
 }
@@ -257,8 +230,9 @@ fn supersweet_syrup_after_the_start() {
     assert_exact_parity("rr-supersweet-syrup-switch");
 }
 
+/// Recycle gives back a Grassy Seed used at the battle start; setItem's Start uses it again in the
+/// Grassy Terrain (was refused; board R11, `oo_item_restart.rs`).
 #[test]
-#[ignore = "refused: Recycle restoring {} (its onStart) (board R11-item-restart)"]
 fn recycle_a_seed() {
     assert_exact_parity("rr-recycle-seed");
 }
@@ -297,17 +271,19 @@ fn sleep_talk_with_a_multi_hit_move() {
     assert_exact_parity("rr-sleep-talk-multihit");
 }
 
-/// The `run_move_inner` guard never fired here (the hit loop's faint processing clears the
-/// Fling volatile first) and the engine answered without the thrown item's `lastItem`; the
-/// Update now refuses it.
+/// Fling knocks out Mega Victreebel, whose Innards Out knocks out Snorlax before the hit loop's
+/// Update: Fling's condition runs on the 0-HP user (`setItem('')` fails, `lastItem` is set). Was
+/// refused (and before the audit answered without `lastItem`); board R16,
+/// `oo_fling_user_fainted.rs`.
 #[test]
-#[ignore = "refused: Fling's user fainted before its item was thrown (board R16-fling-user-fainted)"]
 fn fling_user_fainted_by_innards_out() {
     assert_exact_parity("rr-fling-innards-out");
 }
 
+/// Trick-or-Treat's Curse Glitch: Snorlax in the second position gets its queued Curse aimed at -1
+/// (its ally); the now Ghost Curse re-draws a random foe (was refused; board R17,
+/// `oo_trick_or_treat_curse.rs`).
 #[test]
-#[ignore = "refused: Trick-or-Treat's Curse Glitch (board R17-trick-or-treat-curse)"]
 fn trick_or_treat_curse_glitch() {
     assert_exact_parity("rr-trick-or-treat-curse-glitch");
 }
@@ -330,8 +306,9 @@ fn copycat_mirror_coat() {
     assert_exact_parity("rr-copycat-mirror-coat");
 }
 
+/// Teatime makes Lopunny (Klutz) eat its Sitrus Berry: the Eat event is skipped for a holder
+/// ignoring its item, the berry is consumed (was refused; board R22, `oo_forced_eat_ignored_item.rs`).
 #[test]
-#[ignore = "refused: {} eaten by force while its holder ignores its item (board R22-forced-eat-ignored-item)"]
 fn teatime_with_klutz() {
     assert_exact_parity("rr-teatime-klutz");
 }

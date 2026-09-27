@@ -403,6 +403,15 @@ pub struct Slot {
     pub switch_flag: SwitchFlag,
     pub substitute_hp: i16,
     pub dynamax: DynamaxState,
+    /// When the occupant's ability state started, relative to the other occupied slots
+    /// (Showdown `abilityState.effectOrder`: a battle-wide counter taken by `switchIn`,
+    /// `setAbility`, Skill Swap, a permanent forme change, Transform). Encoded so that the
+    /// battle start needs nothing: the occupied slots ordered by `(ability_order, side, slot)`
+    /// are in the order their ability states started (all 0 = the start's switch-in order p1a,
+    /// p1b, p2a, p2b; `Battle::restart_ability_state`). Only a redirection tie reads it
+    /// (`compareRedirectOrder`), and it is recorded only while a redirector can be in the
+    /// battle (`HistoryReaders::ability_order`). Hidden from the canonical output.
+    pub ability_order: u8,
 }
 
 impl Slot {

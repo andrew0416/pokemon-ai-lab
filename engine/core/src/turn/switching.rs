@@ -726,7 +726,7 @@ fn switch_in_problem<const N: usize>(
             ));
         }
     }
-    super::update::berry_problem(mon)
+    None
 }
 
 /// Showdown `switchIn` without its `runSwitch`: a healthy old occupant runs `BeforeSwitchOut`
@@ -836,6 +836,8 @@ fn switch_in_as<const N: usize>(
         previous: Box::new(previous),
         party_index: Some(party_index),
     });
+    // `pokemon.abilityState = initEffectState(...)`: the newcomer's ability state is the latest.
+    b.restart_ability_state(slot);
     if let Some((from, shed_tail)) = passed {
         copy_volatile_from(b, slot, &from, shed_tail)?;
     }
@@ -1557,6 +1559,7 @@ fn trace_copy<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<
         new: copied,
     });
     b.delete_volatile(holder, Volatile::TraceSeek);
+    b.restart_ability_state(holder);
     start_ability(b, holder, copied)?;
     Ok(true)
 }

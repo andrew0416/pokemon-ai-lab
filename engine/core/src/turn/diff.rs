@@ -306,6 +306,13 @@ pub(crate) fn slot_changes(out: &mut Vec<Instruction>, r: SlotRef, a: &Slot, b: 
             new: b.substitute_hp,
         });
     }
+    if b.ability_order != 0 {
+        out.push(Instruction::SetAbilityOrder {
+            target: r,
+            old: 0,
+            new: b.ability_order,
+        });
+    }
     debug_assert!(!b.dynamax.is_active(), "no instruction sets it yet");
 }
 

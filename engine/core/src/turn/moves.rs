@@ -330,6 +330,14 @@ enum LastHit {
     Blocked,
 }
 
+/// Where a move action aims: its `targetLoc` and its `originalTarget` (the Pokémon there when it
+/// was queued; [`super::queue::ActionKind::Move`]).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub(crate) struct Aim {
+    pub loc: i8,
+    pub original: Option<PokemonRef>,
+}
+
 /// Showdown `runMove` for the queued move `id` (`action.moveid`; `MoveId::NONE` is the `recharge`
 /// pseudo-move). `will_act` is `queue.willAct()`. A multi-hit move returns
 /// `MoveStep::Suspended` after its first hit; the turn engine resumes it with [`resume_move`] as
@@ -339,7 +347,7 @@ pub(crate) fn run_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     id: MoveId,
-    target_loc: i8,
+    aim: Aim,
     will_act: bool,
     round_source: Option<bool>,
 ) -> Result<MoveStep, TurnError> {
@@ -395,7 +403,7 @@ pub(crate) fn run_move<const N: usize>(
     // A finished move leaves its active move set (none after a failure's
     // `clearActiveMove(true)`): Showdown clears it with `runAction`'s `clearActiveMove()`, after
     // the phazing step, which the turn engine runs next (`drag_outs`, Opus DD unit B26).
-    let result = run_move_inner(b, user, id, target_loc, will_act, round_source);
+    let result = run_move_inner(b, user, id, aim, will_act, round_source);
     if result.is_err() {
         b.active_move = None;
     }
@@ -730,7 +738,15 @@ fn run_external_move<const N: usize>(
 ) -> Result<(), TurnError> {
     let pokemon = b.occupant(user).expect("the dancer is active");
     b.increment_move_actions(user);
-    let target = get_target(b, user, id, target_loc);
+    let target = get_target(
+        b,
+        user,
+        id,
+        Aim {
+            loc: target_loc,
+            original: None,
+        },
+    );
     let data = id.data();
     b.active_move = Some(ActiveMoveRef {
         user,
@@ -816,7 +832,7 @@ fn run_move_inner<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     chosen: MoveId,
-    target_loc: i8,
+    aim: Aim,
     will_act: bool,
     round_source: Option<bool>,
 ) -> Result<MoveStep, TurnError> {
@@ -832,7 +848,7 @@ fn run_move_inner<const N: usize>(
         let target = get_random_target(b, user, encore.mv.data().target);
         (encore.mv, target)
     } else {
-        (chosen, get_target(b, user, chosen, target_loc))
+        (chosen, get_target(b, user, chosen, aim))
     };
     let mut mv = ActiveMove {
         id,
@@ -866,7 +882,7 @@ fn run_move_inner<const N: usize>(
         future_hit: false,
         bypass_protect: 0,
         beat_up: [0; 6],
-        target_loc,
+        target_loc: aim.loc,
     };
 
     // `pokemon.moveThisTurnResult = willTryMove`: `false` from every BeforeMove handler
@@ -933,18 +949,14 @@ fn run_move_inner<const N: usize>(
     // `pokemon.moveUsed(move, targetLoc)`: the action's target location (for an encored move
     // that replaced the chosen one, still the chosen one's).
     b.set_last_move(user, id);
-    b.set_last_move_target_loc(user, target_loc);
+    b.set_last_move_target_loc(user, aim.loc);
 
     if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
         return Ok(MoveStep::Suspended(progress));
     }
     let user = handlers::current_slot(b, user, pokemon);
-    // Fling's user knocked out before an Update threw its item (Jaboca Berry, say): Showdown's
-    // `fling.onUpdate` then runs on a 0-HP user, whose `setItem('')` and `removeVolatile` fail
-    // while `lastItem` and AfterUseItem still happen.
-    if b.volatile(user, Volatile::Fling).active && b.alive(user).is_none() {
-        return Err(b.unsupported("Fling's user fainted before its item was thrown"));
-    }
+    // (Fling's user knocked out before its item was thrown gets the item's Update at 0 HP inside
+    // the hit loop, `update::update_event`; the faint then clears the volatile.)
     // `if (this.battle.activeMove) move = this.battle.activeMove;`: the AfterMove events see the
     // move a calling move (Sleep Talk, Copycat) used, not the caller.
     let called = b.called_move.take();
@@ -1089,7 +1101,7 @@ fn loc_of(user: SlotRef, target: SlotRef) -> i8 {
     }
 }
 
-fn at_loc(user: SlotRef, loc: i8) -> SlotRef {
+pub(crate) fn at_loc(user: SlotRef, loc: i8) -> SlotRef {
     let side = if loc < 0 {
         user.side
     } else {
@@ -1174,8 +1186,22 @@ fn get_target<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     id: MoveId,
-    loc: i8,
+    aim: Aim,
 ) -> Option<SlotRef> {
+    // `if (tracksTarget && originalTarget?.isActive) return originalTarget;`: the dex move's
+    // `tracksTarget` (Snipe Shot) or `pokemon.hasAbility(['stalwart', 'propellertail'])` (their
+    // ModifyMove comes later); the Pokémon it was aimed at when queued, wherever it stands now
+    // (Ally Switch). One that left the field or fainted is not active.
+    if let Some(original) = aim.original {
+        if id.data().tracks_target || ability_events::tracks_original_target(b.ability(user)) {
+            if let Some(slot) =
+                crate::state::State::<N>::slot_refs().find(|&s| b.alive(s) == Some(original))
+            {
+                return Some(slot);
+            }
+        }
+    }
+    let loc = aim.loc;
     let target = id.data().target;
     // `if (move.smartTarget) { const curTarget = pokemon.getAtLoc(targetLoc); return curTarget &&
     // !curTarget.fainted ? curTarget : this.getRandomTarget(pokemon, move); }` (Dragon Darts:
@@ -1285,7 +1311,7 @@ fn get_move_targets<const N: usize>(
             }
             let mut smart = mv.data.smart_target;
             if N > 1 && !ability_events::tracks_target(b, user, mv.data, mv.target) {
-                let (redirected, cleared) = redirect_target(b, user, mv, t)?;
+                let (redirected, cleared) = redirect_target(b, user, mv, t);
                 t = redirected;
                 smart &= !cleared;
             }
@@ -1325,11 +1351,11 @@ fn smart_targets<const N: usize>(
 
 /// Showdown `priorityEvent('RedirectTarget')`: the handlers are Follow Me, Rage Powder and
 /// Spotlight on the user's foes (`onFoeRedirectTarget`, priority 1, 1, 2) and Lightning Rod /
-/// Storm Drain on anyone else (`onAnyRedirectTarget`, priority 0). They are sorted by
-/// priority, then the holder's Speed (`compareRedirectOrder`), and the first whose holder is a
-/// valid target of the move's target type wins. Rage Powder skips powder-immune users. A tie
-/// between two valid holders is broken in Showdown by `effectOrder` (who entered the field or
-/// changed ability first), which the state does not record, so it is unsupported. Last comes
+/// Storm Drain on anyone else (`onAnyRedirectTarget`, priority 0). `runEvent` with `fastExit`
+/// sorts them with `compareRedirectOrder` (a plain stable sort, no Speed-tie shuffle): priority,
+/// then the holder's Speed, then the holder's `abilityState.effectOrder` (whose ability state
+/// started first: switch-in, `setAbility`; `Slot::ability_order`), and the first whose holder is
+/// a valid target of the move's target type wins. Rage Powder skips powder-immune users. Last comes
 /// the user's own Counter / Mirror Coat condition (`onRedirectTarget`, priority -1): the slot
 /// of the foe whose hit it recorded, whoever stands there now. The flag is whether a Follow Me,
 /// Rage Powder, Lightning Rod or Storm Drain handler took the move (`if (move.smartTarget)
@@ -1340,14 +1366,14 @@ fn redirect_target<const N: usize>(
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
-) -> Result<(SlotRef, bool), TurnError> {
-    Ok(match foe_redirect_target(b, user, mv)? {
+) -> (SlotRef, bool) {
+    match foe_redirect_target(b, user, mv) {
         Some((slot, priority)) => (slot, priority < 2),
         None => (
             handlers::counter_redirect(b, user, mv).unwrap_or(target),
             false,
         ),
-    })
+    }
 }
 
 /// The `RedirectTarget` handlers of priority 0 and above ([`redirect_target`]): the new target,
@@ -1357,7 +1383,7 @@ fn foe_redirect_target<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
-) -> Result<Option<(SlotRef, i8)>, TurnError> {
+) -> Option<(SlotRef, i8)> {
     // (priority, speed, holder), in Showdown's handler collection order: the user's side
     // (`onAny`), then each foe's `onFoe` volatiles and `onAny` ability.
     let mut handlers: Vec<(i8, i32, SlotRef)> = Vec::new();
@@ -1386,10 +1412,17 @@ fn foe_redirect_target<const N: usize>(
         }
     }
     if handlers.is_empty() {
-        return Ok(None);
+        return None;
     }
-    // Stable, so equal keys keep collection order.
-    handlers.sort_by(|a, b| b.0.cmp(&a.0).then(b.1.cmp(&a.1)));
+    // `compareRedirectOrder` in a stable `Array.prototype.sort` (no Speed-tie shuffle): priority,
+    // Speed, then the holders' `abilityState.effectOrder` (`Slot::ability_order`). Two holders
+    // never share one, so only one holder's own handlers keep their collection order.
+    handlers.sort_by(|x, y| {
+        let started = |s: SlotRef| Battle::<N>::ability_order_key(b.state.slot(s).ability_order, s);
+        y.0.cmp(&x.0)
+            .then(y.1.cmp(&x.1))
+            .then(started(x.2).cmp(&started(y.2)))
+    });
 
     let valid = |b: &Battle<'_, N>, priority: i8, holder: SlotRef| -> bool {
         let loc = loc_of(user, holder);
@@ -1409,34 +1442,10 @@ fn foe_redirect_target<const N: usize>(
         }
         valid_target_loc(N, user, loc, mv.target)
     };
-    let mut i = 0;
-    while i < handlers.len() {
-        let key = (handlers[i].0, handlers[i].1);
-        let mut j = i;
-        let mut winners: Vec<SlotRef> = Vec::new();
-        while j < handlers.len() && (handlers[j].0, handlers[j].1) == key {
-            let holder = handlers[j].2;
-            if valid(b, key.0, holder) && !winners.contains(&holder) {
-                winners.push(holder);
-            }
-            j += 1;
-        }
-        match winners.len() {
-            0 => {}
-            1 => return Ok(Some((winners[0], key.0))),
-            _ => {
-                return Err(b.unsupported(format!(
-                    "redirection tie between {} and {} (Showdown breaks it by effectOrder)",
-                    b.slot_mon(winners[0])
-                        .map_or("?", |m| m.species.data().name),
-                    b.slot_mon(winners[1])
-                        .map_or("?", |m| m.species.data().name),
-                )));
-            }
-        }
-        i = j;
-    }
-    Ok(None)
+    handlers
+        .iter()
+        .find(|&&(priority, _, holder)| valid(b, priority, holder))
+        .map(|&(priority, _, holder)| (holder, priority))
 }
 
 // ---- use ---------------------------------------------------------------------------------------

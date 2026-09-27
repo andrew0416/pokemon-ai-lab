@@ -20,7 +20,7 @@
 
 use crate::dex::{abilities, items, ItemId, Stat, NO_BOOSTS};
 use crate::instruction::Instruction;
-use crate::state::{Pokemon, PokemonRef, SlotRef, State, Status};
+use crate::state::{PokemonRef, SlotRef, State, Status};
 use crate::volatile::Volatile;
 
 use super::battle::{Battle, BoostEffect};
@@ -55,26 +55,6 @@ const STATUS_BERRIES: [(ItemId, &[Status]); 6] = [
     (items::PERSIM_BERRY, &[]),
 ];
 
-/// Why a berry holder cannot be simulated, if it cannot: a Figy-type berry confuses an eater
-/// whose nature lowers the berry's stat, and confusion is not implemented.
-pub(crate) fn berry_problem(mon: &Pokemon) -> Option<String> {
-    let disliked = FIGY_BERRIES
-        .iter()
-        .find(|&&(item, _)| item == mon.item)
-        .map(|&(_, stat)| stat);
-    if let Some(stat) = disliked {
-        if mon.nature.modifiers().1 == Some(stat) {
-            return Some(format!(
-                "{}: {} would confuse a {} nature (confusion is not implemented)",
-                mon.species.data().name,
-                mon.item.data().name,
-                mon.nature.name()
-            ));
-        }
-    }
-    None
-}
-
 /// Showdown `eachEvent('Update')`: the actives are sorted once by `pokemon.speed`
 /// (`speedSort(actives, (a, b) => b.speed - a.speed)`, ties shuffled), then each runs its
 /// handlers, collected at its own turn (`runEvent('Update', pokemon)`: its state as the earlier
@@ -86,20 +66,19 @@ pub(crate) fn berry_problem(mon: &Pokemon) -> Option<String> {
 /// only between Pokémon on a side with an active Symbiosis holder, or between any Pokémon when a
 /// Trace copies; any other tie cannot change the outcome and keeps slot order.
 pub(crate) fn update_event<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), TurnError> {
-    // `getAllActive()` still holds a Pokémon at 0 HP whose faint is not processed yet, and
-    // Fling's condition `onUpdate` runs on it (its `setItem('')` fails; `lastItem` and
-    // AfterUseItem still happen), which is not modelled: Innards Out knocking out the user
-    // (oracle `rr-fling-innards-out`; the guard in `moves::run_move_inner` comes too late, after
-    // the hit loop's faint processing has cleared the volatile).
+    // `getAllActive()` also holds a Pokémon at 0 HP whose faint is not processed yet (`fainted` is
+    // set by `faintMessages`), and of its Update handlers Fling's condition acts: the user that a
+    // reaction to the hit (Innards Out) knocked out before the hit loop's Update
+    // ([`super::conditions::fling_update_fainted`]; oracle `rr-fling-innards-out`).
+    let mut actives = b.all_alive();
     for slot in State::<N>::slot_refs() {
         if b.occupant(slot).is_some()
             && b.alive(slot).is_none()
             && b.volatile(slot, Volatile::Fling).active
         {
-            return Err(b.unsupported("Fling's user fainted before its item was thrown"));
+            actives.push(slot);
         }
     }
-    let actives = b.all_alive();
     // A seeking Trace with a foe to copy changes an ability during the event and starts it, which
     // any other Pokémon's handlers can depend on or change (a copied Unnerve stopping a foe's
     // berry, a copied Intimidate next to White Herb, a second seeking Trace copying the copy):
@@ -118,6 +97,7 @@ pub(crate) fn update_event<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), 
     });
     for slot in actives {
         if b.alive(slot).is_none() {
+            super::conditions::fling_update_fainted(b, slot);
             continue;
         }
         // Its conditions' `onUpdate` (sub-order 2: Attract, Syrup Bomb, Fling; Attract and Syrup
@@ -234,9 +214,12 @@ pub(crate) fn eat_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> 
 /// Showdown `eatItem(true)` (Stuff Cheeks, Teatime) for the holder in `slot`: a held berry
 /// (`this.item`, whatever suppresses it) is eaten without `TryEatItem` (Unnerve and the healing
 /// berries' Heal Block check do not apply) by an active holder with HP: its `onEat`, then
-/// `lastItem` and AfterUseItem. A berry whose `onEat` is empty (the resist berries, Jaboca,
-/// Rowap, Custap, Enigma, the effectless ones) is just consumed. Returns whether it was eaten.
-/// A holder ignoring its item (Magic Room, Klutz) is unsupported.
+/// `runEvent('EatItem')` (Cheek Pouch; Cud Chew, which keeps a berry these moves made it eat;
+/// Ripen), `lastItem` and AfterUseItem. A berry whose `onEat` is empty (the resist berries,
+/// Jaboca, Rowap, Custap, Enigma, the effectless ones) has no Eat effect. For a holder that
+/// ignores its item (Klutz, Magic Room) `singleEvent('Eat')` is skipped (`singleEvent` suppresses
+/// an item's handlers but Start, TakeItem and SetAbility): the berry is consumed without its
+/// effect. Returns whether it was eaten.
 pub(crate) fn eat_item_forced<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
@@ -248,12 +231,8 @@ pub(crate) fn eat_item_forced<const N: usize>(
     if !item.data().is_berry {
         return Ok(false);
     }
-    if super::items::ignoring_item(b.state, slot) {
-        return Err(b.unsupported(format!(
-            "{} eaten by force while its holder ignores its item",
-            item.data().name
-        )));
-    }
+    // Klutz, Magic Room: no `Eat` event.
+    let ignored = super::items::ignoring_item(b.state, slot);
     let empty_on_eat = super::items::resist_berry(item).is_some()
         || !item.data().handlers.contains(&"onEat")
         || [
@@ -263,9 +242,13 @@ pub(crate) fn eat_item_forced<const N: usize>(
             items::ENIGMA_BERRY,
         ]
         .contains(&item);
-    if !empty_on_eat && !berry_on_eat(b, slot, pokemon, item) {
+    if !ignored && !empty_on_eat && !berry_on_eat(b, slot, pokemon, item) {
         return Err(b.unsupported(format!("{} eaten by force", item.data().name)));
     }
+    // `runEvent('EatItem', this, source, sourceEffect, item)` whatever the Eat event did; the
+    // effect is Teatime or Stuff Cheeks, so Cud Chew keeps the berry (it ignores only Bug Bite and
+    // Pluck).
+    super::abilities::eat_item_event(b, slot, item, false);
     Ok(consume(b, slot, pokemon))
 }
 
@@ -305,8 +288,8 @@ pub(crate) fn berry_on_eat<const N: usize>(
     } else if item == items::ORAN_BERRY {
         berry_heal(b, slot, 10.0);
     } else if let Some(&(_, disliked)) = FIGY_BERRIES.iter().find(|&&(i, _)| i == item) {
-        // `if (pokemon.getNature().minus === stat) pokemon.addVolatile('confusion');` (a holder
-        // with such a nature is refused before the turn: `berry_problem`; a Bug Bite user is not).
+        // `if (pokemon.getNature().minus === stat) pokemon.addVolatile('confusion');` (its holder
+        // or a Bug Bite / Pluck user).
         berry_heal(b, slot, max_hp / 3.0);
         if b.mon(pokemon).nature.modifiers().1 == Some(disliked) {
             b.add_volatile(slot, Volatile::Confusion);
