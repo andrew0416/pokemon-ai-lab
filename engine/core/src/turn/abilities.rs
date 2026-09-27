@@ -1547,14 +1547,32 @@ pub(crate) fn speed_sorted<const N: usize, L: std::ops::DerefMut<Target = [SlotR
     mut slots: L,
     relevant: impl Fn(&Battle<'_, N>, SlotRef) -> bool,
 ) -> L {
-    slots.sort_by_key(|&s| std::cmp::Reverse(b.event_speed(s)));
+    // Each Speed read once (nothing changes while sorting): a stable insertion sort, fastest
+    // first, gives the order `sort_by_key(Reverse(speed))` gives.
+    let n = slots.len();
+    let mut speeds = [0i32; super::battle::SlotList::CAPACITY];
+    let speeds = &mut speeds[..n];
+    for (speed, &slot) in speeds.iter_mut().zip(slots.iter()) {
+        *speed = b.event_speed(slot);
+    }
+    for i in 1..n {
+        let mut j = i;
+        while j > 0 && speeds[j - 1] < speeds[j] {
+            speeds.swap(j - 1, j);
+            slots.swap(j - 1, j);
+            j -= 1;
+        }
+    }
     let mut start = 0;
-    while start < slots.len() {
-        let speed = b.event_speed(slots[start]);
-        let end = (start..slots.len())
-            .find(|&i| b.event_speed(slots[i]) != speed)
-            .unwrap_or(slots.len());
-        let count = (start..end).filter(|&i| relevant(b, slots[i])).count();
+    while start < n {
+        let speed = speeds[start];
+        let end = (start..n).find(|&i| speeds[i] != speed).unwrap_or(n);
+        // A group of one is never shuffled: `relevant` is only asked about real ties.
+        let count = if end - start < 2 {
+            0
+        } else {
+            (start..end).filter(|&i| relevant(b, slots[i])).count()
+        };
         if count >= 2 {
             for k in start..end - 1 {
                 let pick = k + b.rng.uniform(end - k);

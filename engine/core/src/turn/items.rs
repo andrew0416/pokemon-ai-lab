@@ -69,9 +69,10 @@ pub(crate) fn ignoring_item<const N: usize>(state: &State<N>, slot: SlotRef) -> 
     let Some(mon) = state.active(slot) else {
         return false;
     };
+    // The cheap ability comparison before the item's dex entry (this runs for every item read).
     state.field[FieldEffect::MagicRoom as usize].is_active()
-        || (!mon.item.data().ignore_klutz
-            && mon.ability == abilities::KLUTZ
+        || (mon.ability == abilities::KLUTZ
+            && !mon.item.data().ignore_klutz
             && !super::abilities::ignoring_ability(state, slot))
 }
 
