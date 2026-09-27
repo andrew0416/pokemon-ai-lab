@@ -1,0 +1,4086 @@
+{
+ "date": "2026-09-27",
+ "engine_head": "9ff1081",
+ "showdown_commit": "9e317a6",
+ "method": "events fired in sim/*.ts, data/*.ts and data/mods/champions/*.ts (runEvent/singleEvent/priorityEvent/eachEvent/fieldEvent, 'Modify'+stat expanded) joined with every handler name in the Champions dex (moves, abilities, items, all data/conditions.ts conditions, move conditions) by base event (Ally/Foe/Source/Any prefixes stripped); standard = engine/scripts/refusals.universe.json; engine side = support.rs pinned handler tables + source mentions + oracle fixtures.",
+ "events": {
+  "Accuracy": {
+   "section": "3.3",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:736:runEvent",
+    "sim/battle-actions.ts:937:runEvent",
+    "data/mods/champions/scripts.ts:508:runEvent"
+   ],
+   "standard_reactors": [
+    "move:glaiverush:condition.onAccuracy",
+    "move:lockon:condition.onSourceAccuracy",
+    "move:minimize:condition.onAccuracy",
+    "abilitie:noguard:onAnyAccuracy"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 2,
+   "engine_site": "turn/moves.rs, turn/moves/ability_hooks.rs, turn/moves/handlers.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "AfterBoost": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:2083:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:opportunist:onFoeAfterBoost",
+    "abilitie:rattled:onAfterBoost"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 3,
+   "engine_site": "turn/battle.rs, turn/items.rs, turn/abilities.rs",
+   "reactors_without_oracle_fixture": [
+    "rattled"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "AfterEachBoost": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:2076:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:competitive:onAfterEachBoost",
+    "abilitie:defiant:onAfterEachBoost"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/battle.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "AfterFaint": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:2601:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:eelevate:onSourceAfterFaint",
+    "abilitie:battlebond:onSourceAfterFaint",
+    "abilitie:moxie:onSourceAfterFaint"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 5,
+   "engine_site": "turn/battle.rs, turn/switching.rs, turn/abilities.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "AfterHit": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:1125:singleEvent",
+    "data/mods/champions/scripts.ts:414:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:ceaselessedge:onAfterHit",
+    "move:covet:onAfterHit",
+    "move:icespinner:onAfterHit",
+    "move:knockoff:onAfterHit",
+    "move:mortalspin:onAfterHit",
+    "move:rapidspin:onAfterHit",
+    "move:stoneaxe:onAfterHit",
+    "move:thief:onAfterHit"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/moves.rs, turn/moves/handlers.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "AfterMega": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:1914:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:opportunist:onAnyAfterMega",
+    "item:whiteherb:onAnyAfterMega"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 2,
+   "engine_site": "turn/items.rs, turn/mega.rs, turn/abilities.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "AfterMove": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:311:singleEvent",
+    "sim/battle-actions.ts:312:runEvent"
+   ],
+   "standard_reactors": [
+    "move:beakblast:onAfterMove",
+    "move:charge:condition.onAfterMove",
+    "move:sparklingaria:onAfterMove",
+    "move:spitup:onAfterMove",
+    "abilitie:opportunist:onAnyAfterMove",
+    "item:whiteherb:onAnyAfterMove"
+   ],
+   "reachable_conditions": [
+    "lockedmove"
+   ],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 4,
+   "engine_site": "turn/moves.rs, turn/moves/handlers.rs, turn/items.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "AfterMoveSecondary": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:814:singleEvent",
+    "sim/battle-actions.ts:815:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:berserk:onAfterMoveSecondary",
+    "abilitie:pickpocket:onAfterMoveSecondary",
+    "item:ejectbutton:onAfterMoveSecondary",
+    "item:redcard:onAfterMoveSecondary"
+   ],
+   "reachable_conditions": [
+    "frz"
+   ],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 4,
+   "engine_site": "turn/items.rs, turn/abilities.rs, turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": [
+    "R5-future-move-edges"
+   ]
+  },
+  "AfterMoveSecondarySelf": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:538:singleEvent",
+    "sim/battle-actions.ts:539:runEvent",
+    "data/conditions.ts:417:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:fellstinger:onAfterMoveSecondarySelf",
+    "abilitie:magician:onAfterMoveSecondarySelf",
+    "item:lifeorb:onAfterMoveSecondarySelf",
+    "item:shellbell:onAfterMoveSecondarySelf"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 4,
+   "engine_site": "turn/moves.rs, turn/abilities.rs, turn/items.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "AfterSetStatus": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:1746:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:synchronize:onAfterSetStatus",
+    "item:lumberry:onAfterSetStatus"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/battle.rs, turn/update.rs, turn/abilities.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "AfterSubDamage": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "data/moves.ts:18369:singleEvent",
+    "data/moves.ts:18370:runEvent"
+   ],
+   "standard_reactors": [
+    "move:ceaselessedge:onAfterSubDamage",
+    "move:icespinner:onAfterSubDamage",
+    "move:mortalspin:onAfterSubDamage",
+    "move:rapidspin:onAfterSubDamage",
+    "move:shellsidearm:onAfterSubDamage",
+    "move:steelroller:onAfterSubDamage",
+    "move:stoneaxe:onAfterSubDamage",
+    "item:airballoon:onAfterSubDamage"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 4,
+   "engine_site": "turn/moves/handlers.rs, turn/items.rs, turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "AfterTakeItem": {
+   "section": "3.5",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/pokemon.ts:1862:runEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "no handler in the dex",
+   "in_progress": []
+  },
+  "AfterTerastallization": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:1966:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:opportunist:onAnyAfterTerastallization"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 2,
+   "engine_site": "turn/switching.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "AfterUseItem": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:1805:runEvent",
+    "sim/pokemon.ts:1845:runEvent",
+    "data/items.ts:201:runEvent",
+    "data/items.ts:209:runEvent",
+    "data/moves.ts:5780:runEvent",
+    "data/moves.ts:12591:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:symbiosis:onAllyAfterUseItem",
+    "abilitie:unburden:onAfterUseItem"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/abilities.rs, turn/items.rs, turn/update.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": [
+    "B44-fling-used-item-pickup"
+   ]
+  },
+  "Attract": {
+   "section": "3.4",
+   "status": "unnecessary",
+   "fired_at": [
+    "data/moves.ts:723:runEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/conditions.rs, volatile.rs, turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "only non-standard reactors: destinyknot",
+   "in_progress": []
+  },
+  "BasePower": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:1650:runEvent"
+   ],
+   "standard_reactors": [
+    "move:gravapple:onBasePower",
+    "move:barbbarrage:onBasePower",
+    "move:bounce:condition.onSourceBasePower",
+    "move:charge:condition.onBasePower",
+    "move:electricterrain:condition.onBasePower",
+    "move:expandingforce:onBasePower",
+    "move:facade:onBasePower",
+    "move:ficklebeam:onBasePower",
+    "move:grassyterrain:condition.onBasePower",
+    "move:helpinghand:condition.onBasePower",
+    "move:knockoff:onBasePower",
+    "move:lashout:onBasePower",
+    "move:mistyexplosion:onBasePower",
+    "move:mistyterrain:condition.onBasePower",
+    "move:psychicterrain:condition.onBasePower",
+    "move:solarbeam:onBasePower",
+    "move:solarblade:onBasePower",
+    "move:venoshock:onBasePower",
+    "abilitie:dragonize:onBasePower",
+    "abilitie:aerilate:onBasePower",
+    "abilitie:analytic:onBasePower",
+    "abilitie:dryskin:onSourceBasePower",
+    "abilitie:fairyaura:onAnyBasePower",
+    "abilitie:ironfist:onBasePower",
+    "abilitie:megalauncher:onBasePower",
+    "abilitie:pixilate:onBasePower",
+    "abilitie:punkrock:onBasePower",
+    "abilitie:reckless:onBasePower",
+    "abilitie:refrigerate:onBasePower",
+    "abilitie:rivalry:onBasePower",
+    "abilitie:sandforce:onBasePower",
+    "abilitie:sharpness:onBasePower",
+    "abilitie:sheerforce:onBasePower",
+    "abilitie:steelyspirit:onAllyBasePower",
+    "abilitie:strongjaw:onBasePower",
+    "abilitie:supremeoverlord:onBasePower",
+    "abilitie:technician:onBasePower",
+    "abilitie:toughclaws:onBasePower",
+    "item:spelltag:onBasePower",
+    "item:blackbelt:onBasePower",
+    "item:blackglasses:onBasePower",
+    "item:charcoal:onBasePower",
+    "item:dragonfang:onBasePower",
+    "item:fairyfeather:onBasePower",
+    "item:hardstone:onBasePower",
+    "item:magnet:onBasePower",
+    "item:metalcoat:onBasePower",
+    "item:miracleseed:onBasePower",
+    "item:muscleband:onBasePower",
+    "item:mysticwater:onBasePower",
+    "item:nevermeltice:onBasePower",
+    "item:poisonbarb:onBasePower",
+    "item:sharpbeak:onBasePower",
+    "item:silkscarf:onBasePower",
+    "item:silverpowder:onBasePower",
+    "item:softsand:onBasePower",
+    "item:twistedspoon:onBasePower",
+    "item:wiseglasses:onBasePower"
+   ],
+   "reachable_conditions": [
+    "gem"
+   ],
+   "unreachable_conditions": {
+    "rolloutstorage": "Rollout / Ice Ball not standard"
+   },
+   "nonstandard_reactor_count": 54,
+   "engine_site": "turn/abilities.rs, turn/moves/handlers.rs, turn/moves.rs",
+   "reactors_without_oracle_fixture": [
+    "blackbelt",
+    "charcoal",
+    "dragonfang",
+    "dragonize",
+    "fairyfeather",
+    "hardstone",
+    "metalcoat",
+    "mistyexplosion",
+    "mysticwater",
+    "nevermeltice",
+    "silkscarf",
+    "silverpowder",
+    "softsand",
+    "solarblade",
+    "spelltag",
+    "twistedspoon"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "BattleStart": {
+   "section": "3.5",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/battle.ts:2679:singleEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {
+    "zacian": "Zacian not standard",
+    "zamazenta": "Zamazenta not standard"
+   },
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/switching.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "conditions unreachable: zacian (Zacian not standard); zamazenta (Zamazenta not standard); only the Zacian / Zamazenta species conditions (not standard)",
+   "in_progress": []
+  },
+  "BeforeFaint": {
+   "section": "3.4",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/battle.ts:2551:runEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "no handler in the dex",
+   "in_progress": []
+  },
+  "BeforeMove": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:255:runEvent"
+   ],
+   "standard_reactors": [
+    "move:disable:condition.onBeforeMove",
+    "move:attract:condition.onBeforeMove",
+    "move:chillyreception:condition.onBeforeMove",
+    "move:destinybond:condition.onBeforeMove",
+    "move:glaiverush:condition.onBeforeMove",
+    "move:gravity:condition.onBeforeMove",
+    "move:imprison:condition.onFoeBeforeMove",
+    "move:taunt:condition.onBeforeMove",
+    "move:throatchop:condition.onBeforeMove"
+   ],
+   "reachable_conditions": [
+    "choicelock",
+    "confusion",
+    "flinch",
+    "frz",
+    "mustrecharge",
+    "par",
+    "slp"
+   ],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 7,
+   "engine_site": "turn/moves.rs, turn/conditions.rs, turn/moves/handlers.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "BeforeSwitchIn": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:144:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:illusion:onBeforeSwitchIn"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/switching.rs, turn/abilities.rs, state.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "BeforeSwitchOut": {
+   "section": "3.5",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/battle-actions.ts:81:runEvent",
+    "sim/battle.ts:2898:runEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {
+    "dynamax": "Dynamax is off in the ruleset"
+   },
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/switching.rs, turn/mod.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "only non-standard reactors: pursuit; conditions unreachable: dynamax (Dynamax is off in the ruleset); only Pursuit (Past) and Dynamax (off)",
+   "in_progress": []
+  },
+  "BeforeTurn": {
+   "section": "3.1",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/battle.ts:2809:eachEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {
+    "commanding": "Commander (Tatsugiri) not standard"
+   },
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/mod.rs, turn/queue.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "conditions unreachable: commanding (Commander (Tatsugiri) not standard); only Commander's `commanding` (not standard); the `beforeTurnMove` action itself (Counter, Mirror Coat) is implemented",
+   "in_progress": []
+  },
+  "ChangeBoost": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:2032:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:contrary:onChangeBoost",
+    "abilitie:ripen:onChangeBoost",
+    "abilitie:simple:onChangeBoost"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/battle.rs, turn/abilities.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ChargeMove": {
+   "section": "3.1",
+   "status": "unnecessary",
+   "fired_at": [
+    "data/moves.ts:1720:runEvent",
+    "data/moves.ts:3603:runEvent",
+    "data/moves.ts:3769:runEvent",
+    "data/moves.ts:4651:runEvent",
+    "data/moves.ts:5912:runEvent",
+    "data/moves.ts:6193:runEvent",
+    "..."
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/moves/handlers.rs, turn/forme.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "only non-standard reactors: powerherb",
+   "in_progress": []
+  },
+  "CheckShow": {
+   "section": "3.5",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/battle.ts:2764:singleEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/abilities.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "Champions removes Natural Cure's `onCheckShow` (`data/mods/champions/abilities.ts`); log only",
+   "in_progress": []
+  },
+  "Copy": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:1266:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:powershift:condition.onCopy",
+    "move:gastroacid:condition.onCopy",
+    "move:powertrick:condition.onCopy"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/switching.rs `copy_volatile_from` (Power Trick / Power Shift stored-stat swap, Gastro Acid on cantsuppress)",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "CriticalHit": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:1646:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:disguise:onCriticalHit"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/forme.rs, turn/moves.rs, turn/switching.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "Damage": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:680:runEvent",
+    "sim/battle.ts:2121:runEvent"
+   ],
+   "standard_reactors": [
+    "move:endure:condition.onDamage",
+    "abilitie:berserk:onDamage",
+    "abilitie:damp:onAnyDamage",
+    "abilitie:disguise:onDamage",
+    "abilitie:gluttony:onDamage",
+    "abilitie:heatproof:onDamage",
+    "abilitie:magicguard:onDamage",
+    "abilitie:poisonheal:onDamage",
+    "abilitie:rockhead:onDamage",
+    "abilitie:sturdy:onDamage",
+    "item:focusband:onDamage",
+    "item:focussash:onDamage"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 6,
+   "engine_site": "turn/moves.rs, turn/battle.rs, turn/forme.rs",
+   "reactors_without_oracle_fixture": [
+    "gluttony"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "DamagingHit": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:1121:runEvent",
+    "sim/battle-actions.ts:1129:runEvent",
+    "data/mods/champions/scripts.ts:410:runEvent",
+    "data/mods/champions/scripts.ts:418:runEvent"
+   ],
+   "standard_reactors": [
+    "move:counter:condition.onDamagingHit",
+    "move:mirrorcoat:condition.onDamagingHit",
+    "abilitie:spicyspray:onDamagingHit",
+    "abilitie:aftermath:onDamagingHit",
+    "abilitie:cursedbody:onDamagingHit",
+    "abilitie:cutecharm:onDamagingHit",
+    "abilitie:effectspore:onDamagingHit",
+    "abilitie:electromorphosis:onDamagingHit",
+    "abilitie:flamebody:onDamagingHit",
+    "abilitie:gooey:onDamagingHit",
+    "abilitie:illusion:onDamagingHit",
+    "abilitie:innardsout:onDamagingHit",
+    "abilitie:justified:onDamagingHit",
+    "abilitie:mummy:onDamagingHit",
+    "abilitie:poisonpoint:onDamagingHit",
+    "abilitie:poisontouch:onSourceDamagingHit",
+    "abilitie:rattled:onDamagingHit",
+    "abilitie:roughskin:onDamagingHit",
+    "abilitie:sandspit:onDamagingHit",
+    "abilitie:seedsower:onDamagingHit",
+    "abilitie:stamina:onDamagingHit",
+    "abilitie:static:onDamagingHit",
+    "abilitie:thermalexchange:onDamagingHit",
+    "abilitie:toxicdebris:onDamagingHit",
+    "abilitie:wanderingspirit:onDamagingHit",
+    "abilitie:weakarmor:onDamagingHit",
+    "item:airballoon:onDamagingHit",
+    "item:rockyhelmet:onDamagingHit"
+   ],
+   "reachable_conditions": [
+    "frz"
+   ],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 17,
+   "engine_site": "turn/moves.rs, turn/moves/ability_hooks.rs, turn/abilities.rs",
+   "reactors_without_oracle_fixture": [
+    "rattled"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "DeductPP": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:476:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:pressure:onDeductPP"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/moves.rs deduct PP (Pressure, `mustpressure`)",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "DisableMove": {
+   "section": "3.6",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:1691:runEvent",
+    "sim/battle.ts:1694:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:disable:condition.onDisableMove",
+    "move:encore:condition.onDisableMove",
+    "move:fakeout:onDisableMove",
+    "move:firstimpression:onDisableMove",
+    "move:gravity:condition.onDisableMove",
+    "move:imprison:condition.onFoeDisableMove",
+    "move:taunt:condition.onDisableMove",
+    "move:throatchop:condition.onDisableMove",
+    "move:torment:condition.onDisableMove"
+   ],
+   "reachable_conditions": [
+    "choicelock"
+   ],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 3,
+   "engine_site": "turn/conditions.rs, turn/items.rs, turn/mod.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "DragOut": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:169:runEvent",
+    "sim/battle-actions.ts:1358:runEvent",
+    "data/items.ts:5155:runEvent"
+   ],
+   "standard_reactors": [
+    "move:ingrain:condition.onDragOut",
+    "abilitie:guarddog:onDragOut",
+    "abilitie:suctioncups:onDragOut"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {
+    "commanded": "Commander (Tatsugiri) not standard",
+    "commanding": "Commander (Tatsugiri) not standard",
+    "dynamax": "Dynamax is off in the ruleset"
+   },
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/moves.rs, volatile.rs, turn/conditions.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "Drive": {
+   "section": "3.4",
+   "status": "unnecessary",
+   "fired_at": [
+    "data/moves.ts:19079:runEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/abilities.rs, turn/field_events.rs, volatile.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "no handler (Techno Blast / Genesect not standard)",
+   "in_progress": []
+  },
+  "Eat": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:1785:singleEvent",
+    "data/abilities.ts:759:singleEvent",
+    "data/moves.ts:1924:singleEvent",
+    "data/moves.ts:5755:singleEvent",
+    "data/moves.ts:13453:singleEvent",
+    "data/rulesets.ts:2496:singleEvent"
+   ],
+   "standard_reactors": [
+    "item:aspearberry:onEat",
+    "item:babiriberry:onEat",
+    "item:chartiberry:onEat",
+    "item:cheriberry:onEat",
+    "item:chestoberry:onEat",
+    "item:chilanberry:onEat",
+    "item:chopleberry:onEat",
+    "item:cobaberry:onEat",
+    "item:colburberry:onEat",
+    "item:habanberry:onEat",
+    "item:kasibberry:onEat",
+    "item:kebiaberry:onEat",
+    "item:leppaberry:onEat",
+    "item:lumberry:onEat",
+    "item:occaberry:onEat",
+    "item:oranberry:onEat",
+    "item:passhoberry:onEat",
+    "item:payapaberry:onEat",
+    "item:pechaberry:onEat",
+    "item:persimberry:onEat",
+    "item:rawstberry:onEat",
+    "item:rindoberry:onEat",
+    "item:roseliberry:onEat",
+    "item:shucaberry:onEat",
+    "item:sitrusberry:onEat",
+    "item:tangaberry:onEat",
+    "item:wacanberry:onEat",
+    "item:yacheberry:onEat"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 29,
+   "engine_site": "turn/update.rs, turn/moves/handlers.rs, turn/items.rs",
+   "reactors_without_oracle_fixture": [
+    "aspearberry",
+    "babiriberry",
+    "chartiberry",
+    "chestoberry",
+    "chopleberry",
+    "cobaberry",
+    "habanberry",
+    "kasibberry",
+    "kebiaberry",
+    "leppaberry",
+    "passhoberry",
+    "payapaberry",
+    "pechaberry",
+    "rawstberry",
+    "rindoberry",
+    "tangaberry",
+    "wacanberry"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "EatItem": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:1786:runEvent",
+    "data/abilities.ts:760:runEvent",
+    "data/moves.ts:1925:runEvent",
+    "data/moves.ts:5752:singleEvent",
+    "data/moves.ts:5756:runEvent",
+    "data/moves.ts:13454:runEvent",
+    "..."
+   ],
+   "standard_reactors": [
+    "abilitie:cheekpouch:onEatItem",
+    "abilitie:cudchew:onEatItem",
+    "abilitie:ripen:onEatItem"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/moves/handlers.rs, turn/abilities.rs, turn/battle.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "Effectiveness": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:2216:singleEvent",
+    "sim/pokemon.ts:2217:runEvent"
+   ],
+   "standard_reactors": [
+    "move:freezedry:onEffectiveness",
+    "move:flyingpress:onEffectiveness",
+    "abilitie:disguise:onEffectiveness",
+    "item:ironball:onEffectiveness"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {
+    "deltastream": "Delta Stream (Rayquaza-Mega) not standard"
+   },
+   "nonstandard_reactor_count": 3,
+   "engine_site": "turn/forme.rs, turn/switching.rs, turn/moves/handlers.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "EmergencyExit": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:530:runEvent",
+    "sim/battle-actions.ts:542:runEvent",
+    "sim/battle-actions.ts:1015:runEvent",
+    "sim/battle-actions.ts:1132:runEvent",
+    "sim/battle-actions.ts:1395:runEvent",
+    "sim/battle.ts:2865:runEvent",
+    "..."
+   ],
+   "standard_reactors": [
+    "abilitie:emergencyexit:onEmergencyExit"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/moves.rs, turn/switching.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": [
+    "R3-emergency-exit-replacement"
+   ]
+  },
+  "End": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:103:singleEvent",
+    "sim/battle-actions.ts:104:singleEvent",
+    "sim/battle-actions.ts:300:singleEvent",
+    "sim/battle-actions.ts:1939:singleEvent",
+    "sim/battle.ts:1333:singleEvent",
+    "sim/battle.ts:1334:singleEvent",
+    "..."
+   ],
+   "standard_reactors": [
+    "move:disable:condition.onEnd",
+    "move:encore:condition.onEnd",
+    "move:powershift:condition.onEnd",
+    "move:saltcure:condition.onEnd",
+    "move:syrupbomb:condition.onEnd",
+    "move:wish:condition.onEnd",
+    "move:attract:condition.onEnd",
+    "move:charge:condition.onEnd",
+    "move:magnetrise:condition.onEnd",
+    "move:perishsong:condition.onEnd",
+    "move:powertrick:condition.onEnd",
+    "move:stockpile:condition.onEnd",
+    "move:substitute:condition.onEnd",
+    "move:taunt:condition.onEnd",
+    "move:throatchop:condition.onEnd",
+    "move:torment:condition.onEnd",
+    "move:uproar:condition.onEnd",
+    "move:yawn:condition.onEnd",
+    "abilitie:cloudnine:onEnd",
+    "abilitie:flashfire:condition.onEnd",
+    "abilitie:flashfire:onEnd",
+    "abilitie:illusion:onEnd",
+    "abilitie:opportunist:onEnd",
+    "abilitie:supremeoverlord:onEnd",
+    "abilitie:unburden:onEnd",
+    "abilitie:unnerve:onEnd"
+   ],
+   "reachable_conditions": [
+    "confusion",
+    "futuremove",
+    "lockedmove",
+    "partiallytrapped",
+    "twoturnmove"
+   ],
+   "unreachable_conditions": {
+    "dynamax": "Dynamax is off in the ruleset"
+   },
+   "nonstandard_reactor_count": 23,
+   "engine_site": "turn/switching.rs, turn/abilities.rs, turn/battle.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "Faint": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:2555:runEvent"
+   ],
+   "standard_reactors": [
+    "move:destinybond:condition.onFaint",
+    "abilitie:illusion:onFaint",
+    "abilitie:receiver:onAllyFaint"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 4,
+   "engine_site": "turn/battle.rs, turn/abilities.rs, turn/conditions.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "FieldEnd": {
+   "section": "3.7",
+   "status": "implemented",
+   "fired_at": [
+    "sim/field.ts:94:singleEvent",
+    "sim/field.ts:162:singleEvent",
+    "sim/field.ts:227:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:electricterrain:condition.onFieldEnd",
+    "move:grassyterrain:condition.onFieldEnd",
+    "move:gravity:condition.onFieldEnd",
+    "move:magicroom:condition.onFieldEnd",
+    "move:mistyterrain:condition.onFieldEnd",
+    "move:psychicterrain:condition.onFieldEnd",
+    "move:trickroom:condition.onFieldEnd",
+    "move:wonderroom:condition.onFieldEnd"
+   ],
+   "reachable_conditions": [
+    "raindance",
+    "sandstorm",
+    "snowscape",
+    "sunnyday"
+   ],
+   "unreachable_conditions": {
+    "deltastream": "Delta Stream (Rayquaza-Mega) not standard",
+    "desolateland": "Desolate Land (Groudon-Primal) not standard",
+    "hail": "no standard move/ability sets hail (Hail is Past; Snow Warning sets snow)",
+    "primordialsea": "Primordial Sea (Kyogre-Primal) not standard"
+   },
+   "nonstandard_reactor_count": 2,
+   "engine_site": "turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "FieldResidual": {
+   "section": "3.6",
+   "status": "implemented",
+   "fired_at": [],
+   "standard_reactors": [],
+   "reachable_conditions": [
+    "raindance",
+    "sandstorm",
+    "snowscape",
+    "sunnyday"
+   ],
+   "unreachable_conditions": {
+    "deltastream": "Delta Stream (Rayquaza-Mega) not standard",
+    "desolateland": "Desolate Land (Groudon-Primal) not standard",
+    "hail": "no standard move/ability sets hail (Hail is Past; Snow Warning sets snow)",
+    "primordialsea": "Primordial Sea (Kyogre-Primal) not standard"
+   },
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/residual.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "FieldRestart": {
+   "section": "3.7",
+   "status": "implemented",
+   "fired_at": [
+    "sim/field.ts:198:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:magicroom:condition.onFieldRestart",
+    "move:trickroom:condition.onFieldRestart",
+    "move:wonderroom:condition.onFieldRestart"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "FieldStart": {
+   "section": "3.7",
+   "status": "implemented",
+   "fired_at": [
+    "sim/field.ts:82:singleEvent",
+    "sim/field.ts:150:singleEvent",
+    "sim/field.ts:210:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:electricterrain:condition.onFieldStart",
+    "move:fairylock:condition.onFieldStart",
+    "move:grassyterrain:condition.onFieldStart",
+    "move:gravity:condition.onFieldStart",
+    "move:magicroom:condition.onFieldStart",
+    "move:mistyterrain:condition.onFieldStart",
+    "move:psychicterrain:condition.onFieldStart",
+    "move:trickroom:condition.onFieldStart",
+    "move:wonderroom:condition.onFieldStart"
+   ],
+   "reachable_conditions": [
+    "raindance",
+    "sandstorm",
+    "snowscape",
+    "sunnyday"
+   ],
+   "unreachable_conditions": {
+    "deltastream": "Delta Stream (Rayquaza-Mega) not standard",
+    "desolateland": "Desolate Land (Groudon-Primal) not standard",
+    "hail": "no standard move/ability sets hail (Hail is Past; Snow Warning sets snow)",
+    "primordialsea": "Primordial Sea (Kyogre-Primal) not standard"
+   },
+   "nonstandard_reactor_count": 4,
+   "engine_site": "turn/items.rs, turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "Flinch": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "data/conditions.ts:204:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:steadfast:onFlinch"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "volatile.rs, instruction.rs, turn/abilities.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "FoeMaybeTrapPokemon": {
+   "section": "3.6",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:1755:singleEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:shadowtag:onFoeMaybeTrapPokemon"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 2,
+   "engine_site": "turn/abilities.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "FractionalPriority": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-queue.ts:249:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:quickdraw:onFractionalPriority",
+    "item:quickclaw:onFractionalPriority"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 2,
+   "engine_site": "turn/order.rs `fractional_priority_tenths`, items.rs (Quick Claw), abilities.rs (Quick Draw)",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "Heal": {
+   "section": "3.4",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/battle.ts:2301:runEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/battle.rs, turn/moves/handlers.rs, turn/abilities.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "no handler in the dex (the heal itself is implemented: `Battle::heal`)",
+   "in_progress": []
+  },
+  "Hit": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:1279:singleEvent",
+    "sim/battle-actions.ts:1283:runEvent"
+   ],
+   "standard_reactors": [
+    "move:banefulbunker:condition.onHit",
+    "move:banefulbunker:onHit",
+    "move:beakblast:condition.onHit",
+    "move:burnup:self.onHit",
+    "move:clangoroussoul:onHit",
+    "move:corrosivegas:onHit",
+    "move:direclaw:secondaries.onHit",
+    "move:direclaw:secondary.onHit",
+    "move:doubleshock:self.onHit",
+    "move:kingsshield:condition.onHit",
+    "move:kingsshield:onHit",
+    "move:protect:onHit",
+    "move:spikyshield:condition.onHit",
+    "move:spikyshield:onHit",
+    "move:spiritshackle:secondaries.onHit",
+    "move:spiritshackle:secondary.onHit",
+    "move:strengthsap:onHit",
+    "move:stuffcheeks:onHit",
+    "move:trickortreat:onHit",
+    "move:acupressure:onHit",
+    "move:afteryou:onHit",
+    "move:alluringvoice:secondaries.onHit",
+    "move:alluringvoice:secondary.onHit",
+    "move:allyswitch:onHit",
+    "move:batonpass:onHit",
+    "move:batonpass:self.onHit",
+    "move:bellydrum:onHit",
+    "move:block:onHit",
+    "move:bugbite:onHit",
+    "move:burningjealousy:secondaries.onHit",
+    "move:burningjealousy:secondary.onHit",
+    "move:clearsmog:onHit",
+    "move:copycat:onHit",
+    "move:curse:onHit",
+    "move:defog:onHit",
+    "move:detect:onHit",
+    "move:eeriespell:secondaries.onHit",
+    "move:eeriespell:secondary.onHit",
+    "move:endure:onHit",
+    "move:entrainment:onHit",
+    "move:focuspunch:condition.onHit",
+    "move:forestscurse:onHit",
+    "move:guardsplit:onHit",
+    "move:guardswap:onHit",
+    "move:healbell:onHit",
+    "move:healpulse:onHit",
+    "move:instruct:onHit",
+    "move:jawlock:onHit",
+    "move:lockon:onHit",
+    "move:magicpowder:onHit",
+    "move:meanlook:onHit",
+    "move:moonlight:onHit",
+    "move:morningsun:onHit",
+    "move:painsplit:onHit",
+    "move:partingshot:onHit",
+    "move:pluck:onHit",
+    "move:pollenpuff:onHit",
+    "move:powersplit:onHit",
+    "move:powerswap:onHit",
+    "move:psychup:onHit",
+    "move:quash:onHit",
+    "move:recycle:onHit",
+    "move:reflecttype:onHit",
+    "move:rest:onHit",
+    "move:roleplay:onHit",
+    "move:shedtail:onHit",
+    "move:shedtail:self.onHit",
+    "move:shellsidearm:onHit",
+    "move:simplebeam:onHit",
+    "move:skillswap:onHit",
+    "move:sleeptalk:onHit",
+    "move:soak:onHit",
+    "move:speedswap:onHit",
+    "move:spite:onHit",
+    "move:steelroller:onHit",
+    "move:substitute:onHit",
+    "move:swallow:onHit",
+    "move:switcheroo:onHit",
+    "move:synthesis:onHit",
+    "move:throatchop:secondaries.onHit",
+    "move:throatchop:secondary.onHit",
+    "move:tidyup:onHit",
+    "move:topsyturvy:onHit",
+    "move:transform:onHit",
+    "move:triattack:secondaries.onHit",
+    "move:triattack:secondary.onHit",
+    "move:trick:onHit",
+    "move:worryseed:onHit",
+    "abilitie:angerpoint:onHit",
+    "abilitie:owntempo:onHit"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 94,
+   "engine_site": "turn/moves.rs, turn/moves/handlers.rs, turn/items.rs",
+   "reactors_without_oracle_fixture": [
+    "detect"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": [
+    "B41-copycat-uturn-switch-flag"
+   ]
+  },
+  "HitField": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:1269:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:courtchange:onHitField",
+    "move:haze:onHitField",
+    "move:perishsong:onHitField",
+    "move:teatime:onHitField"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 2,
+   "engine_site": "turn/moves.rs, volatile.rs, turn/moves/handlers.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "HitProtect": {
+   "section": "3.3",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:1302:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:piercingdrill:onHitProtect",
+    "abilitie:unseenfist:onHitProtect"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/abilities.rs (Unseen Fist Champions / Piercing Drill) + moves.rs `bypassProtect` 0.25",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "HitSide": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:1274:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:magneticflux:onHitSide",
+    "move:quickguard:onHitSide",
+    "move:wideguard:onHitSide"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/moves.rs, turn/moves/handlers.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "Immunity": {
+   "section": "3.3",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:2281:runEvent"
+   ],
+   "standard_reactors": [
+    "move:dig:condition.onImmunity",
+    "move:dive:condition.onImmunity",
+    "move:magnetrise:condition.onImmunity",
+    "abilitie:icebody:onImmunity",
+    "abilitie:magmaarmor:onImmunity",
+    "abilitie:oblivious:onImmunity",
+    "abilitie:overcoat:onImmunity",
+    "abilitie:sandforce:onImmunity",
+    "abilitie:sandrush:onImmunity",
+    "abilitie:sandveil:onImmunity",
+    "abilitie:snowcloak:onImmunity"
+   ],
+   "reachable_conditions": [
+    "sunnyday"
+   ],
+   "unreachable_conditions": {
+    "desolateland": "Desolate Land (Groudon-Primal) not standard"
+   },
+   "nonstandard_reactor_count": 2,
+   "engine_site": "turn/battle.rs, turn/switching.rs, volatile.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "Invulnerability": {
+   "section": "3.3",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:630:runEvent",
+    "data/moves.ts:13247:runEvent",
+    "data/moves.ts:19048:runEvent"
+   ],
+   "standard_reactors": [
+    "move:bounce:condition.onInvulnerability",
+    "move:dig:condition.onInvulnerability",
+    "move:dive:condition.onInvulnerability",
+    "move:fly:condition.onInvulnerability",
+    "move:lockon:condition.onSourceInvulnerability",
+    "abilitie:noguard:onAnyInvulnerability"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/moves/handlers.rs, volatile.rs, turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "LockMove": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:950:priorityEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [
+    "lockedmove",
+    "twoturnmove"
+   ],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/lock.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "MaybeTrapPokemon": {
+   "section": "3.6",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:1729:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:runaway:onMaybeTrapPokemon",
+    "item:shedshell:onMaybeTrapPokemon"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/abilities.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "Memory": {
+   "section": "3.4",
+   "status": "unnecessary",
+   "fired_at": [
+    "data/moves.ts:12502:runEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "no handler (Multi-Attack / Silvally not standard)",
+   "in_progress": []
+  },
+  "ModifyAccuracy": {
+   "section": "3.3",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:712:runEvent",
+    "sim/battle-actions.ts:935:runEvent",
+    "data/mods/champions/scripts.ts:506:runEvent"
+   ],
+   "standard_reactors": [
+    "move:gravity:condition.onModifyAccuracy",
+    "abilitie:compoundeyes:onSourceModifyAccuracy",
+    "abilitie:hustle:onSourceModifyAccuracy",
+    "abilitie:sandveil:onModifyAccuracy",
+    "abilitie:snowcloak:onModifyAccuracy",
+    "abilitie:tangledfeet:onModifyAccuracy",
+    "item:brightpowder:onModifyAccuracy",
+    "item:widelens:onSourceModifyAccuracy",
+    "item:zoomlens:onSourceModifyAccuracy"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 3,
+   "engine_site": "turn/abilities.rs, turn/items.rs, turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ModifyAtk": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:634 / battle-actions.ts:1708 ('Modify'+stat)"
+   ],
+   "standard_reactors": [
+    "abilitie:firemane:onModifyAtk",
+    "abilitie:blaze:onModifyAtk",
+    "abilitie:flashfire:condition.onModifyAtk",
+    "abilitie:guts:onModifyAtk",
+    "abilitie:heatproof:onSourceModifyAtk",
+    "abilitie:hugepower:onModifyAtk",
+    "abilitie:hustle:onModifyAtk",
+    "abilitie:overgrow:onModifyAtk",
+    "abilitie:purepower:onModifyAtk",
+    "abilitie:purifyingsalt:onSourceModifyAtk",
+    "abilitie:stakeout:onModifyAtk",
+    "abilitie:swarm:onModifyAtk",
+    "abilitie:thickfat:onSourceModifyAtk",
+    "abilitie:torrent:onModifyAtk",
+    "abilitie:waterbubble:onModifyAtk",
+    "abilitie:waterbubble:onSourceModifyAtk",
+    "item:lightball:onModifyAtk"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 14,
+   "engine_site": "turn/abilities.rs, turn/switching.rs, turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ModifyBoost": {
+   "section": "3.3",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:716:runEvent",
+    "sim/battle-actions.ts:720:runEvent",
+    "sim/battle-actions.ts:917:runEvent",
+    "sim/battle-actions.ts:926:runEvent",
+    "sim/pokemon.ts:581:runEvent",
+    "sim/pokemon.ts:618:runEvent",
+    "..."
+   ],
+   "standard_reactors": [
+    "abilitie:unaware:onAnyModifyBoost"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 2,
+   "engine_site": "turn/battle.rs, volatile.rs, turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ModifyCritRatio": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:1624:runEvent"
+   ],
+   "standard_reactors": [
+    "move:dragoncheer:condition.onModifyCritRatio",
+    "move:focusenergy:condition.onModifyCritRatio",
+    "abilitie:merciless:onModifyCritRatio",
+    "abilitie:superluck:onModifyCritRatio",
+    "item:leek:onModifyCritRatio",
+    "item:scopelens:onModifyCritRatio"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 5,
+   "engine_site": "volatile.rs, turn/abilities.rs, turn/items.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ModifyDamage": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:1826:runEvent",
+    "data/mods/champions/scripts.ts:297:runEvent"
+   ],
+   "standard_reactors": [
+    "move:auroraveil:condition.onAnyModifyDamage",
+    "move:dig:condition.onSourceModifyDamage",
+    "move:dive:condition.onSourceModifyDamage",
+    "move:fly:condition.onSourceModifyDamage",
+    "move:glaiverush:condition.onSourceModifyDamage",
+    "move:lightscreen:condition.onAnyModifyDamage",
+    "move:minimize:condition.onSourceModifyDamage",
+    "move:reflect:condition.onAnyModifyDamage",
+    "abilitie:auraguard:onSourceModifyDamage",
+    "abilitie:filter:onSourceModifyDamage",
+    "abilitie:fluffy:onSourceModifyDamage",
+    "abilitie:friendguard:onAnyModifyDamage",
+    "abilitie:multiscale:onSourceModifyDamage",
+    "abilitie:punkrock:onSourceModifyDamage",
+    "abilitie:ripen:onSourceModifyDamage",
+    "abilitie:sniper:onModifyDamage",
+    "abilitie:solidrock:onSourceModifyDamage",
+    "item:babiriberry:onSourceModifyDamage",
+    "item:chartiberry:onSourceModifyDamage",
+    "item:chilanberry:onSourceModifyDamage",
+    "item:chopleberry:onSourceModifyDamage",
+    "item:cobaberry:onSourceModifyDamage",
+    "item:colburberry:onSourceModifyDamage",
+    "item:expertbelt:onModifyDamage",
+    "item:habanberry:onSourceModifyDamage",
+    "item:kasibberry:onSourceModifyDamage",
+    "item:kebiaberry:onSourceModifyDamage",
+    "item:lifeorb:onModifyDamage",
+    "item:metronome:condition.onModifyDamage",
+    "item:occaberry:onSourceModifyDamage",
+    "item:passhoberry:onSourceModifyDamage",
+    "item:payapaberry:onSourceModifyDamage",
+    "item:rindoberry:onSourceModifyDamage",
+    "item:roseliberry:onSourceModifyDamage",
+    "item:shucaberry:onSourceModifyDamage",
+    "item:tangaberry:onSourceModifyDamage",
+    "item:wacanberry:onSourceModifyDamage",
+    "item:yacheberry:onSourceModifyDamage"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {
+    "dynamax": "Dynamax is off in the ruleset"
+   },
+   "nonstandard_reactor_count": 5,
+   "engine_site": "turn/abilities.rs, turn/items.rs, turn/moves.rs",
+   "reactors_without_oracle_fixture": [
+    "babiriberry",
+    "chartiberry",
+    "chopleberry",
+    "cobaberry",
+    "habanberry",
+    "kasibberry",
+    "kebiaberry",
+    "passhoberry",
+    "payapaberry",
+    "rindoberry",
+    "tangaberry",
+    "wacanberry"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ModifyDef": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:634 / battle-actions.ts:1708 ('Modify'+stat)"
+   ],
+   "standard_reactors": [
+    "abilitie:furcoat:onModifyDef",
+    "abilitie:grasspelt:onModifyDef",
+    "abilitie:marvelscale:onModifyDef"
+   ],
+   "reachable_conditions": [
+    "snowscape"
+   ],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 5,
+   "engine_site": "turn/abilities.rs, turn/items.rs, turn/switching.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ModifyMove": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:431:singleEvent",
+    "sim/battle-actions.ts:439:runEvent"
+   ],
+   "standard_reactors": [
+    "move:growth:onModifyMove",
+    "move:beatup:onModifyMove",
+    "move:blizzard:onModifyMove",
+    "move:curse:onModifyMove",
+    "move:expandingforce:onModifyMove",
+    "move:gravity:condition.onModifyMove",
+    "move:hurricane:onModifyMove",
+    "move:shellsidearm:onModifyMove",
+    "move:struggle:onModifyMove",
+    "move:terrainpulse:onModifyMove",
+    "move:throatchop:condition.onModifyMove",
+    "move:thunder:onModifyMove",
+    "move:weatherball:onModifyMove",
+    "move:wonderroom:condition.onModifyMove",
+    "abilitie:battlebond:onModifyMove",
+    "abilitie:illuminate:onModifyMove",
+    "abilitie:infiltrator:onModifyMove",
+    "abilitie:keeneye:onModifyMove",
+    "abilitie:longreach:onModifyMove",
+    "abilitie:moldbreaker:onModifyMove",
+    "abilitie:scrappy:onModifyMove",
+    "abilitie:sheerforce:onModifyMove",
+    "abilitie:skilllink:onModifyMove",
+    "abilitie:stalwart:onModifyMove",
+    "abilitie:stancechange:onModifyMove",
+    "abilitie:stench:onModifyMove",
+    "item:choicescarf:onModifyMove",
+    "item:kingsrock:onModifyMove"
+   ],
+   "reachable_conditions": [
+    "frz"
+   ],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 31,
+   "engine_site": "turn/moves.rs, turn/moves/handlers.rs, turn/abilities.rs",
+   "reactors_without_oracle_fixture": [
+    "hurricane",
+    "illuminate",
+    "skilllink"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ModifyPriority": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:2645:singleEvent",
+    "sim/battle.ts:2646:runEvent"
+   ],
+   "standard_reactors": [
+    "move:grassyglide:onModifyPriority",
+    "abilitie:galewings:onModifyPriority",
+    "abilitie:prankster:onModifyPriority"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/moves.rs, turn/order.rs, turn/queue.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ModifySTAB": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:1789:runEvent",
+    "data/mods/champions/scripts.ts:260:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:adaptability:onModifySTAB"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/abilities.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ModifySecondaries": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:1341:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:parentalbond:onSourceModifySecondaries",
+    "abilitie:shielddust:onModifySecondaries"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/moves.rs, turn/moves/ability_hooks.rs, turn/items.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ModifySpA": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:634 / battle-actions.ts:1708 ('Modify'+stat)"
+   ],
+   "standard_reactors": [
+    "abilitie:firemane:onModifySpA",
+    "abilitie:blaze:onModifySpA",
+    "abilitie:flashfire:condition.onModifySpA",
+    "abilitie:heatproof:onSourceModifySpA",
+    "abilitie:minus:onModifySpA",
+    "abilitie:overgrow:onModifySpA",
+    "abilitie:plus:onModifySpA",
+    "abilitie:purifyingsalt:onSourceModifySpA",
+    "abilitie:solarpower:onModifySpA",
+    "abilitie:stakeout:onModifySpA",
+    "abilitie:swarm:onModifySpA",
+    "abilitie:thickfat:onSourceModifySpA",
+    "abilitie:torrent:onModifySpA",
+    "abilitie:waterbubble:onModifySpA",
+    "abilitie:waterbubble:onSourceModifySpA",
+    "item:lightball:onModifySpA"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 11,
+   "engine_site": "turn/abilities.rs, turn/switching.rs, turn/items.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ModifySpD": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:634 / battle-actions.ts:1708 ('Modify'+stat)"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [
+    "sandstorm"
+   ],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 7,
+   "engine_site": "turn/abilities.rs, turn/switching.rs, turn/items.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ModifySpe": {
+   "section": "3.6",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:634 / battle-actions.ts:1708 ('Modify'+stat)"
+   ],
+   "standard_reactors": [
+    "move:tailwind:condition.onModifySpe",
+    "abilitie:chlorophyll:onModifySpe",
+    "abilitie:quickfeet:onModifySpe",
+    "abilitie:sandrush:onModifySpe",
+    "abilitie:slushrush:onModifySpe",
+    "abilitie:surgesurfer:onModifySpe",
+    "abilitie:swiftswim:onModifySpe",
+    "abilitie:unburden:condition.onModifySpe",
+    "item:choicescarf:onModifySpe",
+    "item:ironball:onModifySpe"
+   ],
+   "reachable_conditions": [
+    "par"
+   ],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 12,
+   "engine_site": "turn/switching.rs, turn/order.rs, turn/abilities.rs",
+   "reactors_without_oracle_fixture": [
+    "slushrush",
+    "swiftswim"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ModifySpecies": {
+   "section": "3.5",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/pokemon.ts:1388:runEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "no handler in the dex",
+   "in_progress": []
+  },
+  "ModifyTarget": {
+   "section": "3.2",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:416:runEvent"
+   ],
+   "standard_reactors": [
+    "move:comeuppance:onModifyTarget",
+    "move:metalburst:onModifyTarget"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/moves.rs, turn/moves/handlers.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ModifyType": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:395:singleEvent",
+    "sim/battle-actions.ts:403:singleEvent",
+    "sim/battle-actions.ts:404:runEvent",
+    "sim/battle-actions.ts:430:singleEvent",
+    "sim/battle-actions.ts:438:runEvent"
+   ],
+   "standard_reactors": [
+    "move:electrify:condition.onModifyType",
+    "move:aurawheel:onModifyType",
+    "move:ragingbull:onModifyType",
+    "move:terrainpulse:onModifyType",
+    "move:weatherball:onModifyType",
+    "abilitie:dragonize:onModifyType",
+    "abilitie:aerilate:onModifyType",
+    "abilitie:liquidvoice:onModifyType",
+    "abilitie:pixilate:onModifyType",
+    "abilitie:refrigerate:onModifyType"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 12,
+   "engine_site": "turn/abilities.rs, turn/moves.rs, turn/moves/ability_hooks.rs",
+   "reactors_without_oracle_fixture": [
+    "dragonize"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "ModifyWeight": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:686:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:heavymetal:onModifyWeight",
+    "abilitie:lightmetal:onModifyWeight"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "state.rs, turn/items.rs, turn/moves/handlers.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "MoveAborted": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:257:runEvent"
+   ],
+   "standard_reactors": [
+    "move:charge:condition.onMoveAborted",
+    "move:destinybond:condition.onMoveAborted"
+   ],
+   "reachable_conditions": [
+    "twoturnmove"
+   ],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/moves.rs, turn/abilities.rs, volatile.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "MoveFail": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:527:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:axekick:onMoveFail",
+    "move:highjumpkick:onMoveFail",
+    "move:steelbeam:onMoveFail",
+    "move:supercellslam:onMoveFail"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 3,
+   "engine_site": "turn/moves.rs, turn/moves/handlers.rs",
+   "reactors_without_oracle_fixture": [
+    "axekick",
+    "supercellslam"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "NegateImmunity": {
+   "section": "3.3",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/pokemon.ts:2250:runEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 2,
+   "engine_site": "volatile.rs, dex/mod.rs, turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "only non-standard reactors: foresight, miracleeye",
+   "in_progress": []
+  },
+  "OverrideAction": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:228:runEvent"
+   ],
+   "standard_reactors": [
+    "move:encore:condition.onOverrideAction"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/battle.rs `encore_change_action`, lock.rs (Champions Encore)",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": [
+    "B43-encore-after-you-callback"
+   ]
+  },
+  "PrepareHit": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:591:singleEvent",
+    "sim/battle-actions.ts:592:runEvent",
+    "sim/battle-actions.ts:827:singleEvent",
+    "sim/battle-actions.ts:828:runEvent",
+    "data/conditions.ts:312:runEvent"
+   ],
+   "standard_reactors": [
+    "move:banefulbunker:onPrepareHit",
+    "move:kingsshield:onPrepareHit",
+    "move:protect:onPrepareHit",
+    "move:spikyshield:onPrepareHit",
+    "move:allyswitch:onPrepareHit",
+    "move:destinybond:onPrepareHit",
+    "move:detect:onPrepareHit",
+    "move:endure:onPrepareHit",
+    "move:fling:onPrepareHit",
+    "move:shellsidearm:onPrepareHit",
+    "abilitie:libero:onPrepareHit",
+    "abilitie:parentalbond:onPrepareHit",
+    "abilitie:protean:onPrepareHit"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 11,
+   "engine_site": "turn/moves.rs, turn/moves/handlers.rs, volatile.rs",
+   "reactors_without_oracle_fixture": [
+    "detect"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "PseudoWeatherChange": {
+   "section": "3.7",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/field.ts:214:runEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/moves.rs, turn/items.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "only non-standard reactors: roomservice",
+   "in_progress": []
+  },
+  "RedirectTarget": {
+   "section": "3.2",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:830:priorityEvent"
+   ],
+   "standard_reactors": [
+    "move:counter:condition.onRedirectTarget",
+    "move:followme:condition.onFoeRedirectTarget",
+    "move:mirrorcoat:condition.onRedirectTarget",
+    "move:ragepowder:condition.onFoeRedirectTarget",
+    "abilitie:lightningrod:onAnyRedirectTarget"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 3,
+   "engine_site": "turn/moves.rs `get_target` + abilities.rs (Lightning Rod / Storm Drain), `Slot::ability_order` ties (R4)",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": [
+    "B45-pinned-ability-order"
+   ]
+  },
+  "Residual": {
+   "section": "3.6",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:2816:fieldEvent"
+   ],
+   "standard_reactors": [
+    "move:encore:condition.onResidual",
+    "move:octolock:condition.onResidual",
+    "move:saltcure:condition.onResidual",
+    "move:syrupbomb:condition.onResidual",
+    "move:wish:condition.onResidual",
+    "move:aquaring:condition.onResidual",
+    "move:curse:condition.onResidual",
+    "move:grassyterrain:condition.onResidual",
+    "move:ingrain:condition.onResidual",
+    "move:leechseed:condition.onResidual",
+    "move:perishsong:condition.onResidual",
+    "move:uproar:condition.onResidual",
+    "abilitie:healer:onResidual",
+    "abilitie:cudchew:onResidual",
+    "abilitie:harvest:onResidual",
+    "abilitie:hungerswitch:onResidual",
+    "abilitie:hydration:onResidual",
+    "abilitie:moody:onResidual",
+    "abilitie:opportunist:onResidual",
+    "abilitie:pickup:onResidual",
+    "abilitie:shedskin:onResidual",
+    "abilitie:speedboost:onResidual",
+    "item:leftovers:onResidual",
+    "item:whiteherb:onResidual"
+   ],
+   "reachable_conditions": [
+    "brn",
+    "futuremove",
+    "lockedmove",
+    "partiallytrapped",
+    "psn",
+    "tox"
+   ],
+   "unreachable_conditions": {
+    "dynamax": "Dynamax is off in the ruleset"
+   },
+   "nonstandard_reactor_count": 23,
+   "engine_site": "turn/residual.rs (handler list sorted by order/priority/speed/sub-order)",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": [
+    "R5-future-move-edges",
+    "B44-fling-used-item-pickup"
+   ]
+  },
+  "Restart": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:1985:singleEvent",
+    "sim/side.ts:476:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:powershift:condition.onRestart",
+    "move:allyswitch:condition.onRestart",
+    "move:charge:condition.onRestart",
+    "move:helpinghand:condition.onRestart",
+    "move:minimize:condition.onRestart",
+    "move:powertrick:condition.onRestart",
+    "move:smackdown:condition.onRestart",
+    "move:stockpile:condition.onRestart"
+   ],
+   "reachable_conditions": [
+    "lockedmove",
+    "stall"
+   ],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 5,
+   "engine_site": "turn/battle.rs, volatile.rs, turn/conditions.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "SemiLockMove": {
+   "section": "3.1",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/pokemon.ts:960:priorityEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "no handler in the dex",
+   "in_progress": []
+  },
+  "SetAbility": {
+   "section": "3.5",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/battle.ts:1320:runEvent",
+    "sim/battle.ts:1322:runEvent",
+    "sim/pokemon.ts:1920:runEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/abilities.rs, turn/switching.rs, instruction.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "only non-standard reactors: abilityshield",
+   "in_progress": []
+  },
+  "SetStatus": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:1724:runEvent"
+   ],
+   "standard_reactors": [
+    "move:electricterrain:condition.onSetStatus",
+    "move:mistyterrain:condition.onSetStatus",
+    "move:safeguard:condition.onSetStatus",
+    "move:uproar:condition.onAnySetStatus",
+    "abilitie:flowerveil:onAllySetStatus",
+    "abilitie:immunity:onSetStatus",
+    "abilitie:insomnia:onSetStatus",
+    "abilitie:leafguard:onSetStatus",
+    "abilitie:limber:onSetStatus",
+    "abilitie:purifyingsalt:onSetStatus",
+    "abilitie:sweetveil:onAllySetStatus",
+    "abilitie:thermalexchange:onSetStatus",
+    "abilitie:vitalspirit:onSetStatus",
+    "abilitie:waterbubble:onSetStatus"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 5,
+   "engine_site": "turn/battle.rs, turn/switching.rs, turn/abilities.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "SetWeather": {
+   "section": "3.7",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/field.ts:55:runEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 3,
+   "engine_site": "turn/switching.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "only non-standard reactors: deltastream, desolateland, primordialsea",
+   "in_progress": []
+  },
+  "SideConditionStart": {
+   "section": "3.7",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/side.ts:441:runEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 2,
+   "engine_site": "turn/abilities.rs, turn/moves.rs, turn/switching.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "only non-standard reactors: windpower, windrider",
+   "in_progress": []
+  },
+  "SideEnd": {
+   "section": "3.7",
+   "status": "implemented",
+   "fired_at": [
+    "sim/side.ts:459:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:auroraveil:condition.onSideEnd",
+    "move:lightscreen:condition.onSideEnd",
+    "move:reflect:condition.onSideEnd",
+    "move:safeguard:condition.onSideEnd",
+    "move:tailwind:condition.onSideEnd"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 9,
+   "engine_site": "turn/switching.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "SideRestart": {
+   "section": "3.7",
+   "status": "implemented",
+   "fired_at": [
+    "sim/side.ts:424:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:spikes:condition.onSideRestart",
+    "move:toxicspikes:condition.onSideRestart"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/conditions.rs, turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "SideStart": {
+   "section": "3.7",
+   "status": "implemented",
+   "fired_at": [
+    "sim/side.ts:437:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:auroraveil:condition.onSideStart",
+    "move:lightscreen:condition.onSideStart",
+    "move:quickguard:condition.onSideStart",
+    "move:reflect:condition.onSideStart",
+    "move:safeguard:condition.onSideStart",
+    "move:spikes:condition.onSideStart",
+    "move:stealthrock:condition.onSideStart",
+    "move:stickyweb:condition.onSideStart",
+    "move:tailwind:condition.onSideStart",
+    "move:toxicspikes:condition.onSideStart",
+    "move:wideguard:condition.onSideStart"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 12,
+   "engine_site": "",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "StallMove": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [
+    "data/moves.ts:997:runEvent",
+    "data/moves.ts:2032:runEvent",
+    "data/moves.ts:3539:runEvent",
+    "data/moves.ts:4818:runEvent",
+    "data/moves.ts:9919:runEvent",
+    "data/moves.ts:11171:runEvent",
+    "..."
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [
+    "stall"
+   ],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "Start": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:1342:singleEvent",
+    "sim/battle.ts:1343:singleEvent",
+    "sim/pokemon.ts:1739:singleEvent",
+    "sim/pokemon.ts:1886:singleEvent",
+    "sim/pokemon.ts:1943:singleEvent",
+    "sim/pokemon.ts:2009:singleEvent",
+    "..."
+   ],
+   "standard_reactors": [
+    "move:banefulbunker:condition.onStart",
+    "move:beakblast:condition.onStart",
+    "move:disable:condition.onStart",
+    "move:dragoncheer:condition.onStart",
+    "move:electrify:condition.onStart",
+    "move:encore:condition.onStart",
+    "move:kingsshield:condition.onStart",
+    "move:octolock:condition.onStart",
+    "move:powershift:condition.onStart",
+    "move:protect:condition.onStart",
+    "move:saltcure:condition.onStart",
+    "move:spikyshield:condition.onStart",
+    "move:syrupbomb:condition.onStart",
+    "move:wish:condition.onStart",
+    "move:allyswitch:condition.onStart",
+    "move:aquaring:condition.onStart",
+    "move:attract:condition.onStart",
+    "move:charge:condition.onStart",
+    "move:counter:condition.onStart",
+    "move:curse:condition.onStart",
+    "move:destinybond:condition.onStart",
+    "move:endure:condition.onStart",
+    "move:focusenergy:condition.onStart",
+    "move:focuspunch:condition.onStart",
+    "move:followme:condition.onStart",
+    "move:gastroacid:condition.onStart",
+    "move:glaiverush:condition.onStart",
+    "move:helpinghand:condition.onStart",
+    "move:imprison:condition.onStart",
+    "move:ingrain:condition.onStart",
+    "move:leechseed:condition.onStart",
+    "move:magnetrise:condition.onStart",
+    "move:mirrorcoat:condition.onStart",
+    "move:noretreat:condition.onStart",
+    "move:powertrick:condition.onStart",
+    "move:ragepowder:condition.onStart",
+    "move:roost:condition.onStart",
+    "move:smackdown:condition.onStart",
+    "move:stockpile:condition.onStart",
+    "move:substitute:condition.onStart",
+    "move:taunt:condition.onStart",
+    "move:throatchop:condition.onStart",
+    "move:torment:condition.onStart",
+    "move:uproar:condition.onStart",
+    "move:yawn:condition.onStart",
+    "abilitie:anticipation:onStart",
+    "abilitie:cloudnine:onStart",
+    "abilitie:curiousmedicine:onStart",
+    "abilitie:drizzle:onStart",
+    "abilitie:drought:onStart",
+    "abilitie:electricsurge:onStart",
+    "abilitie:fairyaura:onStart",
+    "abilitie:flashfire:condition.onStart",
+    "abilitie:forecast:onStart",
+    "abilitie:forewarn:onStart",
+    "abilitie:frisk:onStart",
+    "abilitie:gluttony:onStart",
+    "abilitie:grassysurge:onStart",
+    "abilitie:hospitality:onStart",
+    "abilitie:intimidate:onStart",
+    "abilitie:klutz:onStart",
+    "abilitie:mimicry:onStart",
+    "abilitie:moldbreaker:onStart",
+    "abilitie:pressure:onStart",
+    "abilitie:psychicsurge:onStart",
+    "abilitie:sandstream:onStart",
+    "abilitie:screencleaner:onStart",
+    "abilitie:snowwarning:onStart",
+    "abilitie:supersweetsyrup:onStart",
+    "abilitie:supremeoverlord:onStart",
+    "abilitie:trace:onStart",
+    "abilitie:unnerve:onStart",
+    "item:airballoon:onStart",
+    "item:choicescarf:onStart",
+    "item:electricseed:onStart",
+    "item:grassyseed:onStart",
+    "item:metronome:condition.onStart",
+    "item:metronome:onStart",
+    "item:mistyseed:onStart",
+    "item:psychicseed:onStart",
+    "item:whiteherb:onStart"
+   ],
+   "reachable_conditions": [
+    "brn",
+    "choicelock",
+    "confusion",
+    "frz",
+    "futuremove",
+    "lockedmove",
+    "mustrecharge",
+    "par",
+    "partiallytrapped",
+    "psn",
+    "slp",
+    "stall",
+    "tox",
+    "trapped",
+    "twoturnmove"
+   ],
+   "unreachable_conditions": {
+    "commanded": "Commander (Tatsugiri) not standard",
+    "dynamax": "Dynamax is off in the ruleset",
+    "healreplacement": "only Z-Memento / Z-Parting Shot (Z-Moves off)"
+   },
+   "nonstandard_reactor_count": 70,
+   "engine_site": "turn/switching.rs, turn/abilities.rs, turn/items.rs",
+   "reactors_without_oracle_fixture": [
+    "anticipation",
+    "forewarn",
+    "gluttony"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "Swap": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:1604:runEvent",
+    "sim/battle.ts:1605:runEvent",
+    "data/moves.ts:8369:singleEvent",
+    "data/moves.ts:10584:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:healingwish:condition.onSwap"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/moves/handlers.rs (Ally Switch) + conditions.rs (Healing Wish `onSwitchIn` → `onSwap`)",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "SwitchIn": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:184:fieldEvent"
+   ],
+   "standard_reactors": [
+    "move:healingwish:condition.onSwitchIn",
+    "move:spikes:condition.onSwitchIn",
+    "move:stealthrock:condition.onSwitchIn",
+    "move:stickyweb:condition.onSwitchIn",
+    "move:toxicspikes:condition.onSwitchIn",
+    "abilitie:cloudnine:onSwitchIn",
+    "abilitie:imposter:onSwitchIn",
+    "abilitie:opportunist:onAnySwitchIn",
+    "abilitie:zerotohero:onSwitchIn",
+    "item:whiteherb:onAnySwitchIn"
+   ],
+   "reachable_conditions": [
+    "tox"
+   ],
+   "unreachable_conditions": {
+    "healreplacement": "only Z-Memento / Z-Parting Shot (Z-Moves off)"
+   },
+   "nonstandard_reactor_count": 11,
+   "engine_site": "turn/switching.rs `run_switch_in` (fieldEvent: hazards, slot conditions, ability/item start, onAnySwitchIn)",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": [
+    "R2-hazard-effect-order"
+   ]
+  },
+  "SwitchOut": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:87:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:naturalcure:onSwitchOut",
+    "abilitie:regenerator:onSwitchOut",
+    "abilitie:zerotohero:onSwitchOut"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/switching.rs, turn/forme.rs, turn/abilities.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "TakeItem": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:1856:runEvent",
+    "data/abilities.ts:4844:singleEvent",
+    "data/moves.ts:1253:singleEvent",
+    "data/moves.ts:3117:singleEvent",
+    "data/moves.ts:5746:singleEvent",
+    "data/moves.ts:9971:singleEvent",
+    "..."
+   ],
+   "standard_reactors": [
+    "abilitie:stickyhold:onTakeItem",
+    "abilitie:unburden:onTakeItem",
+    "item:abomasite:onTakeItem",
+    "item:absolite:onTakeItem",
+    "item:absolitez:onTakeItem",
+    "item:aerodactylite:onTakeItem",
+    "item:aggronite:onTakeItem",
+    "item:alakazite:onTakeItem",
+    "item:altarianite:onTakeItem",
+    "item:ampharosite:onTakeItem",
+    "item:audinite:onTakeItem",
+    "item:banettite:onTakeItem",
+    "item:barbaracite:onTakeItem",
+    "item:baxcalibrite:onTakeItem",
+    "item:beedrillite:onTakeItem",
+    "item:blastoisinite:onTakeItem",
+    "item:blazikenite:onTakeItem",
+    "item:cameruptite:onTakeItem",
+    "item:chandelurite:onTakeItem",
+    "item:charizarditex:onTakeItem",
+    "item:charizarditey:onTakeItem",
+    "item:chesnaughtite:onTakeItem",
+    "item:chimechite:onTakeItem",
+    "item:clefablite:onTakeItem",
+    "item:crabominite:onTakeItem",
+    "item:delphoxite:onTakeItem",
+    "item:dragalgite:onTakeItem",
+    "item:dragoninite:onTakeItem",
+    "item:drampanite:onTakeItem",
+    "item:eelektrossite:onTakeItem",
+    "item:emboarite:onTakeItem",
+    "item:excadrite:onTakeItem",
+    "item:falinksite:onTakeItem",
+    "item:feraligite:onTakeItem",
+    "item:floettite:onTakeItem",
+    "item:froslassite:onTakeItem",
+    "item:galladite:onTakeItem",
+    "item:garchompite:onTakeItem",
+    "item:garchompitez:onTakeItem",
+    "item:gardevoirite:onTakeItem",
+    "item:gengarite:onTakeItem",
+    "item:glalitite:onTakeItem",
+    "item:glimmoranite:onTakeItem",
+    "item:golisopite:onTakeItem",
+    "item:golurkite:onTakeItem",
+    "item:greninjite:onTakeItem",
+    "item:gyaradosite:onTakeItem",
+    "item:hawluchanite:onTakeItem",
+    "item:heracronite:onTakeItem",
+    "item:houndoominite:onTakeItem",
+    "item:kangaskhanite:onTakeItem",
+    "item:lopunnite:onTakeItem",
+    "item:lucarionite:onTakeItem",
+    "item:lucarionitez:onTakeItem",
+    "item:malamarite:onTakeItem",
+    "item:manectite:onTakeItem",
+    "item:mawilite:onTakeItem",
+    "item:medichamite:onTakeItem",
+    "item:meganiumite:onTakeItem",
+    "item:meowsticite:onTakeItem",
+    "item:metagrossite:onTakeItem",
+    "item:pidgeotite:onTakeItem",
+    "item:pinsirite:onTakeItem",
+    "item:pyroarite:onTakeItem",
+    "item:raichunitex:onTakeItem",
+    "item:raichunitey:onTakeItem",
+    "item:sablenite:onTakeItem",
+    "item:salamencite:onTakeItem",
+    "item:sceptilite:onTakeItem",
+    "item:scizorite:onTakeItem",
+    "item:scolipite:onTakeItem",
+    "item:scovillainite:onTakeItem",
+    "item:scraftinite:onTakeItem",
+    "item:sharpedonite:onTakeItem",
+    "item:skarmorite:onTakeItem",
+    "item:slowbronite:onTakeItem",
+    "item:staraptite:onTakeItem",
+    "item:starminite:onTakeItem",
+    "item:steelixite:onTakeItem",
+    "item:swampertite:onTakeItem",
+    "item:tyranitarite:onTakeItem",
+    "item:venusaurite:onTakeItem",
+    "item:victreebelite:onTakeItem"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 63,
+   "engine_site": "turn/moves/handlers.rs, turn/abilities.rs, turn/battle.rs",
+   "reactors_without_oracle_fixture": [
+    "abomasite",
+    "absolite",
+    "absolitez",
+    "aerodactylite",
+    "aggronite",
+    "altarianite",
+    "ampharosite",
+    "banettite",
+    "barbaracite",
+    "baxcalibrite",
+    "beedrillite",
+    "blastoisinite",
+    "blazikenite",
+    "cameruptite",
+    "chandelurite",
+    "charizarditey",
+    "chesnaughtite",
+    "chimechite",
+    "clefablite",
+    "crabominite",
+    "delphoxite",
+    "dragalgite",
+    "dragoninite",
+    "drampanite",
+    "eelektrossite",
+    "emboarite",
+    "excadrite",
+    "falinksite",
+    "feraligite",
+    "froslassite",
+    "galladite",
+    "garchompite",
+    "garchompitez",
+    "glalitite",
+    "glimmoranite",
+    "golisopite",
+    "golurkite",
+    "greninjite",
+    "gyaradosite",
+    "hawluchanite",
+    "heracronite",
+    "houndoominite",
+    "lopunnite",
+    "lucarionite",
+    "lucarionitez",
+    "malamarite",
+    "mawilite",
+    "medichamite",
+    "metagrossite",
+    "pidgeotite",
+    "pinsirite",
+    "raichunitex",
+    "raichunitey",
+    "scolipite",
+    "scraftinite",
+    "sharpedonite",
+    "skarmorite",
+    "slowbronite",
+    "staraptite",
+    "steelixite",
+    "swampertite"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "TerrainChange": {
+   "section": "3.7",
+   "status": "implemented",
+   "fired_at": [
+    "sim/field.ts:155:eachEvent",
+    "sim/field.ts:165:eachEvent",
+    "data/abilities.ts:2584:singleEvent",
+    "data/abilities.ts:3653:singleEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:mimicry:onTerrainChange",
+    "item:electricseed:onTerrainChange",
+    "item:grassyseed:onTerrainChange",
+    "item:mistyseed:onTerrainChange",
+    "item:psychicseed:onTerrainChange"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/field_events.rs, turn/switching.rs, turn/forme.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "TrapPokemon": {
+   "section": "3.6",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:1727:runEvent"
+   ],
+   "standard_reactors": [
+    "move:octolock:condition.onTrapPokemon",
+    "move:fairylock:condition.onTrapPokemon",
+    "move:ingrain:condition.onTrapPokemon",
+    "move:noretreat:condition.onTrapPokemon",
+    "abilitie:runaway:onTrapPokemon",
+    "abilitie:shadowtag:onFoeTrapPokemon",
+    "item:shedshell:onTrapPokemon"
+   ],
+   "reachable_conditions": [
+    "partiallytrapped",
+    "trapped"
+   ],
+   "unreachable_conditions": {
+    "commanded": "Commander (Tatsugiri) not standard",
+    "commanding": "Commander (Tatsugiri) not standard"
+   },
+   "nonstandard_reactor_count": 3,
+   "engine_site": "volatile.rs, turn/abilities.rs, turn/conditions.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "Try": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:590:singleEvent",
+    "sim/battle-actions.ts:826:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:belch:onTry",
+    "move:clangoroussoul:onTry",
+    "move:fakeout:onTry",
+    "move:firstimpression:onTry",
+    "move:stuffcheeks:onTry",
+    "move:aurawheel:onTry",
+    "move:auroraveil:onTry",
+    "move:comeuppance:onTry",
+    "move:counter:onTry",
+    "move:followme:onTry",
+    "move:futuresight:onTry",
+    "move:lastresort:onTry",
+    "move:magnetrise:onTry",
+    "move:metalburst:onTry",
+    "move:mirrorcoat:onTry",
+    "move:noretreat:onTry",
+    "move:poltergeist:onTry",
+    "move:quickguard:onTry",
+    "move:ragepowder:onTry",
+    "move:rest:onTry",
+    "move:round:onTry",
+    "move:sleeptalk:onTry",
+    "move:snore:onTry",
+    "move:spitup:onTry",
+    "move:steelroller:onTry",
+    "move:stockpile:onTry",
+    "move:suckerpunch:onTry",
+    "move:swallow:onTry",
+    "move:upperhand:onTry",
+    "move:wideguard:onTry"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 11,
+   "engine_site": "turn/moves.rs, turn/moves/handlers.rs, turn/conditions.rs",
+   "reactors_without_oracle_fixture": [
+    "upperhand"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "TryAddVolatile": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:1994:runEvent"
+   ],
+   "standard_reactors": [
+    "move:electricterrain:condition.onTryAddVolatile",
+    "move:focuspunch:condition.onTryAddVolatile",
+    "move:mistyterrain:condition.onTryAddVolatile",
+    "move:safeguard:condition.onTryAddVolatile",
+    "abilitie:aromaveil:onAllyTryAddVolatile",
+    "abilitie:flowerveil:onAllyTryAddVolatile",
+    "abilitie:innerfocus:onTryAddVolatile",
+    "abilitie:insomnia:onTryAddVolatile",
+    "abilitie:leafguard:onTryAddVolatile",
+    "abilitie:owntempo:onTryAddVolatile",
+    "abilitie:purifyingsalt:onTryAddVolatile",
+    "abilitie:sweetveil:onAllyTryAddVolatile",
+    "abilitie:vitalspirit:onTryAddVolatile"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {
+    "dynamax": "Dynamax is off in the ruleset"
+   },
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/battle.rs, turn/switching.rs, turn/forme.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "TryBoost": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:2034:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:bigpecks:onTryBoost",
+    "abilitie:clearbody:onTryBoost",
+    "abilitie:flowerveil:onAllyTryBoost",
+    "abilitie:guarddog:onTryBoost",
+    "abilitie:hypercutter:onTryBoost",
+    "abilitie:illuminate:onTryBoost",
+    "abilitie:innerfocus:onTryBoost",
+    "abilitie:keeneye:onTryBoost",
+    "abilitie:mirrorarmor:onTryBoost",
+    "abilitie:oblivious:onTryBoost",
+    "abilitie:owntempo:onTryBoost",
+    "abilitie:scrappy:onTryBoost",
+    "abilitie:whitesmoke:onTryBoost"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 4,
+   "engine_site": "turn/abilities.rs, turn/battle.rs, turn/items.rs",
+   "reactors_without_oracle_fixture": [
+    "bigpecks",
+    "illuminate",
+    "whitesmoke"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "TryEatItem": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:1781:runEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:berserk:onTryEatItem",
+    "abilitie:ripen:onTryEatItem",
+    "abilitie:unnerve:onFoeTryEatItem",
+    "item:oranberry:onTryEatItem",
+    "item:sitrusberry:onTryEatItem"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 11,
+   "engine_site": "turn/update.rs, turn/switching.rs, turn/abilities.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "TryHeal": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle.ts:2271:runEvent",
+    "data/items.ts:174:runEvent",
+    "data/items.ts:455:runEvent",
+    "data/items.ts:1858:runEvent",
+    "data/items.ts:2056:runEvent",
+    "data/items.ts:2924:runEvent",
+    "..."
+   ],
+   "standard_reactors": [
+    "abilitie:liquidooze:onSourceTryHeal",
+    "abilitie:ripen:onTryHeal",
+    "item:bigroot:onTryHeal"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/battle.rs, turn/abilities.rs, turn/items.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "TryHit": {
+   "section": "3.3",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:644:runEvent",
+    "sim/battle-actions.ts:1044:singleEvent",
+    "data/moves.ts:5865:runEvent",
+    "data/moves.ts:6492:runEvent",
+    "data/moves.ts:10839:runEvent",
+    "data/moves.ts:13250:runEvent",
+    "..."
+   ],
+   "standard_reactors": [
+    "move:banefulbunker:condition.onTryHit",
+    "move:clangoroussoul:onTryHit",
+    "move:disable:onTryHit",
+    "move:electrify:onTryHit",
+    "move:kingsshield:condition.onTryHit",
+    "move:protect:condition.onTryHit",
+    "move:spikyshield:condition.onTryHit",
+    "move:brickbreak:onTryHit",
+    "move:curse:onTryHit",
+    "move:entrainment:onTryHit",
+    "move:gastroacid:onTryHit",
+    "move:grassknot:onTryHit",
+    "move:healingwish:onTryHit",
+    "move:heatcrash:onTryHit",
+    "move:heavyslam:onTryHit",
+    "move:helpinghand:onTryHit",
+    "move:lockon:onTryHit",
+    "move:lowkick:onTryHit",
+    "move:pollenpuff:onTryHit",
+    "move:poltergeist:onTryHit",
+    "move:psychicfangs:onTryHit",
+    "move:psychicterrain:condition.onTryHit",
+    "move:quickguard:condition.onTryHit",
+    "move:ragingbull:onTryHit",
+    "move:revivalblessing:onTryHit",
+    "move:roleplay:onTryHit",
+    "move:shedtail:onTryHit",
+    "move:simplebeam:onTryHit",
+    "move:substitute:onTryHit",
+    "move:uproar:onTryHit",
+    "move:wideguard:condition.onTryHit",
+    "move:worryseed:onTryHit",
+    "move:yawn:onTryHit",
+    "abilitie:bulletproof:onTryHit",
+    "abilitie:dryskin:onTryHit",
+    "abilitie:eartheater:onTryHit",
+    "abilitie:flashfire:onTryHit",
+    "abilitie:goodasgold:onTryHit",
+    "abilitie:lightningrod:onTryHit",
+    "abilitie:magicbounce:onTryHit",
+    "abilitie:motordrive:onTryHit",
+    "abilitie:oblivious:onTryHit",
+    "abilitie:overcoat:onTryHit",
+    "abilitie:sapsipper:onTryHit",
+    "abilitie:soundproof:onTryHit",
+    "abilitie:sturdy:onTryHit",
+    "abilitie:telepathy:onTryHit",
+    "abilitie:voltabsorb:onTryHit",
+    "abilitie:waterabsorb:onTryHit"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 30,
+   "engine_site": "turn/moves.rs, turn/moves/handlers.rs, turn/moves/ability_hooks.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "TryHitField": {
+   "section": "3.3",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/battle-actions.ts:839:runEvent",
+    "sim/battle-actions.ts:1040:singleEvent",
+    "data/mods/champions/scripts.ts:329:singleEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "no handler in the dex (Showdown's default result is used)",
+   "in_progress": []
+  },
+  "TryHitSide": {
+   "section": "3.3",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:841:runEvent",
+    "sim/battle-actions.ts:846:runEvent",
+    "sim/battle-actions.ts:1042:singleEvent",
+    "data/mods/champions/scripts.ts:331:singleEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:magicbounce:onAllyTryHitSide",
+    "abilitie:sapsipper:onAllyTryHitSide",
+    "abilitie:soundproof:onAllyTryHitSide"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 2,
+   "engine_site": "turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "TryImmunity": {
+   "section": "3.3",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:673:singleEvent"
+   ],
+   "standard_reactors": [
+    "move:octolock:onTryImmunity",
+    "move:attract:onTryImmunity",
+    "move:endeavor:onTryImmunity",
+    "move:leechseed:onTryImmunity",
+    "move:switcheroo:onTryImmunity",
+    "move:trick:onTryImmunity",
+    "move:worryseed:onTryImmunity"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 3,
+   "engine_site": "turn/moves/handlers.rs, turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "TryMove": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:486:singleEvent",
+    "sim/battle-actions.ts:488:runEvent"
+   ],
+   "standard_reactors": [
+    "move:burnup:onTryMove",
+    "move:doubleshock:onTryMove",
+    "move:bounce:onTryMove",
+    "move:dig:onTryMove",
+    "move:dive:onTryMove",
+    "move:electroshot:onTryMove",
+    "move:fly:onTryMove",
+    "move:meteorbeam:onTryMove",
+    "move:phantomforce:onTryMove",
+    "move:pollenpuff:onTryMove",
+    "move:skyattack:onTryMove",
+    "move:solarbeam:onTryMove",
+    "move:solarblade:onTryMove",
+    "abilitie:armortail:onFoeTryMove",
+    "abilitie:damp:onAnyTryMove",
+    "abilitie:queenlymajesty:onFoeTryMove",
+    "item:metronome:condition.onTryMove"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {
+    "desolateland": "Desolate Land (Groudon-Primal) not standard",
+    "primordialsea": "Primordial Sea (Kyogre-Primal) not standard"
+   },
+   "nonstandard_reactor_count": 10,
+   "engine_site": "turn/moves/handlers.rs, turn/moves.rs, turn/moves/ability_hooks.rs",
+   "reactors_without_oracle_fixture": [
+    "phantomforce",
+    "queenlymajesty",
+    "skyattack",
+    "solarblade"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "TryPrimaryHit": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:1144:runEvent"
+   ],
+   "standard_reactors": [
+    "move:substitute:condition.onTryPrimaryHit",
+    "item:normalgem:onSourceTryPrimaryHit"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 19,
+   "engine_site": "turn/moves.rs, turn/moves/ability_hooks.rs, volatile.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "TryTerrain": {
+   "section": "3.7",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/field.ts:171:runEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/field_events.rs, turn/order.rs, turn/moves/handlers.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "no handler in the dex",
+   "in_progress": []
+  },
+  "Type": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:2142:runEvent"
+   ],
+   "standard_reactors": [
+    "move:roost:condition.onType"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {
+    "arceus": "Arceus not standard",
+    "silvally": "Silvally not standard"
+   },
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/conditions.rs Roost filter (`Volatile::Roost`)",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "Update": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:83:eachEvent",
+    "sim/battle-actions.ts:967:eachEvent",
+    "sim/battle-actions.ts:1003:eachEvent",
+    "sim/battle.ts:474:eachEvent",
+    "sim/battle.ts:2845:eachEvent",
+    "sim/battle.ts:2861:eachEvent",
+    "..."
+   ],
+   "standard_reactors": [
+    "move:syrupbomb:condition.onUpdate",
+    "move:attract:condition.onUpdate",
+    "move:fling:condition.onUpdate",
+    "abilitie:disguise:onUpdate",
+    "abilitie:immunity:onUpdate",
+    "abilitie:insomnia:onUpdate",
+    "abilitie:limber:onUpdate",
+    "abilitie:magmaarmor:onUpdate",
+    "abilitie:oblivious:onUpdate",
+    "abilitie:owntempo:onUpdate",
+    "abilitie:thermalexchange:onUpdate",
+    "abilitie:trace:onUpdate",
+    "abilitie:vitalspirit:onUpdate",
+    "abilitie:waterbubble:onUpdate",
+    "item:aspearberry:onUpdate",
+    "item:cheriberry:onUpdate",
+    "item:chestoberry:onUpdate",
+    "item:leppaberry:onUpdate",
+    "item:lumberry:onUpdate",
+    "item:mentalherb:onUpdate",
+    "item:oranberry:onUpdate",
+    "item:pechaberry:onUpdate",
+    "item:persimberry:onUpdate",
+    "item:rawstberry:onUpdate",
+    "item:sitrusberry:onUpdate"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 29,
+   "engine_site": "turn/update.rs `update_event` (11 call sites: mod.rs, moves.rs hit loop, residual.rs, switching.rs)",
+   "reactors_without_oracle_fixture": [
+    "aspearberry",
+    "chestoberry",
+    "leppaberry",
+    "pechaberry",
+    "rawstberry"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "Use": {
+   "section": "3.5",
+   "status": "implemented",
+   "fired_at": [
+    "sim/pokemon.ts:1839:singleEvent"
+   ],
+   "standard_reactors": [
+    "item:whiteherb:onUse"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 2,
+   "engine_site": "turn/items.rs (White Herb `onUse`)",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "UseItem": {
+   "section": "3.5",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/pokemon.ts:1780:runEvent",
+    "sim/pokemon.ts:1822:runEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/items.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "only non-standard reactors: ejectpack",
+   "in_progress": []
+  },
+  "UseMoveMessage": {
+   "section": "3.1",
+   "status": "unnecessary",
+   "fired_at": [
+    "sim/battle-actions.ts:494:singleEvent"
+   ],
+   "standard_reactors": [],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": "only non-standard reactors: magnitude; only Magnitude (Past); log only",
+   "in_progress": []
+  },
+  "Weather": {
+   "section": "3.6",
+   "status": "implemented",
+   "fired_at": [
+    "data/conditions.ts:508:eachEvent",
+    "data/conditions.ts:540:eachEvent",
+    "data/conditions.ts:586:eachEvent",
+    "data/conditions.ts:622:eachEvent",
+    "data/conditions.ts:657:eachEvent",
+    "data/conditions.ts:687:eachEvent",
+    "..."
+   ],
+   "standard_reactors": [
+    "abilitie:dryskin:onWeather",
+    "abilitie:icebody:onWeather",
+    "abilitie:raindish:onWeather",
+    "abilitie:solarpower:onWeather"
+   ],
+   "reachable_conditions": [
+    "sandstorm"
+   ],
+   "unreachable_conditions": {
+    "hail": "no standard move/ability sets hail (Hail is Past; Snow Warning sets snow)"
+   },
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/moves/handlers.rs, turn/battle.rs, turn/residual.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "WeatherChange": {
+   "section": "3.7",
+   "status": "implemented",
+   "fired_at": [
+    "sim/field.ts:87:eachEvent",
+    "sim/field.ts:97:eachEvent",
+    "data/abilities.ts:98:eachEvent",
+    "data/abilities.ts:102:eachEvent",
+    "data/abilities.ts:551:eachEvent",
+    "data/abilities.ts:555:eachEvent",
+    "..."
+   ],
+   "standard_reactors": [
+    "abilitie:forecast:onWeatherChange"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 3,
+   "engine_site": "turn/switching.rs, turn/field_events.rs, turn/forme.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "WeatherModifyDamage": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [
+    "sim/battle-actions.ts:1746:priorityEvent",
+    "data/mods/champions/scripts.ts:217:priorityEvent"
+   ],
+   "standard_reactors": [
+    "abilitie:megasol:onWeatherModifyDamage"
+   ],
+   "reachable_conditions": [
+    "raindance",
+    "sunnyday"
+   ],
+   "unreachable_conditions": {
+    "desolateland": "Desolate Land (Groudon-Primal) not standard",
+    "primordialsea": "Primordial Sea (Kyogre-Primal) not standard"
+   },
+   "nonstandard_reactor_count": 0,
+   "engine_site": "turn/moves.rs damage chain + items.rs (Mega Sol's sun view)",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": [
+    "B25-mega-sol-duration"
+   ]
+  },
+  "basePowerCallback": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [],
+   "standard_reactors": [
+    "move:infernalparade:basePowerCallback",
+    "move:ragefist:basePowerCallback",
+    "move:acrobatics:basePowerCallback",
+    "move:assurance:basePowerCallback",
+    "move:avalanche:basePowerCallback",
+    "move:beatup:basePowerCallback",
+    "move:electroball:basePowerCallback",
+    "move:eruption:basePowerCallback",
+    "move:flail:basePowerCallback",
+    "move:grassknot:basePowerCallback",
+    "move:gyroball:basePowerCallback",
+    "move:hardpress:basePowerCallback",
+    "move:heatcrash:basePowerCallback",
+    "move:heavyslam:basePowerCallback",
+    "move:hex:basePowerCallback",
+    "move:lastrespects:basePowerCallback",
+    "move:lowkick:basePowerCallback",
+    "move:payback:basePowerCallback",
+    "move:powertrip:basePowerCallback",
+    "move:reversal:basePowerCallback",
+    "move:risingvoltage:basePowerCallback",
+    "move:round:basePowerCallback",
+    "move:spitup:basePowerCallback",
+    "move:stompingtantrum:basePowerCallback",
+    "move:storedpower:basePowerCallback",
+    "move:temperflare:basePowerCallback",
+    "move:tripleaxel:basePowerCallback",
+    "move:watershuriken:basePowerCallback",
+    "move:waterspout:basePowerCallback"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 24,
+   "engine_site": "turn/moves/handlers.rs, turn/moves.rs",
+   "reactors_without_oracle_fixture": [
+    "flail",
+    "infernalparade",
+    "powertrip",
+    "temperflare",
+    "waterspout"
+   ],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "beforeMoveCallback": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [],
+   "standard_reactors": [
+    "move:focuspunch:beforeMoveCallback"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "volatile.rs, turn/moves.rs, turn/moves/handlers.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "beforeTurnCallback": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [],
+   "standard_reactors": [
+    "move:counter:beforeTurnCallback",
+    "move:mirrorcoat:beforeTurnCallback"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "turn/moves/handlers.rs, turn/moves.rs, volatile.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "damageCallback": {
+   "section": "3.4",
+   "status": "implemented",
+   "fired_at": [],
+   "standard_reactors": [
+    "move:comeuppance:damageCallback",
+    "move:counter:damageCallback",
+    "move:endeavor:damageCallback",
+    "move:finalgambit:damageCallback",
+    "move:metalburst:damageCallback",
+    "move:mirrorcoat:damageCallback",
+    "move:superfang:damageCallback"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 4,
+   "engine_site": "turn/moves.rs, turn/items.rs, turn/moves/handlers.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "durationCallback": {
+   "section": "3.6",
+   "status": "implemented",
+   "fired_at": [],
+   "standard_reactors": [
+    "move:auroraveil:condition.durationCallback",
+    "move:electricterrain:condition.durationCallback",
+    "move:grassyterrain:condition.durationCallback",
+    "move:gravity:condition.durationCallback",
+    "move:lightscreen:condition.durationCallback",
+    "move:magicroom:condition.durationCallback",
+    "move:mistyterrain:condition.durationCallback",
+    "move:psychicterrain:condition.durationCallback",
+    "move:reflect:condition.durationCallback",
+    "move:safeguard:condition.durationCallback",
+    "move:tailwind:condition.durationCallback",
+    "move:trickroom:condition.durationCallback",
+    "move:wonderroom:condition.durationCallback"
+   ],
+   "reachable_conditions": [
+    "partiallytrapped",
+    "raindance",
+    "sandstorm",
+    "snowscape",
+    "sunnyday"
+   ],
+   "unreachable_conditions": {
+    "hail": "no standard move/ability sets hail (Hail is Past; Snow Warning sets snow)"
+   },
+   "nonstandard_reactor_count": 1,
+   "engine_site": "volatile.rs, turn/conditions.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  "priorityChargeCallback": {
+   "section": "3.1",
+   "status": "implemented",
+   "fired_at": [],
+   "standard_reactors": [
+    "move:beakblast:priorityChargeCallback",
+    "move:chillyreception:priorityChargeCallback",
+    "move:focuspunch:priorityChargeCallback"
+   ],
+   "reachable_conditions": [],
+   "unreachable_conditions": {},
+   "nonstandard_reactor_count": 1,
+   "engine_site": "volatile.rs, turn/moves/handlers.rs, turn/moves.rs",
+   "reactors_without_oracle_fixture": [],
+   "unnecessary_proof": null,
+   "in_progress": []
+  }
+ },
+ "mechanisms": [
+  {
+   "section": "3.1",
+   "item": "beforeTurnMove / priorityChargeMove actions (Counter, Mirror Coat, Metal Burst; Focus Punch, Beak Blast, Chilly Reception)",
+   "status": "implemented",
+   "engine_site": "turn/queue.rs, moves/handlers.rs",
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  {
+   "section": "3.1",
+   "item": "Instruct / After You / Quash queue edits, called-move callback actions",
+   "status": "implemented",
+   "engine_site": "turn/queue.rs, order.rs",
+   "unnecessary_proof": null,
+   "in_progress": [
+    "B42-instructed-callback-order",
+    "B43-encore-after-you-callback"
+   ]
+  },
+  {
+   "section": "3.2",
+   "item": "getMoveTargets smartTarget (Dragon Darts)",
+   "status": "implemented",
+   "engine_site": "turn/moves.rs `smart_targets`",
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  {
+   "section": "3.2",
+   "item": "tracksTarget / originalTarget (Snipe Shot, Stalwart, Propeller Tail) through Ally Switch",
+   "status": "implemented",
+   "engine_site": "turn/moves.rs `get_target` (R7)",
+   "unnecessary_proof": null,
+   "in_progress": [
+    "B46-original-target-rebuilt-actions"
+   ]
+  },
+  {
+   "section": "3.2",
+   "item": "spread modifier 0.75 lost when one target remains",
+   "status": "implemented",
+   "engine_site": "turn/moves.rs",
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  {
+   "section": "3.3",
+   "item": "OHKO accuracy rule, Blunder Policy",
+   "status": "implemented",
+   "engine_site": "turn/moves.rs `accuracy_check`, items.rs `blunder_policy`",
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  {
+   "section": "3.3",
+   "item": "multiaccuracy (Triple Axel)",
+   "status": "implemented",
+   "engine_site": "turn/moves.rs hit loop",
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  {
+   "section": "3.3",
+   "item": "StealBoosts (Spectral Thief)",
+   "status": "unnecessary",
+   "engine_site": "",
+   "unnecessary_proof": "Spectral Thief not standard (`steals_boosts` stays refused in support.rs)",
+   "in_progress": []
+  },
+  {
+   "section": "3.4",
+   "item": "Champions modifyDamage (bypassProtect 0.25 for Unseen Fist / Piercing Drill; 4x/0.25x messages only)",
+   "status": "implemented",
+   "engine_site": "turn/moves.rs damage",
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  {
+   "section": "3.4",
+   "item": "Champions spreadMoveHit: AfterHit even if the user fainted",
+   "status": "implemented",
+   "engine_site": "turn/moves.rs (`knock-off-fainted-user`)",
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  {
+   "section": "3.4",
+   "item": "Stellar / Tera STAB, Z / Max bypassProtect",
+   "status": "unnecessary",
+   "engine_site": "",
+   "unnecessary_proof": "Terastallization, Z-Moves and Dynamax are off in the ruleset",
+   "in_progress": []
+  },
+  {
+   "section": "3.5",
+   "item": "formeChange / setSpecies / Transform / Illusion",
+   "status": "implemented",
+   "engine_site": "turn/forme.rs, transform.rs (EE1, EE2)",
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  {
+   "section": "3.5",
+   "item": "simultaneous switch-in order (speed sort, one draw per event)",
+   "status": "implemented",
+   "engine_site": "turn/switching.rs `run_switch_in` (B30)",
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  {
+   "section": "3.6",
+   "item": "endTurn bookkeeping (moveThisTurnResult, newlySwitched, statsRaised/LoweredThisTurn, hurtThisTurn, attackedBy, faintedThisTurn/LastTurn, usedItemThisTurn)",
+   "status": "implemented",
+   "engine_site": "turn/history.rs, state.rs `SlotHistory` / `SideHistory`",
+   "unnecessary_proof": null,
+   "in_progress": [
+    "B44-fling-used-item-pickup"
+   ]
+  },
+  {
+   "section": "3.6",
+   "item": "Endless Battle Clause (staleness: Leppa, Recycle, Harvest, Pickup)",
+   "status": "unnecessary",
+   "engine_site": "",
+   "unnecessary_proof": "not in the M-C formats' rulesets: `Flat Rules` (data/mods/champions/rulesets.ts) has no `Endless Battle Clause`, nor does `gen9championsdoublescustomgame`; `maybeTriggerEndlessBattleClause` returns before it after `!ruleTable.has('endlessbattleclause')`",
+   "in_progress": []
+  },
+  {
+   "section": "3.6",
+   "item": "turn limit: tie after turn 1000 (`maybeTriggerEndlessBattleClause`, independent of the clause)",
+   "status": "missing",
+   "engine_site": "",
+   "unnecessary_proof": null,
+   "in_progress": []
+  },
+  {
+   "section": "3.6",
+   "item": "knownType / apparentType (type reveal, MaybeTrapPokemon's `!knownType` branch)",
+   "status": "unnecessary",
+   "engine_site": "",
+   "unnecessary_proof": "information only: they set `maybeTrapped` / request flags; the full-information engine uses `trapped`, checked against the oracle's `trapped.cjs` fixtures",
+   "in_progress": []
+  },
+  {
+   "section": "3.7",
+   "item": "Magic Room / Wonder Room / Fairy Lock, weather rocks, Terrain Extender, Utility Umbrella",
+   "status": "implemented",
+   "engine_site": "turn/moves.rs, battle.rs `weather_for`",
+   "unnecessary_proof": null,
+   "in_progress": []
+  }
+ ],
+ "pokemon_fields": [
+  {
+   "field": "set, name, fullname, details, pokeball, happiness(Return etc. not standard)",
+   "status": "unnecessary",
+   "where_or_proof": "identity / log; happiness only read by Return, Frustration, Pika Papow, Veevee Volley (not standard)",
+   "in_progress": []
+  },
+  {
+   "field": "level, gender",
+   "status": "implemented",
+   "where_or_proof": "`Pokemon::level`, `Pokemon::gender` (undecided gender refused)",
+   "in_progress": [
+    "R13-attract-gender"
+   ]
+  },
+  {
+   "field": "baseSpecies, species, speciesState",
+   "status": "implemented",
+   "where_or_proof": "`Pokemon::species` + `transformed.species`; speciesState has no reader (no species handlers)",
+   "in_progress": []
+  },
+  {
+   "field": "baseMoveSlots, moveSlots, ppUps",
+   "status": "implemented",
+   "where_or_proof": "`Pokemon::moves`, `TransformBase::moves`; ppUps always 0 in Champions (`calculatePP` in `state::champions_max_pp`); the only other ppUps reader is Zacian's Behemoth Blade swap (not standard)",
+   "in_progress": []
+  },
+  {
+   "field": "hpType, hpPower, baseHpType, baseHpPower",
+   "status": "unnecessary",
+   "where_or_proof": "Hidden Power is not standard; Champions `clearVolatile` only copies them",
+   "in_progress": []
+  },
+  {
+   "field": "position",
+   "status": "implemented",
+   "where_or_proof": "`Slot` index; Ally Switch swaps slots",
+   "in_progress": []
+  },
+  {
+   "field": "side.pokemon order (party order after switches)",
+   "status": "refused",
+   "where_or_proof": "Beat Up with benched allies of different power refuses (`beat_up_powers`)",
+   "in_progress": [
+    "R9-beat-up-order"
+   ]
+  },
+  {
+   "field": "status, statusState (time, stage, startTime)",
+   "status": "implemented",
+   "where_or_proof": "`Pokemon::status`, `status_turns` (Champions slp `sample([2,3,3])`, frz 3 turns / 1-in-4 thaw)",
+   "in_progress": []
+  },
+  {
+   "field": "volatiles (+ effectState)",
+   "status": "implemented",
+   "where_or_proof": "`Slot::volatiles` (`volatile.rs`)",
+   "in_progress": []
+  },
+  {
+   "field": "showCure",
+   "status": "unnecessary",
+   "where_or_proof": "protocol message flag only",
+   "in_progress": []
+  },
+  {
+   "field": "baseStoredStats, storedStats",
+   "status": "implemented",
+   "where_or_proof": "`Pokemon::stats` + stored-stat swaps (Power Trick / Shift, Guard / Power Split, Speed Swap) in conditions.rs; baseStoredStats only read by rulesets",
+   "in_progress": [
+    "R5-future-move-edges"
+   ]
+  },
+  {
+   "field": "boosts",
+   "status": "implemented",
+   "where_or_proof": "`Slot::boosts`",
+   "in_progress": []
+  },
+  {
+   "field": "baseAbility, ability, abilityState",
+   "status": "implemented",
+   "where_or_proof": "`Pokemon::ability`, `base_ability`; abilityState.effectOrder = `Slot::ability_order` (R4)",
+   "in_progress": [
+    "B45-pinned-ability-order"
+   ]
+  },
+  {
+   "field": "item, itemState, lastItem",
+   "status": "implemented",
+   "where_or_proof": "`Pokemon::item`, `last_item`; itemState via volatiles (Micle, Metronome counter)",
+   "in_progress": []
+  },
+  {
+   "field": "usedItemThisTurn, ateBerry",
+   "status": "implemented",
+   "where_or_proof": "`SlotHistory::used_item_this_turn`, `SideHistory::ate_berry`",
+   "in_progress": [
+    "B44-fling-used-item-pickup"
+   ]
+  },
+  {
+   "field": "itemKnockedOff",
+   "status": "unnecessary",
+   "where_or_proof": "Gens 3-4 only",
+   "in_progress": []
+  },
+  {
+   "field": "trapped, maybeTrapped",
+   "status": "implemented",
+   "where_or_proof": "`turn::trapped` + oracle `trapped.cjs` fixtures; maybeTrapped is request information",
+   "in_progress": []
+  },
+  {
+   "field": "maybeDisabled, maybeLocked",
+   "status": "unnecessary",
+   "where_or_proof": "request information (Imprison's hidden disable is a rejected choice, i.e. not legal)",
+   "in_progress": []
+  },
+  {
+   "field": "illusion, transformed",
+   "status": "implemented",
+   "where_or_proof": "`Pokemon::illusion`, `Pokemon::transformed` (EE1, EE2)",
+   "in_progress": []
+  },
+  {
+   "field": "maxhp, baseMaxhp, hp, fainted",
+   "status": "implemented",
+   "where_or_proof": "`Pokemon::hp`, `max_hp` (baseMaxhp = max_hp without Dynamax), `Status::Fainted`, `Slot::fainted_occupant`",
+   "in_progress": []
+  },
+  {
+   "field": "faintQueued, subFainted",
+   "status": "unnecessary",
+   "where_or_proof": "internal to faint processing (engine faint queue in `Battle`); subFainted is Gen 1 only",
+   "in_progress": []
+  },
+  {
+   "field": "formeRegression",
+   "status": "implemented",
+   "where_or_proof": "Champions drops the Mega one (state.rs doc); Power Construct's is modelled in battle.rs",
+   "in_progress": []
+  },
+  {
+   "field": "types, addedType, baseTypes",
+   "status": "implemented",
+   "where_or_proof": "`Pokemon::types` + `Volatile::AddedType` (Trick-or-Treat, Forest's Curse); baseTypes is Tera only",
+   "in_progress": []
+  },
+  {
+   "field": "knownType, apparentType",
+   "status": "unnecessary",
+   "where_or_proof": "information only (see §3.6 row)",
+   "in_progress": []
+  },
+  {
+   "field": "switchFlag, forceSwitchFlag, skipBeforeSwitchOutEventFlag",
+   "status": "implemented",
+   "where_or_proof": "`Slot::switch_flag` (`SwitchFlag`), forced switches, `skip_before_switch_out`",
+   "in_progress": [
+    "B41-copycat-uturn-switch-flag",
+    "R3-emergency-exit-replacement"
+   ]
+  },
+  {
+   "field": "draggedIn, beingCalledBack",
+   "status": "implemented",
+   "where_or_proof": "event speed of dragged-in Pokémon (`Battle::event_speed`); beingCalledBack for Eject Button / Illusion",
+   "in_progress": []
+  },
+  {
+   "field": "newlySwitched",
+   "status": "implemented",
+   "where_or_proof": "`SlotHistory::newly_switched`",
+   "in_progress": []
+  },
+  {
+   "field": "lastMove, lastMoveTargetLoc, lastMoveUsed",
+   "status": "implemented",
+   "where_or_proof": "`Slot::last_move`, `last_move_target_loc`; lastMoveUsed only read by Conversion 2 (not standard)",
+   "in_progress": []
+  },
+  {
+   "field": "lastMoveEncore",
+   "status": "unnecessary",
+   "where_or_proof": "Gen 2 only",
+   "in_progress": []
+  },
+  {
+   "field": "moveThisTurn, moveThisTurnResult, moveLastTurnResult",
+   "status": "implemented",
+   "where_or_proof": "`SlotHistory` + queue state",
+   "in_progress": []
+  },
+  {
+   "field": "statsRaisedThisTurn, statsLoweredThisTurn",
+   "status": "implemented",
+   "where_or_proof": "`SlotHistory`",
+   "in_progress": []
+  },
+  {
+   "field": "hurtThisTurn, lastDamage, attackedBy, timesAttacked",
+   "status": "implemented",
+   "where_or_proof": "`SlotHistory::hurt_this_turn`, `last_damaged_by`, `damaged_by_this_turn`, `times_attacked` (Champions resets on switch)",
+   "in_progress": []
+  },
+  {
+   "field": "isActive, activeTurns, activeMoveActions",
+   "status": "implemented",
+   "where_or_proof": "`Slot::party_index`, `Slot::move_actions`; activeTurns > 0 is derived from the slot history's `newly_switched` (battle.rs; Speed Boost, Slow Start, Stakeout, Taunt)",
+   "in_progress": []
+  },
+  {
+   "field": "previouslySwitchedIn",
+   "status": "unnecessary",
+   "where_or_proof": "written by switchIn, read by nothing in data/ or sim/",
+   "in_progress": []
+  },
+  {
+   "field": "truantTurn",
+   "status": "unnecessary",
+   "where_or_proof": "Truant not standard",
+   "in_progress": []
+  },
+  {
+   "field": "syrupTriggered",
+   "status": "refused",
+   "where_or_proof": "Supersweet Syrup after the battle start refuses (`once_per_battle`)",
+   "in_progress": [
+    "R10-once-per-battle-flags"
+   ]
+  },
+  {
+   "field": "bondTriggered, heroMessageDisplayed, swordBoost, shieldBoost",
+   "status": "unnecessary",
+   "where_or_proof": "Battle Bond only on Past formes, Zero to Hero's message is log-only, Intrepid Sword / Dauntless Shield not standard (R10 note)",
+   "in_progress": []
+  },
+  {
+   "field": "stellarBoostedTypes, canTerastallize, teraType, terastallized, canUltraBurst, canGigantamax, dynamaxLevel, gigantamax",
+   "status": "unnecessary",
+   "where_or_proof": "gimmicks off in the ruleset (kept as structure: `GimmickSet`, `DynamaxState`)",
+   "in_progress": []
+  },
+  {
+   "field": "canMegaEvo, canMegaEvoX, canMegaEvoY",
+   "status": "implemented",
+   "where_or_proof": "`turn/mega.rs` (Champions `canMegaEvo`: `item.megaStone[species.name]`; X/Y are separate stones)",
+   "in_progress": []
+  },
+  {
+   "field": "isStarted, duringMove",
+   "status": "unnecessary",
+   "where_or_proof": "internal: start handlers run once per switch-in in `run_switch_in`; duringMove has no reader in data/",
+   "in_progress": []
+  },
+  {
+   "field": "weighthg",
+   "status": "implemented",
+   "where_or_proof": "`Pokemon::weight_hg` (Autotomize)",
+   "in_progress": []
+  },
+  {
+   "field": "speed",
+   "status": "implemented",
+   "where_or_proof": "`Battle::event_speed` / `update_speed` (B30)",
+   "in_progress": []
+  },
+  {
+   "field": "staleness, pendingStaleness, volatileStaleness",
+   "status": "unnecessary",
+   "where_or_proof": "only Endless Battle Clause reads them; not in the M-C rulesets (§3.6 row)",
+   "in_progress": []
+  },
+  {
+   "field": "modifiedStats, modifyStat, recalculateStats, m",
+   "status": "unnecessary",
+   "where_or_proof": "Gen 1 / Stadium / mods only",
+   "in_progress": []
+  }
+ ],
+ "champions_overrides": [
+  {
+   "override": "scripts.ts init: PP capped at 20",
+   "status": "implemented",
+   "where": "`state::champions_max_pp` (test: every move ≤ 20)"
+  },
+  {
+   "override": "scripts.ts statModify: SP formula (level 50, +75 HP / +20)",
+   "status": "implemented",
+   "where": "`stats.rs` `champions_stats`"
+  },
+  {
+   "override": "scripts.ts calculatePP: (pp/5+1)*4",
+   "status": "implemented",
+   "where": "`state::champions_max_pp`"
+  },
+  {
+   "override": "scripts.ts getActionSpeed: Trick Room negates (no 10000 − speed)",
+   "status": "implemented",
+   "where": "`Battle::trick_room_speed` (V6, fixtures f-trick-room-*)"
+  },
+  {
+   "override": "scripts.ts formeChange: no Mega formeRegression",
+   "status": "implemented",
+   "where": "state.rs `Pokemon::species` doc, forme.rs"
+  },
+  {
+   "override": "scripts.ts clearVolatile: resets timesAttacked",
+   "status": "implemented",
+   "where": "`SlotHistory` reset on switch (Rage Fist)"
+  },
+  {
+   "override": "scripts.ts canTerastallize → null",
+   "status": "implemented",
+   "where": "ruleset gimmicks (Tera off)"
+  },
+  {
+   "override": "scripts.ts canMegaEvo: item.megaStone[species.name] only",
+   "status": "implemented",
+   "where": "`turn/mega.rs`"
+  },
+  {
+   "override": "scripts.ts modifyDamage: 4x / 0.25x messages",
+   "status": "unnecessary",
+   "where": "protocol text only; arithmetic identical to base (diffed)"
+  },
+  {
+   "override": "scripts.ts spreadMoveHit: AfterHit without `pokemon.hp` check",
+   "status": "implemented",
+   "where": "moves.rs (`knock-off-fainted-user`)"
+  },
+  {
+   "override": "scripts.ts hitStepMoveHitLoop: no -hitcount for single Parental Bond hit",
+   "status": "unnecessary",
+   "where": "protocol text only (diffed; aa-parental-bond* fixtures)"
+  },
+  {
+   "override": "abilities.ts Anger Shell / Berserk onDamage (multihit check)",
+   "status": "implemented",
+   "where": "abilities.rs (Champions note)"
+  },
+  {
+   "override": "abilities.ts Healer (each adjacent ally, 1/2)",
+   "status": "implemented",
+   "where": "residual.rs (Champions note)"
+  },
+  {
+   "override": "abilities.ts Natural Cure (no onCheckShow, silent cure)",
+   "status": "implemented",
+   "where": "switching.rs switch-out cure"
+  },
+  {
+   "override": "abilities.ts Regenerator (baseMaxhp/3)",
+   "status": "implemented",
+   "where": "switching.rs"
+  },
+  {
+   "override": "abilities.ts Run Away (escapes trapping)",
+   "status": "implemented",
+   "where": "abilities.rs / trapped (Champions note)"
+  },
+  {
+   "override": "abilities.ts Unseen Fist (onHitProtect, bypassProtect 0.25; no onModifyMove)",
+   "status": "implemented",
+   "where": "abilities.rs, moves.rs"
+  },
+  {
+   "override": "abilities.ts Dragonize / Eelevate / Fire Mane / Mega Sol / Piercing Drill / Spicy Spray made standard",
+   "status": "implemented",
+   "where": "pinned in support.rs; Dragonize has no oracle fixture"
+  },
+  {
+   "override": "items.ts Eject Button (ignores future moves)",
+   "status": "implemented",
+   "where": "items.rs (`rr-future-sight-eject-button`)"
+  },
+  {
+   "override": "items.ts isNonstandard flips (Mega Stones standard; Assault Vest, Eviolite, Eject Pack, … Past)",
+   "status": "implemented",
+   "where": "data/champions.json is exported from the Champions dex"
+  },
+  {
+   "override": "moves.ts Dire Claw secondary (psn/par/slp sample)",
+   "status": "implemented",
+   "where": "moves/handlers.rs"
+  },
+  {
+   "override": "moves.ts Disable condition.onBeforeMove (cantusetwice exception)",
+   "status": "implemented",
+   "where": "conditions.rs"
+  },
+  {
+   "override": "moves.ts Encore condition.onStart (changeAction)",
+   "status": "implemented",
+   "where": "battle.rs `encore_change_action` (R8)"
+  },
+  {
+   "override": "moves.ts Fake Out / First Impression onDisableMove (activeMoveActions)",
+   "status": "implemented",
+   "where": "mod.rs `disabled`"
+  },
+  {
+   "override": "moves.ts Salt Cure condition.onResidual",
+   "status": "implemented",
+   "where": "residual.rs (Champions note)"
+  },
+  {
+   "override": "moves.ts data changes (power, accuracy, flags, PP, isNonstandard)",
+   "status": "implemented",
+   "where": "exported data"
+  },
+  {
+   "override": "conditions.ts par 1/8 full paralysis",
+   "status": "implemented",
+   "where": "moves.rs `chance(1, 8)`"
+  },
+  {
+   "override": "conditions.ts slp startTime sample([2,3,3])",
+   "status": "implemented",
+   "where": "moves.rs / conditions.rs"
+  },
+  {
+   "override": "conditions.ts frz 3-turn cap + 1/4 thaw",
+   "status": "implemented",
+   "where": "moves.rs"
+  },
+  {
+   "override": "rulesets.ts Flat Rules (Team Preview, Adjust Level 50, Item/Species Clause, Picked Team Size Auto)",
+   "status": "implemented",
+   "where": "scenario loader (VGC bring 6 pick 4, O104); clauses are validator rules"
+  }
+ ],
+ "proposed_todos": [
+  {
+   "id": "A1-t1-turn-limit-tie",
+   "what": "Showdown은 턴 1000을 넘기면 무승부(`maybeTriggerEndlessBattleClause`, sim/battle.ts:1839; 클로즈와 무관)인데 엔진은 끝내지 않음",
+   "depends_on": "없음",
+   "repro": "startState `turn: 1000`, 양쪽 아무 행동 → Showdown `tie`; 엔진 `result` Ongoing"
+  },
+  {
+   "id": "A1-t2-fixture-gaps",
+   "what": "고유 핸들러가 있는데 오라클 fixture와 라이브러리 사용이 모두 없는 표준 항목의 정확 일치 검증: Upper Hand(onTry 큐 읽기), Illuminate(onTryBoost + 회피 무시), Rattled(위협 AfterBoost), Gluttony(핀치 문턱), Leppa Berry(PP 0 Update), Misty Explosion, Skill Link, Axe Kick·Supercell Slam(crash), Temper Flare, Dragonize(Champions 신규 -ize), Phantom Force·Solar Blade·Sky Attack(2턴), Flail·Water Spout·Power Trip·Infernal Parade(위력 콜백), Big Pecks·White Smoke·Queenly Majesty",
+   "depends_on": "없음(G7과 병행 가능)",
+   "repro": "`engine/reports/events-audit-2026-09-27.json` `reactors_without_oracle_fixture`; 형제 항목 fixture를 복제해 한 원자씩"
+  },
+  {
+   "id": "A1-t3-support-stale-comments",
+   "what": "support.rs 주석이 Baton Pass의 `condition.onCopy`를 '거부/미지원'이라 함(Gastro Acid·Power Trick·Power Shift 행) — 실제로는 `switching::copy_volatile_from`이 구현",
+   "depends_on": "없음",
+   "repro": "support.rs `GASTRO_ACID`, `POWER_TRICK` 주석"
+  },
+  {
+   "id": "A1-t4-refusals-dead-pattern",
+   "what": "refusals.py가 사라진 `refused.get_or_insert_with(` 패턴을 아직 검색(B40은 문구만 고침) — 패턴 제거",
+   "depends_on": "B40-refusals-stale-text",
+   "repro": "scripts/refusals.py `patterns`"
+  }
+ ]
+}
