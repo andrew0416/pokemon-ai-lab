@@ -236,6 +236,22 @@ pub(crate) struct Battle<'a, const N: usize> {
     pub suppression: bool,
 }
 
+/// The context [`Battle::new`] derives from the state before a run (see [`Battle::replay`]).
+#[derive(Clone, Debug)]
+pub(crate) struct RunStart {
+    history_readers: HistoryReaders,
+    suppression: bool,
+    speed_snapshot: Vec<(PokemonRef, i32)>,
+}
+
+/// Buffers a finished run hands to the next ([`Battle::into_buffers`], [`Battle::replay`]).
+#[derive(Debug, Default)]
+pub(crate) struct RunBuffers {
+    /// The finished run's instructions (the next run clears them).
+    pub log: Vec<Instruction>,
+    speed_snapshot: Vec<(PokemonRef, i32)>,
+}
+
 /// The readers of the hidden damage history present in a battle (any party member's moves;
 /// see `history::record_attack`).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -309,9 +325,70 @@ impl<'a, const N: usize> Battle<'a, N> {
     pub fn new(state: &'a mut State<N>, rng: &'a mut Chooser) -> Battle<'a, N> {
         let history_readers = HistoryReaders::of(state);
         let suppression = super::abilities::suppression_possible(state);
-        let mut b = Battle {
+        let mut b = Battle::with(
             state,
-            log: Vec::new(),
+            rng,
+            history_readers,
+            suppression,
+            RunBuffers::default(),
+        );
+        b.snapshot_speeds();
+        b
+    }
+
+    /// A battle for another run from the position `start` was taken from (the state restored to
+    /// it): the same context as [`Battle::new`] would derive, without deriving it again, and the
+    /// previous run's buffers for the log and the Speed snapshot (a staged enumeration replays
+    /// many runs from each position; Opus GG).
+    pub fn replay(
+        state: &'a mut State<N>,
+        rng: &'a mut Chooser,
+        start: &RunStart,
+        mut buffers: RunBuffers,
+    ) -> Battle<'a, N> {
+        buffers.log.clear();
+        buffers.speed_snapshot.clear();
+        buffers
+            .speed_snapshot
+            .extend_from_slice(&start.speed_snapshot);
+        Battle::with(
+            state,
+            rng,
+            start.history_readers,
+            start.suppression,
+            buffers,
+        )
+    }
+
+    /// What [`Battle::replay`] reuses: the context this battle started with. Call it before the
+    /// run changes anything.
+    pub fn run_start(&self) -> RunStart {
+        RunStart {
+            history_readers: self.history_readers,
+            suppression: self.suppression,
+            speed_snapshot: self.speed_snapshot.clone(),
+        }
+    }
+
+    /// The log (the run's instructions) and the Speed snapshot's buffer, for the next
+    /// [`Battle::replay`].
+    pub fn into_buffers(self) -> RunBuffers {
+        RunBuffers {
+            log: self.log,
+            speed_snapshot: self.speed_snapshot,
+        }
+    }
+
+    fn with(
+        state: &'a mut State<N>,
+        rng: &'a mut Chooser,
+        history_readers: HistoryReaders,
+        suppression: bool,
+        buffers: RunBuffers,
+    ) -> Battle<'a, N> {
+        Battle {
+            state,
+            log: buffers.log,
             rng,
             faint_queue: Vec::new(),
             active_move: None,
@@ -326,7 +403,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             busted: Vec::new(),
             history_readers,
             raw_speed: Vec::new(),
-            speed_snapshot: Vec::new(),
+            speed_snapshot: buffers.speed_snapshot,
             awaiting_run_switch: false,
             unstarted: Vec::new(),
             queue_done: false,
@@ -334,9 +411,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             called_move: None,
             active_target: None,
             suppression,
-        };
-        b.snapshot_speeds();
-        b
+        }
     }
 
     /// The category of `id` as the move in flight has it (`move.category` after ModifyMove:

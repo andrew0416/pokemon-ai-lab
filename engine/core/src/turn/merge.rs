@@ -85,7 +85,7 @@ pub(super) struct Merger<const N: usize, Q> {
     table: Vec<(u64, u32)>,
 }
 
-impl<const N: usize, Q: Hash + Eq> Merger<N, Q> {
+impl<const N: usize, Q: Hash + Eq + Clone> Merger<N, Q> {
     const EMPTY: u32 = u32::MAX;
     const INITIAL: usize = 16;
 
@@ -100,9 +100,9 @@ impl<const N: usize, Q: Hash + Eq> Merger<N, Q> {
         self.entries.len()
     }
 
-    /// Adds `probability` to the entry equal to `(state, rest)`, or appends one with a clone of
-    /// `state` and `probability` if there is none.
-    pub(super) fn add(&mut self, state: &State<N>, rest: Q, probability: f64) {
+    /// Adds `probability` to the entry equal to `(state, rest)`, or appends one with clones of
+    /// `state` and `rest` and `probability` if there is none.
+    pub(super) fn add(&mut self, state: &State<N>, rest: &Q, probability: f64) {
         let mut hasher = KeyHasher::default();
         state.hash(&mut hasher);
         rest.hash(&mut hasher);
@@ -116,7 +116,7 @@ impl<const N: usize, Q: Hash + Eq> Merger<N, Q> {
             }
             if h == hash {
                 let entry = &mut self.entries[e as usize];
-                if entry.0 == *state && entry.1 == rest {
+                if entry.0 == *state && entry.1 == *rest {
                     entry.2 += probability;
                     return;
                 }
@@ -125,7 +125,8 @@ impl<const N: usize, Q: Hash + Eq> Merger<N, Q> {
         }
         let index = u32::try_from(self.entries.len()).expect("fewer than 2^32 positions");
         self.table[i] = (hash, index);
-        self.entries.push((state.clone(), rest, probability));
+        self.entries
+            .push((state.clone(), rest.clone(), probability));
         if self.entries.len() * 2 > self.table.len() {
             self.grow();
         }
@@ -170,7 +171,7 @@ mod tests {
             states.push(s);
         }
         for (k, s) in states.iter().enumerate() {
-            merger.add(s, (k % 3 == 0) as u32, 0.25);
+            merger.add(s, &((k % 3 == 0) as u32), 0.25);
         }
         let entries = merger.into_entries();
         let mut expected: Vec<(u16, u32, f64)> = Vec::new();

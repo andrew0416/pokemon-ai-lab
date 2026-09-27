@@ -48,7 +48,7 @@ use crate::rules::{ActionError, Ruleset};
 use crate::state::{PokemonRef, SideId, SlotRef, State};
 use crate::volatile::Volatile;
 
-use battle::Battle;
+use battle::{Battle, RunBuffers, RunStart};
 use branch::Chooser;
 use merge::Merger;
 
@@ -770,25 +770,38 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
         let mut runs = 0usize;
         for (mut work, pending, probability) in frontier {
             let mut chooser = Chooser::with_rolls(options.rolls);
+            // Every run starts from `work` (a run's instructions are reversed after it), so the
+            // context `Battle::new` derives is the same for all of them: the first run derives
+            // it and the others replay it, reusing the previous run's log and pending buffers.
+            let mut start: Option<RunStart> = None;
+            let mut buffers = RunBuffers::default();
+            let mut after = pending.clone();
             loop {
                 runs += 1;
                 chooser.begin_run();
-                let mut after = pending.clone();
-                let (result, log) = {
-                    let mut b = Battle::new(&mut work, &mut chooser);
+                after.clone_from(&pending);
+                let result = {
+                    let mut b = match &start {
+                        Some(start) => Battle::replay(&mut work, &mut chooser, start, buffers),
+                        None => Battle::new(&mut work, &mut chooser),
+                    };
+                    if start.is_none() {
+                        start = Some(b.run_start());
+                    }
                     let result = stage(&mut b, &mut after);
-                    (result, std::mem::take(&mut b.log))
+                    buffers = b.into_buffers();
+                    result
                 };
                 let end = result?;
                 let p = probability * chooser.probability();
                 match end {
-                    StageEnd::Continue => next.add(&work, after, p),
+                    StageEnd::Continue => next.add(&work, &after, p),
                     StageEnd::Finished | StageEnd::Suspended => {
-                        let kept = (end == StageEnd::Suspended).then_some(after);
-                        finished.add(&work, kept, p);
+                        let kept = (end == StageEnd::Suspended).then(|| after.clone());
+                        finished.add(&work, &kept, p);
                     }
                 }
-                work.reverse(&log);
+                work.reverse(&buffers.log);
                 if !chooser.advance() {
                     break;
                 }
@@ -809,7 +822,9 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
 }
 
 /// The merged end positions as [`Ending`]s, in first-reached order.
-fn endings<const N: usize, P: Hash + Eq>(finished: Merger<N, Option<P>>) -> Vec<Ending<N, P>> {
+fn endings<const N: usize, P: Hash + Eq + Clone>(
+    finished: Merger<N, Option<P>>,
+) -> Vec<Ending<N, P>> {
     finished
         .into_entries()
         .into_iter()
@@ -852,7 +867,7 @@ fn sample_stages<const N: usize, P: Clone + Eq + Hash>(
         };
         finished.add(
             state,
-            (end == StageEnd::Suspended).then_some(pending),
+            &(end == StageEnd::Suspended).then_some(pending),
             weight,
         );
         state.reverse(&log);
@@ -1102,7 +1117,7 @@ fn disabled<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> Opti
 /// The rest of a turn between stages: the actions not yet run, a multi-hit move suspended
 /// between two hits, and whether the turn is over. (Fainted Pokémon still holding a position
 /// are in the state: `Slot::fainted_occupant`.)
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 struct Pending {
     queue: Vec<Action>,
     in_progress: Option<moves::MoveProgress>,
@@ -1116,6 +1131,46 @@ struct Pending {
     /// The residual phase ran (the turn suspended after it for an Emergency Exit switch): the
     /// end of the turn only remains.
     residual_done: bool,
+}
+
+/// By hand for `clone_from`, which reuses the queue's allocation: the enumeration resets its
+/// per-run copy of the pending work from the position's before every run (Opus GG).
+impl Clone for Pending {
+    fn clone(&self) -> Self {
+        let Pending {
+            queue,
+            in_progress,
+            done,
+            fractional_drawn,
+            switches,
+            residual_done,
+        } = self;
+        Pending {
+            queue: queue.clone(),
+            in_progress: in_progress.clone(),
+            done: *done,
+            fractional_drawn: *fractional_drawn,
+            switches: switches.clone(),
+            residual_done: *residual_done,
+        }
+    }
+
+    fn clone_from(&mut self, source: &Self) {
+        let Pending {
+            queue,
+            in_progress,
+            done,
+            fractional_drawn,
+            switches,
+            residual_done,
+        } = source;
+        self.queue.clone_from(queue);
+        self.in_progress.clone_from(in_progress);
+        self.done = *done;
+        self.fractional_drawn = *fractional_drawn;
+        self.switches.clone_from(switches);
+        self.residual_done = *residual_done;
+    }
 }
 
 impl Pending {
