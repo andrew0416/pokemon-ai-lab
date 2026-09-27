@@ -202,12 +202,83 @@ pub(crate) fn effective_ability<const N: usize>(state: &State<N>, slot: SlotRef)
 }
 
 /// Neutralizing Gas's `onSwitchIn` (priority 2) for its holder in `holder`: its
-/// `abilityState.ending` starts false (a switch-in's volatiles are fresh). For the other active
-/// Pokémon (not behind an Ability Shield, not commanding) it only ends Illusion and the primal
-/// weathers, which are refused on the field. No ability's `End` runs: the suppressed abilities
-/// just stop acting ([`ignoring_ability`]).
+/// `abilityState.ending` starts false (a switch-in's volatiles are fresh). For every active
+/// Pokémon (`getAllActive()`) not behind an Ability Shield (the effective item) and not
+/// commanding, it runs Illusion's `End` on one under Illusion ([`illusion_end`]; EE2) and ends
+/// the primal weathers, which are refused on the field. No other ability's `End` runs: the
+/// suppressed abilities just stop acting ([`ignoring_ability`]).
 pub(crate) fn neutralizing_gas_switch_in<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) {
     b.delete_volatile(holder, Volatile::NeutralizingGasEnding);
+    for slot in State::<N>::slot_refs() {
+        let Some(pokemon) = b.occupant(slot) else {
+            continue;
+        };
+        if b.item(slot) == items::ABILITY_SHIELD || b.volatile(slot, Volatile::Commanding).active {
+            continue;
+        }
+        illusion_end(b, pokemon);
+    }
+}
+
+// ---- Illusion (EE2) ---------------------------------------------------------------------------
+
+/// Illusion's `onBeforeSwitchIn` for the Pokémon that just took `slot` (`runEvent`: skipped
+/// while it ignores its ability; `ignored` says so): `pokemon.illusion = null`, then the last
+/// Pokémon after it in party order that has not fainted becomes the disguise. Showdown's
+/// `side.pokemon` keeps each active Pokémon at its position's index and the benched ones after
+/// them, and the loop scans every index after the newcomer's position, so the disguise exists
+/// exactly when an ally in a later position or a benched party member has HP (the benched
+/// order does not matter). The Ogerpon / Terapagos exception needs Terastallization.
+pub(crate) fn illusion_before_switch_in<const N: usize>(
+    b: &mut Battle<'_, N>,
+    slot: SlotRef,
+    ignored: bool,
+) {
+    let Some(pokemon) = b.occupant(slot) else {
+        return;
+    };
+    if ignored || b.raw_ability(slot) != abilities::ILLUSION {
+        return;
+    }
+    let side = b.state.side(slot.side);
+    let later = (0..side.party.len()).any(|party| {
+        let member = &side.party[party];
+        if party == usize::from(pokemon.party) || member.species.is_none() || member.hp <= 0 {
+            return false;
+        }
+        match side
+            .slots
+            .iter()
+            .position(|s| s.party_index == Some(party as u8))
+        {
+            Some(position) => position > usize::from(slot.slot),
+            None => true,
+        }
+    });
+    b.set_illusion(pokemon, later);
+}
+
+/// Illusion's `BeforeSwitchIn` for the battle's leads, in Showdown's `switchIn` order (side by
+/// side, position by position): each lead's event runs before the later leads are active, so
+/// only a Neutralizing Gas among the earlier leads suppresses it (Ability Shield protects).
+pub(crate) fn illusion_leads<const N: usize>(b: &mut Battle<'_, N>, leads: &[SlotRef]) {
+    for (i, &slot) in leads.iter().enumerate() {
+        let gas = leads[..i]
+            .iter()
+            .any(|&s| b.raw_ability(s) == abilities::NEUTRALIZING_GAS);
+        let ignored = gas && b.item(slot) != items::ABILITY_SHIELD;
+        illusion_before_switch_in(b, slot, ignored);
+    }
+}
+
+/// Illusion's `onEnd` (`if (pokemon.illusion && !pokemon.beingCalledBack) pokemon.illusion =
+/// null`), from a damaging hit (`onDamagingHit`), Neutralizing Gas coming in, Gastro Acid or a
+/// lost ability (`End` of the ability), and fainting. Switching out never calls it here: the
+/// Pokémon is being called back, so the illusion stays until its next `BeforeSwitchIn`.
+pub(crate) fn illusion_end<const N: usize>(b: &mut Battle<'_, N>, pokemon: PokemonRef) {
+    if b.mon(pokemon).illusion {
+        b.set_illusion(pokemon, false);
+    }
 }
 
 /// Neutralizing Gas's `onEnd` for a holder leaving the field or losing its ability (switching

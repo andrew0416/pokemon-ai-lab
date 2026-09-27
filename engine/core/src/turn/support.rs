@@ -2150,6 +2150,14 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
     (abilities::NEUTRALIZING_GAS, &["onEnd", "onSwitchIn"]),
     // EE1 Imposter: `onSwitchIn` (`transform::imposter`, from `switching::run_switch_in`).
     (abilities::IMPOSTER, &["onSwitchIn"]),
+    // EE2 Illusion: `onBeforeSwitchIn` (`abilities::illusion_before_switch_in`, from
+    // `switching::switch_in_as` and `turn::enumerate_start`), `onDamagingHit`
+    // (`ability_hooks::on_damaging_hit`), `onEnd` (`switching::end_ability`, Neutralizing Gas's
+    // `onSwitchIn`), `onFaint` (`Battle::faint_messages`): `abilities::illusion_end`.
+    (
+        abilities::ILLUSION,
+        &["onBeforeSwitchIn", "onDamagingHit", "onEnd", "onFaint"],
+    ),
     // Opus U. Poison Heal: `onDamage` in `abilities::poison_heal` (the residual poison damage,
     // `residual.rs`: nothing else deals `psn` / `tox` damage).
     (abilities::POISON_HEAL, &["onDamage"]),

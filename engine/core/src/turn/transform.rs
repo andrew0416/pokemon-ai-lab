@@ -2,7 +2,8 @@
 //! `clearVolatile` undoes when the transformed Pokémon leaves the field.
 //!
 //! `transformInto` (`sim/pokemon.ts`; the Champions mod does not override it, nor the move or
-//! the ability) fails when the target fainted, either Pokémon is under Illusion, the target is
+//! the ability) fails when the target fainted, either Pokémon is under Illusion
+//! (`Pokemon::illusion`, EE2: `abilities::illusion_before_switch_in`), the target is
 //! behind a substitute, either Pokémon is transformed already, or the target is
 //! Eternatus-Eternamax (the Ogerpon / Terapagos / Stellar cases need Terastallization, which
 //! Champions turns off). Otherwise, in this order:
@@ -68,7 +69,9 @@ fn fails<const N: usize>(b: &Battle<'_, N>, user: SlotRef, target: SlotRef) -> b
         return true;
     };
     let (user_mon, target_mon) = (b.mon(u), b.mon(t));
-    b.has_substitute(target)
+    user_mon.illusion
+        || target_mon.illusion
+        || b.has_substitute(target)
         || target_mon.transformed.is_some()
         || user_mon.transformed.is_some()
         || target_mon.species == species::ETERNATUS_ETERNAMAX

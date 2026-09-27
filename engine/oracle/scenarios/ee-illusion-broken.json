@@ -1,0 +1,7 @@
+{
+ "description": "EE2: a damaging hit ends Illusion, after which Transform works. p2's Zoroark leads with Garchomp after it (`pokemon.illusion` set). The turn: Zoroark's Nasty Plot, Garchomp's Swords Dance, then Hariyama's Seismic Toss hits Zoroark (Illusion's `onDamagingHit` runs its `End`: the illusion is gone), and Ditto (Limber, slower) transforms into it (+2 SpA copied).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Hariyama", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Seismic Toss", "Bulk Up"], "level": 50}, {"species": "Ditto", "item": "", "ability": "Limber", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}], "order": "12"},
+ "p2": {"team": [{"species": "Zoroark", "item": "", "ability": "Illusion", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Nasty Plot"], "level": 50}, {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}], "order": "12"},
+ "turn": {"p1": "move seismictoss 1, move transform 1", "p2": "move nastyplot, move swordsdance"}
+}

@@ -141,6 +141,13 @@ pub struct Pokemon {
     /// baseMoveSlots.slice()` (EE1: Transform, Imposter). `None` while not transformed; only an
     /// active Pokémon can be transformed.
     pub transformed: Option<TransformBase>,
+    /// Showdown `pokemon.illusion` as a flag (EE2: Illusion): set by Illusion's
+    /// `onBeforeSwitchIn` when a Pokémon that has not fainted comes after this one in party
+    /// order, cleared by the ability's `End` (a damaging hit, Neutralizing Gas coming in, Gastro
+    /// Acid, losing the ability; not switching out, when `beingCalledBack` keeps it) and by
+    /// fainting. Only `transformInto` reads it (it fails while either Pokémon is under Illusion);
+    /// which Pokémon the disguise shows changes nothing the engine models.
+    pub illusion: bool,
     /// Activation modes this individual can use (Mega Stone, Z-Crystal, Tera type, ...),
     /// filled in from species/item data. The ruleset and the side's usage further restrict it.
     pub gimmicks: GimmickSet,

@@ -800,6 +800,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             }
             // clearVolatile: the ability and types revert; the slot empties (isActive = false).
             self.clear_volatile(pokemon);
+            // `pokemon.illusion = null` (and Illusion's `onFaint`, EE2).
+            super::abilities::illusion_end(self, pokemon);
             let previous = self.state.slot(slot).clone();
             let flag = previous.switch_flag;
             self.apply(Instruction::Switch {
@@ -1915,6 +1917,18 @@ impl<'a, const N: usize> Battle<'a, N> {
             target: pokemon,
             amount: half.max(1),
         });
+    }
+
+    /// `pokemon.illusion` (EE2), as a flag.
+    pub fn set_illusion(&mut self, pokemon: PokemonRef, illusion: bool) {
+        let old = self.mon(pokemon).illusion;
+        if old != illusion {
+            self.apply(Instruction::SetIllusion {
+                target: pokemon,
+                old,
+                new: illusion,
+            });
+        }
     }
 
     /// `pokemon.switchFlag = false`.

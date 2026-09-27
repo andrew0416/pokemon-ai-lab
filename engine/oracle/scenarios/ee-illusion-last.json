@@ -1,0 +1,7 @@
+{
+ "description": "EE2: Illusion with nobody after the holder. p2's Zoroark leads in the right position of a two-Pokemon party: no Pokemon after it in party order, so `pokemon.illusion` stays null. p1's Imposter Ditto in the left position faces it (`side.foe.active[1]`) and transforms at the start (species Zoroark, Illusion, 5-PP Nasty Plot). The turn: the transformed Ditto's Nasty Plot, Zoroark's Nasty Plot, Hardens.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [{"species": "Ditto", "item": "", "ability": "Imposter", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Transform"], "level": 50}, {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden"], "level": 50}], "order": "12"},
+ "p2": {"team": [{"species": "Garchomp", "item": "Iron Ball", "ability": "Rough Skin", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Swords Dance"], "level": 50}, {"species": "Zoroark", "item": "Iron Ball", "ability": "Illusion", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Nasty Plot"], "level": 50}], "order": "12"},
+ "turn": {"p1": "move nastyplot, move harden", "p2": "move swordsdance, move nastyplot"}
+}

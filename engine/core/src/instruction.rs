@@ -95,6 +95,12 @@ pub enum Instruction {
         old: Option<TransformBase>,
         new: Option<TransformBase>,
     },
+    /// `Pokemon::illusion` (Showdown `pokemon.illusion`, as a flag).
+    SetIllusion {
+        target: PokemonRef,
+        old: bool,
+        new: bool,
+    },
     /// Replaces the slot wholesale; `previous` restores boosts/volatiles on reverse (boxed:
     /// a `Slot` carries every volatile's state and would dominate the enum's size).
     Switch {
@@ -246,6 +252,7 @@ impl<const N: usize> State<N> {
             Instruction::SetTransformed { target, new, .. } => {
                 self.pokemon_mut(target).transformed = new
             }
+            Instruction::SetIllusion { target, new, .. } => self.pokemon_mut(target).illusion = new,
             Instruction::Switch {
                 slot, party_index, ..
             } => {
@@ -330,6 +337,7 @@ impl<const N: usize> State<N> {
             Instruction::SetTransformed { target, old, .. } => {
                 self.pokemon_mut(target).transformed = old
             }
+            Instruction::SetIllusion { target, old, .. } => self.pokemon_mut(target).illusion = old,
             Instruction::Switch {
                 slot, ref previous, ..
             } => *self.slot_mut(slot) = previous.as_ref().clone(),
@@ -459,6 +467,11 @@ mod tests {
                     moves: state.pokemon(foe_mon).moves,
                 }),
             },
+            Instruction::SetIllusion {
+                target: my_mon,
+                old: false,
+                new: true,
+            },
             Instruction::SetMoves {
                 target: foe_mon,
                 old: state.pokemon(foe_mon).moves,
@@ -562,6 +575,7 @@ mod tests {
         assert_eq!(state.pokemon(my_mon).ability, abilities::SAND_STREAM);
         assert_eq!(state.pokemon(foe_mon).types, [Type::Water, Type::None]);
         assert!(state.pokemon(foe_mon).transformed.is_some());
+        assert!(state.pokemon(my_mon).illusion);
         assert_eq!(state.pokemon(foe_mon).moves[0].pp, 5);
         assert_eq!(state.active(foe).unwrap().status_turns, 3);
         assert!(state.slot(foe).volatiles.has(Volatile::Flinch));

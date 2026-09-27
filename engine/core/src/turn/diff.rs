@@ -186,6 +186,13 @@ fn pokemon<const N: usize>(
             new: b.transformed,
         });
     }
+    if a.illusion != b.illusion {
+        out.push(Instruction::SetIllusion {
+            target: r,
+            old: a.illusion,
+            new: b.illusion,
+        });
+    }
     // Transform replaces the move slots wholesale (and leaving the field brings them back);
     // otherwise only PP changes.
     let same_moves = a
@@ -410,6 +417,8 @@ mod tests {
             disabled: false,
         };
         to.side_mut(SideId::One).party[3].moves[1].pp = 7;
+        // Illusion (EE2).
+        to.side_mut(SideId::One).party[4].illusion = true;
         // Damage history on a slot and faint counters on a side.
         to.slot_mut(me).history.times_attacked = 2;
         to.slot_mut(me).history.newly_switched = false;

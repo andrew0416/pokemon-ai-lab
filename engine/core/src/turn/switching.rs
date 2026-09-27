@@ -558,6 +558,14 @@ pub(crate) const START_HANDLERS: &[(AbilityId, &[&str], StartEffect)] = &[
     // EE1 Imposter: no `onStart` (a `Start` does nothing); its `onSwitchIn` is
     // `run_switch_in`'s (`transform::imposter`), so it acts only when its holder switches in.
     (abilities::IMPOSTER, &["onSwitchIn"], StartEffect::None),
+    // EE2 Illusion: no `onStart`; `onBeforeSwitchIn` in `switch_in_as` and `turn::enumerate_start`
+    // (`abilities::illusion_before_switch_in`), `onDamagingHit` / `onEnd` / `onFaint` end it
+    // (`abilities::illusion_end`).
+    (
+        abilities::ILLUSION,
+        &["onBeforeSwitchIn", "onDamagingHit", "onEnd", "onFaint"],
+        StartEffect::None,
+    ),
     // Opus U. Slow Start: `onStart` sets the counter, `onEnd` only logs (`end_ability` drops the
     // counter with the ability state); `onModifyAtk` / `onModifySpe` / `onResidual` in
     // `abilities` (`slow_start_halves`, `on_residual`).
@@ -825,6 +833,10 @@ fn switch_in_as<const N: usize>(
     if let Some((from, shed_tail)) = passed {
         copy_volatile_from(b, slot, &from, shed_tail)?;
     }
+    // `runEvent('BeforeSwitchIn', pokemon)`: Illusion (EE2), unless the newcomer ignores its
+    // ability (a Neutralizing Gas on the field; a Gastro Acid Baton Pass passed).
+    let ignored = b.ignoring_ability(slot);
+    super::abilities::illusion_before_switch_in(b, slot, ignored);
     // `switchIn` queued the newcomer's `runSwitch` (a drag runs it at once).
     b.awaiting_run_switch = true;
     b.unstarted.push(incoming);
@@ -1403,6 +1415,13 @@ pub(crate) fn end_ability<const N: usize>(
     }
     if ability == abilities::NEUTRALIZING_GAS {
         return super::abilities::neutralizing_gas_end(b, Some(slot));
+    }
+    // Illusion's `onEnd` (EE2): the Pokémon stays active, so it is not being called back.
+    if ability == abilities::ILLUSION {
+        if let Some(pokemon) = b.occupant(slot) {
+            super::abilities::illusion_end(b, pokemon);
+        }
+        return Ok(());
     }
     if ability.data().handlers.contains(&"onEnd") {
         return Err(b.unsupported(format!(
