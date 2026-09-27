@@ -19,7 +19,10 @@ one `State<2>` clone; `sample` = one `sample_turn(.., 1, seed)` call with a fres
 `lab-rollout` does per turn; `check_turn` and the instruction diff included); `median` /
 `extremes` / `full` = one `enumerate_turn_with` at that `RollMode`, with the outcome count in
 parentheses. `spread-damage` has no `full` (its exact distribution does not fit in memory,
-WORKPLAN F18). Each number is the fastest of five batch means after a warm-up call.
+WORKPLAN F18). `sweep` = `enumerate_turn_with` at Median averaged over up to 256 legal
+joint-action pairs (every k-th of p1 x p2; what `lab-plan --solve nash` spends its time on),
+with the number of pairs enumerated. Each number is the fastest of five batch means after a
+warm-up call. `LAB_BENCH_METRICS=sweep,median` runs only some columns.
 
 Machine: AMD Ryzen 5 3500X (6 cores, 32 GB), Windows 10 Home 19045, rustc 1.98.1
 (x86_64-pc-windows-msvc), `bench` profile = workspace `release` (opt-level 3, `debug = 1`, no
@@ -39,3 +42,19 @@ move by up to about 10 %.
 | spread-damage | 80x64 | 45.5 | 146 | 53.2 | 11.681 (114) | 323.6 (3060) | skipped |
 | o48-flash-fire-spread | 8x4 | 4.3 | 146 | 39.4 | 0.491 (4) | 1.181 (8) | 5.4 (34) |
 | o21-wide-guard | 4x4 | 3.3 | 144 | 33.5 | 0.177 (2) | 0.453 (4) | 2.6 (16) |
+
+`sweep` at the same commit (ms per enumeration, pairs enumerated; a second run under heavier
+load from other sessions was up to 2x slower, which is why the final comparison below runs the
+two builds alternately):
+
+| position | sweep ms (n) |
+|---|---:|
+| cc-lib-sand-owen-vs-coaching-panda | 1.607 (256) |
+| cc-lib-coaching-panda-vs-psy-sand-udon | 0.402 (255) |
+| cc-lib-psy-cona-vs-sand-owen | 2.578 (253) |
+| cc-lib-psy-sand-udon-vs-balance-ddee | 2.266 (255) |
+| cc-lib-balance-ddee-vs-crown-cecil9 | 1.730 (255) |
+| cc-lib-crown-cecil9-vs-perish-mrada | 0.719 (256) |
+| spread-damage | 2.482 (256) |
+| o48-flash-fire-spread | 0.298 (32) |
+| o21-wide-guard | 0.365 (16) |

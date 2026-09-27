@@ -11,14 +11,18 @@
 //!   `lab-rollout` does per turn), checks and instruction diff included;
 //! - `median` / `extremes` / `full`: `enumerate_turn_with` at that `RollMode`, with the outcome
 //!   count. `spread-damage`'s exact distribution does not fit in memory (WORKPLAN F18), so its
-//!   `full` column is skipped.
+//!   `full` column is skipped;
+//! - `sweep`: `enumerate_turn_with` at `RollMode::Median` averaged over up to [`SWEEP_PAIRS`]
+//!   legal joint-action pairs (every k-th of p1 x p2, the scenario's own included or not), what
+//!   `lab-plan --solve nash` spends its time on; pairs the engine refuses are skipped and the
+//!   count of enumerated ones is shown.
 //!
 //! Usage: `cargo bench -p lab-scenario --bench turn [-- <name filter>...]`. Each metric gets
 //! one warm-up call and then five batches of calls, each at least a fifth of `LAB_BENCH_MS`
 //! milliseconds (default 500), and prints the fastest batch's mean. Numbers and the machine they
 //! come from: `benches/README.md`. `LAB_BENCH_METRICS=median,sample` (a comma list of the
-//! column names `legal`, `clone`, `sample`, `median`, `extremes`, `full`) runs only those, e.g.
-//! under a sampling profiler.
+//! column names `legal`, `clone`, `sample`, `median`, `extremes`, `full`, `sweep`) runs only
+//! those, e.g. under a sampling profiler.
 
 use std::hint::black_box;
 use std::path::PathBuf;
@@ -37,6 +41,9 @@ struct Case {
     position: usize,
     full: bool,
 }
+
+/// At most this many joint-action pairs in the `sweep` column.
+const SWEEP_PAIRS: usize = 256;
 
 const CASES: &[Case] = &[
     Case {
@@ -147,7 +154,7 @@ fn main() {
         println!("warning: debug assertions are on; numbers are not release numbers");
     }
     println!(
-        "{:<40} {:>9} {:>9} {:>8} {:>10} {:>15} {:>15} {:>17}",
+        "{:<40} {:>9} {:>9} {:>8} {:>10} {:>15} {:>15} {:>17} {:>15}",
         "position",
         "legal",
         "legal us",
@@ -155,7 +162,8 @@ fn main() {
         "sample us",
         "median ms (n)",
         "extremes ms (n)",
-        "full ms (n)"
+        "full ms (n)",
+        "sweep ms (n)"
     );
     let mut checksum = 0u64;
     for case in CASES {
@@ -223,9 +231,38 @@ fn main() {
         } else {
             "skipped".to_string()
         };
+        let sweep = if wanted("sweep") {
+            let ours = legal_joint_actions(&state, ruleset, SideId::One);
+            let theirs = legal_joint_actions(&state, ruleset, SideId::Two);
+            let total = ours.len() * theirs.len();
+            let stride = total.div_ceil(SWEEP_PAIRS).max(1);
+            let pairs: Vec<_> = (0..total)
+                .step_by(stride)
+                .map(|k| [ours[k / theirs.len()], theirs[k % theirs.len()]])
+                .collect();
+            let options = EnumerateOptions {
+                rolls: RollMode::Median,
+            };
+            let mut enumerated = 0usize;
+            let per_sweep = time(budget, || {
+                enumerated = 0;
+                for &pair in &pairs {
+                    if let Ok(outcomes) = enumerate_turn_with(&mut state, ruleset, pair, options) {
+                        enumerated += 1;
+                        checksum = checksum.wrapping_add(outcomes.len() as u64);
+                    }
+                }
+            });
+            format!(
+                "{} ({enumerated})",
+                millis(per_sweep / enumerated.max(1) as u32)
+            )
+        } else {
+            skipped()
+        };
         assert_eq!(state, position.state, "the state is left unchanged");
         println!(
-            "{:<40} {:>9} {:>9} {:>8} {:>10} {:>15} {:>15} {:>17}",
+            "{:<40} {:>9} {:>9} {:>8} {:>10} {:>15} {:>15} {:>17} {:>15}",
             format!("{}#{}", case.scenario, case.position),
             format!("{}x{}", counts[0], counts[1]),
             legal,
@@ -233,7 +270,8 @@ fn main() {
             sample,
             median,
             extremes,
-            full
+            full,
+            sweep
         );
     }
     println!("checksum: {checksum}");
