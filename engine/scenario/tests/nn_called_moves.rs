@@ -47,6 +47,27 @@ fn copycat_bullet_seed() {
     assert_extremes_parity("nn-copycat-bullet-seed");
 }
 
+/// Champions Encore replaces Snorlax's queued Curse with Counter and queues Counter's
+/// `beforeTurnMove` too (R8): it runs next, so the physical hit that follows is countered.
+#[test]
+fn encore_into_counter_queues_its_callback() {
+    assert_exact_parity("nn-encore-counter-hit");
+}
+
+/// Encore into Focus Punch queues its `priorityChargeMove` (R8): the `focuspunch` condition
+/// starts, Foul Play breaks its focus and Focus Punch fails.
+#[test]
+fn encore_into_focus_punch_queues_its_charge() {
+    assert_exact_parity("nn-encore-focus-punch-hit");
+}
+
+/// Encore into Beak Blast queues its `priorityChargeMove` (R8): the contact attacker that hits it
+/// is burned; Beak Blast fires at the target drawn when the action was replaced.
+#[test]
+fn encore_into_beak_blast_queues_its_charge() {
+    assert_exact_parity("nn-encore-beak-blast-hit");
+}
+
 /// Copycat calls Uproar (setup): Umbreon keeps Uproar's `uproar` volatile, whose `onLockMove`
 /// locks it into a move it does not know (the engine rejected that choice before).
 #[test]

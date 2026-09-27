@@ -1,0 +1,80 @@
+{
+ "description": "R8 (Opus NN): Snorlax used Focus Punch in the setup turn (Sableye is immune). In the decision turn Sableye's Prankster Encore replaces its queued Curse with Focus Punch and queues Focus Punch's `priorityChargeMove`, which starts the `focuspunch` condition; Umbreon's Foul Play hits Snorlax, which loses its focus, so Focus Punch fails (without the condition it would hit).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Sableye",
+    "item": "",
+    "ability": "Prankster",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Encore",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Foul Play",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Focus Punch",
+     "Curse"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move calmmind, move protect",
+   "move focuspunch 1, move protect"
+  ]
+ ],
+ "turn": {
+  "p1": "move encore 1, move foulplay 1",
+  "p2": "move curse, move calmmind"
+ }
+}

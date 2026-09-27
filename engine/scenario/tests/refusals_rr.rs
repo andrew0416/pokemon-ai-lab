@@ -90,11 +90,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R7-ally-switch-target",
     ),
     (
-        "rr-encore-counter",
-        "Encore replacing a queued action with Counter",
-        "R8-encore-edges",
-    ),
-    (
         "rr-beat-up-bench",
         "Beat Up with benched allies of different power",
         "R9-beat-up-order",
@@ -273,7 +268,6 @@ fn snipe_shot_after_ally_switch() {
 }
 
 #[test]
-#[ignore = "refused: Encore replacing a queued action with {} (a callback action it would queue) (board R8-encore-edges)"]
 fn encore_into_counter() {
     assert_exact_parity("rr-encore-counter");
 }

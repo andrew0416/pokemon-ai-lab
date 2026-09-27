@@ -4,8 +4,8 @@
 
 범위: Champions 모드(Showdown `9e317a6`)에서 `isNonstandard`가 null인 종(메가 포함, 배틀 중 폼은 기본 종이 표준일 때만), 그 종의 특성(+심플빔·고민씨가 주는 심플·불면), `learnsets.ts`의 기술(+표준 플래그 기술·발버둥), 표준 도구. 테라·다이맥스·Z는 규칙셋이 막는다. 목록은 `refusals.universe.json`, 근거 검사는 아래 '근거'.
 
-- 거부 호출 72곳(함수 47개). 키 111개 = 호출에 쓰인 메시지 62개 + 다른 함수의 메시지를 전달하는 호출 7개 + 메시지 생산 함수(`producers`)의 메시지 42개.
-- 도달 가능 26개, 도달 불가능 85개, 미확인 0개.
+- 거부 호출 70곳(함수 46개). 키 109개 = 호출에 쓰인 메시지 61개 + 다른 함수의 메시지를 전달하는 호출 6개 + 메시지 생산 함수(`producers`)의 메시지 42개.
+- 도달 가능 24개, 도달 불가능 85개, 미확인 0개.
 
 ## 도달 가능 (Champions 표준 범위)
 
@@ -24,8 +24,6 @@
 | `Instruct on a Quick Draw holder` | moves/handlers.rs::instruct | mechanic | `rr-instruct-quick-draw` | full: 2 | R6-instruct | Quick Draw (Slowbro-Galar) is standard; a non-status instructed move draws it again. |
 | `Instruct repeating {} (its lastMoveTargetLoc is not kept)` | moves/handlers.rs::instruct | mechanic | `rr-instruct-target` | full: 1 | R6-instruct | Instruct (Oranguru) on a Pokémon whose last move takes a target (any single-target move): Showdown repeats it at `lastMoveTargetLoc`, which the state does not keep. |
 | `{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)` | moves/handlers.rs::swap_positions | mechanic | `rr-ally-switch-snipe-shot` | full: 17 | R7-ally-switch-target | Ally Switch (standard) swaps the side a Snipe Shot (Inteleon) or a Stalwart holder's move (Archaludon, Mega Skarmory) aims at; Showdown keeps the original target, which the queue does not hold. |
-| `Encore replacing a queued action with {} (a callback action it would queue)` | battle.rs::encore_change_action | mechanic | `rr-encore-counter` | full: 1 | R8-encore-edges | The Champions Encore replaces the target's queued action (`queue.changeAction`); an encored Counter, Mirror Coat, Focus Punch, Beak Blast or Chilly Reception (none `failencore`, E10) queues its callback action too. |
-| `stage_end_check: -> what.clone()` | items.rs::stage_end_check | forward | `rr-encore-counter` | full: 1 | R8-encore-edges | Forwards `Battle::refused`, set only by the Encore message above. |
 | `Beat Up with benched allies of different power {} (their order in Showdown's side.pokemon depends on the switches so far, which the state does not keep)` | moves/handlers.rs::beat_up_powers | mechanic | `rr-beat-up-bench` | extremes: 28 | R9-beat-up-order | Beat Up (standard) with two eligible benched allies of different base Attack: the hit order follows `side.pokemon`, which switches reorder. |
 | `{} after the battle start (its once-per-battle flag is not in the state)` | switching.rs::once_per_battle | mechanic | `rr-supersweet-syrup-switch` | full: 1 | R10-once-per-battle-flags | Supersweet Syrup (Hydrapple) starting after the battle start (a switch-in, a Skill Swap); `pokemon.syrupTriggered` is not in the state. Intrepid Sword and Dauntless Shield are not standard. |
 | `Recycle restoring {} (its onStart)` | moves/handlers.rs::on_hit | mechanic | `rr-recycle-seed` | full: 1 | R11-item-restart | Recycle (standard) bringing back a Terrain Seed, White Herb or Metronome, whose `onStart` acts on the new holder. |
@@ -42,6 +40,7 @@
 
 | 이전 키 | 보드 | 오라클 fixture | 내용 |
 |---|---|---|---|
+| `Encore replacing a queued action with {} (a callback action it would queue)` | R8-encore-edges | `rr-encore-counter` (full: 1) | The Champions Encore's `changeAction` also queues the encored move's `beforeTurnMove` (Counter, Mirror Coat) or `priorityChargeMove` (Focus Punch, Beak Blast, Chilly Reception) action, which runs next (`Battle::encore_change_action`; `nn-encore-counter-hit`, `nn-encore-focus-punch-hit`, `nn-encore-beak-blast-hit`); the new action's target is drawn when it is queued. `Battle::refused` (FF) and its `stage_end_check` forward are gone. |
 | `Sleep Talk calling {} (a multi-hit move)` | R14-called-multi-hit | `rr-sleep-talk-multihit` (full: 1) | A multi-hit move Copycat or Sleep Talk calls suspends after its first hit like a chosen one; the caller's hit loop stops after its `spreadMoveHit` (`moves::CallerFrame` in the called move's `MoveProgress`) and, once the called hits and `useMoveInner` tail are done, goes on with its hit-loop tail, its own `useMoveInner` tail and AfterMove with the called move active (`moves::finish_called`; `nn-sleep-talk-double-hit-life-orb`, `nn-copycat-bullet-seed`, `rr-copycat-multihit`). |
 | `a two-turn move` | R21-copycat-called-moves | `rr-copycat-two-turn` (full: 1) | Copycat calling a charge move: `twoturnmove` starts aimed at the drawn target (`getLocOf(defender)` for a called move, `handlers::charge_try_move`) and the second turn runs the locked move the user does not know, without PP (`nn-copycat-solar-beam-lock`). |
 | `a lock on the called move` | R21-copycat-called-moves | `rr-copycat-outrage` (extremes: 81) | Copycat calling Outrage, Petal Dance, Thrash, Raging Fury (or Uproar, which was let through and then rejected as an unknown locked move): the caller's user is locked into the called move, which its next actions run without PP (`ActionKind::Move` holds `action.moveid`; `lock::queued_move_id`; `nn-copycat-outrage-lock`, `nn-copycat-uproar-lock`). |
@@ -183,7 +182,7 @@
 | R5-future-move-edges | `{} of {} hitting after its user left the field`<br>`{} hitting a holder of {}` | `{}: a multi-hit future move` |
 | R6-instruct | `Instruct repeating {} (its lastMoveTargetLoc is not kept)`<br>`Instruct on a Quick Claw holder`<br>`Instruct on a Quick Draw holder` | `Instruct repeating {}, which the target does not know` |
 | R7-ally-switch-target | `{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)` | — |
-| R8-encore-edges | `Encore replacing a queued action with {} (a callback action it would queue)`<br>`stage_end_check: -> what.clone()` | `Transform by an encored Pokémon (the encored move leaves the move slots)` |
+| R8-encore-edges | — | `Transform by an encored Pokémon (the encored move leaves the move slots)` |
 | R9-beat-up-order | `Beat Up with benched allies of different power {} (their order in Showdown's side.pokemon depends on the switches so far, which the state does not keep)` | — |
 | R10-once-per-battle-flags | `{} after the battle start (its once-per-battle flag is not in the state)` | `{}: Battle Bond (its once-per-battle `bondTriggered` is not in the state)` |
 | R11-item-restart | `Recycle restoring {} (its onStart)` | `Pickup restoring {} (its Start / End for a new holder)` |

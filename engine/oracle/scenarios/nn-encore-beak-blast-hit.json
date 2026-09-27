@@ -1,0 +1,80 @@
+{
+ "description": "R8 (Opus NN): Toucannon used Beak Blast into Umbreon's Protect in the setup turn. In the decision turn Sableye's Prankster Encore replaces its queued Roost with Beak Blast and queues Beak Blast's `priorityChargeMove`, which starts the `beakblast` condition; Umbreon's Foul Play (contact) hits Toucannon and is burned, then Beak Blast (priority -3) fires at the target drawn when the action was replaced.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Sableye",
+    "item": "",
+    "ability": "Prankster",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Encore",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Foul Play",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Toucannon",
+    "item": "",
+    "ability": "Keen Eye",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Beak Blast",
+     "Roost"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Slowbro",
+    "item": "",
+    "ability": "Oblivious",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move calmmind, move protect",
+   "move beakblast 2, move protect"
+  ]
+ ],
+ "turn": {
+  "p1": "move encore 1, move foulplay 1",
+  "p2": "move roost, move calmmind"
+ }
+}

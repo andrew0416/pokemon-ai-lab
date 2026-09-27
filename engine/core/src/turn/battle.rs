@@ -183,9 +183,6 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// Kept within a stage; a stage that ends with a living umbrella holder still marked is
     /// refused (`items::stage_end_check`).
     pub umbrella_inactive: Vec<PokemonRef>,
-    /// Something a handler without a way to return an error found unsupported within the
-    /// stage (the first one); `items::stage_end_check` refuses the stage with it.
-    pub refused: Option<String>,
     /// Whether the move in flight switches its user out (`move.selfSwitch`); Parting Shot's
     /// `onHit` withdraws it (`delete move.selfSwitch`) when its drops failed.
     pub move_self_switch: bool,
@@ -410,7 +407,6 @@ impl<'a, const N: usize> Battle<'a, N> {
             hit_crit: [[false; N]; 2],
             mirror_herb: Vec::new(),
             umbrella_inactive: Vec::new(),
-            refused: None,
             move_self_switch: false,
             force_switch: Vec::new(),
             busted: Vec::new(),
@@ -1626,16 +1622,22 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// move action queued with another move and does not hold Mental Herb, `queue.changeAction`
     /// replaces that action (FF-parity-harness; the base game only swaps the move when it runs,
     /// `onOverrideAction`). The new action (`resolveAction`) keeps the `order` (After You,
-    /// Quash), uses the encored move with a target drawn by `getRandomTarget` (drawn here when
-    /// the move runs: the same distribution, since Showdown re-draws a drawn target that has
-    /// fainted by then), and runs `FractionalPriority` again (the constants, Quick Draw, Quick
-    /// Claw, Custap Berry). From the next re-sort on its priority is the encored move's (an
-    /// encored Protect jumps to +4), which `action_key` reads from the action's move. The random
-    /// insertion point among equal actions does not matter: the queue is re-sorted before the
-    /// next move. An encored move with a `beforeTurnCallback` or `priorityChargeCallback` would
-    /// queue one more action; that is refused.
+    /// Quash), uses the encored move with the target `getRandomTarget` draws now (for a move
+    /// that takes a chosen target: `moves::resolved_target_loc`; it becomes the user's
+    /// `lastMoveTargetLoc`, and the move re-draws when it runs only if that target is gone), and
+    /// runs `FractionalPriority` again (the constants, Quick Draw, Quick Claw, Custap Berry).
+    /// From the next re-sort on its priority is the encored move's (an encored Protect jumps to
+    /// +4), which `action_key` reads from the action's move. The random insertion point among
+    /// equal actions does not matter: the queue is re-sorted before the next move.
+    /// `resolveAction` also queues the encored move's `beforeTurnMove` (Counter, Mirror Coat) or
+    /// `priorityChargeMove` (Focus Punch, Beak Blast, Chilly Reception) action, which
+    /// `insertChoice` puts ahead of every move action: it runs next and adds its condition (oracle
+    /// `nn-encore-counter-hit`, `nn-encore-focus-punch-hit`, `nn-encore-beak-blast-hit`,
+    /// `rr-encore-counter`). (With the target's own action moved up by After You, order 3, the
+    /// moved action would come first in the engine but after the callback in Showdown, whose
+    /// `insertChoice` places the pair by the callback's order; not modelled.)
     fn encore_change_action(&mut self, target: SlotRef, encored: MoveId) {
-        use super::queue::ActionKind;
+        use super::queue::{Action, ActionKind};
         let Some(i) = self.will_move(target) else {
             return;
         };
@@ -1647,16 +1649,6 @@ impl<'a, const N: usize> Battle<'a, N> {
         if id == encored || self.item(target) == items::MENTAL_HERB {
             return;
         }
-        if super::moves::has_before_turn_callback(encored)
-            || super::moves::has_priority_charge_callback(encored)
-        {
-            self.refused.get_or_insert_with(|| {
-                format!(
-                    "Encore replacing a queued action with {} (a callback action it would queue)",
-                    encored.data().name
-                )
-            });
-        }
         let mut fractional = super::items::fractional_priority_tenths(self.state, target, encored);
         if let Some(t) = super::abilities::quick_draw(self, target, pokemon, encored) {
             fractional = t;
@@ -1667,13 +1659,29 @@ impl<'a, const N: usize> Battle<'a, N> {
         if let Some(t) = super::items::custap(self, target, pokemon, fractional, encored) {
             fractional = t;
         }
+        let target_loc = super::moves::resolved_target_loc(self, target, encored);
         if let Some(i) = self.will_move(target) {
             self.queue[i].kind = ActionKind::Move {
                 id: encored,
-                target: 0,
+                target: target_loc,
                 fractional_tenths: fractional,
                 round_source: None,
             };
+        }
+        let callback = if super::moves::has_before_turn_callback(encored) {
+            Some(ActionKind::BeforeTurnMove { id: encored })
+        } else if super::moves::has_priority_charge_callback(encored) {
+            Some(ActionKind::PriorityCharge { id: encored })
+        } else {
+            None
+        };
+        if let Some(kind) = callback {
+            self.queue.push(Action {
+                slot: target,
+                pokemon,
+                kind,
+                order: None,
+            });
         }
     }
 

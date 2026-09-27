@@ -18,6 +18,10 @@
   "R22-forced-eat-ignored-item": "Teatime / Stuff Cheeks (eatItem(true)) for a holder that ignores its item (Klutz, Magic Room): the Eat event is skipped, the berry still goes and EatItem still runs; eat_item_forced also never runs EatItem (Cheek Pouch, Cud Chew, Ripen), unverified."
  },
  "fixed": {
+  "Encore replacing a queued action with {} (a callback action it would queue)": {
+   "board": "R8-encore-edges", "fixture": "rr-encore-counter",
+   "what": "The Champions Encore's `changeAction` also queues the encored move's `beforeTurnMove` (Counter, Mirror Coat) or `priorityChargeMove` (Focus Punch, Beak Blast, Chilly Reception) action, which runs next (`Battle::encore_change_action`; `nn-encore-counter-hit`, `nn-encore-focus-punch-hit`, `nn-encore-beak-blast-hit`); the new action's target is drawn when it is queued. `Battle::refused` (FF) and its `stage_end_check` forward are gone."
+  },
   "Sleep Talk calling {} (a multi-hit move)": {
    "board": "R14-called-multi-hit", "fixture": "rr-sleep-talk-multihit",
    "what": "A multi-hit move Copycat or Sleep Talk calls suspends after its first hit like a chosen one; the caller's hit loop stops after its `spreadMoveHit` (`moves::CallerFrame` in the called move's `MoveProgress`) and, once the called hits and `useMoveInner` tail are done, goes on with its hit-loop tail, its own `useMoveInner` tail and AfterMove with the called move active (`moves::finish_called`; `nn-sleep-talk-double-hit-life-orb`, `nn-copycat-bullet-seed`, `rr-copycat-multihit`)."
@@ -131,14 +135,6 @@
   "{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)": {
    "reachable": "yes", "kind": "mechanic", "board": "R7-ally-switch-target", "repro": "rr-ally-switch-snipe-shot",
    "why": "Ally Switch (standard) swaps the side a Snipe Shot (Inteleon) or a Stalwart holder's move (Archaludon, Mega Skarmory) aims at; Showdown keeps the original target, which the queue does not hold."
-  },
-  "Encore replacing a queued action with {} (a callback action it would queue)": {
-   "reachable": "yes", "kind": "mechanic", "board": "R8-encore-edges", "repro": "rr-encore-counter",
-   "why": "The Champions Encore replaces the target's queued action (`queue.changeAction`); an encored Counter, Mirror Coat, Focus Punch, Beak Blast or Chilly Reception (none `failencore`, E10) queues its callback action too."
-  },
-  "stage_end_check: -> what.clone()": {
-   "reachable": "yes", "kind": "forward", "board": "R8-encore-edges", "repro": "rr-encore-counter",
-   "why": "Forwards `Battle::refused`, set only by the Encore message above."
   },
   "Transform by an encored Pokémon (the encored move leaves the move slots)": {
    "reachable": "no", "kind": "invariant", "board": "R8-encore-edges",

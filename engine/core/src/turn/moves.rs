@@ -1149,6 +1149,22 @@ pub fn takes_target(n: usize, target: MoveTarget) -> bool {
         )
 }
 
+/// Showdown `resolveAction`'s target location for a move action queued without one (Champions
+/// Encore's `changeAction`): `getRandomTarget` draws it now for a move that takes a chosen
+/// target; 0 for any other (a spread, self or random move draws its target when it runs, and its
+/// location is read by nothing).
+pub(crate) fn resolved_target_loc<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    id: MoveId,
+) -> i8 {
+    let target = id.data().target;
+    if !takes_target(N, target) {
+        return 0;
+    }
+    get_random_target(b, user, target).map_or(0, |t| loc_of(user, t))
+}
+
 /// Showdown `getTarget`. The returned slot may hold a fainted Pok챕mon (Showdown returns
 /// the fainted object; the move then fails).
 fn get_target<const N: usize>(
