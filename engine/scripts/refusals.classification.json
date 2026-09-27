@@ -18,6 +18,10 @@
   "R22-forced-eat-ignored-item": "Teatime / Stuff Cheeks (eatItem(true)) for a holder that ignores its item (Klutz, Magic Room): the Eat event is skipped, the berry still goes and EatItem still runs; eat_item_forced also never runs EatItem (Cheek Pouch, Cud Chew, Ripen), unverified."
  },
  "fixed": {
+  "Sleep Talk calling {} (a multi-hit move)": {
+   "board": "R14-called-multi-hit", "fixture": "rr-sleep-talk-multihit",
+   "what": "A multi-hit move Copycat or Sleep Talk calls suspends after its first hit like a chosen one; the caller's hit loop stops after its `spreadMoveHit` (`moves::CallerFrame` in the called move's `MoveProgress`) and, once the called hits and `useMoveInner` tail are done, goes on with its hit-loop tail, its own `useMoveInner` tail and AfterMove with the called move active (`moves::finish_called`; `nn-sleep-talk-double-hit-life-orb`, `nn-copycat-bullet-seed`, `rr-copycat-multihit`)."
+  },
   "a two-turn move": {
    "board": "R21-copycat-called-moves", "fixture": "rr-copycat-two-turn",
    "what": "Copycat calling a charge move: `twoturnmove` starts aimed at the drawn target (`getLocOf(defender)` for a called move, `handlers::charge_try_move`) and the second turn runs the locked move the user does not know, without PP (`nn-copycat-solar-beam-lock`)."
@@ -189,16 +193,12 @@
    "why": "Symbiosis part: every standard item moves (E3). Rivalry part: the Rivalry holder is on the field before Skill Swap runs, so `check_state` (at the turn start) or `switch_in_problem` (on its switch-in) already refused an undecided gender."
   },
   "{} called by {}: a multi-hit called move": {
-   "reachable": "yes", "kind": "mechanic", "board": "R14-called-multi-hit", "repro": "rr-copycat-multihit",
-   "why": "Copycat calling one of the 14 standard multi-hit moves (Double Hit, Bullet Seed, Scale Shot, Population Bomb, ...): the hits of a called move cannot suspend between stages. (Sleep Talk is refused earlier, below.)"
-  },
-  "Sleep Talk calling {} (a multi-hit move)": {
-   "reachable": "yes", "kind": "mechanic", "board": "R14-called-multi-hit", "repro": "rr-sleep-talk-multihit",
-   "why": "Choosing Sleep Talk with a multi-hit move in the slots (none is `nosleeptalk`)."
+   "reachable": "no", "kind": "past-only", "board": "R14-called-multi-hit",
+   "why": "Copycat's and Sleep Talk's called multi-hit moves suspend between their hits (the caller waits in `CallerFrame`; fixed: `rr-copycat-multihit`, `nn-copycat-bullet-seed`); only Mirror Move, which calls from `onTryHit` and is not standard (E8), is still refused."
   },
   "check_side: -> why": {
-   "reachable": "yes", "kind": "forward", "board": "R14-called-multi-hit", "repro": "rr-sleep-talk-multihit",
-   "why": "Forwards `move_unsupported` (Struggle, the chosen move: E1) and `sleep_talk_problem` (reachable: multi-hit)."
+   "reachable": "no", "kind": "forward", "board": "R14-called-multi-hit",
+   "why": "Forwards `move_unsupported` (Struggle, the chosen move: E1) and `sleep_talk_problem`, whose remaining messages are unreachable (`Sleep Talk could call {}`: E1; an unchecked onAfterMove: E12). The multi-hit one is fixed (`rr-sleep-talk-multihit`)."
   },
   "Sleep Talk calling {} (its onAfterMove, unchecked for a called move)": {
    "reachable": "no", "kind": "static", "board": "R14-called-multi-hit",

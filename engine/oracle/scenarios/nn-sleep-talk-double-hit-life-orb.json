@@ -1,0 +1,82 @@
+{
+ "description": "R14 (Opus NN): a sleeping Kangaskhan holding Life Orb uses Sleep Talk, which calls Double Hit (its only callable move) at a random foe (Umbreon or Clefable, neither protects): the called move's two hits are stages of the caller's action; after them the called move's tail (Life Orb recoil), then Sleep Talk's own hit-loop tail and AfterMove with Double Hit as the active move (battle lastMove Double Hit, Kangaskhan's lastMove Sleep Talk, Sleep Talk's PP spent).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Kangaskhan",
+    "item": "Life Orb",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Sleep Talk",
+     "Double Hit"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Kangaskhan": {
+    "status": "slp",
+    "statusTime": 3
+   }
+  }
+ },
+ "turn": {
+  "p1": "move sleeptalk, move curse",
+  "p2": "move calmmind, move calmmind"
+ }
+}

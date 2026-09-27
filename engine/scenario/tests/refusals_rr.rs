@@ -130,16 +130,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R13-attract-gender",
     ),
     (
-        "rr-copycat-multihit",
-        "Double Hit called by Copycat: a multi-hit called move",
-        "R14-called-multi-hit",
-    ),
-    (
-        "rr-sleep-talk-multihit",
-        "Sleep Talk calling Double Hit (a multi-hit move)",
-        "R14-called-multi-hit",
-    ),
-    (
         "rr-fling-innards-out",
         "Fling's user fainted before its item was thrown",
         "R16-fling-user-fainted",
@@ -333,13 +323,11 @@ fn rivalry_switching_in_with_undecided_genders() {
 }
 
 #[test]
-#[ignore = "refused: {} called by {}: a multi-hit called move (board R14-called-multi-hit)"]
 fn copycat_a_multi_hit_move() {
     assert_exact_parity("rr-copycat-multihit");
 }
 
 #[test]
-#[ignore = "refused: Sleep Talk calling {} (a multi-hit move) (board R14-called-multi-hit)"]
 fn sleep_talk_with_a_multi_hit_move() {
     assert_exact_parity("rr-sleep-talk-multihit");
 }

@@ -246,6 +246,26 @@ pub(crate) struct MoveProgress {
     /// Showdown `move.smartTarget` still on when the hits start (Dragon Darts with both of its
     /// smart targets left): hit `n` strikes `targets[n - 1]` alone, and `targets` keeps both.
     smart: bool,
+    /// For a move another move called (Copycat, Sleep Talk: `useMove` from its `onHit`), the
+    /// calling move, which waits for the called move's hits: [`finish_called`].
+    caller: Option<Box<CallerFrame>>,
+}
+
+/// A calling move (Copycat, Sleep Talk) stopped right after the `spreadMoveHit` of its one hit,
+/// whose `onHit` called a multi-hit move that suspended between its hits (R14). Once the called
+/// move's hits and its `useMoveInner` tail are done, the caller's hit loop goes on from there
+/// ([`hit_loop_rest`]), then its own `useMoveInner` tail and `runMove`'s AfterMove with the
+/// called move as the active move. What the caller's `spreadMoveHit` still did after its `onHit`
+/// (the target's Hit event, `self` and secondary effects of a self-targeting status move with
+/// none) did nothing and ran before the suspension.
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+pub(crate) struct CallerFrame {
+    /// The caller's hit loop after its hit (`mv` is the calling move).
+    progress: MoveProgress,
+    /// That hit's results.
+    results: Vec<Hit>,
+    /// The caller's main target (`use_move` sets it as the suspension passes).
+    main_target: SlotRef,
 }
 
 /// How far a move got: finished, or suspended before its next hit.
@@ -262,7 +282,7 @@ enum HitOutcome {
 }
 
 /// Per-target result of a hit (Showdown's `damage[i]`: a number, `true`, or `false`).
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 enum Hit {
     Failed,
     /// Hit without damage (status moves).
@@ -539,9 +559,14 @@ pub(crate) fn resume_move<const N: usize>(
     });
     b.raw_speed = progress.raw_speed.clone();
     b.speed_snapshot = progress.speed_snapshot.clone();
+    let mut progress = progress;
+    let caller = progress.caller.take();
     let mut mv = progress.mv.clone();
     let result = match hit_loop(b, user, &mv, Some(progress))? {
-        HitOutcome::Suspended(progress) => return Ok(MoveStep::Suspended(progress)),
+        HitOutcome::Suspended(mut progress) => {
+            progress.caller = caller;
+            return Ok(MoveStep::Suspended(progress));
+        }
         HitOutcome::Finished { ok, total_damage } => {
             mv.total_damage = total_damage;
             if !ok {
@@ -550,6 +575,10 @@ pub(crate) fn resume_move<const N: usize>(
             ok
         }
     };
+    if let Some(frame) = caller {
+        finish_called(b, user, pokemon, mv, result, main_target, *frame)?;
+        return Ok(MoveStep::Done);
+    }
     b.finish_move_result(user, result);
     use_move_tail(b, user, &mv, result, main_target)?;
     // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
@@ -559,6 +588,57 @@ pub(crate) fn resume_move<const N: usize>(
     // The active move itself stays set through the phazing step (`drag_outs`), which clears it.
     b.record_battle_last_move(mv.id);
     Ok(MoveStep::Done)
+}
+
+/// The rest of a calling move's action (Copycat, Sleep Talk) once the multi-hit move it called is
+/// done (R14): the called move's `useMove` ends (its result, its `useMoveInner` tail: Life Orb,
+/// Shell Bell, `selfBoost`), the caller's `onHit` returns and its hit loop goes on after its hit
+/// ([`hit_loop_rest`]: the Update, `faintMessages`, AfterMoveSecondary and Emergency Exit on its
+/// target, the user), its own `useMove` ends, then `runMove`'s AfterMove with the called move as
+/// the active move (`battle.lastMove`). No PP, and the user's `lastMove` is the caller's.
+fn finish_called<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    pokemon: PokemonRef,
+    called: ActiveMove,
+    result: bool,
+    called_target: SlotRef,
+    frame: CallerFrame,
+) -> Result<(), TurnError> {
+    // The called move's `useMove`, after its hits (as `use_move`).
+    let user = handlers::current_slot(b, user, pokemon);
+    b.finish_move_result(user, result);
+    b.active_target = Some((called_target, result));
+    use_move_tail(b, user, &called, result, called_target)?;
+    // The caller's hit loop, then its `useMove`.
+    let CallerFrame {
+        progress,
+        results,
+        main_target,
+    } = frame;
+    let mut caller = progress.mv.clone();
+    let user = handlers::current_slot(b, user, pokemon);
+    let ok = match hit_loop_rest(b, user, &caller, progress, results, false)? {
+        HitOutcome::Finished { ok, total_damage } => {
+            caller.total_damage = total_damage;
+            if !ok {
+                caller.hit_targets = 0;
+            }
+            ok
+        }
+        HitOutcome::Suspended(_) => unreachable!("a calling move hits once"),
+    };
+    let user = handlers::current_slot(b, user, pokemon);
+    b.finish_move_result(user, ok);
+    b.active_target = Some((main_target, ok));
+    use_move_tail(b, user, &caller, ok, main_target)?;
+    // `runMove`: `if (this.battle.activeMove) move = this.battle.activeMove;` — the AfterMove
+    // events see the called move, which the action's `clearActiveMove()` makes
+    // `battle.lastMove`.
+    handlers::on_after_move(b, user, pokemon, &called);
+    run_move_tail(b, user, &called)?;
+    b.record_battle_last_move(called.id);
+    Ok(())
 }
 
 /// The end of Showdown `runMove` after `useMove`: `AfterMove` (a locked move on its last
@@ -1490,7 +1570,12 @@ fn use_move<const N: usize>(
                 ok
             }
             HitOutcome::Suspended(mut progress) => {
-                progress.main_target = main_target;
+                // A move this one called suspended (Copycat's): this move's own main target
+                // waits with it in the caller frame.
+                match progress.caller.as_deref_mut() {
+                    Some(frame) => frame.main_target = main_target,
+                    None => progress.main_target = main_target,
+                }
                 return Ok(Some(progress));
             }
         }
@@ -1511,7 +1596,9 @@ fn use_move<const N: usize>(
 /// boost and ability suppression, its source effect is the caller (whose PP pays Pressure), its
 /// target is `target` or, without one, drawn afresh, and it runs `useMoveInner` without
 /// BeforeMove, PP or `lastMove`. The called move stays the active move. A multi-hit called move
-/// (it would suspend the caller) is unsupported.
+/// of Copycat or Sleep Talk suspends after its first hit like a chosen one: its progress waits
+/// in [`Battle::called_suspension`] until the caller's hit loop takes it and suspends with it
+/// (R14); Mirror Move's is unsupported (it calls from `onTryHit`).
 fn call_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
@@ -1564,11 +1651,15 @@ fn call_move<const N: usize>(
         None => get_random_target(b, user, data.target),
     };
     let will_act = b.will_act();
-    if use_move(b, user, &mut mv, target, will_act)?.is_some() {
-        return Err(b.unsupported(format!(
-            "{} called by {}: a multi-hit called move",
-            data.name, caller.data.name
-        )));
+    if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
+        if ![moves::COPYCAT, moves::SLEEP_TALK].contains(&caller.id) {
+            return Err(b.unsupported(format!(
+                "{} called by {}: a multi-hit called move",
+                data.name, caller.data.name
+            )));
+        }
+        b.called_suspension = Some(progress);
+        return Ok(());
     }
     // It stays the active move: the caller's AfterMove sees it (`run_move_tail`).
     b.called_move = Some(mv);
@@ -2104,6 +2195,7 @@ fn try_spread_move_hit<const N: usize>(
         raw_speed: Vec::new(),
         speed_snapshot: Vec::new(),
         smart,
+        caller: None,
     };
     hit_loop(b, user, mv, Some(progress))
 }
@@ -2606,7 +2698,7 @@ fn hit_loop<const N: usize>(
 ) -> Result<HitOutcome, TurnError> {
     let mut progress = progress.expect("a hit loop starts with its progress");
     let hit = progress.hit + 1;
-    let mut targets = progress.targets.clone();
+    let targets = progress.targets.clone();
     // Champions `hitStepMoveHitLoop` with `move.smartTarget` and two targets: `targetsCopy =
     // [targets[hit - 1]]`, each dart strikes one of them.
     let smart = progress.smart;
@@ -2657,9 +2749,39 @@ fn hit_loop<const N: usize>(
         }
         let hit_ok = results.iter().any(|r| r.ok());
         progress.any_ok |= hit_ok;
+        // This hit's `onHit` (Copycat's, Sleep Talk's) called a multi-hit move that suspended
+        // after its first hit: the calling move stops here and goes on once the called move's
+        // hits are done ([`finish_called`]).
+        if let Some(mut called) = b.called_suspension.take() {
+            called.caller = Some(Box::new(CallerFrame {
+                progress,
+                results,
+                main_target: user,
+            }));
+            return Ok(HitOutcome::Suspended(called));
+        }
+    }
+    hit_loop_rest(b, user, mv, progress, results, ended_by_miss)
+}
+
+/// The rest of a hit of [`hit_loop`] after its `spreadMoveHit` (or its multi-accuracy miss): the
+/// Update, the next hit's suspension, or the loop's end.
+fn hit_loop_rest<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    mut progress: MoveProgress,
+    results: Vec<Hit>,
+    ended_by_miss: bool,
+) -> Result<HitOutcome, TurnError> {
+    let smart = progress.smart;
+    if !ended_by_miss {
+        let hit = progress.hit;
+        let hit_ok = results.iter().any(|r| r.ok());
         // `eachEvent('Update')` after the hit's damage (berries eat before faints are
         // processed).
         super::update::update_event(b)?;
+        let mut targets = progress.targets.clone();
         targets.retain(|&t| b.alive(t).is_some());
         let single = progress.targets.len() == 1;
         let user_standing = b.alive(user).is_some();

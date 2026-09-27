@@ -6,7 +6,7 @@
 
 mod common;
 
-use common::assert_exact_parity;
+use common::{assert_exact_parity, assert_extremes_parity};
 
 /// Copycat calls Solar Beam in its charge turn (setup): the called move starts `twoturnmove` aimed
 /// at the target it drew. Next turn Umbreon is locked into Solar Beam, which it does not know: it
@@ -30,6 +30,21 @@ fn copycat_outrage_second_turn() {
 #[test]
 fn pressure_takes_no_pp_on_a_locked_turn() {
     assert_exact_parity("nn-pressure-locked-outrage");
+}
+
+/// Sleep Talk calls Double Hit (R14): the called move's second hit is a stage of its own; after
+/// it, the called move's tail (Life Orb recoil), Sleep Talk's hit-loop tail and AfterMove with
+/// Double Hit active.
+#[test]
+fn sleep_talk_double_hit_with_life_orb() {
+    assert_exact_parity("nn-sleep-talk-double-hit-life-orb");
+}
+
+/// Copycat calls Bullet Seed (R14): up to four more hits, each a stage, then Copycat's tail. An
+/// `--mode extremes` fixture (up to five damage rolls in one action).
+#[test]
+fn copycat_bullet_seed() {
+    assert_extremes_parity("nn-copycat-bullet-seed");
 }
 
 /// Copycat calls Uproar (setup): Umbreon keeps Uproar's `uproar` volatile, whose `onLockMove`

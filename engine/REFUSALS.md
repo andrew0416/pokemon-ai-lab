@@ -4,8 +4,8 @@
 
 범위: Champions 모드(Showdown `9e317a6`)에서 `isNonstandard`가 null인 종(메가 포함, 배틀 중 폼은 기본 종이 표준일 때만), 그 종의 특성(+심플빔·고민씨가 주는 심플·불면), `learnsets.ts`의 기술(+표준 플래그 기술·발버둥), 표준 도구. 테라·다이맥스·Z는 규칙셋이 막는다. 목록은 `refusals.universe.json`, 근거 검사는 아래 '근거'.
 
-- 거부 호출 72곳(함수 47개). 키 112개 = 호출에 쓰인 메시지 62개 + 다른 함수의 메시지를 전달하는 호출 7개 + 메시지 생산 함수(`producers`)의 메시지 43개.
-- 도달 가능 29개, 도달 불가능 83개, 미확인 0개.
+- 거부 호출 72곳(함수 47개). 키 111개 = 호출에 쓰인 메시지 62개 + 다른 함수의 메시지를 전달하는 호출 7개 + 메시지 생산 함수(`producers`)의 메시지 42개.
+- 도달 가능 26개, 도달 불가능 85개, 미확인 0개.
 
 ## 도달 가능 (Champions 표준 범위)
 
@@ -34,9 +34,6 @@
 | `switch_in_as: -> why` | switching.rs::switch_in_as | forward | `rr-rivalry-switch-in-undecided-gender` | full: 1 | R13-attract-gender | Forwards `switch_in_problem`: reachable only through its Rivalry gender message; the others are E1, E2, E3, E8. |
 | `{} with {} of undecided gender (give the set a gender)` | moves/handlers.rs::try_immunity_problem | input | `rr-attract-undecided-gender` | full: 1 | R13-attract-gender | Attract (standard) between sets without a gender (Captivate is not standard). |
 | `{}: Rivalry next to a Pokémon of undecided gender` | switching.rs::switch_in_problem (producer) | input | `rr-rivalry-switch-in-undecided-gender` | full: 1 | R13-attract-gender | A Rivalry holder switching in next to a set without a gender. |
-| `Sleep Talk calling {} (a multi-hit move)` | support.rs::sleep_talk_problem (producer) | mechanic | `rr-sleep-talk-multihit` | full: 1 | R14-called-multi-hit | Choosing Sleep Talk with a multi-hit move in the slots (none is `nosleeptalk`). |
-| `check_side: -> why` | mod.rs::check_side | forward | `rr-sleep-talk-multihit` | full: 1 | R14-called-multi-hit | Forwards `move_unsupported` (Struggle, the chosen move: E1) and `sleep_talk_problem` (reachable: multi-hit). |
-| `{} called by {}: a multi-hit called move` | moves.rs::call_move | mechanic | `rr-copycat-multihit` | full: 22 | R14-called-multi-hit | Copycat calling one of the 14 standard multi-hit moves (Double Hit, Bullet Seed, Scale Shot, Population Bomb, ...): the hits of a called move cannot suspend between stages. (Sleep Talk is refused earlier, below.) |
 | `Fling's user fainted before its item was thrown` | moves.rs::run_move_inner<br>update.rs::update_event | mechanic | `rr-fling-innards-out` | full: 1 | R16-fling-user-fainted | Fling knocking out Mega Victreebel (Innards Out), whose damage faints the user before the Update that throws the item. The `run_move_inner` guard never fired (the hit loop's faint processing clears the volatile first) and the engine answered wrongly; this audit added the guard in `update_event`. |
 | `Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)` | moves/handlers.rs::on_hit | mechanic | `rr-trick-or-treat-curse-glitch` | full: 2 | R17-trick-or-treat-curse | Trick-or-Treat (Gourgeist) and Curse (Snorlax and others) are both standard; the target in the second position with Curse queued gets `targetLoc = -1`. |
 | `{} eaten by force while its holder ignores its item` | update.rs::eat_item_forced | mechanic | `rr-teatime-klutz` | full: 1 | R22-forced-eat-ignored-item | Teatime (Polteageist) or Stuff Cheeks with a berry held by a Klutz holder (Lopunny, Audino, Golurk) or under Magic Room: Showdown skips the berry's Eat event but still consumes it and runs EatItem. |
@@ -45,6 +42,7 @@
 
 | 이전 키 | 보드 | 오라클 fixture | 내용 |
 |---|---|---|---|
+| `Sleep Talk calling {} (a multi-hit move)` | R14-called-multi-hit | `rr-sleep-talk-multihit` (full: 1) | A multi-hit move Copycat or Sleep Talk calls suspends after its first hit like a chosen one; the caller's hit loop stops after its `spreadMoveHit` (`moves::CallerFrame` in the called move's `MoveProgress`) and, once the called hits and `useMoveInner` tail are done, goes on with its hit-loop tail, its own `useMoveInner` tail and AfterMove with the called move active (`moves::finish_called`; `nn-sleep-talk-double-hit-life-orb`, `nn-copycat-bullet-seed`, `rr-copycat-multihit`). |
 | `a two-turn move` | R21-copycat-called-moves | `rr-copycat-two-turn` (full: 1) | Copycat calling a charge move: `twoturnmove` starts aimed at the drawn target (`getLocOf(defender)` for a called move, `handlers::charge_try_move`) and the second turn runs the locked move the user does not know, without PP (`nn-copycat-solar-beam-lock`). |
 | `a lock on the called move` | R21-copycat-called-moves | `rr-copycat-outrage` (extremes: 81) | Copycat calling Outrage, Petal Dance, Thrash, Raging Fury (or Uproar, which was let through and then rejected as an unknown locked move): the caller's user is locked into the called move, which its next actions run without PP (`ActionKind::Move` holds `action.moveid`; `lock::queued_move_id`; `nn-copycat-outrage-lock`, `nn-copycat-uproar-lock`). |
 | `queue actions of its own` | R21-copycat-called-moves | `rr-copycat-mirror-coat` (full: 1) | Copycat calling Mirror Coat or Chilly Reception: a called move queues no action (`useMove` resolves none), so Mirror Coat fails in `onTry` without its condition and Chilly Reception needs none. |
@@ -81,6 +79,7 @@
 | `field effect #{} (value {})` | support.rs::check_state (producer) | Only the primal weathers are outside sun / rain / sand / snow, and their holders are not standard (E8). | R20-generic-guards |
 | `field effect #{} without a duration` | support.rs::check_state (producer) | Only the primal weathers are permanent (E8); every standard weather, terrain and room has a duration. | R20-generic-guards |
 | `two Dancers with the same Speed (Showdown orders them by abilityState.effectOrder)` | abilities.rs::dancers | Dancer (Oricorio) is not standard, and copying it needs a holder on the field (E8). | R20-generic-guards |
+| `{} called by {}: a multi-hit called move` | moves.rs::call_move | Copycat's and Sleep Talk's called multi-hit moves suspend between their hits (the caller waits in `CallerFrame`; fixed: `rr-copycat-multihit`, `nn-copycat-bullet-seed`); only Mirror Move, which calls from `onTryHit` and is not standard (E8), is still refused. | R14-called-multi-hit |
 | `{} restarting after Neutralizing Gas at 0 HP` | abilities.rs::neutralizing_gas_end | Neutralizing Gas is on no standard species and is `notransform` / `failroleplay` / `failskillswap` / `noentrain` / `noreceiver` (E8). | R20-generic-guards |
 | `{}: Battle Bond (its once-per-battle `bondTriggered` is not in the state)` | forme.rs::field_problem (producer) | Only Greninja-Bond and Greninja-Ash (not standard, E8) are refused; standard Greninja's Battle Bond does nothing. | R10-once-per-battle-flags |
 | `{}: Mirror Herb keeps copied boosts past the end of a stage (its effectState persists until the next trigger)` | items.rs::stage_end_check | Mirror Herb is not standard (E8). | R20-generic-guards |
@@ -168,6 +167,7 @@
 
 | 키 | 지점 | 이유 | 보드 |
 |---|---|---|---|
+| `check_side: -> why` | mod.rs::check_side | Forwards `move_unsupported` (Struggle, the chosen move: E1) and `sleep_talk_problem`, whose remaining messages are unreachable (`Sleep Talk could call {}`: E1; an unchecked onAfterMove: E12). The multi-hit one is fixed (`rr-sleep-talk-multihit`). | R14-called-multi-hit |
 | `enumerate_start: -> why` | mod.rs::enumerate_start | Forwards `switching_problem_at_start`: no standard item, species or ability has an unimplemented switch-in handler (E1, E2). | R20-generic-guards |
 | `run_mega_evo: -> why` | mega.rs::run_mega_evo | Shadowed: `check_side` runs the same `mega_target` on the chosen Pokémon, and nothing changes its species or item between the choice and the Mega action (Mega Stones cannot be taken). | R20-generic-guards |
 | `{} ({})` | moves/handlers.rs::called_move_problem (producer) | `called_move_problem`'s wrapper of its reasons (the move and why); none of them is reachable (see `Copycat calling {}`). | R21-copycat-called-moves |
@@ -189,7 +189,7 @@
 | R11-item-restart | `Recycle restoring {} (its onStart)` | `Pickup restoring {} (its Start / End for a new holder)` |
 | R12-syrup-bomb-source | — | `Syrup Bomb's residual with its source neither active nor fainted in place` |
 | R13-attract-gender | `Attract between {} and {} with an undecided gender (give the sets a gender)`<br>`{} with {} of undecided gender (give the set a gender)`<br>`switch_in_as: -> why`<br>`{}: Rivalry next to a Pokémon of undecided gender`<br>`Rivalry next to {} of undecided gender (give the set a gender)` | `Skill Swap: {}` |
-| R14-called-multi-hit | `check_side: -> why`<br>`{} called by {}: a multi-hit called move`<br>`Sleep Talk calling {} (a multi-hit move)` | `Sleep Talk calling {} (its onAfterMove, unchecked for a called move)` |
+| R14-called-multi-hit | — | `check_side: -> why`<br>`{} called by {}: a multi-hit called move`<br>`Sleep Talk calling {} (its onAfterMove, unchecked for a called move)` |
 | R16-fling-user-fainted | `Fling's user fainted before its item was thrown` | — |
 | R17-trick-or-treat-curse | `Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)` | — |
 | R18-baton-pass-volatiles | — | `Baton Pass passing the {} volatile` |

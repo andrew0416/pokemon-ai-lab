@@ -230,6 +230,10 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// `if (this.battle.activeMove) move = this.battle.activeMove;` after `useMove`, so the
     /// AfterMove events (the move's own, Charge's) see the called move.
     pub(crate) called_move: Option<super::moves::ActiveMove>,
+    /// A multi-hit move Copycat or Sleep Talk called (`moves::call_move`) that suspended after its
+    /// first hit, until the caller's hit loop takes it and suspends with it (R14). `None` at the
+    /// end of every stage.
+    pub(crate) called_suspension: Option<super::moves::MoveProgress>,
     /// Showdown `battle.activeTarget` of the move that just ran (the (redirected) target it was
     /// used at; its user for a self-targeting move) with `useMove`'s result
     /// (`moveDidSomething`); `None` until `useMove` got that far. Dancer reads both.
@@ -418,6 +422,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             queue_done: false,
             external_move: false,
             called_move: None,
+            called_suspension: None,
             active_target: None,
             suppression,
         }

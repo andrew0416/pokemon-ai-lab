@@ -2488,12 +2488,8 @@ pub(crate) fn sleep_talk_problem(moves: &[MoveId]) -> Option<String> {
         if let Some(why) = move_unsupported(id) {
             return Some(format!("Sleep Talk could call {why}"));
         }
-        if super::moves::is_multihit(id) {
-            return Some(format!(
-                "Sleep Talk calling {} (a multi-hit move)",
-                data.name
-            ));
-        }
+        // A multi-hit move it calls suspends between its hits like a chosen one (R14:
+        // `moves::call_move`, `CallerFrame`).
         if !super::moves::called_after_move_checked(id) {
             return Some(format!(
                 "Sleep Talk calling {} (its onAfterMove, unchecked for a called move)",

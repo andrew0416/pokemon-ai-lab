@@ -1387,6 +1387,10 @@ fn run_stage<const N: usize>(
     let result = run_stage_inner(b, pending);
     pending.queue = std::mem::take(&mut b.queue);
     let end = result?;
+    debug_assert!(
+        b.called_suspension.is_none(),
+        "a called move's suspension was not taken by its caller"
+    );
     items::stage_end_check(b)?;
     Ok(end)
 }
