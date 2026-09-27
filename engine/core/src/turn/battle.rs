@@ -323,15 +323,20 @@ impl HistoryReaders {
 
 impl<'a, const N: usize> Battle<'a, N> {
     pub fn new(state: &'a mut State<N>, rng: &'a mut Chooser) -> Battle<'a, N> {
+        Battle::recycle(state, rng, RunBuffers::default())
+    }
+
+    /// [`Battle::new`] with an earlier run's buffers ([`Battle::into_buffers`]): the log is kept
+    /// as it is (a sampled turn's stages log into one), the Speed snapshot is taken again.
+    pub fn recycle(
+        state: &'a mut State<N>,
+        rng: &'a mut Chooser,
+        mut buffers: RunBuffers,
+    ) -> Battle<'a, N> {
         let history_readers = HistoryReaders::of(state);
         let suppression = super::abilities::suppression_possible(state);
-        let mut b = Battle::with(
-            state,
-            rng,
-            history_readers,
-            suppression,
-            RunBuffers::default(),
-        );
+        buffers.speed_snapshot.clear();
+        let mut b = Battle::with(state, rng, history_readers, suppression, buffers);
         b.snapshot_speeds();
         b
     }

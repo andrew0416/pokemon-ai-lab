@@ -764,6 +764,8 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
     let mut frontier: Vec<(State<N>, P, f64)> = vec![(state.clone(), start, 1.0)];
     // Both merge in first-reached order, which keeps the output order deterministic.
     let mut finished: Merger<N, Option<P>> = Merger::new();
+    // The runs' log and Speed snapshot buffers, handed from run to run.
+    let mut buffers = RunBuffers::default();
     while !frontier.is_empty() {
         let mut next: Merger<N, P> = Merger::new();
         let stage_started = std::time::Instant::now();
@@ -772,9 +774,8 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
             let mut chooser = Chooser::with_rolls(options.rolls);
             // Every run starts from `work` (a run's instructions are reversed after it), so the
             // context `Battle::new` derives is the same for all of them: the first run derives
-            // it and the others replay it, reusing the previous run's log and pending buffers.
+            // it and the others replay it, reusing the previous run's pending buffers too.
             let mut start: Option<RunStart> = None;
-            let mut buffers = RunBuffers::default();
             let mut after = pending.clone();
             loop {
                 runs += 1;
@@ -783,7 +784,10 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
                 let result = {
                     let mut b = match &start {
                         Some(start) => Battle::replay(&mut work, &mut chooser, start, buffers),
-                        None => Battle::new(&mut work, &mut chooser),
+                        None => {
+                            buffers.log.clear();
+                            Battle::recycle(&mut work, &mut chooser, buffers)
+                        }
                     };
                     if start.is_none() {
                         start = Some(b.run_start());
@@ -847,31 +851,44 @@ fn sample_stages<const N: usize, P: Clone + Eq + Hash>(
     let mut chooser = Chooser::sampler(seed);
     let mut finished: Merger<N, Option<P>> = Merger::new();
     let weight = 1.0 / samples as f64;
+    #[cfg(debug_assertions)]
     let begin = state.clone();
+    // One buffer set for every stage: the stages of a sample log into one list.
+    let mut buffers = RunBuffers::default();
     for _ in 0..samples {
         let mut pending = start.clone();
-        let mut log = Vec::new();
+        buffers.log.clear();
         let mut result = Ok(StageEnd::Continue);
         while matches!(result, Ok(StageEnd::Continue)) {
             chooser.begin_run();
-            let mut b = Battle::new(state, &mut chooser);
+            let mut b = Battle::recycle(state, &mut chooser, buffers);
             result = stage(&mut b, &mut pending);
-            log.append(&mut b.log);
+            buffers = b.into_buffers();
         }
         let end = match result {
             Ok(end) => end,
             Err(error) => {
-                state.reverse(&log);
+                state.reverse(&buffers.log);
                 return Err(error);
             }
         };
-        finished.add(
-            state,
-            &(end == StageEnd::Suspended).then_some(pending),
-            weight,
-        );
-        state.reverse(&log);
+        let kept = (end == StageEnd::Suspended).then_some(pending);
+        if samples == 1 {
+            // A single path (what `lab-rollout` asks for every turn): nothing to merge.
+            let ending = Ending {
+                end: state.clone(),
+                pending: kept,
+                probability: weight,
+            };
+            state.reverse(&buffers.log);
+            #[cfg(debug_assertions)]
+            debug_assert_eq!(*state, begin);
+            return Ok(vec![ending]);
+        }
+        finished.add(state, &kept, weight);
+        state.reverse(&buffers.log);
     }
+    #[cfg(debug_assertions)]
     debug_assert_eq!(*state, begin);
     Ok(endings(finished))
 }
