@@ -1,0 +1,82 @@
+{
+ "description": "V4 control: the same with a Klutz Snorlax, whose Mental Herb is ignored (`hasItem` is false while the item is ignored): the Encore replaces the queued Body Slam by Harden and stays.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Whimsicott",
+    "item": "",
+    "ability": "Prankster",
+    "nature": "Timid",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Encore",
+     "Cotton Guard"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Shuckle",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "Mental Herb",
+    "ability": "Klutz",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Harden",
+     "Body Slam",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 10
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move cottonguard, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move encore 1, move harden",
+  "p2": "move bodyslam 1, move harden"
+ }
+}

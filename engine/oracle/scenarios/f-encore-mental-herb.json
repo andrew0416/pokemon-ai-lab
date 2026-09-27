@@ -1,0 +1,82 @@
+{
+ "description": "V4 (Champions Encore against a Mental Herb holder). Setup turn: Snorlax uses Harden. Decision: Prankster Whimsicott encores Snorlax, which chose Body Slam and holds a Mental Herb. The Champions `encore.condition.onStart` leaves the queued action alone for a Mental Herb holder; the herb cures the Encore in the Update after Whimsicott's move, and Snorlax uses the Body Slam it chose at its own priority.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Whimsicott",
+    "item": "",
+    "ability": "Prankster",
+    "nature": "Timid",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Encore",
+     "Cotton Guard"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Shuckle",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "Mental Herb",
+    "ability": "Thick Fat",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Harden",
+     "Body Slam",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 10
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move cottonguard, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move encore 1, move harden",
+  "p2": "move bodyslam 1, move harden"
+ }
+}
