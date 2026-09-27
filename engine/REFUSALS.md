@@ -4,8 +4,8 @@
 
 범위: Champions 모드(Showdown `9e317a6`)에서 `isNonstandard`가 null인 종(메가 포함, 배틀 중 폼은 기본 종이 표준일 때만), 그 종의 특성(+심플빔·고민씨가 주는 심플·불면), `learnsets.ts`의 기술(+표준 플래그 기술·발버둥), 표준 도구. 테라·다이맥스·Z는 규칙셋이 막는다. 목록은 `refusals.universe.json`, 근거 검사는 아래 '근거'.
 
-- 거부 호출 73곳(함수 47개). 키 115개 = 호출에 쓰인 메시지 63개 + 다른 함수의 메시지를 전달하는 호출 7개 + 메시지 생산 함수(`producers`)의 메시지 45개.
-- 도달 가능 34개, 도달 불가능 81개, 미확인 0개.
+- 거부 호출 72곳(함수 47개). 키 112개 = 호출에 쓰인 메시지 62개 + 다른 함수의 메시지를 전달하는 호출 7개 + 메시지 생산 함수(`producers`)의 메시지 43개.
+- 도달 가능 29개, 도달 불가능 83개, 미확인 0개.
 
 ## 도달 가능 (Champions 표준 범위)
 
@@ -39,17 +39,15 @@
 | `{} called by {}: a multi-hit called move` | moves.rs::call_move | mechanic | `rr-copycat-multihit` | full: 22 | R14-called-multi-hit | Copycat calling one of the 14 standard multi-hit moves (Double Hit, Bullet Seed, Scale Shot, Population Bomb, ...): the hits of a called move cannot suspend between stages. (Sleep Talk is refused earlier, below.) |
 | `Fling's user fainted before its item was thrown` | moves.rs::run_move_inner<br>update.rs::update_event | mechanic | `rr-fling-innards-out` | full: 1 | R16-fling-user-fainted | Fling knocking out Mega Victreebel (Innards Out), whose damage faints the user before the Update that throws the item. The `run_move_inner` guard never fired (the hit loop's faint processing clears the volatile first) and the engine answered wrongly; this audit added the guard in `update_event`. |
 | `Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)` | moves/handlers.rs::on_hit | mechanic | `rr-trick-or-treat-curse-glitch` | full: 2 | R17-trick-or-treat-curse | Trick-or-Treat (Gourgeist) and Curse (Snorlax and others) are both standard; the target in the second position with Curse queued gets `targetLoc = -1`. |
-| `Copycat calling {}` | moves/handlers.rs::on_hit | mechanic | `rr-copycat-two-turn` | full: 1 | R21-copycat-called-moves | Copycat (standard) calling the last move used in the battle: a two-turn move (Solar Beam, Fly, Dig, Dive, ...; `rr-copycat-two-turn`), a locking move (Outrage, Petal Dance, Thrash, Raging Fury; `rr-copycat-outrage`) or one with its own queued action (Mirror Coat, Chilly Reception are not `failcopycat`; `rr-copycat-mirror-coat`). |
-| `a lock on the called move` | moves/handlers.rs::called_move_problem (producer) | mechanic | `rr-copycat-outrage` | extremes: 81 | R21-copycat-called-moves | Copycat calling Outrage, Petal Dance, Thrash or Raging Fury (`lockedmove`). |
-| `a two-turn move` | moves/handlers.rs::called_move_problem (producer) | mechanic | `rr-copycat-two-turn` | full: 1 | R21-copycat-called-moves | Copycat calling a standard charge move (10 of them, none `failcopycat`). |
-| `queue actions of its own` | moves/handlers.rs::called_move_problem (producer) | mechanic | `rr-copycat-mirror-coat` | full: 1 | R21-copycat-called-moves | Copycat calling Mirror Coat or Chilly Reception (Counter, Focus Punch and Beak Blast are `failcopycat`, E10). |
-| `{} ({})` | moves/handlers.rs::called_move_problem (producer) | forward | `rr-copycat-two-turn` | full: 1 | R21-copycat-called-moves | `called_move_problem`'s wrapper of its reasons (the move and why). |
 | `{} eaten by force while its holder ignores its item` | update.rs::eat_item_forced | mechanic | `rr-teatime-klutz` | full: 1 | R22-forced-eat-ignored-item | Teatime (Polteageist) or Stuff Cheeks with a berry held by a Klutz holder (Lopunny, Audino, Golurk) or under Magic Room: Showdown skips the berry's Eat event but still consumes it and runs EatItem. |
 
 ## 고친 거부 (소스에서 사라짐)
 
 | 이전 키 | 보드 | 오라클 fixture | 내용 |
 |---|---|---|---|
+| `a two-turn move` | R21-copycat-called-moves | `rr-copycat-two-turn` (full: 1) | Copycat calling a charge move: `twoturnmove` starts aimed at the drawn target (`getLocOf(defender)` for a called move, `handlers::charge_try_move`) and the second turn runs the locked move the user does not know, without PP (`nn-copycat-solar-beam-lock`). |
+| `a lock on the called move` | R21-copycat-called-moves | `rr-copycat-outrage` (extremes: 81) | Copycat calling Outrage, Petal Dance, Thrash, Raging Fury (or Uproar, which was let through and then rejected as an unknown locked move): the caller's user is locked into the called move, which its next actions run without PP (`ActionKind::Move` holds `action.moveid`; `lock::queued_move_id`; `nn-copycat-outrage-lock`, `nn-copycat-uproar-lock`). |
+| `queue actions of its own` | R21-copycat-called-moves | `rr-copycat-mirror-coat` (full: 1) | Copycat calling Mirror Coat or Chilly Reception: a called move queues no action (`useMove` resolves none), so Mirror Coat fails in `onTry` without its condition and Chilly Reception needs none. |
 | `{}: no PP left when used` | R15-no-pp-when-used | `rr-spite-no-pp` (full: 1) | Spite / Eerie Spell taking the last PP after the choice: now Showdown's `cant ... nopp` (the move fails, no `lastMove`, no MoveAborted) in `moves::run_move_inner`. |
 | `Toxic Spikes poisoning a Synchronize holder (Synchronize ignores Toxic Spikes)` | R2-hazard-effect-order | `rr-toxic-spikes-synchronize` (full: 1) | `Battle::try_set_status_from_toxic_spikes` skips Synchronize's `onAfterSetStatus` (`effect.id === 'toxicspikes'`). |
 | `{} hitting a holder of {} (Eject Button)` | R5-future-move-edges | `rr-future-sight-eject-button` (full: 10) | Eject Button ignores future moves (`!move.flags['futuremove']`): the hit loop skips it for a future hit; only Red Card stays refused under the same message. |
@@ -78,6 +76,7 @@
 | `Trace copying {} (cantsuppress: setAbility fails and Trace keeps seeking)` | switching.rs::trace | Every standard `cantsuppress` ability (Battle Bond, Disguise, Stance Change, Zero to Hero) is also `notrace`, so Trace never picks one (E6). | R1-trace-seeking |
 | `Trace next to No Ability` | switching.rs::trace | No standard species has No Ability and nothing sets it (E8). | R1-trace-seeking |
 | `Zygarde-Complete fainting (Power Construct's formeRegression to the set's forme)` | battle.rs::faint_messages | Zygarde is not standard (E8). | R20-generic-guards |
+| `a Rollout lock on the called move` | moves/handlers.rs::called_move_problem (producer) | Rollout and Ice Ball are not standard (E8); the target location their lock keeps for a called move is unverified. | R21-copycat-called-moves |
 | `a switch request for {} slot {} (Eject Pack) during {}` | mod.rs::refuse_switch_request | During the battle start or a replacement only Eject Pack (not standard, E8) raises a switch request; a replacement's Emergency Exit is refused before (R3). | R20-generic-guards |
 | `field effect #{} (value {})` | support.rs::check_state (producer) | Only the primal weathers are outside sun / rain / sand / snow, and their holders are not standard (E8). | R20-generic-guards |
 | `field effect #{} without a duration` | support.rs::check_state (producer) | Only the primal weathers are permanent (E8); every standard weather, terrain and room has a duration. | R20-generic-guards |
@@ -93,6 +92,7 @@
 
 | 키 | 지점 | 이유 | 보드 |
 |---|---|---|---|
+| `Copycat calling {}` | moves/handlers.rs::on_hit | Copycat (standard) calls `battle.lastMove`, and `called_move_problem` refuses no standard move any more: `move_unsupported` refuses none (E1), Rollout and Ice Ball are not standard (E8), and Beak Blast, the one standard move with an onAfterMove unchecked for a called move, is `failcopycat` (E12). Called two-turn, locking and queue-action moves run (fixed: `rr-copycat-two-turn`, `rr-copycat-outrage`, `rr-copycat-mirror-coat`). | R21-copycat-called-moves |
 | `Cud Chew eating {}` | abilities.rs::cud_chew_residual | Every standard berry's onEat is implemented or empty (E4). | R20-generic-guards |
 | `Fling feeding {}` | moves/handlers.rs::on_hit | Every standard berry's onEat is implemented or empty (E4). | R20-generic-guards |
 | `Pickup restoring {} (its Start / End for a new holder)` | abilities.rs::pickup | Every standard item with onStart / onEnd is one Trick moves (E3), which Pickup's check accepts. | R11-item-restart |
@@ -139,7 +139,6 @@
 | 키 | 지점 | 이유 | 보드 |
 |---|---|---|---|
 | `Baton Pass passing the {} volatile` | switching.rs::copy_volatile_from | The refused volatiles are locks and charges (Outrage, recharge, two-turn moves, Rollout, Uproar), during which the Pokémon can only use the locked move, and Roost's, which lasts only the turn Roost was used (one action per turn; Sleep Talk needs sleep, which ends `lockedmove` and aborts charges, and Uproar prevents sleep). | R18-baton-pass-volatiles |
-| `Encore into a move the user no longer has` | moves.rs::run_move_inner | Move slots change only through Transform (refused while encored; Encore is `noCopy` and ends on switching) and Mimic / Sketch (not standard, E8), so an encored move stays in the slots. | R8-encore-edges |
 | `Instruct repeating {}, which the target does not know` | moves/handlers.rs::instruct | Showdown sets `lastMove` only in `runMove` (not for called moves), so a last move outside the move slots is Struggle or Transform; both are `failinstruct` (E11), which now fails Instruct before the slot lookup (fixed in this audit: `rr-instruct-struggle`). | R6-instruct |
 | `Skill Swap: {}` | abilities.rs::skill_swap | Symbiosis part: every standard item moves (E3). Rivalry part: the Rivalry holder is on the field before Skill Swap runs, so `check_state` (at the turn start) or `switch_in_problem` (on its switch-in) already refused an undecided gender. | R13-attract-gender |
 | `Syrup Bomb's residual with its source neither active nor fainted in place` | conditions.rs::syrup_bomb_residual | A source leaves the field only by a switch or a drag, and every action ends with an Update in which Syrup Bomb's `onUpdate` removes the volatile; a fainted source stays in place until the replacement after the residual. | R12-syrup-bomb-source |
@@ -171,6 +170,7 @@
 |---|---|---|---|
 | `enumerate_start: -> why` | mod.rs::enumerate_start | Forwards `switching_problem_at_start`: no standard item, species or ability has an unimplemented switch-in handler (E1, E2). | R20-generic-guards |
 | `run_mega_evo: -> why` | mega.rs::run_mega_evo | Shadowed: `check_side` runs the same `mega_target` on the chosen Pokémon, and nothing changes its species or item between the choice and the Mega action (Mega Stones cannot be taken). | R20-generic-guards |
+| `{} ({})` | moves/handlers.rs::called_move_problem (producer) | `called_move_problem`'s wrapper of its reasons (the move and why); none of them is reachable (see `Copycat calling {}`). | R21-copycat-called-moves |
 
 ## 보드 대응
 
@@ -183,7 +183,7 @@
 | R5-future-move-edges | `{} of {} hitting after its user left the field`<br>`{} hitting a holder of {}` | `{}: a multi-hit future move` |
 | R6-instruct | `Instruct repeating {} (its lastMoveTargetLoc is not kept)`<br>`Instruct on a Quick Claw holder`<br>`Instruct on a Quick Draw holder` | `Instruct repeating {}, which the target does not know` |
 | R7-ally-switch-target | `{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)` | — |
-| R8-encore-edges | `Encore replacing a queued action with {} (a callback action it would queue)`<br>`stage_end_check: -> what.clone()` | `Encore into a move the user no longer has`<br>`Transform by an encored Pokémon (the encored move leaves the move slots)` |
+| R8-encore-edges | `Encore replacing a queued action with {} (a callback action it would queue)`<br>`stage_end_check: -> what.clone()` | `Transform by an encored Pokémon (the encored move leaves the move slots)` |
 | R9-beat-up-order | `Beat Up with benched allies of different power {} (their order in Showdown's side.pokemon depends on the switches so far, which the state does not keep)` | — |
 | R10-once-per-battle-flags | `{} after the battle start (its once-per-battle flag is not in the state)` | `{}: Battle Bond (its once-per-battle `bondTriggered` is not in the state)` |
 | R11-item-restart | `Recycle restoring {} (its onStart)` | `Pickup restoring {} (its Start / End for a new holder)` |
@@ -195,7 +195,7 @@
 | R18-baton-pass-volatiles | — | `Baton Pass passing the {} volatile` |
 | R19-transformed-off-field | — | `Transform copying {} ({})`<br>`{}: transformed off the field` |
 | R20-generic-guards | — | `{} restarting after Neutralizing Gas at 0 HP`<br>`Gluttony restarting after Neutralizing Gas (its abilityState.gluttony = false)`<br>`Cud Chew eating {}`<br>`two Dancers with the same Speed (Showdown orders them by abilityState.effectOrder)`<br>`{} gaining {} ({})`<br>`an ability stealing {} ({})`<br>`Zygarde-Complete fainting (Power Construct's formeRegression to the set's forme)`<br>`Shields Down on {}: the core colour (the set's species) is not in the state`<br>`Power Construct on {}`<br>`Power Construct making a Zygarde holding {} able to Mega Evolve`<br>`{}: Utility Umbrella's `inactive` item state past the end of a stage (its onUpdate has not run)`<br>`{}: Mirror Herb keeps copied boosts past the end of a stage (its effectState persists until the next trigger)`<br>`run_mega_evo: -> why`<br>`enumerate_start: -> why`<br>`a switch request for {} slot {} (Eject Pack) during {}`<br>`{} activation (effects not implemented)`<br>`Mirror Move calling {}`<br>`Nature Power calling {}`<br>`{} moving {} ({})`<br>`Order Up from a commanded Dondozo whose Tatsugiri is gone (the source of `commanded` is not in the state)`<br>`Relic Song: Meloetta changing forme after fainting`<br>`{} eating {}`<br>`Fling feeding {}`<br>`Ally Switch in triples`<br>`Trick moving {} ({})`<br>`Dancer copying {}: a multi-hit move`<br>`{} bounced: a multi-hit move`<br>`{}: damageCallback of {}`<br>`ability {} starting ({})`<br>`{}: onWeatherChange`<br>`ability {} ending ({})`<br>`{} eaten by force`<br>`field effect #{} (value {})`<br>`field effect #{} without a duration`<br>`side effect #{}`<br>`{} with {}`<br>`{}: item {} ({})`<br>`{}: species callbacks`<br>`{}: Dynamax`<br>`{}: substitute volatile {} with {} HP`<br>`move {}: {}`<br>`callbacks {} are not implemented`<br>`volatile {}`<br>`side condition {}`<br>`field effect {}`<br>`secondary volatile {}`<br>`multi-hit range`<br>`a special mechanic`<br>`stalling move`<br>`two-turn move`<br>`slot condition`<br>`self effect`<br>`status move with base power`<br>`Sleep Talk could call {}`<br>`{} holding {} has no Mega Evolution`<br>`{}: species callbacks {}`<br>`{}: item {} switch-in handler {}`<br>`{}: species switch-in handler {}`<br>`{}: ability {} switch-in handler ({})`<br>`{}: ability {} switch-in handler {}`<br>`{}: Protosynthesis / Flower Gift next to Air Lock / Cloud Nine (the suppressor's End WeatherChange)`<br>`{}: Symbiosis holding {} ({})`<br>`Protosynthesis / Flower Gift next to Air Lock / Cloud Nine (the suppressor's End WeatherChange)`<br>`{}: {} would confuse a {} nature (confusion is not implemented)` |
-| R21-copycat-called-moves | `Copycat calling {}`<br>`{} ({})`<br>`a two-turn move`<br>`a lock on the called move`<br>`queue actions of its own` | `its onAfterMove, unchecked for a called move` |
+| R21-copycat-called-moves | — | `Copycat calling {}`<br>`{} ({})`<br>`a Rollout lock on the called move`<br>`its onAfterMove, unchecked for a called move` |
 | R22-forced-eat-ignored-item | `{} eaten by force while its holder ignores its item` | — |
 
 보드에 아직 없는 제안 작업(이 감사가 붙인 이름):

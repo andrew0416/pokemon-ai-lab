@@ -24,7 +24,11 @@ pub(crate) struct Action {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub(crate) enum ActionKind {
     Move {
-        index: u8,
+        /// Showdown `action.moveid`, fixed when the action is queued: the chosen move, the
+        /// locked move of a locked Pokémon (`chooseMove` pushes `moveid: lockedMoveID`, which may
+        /// be a move it does not know: one Copycat called), Struggle, or `MoveId::NONE` for the
+        /// `recharge` pseudo-move.
+        id: MoveId,
         target: i8,
         /// Showdown `action.fractionalPriority`, fixed when the action is queued.
         fractional_tenths: i8,
@@ -49,13 +53,13 @@ pub(crate) enum ActionKind {
     /// `beforeTurnCallback` (Counter, Mirror Coat), queued with the move action. Neither
     /// `willAct` nor `willMove` counts it.
     BeforeTurnMove {
-        index: u8,
+        id: MoveId,
     },
     /// Showdown `priorityChargeMove` (order 107: after switches and Mega Evolution, before the
     /// moves): the chosen move's `priorityChargeCallback` (Focus Punch, Beak Blast, Shell Trap).
     /// Neither `willAct` nor `willMove` counts it.
     PriorityCharge {
-        index: u8,
+        id: MoveId,
     },
 }
 
@@ -83,18 +87,17 @@ impl<const N: usize> Battle<'_, N> {
         let index = self.will_move(slot)?;
         let action = self.queue[index];
         let ActionKind::Move {
-            index: move_index,
+            id,
             fractional_tenths,
             ..
         } = action.kind
         else {
             return None;
         };
-        if move_index == super::lock::RECHARGE_INDEX {
+        if id.is_none() {
             // `recharge` is a status pseudo-move with priority 0.
             return Some((crate::dex::MoveId::NONE, MoveCategory::Status, 0));
         }
-        let id = super::lock::action_move_id(self.mon(action.pokemon), move_index);
         let priority = self.move_priority(slot, id) * 10 + i32::from(fractional_tenths);
         Some((id, id.data().category, priority))
     }
@@ -112,9 +115,7 @@ impl<const N: usize> Battle<'_, N> {
         let rounds: Vec<usize> = (0..self.queue.len())
             .filter(|&i| {
                 let action = self.queue[i];
-                matches!(action.kind, ActionKind::Move { index, .. }
-                    if super::lock::action_move_id(self.mon(action.pokemon), index)
-                        == crate::dex::moves::ROUND)
+                matches!(action.kind, ActionKind::Move { id, .. } if id == crate::dex::moves::ROUND)
             })
             .collect();
         if rounds.is_empty() {

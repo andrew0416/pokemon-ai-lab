@@ -310,21 +310,22 @@ enum LastHit {
     Blocked,
 }
 
-/// Showdown `runMove` for the move in `move_index`. `will_act` is `queue.willAct()`. A
-/// multi-hit move returns `MoveStep::Suspended` after its first hit; the turn engine resumes
-/// it with [`resume_move`] as its own stage. `round_source`: the action's source effect is a
+/// Showdown `runMove` for the queued move `id` (`action.moveid`; `MoveId::NONE` is the `recharge`
+/// pseudo-move). `will_act` is `queue.willAct()`. A multi-hit move returns
+/// `MoveStep::Suspended` after its first hit; the turn engine resumes it with [`resume_move`] as
+/// its own stage. `round_source`: the action's source effect is a
 /// Round that moved it up (`queue::ActionKind::Move::round_source`).
 pub(crate) fn run_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
-    move_index: u8,
+    id: MoveId,
     target_loc: i8,
     will_act: bool,
     round_source: Option<bool>,
 ) -> Result<MoveStep, TurnError> {
     let pokemon = b.occupant(user).expect("the caller checked the user");
     b.increment_move_actions(user);
-    if move_index == super::lock::RECHARGE_INDEX {
+    if id.is_none() {
         // The `recharge` pseudo-move: BeforeMove (`mustrecharge`, priority 11) ends it.
         let recharge = ActiveMove {
             id: MoveId::NONE,
@@ -359,7 +360,6 @@ pub(crate) fn run_move<const N: usize>(
         conditions::destiny_bond_before_move(b, user, MoveId::NONE, false);
         return Ok(MoveStep::Done);
     }
-    let id = super::lock::action_move_id(b.mon(pokemon), move_index);
     // `setActiveMove`: set for the whole move. A Round's source effect gives the move that
     // Round's `ignoreAbility` (`useMoveInner`: `move.ignoreAbility =
     // sourceEffect.ignoreAbility`; the user's own Mold Breaker can still set it in ModifyMove).
@@ -375,7 +375,7 @@ pub(crate) fn run_move<const N: usize>(
     // A finished move leaves its active move set (none after a failure's
     // `clearActiveMove(true)`): Showdown clears it with `runAction`'s `clearActiveMove()`, after
     // the phazing step, which the turn engine runs next (`drag_outs`, Opus DD unit B26).
-    let result = run_move_inner(b, user, move_index, target_loc, will_act, round_source);
+    let result = run_move_inner(b, user, id, target_loc, will_act, round_source);
     if result.is_err() {
         b.active_move = None;
     }
@@ -388,17 +388,11 @@ pub(crate) fn has_before_turn_callback(id: MoveId) -> bool {
     handlers::before_turn_volatile(id).is_some()
 }
 
-/// Showdown `runAction('beforeTurnMove')` for the move in `move_index` of the Pokémon at `user`
-/// (the caller checked it is active and not fainted): `getTarget` (a scripted move's random
-/// foe: never `null` in a battle that goes on, and it does not matter otherwise), then the
-/// move's `beforeTurnCallback`: Counter and Mirror Coat add their condition.
-pub(crate) fn before_turn_move<const N: usize>(
-    b: &mut Battle<'_, N>,
-    user: SlotRef,
-    move_index: u8,
-) {
-    let pokemon = b.occupant(user).expect("the caller checked the user");
-    let id = super::lock::action_move_id(b.mon(pokemon), move_index);
+/// Showdown `runAction('beforeTurnMove')` for the move `id` of the Pokémon at `user` (the caller
+/// checked it is active and not fainted): `getTarget` (a scripted move's random foe: never
+/// `null` in a battle that goes on, and it does not matter otherwise), then the move's
+/// `beforeTurnCallback`: Counter and Mirror Coat add their condition.
+pub(crate) fn before_turn_move<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, id: MoveId) {
     if let Some(volatile) = handlers::before_turn_volatile(id) {
         b.add_volatile(user, volatile);
     }
@@ -410,17 +404,14 @@ pub(crate) fn has_priority_charge_callback(id: MoveId) -> bool {
     handlers::priority_charge_volatile(id).is_some()
 }
 
-/// Showdown `runAction('priorityChargeMove')` for the move in `move_index` of the Pokémon at
-/// `user` (the caller checked it is active and not fainted): the move's
-/// `priorityChargeCallback` adds its condition (`focuspunch`, `beakblast`, `shelltrap`), whatever
-/// the user's status.
+/// Showdown `runAction('priorityChargeMove')` for the move `id` of the Pokémon at `user` (the
+/// caller checked it is active and not fainted): the move's `priorityChargeCallback` adds its
+/// condition (`focuspunch`, `beakblast`, `shelltrap`), whatever the user's status.
 pub(crate) fn priority_charge_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
-    move_index: u8,
+    id: MoveId,
 ) {
-    let pokemon = b.occupant(user).expect("the caller checked the user");
-    let id = super::lock::action_move_id(b.mon(pokemon), move_index);
     if let Some(volatile) = handlers::priority_charge_volatile(id) {
         b.add_volatile(user, volatile);
     }
@@ -744,31 +735,24 @@ fn run_external_move<const N: usize>(
 fn run_move_inner<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
-    move_index: u8,
+    chosen: MoveId,
     target_loc: i8,
     will_act: bool,
     round_source: Option<bool>,
 ) -> Result<MoveStep, TurnError> {
     let pokemon = b.occupant(user).expect("the caller checked the user");
-    let chosen = super::lock::action_move_id(b.mon(pokemon), move_index);
     // OverrideAction (Encore, not for Struggle): the encored move replaces the chosen one,
     // keeping the chosen move's priority and Prankster boost; its target is drawn afresh. Under
     // Champions an Encore that starts while the action is queued has already replaced the
     // action itself (`Battle::encore_change_action`), so this only remains for a Mental Herb
     // holder and for actions chosen while already encored.
     let encore = b.volatile(user, Volatile::Encore);
-    let struggle = move_index == super::lock::STRUGGLE_INDEX;
-    let (id, move_index, target) = if !struggle && encore.active && encore.mv != chosen {
-        let index = b
-            .mon(pokemon)
-            .moves
-            .iter()
-            .position(|m| m.id == encore.mv)
-            .ok_or_else(|| b.unsupported("Encore into a move the user no longer has"))?;
+    let struggle = chosen == moves::STRUGGLE;
+    let (id, target) = if !struggle && encore.active && encore.mv != chosen {
         let target = get_random_target(b, user, encore.mv.data().target);
-        (encore.mv, index as u8, target)
+        (encore.mv, target)
     } else {
-        (chosen, move_index, get_target(b, user, chosen, target_loc))
+        (chosen, get_target(b, user, chosen, target_loc))
     };
     let mut mv = ActiveMove {
         id,
@@ -837,19 +821,26 @@ fn run_move_inner<const N: usize>(
         return Ok(MoveStep::Done);
     }
 
-    // A locked move (Outrage's later turns) costs no PP, nor does Struggle (`deductPP` finds no
+    // A locked move (Outrage's later turns, a two-turn move's second turn, also one Copycat
+    // called that the user does not know) costs no PP, nor does Struggle (`deductPP` finds no
     // slot, and Struggle goes on anyway).
     if super::lock::locked_move(b.state, user).is_none() && !struggle {
-        let pp = b.mon(pokemon).moves[move_index as usize].pp;
-        // `if (!pokemon.deductPP(baseMove, null, target) && move.id !== 'struggle')`: Spite or
-        // Eerie Spell took the last PP after the move was chosen. `cant ... nopp`,
+        // `if (!pokemon.deductPP(baseMove, null, target) && move.id !== 'struggle')`: `deductPP`
+        // finds the move's slot by id (`getMoveData`); none, or no PP left (Spite or Eerie Spell
+        // took the last PP after the move was chosen), is `cant ... nopp`,
         // `clearActiveMove(true)`, `moveThisTurnResult = false`; no `lastMove`, no MoveAborted
         // (oracle `rr-spite-no-pp`).
-        if pp == 0 {
+        let slot_pp = b
+            .mon(pokemon)
+            .moves
+            .iter()
+            .position(|m| m.id == id)
+            .map(|i| (i as u8, b.mon(pokemon).moves[i].pp));
+        let Some((move_index, pp)) = slot_pp.filter(|&(_, pp)| pp > 0) else {
             b.set_move_result(user, MoveResult::Failed);
             b.active_move = None;
             return Ok(MoveStep::Done);
-        }
+        };
         b.apply(crate::instruction::Instruction::SetPp {
             target: pokemon,
             move_index,
@@ -1452,12 +1443,16 @@ fn use_move<const N: usize>(
         get_move_targets(b, user, mv, target)?
     };
     deduct_pressure_pp(b, user, mv, &targets);
+    // TryMove's target: the last of the targets (after redirection), else the one aimed at.
+    let try_move_target = targets.last().copied().unwrap_or(target);
     // The move's own TryMove (`singleEvent('TryMove')`) returns `null` for a two-turn move's
     // charging turn (`attacker.addVolatile('twoturnmove', defender); return null;`) and for
     // Double Shock / Burn Up without the Electric / Fire type: the move stops, and `useMove`
     // stores that
     // `null` as the move's result (no failure for Stomping Tantrum and Temper Flare).
-    if !handlers::charge_try_move(b, user, mv) || !handlers::null_try_move(b, user, mv) {
+    if !handlers::charge_try_move(b, user, mv, try_move_target)
+        || !handlers::null_try_move(b, user, mv)
+    {
         if b.slot_history(user).move_this_turn_result == MoveResult::Undefined {
             b.set_move_result(user, MoveResult::Null);
         }
@@ -1465,7 +1460,6 @@ fn use_move<const N: usize>(
     }
     // TryMove: the move's own that fail it (Pollen Puff under Heal Block), then Dazzling,
     // Queenly Majesty, Armor Tail (`onFoeTryMove`).
-    let try_move_target = targets.last().copied().unwrap_or(target);
     if !handlers::fail_try_move(b, user, mv, try_move_target)
         || !ability_hooks::on_try_move(b, user, mv, try_move_target)
     {
@@ -1722,8 +1716,15 @@ fn deduct_pressure_pp<const N: usize>(
     targets: &[SlotRef],
 ) {
     // `if (!sourceEffect || callerMoveForPressure)`: a bounced move's source effect is Magic
-    // Bounce, a Dancer copy's Dancer, neither of which has PP.
-    if mv.has_bounced || b.external_move {
+    // Bounce, a Dancer copy's Dancer, neither of which has PP; nor has the `lockedmove` condition,
+    // which `runMove` passes as the source effect of a locked Pokémon's move (Outrage's later
+    // turns, a two-turn move's second, Uproar: oracle `nn-pressure-locked-outrage`). The lock is
+    // the one `runMove` saw: nothing between its check and this one starts or ends a lock. A move
+    // another called pays through its caller (Copycat), locked or not.
+    if mv.has_bounced
+        || b.external_move
+        || (mv.source_effect.is_none() && super::lock::locked_move(b.state, user).is_some())
+    {
         return;
     }
     let foe = user.side.other();
@@ -3830,10 +3831,9 @@ fn flinch_observable_later<const N: usize>(
         return true;
     }
     let queued_switcher = b.queue.iter().any(|action| {
-        let super::queue::ActionKind::Move { index, .. } = action.kind else {
+        let super::queue::ActionKind::Move { id, .. } = action.kind else {
             return false;
         };
-        let id = super::lock::action_move_id(b.mon(action.pokemon), index);
         !id.is_none()
             && (id.data().self_switch != SelfSwitch::No
                 || id == moves::REVIVAL_BLESSING

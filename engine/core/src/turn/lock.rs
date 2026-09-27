@@ -50,6 +50,22 @@ pub(crate) fn action_move_id(mon: &Pokemon, index: u8) -> MoveId {
     }
 }
 
+/// The move a choice of the Pokémon at `slot` (checked by `check_side`) queues: Showdown
+/// `chooseMove` pushes `moveid: lockedMoveID` for a locked Pokémon, whatever was picked, so its
+/// action is the locked move, also one it does not know (a two-turn or locking move Copycat
+/// called: its index in the choice is then 0 and means nothing); `MoveId::NONE` for the
+/// `recharge` pseudo-move; otherwise the move `index` names.
+pub(crate) fn queued_move_id<const N: usize>(state: &State<N>, slot: SlotRef, index: u8) -> MoveId {
+    match locked_move(state, slot) {
+        Some(Locked::Recharge) => MoveId::NONE,
+        Some(Locked::Move(id) | Locked::TwoTurn { id, .. }) => id,
+        None => action_move_id(
+            state.active(slot).expect("a queued move's user is active"),
+            index,
+        ),
+    }
+}
+
 /// What the Pokémon at `slot` is locked into, if anything.
 pub fn locked_move<const N: usize>(state: &State<N>, slot: SlotRef) -> Option<Locked> {
     let volatiles = &state.slot(slot).volatiles;

@@ -3,7 +3,7 @@
 use lab_engine::action::{JointAction, SlotAction};
 use lab_engine::gimmick::Gimmick;
 use lab_engine::state::{SideId, SlotRef, State};
-use lab_engine::turn::{RECHARGE_INDEX, STRUGGLE_INDEX};
+use lab_engine::turn::{locked_move, Locked, RECHARGE_INDEX, STRUGGLE_INDEX};
 
 /// One side's choice at a decision (see [`crate::game::Decision`]).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
@@ -22,8 +22,9 @@ impl<const N: usize> Choice<N> {
 /// `action` as Showdown's choice string against `order`, the side's current party order
 /// (what `switch N` counts; `lab_scenario::PartyOrder`): `move hypervoice 1, move protect`,
 /// `switch 3`, `pass`, `move 2 -1 mega`. Moves are written by id; the locked pseudo-moves as
-/// `move recharge` and `move struggle`. The inverse of `lab_scenario::parse_choice` for
-/// actions in their normalized form.
+/// `move recharge` and `move struggle`; a lock onto a move the Pokémon does not know (one Copycat
+/// called) as `move 1`, the only move of Showdown's request, whose index form takes no target.
+/// The inverse of `lab_scenario::parse_choice` for actions in their normalized form.
 pub fn format_choice<const N: usize>(
     state: &State<N>,
     side: SideId,
@@ -58,6 +59,15 @@ fn format_slot_action<const N: usize>(
             target,
             gimmick,
         } => {
+            let unknown_lock = match (locked_move(state, slot), state.active(slot)) {
+                (Some(Locked::Move(id) | Locked::TwoTurn { id, .. }), Some(mon)) => {
+                    !mon.moves.iter().any(|m| m.id == id)
+                }
+                _ => false,
+            };
+            if unknown_lock {
+                return "move 1".to_owned();
+            }
             let mut text = if index == RECHARGE_INDEX {
                 "move recharge".to_owned()
             } else if index == STRUGGLE_INDEX {

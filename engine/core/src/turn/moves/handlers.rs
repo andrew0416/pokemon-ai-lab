@@ -1022,29 +1022,25 @@ pub(super) fn on_try_hit<const N: usize>(
 }
 
 /// Why a move Copycat or Mirror Move would call (`useMove`, which the caller may not know) is not
-/// run: a move the engine does not support; a two-turn move or one that locks its user (the lock
-/// would name a move the user may not have; Rollout, Ice Ball); a move with a
-/// `beforeTurnCallback` or a `priorityChargeCallback` (the queue actions belong to the caller);
-/// a move whose own `onAfterMove` is not checked for a called move
-/// ([`called_after_move_checked`]). An Electric move while the user has Charge is run: Charge's
-/// `onAfterMove` sees the called move (oracle `x-copycat-charge`).
+/// run: a move the engine does not support; Rollout or Ice Ball (not standard: their lock's
+/// target location for a called move is unverified); a move whose own `onAfterMove` is not
+/// checked for a called move ([`called_after_move_checked`]). A called two-turn move charges
+/// and locks the caller's user into it (`twoturnmove` aimed at the drawn target:
+/// [`charge_try_move`]); one that locks its user (Outrage's `lockedmove`, Uproar) locks it into
+/// the called move; either lock is a move the user may not know, which its next action runs
+/// without PP (`lock::queued_move_id`; oracle `nn-copycat-solar-beam-lock`,
+/// `nn-copycat-outrage-lock`, `nn-copycat-uproar-lock`). A move with a `beforeTurnCallback` or
+/// a `priorityChargeCallback` queues nothing when called (`useMove` resolves no action): Mirror
+/// Coat fails without its condition (`rr-copycat-mirror-coat`), Chilly Reception needs none. An
+/// Electric move while the user has Charge is run: Charge's `onAfterMove` sees the called move
+/// (oracle `x-copycat-charge`).
 fn called_move_problem(id: MoveId) -> Option<String> {
     let data = id.data();
     if let Some(why) = super::super::support::move_unsupported(id) {
         return Some(why);
     }
-    let locks = data
-        .self_effect
-        .is_some_and(|s| s.volatile_status == crate::dex::conditions::LOCKEDMOVE)
-        || [moves::ROLLOUT, moves::ICE_BALL].contains(&id);
-    let own_actions =
-        super::has_before_turn_callback(id) || super::has_priority_charge_callback(id);
-    let why = if data.flags.contains(MoveFlags::CHARGE) {
-        "a two-turn move"
-    } else if locks {
-        "a lock on the called move"
-    } else if own_actions {
-        "queue actions of its own"
+    let why = if [moves::ROLLOUT, moves::ICE_BALL].contains(&id) {
+        "a Rollout lock on the called move"
     } else if !called_after_move_checked(id) {
         "its onAfterMove, unchecked for a called move"
     } else {
@@ -2045,13 +2041,17 @@ pub(super) fn target_volatile_base_power<const N: usize>(
 /// own volatile is removed and the move goes on; otherwise this is the charging turn: Meteor
 /// Beam and Electro Shot raise SpA first; Solar Beam and Solar Blade in sun and Electro Shot in
 /// rain (`effectiveWeather`) skip the charge, as does Power Herb (`ChargeMove`: `useItem`);
-/// else `twoturnmove` (duration 2, the move, the chosen target location) and the move's own
-/// volatile start, PrepareHit runs (Protean), and the move stops (`return null`). `false` =
-/// the move stops here.
+/// else `twoturnmove` (duration 2, the move, the target location) and the move's own volatile
+/// start, PrepareHit runs (Protean), and the move stops (`return null`). `false` = the move stops
+/// here. The target location is the chosen one (`lastMoveTargetLoc`), or for a move another
+/// called (Copycat: `effect.sourceEffect`) `attacker.getLocOf(defender)`, `defender` being
+/// TryMove's target: a live foe the called move drew (Showdown samples a slot only for a fainted
+/// defender, which a drawn target never is).
 pub(super) fn charge_try_move<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
+    defender: SlotRef,
 ) -> bool {
     let Some(own) = super::super::conditions::charge_volatile(mv.id) else {
         return true;
@@ -2091,6 +2091,11 @@ pub(super) fn charge_try_move<const N: usize>(
     if b.item(user) == items::POWER_HERB && b.use_item(user) {
         return true;
     }
+    let target_loc = if !mv.source_effect.is_none() && mv.data.target != MoveTarget::User {
+        super::loc_of(user, defender)
+    } else {
+        mv.target_loc
+    };
     b.set_volatile_state(
         user,
         Volatile::TwoTurnMove,
@@ -2098,7 +2103,7 @@ pub(super) fn charge_try_move<const N: usize>(
             active: true,
             duration: Volatile::TwoTurnMove.initial_duration(),
             mv: mv.id,
-            counter: super::super::lock::encode_target_loc(mv.target_loc),
+            counter: super::super::lock::encode_target_loc(target_loc),
             ..VolatileState::NONE
         },
     );
@@ -3246,7 +3251,7 @@ fn instruct<const N: usize>(
         slot: target,
         pokemon,
         kind: ActionKind::Move {
-            index: index as u8,
+            id: last,
             target: 0,
             fractional_tenths,
             round_source: None,
@@ -3361,10 +3366,9 @@ fn swap_positions<const N: usize>(
     to: SlotRef,
 ) -> Result<(), TurnError> {
     for action in &b.queue {
-        let ActionKind::Move { index, target, .. } = action.kind else {
+        let ActionKind::Move { id, target, .. } = action.kind else {
             continue;
         };
-        let id = super::super::lock::action_move_id(b.mon(action.pokemon), index);
         let tracks = id.data().tracks_target
             || super::super::abilities::tracks_original_target(b.mon(action.pokemon).ability);
         if target != 0 && tracks && super::at_loc(action.slot, target).side == from.side {

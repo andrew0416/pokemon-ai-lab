@@ -150,21 +150,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R17-trick-or-treat-curse",
     ),
     (
-        "rr-copycat-two-turn",
-        "Copycat calling Solar Beam (a two-turn move)",
-        "R21-copycat-called-moves",
-    ),
-    (
-        "rr-copycat-outrage",
-        "Copycat calling Outrage (a lock on the called move)",
-        "R21-copycat-called-moves",
-    ),
-    (
-        "rr-copycat-mirror-coat",
-        "Copycat calling Mirror Coat (queue actions of its own)",
-        "R21-copycat-called-moves",
-    ),
-    (
         "rr-teatime-klutz",
         "Sitrus Berry eaten by force while its holder ignores its item",
         "R22-forced-eat-ignored-item",
@@ -375,7 +360,6 @@ fn trick_or_treat_curse_glitch() {
 }
 
 #[test]
-#[ignore = "refused: Copycat calling {} — a two-turn move (board R21-copycat-called-moves)"]
 fn copycat_a_two_turn_move() {
     assert_exact_parity("rr-copycat-two-turn");
 }
@@ -384,13 +368,11 @@ fn copycat_a_two_turn_move() {
 /// and two random targets) is about 540,800 branches (`fullBranchEstimate`), over the oracle's
 /// 500,000 limit.
 #[test]
-#[ignore = "refused: Copycat calling {} — a lock on the called move (board R21-copycat-called-moves)"]
 fn copycat_outrage() {
     assert_extremes_parity("rr-copycat-outrage");
 }
 
 #[test]
-#[ignore = "refused: Copycat calling {} — queue actions of its own (board R21-copycat-called-moves)"]
 fn copycat_mirror_coat() {
     assert_exact_parity("rr-copycat-mirror-coat");
 }

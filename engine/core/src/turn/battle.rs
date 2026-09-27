@@ -1635,18 +1635,13 @@ impl<'a, const N: usize> Battle<'a, N> {
             return;
         };
         let action = self.queue[i];
-        let ActionKind::Move { index, .. } = action.kind else {
+        let ActionKind::Move { id, .. } = action.kind else {
             return;
         };
         let pokemon = action.pokemon;
-        if super::lock::action_move_id(self.mon(pokemon), index) == encored
-            || self.item(target) == items::MENTAL_HERB
-        {
+        if id == encored || self.item(target) == items::MENTAL_HERB {
             return;
         }
-        let Some(new_index) = self.mon(pokemon).moves.iter().position(|m| m.id == encored) else {
-            return;
-        };
         if super::moves::has_before_turn_callback(encored)
             || super::moves::has_priority_charge_callback(encored)
         {
@@ -1669,7 +1664,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         }
         if let Some(i) = self.will_move(target) {
             self.queue[i].kind = ActionKind::Move {
-                index: new_index as u8,
+                id: encored,
                 target: 0,
                 fractional_tenths: fractional,
                 round_source: None,

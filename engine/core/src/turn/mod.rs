@@ -970,12 +970,13 @@ pub(crate) fn check_side<const N: usize>(
             if !gimmick.is_none() {
                 return Err(invalid(format!("locked into {locked:?}; no {gimmick:?}")));
             }
+            // A lock onto a move the Pokémon does not know (a two-turn or locking move Copycat
+            // called) keeps index 0: the queued action is the locked move whatever the index
+            // (`lock::queued_move_id`).
             let index = match locked {
                 Locked::Recharge => RECHARGE_INDEX,
                 Locked::Move(id) | Locked::TwoTurn { id, .. } => {
-                    mon.moves.iter().position(|m| m.id == id).ok_or_else(|| {
-                        invalid(format!("locked move {} not known", id.data().name))
-                    })? as u8
+                    mon.moves.iter().position(|m| m.id == id).unwrap_or(0) as u8
                 }
             };
             // A two-turn move keeps the target location it was aimed at.
@@ -1230,16 +1231,15 @@ impl<const N: usize> Battle<'_, N> {
             // `FractionalPriority` for it too (Stall's and Mycelium Might's -0.1; Quick Claw and
             // Custap skip status moves), so a Stall holder recharges after everything at 0.
             ActionKind::Move {
-                index: RECHARGE_INDEX,
+                id,
                 fractional_tenths,
                 ..
-            } => (ORDER_MOVE, i32::from(fractional_tenths)),
+            } if id.is_none() => (ORDER_MOVE, i32::from(fractional_tenths)),
             ActionKind::Move {
-                index,
+                id,
                 fractional_tenths,
                 ..
             } => {
-                let id = lock::action_move_id(self.mon(action.pokemon), index);
                 let priority = if in_slot {
                     self.move_priority(action.slot, id)
                 } else {
@@ -1298,14 +1298,14 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
                             order: None,
                         });
                     }
+                    let id = lock::queued_move_id(state, slot, index);
                     // `resolveAction`: a move with a `beforeTurnCallback` also queues a
                     // `beforeTurnMove` action (the chosen move; Encore's override comes later).
-                    let id = lock::action_move_id(state.pokemon(pokemon), index);
                     if moves::has_before_turn_callback(id) {
                         queue.push(Action {
                             slot,
                             pokemon,
-                            kind: ActionKind::BeforeTurnMove { index },
+                            kind: ActionKind::BeforeTurnMove { id },
                             order: None,
                         });
                     }
@@ -1314,12 +1314,12 @@ fn initial_queue<const N: usize>(state: &State<N>, choices: &[JointAction<N>; 2]
                         queue.push(Action {
                             slot,
                             pokemon,
-                            kind: ActionKind::PriorityCharge { index },
+                            kind: ActionKind::PriorityCharge { id },
                             order: None,
                         });
                     }
                     ActionKind::Move {
-                        index,
+                        id,
                         target,
                         fractional_tenths: items::fractional_priority_tenths(state, slot, id),
                         round_source: None,
@@ -1360,12 +1360,12 @@ fn run_stage<const N: usize>(
         pending.fractional_drawn = true;
         for action in &mut pending.queue {
             if let ActionKind::Move {
-                index,
+                id,
                 fractional_tenths,
                 ..
             } = &mut action.kind
             {
-                let id = lock::action_move_id(b.mon(action.pokemon), *index);
+                let id = *id;
                 if let Some(t) = abilities::quick_draw(b, action.slot, action.pokemon, id) {
                     *fractional_tenths = t;
                 }
@@ -1448,14 +1448,14 @@ fn run_stage_inner<const N: usize>(
             let mut newcomers = Vec::new();
             match action.kind {
                 ActionKind::Move {
-                    index,
+                    id,
                     target,
                     round_source,
                     ..
                 } => {
                     let will_act = b.will_act();
                     if let moves::MoveStep::Suspended(progress) =
-                        moves::run_move(b, action.slot, index, target, will_act, round_source)?
+                        moves::run_move(b, action.slot, id, target, will_act, round_source)?
                     {
                         pending.in_progress = Some(progress);
                         return Ok(StageEnd::Continue);
@@ -1472,11 +1472,11 @@ fn run_stage_inner<const N: usize>(
                     mega::run_mega_evo(b, action.slot)?;
                 }
                 ActionKind::BeforeTurn => {}
-                ActionKind::BeforeTurnMove { index } => {
-                    moves::before_turn_move(b, action.slot, index);
+                ActionKind::BeforeTurnMove { id } => {
+                    moves::before_turn_move(b, action.slot, id);
                 }
-                ActionKind::PriorityCharge { index } => {
-                    moves::priority_charge_move(b, action.slot, index);
+                ActionKind::PriorityCharge { id } => {
+                    moves::priority_charge_move(b, action.slot, id);
                 }
             }
             return after_action(b, pending, &newcomers);
