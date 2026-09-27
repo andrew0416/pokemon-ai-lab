@@ -9,9 +9,7 @@ use lab_engine::action::{Gimmick, SlotAction};
 use lab_engine::rules::Ruleset;
 use lab_engine::turn::{enumerate_turn, TurnError};
 use lab_engine::Doubles;
-use lab_scenario::{
-    load_scenario_file, run_decision, scenario_choices, scenario_decision, scenario_positions,
-};
+use lab_scenario::scenario_choices;
 
 /// Runs the scenario's turn with one slot's choice replaced and expects an `InvalidChoice`
 /// whose reason contains `expected`.
@@ -34,21 +32,6 @@ fn move_choice(index: u8, target: i8) -> SlotAction {
         index,
         target,
         gimmick: Gimmick::None,
-    }
-}
-
-/// Runs a scenario without an oracle fixture (its first position) and expects the engine to
-/// refuse it with an `Unsupported` naming `expected`.
-fn assert_unsupported(name: &str, expected: &str) {
-    let loaded =
-        load_scenario_file(common::engine_dir().join(format!("oracle/scenarios/{name}.json")))
-            .unwrap();
-    let position = scenario_positions(&loaded).unwrap().remove(0);
-    let mut state = position.state.clone();
-    let decision = scenario_decision(&loaded, &position).unwrap();
-    match run_decision(&mut state, &decision) {
-        Err(TurnError::Unsupported(what)) => assert!(what.contains(expected), "{what}"),
-        other => panic!("expected Unsupported, got {other:?}"),
     }
 }
 
@@ -294,11 +277,12 @@ fn o38_instruct_repeats_a_targeted_move_at_its_last_target() {
     assert_exact_parity("o38-instruct-target");
 }
 
-/// Stealth Rock could knock out a newcomer that Toxic Spikes also poisons: Showdown's result
-/// depends on the order the hazards were set, which the state does not keep.
+/// Stealth Rock could knock out a newcomer that Toxic Spikes also poisons: Showdown runs the
+/// hazards in the order they were set (`effectOrder`), which `SideHistory::hazard_order` keeps
+/// (was refused; TT R2a, `tt_queue.rs`).
 #[test]
-fn o22_hazard_order_that_shows_is_unsupported() {
-    assert_unsupported("o22-hazard-order", "effectOrder");
+fn o22_hazard_order_newcomer_knocked_out() {
+    assert_exact_parity("o22-hazard-order");
 }
 
 #[test]

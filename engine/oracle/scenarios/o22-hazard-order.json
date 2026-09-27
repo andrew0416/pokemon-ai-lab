@@ -1,5 +1,5 @@
 {
- "description": "O22 refused case (no fixture): Tyranitar (patched to 10 HP) switches into Stealth Rock (25) and Toxic Spikes. Showdown runs the hazards in the order they were set (effectOrder): poisoned then knocked out, or knocked out first. The engine does not keep that order and refuses the switch-in.",
+ "description": "O22 (refused until TT R2a): Tyranitar (patched to 10 HP) switches into Stealth Rock (25) and Toxic Spikes. Showdown runs the hazards in the order they were set (effectOrder), which the engine keeps in SideHistory::hazard_order. (Either order ends with Tyranitar fainted; tt-hazard-order-* show the order.)",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [
