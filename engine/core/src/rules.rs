@@ -107,8 +107,12 @@ impl Ruleset {
                 if state.slot(slot).party_index.is_none() {
                     return Err(ActionError::EmptySlot { slot: s });
                 }
-                // `STRUGGLE_INDEX` stands for Struggle (the turn engine checks it is the only choice).
-                if index >= 4 && index != crate::turn::STRUGGLE_INDEX {
+                // `STRUGGLE_INDEX` stands for Struggle (the turn engine checks it is the only choice),
+                // `RECHARGE_INDEX` for the `recharge` pseudo-move of a Pokémon that must recharge
+                // (what `legal_joint_actions` offers it; board B38).
+                let recharging = index == crate::turn::RECHARGE_INDEX
+                    && crate::turn::locked_move(state, slot) == Some(crate::turn::Locked::Recharge);
+                if index >= 4 && index != crate::turn::STRUGGLE_INDEX && !recharging {
                     return Err(ActionError::MoveIndexOutOfRange { slot: s, index });
                 }
                 if target.unsigned_abs() as usize > N {
