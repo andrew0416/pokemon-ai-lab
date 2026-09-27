@@ -3,15 +3,15 @@
 //! `lab_engine::turn`, so a choice the solver considers is exactly one the turn engine
 //! accepts.
 
-use lab_engine::action::SlotAction;
+use lab_engine::action::{JointAction, SlotAction};
 use lab_engine::dex::{moves, MoveCategory, MoveTarget};
 use lab_engine::field::SlotCondition;
 use lab_engine::instruction::Outcome;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::{BattleResult, SideId, SlotRef, State};
 use lab_engine::turn::{
-    enumerate_replacements, enumerate_turn_with, legal_joint_actions, resume_turn_with,
-    side_must_replace, side_must_switch, EnumerateOptions, Suspension, TurnError,
+    enumerate_replacements, enumerate_turn_with, legal_joint_actions, locked_move,
+    resume_turn_with, side_must_replace, side_must_switch, EnumerateOptions, Suspension, TurnError,
 };
 
 use crate::choice::Choice;
@@ -151,6 +151,42 @@ pub fn legal_choices<const N: usize>(
                 .collect()
         }
     }
+}
+
+/// A turn choice as [`legal_choices`] lists it: a slot whose Pokémon is locked (recharging,
+/// a locking or two-turn move; `lab_engine::turn::locked_move`) takes the one action
+/// `legal_joint_actions` offers there, whatever the choice string said (Showdown's
+/// `chooseMove` ignores it, and the turn engine runs the locked move). Other slots are left
+/// as they are, so a parsed scenario choice compares equal to its legal counterpart (board
+/// B39: `move recharge 1` parses with a target the legal action does not carry).
+pub fn normalize_turn_choice<const N: usize>(
+    state: &State<N>,
+    ruleset: Ruleset,
+    side: SideId,
+    action: JointAction<N>,
+) -> JointAction<N> {
+    let locked: Vec<usize> = (0..N)
+        .filter(|&i| {
+            let slot = SlotRef {
+                side,
+                slot: i as u8,
+            };
+            state.active(slot).is_some_and(|p| p.hp > 0) && locked_move(state, slot).is_some()
+        })
+        .collect();
+    if locked.is_empty() {
+        return action;
+    }
+    let legal = legal_joint_actions(state, ruleset, side);
+    let mut out = action;
+    for i in locked {
+        if let Some(first) = legal.first() {
+            if legal.iter().all(|a| a[i] == first[i]) {
+                out[i] = first[i];
+            }
+        }
+    }
+    out
 }
 
 /// The slots a replacement or mid-turn decision asks `side` about, in slot order (for
