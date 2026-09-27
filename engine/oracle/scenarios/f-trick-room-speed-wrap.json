@@ -1,0 +1,93 @@
+{
+ "description": "V6 (Trick Room in Champions negates the Speed; no wrap-around). Under Trick Room and Tailwind, Dragapult (raw Speed 213, +6, Choice Scarf: action Speed 2556) is the fastest and so moves last: Snorlax (Speed 50) taunts it first and its Substitute fails (full HP, `taunt`, no substitute; one outcome). The base game's `trunc(10000 - speed, 13)` would give Dragapult 7444, the highest Speed, and the Substitute would go up first; the Champions mod overrides `getActionSpeed` (`data/mods/champions/scripts.ts`, 'Remove Trick Room underflow').",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Dragapult",
+    "item": "Choice Scarf",
+    "ability": "Clear Body",
+    "nature": "Jolly",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Substitute",
+     "Dragon Darts"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Shuckle",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Taunt",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 10
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Dragapult": {
+    "boosts": {
+     "spe": 6
+    }
+   }
+  },
+  "sides": {
+   "p1": {
+    "tailwind": 3
+   }
+  },
+  "field": {
+   "pseudoWeather": {
+    "trickroom": 3
+   }
+  }
+ },
+ "turn": {
+  "p1": "move substitute, move harden",
+  "p2": "move taunt 1, move harden"
+ }
+}

@@ -1,0 +1,88 @@
+{
+ "description": "V6 (raw Speed against Trick Room Speeds in Champions). stance-change-raw-speed under Trick Room, with Clefable (Multiscale, Speed 80) slower than Metagross (Friend Guard, Speed 122): Aegislash's forme change leaves `pokemon.speed` at the raw stored Speed 80, which Trick Room does not touch, while the others carry their negated Speeds (-80, -122). The ModifyDamage handlers sort by that: Expert Belt (80), Multiscale (-80), Friend Guard (-122), and the chain 4915, 2048, 3072 gives 1844/4096. With the base game's `10000 - speed` the raw 80 would sort last (Multiscale, Friend Guard, Expert Belt: 1843/4096).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Aegislash",
+    "item": "Expert Belt",
+    "ability": "Stance Change",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 2
+    },
+    "moves": [
+     "Smart Strike",
+     "King's Shield"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Shuckle",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Multiscale",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Metagross",
+    "item": "",
+    "ability": "Friend Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Aegislash": {
+    "boosts": {
+     "spe": 2
+    }
+   }
+  },
+  "field": {
+   "pseudoWeather": {
+    "trickroom": 3
+   }
+  }
+ },
+ "turn": {
+  "p1": "move smartstrike 1, move harden",
+  "p2": "move harden, move harden"
+ }
+}

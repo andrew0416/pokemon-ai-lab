@@ -955,7 +955,7 @@ enum SwitchInHandler {
 /// group), then sub-order (side condition 4, ability 7, item 8); the engine draws the same
 /// order once over the holders with a handler. Speeds are Showdown's `pokemon.speed`
 /// ([`Battle::event_speed`]): the action Speed of a newcomer whose `runSwitch` was queued
-/// (`insertChoice` calls `updateSpeed()`: Choice Scarf, paralysis, Tailwind and Trick Room
+/// (`insertChoice` calls `updateSpeed()`: Choice Scarf, paralysis, Tailwind and Trick Room's negation
 /// count; B30), the raw stored Speed of a Pokémon dragged in, the stage's Speed of a Pokémon
 /// already on the field. A handler
 /// is skipped if its holder fainted, an ability handler also if the holder's ability changed

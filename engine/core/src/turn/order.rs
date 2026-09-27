@@ -121,19 +121,18 @@ impl<const N: usize> Battle<'_, N> {
         self.trick_room_speed(speed)
     }
 
-    /// The tail of Showdown's `getActionSpeed`: `10000 - speed` under Trick Room, then
-    /// `trunc(speed, 13)`. The values are Showdown's own rather than a negation, because an
-    /// action Speed is also compared with Speeds Trick Room does not touch: the raw stored
-    /// Speed `setSpecies` leaves in `pokemon.speed` (a Pokémon dragged in, a forme change:
-    /// [`Battle::raw_speed`]) and the constant Speeds of handlers without a Pokémon. Under
-    /// Trick Room a Speed of 1809 or more wraps around to the top (`8191` for 1809).
+    /// The tail of `getActionSpeed` in the Champions mod (`data/mods/champions/scripts.ts`,
+    /// "Remove Trick Room underflow"): the Speed is negated under Trick Room. The base game's
+    /// `trunc(10000 - speed, 13)` is not used, so nothing wraps around at 1809 and a Speed that
+    /// Trick Room does not touch (the raw stored Speed `setSpecies` leaves in `pokemon.speed`,
+    /// the constant Speeds of handlers without a Pokémon) sorts above every Trick Room Speed
+    /// (`f-trick-room-speed-wrap`, `f-trick-room-raw-speed`; board V6).
     pub(crate) fn trick_room_speed(&self, speed: i32) -> i32 {
-        let speed = if self.field_active(FieldEffect::TrickRoom) {
-            10000 - speed
+        if self.field_active(FieldEffect::TrickRoom) {
+            -speed
         } else {
             speed
-        };
-        speed & 0x1FFF
+        }
     }
 
     /// Showdown `pokemon.updateSpeed()` for the Pokémon in `slot`: its `pokemon.speed` becomes
