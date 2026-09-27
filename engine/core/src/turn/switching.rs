@@ -727,7 +727,7 @@ fn switch_in_problem<const N: usize>(
             ));
         }
     }
-    super::update::berry_problem(mon)
+    None
 }
 
 /// Showdown `switchIn` without its `runSwitch`: a healthy old occupant runs `BeforeSwitchOut`

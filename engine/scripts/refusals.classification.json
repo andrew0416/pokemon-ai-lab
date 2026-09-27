@@ -10,7 +10,6 @@
   "abilities.rs::symbiosis_problem",
   "abilities.rs::rivalry_problem",
   "abilities.rs::paradox_suppressor_problem",
-  "update.rs::berry_problem",
   "moves/handlers.rs::called_move_problem"
  ],
  "proposed_boards": {
@@ -57,6 +56,10 @@
   "{} eaten by force while its holder ignores its item": {
    "board": "R22-forced-eat-ignored-item", "fixture": "rr-teatime-klutz",
    "what": "`eatItem(true)` (sim/pokemon.ts:1768) for a holder that ignores its item: `singleEvent('Eat')` is suppressed (sim/battle.ts:607: item handlers but Start, TakeItem and SetAbility), the berry is still consumed with `lastItem` and AfterUseItem. `update::eat_item_forced` skips `berry_on_eat` for such a holder instead of refusing. Also `oo-teatime-magic-room`."
+  },
+  "{}: {} would confuse a {} nature (confusion is not implemented)": {
+   "board": "B36-refusal-messages", "fixture": "oo-figy-berry-confusion",
+   "what": "Stale: confusion is implemented and `update::berry_on_eat` already confuses the eater of a Figy-type berry its nature dislikes (the Bug Bite / Pluck path was checked by `pluck-incinerate`). `update::berry_problem` is gone (with its call in `support::check_state` and `switching::switch_in_problem`); the holder's own Update eating matches the oracle (`oo-figy-berry-confusion`: Figy Berry, Timid Snorlax). The Figy-type berries are not standard."
   }
  },
  "entries": {
@@ -415,10 +418,6 @@
   "Protosynthesis / Flower Gift next to Air Lock / Cloud Nine (the suppressor's End WeatherChange)": {
    "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
    "why": "Protosynthesis and Flower Gift are on no standard species and cannot be copied (E8)."
-  },
-  "{}: {} would confuse a {} nature (confusion is not implemented)": {
-   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
-   "why": "The five Figy-type berries are not standard (E8). (The message is stale: `berry_on_eat` already adds the confusion.)"
   },
   "field effect #{} (value {})": {
    "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",

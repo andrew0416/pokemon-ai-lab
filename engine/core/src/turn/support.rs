@@ -2637,9 +2637,6 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
                     mon.item.data().handlers
                 ));
             }
-            if let Some(why) = super::update::berry_problem(mon) {
-                return Err(why);
-            }
             if !mon.species.data().handlers.is_empty() {
                 return Err(format!("{name}: species callbacks"));
             }

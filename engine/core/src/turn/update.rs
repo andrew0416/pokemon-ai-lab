@@ -20,7 +20,7 @@
 
 use crate::dex::{abilities, items, ItemId, Stat, NO_BOOSTS};
 use crate::instruction::Instruction;
-use crate::state::{Pokemon, PokemonRef, SlotRef, State, Status};
+use crate::state::{PokemonRef, SlotRef, State, Status};
 use crate::volatile::Volatile;
 
 use super::battle::{Battle, BoostEffect};
@@ -54,26 +54,6 @@ const STATUS_BERRIES: [(ItemId, &[Status]); 6] = [
     // Persim cures confusion (a volatile: `item_wants_eating` and `eat_item` special-case it).
     (items::PERSIM_BERRY, &[]),
 ];
-
-/// Why a berry holder cannot be simulated, if it cannot: a Figy-type berry confuses an eater
-/// whose nature lowers the berry's stat, and confusion is not implemented.
-pub(crate) fn berry_problem(mon: &Pokemon) -> Option<String> {
-    let disliked = FIGY_BERRIES
-        .iter()
-        .find(|&&(item, _)| item == mon.item)
-        .map(|&(_, stat)| stat);
-    if let Some(stat) = disliked {
-        if mon.nature.modifiers().1 == Some(stat) {
-            return Some(format!(
-                "{}: {} would confuse a {} nature (confusion is not implemented)",
-                mon.species.data().name,
-                mon.item.data().name,
-                mon.nature.name()
-            ));
-        }
-    }
-    None
-}
 
 /// Showdown `eachEvent('Update')`: the actives are sorted once by `pokemon.speed`
 /// (`speedSort(actives, (a, b) => b.speed - a.speed)`, ties shuffled), then each runs its
@@ -293,8 +273,8 @@ pub(crate) fn berry_on_eat<const N: usize>(
     } else if item == items::ORAN_BERRY {
         berry_heal(b, slot, 10.0);
     } else if let Some(&(_, disliked)) = FIGY_BERRIES.iter().find(|&&(i, _)| i == item) {
-        // `if (pokemon.getNature().minus === stat) pokemon.addVolatile('confusion');` (a holder
-        // with such a nature is refused before the turn: `berry_problem`; a Bug Bite user is not).
+        // `if (pokemon.getNature().minus === stat) pokemon.addVolatile('confusion');` (its holder
+        // or a Bug Bite / Pluck user).
         berry_heal(b, slot, max_hp / 3.0);
         if b.mon(pokemon).nature.modifiers().1 == Some(disliked) {
             b.add_volatile(slot, Volatile::Confusion);

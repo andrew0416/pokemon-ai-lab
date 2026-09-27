@@ -283,7 +283,9 @@ fn beat_up_powers<const N: usize>(b: &Battle<'_, N>, user: SlotRef) -> Result<[u
     }
     if bench.windows(2).any(|w| w[0] != w[1]) {
         return Err(b.unsupported(format!(
-            "Beat Up with benched allies of different power {bench:?} (their order in Showdown's              side.pokemon depends on the switches so far, which the state does not keep)"
+            "Beat Up with benched allies of different power {bench:?} (their order in \
+             Showdown's side.pokemon depends on the switches so far, which the state does not \
+             keep)"
         )));
     }
     powers.extend(bench);
