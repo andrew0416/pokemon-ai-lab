@@ -35,11 +35,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R2-hazard-effect-order",
     ),
     (
-        "rr-emergency-exit-replacement",
-        "Emergency Exit of a replacement hit by entry hazards",
-        "R3-emergency-exit-replacement",
-    ),
-    (
         "rr-future-sight-user-left",
         "hitting after its user left the field",
         "R5-future-move-edges",
@@ -161,12 +156,6 @@ fn trace_under_passed_gastro_acid() {
 #[ignore = "refused: {} switching into hazards whose order (Showdown effectOrder) decides the outcome (board R2-hazard-effect-order)"]
 fn hazard_order() {
     assert_exact_parity("rr-hazard-order");
-}
-
-#[test]
-#[ignore = "refused: Emergency Exit of a replacement hit by entry hazards (board R3-emergency-exit-replacement)"]
-fn emergency_exit_of_a_replacement() {
-    assert_exact_parity("rr-emergency-exit-replacement");
 }
 
 /// Follow Me (Clefable, p2a) and Rage Powder (Ariados, p2b) at equal Speed: Showdown's

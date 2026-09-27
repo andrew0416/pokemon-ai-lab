@@ -346,20 +346,25 @@ fn switching_problem_at_start<const N: usize>(
 /// changes). A side that must replace gives exactly as many switches as it can (empty slots,
 /// bounded by its bench); a side that need not gives none. The fainted occupants lose `fnt`,
 /// the newcomers' start handlers run in Speed order (ties uniformly at random), and the turn
-/// counter advances. `state` is left unchanged.
+/// counter advances — unless a newcomer's Emergency Exit asks for a switch first: that outcome
+/// is suspended (`Outcome::suspension`, [`resume_turn`], which then only ends the turn).
+/// `state` is left unchanged.
 pub fn enumerate_replacements<const N: usize>(
     state: &mut State<N>,
     choices: [[Option<u8>; N]; 2],
 ) -> Result<Vec<Outcome>, TurnError> {
     check_replacements(state, &choices)?;
-    let endings = enumerate_stages(state, (), EnumerateOptions::default(), |b, _| {
-        run_replacements(b, &choices)?;
+    // The replacement runs as the only stage; a newcomer's Emergency Exit (entry hazards took
+    // it to half) suspends it for another switch, and the resumed turn only has `endTurn` left.
+    let mut start = Pending::new(Vec::new());
+    start.fractional_drawn = true;
+    start.residual_done = true;
+    let endings = enumerate_stages(state, start, EnumerateOptions::default(), |b, _| {
+        let end = run_replacements(b, &choices)?;
         items::stage_end_check(b)?;
-        Ok(StageEnd::Finished)
+        Ok(end)
     })?;
-    Ok(outcomes(state, endings, |()| {
-        unreachable!("a replacement never suspends")
-    }))
+    Ok(outcomes(state, endings, Suspension))
 }
 
 /// Validates a replacement decision (see [`enumerate_replacements`]).
@@ -434,7 +439,7 @@ fn check_replacements<const N: usize>(
 fn run_replacements<const N: usize>(
     b: &mut Battle<'_, N>,
     choices: &[[Option<u8>; N]; 2],
-) -> Result<(), TurnError> {
+) -> Result<StageEnd, TurnError> {
     let mut switches: Vec<(SlotRef, u8, i32)> = Vec::new();
     for (side, choice) in [SideId::One, SideId::Two].into_iter().zip(choices) {
         for (i, &c) in choice.iter().enumerate() {
@@ -468,33 +473,76 @@ fn run_replacements<const N: usize>(
         let (slot, party_index, _) = switches.remove(pick);
         let hp_before = b.state.side(slot.side).party[usize::from(party_index)].hp;
         switching::switch_in(b, slot, party_index, true)?;
-        newcomers.push((slot, hp_before));
+        newcomers.push(Newcomer::queued(b, slot, hp_before));
     }
     // The last `instaswitch` action's `runAction` tail: `eachEvent('Update')` before the
     // queued `runSwitch` actions (see `switching::run_switch`).
     update::update_event(b)?;
     // `runSwitch` takes every queued `runSwitch` action: nothing is left in the queue.
     b.queue_done = true;
-    let slots: Vec<SlotRef> = newcomers.iter().map(|n| n.0).collect();
+    let slots: Vec<SlotRef> = newcomers.iter().map(|n| n.slot).collect();
     switching::run_switch_in(b, &slots)?;
     if b.is_over() {
-        return Ok(());
-    }
-    // A replacement's Emergency Exit (entry hazards took it to half) would ask for another
-    // switch before the turn ends; the replacement decision cannot suspend.
-    for &(slot, hp_before) in &newcomers {
-        if switching::emergency_exit_would_trigger(b, slot, hp_before) {
-            return Err(b.unsupported("Emergency Exit of a replacement hit by entry hazards"));
-        }
+        return Ok(StageEnd::Finished);
     }
     refuse_switch_request(b, "a replacement")?;
     // `runAction`'s tail with nothing left in the queue: `checkFainted` (a newcomer that fainted
-    // to entry hazards gets `fnt`), the Update, then `endTurn` (which waits for another
+    // to entry hazards gets `fnt`), the Update, Emergency Exit for the `runSwitch` action's
+    // Pokémon if the entry hazards took it to half (board R3), the switch request it raises
+    // (the turn waits; `resume_turn` then only ends it), else `endTurn` (which waits for another
     // replacement if one is needed).
     residual::check_fainted(b);
     update::update_event(b)?;
+    run_switch_emergency_exit(b, &newcomers);
+    if request_switches(b) {
+        return Ok(StageEnd::Suspended);
+    }
     residual::end_turn(b);
-    Ok(())
+    Ok(StageEnd::Finished)
+}
+
+/// A Pokémon a `switchIn` just put on the field, whose `runSwitch` is queued.
+#[derive(Clone, Copy, Debug)]
+struct Newcomer {
+    slot: SlotRef,
+    /// Its HP before the switch-in (entry hazards), for Emergency Exit.
+    hp_before: i16,
+    /// Its queued `runSwitch` action's Speed: `insertChoice` stores `getActionSpeed()` then.
+    speed: i32,
+}
+
+impl Newcomer {
+    /// A newcomer whose `runSwitch` action was just queued.
+    fn queued<const N: usize>(b: &Battle<'_, N>, slot: SlotRef, hp_before: i16) -> Newcomer {
+        Newcomer {
+            slot,
+            hp_before,
+            speed: b.action_speed(slot),
+        }
+    }
+}
+
+/// `runAction('runSwitch')`'s tail: `if (pokemon.hp && pokemon.hp <= pokemon.maxhp / 2 &&
+/// pokemonOriginalHP > pokemon.maxhp / 2) runEvent('EmergencyExit', pokemon)` for the action's
+/// own Pokémon only, the first queued `runSwitch` (`actions.runSwitch` takes the batch's others
+/// without a tail of their own). The `runSwitch` actions sort by their stored Speed;
+/// `insertChoice` places one at random among its equals, which makes each tied newcomer first
+/// with equal probability. Drawn only when a newcomer could trigger.
+fn run_switch_emergency_exit<const N: usize>(b: &mut Battle<'_, N>, newcomers: &[Newcomer]) {
+    if !newcomers
+        .iter()
+        .any(|n| switching::emergency_exit_would_trigger(b, n.slot, n.hp_before))
+    {
+        return;
+    }
+    let best = newcomers.iter().map(|n| n.speed).max().expect("non-empty");
+    let tied: Vec<&Newcomer> = newcomers.iter().filter(|n| n.speed == best).collect();
+    let first = if tied.len() == 1 {
+        tied[0]
+    } else {
+        tied[b.rng.uniform(tied.len())]
+    };
+    switching::emergency_exit_check(b, first.slot, first.hp_before);
 }
 
 /// The end of Showdown `runAction` for a move, switch or Mega Evolution: faints (the turn ends
@@ -502,7 +550,7 @@ fn run_replacements<const N: usize>(
 fn after_action<const N: usize>(
     b: &mut Battle<'_, N>,
     pending: &mut Pending,
-    newcomers: &[(SlotRef, i16)],
+    newcomers: &[Newcomer],
 ) -> Result<StageEnd, TurnError> {
     if b.faint_messages(true)? {
         pending.done = true;
@@ -510,10 +558,8 @@ fn after_action<const N: usize>(
         return Ok(StageEnd::Finished);
     }
     update::update_event(b)?;
-    // `runSwitch`'s tail: Emergency Exit for a newcomer the entry hazards took to half.
-    for &(slot, hp_before) in newcomers {
-        switching::emergency_exit_check(b, slot, hp_before);
-    }
+    // `runSwitch`'s tail: Emergency Exit for its newcomer if the entry hazards took it to half.
+    run_switch_emergency_exit(b, newcomers);
     if request_switches(b) {
         Ok(StageEnd::Suspended)
     } else {
@@ -696,7 +742,7 @@ fn run_mid_turn_switches<const N: usize>(
                 b.queue.retain(|a| a.pokemon != party);
                 let hp_before = b.mon(party).hp;
                 switching::switch_in(b, held, party_index, false)?;
-                newcomers.push((held, hp_before));
+                newcomers.push(Newcomer::queued(b, held, hp_before));
             }
             continue;
         }
@@ -704,7 +750,7 @@ fn run_mid_turn_switches<const N: usize>(
         // The request set `skipBeforeSwitchOutEventFlag`: no BeforeSwitchOut and no Update
         // before the flagged Pokémon leaves.
         switching::instaswitch_in(b, slot, party_index, true)?;
-        newcomers.push((slot, hp_before));
+        newcomers.push(Newcomer::queued(b, slot, hp_before));
     }
     // The last `instaswitch` action's `runAction` tail: `eachEvent('Update')` before the
     // queued `runSwitch` actions (see `switching::run_switch`).
@@ -713,7 +759,7 @@ fn run_mid_turn_switches<const N: usize>(
     // when nothing else is left, i.e. for a batch requested after the residual (Emergency
     // Exit, Eject Pack at the residual). Cud Chew reads it.
     b.queue_done = pending.residual_done && b.queue.is_empty();
-    let slots: Vec<SlotRef> = newcomers.iter().map(|n| n.0).collect();
+    let slots: Vec<SlotRef> = newcomers.iter().map(|n| n.slot).collect();
     switching::run_switch_in(b, &slots)?;
     after_action(b, pending, &newcomers)
 }
@@ -1478,7 +1524,12 @@ fn run_stage_inner<const N: usize>(
                     let hp_before =
                         b.state.side(action.slot.side).party[usize::from(party_index)].hp;
                     switching::run_switch(b, action.slot, party_index)?;
-                    newcomers.push((action.slot, hp_before));
+                    // Its own `runSwitch` ran: the only newcomer, its Speed unused.
+                    newcomers.push(Newcomer {
+                        slot: action.slot,
+                        hp_before,
+                        speed: 0,
+                    });
                 }
                 ActionKind::Mega => {
                     mega::run_mega_evo(b, action.slot)?;

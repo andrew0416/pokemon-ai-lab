@@ -126,6 +126,11 @@
    "board": "B36-refusal-messages",
    "fixture": "oo-figy-berry-confusion",
    "what": "Stale: confusion is implemented and `update::berry_on_eat` already confuses the eater of a Figy-type berry its nature dislikes (the Bug Bite / Pluck path was checked by `pluck-incinerate`). `update::berry_problem` is gone (with its call in `support::check_state` and `switching::switch_in_problem`); the holder's own Update eating matches the oracle (`oo-figy-berry-confusion`: Figy Berry, Timid Snorlax). The Figy-type berries are not standard."
+  },
+  "Emergency Exit of a replacement hit by entry hazards": {
+   "board": "R3-emergency-exit-replacement",
+   "fixture": "rr-emergency-exit-replacement",
+   "what": "A replacement can suspend: `runAction('runSwitch')`'s tail (checkFainted, Update) checks Emergency Exit for the action's own Pokémon, the first queued `runSwitch` (fastest newcomer, Speed ties at random), and the switch request it raises suspends `enumerate_replacements`; `resume_turn` then only runs `endTurn` (`uu-emergency-exit-replacement-resume`, `uu-emergency-exit-two-replacements-tie`, `uu-emergency-exit-two-replacements-fast`)."
   }
  },
  "entries": {
@@ -178,13 +183,6 @@
    "board": "R2-hazard-effect-order",
    "repro": "rr-hazard-order",
    "why": "Stealth Rock / Spikes with Toxic Spikes (or Sticky Web against Mirror Armor, Corviknight) on one side and a newcomer the damage can knock out: Showdown runs them in the order they were set (a Poison type knocked out first leaves the Toxic Spikes), which the state does not keep."
-  },
-  "Emergency Exit of a replacement hit by entry hazards": {
-   "reachable": "yes",
-   "kind": "mechanic",
-   "board": "R3-emergency-exit-replacement",
-   "repro": "rr-emergency-exit-replacement",
-   "why": "Golisopod (Emergency Exit) replacing a fainted Pokémon onto Stealth Rock / Spikes that take it to half: Showdown asks for another switch before the turn ends; the replacement decision cannot suspend."
   },
   "{} of {} hitting after its user left the field": {
    "reachable": "yes",
@@ -493,7 +491,7 @@
    "reachable": "no",
    "kind": "past-only",
    "board": "R20-generic-guards",
-   "why": "During the battle start or a replacement only Eject Pack (not standard, E8) raises a switch request; a replacement's Emergency Exit is refused before (R3)."
+   "why": "During the battle start or a replacement only Eject Pack (not standard, E8) raises a switch request before the tail's Emergency Exit check (R3, which suspends a replacement)."
   },
   "Order Up from a commanded Dondozo whose Tatsugiri is gone (the source of `commanded` is not in the state)": {
    "reachable": "no",

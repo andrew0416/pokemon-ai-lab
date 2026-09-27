@@ -1,0 +1,120 @@
+{
+ "description": "Board R3a: rr-emergency-exit-replacement, then p2 answers Golisopod's Emergency Exit request (after the replacement) with Snorlax; Snorlax takes Stealth Rock and the turn ends (turn 2).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Rough Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Stealth Rock",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Glimmora",
+    "item": "",
+    "ability": "Toxic Debris",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Memento",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Golisopod",
+    "item": "",
+    "ability": "Emergency Exit",
+    "nature": "Serious",
+    "evs": {
+     "atk": 32
+    },
+    "moves": [
+     "Protect",
+     "Liquidation"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "1234"
+ },
+ "setupTurns": [
+  [
+   "move stealthrock, move calmmind",
+   "move memento 1, move calmmind"
+  ]
+ ],
+ "patch": {
+  "p2": {
+   "Golisopod": {
+    "hp": 100
+   }
+  }
+ },
+ "turn": {
+  "p1": "",
+  "p2": "switch 3"
+ },
+ "midTurn": {
+  "p2": [
+   "switch 4"
+  ]
+ }
+}

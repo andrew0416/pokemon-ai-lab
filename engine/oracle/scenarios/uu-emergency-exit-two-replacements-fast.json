@@ -1,0 +1,149 @@
+{
+ "description": "Board R3a: as uu-emergency-exit-two-replacements-tie, but p1's Golisopod is faster (Speed SP 32): its runSwitch action is first, so only it gets the Emergency Exit check; p2's Golisopod stays in at 63 HP.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Rough Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Stealth Rock",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Glimmora",
+    "item": "",
+    "ability": "Toxic Debris",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Memento",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Golisopod",
+    "item": "",
+    "ability": "Emergency Exit",
+    "nature": "Serious",
+    "evs": {
+     "atk": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Protect",
+     "Liquidation"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Rough Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Stealth Rock",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Glimmora",
+    "item": "",
+    "ability": "Toxic Debris",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Memento",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Golisopod",
+    "item": "",
+    "ability": "Emergency Exit",
+    "nature": "Serious",
+    "evs": {
+     "atk": 32
+    },
+    "moves": [
+     "Protect",
+     "Liquidation"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "1234"
+ },
+ "setupTurns": [
+  [
+   "move stealthrock, move memento 1",
+   "move stealthrock, move memento 1"
+  ]
+ ],
+ "patch": {
+  "p1": {
+   "Golisopod": {
+    "hp": 100
+   }
+  },
+  "p2": {
+   "Golisopod": {
+    "hp": 100
+   }
+  }
+ },
+ "turn": {
+  "p1": "switch 3",
+  "p2": "switch 3"
+ }
+}
