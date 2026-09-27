@@ -41,10 +41,11 @@
 // and `setupStates[k]` (canonical state after setup turn k) keep only the branch of the start or of
 // that setup turn that ends in the pinned state, instead of the scenario seed's natural path. The
 // branch is found by replaying `startTrace`/`setupTraces[k]` (a trace from an earlier report) if
-// given and still valid, else by up to --setup-walks random walks, else (a setup turn) by the staged
-// enumeration of that turn in extremes mode, up to --setup-staged-max-branches runs, dropping
-// stage states that can no longer end in the pin (V3: a heavy lead turn, which no report ever
-// supplies a trace for, stays reachable), else by a depth-first enumeration of up to
+// given and still valid, else by up to --setup-walks random walks, else (a setup turn) by a staged
+// search of that turn, in extremes mode and then with every roll, each up to
+// --setup-staged-max-branches runs, dropping stage states that can no longer end in the pin (V3: a
+// heavy lead turn, which no report ever supplies a trace for, stays reachable; `findPinnedStaged`),
+// else by a depth-first enumeration of up to
 // --setup-max-branches branches (extremes mode). The report's `startTrace` and `setupTraces` are the
 // branches used, `setupSearch` how each pinned setup turn was found.
 
@@ -290,16 +291,20 @@ function findPinned(make, run, pin, trace, opts, staged = null) {
 	if (process.env.LAB_ORACLE_PROGRESS) {
 		console.error(`${opts.what}: ${walks} walks missed the pin (${Math.round((Date.now() - walkStart) / 1000)} s)`);
 	}
-	if (staged && stagedCap > 0) {
-		const search = findPinnedStaged(staged, pin, target, opts, stagedCap);
-		tried += `, staged search ${search.note}`;
+	// Extremes first (lab-parity pins its outcomes from the engine's min/max-roll distribution); when
+	// no extremes branch ends in the pin, every roll (a pin with a middle roll: one recorded under
+	// another roll mode, or by an engine that drew a roll the oracle's reduced modes do not).
+	for (const mode of staged && stagedCap > 0 ? ['extremes', 'full'] : []) {
+		const search = findPinnedStaged(staged, pin, target, {...opts, searchMode: mode}, stagedCap);
+		tried += `, staged ${mode} search ${search.note}`;
 		if (search.prefix) {
-			const prng = new ScriptedPRNG(search.prefix, 'extremes');
+			const prng = new ScriptedPRNG(search.prefix, mode);
 			const battle = attempt(prng);
-			if (stableKey(canonical(battle)) === target) return found(battle, prng, `staged search (${search.note})`);
+			if (stableKey(canonical(battle)) === target) return found(battle, prng, `staged ${mode} search (${search.note})`);
 			throw new Error(`${opts.what}: the staged search's branch does not replay the pinned state`);
 		}
-		if (search.complete) throw new Error(`${opts.what}: no branch reaches the pinned state (${tried})`);
+		if (!search.complete) break; // over the cap: the depth-first enumeration below is the last resort
+		if (mode === 'full') throw new Error(`${opts.what}: no branch reaches the pinned state (${tried})`);
 	}
 	const cap = opts.setupMaxBranches ?? 200000;
 	let prefix = [];
@@ -316,8 +321,8 @@ function findPinned(make, run, pin, trace, opts, staged = null) {
 	throw new Error(`${opts.what}: no branch reaches the pinned state (${tried}, ${branches} branches)`);
 }
 
-// The staged search of one pinned setup turn in extremes mode: the turn run one action at a time as
-// in enumerateStaged, depth first, the stage states closest to the pin first (`pinDistance`), each
+// The staged search of one pinned setup turn (roll mode `opts.searchMode`, default extremes): the
+// turn run one action at a time as in enumerateStaged, depth first, the stage states closest to the pin first (`pinDistance`), each
 // distinct stage state expanded once (its future does not depend on how it was reached: the staged
 // enumeration's merge), stage states that `pinPruner` shows cannot end in the pin dropped, and
 // stopped at the first outcome equal to the pin. Complete (every distinct stage state is expanded
@@ -328,7 +333,7 @@ function findPinned(make, run, pin, trace, opts, staged = null) {
 function findPinnedStaged(staged, pin, target, opts, cap) {
 	const crypto = require('node:crypto');
 	const scenario = {turn: staged.turn, midTurn: staged.midTurn};
-	const o = {mode: 'extremes', collapse: opts.collapse, keepNominalDraws: opts.keepNominalDraws};
+	const o = {mode: opts.searchMode || 'extremes', collapse: opts.collapse, keepNominalDraws: opts.keepNominalDraws};
 	const prune = pinPruner(pin);
 	const distance = pinDistance(pin);
 	const visited = new Set();

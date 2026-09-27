@@ -67,7 +67,7 @@ function main() {
 				collapse: true, setupWalks: 0, setupStagedMaxBranches: args.cap, setupMaxBranches: 0,
 			});
 			row.how = found.search[k];
-			row.status = /^staged search/.test(row.how) ? 'found' : `found by ${row.how}`;
+			row.status = /^staged (extremes|full) search/.test(row.how) ? 'found' : `found by ${row.how}`;
 		} catch (e) {
 			row.status = /pinned state/.test(e.message) ? 'not found' : 'error';
 			row.error = String(e.message).slice(0, 300);
