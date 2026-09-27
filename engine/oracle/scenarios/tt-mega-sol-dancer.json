@@ -1,0 +1,70 @@
+{
+ "description": "TT B25a: the Mega Sol window ends with the Mega Sol user's own move. In Pelipper's rain, Mega Meganium's Aqua Step hits Pelipper as in sun (0.5x); Oricorio (Dancer) copies it at Meganium. The copy runs with Oricorio as the active Pokemon (runMove: setActiveMove), so it sees the rain (1.5x), not Mega Sol's sun.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Meganium",
+    "item": "Meganiumite",
+    "ability": "Overgrow",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Aqua Step"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Pelipper",
+    "item": "",
+    "ability": "Drizzle",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Oricorio",
+    "item": "",
+    "ability": "Dancer",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move aquastep 1 mega, move harden",
+  "p2": "move harden, move harden"
+ }
+}

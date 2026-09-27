@@ -30,3 +30,12 @@ fn court_change_keeps_the_hazard_order() {
 fn pickup_picks_up_a_flung_item() {
     assert_exact_parity("tt-fling-pickup");
 }
+
+/// B25a (no bug; regression lock): Mega Sol's sun belongs to the active Pokémon. In rain, Mega
+/// Meganium's Aqua Step hits as in sun (0.5x); Oricorio's Dancer copy runs with Oricorio as the
+/// active Pokémon (`runMove`: `setActiveMove`) and sees the rain (1.5x). Oracle recorded with
+/// `--collapse-secondaries` (Aqua Step's 100% Speed raise: exact).
+#[test]
+fn mega_sol_sun_ends_with_the_users_move() {
+    assert_exact_parity("tt-mega-sol-dancer");
+}
