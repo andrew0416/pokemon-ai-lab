@@ -1,5 +1,5 @@
 //! Parity positions from played games (FF-parity-harness): plays games between the two teams of
-//! a scenario and writes every decision after the lead turn as a one-decision scenario that
+//! a scenario and writes every decision, the lead turn included, as a one-decision scenario that
 //! `enumerate.cjs` (Showdown) and `lab-check` (lab-engine) can both replay, so the engine's
 //! parity is measured on real mid-game positions (statuses, boosts, volatiles, hazards, weather
 //! timers, half-fainted teams, replacements) rather than on hand-built one-turn fixtures.
@@ -24,6 +24,12 @@
 //! each side (pinned outcome kept), not the product of every setup branch. Team files are
 //! referenced by paths relative to `--out-dir`. Files are named
 //! `<name>.<policy>.g<game>.s<step>.json`; `<name>.<policy>.games.json` lists the games.
+//!
+//! Step 0 is the lead turn (no setup turns; V3). It is a position like any other, so the lead
+//! turn is compared too, and its oracle report carries the traces of the lead turn's outcomes:
+//! `parity_sweep.py` writes the pinned one into the next position's `setupTraces`, so Showdown
+//! replays the lead turn instead of searching for it (a heavy lead turn once made a whole game
+//! unreachable). `--first-step 1` leaves it out, as before.
 //!
 //! Game `g` of seed `s` is deterministic given the engine and the policy.
 
@@ -157,7 +163,7 @@ fn run() -> Result<(), String> {
     let mut seed = 1u64;
     let mut threads = 0usize;
     let mut max_turns = 40u16;
-    let mut first_step = 1usize;
+    let mut first_step = 0usize;
     let mut policy = Policy::Random;
     let mut rolls = RollMode::Median;
     let mut eval = "heuristic".to_owned();
