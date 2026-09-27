@@ -89,7 +89,9 @@ pub(crate) fn residual<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), Turn
             return Ok(());
         }
     }
-    // `runAction`'s `faintMessages()` after the residual action.
+    // `runAction`'s phazing step after the residual action: a Red Card a future move hit drags
+    // its user out (board R5b), then `faintMessages()`.
+    super::drag_outs(b)?;
     b.faint_messages(true)?;
     Ok(())
 }

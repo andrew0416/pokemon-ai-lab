@@ -1,0 +1,88 @@
+{
+ "description": "Board B41a: Scizor's U-turn hits Clefable's Protect; Togekiss's Copycat then calls U-turn, whose random foe is protected too. Neither U-turn does anything, so nobody switches: Copycat's own runMoveEffects tail has no selfSwitch (the called move's does not leak).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Scizor",
+    "item": "",
+    "ability": "Technician",
+    "nature": "Serious",
+    "evs": {
+     "spe": 32
+    },
+    "moves": [
+     "U-turn",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Togekiss",
+    "item": "",
+    "ability": "Serene Grace",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Copycat",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Calm Mind"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move uturn 1, move copycat",
+  "p2": "move protect, move protect"
+ }
+}

@@ -30,19 +30,9 @@ fn any_fixture(name: &str) -> Value {
 /// (scenario, text the refusal must contain, board task).
 const REFUSED: &[(&str, &str, &str)] = &[
     (
-        "rr-emergency-exit-replacement",
-        "Emergency Exit of a replacement hit by entry hazards",
-        "R3-emergency-exit-replacement",
-    ),
-    (
-        "rr-future-sight-user-left",
-        "hitting after its user left the field",
-        "R5-future-move-edges",
-    ),
-    (
-        "rr-future-sight-red-card",
-        "Future Sight hitting a holder of Red Card",
-        "R5-future-move-edges",
+        "uu-future-sight-absent-user-unnerve",
+        "hitting after its user left the field, whose position holds Tyranitar with Unnerve",
+        "R5c-future-move-absent-user-occupant",
     ),
     (
         "rr-beat-up-bench",
@@ -158,32 +148,12 @@ fn hazard_order() {
     assert_exact_parity("rr-hazard-order");
 }
 
-// ---- still refused: Showdown's answer, for the board task that implements it --------------
-
-#[test]
-#[ignore = "refused: Emergency Exit of a replacement hit by entry hazards (board R3-emergency-exit-replacement)"]
-fn emergency_exit_of_a_replacement() {
-    assert_exact_parity("rr-emergency-exit-replacement");
-}
-
 /// Follow Me (Clefable, p2a) and Rage Powder (Ariados, p2b) at equal Speed: Showdown's
 /// `compareRedirectOrder` puts the holder whose ability state started first (Clefable) first, so
 /// Follow Me takes the move whoever moved first (was refused; board R4, `oo_redirection_tie.rs`).
 #[test]
 fn redirection_tie() {
     assert_exact_parity("rr-redirect-tie");
-}
-
-#[test]
-#[ignore = "refused: {} of {} hitting after its user left the field (board R5-future-move-edges)"]
-fn future_sight_after_its_user_left() {
-    assert_exact_parity("rr-future-sight-user-left");
-}
-
-#[test]
-#[ignore = "refused: {} hitting a holder of {} (board R5-future-move-edges)"]
-fn future_sight_on_a_red_card_holder() {
-    assert_exact_parity("rr-future-sight-red-card");
 }
 
 #[test]

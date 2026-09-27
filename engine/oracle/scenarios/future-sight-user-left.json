@@ -1,5 +1,5 @@
 {
- "description": "Future Sight whose user switched out before it hits: Showdown computes the hit with the benched Slowking's stored stats (ability and item ignored); the engine refuses it (no damage path for an attacker off the field).",
+ "description": "Future Sight whose user switched out before it hits: Showdown computes the hit with the benched Slowking's stored stats (ability and item ignored); the engine seats the benched user in a position of its side for the hit only (moves::AbsentUser, board R5a).",
  "format": "gen9championsdoublescustomgame",
  "p1": {
   "team": [

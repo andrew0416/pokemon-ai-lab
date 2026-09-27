@@ -20,6 +20,7 @@ use crate::dex::{
     TypeImmunities, TypeRelation, NO_BOOSTS,
 };
 use crate::field::{Effect, FieldEffect, SideEffect, Terrain, Weather};
+use crate::instruction::Instruction;
 use crate::state::{MoveResult, PokemonRef, SideId, SlotRef, Status, SwitchFlag};
 use crate::volatile::Volatile;
 
@@ -469,21 +470,16 @@ pub(crate) fn future_move_hit<const N: usize>(
         return Ok(());
     }
     let data = id.data();
-    let Some(user) = Battle::<N>::slots(source.side).find(|&s| b.occupant(s) == Some(source))
-    else {
-        return Err(b.unsupported(format!(
-            "{} of {} hitting after its user left the field",
-            data.name,
-            b.mon(source).species.data().name
-        )));
+    // A user that left the field (switched out or fainted) hits from the bench (R5a): it stands
+    // in a position of its side for the hit only (`AbsentUser`).
+    let on_field = Battle::<N>::slots(source.side).find(|&s| b.occupant(s) == Some(source));
+    let absent = match on_field {
+        Some(_) => None,
+        None => Some(AbsentUser::place(b, slot, source, id)?),
     };
-    if b.item(slot) == items::RED_CARD {
-        return Err(b.unsupported(format!(
-            "{} hitting a holder of {}",
-            data.name,
-            b.item(slot).data().name
-        )));
-    }
+    let user = on_field.unwrap_or_else(|| absent.as_ref().expect("placed").slot);
+    // A Red Card on the target drags the (active) user out after the residual
+    // (`residual::residual` runs the phazing step): board R5b.
     b.remove_volatile(slot, Volatile::Protect);
     b.remove_volatile(slot, Volatile::Endure);
     // `if (data.source.hasAbility('normalize')) data.moveData.type = 'Normal';`
@@ -535,6 +531,9 @@ pub(crate) fn future_move_hit<const N: usize>(
     if let HitOutcome::Suspended(_) = try_spread_move_hit(b, user, &mut mv, vec![slot], false)? {
         return Err(b.unsupported(format!("{}: a multi-hit future move", data.name)));
     }
+    if let Some(absent) = absent {
+        absent.remove(b);
+    }
     // `if (data.source.isActive && data.source.hasItem('lifeorb'))` its
     // `onAfterMoveSecondarySelf`: `source !== target`, not a status move, no `forceSwitchFlag`.
     if b.alive(user) == Some(source)
@@ -548,6 +547,151 @@ pub(crate) fn future_move_hit<const N: usize>(
     b.active_move = None;
     b.check_win(None);
     Ok(())
+}
+
+/// A future move's user that left the field before the hit (switched out or fainted: Showdown
+/// keeps `data.source`, the Pokémon itself, and `trySpreadMoveHit` runs with it inactive). It
+/// attacks with its stored stats and no stages, volatiles, ability or item (`ignoringAbility()`
+/// and `ignoringItem()` are true for an inactive Pokémon from Gen 5), and nothing the hit does
+/// to it lands (`spreadDamage` skips an inactive target; the handlers that act on the source
+/// check `source.isActive`). The engine seats it in a position of its side for the hit only: a
+/// fresh slot, its ability and item cleared; afterwards the position, ability, item and the
+/// rest of the Pokémon are restored as they were.
+///
+/// The position is an empty one if the side has one, else one not holding the target; its
+/// occupant is out of the field meanwhile, so a hit whose outcome it could change is refused:
+/// an occupant with ability or item handlers that act for other Pokémon (`onAny*`, `onAlly*`,
+/// `onFoe*`) or that suppresses abilities or the weather, and a target whose handlers act on an
+/// active source or on every active Pokémon (Innards Out, Cotton Down, Gulp Missile, Rowap
+/// Berry).
+pub(crate) struct AbsentUser {
+    slot: SlotRef,
+    source: PokemonRef,
+    /// The position's slot state before the user took it.
+    saved_slot: crate::state::Slot,
+    /// The user itself before (ability and item cleared, anything the hit changed).
+    saved_mon: crate::state::Pokemon,
+}
+
+impl AbsentUser {
+    fn place<const N: usize>(
+        b: &mut Battle<'_, N>,
+        target: SlotRef,
+        source: PokemonRef,
+        id: MoveId,
+    ) -> Result<AbsentUser, TurnError> {
+        let name = |b: &Battle<'_, N>, p: PokemonRef| b.mon(p).species.data().name;
+        let refuse = |b: &Battle<'_, N>, why: String| {
+            Err(b.unsupported(format!(
+                "{} of {} hitting after its user left the field, {why}",
+                id.data().name,
+                name(b, source)
+            )))
+        };
+        let target_ability = b.ability(target);
+        if [
+            abilities::INNARDS_OUT,
+            abilities::COTTON_DOWN,
+            abilities::GULP_MISSILE,
+        ]
+        .contains(&target_ability)
+        {
+            return refuse(
+                b,
+                format!("on a target with {}", target_ability.data().name),
+            );
+        }
+        if b.item(target) == items::ROWAP_BERRY {
+            return refuse(b, "on a target holding Rowap Berry".into());
+        }
+        let candidates: Vec<SlotRef> = Battle::<N>::slots(source.side)
+            .filter(|&s| s != target)
+            .collect();
+        let Some(&slot) = candidates
+            .iter()
+            .find(|&&s| b.occupant(s).is_none())
+            .or_else(|| candidates.first())
+        else {
+            return refuse(b, "with no position of its side free of the target".into());
+        };
+        if let Some(occupant) = b.alive(slot) {
+            let mon = b.mon(occupant);
+            let acts_for_others = |handlers: &[&str]| {
+                handlers.iter().any(|h| {
+                    h.starts_with("onAny") || h.starts_with("onAlly") || h.starts_with("onFoe")
+                })
+            };
+            let ability = mon.ability.data();
+            let item = mon.item.data();
+            if acts_for_others(ability.handlers)
+                || ability.suppress_weather
+                || mon.ability == abilities::NEUTRALIZING_GAS
+            {
+                return refuse(
+                    b,
+                    format!(
+                        "whose position holds {} with {}",
+                        name(b, occupant),
+                        ability.name
+                    ),
+                );
+            }
+            if acts_for_others(item.handlers) {
+                return refuse(
+                    b,
+                    format!(
+                        "whose position holds {} with {}",
+                        name(b, occupant),
+                        item.name
+                    ),
+                );
+            }
+        }
+        let saved_slot = b.state.slot(slot).clone();
+        let saved_mon = b.mon(source).clone();
+        b.apply(Instruction::Switch {
+            slot,
+            previous: Box::new(saved_slot.clone()),
+            party_index: Some(source.party),
+        });
+        if !saved_mon.ability.is_none() {
+            b.apply(Instruction::SetAbility {
+                target: source,
+                old: saved_mon.ability,
+                new: AbilityId::NONE,
+            });
+        }
+        if !saved_mon.item.is_none() {
+            b.apply(Instruction::SetItem {
+                target: source,
+                old: saved_mon.item,
+                new: ItemId::NONE,
+            });
+        }
+        b.absent_user = Some(slot);
+        Ok(AbsentUser {
+            slot,
+            source,
+            saved_slot,
+            saved_mon,
+        })
+    }
+
+    /// The position and the user back as they were before [`AbsentUser::place`].
+    fn remove<const N: usize>(self, b: &mut Battle<'_, N>) {
+        b.absent_user = None;
+        let mut undo = Vec::new();
+        super::diff::slot_changes(
+            &mut undo,
+            self.slot,
+            b.state.slot(self.slot),
+            &self.saved_slot,
+        );
+        super::diff::pokemon_changes(&mut undo, self.source, b.mon(self.source), &self.saved_mon);
+        for instruction in undo {
+            b.apply(instruction);
+        }
+    }
 }
 
 /// The next hit of a suspended multi-hit move, then the move's tail once the hits are done.
@@ -625,6 +769,8 @@ fn finish_called<const N: usize>(
         main_target,
     } = frame;
     let mut caller = progress.mv.clone();
+    // The caller's own `move.selfSwitch` again (see `call_move`).
+    b.move_self_switch = caller.self_switch;
     let user = handlers::current_slot(b, user, pokemon);
     let ok = match hit_loop_rest(b, user, &caller, progress, results, false)? {
         HitOutcome::Finished { ok, total_damage } => {
@@ -1679,6 +1825,9 @@ fn call_move<const N: usize>(
         None => get_random_target(b, user, data.target),
     };
     let will_act = b.will_act();
+    // `move.selfSwitch` belongs to each move object: the called move's (U-turn's) must not be
+    // read back by the caller's own `runMoveEffects` tail (board B41, `uu-copycat-uturn-protected`).
+    let caller_self_switch = b.move_self_switch;
     if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
         if ![moves::COPYCAT, moves::SLEEP_TALK].contains(&caller.id) {
             return Err(b.unsupported(format!(
@@ -1689,6 +1838,7 @@ fn call_move<const N: usize>(
         b.called_suspension = Some(progress);
         return Ok(());
     }
+    b.move_self_switch = caller_self_switch;
     // It stays the active move: the caller's AfterMove sees it (`run_move_tail`).
     b.called_move = Some(mv);
     Ok(())
