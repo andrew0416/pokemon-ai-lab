@@ -20,6 +20,7 @@ pub mod decision;
 pub mod error;
 pub mod json;
 pub mod meta;
+pub mod parity;
 pub mod switch_in;
 pub mod team;
 
@@ -32,7 +33,8 @@ use lab_engine::instruction::Outcome;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::{SideId, State, PARTY_SIZE};
 use lab_engine::turn::{
-    enumerate_replacements, enumerate_turn_with, resume_turn_with, EnumerateOptions, TurnError,
+    enumerate_replacements, enumerate_turn_with, resume_turn_with, EnumerateOptions, RollMode,
+    TurnError,
 };
 use lab_engine::Doubles;
 
@@ -86,6 +88,14 @@ pub struct LoadedScenario {
     /// The decision turn's mid-turn switch choices per side (`midTurn`), consumed in order as
     /// the turn asks that side (see [`run_decision_mid_turn`]).
     pub mid_turn: [Vec<String>; 2],
+    /// `startState`: only initial outcomes with this canonical state are replayed.
+    pub start_state: Option<Value>,
+    /// `setupStates`: per setup turn, the canonical state its replay must end in (`None` keeps
+    /// every outcome). See [`scenario_positions_filtered`].
+    pub setup_states: Vec<Option<Value>>,
+    /// `setupRolls`: the damage-roll mode the setup turns are replayed with, overriding the
+    /// caller's.
+    pub setup_rolls: Option<RollMode>,
 }
 
 /// A turn played before the decision: both sides' choices and the mid-turn switch choices
@@ -193,6 +203,29 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
     state.turn = FIRST_TURN;
 
     let mid_turn = scenario.mid_turn.unwrap_or_default();
+    let setup_states: Vec<Option<Value>> = scenario
+        .setup_states
+        .unwrap_or_default()
+        .into_iter()
+        .map(|v| if v.is_null() { None } else { Some(v) })
+        .collect();
+    if setup_states.len() > setup_turns.len() {
+        return Err(LoadError::Unsupported {
+            field: "setupStates",
+            reason: "more pinned states than setup turns",
+        });
+    }
+    let setup_rolls = match scenario.setup_rolls.as_deref() {
+        None => None,
+        Some("full") => Some(RollMode::Full),
+        Some("extremes") => Some(RollMode::Extremes),
+        Some(_) => {
+            return Err(LoadError::Unsupported {
+                field: "setupRolls",
+                reason: "expected \"full\" or \"extremes\"",
+            })
+        }
+    };
     Ok(LoadedScenario {
         state,
         meta: ScenarioMeta {
@@ -204,6 +237,9 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
         setup_turns,
         patch,
         mid_turn: [mid_turn.p1, mid_turn.p2],
+        start_state: scenario.start_state.filter(|v| !v.is_null()),
+        setup_states,
+        setup_rolls,
     })
 }
 
@@ -404,6 +440,12 @@ fn replay_setup_turns(
             state: o.state,
         })
         .collect();
+    if let Some(pin) = &loaded.start_state {
+        positions = pinned(&loaded.meta, positions, pin).map_err(|e| format!("startState: {e}"))?;
+    }
+    let options = EnumerateOptions {
+        rolls: loaded.setup_rolls.unwrap_or(options.rolls),
+    };
     for (n, turn) in loaded.setup_turns.iter().enumerate() {
         let mut next: Vec<Position> = Vec::new();
         for position in &positions {
@@ -441,6 +483,10 @@ fn replay_setup_turns(
                 }
             }
         }
+        if let Some(Some(pin)) = loaded.setup_states.get(n) {
+            next = pinned(&loaded.meta, next, pin)
+                .map_err(|e| format!("setup turn {}: {e}", n + 1))?;
+        }
         positions = filter(n + 1, next);
     }
     if let Some(patch) = &loaded.patch {
@@ -449,6 +495,47 @@ fn replay_setup_turns(
         }
     }
     Ok(positions)
+}
+
+/// The positions whose canonical state is `pin` (compared as JSON values, so key order does
+/// not matter), with their probabilities renormalized: a pinned outcome is part of the
+/// scenario's definition, not an observation. None matching is an error naming the first
+/// canonical fields in which the closest candidate differs.
+fn pinned(
+    meta: &ScenarioMeta,
+    positions: Vec<Position>,
+    pin: &Value,
+) -> Result<Vec<Position>, String> {
+    let candidates = positions.len();
+    let mut kept = Vec::new();
+    let mut closest: Option<(usize, Vec<String>)> = None;
+    for position in positions {
+        let value = canonical_value(&position.state, meta).map_err(|e| e.to_string())?;
+        if value == *pin {
+            kept.push(position);
+            continue;
+        }
+        let diffs = parity::json_diff(pin, &value, 5);
+        if closest.as_ref().is_none_or(|(n, _)| diffs.len() < *n) {
+            closest = Some((diffs.len(), diffs));
+        }
+    }
+    if kept.is_empty() {
+        return Err(format!(
+            "none of {candidates} position(s) has the pinned canonical state{}",
+            match closest {
+                Some((_, diffs)) => format!("; closest differs at {}", diffs.join(", ")),
+                None => String::new(),
+            }
+        ));
+    }
+    let total: f64 = kept.iter().map(|p| p.probability).sum();
+    if total > 0.0 {
+        for p in &mut kept {
+            p.probability /= total;
+        }
+    }
+    Ok(kept)
 }
 
 /// The scenario's `turn` choices parsed for `position`.

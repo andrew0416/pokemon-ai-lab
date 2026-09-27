@@ -34,3 +34,8 @@ required-features = ["cli"]
 name = "lab-rollout"
 path = "src/bin/lab-rollout.rs"
 required-features = ["cli"]
+
+[[bin]]
+name = "lab-parity"
+path = "src/bin/lab-parity.rs"
+required-features = ["cli"]

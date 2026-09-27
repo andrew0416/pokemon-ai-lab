@@ -9,11 +9,25 @@
 // Usage:
 //   node engine/oracle/enumerate.cjs <scenario.json> [--mode full|extremes|mc] [--samples N]
 //                                    [--max-branches N] [--keep-nominal-draws] [--out file]
+//                                    [--collapse-secondaries] [--traces]
+//                                    [--setup-walks N] [--setup-max-branches N]
 //
 // Modes:
 //   full      every branch with its exact probability (the parity reference)
 //   extremes  damage rolls only take the min and max roll; probabilities are NOT exact
 //   mc        N natural PRNG runs, empirical frequencies (cross-checks `full`)
+//
+// --collapse-secondaries: a secondary effect's or self-drop's `random(100) < chance` draw becomes
+// one two-way decision (exact; see collapsedActions). --traces: every outcome carries the
+// scripted-PRNG trace of its first branch, which replays it (`setupTraces` below).
+//
+// Pinned positions (FF-parity-harness): `startState` (canonical state after the leads' switch-ins)
+// and `setupStates[k]` (canonical state after setup turn k) keep only the branch of the start or of
+// that setup turn that ends in the pinned state, instead of the scenario seed's natural path. The
+// branch is found by replaying `startTrace`/`setupTraces[k]` (a trace from an earlier report) if
+// given and still valid, else by up to --setup-walks random walks, else by a depth-first
+// enumeration of up to --setup-max-branches branches (extremes mode). The report's `startTrace`
+// and `setupTraces` are the branches used.
 
 const fs = require('node:fs');
 const path = require('node:path');
@@ -23,7 +37,10 @@ const {Battle, PRNG, Teams} = require(path.join(root, 'vendor/pokemon-showdown/d
 const {canonical, canonicalKey} = require('./canonical.cjs');
 
 function parseArgs(argv) {
-	const args = {mode: 'full', samples: 20000, maxBranches: 500000, out: null, file: null, keepNominalDraws: false};
+	const args = {
+		mode: 'full', samples: 20000, maxBranches: 500000, out: null, file: null, keepNominalDraws: false,
+		collapse: false, traces: false, setupWalks: 2000, setupMaxBranches: 200000,
+	};
 	for (let i = 0; i < argv.length; i++) {
 		const a = argv[i];
 		if (a === '--mode') args.mode = argv[++i];
@@ -31,6 +48,10 @@ function parseArgs(argv) {
 		else if (a === '--max-branches') args.maxBranches = Number(argv[++i]);
 		else if (a === '--out') args.out = argv[++i];
 		else if (a === '--keep-nominal-draws') args.keepNominalDraws = true;
+		else if (a === '--collapse-secondaries') args.collapse = true;
+		else if (a === '--traces') args.traces = true;
+		else if (a === '--setup-walks') args.setupWalks = Number(argv[++i]);
+		else if (a === '--setup-max-branches') args.setupMaxBranches = Number(argv[++i]);
 		else if (!args.file) args.file = a;
 		else throw new Error(`unexpected argument ${a}`);
 	}
@@ -111,26 +132,176 @@ function applyPatch(battle, patch) {
 	}
 }
 
-// Builds the battle up to the decision point and returns its serialized snapshot.
-function buildSnapshot(scenario, baseDir) {
+const DEFAULT_SEED = 'sodium,00000000000000000000000000000000';
+
+function newBattle(scenario, baseDir) {
 	const battle = new Battle({
 		formatid: scenario.format,
-		seed: scenario.seed || 'sodium,00000000000000000000000000000000',
+		seed: scenario.seed || DEFAULT_SEED,
 		strictChoices: true,
 	});
 	const adjustLevel = battle.ruleTable.adjustLevel;
 	battle.setPlayer('p1', {name: 'p1', team: Teams.pack(loadTeam(scenario.p1.team, baseDir, adjustLevel))});
 	battle.setPlayer('p2', {name: 'p2', team: Teams.pack(loadTeam(scenario.p2.team, baseDir, adjustLevel))});
+	return battle;
+}
+
+function chooseTeams(battle, scenario) {
 	if (battle.requestState === 'teampreview') {
 		battle.makeChoices(`team ${scenario.p1.order || '123456'}`, `team ${scenario.p2.order || '123456'}`);
 	}
-	for (const [c1, c2, midTurn] of scenario.setupTurns || []) {
-		battle.makeChoices(c1, c2);
-		applyMidTurn(battle, midTurn);
+}
+
+// Builds the battle up to the decision point and returns its serialized snapshot. `opts` (the
+// command-line options) only matter for pinned states: how their branches are searched.
+function buildSnapshot(scenario, baseDir, opts = {}) {
+	const traces = {start: null, setup: []};
+	let battle;
+	if (scenario.startState) {
+		const found = findPinned(() => newBattle(scenario, baseDir), b => chooseTeams(b, scenario),
+			scenario.startState, scenario.startTrace, {...opts, what: 'startState'});
+		battle = found.battle;
+		traces.start = found.trace;
+	} else {
+		battle = newBattle(scenario, baseDir);
+		chooseTeams(battle, scenario);
+	}
+	const pins = scenario.setupStates || [];
+	const known = scenario.setupTraces || [];
+	for (const [k, [c1, c2, midTurn]] of (scenario.setupTurns || []).entries()) {
+		if (pins[k]) {
+			const snapshot = JSON.stringify(battle.toJSON());
+			const found = findPinned(() => restore(snapshot), b => {
+				b.makeChoices(c1, c2);
+				applyMidTurn(b, midTurn);
+			}, pins[k], known[k], {...opts, what: `setup turn ${k + 1}`});
+			battle = found.battle;
+			traces.setup.push(found.trace);
+		} else {
+			battle.makeChoices(c1, c2);
+			applyMidTurn(battle, midTurn);
+			traces.setup.push(null);
+		}
 	}
 	applyPatch(battle, scenario.patch);
 	if (battle.ended) throw new Error('battle ended during setup');
-	return {snapshot: JSON.stringify(battle.toJSON()), before: canonical(battle)};
+	return {snapshot: JSON.stringify(battle.toJSON()), before: canonical(battle), traces};
+}
+
+// ---- pinned branches -----------------------------------------------------------------------
+
+// Canonical states compared regardless of key order (a pinned state may come from lab-engine).
+function sortKeys(v) {
+	if (Array.isArray(v)) return v.map(sortKeys);
+	if (v && typeof v === 'object') {
+		const out = {};
+		for (const k of Object.keys(v).sort()) out[k] = sortKeys(v[k]);
+		return out;
+	}
+	return v;
+}
+
+function stableKey(state) {
+	return JSON.stringify(sortKeys(state));
+}
+
+// Deterministic uniform [0, 1) stream for the random walks.
+function mulberry32(seed) {
+	let a = seed >>> 0;
+	return () => {
+		a = (a + 0x6d2b79f5) >>> 0;
+		let t = a;
+		t = Math.imul(t ^ (t >>> 15), t | 1);
+		t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+		return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+	};
+}
+
+// Finds a branch of `run(battle)` (one step played on a fresh battle from `make()`) that ends in
+// the canonical state `pin`: the recorded `trace` if it still leads there, else random walks that
+// draw every decision by its probability (quick for the likely outcomes a recorded game mostly
+// has), else a depth-first enumeration in extremes mode (pins recorded under min/max rolls are
+// reachable there). Returns that branch's battle, with a real PRNG again, and its trace.
+function findPinned(make, run, pin, trace, opts) {
+	const target = stableKey(pin);
+	const settings = {collapse: !!opts.collapse, nominal: !opts.keepNominalDraws};
+	const attempt = prng => {
+		const battle = make();
+		instrument(battle, prng, opts);
+		run(battle);
+		return battle;
+	};
+	const found = (battle, prng) => {
+		battle.prng = new PRNG(DEFAULT_SEED);
+		return {battle, trace: {mode: prng.mode, ...settings, prefix: prng.trace.map(t => t.choice)}};
+	};
+	if (trace && trace.collapse === settings.collapse && trace.nominal === settings.nominal) {
+		try {
+			const prng = new ScriptedPRNG(trace.prefix, trace.mode);
+			const battle = attempt(prng);
+			if (stableKey(canonical(battle)) === target) return found(battle, prng);
+		} catch (e) {
+			if (!(e instanceof ExhaustedTrace)) throw e;
+		}
+	}
+	const rng = mulberry32(0x5eed);
+	const walks = opts.setupWalks ?? 2000;
+	for (let i = 0; i < walks; i++) {
+		const prng = new WalkPRNG(rng, 'extremes');
+		const battle = attempt(prng);
+		if (stableKey(canonical(battle)) === target) return found(battle, prng);
+	}
+	const cap = opts.setupMaxBranches ?? 200000;
+	let prefix = [];
+	let branches = 0;
+	while (prefix) {
+		if (++branches > cap) {
+			throw new Error(`${opts.what}: pinned state not found (${walks} walks, more than ${cap} branches)`);
+		}
+		const prng = new ScriptedPRNG(prefix, 'extremes');
+		const battle = attempt(prng);
+		if (stableKey(canonical(battle)) === target) return found(battle, prng);
+		prefix = nextPrefix(prng.trace);
+	}
+	throw new Error(`${opts.what}: no branch reaches the pinned state (${walks} walks, ${branches} branches)`);
+}
+
+// ---- exact collapse of secondary-effect rolls ----------------------------------------------
+
+// Showdown draws `random(100)` for every secondary effect and every self-drop and only compares it
+// with the effect's chance, which makes one roll 100 branches for the oracle. With
+// --collapse-secondaries, `secondaries`/`selfDrops` are recompiled from their own source with that
+// draw replaced by `prng.thresholdRoll(chance)`: one two-way decision weighted ceil(chance)/100
+// (no decision when the chance is undefined, since the roll is then unused). The distribution is
+// unchanged, only the branch count drops. If the vendor source no longer contains the draw exactly
+// once, the oracle refuses instead of guessing.
+let collapsed = null;
+
+function collapsedActions(actions) {
+	if (collapsed) return collapsed;
+	const recompile = (fn, from, to) => {
+		const src = fn.toString();
+		const n = src.split(from).length - 1;
+		if (n !== 1) throw new Error(`--collapse-secondaries: ${fn.name} contains "${from}" ${n} times`);
+		// eslint-disable-next-line no-new-func
+		return new Function(`return function ${src.replace(from, to)}`)();
+	};
+	const draw = 'const secondaryRoll = this.battle.random(100);';
+	collapsed = {
+		secondaries: recompile(actions.secondaries, draw,
+			'const secondaryRoll = this.battle.prng.thresholdRoll(secondary.chance);'),
+		selfDrops: recompile(actions.selfDrops, draw,
+			'const secondaryRoll = this.battle.prng.thresholdRoll(moveData.self.chance);'),
+	};
+	return collapsed;
+}
+
+// Puts `prng` in charge of every random call of `battle`, with the oracle's reductions.
+function instrument(battle, prng, opts) {
+	battle.prng = prng;
+	tagDamageRolls(battle, prng);
+	if (!opts.keepNominalDraws) collapseNominalTargets(battle);
+	if (opts.collapse) Object.assign(battle.actions, collapsedActions(battle.actions));
 }
 
 // ---- scripted PRNG ---------------------------------------------------------------------------
@@ -182,6 +353,15 @@ class ScriptedPRNG {
 		const p = hits / denominator;
 		return this.decide([true, false], [p, 1 - p]);
 	}
+	// A `random(100)` whose only use is `roll < chance` (--collapse-secondaries): 0 stands for
+	// every roll below the chance, 99 for every other.
+	thresholdRoll(chance) {
+		if (chance === undefined) return 0;
+		const hits = Math.ceil(chance);
+		if (hits >= 100) return 0;
+		if (hits <= 0) return 99;
+		return this.decide([0, 99], [hits / 100, 1 - hits / 100]);
+	}
 	sample(items) {
 		if (!items.length) throw new RangeError('Cannot sample an empty array');
 		return items[this.random(items.length)];
@@ -198,6 +378,27 @@ class ScriptedPRNG {
 	}
 	clone() {
 		throw new Error('ScriptedPRNG cannot be cloned');
+	}
+}
+
+// A random walk through the same decision points: each is drawn by its weights from `rng`.
+class WalkPRNG extends ScriptedPRNG {
+	constructor(rng, mode) {
+		super([], mode);
+		this.rng = rng;
+	}
+	decide(values, weights) {
+		let u = this.rng();
+		let choice = values.length - 1;
+		for (let k = 0; k < weights.length; k++) {
+			if (u < weights[k]) {
+				choice = k;
+				break;
+			}
+			u -= weights[k];
+		}
+		this.trace.push({weights, choice});
+		return values[choice];
 	}
 }
 
@@ -277,7 +478,13 @@ function nextPrefix(trace) {
 	return null;
 }
 
-function enumerate(scenario, snapshot, mode, maxBranches, keepNominalDraws = false) {
+// `opts`: {mode, maxBranches, keepNominalDraws, collapse, traces} (the legacy positional form
+// `enumerate(scenario, snapshot, mode, maxBranches, keepNominalDraws)` still works).
+function enumerate(scenario, snapshot, opts, maxBranchesArg, keepNominalDrawsArg = false) {
+	if (typeof opts === 'string') {
+		opts = {mode: opts, maxBranches: maxBranchesArg, keepNominalDraws: keepNominalDrawsArg};
+	}
+	const {mode, maxBranches} = opts;
 	const outcomes = new Map();
 	let prefix = [];
 	let branches = 0;
@@ -287,9 +494,7 @@ function enumerate(scenario, snapshot, mode, maxBranches, keepNominalDraws = fal
 		if (++branches > maxBranches) throw new Error(`more than ${maxBranches} branches; use --mode extremes or mc`);
 		const battle = restore(snapshot);
 		const prng = new ScriptedPRNG(prefix, mode);
-		battle.prng = prng;
-		tagDamageRolls(battle, prng);
-		if (!keepNominalDraws) collapseNominalTargets(battle);
+		instrument(battle, prng, opts);
 		const {state, log} = runTurn(battle, scenario);
 		const p = prng.trace.reduce((acc, t) => acc * t.weights[t.choice], 1);
 		approximate ||= prng.approximate;
@@ -300,7 +505,14 @@ function enumerate(scenario, snapshot, mode, maxBranches, keepNominalDraws = fal
 			entry.p += p;
 			entry.branches++;
 		} else {
-			outcomes.set(key, {p, branches: 1, state, log});
+			const outcome = {p, branches: 1, state, log};
+			if (opts.traces) {
+				outcome.trace = {
+					mode, collapse: !!opts.collapse, nominal: !opts.keepNominalDraws,
+					prefix: prng.trace.map(t => t.choice),
+				};
+			}
+			outcomes.set(key, outcome);
 		}
 		prefix = nextPrefix(prng.trace);
 	}
@@ -348,14 +560,17 @@ function main() {
 	const scenario = readJSON(scenarioPath);
 	const baseDir = path.dirname(scenarioPath);
 	const started = process.hrtime.bigint();
-	const {snapshot, before} = buildSnapshot(scenario, baseDir);
+	const {snapshot, before, traces} = buildSnapshot(scenario, baseDir, args);
+	const setupMs = Number(process.hrtime.bigint() - started) / 1e6;
 	const result = args.mode === 'mc' ?
 		monteCarlo(scenario, snapshot, args.samples) :
-		enumerate(scenario, snapshot, args.mode, args.maxBranches, args.keepNominalDraws);
+		enumerate(scenario, snapshot, args);
 	const elapsedMs = Number(process.hrtime.bigint() - started) / 1e6;
 	const outcomes = [...result.outcomes.values()]
 		.sort((a, b) => b.p - a.p)
-		.map(o => ({p: o.p, branches: o.branches, state: o.state, log: o.log}));
+		.map(o => (o.trace ?
+			{p: o.p, branches: o.branches, state: o.state, log: o.log, trace: o.trace} :
+			{p: o.p, branches: o.branches, state: o.state, log: o.log}));
 	const total = outcomes.reduce((s, o) => s + o.p, 0);
 	const report = {
 		scenario: path.relative(root, scenarioPath).replaceAll('\\', '/'),
@@ -373,6 +588,12 @@ function main() {
 		before,
 		outcomes,
 	};
+	if (args.collapse) report.collapseSecondaries = true;
+	if (scenario.startState || (scenario.setupStates || []).some(Boolean)) {
+		report.setupMs = Math.round(setupMs);
+		report.startTrace = traces.start;
+		report.setupTraces = traces.setup;
+	}
 	const text = JSON.stringify(report, null, 1);
 	if (args.out) fs.writeFileSync(args.out, text);
 	else process.stdout.write(text + '\n');

@@ -24,7 +24,7 @@ pub fn engine_dir() -> PathBuf {
 
 /// Canonical state as an order-independent key (serde_json sorts object keys).
 pub fn key(state: &Value) -> String {
-    serde_json::to_string(state).expect("serializable")
+    lab_scenario::parity::value_key(state)
 }
 
 pub fn fixture(name: &str) -> Value {
@@ -58,26 +58,15 @@ pub fn distribution(
     state: &mut Doubles,
     outcomes: &[lab_engine::instruction::Outcome],
 ) -> HashMap<String, f64> {
-    let mut out = HashMap::new();
     let original = state.clone();
-    for outcome in outcomes {
-        state.apply(&outcome.instructions);
-        let json: Value =
-            serde_json::from_str(&canonical_json(state, &loaded.meta).unwrap()).unwrap();
-        state.reverse(&outcome.instructions);
-        assert_eq!(*state, original, "outcome instructions must reverse");
-        *out.entry(key(&json)).or_insert(0.0) += outcome.probability;
-    }
+    let out = lab_scenario::parity::engine_distribution(&loaded.meta, state, outcomes).unwrap();
+    assert_eq!(*state, original, "outcome instructions must reverse");
     out
 }
 
 /// The oracle's outcome distribution as canonical key → probability.
 pub fn oracle_distribution(fixture: &Value) -> HashMap<String, f64> {
-    let mut oracle: HashMap<String, f64> = HashMap::new();
-    for o in fixture["outcomes"].as_array().unwrap() {
-        *oracle.entry(key(&o["state"])).or_insert(0.0) += o["p"].as_f64().unwrap();
-    }
-    oracle
+    lab_scenario::parity::report_distribution(fixture).unwrap()
 }
 
 /// Parity with a Monte Carlo oracle fixture (`oracle/expected/<name>.mc.json`, `enumerate.cjs

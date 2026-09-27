@@ -85,6 +85,31 @@ pub struct ScenarioJson {
     /// order as the turn asks that side; a missing one leaves the turn suspended.
     #[serde(default, rename = "midTurn")]
     pub mid_turn: Option<MidTurnJson>,
+    /// Pinned start: the canonical state (schema 1) after the leads' switch-ins that the
+    /// position continues from, when the start can end several ways (speed ties, Trace).
+    /// Only initial outcomes with exactly this canonical state are kept (both here and in
+    /// `enumerate.cjs`), so a recorded game's start is replayed without drawing it again.
+    #[serde(default, rename = "startState")]
+    pub start_state: Option<Value>,
+    /// Pinned setup outcomes: entry `k` is the canonical state the `k`-th setup turn ended in
+    /// (`null` for an unpinned turn). Each setup turn keeps only its outcomes with that
+    /// canonical state, which turns a recorded game's prefix into one position instead of
+    /// the product of every setup turn's branches (FF-parity-harness).
+    #[serde(default, rename = "setupStates")]
+    pub setup_states: Option<Vec<Value>>,
+    /// Damage-roll mode for replaying the setup turns (`full`, `extremes`), overriding the
+    /// caller's: pinned states recorded under min/max rolls are reachable in either, but a
+    /// heavy turn is only enumerable in `extremes`.
+    #[serde(default, rename = "setupRolls")]
+    pub setup_rolls: Option<String>,
+    /// Oracle-only acceleration data (the Showdown branch that reaches `startState`); accepted
+    /// and ignored.
+    #[serde(default, rename = "startTrace")]
+    pub start_trace: Option<Value>,
+    /// Oracle-only acceleration data (the Showdown branch per pinned setup turn); accepted and
+    /// ignored.
+    #[serde(default, rename = "setupTraces")]
+    pub setup_traces: Option<Value>,
 }
 
 /// Per-side mid-turn switch choices (`"switch 3"`), in the order the requests come.
