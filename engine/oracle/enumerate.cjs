@@ -476,8 +476,15 @@ function estimateBranches(scenario, snapshot, opts, walks) {
 		msPerBranch: +(ms / walks).toFixed(3)};
 }
 
+// Showdown's serializer (sim/state.ts) writes a reference to a dex Move as `[DataMove:<id>]` (the
+// class's name, `Dex.Move = DataMove`) but `fromRef` only reads `[Move:<id>]`, so a plain Move object
+// in the battle state comes back as that literal string. The only one there is between two actions
+// is a queued switch's `sourceEffect` (the self-switch move, from `switchFlag`), which a two-switch
+// mid-turn commit carries across a stage of the staged enumeration: its `|switch|` log line then
+// read `[from] [DataMove:uturn]`, and a Baton Pass / Shed Tail switch would lose its `selfSwitch`
+// copy flag. Between turns (the plain enumeration's snapshots) no such object exists. (V10)
 function restore(snapshot) {
-	return Battle.fromJSON(snapshot);
+	return Battle.fromJSON(snapshot.replaceAll('"[DataMove:', '"[Move:'));
 }
 
 function runTurn(battle, scenario) {
@@ -867,5 +874,8 @@ function sourceCommit() {
 
 module.exports = {
 	buildSnapshot, enumerate, enumerateStaged, monteCarlo, ScriptedPRNG, nextPrefix, loadTeam, readJSON, sourceCommit,
+	// the staged enumeration's pieces, for check-roundtrip.cjs (V10)
+	DEFAULT_SEED, instrument, restore, steppedTurnLoop, stageState, midTurnRequest, midTurnRound, mulberry32,
+	ExhaustedTrace,
 };
 if (require.main === module) main();

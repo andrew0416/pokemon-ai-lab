@@ -1,0 +1,28 @@
+{
+ "description": "Opus LL V10 (staged serializer): a queued action's `order` changed in one stage decides a later one. Sableye's Prankster Quash (+1) sets Garchomp's pending Dragon Claw to order 201 (`action.order = 201`: after every other move, whatever the re-sorts after each action), so the slower Tyranitar's Stone Edge (80%) goes first and knocks out Garchomp (patched to 40 HP) unless it misses; only then does Garchomp's Dragon Claw hit Tyranitar. Without Quash, Garchomp (Speed 169 vs 81) would move first.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Sableye", "item": "", "ability": "Prankster", "nature": "Calm",
+    "evs": {"hp": 32, "spd": 32}, "moves": ["Quash", "Harden"], "level": 50},
+   {"species": "Tyranitar", "item": "", "ability": "Honey Gather", "nature": "Adamant",
+    "evs": {"hp": 32, "atk": 32}, "moves": ["Stone Edge", "Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Garchomp", "item": "", "ability": "Honey Gather", "nature": "Jolly",
+    "evs": {"atk": 32, "spe": 32}, "moves": ["Dragon Claw", "Harden"], "level": 50},
+   {"species": "Snorlax", "item": "", "ability": "Honey Gather", "nature": "Serious",
+    "evs": {"hp": 32, "def": 32}, "moves": ["Harden"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {
+   "Garchomp": {"hp": 40}
+  }
+ },
+ "turn": {"p1": "move quash 1, move stoneedge 1", "p2": "move dragonclaw 2, move harden"}
+}
