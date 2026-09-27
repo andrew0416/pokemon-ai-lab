@@ -1,0 +1,105 @@
+{
+ "description": "Refusal repro (board R5c, proposed): Slowking's Future Sight hits Clefable (Sitrus Berry, patched to 110 of 202 HP) after Slowking switched out for Tyranitar (Unnerve). The engine seats the benched user in Tyranitar's position for the hit, so Tyranitar's onFoeTryEatItem would not run (Showdown: Clefable cannot eat the berry); it refuses.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Slowking",
+    "item": "",
+    "ability": "Own Tempo",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Future Sight",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Tyranitar",
+    "item": "",
+    "ability": "Unnerve",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Rock Slide"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Clefable",
+    "item": "Sitrus Berry",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Gourgeist",
+    "item": "",
+    "ability": "Insomnia",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Trick-or-Treat"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move futuresight 1, move calmmind",
+   "move calmmind, move protect"
+  ],
+  [
+   "switch 3, move protect",
+   "move calmmind, move trickortreat 2"
+  ]
+ ],
+ "turn": {
+  "p1": "move protect, move calmmind",
+  "p2": "move calmmind, move protect"
+ },
+ "patch": {
+  "p2": {
+   "Clefable": {
+    "hp": 110
+   }
+  }
+ }
+}

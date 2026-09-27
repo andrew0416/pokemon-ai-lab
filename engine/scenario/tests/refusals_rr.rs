@@ -35,9 +35,9 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R2-hazard-effect-order",
     ),
     (
-        "rr-future-sight-user-left",
-        "hitting after its user left the field",
-        "R5-future-move-edges",
+        "uu-future-sight-absent-user-unnerve",
+        "hitting after its user left the field, whose position holds Tyranitar with Unnerve",
+        "R5c-future-move-absent-user-occupant",
     ),
     (
         "rr-future-sight-red-card",
@@ -164,12 +164,6 @@ fn hazard_order() {
 #[test]
 fn redirection_tie() {
     assert_exact_parity("rr-redirect-tie");
-}
-
-#[test]
-#[ignore = "refused: {} of {} hitting after its user left the field (board R5-future-move-edges)"]
-fn future_sight_after_its_user_left() {
-    assert_exact_parity("rr-future-sight-user-left");
 }
 
 #[test]

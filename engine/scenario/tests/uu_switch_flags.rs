@@ -1,5 +1,6 @@
 //! Switch requests raised where a decision meets `switchFlag` (Opus UU, wave 15 lane L3): a
-//! replacement's Emergency Exit (board R3). Fixtures from Showdown's exact enumeration.
+//! replacement's Emergency Exit (board R3), a future move whose user left the field (R5).
+//! Fixtures from Showdown's exact enumeration.
 
 mod common;
 
@@ -30,4 +31,23 @@ fn emergency_exit_of_two_replacements_at_equal_speed() {
 #[test]
 fn emergency_exit_of_two_replacements_faster_first() {
     assert_exact_parity("uu-emergency-exit-two-replacements-fast");
+}
+
+/// Future Sight hits after Slowking switched out: the benched user's stored stats (board R5a).
+#[test]
+fn future_sight_after_its_user_left() {
+    assert_exact_parity("rr-future-sight-user-left");
+}
+
+/// The same with Slowking holding Twisted Spoon (Regenerator) at +1 SpA before it left: the
+/// item, the ability and the stage are ignored from the bench.
+#[test]
+fn future_sight_after_its_user_left_ignores_its_item_and_stages() {
+    assert_exact_parity("uu-future-sight-user-left-item");
+}
+
+/// Future Sight hits after its user fainted with no bench (its position stays empty).
+#[test]
+fn future_sight_after_its_user_fainted() {
+    assert_exact_parity("uu-future-sight-user-fainted");
 }

@@ -4,7 +4,7 @@
 
 범위: Champions 모드(Showdown `9e317a6`)에서 `isNonstandard`가 null인 종(메가 포함, 배틀 중 폼은 기본 종이 표준일 때만), 그 종의 특성(+심플빔·고민씨가 주는 심플·불면), `learnsets.ts`의 기술(+표준 플래그 기술·발버둥), 표준 도구. 테라·다이맥스·Z는 규칙셋이 막는다. 목록은 `refusals.universe.json`, 근거 검사는 아래 '근거'.
 
-- 거부 호출 57곳(함수 41개). 키 95개 = 호출에 쓰인 메시지 49개 + 다른 함수의 메시지를 전달하는 호출 6개 + 메시지 생산 함수(`producers`)의 메시지 40개.
+- 거부 호출 57곳(함수 42개). 키 95개 = 호출에 쓰인 메시지 49개 + 다른 함수의 메시지를 전달하는 호출 6개 + 메시지 생산 함수(`producers`)의 메시지 40개.
 - 도달 가능 11개, 도달 불가능 84개, 미확인 0개.
 
 ## 도달 가능 (Champions 표준 범위)
@@ -13,7 +13,7 @@
 |---|---|---|---|---|---|---|
 | `{} switching into hazards whose order (Showdown effectOrder) decides the outcome` | conditions.rs::entry_hazards | mechanic | `rr-hazard-order` | full: 1 | R2-hazard-effect-order | Stealth Rock / Spikes with Toxic Spikes (or Sticky Web against Mirror Armor, Corviknight) on one side and a newcomer the damage can knock out: Showdown runs them in the order they were set (a Poison type knocked out first leaves the Toxic Spikes), which the state does not keep. |
 | `{} hitting a holder of {}` | moves.rs::future_move_hit | mechanic | `rr-future-sight-red-card` | full: 10 | R5-future-move-edges | Future Sight hitting a Red Card holder: the card drags the user out after the residual. (Eject Button ignores future moves and is no longer refused: fixed in this audit, `rr-future-sight-eject-button`.) |
-| `{} of {} hitting after its user left the field` | moves.rs::future_move_hit | mechanic | `rr-future-sight-user-left` | full: 20 | R5-future-move-edges | Future Sight whose user switched out or fainted before the hit: Showdown uses the benched user's stored stats (no ability or item); the engine has no attacker off the field. |
+| `{} of {} hitting after its user left the field, {}` | moves.rs::place | mechanic | `uu-future-sight-absent-user-unnerve` | full: 6 | R5c-future-move-absent-user-occupant | The benched user of a future move stands in for the hit in a position of its side (`moves::AbsentUser`); a hit whose outcome the displaced occupant could change is refused: an occupant with ability or item handlers acting for other Pokémon (`onAny*`, `onAlly*`, `onFoe*`: Unnerve against the target's berry, the Ruin abilities, Battery, ...) or suppressing abilities or the weather, and a target whose handlers act on an active source or on every active Pokémon (Innards Out, Cotton Down, Gulp Missile, Rowap Berry). The prefix rule is conservative (Friend Guard or Shadow Tag change nothing here). |
 | `Beat Up with benched allies of different power {} (their order in Showdown's side.pokemon depends on the switches so far, which the state does not keep)` | moves/handlers.rs::beat_up_powers | mechanic | `rr-beat-up-bench` | extremes: 28 | R9-beat-up-order | Beat Up (standard) with two eligible benched allies of different base Attack: the hit order follows `side.pokemon`, which switches reorder. |
 | `{} after the battle start (its once-per-battle flag is not in the state)` | switching.rs::once_per_battle | mechanic | `rr-supersweet-syrup-switch` | full: 1 | R10-once-per-battle-flags | Supersweet Syrup (Hydrapple) starting after the battle start (a switch-in, a Skill Swap); `pokemon.syrupTriggered` is not in the state. Intrepid Sword and Dauntless Shield are not standard. |
 | `Attract between {} and {} with an undecided gender (give the sets a gender)` | conditions.rs::attract_fails | input | `rr-cute-charm-undecided-gender` | full: 2 | R13-attract-gender | Cute Charm (Clefable, Milotic, Lopunny, Wigglytuff) next to a set without a gender: Showdown drew the gender at team creation (`battle.sample(['M', 'F'])`), the scenario does not say which. |
@@ -50,6 +50,7 @@
 | `{} eaten by force while its holder ignores its item` | R22-forced-eat-ignored-item | `rr-teatime-klutz` (full: 1) | `eatItem(true)` (sim/pokemon.ts:1768) for a holder that ignores its item: `singleEvent('Eat')` is suppressed (sim/battle.ts:607: item handlers but Start, TakeItem and SetAbility), the berry is still consumed with `lastItem` and AfterUseItem. `update::eat_item_forced` skips `berry_on_eat` for such a holder instead of refusing. Also `oo-teatime-magic-room`. |
 | `{}: {} would confuse a {} nature (confusion is not implemented)` | B36-refusal-messages | `oo-figy-berry-confusion` (full: 24) | Stale: confusion is implemented and `update::berry_on_eat` already confuses the eater of a Figy-type berry its nature dislikes (the Bug Bite / Pluck path was checked by `pluck-incinerate`). `update::berry_problem` is gone (with its call in `support::check_state` and `switching::switch_in_problem`); the holder's own Update eating matches the oracle (`oo-figy-berry-confusion`: Figy Berry, Timid Snorlax). The Figy-type berries are not standard. |
 | `Emergency Exit of a replacement hit by entry hazards` | R3-emergency-exit-replacement | `rr-emergency-exit-replacement` (full: 1) | A replacement can suspend: `runAction('runSwitch')`'s tail (checkFainted, Update) checks Emergency Exit for the action's own Pokémon, the first queued `runSwitch` (fastest newcomer, Speed ties at random), and the switch request it raises suspends `enumerate_replacements`; `resume_turn` then only runs `endTurn` (`uu-emergency-exit-replacement-resume`, `uu-emergency-exit-two-replacements-tie`, `uu-emergency-exit-two-replacements-fast`). |
+| `{} of {} hitting after its user left the field` | R5-future-move-edges | `rr-future-sight-user-left` (full: 20) | The benched (switched-out or fainted) user is seated in a position of its side for the hit only (`moves::AbsentUser`): a fresh slot (no stages or volatiles), its ability and item cleared (`ignoringAbility`/`ignoringItem` for an inactive Pokémon), everything restored after the hit (nothing the hit does to an inactive source lands). Also `uu-future-sight-user-left-item` (Twisted Spoon, Regenerator, a Calm Mind stage ignored) and `uu-future-sight-user-fainted` (fainted user, empty position). |
 
 ## 미확인
 
@@ -177,7 +178,8 @@
 |---|---|---|
 | R1-trace-seeking | — | `check_side: -> mega::mega_target(mon)`<br>`Trace next to No Ability`<br>`Trace copying {} (cantsuppress: setAbility fails and Trace keeps seeking)`<br>`Trace copying {} ({})`<br>`{}: ability {} ({})` |
 | R2-hazard-effect-order | `{} switching into hazards whose order (Showdown effectOrder) decides the outcome` | — |
-| R5-future-move-edges | `{} of {} hitting after its user left the field`<br>`{} hitting a holder of {}` | `{}: a multi-hit future move` |
+| R5-future-move-edges | `{} hitting a holder of {}` | `{}: a multi-hit future move` |
+| R5c-future-move-absent-user-occupant | `{} of {} hitting after its user left the field, {}` | — |
 | R8-encore-edges | — | `Transform by an encored Pokémon (the encored move leaves the move slots)` |
 | R9-beat-up-order | `Beat Up with benched allies of different power {} (their order in Showdown's side.pokemon depends on the switches so far, which the state does not keep)` | — |
 | R10-once-per-battle-flags | `{} after the battle start (its once-per-battle flag is not in the state)` | `{}: Battle Bond (its once-per-battle `bondTriggered` is not in the state)` |
@@ -194,6 +196,7 @@
 
 - **R21-copycat-called-moves**: Copycat calling a two-turn move (the caller becomes locked into the charge), a move that locks its user (lockedmove) or one that queues its own action (Mirror Coat's beforeTurnCallback, Chilly Reception's priorityChargeCallback) — shares moves::call_move with R14.
 - **R22-forced-eat-ignored-item**: Teatime / Stuff Cheeks (eatItem(true)) for a holder that ignores its item (Klutz, Magic Room): the Eat event is skipped, the berry still goes and EatItem still runs; eat_item_forced also never ran EatItem (Cheek Pouch, Cud Chew, Ripen): confirmed by the oracle and fixed in B35 (`oo-teatime-cheek-pouch`, `oo-teatime-cud-chew`, `oo-teatime-ripen`).
+- **R5c-future-move-absent-user-occupant**: A future move whose user left the field while the position the engine seats it in holds a Pokémon with onAny/onAlly/onFoe ability or item handlers (Unnerve, Ruin abilities, Battery, Soul-Heart, Opportunist, ...) or a target with Innards Out / Cotton Down / Gulp Missile / Rowap Berry: needs an attacker that is not in any slot (or a narrower, per-event refusal) — repro uu-future-sight-absent-user-unnerve (full: 6).
 
 ## 근거 (자동 검사)
 

@@ -7,7 +7,7 @@
 
 use crate::gimmick::Gimmick;
 use crate::instruction::Instruction;
-use crate::state::{PokemonRef, SideId, Slot, SlotHistory, SlotRef, State, SwitchFlag};
+use crate::state::{Pokemon, PokemonRef, SideId, Slot, SlotHistory, SlotRef, State, SwitchFlag};
 use crate::volatile::VolatileState;
 
 pub(crate) fn instructions<const N: usize>(from: &State<N>, to: &State<N>) -> Vec<Instruction> {
@@ -15,7 +15,8 @@ pub(crate) fn instructions<const N: usize>(from: &State<N>, to: &State<N>) -> Ve
     for side in [SideId::One, SideId::Two] {
         let (a, b) = (from.side(side), to.side(side));
         for party in 0..a.party.len() as u8 {
-            pokemon(&mut out, from, to, PokemonRef { side, party });
+            let r = PokemonRef { side, party };
+            pokemon_changes(&mut out, r, from.pokemon(r), to.pokemon(r));
         }
         for slot in 0..N as u8 {
             let r = SlotRef { side, slot };
@@ -95,13 +96,8 @@ pub(crate) fn instructions<const N: usize>(from: &State<N>, to: &State<N>) -> Ve
     out
 }
 
-fn pokemon<const N: usize>(
-    out: &mut Vec<Instruction>,
-    from: &State<N>,
-    to: &State<N>,
-    r: PokemonRef,
-) {
-    let (a, b) = (from.pokemon(r), to.pokemon(r));
+/// The instructions that turn party member `r` from `a` into `b`.
+pub(crate) fn pokemon_changes(out: &mut Vec<Instruction>, r: PokemonRef, a: &Pokemon, b: &Pokemon) {
     if a == b {
         return;
     }
