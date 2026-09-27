@@ -4,8 +4,8 @@
 
 범위: Champions 모드(Showdown `9e317a6`)에서 `isNonstandard`가 null인 종(메가 포함, 배틀 중 폼은 기본 종이 표준일 때만), 그 종의 특성(+심플빔·고민씨가 주는 심플·불면), `learnsets.ts`의 기술(+표준 플래그 기술·발버둥), 표준 도구. 테라·다이맥스·Z는 규칙셋이 막는다. 목록은 `refusals.universe.json`, 근거 검사는 아래 '근거'.
 
-- 거부 호출 70곳(함수 46개). 키 109개 = 호출에 쓰인 메시지 61개 + 다른 함수의 메시지를 전달하는 호출 6개 + 메시지 생산 함수(`producers`)의 메시지 42개.
-- 도달 가능 24개, 도달 불가능 85개, 미확인 0개.
+- 거부 호출 66곳(함수 45개). 키 105개 = 호출에 쓰인 메시지 57개 + 다른 함수의 메시지를 전달하는 호출 6개 + 메시지 생산 함수(`producers`)의 메시지 42개.
+- 도달 가능 21개, 도달 불가능 84개, 미확인 0개.
 
 ## 도달 가능 (Champions 표준 범위)
 
@@ -20,9 +20,6 @@
 | `redirection tie between {} and {} (Showdown breaks it by effectOrder)` | moves.rs::foe_redirect_target | mechanic | `rr-redirect-tie` | full: 1 | R4-redirection-tie | Two redirectors of one priority at equal Speed (Follow Me and Rage Powder users, two Lightning Rod holders): Showdown orders them by `effectOrder`, which the state does not keep. |
 | `{} hitting a holder of {}` | moves.rs::future_move_hit | mechanic | `rr-future-sight-red-card` | full: 10 | R5-future-move-edges | Future Sight hitting a Red Card holder: the card drags the user out after the residual. (Eject Button ignores future moves and is no longer refused: fixed in this audit, `rr-future-sight-eject-button`.) |
 | `{} of {} hitting after its user left the field` | moves.rs::future_move_hit | mechanic | `rr-future-sight-user-left` | full: 20 | R5-future-move-edges | Future Sight whose user switched out or fainted before the hit: Showdown uses the benched user's stored stats (no ability or item); the engine has no attacker off the field. |
-| `Instruct on a Quick Claw holder` | moves/handlers.rs::instruct | mechanic | `rr-instruct-quick-claw` | full: 1 | R6-instruct | Quick Claw is standard; `resolveAction` draws its fractional priority again for the instructed action. |
-| `Instruct on a Quick Draw holder` | moves/handlers.rs::instruct | mechanic | `rr-instruct-quick-draw` | full: 2 | R6-instruct | Quick Draw (Slowbro-Galar) is standard; a non-status instructed move draws it again. |
-| `Instruct repeating {} (its lastMoveTargetLoc is not kept)` | moves/handlers.rs::instruct | mechanic | `rr-instruct-target` | full: 1 | R6-instruct | Instruct (Oranguru) on a Pokémon whose last move takes a target (any single-target move): Showdown repeats it at `lastMoveTargetLoc`, which the state does not keep. |
 | `{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)` | moves/handlers.rs::swap_positions | mechanic | `rr-ally-switch-snipe-shot` | full: 17 | R7-ally-switch-target | Ally Switch (standard) swaps the side a Snipe Shot (Inteleon) or a Stalwart holder's move (Archaludon, Mega Skarmory) aims at; Showdown keeps the original target, which the queue does not hold. |
 | `Beat Up with benched allies of different power {} (their order in Showdown's side.pokemon depends on the switches so far, which the state does not keep)` | moves/handlers.rs::beat_up_powers | mechanic | `rr-beat-up-bench` | extremes: 28 | R9-beat-up-order | Beat Up (standard) with two eligible benched allies of different base Attack: the hit order follows `side.pokemon`, which switches reorder. |
 | `{} after the battle start (its once-per-battle flag is not in the state)` | switching.rs::once_per_battle | mechanic | `rr-supersweet-syrup-switch` | full: 1 | R10-once-per-battle-flags | Supersweet Syrup (Hydrapple) starting after the battle start (a switch-in, a Skill Swap); `pokemon.syrupTriggered` is not in the state. Intrepid Sword and Dauntless Shield are not standard. |
@@ -40,6 +37,10 @@
 
 | 이전 키 | 보드 | 오라클 fixture | 내용 |
 |---|---|---|---|
+| `Instruct repeating {} (its lastMoveTargetLoc is not kept)` | R6-instruct | `rr-instruct-target` (full: 1) | `Slot::last_move_target_loc` (`Instruction::SetLastMoveTargetLoc`, hidden, recorded while an Instruct is in a party) keeps `moveUsed`'s target location; the instructed action aims at it (also `o38-instruct-target`). |
+| `Instruct on a Quick Claw holder` | R6-instruct | `rr-instruct-quick-claw` (full: 1) | Quick Claw's fractional priority is drawn again for the instructed action (see Quick Draw). |
+| `Instruct on a Quick Draw holder` | R6-instruct | `rr-instruct-quick-draw` (full: 2) | Instruct's `resolveAction` runs `FractionalPriority` for the new action (Quick Draw, Quick Claw, Custap Berry, the constants) as the turn's first stage does. |
+| `Instruct repeating {}, which the target does not know` | R6-instruct | `nn-instruct-called-raging-fury` (full: 32) | A last move outside the slots became reachable with R21 (Copycat calling Raging Fury, which is not `failinstruct`, locks its user into it). The instructed action holds the move id: `runMove` spends no PP while the user is locked and fails with `cant nopp` otherwise (`deductPP` finds no slot). |
 | `Encore replacing a queued action with {} (a callback action it would queue)` | R8-encore-edges | `rr-encore-counter` (full: 1) | The Champions Encore's `changeAction` also queues the encored move's `beforeTurnMove` (Counter, Mirror Coat) or `priorityChargeMove` (Focus Punch, Beak Blast, Chilly Reception) action, which runs next (`Battle::encore_change_action`; `nn-encore-counter-hit`, `nn-encore-focus-punch-hit`, `nn-encore-beak-blast-hit`); the new action's target is drawn when it is queued. `Battle::refused` (FF) and its `stage_end_check` forward are gone. |
 | `Sleep Talk calling {} (a multi-hit move)` | R14-called-multi-hit | `rr-sleep-talk-multihit` (full: 1) | A multi-hit move Copycat or Sleep Talk calls suspends after its first hit like a chosen one; the caller's hit loop stops after its `spreadMoveHit` (`moves::CallerFrame` in the called move's `MoveProgress`) and, once the called hits and `useMoveInner` tail are done, goes on with its hit-loop tail, its own `useMoveInner` tail and AfterMove with the called move active (`moves::finish_called`; `nn-sleep-talk-double-hit-life-orb`, `nn-copycat-bullet-seed`, `rr-copycat-multihit`). |
 | `a two-turn move` | R21-copycat-called-moves | `rr-copycat-two-turn` (full: 1) | Copycat calling a charge move: `twoturnmove` starts aimed at the drawn target (`getLocOf(defender)` for a called move, `handlers::charge_try_move`) and the second turn runs the locked move the user does not know, without PP (`nn-copycat-solar-beam-lock`). |
@@ -137,7 +138,6 @@
 | 키 | 지점 | 이유 | 보드 |
 |---|---|---|---|
 | `Baton Pass passing the {} volatile` | switching.rs::copy_volatile_from | The refused volatiles are locks and charges (Outrage, recharge, two-turn moves, Rollout, Uproar), during which the Pokémon can only use the locked move, and Roost's, which lasts only the turn Roost was used (one action per turn; Sleep Talk needs sleep, which ends `lockedmove` and aborts charges, and Uproar prevents sleep). | R18-baton-pass-volatiles |
-| `Instruct repeating {}, which the target does not know` | moves/handlers.rs::instruct | Showdown sets `lastMove` only in `runMove` (not for called moves), so a last move outside the move slots is Struggle or Transform; both are `failinstruct` (E11), which now fails Instruct before the slot lookup (fixed in this audit: `rr-instruct-struggle`). | R6-instruct |
 | `Skill Swap: {}` | abilities.rs::skill_swap | Symbiosis part: every standard item moves (E3). Rivalry part: the Rivalry holder is on the field before Skill Swap runs, so `check_state` (at the turn start) or `switch_in_problem` (on its switch-in) already refused an undecided gender. | R13-attract-gender |
 | `Syrup Bomb's residual with its source neither active nor fainted in place` | conditions.rs::syrup_bomb_residual | A source leaves the field only by a switch or a drag, and every action ends with an Update in which Syrup Bomb's `onUpdate` removes the volatile; a fainted source stays in place until the replacement after the residual. | R12-syrup-bomb-source |
 | `Transform by an encored Pokémon (the encored move leaves the move slots)` | transform.rs::transform_into | Transform is `failencore`, `failcopycat`, `nosleeptalk` and `failinstruct`, so an encored Pokémon can only run it by choosing it, and the Champions Encore replaces that queued action with the encored move first (a Mental Herb holder is cured at once); Imposter transforms on switch-in, when Encore is gone (`noCopy`). | R8-encore-edges |
@@ -180,7 +180,6 @@
 | R3-emergency-exit-replacement | `Emergency Exit of a replacement hit by entry hazards` | — |
 | R4-redirection-tie | `redirection tie between {} and {} (Showdown breaks it by effectOrder)` | — |
 | R5-future-move-edges | `{} of {} hitting after its user left the field`<br>`{} hitting a holder of {}` | `{}: a multi-hit future move` |
-| R6-instruct | `Instruct repeating {} (its lastMoveTargetLoc is not kept)`<br>`Instruct on a Quick Claw holder`<br>`Instruct on a Quick Draw holder` | `Instruct repeating {}, which the target does not know` |
 | R7-ally-switch-target | `{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)` | — |
 | R8-encore-edges | — | `Transform by an encored Pokémon (the encored move leaves the move slots)` |
 | R9-beat-up-order | `Beat Up with benched allies of different power {} (their order in Showdown's side.pokemon depends on the switches so far, which the state does not keep)` | — |

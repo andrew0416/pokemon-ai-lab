@@ -18,6 +18,22 @@
   "R22-forced-eat-ignored-item": "Teatime / Stuff Cheeks (eatItem(true)) for a holder that ignores its item (Klutz, Magic Room): the Eat event is skipped, the berry still goes and EatItem still runs; eat_item_forced also never runs EatItem (Cheek Pouch, Cud Chew, Ripen), unverified."
  },
  "fixed": {
+  "Instruct repeating {} (its lastMoveTargetLoc is not kept)": {
+   "board": "R6-instruct", "fixture": "rr-instruct-target",
+   "what": "`Slot::last_move_target_loc` (`Instruction::SetLastMoveTargetLoc`, hidden, recorded while an Instruct is in a party) keeps `moveUsed`'s target location; the instructed action aims at it (also `o38-instruct-target`)."
+  },
+  "Instruct on a Quick Claw holder": {
+   "board": "R6-instruct", "fixture": "rr-instruct-quick-claw",
+   "what": "Quick Claw's fractional priority is drawn again for the instructed action (see Quick Draw)."
+  },
+  "Instruct on a Quick Draw holder": {
+   "board": "R6-instruct", "fixture": "rr-instruct-quick-draw",
+   "what": "Instruct's `resolveAction` runs `FractionalPriority` for the new action (Quick Draw, Quick Claw, Custap Berry, the constants) as the turn's first stage does."
+  },
+  "Instruct repeating {}, which the target does not know": {
+   "board": "R6-instruct", "fixture": "nn-instruct-called-raging-fury",
+   "what": "A last move outside the slots became reachable with R21 (Copycat calling Raging Fury, which is not `failinstruct`, locks its user into it). The instructed action holds the move id: `runMove` spends no PP while the user is locked and fails with `cant nopp` otherwise (`deductPP` finds no slot)."
+  },
   "Encore replacing a queued action with {} (a callback action it would queue)": {
    "board": "R8-encore-edges", "fixture": "rr-encore-counter",
    "what": "The Champions Encore's `changeAction` also queues the encored move's `beforeTurnMove` (Counter, Mirror Coat) or `priorityChargeMove` (Focus Punch, Beak Blast, Chilly Reception) action, which runs next (`Battle::encore_change_action`; `nn-encore-counter-hit`, `nn-encore-focus-punch-hit`, `nn-encore-beak-blast-hit`); the new action's target is drawn when it is queued. `Battle::refused` (FF) and its `stage_end_check` forward are gone."
@@ -115,22 +131,6 @@
   "{}: a multi-hit future move": {
    "reachable": "no", "kind": "invariant", "board": "R5-future-move-edges",
    "why": "The hit loop suspends only between hits of a multi-hit move. The only standard future move is Future Sight (one hit; Doom Desire is not standard, E8), and Parental Bond skips `futuremove` moves."
-  },
-  "Instruct repeating {} (its lastMoveTargetLoc is not kept)": {
-   "reachable": "yes", "kind": "mechanic", "board": "R6-instruct", "repro": "rr-instruct-target",
-   "why": "Instruct (Oranguru) on a Pokémon whose last move takes a target (any single-target move): Showdown repeats it at `lastMoveTargetLoc`, which the state does not keep."
-  },
-  "Instruct on a Quick Claw holder": {
-   "reachable": "yes", "kind": "mechanic", "board": "R6-instruct", "repro": "rr-instruct-quick-claw",
-   "why": "Quick Claw is standard; `resolveAction` draws its fractional priority again for the instructed action."
-  },
-  "Instruct on a Quick Draw holder": {
-   "reachable": "yes", "kind": "mechanic", "board": "R6-instruct", "repro": "rr-instruct-quick-draw",
-   "why": "Quick Draw (Slowbro-Galar) is standard; a non-status instructed move draws it again."
-  },
-  "Instruct repeating {}, which the target does not know": {
-   "reachable": "no", "kind": "invariant", "board": "R6-instruct",
-   "why": "Showdown sets `lastMove` only in `runMove` (not for called moves), so a last move outside the move slots is Struggle or Transform; both are `failinstruct` (E11), which now fails Instruct before the slot lookup (fixed in this audit: `rr-instruct-struggle`)."
   },
   "{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)": {
    "reachable": "yes", "kind": "mechanic", "board": "R7-ally-switch-target", "repro": "rr-ally-switch-snipe-shot",

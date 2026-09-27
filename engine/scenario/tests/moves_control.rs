@@ -288,11 +288,10 @@ fn o38_instruct_repeats_a_spread_move_from_both_sides() {
     assert_exact_parity("o38-instruct-spread");
 }
 
-/// Instruct aims a repeated single-target move at `lastMoveTargetLoc`, which the state does not
-/// keep.
+/// Instruct aims a repeated single-target move at `lastMoveTargetLoc` (`Slot::last_move_target_loc`).
 #[test]
-fn o38_instruct_repeating_a_targeted_move_is_unsupported() {
-    assert_unsupported("o38-instruct-target", "lastMoveTargetLoc");
+fn o38_instruct_repeats_a_targeted_move_at_its_last_target() {
+    assert_exact_parity("o38-instruct-target");
 }
 
 /// Stealth Rock could knock out a newcomer that Toxic Spikes also poisons: Showdown's result

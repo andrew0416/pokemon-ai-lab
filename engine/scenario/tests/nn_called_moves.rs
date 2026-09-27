@@ -68,6 +68,14 @@ fn encore_into_beak_blast_queues_its_charge() {
     assert_exact_parity("nn-encore-beak-blast-hit");
 }
 
+/// Instruct on Umbreon after its locked Raging Fury, a move Copycat called and it does not know
+/// (R6): no slot, so the PP check passes; the repeat runs without PP while Umbreon is still
+/// locked and fails (`cant nopp`) once its lock ended.
+#[test]
+fn instruct_a_called_raging_fury() {
+    assert_exact_parity("nn-instruct-called-raging-fury");
+}
+
 /// Copycat calls Uproar (setup): Umbreon keeps Uproar's `uproar` volatile, whose `onLockMove`
 /// locks it into a move it does not know (the engine rejected that choice before).
 #[test]

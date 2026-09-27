@@ -930,7 +930,10 @@ fn run_move_inner<const N: usize>(
         // `deductPP`: `moveSlot.used = true` (Last Resort).
         b.record_move_used(user, usize::from(move_index));
     }
+    // `pokemon.moveUsed(move, targetLoc)`: the action's target location (for an encored move
+    // that replaced the chosen one, still the chosen one's).
     b.set_last_move(user, id);
+    b.set_last_move_target_loc(user, target_loc);
 
     if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
         return Ok(MoveStep::Suspended(progress));

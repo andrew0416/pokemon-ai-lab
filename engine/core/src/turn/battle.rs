@@ -278,6 +278,8 @@ pub struct HistoryReaders {
     pub moves_used: bool,
     /// Copycat (`battle.lastMove`: `State::last_move`).
     pub last_move: bool,
+    /// Instruct (`lastMoveTargetLoc`: `Slot::last_move_target_loc`).
+    pub last_move_target_loc: bool,
     /// Pickup (`usedItemThisTurn`).
     pub used_item: bool,
 }
@@ -317,6 +319,8 @@ impl HistoryReaders {
                         readers.moves_used = true;
                     } else if slot.id == m::COPYCAT {
                         readers.last_move = true;
+                    } else if slot.id == m::INSTRUCT {
+                        readers.last_move_target_loc = true;
                     }
                 }
             }
@@ -2209,6 +2213,22 @@ impl<'a, const N: usize> Battle<'a, N> {
         let old = self.state.last_move;
         if old != id {
             self.apply(Instruction::SetBattleLastMove { old, new: id });
+        }
+    }
+
+    /// `moveUsed(move, targetLoc)`'s `lastMoveTargetLoc`, recorded only while an Instruct is in a
+    /// party.
+    pub fn set_last_move_target_loc(&mut self, slot: SlotRef, loc: i8) {
+        if !self.history_readers.last_move_target_loc {
+            return;
+        }
+        let old = self.state.slot(slot).last_move_target_loc;
+        if old != loc {
+            self.apply(Instruction::SetLastMoveTargetLoc {
+                target: slot,
+                old,
+                new: loc,
+            });
         }
     }
 

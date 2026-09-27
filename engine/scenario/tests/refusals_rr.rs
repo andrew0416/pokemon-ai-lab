@@ -70,21 +70,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R5-future-move-edges",
     ),
     (
-        "rr-instruct-target",
-        "Instruct repeating Dragon Claw (its lastMoveTargetLoc is not kept)",
-        "R6-instruct",
-    ),
-    (
-        "rr-instruct-quick-claw",
-        "Instruct on a Quick Claw holder",
-        "R6-instruct",
-    ),
-    (
-        "rr-instruct-quick-draw",
-        "Instruct on a Quick Draw holder",
-        "R6-instruct",
-    ),
-    (
         "rr-ally-switch-snipe-shot",
         "Snipe Shot aimed at a side whose Pokémon Ally Switch swapped",
         "R7-ally-switch-target",
@@ -244,19 +229,16 @@ fn future_sight_on_a_red_card_holder() {
 }
 
 #[test]
-#[ignore = "refused: Instruct repeating {} (its lastMoveTargetLoc is not kept) (board R6-instruct)"]
 fn instruct_a_targeted_move() {
     assert_exact_parity("rr-instruct-target");
 }
 
 #[test]
-#[ignore = "refused: Instruct on a Quick Claw holder (board R6-instruct)"]
 fn instruct_a_quick_claw_holder() {
     assert_exact_parity("rr-instruct-quick-claw");
 }
 
 #[test]
-#[ignore = "refused: Instruct on a Quick Draw holder (board R6-instruct)"]
 fn instruct_a_quick_draw_holder() {
     assert_exact_parity("rr-instruct-quick-draw");
 }

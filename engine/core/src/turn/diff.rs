@@ -264,6 +264,13 @@ pub(crate) fn slot_changes(out: &mut Vec<Instruction>, r: SlotRef, a: &Slot, b: 
             new: b.last_move,
         });
     }
+    if b.last_move_target_loc != 0 {
+        out.push(Instruction::SetLastMoveTargetLoc {
+            target: r,
+            old: 0,
+            new: b.last_move_target_loc,
+        });
+    }
     if b.move_actions != 0 {
         out.push(Instruction::SetMoveActions {
             target: r,

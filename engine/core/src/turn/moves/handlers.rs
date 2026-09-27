@@ -3194,13 +3194,13 @@ pub(super) fn on_hit<const N: usize>(
 
 /// Instruct `onHit`: the target repeats its last move right away. It fails without a last move,
 /// or when that move has `failinstruct`, `charge` or `recharge`, is a Z- or Max move, or its
-/// slot has no PP; otherwise a move action for it goes to the front of the queue
+/// slot has no PP (a last move the target does not know, one Copycat called and locked it into,
+/// passes this check); otherwise a move action for it goes to the front of the queue
 /// (`queue.prioritizeAction(queue.resolveAction(...))`: order 3) and runs as a full `runMove`
-/// (PP, BeforeMove, `lastMove`). Showdown aims it at `target.lastMoveTargetLoc`, which the
-/// state does not keep, so a last move with a chosen target (`normal`, `any`, ...) is
-/// unsupported, as are a Quick Claw holder (`resolveAction` draws its fractional priority
-/// again) and a last move the target does not know that its flags do not already fail (Struggle
-/// and Transform, the only such last moves, are `failinstruct`: oracle `rr-instruct-struggle`).
+/// (PP by id: none for a locked Pokémon, `cant nopp` without a slot; BeforeMove; `lastMove`)
+/// aimed at `target.lastMoveTargetLoc` (`Slot::last_move_target_loc`). `resolveAction` runs
+/// `FractionalPriority` for it again (the constants, Quick Draw, Quick Claw, Custap Berry),
+/// which orders it among other order-3 actions.
 fn instruct<const N: usize>(
     b: &mut Battle<'_, N>,
     target: SlotRef,
@@ -3224,35 +3224,32 @@ fn instruct<const N: usize>(
     if blocked {
         return Ok(HitResult::Failure);
     }
-    let Some(index) = b.mon(pokemon).moves.iter().position(|m| m.id == last) else {
-        return Err(b.unsupported(format!(
-            "Instruct repeating {}, which the target does not know",
-            data.name
-        )));
-    };
-    if b.mon(pokemon).moves[index].pp == 0 {
+    // `(moveSlot && moveSlot.pp <= 0)`: no slot passes.
+    if b.mon(pokemon)
+        .moves
+        .iter()
+        .any(|m| m.id == last && m.pp == 0)
+    {
         return Ok(HitResult::Failure);
     }
-    if super::takes_target(N, data.target) {
-        return Err(b.unsupported(format!(
-            "Instruct repeating {} (its lastMoveTargetLoc is not kept)",
-            data.name
-        )));
+    // `resolveAction`: the fractional priority is drawn again (Custap Berry may be eaten).
+    let mut fractional_tenths =
+        super::super::items::fractional_priority_tenths(b.state, target, last);
+    if let Some(t) = super::super::abilities::quick_draw(b, target, pokemon, last) {
+        fractional_tenths = t;
     }
-    if b.item(target) == items::QUICK_CLAW {
-        return Err(b.unsupported("Instruct on a Quick Claw holder"));
+    if let Some(t) = super::super::items::quick_claw(b, target, pokemon, fractional_tenths, last) {
+        fractional_tenths = t;
     }
-    // Quick Draw's random `onFractionalPriority` would be drawn for the new action too.
-    if b.ability(target) == abilities::QUICK_DRAW && data.category != MoveCategory::Status {
-        return Err(b.unsupported("Instruct on a Quick Draw holder"));
+    if let Some(t) = super::super::items::custap(b, target, pokemon, fractional_tenths, last) {
+        fractional_tenths = t;
     }
-    let fractional_tenths = super::super::items::fractional_priority_tenths(b.state, target, last);
     b.queue.push(Action {
         slot: target,
         pokemon,
         kind: ActionKind::Move {
             id: last,
-            target: 0,
+            target: b.state.slot(target).last_move_target_loc,
             fractional_tenths,
             round_source: None,
         },

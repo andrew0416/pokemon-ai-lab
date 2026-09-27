@@ -383,6 +383,12 @@ pub struct Slot {
     pub volatiles: Volatiles,
     /// Showdown `lastMove`: the last move this Pokémon used since switching in.
     pub last_move: MoveId,
+    /// Showdown `lastMoveTargetLoc`: the target location of the action that set `last_move`
+    /// (`moveUsed(move, targetLoc)`; 0 for none). Showdown keeps it on the Pokémon across
+    /// switches, but only Instruct reads it, together with `lastMove`, which a switch clears.
+    /// Hidden from the canonical output; recorded only while an Instruct is in a party
+    /// (`turn::battle::HistoryReaders`).
+    pub last_move_target_loc: i8,
     /// Showdown `activeMoveActions`: moves attempted since switching in (Fake Out).
     pub move_actions: u8,
     /// Damage history (F13); hidden from the canonical output.

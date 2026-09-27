@@ -125,6 +125,12 @@ pub enum Instruction {
         old: MoveId,
         new: MoveId,
     },
+    /// `Slot::last_move_target_loc` (Showdown `lastMoveTargetLoc`, hidden; Instruct).
+    SetLastMoveTargetLoc {
+        target: SlotRef,
+        old: i8,
+        new: i8,
+    },
     SetMoveActions {
         target: SlotRef,
         old: u8,
@@ -271,6 +277,9 @@ impl<const N: usize> State<N> {
                 ..
             } => self.slot_mut(target).volatiles.set(volatile, new),
             Instruction::SetLastMove { target, new, .. } => self.slot_mut(target).last_move = new,
+            Instruction::SetLastMoveTargetLoc { target, new, .. } => {
+                self.slot_mut(target).last_move_target_loc = new
+            }
             Instruction::SetMoveActions { target, new, .. } => {
                 self.slot_mut(target).move_actions = new
             }
@@ -351,6 +360,9 @@ impl<const N: usize> State<N> {
                 ..
             } => self.slot_mut(target).volatiles.set(volatile, old),
             Instruction::SetLastMove { target, old, .. } => self.slot_mut(target).last_move = old,
+            Instruction::SetLastMoveTargetLoc { target, old, .. } => {
+                self.slot_mut(target).last_move_target_loc = old
+            }
             Instruction::SetMoveActions { target, old, .. } => {
                 self.slot_mut(target).move_actions = old
             }
