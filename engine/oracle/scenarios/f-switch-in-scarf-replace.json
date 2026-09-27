@@ -1,0 +1,22 @@
+{
+ "description": "B30 (switch-in handlers sort by action Speed). ko-replace with a Choice Scarf on Pelipper: after the double KO of the setup turn, Abomasnow (Snow Warning) and Pelipper (Drizzle) come in at equal raw Speed 85, but `switchIn` queues each `runSwitch` through `insertChoice`, which calls `updateSpeed()`, so Pelipper's `pokemon.speed` is its action Speed with the Scarf (127): Drizzle runs first, Snow Warning second, and snow remains with probability 1 (raw Speeds would tie: 1/2 each).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "replace.p1.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "f-switch-in-speed.p2-scarf.json",
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move ironhead 2, move dragondance",
+   "move waterfall 2, move quiverdance"
+  ]
+ ],
+ "turn": {
+  "p1": "switch 3",
+  "p2": "switch 3"
+ }
+}

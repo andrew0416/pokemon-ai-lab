@@ -3,9 +3,10 @@
 //! switches during a turn, and replacements after faints.
 //!
 //! `runSwitch` gathers every queued `runSwitch` action and runs `fieldEvent('SwitchIn')` for
-//! all of them at once: the handlers (abilities' `onStart`) are sorted by their holder's stored
-//! Speed, which right after switching in is the raw Speed stat, and equal Speeds are ordered
-//! uniformly at random (`speedSort`; confirmed against the oracle, `tie-start.initial.json`).
+//! all of them at once: the handlers (abilities' `onStart`) are sorted by their holder's
+//! `pokemon.speed`, which for a queued `runSwitch` is the newcomer's action Speed
+//! (`insertChoice` → `updateSpeed()`; `f-switch-in-scarf-*`, `f-switch-in-trick-room-replace`),
+//! and equal Speeds are ordered uniformly at random (`speedSort`; `tie-start.initial.json`).
 //! A handler whose holder's ability changed before it ran is skipped.
 //!
 //! Implemented start handlers: the four weather and four terrain setters, Intimidate, Trace
@@ -741,7 +742,11 @@ pub(crate) fn switch_in<const N: usize>(
     party_index: u8,
     on_field: bool,
 ) -> Result<(), TurnError> {
-    switch_in_as(b, slot, party_index, on_field, false)
+    switch_in_as(b, slot, party_index, on_field, false)?;
+    // `switchIn` queues the newcomer's `runSwitch` with `insertChoice`, which refreshes its
+    // `pokemon.speed` (`updateSpeed()`): the switch-in handlers sort by its action Speed.
+    b.update_speed(slot);
+    Ok(())
 }
 
 /// [`switch_in`] for an `instaswitch` answering a mid-turn switch request (U-turn, Eject
@@ -756,7 +761,9 @@ pub(crate) fn instaswitch_in<const N: usize>(
     party_index: u8,
     on_field: bool,
 ) -> Result<(), TurnError> {
-    switch_in_as(b, slot, party_index, on_field, true)
+    switch_in_as(b, slot, party_index, on_field, true)?;
+    b.update_speed(slot);
+    Ok(())
 }
 
 /// [`switch_in`], or with `skip_before_switch_out` the switch of `dragIn` (Roar, Dragon Tail,
@@ -946,9 +953,11 @@ enum SwitchInHandler {
 /// by priority, then their holder's Speed (`speedSort(getAllActive())` once for the whole event,
 /// so equal Speeds are drawn uniformly at random once and keep that order in every priority
 /// group), then sub-order (side condition 4, ability 7, item 8); the engine draws the same
-/// order once over the holders with a handler. Speeds are the raw stats (Showdown's
-/// `pokemon.speed`, the stored stat of a Pokémon that has not had a turn; a Pokémon already on
-/// the field carries its last action Speed there, which the engine does not model). A handler
+/// order once over the holders with a handler. Speeds are Showdown's `pokemon.speed`
+/// ([`Battle::event_speed`]): the action Speed of a newcomer whose `runSwitch` was queued
+/// (`insertChoice` calls `updateSpeed()`: Choice Scarf, paralysis, Tailwind and Trick Room
+/// count; B30), the raw stored Speed of a Pokémon dragged in, the stage's Speed of a Pokémon
+/// already on the field. A handler
 /// is skipped if its holder fainted, an ability handler also if the holder's ability changed
 /// before its turn came; the event stops once the hazards end the battle.
 pub(crate) fn run_switch_in<const N: usize>(
@@ -1011,14 +1020,16 @@ pub(crate) fn run_switch_in<const N: usize>(
             handlers.push((priority, slot, SUB_ABILITY, SwitchInHandler::CommanderAny));
         }
     }
-    // `speedOrder`: the holders by raw Speed, equal Speeds uniformly at random.
+    // `speedOrder`: the holders by `pokemon.speed` (a queued newcomer's action Speed from
+    // `insertChoice`'s `updateSpeed()`, a dragged one's raw Speed, a Pokémon already on the
+    // field its Speed of the stage), equal Speeds uniformly at random.
     let mut remaining: Vec<SlotRef> = Vec::new();
     for h in &handlers {
         if !remaining.contains(&h.1) {
             remaining.push(h.1);
         }
     }
-    let speed = |b: &Battle<'_, N>, slot: SlotRef| b.slot_mon(slot).expect("alive").stats[4];
+    let speed = |b: &Battle<'_, N>, slot: SlotRef| b.event_speed(slot);
     let mut ranked: Vec<SlotRef> = Vec::with_capacity(remaining.len());
     while !remaining.is_empty() {
         let best = remaining
@@ -1498,12 +1509,7 @@ fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), T
 /// that replaces it sorts by it): no boosts, no handlers (an inactive Pokémon has none, not
 /// even Tailwind's), only Trick Room's negation.
 pub(crate) fn fainted_action_speed<const N: usize>(b: &Battle<'_, N>, pokemon: PokemonRef) -> i32 {
-    let spe = i32::from(b.mon(pokemon).stats[4]);
-    if b.field_active(FieldEffect::TrickRoom) {
-        -spe
-    } else {
-        spe
-    }
+    b.trick_room_speed(i32::from(b.mon(pokemon).stats[4]))
 }
 
 /// Showdown `dragIn(side, pos)` for a Pokémon with `forceSwitchFlag`: a uniformly random
@@ -1530,6 +1536,9 @@ pub(crate) fn drag_in<const N: usize>(
         return Ok(false);
     }
     switch_in_as(b, slot, bench[pick], true, true)?;
+    // A drag runs `runSwitch` at once, without `insertChoice`: `pokemon.speed` is still the raw
+    // stored Speed `clearVolatile`'s `setSpecies` left when the Pokémon last was on the bench.
+    b.species_set(slot);
     run_switch_in(b, &[slot])?;
     Ok(true)
 }

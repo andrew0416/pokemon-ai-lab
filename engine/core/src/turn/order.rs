@@ -115,13 +115,41 @@ impl<const N: usize> Battle<'_, N> {
         spe.min(10000)
     }
 
-    /// Showdown (Champions) `getActionSpeed`: Speed, negated under Trick Room.
+    /// Showdown (Champions) `getActionSpeed`: the Speed stat through [`Battle::trick_room_speed`].
     pub(crate) fn action_speed(&self, slot: SlotRef) -> i32 {
         let speed = self.speed_stat(slot);
-        if self.field_active(FieldEffect::TrickRoom) {
-            -speed
+        self.trick_room_speed(speed)
+    }
+
+    /// The tail of Showdown's `getActionSpeed`: `10000 - speed` under Trick Room, then
+    /// `trunc(speed, 13)`. The values are Showdown's own rather than a negation, because an
+    /// action Speed is also compared with Speeds Trick Room does not touch: the raw stored
+    /// Speed `setSpecies` leaves in `pokemon.speed` (a Pokémon dragged in, a forme change:
+    /// [`Battle::raw_speed`]) and the constant Speeds of handlers without a Pokémon. Under
+    /// Trick Room a Speed of 1809 or more wraps around to the top (`8191` for 1809).
+    pub(crate) fn trick_room_speed(&self, speed: i32) -> i32 {
+        let speed = if self.field_active(FieldEffect::TrickRoom) {
+            10000 - speed
         } else {
             speed
+        };
+        speed & 0x1FFF
+    }
+
+    /// Showdown `pokemon.updateSpeed()` for the Pokémon in `slot`: its `pokemon.speed` becomes
+    /// its action Speed now, replacing the stage's snapshot and a raw Speed `setSpecies` left
+    /// ([`Battle::event_speed`]). `BattleQueue.insertChoice` calls it for the Pokémon of every
+    /// inserted action, so for every newcomer whose `runSwitch` is queued (the battle start, a
+    /// chosen switch, a replacement; not a drag, whose `runSwitch` runs at once): board B30.
+    pub(crate) fn update_speed(&mut self, slot: SlotRef) {
+        let Some(pokemon) = self.occupant(slot) else {
+            return;
+        };
+        let speed = self.action_speed(slot);
+        self.raw_speed.retain(|(p, _)| *p != pokemon);
+        match self.speed_snapshot.iter_mut().find(|(p, _)| *p == pokemon) {
+            Some(entry) => entry.1 = speed,
+            None => self.speed_snapshot.push((pokemon, speed)),
         }
     }
 

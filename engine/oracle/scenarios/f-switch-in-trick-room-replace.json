@@ -1,0 +1,26 @@
+{
+ "description": "B30 (switch-in handlers sort by action Speed, which Trick Room reverses). Setup turn 1: Excadrill sets Trick Room. Setup turn 2: the double KO of ko-replace. The replacements Abomasnow (Snow Warning, raw Speed below Pelipper's) and Pelipper (Drizzle, raw 85) come in under Trick Room: `updateSpeed()` gives `10000 - speed`, so the slower Abomasnow's handler runs first and rain remains (raw Speed order would leave snow).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "f-switch-in-speed.p1-trick-room.json",
+  "order": "12"
+ },
+ "p2": {
+  "team": "replace.p2.json",
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move trickroom, move dragondance",
+   "move dragondance, move quiverdance"
+  ],
+  [
+   "move ironhead 2, move dragondance",
+   "move waterfall 2, move quiverdance"
+  ]
+ ],
+ "turn": {
+  "p1": "switch 3",
+  "p2": "switch 3"
+ }
+}

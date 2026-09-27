@@ -1198,12 +1198,7 @@ impl<const N: usize> Battle<'_, N> {
             self.action_speed(action.slot)
         } else {
             // No handlers run for an inactive Pokémon: stored Speed, Trick Room applies.
-            let spe = i32::from(self.mon(action.pokemon).stats[4]);
-            if self.field_active(FieldEffect::TrickRoom) {
-                -spe
-            } else {
-                spe
-            }
+            self.trick_room_speed(i32::from(self.mon(action.pokemon).stats[4]))
         };
         (action.order.unwrap_or(order), priority, speed)
     }

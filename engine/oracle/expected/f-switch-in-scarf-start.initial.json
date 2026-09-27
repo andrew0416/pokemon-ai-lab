@@ -1,0 +1,293 @@
+{
+ "provenance": "engine/oracle/initial.cjs",
+ "scenario": "engine/oracle/scenarios/f-switch-in-scarf-start.json",
+ "format": "gen9championsdoublescustomgame",
+ "showdownCommit": "9e317a666d9fd250f36f494778e843141f09bdba",
+ "branches": 2,
+ "distinctOutcomes": 1,
+ "totalProbability": 1,
+ "before": {
+  "schema": 1,
+  "turn": 1,
+  "ended": false,
+  "winner": "",
+  "field": {
+   "weather": "snowscape",
+   "weatherDuration": 5,
+   "terrain": "",
+   "terrainDuration": null,
+   "pseudoWeather": {}
+  },
+  "sides": [
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Abomasnow",
+      "species": "Abomasnow",
+      "hp": 197,
+      "maxhp": 197,
+      "status": "",
+      "item": "nevermeltice",
+      "ability": "snowwarning",
+      "slot": 0,
+      "pp": {
+       "blizzard": 8,
+       "woodhammer": 16,
+       "iceshard": 20,
+       "protect": 8
+      },
+      "boosts": {},
+      "volatiles": {}
+     },
+     {
+      "name": "Charizard",
+      "species": "Charizard",
+      "hp": 157,
+      "maxhp": 157,
+      "status": "",
+      "item": "charcoal",
+      "ability": "solarpower",
+      "slot": null,
+      "pp": {
+       "flamethrower": 16,
+       "dragondance": 20,
+       "airslash": 16,
+       "protect": 8
+      }
+     },
+     {
+      "name": "Excadrill",
+      "species": "Excadrill",
+      "hp": 189,
+      "maxhp": 189,
+      "status": "",
+      "item": "leftovers",
+      "ability": "sandrush",
+      "slot": 1,
+      "pp": {
+       "ironhead": 16,
+       "highhorsepower": 12,
+       "rockslide": 12,
+       "protect": 8
+      },
+      "boosts": {},
+      "volatiles": {}
+     }
+    ]
+   },
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Gyarados",
+      "species": "Gyarados",
+      "hp": 202,
+      "maxhp": 202,
+      "status": "",
+      "item": "lifeorb",
+      "ability": "intimidate",
+      "slot": null,
+      "pp": {
+       "waterfall": 16,
+       "crunch": 16,
+       "dragondance": 20,
+       "protect": 8
+      }
+     },
+     {
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "hp": 167,
+      "maxhp": 167,
+      "status": "",
+      "item": "choicescarf",
+      "ability": "drizzle",
+      "slot": 0,
+      "pp": {
+       "hurricane": 12,
+       "surf": 16,
+       "tailwind": 16,
+       "protect": 8
+      },
+      "boosts": {},
+      "volatiles": {}
+     },
+     {
+      "name": "Ribombee",
+      "species": "Ribombee",
+      "hp": 135,
+      "maxhp": 135,
+      "status": "",
+      "item": "leftovers",
+      "ability": "honeygather",
+      "slot": 1,
+      "pp": {
+       "ragepowder": 20,
+       "moonblast": 16,
+       "quiverdance": 20,
+       "protect": 8
+      },
+      "boosts": {},
+      "volatiles": {}
+     }
+    ]
+   }
+  ]
+ },
+ "outcomes": [
+  {
+   "p": 1,
+   "branches": 2,
+   "state": {
+    "schema": 1,
+    "turn": 1,
+    "ended": false,
+    "winner": "",
+    "field": {
+     "weather": "snowscape",
+     "weatherDuration": 5,
+     "terrain": "",
+     "terrainDuration": null,
+     "pseudoWeather": {}
+    },
+    "sides": [
+     {
+      "request": "move",
+      "conditions": {},
+      "slotConditions": [
+       {},
+       {}
+      ],
+      "pokemon": [
+       {
+        "name": "Abomasnow",
+        "species": "Abomasnow",
+        "hp": 197,
+        "maxhp": 197,
+        "status": "",
+        "item": "nevermeltice",
+        "ability": "snowwarning",
+        "slot": 0,
+        "pp": {
+         "blizzard": 8,
+         "woodhammer": 16,
+         "iceshard": 20,
+         "protect": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       },
+       {
+        "name": "Charizard",
+        "species": "Charizard",
+        "hp": 157,
+        "maxhp": 157,
+        "status": "",
+        "item": "charcoal",
+        "ability": "solarpower",
+        "slot": null,
+        "pp": {
+         "flamethrower": 16,
+         "dragondance": 20,
+         "airslash": 16,
+         "protect": 8
+        }
+       },
+       {
+        "name": "Excadrill",
+        "species": "Excadrill",
+        "hp": 189,
+        "maxhp": 189,
+        "status": "",
+        "item": "leftovers",
+        "ability": "sandrush",
+        "slot": 1,
+        "pp": {
+         "ironhead": 16,
+         "highhorsepower": 12,
+         "rockslide": 12,
+         "protect": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       }
+      ]
+     },
+     {
+      "request": "move",
+      "conditions": {},
+      "slotConditions": [
+       {},
+       {}
+      ],
+      "pokemon": [
+       {
+        "name": "Gyarados",
+        "species": "Gyarados",
+        "hp": 202,
+        "maxhp": 202,
+        "status": "",
+        "item": "lifeorb",
+        "ability": "intimidate",
+        "slot": null,
+        "pp": {
+         "waterfall": 16,
+         "crunch": 16,
+         "dragondance": 20,
+         "protect": 8
+        }
+       },
+       {
+        "name": "Pelipper",
+        "species": "Pelipper",
+        "hp": 167,
+        "maxhp": 167,
+        "status": "",
+        "item": "choicescarf",
+        "ability": "drizzle",
+        "slot": 0,
+        "pp": {
+         "hurricane": 12,
+         "surf": 16,
+         "tailwind": 16,
+         "protect": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       },
+       {
+        "name": "Ribombee",
+        "species": "Ribombee",
+        "hp": 135,
+        "maxhp": 135,
+        "status": "",
+        "item": "leftovers",
+        "ability": "honeygather",
+        "slot": 1,
+        "pp": {
+         "ragepowder": 20,
+         "moonblast": 16,
+         "quiverdance": 20,
+         "protect": 8
+        },
+        "boosts": {},
+        "volatiles": {}
+       }
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,16 @@
+{
+ "description": "B30 at the battle start. Leads: Abomasnow (Snow Warning, raw Speed 85) + Excadrill against Pelipper (Drizzle, raw 85, Choice Scarf: action Speed 127) + Ribombee. The start's `switchIn` calls queue every `runSwitch` through `insertChoice` (`updateSpeed()`), so Drizzle runs before Snow Warning and the battle starts in snow with probability 1 (raw Speeds would tie). The turn: everyone protects.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": "replace.p1.json",
+  "order": "31"
+ },
+ "p2": {
+  "team": "f-switch-in-speed.p2-scarf.json",
+  "order": "32"
+ },
+ "turn": {
+  "p1": "move protect, move protect",
+  "p2": "move protect, move protect"
+ }
+}
