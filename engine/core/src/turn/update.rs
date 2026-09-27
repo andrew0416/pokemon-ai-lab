@@ -219,11 +219,12 @@ pub(crate) fn eat_item<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> 
 /// Showdown `eatItem(true)` (Stuff Cheeks, Teatime) for the holder in `slot`: a held berry
 /// (`this.item`, whatever suppresses it) is eaten without `TryEatItem` (Unnerve and the healing
 /// berries' Heal Block check do not apply) by an active holder with HP: its `onEat`, then
-/// `lastItem` and AfterUseItem. A berry whose `onEat` is empty (the resist berries, Jaboca,
-/// Rowap, Custap, Enigma, the effectless ones) is just consumed. For a holder that ignores its
-/// item (Klutz, Magic Room) `singleEvent('Eat')` is skipped (`singleEvent` suppresses an item's
-/// handlers but Start, TakeItem and SetAbility): the berry is consumed without its effect.
-/// Returns whether it was eaten.
+/// `runEvent('EatItem')` (Cheek Pouch; Cud Chew, which keeps a berry these moves made it eat;
+/// Ripen), `lastItem` and AfterUseItem. A berry whose `onEat` is empty (the resist berries,
+/// Jaboca, Rowap, Custap, Enigma, the effectless ones) has no Eat effect. For a holder that
+/// ignores its item (Klutz, Magic Room) `singleEvent('Eat')` is skipped (`singleEvent` suppresses
+/// an item's handlers but Start, TakeItem and SetAbility): the berry is consumed without its
+/// effect. Returns whether it was eaten.
 pub(crate) fn eat_item_forced<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
@@ -249,6 +250,10 @@ pub(crate) fn eat_item_forced<const N: usize>(
     if !ignored && !empty_on_eat && !berry_on_eat(b, slot, pokemon, item) {
         return Err(b.unsupported(format!("{} eaten by force", item.data().name)));
     }
+    // `runEvent('EatItem', this, source, sourceEffect, item)` whatever the Eat event did; the
+    // effect is Teatime or Stuff Cheeks, so Cud Chew keeps the berry (it ignores only Bug Bite and
+    // Pluck).
+    super::abilities::eat_item_event(b, slot, item, false);
     Ok(consume(b, slot, pokemon))
 }
 

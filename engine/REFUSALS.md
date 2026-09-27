@@ -196,7 +196,7 @@
 보드에 아직 없는 제안 작업(이 감사가 붙인 이름):
 
 - **R21-copycat-called-moves**: Copycat calling a two-turn move (the caller becomes locked into the charge), a move that locks its user (lockedmove) or one that queues its own action (Mirror Coat's beforeTurnCallback, Chilly Reception's priorityChargeCallback) — shares moves::call_move with R14.
-- **R22-forced-eat-ignored-item**: Teatime / Stuff Cheeks (eatItem(true)) for a holder that ignores its item (Klutz, Magic Room): the Eat event is skipped, the berry still goes and EatItem still runs; eat_item_forced also never runs EatItem (Cheek Pouch, Cud Chew, Ripen), unverified.
+- **R22-forced-eat-ignored-item**: Teatime / Stuff Cheeks (eatItem(true)) for a holder that ignores its item (Klutz, Magic Room): the Eat event is skipped, the berry still goes and EatItem still runs; eat_item_forced also never ran EatItem (Cheek Pouch, Cud Chew, Ripen): confirmed by the oracle and fixed in B35 (`oo-teatime-cheek-pouch`, `oo-teatime-cud-chew`, `oo-teatime-ripen`).
 
 ## 근거 (자동 검사)
 
