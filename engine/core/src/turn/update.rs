@@ -4,16 +4,16 @@
 //! hit (`hitStepMoveHitLoop`), after the weather's residual damage, before a healthy Pokémon
 //! switches out, and after a batch of switch-ins. Every active Pokémon is visited in stored
 //! Speed order with ties shuffled; of the implemented listeners only an item use next to an
-//! ally's Symbiosis touches another Pokémon (Starf Berry's random stat is drawn independently
-//! per eater), so only such a tie spends a random draw ([`update_event`]).
+//! ally's Symbiosis and a seeking Trace's copy touch another Pokémon (Starf Berry's random stat
+//! is drawn independently per eater), so only such a tie spends a random draw ([`update_event`]).
 //!
 //! Listeners implemented here: berries with `onUpdate` (Sitrus, Oran, the five Figy-type
 //! berries, the five pinch stat berries, Lansat, Starf, Lum, Miracle and the six one-status
 //! berries, Leppa) and Lum's `onAfterSetStatus`; the non-berry items Booster Energy, Mental
-//! Herb and Berry Juice (used, not eaten); the abilities' `onUpdate` cures run first
+//! Herb and Berry Juice (used, not eaten); the abilities' `onUpdate` run first
 //! (`abilities::on_update`: the status cures of `cured_on_update`, Own Tempo's confusion cure;
-//! `forme::on_update`: Disguise, Ice Face). Other ability `onUpdate` handlers are refused (Trace
-//! still seeking, ...). A berry
+//! `forme::on_update`: Disguise, Ice Face; `switching::trace_update`: a seeking Trace copies a
+//! foe's ability). Other ability `onUpdate` handlers are refused. A berry
 //! is eaten only if the `TryEatItem` handlers allow it (`abilities::try_eat_item`). [`eat_item`]
 //! also runs the `onEat` of the berries eaten elsewhere (Kee, Maranga, Jaboca, Rowap, Micle,
 //! Custap, Enigma).
@@ -80,10 +80,11 @@ pub(crate) fn berry_problem(mon: &Pokemon) -> Option<String> {
 /// handlers, collected at its own turn (`runEvent('Update', pokemon)`: its state as the earlier
 /// ones left it; an item it gains during its turn waits for the next Update).
 ///
-/// Only Symbiosis links two Pokémon's handlers: the item one uses or eats is replaced by its
-/// ally's, which the ally then no longer has for its own turn (oracle `w-update-symbiosis-tie`).
-/// So a tie is drawn only between Pokémon on a side with an active Symbiosis holder; any other
-/// tie cannot change the outcome and keeps slot order.
+/// Two listeners link Pokémon's handlers: Symbiosis (the item one uses or eats is replaced by
+/// its ally's, which the ally then no longer has for its own turn; oracle
+/// `w-update-symbiosis-tie`) and a seeking Trace that copies an ability now. So a tie is drawn
+/// only between Pokémon on a side with an active Symbiosis holder, or between any Pokémon when a
+/// Trace copies; any other tie cannot change the outcome and keeps slot order.
 pub(crate) fn update_event<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), TurnError> {
     // `getAllActive()` still holds a Pokémon at 0 HP whose faint is not processed yet, and
     // Fling's condition `onUpdate` runs on it (its `setItem('')` fails; `lastItem` and
@@ -99,12 +100,21 @@ pub(crate) fn update_event<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), 
         }
     }
     let actives = b.all_alive();
+    // A seeking Trace with a foe to copy changes an ability during the event and starts it, which
+    // any other Pokémon's handlers can depend on or change (a copied Unnerve stopping a foe's
+    // berry, a copied Intimidate next to White Herb, a second seeking Trace copying the copy):
+    // every tie is drawn then. Only a Trace copy changes an ability on Update, so no seeking
+    // Trace without a target now gets one during the event.
+    let trace_copies = actives
+        .iter()
+        .any(|&slot| super::switching::trace_can_copy(b, slot));
     // The effective ability: Symbiosis acts through `onAllyAfterUseItem`, a `runEvent` handler
     // skipped while its holder ignores its ability (no implemented Update handler changes that).
     let actives = super::abilities::speed_sorted(b, actives, |b, slot| {
-        b.alive_slots(slot.side)
-            .into_iter()
-            .any(|s| b.ability(s) == abilities::SYMBIOSIS)
+        trace_copies
+            || b.alive_slots(slot.side)
+                .into_iter()
+                .any(|s| b.ability(s) == abilities::SYMBIOSIS)
     });
     for slot in actives {
         if b.alive(slot).is_none() {
@@ -112,13 +122,18 @@ pub(crate) fn update_event<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), 
         }
         // Its conditions' `onUpdate` (sub-order 2: Attract, Syrup Bomb, Fling; Attract and Syrup
         // Bomb only remove themselves, Fling throws the item before the item's own handlers
-        // below), the ability's (7), the item's (8); a Pokémon has one ability, so the two
-        // ability calls never both act.
+        // below), the ability's (7), the item's (8); a Pokémon has one ability, so the ability
+        // calls never both act. The ability's handler is the one the Pokémon has as its turn
+        // comes: one Trace copies now waits for the next Update.
         super::conditions::attract_update(b, slot);
         super::conditions::syrup_bomb_update(b, slot);
         super::conditions::fling_update(b, slot)?;
-        super::abilities::on_update(b, slot);
-        super::forme::on_update(b, slot);
+        if b.ability(slot) == abilities::TRACE {
+            super::switching::trace_update(b, slot)?;
+        } else {
+            super::abilities::on_update(b, slot);
+            super::forme::on_update(b, slot);
+        }
         // The item's handlers were collected with the Pokémon's item at the start of its turn
         // in the event: an item Symbiosis gives it after a berry is eaten waits for the next
         // Update.

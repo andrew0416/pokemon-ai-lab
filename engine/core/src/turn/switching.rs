@@ -10,7 +10,8 @@
 //! A handler whose holder's ability changed before it ran is skipped.
 //!
 //! Implemented start handlers: the four weather and four terrain setters, Intimidate, Trace
-//! (copies a random traceable adjacent foe's ability and starts it at once), Air Lock and Cloud
+//! (copies a random traceable adjacent foe's ability and starts it at once, or keeps seeking
+//! until an `Update` finds one: [`trace_update`]), Air Lock and Cloud
 //! Nine (their `WeatherChange` event has no implemented handler), and abilities whose `onStart`
 //! only announces them; of items, the Seeds' `onStart` (`onSwitchInPriority: -1`, after every
 //! ability). Anything else that could fire during a switch-in (other
@@ -660,9 +661,7 @@ fn switch_in_problem<const N: usize>(
 ) -> Option<String> {
     let mon = b.mon(pokemon);
     let name = mon.species.data().name;
-    // Trace is replaced by the ability it copies as it starts (`trace` checks that one; one that
-    // keeps seeking is refused there).
-    if on_field && !ability_supported_on_field(mon.ability) && mon.ability != abilities::TRACE {
+    if on_field && !ability_supported_on_field(mon.ability) {
         return Some(format!(
             "{name}: ability {} ({:?})",
             mon.ability.data().name,
@@ -1375,6 +1374,13 @@ pub(crate) fn end_ability<const N: usize>(
         b.delete_volatile(slot, Volatile::SupremeOverlord);
         return Ok(());
     }
+    // Trace (no `onEnd`): its `abilityState.seek` goes with the ability. (A Gastro Acid `End`
+    // leaves it in Showdown, but that suppression lasts as long as the holder stays, so a seeking
+    // Trace under it never acts again.)
+    if ability == abilities::TRACE {
+        b.delete_volatile(slot, Volatile::TraceSeek);
+        return Ok(());
+    }
     // Slow Start's `onEnd` only logs; its `abilityState.counter` goes with the ability.
     if ability == abilities::SLOW_START {
         b.delete_volatile(slot, Volatile::SlowStart);
@@ -1444,40 +1450,85 @@ pub(crate) fn end_ability<const N: usize>(
     Ok(())
 }
 
-/// Trace's `onStart` → `Update`: copies the ability of a uniformly random adjacent foe whose
-/// ability lacks `notrace`, then that ability starts at once (`setAbility` → `Start`). With no
-/// traceable foe Trace keeps seeking on later Updates, which the engine cannot represent, so
-/// that (and the No Ability edge case) is unsupported. An effective Ability Shield stops the
-/// seeking: Trace stays.
+/// Trace's `onStart`: `effectState.seek = true`, then its `onUpdate` at once
+/// (`singleEvent('Update')`: [`trace_copy`]). An effective Ability Shield (`pokemon.hasItem`: under
+/// Magic Room Trace seeks, and the shield's `onSetAbility` is skipped too) sets `seek = false`, so
+/// Trace never copies (its `onUpdate` returns while `seek` is false, and only `onStart` sets it);
+/// so does a foe with No Ability (refused: no standard Pokémon has it). A Trace that finds no
+/// traceable foe keeps seeking ([`Volatile::TraceSeek`]) and copies at a later `Update`
+/// ([`trace_update`]).
 fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), TurnError> {
-    let pokemon = b.alive(holder).expect("the holder is active");
+    // `foeActive.ability === 'noability'`: the raw abilities.
     let foes = b.alive_slots(holder.side.other());
-    // `foeActive.ability === 'noability'`, `target.getAbility()`: the raw abilities.
     if foes
         .iter()
         .any(|&f| b.raw_ability(f) == abilities::NO_ABILITY)
     {
         return Err(b.unsupported("Trace next to No Ability"));
     }
-    // `pokemon.hasItem('Ability Shield')` (the effective item: under Magic Room Trace seeks and
-    // the shield's `onSetAbility` is skipped too): `effectState.seek = false`, so Trace never
-    // copies (its `onUpdate` returns while `seek` is false, and only `onStart` sets it).
+    // (No seeking to clear: every Start of Trace comes with a fresh `abilityState` except
+    // Neutralizing Gas's restart, which skips a shield holder.)
     if b.item(holder) == items::ABILITY_SHIELD {
         return Ok(());
     }
-    let targets: Vec<SlotRef> = foes
+    if !trace_copy(b, holder)? {
+        let seek = crate::volatile::VolatileState {
+            active: true,
+            ..crate::volatile::VolatileState::NONE
+        };
+        b.set_volatile_state(holder, Volatile::TraceSeek, seek);
+    }
+    Ok(())
+}
+
+/// Trace's `onUpdate` for the Pokémon in `holder` (`update::update_event`, when the ability that
+/// acts for it is Trace): nothing unless it is seeking ([`Volatile::TraceSeek`]), else
+/// [`trace_copy`].
+pub(crate) fn trace_update<const N: usize>(
+    b: &mut Battle<'_, N>,
+    holder: SlotRef,
+) -> Result<(), TurnError> {
+    if b.volatile(holder, Volatile::TraceSeek).active {
+        trace_copy(b, holder)?;
+    }
+    Ok(())
+}
+
+/// Whether the Pokémon in `slot` has a seeking Trace that acts and a traceable foe to copy now:
+/// its `onUpdate` changes an ability in this `Update` (`update::update_event` draws every Speed
+/// tie then).
+pub(crate) fn trace_can_copy<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
+    b.volatile(slot, Volatile::TraceSeek).active
+        && b.ability(slot) == abilities::TRACE
+        && !traceable_foes(b, slot).is_empty()
+}
+
+/// Trace's targets: `pokemon.adjacentFoes()` (in doubles every foe not fainted) whose ability
+/// (`getAbility()`, the raw one) lacks `notrace` and is not No Ability.
+fn traceable_foes<const N: usize>(b: &Battle<'_, N>, holder: SlotRef) -> Vec<SlotRef> {
+    b.alive_slots(holder.side.other())
         .into_iter()
         .filter(|&f| {
-            !b.raw_ability(f)
-                .data()
-                .flags
-                .contains(AbilityFlags::NOTRACE)
+            let ability = b.raw_ability(f);
+            ability != abilities::NO_ABILITY
+                && !ability.data().flags.contains(AbilityFlags::NOTRACE)
         })
-        .collect();
+        .collect()
+}
+
+/// The body of Trace's `onUpdate` once `seek` is set: `this.sample(possibleTargets)` among the
+/// [`traceable_foes`] (nothing without one), then `pokemon.setAbility(ability, target)`: nothing
+/// at 0 HP; a `SetAbility` an effective Ability Shield blocks (`abilities::set_ability_blocked`:
+/// Magic Room ended while Trace was seeking) leaves it seeking; otherwise Trace's `End` (it has
+/// none), the copied ability with a fresh `abilityState` (the seeking ends), and its `Start` at
+/// once. Returns whether it copied.
+fn trace_copy<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<bool, TurnError> {
+    let Some(pokemon) = b.alive(holder) else {
+        return Ok(false);
+    };
+    let targets = traceable_foes(b, holder);
     if targets.is_empty() {
-        return Err(
-            b.unsupported("Trace has no traceable foe and would keep seeking on later Updates")
-        );
+        return Ok(false);
     }
     let target = targets[b.rng.uniform(targets.len())];
     let copied = b.raw_ability(target);
@@ -1486,6 +1537,9 @@ fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), T
             "Trace copying {} (cantsuppress: setAbility fails and Trace keeps seeking)",
             copied.data().name
         )));
+    }
+    if super::abilities::set_ability_blocked(b, holder) {
+        return Ok(false);
     }
     // After a switch during the battle the copied ability is on the field for the rest of the
     // turn, so it must be supported there too (at the battle start `support::check_state` checks
@@ -1502,7 +1556,9 @@ fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), T
         old: abilities::TRACE,
         new: copied,
     });
-    start_ability(b, holder, copied)
+    b.delete_volatile(holder, Volatile::TraceSeek);
+    start_ability(b, holder, copied)?;
+    Ok(true)
 }
 
 /// `getActionSpeed()` of a fainted Pokémon still holding a position (the `instaswitch` action

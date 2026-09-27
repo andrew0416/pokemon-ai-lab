@@ -456,8 +456,8 @@ def evidence(universe, sources):
     }
     universe_of = {"moves": u_moves, "abilities": u_abilities, "items": u_items}
     singular = {"moves": "move", "abilities": "ability", "items": "item"}
-    trace_note = {"abilities": " (Trace counts as supported through its switch-in; on the field "
-                  "`ability_supported_on_field` still rejects it: R1)"}
+    trace_note = {"abilities": " (Trace included: its switch-in and, while it seeks, its `onUpdate` "
+                  "are implemented since R1)"}
     for section in ("moves", "abilities", "items"):
         names = unsupported.get(section, set())
         ids = {by_name[section].get(n, "?" + n) for n in names}

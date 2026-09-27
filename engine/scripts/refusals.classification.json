@@ -33,28 +33,28 @@
   "Instruct repeating {}, which the target does not know (Struggle, Transform)": {
    "board": "R6-instruct", "fixture": "rr-instruct-struggle",
    "what": "Instruct checks the last move's flags (`failinstruct`, charge, recharge, Z, Max) before looking for its slot, as Showdown does; the refusal stays for a last move outside the slots that the flags do not fail, which no standard battle has (E11)."
+  },
+  "Trace has no traceable foe and would keep seeking on later Updates": {
+   "board": "R1-trace-seeking", "fixture": "rr-trace-no-traceable",
+   "what": "Trace's `effectState.seek` is the hidden volatile `traceseek` (`Volatile::TraceSeek`, set by `switching::trace` when nothing was copied); every later Update in which its Trace acts copies a random traceable foe (`switching::trace_update` from `update::update_event`, before the item's handlers; a Speed tie is drawn while a Trace can copy). Also fixtures `mm-trace-*`."
+  },
+  "{}: Trace still seeking a target": {
+   "board": "R1-trace-seeking", "fixture": "rr-trace-gastro-acid-baton-pass",
+   "what": "Removed from `check_state` (it was shadowed by `{}: ability {} ({})`): Trace is supported on the field, seeking or not; a Trace that never started (Gastro Acid passed by Baton Pass) stays inert, as in Showdown (Gastro Acid lasts while its holder stays)."
   }
  },
  "entries": {
-  "Trace has no traceable foe and would keep seeking on later Updates": {
-   "reachable": "yes", "kind": "mechanic", "board": "R1-trace-seeking", "repro": "rr-trace-no-traceable",
-   "why": "A standard Trace holder (Gardevoir; Mega Alakazam / Meowstic) facing only `notrace` foes (Mimikyu, Aegislash, Ditto, Zoroark, Palafin, Morpeko, Castform, Passimian, another Trace) or no foe keeps seeking on every later Update; the state has no seeking flag."
-  },
   "{}: ability {} ({})": {
-   "reachable": "yes", "kind": "mechanic", "board": "R1-trace-seeking", "repro": "rr-mega-alakazam-trace",
-   "why": "Trace is the one standard ability `ability_supported_on_field` rejects (it is only handled as a switch-in). `mega_target` therefore refuses every Trace Mega (Alakazam-Mega, Meowstic-M-Mega, Meowstic-F-Mega), and `check_state` refuses a Trace that never started (Gastro Acid passed by Baton Pass: `rr-trace-gastro-acid-baton-pass`). Every other ability behind this message is outside the range (E1); `switch_in_problem` exempts Trace."
+   "reachable": "no", "kind": "static", "board": "R1-trace-seeking",
+   "why": "`check_state`, `mega_target` and `switch_in_problem` refuse an ability `ability_supported_on_field` rejects; every standard ability is supported on the field (E1), Trace too since R1 (its seeking `onUpdate` is `switching::trace_update`), so neither a Trace Mega (Alakazam-Mega, both Meowstic Megas) nor a Trace that never started is refused."
   },
   "check_side: -> mega::mega_target(mon)": {
-   "reachable": "yes", "kind": "forward", "board": "R1-trace-seeking", "repro": "rr-mega-alakazam-trace",
-   "why": "Forwards `mega_target` for a Mega choice: reachable through its `{}: ability {} ({})` (Trace Megas); `{} holding {} has no Mega Evolution` and `{}: species callbacks {}` are not."
+   "reachable": "no", "kind": "forward", "board": "R1-trace-seeking",
+   "why": "Forwards `mega_target` for a Mega choice; none of its messages is reachable: `{}: ability {} ({})` (every Mega ability is supported, E1; Trace since R1), `{} holding {} has no Mega Evolution` and `{}: species callbacks {}`."
   },
   "check_turn: -> support::check_state(state)": {
-   "reachable": "yes", "kind": "forward", "board": "R1-trace-seeking", "repro": "rr-trace-gastro-acid-baton-pass",
-   "why": "Forwards `check_state`: reachable through `{}: ability {} ({})` (a Trace that never started) and the Rivalry gender check (R13)."
-  },
-  "{}: Trace still seeking a target": {
-   "reachable": "no", "kind": "invariant", "board": "R1-trace-seeking",
-   "why": "Shadowed: `check_state` tests `ability_supported_on_field` first, which is false for Trace, so any Trace left on the field is refused with `{}: ability {} ({})` before this line (seen in `rr-trace-gastro-acid-baton-pass`)."
+   "reachable": "yes", "kind": "forward", "board": "R13-attract-gender", "repro": "rr-rivalry-undecided-gender",
+   "why": "Forwards `check_state`: reachable through the Rivalry gender check (R13); its `{}: ability {} ({})` is not since R1 (Trace on the field is supported)."
   },
   "Trace next to No Ability": {
    "reachable": "no", "kind": "past-only", "board": "R1-trace-seeking",

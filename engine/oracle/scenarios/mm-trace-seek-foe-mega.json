@@ -1,0 +1,74 @@
+{
+ "description": "R1 (Opus MM): both sides lead a seeking Gardevoir (each facing Trace and a `notrace` partner). p2's Gardevoir Mega Evolves: its Trace (and seeking) ends and Pixilate starts; at the Update after the megaEvo action p1's seeking Trace copies Pixilate.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Gardevoir",
+    "item": "",
+    "ability": "Trace",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Mimikyu",
+    "item": "",
+    "ability": "Disguise",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Gardevoir",
+    "item": "Gardevoirite",
+    "ability": "Trace",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Aegislash",
+    "item": "",
+    "ability": "Stance Change",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move calmmind, move swordsdance",
+  "p2": "move calmmind mega, move swordsdance"
+ }
+}

@@ -1,0 +1,88 @@
+{
+ "description": "R1 (Opus MM): a seeking Gardevoir (Gardevoirite) Mega Evolves in the turn Arcanine switches in: the switch (order 103) and its Update come before the megaEvo action (104), so Trace copies Intimidate (p2 -1 Atk), Arcanine's Intimidate follows, then Mega Evolution replaces the copied Intimidate with Pixilate.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Gardevoir",
+    "item": "Gardevoirite",
+    "ability": "Trace",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Mimikyu",
+    "item": "",
+    "ability": "Disguise",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Aegislash",
+    "item": "",
+    "ability": "Stance Change",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Arcanine",
+    "item": "",
+    "ability": "Intimidate",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Will-O-Wisp"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "turn": {
+  "p1": "move calmmind mega, move curse",
+  "p2": "move swordsdance, switch 3"
+ }
+}

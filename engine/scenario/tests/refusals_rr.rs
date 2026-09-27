@@ -30,21 +30,6 @@ fn any_fixture(name: &str) -> Value {
 /// (scenario, text the refusal must contain, board task).
 const REFUSED: &[(&str, &str, &str)] = &[
     (
-        "rr-trace-no-traceable",
-        "Trace has no traceable foe and would keep seeking on later Updates",
-        "R1-trace-seeking",
-    ),
-    (
-        "rr-mega-alakazam-trace",
-        "Alakazam-Mega: ability Trace",
-        "R1-trace-seeking",
-    ),
-    (
-        "rr-trace-gastro-acid-baton-pass",
-        "Gardevoir: ability Trace",
-        "R1-trace-seeking",
-    ),
-    (
         "rr-hazard-order",
         "switching into hazards whose order (Showdown effectOrder) decides the outcome",
         "R2-hazard-effect-order",
@@ -223,25 +208,29 @@ fn eject_button_ignores_a_future_move() {
     assert_exact_parity("rr-future-sight-eject-button");
 }
 
-// ---- still refused: Showdown's answer, for the board task that implements it --------------
+// ---- fixed by R1-trace-seeking (Opus MM; more in `abilities_trace_seek.rs`) -----------------
 
+/// Trace facing only `notrace` foes copies nothing and keeps seeking (the hidden `traceseek`).
 #[test]
-#[ignore = "refused: Trace has no traceable foe and would keep seeking on later Updates (board R1-trace-seeking)"]
 fn trace_with_no_traceable_foe() {
     assert_exact_parity("rr-trace-no-traceable");
 }
 
+/// Alakazam-Mega's Trace starts as it Mega Evolves and copies one of two traceable foes at
+/// random.
 #[test]
-#[ignore = "refused: {}: ability {} ({}) — Trace as a Mega's ability (board R1-trace-seeking)"]
 fn mega_alakazam_trace() {
     assert_exact_parity("rr-mega-alakazam-trace");
 }
 
+/// Gastro Acid passed by Baton Pass: the newcomer's Trace never starts (its switch-in handler is
+/// suppressed) and stays inert (Gastro Acid lasts as long as it stays).
 #[test]
-#[ignore = "refused: {}: ability {} ({}) — a Trace that never started (board R1-trace-seeking)"]
 fn trace_under_passed_gastro_acid() {
     assert_exact_parity("rr-trace-gastro-acid-baton-pass");
 }
+
+// ---- still refused: Showdown's answer, for the board task that implements it --------------
 
 #[test]
 #[ignore = "refused: {} switching into hazards whose order (Showdown effectOrder) decides the outcome (board R2-hazard-effect-order)"]

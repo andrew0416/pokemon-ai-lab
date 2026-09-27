@@ -261,7 +261,8 @@ pub(crate) fn start_handler_implemented(item: ItemId, handler: &str) -> bool {
         "onAnySwitchIn" => any_switch_in_priority(item).is_some(),
         // Ability Shield: the only `setAbility` of a switch-in is the holder's own Trace, which
         // does not seek with an effective shield (`switching::trace`) and, under Magic Room,
-        // sets the ability past the skipped item; a forme change skips the event.
+        // sets the ability past the skipped item (a later copy of a Trace still seeking asks
+        // the shield: `switching::trace_copy`); a forme change skips the event.
         "onSetAbility" => item == items::ABILITY_SHIELD,
         _ => false,
     }

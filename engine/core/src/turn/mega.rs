@@ -8,8 +8,10 @@
 //!    nature and SP, `spreadModify`); `updateMaxHp` keeps the HP lost so far.
 //! 2. The ability becomes the Mega forme's first ability, permanently (`baseAbility` too).
 //!    `setAbility(..., isFromFormeChange)` runs the old ability's `End` and the new one's
-//!    `Start`, so Sand Stream sets sand (or fails against the same weather) and Intimidate
-//!    fires again.
+//!    `Start`, so Sand Stream sets sand (or fails against the same weather), Intimidate
+//!    fires again, and a Trace Mega (Alakazam, both Meowstic) copies a random traceable foe's
+//!    ability or keeps seeking (`switching::trace`); a seeking Trace that Mega Evolves away
+//!    stops seeking (its `End`).
 //! 3. The side's once-per-battle Mega budget is spent (`gimmicks_used`).
 //! 4. `AfterMega` has handlers only in items and abilities the engine does not support on the
 //!    field (Eject Pack, Mirror Herb, White Herb, Opportunist-style deferred boosts), so

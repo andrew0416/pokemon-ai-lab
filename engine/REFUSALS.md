@@ -4,17 +4,13 @@
 
 범위: Champions 모드(Showdown `9e317a6`)에서 `isNonstandard`가 null인 종(메가 포함, 배틀 중 폼은 기본 종이 표준일 때만), 그 종의 특성(+심플빔·고민씨가 주는 심플·불면), `learnsets.ts`의 기술(+표준 플래그 기술·발버둥), 표준 도구. 테라·다이맥스·Z는 규칙셋이 막는다. 목록은 `refusals.universe.json`, 근거 검사는 아래 '근거'.
 
-- 거부 호출 73곳(함수 47개). 키 115개 = 호출에 쓰인 메시지 63개 + 다른 함수의 메시지를 전달하는 호출 7개 + 메시지 생산 함수(`producers`)의 메시지 45개.
-- 도달 가능 34개, 도달 불가능 81개, 미확인 0개.
+- 거부 호출 72곳(함수 48개). 키 113개 = 호출에 쓰인 메시지 62개 + 다른 함수의 메시지를 전달하는 호출 7개 + 메시지 생산 함수(`producers`)의 메시지 44개.
+- 도달 가능 31개, 도달 불가능 82개, 미확인 0개.
 
 ## 도달 가능 (Champions 표준 범위)
 
 | 키 | 지점 | 종류 | 재현 시나리오 | 오라클 결과 수 | 보드 | 이유 |
 |---|---|---|---|---|---|---|
-| `Trace has no traceable foe and would keep seeking on later Updates` | switching.rs::trace | mechanic | `rr-trace-no-traceable` | full: 1 | R1-trace-seeking | A standard Trace holder (Gardevoir; Mega Alakazam / Meowstic) facing only `notrace` foes (Mimikyu, Aegislash, Ditto, Zoroark, Palafin, Morpeko, Castform, Passimian, another Trace) or no foe keeps seeking on every later Update; the state has no seeking flag. |
-| `check_side: -> mega::mega_target(mon)` | mod.rs::check_side | forward | `rr-mega-alakazam-trace` | full: 2 | R1-trace-seeking | Forwards `mega_target` for a Mega choice: reachable through its `{}: ability {} ({})` (Trace Megas); `{} holding {} has no Mega Evolution` and `{}: species callbacks {}` are not. |
-| `check_turn: -> support::check_state(state)` | mod.rs::check_turn | forward | `rr-trace-gastro-acid-baton-pass` | full: 2 | R1-trace-seeking | Forwards `check_state`: reachable through `{}: ability {} ({})` (a Trace that never started) and the Rivalry gender check (R13). |
-| `{}: ability {} ({})` | support.rs::check_state (producer)<br>mega.rs::mega_target (producer)<br>switching.rs::switch_in_problem (producer) | mechanic | `rr-mega-alakazam-trace` | full: 2 | R1-trace-seeking | Trace is the one standard ability `ability_supported_on_field` rejects (it is only handled as a switch-in). `mega_target` therefore refuses every Trace Mega (Alakazam-Mega, Meowstic-M-Mega, Meowstic-F-Mega), and `check_state` refuses a Trace that never started (Gastro Acid passed by Baton Pass: `rr-trace-gastro-acid-baton-pass`). Every other ability behind this message is outside the range (E1); `switch_in_problem` exempts Trace. |
 | `{} switching into hazards whose order (Showdown effectOrder) decides the outcome` | conditions.rs::entry_hazards | mechanic | `rr-hazard-order` | full: 1 | R2-hazard-effect-order | Stealth Rock / Spikes with Toxic Spikes (or Sticky Web against Mirror Armor, Corviknight) on one side and a newcomer the damage can knock out: Showdown runs them in the order they were set (a Poison type knocked out first leaves the Toxic Spikes), which the state does not keep. |
 | `Emergency Exit of a replacement hit by entry hazards` | mod.rs::run_replacements | mechanic | `rr-emergency-exit-replacement` | full: 1 | R3-emergency-exit-replacement | Golisopod (Emergency Exit) replacing a fainted Pokémon onto Stealth Rock / Spikes that take it to half: Showdown asks for another switch before the turn ends; the replacement decision cannot suspend. |
 | `redirection tie between {} and {} (Showdown breaks it by effectOrder)` | moves.rs::foe_redirect_target | mechanic | `rr-redirect-tie` | full: 1 | R4-redirection-tie | Two redirectors of one priority at equal Speed (Follow Me and Rage Powder users, two Lightning Rod holders): Showdown orders them by `effectOrder`, which the state does not keep. |
@@ -31,6 +27,7 @@
 | `Recycle restoring {} (its onStart)` | moves/handlers.rs::on_hit | mechanic | `rr-recycle-seed` | full: 1 | R11-item-restart | Recycle (standard) bringing back a Terrain Seed, White Herb or Metronome, whose `onStart` acts on the new holder. |
 | `Attract between {} and {} with an undecided gender (give the sets a gender)` | conditions.rs::attract_fails | input | `rr-cute-charm-undecided-gender` | full: 2 | R13-attract-gender | Cute Charm (Clefable, Milotic, Lopunny, Wigglytuff) next to a set without a gender: Showdown drew the gender at team creation (`battle.sample(['M', 'F'])`), the scenario does not say which. |
 | `Rivalry next to {} of undecided gender (give the set a gender)` | abilities.rs::rivalry_problem (producer) | input | `rr-rivalry-undecided-gender` | full: 22 | R13-attract-gender | Rivalry (Luxray, Pyroar) on the field next to a set without a gender. |
+| `check_turn: -> support::check_state(state)` | mod.rs::check_turn | forward | `rr-rivalry-undecided-gender` | full: 22 | R13-attract-gender | Forwards `check_state`: reachable through the Rivalry gender check (R13); its `{}: ability {} ({})` is not since R1 (Trace on the field is supported). |
 | `switch_in_as: -> why` | switching.rs::switch_in_as | forward | `rr-rivalry-switch-in-undecided-gender` | full: 1 | R13-attract-gender | Forwards `switch_in_problem`: reachable only through its Rivalry gender message; the others are E1, E2, E3, E8. |
 | `{} with {} of undecided gender (give the set a gender)` | moves/handlers.rs::try_immunity_problem | input | `rr-attract-undecided-gender` | full: 1 | R13-attract-gender | Attract (standard) between sets without a gender (Captivate is not standard). |
 | `{}: Rivalry next to a Pokémon of undecided gender` | switching.rs::switch_in_problem (producer) | input | `rr-rivalry-switch-in-undecided-gender` | full: 1 | R13-attract-gender | A Rivalry holder switching in next to a set without a gender. |
@@ -54,6 +51,8 @@
 | `Toxic Spikes poisoning a Synchronize holder (Synchronize ignores Toxic Spikes)` | R2-hazard-effect-order | `rr-toxic-spikes-synchronize` (full: 1) | `Battle::try_set_status_from_toxic_spikes` skips Synchronize's `onAfterSetStatus` (`effect.id === 'toxicspikes'`). |
 | `{} hitting a holder of {} (Eject Button)` | R5-future-move-edges | `rr-future-sight-eject-button` (full: 10) | Eject Button ignores future moves (`!move.flags['futuremove']`): the hit loop skips it for a future hit; only Red Card stays refused under the same message. |
 | `Instruct repeating {}, which the target does not know (Struggle, Transform)` | R6-instruct | `rr-instruct-struggle` (full: 29) | Instruct checks the last move's flags (`failinstruct`, charge, recharge, Z, Max) before looking for its slot, as Showdown does; the refusal stays for a last move outside the slots that the flags do not fail, which no standard battle has (E11). |
+| `Trace has no traceable foe and would keep seeking on later Updates` | R1-trace-seeking | `rr-trace-no-traceable` (full: 1) | Trace's `effectState.seek` is the hidden volatile `traceseek` (`Volatile::TraceSeek`, set by `switching::trace` when nothing was copied); every later Update in which its Trace acts copies a random traceable foe (`switching::trace_update` from `update::update_event`, before the item's handlers; a Speed tie is drawn while a Trace can copy). Also fixtures `mm-trace-*`. |
+| `{}: Trace still seeking a target` | R1-trace-seeking | `rr-trace-gastro-acid-baton-pass` (full: 2) | Removed from `check_state` (it was shadowed by `{}: ability {} ({})`): Trace is supported on the field, seeking or not; a Trace that never started (Gastro Acid passed by Baton Pass) stays inert, as in Showdown (Gastro Acid lasts while its holder stays). |
 
 ## 미확인
 
@@ -75,7 +74,7 @@
 | `Protosynthesis / Flower Gift next to Air Lock / Cloud Nine (the suppressor's End WeatherChange)` | abilities.rs::paradox_suppressor_problem (producer) | Protosynthesis and Flower Gift are on no standard species and cannot be copied (E8). | R20-generic-guards |
 | `Relic Song: Meloetta changing forme after fainting` | moves/handlers.rs::after_move_secondary_self | Relic Song and Meloetta are not standard (E8). | R20-generic-guards |
 | `Shields Down on {}: the core colour (the set's species) is not in the state` | forme.rs::shields_down | Minior is not standard (E8). | R20-generic-guards |
-| `Trace copying {} (cantsuppress: setAbility fails and Trace keeps seeking)` | switching.rs::trace | Every standard `cantsuppress` ability (Battle Bond, Disguise, Stance Change, Zero to Hero) is also `notrace`, so Trace never picks one (E6). | R1-trace-seeking |
+| `Trace copying {} (cantsuppress: setAbility fails and Trace keeps seeking)` | switching.rs::trace_copy | Every standard `cantsuppress` ability (Battle Bond, Disguise, Stance Change, Zero to Hero) is also `notrace`, so Trace never picks one (E6). | R1-trace-seeking |
 | `Trace next to No Ability` | switching.rs::trace | No standard species has No Ability and nothing sets it (E8). | R1-trace-seeking |
 | `Zygarde-Complete fainting (Power Construct's formeRegression to the set's forme)` | battle.rs::faint_messages | Zygarde is not standard (E8). | R20-generic-guards |
 | `a switch request for {} slot {} (Eject Pack) during {}` | mod.rs::refuse_switch_request | During the battle start or a replacement only Eject Pack (not standard, E8) raises a switch request; a replacement's Emergency Exit is refused before (R3). | R20-generic-guards |
@@ -98,7 +97,7 @@
 | `Pickup restoring {} (its Start / End for a new holder)` | abilities.rs::pickup | Every standard item with onStart / onEnd is one Trick moves (E3), which Pickup's check accepts. | R11-item-restart |
 | `Sleep Talk calling {} (its onAfterMove, unchecked for a called move)` | support.rs::sleep_talk_problem (producer) | The standard moves with an onAfterMove are Sparkling Aria and Spit Up (checked for a called move) and Beak Blast, which is `nosleeptalk` and `failcopycat` (E12). | R14-called-multi-hit |
 | `Sleep Talk could call {}` | support.rs::sleep_talk_problem (producer) | Forwards the static gate for the user's own moves: no standard move is refused (E1). | R20-generic-guards |
-| `Trace copying {} ({})` | switching.rs::trace | Trace copies a standard ability on the field; every one starts and is supported on the field (E1: no ability refused, none switch-in-only). | R1-trace-seeking |
+| `Trace copying {} ({})` | switching.rs::trace_copy | Trace copies a standard ability on the field; every one starts and is supported on the field (E1: no ability refused, none switch-in-only). | R1-trace-seeking |
 | `Transform copying {} ({})` | transform.rs::transform_into | Transform copies a standard ability on the field; all are supported (E1). | R19-transformed-off-field |
 | `Trick moving {} ({})` | moves/handlers.rs::trick | Every standard item with onStart / onEnd moves and the only other onTakeItem items are Mega Stones (E3). | R20-generic-guards |
 | `a special mechanic` | support.rs::move_unsupported (producer) | No standard move is refused (E1). | R20-generic-guards |
@@ -125,6 +124,7 @@
 | `{} gaining {} ({})` | abilities.rs::set_ability | `setAbility` gives an ability already on the field (Role Play, Entrainment, Receiver, Mummy) or Simple / Insomnia (Simple Beam, Worry Seed), all supported (E1). | R20-generic-guards |
 | `{} moving {} ({})` | moves/handlers.rs::pass_item | Covet / Thief (Bestow is not standard): every standard item moves (E3). | R20-generic-guards |
 | `{}: Symbiosis holding {} ({})` | abilities.rs::symbiosis_problem (producer) | Every standard item moves (E3). | R20-generic-guards |
+| `{}: ability {} ({})` | support.rs::check_state (producer)<br>mega.rs::mega_target (producer)<br>switching.rs::switch_in_problem (producer) | `check_state`, `mega_target` and `switch_in_problem` refuse an ability `ability_supported_on_field` rejects; every standard ability is supported on the field (E1), Trace too since R1 (its seeking `onUpdate` is `switching::trace_update`), so neither a Trace Mega (Alakazam-Mega, both Meowstic Megas) nor a Trace that never started is refused. | R1-trace-seeking |
 | `{}: ability {} switch-in handler ({})` | mod.rs::switching_problem_at_start (producer) | No standard ability is refused only at switch-in (E1). | R20-generic-guards |
 | `{}: ability {} switch-in handler {}` | switching.rs::switch_in_problem (producer) | No standard ability is refused only at switch-in (E1). | R20-generic-guards |
 | `{}: item {} ({})` | support.rs::check_state (producer)<br>switching.rs::switch_in_problem (producer) | No standard item is refused by the gate (E1). | R20-generic-guards |
@@ -146,7 +146,6 @@
 | `Transform by an encored Pokémon (the encored move leaves the move slots)` | transform.rs::transform_into | Transform is `failencore`, `failcopycat`, `nosleeptalk` and `failinstruct`, so an encored Pokémon can only run it by choosing it, and the Champions Encore replaces that queued action with the encored move first (a Mental Herb holder is cured at once); Imposter transforms on switch-in, when Encore is gone (`noCopy`). | R8-encore-edges |
 | `{} holding {} has no Mega Evolution` | mega.rs::mega_target (producer) | Mega eligibility comes from the same stone table (`gimmick::structural_gimmicks`), so the ruleset rejects a Mega choice without a Mega Evolution first. | R20-generic-guards |
 | `{} with {}` | support.rs::check_state (producer) | Hazard layers and durations as the engine sets them; only a hand-built state differs. | R20-generic-guards |
-| `{}: Trace still seeking a target` | support.rs::check_state (producer) | Shadowed: `check_state` tests `ability_supported_on_field` first, which is false for Trace, so any Trace left on the field is refused with `{}: ability {} ({})` before this line (seen in `rr-trace-gastro-acid-baton-pass`). | R1-trace-seeking |
 | `{}: a multi-hit future move` | moves.rs::future_move_hit | The hit loop suspends only between hits of a multi-hit move. The only standard future move is Future Sight (one hit; Doom Desire is not standard, E8), and Parental Bond skips `futuremove` moves. | R5-future-move-edges |
 | `{}: damageCallback of {}` | moves.rs::get_damage | Of the standard callbacks, Endeavor runs only when the user has less HP (its onTryImmunity), Super Fang, Metal Burst and Comeuppance return at least 1, Final Gambit the user's HP, and Counter / Mirror Coat 0 only without their condition, when their onTry already failed (Psywave, Nature's Madness, Ruination are not standard). | R20-generic-guards |
 | `{}: substitute volatile {} with {} HP` | support.rs::check_state (producer) | The engine sets the volatile and its HP together; only a hand-built state differs. | R20-generic-guards |
@@ -169,6 +168,7 @@
 
 | 키 | 지점 | 이유 | 보드 |
 |---|---|---|---|
+| `check_side: -> mega::mega_target(mon)` | mod.rs::check_side | Forwards `mega_target` for a Mega choice; none of its messages is reachable: `{}: ability {} ({})` (every Mega ability is supported, E1; Trace since R1), `{} holding {} has no Mega Evolution` and `{}: species callbacks {}`. | R1-trace-seeking |
 | `enumerate_start: -> why` | mod.rs::enumerate_start | Forwards `switching_problem_at_start`: no standard item, species or ability has an unimplemented switch-in handler (E1, E2). | R20-generic-guards |
 | `run_mega_evo: -> why` | mega.rs::run_mega_evo | Shadowed: `check_side` runs the same `mega_target` on the chosen Pokémon, and nothing changes its species or item between the choice and the Mega action (Mega Stones cannot be taken). | R20-generic-guards |
 
@@ -176,7 +176,7 @@
 
 | 보드 | 도달 가능 | 도달 불가능 |
 |---|---|---|
-| R1-trace-seeking | `check_turn: -> support::check_state(state)`<br>`check_side: -> mega::mega_target(mon)`<br>`Trace has no traceable foe and would keep seeking on later Updates`<br>`{}: ability {} ({})` | `Trace next to No Ability`<br>`Trace copying {} (cantsuppress: setAbility fails and Trace keeps seeking)`<br>`Trace copying {} ({})`<br>`{}: Trace still seeking a target` |
+| R1-trace-seeking | — | `check_side: -> mega::mega_target(mon)`<br>`Trace next to No Ability`<br>`Trace copying {} (cantsuppress: setAbility fails and Trace keeps seeking)`<br>`Trace copying {} ({})`<br>`{}: ability {} ({})` |
 | R2-hazard-effect-order | `{} switching into hazards whose order (Showdown effectOrder) decides the outcome` | — |
 | R3-emergency-exit-replacement | `Emergency Exit of a replacement hit by entry hazards` | — |
 | R4-redirection-tie | `redirection tie between {} and {} (Showdown breaks it by effectOrder)` | — |
@@ -188,7 +188,7 @@
 | R10-once-per-battle-flags | `{} after the battle start (its once-per-battle flag is not in the state)` | `{}: Battle Bond (its once-per-battle `bondTriggered` is not in the state)` |
 | R11-item-restart | `Recycle restoring {} (its onStart)` | `Pickup restoring {} (its Start / End for a new holder)` |
 | R12-syrup-bomb-source | — | `Syrup Bomb's residual with its source neither active nor fainted in place` |
-| R13-attract-gender | `Attract between {} and {} with an undecided gender (give the sets a gender)`<br>`{} with {} of undecided gender (give the set a gender)`<br>`switch_in_as: -> why`<br>`{}: Rivalry next to a Pokémon of undecided gender`<br>`Rivalry next to {} of undecided gender (give the set a gender)` | `Skill Swap: {}` |
+| R13-attract-gender | `Attract between {} and {} with an undecided gender (give the sets a gender)`<br>`check_turn: -> support::check_state(state)`<br>`{} with {} of undecided gender (give the set a gender)`<br>`switch_in_as: -> why`<br>`{}: Rivalry next to a Pokémon of undecided gender`<br>`Rivalry next to {} of undecided gender (give the set a gender)` | `Skill Swap: {}` |
 | R14-called-multi-hit | `check_side: -> why`<br>`{} called by {}: a multi-hit called move`<br>`Sleep Talk calling {} (a multi-hit move)` | `Sleep Talk calling {} (its onAfterMove, unchecked for a called move)` |
 | R16-fling-user-fainted | `Fling's user fainted before its item was thrown` | — |
 | R17-trick-or-treat-curse | `Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)` | — |
@@ -208,7 +208,7 @@
 | 검사 | 내용 | 결과 |
 |---|---|---|
 | E1-moves | COVERAGE.md: no move the support gate refuses is in the standard range, and none is refused only at switch-in | 통과: 149 refused, all outside |
-| E1-abilities | COVERAGE.md: no ability the support gate refuses is in the standard range, and none is refused only at switch-in (Trace counts as supported through its switch-in; on the field `ability_supported_on_field` still rejects it: R1) | 통과: 10 refused, all outside |
+| E1-abilities | COVERAGE.md: no ability the support gate refuses is in the standard range, and none is refused only at switch-in (Trace included: its switch-in and, while it seeks, its `onUpdate` are implemented since R1) | 통과: 10 refused, all outside |
 | E1-items | COVERAGE.md: no item the support gate refuses is in the standard range, and none is refused only at switch-in | 통과: 86 refused, all outside |
 | E2 | No standard species (Megas included) has species callbacks | 통과: 382 species |
 | E3 | Every standard item with onStart / onEnd is one `trick_moves_item` moves; the only standard onTakeItem items are Mega Stones | 통과 |

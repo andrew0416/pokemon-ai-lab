@@ -338,18 +338,34 @@ fn unsupported_start_handlers_are_rejected() {
     ));
 }
 
+/// The fastest lead's Trace facing only Trace holders (`notrace`) keeps seeking (R1, no longer
+/// refused): the foes' Traces copy Grassy Surge, and it copies Grassy Surge from them at the Update
+/// after the start (oracle `initial.cjs`, 32 branches, one outcome).
 #[test]
-fn trace_with_only_untraceable_foes_is_rejected() {
-    let loaded = single_hit();
-    let mut s = loaded.state.clone();
-    // Gardevoir moves first and faces two Trace users (Trace has `notrace`).
-    s.active_mut(GARDEVOIR).unwrap().stats[4] = 200;
-    for mon in &mut s.side_mut(SideId::Two).party[..2] {
-        mon.ability = abilities::TRACE;
+fn trace_with_only_untraceable_foes_seeks_until_the_start_update() {
+    let loaded =
+        load_scenario_file(engine_dir().join("oracle/scenarios/mm-trace-start-only-traces.json"))
+            .unwrap();
+    let ours = outcome_values(&loaded);
+    let path = engine_dir().join("oracle/expected/mm-trace-start-only-traces.initial.json");
+    let fixture: Value = serde_json::from_str(&std::fs::read_to_string(&path).unwrap()).unwrap();
+    let expected = fixture["outcomes"].as_array().unwrap();
+    assert_eq!(ours.len(), expected.len());
+    for o in expected {
+        let p = o["p"].as_f64().unwrap();
+        let found = ours.iter().find(|(_, state)| *state == o["state"]);
+        let (q, _) = found.unwrap_or_else(|| panic!("no engine outcome equals {}", o["state"]));
+        assert!((p - q).abs() < 1e-12, "p {p} vs {q}");
     }
-    match expand_switch_ins(&s) {
-        Err(SwitchInError::Unsupported { what }) => assert!(what.contains("Trace"), "{what}"),
-        other => panic!("{other:?}"),
+    // Every outcome of the start: all four hold Grassy Surge, none still seeking.
+    for outcome in initial_outcomes(&loaded).unwrap() {
+        for side in [SideId::One, SideId::Two] {
+            for slot in 0..2 {
+                let r = SlotRef { side, slot };
+                assert_eq!(ability(&outcome.state, r), abilities::GRASSY_SURGE);
+                assert!(!outcome.state.slot(r).volatiles.has(Volatile::TraceSeek));
+            }
+        }
     }
 }
 

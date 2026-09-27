@@ -1,0 +1,110 @@
+{
+ "description": "R1 (Opus MM): two seeking Traces on one side (two Gardevoir, the same Speed) facing Zoroark and Zoroark-Hisui (Illusion, `notrace`). Setup: both Zoroark use Memento and faint. Decision: p2 replaces both with Snorlax (Thick Fat) and Umbreon (Inner Focus); the Update after the last instaswitch (before the runSwitch) lets each Trace copy a uniformly random one of the two (the tied Gardevoir's order is drawn).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Gardevoir",
+    "item": "",
+    "ability": "Trace",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "name": "Gardy",
+    "species": "Gardevoir",
+    "item": "",
+    "ability": "Trace",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Zoroark",
+    "item": "",
+    "ability": "Illusion",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Memento",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "name": "Hisui",
+    "species": "Zoroark-Hisui",
+    "item": "",
+    "ability": "Illusion",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Memento",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "1234"
+ },
+ "setupTurns": [
+  [
+   "move calmmind, move calmmind",
+   "move memento 1, move memento 1"
+  ]
+ ],
+ "turn": {
+  "p1": "",
+  "p2": "switch 3, switch 4"
+ }
+}
