@@ -131,7 +131,8 @@
   "{} switching into hazards whose order (Showdown effectOrder) decides the outcome": {
    "board": "R2-hazard-effect-order",
    "fixture": "rr-hazard-order",
-   "what": "`SideHistory::hazard_order` (`field::HazardOrder`) keeps the order each side's hazards were set in (Showdown side-condition `effectOrder`; kept through removal and Court Change); `conditions::entry_hazards` runs them in that order.",
+   "what": "`SideHistory::hazard_order` (`field::HazardOrder`) keeps the order each side's hazards were set in (Showdown side-condition `effectOrder`; kept through removal and Court Change); `conditions::entry_hazards` runs them in that order."
+  },
   "Emergency Exit of a replacement hit by entry hazards": {
    "board": "R3-emergency-exit-replacement",
    "fixture": "rr-emergency-exit-replacement",
@@ -191,7 +192,6 @@
    "kind": "static",
    "board": "R1-trace-seeking",
    "why": "Trace copies a standard ability on the field; every one starts and is supported on the field (E1: no ability refused, none switch-in-only)."
-  },
   },
   "{}: a multi-hit future move": {
    "reachable": "no",
