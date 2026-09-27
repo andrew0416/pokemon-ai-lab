@@ -102,20 +102,29 @@ impl Chooser {
         } else {
             self.roll_mode.indices(attacker)
         };
-        let mut values: Vec<(u16, u32)> = Vec::with_capacity(indices.len());
+        // Distinct values with their multiplicity, first-seen order (on the stack: this runs for
+        // every damage roll).
+        let mut values = [(0u16, 0u32); crate::damage::DAMAGE_ROLL_COUNT];
+        let mut distinct = 0;
         for &i in indices {
             let r = rolls[i];
-            match values.iter_mut().find(|(v, _)| *v == r) {
+            match values[..distinct].iter_mut().find(|(v, _)| *v == r) {
                 Some((_, count)) => *count += 1,
-                None => values.push((r, 1)),
+                None => {
+                    values[distinct] = (r, 1);
+                    distinct += 1;
+                }
             }
         }
-        if values.len() == 1 {
+        if distinct == 1 {
             return values[0].0;
         }
         let total = indices.len() as f64;
-        let weights: Vec<f64> = values.iter().map(|&(_, c)| f64::from(c) / total).collect();
-        values[self.weighted(&weights)].0
+        let mut weights = [0.0f64; crate::damage::DAMAGE_ROLL_COUNT];
+        for (w, &(_, c)) in weights.iter_mut().zip(&values[..distinct]) {
+            *w = f64::from(c) / total;
+        }
+        values[self.weighted(&weights[..distinct])].0
     }
 
     /// A chooser that samples one path per run (Monte Carlo) from a nonzero seed.

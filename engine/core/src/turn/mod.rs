@@ -1392,6 +1392,24 @@ fn run_stage<const N: usize>(
     Ok(end)
 }
 
+/// The queue index of the action that runs next, given the queue's sort keys: the best by
+/// (order asc, priority desc, speed desc), uniformly at random among equals.
+fn pick_action<const N: usize>(b: &mut Battle<'_, N>, keys: &[(u32, i32, i32)]) -> usize {
+    let best = keys
+        .iter()
+        .copied()
+        .min_by(|x, y| x.0.cmp(&y.0).then(y.1.cmp(&x.1)).then(y.2.cmp(&x.2)))
+        .expect("non-empty");
+    let tied = keys.iter().filter(|&&k| k == best).count();
+    let nth = b.rng.uniform(tied);
+    keys.iter()
+        .enumerate()
+        .filter(|&(_, &k)| k == best)
+        .nth(nth)
+        .map(|(i, _)| i)
+        .expect("a tied action")
+}
+
 fn run_stage_inner<const N: usize>(
     b: &mut Battle<'_, N>,
     pending: &mut Pending,
@@ -1410,15 +1428,20 @@ fn run_stage_inner<const N: usize>(
         };
     }
     if !b.queue.is_empty() {
-        // Best action by (order asc, priority desc, speed desc), ties uniformly at random.
-        let keys: Vec<(u32, i32, i32)> = b.queue.iter().map(|a| b.action_key(a)).collect();
-        let best = keys
-            .iter()
-            .copied()
-            .min_by(|x, y| x.0.cmp(&y.0).then(y.1.cmp(&x.1)).then(y.2.cmp(&x.2)))
-            .expect("non-empty");
-        let tied: Vec<usize> = (0..b.queue.len()).filter(|&i| keys[i] == best).collect();
-        let pick = tied[b.rng.uniform(tied.len())];
+        // Best action by (order asc, priority desc, speed desc), ties uniformly at random. The
+        // keys stay on the stack for a queue of usual length (this runs for every action).
+        const INLINE: usize = 24;
+        let n = b.queue.len();
+        let pick = if n <= INLINE {
+            let mut keys = [(0u32, 0i32, 0i32); INLINE];
+            for (key, action) in keys.iter_mut().zip(&b.queue) {
+                *key = b.action_key(action);
+            }
+            pick_action(b, &keys[..n])
+        } else {
+            let keys: Vec<(u32, i32, i32)> = b.queue.iter().map(|a| b.action_key(a)).collect();
+            pick_action(b, &keys)
+        };
         let action = b.queue.remove(pick);
 
         // `runAction` skips a Pokémon that is no longer active or has fainted.

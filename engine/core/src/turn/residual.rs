@@ -322,15 +322,15 @@ fn speed_sort<const N: usize>(b: &mut Battle<'_, N>, list: &mut [Handler]) {
             .map(Handler::key)
             .min()
             .expect("non-empty");
-        let mut tied: Vec<usize> = (sorted..list.len())
-            .filter(|&i| list[i].key() == best)
-            .collect();
-        // Move the tied group to the front in order, then pick their order at random.
-        for (offset, &i) in tied.iter().enumerate() {
-            list.swap(sorted + offset, i);
+        // Move the tied group to the front in order, then pick their order at random. A swap
+        // only moves elements at or before `i`, so the scan sees every later element as it was.
+        let mut count = 0;
+        for i in sorted..list.len() {
+            if list[i].key() == best {
+                list.swap(sorted + count, i);
+                count += 1;
+            }
         }
-        let count = tied.len();
-        tied.clear();
         for k in 0..count {
             let pick = b.rng.uniform(count - k);
             list.swap(sorted + k, sorted + k + pick);
