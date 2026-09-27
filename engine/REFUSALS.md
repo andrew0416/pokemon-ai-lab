@@ -4,8 +4,8 @@
 
 범위: Champions 모드(Showdown `9e317a6`)에서 `isNonstandard`가 null인 종(메가 포함, 배틀 중 폼은 기본 종이 표준일 때만), 그 종의 특성(+심플빔·고민씨가 주는 심플·불면), `learnsets.ts`의 기술(+표준 플래그 기술·발버둥), 표준 도구. 테라·다이맥스·Z는 규칙셋이 막는다. 목록은 `refusals.universe.json`, 근거 검사는 아래 '근거'.
 
-- 거부 호출 73곳(함수 47개). 키 115개 = 호출에 쓰인 메시지 63개 + 다른 함수의 메시지를 전달하는 호출 7개 + 메시지 생산 함수(`producers`)의 메시지 45개.
-- 도달 가능 34개, 도달 불가능 81개, 미확인 0개.
+- 거부 호출 72곳(함수 46개). 키 114개 = 호출에 쓰인 메시지 62개 + 다른 함수의 메시지를 전달하는 호출 7개 + 메시지 생산 함수(`producers`)의 메시지 45개.
+- 도달 가능 33개, 도달 불가능 81개, 미확인 0개.
 
 ## 도달 가능 (Champions 표준 범위)
 
@@ -17,7 +17,6 @@
 | `{}: ability {} ({})` | support.rs::check_state (producer)<br>mega.rs::mega_target (producer)<br>switching.rs::switch_in_problem (producer) | mechanic | `rr-mega-alakazam-trace` | full: 2 | R1-trace-seeking | Trace is the one standard ability `ability_supported_on_field` rejects (it is only handled as a switch-in). `mega_target` therefore refuses every Trace Mega (Alakazam-Mega, Meowstic-M-Mega, Meowstic-F-Mega), and `check_state` refuses a Trace that never started (Gastro Acid passed by Baton Pass: `rr-trace-gastro-acid-baton-pass`). Every other ability behind this message is outside the range (E1); `switch_in_problem` exempts Trace. |
 | `{} switching into hazards whose order (Showdown effectOrder) decides the outcome` | conditions.rs::entry_hazards | mechanic | `rr-hazard-order` | full: 1 | R2-hazard-effect-order | Stealth Rock / Spikes with Toxic Spikes (or Sticky Web against Mirror Armor, Corviknight) on one side and a newcomer the damage can knock out: Showdown runs them in the order they were set (a Poison type knocked out first leaves the Toxic Spikes), which the state does not keep. |
 | `Emergency Exit of a replacement hit by entry hazards` | mod.rs::run_replacements | mechanic | `rr-emergency-exit-replacement` | full: 1 | R3-emergency-exit-replacement | Golisopod (Emergency Exit) replacing a fainted Pokémon onto Stealth Rock / Spikes that take it to half: Showdown asks for another switch before the turn ends; the replacement decision cannot suspend. |
-| `redirection tie between {} and {} (Showdown breaks it by effectOrder)` | moves.rs::foe_redirect_target | mechanic | `rr-redirect-tie` | full: 1 | R4-redirection-tie | Two redirectors of one priority at equal Speed (Follow Me and Rage Powder users, two Lightning Rod holders): Showdown orders them by `effectOrder`, which the state does not keep. |
 | `{} hitting a holder of {}` | moves.rs::future_move_hit | mechanic | `rr-future-sight-red-card` | full: 10 | R5-future-move-edges | Future Sight hitting a Red Card holder: the card drags the user out after the residual. (Eject Button ignores future moves and is no longer refused: fixed in this audit, `rr-future-sight-eject-button`.) |
 | `{} of {} hitting after its user left the field` | moves.rs::future_move_hit | mechanic | `rr-future-sight-user-left` | full: 20 | R5-future-move-edges | Future Sight whose user switched out or fainted before the hit: Showdown uses the benched user's stored stats (no ability or item); the engine has no attacker off the field. |
 | `Instruct on a Quick Claw holder` | moves/handlers.rs::instruct | mechanic | `rr-instruct-quick-claw` | full: 1 | R6-instruct | Quick Claw is standard; `resolveAction` draws its fractional priority again for the instructed action. |
@@ -54,6 +53,7 @@
 | `Toxic Spikes poisoning a Synchronize holder (Synchronize ignores Toxic Spikes)` | R2-hazard-effect-order | `rr-toxic-spikes-synchronize` (full: 1) | `Battle::try_set_status_from_toxic_spikes` skips Synchronize's `onAfterSetStatus` (`effect.id === 'toxicspikes'`). |
 | `{} hitting a holder of {} (Eject Button)` | R5-future-move-edges | `rr-future-sight-eject-button` (full: 10) | Eject Button ignores future moves (`!move.flags['futuremove']`): the hit loop skips it for a future hit; only Red Card stays refused under the same message. |
 | `Instruct repeating {}, which the target does not know (Struggle, Transform)` | R6-instruct | `rr-instruct-struggle` (full: 29) | Instruct checks the last move's flags (`failinstruct`, charge, recharge, Z, Max) before looking for its slot, as Showdown does; the refusal stays for a last move outside the slots that the flags do not fail, which no standard battle has (E11). |
+| `redirection tie between {} and {} (Showdown breaks it by effectOrder)` | R4-redirection-tie | `rr-redirect-tie` (full: 1) | Two redirectors of one priority at equal Speed: Showdown sorts the RedirectTarget handlers with `compareRedirectOrder` in a stable sort (no tie shuffle), so the holder whose `abilityState.effectOrder` is lower (switched in or last had an ability set first) wins, whatever the move and the order of use. New hidden `Slot::ability_order` (restarted by switch-in, `setAbility`, Skill Swap, Transform, Mega Evolution and other permanent forme changes; carried by Ally Switch), recorded only while a redirector can be in the battle; also `oo-redirect-tie-swapped`, `oo-redirect-tie-worry-seed`, `oo-lightningrod-tie`. |
 
 ## 미확인
 
@@ -179,7 +179,6 @@
 | R1-trace-seeking | `check_turn: -> support::check_state(state)`<br>`check_side: -> mega::mega_target(mon)`<br>`Trace has no traceable foe and would keep seeking on later Updates`<br>`{}: ability {} ({})` | `Trace next to No Ability`<br>`Trace copying {} (cantsuppress: setAbility fails and Trace keeps seeking)`<br>`Trace copying {} ({})`<br>`{}: Trace still seeking a target` |
 | R2-hazard-effect-order | `{} switching into hazards whose order (Showdown effectOrder) decides the outcome` | — |
 | R3-emergency-exit-replacement | `Emergency Exit of a replacement hit by entry hazards` | — |
-| R4-redirection-tie | `redirection tie between {} and {} (Showdown breaks it by effectOrder)` | — |
 | R5-future-move-edges | `{} of {} hitting after its user left the field`<br>`{} hitting a holder of {}` | `{}: a multi-hit future move` |
 | R6-instruct | `Instruct repeating {} (its lastMoveTargetLoc is not kept)`<br>`Instruct on a Quick Claw holder`<br>`Instruct on a Quick Draw holder` | `Instruct repeating {}, which the target does not know` |
 | R7-ally-switch-target | `{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)` | — |

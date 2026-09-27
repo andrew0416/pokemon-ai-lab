@@ -33,6 +33,10 @@
   "Instruct repeating {}, which the target does not know (Struggle, Transform)": {
    "board": "R6-instruct", "fixture": "rr-instruct-struggle",
    "what": "Instruct checks the last move's flags (`failinstruct`, charge, recharge, Z, Max) before looking for its slot, as Showdown does; the refusal stays for a last move outside the slots that the flags do not fail, which no standard battle has (E11)."
+  },
+  "redirection tie between {} and {} (Showdown breaks it by effectOrder)": {
+   "board": "R4-redirection-tie", "fixture": "rr-redirect-tie",
+   "what": "Two redirectors of one priority at equal Speed: Showdown sorts the RedirectTarget handlers with `compareRedirectOrder` in a stable sort (no tie shuffle), so the holder whose `abilityState.effectOrder` is lower (switched in or last had an ability set first) wins, whatever the move and the order of use. New hidden `Slot::ability_order` (restarted by switch-in, `setAbility`, Skill Swap, Transform, Mega Evolution and other permanent forme changes; carried by Ally Switch), recorded only while a redirector can be in the battle; also `oo-redirect-tie-swapped`, `oo-redirect-tie-worry-seed`, `oo-lightningrod-tie`."
   }
  },
  "entries": {
@@ -75,10 +79,6 @@
   "Emergency Exit of a replacement hit by entry hazards": {
    "reachable": "yes", "kind": "mechanic", "board": "R3-emergency-exit-replacement", "repro": "rr-emergency-exit-replacement",
    "why": "Golisopod (Emergency Exit) replacing a fainted Pokémon onto Stealth Rock / Spikes that take it to half: Showdown asks for another switch before the turn ends; the replacement decision cannot suspend."
-  },
-  "redirection tie between {} and {} (Showdown breaks it by effectOrder)": {
-   "reachable": "yes", "kind": "mechanic", "board": "R4-redirection-tie", "repro": "rr-redirect-tie",
-   "why": "Two redirectors of one priority at equal Speed (Follow Me and Rage Powder users, two Lightning Rod holders): Showdown orders them by `effectOrder`, which the state does not keep."
   },
   "{} of {} hitting after its user left the field": {
    "reachable": "yes", "kind": "mechanic", "board": "R5-future-move-edges", "repro": "rr-future-sight-user-left",

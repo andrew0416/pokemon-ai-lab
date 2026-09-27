@@ -183,6 +183,11 @@ pub(crate) fn forme_change<const N: usize>(
             new,
         });
     }
+    // A permanent change with the new forme's ability runs `setAbility` (a fresh
+    // `abilityState`); Disguise's and Ice Face's keep theirs.
+    if change == Change::Permanent {
+        b.restart_ability_state(slot);
+    }
     // `setSpecies`: `this.speed = this.storedStats.spe` until the next `updateSpeed()`, and the
     // new forme's weight (Autotomize's reductions end).
     b.species_set(slot);

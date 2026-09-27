@@ -91,6 +91,8 @@ pub(crate) fn run_mega_evo<const N: usize>(
         old,
         new,
     });
+    // setAbility's fresh `abilityState`.
+    b.restart_ability_state(slot);
     // `setSpecies`: `this.speed = this.storedStats.spe` until the next `updateSpeed()` (after
     // this action), the Mega forme's weight (Autotomize's reductions end), and no added type
     // (`this.addedType = species.addedType || ''`).

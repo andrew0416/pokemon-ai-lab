@@ -1018,6 +1018,8 @@ pub(crate) fn replace_ability<const N: usize>(
             new: ability,
         });
     }
+    // The fresh `abilityState` (even for the same ability) starts after every other one.
+    b.restart_ability_state(slot);
 }
 
 /// The ability of the Pokémon in `holder` as the handlers of `user`'s move see it. Showdown

@@ -3376,12 +3376,15 @@ fn swap_positions<const N: usize>(
     }
     let (user, ally) = (b.occupant(from), b.occupant(to));
     let (a, c) = (b.state.slot(from).clone(), b.state.slot(to).clone());
+    let order = b.ability_state_order();
     let mut swap = Vec::new();
     super::super::diff::slot_changes(&mut swap, from, &a, &c);
     super::super::diff::slot_changes(&mut swap, to, &c, &a);
     for instruction in swap {
         b.apply(instruction);
     }
+    // The ability states move with the Pokémon.
+    b.swap_ability_state_order(&order, from, to);
     for action in &mut b.queue {
         if Some(action.pokemon) == user {
             action.slot = to;

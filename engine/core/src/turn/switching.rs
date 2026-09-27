@@ -837,6 +837,8 @@ fn switch_in_as<const N: usize>(
         previous: Box::new(previous),
         party_index: Some(party_index),
     });
+    // `pokemon.abilityState = initEffectState(...)`: the newcomer's ability state is the latest.
+    b.restart_ability_state(slot);
     if let Some((from, shed_tail)) = passed {
         copy_volatile_from(b, slot, &from, shed_tail)?;
     }
@@ -1502,6 +1504,7 @@ fn trace<const N: usize>(b: &mut Battle<'_, N>, holder: SlotRef) -> Result<(), T
         old: abilities::TRACE,
         new: copied,
     });
+    b.restart_ability_state(holder);
     start_ability(b, holder, copied)
 }
 

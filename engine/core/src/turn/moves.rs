@@ -1195,7 +1195,7 @@ fn get_move_targets<const N: usize>(
             }
             let mut smart = mv.data.smart_target;
             if N > 1 && !ability_events::tracks_target(b, user, mv.data, mv.target) {
-                let (redirected, cleared) = redirect_target(b, user, mv, t)?;
+                let (redirected, cleared) = redirect_target(b, user, mv, t);
                 t = redirected;
                 smart &= !cleared;
             }
@@ -1235,11 +1235,11 @@ fn smart_targets<const N: usize>(
 
 /// Showdown `priorityEvent('RedirectTarget')`: the handlers are Follow Me, Rage Powder and
 /// Spotlight on the user's foes (`onFoeRedirectTarget`, priority 1, 1, 2) and Lightning Rod /
-/// Storm Drain on anyone else (`onAnyRedirectTarget`, priority 0). They are sorted by
-/// priority, then the holder's Speed (`compareRedirectOrder`), and the first whose holder is a
-/// valid target of the move's target type wins. Rage Powder skips powder-immune users. A tie
-/// between two valid holders is broken in Showdown by `effectOrder` (who entered the field or
-/// changed ability first), which the state does not record, so it is unsupported. Last comes
+/// Storm Drain on anyone else (`onAnyRedirectTarget`, priority 0). `runEvent` with `fastExit`
+/// sorts them with `compareRedirectOrder` (a plain stable sort, no Speed-tie shuffle): priority,
+/// then the holder's Speed, then the holder's `abilityState.effectOrder` (whose ability state
+/// started first: switch-in, `setAbility`; `Slot::ability_order`), and the first whose holder is
+/// a valid target of the move's target type wins. Rage Powder skips powder-immune users. Last comes
 /// the user's own Counter / Mirror Coat condition (`onRedirectTarget`, priority -1): the slot
 /// of the foe whose hit it recorded, whoever stands there now. The flag is whether a Follow Me,
 /// Rage Powder, Lightning Rod or Storm Drain handler took the move (`if (move.smartTarget)
@@ -1250,14 +1250,14 @@ fn redirect_target<const N: usize>(
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
-) -> Result<(SlotRef, bool), TurnError> {
-    Ok(match foe_redirect_target(b, user, mv)? {
+) -> (SlotRef, bool) {
+    match foe_redirect_target(b, user, mv) {
         Some((slot, priority)) => (slot, priority < 2),
         None => (
             handlers::counter_redirect(b, user, mv).unwrap_or(target),
             false,
         ),
-    })
+    }
 }
 
 /// The `RedirectTarget` handlers of priority 0 and above ([`redirect_target`]): the new target,
@@ -1267,7 +1267,7 @@ fn foe_redirect_target<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
-) -> Result<Option<(SlotRef, i8)>, TurnError> {
+) -> Option<(SlotRef, i8)> {
     // (priority, speed, holder), in Showdown's handler collection order: the user's side
     // (`onAny`), then each foe's `onFoe` volatiles and `onAny` ability.
     let mut handlers: Vec<(i8, i32, SlotRef)> = Vec::new();
@@ -1296,10 +1296,17 @@ fn foe_redirect_target<const N: usize>(
         }
     }
     if handlers.is_empty() {
-        return Ok(None);
+        return None;
     }
-    // Stable, so equal keys keep collection order.
-    handlers.sort_by(|a, b| b.0.cmp(&a.0).then(b.1.cmp(&a.1)));
+    // `compareRedirectOrder` in a stable `Array.prototype.sort` (no Speed-tie shuffle): priority,
+    // Speed, then the holders' `abilityState.effectOrder` (`Slot::ability_order`). Two holders
+    // never share one, so only one holder's own handlers keep their collection order.
+    handlers.sort_by(|x, y| {
+        let started = |s: SlotRef| Battle::<N>::ability_order_key(b.state.slot(s).ability_order, s);
+        y.0.cmp(&x.0)
+            .then(y.1.cmp(&x.1))
+            .then(started(x.2).cmp(&started(y.2)))
+    });
 
     let valid = |b: &Battle<'_, N>, priority: i8, holder: SlotRef| -> bool {
         let loc = loc_of(user, holder);
@@ -1319,34 +1326,10 @@ fn foe_redirect_target<const N: usize>(
         }
         valid_target_loc(N, user, loc, mv.target)
     };
-    let mut i = 0;
-    while i < handlers.len() {
-        let key = (handlers[i].0, handlers[i].1);
-        let mut j = i;
-        let mut winners: Vec<SlotRef> = Vec::new();
-        while j < handlers.len() && (handlers[j].0, handlers[j].1) == key {
-            let holder = handlers[j].2;
-            if valid(b, key.0, holder) && !winners.contains(&holder) {
-                winners.push(holder);
-            }
-            j += 1;
-        }
-        match winners.len() {
-            0 => {}
-            1 => return Ok(Some((winners[0], key.0))),
-            _ => {
-                return Err(b.unsupported(format!(
-                    "redirection tie between {} and {} (Showdown breaks it by effectOrder)",
-                    b.slot_mon(winners[0])
-                        .map_or("?", |m| m.species.data().name),
-                    b.slot_mon(winners[1])
-                        .map_or("?", |m| m.species.data().name),
-                )));
-            }
-        }
-        i = j;
-    }
-    Ok(None)
+    handlers
+        .iter()
+        .find(|&&(priority, _, holder)| valid(b, priority, holder))
+        .map(|&(priority, _, holder)| (holder, priority))
 }
 
 // ---- use ---------------------------------------------------------------------------------------

@@ -155,6 +155,12 @@ pub enum Instruction {
         old: i16,
         new: i16,
     },
+    /// `Slot::ability_order` (Showdown `abilityState.effectOrder`, hidden; redirection ties).
+    SetAbilityOrder {
+        target: SlotRef,
+        old: u8,
+        new: u8,
+    },
     SetField {
         effect: FieldEffect,
         old: Effect,
@@ -282,6 +288,9 @@ impl<const N: usize> State<N> {
             Instruction::SetSubstituteHp { target, new, .. } => {
                 self.slot_mut(target).substitute_hp = new
             }
+            Instruction::SetAbilityOrder { target, new, .. } => {
+                self.slot_mut(target).ability_order = new
+            }
             Instruction::SetField { effect, new, .. } => self.field[effect as usize] = new,
             Instruction::SetSideEffect {
                 side, effect, new, ..
@@ -361,6 +370,9 @@ impl<const N: usize> State<N> {
             }
             Instruction::SetSubstituteHp { target, old, .. } => {
                 self.slot_mut(target).substitute_hp = old
+            }
+            Instruction::SetAbilityOrder { target, old, .. } => {
+                self.slot_mut(target).ability_order = old
             }
             Instruction::SetField { effect, old, .. } => self.field[effect as usize] = old,
             Instruction::SetSideEffect {
@@ -516,6 +528,11 @@ mod tests {
                 old: 0,
                 new: 50,
             },
+            Instruction::SetAbilityOrder {
+                target: foe,
+                old: 0,
+                new: 2,
+            },
             Instruction::SetItem {
                 target: foe_mon,
                 old: ItemId::NONE,
@@ -579,6 +596,7 @@ mod tests {
         assert_eq!(state.pokemon(foe_mon).moves[0].pp, 5);
         assert_eq!(state.active(foe).unwrap().status_turns, 3);
         assert!(state.slot(foe).volatiles.has(Volatile::Flinch));
+        assert_eq!(state.slot(foe).ability_order, 2);
         assert!(state
             .side(SideId::One)
             .gimmicks_used

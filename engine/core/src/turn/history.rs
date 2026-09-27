@@ -221,4 +221,178 @@ impl<const N: usize> Battle<'_, N> {
             self.set_side_history(side, history);
         }
     }
+
+    // ---- abilityState.effectOrder (R4) --------------------------------------------------------
+
+    /// The occupied slots in the order their occupants' ability states started (Showdown
+    /// `abilityState.effectOrder`, low to high): by `(Slot::ability_order, side, slot)`.
+    pub(crate) fn ability_state_order(&self) -> Vec<SlotRef> {
+        let mut order: Vec<SlotRef> = State::<N>::slot_refs()
+            .filter(|&s| self.state.slot(s).party_index.is_some())
+            .collect();
+        order.sort_by_key(|&s| Self::ability_order_key(self.state.slot(s).ability_order, s));
+        order
+    }
+
+    /// The sort key of a slot's ability state start ([`Battle::ability_state_order`]).
+    pub(crate) fn ability_order_key(ability_order: u8, slot: SlotRef) -> (u8, usize, u8) {
+        (ability_order, slot.side.index(), slot.slot)
+    }
+
+    /// Writes `order` (occupied slots, earliest ability state first) as the smallest
+    /// `Slot::ability_order` values that give it: a slot keeps the previous one's value when it
+    /// comes after it in `(side, slot)` order, else takes the next value. The start's order
+    /// (p1a, p1b, p2a, p2b) is all 0, and equal orders get equal values, so positions merge.
+    pub(crate) fn set_ability_state_order(&mut self, order: &[SlotRef]) {
+        let mut value = 0u8;
+        let mut previous: Option<SlotRef> = None;
+        for &slot in order {
+            if previous.is_some_and(|p| (slot.side.index(), slot.slot) < (p.side.index(), p.slot)) {
+                value += 1;
+            }
+            let old = self.state.slot(slot).ability_order;
+            if old != value {
+                self.apply(Instruction::SetAbilityOrder {
+                    target: slot,
+                    old,
+                    new: value,
+                });
+            }
+            previous = Some(slot);
+        }
+    }
+
+    /// Showdown `abilityState = initEffectState({id, target})` for an active Pokémon: its ability
+    /// state now started after every other active one's (`battle.effectOrder++`). `switchIn`,
+    /// `setAbility` (also from a permanent forme change and Transform, and when the ability stays
+    /// the same) and Skill Swap. Recorded only while a redirection tie is possible
+    /// ([`super::battle::HistoryReaders::ability_order`]).
+    pub(crate) fn restart_ability_state(&mut self, slot: SlotRef) {
+        if !self.history_readers.ability_order {
+            return;
+        }
+        let mut order = self.ability_state_order();
+        order.retain(|&s| s != slot);
+        if self.state.slot(slot).party_index.is_some() {
+            order.push(slot);
+        }
+        self.set_ability_state_order(&order);
+    }
+
+    /// Ally Switch exchanged the slots `a` and `b` (their `ability_order` values with them):
+    /// the Pokémon keep their ability states, so the order `before` the exchange holds with the
+    /// two positions swapped.
+    pub(crate) fn swap_ability_state_order(&mut self, before: &[SlotRef], a: SlotRef, b: SlotRef) {
+        if !self.history_readers.ability_order {
+            return;
+        }
+        let order: Vec<SlotRef> = before
+            .iter()
+            .map(|&s| match s {
+                s if s == a => b,
+                s if s == b => a,
+                s => s,
+            })
+            .filter(|&s| self.state.slot(s).party_index.is_some())
+            .collect();
+        self.set_ability_state_order(&order);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::dex::SpeciesId;
+
+    const P1A: SlotRef = SlotRef {
+        side: SideId::One,
+        slot: 0,
+    };
+    const P1B: SlotRef = SlotRef {
+        side: SideId::One,
+        slot: 1,
+    };
+    const P2A: SlotRef = SlotRef {
+        side: SideId::Two,
+        slot: 0,
+    };
+    const P2B: SlotRef = SlotRef {
+        side: SideId::Two,
+        slot: 1,
+    };
+
+    fn leads() -> State<2> {
+        let mut state = State::<2>::default();
+        for side in [SideId::One, SideId::Two] {
+            for (i, p) in state.side_mut(side).party.iter_mut().enumerate() {
+                p.species = SpeciesId(i as u16 + 1);
+                p.max_hp = 100;
+                p.hp = 100;
+            }
+            for s in 0..2 {
+                state.side_mut(side).slots[s].party_index = Some(s as u8);
+            }
+        }
+        state
+    }
+
+    /// Opus OO R4: `Slot::ability_order` keeps the order the ability states started in
+    /// (`abilityState.effectOrder`) through restarts, an Ally Switch and an emptied slot, with the
+    /// smallest values (the battle start's order is all 0), and reverses.
+    #[test]
+    fn ability_state_order_follows_restarts_and_ally_switch() {
+        let mut state = leads();
+        let original = state.clone();
+        let mut chooser = super::super::branch::Chooser::new();
+        let mut b = Battle::new(&mut state, &mut chooser);
+        b.history_readers.ability_order = true;
+        assert_eq!(b.ability_state_order(), [P1A, P1B, P2A, P2B]);
+
+        // p1a's ability state restarts (a switch-in, setAbility): last.
+        b.restart_ability_state(P1A);
+        assert_eq!(b.ability_state_order(), [P1B, P2A, P2B, P1A]);
+        let values =
+            |b: &Battle<'_, 2>| [P1A, P1B, P2A, P2B].map(|s| b.state.slot(s).ability_order);
+        assert_eq!(values(&b), [1, 0, 0, 0]);
+
+        // Ally Switch on side one: the Pokémon take their ability states along.
+        let before = b.ability_state_order();
+        let (a, c) = (b.state.slot(P1A).clone(), b.state.slot(P1B).clone());
+        let mut swap = Vec::new();
+        super::super::diff::slot_changes(&mut swap, P1A, &a, &c);
+        super::super::diff::slot_changes(&mut swap, P1B, &c, &a);
+        for instruction in swap {
+            b.apply(instruction);
+        }
+        b.swap_ability_state_order(&before, P1A, P1B);
+        assert_eq!(b.ability_state_order(), [P1A, P2A, P2B, P1B]);
+        assert_eq!(values(&b), [0, 1, 0, 0]);
+
+        // p2a restarts, then p1b: the earliest is now p1a.
+        b.restart_ability_state(P2A);
+        b.restart_ability_state(P1B);
+        assert_eq!(b.ability_state_order(), [P1A, P2B, P2A, P1B]);
+
+        // Restarting everyone in the start's order gives the start's values back.
+        for s in [P1A, P1B, P2A, P2B] {
+            b.restart_ability_state(s);
+        }
+        assert_eq!(values(&b), [0, 0, 0, 0]);
+
+        let log = std::mem::take(&mut b.log);
+        drop(b);
+        state.reverse(&log);
+        assert_eq!(state, original);
+    }
+
+    /// Without a redirector in the battle nothing is recorded.
+    #[test]
+    fn ability_state_order_is_not_recorded_without_readers() {
+        let mut state = leads();
+        let mut chooser = super::super::branch::Chooser::new();
+        let mut b = Battle::new(&mut state, &mut chooser);
+        assert!(!b.history_readers.ability_order);
+        b.restart_ability_state(P1A);
+        assert!(b.log.is_empty());
+    }
 }

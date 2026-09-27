@@ -55,11 +55,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "R3-emergency-exit-replacement",
     ),
     (
-        "rr-redirect-tie",
-        "redirection tie between Clefable and Ariados",
-        "R4-redirection-tie",
-    ),
-    (
         "rr-future-sight-user-left",
         "hitting after its user left the field",
         "R5-future-move-edges",
@@ -255,8 +250,10 @@ fn emergency_exit_of_a_replacement() {
     assert_exact_parity("rr-emergency-exit-replacement");
 }
 
+/// Follow Me (Clefable, p2a) and Rage Powder (Ariados, p2b) at equal Speed: Showdown's
+/// `compareRedirectOrder` puts the holder whose ability state started first (Clefable) first, so
+/// Follow Me takes the move whoever moved first (was refused; board R4, `oo_redirection_tie.rs`).
 #[test]
-#[ignore = "refused: redirection tie between {} and {} (Showdown breaks it by effectOrder) (board R4-redirection-tie)"]
 fn redirection_tie() {
     assert_exact_parity("rr-redirect-tie");
 }

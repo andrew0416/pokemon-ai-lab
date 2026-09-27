@@ -1,0 +1,75 @@
+{
+ "description": "R4 redirection tie (Opus OO): Clefable (p2a, Follow Me) and Ariados (p2b, Rage Powder) at equal Speed 72. Whimsicott's Prankster Worry Seed aimed at Ariados goes to Clefable (Rage Powder skips a Grass user, Follow Me takes it), and setAbility gives Clefable a fresh abilityState (a later effectOrder), so Garchomp's Dragon Claw aimed at Clefable then goes to Ariados.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Rough Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Dragon Claw",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Whimsicott",
+    "item": "",
+    "ability": "Prankster",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Worry Seed",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Brave",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Follow Me",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Ariados",
+    "item": "",
+    "ability": "Insomnia",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 12
+    },
+    "moves": [
+     "Rage Powder",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move dragonclaw 1, move worryseed 2",
+  "p2": "move followme, move ragepowder"
+ }
+}
