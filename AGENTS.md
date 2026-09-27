@@ -89,3 +89,9 @@
 - 실행 기록은 `runs/plan-<날짜>/`(gitignored)에 시나리오·`out/`·`summary.*.json`·README로 남긴다. 시나리오는 `teams/` 원본을 상대 경로로 참조하고, 파생 팀(예: `teams/rillaboom-slot-20260920/starmie-braverilla.json`)은 provenance 파일과 함께 별도 저장한다. 첫 적용: `runs/plan-20260926/README.md`(가디안 vs 아쿠스타 선두, 4 라이브러리 팀, 선두 6×6 표).
 - `lab-rollout <scenario> --games n --seed s`는 두 파티를 1턴 균형 정책으로 끝까지 두는 자기대전이다(양쪽 같은 평가 함수, 정확 난수, 같은 시드로 두 선두 비교, 컷오프·중단은 집계 밖). 승률은 '그 정책 아래의 결과'이며 평가 함수 값보다는 낫지만 파티 강도의 결론이 아니다. 결과는 `runs/rollout-<날짜>/`. 첫 배치(2026-09-26, `runs/rollout-20260926/README.md`): 가디안 vs 아쿠스타 선두는 라이브러리 4팀 모두에서 Wilson 구간이 겹쳐 **판정 유보**. 두 선두 모두 coaching-panda에 크게 지는데(12%/4%) 깊이 1 정책 약점이 섞여 있어 상성 결론으로 쓰지 않는다. 2026-09-27 세 정책(현행 깊이 1, 현행 깊이 2, 적합 평가 깊이 1)으로 재측정한 결과 **psy-cona 상대는 세 번 모두 아쿠스타 선두 우세(p 0.026/0.027/0.005), sand-owen 상대는 세 번 모두 차이 없음** — '정책과 무관하게 재현되는 방향'으로 보고하되 상성의 증명으로는 쓰지 않는다(WORKPLAN S22).
 - 여러 매치업은 `python engine/scripts/plan_sweep.py <run-dir> [--leads all]`로 돈다. 평가 가중치 적합은 `lab-plan --dump-children` + `engine/scripts/fit_eval.py`(S12, 진행 중).
+
+## 2026-09-27 엔진 우선
+- 사용자 우선순위: **전략 비교(가디안 vs 아쿠스타 롤아웃·판정)보다 엔진 완결이 먼저다.** 요청이 있기 전에는 새 `lab-rollout`/`lab-plan` 배치를 돌리거나 승률 판정을 보고하지 않는다.
+- 엔진 범위: Champions 모드(`vendor/pokemon-showdown` `data/mods/champions`, 커밋 9e317a6)에서 표준인 종·기술·특성·도구의 거부는 0이다(딧토 변신·임포스터, 조로아크 일루전 포함). `Past`·CAP·G맥스·LGPE·테라·다이맥스는 구현하지 않는다.
+- 검증: 손으로 만든 1턴 fixture 외에 실전 중반 국면 검증(`lab-parity` → `engine/scripts/parity_sweep.py` → `lab-check`)이 있다. 2026-09-27 측정은 691 국면 중 687 정확 일치, 불일치 4는 버그 3개로 수정됨(`runs/parity-20260927/README.md`). 비교하지 못한 범위(6만 분기 초과 턴, 압정·벽·대타·혼란·씨뿌리기 미등장)를 함께 적는다. '일치율'은 그 표본의 결과이며 엔진 전체의 증명이 아니다.
+- 파이썬에서 쓰려면 `engine/py`(`engine/py/README.md`): 더블만, 시나리오 로드·합법 선택·정확 분포·샘플·canonical JSON·평가·1턴 균형.
