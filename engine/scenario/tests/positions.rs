@@ -67,7 +67,8 @@ fn an_illegal_setup_choice_fails_the_replay_unless_the_teams_are_only_believed()
     let loaded = load_scenario_str(&json.to_string(), path.parent().unwrap()).unwrap();
     let error =
         scenario_positions_filtered(&loaded, FULL, &mut |_, positions| positions).unwrap_err();
-    assert!(error.starts_with("setup turn 1:"), "{error}");
+    assert!(!error.is_unsupported(), "{error}");
+    assert!(error.message().starts_with("setup turn 1:"), "{error}");
     let mut turns = 0;
     let none = scenario_positions_consistent(&loaded, FULL, &mut |_, positions| {
         turns += 1;
@@ -90,6 +91,8 @@ fn a_setup_turn_left_waiting_for_a_mid_turn_switch_is_refused() {
     scenario["setupTurns"] = serde_json::json!([[turn["p1"], turn["p2"]]]);
     let loaded = load_scenario_str(&scenario.to_string(), path.parent().unwrap()).unwrap();
     let error = scenario_positions(&loaded).unwrap_err();
+    assert!(!error.is_unsupported(), "{error}");
+    let error = error.message();
     assert!(
         error.contains("setup turn 1") && error.contains("midTurn"),
         "{error}"

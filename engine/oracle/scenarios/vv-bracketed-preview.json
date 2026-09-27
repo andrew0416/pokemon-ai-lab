@@ -1,0 +1,210 @@
+{
+ "description": "A4 (VV): bracketed team preview choices in VGC (Showdown Side.chooseTeam: brackets stripped, always split on commas, not cut, filled to the picked size). p1 '[6, 4,1]' brings Chansey, Machamp, Kangaskhan, Snorlax (filled with the first team slots not chosen); p2 '[2,1,5,3]' brings Snorlax, Kangaskhan, Blissey, Hariyama (no speed tie among the leads). The turn only checks the leads.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "team": [
+   {
+    "species": "Kangaskhan",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Careful",
+    "evs": {
+     "hp": 32,
+     "def": 2,
+     "spd": 32
+    },
+    "moves": [
+     "Harden",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Careful",
+    "evs": {
+     "hp": 32,
+     "def": 2,
+     "spd": 32
+    },
+    "moves": [
+     "Harden",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hariyama",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Careful",
+    "evs": {
+     "hp": 32,
+     "def": 2,
+     "spd": 32
+    },
+    "moves": [
+     "Bulk Up",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Machamp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Careful",
+    "evs": {
+     "hp": 32,
+     "def": 2,
+     "spd": 32
+    },
+    "moves": [
+     "Bulk Up",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Careful",
+    "evs": {
+     "hp": 32,
+     "def": 2,
+     "spd": 32
+    },
+    "moves": [
+     "Harden",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Careful",
+    "evs": {
+     "hp": 32,
+     "def": 2,
+     "spd": 32
+    },
+    "moves": [
+     "Harden",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "[6, 4,1]"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Kangaskhan",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Careful",
+    "evs": {
+     "hp": 32,
+     "def": 2,
+     "spd": 32
+    },
+    "moves": [
+     "Harden",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Careful",
+    "evs": {
+     "hp": 32,
+     "def": 2,
+     "spd": 32
+    },
+    "moves": [
+     "Harden",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hariyama",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Careful",
+    "evs": {
+     "hp": 32,
+     "def": 2,
+     "spd": 32
+    },
+    "moves": [
+     "Bulk Up",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Machamp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Careful",
+    "evs": {
+     "hp": 32,
+     "def": 2,
+     "spd": 32
+    },
+    "moves": [
+     "Bulk Up",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Careful",
+    "evs": {
+     "hp": 32,
+     "def": 2,
+     "spd": 32
+    },
+    "moves": [
+     "Harden",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Careful",
+    "evs": {
+     "hp": 32,
+     "def": 2,
+     "spd": 32
+    },
+    "moves": [
+     "Harden",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "[2,1,5,3]"
+ },
+ "turn": {
+  "p1": "move harden, move bulkup",
+  "p2": "move harden, move harden"
+ }
+}

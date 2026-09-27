@@ -69,7 +69,10 @@ fn power_construct_complete_faint_is_refused() {
         ) {
             Ok(_) => ran += 1,
             Err(why) => {
-                assert!(why.contains("Zygarde-Complete fainting"), "{why}");
+                assert!(
+                    why.is_unsupported() && why.message().contains("Zygarde-Complete fainting"),
+                    "{why}"
+                );
                 refused += 1;
             }
         }

@@ -877,6 +877,9 @@ fn run() -> Result<(), String> {
         if analysis.decision == Decision::Turn {
             match lab_scenario::parse_choice(&state, us, &position.order[us.index()], own) {
                 Ok(action) => {
+                    // A locked slot's choice as the legal choices list it (board B39).
+                    let action =
+                        lab_search::game::normalize_turn_choice(&state, config.ruleset, us, action);
                     let text = format_choice(&state, us, &position.order[us.index()], &action);
                     match analysis
                         .lines

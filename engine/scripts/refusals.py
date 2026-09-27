@@ -24,6 +24,12 @@ space), not by line number; a forwarding site without its own text is keyed
 (`reachable`: yes | no | unknown, `kind`, `why`, and for reachable ones `repro` and `board`), and
 every entry must still match a key: a new refusal cannot be added silently.
 
+The scenario loader's refusals (board A4) are a separate section: the construction sites of
+`LoadError`, `TeamProblem`, `SetProblem`, `SwitchInError`, `CanonicalError` and the `String`
+errors in `engine/scenario/src` (`extract_loader`), each classified under `loader` in the
+classification file as input | unsupported | unreachable | forward; an `unsupported` one names
+the loader test (`engine/scenario/tests/<file>::<fn>`) that reproduces it.
+
 The standard range is the Champions mod at the pinned Showdown commit: species with
 `isNonstandard` null (in-battle formes only if their base is), their abilities (plus Simple and
 Insomnia, which Simple Beam and Worry Seed give), the moves of `learnsets.ts` for those species
@@ -321,6 +327,157 @@ def extract(producers):
 
 
 # ---------------------------------------------------------------------------------------------
+# The scenario loader (board A4-loader-refusal-audit): `engine/scenario/src` refuses inputs before
+# the turn engine sees them (`LoadError`, `TeamProblem`, `SetProblem`, `SwitchInError`,
+# `CanonicalError`, and the `String` errors of team preview, patches and choice strings).
+
+SCENARIO_SRC = ENGINE / "scenario" / "src"
+SCENARIO_TESTS = ENGINE / "scenario" / "tests"
+# Every loader file but `error.rs` (the enums and their messages), `parity.rs` (the comparison)
+# and the binaries.
+LOADER_FILES = ["lib.rs", "team.rs", "decision.rs", "switch_in.rs", "canonical.rs", "json.rs", "meta.rs"]
+LOADER_ENUMS = r"(LoadError|TeamProblem|SetProblem|SwitchInError|CanonicalError)::(\w+)"
+# Wrappers: they only carry a problem that has its own key.
+LOADER_WRAPPERS = {"LoadError::Team", "LoadError::Set"}
+# Helpers that build a variant from a message (their own bodies are skipped).
+LOADER_HELPERS = {"unrepresentable": "CanonicalError::Unrepresentable", "not_initial": "SwitchInError::NotInitial",
+                  "meta_error": "CanonicalError::Meta"}
+# Messages that only put context before another error (`e.context("setup turn 2")`).
+LOADER_CONTEXT = re.compile(r"^(setup turn \{\}(: \{\})?|startState)$")
+LOADER_CLASSES = {
+    "input": "입력 오류: the scenario file is malformed or asks for something Showdown would also refuse "
+             "(or that the file format does not have)",
+    "unsupported": "미지원: a battle Showdown plays that the loader refuses (each has a loader test)",
+    "unreachable": "도달 불가: no input produces it (an invariant of the loader or the engine, the ruleset, "
+                   "or content outside the standard range)",
+    "forward": "carries another key's problem",
+}
+
+
+class LoaderSource(Source):
+    def __init__(self, path):
+        self.path = path
+        self.rel = path.name
+        self.src = path.read_text(encoding="utf-8")
+        code, self.literals = lex(self.src)
+        self.code = strip_tests(code)
+        self.spans = functions(self.code)
+
+
+def extract_loader():
+    """Every loader refusal key → {"sites": [...], "calls": n}. Keys: `Enum::Variant` (with the
+    field for `LoadError::Unsupported` and the message for `CanonicalError::Unrepresentable`),
+    or `<function>: <message template>` for a `String` error."""
+    entries = {}
+
+    def add(key, site):
+        e = entries.setdefault(key, {"sites": [], "calls": 0})
+        if site not in e["sites"]:
+            e["sites"].append(site)
+        e["calls"] += 1
+
+    for name in LOADER_FILES:
+        s = LoaderSource(SCENARIO_SRC / name)
+        code = s.code
+        covered = []
+        for m in re.finditer(LOADER_ENUMS, code):
+            j = m.end()
+            while j < len(code) and code[j] in " \t\r\n":
+                j += 1
+            arg_end = match_close(code, j) if j < len(code) and code[j] in "({" else j
+            if re.match(r"\s*(=>|\||if\b)", code[arg_end:arg_end + 8]):
+                continue  # a match pattern
+            fn = enclosing(s.spans, m.start())
+            if fn in LOADER_HELPERS:
+                continue
+            key = f"{m.group(1)}::{m.group(2)}"
+            if key == "LoadError::Unsupported":
+                key += f": {first_literal(code, s.literals, j, arg_end)}"
+            covered.append((m.start(), arg_end))
+            if key not in LOADER_WRAPPERS:
+                add(key, f"{name}::{fn}")
+        for helper, variant in LOADER_HELPERS.items():
+            for m in re.finditer(rf"\b{helper}\(", code):
+                if code[max(0, m.start() - 3):m.start()] == "fn ":
+                    continue
+                a, b = s.arg(m.end() - 1)
+                key = variant
+                if variant.endswith("Unrepresentable"):
+                    lit = first_literal(code, s.literals, a, b)
+                    key += f": {template(lit)}" if lit else ""
+                add(key, f"{name}::{enclosing(s.spans, m.start())}")
+                covered.append((m.start(), b))
+        for m in re.finditer(r"(\bErr|\.ok_or|\.ok_or_else|\.map_err)\(", code):
+            a, b = s.arg(m.end() - 1)
+            if any(x <= a < y or a <= x < b for x, y in covered):
+                continue
+            body = code[a:b]
+            if re.search(LOADER_ENUMS, body) or any(h + "(" in body for h in LOADER_HELPERS):
+                continue
+            lit = first_literal(code, s.literals, a, b)
+            if lit is None or LOADER_CONTEXT.match(template(lit)):
+                continue
+            fn = enclosing(s.spans, m.start())
+            add(f"{fn}: {template(lit)}", f"{name}::{fn}")
+    return entries
+
+
+def loader_problems(entries, classification):
+    problems = []
+    for key in entries:
+        if key not in classification:
+            problems.append(f"unclassified loader refusal `{key}` ({', '.join(entries[key]['sites'])})")
+    for key, c in classification.items():
+        if key not in entries:
+            problems.append(f"stale loader classification `{key}` (no such refusal in the source)")
+        if c.get("class") not in LOADER_CLASSES:
+            problems.append(f"loader `{key}`: class must be one of {', '.join(LOADER_CLASSES)}")
+        if not c.get("why"):
+            problems.append(f"loader `{key}`: no reason")
+        test = c.get("test")
+        if c.get("class") == "unsupported" and not test:
+            problems.append(f"loader `{key}`: unsupported without a loader test")
+        if test:
+            file, _, fn = test.partition("::")
+            path = SCENARIO_TESTS / file
+            if not path.exists() or not re.search(rf"\bfn\s+{re.escape(fn)}\s*\(", path.read_text(encoding="utf-8")):
+                problems.append(f"loader `{key}`: test {test} not found in engine/scenario/tests")
+    return problems
+
+
+def render_loader(entries, classification):
+    lines = []
+    w = lines.append
+    w("## 시나리오 로더 거부 (A4)")
+    w("")
+    w("`engine/scenario/src`(`error.rs`·`parity.rs`·바이너리 제외)가 턴 엔진 앞에서 거부하는 곳: `LoadError`·`TeamProblem`·"
+      "`SetProblem`·`SwitchInError`·`CanonicalError`의 생성 지점과 팀 프리뷰·패치·선택 문자열의 `String` 오류. "
+      "분류는 `refusals.classification.json`의 `loader`. `SwitchInError`와 `CanonicalError::Unrepresentable`은 "
+      "`ScenarioError::Unsupported`로, 나머지는 `ScenarioError::Invalid`/`LoadError`로 나온다(T1).")
+    w("")
+    counts = {}
+    for key in entries:
+        c = classification.get(key, {}).get("class", "?")
+        counts[c] = counts.get(c, 0) + 1
+    w(f"- 키 {len(entries)}개: " + ", ".join(f"{c} {counts.get(c, 0)}개" for c in LOADER_CLASSES) + ".")
+    w("")
+    for cls, title in LOADER_CLASSES.items():
+        rows = sorted((k, e, classification[k]) for k, e in entries.items() if classification.get(k, {}).get("class") == cls)
+        if not rows:
+            continue
+        w(f"### {cls}: {title}")
+        w("")
+        w("| 키 | 지점 | 로더 테스트 | 보드 | 이유 |")
+        w("|---|---|---|---|---|")
+        for key, e, c in rows:
+            test = c.get("test")
+            w(f"| `{md(key)}` | {'<br>'.join(md(s) for s in e['sites'])} | {'`' + test + '`' if test else '—'} | "
+              f"{c.get('board', '—')} | {md(c['why'])} |")
+        w("")
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------------------------
 # The standard range.
 
 
@@ -562,6 +719,27 @@ def evidence(universe, sources):
                 bad.append(m)
     check("E12", "Every standard move with an onAfterMove unchecked for a called move "
           "(`called_after_move_checked`) is `nosleeptalk` and `failcopycat`", bad)
+    # E13 (loader, A4): the canonical writer has an id for every side and field effect, and
+    # nothing in the engine sets a move slot's `disabled` flag.
+    canonical = (ENGINE / "scenario" / "src" / "canonical.rs").read_text(encoding="utf-8")
+    field_rs = (ENGINE / "core" / "src" / "field.rs").read_text(encoding="utf-8")
+    side_count = int(re.search(r"SIDE_EFFECT_COUNT: usize = (\d+);", field_rs).group(1))
+    field_count = int(re.search(r"FIELD_EFFECT_COUNT: usize = (\d+);", field_rs).group(1))
+    side_listed = int(re.search(r"const SIDE_CONDITIONS: \[\(SideEffect, &str\); (\d+)\]", canonical).group(1))
+    pseudo_listed = int(re.search(r"const PSEUDO: \[\(FieldEffect, &str\); (\d+)\]", canonical).group(1))
+    bad = []
+    if side_listed != side_count:
+        bad.append(f"SIDE_CONDITIONS {side_listed} of {side_count}")
+    if pseudo_listed + 2 != field_count:
+        bad.append(f"PSEUDO {pseudo_listed} + weather + terrain of {field_count}")
+    for path in (ENGINE / "core" / "src").rglob("*.rs"):
+        code = lex(path.read_text(encoding="utf-8"))[0]
+        if "#[cfg(test)]" in code and not re.search(r"#\[cfg\(test\)\]\s*mod\s+\w+\s*;", code):
+            code = strip_tests(code)
+        if re.search(r"\.disabled\s*=\s*true|disabled:\s*true", code):
+            bad.append(f"{path.name} sets disabled")
+    check("E13", "Loader: canonical.rs names every side effect (`SIDE_CONDITIONS`) and every field "
+          "effect (`PSEUDO` + weather + terrain); no engine code sets `MoveSlot::disabled`", bad)
     return results
 
 
@@ -790,9 +968,14 @@ def main():
     entries, sources = extract(classification_file["producers"])
     universe = load_universe()
 
+    loader = extract_loader()
+    loader_classification = classification_file.get("loader", {})
+
     if args.command == "list":
         for key, e in entries.items():
             print(f"{key}\t{', '.join(e['sites'])}\t{','.join(e['how'])}")
+        for key, e in loader.items():
+            print(f"loader\t{key}\t{', '.join(e['sites'])}")
         return 0
 
     results = evidence(universe, sources)
@@ -815,8 +998,11 @@ def main():
             problems.append(f"`{key}` is listed as fixed but is still in the source")
         if not (SCENARIOS / f"{f['fixture']}.json").exists():
             problems.append(f"fixed `{key}`: no scenario {f['fixture']}")
+    problems += loader_problems(loader, loader_classification)
     text = render(entries, classification, results, problems, fixed,
                   classification_file.get("proposed_boards", {}))
+    evidence_at = text.index("## 근거 (자동 검사)")
+    text = text[:evidence_at] + render_loader(loader, loader_classification) + "\n" + text[evidence_at:]
     if args.check:
         current = OUT.read_text(encoding="utf-8") if OUT.exists() else ""
         if current != text:

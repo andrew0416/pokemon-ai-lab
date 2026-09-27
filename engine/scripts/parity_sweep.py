@@ -5,7 +5,8 @@ engine's outcome distribution matches Showdown's exactly.
 Usage: python engine/scripts/parity_sweep.py <scenario-dir> [--strategy auto|full-first|fallback]
            [--mode full] [--fallback extremes] [--max-branches 5000] [--fallback-max-branches 60000]
            [--fixed-rolls 7,0,15] [--fixed-max-branches N] [--[no-]staged-fallback]
-           [--staged-extremes-max-branches N] [--mc-samples N] [--mc-seed S] [--turn <lab-turn.exe>]
+           [--staged-extremes-max-branches N] [--full-staged-max-branches N]
+           [--mc-samples N] [--mc-seed S] [--turn <lab-turn.exe>]
            [--jobs N] [--out <dir>] [--check <lab-check.exe>] [--timeout 1800]
            [--keep-reports mismatch|all|none] [--limit N] [--pattern '*.json'] [--resume]
 
@@ -32,7 +33,9 @@ is compared exactly by `lab-check` (`RollMode::Fixed(k)`). These runs use `enume
 unless --no-staged-fallback: the staged enumeration merges identical states between actions (the
 same distribution in far fewer runs; see enumerate.cjs and oracle/check-staged.cjs). (2) If a
 fixed-roll report fit and --staged-extremes-max-branches N is set, `--mode extremes --staged`
-capped at N runs as well (both roll ends mixed). The position counts as compared when at least
+capped at N runs as well (both roll ends mixed); if --full-staged-max-branches M is set,
+`--mode full --staged` capped at M runs too (every roll: the exact distribution; V9). The position
+counts as compared when at least
 one of these reports fit; it is a `mismatch` if any of them mismatches and `match` if all of them
 match (row fields `mode: fixed`, `rolls`, `compared_by: "fixed 7,0,15 staged + extremes staged"`,
 `fixed`: one verdict per report). `--strategy fallback` runs only the fallback (positions known to
@@ -259,6 +262,11 @@ def sweep_game(args, paths, out, progress):
                 candidate = attempt("extremes", args.staged_extremes_max_branches, staged=True)
                 if candidate is not None:
                     fitted.append(("extremes", None, candidate))
+            # V9: every roll, staged (the exact distribution), when --full-staged-max-branches is set.
+            if fitted and args.staged_fallback and args.full_staged_max_branches:
+                candidate = attempt("full", args.full_staged_max_branches, staged=True)
+                if candidate is not None:
+                    fitted.append(("full", None, candidate))
             return fitted
 
         # (label, roll, report path) of every report compared, in order.
@@ -443,9 +451,9 @@ def table(rows, key):
 def fixed_roll_cells(args, row):
     """Per --fixed-rolls roll (and staged extremes when enabled): the check status of its report,
     `overflow`, or `-` (not run)."""
-    done = {c.get("roll"): c["status"] for c in row.get("fixed", [])}
+    done = {c.get("roll"): c["status"] for c in row.get("fixed", []) if c["mode"] != "full"}
     tried = {a["roll"] if a["mode"] == "fixed" else None: a["status"] for a in row.get("oracle_attempts", [])
-             if a["mode"] == "fixed" or a.get("staged")}
+             if a["mode"] == "fixed" or (a.get("staged") and a["mode"] != "full")}
     cells = []
     for k in args.fixed_rolls + ([None] if args.staged_extremes_max_branches else []):
         if k in done:
@@ -523,6 +531,10 @@ def write_summary(args, out, rows, elapsed):
         f"Staged extremes compared as well on {sum(1 for r in fixed_rows if 'extremes' in r.get('compared_by', ''))} "
         "of the fixed-roll positions.",
     ]
+    if args.full_staged_max_branches:
+        lines.append(f"Staged full (every roll, exact) compared as well on "
+                     f"{sum(1 for r in fixed_rows if 'full' in r.get('compared_by', ''))} of the fixed-roll positions "
+                     f"(cap {args.full_staged_max_branches} runs).")
     if args.mc_samples:
         lines.append(f"Monte Carlo (statistical, not a proof: per-feature TV distance within 4x the two-sample noise): "
                      f"consistent {counts['mc-consistent']}, flagged {counts['mc-flagged']}.")
@@ -585,6 +597,8 @@ def main():
                     help="the overflow fallback runs enumerate.cjs --staged (default: yes)")
     ap.add_argument("--staged-extremes-max-branches", type=int, default=0,
                     help="cap of a staged extremes run before the fixed-roll chain (0: skip it)")
+    ap.add_argument("--full-staged-max-branches", type=int, default=0,
+                    help="cap of a staged full run (every roll, exact) after the fixed-roll chain (0: skip it)")
     ap.add_argument("--mc-samples", type=int, default=0,
                     help="Monte Carlo samples on both sides when every fixed roll overflows (0: off)")
     ap.add_argument("--mc-seed", type=int, default=1, help="lab-turn --seed of the engine's samples")

@@ -13,7 +13,10 @@ fn sucker_punch_and_thunderclap_match_showdown_exactly() {
     assert_exact_parity("sucker-punch");
 }
 
-/// Quash sends the target's move to the back of the turn (order 201) regardless of priority.
+/// Quash against a target that has already moved fails (`queue.willMove` finds no action):
+/// Grassy Glide (+1 on Grassy Terrain, faster) goes before the Prankster Quash (board B37: the
+/// scenario used to claim it moved Grassy Glide back). Quash that does send its target's move
+/// to the back (order 201) is `ll_staged_serializer::quash_order_outlasts_the_resorts`.
 #[test]
 fn quash_matches_showdown_exactly() {
     assert_exact_parity("quash");

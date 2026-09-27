@@ -150,7 +150,11 @@ fn shields_down_refuses_a_core_colour() {
     }"#;
     let loaded = lab_scenario::load_scenario_str(json, &common::engine_dir()).unwrap();
     let error = lab_scenario::scenario_positions(&loaded).unwrap_err();
-    assert!(error.contains("Shields Down on Minior-Orange"), "{error}");
+    assert!(error.is_unsupported(), "{error}");
+    assert!(
+        error.message().contains("Shields Down on Minior-Orange"),
+        "{error}"
+    );
 }
 
 // ---- Mimicry ----------------------------------------------------------------------------------

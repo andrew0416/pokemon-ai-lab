@@ -37,8 +37,9 @@ Layout:
                                                 fixed<k>-staged, extremes-staged
   build/rows/<set>/<stem>.json                  the build log of a position (`--resume` state)
 
-`check` runs `lab-check <scenario> <report>` for every stored report (decompressed to a temporary
-directory) and writes `<out>/summary.json`, `<out>/summary.md`, `<out>/rows/` and the verdicts of
+`check` runs every stored report through one `lab-check --batch - --jobs <jobs>` process that reads
+the gzipped files directly (board P5; `--per-report` keeps the old way: `lab-check <scenario>
+<report>` per report, decompressed to a temporary directory, with `--timeout`) and writes `<out>/summary.json`, `<out>/summary.md`, `<out>/rows/` and the verdicts of
 positions that did not match (`<out>/verdicts/`); `--out` defaults to `<corpus-dir>/check`. A
 position with several reports is `mismatch` if any report mismatches and `match` only if all
 match (parity_sweep.FIXED_PRECEDENCE). The exit code is 0 only if every checked position
@@ -159,6 +160,10 @@ def collect(corpus, sources):
             if not scenario.exists():
                 raise SystemExit(f"{row_file}: no scenario {scenario}")
             plan, excluded = plan_of(row)
+            # A source can discard positions for good (V12: a pin the old engine recorded that
+            # Showdown never reaches); the reason is kept like an oracle failure's.
+            if stem in src.get("discarded", {}):
+                plan, excluded = [], f"discarded: {src['discarded'][stem]}"
             entry_id = f"{src['set']}/{stem}"
             m = parity_sweep.NAME.match(f"{stem}.json")
             entries[entry_id] = {
@@ -455,24 +460,85 @@ def check_entry(args, corpus, entry, out):
                     verdict = json.loads(proc.stdout)
             except subprocess.TimeoutExpired:
                 verdict = {"status": "check-timeout", "error": f"more than {args.timeout} s"}
-            result = {"label": rep["label"], "mode": rep["mode"], "roll": rep.get("roll"),
-                      "status": verdict.get("status", "engine-error")}
-            for key in ("engineOutcomes", "oracleOutcomes", "onlyEngine", "onlyOracle", "maxSharedDiff", "tv",
-                        "variants", "engineMs", "differences", "error"):
-                if verdict.get(key) not in (None, []):
-                    result[key] = verdict[key]
-            if result["status"] != "match":
-                write_json(out / "verdicts" / entry["set"] / f"{entry['stem']}.{rep['label']}.json", verdict)
-            results.append(result)
+            results.append(report_result(entry, rep, verdict, out))
+    return finish_entry(entry, results, round(time.time() - started, 2), out, row_file)
+
+
+def report_result(entry, rep, verdict, out):
+    """One report's part of a position's row (the verdict of a non-match is kept whole)."""
+    result = {"label": rep["label"], "mode": rep["mode"], "roll": rep.get("roll"),
+              "status": verdict.get("status", "engine-error")}
+    for key in ("engineOutcomes", "oracleOutcomes", "onlyEngine", "onlyOracle", "maxSharedDiff", "tv",
+                "variants", "engineMs", "differences", "error"):
+        if verdict.get(key) not in (None, []):
+            result[key] = verdict[key]
+    if result["status"] != "match":
+        write_json(out / "verdicts" / entry["set"] / f"{entry['stem']}.{rep['label']}.json", verdict)
+    return result
+
+
+def finish_entry(entry, results, seconds, out, row_file=None):
+    row_file = row_file or out / "rows" / entry["set"] / f"{entry['stem']}.json"
     statuses = [r["status"] for r in results]
     precedence = ("check-timeout",) + FIXED_PRECEDENCE
     status = next((s for s in precedence if s in statuses), statuses[0] if statuses else "engine-error")
     row = {"id": entry["id"], "set": entry["set"], "stem": entry["stem"], "status": status,
            "compared_by": " + ".join(r["label"] for r in results), "kind": entry.get("kind"),
            "matchup": entry.get("matchup"), "policy": entry.get("policy"),
-           "seconds": round(time.time() - started, 2), "reports": results}
+           "seconds": seconds, "reports": results}
     write_json(row_file, row)
     return row
+
+
+def check_batch(args, corpus, entries, out, done):
+    """Board P5: every report of `entries` through one `lab-check --batch - --jobs n` process that
+    reads the gzipped corpus files itself (no temporary files, no process per report). `done(row)`
+    is called for each position once all its reports are in; a position's `seconds` is the sum of
+    its reports' `engineMs` (lab-check's time for reading, parsing and the engine). There is no
+    per-report timeout here (`--per-report` has one)."""
+    pending = {}
+    jobs = []
+    for n, entry in enumerate(entries):
+        pending[n] = {"entry": entry, "results": [None] * len(entry["reports"])}
+        for k, rep in enumerate(entry["reports"]):
+            jobs.append({"id": f"{n}:{k}", "scenario": str(corpus / entry["scenario"]).replace(os.sep, "/"),
+                         "report": str(corpus / rep["file"]).replace(os.sep, "/")})
+    proc = subprocess.Popen([args.check, "--batch", "-", "--jobs", str(args.jobs)], stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8",
+                            errors="replace", bufsize=1)
+
+    def feed():
+        try:
+            for job in jobs:
+                proc.stdin.write(json.dumps(job) + "\n")
+            proc.stdin.close()
+        except (BrokenPipeError, OSError):
+            pass
+
+    writer = threading.Thread(target=feed, daemon=True)
+    writer.start()
+    for line in proc.stdout:
+        if not line.strip():
+            continue
+        verdict = json.loads(line)
+        n, k = (int(x) for x in verdict["id"].split(":"))
+        slot = pending[n]
+        entry = slot["entry"]
+        slot["results"][k] = report_result(entry, entry["reports"][k], verdict, out)
+        if all(r is not None for r in slot["results"]):
+            seconds = round(sum(r.get("engineMs") or 0 for r in slot["results"]) / 1000, 2)
+            done(finish_entry(entry, slot["results"], seconds, out))
+            del pending[n]
+    proc.wait()
+    writer.join()
+    stderr = proc.stderr.read().strip()
+    # Whatever the process did not answer (it crashed) is an engine error of its own.
+    for slot in pending.values():
+        entry = slot["entry"]
+        results = [r if r is not None else report_result(entry, entry["reports"][k], {
+            "status": "engine-error", "error": f"lab-check --batch exited {proc.returncode}: {stderr[:300]}"}, out)
+            for k, r in enumerate(slot["results"])]
+        done(finish_entry(entry, results, 0.0, out))
 
 
 def exe_info(path):
@@ -505,7 +571,9 @@ def cmd_check(args):
     started = time.time()
 
     def run(entry):
-        row = check_entry(args, corpus, entry, out)
+        return report(check_entry(args, corpus, entry, out))
+
+    def report(row):
         with lock:
             rows.append(row)
             if row["status"] != "match" or args.verbose:
@@ -517,8 +585,18 @@ def cmd_check(args):
                 print(f"[{len(rows)}/{len(entries)}] {time.time() - started:.0f} s", flush=True)
         return row
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as pool:
-        list(pool.map(run, entries))
+    if args.per_report:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as pool:
+            list(pool.map(run, entries))
+    else:
+        todo = []
+        for entry in entries:
+            row_file = out / "rows" / entry["set"] / f"{entry['stem']}.json"
+            if args.resume and row_file.exists():
+                report(read_json(row_file))
+            else:
+                todo.append(entry)
+        check_batch(args, corpus, todo, out, report)
     elapsed = time.time() - started
     summary = write_check_summary(args, corpus, index, out, rows, exe, skipped, elapsed)
     print(json.dumps({k: summary[k] for k in ("positions", "reports", "counts", "all_match", "elapsed_s")}))
@@ -554,6 +632,7 @@ def write_check_summary(args, corpus, index, out, rows, exe, skipped, elapsed):
         "lab_check": exe,
         "only": args.only,
         "jobs": args.jobs,
+        "runner": "per-report" if args.per_report else "batch",
         "positions": len(rows),
         "reports": len(reports),
         "counts": counts,
@@ -571,7 +650,7 @@ def write_check_summary(args, corpus, index, out, rows, exe, skipped, elapsed):
         "# Parity corpus check",
         "",
         f"Corpus `{summary['corpus']}`; lab-check `{exe['path']}` (sha256 `{exe['sha256'][:16]}`, built {exe['mtime']}); "
-        f"{args.jobs} job(s); {elapsed:.0f} s wall, {engine_ms / 1000:.0f} s in lab-check's engine.",
+        f"{args.jobs} job(s), {summary['runner']}; {elapsed:.0f} s wall, {engine_ms / 1000:.0f} s in lab-check's engine.",
         "",
         "| positions | reports | match | mismatch | unsupported | engine error | no position | ambiguous | timeout |",
         "|---|---|---|---|---|---|---|---|---|",
@@ -673,7 +752,9 @@ def main():
     c.add_argument("--out", type=pathlib.Path)
     c.add_argument("--only", help="glob on position ids (<set>/<stem>)")
     c.add_argument("--limit", type=int, help="only the first N positions")
-    c.add_argument("--timeout", type=int, default=1800, help="seconds per lab-check run")
+    c.add_argument("--timeout", type=int, default=1800, help="seconds per lab-check run (--per-report only)")
+    c.add_argument("--per-report", action="store_true",
+                   help="one lab-check process per report on decompressed copies (the way before P5)")
     c.add_argument("--resume", action="store_true", help="reuse <out>/rows of positions already checked")
     c.add_argument("--verbose", action="store_true", help="print every position, not only non-matches")
     s = sub.add_parser("stats", help="count, total size and largest files of the corpus")

@@ -28,9 +28,10 @@ fn the_beat_up_refusal_has_no_runs_of_spaces() {
     let mut state = position.state.clone();
     let decision = scenario_decision(&loaded, &position).unwrap();
     // Once R9 simulates it there is no message left to check.
-    if let Err(why) =
-        run_decision_mid_turn(&mut state, &position.order, &decision, &loaded.mid_turn)
+    if let Err(e) = run_decision_mid_turn(&mut state, &position.order, &decision, &loaded.mid_turn)
     {
+        assert!(e.is_unsupported(), "{e}");
+        let why = e.message();
         assert!(
             why.contains(
                 "Beat Up with benched allies of different power [18, 12] (their order in \

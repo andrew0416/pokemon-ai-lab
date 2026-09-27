@@ -89,6 +89,8 @@ fn a_pin_no_roll_reaches_is_still_an_error() {
         .unwrap();
     tyranitar["hp"] = Value::from(1);
     let error = scenario_positions(&scenario("extremes", Some(&pin))).unwrap_err();
+    assert!(!error.is_unsupported(), "{error}");
+    let error = error.message();
     assert!(error.starts_with("setup turn 1: none of"), "{error}");
     assert!(
         error.ends_with("(nor in the turn's exact distribution)"),

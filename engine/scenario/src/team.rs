@@ -154,6 +154,8 @@ pub fn preview_order(order: Option<&str>, team_len: usize) -> Result<Vec<usize>,
 /// character), cut to `picked` (entries past the cut are not even checked), then, while
 /// fewer, the first members in team order among positions `0..picked` that are not chosen yet
 /// (`for (let i = 0; i < pickedTeamSize; i++) if (!positions.includes(i)) positions.push(i)`).
+/// A bracketed choice (`[1,2,3,4]`) always splits on commas and is not cut: it must name
+/// exactly `picked` members once filled (an empty one, `[]`, names the whole team).
 /// Returns the 0-based team indices of the picked members in party order.
 pub fn picked_order(
     order: Option<&str>,
@@ -162,17 +164,25 @@ pub fn picked_order(
 ) -> Result<Vec<usize>, String> {
     let picked = picked.min(team_len);
     let order = order.map(str::trim).unwrap_or("");
-    if order.starts_with('[') {
-        return Err("bracketed team preview choices are not supported".into());
-    }
+    // `if (data?.startsWith('[') && data.endsWith(']'))`: the brackets go, the rest is trimmed.
+    let bracketed = order.len() >= 2 && order.starts_with('[') && order.ends_with(']');
+    let order = if bracketed {
+        order[1..order.len() - 1].trim()
+    } else {
+        order
+    };
     let mut positions = Vec::new();
-    if !order.is_empty() {
-        let parts: Vec<String> = if order.contains(',') {
+    if bracketed && order.is_empty() {
+        // `[...this.pokemon.keys()]` (autoChoose), not cut.
+        positions.extend(0..team_len);
+    } else if !order.is_empty() {
+        let parts: Vec<String> = if bracketed || order.contains(',') {
             order.split(',').map(str::to_owned).collect()
         } else {
             order.chars().map(String::from).collect()
         };
-        for part in parts.into_iter().take(picked) {
+        let keep = if bracketed { parts.len() } else { picked };
+        for part in parts.into_iter().take(keep) {
             let pos: usize = part
                 .trim()
                 .parse()
@@ -193,6 +203,10 @@ pub fn picked_order(
         if !positions.contains(&i) {
             positions.push(i);
         }
+    }
+    if positions.len() != picked {
+        // Only a bracketed choice can be too long.
+        return Err(format!("you must choose exactly {picked} Pokémon"));
     }
     Ok(positions)
 }

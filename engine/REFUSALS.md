@@ -196,6 +196,115 @@
 - **R22-forced-eat-ignored-item**: Teatime / Stuff Cheeks (eatItem(true)) for a holder that ignores its item (Klutz, Magic Room): the Eat event is skipped, the berry still goes and EatItem still runs; eat_item_forced also never ran EatItem (Cheek Pouch, Cud Chew, Ripen): confirmed by the oracle and fixed in B35 (`oo-teatime-cheek-pouch`, `oo-teatime-cud-chew`, `oo-teatime-ripen`).
 - **R5c-future-move-absent-user-occupant**: A future move whose user left the field while the position the engine seats it in holds a Pokémon with onAny/onAlly/onFoe ability or item handlers (Unnerve, Ruin abilities, Battery, Soul-Heart, Opportunist, ...) or a target with Innards Out / Cotton Down / Gulp Missile / Rowap Berry: needs an attacker that is not in any slot (or a narrower, per-event refusal) — repro uu-future-sight-absent-user-unnerve (full: 6).
 
+## 시나리오 로더 거부 (A4)
+
+`engine/scenario/src`(`error.rs`·`parity.rs`·바이너리 제외)가 턴 엔진 앞에서 거부하는 곳: `LoadError`·`TeamProblem`·`SetProblem`·`SwitchInError`·`CanonicalError`의 생성 지점과 팀 프리뷰·패치·선택 문자열의 `String` 오류. 분류는 `refusals.classification.json`의 `loader`. `SwitchInError`와 `CanonicalError::Unrepresentable`은 `ScenarioError::Unsupported`로, 나머지는 `ScenarioError::Invalid`/`LoadError`로 나온다(T1).
+
+- 키 83개: input 58개, unsupported 4개, unreachable 18개, forward 3개.
+
+### input: 입력 오류: the scenario file is malformed or asks for something Showdown would also refuse (or that the file format does not have)
+
+| 키 | 지점 | 로더 테스트 | 보드 | 이유 |
+|---|---|---|---|---|
+| `LoadError::Io` | lib.rs::read_text | — | — | A team or scenario file that cannot be read. |
+| `LoadError::Json` | lib.rs::parse_setup_turn<br>lib.rs::load_scenario_str<br>lib.rs::parse_team<br>lib.rs::resolve_team | `loader_refusals.rs::an_unknown_scenario_field_is_refused` | — | Malformed JSON, a wrong value type, or a field the loader does not know (`deny_unknown_fields` on every scenario and set shape: an unknown field could change the battle, so it is refused, not dropped). |
+| `LoadError::Unsupported: setupRolls` | lib.rs::load_scenario_str | `loader_refusals.rs::scenario_field_values_are_checked` | — | `setupRolls` other than `full` / `extremes`: the file format has no other value (the oracle's reports use those two). |
+| `LoadError::Unsupported: setupStates` | lib.rs::load_scenario_str | `loader_refusals.rs::scenario_field_values_are_checked` | — | More pinned setup states than setup turns: a file error. |
+| `LoadError::Unsupported: team` | lib.rs::resolve_team | `loader_refusals.rs::scenario_field_values_are_checked` | — | A side's `team` that is neither a path nor an inline array. |
+| `SetProblem::DuplicateMove` | team.rs::build_pokemon | — | — | The same move twice in a set (the validator refuses it; move slots are addressed by move id). |
+| `SetProblem::InvalidIv` | team.rs::build_pokemon | — | — | An IV above 31 (IVs have no term in the Champions formula and are only range-checked). |
+| `SetProblem::MissingAbility` | team.rs::build_pokemon | — | — | A set without an ability: the loader asks for it (Showdown would fall back to no ability). |
+| `SetProblem::MissingNature` | team.rs::build_pokemon | — | — | A set without a nature: the loader asks for it (Showdown would pick a neutral one). |
+| `SetProblem::NoMoves` | team.rs::build_pokemon | — | — | A set without moves. |
+| `SetProblem::StatPoints` | team.rs::build_pokemon | — | — | More than 32 SP in a stat or 66 in total: not a Champions set (Showdown's `evs` are SP here). |
+| `SetProblem::TooManyMoves` | team.rs::build_pokemon | — | — | More than four moves. |
+| `SetProblem::UnknownAbility` | team.rs::build_pokemon | — | — | An ability name the dex does not have. |
+| `SetProblem::UnknownGender` | team.rs::build_pokemon | — | — | A gender other than M, F or N. Showdown ignores an unknown one (`genders[set.gender]` falls back to the species'); the loader is stricter on garbage input. |
+| `SetProblem::UnknownItem` | team.rs::build_pokemon | — | — | An item name the dex does not have. |
+| `SetProblem::UnknownMove` | team.rs::build_pokemon | — | — | A move name the dex does not have. |
+| `SetProblem::UnknownNature` | team.rs::build_pokemon | — | — | A nature name that does not exist. |
+| `SetProblem::UnknownSpecies` | team.rs::build_pokemon | — | — | A species name the Champions dex does not have (Showdown would not either). |
+| `SetProblem::UnknownTeraType` | team.rs::build_pokemon | — | — | A Tera type that is not a type (kept as sidecar data only; Tera is off under M-C). |
+| `TeamProblem::Empty` | team.rs::build_picked_side | — | — | A side without Pokémon. |
+| `TeamProblem::TooLarge` | team.rs::build_picked_side | — | — | More than six Pokémon. |
+| `apply_patch: side condition {} is not supported` | decision.rs::apply_patch | — | — | A patch side condition outside the engine's side effects: every `SideEffect` is patchable (the list covers all 15), so the id names something the engine has no state for (Past effects). |
+| `apply_patch: side condition {}: give a duration (Light Clay on the source changes it)` | decision.rs::apply_patch | — | — | A screen patch without its duration (Light Clay on `enumerate.cjs`'s source would change it). |
+| `apply_patch: side condition {}: hazards take no duration` | decision.rs::apply_patch | — | — | A hazard patch with a duration (hazards do not expire). |
+| `apply_patch: unknown side {}` | decision.rs::apply_patch | — | — | A patch side other than p1 / p2. |
+| `parse_choice: {}: empty slot` | decision.rs::parse_choice | — | — | A move for an empty slot. |
+| `parse_choice: {}: expected {} actions` | decision.rs::parse_choice | — | — | A choice string with the wrong number of actions. |
+| `parse_choice: {}: not a choice` | decision.rs::parse_choice | — | — | Not a choice. |
+| `parse_choice: {}: not a known move` | decision.rs::parse_choice | — | — | A move the Pokémon does not have (Showdown: `doesn't have a move matching`). |
+| `parse_choice: {}: unknown move` | decision.rs::parse_choice | — | — | A move id the dex does not have. |
+| `parse_choice: {}: unknown word {}` | decision.rs::parse_choice | — | — | A word the choice syntax does not have. |
+| `parse_mid_turn: {}: no slot left that must switch out` | decision.rs::parse_mid_turn | — | — | More mid-turn switches than flagged slots. |
+| `parse_mid_turn: {}: not a mid-turn switch choice` | decision.rs::parse_mid_turn | — | — | A mid-turn switch answered with something else. |
+| `parse_replacement: {}: no empty slot left to fill` | decision.rs::parse_replacement | — | — | More replacements than empty slots. |
+| `parse_replacement: {}: not a replacement choice` | decision.rs::parse_replacement | — | — | A replacement decision answered with something else. |
+| `patch_field: a terrain patch needs terrainDuration` | decision.rs::patch_field | — | — | A terrain patch without its duration. |
+| `patch_field: a weather patch needs weatherDuration` | decision.rs::patch_field | — | — | A weather patch without its duration. |
+| `patch_field: field effect {} is not supported` | decision.rs::patch_field | — | — | A pseudo-weather outside the engine's field effects (every `FieldEffect` besides weather and terrain is patchable). |
+| `patch_field: terrain {} is not supported` | decision.rs::patch_field | — | — | A terrain that does not exist. |
+| `patch_field: weather {} is not supported` | decision.rs::patch_field | `loader_refusals.rs::a_bad_patch_is_invalid` | — | A patch weather other than the four the moves and abilities of the standard range set; the primal weathers are Past-only (refusal audit E8). |
+| `patch_field: {} is already up (Showdown would fail or end it)` | decision.rs::patch_field | — | — | Patching a pseudo-weather that is already up: `enumerate.cjs`'s `addPseudoWeather` would fail or toggle it. |
+| `patch_mon: boosts on inactive {}` | decision.rs::patch_mon | — | — | Boosts patched on a benched Pokémon (they live on the slot). |
+| `patch_mon: {} has no Pokémon named {}` | decision.rs::patch_mon | — | — | A patch for a name the side does not have. |
+| `patch_mon: {}: a sleep patch needs statusTime` | decision.rs::patch_mon | — | — | A sleep patch without its remaining turns. |
+| `patch_mon: {}: status {}` | decision.rs::patch_mon | — | — | A patch status that is not a status id. |
+| `patch_mon: {}: unknown boost {}` | decision.rs::patch_mon | — | — | A boost name that is not a stat. |
+| `patch_mon: {}: unknown item {}` | decision.rs::patch_mon | — | — | A patch item the dex does not have. |
+| `picked_order: no Pokémon in slot {}` | team.rs::picked_order | — | — | Team preview choice beyond the team (Showdown: `You do not have a Pokémon in slot N`). |
+| `picked_order: the Pokémon in slot {} can only switch in once` | team.rs::picked_order | — | — | Team preview choice naming a member twice (Showdown's own message). |
+| `picked_order: you must choose exactly {} Pokémon` | team.rs::picked_order | `loader_refusals.rs::bracketed_team_preview_follows_choose_team` | — | A bracketed team preview choice with more members than the format keeps (Showdown: `You must choose exactly N Pokémon`). Bracketed choices themselves load since A4 (`vv-bracketed-preview`). |
+| `picked_order: {} is not a team position` | team.rs::picked_order | — | — | Team preview choice with a non-number (Showdown's `parseInt` gives NaN and refuses it; it would read `2x` as 2, which the loader refuses). |
+| `pinned: none of {} position(s) has the pinned canonical state{}` | lib.rs::pinned | — | — | A pinned `startState` / `setupStates` entry no replayed position has: a wrong pin, or the engine diverging from the game the pin came from (the parity pipeline reports it as `setup:`; not a refusal of a legal battle). |
+| `replay_setup_turn: setup turn {}: the turn pauses for a mid-turn switch that has no choice; give it in the setup turn's third element (`midTurn`)` | lib.rs::replay_setup_turn | — | — | A setup turn left waiting for a mid-turn switch nobody gave (board B29): the file must give it; `scenario_positions_consistent` drops such outcomes instead. |
+| `scenario_choices: the scenario has no turn` | lib.rs::scenario_choices | — | — | A scenario without `turn` asked for its choices. |
+| `scenario_decision: the scenario has no turn` | lib.rs::scenario_decision | — | — | A scenario without `turn` asked for its decision. |
+| `switch_position: {}: bad switch` | decision.rs::switch_position | — | — | A `switch` without a number. |
+| `switch_position: {}: no Pokémon in position {}` | decision.rs::switch_position | — | — | A switch beyond the side's Pokémon (Showdown refuses it too). |
+| `switch_position: {}: switch positions start at 1` | decision.rs::switch_position | — | — | `switch 0`. |
+
+### unsupported: 미지원: a battle Showdown plays that the loader refuses (each has a loader test)
+
+| 키 | 지점 | 로더 테스트 | 보드 | 이유 |
+|---|---|---|---|---|
+| `LoadError::UnsupportedFormat` | lib.rs::load_scenario_str | `loader_refusals.rs::a_singles_format_is_refused` | II-singles-loader | Only the Champions doubles custom game and VGC 2026 Reg M-C load; Champions singles (`gen9championsbssregmc`) is a format Showdown plays (board II-singles-loader, on hold: singles keeps only the structure). |
+| `SetProblem::TemporaryForme` | team.rs::build_pokemon | `loader_refusals.rs::a_temporary_forme_as_species_is_refused` | — | A temporary in-battle forme (Aegislash-Blade, Darmanitan-Zen, ...) as a set's species: the custom game (no validator) keeps it as the base species, which the state cannot tell from the forme reached in battle. VGC's validator refuses such sets, so only the custom game reaches it. |
+| `SetProblem::UnsupportedLevel` | team.rs::build_pokemon | `loader_refusals.rs::a_level_other_than_50_is_refused` | — | A level other than 50 in the custom game (a set without `level` is 100 there, board B31): Showdown plays it, the engine's stat formula is the level-50 one. VGC's `Adjust Level = 50` never reaches it. |
+| `TeamProblem::DuplicateName` | team.rs::build_picked_side | `loader_refusals.rs::a_name_twice_on_a_side_is_refused` | — | Two members of a side with the same name (a shared nickname, or one species twice in the custom game): Showdown plays it, canonical states key Pokémon by name. |
+
+### unreachable: 도달 불가: no input produces it (an invariant of the loader or the engine, the ruleset, or content outside the standard range)
+
+| 키 | 지점 | 로더 테스트 | 보드 | 이유 |
+|---|---|---|---|---|
+| `CanonicalError::Meta` | canonical.rs::side_json | — | — | The sidecar and the state come from the same load; they disagree only for a hand-built pair. |
+| `CanonicalError::UnknownFormat` | canonical.rs::format_ruleset | — | — | `format_ruleset` accepts the two formats the loader loads; any other is refused at load (`LoadError::UnsupportedFormat`) first. |
+| `CanonicalError::Unrepresentable: inactive {} with value {}` | canonical.rs::timed | — | — | The engine clears an effect whole when it ends (invariant). |
+| `CanonicalError::Unrepresentable: pseudo-weather field effect #{}` | canonical.rs::field | — | — | Every `FieldEffect` besides weather and terrain is in `PSEUDO` (5 of 7; invariant). |
+| `CanonicalError::Unrepresentable: terrain value {}` | canonical.rs::terrain_id | — | — | Every `Terrain` value has an id (invariant). |
+| `CanonicalError::Unrepresentable: weather value {}` | canonical.rs::weather_id | — | — | Only the primal weathers (Desolate Land, Primordial Sea, Delta Stream) have no canonical id; their abilities are not standard (audit E8). |
+| `CanonicalError::Unrepresentable: {} side effect #{}` | canonical.rs::side_json | — | — | `SIDE_CONDITIONS` lists all 15 `SideEffect`s (invariant). |
+| `CanonicalError::Unrepresentable: {} slot {} Dynamax` | canonical.rs::side_json | — | — | Dynamax is off under the M-C ruleset. |
+| `CanonicalError::Unrepresentable: {} slot {} substitute HP {} without its volatile` | canonical.rs::side_json | — | — | The engine sets the substitute's HP and volatile together (invariant). |
+| `CanonicalError::Unrepresentable: {} with a duration` | canonical.rs::side_json | — | — | Hazards are set `PERMANENT` (invariant). |
+| `CanonicalError::Unrepresentable: {} without a duration` | canonical.rs::timed | — | — | A permanent weather or terrain: the primal weathers only (audit E8). |
+| `SwitchInError::NotInitial` | switch_in.rs::validate | — | — | The loader always builds a fresh state (leads placed, nothing started); only a hand-built state reaches it. |
+| `SwitchInError::UnsupportedAbility` | switch_in.rs::validate | — | — | No standard ability is refused at switch-in (COVERAGE.md: 등장 효과만 미지원 0; audit E1). |
+| `SwitchInError::UnsupportedItem` | switch_in.rs::validate | — | — | No standard item is refused at switch-in (COVERAGE.md: 등장 효과만 미지원 0; audit E1). |
+| `SwitchInError::UnsupportedSlotCount` | switch_in.rs::validate | — | — | Only `State<1>` and `State<2>` exist; the loader builds `State<2>` (shape). |
+| `SwitchInError::UnsupportedSpecies` | switch_in.rs::validate | — | — | No standard species has species callbacks (refusal audit E2), so neither `onBattleStart` nor a start handler of a species is reached. |
+| `pokemon: disabled move {}` | canonical.rs::pokemon | — | — | Nothing in the engine sets `MoveSlot::disabled` (Disable is a volatile); invariant. |
+| `types_string: no types (Showdown `???`)` | canonical.rs::types_string | — | — | A Pokémon that loses its types becomes `Type::Unknown` (`???`: Burn Up, Double Shock), never two `Type::None`s; invariant. |
+
+### forward: carries another key's problem
+
+| 키 | 지점 | 로더 테스트 | 보드 | 이유 |
+|---|---|---|---|---|
+| `CanonicalError::Unrepresentable: {} {}: {}` | canonical.rs::side_json | — | — | Carries a Pokémon's message (`pokemon: ...`, `types_string: ...`). |
+| `SwitchInError::Unsupported` | switch_in.rs::expand_switch_ins | — | — | Carries the turn engine's refusal during the start (`enumerate_start`); those keys are in the turn engine's list above. (A non-`Unsupported` `TurnError` there is an invariant and is carried the same way.) |
+| `TeamProblem::Order` | team.rs::build_picked_side | — | — | Carries a team preview message of `picked_order` (keys `picked_order: ...`). |
+
 ## 근거 (자동 검사)
 
 | 검사 | 내용 | 결과 |
@@ -214,3 +323,4 @@
 | E10 | No standard move with a beforeTurnCallback / priorityChargeCallback is `failencore` (Encore can lock each); Copycat can call those without `failcopycat` | 통과: beakblast (failcopycat), chillyreception, counter (failcopycat), focuspunch (failcopycat), mirrorcoat |
 | E11 | Struggle and Transform are `failinstruct` (Instruct fails on them) | 통과 |
 | E12 | Every standard move with an onAfterMove unchecked for a called move (`called_after_move_checked`) is `nosleeptalk` and `failcopycat` | 통과 |
+| E13 | Loader: canonical.rs names every side effect (`SIDE_CONDITIONS`) and every field effect (`PSEUDO` + weather + terrain); no engine code sets `MoveSlot::disabled` | 통과 |
