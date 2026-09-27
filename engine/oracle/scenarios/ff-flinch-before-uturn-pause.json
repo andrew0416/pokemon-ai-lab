@@ -1,0 +1,71 @@
+{
+ "description": "Opus FF FF-parity-harness (reduced from runs/parity-20260927 starmie-vs-sand-owen random game 2, decision 3): a flinch on a target that has already moved stays on it until the residual, so a turn paused later for a mid-turn switch shows it. Incineroar Protects, Prankster Sableye uses Sunny Day, Excadrill's Iron Head hits Sableye (30% flinch), then Rillaboom's U-turn hits Excadrill and the turn stops for Rillaboom's switch (no midTurn choice): the paused state keeps Sableye's `flinch` 30% of the time. The engine skipped that roll (F18: no move left) and never showed it. Speeds 108 / 105 / 80 / 70: no ties.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "name": "Sableye",
+    "species": "Sableye",
+    "ability": "Prankster",
+    "nature": "Hardy",
+    "moves": [
+     "Sunny Day",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "name": "Rillaboom",
+    "species": "Rillaboom",
+    "ability": "Overgrow",
+    "nature": "Hardy",
+    "moves": [
+     "U-turn",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "name": "Snorlax",
+    "species": "Snorlax",
+    "ability": "Thick Fat",
+    "nature": "Hardy",
+    "moves": [
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Excadrill",
+    "species": "Excadrill",
+    "ability": "Sand Force",
+    "nature": "Hardy",
+    "moves": [
+     "Iron Head",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "name": "Incineroar",
+    "species": "Incineroar",
+    "ability": "Blaze",
+    "nature": "Hardy",
+    "moves": [
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move sunnyday, move uturn 1",
+  "p2": "move ironhead 1, move protect"
+ }
+}

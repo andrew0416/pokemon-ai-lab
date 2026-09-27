@@ -1,0 +1,68 @@
+{
+ "description": "Opus FF FF-parity-harness (reduced from runs/parity-20260927 gardevoir-vs-psy-cona random game 2, decision 3): the Champions mod's Encore replaces the target's queued action (`queue.changeAction`), so an encored Protect moves at +4. Setup turn: everyone Protects (stall counters 3). Decision: Snorlax Protects (1/3), Prankster Sableye Encores Armarouge, whose Dark Pulse becomes Protect and now goes before the faster Sneasler (Close Combat into Ghost Sableye: immune); with Sneasler still to move, `willAct()` holds and Armarouge's Protect succeeds with 1/3 (stall 3 -> 9). The base game's `onOverrideAction` would keep priority 0: Sneasler first, Armarouge last, and its Protect always fails. Speeds 140 / 95 / 70 / 50: no ties.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "name": "Sableye",
+    "species": "Sableye",
+    "ability": "Prankster",
+    "nature": "Hardy",
+    "moves": [
+     "Encore",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "name": "Snorlax",
+    "species": "Snorlax",
+    "ability": "Thick Fat",
+    "nature": "Hardy",
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Armarouge",
+    "species": "Armarouge",
+    "ability": "Flash Fire",
+    "nature": "Hardy",
+    "moves": [
+     "Protect",
+     "Dark Pulse"
+    ],
+    "level": 50
+   },
+   {
+    "name": "Sneasler",
+    "species": "Sneasler",
+    "ability": "Unburden",
+    "nature": "Hardy",
+    "moves": [
+     "Protect",
+     "Close Combat"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move protect, move protect",
+   "move protect, move protect"
+  ]
+ ],
+ "turn": {
+  "p1": "move encore 1, move protect",
+  "p2": "move darkpulse 1, move closecombat 1"
+ }
+}

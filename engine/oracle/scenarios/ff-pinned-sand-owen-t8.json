@@ -1,0 +1,1971 @@
+{
+ "description": "Opus FF FF-parity-harness: a pinned mid-game position (turn 8 of a random-policy game): Rillaboom choice-locked and Encored, Sableye at -1 Atk, Gardevoir fainted, sand (3 turns) and Grassy Terrain (2 turns) up. p1 switches Rillaboom out for Milotic while Sableye Encores; p2 Knocks Off and Double-Edges. The eight earlier decisions are replayed as setupTurns pinned by setupStates (setupRolls extremes). Generated from: FF parity position (FF-parity-harness): gardevoir-vs-sand-owen, lab-parity game 0 (seed 4b46a55df3611b9b, policy random, extremes chance), decision 9 = turn 8 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927/matchups/gardevoir-vs-sand-owen.json. The 9 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "3521",
+  "team": "../../../teams/rillaboom-slot-20260920/gardevoir-braverilla.json"
+ },
+ "p2": {
+  "order": "5612",
+  "team": "../../../teams/library/doubles/m-c/sand-owen/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "sandstorm",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "focusblast": 8,
+        "hypervoice": 12,
+        "hypnosis": 20,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "competitive",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "hydropump": 8,
+        "hypnosis": 20,
+        "icebeam": 12,
+        "recover": 8
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 146,
+       "item": "miracleseed",
+       "lastMove": "woodhammer",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 157,
+       "item": "roseliberry",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 8,
+        "gravity": 8,
+        "quash": 16,
+        "sunnyday": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 187,
+       "name": "Excadrill",
+       "pp": {
+        "highhorsepower": 12,
+        "ironhead": 15,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": "fnt"
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 137,
+       "item": "choicescarf",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "dazzlinggleam": 12,
+        "expandingforce": 12,
+        "psychic": 12,
+        "trick": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 170,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "canMega": true,
+       "hp": 202,
+       "item": "tyranitarite",
+       "lastMove": "lowkick",
+       "maxhp": 202,
+       "name": "Tyranitar",
+       "pp": {
+        "knockoff": 20,
+        "lowkick": 19,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Tyranitar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 5,
+    "weather": "sandstorm",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "focusblast": 8,
+        "hypervoice": 12,
+        "hypnosis": 20,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "boosts": {},
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "hydropump": 8,
+        "hypnosis": 20,
+        "icebeam": 12,
+        "recover": 8
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 146,
+       "item": "miracleseed",
+       "lastMove": "woodhammer",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 157,
+       "item": "roseliberry",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 8,
+        "gravity": 8,
+        "quash": 16,
+        "sunnyday": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 187,
+       "name": "Excadrill",
+       "pp": {
+        "highhorsepower": 12,
+        "ironhead": 15,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 137,
+       "item": "choicescarf",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "dazzlinggleam": 12,
+        "expandingforce": 12,
+        "psychic": 12,
+        "trick": 12
+       },
+       "slot": 1,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 170,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "canMega": true,
+       "hp": 202,
+       "item": "tyranitarite",
+       "lastMove": "lowkick",
+       "maxhp": 202,
+       "name": "Tyranitar",
+       "pp": {
+        "knockoff": 20,
+        "lowkick": 19,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Tyranitar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "sandstorm",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "focusblast": 8,
+        "hypervoice": 12,
+        "hypnosis": 20,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "boosts": {},
+       "hp": 138,
+       "item": "sitrusberry",
+       "lastMove": "hydropump",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "hydropump": 7,
+        "hypnosis": 20,
+        "icebeam": 12,
+        "recover": 8
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 134,
+       "item": "choicescarf",
+       "lastMove": "grassyglide",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 19,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "grassyglide"
+        }
+       }
+      },
+      {
+       "ability": "prankster",
+       "hp": 157,
+       "item": "roseliberry",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 8,
+        "gravity": 8,
+        "quash": 16,
+        "sunnyday": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 187,
+       "name": "Excadrill",
+       "pp": {
+        "highhorsepower": 12,
+        "ironhead": 15,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 129,
+       "item": "miracleseed",
+       "lastMove": "trick",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "dazzlinggleam": 12,
+        "expandingforce": 12,
+        "psychic": 12,
+        "trick": 11
+       },
+       "slot": 1,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 170,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "canMega": true,
+       "hp": 110,
+       "item": "tyranitarite",
+       "lastMove": "lowkick",
+       "maxhp": 202,
+       "name": "Tyranitar",
+       "pp": {
+        "knockoff": 20,
+        "lowkick": 18,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Tyranitar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "sandstorm",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "focusblast": 8,
+        "hypervoice": 12,
+        "hypnosis": 20,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "boosts": {
+        "atk": -1,
+        "spa": 2
+       },
+       "hp": 100,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "hypnosis",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "hydropump": 7,
+        "hypnosis": 19,
+        "icebeam": 12,
+        "recover": 8
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 134,
+       "item": "choicescarf",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 19,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 148,
+       "item": "roseliberry",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 8,
+        "gravity": 8,
+        "quash": 16,
+        "sunnyday": 8
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 187,
+       "name": "Excadrill",
+       "pp": {
+        "highhorsepower": 12,
+        "ironhead": 15,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 121,
+       "item": "miracleseed",
+       "lastMove": "expandingforce",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "dazzlinggleam": 12,
+        "expandingforce": 11,
+        "psychic": 12,
+        "trick": 11
+       },
+       "slot": 1,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "canMega": true,
+       "hp": 160,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": 0,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "canMega": true,
+       "hp": 110,
+       "item": "tyranitarite",
+       "maxhp": 202,
+       "name": "Tyranitar",
+       "pp": {
+        "knockoff": 20,
+        "lowkick": 18,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "sandstorm",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "focusblast": 8,
+        "hypervoice": 12,
+        "hypnosis": 20,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "boosts": {
+        "atk": -1,
+        "spa": 2
+       },
+       "hp": 88,
+       "item": "miracleseed",
+       "lastItem": "sitrusberry",
+       "lastMove": "hypnosis",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "hydropump": 7,
+        "hypnosis": 18,
+        "icebeam": 12,
+        "recover": 8
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {
+        "encore": {
+         "duration": 2,
+         "move": "hypnosis"
+        }
+       }
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 134,
+       "item": "choicescarf",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 19,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 139,
+       "item": "roseliberry",
+       "lastMove": "encore",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 7,
+        "gravity": 8,
+        "quash": 16,
+        "sunnyday": 8
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 187,
+       "name": "Excadrill",
+       "pp": {
+        "highhorsepower": 12,
+        "ironhead": 15,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 113,
+       "item": "",
+       "lastMove": "trick",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "dazzlinggleam": 12,
+        "expandingforce": 11,
+        "psychic": 12,
+        "trick": 10
+       },
+       "slot": 1,
+       "species": "Indeedee",
+       "status": "slp",
+       "statusTime": 3,
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 150,
+       "item": "salamencite",
+       "lastMove": "tailwind",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 15
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "hp": 110,
+       "item": "tyranitarite",
+       "maxhp": 202,
+       "name": "Tyranitar",
+       "pp": {
+        "knockoff": 20,
+        "lowkick": 18,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "focusblast": 8,
+        "hypervoice": 12,
+        "hypnosis": 20,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "hp": 88,
+       "item": "miracleseed",
+       "lastItem": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "hydropump": 7,
+        "hypnosis": 18,
+        "icebeam": 12,
+        "recover": 8
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 146,
+       "item": "choicescarf",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 19,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 148,
+       "item": "roseliberry",
+       "lastMove": "encore",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 6,
+        "gravity": 8,
+        "quash": 16,
+        "sunnyday": 8
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 187,
+       "name": "Excadrill",
+       "pp": {
+        "highhorsepower": 12,
+        "ironhead": 15,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 121,
+       "item": "",
+       "lastMove": "trick",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "dazzlinggleam": 12,
+        "expandingforce": 11,
+        "psychic": 12,
+        "trick": 10
+       },
+       "slot": 1,
+       "species": "Indeedee",
+       "status": "slp",
+       "statusTime": 2,
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 150,
+       "item": "salamencite",
+       "lastMove": "tailwind",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 14
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {
+        "encore": {
+         "duration": 2,
+         "move": "tailwind"
+        }
+       }
+      },
+      {
+       "ability": "sandstream",
+       "hp": 110,
+       "item": "tyranitarite",
+       "maxhp": 202,
+       "name": "Tyranitar",
+       "pp": {
+        "knockoff": 20,
+        "lowkick": 18,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "sandstorm",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "focusblast": 8,
+        "hypervoice": 12,
+        "hypnosis": 20,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "hp": 88,
+       "item": "miracleseed",
+       "lastItem": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "hydropump": 7,
+        "hypnosis": 18,
+        "icebeam": 12,
+        "recover": 8
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 146,
+       "item": "choicescarf",
+       "lastMove": "grassyglide",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 18,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "grassyglide"
+        }
+       }
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 148,
+       "item": "roseliberry",
+       "lastMove": "quash",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 6,
+        "gravity": 8,
+        "quash": 15,
+        "sunnyday": 8
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 187,
+       "name": "Excadrill",
+       "pp": {
+        "highhorsepower": 12,
+        "ironhead": 15,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "dazzlinggleam": 12,
+        "expandingforce": 11,
+        "psychic": 12,
+        "trick": 10
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": "fnt"
+      },
+      {
+       "ability": "aerilate",
+       "hp": 150,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 14
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 122,
+       "item": "tyranitarite",
+       "maxhp": 202,
+       "name": "Tyranitar",
+       "pp": {
+        "knockoff": 20,
+        "lowkick": 18,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Tyranitar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "sandstorm",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "focusblast": 8,
+        "hypervoice": 12,
+        "hypnosis": 20,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "hp": 88,
+       "item": "miracleseed",
+       "lastItem": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "hydropump": 7,
+        "hypnosis": 18,
+        "icebeam": 12,
+        "recover": 8
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 146,
+       "item": "choicescarf",
+       "lastMove": "grassyglide",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 18,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "grassyglide"
+        }
+       }
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 148,
+       "item": "roseliberry",
+       "lastMove": "quash",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 6,
+        "gravity": 8,
+        "quash": 15,
+        "sunnyday": 8
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 187,
+       "name": "Excadrill",
+       "pp": {
+        "highhorsepower": 12,
+        "ironhead": 15,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "dazzlinggleam": 12,
+        "expandingforce": 11,
+        "psychic": 12,
+        "trick": 10
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 150,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 14
+       },
+       "slot": 1,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 122,
+       "item": "tyranitarite",
+       "maxhp": 202,
+       "name": "Tyranitar",
+       "pp": {
+        "knockoff": 20,
+        "lowkick": 18,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Tyranitar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "sandstorm",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "focusblast": 8,
+        "hypervoice": 12,
+        "hypnosis": 20,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "hp": 88,
+       "item": "miracleseed",
+       "lastItem": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "hydropump": 7,
+        "hypnosis": 18,
+        "icebeam": 12,
+        "recover": 8
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 146,
+       "item": "choicescarf",
+       "lastMove": "grassyglide",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 17,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "grassyglide"
+        },
+        "encore": {
+         "duration": 3,
+         "move": "grassyglide"
+        }
+       }
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 148,
+       "item": "roseliberry",
+       "lastMove": "encore",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 5,
+        "gravity": 8,
+        "quash": 15,
+        "sunnyday": 8
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 187,
+       "name": "Excadrill",
+       "pp": {
+        "highhorsepower": 12,
+        "ironhead": 15,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "dazzlinggleam": 12,
+        "expandingforce": 11,
+        "psychic": 12,
+        "trick": 10
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 127,
+       "item": "salamencite",
+       "lastMove": "tailwind",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 13
+       },
+       "slot": 1,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 134,
+       "item": "tyranitarite",
+       "lastMove": "lowkick",
+       "maxhp": 202,
+       "name": "Tyranitar",
+       "pp": {
+        "knockoff": 20,
+        "lowkick": 17,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Tyranitar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move hypervoice mega, move woodhammer 2",
+   "move lowkick -2, move ironhead 1"
+  ],
+  [
+   "switch 3",
+   "switch 4"
+  ],
+  [
+   "move hydropump 2, move grassyglide 1",
+   "move lowkick 1, move trick 2"
+  ],
+  [
+   "move hypnosis 2, switch 4",
+   "switch 3, move expandingforce 1"
+  ],
+  [
+   "move hydropump 2, move encore -1",
+   "move tailwind mega, move trick 1"
+  ],
+  [
+   "switch 4, move encore 1",
+   "move doubleedge 1, move expandingforce -1"
+  ],
+  [
+   "move grassyglide 2, move quash 1",
+   "switch 3, move trick -1"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move grassyglide 2, move encore -1",
+   "move lowkick 2, move tailwind"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "sandstorm",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "sandrush",
+      "boosts": {},
+      "canMega": true,
+      "hp": 175,
+      "item": "gardevoirite",
+      "maxhp": 175,
+      "name": "Gardevoir",
+      "pp": {
+       "focusblast": 8,
+       "hypervoice": 12,
+       "hypnosis": 20,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Gardevoir",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "competitive",
+      "hp": 202,
+      "item": "sitrusberry",
+      "maxhp": 202,
+      "name": "Milotic",
+      "pp": {
+       "hydropump": 8,
+       "hypnosis": 20,
+       "icebeam": 12,
+       "recover": 8
+      },
+      "slot": null,
+      "species": "Milotic",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 207,
+      "item": "miracleseed",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "uturn": 20,
+       "woodhammer": 16
+      },
+      "slot": 1,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "hp": 157,
+      "item": "roseliberry",
+      "maxhp": 157,
+      "name": "Sableye",
+      "pp": {
+       "encore": 8,
+       "gravity": 8,
+       "quash": 16,
+       "sunnyday": 8
+      },
+      "slot": null,
+      "species": "Sableye",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "sandrush",
+      "boosts": {},
+      "hp": 187,
+      "item": "focussash",
+      "maxhp": 187,
+      "name": "Excadrill",
+      "pp": {
+       "highhorsepower": 12,
+       "ironhead": 16,
+       "protect": 8,
+       "rockslide": 12
+      },
+      "slot": 1,
+      "species": "Excadrill",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "hp": 137,
+      "item": "choicescarf",
+      "maxhp": 137,
+      "name": "Indeedee",
+      "pp": {
+       "dazzlinggleam": 12,
+       "expandingforce": 12,
+       "psychic": 12,
+       "trick": 12
+      },
+      "slot": null,
+      "species": "Indeedee",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "canMega": true,
+      "hp": 170,
+      "item": "salamencite",
+      "maxhp": 170,
+      "name": "Salamence",
+      "pp": {
+       "doubleedge": 16,
+       "hypervoice": 12,
+       "protect": 8,
+       "tailwind": 16
+      },
+      "slot": null,
+      "species": "Salamence",
+      "status": ""
+     },
+     {
+      "ability": "sandstream",
+      "boosts": {},
+      "canMega": true,
+      "hp": 202,
+      "item": "tyranitarite",
+      "maxhp": 202,
+      "name": "Tyranitar",
+      "pp": {
+       "knockoff": 20,
+       "lowkick": 20,
+       "protect": 8,
+       "rockslide": 12
+      },
+      "slot": 0,
+      "species": "Tyranitar",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "switch 4, move encore -1",
+  "p2": "move knockoff 1, move doubleedge 1"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": [
+   1
+  ]
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    15,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    10,
+    0
+   ]
+  }
+ ]
+}

@@ -617,6 +617,9 @@ pub(crate) fn pseudo_weather_change<const N: usize>(b: &mut Battle<'_, N>) {
 /// Showdown (until its next trigger, possibly turns later); the engine does not carry them
 /// past a stage, so a stage that ends with a living holder still `ready` is refused.
 pub(crate) fn stage_end_check<const N: usize>(b: &Battle<'_, N>) -> Result<(), TurnError> {
+    if let Some(what) = &b.refused {
+        return Err(b.unsupported(what.clone()));
+    }
     // Utility Umbrella's `inactive` mark waits for the holder's next `onUpdate`, which the
     // engine only runs within the stage (the Update after the action always comes first).
     for &pokemon in &b.umbrella_inactive {

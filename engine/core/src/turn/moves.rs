@@ -752,7 +752,10 @@ fn run_move_inner<const N: usize>(
     let pokemon = b.occupant(user).expect("the caller checked the user");
     let chosen = super::lock::action_move_id(b.mon(pokemon), move_index);
     // OverrideAction (Encore, not for Struggle): the encored move replaces the chosen one,
-    // keeping the chosen move's priority and Prankster boost; its target is drawn afresh.
+    // keeping the chosen move's priority and Prankster boost; its target is drawn afresh. Under
+    // Champions an Encore that starts while the action is queued has already replaced the
+    // action itself (`Battle::encore_change_action`), so this only remains for a Mental Herb
+    // holder and for actions chosen while already encored.
     let encore = b.volatile(user, Volatile::Encore);
     let struggle = move_index == super::lock::STRUGGLE_INDEX;
     let (id, move_index, target) = if !struggle && encore.active && encore.mv != chosen {
@@ -3092,13 +3095,16 @@ fn spread_move_hit<const N: usize>(
             // F18: a flinch on a target with no move left this turn can never act (`flinch`
             // is read only by BeforeMove and ends at the residual; Steadfast fires only when
             // it stops a move), so the roll is skipped. The end-of-turn distribution is
-            // unchanged; only the mid-turn `flinch` volatile Showdown would show is missing.
+            // unchanged. Not when the volatile could still be seen before the residual
+            // (`flinch_observable_later`): a turn suspended for a mid-turn switch shows it
+            // (FF-parity-harness), and a Dancer copy or an Instructed move would be stopped.
             if flinch_only(secondary)
                 && !matches!(
                     mv.id,
                     moves::THROAT_CHOP | moves::DIRE_CLAW | moves::TRI_ATTACK
                 )
                 && b.will_move(t).is_none()
+                && !flinch_observable_later(b, mv, t)
             {
                 continue;
             }
@@ -3786,6 +3792,46 @@ fn get_damage<const N: usize>(
     let rolls = damage_rolls(input);
     b.hit_crit[target.side.index()][usize::from(target.slot)] = critical;
     Ok(Planned::Damage(i32::from(b.rng.roll(&rolls, user.side))))
+}
+
+/// Whether a `flinch` volatile on `target` (which has no move left this turn) could still be
+/// seen before the residual removes it, so the F18 shortcut must roll it after all
+/// (conservative: any possible source counts):
+/// - the turn may still stop for a mid-turn switch, whose paused state shows the volatile: the
+///   move in progress or a queued move switches its user out (`selfSwitch`: U-turn, Parting
+///   Shot, Baton Pass, ...), a queued Revival Blessing, or an active Pokémon holds Eject Button
+///   or Eject Pack or has Emergency Exit or Wimp Out (raw or effective);
+/// - the target may still use a move this turn and be stopped by it: its Dancer copying a
+///   dance, or a queued Instruct.
+fn flinch_observable_later<const N: usize>(
+    b: &Battle<'_, N>,
+    mv: &ActiveMove,
+    target: SlotRef,
+) -> bool {
+    if mv.self_switch || [b.ability(target), b.raw_ability(target)].contains(&abilities::DANCER) {
+        return true;
+    }
+    let queued_switcher = b.queue.iter().any(|action| {
+        let super::queue::ActionKind::Move { index, .. } = action.kind else {
+            return false;
+        };
+        let id = super::lock::action_move_id(b.mon(action.pokemon), index);
+        !id.is_none()
+            && (id.data().self_switch != SelfSwitch::No
+                || id == moves::REVIVAL_BLESSING
+                || id == moves::INSTRUCT)
+    });
+    if queued_switcher {
+        return true;
+    }
+    b.all_alive().into_iter().any(|slot| {
+        let items = [b.item(slot), b.raw_item(slot)];
+        let abilities = [b.ability(slot), b.raw_ability(slot)];
+        items.contains(&items::EJECT_BUTTON)
+            || items.contains(&items::EJECT_PACK)
+            || abilities.contains(&abilities::EMERGENCY_EXIT)
+            || abilities.contains(&abilities::WIMP_OUT)
+    })
 }
 
 /// A secondary whose only effect is the `flinch` volatile.

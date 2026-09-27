@@ -1,0 +1,1816 @@
+{
+ "description": "Opus FF FF-parity-harness: a pinned mid-game position with a mid-turn switch (turn 6 of a random-policy game, library balance-ddee vs crown-cecil9): Incineroar's Parting Shot at its own ally Rillaboom, then Incineroar switches to Floette (midTurn); Rillaboom's Grassy Glide at Gholdengo (Throat Chop volatile, -1 Atk +1 Def); Mega Floette's Moonblast at its fainted partner's slot and Gholdengo's Nasty Plot. Eight earlier decisions pinned by setupStates (setupRolls extremes). Generated from: FF parity position (FF-parity-harness): balance-ddee-vs-crown-cecil9, lab-parity game 2 (seed 92c68bb069787e19, policy random, extremes chance), decision 8 = turn 6 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927/matchups/balance-ddee-vs-crown-cecil9.json. The 8 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "midTurn": {
+  "p1": [
+   "switch 3"
+  ],
+  "p2": []
+ },
+ "p1": {
+  "order": "1234",
+  "team": "../../../teams/library/doubles/m-c/balance-ddee/team.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../teams/library/doubles/m-c/crown-cecil9/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "boosts": {
+        "spa": 1,
+        "spd": 1
+       },
+       "canMega": true,
+       "hp": 149,
+       "item": "floettite",
+       "lastMove": "calmmind",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 19,
+        "dazzlinggleam": 12,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Floette-Eternal",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": -1
+       },
+       "hp": 155,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "closecombat",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {},
+       "hp": 12,
+       "item": "focussash",
+       "lastMove": "extremespeed",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 7,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flowerveil",
+       "canMega": true,
+       "hp": 149,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 162,
+       "item": "grassyseed",
+       "maxhp": 162,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "boosts": {
+        "spa": 1,
+        "spd": 1
+       },
+       "canMega": true,
+       "hp": 149,
+       "item": "floettite",
+       "lastMove": "calmmind",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 19,
+        "dazzlinggleam": 12,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Floette-Eternal",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": -1
+       },
+       "hp": 155,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "closecombat",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {},
+       "hp": 12,
+       "item": "focussash",
+       "lastMove": "extremespeed",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 7,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flowerveil",
+       "canMega": true,
+       "hp": 149,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 162,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 162,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 8,
+        "shadowball": 16
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "canMega": true,
+       "hp": 149,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 19,
+        "dazzlinggleam": 12,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 155,
+       "item": "sitrusberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": -1
+       },
+       "hp": 155,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "closecombat",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 22,
+       "item": "focussash",
+       "lastMove": "extremespeed",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 6,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flowerveil",
+       "canMega": true,
+       "hp": 149,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {
+        "atk": -1,
+        "def": 1
+       },
+       "hp": 162,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "protect",
+       "maxhp": 162,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 7,
+        "shadowball": 16
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "canMega": true,
+       "hp": 149,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 19,
+        "dazzlinggleam": 12,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 165,
+       "item": "sitrusberry",
+       "lastMove": "throatchop",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 15
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": -1
+       },
+       "hp": 119,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "rockslide",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 11
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "throatchop": {
+         "duration": 1
+        },
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 6,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": "fnt"
+      },
+      {
+       "ability": "flowerveil",
+       "canMega": true,
+       "hp": 149,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {
+        "atk": -1,
+        "def": 1
+       },
+       "hp": 160,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "protect",
+       "maxhp": 162,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 7,
+        "shadowball": 16
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "canMega": true,
+       "hp": 149,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 19,
+        "dazzlinggleam": 12,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 165,
+       "item": "sitrusberry",
+       "lastMove": "throatchop",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 15
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": -1
+       },
+       "hp": 119,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "rockslide",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 11
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "throatchop": {
+         "duration": 1
+        },
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 6,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "flowerveil",
+       "boosts": {},
+       "canMega": true,
+       "hp": 149,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Floette-Eternal",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {
+        "atk": -1,
+        "def": 1
+       },
+       "hp": 160,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "protect",
+       "maxhp": 162,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 7,
+        "shadowball": 16
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "canMega": true,
+       "hp": 149,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 19,
+        "dazzlinggleam": 12,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 70,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "partingshot",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 19,
+        "throatchop": 15
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 5,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 6,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "fairyaura",
+       "boosts": {},
+       "hp": 96,
+       "item": "floettite",
+       "lastMove": "moonblast",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 15,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Floette-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {
+        "atk": -1,
+        "def": 1
+       },
+       "hp": 162,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "shadowball",
+       "maxhp": 162,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 7,
+        "shadowball": 15
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "canMega": true,
+       "hp": 149,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 19,
+        "dazzlinggleam": 12,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 70,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "partingshot",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 19,
+        "throatchop": 15
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 5,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 6,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "fairyaura",
+       "boosts": {},
+       "hp": 96,
+       "item": "floettite",
+       "lastMove": "moonblast",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 15,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Floette-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {
+        "atk": -1,
+        "def": 1
+       },
+       "hp": 162,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "shadowball",
+       "maxhp": 162,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 7,
+        "shadowball": 15
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "canMega": true,
+       "hp": 149,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 19,
+        "dazzlinggleam": 12,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 80,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "throatchop",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 19,
+        "throatchop": 14
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 175,
+       "item": "miracleseed",
+       "lastMove": "fakeout",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 5,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 6,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "fairyaura",
+       "boosts": {
+        "spd": -1
+       },
+       "hp": 36,
+       "item": "floettite",
+       "lastMove": "moonblast",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 15,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Floette-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {
+        "atk": -1,
+        "def": 1
+       },
+       "hp": 100,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "shadowball",
+       "maxhp": 162,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 7,
+        "shadowball": 14
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {
+        "throatchop": {
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move calmmind, move closecombat 2",
+   "move extremespeed -2, move woodhammer -1"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "switch 3, move closecombat 2",
+   "move extremespeed 1, move protect"
+  ],
+  [
+   "move throatchop -2, move rockslide",
+   "move headsmash 2, move nastyplot"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move partingshot 2, move closecombat 1",
+   "move moonblast 1 mega, move shadowball 2"
+  ],
+  [
+   "switch 4",
+   ""
+  ],
+  [
+   "move throatchop 2, move fakeout 1",
+   "move calmmind, move shadowball -1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flowerveil",
+      "boosts": {},
+      "canMega": true,
+      "hp": 149,
+      "item": "floettite",
+      "maxhp": 149,
+      "name": "Floette",
+      "pp": {
+       "calmmind": 20,
+       "dazzlinggleam": 12,
+       "moonblast": 16,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Floette-Eternal",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "hp": 170,
+      "item": "sitrusberry",
+      "maxhp": 170,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "flareblitz": 16,
+       "partingshot": 20,
+       "throatchop": 16
+      },
+      "slot": null,
+      "species": "Incineroar",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 175,
+      "item": "miracleseed",
+      "maxhp": 175,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "highhorsepower": 12,
+       "woodhammer": 16
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "boosts": {
+       "def": 1
+      },
+      "hp": 155,
+      "item": "",
+      "lastItem": "grassyseed",
+      "maxhp": 155,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "protect": 8,
+       "rockslide": 12
+      },
+      "slot": 1,
+      "species": "Sneasler",
+      "status": "",
+      "volatiles": {
+       "unburden": {}
+      }
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "rockhead",
+      "boosts": {},
+      "hp": 170,
+      "item": "focussash",
+      "maxhp": 170,
+      "name": "Arcanine",
+      "pp": {
+       "extremespeed": 8,
+       "flareblitz": 16,
+       "headsmash": 8,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Arcanine-Hisui",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "flowerveil",
+      "canMega": true,
+      "hp": 149,
+      "item": "floettite",
+      "maxhp": 149,
+      "name": "Floette",
+      "pp": {
+       "calmmind": 20,
+       "dazzlinggleam": 12,
+       "moonblast": 16,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Floette-Eternal",
+      "status": ""
+     },
+     {
+      "ability": "goodasgold",
+      "hp": 162,
+      "item": "grassyseed",
+      "maxhp": 162,
+      "name": "Gholdengo",
+      "pp": {
+       "makeitrain": 8,
+       "nastyplot": 20,
+       "protect": 8,
+       "shadowball": 16
+      },
+      "slot": null,
+      "species": "Gholdengo",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 175,
+      "item": "miracleseed",
+      "maxhp": 175,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "uturn": 20,
+       "woodhammer": 16
+      },
+      "slot": 1,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move partingshot -2, move grassyglide 2",
+  "p2": "move moonblast -2, move nastyplot"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    14,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1
+   ]
+  }
+ ]
+}

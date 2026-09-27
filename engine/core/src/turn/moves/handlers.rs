@@ -3583,7 +3583,7 @@ pub(super) fn on_hit_field<const N: usize>(
                         continue;
                     }
                     if invulnerable(b, user, mv, slot)
-                        || perish_song_try_hit_null(b, user, mv, slot)
+                        || perish_song_try_hit_null(b, user, mv, slot)?
                     {
                         result = true;
                     } else if !b.volatile(slot, Volatile::PerishSong).active {
@@ -3757,22 +3757,22 @@ fn teatime_try_hit_blocks<const N: usize>(
     psychic_terrain || good_as_gold
 }
 
-/// Whether a `TryHit` handler returns `null` for Perish Song on `target` (only `null` spares
-/// it; `false`, e.g. Good as Gold, does not): Psychic Terrain against a Prankster-boosted
-/// Perish Song on a grounded foe, and Soundproof (breakable) on anyone but the user. Any other
-/// `null`-returning TryHit handler added later must be listed here.
+/// Whether `runEvent('TryHit', target, user, move)` returns `null` for Perish Song on `target`
+/// (only `null` spares it): the move pipeline's own TryHit step (`moves::try_hit`), which for a
+/// status move without the `protect` flag comes down to Psychic Terrain against a
+/// Prankster-boosted Perish Song on a grounded foe and the target's ability `onTryHit`
+/// (Soundproof, Good as Gold — both `return null` for another Pokémon's move — and the
+/// absorbing abilities when the move's type was changed, e.g. by Liquid Voice). Every one of
+/// those handlers answers `null`; the guards that answer `NOT_FAIL` need the `protect` flag,
+/// which Perish Song lacks (FF-parity-harness: Good as Gold was missing here).
 fn perish_song_try_hit_null<const N: usize>(
-    b: &Battle<'_, N>,
+    b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
-) -> bool {
-    let psychic_terrain = b.terrain() == Terrain::Psychic
-        && mv.priority > 0
-        && target.side != user.side
-        && b.is_grounded(target);
-    let soundproof = target != user && b.ability_unless_broken(target) == abilities::SOUNDPROOF;
-    psychic_terrain || soundproof
+) -> Result<bool, TurnError> {
+    let mut probe = mv.clone();
+    Ok(super::try_hit(b, user, &mut probe, target)? == super::TryHit::Fail)
 }
 
 /// Showdown `clearBoosts`.
