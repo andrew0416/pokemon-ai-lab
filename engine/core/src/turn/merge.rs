@@ -5,81 +5,34 @@
 //! `HashMap<(State, P), _>` did this with SipHash over the whole state, and every growth of the
 //! map hashed every stored state again: most of a Median enumeration went into hashing. A
 //! [`Merger`] keeps the entries in first-reached order in a `Vec` and indexes them by one
-//! 64-bit hash per key ([`KeyHasher`]), computed once: growing the index moves `(hash, entry)`
-//! pairs only, and a new position's state is cloned once. Equal hashes are resolved by `Eq`, so
-//! the merged result (entries, their order and the order in which probabilities add up) is the
-//! same as the map's.
+//! 64-bit hash per key, computed once: growing the index moves `(hash, entry)` pairs only, and
+//! a new position's state is cloned once. Equal hashes are resolved by `Eq`, so the merged
+//! result (entries, their order and the order in which probabilities add up) is the same as the
+//! map's.
+//!
+//! The key's hash is the state's [`State::position_hash`], which the caller keeps
+//! incrementally while a run applies its instructions (board P3a), mixed with the hash of the
+//! remaining turn: the state itself is not hashed here.
 
 use std::hash::{Hash, Hasher};
+use std::sync::atomic::{AtomicBool, Ordering};
 
+use crate::hash::KeyHasher;
 use crate::state::State;
 
-/// FxHash-style mixing of the derived `Hash` writes (one rotate, xor and multiply per word),
-/// finished with the MurmurHash3 64-bit mixer so the low bits can index a table.
-#[derive(Default)]
-struct KeyHasher(u64);
+/// Whether [`Merger::add`] checks every incrementally kept position hash against
+/// [`State::position_hash`] ([`super::verify_position_hashes`]).
+static VERIFY: AtomicBool = AtomicBool::new(false);
 
-impl KeyHasher {
-    const SEED: u64 = 0x517c_c1b7_2722_0a95;
-
-    #[inline]
-    fn add(&mut self, word: u64) {
-        self.0 = (self.0.rotate_left(5) ^ word).wrapping_mul(Self::SEED);
-    }
+/// Turns the check of [`Merger::add`] on or off for the whole process.
+pub(super) fn set_verify(on: bool) {
+    VERIFY.store(on, Ordering::Relaxed);
 }
 
-impl Hasher for KeyHasher {
-    #[inline]
-    fn write(&mut self, bytes: &[u8]) {
-        let (chunks, rest) = bytes.as_chunks::<8>();
-        for chunk in chunks {
-            self.add(u64::from_le_bytes(*chunk));
-        }
-        if !rest.is_empty() {
-            let mut word = [0u8; 8];
-            word[..rest.len()].copy_from_slice(rest);
-            self.add(u64::from_le_bytes(word));
-        }
-    }
-
-    #[inline]
-    fn write_u8(&mut self, i: u8) {
-        self.add(u64::from(i));
-    }
-
-    #[inline]
-    fn write_u16(&mut self, i: u16) {
-        self.add(u64::from(i));
-    }
-
-    #[inline]
-    fn write_u32(&mut self, i: u32) {
-        self.add(u64::from(i));
-    }
-
-    #[inline]
-    fn write_u64(&mut self, i: u64) {
-        self.add(i);
-    }
-
-    #[inline]
-    fn write_usize(&mut self, i: usize) {
-        self.add(i as u64);
-    }
-
-    fn finish(&self) -> u64 {
-        let mut h = self.0;
-        h ^= h >> 33;
-        h = h.wrapping_mul(0xff51_afd7_ed55_8ccd);
-        h ^= h >> 33;
-        h = h.wrapping_mul(0xc4ce_b9fe_1a85_ec53);
-        h ^ (h >> 33)
-    }
-}
-
-/// Positions `(state, rest, probability)` merged by `(state, rest)` in first-reached order.
+/// Positions `(state, rest, probability)` merged by `(state, rest)` in first-reached order,
+/// each kept with its state's [`State::position_hash`].
 pub(super) struct Merger<const N: usize, Q> {
-    entries: Vec<(State<N>, Q, f64)>,
+    entries: Vec<(State<N>, Q, f64, u64)>,
     /// Open addressing with linear probing: `(hash, index into entries)`, [`Merger::EMPTY`] for
     /// a free slot. The length is a power of two and at least twice the entry count.
     table: Vec<(u64, u32)>,
@@ -101,10 +54,18 @@ impl<const N: usize, Q: Hash + Eq + Clone> Merger<N, Q> {
     }
 
     /// Adds `probability` to the entry equal to `(state, rest)`, or appends one with clones of
-    /// `state` and `rest` and `probability` if there is none.
-    pub(super) fn add(&mut self, state: &State<N>, rest: &Q, probability: f64) {
-        let mut hasher = KeyHasher::default();
-        state.hash(&mut hasher);
+    /// `state` and `rest` and `probability` if there is none. `state_hash` must be
+    /// `state.position_hash()` (kept incrementally by the caller).
+    pub(super) fn add(&mut self, state: &State<N>, state_hash: u64, rest: &Q, probability: f64) {
+        if VERIFY.load(Ordering::Relaxed) {
+            assert_eq!(
+                state_hash,
+                state.position_hash(),
+                "the incrementally kept position hash differs from the full one"
+            );
+        }
+        let mut hasher = KeyHasher::new();
+        hasher.write_u64(state_hash);
         rest.hash(&mut hasher);
         let hash = hasher.finish();
         let mask = self.table.len() - 1;
@@ -116,7 +77,7 @@ impl<const N: usize, Q: Hash + Eq + Clone> Merger<N, Q> {
             }
             if h == hash {
                 let entry = &mut self.entries[e as usize];
-                if entry.0 == *state && entry.1 == *rest {
+                if entry.3 == state_hash && entry.0 == *state && entry.1 == *rest {
                     entry.2 += probability;
                     return;
                 }
@@ -126,7 +87,7 @@ impl<const N: usize, Q: Hash + Eq + Clone> Merger<N, Q> {
         let index = u32::try_from(self.entries.len()).expect("fewer than 2^32 positions");
         self.table[i] = (hash, index);
         self.entries
-            .push((state.clone(), rest.clone(), probability));
+            .push((state.clone(), rest.clone(), probability, state_hash));
         if self.entries.len() * 2 > self.table.len() {
             self.grow();
         }
@@ -148,8 +109,8 @@ impl<const N: usize, Q: Hash + Eq + Clone> Merger<N, Q> {
         self.table = table;
     }
 
-    /// The merged entries in first-reached order.
-    pub(super) fn into_entries(self) -> Vec<(State<N>, Q, f64)> {
+    /// The merged entries in first-reached order, each with its state's position hash.
+    pub(super) fn into_entries(self) -> Vec<(State<N>, Q, f64, u64)> {
         self.entries
     }
 }
@@ -171,7 +132,7 @@ mod tests {
             states.push(s);
         }
         for (k, s) in states.iter().enumerate() {
-            merger.add(s, &((k % 3 == 0) as u32), 0.25);
+            merger.add(s, s.position_hash(), &((k % 3 == 0) as u32), 0.25);
         }
         let entries = merger.into_entries();
         let mut expected: Vec<(u16, u32, f64)> = Vec::new();
@@ -185,7 +146,11 @@ mod tests {
                 None => expected.push((s.turn, rest, 0.25)),
             }
         }
-        let got: Vec<(u16, u32, f64)> = entries.iter().map(|(s, r, p)| (s.turn, *r, *p)).collect();
+        let got: Vec<(u16, u32, f64)> = entries
+            .iter()
+            .map(|(s, r, p, _)| (s.turn, *r, *p))
+            .collect();
         assert_eq!(got, expected);
+        assert!(entries.iter().all(|(s, _, _, h)| *h == s.position_hash()));
     }
 }

@@ -16,6 +16,7 @@ pub mod dex;
 pub mod eval;
 pub mod field;
 pub mod gimmick;
+pub mod hash;
 pub mod instruction;
 pub mod rules;
 pub mod state;

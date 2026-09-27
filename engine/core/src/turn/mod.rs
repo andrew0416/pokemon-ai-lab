@@ -112,6 +112,13 @@ pub struct EnumerateOptions {
     pub rolls: RollMode,
 }
 
+/// Makes every enumeration and sampling of this process check each position hash it kept
+/// incrementally against a full [`State::position_hash`] (a panic on a difference; board P3a).
+/// For tests: the check costs a whole-state hash per merged position.
+pub fn verify_position_hashes(on: bool) {
+    merge::set_verify(on);
+}
+
 /// Every outcome of the turn in which the sides choose `choices` (side one first). `state`
 /// is left unchanged. Probabilities sum to 1; outcomes are in first-reached order.
 pub fn enumerate_turn<const N: usize>(
@@ -813,7 +820,10 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
     // (state, remaining turn) pairs merge, so the work grows with the number of distinct
     // intermediate positions, not with the number of random paths. Within a stage every
     // random path is enumerated by replay.
-    let mut frontier: Vec<(State<N>, P, f64)> = vec![(state.clone(), start, 1.0)];
+    // Each position carries its `State::position_hash`; a run's instructions keep the hash of
+    // the state they lead to (`Battle::hash_delta`), so merging hashes no state (board P3a).
+    let mut frontier: Vec<(State<N>, P, f64, u64)> =
+        vec![(state.clone(), start, 1.0, state.position_hash())];
     // Both merge in first-reached order, which keeps the output order deterministic.
     let mut finished: Merger<N, Option<P>> = Merger::new();
     // The runs' log and Speed snapshot buffers, handed from run to run.
@@ -822,7 +832,7 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
         let mut next: Merger<N, P> = Merger::new();
         let stage_started = std::time::Instant::now();
         let mut runs = 0usize;
-        for (mut work, pending, probability) in frontier {
+        for (mut work, pending, probability, work_hash) in frontier {
             let mut chooser = Chooser::with_rolls(options.rolls);
             // Every run starts from `work` (a run's instructions are reversed after it), so the
             // context `Battle::new` derives is the same for all of them: the first run derives
@@ -837,7 +847,7 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
                     let mut b = match &start {
                         Some(start) => Battle::replay(&mut work, &mut chooser, start, buffers),
                         None => {
-                            buffers.log.clear();
+                            buffers.clear_log();
                             Battle::recycle(&mut work, &mut chooser, buffers)
                         }
                     };
@@ -850,11 +860,12 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
                 };
                 let end = result?;
                 let p = probability * chooser.probability();
+                let hash = work_hash.wrapping_add(buffers.hash_delta);
                 match end {
-                    StageEnd::Continue => next.add(&work, &after, p),
+                    StageEnd::Continue => next.add(&work, hash, &after, p),
                     StageEnd::Finished | StageEnd::Suspended => {
                         let kept = (end == StageEnd::Suspended).then(|| after.clone());
-                        finished.add(&work, &kept, p);
+                        finished.add(&work, hash, &kept, p);
                     }
                 }
                 work.reverse(&buffers.log);
@@ -884,7 +895,7 @@ fn endings<const N: usize, P: Hash + Eq + Clone>(
     finished
         .into_entries()
         .into_iter()
-        .map(|(end, pending, probability)| Ending {
+        .map(|(end, pending, probability, _)| Ending {
             end,
             pending,
             probability,
@@ -907,9 +918,16 @@ fn sample_stages<const N: usize, P: Clone + Eq + Hash>(
     let begin = state.clone();
     // One buffer set for every stage: the stages of a sample log into one list.
     let mut buffers = RunBuffers::default();
+    // The end positions' hashes are the start's plus the logs' changes; a single sample merges
+    // nothing and needs none.
+    let begin_hash = if samples > 1 {
+        state.position_hash()
+    } else {
+        0
+    };
     for _ in 0..samples {
         let mut pending = start.clone();
-        buffers.log.clear();
+        buffers.clear_log();
         let mut result = Ok(StageEnd::Continue);
         while matches!(result, Ok(StageEnd::Continue)) {
             chooser.begin_run();
@@ -937,7 +955,12 @@ fn sample_stages<const N: usize, P: Clone + Eq + Hash>(
             debug_assert_eq!(*state, begin);
             return Ok(vec![ending]);
         }
-        finished.add(state, &kept, weight);
+        finished.add(
+            state,
+            begin_hash.wrapping_add(buffers.hash_delta),
+            &kept,
+            weight,
+        );
         state.reverse(&buffers.log);
     }
     #[cfg(debug_assertions)]

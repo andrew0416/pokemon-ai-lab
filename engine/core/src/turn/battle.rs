@@ -147,6 +147,10 @@ pub(crate) struct ActiveMoveRef {
 pub(crate) struct Battle<'a, const N: usize> {
     pub state: &'a mut State<N>,
     pub log: Vec<Instruction>,
+    /// The change of [`State::position_hash`] made by the instructions in [`Battle::log`]
+    /// (wrapping arithmetic; board P3a): the hash of the state now is the hash of the state the
+    /// log started from plus this.
+    pub hash_delta: u64,
     pub rng: &'a mut Chooser,
     /// Showdown `faintQueue`: Pokémon at 0 HP not yet processed, in the order they fell, with
     /// the Pokémon whose move's damage knocked them out (`faintData.source` when
@@ -256,7 +260,17 @@ pub(crate) struct RunStart {
 pub(crate) struct RunBuffers {
     /// The finished run's instructions (the next run clears them).
     pub log: Vec<Instruction>,
+    /// The change of the position hash the log made ([`Battle::hash_delta`]).
+    pub hash_delta: u64,
     speed_snapshot: Vec<(PokemonRef, i32)>,
+}
+
+impl RunBuffers {
+    /// Empties the log (and its hash change) for a run from a new position.
+    pub fn clear_log(&mut self) {
+        self.log.clear();
+        self.hash_delta = 0;
+    }
 }
 
 /// The readers of the hidden damage history present in a battle (any party member's moves;
@@ -401,7 +415,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         start: &RunStart,
         mut buffers: RunBuffers,
     ) -> Battle<'a, N> {
-        buffers.log.clear();
+        buffers.clear_log();
         buffers.speed_snapshot.clear();
         buffers
             .speed_snapshot
@@ -430,6 +444,7 @@ impl<'a, const N: usize> Battle<'a, N> {
     pub fn into_buffers(self) -> RunBuffers {
         RunBuffers {
             log: self.log,
+            hash_delta: self.hash_delta,
             speed_snapshot: self.speed_snapshot,
         }
     }
@@ -444,6 +459,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         Battle {
             state,
             log: buffers.log,
+            hash_delta: buffers.hash_delta,
             rng,
             faint_queue: Vec::new(),
             active_move: None,
@@ -491,7 +507,8 @@ impl<'a, const N: usize> Battle<'a, N> {
     }
 
     pub fn apply(&mut self, instruction: Instruction) {
-        self.state.apply_one(&instruction);
+        let delta = self.state.apply_hashed(&instruction);
+        self.hash_delta = self.hash_delta.wrapping_add(delta);
         self.log.push(instruction);
     }
 
