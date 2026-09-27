@@ -58,7 +58,7 @@ jobs:
   plan:
     needs: prepare
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ fromJSON(inputs.timeout_minutes) }}
+    timeout-minutes: 360
     strategy:
       fail-fast: false
       max-parallel: 20
