@@ -24,6 +24,9 @@ pub mod parity;
 pub mod switch_in;
 pub mod team;
 
+use std::collections::hash_map::DefaultHasher;
+use std::collections::HashMap;
+use std::hash::{Hash, Hasher};
 use std::path::Path;
 
 use serde_json::Value;
@@ -458,71 +461,37 @@ fn replay_setup_turns(
     };
     for (n, turn) in loaded.setup_turns.iter().enumerate() {
         let pin = loaded.setup_states.get(n).and_then(|pin| pin.as_ref());
-        let mut next: Vec<Position> = Vec::new();
-        // Whether an outcome of this turn still waits for a mid-turn switch (board B29).
-        let mut paused = false;
-        for position in &positions {
-            let decision =
-                match parse_decision(&position.state, &position.order, &turn.p1, &turn.p2) {
-                    Ok(decision) => decision,
-                    Err(_) if drop_illegal => continue,
-                    Err(e) => return Err(format!("setup turn {}: {e}", n + 1)),
-                };
-            let mut state = position.state.clone();
-            let outcomes = match run_decision_mid_turn_with(
-                &mut state,
-                &position.order,
-                &decision,
-                &turn.mid_turn,
-                options,
-            ) {
-                Ok(outcomes) => outcomes,
-                Err(_) if drop_illegal => continue,
+        let mut next = replay_setup_turn(loaded, &positions, n, turn, options, pin, drop_illegal)?;
+        if let Some(pin) = pin {
+            next = match pinned(&loaded.meta, next, pin) {
+                Ok(kept) => kept,
+                // A reduced roll mode can miss a pinned outcome that another damage roll made
+                // (a game played with every roll, or recorded by an engine whose reduced mode
+                // still drew that roll: the confusion self-hit before JJ's fix). The pin is an
+                // outcome of the exact distribution all the same, so it is looked for there
+                // before the replay gives up (Opus KK, V8 corpus: 11 positions of one game).
+                Err(e) if options.rolls != RollMode::Full => {
+                    let full = EnumerateOptions {
+                        rolls: RollMode::Full,
+                    };
+                    let exact = replay_setup_turn(
+                        loaded,
+                        &positions,
+                        n,
+                        turn,
+                        full,
+                        Some(pin),
+                        drop_illegal,
+                    )?;
+                    pinned(&loaded.meta, exact, pin).map_err(|_| {
+                        format!(
+                            "setup turn {}: {e} (nor in the turn's exact distribution)",
+                            n + 1
+                        )
+                    })?
+                }
                 Err(e) => return Err(format!("setup turn {}: {e}", n + 1)),
             };
-            for outcome in outcomes {
-                // A setup turn that still waits for a mid-turn switch is not a position: the
-                // suspension cannot be carried into the next turn (board B29). On believed
-                // teams the choices that were made contradict such an outcome, which is dropped.
-                let mut end = state.clone();
-                end.apply(&outcome.instructions);
-                if outcome.suspension.is_some() {
-                    // With a pinned outcome the turn's other branches are not the scenario's
-                    // (the U-turn that hit where the game's missed), so a paused one is only
-                    // refused if it is the pinned state itself.
-                    let refused = match pin {
-                        Some(pin) => {
-                            canonical_value(&end, &loaded.meta).map_err(|e| e.to_string())? == *pin
-                        }
-                        None => !drop_illegal,
-                    };
-                    if refused {
-                        paused = true;
-                    }
-                    continue;
-                }
-                let mut order = position.order.clone();
-                advance_order(&mut order, &outcome.instructions);
-                let p = position.probability * outcome.probability;
-                match next.iter_mut().find(|q| q.state == end && q.order == order) {
-                    Some(existing) => existing.probability += p,
-                    None => next.push(Position {
-                        probability: p,
-                        state: end,
-                        order,
-                    }),
-                }
-            }
-        }
-        if paused {
-            return Err(format!(
-                "setup turn {}: the turn pauses for a mid-turn switch that has no choice; give                  it in the setup turn's third element (`midTurn`)",
-                n + 1
-            ));
-        }
-        if let Some(pin) = pin {
-            next = pinned(&loaded.meta, next, pin)
-                .map_err(|e| format!("setup turn {}: {e}", n + 1))?;
         }
         positions = filter(n + 1, next);
     }
@@ -532,6 +501,96 @@ fn replay_setup_turns(
         }
     }
     Ok(positions)
+}
+
+/// Every outcome of setup turn `n` (0-based) from each of `positions`, merged by (state, party
+/// order) in first-reached order.
+fn replay_setup_turn(
+    loaded: &LoadedScenario,
+    positions: &[Position],
+    n: usize,
+    turn: &SetupTurn,
+    options: EnumerateOptions,
+    pin: Option<&Value>,
+    drop_illegal: bool,
+) -> Result<Vec<Position>, String> {
+    let mut next: Vec<Position> = Vec::new();
+    // Equal (state, order) positions merge in first-reached order; the index finds the earlier
+    // one by hash instead of scanning `next` (Opus KK: a pinned setup turn with 37,686 outcomes
+    // spent 144 s in the scan).
+    let mut index: HashMap<u64, Vec<usize>> = HashMap::new();
+    // Whether an outcome of this turn still waits for a mid-turn switch (board B29).
+    let mut paused = false;
+    for position in positions {
+        let decision = match parse_decision(&position.state, &position.order, &turn.p1, &turn.p2) {
+            Ok(decision) => decision,
+            Err(_) if drop_illegal => continue,
+            Err(e) => return Err(format!("setup turn {}: {e}", n + 1)),
+        };
+        let mut state = position.state.clone();
+        let outcomes = match run_decision_mid_turn_with(
+            &mut state,
+            &position.order,
+            &decision,
+            &turn.mid_turn,
+            options,
+        ) {
+            Ok(outcomes) => outcomes,
+            Err(_) if drop_illegal => continue,
+            Err(e) => return Err(format!("setup turn {}: {e}", n + 1)),
+        };
+        for outcome in outcomes {
+            // A setup turn that still waits for a mid-turn switch is not a position: the
+            // suspension cannot be carried into the next turn (board B29). On believed teams
+            // the choices that were made contradict such an outcome, which is dropped.
+            let mut end = state.clone();
+            end.apply(&outcome.instructions);
+            if outcome.suspension.is_some() {
+                // With a pinned outcome the turn's other branches are not the scenario's (the
+                // U-turn that hit where the game's missed), so a paused one is only refused if
+                // it is the pinned state itself.
+                let refused = match pin {
+                    Some(pin) => {
+                        canonical_value(&end, &loaded.meta).map_err(|e| e.to_string())? == *pin
+                    }
+                    None => !drop_illegal,
+                };
+                if refused {
+                    paused = true;
+                }
+                continue;
+            }
+            let mut order = position.order.clone();
+            advance_order(&mut order, &outcome.instructions);
+            let p = position.probability * outcome.probability;
+            let mut hasher = DefaultHasher::new();
+            end.hash(&mut hasher);
+            order.hash(&mut hasher);
+            let bucket = index.entry(hasher.finish()).or_default();
+            match bucket
+                .iter()
+                .copied()
+                .find(|&i| next[i].state == end && next[i].order == order)
+            {
+                Some(i) => next[i].probability += p,
+                None => {
+                    bucket.push(next.len());
+                    next.push(Position {
+                        probability: p,
+                        state: end,
+                        order,
+                    });
+                }
+            }
+        }
+    }
+    if paused {
+        return Err(format!(
+            "setup turn {}: the turn pauses for a mid-turn switch that has no choice; give                  it in the setup turn's third element (`midTurn`)",
+            n + 1
+        ));
+    }
+    Ok(next)
 }
 
 /// The positions whose canonical state is `pin` (compared as JSON values, so key order does
