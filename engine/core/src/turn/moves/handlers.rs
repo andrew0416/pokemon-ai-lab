@@ -3193,8 +3193,9 @@ pub(super) fn on_hit<const N: usize>(
 /// (`queue.prioritizeAction(queue.resolveAction(...))`: order 3) and runs as a full `runMove`
 /// (PP, BeforeMove, `lastMove`). Showdown aims it at `target.lastMoveTargetLoc`, which the
 /// state does not keep, so a last move with a chosen target (`normal`, `any`, ...) is
-/// unsupported, as are a last move the target does not know (Struggle) and a Quick Claw
-/// holder (`resolveAction` draws its fractional priority again).
+/// unsupported, as are a Quick Claw holder (`resolveAction` draws its fractional priority
+/// again) and a last move the target does not know that its flags do not already fail (Struggle
+/// and Transform, the only such last moves, are `failinstruct`: oracle `rr-instruct-struggle`).
 fn instruct<const N: usize>(
     b: &mut Battle<'_, N>,
     target: SlotRef,
@@ -3207,19 +3208,24 @@ fn instruct<const N: usize>(
         return Ok(HitResult::Failure);
     }
     let data = last.data();
+    // `lastMove.flags['failinstruct'] || ... || (moveSlot && moveSlot.pp <= 0)`: the move's own
+    // flags fail it whether or not the target has a slot for it (`getMoveData` finds none for
+    // Struggle).
+    let blocked = data.flags.contains(MoveFlags::FAILINSTRUCT)
+        || data.flags.contains(MoveFlags::CHARGE)
+        || data.flags.contains(MoveFlags::RECHARGE)
+        || data.is_z
+        || data.is_max;
+    if blocked {
+        return Ok(HitResult::Failure);
+    }
     let Some(index) = b.mon(pokemon).moves.iter().position(|m| m.id == last) else {
         return Err(b.unsupported(format!(
             "Instruct repeating {}, which the target does not know",
             data.name
         )));
     };
-    let blocked = data.flags.contains(MoveFlags::FAILINSTRUCT)
-        || data.flags.contains(MoveFlags::CHARGE)
-        || data.flags.contains(MoveFlags::RECHARGE)
-        || data.is_z
-        || data.is_max
-        || b.mon(pokemon).moves[index].pp == 0;
-    if blocked {
+    if b.mon(pokemon).moves[index].pp == 0 {
         return Ok(HitResult::Failure);
     }
     if super::takes_target(N, data.target) {

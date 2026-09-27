@@ -1117,7 +1117,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         // !target.isAlly(source)) return;`: an infiltrating move's status on a foe.
         let infiltrates = self.active_move.is_some_and(|m| m.infiltrates)
             && source.is_some_and(|s| s.side != target.side);
-        self.try_set_status_inner(target, status, source, infiltrates, true)
+        self.try_set_status_inner(target, status, source, infiltrates, true, true)
     }
 
     /// Showdown `trySetStatus(status, source)` → `setStatus` for the supported handlers: fails
@@ -1130,12 +1130,26 @@ impl<'a, const N: usize> Battle<'a, N> {
         status: Status,
         source: Option<SlotRef>,
     ) -> bool {
-        self.try_set_status_inner(target, status, source, false, false)
+        self.try_set_status_inner(target, status, source, false, false, true)
+    }
+
+    /// [`Battle::try_set_status_from`] for Toxic Spikes' poison (`pokemon.trySetStatus(status,
+    /// pokemon.side.foe.active[0])`, the condition as the effect): Synchronize's
+    /// `onAfterSetStatus` ignores it (`if (effect && effect.id === 'toxicspikes') return;`;
+    /// oracle `rr-toxic-spikes-synchronize`).
+    pub fn try_set_status_from_toxic_spikes(
+        &mut self,
+        target: SlotRef,
+        status: Status,
+        source: Option<SlotRef>,
+    ) -> bool {
+        self.try_set_status_inner(target, status, source, false, false, false)
     }
 
     /// [`Battle::try_set_status_from`]; `infiltrates`: the status is an infiltrating move's
     /// effect on a foe, which Safeguard lets through; `by_move`: the status's effect is the move
-    /// in progress (`effect.effectType === 'Move'`, Poison Puppeteer).
+    /// in progress (`effect.effectType === 'Move'`, Poison Puppeteer); `synchronize`: the effect
+    /// is not Toxic Spikes, so Synchronize may pass the status back.
     fn try_set_status_inner(
         &mut self,
         target: SlotRef,
@@ -1143,6 +1157,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         source: Option<SlotRef>,
         infiltrates: bool,
         by_move: bool,
+        synchronize: bool,
     ) -> bool {
         let Some(pokemon) = self.alive(target) else {
             return false;
@@ -1207,7 +1222,9 @@ impl<'a, const N: usize> Battle<'a, N> {
         if status == Status::Sleep {
             self.end_nightmare(pokemon);
         }
-        self.after_set_status(target, status, source);
+        if synchronize {
+            self.after_set_status(target, status, source);
+        }
         // Poison Puppeteer's `onAnyAfterSetStatus` (like Synchronize, priority 0; each changes
         // a different Pokémon and Synchronize cannot poison the Poison-type source).
         if by_move {
@@ -1222,7 +1239,7 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// handler is Synchronize on the target (not breakable, not modded in Champions): a burn,
     /// paralysis or (bad) poison from another Pokémon is passed back to it
     /// (`source.trySetStatus(status, target)`), which fails if the source already has a status
-    /// or is immune. Toxic Spikes (excluded by Synchronize) is not supported.
+    /// or is immune. Toxic Spikes' poison skips it ([`Battle::try_set_status_from_toxic_spikes`]).
     fn after_set_status(&mut self, target: SlotRef, status: Status, source: Option<SlotRef>) {
         let Some(source) = source else {
             return;

@@ -1,0 +1,86 @@
+{
+ "description": "R0 refusal repro (board R6): Sableye's Taunt leaves Snorlax (only status moves) with Struggle in the second setup turn; Oranguru then instructs it. Struggle is `failinstruct` (Showdown: Instruct fails); the engine looks the move up in the target's move slots first and refuses.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Oranguru",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Instruct",
+     "Protect",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Sableye",
+    "item": "",
+    "ability": "Prankster",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Taunt",
+     "Protect",
+     "Calm Mind"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Rest"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Calm Mind"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move calmmind, move taunt 1",
+   "move curse, move protect"
+  ],
+  [
+   "move protect, move protect",
+   "move 1, move calmmind"
+  ]
+ ],
+ "turn": {
+  "p1": "move instruct 1, move calmmind",
+  "p2": "move 1, move calmmind"
+ }
+}
