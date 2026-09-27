@@ -43,7 +43,8 @@ jobs:
       - run: cargo clippy -p lab-engine -p lab-scenario --all-targets -- -D warnings
       # The py crate is a cdylib with extension-module; it is built by the wheels job.
       # lab-scenario's tests read engine/oracle/scenarios and teams/gravity-original.json.
-      - run: cargo test -p lab-engine -p lab-scenario --release
+      # lab-search's tests (solver, node API) read the same scenarios.
+      - run: cargo test -p lab-engine -p lab-scenario -p lab-search --release
 
   wheels:
     name: lab-engine wheel (${{ matrix.os }})
@@ -63,6 +64,17 @@ jobs:
           working-directory: engine/py
           args: --release --out dist
           manylinux: auto
+      # Python API tests run against the built wheel (engine/py/tests read engine/oracle/scenarios).
+      - name: Install the wheel and pytest
+        shell: bash
+        run: |
+          python -m pip install pytest
+          python -m pip install --no-index --find-links engine/py/dist lab_engine
+      - name: pytest
+        shell: bash
+        env:
+          PYTHONUTF8: "1"
+        run: python -m pytest engine/py/tests
       - uses: actions/upload-artifact@v4
         with:
           name: lab-engine-${{ matrix.os }}
