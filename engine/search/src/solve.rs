@@ -26,6 +26,7 @@ use lab_engine::turn::{EnumerateOptions, RollMode, Suspension, TurnError};
 use crate::choice::Choice;
 use crate::game::{self, Decision, Pruning};
 use crate::nash::{self, Equilibrium, Matrix};
+use crate::tt::{self, TranspositionTable};
 
 /// What a chance node continues into: the maximin tree with `depth` turns left, or a fixed
 /// plan (`Solver::evaluate_plan`) at its next entry.
@@ -87,6 +88,9 @@ pub struct Config {
     /// with `exact_lines`); 0 uses the machine's parallelism. Each thread works on its own
     /// copy of the state; the result does not depend on the count.
     pub threads: usize,
+    /// Reuse child equilibrium values by position ([`crate::tt`]); off only to check that the
+    /// table changes nothing but the time.
+    pub transposition: bool,
 }
 
 impl Config {
@@ -109,6 +113,7 @@ impl Config {
             child_nash: false,
             reply_beam: Some(6),
             outcome_cap: Some(4),
+            transposition: true,
         }
     }
 
@@ -245,9 +250,8 @@ pub struct Solver<'e, const N: usize, E: Evaluator<N> + ?Sized> {
     /// Pairs of choices dropped that way.
     omitted_pairs: usize,
     /// [`Solver::nash_value`] results by position (identical children recur across replies and
-    /// outcomes). The key is the position itself, not its hash: a 64-bit hash alone would hand
-    /// one position another's value on a collision (board B32).
-    nash_cache: std::collections::HashMap<(State<N>, Option<Suspension>), f32>,
+    /// outcomes), [`crate::tt`].
+    tt: TranspositionTable<N>,
 }
 
 impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
@@ -261,8 +265,13 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             unsupported: Vec::new(),
             omitted_pairs: 0,
             stats: SearchStats::default(),
-            nash_cache: std::collections::HashMap::new(),
+            tt: TranspositionTable::new(config.transposition, tt::DEFAULT_CAPACITY),
         }
+    }
+
+    /// Positions in the transposition table.
+    pub fn tt_len(&self) -> usize {
+        self.tt.len()
     }
 
     /// The work counters since the last analysis started.
@@ -997,12 +1006,17 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         if let Decision::Over(result) = decision {
             return Ok(self.terminal(result, 0));
         }
-        let key = (state.clone(), suspension.cloned());
-        if let Some(&v) = self.nash_cache.get(&key) {
-            self.stats.tt_hits += 1;
-            return Ok(v);
-        }
-        self.stats.tt_misses += 1;
+        let key = if self.tt.enabled() {
+            let key = (state.clone(), suspension.cloned());
+            if let Some(v) = self.tt.get(&key) {
+                self.stats.tt_hits += 1;
+                return Ok(v);
+            }
+            self.stats.tt_misses += 1;
+            Some(key)
+        } else {
+            None
+        };
         let them = self.config.us.other();
         let ours = self.choices(state, decision, self.config.us)?;
         let theirs = self.choices(state, decision, them)?;
@@ -1043,7 +1057,9 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             let matrix = Matrix::new(ours.len(), theirs.len(), values);
             self.solve_matrix(&matrix).value
         };
-        self.nash_cache.insert(key, value);
+        if let Some(key) = key {
+            self.tt.insert(key, value);
+        }
         Ok(value)
     }
 

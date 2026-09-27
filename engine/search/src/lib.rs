@@ -36,6 +36,7 @@ pub mod node;
 #[cfg(feature = "scenario")]
 pub mod rollout;
 pub mod solve;
+pub mod tt;
 
 pub use choice::{format_choice, format_switches, Choice};
 pub use game::{decision, legal_choices, transitions, Decision, Pruning};
