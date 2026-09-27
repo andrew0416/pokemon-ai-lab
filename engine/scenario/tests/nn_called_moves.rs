@@ -76,6 +76,14 @@ fn instruct_a_called_raging_fury() {
     assert_exact_parity("nn-instruct-called-raging-fury");
 }
 
+/// Instruct on Slowking after its Chilly Reception (B33): `resolveAction(...)[0]` is the
+/// `priorityChargeMove` action, so only the `chillyreception` condition starts; Chilly Reception
+/// does not run again (no PP spent).
+#[test]
+fn instruct_chilly_reception_runs_only_its_charge_callback() {
+    assert_exact_parity("nn-instruct-chilly-reception");
+}
+
 /// Copycat calls Uproar (setup): Umbreon keeps Uproar's `uproar` volatile, whose `onLockMove`
 /// locks it into a move it does not know (the engine rejected that choice before).
 #[test]

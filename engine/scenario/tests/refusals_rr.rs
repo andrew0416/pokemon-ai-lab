@@ -352,7 +352,6 @@ fn teatime_with_klutz() {
 /// Instruct on a Pokémon whose last move is Counter: Showdown's `resolveAction(...)[0]` is the
 /// `beforeTurnMove` action, so Counter never runs (no PP); the engine runs it.
 #[test]
-#[ignore = "mismatch: Instruct repeating a move with a beforeTurnCallback runs only the callback in Showdown (not on the board yet)"]
 fn instruct_counter_runs_only_its_callback() {
     assert_exact_parity("rr-x-instruct-counter");
 }

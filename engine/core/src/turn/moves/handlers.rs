@@ -3200,7 +3200,11 @@ pub(super) fn on_hit<const N: usize>(
 /// (PP by id: none for a locked Pokémon, `cant nopp` without a slot; BeforeMove; `lastMove`)
 /// aimed at `target.lastMoveTargetLoc` (`Slot::last_move_target_loc`). `resolveAction` runs
 /// `FractionalPriority` for it again (the constants, Quick Draw, Quick Claw, Custap Berry),
-/// which orders it among other order-3 actions.
+/// which orders it among other order-3 actions. Only `resolveAction(...)[0]` is prioritized: for
+/// a move with a `beforeTurnCallback` (Counter, Mirror Coat) or `priorityChargeCallback` (Chilly
+/// Reception; Focus Punch, Beak Blast and Shell Trap are `failinstruct`) that is the callback's
+/// action, so only the callback runs (its condition starts) and the move itself does not (no
+/// PP, no `lastMove`; B33, oracle `rr-x-instruct-counter`, `nn-instruct-chilly-reception`).
 fn instruct<const N: usize>(
     b: &mut Battle<'_, N>,
     target: SlotRef,
@@ -3244,15 +3248,22 @@ fn instruct<const N: usize>(
     if let Some(t) = super::super::items::custap(b, target, pokemon, fractional_tenths, last) {
         fractional_tenths = t;
     }
-    b.queue.push(Action {
-        slot: target,
-        pokemon,
-        kind: ActionKind::Move {
+    let kind = if super::has_before_turn_callback(last) {
+        ActionKind::BeforeTurnMove { id: last }
+    } else if super::has_priority_charge_callback(last) {
+        ActionKind::PriorityCharge { id: last }
+    } else {
+        ActionKind::Move {
             id: last,
             target: b.state.slot(target).last_move_target_loc,
             fractional_tenths,
             round_source: None,
-        },
+        }
+    };
+    b.queue.push(Action {
+        slot: target,
+        pokemon,
+        kind,
         order: Some(3),
     });
     Ok(HitResult::Success)
