@@ -10,7 +10,8 @@ Usage (from the repository root):
     python engine/scripts/search_bench.py [--exe D:/cargo-target/release/lab-plan.exe]
         [--out-dir runs/search-bench-20260927] [--label <name>] [--modes nash,deep-nash,plan]
         [--only sand-owen] [--threads n] [--repeat k] [--extra "--foo"]
-    python engine/scripts/search_bench.py --table [--out-dir ...]
+    python engine/scripts/search_bench.py --compare base=a.exe,new=b.exe [--repeat 2] ...
+    python engine/scripts/search_bench.py --table [--out-dir ...] [--labels a,b]
 
 The positions are fixed (the baseline): scenarios of `runs/plan-20260926` (gitignored; run
 directory of the first search application, turn 1 of four library teams), referenced by
@@ -196,6 +197,9 @@ def run_case(exe, plan_dir, case, mode, extra, timeout):
 
 
 def bench(opts):
+    """Runs every (case, mode) for each build in turn — interleaved when several builds are
+    compared (`--compare label=exe,...`), so a change in the machine's load hits them alike —
+    and writes one `<label>.json` per build."""
     out_dir = pathlib.Path(opts.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     plan_dir = pathlib.Path(opts.plan_dir)
@@ -204,42 +208,57 @@ def bench(opts):
     if opts.threads is not None:
         extra += ["--threads", str(opts.threads)]
     commit = git_commit()
-    label = opts.label or commit
-    results = []
+    if opts.compare:
+        builds = []
+        for item in opts.compare.split(","):
+            label, exe = item.split("=", 1)
+            builds.append((label, exe))
+    else:
+        builds = [(opts.label or commit, opts.exe)]
+    results = {label: [] for label, _ in builds}
     for case in CASES:
         if opts.only and case[0] not in opts.only.split(","):
             continue
         for mode in modes:
             if mode == "deep-nash" and case[0] not in DEEP_CASES and not opts.all_deep:
                 continue
-            runs = []
+            runs = {label: [] for label, _ in builds}
             for _ in range(max(1, opts.repeat)):
-                e = run_case(opts.exe, plan_dir, case, mode, extra, opts.timeout)
-                runs.append(e)
-                print(
-                    f"{case[0]:>15} {mode:>9}: {e['wall_s']:8.2f} s wall, cpu {e['cpu_s']} s, "
-                    f"{e.get('nodes', '?')} nodes, {e.get('enumerations', '?')} enumerations, "
-                    f"value {e.get('value', e.get('plan_value', '?'))}"
-                    + (f"  ERROR {e['error'][:200]}" if "error" in e else ""),
-                    flush=True,
-                )
-            best = min(runs, key=lambda e: e["wall_s"])
-            best["wall_runs_s"] = [e["wall_s"] for e in runs]
-            results.append(best)
-    doc = {
-        "label": label,
-        "commit": commit,
-        "dirty": git_dirty(),
-        "date": time.strftime("%Y-%m-%d %H:%M:%S"),
-        "exe": opts.exe,
-        "cpus": os.cpu_count(),
-        "extra": extra,
-        "repeat": opts.repeat,
-        "results": results,
-    }
-    path = out_dir / f"{label}.json"
-    path.write_text(json.dumps(doc, indent=1, ensure_ascii=False), encoding="utf-8")
-    print(f"wrote {path}")
+                for label, exe in builds:
+                    # Only builds that know `--stats` get it (`--stats-for label,...`).
+                    args = list(extra)
+                    if opts.stats_for and label in opts.stats_for.split(","):
+                        args.append("--stats")
+                    e = run_case(exe, plan_dir, case, mode, args, opts.timeout)
+                    runs[label].append(e)
+                    print(
+                        f"{label:>28} {case[0]:>15} {mode:>9}: {e['wall_s']:8.2f} s wall, cpu {e['cpu_s']} s, "
+                        f"{e.get('nodes', '?')} nodes, {e.get('enumerations', '?')} enumerations, "
+                        f"value {e.get('value', e.get('plan_value', '?'))}"
+                        + (f"  ERROR {e['error'][:200]}" if "error" in e else ""),
+                        flush=True,
+                    )
+            for label, _ in builds:
+                best = min(runs[label], key=lambda e: e["wall_s"])
+                best["wall_runs_s"] = [e["wall_s"] for e in runs[label]]
+                best["cpu_runs_s"] = [e["cpu_s"] for e in runs[label]]
+                results[label].append(best)
+    for label, exe in builds:
+        doc = {
+            "label": label,
+            "commit": commit,
+            "dirty": git_dirty(),
+            "date": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "exe": exe,
+            "cpus": os.cpu_count(),
+            "extra": extra,
+            "repeat": opts.repeat,
+            "interleaved_with": [b[0] for b in builds if b[0] != label],
+            "results": results[label],
+        }
+        path = out_dir / f"{label}.json"
+        path.write_text(json.dumps(doc, indent=1, ensure_ascii=False), encoding="utf-8")
+        print(f"wrote {path}")
 
 
 def table(opts):
@@ -299,6 +318,11 @@ def main():
     ap.add_argument("--extra", default="")
     ap.add_argument("--all-deep", action="store_true", help="deep-nash on every case")
     ap.add_argument("--timeout", type=int, default=3600)
+    ap.add_argument(
+        "--compare",
+        help="label=exe,label=exe: run several builds interleaved per case (one JSON each)",
+    )
+    ap.add_argument("--stats-for", help="labels whose lab-plan gets --stats")
     ap.add_argument("--table", action="store_true")
     ap.add_argument("--labels", help="--table: these labels, in this order")
     opts = ap.parse_args()
