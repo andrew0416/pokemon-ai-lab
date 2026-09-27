@@ -30,6 +30,97 @@ pub(crate) enum DamageSource {
     Indirect,
 }
 
+/// Active positions in order, kept inline: what [`Battle::alive_slots`] and
+/// [`Battle::all_alive`] return. Every event walks them, and as `Vec`s their heap allocations
+/// were a large share of a turn's cost (Opus GG). Derefs to a slice; iterates by value like a
+/// `Vec`.
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct SlotList {
+    len: u8,
+    slots: [SlotRef; SlotList::CAPACITY],
+}
+
+impl SlotList {
+    /// Both sides' positions for up to three active Pokémon a side.
+    pub const CAPACITY: usize = 6;
+    const FILLER: SlotRef = SlotRef {
+        side: SideId::One,
+        slot: 0,
+    };
+
+    pub fn new() -> SlotList {
+        SlotList {
+            len: 0,
+            slots: [Self::FILLER; Self::CAPACITY],
+        }
+    }
+
+    pub fn push(&mut self, slot: SlotRef) {
+        self.slots[usize::from(self.len)] = slot;
+        self.len += 1;
+    }
+}
+
+impl Default for SlotList {
+    fn default() -> Self {
+        SlotList::new()
+    }
+}
+
+impl std::ops::Deref for SlotList {
+    type Target = [SlotRef];
+
+    fn deref(&self) -> &[SlotRef] {
+        &self.slots[..usize::from(self.len)]
+    }
+}
+
+impl std::ops::DerefMut for SlotList {
+    fn deref_mut(&mut self) -> &mut [SlotRef] {
+        &mut self.slots[..usize::from(self.len)]
+    }
+}
+
+impl IntoIterator for SlotList {
+    type Item = SlotRef;
+    type IntoIter = std::iter::Take<std::array::IntoIter<SlotRef, { SlotList::CAPACITY }>>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.slots.into_iter().take(usize::from(self.len))
+    }
+}
+
+impl<'a> IntoIterator for &'a SlotList {
+    type Item = &'a SlotRef;
+    type IntoIter = std::slice::Iter<'a, SlotRef>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
+}
+
+impl Extend<SlotRef> for SlotList {
+    fn extend<I: IntoIterator<Item = SlotRef>>(&mut self, iter: I) {
+        for slot in iter {
+            self.push(slot);
+        }
+    }
+}
+
+impl FromIterator<SlotRef> for SlotList {
+    fn from_iter<I: IntoIterator<Item = SlotRef>>(iter: I) -> Self {
+        let mut out = SlotList::new();
+        out.extend(iter);
+        out
+    }
+}
+
+impl From<SlotList> for Vec<SlotRef> {
+    fn from(list: SlotList) -> Vec<SlotRef> {
+        list.to_vec()
+    }
+}
+
 /// The move being used (Showdown `activeMove` with `activePokemon`), set for the whole of
 /// `runMove` and the action's phazing step after it; it decides whether breakable abilities are
 /// suppressed (`suppressingAbility`).
@@ -297,13 +388,13 @@ impl<'a, const N: usize> Battle<'a, N> {
     }
 
     /// Showdown `side.allies()` + self order is slot order; foes are the other side's slots.
-    pub fn alive_slots(&self, side: SideId) -> Vec<SlotRef> {
+    pub fn alive_slots(&self, side: SideId) -> SlotList {
         Self::slots(side)
             .filter(|&s| self.alive(s).is_some())
             .collect()
     }
 
-    pub fn all_alive(&self) -> Vec<SlotRef> {
+    pub fn all_alive(&self) -> SlotList {
         let mut out = self.alive_slots(SideId::One);
         out.extend(self.alive_slots(SideId::Two));
         out

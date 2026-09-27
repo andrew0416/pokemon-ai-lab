@@ -1542,11 +1542,11 @@ fn steal_item<const N: usize>(
 /// Showdown `speedSort` of `slots` by `pokemon.speed` ([`Battle::event_speed`]), fastest first:
 /// equal Speeds are shuffled (uniformly) only when two of them are `relevant`, the only case in
 /// which their order can change the outcome.
-pub(crate) fn speed_sorted<const N: usize>(
+pub(crate) fn speed_sorted<const N: usize, L: std::ops::DerefMut<Target = [SlotRef]>>(
     b: &mut Battle<'_, N>,
-    mut slots: Vec<SlotRef>,
+    mut slots: L,
     relevant: impl Fn(&Battle<'_, N>, SlotRef) -> bool,
-) -> Vec<SlotRef> {
+) -> L {
     slots.sort_by_key(|&s| std::cmp::Reverse(b.event_speed(s)));
     let mut start = 0;
     while start < slots.len() {
