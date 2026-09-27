@@ -10,4 +10,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 lab-engine = { path = "../core" }
+lab-scenario = { path = "../scenario" }
+# `node` (the Python API's core) only; the CLI binaries are not needed.
+lab-search = { path = "../search", default-features = false, features = ["scenario"] }
 pyo3 = { version = "0.29.0", features = ["extension-module", "abi3-py312"] }
