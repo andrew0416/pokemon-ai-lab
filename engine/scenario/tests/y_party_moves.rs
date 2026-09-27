@@ -4,7 +4,6 @@
 mod common;
 
 use common::assert_exact_parity;
-use lab_engine::turn::TurnError;
 use lab_scenario::{load_scenario_file, run_decision, scenario_decision, scenario_positions};
 
 /// Uproar wakes sleeping Pokémon and starts its three-turn lock.
