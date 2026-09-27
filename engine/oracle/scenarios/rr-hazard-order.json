@@ -1,0 +1,101 @@
+{
+ "description": "R0 refusal repro (board R2): Stealth Rock (Garchomp, faster) then Toxic Spikes (Glimmora) on p2's side; Arbok (Poison, grounded) patched to 5 HP switches in. Showdown runs the hazards in the order they were set: the rocks knock it out before it can absorb the Toxic Spikes, which stay. The engine does not keep that order and refuses.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Rough Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Stealth Rock",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Glimmora",
+    "item": "",
+    "ability": "Toxic Debris",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Toxic Spikes",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Arbok",
+    "item": "",
+    "ability": "Shed Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Gastro Acid"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "setupTurns": [
+  [
+   "move stealthrock, move toxicspikes",
+   "move calmmind, move calmmind"
+  ]
+ ],
+ "patch": {
+  "p2": {
+   "Arbok": {
+    "hp": 5
+   }
+  }
+ },
+ "turn": {
+  "p1": "move protect, move protect",
+  "p2": "switch 3, move calmmind"
+ }
+}

@@ -1,0 +1,115 @@
+{
+ "description": "R0 refusal repro (board R3): Glimmora's Memento faints it after Garchomp's Stealth Rock; Golisopod (patched to 100 of 150 HP) replaces it and the rocks (1/4) take it to 63, at most half: Emergency Exit asks for another switch before the turn ends. The replacement decision cannot suspend; the engine refuses.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Rough Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Stealth Rock",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Glimmora",
+    "item": "",
+    "ability": "Toxic Debris",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Memento",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Golisopod",
+    "item": "",
+    "ability": "Emergency Exit",
+    "nature": "Serious",
+    "evs": {
+     "atk": 32
+    },
+    "moves": [
+     "Protect",
+     "Liquidation"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "1234"
+ },
+ "setupTurns": [
+  [
+   "move stealthrock, move calmmind",
+   "move memento 1, move calmmind"
+  ]
+ ],
+ "patch": {
+  "p2": {
+   "Golisopod": {
+    "hp": 100
+   }
+  }
+ },
+ "turn": {
+  "p1": "",
+  "p2": "switch 3"
+ }
+}

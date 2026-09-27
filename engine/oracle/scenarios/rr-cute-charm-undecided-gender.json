@@ -1,0 +1,75 @@
+{
+ "description": "R0 refusal repro (board R13): Garchomp's Dragon Claw (contact) hits Milotic (Cute Charm, 30% to attract), neither set with a gender. The engine refuses once Cute Charm asks whether the attraction can land (`attract_fails`).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Rough Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Dragon Claw",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Milotic",
+    "item": "",
+    "ability": "Cute Charm",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "def": 32
+    },
+    "moves": [
+     "Recover",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move dragonclaw 1, move calmmind",
+  "p2": "move recover, move curse"
+ }
+}

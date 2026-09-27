@@ -1,0 +1,80 @@
+{
+ "description": "R0 refusal repro (board R6): Slowbro-Galar (Quick Draw) used Muddy Water (absorbed by two Water Absorb foes) in the setup turn; this turn Oranguru instructs it before it moves. Showdown's instructed Muddy Water draws Quick Draw's fractional priority; the engine refuses.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Slowbro-Galar",
+    "item": "",
+    "ability": "Quick Draw",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Muddy Water",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Oranguru",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Instruct",
+     "Calm Mind"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Vaporeon",
+    "item": "",
+    "ability": "Water Absorb",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Araquanid",
+    "item": "",
+    "ability": "Water Absorb",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Liquidation"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move muddywater, move calmmind",
+   "move calmmind, move protect"
+  ]
+ ],
+ "turn": {
+  "p1": "move calmmind, move instruct -1",
+  "p2": "move calmmind, move protect"
+ }
+}

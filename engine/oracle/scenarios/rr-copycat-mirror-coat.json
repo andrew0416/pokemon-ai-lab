@@ -1,0 +1,80 @@
+{
+ "description": "R0 refusal repro (board R14/new): Lopunny's Mirror Coat (priority -5) is the last move of the setup turn; in the decision turn Jolteon moves first and its Copycat calls Mirror Coat (`battle.lastMove`). Showdown's called Mirror Coat fails (no `mirrorcoat` condition); the engine refuses a called move with a `beforeTurnCallback`.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Jolteon",
+    "item": "",
+    "ability": "Volt Absorb",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Copycat",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Lopunny",
+    "item": "",
+    "ability": "Limber",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Mirror Coat",
+     "Swords Dance"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move protect, move curse",
+   "move mirrorcoat, move calmmind"
+  ]
+ ],
+ "turn": {
+  "p1": "move copycat, move curse",
+  "p2": "move swordsdance, move calmmind"
+ }
+}
