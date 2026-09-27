@@ -58,6 +58,8 @@ CASES = [
 
 MODES = {
     "nash": lambda plan: ["--solve", "nash"],
+    # The root by double oracle (S24d 3/3; builds from 11dc2a5 on).
+    "nash-lazy": lambda plan: ["--solve", "nash", "--lazy"],
     "deep-nash": lambda plan: ["--solve", "deep-nash", "--beam", "4", "--outcomes", "4"],
     "plan": lambda plan: ["--plan", plan, "--child-nash", "--beam", "6", "--outcomes", "4"],
 }
@@ -102,7 +104,7 @@ def parse(text):
         entry["enumerations"] = int(stats.group(2))
         entry["reported_s"] = float(stats.group(3))
     eq = re.search(
-        r"matrix (\d+)x(\d+); equilibrium value ([+-][0-9.]+) \(exploitability ([0-9.]+)",
+        r"matrix (\d+)x(\d+)[^;]*; equilibrium value ([+-][0-9.]+) \(exploitability[a-z ]* ([0-9.]+)",
         text,
     )
     if eq:
