@@ -1,0 +1,87 @@
+{
+ "description": "R22 forced eating of an ignored item (Opus OO): Mr. Mime's Magic Room (setup turn), then Snorlax is patched to 100 HP (its Sitrus Berry's onUpdate is suppressed). Polteageist's Teatime makes it eat the berry by force (eatItem(true)): the Eat event is skipped for a holder ignoring its item, so there is no heal, but the berry is consumed (lastItem).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Polteageist",
+    "item": "",
+    "ability": "Cursed Body",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Teatime",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "Sitrus Berry",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Mr. Mime",
+    "item": "",
+    "ability": "Filter",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Magic Room",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move protect, move curse",
+   "move magicroom, move calmmind"
+  ]
+ ],
+ "patch": {
+  "p1": {
+   "Snorlax": {
+    "hp": 100
+   }
+  }
+ },
+ "turn": {
+  "p1": "move teatime, move curse",
+  "p2": "move protect, move calmmind"
+ }
+}

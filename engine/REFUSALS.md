@@ -4,8 +4,8 @@
 
 범위: Champions 모드(Showdown `9e317a6`)에서 `isNonstandard`가 null인 종(메가 포함, 배틀 중 폼은 기본 종이 표준일 때만), 그 종의 특성(+심플빔·고민씨가 주는 심플·불면), `learnsets.ts`의 기술(+표준 플래그 기술·발버둥), 표준 도구. 테라·다이맥스·Z는 규칙셋이 막는다. 목록은 `refusals.universe.json`, 근거 검사는 아래 '근거'.
 
-- 거부 호출 67곳(함수 44개). 키 110개 = 호출에 쓰인 메시지 58개 + 다른 함수의 메시지를 전달하는 호출 7개 + 메시지 생산 함수(`producers`)의 메시지 45개.
-- 도달 가능 29개, 도달 불가능 81개, 미확인 0개.
+- 거부 호출 66곳(함수 44개). 키 109개 = 호출에 쓰인 메시지 57개 + 다른 함수의 메시지를 전달하는 호출 7개 + 메시지 생산 함수(`producers`)의 메시지 45개.
+- 도달 가능 28개, 도달 불가능 81개, 미확인 0개.
 
 ## 도달 가능 (Champions 표준 범위)
 
@@ -39,7 +39,6 @@
 | `a two-turn move` | moves/handlers.rs::called_move_problem (producer) | mechanic | `rr-copycat-two-turn` | full: 1 | R21-copycat-called-moves | Copycat calling a standard charge move (10 of them, none `failcopycat`). |
 | `queue actions of its own` | moves/handlers.rs::called_move_problem (producer) | mechanic | `rr-copycat-mirror-coat` | full: 1 | R21-copycat-called-moves | Copycat calling Mirror Coat or Chilly Reception (Counter, Focus Punch and Beak Blast are `failcopycat`, E10). |
 | `{} ({})` | moves/handlers.rs::called_move_problem (producer) | forward | `rr-copycat-two-turn` | full: 1 | R21-copycat-called-moves | `called_move_problem`'s wrapper of its reasons (the move and why). |
-| `{} eaten by force while its holder ignores its item` | update.rs::eat_item_forced | mechanic | `rr-teatime-klutz` | full: 1 | R22-forced-eat-ignored-item | Teatime (Polteageist) or Stuff Cheeks with a berry held by a Klutz holder (Lopunny, Audino, Golurk) or under Magic Room: Showdown skips the berry's Eat event but still consumes it and runs EatItem. |
 
 ## 고친 거부 (소스에서 사라짐)
 
@@ -54,6 +53,7 @@
 | `Recycle restoring {} (its onStart)` | R11-item-restart | `rr-recycle-seed` (full: 1) | Recycle is `pokemon.lastItem = ""; pokemon.setItem(item, source, move)`: the item is held again and `setItem`'s Start runs for every item with an `onStart` (`handlers::trick_item_start`, which Trick already used: Seeds, Room Service, White Herb, Metronome, the Choice items, Booster Energy, Utility Umbrella, Air Balloon). Also `oo-recycle-white-herb`, `oo-recycle-metronome`. |
 | `Fling's user fainted before its item was thrown` | R16-fling-user-fainted | `rr-fling-innards-out` (full: 1) | Showdown's `eachEvent('Update')` in the hit loop (sim/battle-actions.ts:967) still holds the 0-HP user (its faint is processed after the loop), so Fling's condition `onUpdate` runs on it: `setItem('')` fails (`!this.hp`) and the item stays, `lastItem` is set, AfterUseItem runs (an ally's Symbiosis takes its item back when `setItem` fails on the fainted user), `removeVolatile` fails. `update::update_event` adds such users to the Update (`conditions::fling_update_fainted`); the never-firing guard in `moves::run_move_inner` is gone. Also `oo-fling-innards-out-symbiosis`. |
 | `Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)` | R17-trick-or-treat-curse | `rr-trick-or-treat-curse-glitch` (full: 2) | Trick-or-Treat's `onHit` sets `action.targetLoc = -1` for a queued Curse of a target in the second position (data/moves.ts:19928; Champions only makes the move standard): the queued action now aims at the ally position; the Ghost Curse's ModifyMove turns an ally target into `randomNormal` and useMove draws a random foe (`handlers::on_modify_move`, already implemented). Also `oo-trick-or-treat-curse-first-slot` (no glitch in the first position). |
+| `{} eaten by force while its holder ignores its item` | R22-forced-eat-ignored-item | `rr-teatime-klutz` (full: 1) | `eatItem(true)` (sim/pokemon.ts:1768) for a holder that ignores its item: `singleEvent('Eat')` is suppressed (sim/battle.ts:607: item handlers but Start, TakeItem and SetAbility), the berry is still consumed with `lastItem` and AfterUseItem. `update::eat_item_forced` skips `berry_on_eat` for such a holder instead of refusing. Also `oo-teatime-magic-room`. |
 
 ## 미확인
 
@@ -192,7 +192,6 @@
 | R19-transformed-off-field | — | `Transform copying {} ({})`<br>`{}: transformed off the field` |
 | R20-generic-guards | — | `{} restarting after Neutralizing Gas at 0 HP`<br>`Gluttony restarting after Neutralizing Gas (its abilityState.gluttony = false)`<br>`Cud Chew eating {}`<br>`two Dancers with the same Speed (Showdown orders them by abilityState.effectOrder)`<br>`{} gaining {} ({})`<br>`an ability stealing {} ({})`<br>`Zygarde-Complete fainting (Power Construct's formeRegression to the set's forme)`<br>`Shields Down on {}: the core colour (the set's species) is not in the state`<br>`Power Construct on {}`<br>`Power Construct making a Zygarde holding {} able to Mega Evolve`<br>`{}: Utility Umbrella's `inactive` item state past the end of a stage (its onUpdate has not run)`<br>`{}: Mirror Herb keeps copied boosts past the end of a stage (its effectState persists until the next trigger)`<br>`run_mega_evo: -> why`<br>`enumerate_start: -> why`<br>`a switch request for {} slot {} (Eject Pack) during {}`<br>`{} activation (effects not implemented)`<br>`Mirror Move calling {}`<br>`Nature Power calling {}`<br>`{} moving {} ({})`<br>`Order Up from a commanded Dondozo whose Tatsugiri is gone (the source of `commanded` is not in the state)`<br>`Relic Song: Meloetta changing forme after fainting`<br>`{} eating {}`<br>`Fling feeding {}`<br>`Ally Switch in triples`<br>`Trick moving {} ({})`<br>`Dancer copying {}: a multi-hit move`<br>`{} bounced: a multi-hit move`<br>`{}: damageCallback of {}`<br>`ability {} starting ({})`<br>`{}: onWeatherChange`<br>`ability {} ending ({})`<br>`{} eaten by force`<br>`field effect #{} (value {})`<br>`field effect #{} without a duration`<br>`side effect #{}`<br>`{} with {}`<br>`{}: item {} ({})`<br>`{}: species callbacks`<br>`{}: Dynamax`<br>`{}: substitute volatile {} with {} HP`<br>`move {}: {}`<br>`callbacks {} are not implemented`<br>`volatile {}`<br>`side condition {}`<br>`field effect {}`<br>`secondary volatile {}`<br>`multi-hit range`<br>`a special mechanic`<br>`stalling move`<br>`two-turn move`<br>`slot condition`<br>`self effect`<br>`status move with base power`<br>`Sleep Talk could call {}`<br>`{} holding {} has no Mega Evolution`<br>`{}: species callbacks {}`<br>`{}: item {} switch-in handler {}`<br>`{}: species switch-in handler {}`<br>`{}: ability {} switch-in handler ({})`<br>`{}: ability {} switch-in handler {}`<br>`{}: Protosynthesis / Flower Gift next to Air Lock / Cloud Nine (the suppressor's End WeatherChange)`<br>`{}: Symbiosis holding {} ({})`<br>`Protosynthesis / Flower Gift next to Air Lock / Cloud Nine (the suppressor's End WeatherChange)`<br>`{}: {} would confuse a {} nature (confusion is not implemented)` |
 | R21-copycat-called-moves | `Copycat calling {}`<br>`{} ({})`<br>`a two-turn move`<br>`a lock on the called move`<br>`queue actions of its own` | `its onAfterMove, unchecked for a called move` |
-| R22-forced-eat-ignored-item | `{} eaten by force while its holder ignores its item` | — |
 
 보드에 아직 없는 제안 작업(이 감사가 붙인 이름):
 

@@ -139,11 +139,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "Copycat calling Mirror Coat (queue actions of its own)",
         "R21-copycat-called-moves",
     ),
-    (
-        "rr-teatime-klutz",
-        "Sitrus Berry eaten by force while its holder ignores its item",
-        "R22-forced-eat-ignored-item",
-    ),
 ];
 
 /// Each repro still reaches its refusal from the oracle fixture's position (the scenario is
@@ -376,8 +371,9 @@ fn copycat_mirror_coat() {
     assert_exact_parity("rr-copycat-mirror-coat");
 }
 
+/// Teatime makes Lopunny (Klutz) eat its Sitrus Berry: the Eat event is skipped for a holder
+/// ignoring its item, the berry is consumed (was refused; board R22, `oo_forced_eat_ignored_item.rs`).
 #[test]
-#[ignore = "refused: {} eaten by force while its holder ignores its item (board R22-forced-eat-ignored-item)"]
 fn teatime_with_klutz() {
     assert_exact_parity("rr-teatime-klutz");
 }

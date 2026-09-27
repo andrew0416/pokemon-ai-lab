@@ -53,6 +53,10 @@
   "Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)": {
    "board": "R17-trick-or-treat-curse", "fixture": "rr-trick-or-treat-curse-glitch",
    "what": "Trick-or-Treat's `onHit` sets `action.targetLoc = -1` for a queued Curse of a target in the second position (data/moves.ts:19928; Champions only makes the move standard): the queued action now aims at the ally position; the Ghost Curse's ModifyMove turns an ally target into `randomNormal` and useMove draws a random foe (`handlers::on_modify_move`, already implemented). Also `oo-trick-or-treat-curse-first-slot` (no glitch in the first position)."
+  },
+  "{} eaten by force while its holder ignores its item": {
+   "board": "R22-forced-eat-ignored-item", "fixture": "rr-teatime-klutz",
+   "what": "`eatItem(true)` (sim/pokemon.ts:1768) for a holder that ignores its item: `singleEvent('Eat')` is suppressed (sim/battle.ts:607: item handlers but Start, TakeItem and SetAbility), the berry is still consumed with `lastItem` and AfterUseItem. `update::eat_item_forced` skips `berry_on_eat` for such a holder instead of refusing. Also `oo-teatime-magic-room`."
   }
  },
  "entries": {
@@ -247,10 +251,6 @@
   "Transform copying {} ({})": {
    "reachable": "no", "kind": "static", "board": "R19-transformed-off-field",
    "why": "Transform copies a standard ability on the field; all are supported (E1)."
-  },
-  "{} eaten by force while its holder ignores its item": {
-   "reachable": "yes", "kind": "mechanic", "board": "R22-forced-eat-ignored-item", "repro": "rr-teatime-klutz",
-   "why": "Teatime (Polteageist) or Stuff Cheeks with a berry held by a Klutz holder (Lopunny, Audino, Golurk) or under Magic Room: Showdown skips the berry's Eat event but still consumes it and runs EatItem."
   },
   "{} eaten by force": {
    "reachable": "no", "kind": "static", "board": "R20-generic-guards",
