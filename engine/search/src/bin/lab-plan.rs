@@ -32,6 +32,16 @@
 //! DESIGN.md "모델 ③·② 구현".
 //!                 [--threads n] [--plan "<turn 1> / <turn 2> / ..."]
 //!                 [--child-nash [--beam b] [--outcomes k]]
+//!                 [--stats] [--no-transposition] [--no-dominance] [--full-children] [--lazy]
+//!
+//! `--stats` adds a line with the search's work (transposition-table hits, matrix games and
+//! their RM+ time, enumeration time summed over threads). `--no-transposition` and
+//! `--no-dominance` turn off the child-equilibrium table (S24a) and the dominance reduction of
+//! child matrix games (S24d), `--full-children` values every cell of every child game instead
+//! of double oracle over lazily valued cells (S24d), to check that they change nothing but the
+//! time (within the equilibrium solver's tolerance). `--lazy` solves `--solve nash`'s root the
+//! same way (double oracle): a fraction of the pairs, the equilibrium within tolerance, but no
+//! full matrix, so the pure maximin is only over the rows valued in full.
 //!
 //! `--plan` values a fixed sequence of our turn choices (Showdown choice strings parsed
 //! against the starting position; a turn whose choice is no longer legal falls back to
@@ -53,24 +63,17 @@
 
 use std::process::ExitCode;
 
-use serde_json::Value;
-
-use lab_engine::eval::{
-    features, Evaluator, Heuristic, Material, Weighted, FEATURE_COUNT, FEATURE_NAMES,
-};
+use lab_engine::eval::FEATURE_NAMES;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::SideId;
 use lab_engine::turn::RollMode;
-use lab_scenario::{
-    canonical_json, load_scenario_file, scenario_positions_consistent, scenario_positions_filtered,
-    Position,
+use lab_scenario::{load_scenario_file, Position};
+use lab_search::model::{
+    analyse_positions, believed_analysis, check_observations, describe, load_evaluator,
+    observed_start, parse_observation, pick_position, side_name, BeliefSetup, BelievedReport,
+    Observation, PositionPick,
 };
-use lab_search::game::asked_slots;
-use lab_search::nash::{self, Matrix};
-use lab_search::solve::MixedAnalysis;
-use lab_search::{
-    format_choice, format_switches, Chance, Choice, Config, Decision, Pruning, Solver,
-};
+use lab_search::{format_choice, Chance, Choice, Config, Decision, Pruning, Solver};
 
 fn main() -> ExitCode {
     match run() {
@@ -106,6 +109,8 @@ fn run() -> Result<(), String> {
     let mut setup_rolls = RollMode::Full;
     let mut believed_weights: Vec<f32> = Vec::new();
     let mut pessimistic = false;
+    let mut show_stats = false;
+    let mut lazy_root = false;
     let mut config = Config::new(Ruleset::CHAMPIONS_MC, us);
     let mut i = 0;
     while i < args.len() {
@@ -275,7 +280,12 @@ fn run() -> Result<(), String> {
                     .ok_or("--threads needs a number")?;
             }
             "--exact" => config.exact_lines = true,
+            "--stats" => show_stats = true,
             "--child-nash" => config.child_nash = true,
+            "--no-transposition" => config.transposition = false,
+            "--no-dominance" => config.dominance = false,
+            "--full-children" => config.double_oracle = false,
+            "--lazy" => lazy_root = true,
             "--beam" => {
                 i += 1;
                 config.reply_beam = Some(
@@ -311,44 +321,28 @@ fn run() -> Result<(), String> {
     let loaded = load_scenario_file(&scenario).map_err(|e| e.to_string())?;
     let setup_options = lab_engine::turn::EnumerateOptions { rolls: setup_rolls };
     // Opponent model ②'s observations: (setup turn, what the opponent saw of our side then).
-    let mut observations: Vec<(usize, Vec<(String, f32)>)> = Vec::new();
+    let mut observations: Vec<(usize, Observation)> = Vec::new();
     for (turn, text) in &observed_turns {
         observations.push((*turn, parse_observation(text)?));
     }
     if let Some(text) = &observed {
         observations.push((loaded.setup_turns.len(), parse_observation(text)?));
     }
-    observations.sort_by_key(|(turn, _)| *turn);
-    if let Some(pair) = observations.windows(2).find(|pair| pair[0].0 == pair[1].0) {
-        return Err(format!(
-            "two observations for setup turn {}; give one --observed-turn per turn",
-            pair[0].0
-        ));
-    }
-    if let Some((turn, _)) = observations
-        .iter()
-        .find(|(turn, _)| *turn == 0 || *turn > loaded.setup_turns.len())
-    {
-        return Err(format!(
-            "--observed-turn {turn}: the scenario has {} setup turns (an observation belongs to one of them)",
-            loaded.setup_turns.len()
-        ));
-    }
-    let (mut positions, trace) = observed_positions(
+    check_observations(&mut observations, loaded.setup_turns.len())?;
+    let pick = PositionPick {
+        index: position_index,
+        most_probable: position_max,
+        before: before.clone(),
+    };
+    let (positions, trace, survivors) = observed_start(
         &loaded,
         us,
         &observations,
         observed_tolerance,
         setup_options,
-        if setup_lenient {
-            Replay::Believed
-        } else {
-            Replay::Real
-        },
+        setup_lenient,
+        pick.is_open(),
     )?;
-    if positions.is_empty() {
-        return Err("no position survives the setup turns (with --setup-lenient every replayed branch made a recorded choice illegal)".into());
-    }
     if !observations.is_empty() {
         for (turn, matched, total, share) in &trace {
             println!(
@@ -356,40 +350,17 @@ fn run() -> Result<(), String> {
                 share * 100.0
             );
         }
-        if positions.is_empty() {
-            return Err(
-                "no position after the setup turns matches the observations; check the names, percentages and tolerance (it must cover the roll spread of --setup-rolls)".into(),
-            );
-        }
-        positions.sort_by(|a, b| b.probability.total_cmp(&a.probability));
     }
-    // The positions the observations cannot tell apart: `--solve nash` and the believed-team
-    // analysis play the matrix game over their mixture (where the choice lists coincide); the
-    // other modes take the most probable one. Empty when there is one position or `--position`.
-    let survivors: Vec<Position> = if !observations.is_empty()
-        && positions.len() > 1
-        && position_index.is_none()
-        && !position_max
-    {
+    // The positions the observations cannot tell apart (empty when there is one position or
+    // `--position`).
+    if !survivors.is_empty() {
         println!(
                 "{} positions survive the observations (most probable p={:.4}); the matrix game is played over their mixture where the choices coincide; pass --position to pick one",
-                positions.len(),
-                positions[0].probability
+                survivors.len(),
+                survivors[0].probability
             );
-        let keep = positions.clone();
-        positions.truncate(1);
-        keep
-    } else {
-        Vec::new()
-    };
-    let position = pick_position(
-        &loaded,
-        positions,
-        before.as_deref(),
-        position_index,
-        position_max,
-        us,
-    )?;
+    }
+    let position = pick_position(&loaded, positions, &pick, us)?;
     let them = us.other();
     let mut state = position.state.clone();
 
@@ -403,129 +374,40 @@ fn run() -> Result<(), String> {
         roster(&loaded, &position, them)
     );
 
-    let evaluator: Box<dyn Evaluator<2> + Sync> = if eval == "material" {
-        Box::new(Material)
-    } else if let Some(path) = eval.strip_prefix("file:") {
-        let text = std::fs::read_to_string(path).map_err(|e| format!("{path}: {e}"))?;
-        let value: Value = serde_json::from_str(&text).map_err(|e| format!("{path}: {e}"))?;
-        let mut weights = [0.0f32; FEATURE_COUNT];
-        for (i, name) in FEATURE_NAMES.iter().enumerate() {
-            weights[i] = value["weights"][*name]
-                .as_f64()
-                .ok_or_else(|| format!("{path}: weights.{name} missing"))?
-                as f32;
-        }
-        Box::new(Weighted { weights })
-    } else {
-        Box::new(Heuristic)
-    };
+    let evaluator = load_evaluator(&eval)?;
     let mut solver = Solver::new(config, evaluator.as_ref());
     if !believed_teams.is_empty() {
-        // Opponent model ③ with a belief: for each believed team (the same scenario with our
-        // side's team file replaced) the opponent's equilibrium strategy; the mixture by weight
-        // is what it plays; our best response is valued on the real position.
-        let weights: Vec<f32> = if believed_weights.is_empty() {
-            vec![1.0 / believed_teams.len() as f32; believed_teams.len()]
-        } else if believed_weights.len() == believed_teams.len() {
-            let total: f32 = believed_weights.iter().sum();
-            if total <= 0.0 {
-                return Err("--believed-weight must sum to a positive number".into());
-            }
-            believed_weights.iter().map(|w| w / total).collect()
-        } else {
-            return Err("--believed-weight needs one weight per --believed-team".into());
+        // Opponent model ③ with a belief (② with observations), `lab_search::model`.
+        let setup = BeliefSetup {
+            observations: observations.clone(),
+            tolerance: observed_tolerance,
+            setup_options,
+            pick: pick.clone(),
         };
-        let mut mixture: Vec<(Choice<2>, f32)> = Vec::new();
-        let mut believed_values = Vec::new();
-        let mut dropped: Vec<String> = Vec::new();
-        let mut reference: Option<(Vec<Choice<2>>, Position, Decision)> = None;
-        // With observations, each believed team's weight is multiplied by the probability that
-        // its own replay of the setup turns produced all of them (Bayes with the engine as the
-        // likelihood); the believed position is then the most probable surviving one.
-        let mut posterior = weights.clone();
-        let mut believed_positions = Vec::with_capacity(believed_teams.len());
-        for (k, team_path) in believed_teams.iter().enumerate() {
-            let bl = believed_loaded(&scenario, us, team_path)?;
-            let (mut bpositions, _) = observed_positions(
-                &bl,
-                us,
-                &observations,
-                observed_tolerance,
-                setup_options,
-                Replay::Believed,
-            )?;
-            let mut bsurvivors: Vec<Position> = Vec::new();
-            if !observations.is_empty() {
-                let likelihood: f64 = bpositions.iter().map(|p| p.probability).sum();
-                posterior[k] *= likelihood as f32;
-                if bpositions.is_empty() {
-                    believed_positions.push(None);
-                    continue;
-                }
-                bpositions.sort_by(|a, b| b.probability.total_cmp(&a.probability));
-                if bpositions.len() > 1 && position_index.is_none() && !position_max {
-                    bsurvivors = bpositions.clone();
-                }
-                bpositions.truncate(1);
-            }
-            let bp = pick_position(
-                &bl,
-                bpositions,
-                before.as_deref(),
-                position_index,
-                position_max,
-                us,
-            )?;
-            believed_positions.push(Some((bp, bsurvivors)));
+        let report = believed_analysis(
+            &mut solver,
+            &scenario,
+            us,
+            &position,
+            &survivors,
+            &believed_teams,
+            &believed_weights,
+            &setup,
+        )?;
+        for note in &report.notes {
+            println!("{note}");
         }
-        let total: f32 = posterior.iter().sum();
-        if total <= 0.0 {
-            return Err("every believed team is contradicted by the observations".into());
-        }
-        for w in &mut posterior {
-            *w /= total;
-        }
-        for (k, team_path) in believed_teams.iter().enumerate() {
-            let w = posterior[k];
-            let Some((believed, bsurvivors)) = believed_positions[k].clone() else {
-                believed_values.push((team_path.clone(), w, f32::NAN));
-                continue;
-            };
-            let mixed = analyse_positions(
-                &mut solver,
-                &believed,
-                &bsurvivors,
-                &format!("believed team {team_path}"),
-            )
-            .map_err(|e| format!("believed position {team_path}: {e}"))?;
-            believed_values.push((team_path.clone(), w, mixed.equilibrium.value));
-            dropped.extend(mixed.unsupported.iter().cloned());
-            match &reference {
-                None => reference = Some((mixed.theirs.clone(), believed.clone(), mixed.decision)),
-                Some((theirs, _, _)) if *theirs != mixed.theirs => {
-                    return Err(format!(
-                        "believed team {team_path}: the opponent's choice list differs from the first believed team's (different species, moves or order); the beliefs must share it"
-                    ));
-                }
-                Some(_) => {}
-            }
-            for (c, &p) in mixed.theirs.iter().zip(&mixed.equilibrium.cols) {
-                match mixture.iter_mut().find(|(x, _)| x == c) {
-                    Some(entry) => entry.1 += w * p,
-                    None => mixture.push((*c, w * p)),
-                }
-            }
-        }
-        let (_, believed, believed_decision) = reference.expect("at least one believed team");
-        let started = std::time::Instant::now();
-        let real = analyse_positions(&mut solver, &position, &survivors, "real position")?;
-        // Our best response to their mixed strategy, read off the (mixed) real matrix: their
-        // choices the real position does not keep are dropped and the rest renormalised.
-        let response_lines = matrix_best_response(&real, &mixture);
-        if response_lines.is_empty() {
-            return Err("none of their strategy's choices is kept on the real position".into());
-        }
-        let response_elapsed = started.elapsed();
+        let BelievedReport {
+            teams,
+            mixture,
+            believed,
+            believed_decision,
+            real,
+            response: response_lines,
+            response_elapsed,
+            dropped,
+            ..
+        } = report;
         println!(
             "opponent model 3: their equilibrium strategies on the believed teams, mixed by weight, answered on the real position; real equilibrium {:+.1}; chance {:?}, rolls {:?}, eval {eval}: {} nodes, {} enumerations, {:.2} s",
             real.equilibrium.value,
@@ -535,8 +417,11 @@ fn run() -> Result<(), String> {
             real.turns,
             response_elapsed.as_secs_f64()
         );
-        for (k, (team_path, w, value)) in believed_values.iter().enumerate() {
-            let prior = weights[k];
+        if show_stats {
+            println!("search stats: {}", solver.stats());
+        }
+        for team in &teams {
+            let (team_path, w, value, prior) = (&team.team, team.posterior, team.value, team.prior);
             if !observations.is_empty() {
                 println!(
                     "  belief {:>5.1}% -> {:>5.1}%  {team_path}: equilibrium there {value:+.1} (from our side)",
@@ -589,64 +474,25 @@ fn run() -> Result<(), String> {
         return Ok(());
     }
     if let Some(path) = &dump_children {
-        // Feature vectors of the positions one turn ahead, each with its next-turn equilibrium
-        // value as the fitting target (WORKPLAN S12): our `--beam` best choices by the root
-        // matrix, their `--beam` worst replies, the `--outcomes` most probable outcomes of each
-        // pair (the deep analysis' children, cached).
+        // Feature vectors of the positions one turn ahead with their next-turn equilibrium
+        // (WORKPLAN S12), `lab_search::model::dump_children`.
         let beam = config.reply_beam.unwrap_or(6);
-        let deep = solver
-            .analyse_deep(&mut state, None, beam)
-            .map_err(|e| e.to_string())?;
+        let (deep, children) = lab_search::model::dump_children(&mut solver, &mut state, beam)?;
         let decision = deep.decision;
         let mut out = String::new();
-        let mut rows = 0usize;
-        // Only the beam's replies: their children were just valued by `analyse_deep`, so the
-        // targets come from the solver's cache instead of hundreds of fresh matrix games.
-        for line in &deep.lines {
-            for &(b, _) in &line.replies {
-                let pair = match us {
-                    SideId::One => [line.ours, b],
-                    SideId::Two => [b, line.ours],
-                };
-                let Ok(mut outcomes) = lab_search::transitions(
-                    &mut state,
-                    config.ruleset,
-                    config.enumerate_options(),
-                    decision,
-                    None,
-                    pair,
-                ) else {
-                    continue;
-                };
-                outcomes.sort_by(|x, y| y.probability.total_cmp(&x.probability));
-                if let Some(cap) = config.outcome_cap {
-                    outcomes.truncate(cap);
-                }
-                for o in &outcomes {
-                    state.apply(&o.instructions);
-                    let target = solver.nash_value(&mut state, o.suspension.as_ref());
-                    let f = features(&state);
-                    let sign = if us == SideId::One { 1.0 } else { -1.0 };
-                    state.reverse(&o.instructions);
-                    let Ok(target) = target else { continue };
-                    if target.is_nan() {
-                        continue;
-                    }
-                    let f: Vec<f32> = f.iter().map(|x| x * sign).collect();
-                    out.push_str(
-                        &serde_json::to_string(&serde_json::json!({
-                            "features": f,
-                            "target": target,
-                            "p": o.probability,
-                            "ours": describe(&position, decision, us, &line.ours),
-                            "theirs": describe(&position, decision, them, &b),
-                        }))
-                        .expect("serializable"),
-                    );
-                    out.push('\n');
-                    rows += 1;
-                }
-            }
+        let rows = children.len();
+        for row in &children {
+            out.push_str(
+                &serde_json::to_string(&serde_json::json!({
+                    "features": row.features,
+                    "target": row.target,
+                    "p": row.probability,
+                    "ours": describe(&position, decision, us, &row.ours),
+                    "theirs": describe(&position, decision, them, &row.theirs),
+                }))
+                .expect("serializable"),
+            );
+            out.push('\n');
         }
         std::fs::write(path, out).map_err(|e| format!("{path}: {e}"))?;
         println!(
@@ -679,6 +525,9 @@ fn run() -> Result<(), String> {
             report.turns,
             report.elapsed.as_secs_f64()
         );
+        if show_stats {
+            println!("search stats: {}", solver.stats());
+        }
         for (n, choice) in choices.iter().enumerate() {
             println!(
                 "  turn {}: {}",
@@ -747,6 +596,9 @@ fn run() -> Result<(), String> {
             deep.turns,
             deep.elapsed.as_secs_f64()
         );
+        if show_stats {
+            println!("search stats: {}", solver.stats());
+        }
         println!(
             "shallow matrix {}x{}, equilibrium {:+.1}; deep matrix {}x{}, equilibrium {:+.1} (exploitability {:.3}, {} RM+ iterations); pure deep maximin {:+.1}",
             deep.shallow.matrix.rows,
@@ -837,6 +689,9 @@ fn run() -> Result<(), String> {
             deep.turns,
             deep.elapsed.as_secs_f64()
         );
+        if show_stats {
+            println!("search stats: {}", solver.stats());
+        }
         println!(
             "{:>3}  {:>9}  {:>9}  {:<44}  worst reply (deep)",
             "#", "deep", "shallow", "our choice"
@@ -876,21 +731,53 @@ fn run() -> Result<(), String> {
         return Ok(());
     }
     if solve == "nash" {
-        let mixed = analyse_positions(&mut solver, &position, &survivors, "position")?;
+        // `--lazy`: the root by double oracle (not over a mixture of surviving positions,
+        // which averages full matrices).
+        let lazy = lazy_root && survivors.len() <= 1;
+        let (mixed, note) = if lazy {
+            let mut state = position.state.clone();
+            let mixed = solver
+                .analyse_mixed_lazy(&mut state, None)
+                .map_err(|e| e.to_string())?;
+            (mixed, None)
+        } else {
+            analyse_positions(&mut solver, &position, &survivors, "position")?
+        };
+        if let Some(note) = note {
+            println!("{note}");
+        }
         println!(
             "decision {:?}, depth {}, chance {:?}, pruning {:?}, rolls {:?}, eval {eval}: {} nodes, {} enumerations, {:.2} s",
             mixed.decision, mixed.depth, config.chance, config.pruning, config.rolls, mixed.nodes, mixed.turns,
             mixed.elapsed.as_secs_f64()
         );
-        println!(
-            "matrix {}x{}; equilibrium value {:+.1} (exploitability {:.3}, {} RM+ iterations); pure maximin {:+.1}",
-            mixed.matrix.rows,
-            mixed.matrix.cols,
-            mixed.equilibrium.value,
-            mixed.equilibrium.exploitability,
-            mixed.equilibrium.iterations,
-            mixed.maximin.1
-        );
+        if show_stats {
+            println!("search stats: {}", solver.stats());
+        }
+        let valued = mixed.matrix.values.iter().filter(|v| !v.is_nan()).count();
+        if lazy && valued < mixed.matrix.values.len() {
+            println!(
+                "matrix {}x{} ({} of {} pairs valued, double oracle); equilibrium value {:+.1} (exploitability in the full game {:.3}, {} RM+ iterations); pure maximin over the rows valued in full {:+.1} (a lower bound)",
+                mixed.matrix.rows,
+                mixed.matrix.cols,
+                valued,
+                mixed.matrix.values.len(),
+                mixed.equilibrium.value,
+                mixed.equilibrium.exploitability,
+                mixed.equilibrium.iterations,
+                mixed.maximin.1
+            );
+        } else {
+            println!(
+                "matrix {}x{}; equilibrium value {:+.1} (exploitability {:.3}, {} RM+ iterations); pure maximin {:+.1}",
+                mixed.matrix.rows,
+                mixed.matrix.cols,
+                mixed.equilibrium.value,
+                mixed.equilibrium.exploitability,
+                mixed.equilibrium.iterations,
+                mixed.maximin.1
+            );
+        }
         if !mixed.unsupported.is_empty() {
             println!(
                 "dropped {} of their replies and {} of our choices that reach effects the engine does not implement:",
@@ -935,6 +822,9 @@ fn run() -> Result<(), String> {
         analysis.turns,
         analysis.elapsed.as_secs_f64()
     );
+    if show_stats {
+        println!("search stats: {}", solver.stats());
+    }
     if analysis.lines.is_empty() {
         println!("the battle is over: value {:+.1}", analysis.value);
         return Ok(());
@@ -1015,224 +905,6 @@ fn run() -> Result<(), String> {
     Ok(())
 }
 
-/// The scenario with our side's team file replaced by `team_path`, loaded (the callers replay
-/// its setup turns under the observations and pick).
-fn believed_loaded(
-    scenario: &str,
-    us: SideId,
-    team_path: &str,
-) -> Result<lab_scenario::LoadedScenario, String> {
-    let text = std::fs::read_to_string(scenario).map_err(|e| format!("{scenario}: {e}"))?;
-    let mut json: Value = serde_json::from_str(&text).map_err(|e| format!("{scenario}: {e}"))?;
-    let side = side_name(us);
-    let team_abs = std::fs::canonicalize(team_path).map_err(|e| format!("{team_path}: {e}"))?;
-    json[side]["team"] = Value::String(
-        team_abs
-            .to_string_lossy()
-            .trim_start_matches(r"\\?\")
-            .to_owned(),
-    );
-    if let Some(desc) = json["description"].as_str() {
-        json["description"] = Value::String(format!("{desc} [believed {side} team: {team_path}]"));
-    }
-    let base_dir = std::path::Path::new(scenario)
-        .parent()
-        .unwrap_or(std::path::Path::new("."));
-    lab_scenario::load_scenario_str(&json.to_string(), base_dir)
-        .map_err(|e| format!("believed scenario: {e}"))
-}
-
-/// Per observed setup turn: `(turn, matched, total, share)`, see [`observed_positions`].
-type ObservationTrace = Vec<(usize, usize, usize, f64)>;
-
-/// Whose teams a replay of the setup turns runs on: the real ones, where a choice that is not
-/// legal is a scenario error, or a believed team's, where it contradicts the belief in that
-/// position and the position is dropped (`scenario_positions_consistent`).
-#[derive(Clone, Copy)]
-enum Replay {
-    Real,
-    Believed,
-}
-
-/// The positions after the setup turns that survive every observation, each applied as soon as
-/// its turn is played, with one `(turn, matched, total, share)` per observed turn: how many of
-/// the positions reaching that turn matched and the share of their probability they hold. The
-/// total probability of the result is the likelihood of the observations under this scenario's
-/// teams.
-fn observed_positions(
-    loaded: &lab_scenario::LoadedScenario,
-    us: SideId,
-    observations: &[(usize, Vec<(String, f32)>)],
-    tolerance: f32,
-    setup_options: lab_engine::turn::EnumerateOptions,
-    replay: Replay,
-) -> Result<(Vec<Position>, ObservationTrace), String> {
-    let mut trace = Vec::new();
-    let replay_fn = match replay {
-        Replay::Real => scenario_positions_filtered,
-        Replay::Believed => scenario_positions_consistent,
-    };
-    let positions = replay_fn(loaded, setup_options, &mut |turn, positions| {
-        let Some((_, observation)) = observations.iter().find(|(t, _)| *t == turn) else {
-            return positions;
-        };
-        let total = positions.len();
-        let reaching: f64 = positions.iter().map(|p| p.probability).sum();
-        let matching = matching_positions(loaded, positions, us, observation, tolerance);
-        let kept: f64 = matching.iter().map(|p| p.probability).sum();
-        let share = if reaching > 0.0 { kept / reaching } else { 0.0 };
-        trace.push((turn, matching.len(), total, share));
-        matching
-    })?;
-    Ok((positions, trace))
-}
-
-/// `Name:pct,Name:pct`: what the opponent saw of our side's Pokémon after a setup turn.
-fn parse_observation(text: &str) -> Result<Vec<(String, f32)>, String> {
-    text.split(',')
-        .map(|part| {
-            let (name, pct) = part
-                .trim()
-                .rsplit_once(':')
-                .ok_or_else(|| format!("--observed: {part:?} is not Name:pct"))?;
-            let pct: f32 = pct
-                .trim()
-                .trim_end_matches('%')
-                .parse()
-                .map_err(|_| format!("--observed: {pct:?} is not a percentage"))?;
-            Ok((name.trim().to_owned(), pct))
-        })
-        .collect()
-}
-
-/// The positions whose HP percentages of our named Pokémon match the observation within
-/// `tolerance` points (a fainted Pokémon is 0%).
-fn matching_positions(
-    loaded: &lab_scenario::LoadedScenario,
-    positions: Vec<Position>,
-    us: SideId,
-    observation: &[(String, f32)],
-    tolerance: f32,
-) -> Vec<Position> {
-    let meta = &loaded.meta.sides[us.index()];
-    positions
-        .into_iter()
-        .filter(|p| {
-            let side = p.state.side(us);
-            observation.iter().all(|(name, pct)| {
-                let Some(party) = meta.party_index(name) else {
-                    return false;
-                };
-                let mon = &side.party[party as usize];
-                let actual = if mon.hp <= 0 {
-                    0.0
-                } else {
-                    100.0 * f32::from(mon.hp) / f32::from(mon.max_hp.max(1))
-                };
-                (actual - pct).abs() <= tolerance
-            })
-        })
-        .collect()
-}
-
-fn pick_position(
-    loaded: &lab_scenario::LoadedScenario,
-    positions: Vec<Position>,
-    before: Option<&str>,
-    index: Option<usize>,
-    most_probable: bool,
-    us: SideId,
-) -> Result<Position, String> {
-    if most_probable {
-        return positions
-            .into_iter()
-            .max_by(|a, b| a.probability.total_cmp(&b.probability))
-            .ok_or_else(|| "no initial state".to_owned());
-    }
-    if let Some(i) = index {
-        let n = positions.len();
-        return positions
-            .into_iter()
-            .nth(i)
-            .ok_or_else(|| format!("--position {i}: only {n} initial states"));
-    }
-    let wanted = match before {
-        Some(path) => {
-            let text = std::fs::read_to_string(path).map_err(|e| format!("{path}: {e}"))?;
-            let report: Value = serde_json::from_str(&text).map_err(|e| format!("{path}: {e}"))?;
-            Some(report["before"].clone())
-        }
-        None => None,
-    };
-    match wanted {
-        None if positions.len() == 1 => Ok(positions.into_iter().next().unwrap()),
-        None => {
-            // Several start states (Trace, Speed ties among the leads): list them.
-            let mut text = format!(
-                "{} initial states; pass --position <index> or --before <oracle report>:
-",
-                positions.len()
-            );
-            for (i, p) in positions.iter().enumerate() {
-                let actives: Vec<String> = [SideId::One, SideId::Two]
-                    .into_iter()
-                    .flat_map(|side| {
-                        let meta = &loaded.meta.sides[side.index()];
-                        p.state.side(side).slots.iter().filter_map(move |slot| {
-                            let party = slot.party_index?;
-                            let mon = &p.state.side(side).party[party as usize];
-                            Some(format!(
-                                "{} ({})",
-                                meta.name(party).unwrap_or("?"),
-                                mon.ability.data().name
-                            ))
-                        })
-                    })
-                    .collect();
-                let hp: Vec<String> = {
-                    let meta = &loaded.meta.sides[us.index()];
-                    let side = p.state.side(us);
-                    side.slots
-                        .iter()
-                        .filter_map(|slot| slot.party_index)
-                        .map(|party| {
-                            let mon = &side.party[party as usize];
-                            format!(
-                                "{}:{:.1}",
-                                meta.name(party).unwrap_or("?"),
-                                100.0 * f32::from(mon.hp) / f32::from(mon.max_hp.max(1))
-                            )
-                        })
-                        .collect()
-                };
-                text.push_str(&format!(
-                    "  {i}: p={:.4} {} | our HP% {}\n",
-                    p.probability,
-                    actives.join(", "),
-                    hp.join(",")
-                ));
-            }
-            Err(text)
-        }
-        Some(w) => positions
-            .into_iter()
-            .find(|p| {
-                canonical_json(&p.state, &loaded.meta)
-                    .ok()
-                    .and_then(|key| serde_json::from_str::<Value>(&key).ok())
-                    .is_some_and(|v| v == w)
-            })
-            .ok_or_else(|| "no initial state matches the report's `before`".to_owned()),
-    }
-}
-
-fn side_name(side: SideId) -> &'static str {
-    match side {
-        SideId::One => "p1",
-        SideId::Two => "p2",
-    }
-}
-
 /// `Gardevoir, Rillaboom | bench Sableye, Milotic` from the sidecar names.
 fn roster(loaded: &lab_scenario::LoadedScenario, position: &Position, side: SideId) -> String {
     let s = position.state.side(side);
@@ -1261,140 +933,4 @@ fn roster(loaded: &lab_scenario::LoadedScenario, position: &Position, side: Side
         })
         .collect();
     format!("{} | bench {}", active.join(", "), bench.join(", "))
-}
-
-/// The one-turn matrix game of `single`, or, when `survivors` (positions the observations
-/// cannot tell apart, `single` the most probable of them) has several, of their mixture; falls
-/// back to `single` with a note when the mixture is not well defined.
-fn analyse_positions(
-    solver: &mut Solver<'_, 2, dyn Evaluator<2> + Sync>,
-    single: &Position,
-    survivors: &[Position],
-    label: &str,
-) -> Result<MixedAnalysis<2>, String> {
-    if survivors.len() > 1 {
-        match mixed_over_positions(solver, survivors)? {
-            Ok(mixed) => {
-                println!(
-                    "{label}: matrix game over the mixture of {} positions (total p={:.4})",
-                    survivors.len(),
-                    survivors.iter().map(|p| p.probability).sum::<f64>()
-                );
-                return Ok(mixed);
-            }
-            Err(why) => println!("{label}: {why}; using the most probable position alone"),
-        }
-    }
-    let mut state = single.state.clone();
-    solver
-        .analyse_mixed(&mut state, None)
-        .map_err(|e| e.to_string())
-}
-
-/// Several positions the players cannot tell apart (chance the observations do not reveal:
-/// sleep turns, hidden damage rolls) form one matrix game: the probability-weighted average of
-/// their payoff matrices, over choice lists that must coincide (the same decision, the same
-/// choices kept after dropping unsupported pairs). The inner `Err(why)` says when they do not.
-fn mixed_over_positions(
-    solver: &mut Solver<'_, 2, dyn Evaluator<2> + Sync>,
-    positions: &[Position],
-) -> Result<Result<MixedAnalysis<2>, String>, String> {
-    let mut parts: Vec<(f64, MixedAnalysis<2>)> = Vec::with_capacity(positions.len());
-    for p in positions {
-        let mut state = p.state.clone();
-        let analysis = solver
-            .analyse_mixed(&mut state, None)
-            .map_err(|e| e.to_string())?;
-        parts.push((p.probability, analysis));
-    }
-    let first = &parts[0].1;
-    for (_, m) in &parts[1..] {
-        if m.decision != first.decision {
-            return Ok(Err("the surviving positions ask different decisions".into()));
-        }
-        if m.ours != first.ours || m.theirs != first.theirs {
-            return Ok(Err(
-                "the surviving positions keep different choice lists (different legal moves or unsupported pairs)".into(),
-            ));
-        }
-    }
-    let total: f64 = parts.iter().map(|(p, _)| *p).sum();
-    let mut values = vec![0.0f32; first.matrix.values.len()];
-    for (p, m) in &parts {
-        let w = (*p / total) as f32;
-        for (v, x) in values.iter_mut().zip(&m.matrix.values) {
-            *v += w * x;
-        }
-    }
-    let matrix = Matrix::new(first.matrix.rows, first.matrix.cols, values);
-    let equilibrium = nash::solve(&matrix, 20_000, 0.01);
-    let maximin = matrix.maximin();
-    let nodes = parts.iter().map(|(_, m)| m.nodes).sum();
-    let turns = parts.iter().map(|(_, m)| m.turns).sum();
-    let elapsed = parts.iter().map(|(_, m)| m.elapsed).sum();
-    let mut unsupported: Vec<String> = parts
-        .iter()
-        .flat_map(|(_, m)| m.unsupported.iter().cloned())
-        .collect();
-    unsupported.sort();
-    unsupported.dedup();
-    let first = parts.swap_remove(0).1;
-    Ok(Ok(MixedAnalysis {
-        matrix,
-        equilibrium,
-        maximin,
-        nodes,
-        turns,
-        elapsed,
-        unsupported,
-        ..first
-    }))
-}
-
-/// Our choices' expected values on `analysis`'s matrix against their mixed `strategy` (choices
-/// of theirs the matrix does not keep are dropped and the rest renormalised), best first.
-fn matrix_best_response(
-    analysis: &MixedAnalysis<2>,
-    strategy: &[(Choice<2>, f32)],
-) -> Vec<(Choice<2>, f32)> {
-    let mut weights = vec![0.0f32; analysis.theirs.len()];
-    for (choice, p) in strategy {
-        if let Some(i) = analysis.theirs.iter().position(|x| x == choice) {
-            weights[i] += p;
-        }
-    }
-    let total: f32 = weights.iter().sum();
-    if total <= 0.0 {
-        return Vec::new();
-    }
-    let mut lines: Vec<(Choice<2>, f32)> = analysis
-        .ours
-        .iter()
-        .enumerate()
-        .map(|(r, choice)| {
-            let value: f32 = weights
-                .iter()
-                .enumerate()
-                .map(|(c, w)| w / total * analysis.matrix.at(r, c))
-                .sum();
-            (*choice, value)
-        })
-        .collect();
-    lines.sort_by(|a, b| b.1.total_cmp(&a.1));
-    lines
-}
-
-fn describe(position: &Position, decision: Decision, side: SideId, choice: &Choice<2>) -> String {
-    let order = &position.order[side.index()];
-    match choice {
-        Choice::Turn(action) => format_choice(&position.state, side, order, action),
-        Choice::Switches(switches) => {
-            let slots = asked_slots(&position.state, decision, side);
-            if slots.is_empty() {
-                "(waits)".to_owned()
-            } else {
-                format_switches(order, &slots, switches)
-            }
-        }
-    }
 }
