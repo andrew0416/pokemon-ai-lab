@@ -200,7 +200,7 @@
 
 `engine/scenario/src`(`error.rs`·`parity.rs`·바이너리 제외)가 턴 엔진 앞에서 거부하는 곳: `LoadError`·`TeamProblem`·`SetProblem`·`SwitchInError`·`CanonicalError`의 생성 지점과 팀 프리뷰·패치·선택 문자열의 `String` 오류. 분류는 `refusals.classification.json`의 `loader`. `SwitchInError`와 `CanonicalError::Unrepresentable`은 `ScenarioError::Unsupported`로, 나머지는 `ScenarioError::Invalid`/`LoadError`로 나온다(T1).
 
-- 키 83개: input 58개, unsupported 4개, unreachable 18개, forward 3개.
+- 키 84개: input 58개, unsupported 4개, unreachable 19개, forward 3개.
 
 ### input: 입력 오류: the scenario file is malformed or asks for something Showdown would also refuse (or that the file format does not have)
 
@@ -290,6 +290,7 @@
 | `CanonicalError::Unrepresentable: {} with a duration` | canonical.rs::side_json | — | — | Hazards are set `PERMANENT` (invariant). |
 | `CanonicalError::Unrepresentable: {} without a duration` | canonical.rs::timed | — | — | A permanent weather or terrain: the primal weathers only (audit E8). |
 | `SwitchInError::NotInitial` | switch_in.rs::validate | — | — | The loader always builds a fresh state (leads placed, nothing started); only a hand-built state reaches it. |
+| `SwitchInError::Turn` | switch_in.rs::start_error | — | — | A non-`Unsupported` `TurnError` from `enumerate_start` (the battle over, a replacement pending, ...): the loader's fresh start never has one; it is `ScenarioError::Invalid`, not a missing mechanic (A4-t3). |
 | `SwitchInError::UnsupportedAbility` | switch_in.rs::validate | — | — | No standard ability is refused at switch-in (COVERAGE.md: 등장 효과만 미지원 0; audit E1). |
 | `SwitchInError::UnsupportedItem` | switch_in.rs::validate | — | — | No standard item is refused at switch-in (COVERAGE.md: 등장 효과만 미지원 0; audit E1). |
 | `SwitchInError::UnsupportedSlotCount` | switch_in.rs::validate | — | — | Only `State<1>` and `State<2>` exist; the loader builds `State<2>` (shape). |
@@ -302,7 +303,7 @@
 | 키 | 지점 | 로더 테스트 | 보드 | 이유 |
 |---|---|---|---|---|
 | `CanonicalError::Unrepresentable: {} {}: {}` | canonical.rs::side_json | — | — | Carries a Pokémon's message (`pokemon: ...`, `types_string: ...`). |
-| `SwitchInError::Unsupported` | switch_in.rs::expand_switch_ins | — | — | Carries the turn engine's refusal during the start (`enumerate_start`); those keys are in the turn engine's list above. (A non-`Unsupported` `TurnError` there is an invariant and is carried the same way.) |
+| `SwitchInError::Unsupported` | switch_in.rs::start_error | — | — | Carries the turn engine's refusal during the start (`enumerate_start`); those keys are in the turn engine's list above. |
 | `TeamProblem::Order` | team.rs::build_picked_side | — | — | Carries a team preview message of `picked_order` (keys `picked_order: ...`). |
 
 ## 근거 (자동 검사)

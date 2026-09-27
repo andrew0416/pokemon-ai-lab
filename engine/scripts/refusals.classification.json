@@ -991,7 +991,11 @@
   },
   "SwitchInError::Unsupported": {
    "class": "forward",
-   "why": "Carries the turn engine's refusal during the start (`enumerate_start`); those keys are in the turn engine's list above. (A non-`Unsupported` `TurnError` there is an invariant and is carried the same way.)"
+   "why": "Carries the turn engine's refusal during the start (`enumerate_start`); those keys are in the turn engine's list above."
+  },
+  "SwitchInError::Turn": {
+   "class": "unreachable",
+   "why": "A non-`Unsupported` `TurnError` from `enumerate_start` (the battle over, a replacement pending, ...): the loader's fresh start never has one; it is `ScenarioError::Invalid`, not a missing mechanic (A4-t3)."
   },
   "SwitchInError::NotInitial": {
    "class": "unreachable",
