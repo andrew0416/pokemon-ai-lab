@@ -1,0 +1,98 @@
+{
+ "description": "R0 refusal repro (board R5): Slowking's Future Sight hits Clefable holding Red Card at the end of the decision turn; Showdown uses the card and drags Slowking out after the residual (`forceSwitchFlag`). The engine refuses a future move hitting a Red Card holder.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Slowking",
+    "item": "",
+    "ability": "Own Tempo",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Future Sight",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Clefable",
+    "item": "Red Card",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Gourgeist",
+    "item": "",
+    "ability": "Insomnia",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Trick-or-Treat"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move futuresight 1, move calmmind",
+   "move calmmind, move protect"
+  ],
+  [
+   "move calmmind, move protect",
+   "move calmmind, move trickortreat 2"
+  ]
+ ],
+ "turn": {
+  "p1": "move calmmind, move calmmind",
+  "p2": "move calmmind, move protect"
+ }
+}

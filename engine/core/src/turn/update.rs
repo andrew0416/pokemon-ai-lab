@@ -20,7 +20,7 @@
 
 use crate::dex::{abilities, items, ItemId, Stat, NO_BOOSTS};
 use crate::instruction::Instruction;
-use crate::state::{Pokemon, PokemonRef, SlotRef, Status};
+use crate::state::{Pokemon, PokemonRef, SlotRef, State, Status};
 use crate::volatile::Volatile;
 
 use super::battle::{Battle, BoostEffect};
@@ -85,6 +85,19 @@ pub(crate) fn berry_problem(mon: &Pokemon) -> Option<String> {
 /// So a tie is drawn only between Pokémon on a side with an active Symbiosis holder; any other
 /// tie cannot change the outcome and keeps slot order.
 pub(crate) fn update_event<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), TurnError> {
+    // `getAllActive()` still holds a Pokémon at 0 HP whose faint is not processed yet, and
+    // Fling's condition `onUpdate` runs on it (its `setItem('')` fails; `lastItem` and
+    // AfterUseItem still happen), which is not modelled: Innards Out knocking out the user
+    // (oracle `rr-fling-innards-out`; the guard in `moves::run_move_inner` comes too late, after
+    // the hit loop's faint processing has cleared the volatile).
+    for slot in State::<N>::slot_refs() {
+        if b.occupant(slot).is_some()
+            && b.alive(slot).is_none()
+            && b.volatile(slot, Volatile::Fling).active
+        {
+            return Err(b.unsupported("Fling's user fainted before its item was thrown"));
+        }
+    }
     let actives = b.all_alive();
     // The effective ability: Symbiosis acts through `onAllyAfterUseItem`, a `runEvent` handler
     // skipped while its holder ignores its ability (no implemented Update handler changes that).

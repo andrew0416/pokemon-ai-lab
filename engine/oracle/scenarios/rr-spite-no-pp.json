@@ -1,0 +1,84 @@
+{
+ "description": "R0 refusal repro (board R15): Clefable's Moonlight (8 PP in Champions) drops to 2 PP (two uses, one Spite); in the decision turn Sableye's Prankster Spite takes the last 2 before Clefable moves. Showdown: `cant ... nopp`; the engine refuses a move with no PP when it runs.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Sableye",
+    "item": "",
+    "ability": "Prankster",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Spite",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Moonlight",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move calmmind, move protect",
+   "move moonlight, move curse"
+  ],
+  [
+   "move spite 1, move calmmind",
+   "move moonlight, move curse"
+  ]
+ ],
+ "turn": {
+  "p1": "move spite 1, move calmmind",
+  "p2": "move moonlight, move curse"
+ }
+}

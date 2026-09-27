@@ -1297,9 +1297,8 @@ fn hazard_damage<const N: usize>(b: &Battle<'_, N>, slot: SlotRef, effect: SideE
 ///
 /// Showdown runs several hazards in the order they were set. The order only shows when a
 /// damaging hazard can knock the newcomer out and Toxic Spikes (status or absorption) or Sticky
-/// Web against Mirror Armor (the reflected drop) also act on it; that case is unsupported, and
-/// so is Toxic Spikes poisoning a Synchronize holder (Synchronize ignores Toxic Spikes, which
-/// `Battle::try_set_status_from` cannot tell).
+/// Web against Mirror Armor (the reflected drop) also act on it; that case is unsupported.
+/// Synchronize ignores Toxic Spikes' poison (`Battle::try_set_status_from_toxic_spikes`).
 pub(crate) fn entry_hazards<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
@@ -1320,10 +1319,6 @@ pub(crate) fn entry_hazards<const N: usize>(
     // `pokemon.hasItem('heavydutyboots')` (Klutz, Magic Room: no Boots).
     let boots = b.item(slot) == items::HEAVY_DUTY_BOOTS;
     let toxic_spikes_act = present.contains(&SideEffect::ToxicSpikes) && grounded;
-    let poisons = toxic_spikes_act
-        && !mon.types.contains(&Type::Poison)
-        && !mon.types.contains(&Type::Steel)
-        && !boots;
     let web_reflects = present.contains(&SideEffect::StickyWeb)
         && grounded
         && !boots
@@ -1340,11 +1335,6 @@ pub(crate) fn entry_hazards<const N: usize>(
             "{} switching into hazards whose order (Showdown effectOrder) decides the outcome",
             mon.species.data().name
         )));
-    }
-    if poisons && b.ability(slot) == abilities::SYNCHRONIZE {
-        return Err(b.unsupported(
-            "Toxic Spikes poisoning a Synchronize holder (Synchronize ignores Toxic Spikes)",
-        ));
     }
     let foe_lead = SlotRef {
         side: side.other(),
@@ -1377,7 +1367,7 @@ pub(crate) fn entry_hazards<const N: usize>(
                     } else {
                         Status::Poison
                     };
-                    b.try_set_status_from(slot, status, Some(foe_lead));
+                    b.try_set_status_from_toxic_spikes(slot, status, Some(foe_lead));
                 }
             }
             SideEffect::StickyWeb

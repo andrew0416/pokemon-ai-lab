@@ -1,0 +1,80 @@
+{
+ "description": "R0 refusal repro (board R8): Snorlax used Counter in the setup turn (it failed: not hit). In the decision turn Sableye's Prankster Encore hits it before it moves; the Champions Encore replaces Snorlax's queued Curse with Counter (`queue.changeAction`), whose `beforeTurnCallback` queues one more action. The engine refuses (`Battle::refused`).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Sableye",
+    "item": "",
+    "ability": "Prankster",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Encore",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Counter",
+     "Curse"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move calmmind, move protect",
+   "move counter, move protect"
+  ]
+ ],
+ "turn": {
+  "p1": "move encore 1, move calmmind",
+  "p2": "move curse, move calmmind"
+ }
+}

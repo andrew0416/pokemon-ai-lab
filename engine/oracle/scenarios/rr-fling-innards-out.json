@@ -1,0 +1,92 @@
+{
+ "description": "R0 refusal repro (board R16): Victreebel Mega Evolves (setup turn, Innards Out) and is patched to 5 HP; Snorlax (patched to 3 HP) knocks it out with a flung Iron Ball, and Innards Out's 5 damage faints Snorlax before the Update that would throw its item. The engine refuses.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "Iron Ball",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Fling",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Victreebel",
+    "item": "Victreebelite",
+    "ability": "Chlorophyll",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Swords Dance"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move protect, move calmmind",
+   "move protect mega, move calmmind"
+  ]
+ ],
+ "patch": {
+  "p1": {
+   "Snorlax": {
+    "hp": 3
+   }
+  },
+  "p2": {
+   "Victreebel": {
+    "hp": 5
+   }
+  }
+ },
+ "turn": {
+  "p1": "move fling 1, move calmmind",
+  "p2": "move swordsdance, move calmmind"
+ }
+}

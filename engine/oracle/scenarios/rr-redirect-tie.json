@@ -1,0 +1,75 @@
+{
+ "description": "R0 refusal repro (board R4): Clefable's Follow Me and Ariados's Rage Powder at equal Speed 72 (their order is a Speed tie); Garchomp's Dragon Claw is then redirected by the one Showdown orders first by `effectOrder` (Clefable: Fairy, immune; Ariados: hit). The engine refuses the tie.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Rough Skin",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Dragon Claw",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Brave",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Follow Me",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Ariados",
+    "item": "",
+    "ability": "Insomnia",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spe": 12
+    },
+    "moves": [
+     "Rage Powder",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move dragonclaw 1, move calmmind",
+  "p2": "move followme, move ragepowder"
+ }
+}

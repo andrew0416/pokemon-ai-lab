@@ -1,0 +1,20 @@
+{
+ "description": "R0 audit, out of scope (a mismatch, not a refusal): Oranguru instructs Snorlax, whose last move is Counter. Showdown's Instruct prioritizes `queue.resolveAction(...)[0]`, which for a move with a beforeTurnCallback is the `beforeTurnMove` action: only Counter's callback runs (no move, no PP). The engine runs Counter itself (one PP less).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {"species": "Oranguru", "item": "", "ability": "Inner Focus", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Instruct", "Calm Mind"], "level": 50},
+   {"species": "Umbreon", "item": "", "ability": "Inner Focus", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Calm Mind", "Protect"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Counter", "Curse"], "level": 50},
+   {"species": "Gourgeist", "item": "", "ability": "Insomnia", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Protect", "Trick-or-Treat"], "level": 50}
+  ],
+  "order": "12"
+ },
+ "setupTurns": [["move calmmind, move calmmind", "move counter, move protect"]],
+ "turn": {"p1": "move instruct 1, move calmmind", "p2": "move curse, move trickortreat 2"}
+}

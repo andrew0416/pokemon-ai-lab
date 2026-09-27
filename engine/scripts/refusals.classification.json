@@ -1,0 +1,488 @@
+{
+ "producers": [
+  "support.rs::check_state",
+  "support.rs::move_unsupported",
+  "support.rs::sleep_talk_problem",
+  "mega.rs::mega_target",
+  "mod.rs::switching_problem_at_start",
+  "switching.rs::switch_in_problem",
+  "forme.rs::field_problem",
+  "abilities.rs::symbiosis_problem",
+  "abilities.rs::rivalry_problem",
+  "abilities.rs::paradox_suppressor_problem",
+  "update.rs::berry_problem",
+  "moves/handlers.rs::called_move_problem"
+ ],
+ "proposed_boards": {
+  "R21-copycat-called-moves": "Copycat calling a two-turn move (the caller becomes locked into the charge), a move that locks its user (lockedmove) or one that queues its own action (Mirror Coat's beforeTurnCallback, Chilly Reception's priorityChargeCallback) — shares moves::call_move with R14.",
+  "R22-forced-eat-ignored-item": "Teatime / Stuff Cheeks (eatItem(true)) for a holder that ignores its item (Klutz, Magic Room): the Eat event is skipped, the berry still goes and EatItem still runs; eat_item_forced also never runs EatItem (Cheek Pouch, Cud Chew, Ripen), unverified."
+ },
+ "fixed": {
+  "{}: no PP left when used": {
+   "board": "R15-no-pp-when-used", "fixture": "rr-spite-no-pp",
+   "what": "Spite / Eerie Spell taking the last PP after the choice: now Showdown's `cant ... nopp` (the move fails, no `lastMove`, no MoveAborted) in `moves::run_move_inner`."
+  },
+  "Toxic Spikes poisoning a Synchronize holder (Synchronize ignores Toxic Spikes)": {
+   "board": "R2-hazard-effect-order", "fixture": "rr-toxic-spikes-synchronize",
+   "what": "`Battle::try_set_status_from_toxic_spikes` skips Synchronize's `onAfterSetStatus` (`effect.id === 'toxicspikes'`)."
+  },
+  "{} hitting a holder of {} (Eject Button)": {
+   "board": "R5-future-move-edges", "fixture": "rr-future-sight-eject-button",
+   "what": "Eject Button ignores future moves (`!move.flags['futuremove']`): the hit loop skips it for a future hit; only Red Card stays refused under the same message."
+  },
+  "Instruct repeating {}, which the target does not know (Struggle, Transform)": {
+   "board": "R6-instruct", "fixture": "rr-instruct-struggle",
+   "what": "Instruct checks the last move's flags (`failinstruct`, charge, recharge, Z, Max) before looking for its slot, as Showdown does; the refusal stays for a last move outside the slots that the flags do not fail, which no standard battle has (E11)."
+  }
+ },
+ "entries": {
+  "Trace has no traceable foe and would keep seeking on later Updates": {
+   "reachable": "yes", "kind": "mechanic", "board": "R1-trace-seeking", "repro": "rr-trace-no-traceable",
+   "why": "A standard Trace holder (Gardevoir; Mega Alakazam / Meowstic) facing only `notrace` foes (Mimikyu, Aegislash, Ditto, Zoroark, Palafin, Morpeko, Castform, Passimian, another Trace) or no foe keeps seeking on every later Update; the state has no seeking flag."
+  },
+  "{}: ability {} ({})": {
+   "reachable": "yes", "kind": "mechanic", "board": "R1-trace-seeking", "repro": "rr-mega-alakazam-trace",
+   "why": "Trace is the one standard ability `ability_supported_on_field` rejects (it is only handled as a switch-in). `mega_target` therefore refuses every Trace Mega (Alakazam-Mega, Meowstic-M-Mega, Meowstic-F-Mega), and `check_state` refuses a Trace that never started (Gastro Acid passed by Baton Pass: `rr-trace-gastro-acid-baton-pass`). Every other ability behind this message is outside the range (E1); `switch_in_problem` exempts Trace."
+  },
+  "check_side: -> mega::mega_target(mon)": {
+   "reachable": "yes", "kind": "forward", "board": "R1-trace-seeking", "repro": "rr-mega-alakazam-trace",
+   "why": "Forwards `mega_target` for a Mega choice: reachable through its `{}: ability {} ({})` (Trace Megas); `{} holding {} has no Mega Evolution` and `{}: species callbacks {}` are not."
+  },
+  "check_turn: -> support::check_state(state)": {
+   "reachable": "yes", "kind": "forward", "board": "R1-trace-seeking", "repro": "rr-trace-gastro-acid-baton-pass",
+   "why": "Forwards `check_state`: reachable through `{}: ability {} ({})` (a Trace that never started) and the Rivalry gender check (R13)."
+  },
+  "{}: Trace still seeking a target": {
+   "reachable": "no", "kind": "invariant", "board": "R1-trace-seeking",
+   "why": "Shadowed: `check_state` tests `ability_supported_on_field` first, which is false for Trace, so any Trace left on the field is refused with `{}: ability {} ({})` before this line (seen in `rr-trace-gastro-acid-baton-pass`)."
+  },
+  "Trace next to No Ability": {
+   "reachable": "no", "kind": "past-only", "board": "R1-trace-seeking",
+   "why": "No standard species has No Ability and nothing sets it (E8)."
+  },
+  "Trace copying {} (cantsuppress: setAbility fails and Trace keeps seeking)": {
+   "reachable": "no", "kind": "past-only", "board": "R1-trace-seeking",
+   "why": "Every standard `cantsuppress` ability (Battle Bond, Disguise, Stance Change, Zero to Hero) is also `notrace`, so Trace never picks one (E6)."
+  },
+  "Trace copying {} ({})": {
+   "reachable": "no", "kind": "static", "board": "R1-trace-seeking",
+   "why": "Trace copies a standard ability on the field; every one starts and is supported on the field (E1: no ability refused, none switch-in-only)."
+  },
+  "{} switching into hazards whose order (Showdown effectOrder) decides the outcome": {
+   "reachable": "yes", "kind": "mechanic", "board": "R2-hazard-effect-order", "repro": "rr-hazard-order",
+   "why": "Stealth Rock / Spikes with Toxic Spikes (or Sticky Web against Mirror Armor, Corviknight) on one side and a newcomer the damage can knock out: Showdown runs them in the order they were set (a Poison type knocked out first leaves the Toxic Spikes), which the state does not keep."
+  },
+  "Emergency Exit of a replacement hit by entry hazards": {
+   "reachable": "yes", "kind": "mechanic", "board": "R3-emergency-exit-replacement", "repro": "rr-emergency-exit-replacement",
+   "why": "Golisopod (Emergency Exit) replacing a fainted Pokémon onto Stealth Rock / Spikes that take it to half: Showdown asks for another switch before the turn ends; the replacement decision cannot suspend."
+  },
+  "redirection tie between {} and {} (Showdown breaks it by effectOrder)": {
+   "reachable": "yes", "kind": "mechanic", "board": "R4-redirection-tie", "repro": "rr-redirect-tie",
+   "why": "Two redirectors of one priority at equal Speed (Follow Me and Rage Powder users, two Lightning Rod holders): Showdown orders them by `effectOrder`, which the state does not keep."
+  },
+  "{} of {} hitting after its user left the field": {
+   "reachable": "yes", "kind": "mechanic", "board": "R5-future-move-edges", "repro": "rr-future-sight-user-left",
+   "why": "Future Sight whose user switched out or fainted before the hit: Showdown uses the benched user's stored stats (no ability or item); the engine has no attacker off the field."
+  },
+  "{} hitting a holder of {}": {
+   "reachable": "yes", "kind": "mechanic", "board": "R5-future-move-edges", "repro": "rr-future-sight-red-card",
+   "why": "Future Sight hitting a Red Card holder: the card drags the user out after the residual. (Eject Button ignores future moves and is no longer refused: fixed in this audit, `rr-future-sight-eject-button`.)"
+  },
+  "{}: a multi-hit future move": {
+   "reachable": "no", "kind": "invariant", "board": "R5-future-move-edges",
+   "why": "The hit loop suspends only between hits of a multi-hit move. The only standard future move is Future Sight (one hit; Doom Desire is not standard, E8), and Parental Bond skips `futuremove` moves."
+  },
+  "Instruct repeating {} (its lastMoveTargetLoc is not kept)": {
+   "reachable": "yes", "kind": "mechanic", "board": "R6-instruct", "repro": "rr-instruct-target",
+   "why": "Instruct (Oranguru) on a Pokémon whose last move takes a target (any single-target move): Showdown repeats it at `lastMoveTargetLoc`, which the state does not keep."
+  },
+  "Instruct on a Quick Claw holder": {
+   "reachable": "yes", "kind": "mechanic", "board": "R6-instruct", "repro": "rr-instruct-quick-claw",
+   "why": "Quick Claw is standard; `resolveAction` draws its fractional priority again for the instructed action."
+  },
+  "Instruct on a Quick Draw holder": {
+   "reachable": "yes", "kind": "mechanic", "board": "R6-instruct", "repro": "rr-instruct-quick-draw",
+   "why": "Quick Draw (Slowbro-Galar) is standard; a non-status instructed move draws it again."
+  },
+  "Instruct repeating {}, which the target does not know": {
+   "reachable": "no", "kind": "invariant", "board": "R6-instruct",
+   "why": "Showdown sets `lastMove` only in `runMove` (not for called moves), so a last move outside the move slots is Struggle or Transform; both are `failinstruct` (E11), which now fails Instruct before the slot lookup (fixed in this audit: `rr-instruct-struggle`)."
+  },
+  "{} aimed at a side whose Pokémon Ally Switch swapped (it tracks its original target)": {
+   "reachable": "yes", "kind": "mechanic", "board": "R7-ally-switch-target", "repro": "rr-ally-switch-snipe-shot",
+   "why": "Ally Switch (standard) swaps the side a Snipe Shot (Inteleon) or a Stalwart holder's move (Archaludon, Mega Skarmory) aims at; Showdown keeps the original target, which the queue does not hold."
+  },
+  "Encore replacing a queued action with {} (a callback action it would queue)": {
+   "reachable": "yes", "kind": "mechanic", "board": "R8-encore-edges", "repro": "rr-encore-counter",
+   "why": "The Champions Encore replaces the target's queued action (`queue.changeAction`); an encored Counter, Mirror Coat, Focus Punch, Beak Blast or Chilly Reception (none `failencore`, E10) queues its callback action too."
+  },
+  "stage_end_check: -> what.clone()": {
+   "reachable": "yes", "kind": "forward", "board": "R8-encore-edges", "repro": "rr-encore-counter",
+   "why": "Forwards `Battle::refused`, set only by the Encore message above."
+  },
+  "Encore into a move the user no longer has": {
+   "reachable": "no", "kind": "invariant", "board": "R8-encore-edges",
+   "why": "Move slots change only through Transform (refused while encored; Encore is `noCopy` and ends on switching) and Mimic / Sketch (not standard, E8), so an encored move stays in the slots."
+  },
+  "Transform by an encored Pokémon (the encored move leaves the move slots)": {
+   "reachable": "no", "kind": "invariant", "board": "R8-encore-edges",
+   "why": "Transform is `failencore`, `failcopycat`, `nosleeptalk` and `failinstruct`, so an encored Pokémon can only run it by choosing it, and the Champions Encore replaces that queued action with the encored move first (a Mental Herb holder is cured at once); Imposter transforms on switch-in, when Encore is gone (`noCopy`)."
+  },
+  "Beat Up with benched allies of different power {} (their order in Showdown's side.pokemon depends on the switches so far, which the state does not keep)": {
+   "reachable": "yes", "kind": "mechanic", "board": "R9-beat-up-order", "repro": "rr-beat-up-bench",
+   "why": "Beat Up (standard) with two eligible benched allies of different base Attack: the hit order follows `side.pokemon`, which switches reorder."
+  },
+  "{} after the battle start (its once-per-battle flag is not in the state)": {
+   "reachable": "yes", "kind": "mechanic", "board": "R10-once-per-battle-flags", "repro": "rr-supersweet-syrup-switch",
+   "why": "Supersweet Syrup (Hydrapple) starting after the battle start (a switch-in, a Skill Swap); `pokemon.syrupTriggered` is not in the state. Intrepid Sword and Dauntless Shield are not standard."
+  },
+  "{}: Battle Bond (its once-per-battle `bondTriggered` is not in the state)": {
+   "reachable": "no", "kind": "past-only", "board": "R10-once-per-battle-flags",
+   "why": "Only Greninja-Bond and Greninja-Ash (not standard, E8) are refused; standard Greninja's Battle Bond does nothing."
+  },
+  "Recycle restoring {} (its onStart)": {
+   "reachable": "yes", "kind": "mechanic", "board": "R11-item-restart", "repro": "rr-recycle-seed",
+   "why": "Recycle (standard) bringing back a Terrain Seed, White Herb or Metronome, whose `onStart` acts on the new holder."
+  },
+  "Pickup restoring {} (its Start / End for a new holder)": {
+   "reachable": "no", "kind": "static", "board": "R11-item-restart",
+   "why": "Every standard item with onStart / onEnd is one Trick moves (E3), which Pickup's check accepts."
+  },
+  "Syrup Bomb's residual with its source neither active nor fainted in place": {
+   "reachable": "no", "kind": "invariant", "board": "R12-syrup-bomb-source",
+   "why": "A source leaves the field only by a switch or a drag, and every action ends with an Update in which Syrup Bomb's `onUpdate` removes the volatile; a fainted source stays in place until the replacement after the residual."
+  },
+  "Attract between {} and {} with an undecided gender (give the sets a gender)": {
+   "reachable": "yes", "kind": "input", "board": "R13-attract-gender", "repro": "rr-cute-charm-undecided-gender",
+   "why": "Cute Charm (Clefable, Milotic, Lopunny, Wigglytuff) next to a set without a gender: Showdown drew the gender at team creation (`battle.sample(['M', 'F'])`), the scenario does not say which."
+  },
+  "{} with {} of undecided gender (give the set a gender)": {
+   "reachable": "yes", "kind": "input", "board": "R13-attract-gender", "repro": "rr-attract-undecided-gender",
+   "why": "Attract (standard) between sets without a gender (Captivate is not standard)."
+  },
+  "Rivalry next to {} of undecided gender (give the set a gender)": {
+   "reachable": "yes", "kind": "input", "board": "R13-attract-gender", "repro": "rr-rivalry-undecided-gender",
+   "why": "Rivalry (Luxray, Pyroar) on the field next to a set without a gender."
+  },
+  "{}: Rivalry next to a Pokémon of undecided gender": {
+   "reachable": "yes", "kind": "input", "board": "R13-attract-gender", "repro": "rr-rivalry-switch-in-undecided-gender",
+   "why": "A Rivalry holder switching in next to a set without a gender."
+  },
+  "switch_in_as: -> why": {
+   "reachable": "yes", "kind": "forward", "board": "R13-attract-gender", "repro": "rr-rivalry-switch-in-undecided-gender",
+   "why": "Forwards `switch_in_problem`: reachable only through its Rivalry gender message; the others are E1, E2, E3, E8."
+  },
+  "Skill Swap: {}": {
+   "reachable": "no", "kind": "invariant", "board": "R13-attract-gender",
+   "why": "Symbiosis part: every standard item moves (E3). Rivalry part: the Rivalry holder is on the field before Skill Swap runs, so `check_state` (at the turn start) or `switch_in_problem` (on its switch-in) already refused an undecided gender."
+  },
+  "{} called by {}: a multi-hit called move": {
+   "reachable": "yes", "kind": "mechanic", "board": "R14-called-multi-hit", "repro": "rr-copycat-multihit",
+   "why": "Copycat calling one of the 14 standard multi-hit moves (Double Hit, Bullet Seed, Scale Shot, Population Bomb, ...): the hits of a called move cannot suspend between stages. (Sleep Talk is refused earlier, below.)"
+  },
+  "Sleep Talk calling {} (a multi-hit move)": {
+   "reachable": "yes", "kind": "mechanic", "board": "R14-called-multi-hit", "repro": "rr-sleep-talk-multihit",
+   "why": "Choosing Sleep Talk with a multi-hit move in the slots (none is `nosleeptalk`)."
+  },
+  "check_side: -> why": {
+   "reachable": "yes", "kind": "forward", "board": "R14-called-multi-hit", "repro": "rr-sleep-talk-multihit",
+   "why": "Forwards `move_unsupported` (Struggle, the chosen move: E1) and `sleep_talk_problem` (reachable: multi-hit)."
+  },
+  "Sleep Talk calling {} (its onAfterMove, unchecked for a called move)": {
+   "reachable": "no", "kind": "static", "board": "R14-called-multi-hit",
+   "why": "The standard moves with an onAfterMove are Sparkling Aria and Spit Up (checked for a called move) and Beak Blast, which is `nosleeptalk` and `failcopycat` (E12)."
+  },
+  "Sleep Talk could call {}": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "Forwards the static gate for the user's own moves: no standard move is refused (E1)."
+  },
+  "Copycat calling {}": {
+   "reachable": "yes", "kind": "mechanic", "board": "R21-copycat-called-moves", "repro": "rr-copycat-two-turn",
+   "why": "Copycat (standard) calling the last move used in the battle: a two-turn move (Solar Beam, Fly, Dig, Dive, ...; `rr-copycat-two-turn`), a locking move (Outrage, Petal Dance, Thrash, Raging Fury; `rr-copycat-outrage`) or one with its own queued action (Mirror Coat, Chilly Reception are not `failcopycat`; `rr-copycat-mirror-coat`)."
+  },
+  "{} ({})": {
+   "reachable": "yes", "kind": "forward", "board": "R21-copycat-called-moves", "repro": "rr-copycat-two-turn",
+   "why": "`called_move_problem`'s wrapper of its reasons (the move and why)."
+  },
+  "a two-turn move": {
+   "reachable": "yes", "kind": "mechanic", "board": "R21-copycat-called-moves", "repro": "rr-copycat-two-turn",
+   "why": "Copycat calling a standard charge move (10 of them, none `failcopycat`)."
+  },
+  "a lock on the called move": {
+   "reachable": "yes", "kind": "mechanic", "board": "R21-copycat-called-moves", "repro": "rr-copycat-outrage",
+   "why": "Copycat calling Outrage, Petal Dance, Thrash or Raging Fury (`lockedmove`)."
+  },
+  "queue actions of its own": {
+   "reachable": "yes", "kind": "mechanic", "board": "R21-copycat-called-moves", "repro": "rr-copycat-mirror-coat",
+   "why": "Copycat calling Mirror Coat or Chilly Reception (Counter, Focus Punch and Beak Blast are `failcopycat`, E10)."
+  },
+  "its onAfterMove, unchecked for a called move": {
+   "reachable": "no", "kind": "static", "board": "R21-copycat-called-moves",
+   "why": "Beak Blast is the only standard move with an unchecked onAfterMove and it is `failcopycat` (E12)."
+  },
+  "Mirror Move calling {}": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Mirror Move is not standard (E8); nothing calls it (Copycat copies moves used on the field)."
+  },
+  "Nature Power calling {}": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Nature Power is not standard (E8)."
+  },
+  "Fling's user fainted before its item was thrown": {
+   "reachable": "yes", "kind": "mechanic", "board": "R16-fling-user-fainted", "repro": "rr-fling-innards-out",
+   "why": "Fling knocking out Mega Victreebel (Innards Out), whose damage faints the user before the Update that throws the item. The `run_move_inner` guard never fired (the hit loop's faint processing clears the volatile first) and the engine answered wrongly; this audit added the guard in `update_event`."
+  },
+  "Trick-or-Treat's Curse Glitch (a queued Curse of the Ghost-typed target)": {
+   "reachable": "yes", "kind": "mechanic", "board": "R17-trick-or-treat-curse", "repro": "rr-trick-or-treat-curse-glitch",
+   "why": "Trick-or-Treat (Gourgeist) and Curse (Snorlax and others) are both standard; the target in the second position with Curse queued gets `targetLoc = -1`."
+  },
+  "Baton Pass passing the {} volatile": {
+   "reachable": "no", "kind": "invariant", "board": "R18-baton-pass-volatiles",
+   "why": "The refused volatiles are locks and charges (Outrage, recharge, two-turn moves, Rollout, Uproar), during which the Pokémon can only use the locked move, and Roost's, which lasts only the turn Roost was used (one action per turn; Sleep Talk needs sleep, which ends `lockedmove` and aborts charges, and Uproar prevents sleep)."
+  },
+  "{}: transformed off the field": {
+   "reachable": "no", "kind": "invariant", "board": "R19-transformed-off-field",
+   "why": "Leaving the field reverts Transform (`clearVolatile`), so the engine never produces this state; only a hand-built state has it."
+  },
+  "Transform copying {} ({})": {
+   "reachable": "no", "kind": "static", "board": "R19-transformed-off-field",
+   "why": "Transform copies a standard ability on the field; all are supported (E1)."
+  },
+  "{} eaten by force while its holder ignores its item": {
+   "reachable": "yes", "kind": "mechanic", "board": "R22-forced-eat-ignored-item", "repro": "rr-teatime-klutz",
+   "why": "Teatime (Polteageist) or Stuff Cheeks with a berry held by a Klutz holder (Lopunny, Audino, Golurk) or under Magic Room: Showdown skips the berry's Eat event but still consumes it and runs EatItem."
+  },
+  "{} eaten by force": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "Every standard berry's onEat is implemented or empty (E4)."
+  },
+  "Cud Chew eating {}": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "Every standard berry's onEat is implemented or empty (E4)."
+  },
+  "{} eating {}": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "Bug Bite / Pluck: every standard berry's onEat is implemented or empty (E4)."
+  },
+  "Fling feeding {}": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "Every standard berry's onEat is implemented or empty (E4)."
+  },
+  "Trick moving {} ({})": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "Every standard item with onStart / onEnd moves and the only other onTakeItem items are Mega Stones (E3)."
+  },
+  "{} moving {} ({})": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "Covet / Thief (Bestow is not standard): every standard item moves (E3)."
+  },
+  "an ability stealing {} ({})": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "Pickpocket / Magician: every standard item moves (E3)."
+  },
+  "{}: Symbiosis holding {} ({})": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "Every standard item moves (E3)."
+  },
+  "{} gaining {} ({})": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "`setAbility` gives an ability already on the field (Role Play, Entrainment, Receiver, Mummy) or Simple / Insomnia (Simple Beam, Worry Seed), all supported (E1)."
+  },
+  "ability {} starting ({})": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "Every standard ability's start is implemented (E1: none is switch-in-only)."
+  },
+  "ability {} ending ({})": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "Every standard ability with onEnd is handled in `end_ability` (E5)."
+  },
+  "{}: onWeatherChange": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "Forecast is the only standard onWeatherChange holder and is excluded (E7)."
+  },
+  "{} restarting after Neutralizing Gas at 0 HP": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Neutralizing Gas is on no standard species and is `notransform` / `failroleplay` / `failskillswap` / `noentrain` / `noreceiver` (E8)."
+  },
+  "Gluttony restarting after Neutralizing Gas (its abilityState.gluttony = false)": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Needs Neutralizing Gas (E8)."
+  },
+  "two Dancers with the same Speed (Showdown orders them by abilityState.effectOrder)": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Dancer (Oricorio) is not standard, and copying it needs a holder on the field (E8)."
+  },
+  "Dancer copying {}: a multi-hit move": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Dancer is not standard (E8)."
+  },
+  "Zygarde-Complete fainting (Power Construct's formeRegression to the set's forme)": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Zygarde is not standard (E8)."
+  },
+  "Shields Down on {}: the core colour (the set's species) is not in the state": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Minior is not standard (E8)."
+  },
+  "Power Construct on {}": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Zygarde is not standard (E8)."
+  },
+  "Power Construct making a Zygarde holding {} able to Mega Evolve": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Zygarde is not standard (E8)."
+  },
+  "{}: Utility Umbrella's `inactive` item state past the end of a stage (its onUpdate has not run)": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Utility Umbrella is not standard (E8)."
+  },
+  "{}: Mirror Herb keeps copied boosts past the end of a stage (its effectState persists until the next trigger)": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Mirror Herb is not standard (E8)."
+  },
+  "a switch request for {} slot {} (Eject Pack) during {}": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "During the battle start or a replacement only Eject Pack (not standard, E8) raises a switch request; a replacement's Emergency Exit is refused before (R3)."
+  },
+  "Order Up from a commanded Dondozo whose Tatsugiri is gone (the source of `commanded` is not in the state)": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Order Up, Tatsugiri and Dondozo are not standard (E8)."
+  },
+  "Relic Song: Meloetta changing forme after fainting": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Relic Song and Meloetta are not standard (E8)."
+  },
+  "Ally Switch in triples": {
+   "reachable": "no", "kind": "shape", "board": "R20-generic-guards",
+   "why": "The engine runs singles and doubles only (`State<1>`, `State<2>`)."
+  },
+  "{} bounced: a multi-hit move": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "Magic Bounce reflects status moves, and no standard multi-hit move is a status move (E9)."
+  },
+  "{}: damageCallback of {}": {
+   "reachable": "no", "kind": "invariant", "board": "R20-generic-guards",
+   "why": "Of the standard callbacks, Endeavor runs only when the user has less HP (its onTryImmunity), Super Fang, Metal Burst and Comeuppance return at least 1, Final Gambit the user's HP, and Counter / Mirror Coat 0 only without their condition, when their onTry already failed (Psywave, Nature's Madness, Ruination are not standard)."
+  },
+  "{} activation (effects not implemented)": {
+   "reachable": "no", "kind": "ruleset", "board": "R20-generic-guards",
+   "why": "The M-C ruleset allows only Mega Evolution; other gimmicks are rejected before (`ActionError`)."
+  },
+  "run_mega_evo: -> why": {
+   "reachable": "no", "kind": "forward", "board": "R20-generic-guards",
+   "why": "Shadowed: `check_side` runs the same `mega_target` on the chosen Pokémon, and nothing changes its species or item between the choice and the Mega action (Mega Stones cannot be taken)."
+  },
+  "enumerate_start: -> why": {
+   "reachable": "no", "kind": "forward", "board": "R20-generic-guards",
+   "why": "Forwards `switching_problem_at_start`: no standard item, species or ability has an unimplemented switch-in handler (E1, E2)."
+  },
+  "{}: item {} switch-in handler {}": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "No standard item is refused only at switch-in (E1)."
+  },
+  "{}: species switch-in handler {}": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "No standard species has callbacks (E2)."
+  },
+  "{}: ability {} switch-in handler ({})": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "No standard ability is refused only at switch-in (E1)."
+  },
+  "{}: ability {} switch-in handler {}": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "No standard ability is refused only at switch-in (E1)."
+  },
+  "{}: item {} ({})": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "No standard item is refused by the gate (E1)."
+  },
+  "{}: species callbacks": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "No standard species has callbacks (E2)."
+  },
+  "{}: species callbacks {}": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "No standard Mega has species callbacks (E2)."
+  },
+  "{} holding {} has no Mega Evolution": {
+   "reachable": "no", "kind": "invariant", "board": "R20-generic-guards",
+   "why": "Mega eligibility comes from the same stone table (`gimmick::structural_gimmicks`), so the ruleset rejects a Mega choice without a Mega Evolution first."
+  },
+  "{}: Protosynthesis / Flower Gift next to Air Lock / Cloud Nine (the suppressor's End WeatherChange)": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Protosynthesis and Flower Gift are on no standard species and cannot be copied (E8)."
+  },
+  "Protosynthesis / Flower Gift next to Air Lock / Cloud Nine (the suppressor's End WeatherChange)": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Protosynthesis and Flower Gift are on no standard species and cannot be copied (E8)."
+  },
+  "{}: {} would confuse a {} nature (confusion is not implemented)": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "The five Figy-type berries are not standard (E8). (The message is stale: `berry_on_eat` already adds the confusion.)"
+  },
+  "field effect #{} (value {})": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Only the primal weathers are outside sun / rain / sand / snow, and their holders are not standard (E8)."
+  },
+  "field effect #{} without a duration": {
+   "reachable": "no", "kind": "past-only", "board": "R20-generic-guards",
+   "why": "Only the primal weathers are permanent (E8); every standard weather, terrain and room has a duration."
+  },
+  "side effect #{}": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "The unsupported side effects come only from moves the gate refuses (Pledges, G-Max moves: E1)."
+  },
+  "{} with {}": {
+   "reachable": "no", "kind": "invariant", "board": "R20-generic-guards",
+   "why": "Hazard layers and durations as the engine sets them; only a hand-built state differs."
+  },
+  "{}: Dynamax": {
+   "reachable": "no", "kind": "ruleset", "board": "R20-generic-guards",
+   "why": "The M-C ruleset forbids Dynamax."
+  },
+  "{}: substitute volatile {} with {} HP": {
+   "reachable": "no", "kind": "invariant", "board": "R20-generic-guards",
+   "why": "The engine sets the volatile and its HP together; only a hand-built state differs."
+  },
+  "move {}: {}": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards",
+   "why": "The static gate's wrapper; no standard move is refused (E1)."
+  },
+  "callbacks {} are not implemented": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards", "why": "No standard move is refused (E1)."
+  },
+  "volatile {}": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards", "why": "No standard move is refused (E1)."
+  },
+  "side condition {}": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards", "why": "No standard move is refused (E1)."
+  },
+  "field effect {}": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards", "why": "No standard move is refused (E1)."
+  },
+  "secondary volatile {}": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards", "why": "No standard move is refused (E1)."
+  },
+  "multi-hit range": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards", "why": "No standard move is refused (E1)."
+  },
+  "a special mechanic": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards", "why": "No standard move is refused (E1)."
+  },
+  "stalling move": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards", "why": "No standard move is refused (E1)."
+  },
+  "two-turn move": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards", "why": "No standard move is refused (E1)."
+  },
+  "slot condition": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards", "why": "No standard move is refused (E1)."
+  },
+  "self effect": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards", "why": "No standard move is refused (E1)."
+  },
+  "status move with base power": {
+   "reachable": "no", "kind": "static", "board": "R20-generic-guards", "why": "No standard move is refused (E1)."
+  }
+ }
+}

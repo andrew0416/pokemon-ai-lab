@@ -434,9 +434,9 @@ pub(crate) fn priority_charge_move<const N: usize>(
 /// is Normal) with the source as the user: its current stats, boosts, ability and item if it is
 /// on the field (Showdown ignores an inactive source's ability and item and uses its stored
 /// stats; that case is unsupported). No PP, BeforeMove or AfterMoveSecondarySelf; only Life
-/// Orb's recoil follows, for an active holder, whether or not the move hit. Eject Button (which
-/// ignores future moves) and Red Card (its drag would wait for the end of the residual) on the
-/// target are unsupported.
+/// Orb's recoil follows, for an active holder, whether or not the move hit. Eject Button ignores
+/// future moves (the hit loop skips it); Red Card (its drag would wait for the end of the
+/// residual) on the target is unsupported.
 pub(crate) fn future_move_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
@@ -458,7 +458,7 @@ pub(crate) fn future_move_hit<const N: usize>(
             b.mon(source).species.data().name
         )));
     };
-    if [items::EJECT_BUTTON, items::RED_CARD].contains(&b.item(slot)) {
+    if b.item(slot) == items::RED_CARD {
         return Err(b.unsupported(format!(
             "{} hitting a holder of {}",
             data.name,
@@ -841,8 +841,14 @@ fn run_move_inner<const N: usize>(
     // slot, and Struggle goes on anyway).
     if super::lock::locked_move(b.state, user).is_none() && !struggle {
         let pp = b.mon(pokemon).moves[move_index as usize].pp;
+        // `if (!pokemon.deductPP(baseMove, null, target) && move.id !== 'struggle')`: Spite or
+        // Eerie Spell took the last PP after the move was chosen. `cant ... nopp`,
+        // `clearActiveMove(true)`, `moveThisTurnResult = false`; no `lastMove`, no MoveAborted
+        // (oracle `rr-spite-no-pp`).
         if pp == 0 {
-            return Err(b.unsupported(format!("{}: no PP left when used", mv.data.name)));
+            b.set_move_result(user, MoveResult::Failed);
+            b.active_move = None;
+            return Ok(MoveStep::Done);
         }
         b.apply(crate::instruction::Instruction::SetPp {
             target: pokemon,
@@ -2773,7 +2779,11 @@ fn hit_loop<const N: usize>(
                     ability_events::color_change(b, t, mv.move_type, mv.data.category);
                 }
                 item_events::AfterMoveSecondaryHandler::Item => {
-                    item_events::after_move_secondary(b, user, t, mv.data.category);
+                    // Eject Button: `!move.flags['futuremove']` (a future move's hit never ejects;
+                    // oracle `rr-future-sight-eject-button`).
+                    if !(mv.future_hit && b.item(t) == items::EJECT_BUTTON) {
+                        item_events::after_move_secondary(b, user, t, mv.data.category);
+                    }
                 }
             }
         }

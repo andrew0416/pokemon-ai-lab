@@ -1,0 +1,74 @@
+{
+ "description": "R0 refusal repro (board R11): Snorlax's Grassy Seed is used at the battle start (Rillaboom's Grassy Surge); Recycle gives it back and the seed's `onStart` uses it again in the terrain (+1 Def). The engine refuses an item with an acting `onStart` coming back through Recycle.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "Grassy Seed",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Recycle",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Rillaboom",
+    "item": "",
+    "ability": "Grassy Surge",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Swords Dance"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move recycle, move swordsdance",
+  "p2": "move calmmind, move calmmind"
+ }
+}
