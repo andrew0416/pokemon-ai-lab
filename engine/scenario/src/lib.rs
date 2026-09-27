@@ -457,7 +457,10 @@ fn replay_setup_turns(
         rolls: loaded.setup_rolls.unwrap_or(options.rolls),
     };
     for (n, turn) in loaded.setup_turns.iter().enumerate() {
+        let pin = loaded.setup_states.get(n).and_then(|pin| pin.as_ref());
         let mut next: Vec<Position> = Vec::new();
+        // Whether an outcome of this turn still waits for a mid-turn switch (board B29).
+        let mut paused = false;
         for position in &positions {
             let decision =
                 match parse_decision(&position.state, &position.order, &turn.p1, &turn.p2) {
@@ -480,18 +483,24 @@ fn replay_setup_turns(
             for outcome in outcomes {
                 // A setup turn that still waits for a mid-turn switch is not a position: the
                 // suspension cannot be carried into the next turn (board B29). On believed
-                // teams the choices that were made contradict such an outcome.
-                if outcome.suspension.is_some() {
-                    if drop_illegal {
-                        continue;
-                    }
-                    return Err(format!(
-                        "setup turn {}: the turn pauses for a mid-turn switch that has no                          choice; give it in the setup turn's third element (`midTurn`)",
-                        n + 1
-                    ));
-                }
+                // teams the choices that were made contradict such an outcome, which is dropped.
                 let mut end = state.clone();
                 end.apply(&outcome.instructions);
+                if outcome.suspension.is_some() {
+                    // With a pinned outcome the turn's other branches are not the scenario's
+                    // (the U-turn that hit where the game's missed), so a paused one is only
+                    // refused if it is the pinned state itself.
+                    let refused = match pin {
+                        Some(pin) => {
+                            canonical_value(&end, &loaded.meta).map_err(|e| e.to_string())? == *pin
+                        }
+                        None => !drop_illegal,
+                    };
+                    if refused {
+                        paused = true;
+                    }
+                    continue;
+                }
                 let mut order = position.order.clone();
                 advance_order(&mut order, &outcome.instructions);
                 let p = position.probability * outcome.probability;
@@ -505,7 +514,13 @@ fn replay_setup_turns(
                 }
             }
         }
-        if let Some(Some(pin)) = loaded.setup_states.get(n) {
+        if paused {
+            return Err(format!(
+                "setup turn {}: the turn pauses for a mid-turn switch that has no choice; give                  it in the setup turn's third element (`midTurn`)",
+                n + 1
+            ));
+        }
+        if let Some(pin) = pin {
             next = pinned(&loaded.meta, next, pin)
                 .map_err(|e| format!("setup turn {}: {e}", n + 1))?;
         }
