@@ -49,26 +49,6 @@ const REFUSED: &[(&str, &str, &str)] = &[
         "Future Sight hitting a holder of Red Card",
         "R5-future-move-edges",
     ),
-    (
-        "rr-cute-charm-undecided-gender",
-        "with an undecided gender (give the sets a gender)",
-        "R13-attract-gender",
-    ),
-    (
-        "rr-attract-undecided-gender",
-        "Attract with Snorlax of undecided gender",
-        "R13-attract-gender",
-    ),
-    (
-        "rr-rivalry-undecided-gender",
-        "Rivalry next to Luxray of undecided gender",
-        "R13-attract-gender",
-    ),
-    (
-        "rr-rivalry-switch-in-undecided-gender",
-        "Luxray: Rivalry next to a Pokémon of undecided gender",
-        "R13-attract-gender",
-    ),
 ];
 
 /// Each repro still reaches its refusal from the oracle fixture's position (the scenario is
@@ -226,30 +206,6 @@ fn supersweet_syrup_after_the_start() {
 #[test]
 fn recycle_a_seed() {
     assert_exact_parity("rr-recycle-seed");
-}
-
-#[test]
-#[ignore = "refused: Attract between {} and {} with an undecided gender (board R13-attract-gender)"]
-fn cute_charm_with_undecided_genders() {
-    assert_exact_parity("rr-cute-charm-undecided-gender");
-}
-
-#[test]
-#[ignore = "refused: {} with {} of undecided gender (board R13-attract-gender)"]
-fn attract_with_undecided_genders() {
-    assert_exact_parity("rr-attract-undecided-gender");
-}
-
-#[test]
-#[ignore = "refused: Rivalry next to {} of undecided gender (board R13-attract-gender)"]
-fn rivalry_with_undecided_genders() {
-    assert_exact_parity("rr-rivalry-undecided-gender");
-}
-
-#[test]
-#[ignore = "refused: {}: Rivalry next to a Pokémon of undecided gender (board R13-attract-gender)"]
-fn rivalry_switching_in_with_undecided_genders() {
-    assert_exact_parity("rr-rivalry-switch-in-undecided-gender");
 }
 
 #[test]

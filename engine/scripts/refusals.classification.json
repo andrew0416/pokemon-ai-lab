@@ -158,11 +158,10 @@
    "why": "Forwards `mega_target` for a Mega choice; none of its messages is reachable: `{}: ability {} ({})` (every Mega ability is supported, E1; Trace since R1), `{} holding {} has no Mega Evolution` and `{}: species callbacks {}`."
   },
   "check_turn: -> support::check_state(state)": {
-   "reachable": "yes",
+   "reachable": "no",
    "kind": "forward",
    "board": "R13-attract-gender",
-   "repro": "rr-rivalry-undecided-gender",
-   "why": "Forwards `check_state`: reachable through the Rivalry gender check (R13); its `{}: ability {} ({})` is not since R1 (Trace on the field is supported)."
+   "why": "Forwards `check_state`: its Rivalry gender check is unreachable since R13b (the initial distribution decides the genders a Rivalry holder could read); its `{}: ability {} ({})` is not since R1 (Trace on the field is supported)."
   },
   "Trace next to No Ability": {
    "reachable": "no",
@@ -241,32 +240,28 @@
    "why": "A source leaves the field only by a switch or a drag, and every action ends with an Update in which Syrup Bomb's `onUpdate` removes the volatile; a fainted source stays in place until the replacement after the residual."
   },
   "Attract between {} and {} with an undecided gender (give the sets a gender)": {
-   "reachable": "yes",
-   "kind": "input",
+   "reachable": "no",
+   "kind": "invariant",
    "board": "R13-attract-gender",
-   "repro": "rr-cute-charm-undecided-gender",
-   "why": "Cute Charm (Clefable, Milotic, Lopunny, Wigglytuff) next to a set without a gender: Showdown drew the gender at team creation (`battle.sample(['M', 'F'])`), the scenario does not say which."
+   "why": "Cute Charm / Destiny Knot / Attract's volatile between sets without a gender. The scenario crate's initial distribution decides every undecided gender (Showdown's `battle.sample(['M', 'F'])` at team creation, a fair coin per set) whenever a party has Attract / Captivate or a Cute Charm / Rivalry holder or Mega forme (`lab_scenario::decide_genders`, board R13b; fixtures mixed by `oracle/gender-mix.cjs`), so a loaded battle never reads an undecided gender; the guard is left for hand-made states."
   },
   "{} with {} of undecided gender (give the set a gender)": {
-   "reachable": "yes",
-   "kind": "input",
+   "reachable": "no",
+   "kind": "invariant",
    "board": "R13-attract-gender",
-   "repro": "rr-attract-undecided-gender",
-   "why": "Attract (standard) between sets without a gender (Captivate is not standard)."
+   "why": "Attract's onTryImmunity between sets without a gender. The scenario crate's initial distribution decides every undecided gender (Showdown's `battle.sample(['M', 'F'])` at team creation, a fair coin per set) whenever a party has Attract / Captivate or a Cute Charm / Rivalry holder or Mega forme (`lab_scenario::decide_genders`, board R13b; fixtures mixed by `oracle/gender-mix.cjs`), so a loaded battle never reads an undecided gender; the guard is left for hand-made states."
   },
   "Rivalry next to {} of undecided gender (give the set a gender)": {
-   "reachable": "yes",
-   "kind": "input",
+   "reachable": "no",
+   "kind": "invariant",
    "board": "R13-attract-gender",
-   "repro": "rr-rivalry-undecided-gender",
-   "why": "Rivalry (Luxray, Pyroar) on the field next to a set without a gender."
+   "why": "Rivalry on the field next to a set without a gender. The scenario crate's initial distribution decides every undecided gender (Showdown's `battle.sample(['M', 'F'])` at team creation, a fair coin per set) whenever a party has Attract / Captivate or a Cute Charm / Rivalry holder or Mega forme (`lab_scenario::decide_genders`, board R13b; fixtures mixed by `oracle/gender-mix.cjs`), so a loaded battle never reads an undecided gender; the guard is left for hand-made states."
   },
   "{}: Rivalry next to a Pokémon of undecided gender": {
-   "reachable": "yes",
-   "kind": "input",
+   "reachable": "no",
+   "kind": "invariant",
    "board": "R13-attract-gender",
-   "repro": "rr-rivalry-switch-in-undecided-gender",
-   "why": "A Rivalry holder switching in next to a set without a gender."
+   "why": "A Rivalry holder switching in next to a set without a gender. The scenario crate's initial distribution decides every undecided gender (Showdown's `battle.sample(['M', 'F'])` at team creation, a fair coin per set) whenever a party has Attract / Captivate or a Cute Charm / Rivalry holder or Mega forme (`lab_scenario::decide_genders`, board R13b; fixtures mixed by `oracle/gender-mix.cjs`), so a loaded battle never reads an undecided gender; the guard is left for hand-made states."
   },
   "switch_in_as: -> why": {
    "reachable": "yes",

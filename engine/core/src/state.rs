@@ -112,9 +112,11 @@ pub struct Pokemon {
     pub nature: Nature,
     pub stat_points: StatPoints,
     /// Showdown `pokemon.gender`: the set's (`M`, `F`, `N`), else the species' fixed one;
-    /// [`Gender::Random`] when neither decides (Showdown then draws `M` or `F` with the battle's
-    /// PRNG, which the state cannot know: what reads the gender refuses it). Never changes, so
-    /// it does not split positions.
+    /// [`Gender::Random`] when neither decides (Showdown then draws `M` or `F`, a fair coin, with
+    /// the battle's PRNG when the players join). The scenario crate's initial distribution
+    /// decides it whenever something in the battle reads it (board R13b,
+    /// `lab_scenario::decide_genders`), so an undecided gender only remains where nothing reads
+    /// it; the turn engine refuses to read one (a hand-made state). Never changes in a battle.
     pub gender: Gender,
     pub status: Status,
     /// Showdown `statusState.time` for sleep and freeze, `statusState.stage` for toxic.

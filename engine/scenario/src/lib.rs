@@ -49,7 +49,9 @@ pub use decision::{
 pub use error::{LoadError, SetProblem, TeamProblem};
 pub use json::{ScenarioJson, TeamSet};
 pub use meta::{MemberMeta, ScenarioMeta, SideMeta};
-pub use switch_in::{expand_switch_ins, initial_outcomes, InitialOutcome, SwitchInError};
+pub use switch_in::{
+    decide_genders, expand_switch_ins, initial_outcomes, InitialOutcome, SwitchInError,
+};
 pub use team::{build_picked_side, build_pokemon, build_side, picked_order, preview_order};
 
 /// The oracle's doubles format: Champions mechanics, every member brought, level 50.
