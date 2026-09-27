@@ -374,9 +374,17 @@ pub enum Volatile {
     /// and its moves' base power is 5325/4096 (`onBasePower`, priority 14) until the residual.
     /// Added by name, so the dex has no condition id.
     Gem,
+    /// Not a Showdown volatile: Trace's `abilityState.seek` (its `onStart` set it and it has
+    /// copied nothing yet: no adjacent foe had a traceable ability). While it is set, every
+    /// `Update` in which the holder's Trace acts copies a random traceable adjacent foe's ability
+    /// (`switching::trace_update`). It goes with the ability (`setAbility`, Mega Evolution,
+    /// Skill Swap, Transform: `switching::end_ability`) and with the holder leaving the field
+    /// (`switchIn` gives the newcomer a fresh `abilityState`, so Baton Pass never passes it). No
+    /// duration; hidden in the canonical state.
+    TraceSeek,
 }
 
-pub const VOLATILE_COUNT: usize = 111;
+pub const VOLATILE_COUNT: usize = 112;
 
 impl Volatile {
     pub const ALL: [Volatile; VOLATILE_COUNT] = [
@@ -491,6 +499,7 @@ impl Volatile {
         Volatile::Uproar,
         Volatile::Fling,
         Volatile::Gem,
+        Volatile::TraceSeek,
     ];
 
     /// The Showdown condition this volatile is. `ConditionId::NONE` for a volatile that is an
@@ -608,7 +617,8 @@ impl Volatile {
             | Volatile::LockOn
             | Volatile::ChillyReception
             | Volatile::Fling
-            | Volatile::Gem => ConditionId::NONE,
+            | Volatile::Gem
+            | Volatile::TraceSeek => ConditionId::NONE,
         }
     }
 
@@ -726,6 +736,7 @@ impl Volatile {
             Volatile::Uproar => "uproar",
             Volatile::Fling => "fling",
             Volatile::Gem => "gem",
+            Volatile::TraceSeek => "traceseek",
         }
     }
 
@@ -848,7 +859,8 @@ impl Volatile {
             | Volatile::Minimize
             | Volatile::AddedType
             | Volatile::Curse
-            | Volatile::Fling => 0,
+            | Volatile::Fling
+            | Volatile::TraceSeek => 0,
             Volatile::Rollout | Volatile::IceBall => 1,
             Volatile::ZenMode => 0,
         }
@@ -894,7 +906,8 @@ impl Volatile {
             | Volatile::CudChew
             | Volatile::RipenWeaken
             | Volatile::Opportunist
-            | Volatile::AddedType => None,
+            | Volatile::AddedType
+            | Volatile::TraceSeek => None,
             // Two-turn move: the target location is not a canonical field.
             Volatile::Roost
             | Volatile::HelpingHand
@@ -1048,6 +1061,8 @@ impl Volatile {
             | Volatile::CudChew
             | Volatile::RipenWeaken
             | Volatile::Opportunist
+            // Trace's `abilityState.seek`: the newcomer gets a fresh `abilityState`.
+            | Volatile::TraceSeek
             // `pokemon.addedType` is not a volatile; the newcomer keeps its own types.
             | Volatile::AddedType => Passed::Dropped,
             // Removed by the ability's `End` in `switchIn` before `copyVolatileFrom`.
@@ -1285,6 +1300,7 @@ mod tests {
                         | Volatile::ChillyReception
                         | Volatile::Fling
                         | Volatile::Gem
+                        | Volatile::TraceSeek
                 ));
                 continue;
             }

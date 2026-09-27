@@ -1,0 +1,85 @@
+{
+ "description": "R1 (Opus MM; Neutralizing Gas is outside the Champions standard range): at the start Weezing-Galar's Neutralizing Gas (switch-in priority 2) suppresses p2 Gardevoir's Trace before it starts. Weezing switches to Blissey: Neutralizing Gas's End restarts Trace while Weezing is still active, which finds no traceable foe (Neutralizing Gas, Disguise are `notrace`) and seeks; the switch action's Update then copies Blissey's Natural Cure.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Weezing-Galar",
+    "item": "",
+    "ability": "Neutralizing Gas",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Mimikyu",
+    "item": "",
+    "ability": "Disguise",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Gardevoir",
+    "item": "",
+    "ability": "Trace",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Metagross",
+    "item": "",
+    "ability": "Clear Body",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "switch 3, move swordsdance",
+  "p2": "move calmmind, move protect"
+ }
+}

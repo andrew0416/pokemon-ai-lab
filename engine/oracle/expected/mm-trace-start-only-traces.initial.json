@@ -1,0 +1,213 @@
+{
+ "provenance": "engine/oracle/initial.cjs",
+ "scenario": ".claude/worktrees/agent-ab94929e5a2cad9a1/engine/oracle/scenarios/mm-trace-start-only-traces.json",
+ "format": "gen9championsdoublescustomgame",
+ "showdownCommit": "9e317a666d9fd250f36f494778e843141f09bdba",
+ "branches": 32,
+ "distinctOutcomes": 1,
+ "totalProbability": 1,
+ "before": {
+  "schema": 1,
+  "turn": 1,
+  "ended": false,
+  "winner": "",
+  "field": {
+   "weather": "",
+   "weatherDuration": null,
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "pseudoWeather": {}
+  },
+  "sides": [
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Gardevoir",
+      "species": "Gardevoir",
+      "hp": 175,
+      "maxhp": 175,
+      "status": "",
+      "item": "",
+      "ability": "grassysurge",
+      "slot": 0,
+      "pp": {
+       "protect": 8,
+       "calmmind": 20
+      },
+      "boosts": {},
+      "volatiles": {}
+     },
+     {
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "hp": 207,
+      "maxhp": 207,
+      "status": "",
+      "item": "",
+      "ability": "grassysurge",
+      "slot": 1,
+      "pp": {
+       "protect": 8,
+       "grassyglide": 20
+      },
+      "boosts": {},
+      "volatiles": {}
+     }
+    ]
+   },
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Gardevoir",
+      "species": "Gardevoir",
+      "hp": 175,
+      "maxhp": 175,
+      "status": "",
+      "item": "",
+      "ability": "grassysurge",
+      "slot": 0,
+      "pp": {
+       "protect": 8,
+       "calmmind": 20
+      },
+      "boosts": {},
+      "volatiles": {}
+     },
+     {
+      "name": "Gardy",
+      "species": "Gardevoir",
+      "hp": 175,
+      "maxhp": 175,
+      "status": "",
+      "item": "",
+      "ability": "grassysurge",
+      "slot": 1,
+      "pp": {
+       "protect": 8,
+       "calmmind": 20
+      },
+      "boosts": {},
+      "volatiles": {}
+     }
+    ]
+   }
+  ]
+ },
+ "outcomes": [
+  {
+   "p": 1,
+   "branches": 32,
+   "state": {
+    "schema": 1,
+    "turn": 1,
+    "ended": false,
+    "winner": "",
+    "field": {
+     "weather": "",
+     "weatherDuration": null,
+     "terrain": "grassyterrain",
+     "terrainDuration": 5,
+     "pseudoWeather": {}
+    },
+    "sides": [
+     {
+      "request": "move",
+      "conditions": {},
+      "slotConditions": [
+       {},
+       {}
+      ],
+      "pokemon": [
+       {
+        "name": "Gardevoir",
+        "species": "Gardevoir",
+        "hp": 175,
+        "maxhp": 175,
+        "status": "",
+        "item": "",
+        "ability": "grassysurge",
+        "slot": 0,
+        "pp": {
+         "protect": 8,
+         "calmmind": 20
+        },
+        "boosts": {},
+        "volatiles": {}
+       },
+       {
+        "name": "Rillaboom",
+        "species": "Rillaboom",
+        "hp": 207,
+        "maxhp": 207,
+        "status": "",
+        "item": "",
+        "ability": "grassysurge",
+        "slot": 1,
+        "pp": {
+         "protect": 8,
+         "grassyglide": 20
+        },
+        "boosts": {},
+        "volatiles": {}
+       }
+      ]
+     },
+     {
+      "request": "move",
+      "conditions": {},
+      "slotConditions": [
+       {},
+       {}
+      ],
+      "pokemon": [
+       {
+        "name": "Gardevoir",
+        "species": "Gardevoir",
+        "hp": 175,
+        "maxhp": 175,
+        "status": "",
+        "item": "",
+        "ability": "grassysurge",
+        "slot": 0,
+        "pp": {
+         "protect": 8,
+         "calmmind": 20
+        },
+        "boosts": {},
+        "volatiles": {}
+       },
+       {
+        "name": "Gardy",
+        "species": "Gardevoir",
+        "hp": 175,
+        "maxhp": 175,
+        "status": "",
+        "item": "",
+        "ability": "grassysurge",
+        "slot": 1,
+        "pp": {
+         "protect": 8,
+         "calmmind": 20
+        },
+        "boosts": {},
+        "volatiles": {}
+       }
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

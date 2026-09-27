@@ -1,0 +1,76 @@
+{
+ "description": "R1 (Opus MM): at the battle start the fastest lead, p1's Gardevoir, faces two Trace holders (`notrace`) and keeps seeking; p2's two Gardevoir (a Speed tie) copy Rillaboom's Grassy Surge (the first sets Grassy Terrain), then Rillaboom's own fails; at the Update after the start's runSwitch p1's Trace copies Grassy Surge from either foe. Replaces the engine test that expected this start to be refused.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Gardevoir",
+    "item": "",
+    "ability": "Trace",
+    "nature": "Timid",
+    "evs": {
+     "hp": 32,
+     "spe": 32
+    },
+    "moves": [
+     "Protect",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Rillaboom",
+    "item": "",
+    "ability": "Grassy Surge",
+    "nature": "Brave",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Grassy Glide"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Gardevoir",
+    "item": "",
+    "ability": "Trace",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Calm Mind"
+    ],
+    "level": 50
+   },
+   {
+    "name": "Gardy",
+    "species": "Gardevoir",
+    "item": "",
+    "ability": "Trace",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Calm Mind"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move protect, move protect",
+  "p2": "move protect, move protect"
+ }
+}

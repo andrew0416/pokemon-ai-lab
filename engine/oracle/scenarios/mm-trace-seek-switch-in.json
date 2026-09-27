@@ -1,0 +1,88 @@
+{
+ "description": "R1 (Opus MM): Gardevoir's Trace finds only `notrace` foes at the start (Mimikyu, Aegislash) and keeps seeking (`effectState.seek`). Aegislash switches to Arcanine: the switch action's Update runs before Arcanine's runSwitch, so the seeking Trace copies Intimidate first (Mimikyu and Arcanine -1 Atk), then Arcanine's own Intimidate hits Gardevoir and Snorlax.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Gardevoir",
+    "item": "",
+    "ability": "Trace",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Mimikyu",
+    "item": "",
+    "ability": "Disguise",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Aegislash",
+    "item": "",
+    "ability": "Stance Change",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Arcanine",
+    "item": "",
+    "ability": "Intimidate",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Will-O-Wisp"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "turn": {
+  "p1": "move calmmind, move curse",
+  "p2": "move swordsdance, switch 3"
+ }
+}

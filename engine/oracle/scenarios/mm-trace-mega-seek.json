@@ -1,0 +1,94 @@
+{
+ "description": "R1 (Opus MM): Meowstic-F Mega Evolves (setup turn) facing Mimikyu and Aegislash (`notrace`): Meowstic-F-Mega's Trace starts and keeps seeking. Aegislash then switches to Snorlax: the seeking Trace copies Thick Fat at the switch's Update.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Meowstic-F",
+    "item": "Meowsticite",
+    "ability": "Keen Eye",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Mimikyu",
+    "item": "",
+    "ability": "Disguise",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Aegislash",
+    "item": "",
+    "ability": "Stance Change",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "setupTurns": [
+  [
+   "move calmmind mega, move calmmind",
+   "move swordsdance, move swordsdance"
+  ]
+ ],
+ "turn": {
+  "p1": "move calmmind, move protect",
+  "p2": "move swordsdance, switch 3"
+ }
+}

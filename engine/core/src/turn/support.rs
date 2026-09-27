@@ -1336,8 +1336,9 @@ pub(crate) const ITEMS_WITH_HANDLERS: &[(ItemId, &[&str])] = &[
     (items::BRIGHT_POWDER, &["onModifyAccuracy"]),
     (items::LAX_INCENSE, &["onModifyAccuracy"]),
     // Opus Q unit 6. Clear Amulet: `onTryBoost` in `Battle::boost_by`. Ability Shield:
-    // `onSetAbility` blocks Mummy / Lingering Aroma (`moves::ability_hooks`; Trace holding it
-    // stays refused in `switching::trace`), its Mold Breaker protection is in
+    // `onSetAbility` blocks Mummy / Lingering Aroma (`moves::ability_hooks`) and a seeking
+    // Trace's copy (`abilities::set_ability_blocked` in `switching::trace_copy`; a Trace holding
+    // it does not seek at all), its Mold Breaker protection is in
     // `abilities::ability_for_move` / `Battle::suppressing_ability`. Big Root: `onTryHeal` in
     // `Battle::heal_rooted` (drain, Leech Seed, Strength Sap). The stat items in
     // `items::attack_handlers` / `defense_handlers`, the power items in
@@ -1963,6 +1964,9 @@ pub(crate) const ABILITIES_WITH_HANDLERS: &[(AbilityId, &[&str])] = &[
         abilities::OBLIVIOUS,
         &["onImmunity", "onTryBoost", "onTryHit", "onUpdate"],
     ),
+    // R1. Trace: `onStart` in `switching::trace` (also its switch-in, `START_HANDLERS`); while
+    // it seeks (`Volatile::TraceSeek`), `onUpdate` in `switching::trace_update`.
+    (abilities::TRACE, &["onStart", "onUpdate"]),
     (abilities::SCRAPPY, &["onModifyMove", "onTryBoost"]),
     (abilities::KEEN_EYE, &["onModifyMove", "onTryBoost"]),
     (abilities::ILLUMINATE, &["onModifyMove", "onTryBoost"]),
@@ -2623,9 +2627,6 @@ pub(crate) fn check_state<const N: usize>(state: &State<N>) -> Result<(), String
                     mon.ability.data().name,
                     mon.ability.data().handlers
                 ));
-            }
-            if mon.ability == abilities::TRACE {
-                return Err(format!("{name}: Trace still seeking a target"));
             }
             if let Some(why) = super::forme::field_problem(mon) {
                 return Err(why);

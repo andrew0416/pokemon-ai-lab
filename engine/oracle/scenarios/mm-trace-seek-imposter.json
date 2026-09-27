@@ -1,0 +1,87 @@
+{
+ "description": "R1 (Opus MM): Gardevoir's Trace seeks (Mimikyu, Aegislash are `notrace`). Ditto replaces Aegislash: no traceable foe at the switch's Update (Imposter is `notrace`); Imposter transforms Ditto into the Gardevoir opposite, copying Trace, which starts on Ditto and copies Snorlax's Thick Fat; at the Update after the runSwitch Gardevoir's Trace copies Thick Fat from Ditto.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Gardevoir",
+    "item": "",
+    "ability": "Trace",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Curse",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Mimikyu",
+    "item": "",
+    "ability": "Disguise",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Aegislash",
+    "item": "",
+    "ability": "Stance Change",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Swords Dance",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Ditto",
+    "item": "",
+    "ability": "Imposter",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Transform"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "turn": {
+  "p1": "move calmmind, move curse",
+  "p2": "move swordsdance, switch 3"
+ }
+}
