@@ -1,0 +1,284 @@
+"""Search-speed benchmark for `lab-plan` (board S24-baseline-timing, wave 15 L6).
+
+Runs a fixed set of positions x search modes with `--rolls median`, records wall time, the
+node / enumeration counts and the reported time `lab-plan` prints, and the values each mode
+reports (so a speed change that also changes a value shows up), in
+`<out-dir>/<label>.json` (label: the engine's short commit by default). `--table` prints the
+Markdown comparison of every JSON in the directory (one column per label, in file order).
+
+Usage (from the repository root):
+    python engine/scripts/search_bench.py [--exe D:/cargo-target/release/lab-plan.exe]
+        [--out-dir runs/search-bench-20260927] [--label <name>] [--modes nash,deep-nash,plan]
+        [--only sand-owen] [--threads n] [--repeat k] [--extra "--foo"]
+    python engine/scripts/search_bench.py --table [--out-dir ...]
+
+The positions are fixed (the baseline): scenarios of `runs/plan-20260926` (gitignored; run
+directory of the first search application, turn 1 of four library teams), referenced by
+path, never copied or modified. `deep-nash` (beam 4, outcomes 4) runs on sand-owen and
+psy-cona only (coaching-panda's costs about 4 minutes; `--all-deep` adds it): the whole bench
+is meant to be re-run after every search change. `plan` is a one-turn plan with its children
+valued by their next-turn equilibrium (`--child-nash --beam 6 --outcomes 4`). Values are
+evaluator scores (not win rates); they are recorded here only to check that a speed change
+keeps them. Wall times depend on the machine's load (other sessions share the cores); the node
+and enumeration counts do not, and are the measure of search work.
+"""
+import argparse
+import json
+import os
+import pathlib
+import re
+import subprocess
+import sys
+import time
+
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+
+# (name, scenario relative to the plan run directory, extra position args, plan line)
+CASES = [
+    (
+        "sand-owen",
+        "gardevoir-vs-sand-owen.json",
+        ["--position", "1"],
+        "move protect, move grassyglide 2",
+    ),
+    (
+        "psy-cona",
+        "starmie-vs-psy-cona.json",
+        [],
+        "move liquidation 2 mega, move fakeout 1",
+    ),
+    (
+        "coaching-panda",
+        "gardevoir-vs-coaching-panda.json",
+        ["--position", "0"],
+        "move focusblast 2 mega, move fakeout 1",
+    ),
+]
+
+MODES = {
+    "nash": lambda plan: ["--solve", "nash"],
+    "deep-nash": lambda plan: ["--solve", "deep-nash", "--beam", "4", "--outcomes", "4"],
+    "plan": lambda plan: ["--plan", plan, "--child-nash", "--beam", "6", "--outcomes", "4"],
+}
+
+# deep-nash only where its cost fits the budget (fixed with the baseline: coaching-panda's
+# deep-nash took 244 s at 9ff1081, sand-owen 131 s, psy-cona 57 s).
+DEEP_CASES = {"sand-owen", "psy-cona"}
+
+
+def git_commit():
+    try:
+        return subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+    except Exception:
+        return "unknown"
+
+
+def git_dirty():
+    try:
+        out = subprocess.run(
+            ["git", "status", "--porcelain", "--", "engine"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+        return bool(out.strip())
+    except Exception:
+        return None
+
+
+def parse(text):
+    entry = {}
+    stats = re.search(r"([0-9]+) nodes, ([0-9]+) enumerations, ([0-9.]+) s", text)
+    if stats:
+        entry["nodes"] = int(stats.group(1))
+        entry["enumerations"] = int(stats.group(2))
+        entry["reported_s"] = float(stats.group(3))
+    eq = re.search(
+        r"matrix (\d+)x(\d+); equilibrium value ([+-][0-9.]+) \(exploitability ([0-9.]+)",
+        text,
+    )
+    if eq:
+        entry["matrix"] = f"{eq.group(1)}x{eq.group(2)}"
+        entry["value"] = float(eq.group(3))
+        entry["exploitability"] = float(eq.group(4))
+    deep = re.search(
+        r"shallow matrix (\d+)x(\d+), equilibrium ([+-][0-9.]+); deep matrix (\d+)x(\d+), "
+        r"equilibrium ([+-][0-9.]+) \(exploitability ([0-9.]+)",
+        text,
+    )
+    if deep:
+        entry["shallow_value"] = float(deep.group(3))
+        entry["matrix"] = f"{deep.group(4)}x{deep.group(5)}"
+        entry["value"] = float(deep.group(6))
+        entry["exploitability"] = float(deep.group(7))
+    plan = re.search(r"value ([+-][0-9.]+) against the worst replies", text)
+    if plan:
+        entry["plan_value"] = float(plan.group(1))
+    child = re.search(r"next-turn equilibrium .*: value ([+-][0-9.]+|NaN)", text)
+    if child:
+        entry["value"] = float(child.group(1)) if child.group(1) != "NaN" else None
+    stats_line = re.search(r"^search stats: (.*)$", text, re.M)
+    if stats_line:
+        entry["search_stats"] = stats_line.group(1).strip()
+    return entry
+
+
+def show_path(path):
+    rel = os.path.relpath(path, ROOT)
+    return (rel if not rel.startswith("..") else str(pathlib.Path(path).resolve())).replace("\\", "/")
+
+
+def run_case(exe, plan_dir, case, mode, extra, timeout):
+    name, scenario, position, plan = case
+    scenario_path = plan_dir / scenario
+    args = [str(scenario_path), "--side", "p1", "--rolls", "median", "--top", "3"]
+    args += position + MODES[mode](plan) + extra
+    t0 = time.perf_counter()
+    p = subprocess.run(
+        [exe] + args,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=timeout,
+    )
+    wall = time.perf_counter() - t0
+    text = (p.stdout or "") + (p.stderr or "")
+    entry = {
+        "case": name,
+        "mode": mode,
+        "scenario": show_path(scenario_path),
+        "command": [pathlib.Path(exe).name] + [
+            show_path(a) if a == str(scenario_path) else a
+            for a in args
+        ],
+        "returncode": p.returncode,
+        "wall_s": round(wall, 3),
+    }
+    entry.update(parse(text))
+    if p.returncode != 0:
+        entry["error"] = text.strip()[-2000:]
+    return entry
+
+
+def bench(opts):
+    out_dir = pathlib.Path(opts.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    plan_dir = pathlib.Path(opts.plan_dir)
+    modes = [m.strip() for m in opts.modes.split(",") if m.strip()]
+    extra = opts.extra.split() if opts.extra else []
+    if opts.threads is not None:
+        extra += ["--threads", str(opts.threads)]
+    commit = git_commit()
+    label = opts.label or commit
+    results = []
+    for case in CASES:
+        if opts.only and case[0] not in opts.only.split(","):
+            continue
+        for mode in modes:
+            if mode == "deep-nash" and case[0] not in DEEP_CASES and not opts.all_deep:
+                continue
+            runs = []
+            for _ in range(max(1, opts.repeat)):
+                e = run_case(opts.exe, plan_dir, case, mode, extra, opts.timeout)
+                runs.append(e)
+                print(
+                    f"{case[0]:>15} {mode:>9}: {e['wall_s']:8.2f} s wall, "
+                    f"{e.get('nodes', '?')} nodes, {e.get('enumerations', '?')} enumerations, "
+                    f"value {e.get('value', e.get('plan_value', '?'))}"
+                    + (f"  ERROR {e['error'][:200]}" if "error" in e else ""),
+                    flush=True,
+                )
+            best = min(runs, key=lambda e: e["wall_s"])
+            best["wall_runs_s"] = [e["wall_s"] for e in runs]
+            results.append(best)
+    doc = {
+        "label": label,
+        "commit": commit,
+        "dirty": git_dirty(),
+        "date": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "exe": opts.exe,
+        "cpus": os.cpu_count(),
+        "extra": extra,
+        "repeat": opts.repeat,
+        "results": results,
+    }
+    path = out_dir / f"{label}.json"
+    path.write_text(json.dumps(doc, indent=1, ensure_ascii=False), encoding="utf-8")
+    print(f"wrote {path}")
+
+
+def table(opts):
+    out_dir = pathlib.Path(opts.out_dir)
+    docs = []
+    for path in sorted(out_dir.glob("*.json"), key=lambda p: p.stat().st_mtime):
+        try:
+            docs.append(json.loads(path.read_text(encoding="utf-8")))
+        except (OSError, ValueError):
+            continue
+    if opts.labels:
+        wanted = opts.labels.split(",")
+        docs = sorted(
+            [d for d in docs if d["label"] in wanted], key=lambda d: wanted.index(d["label"])
+        )
+    keys = []
+    for d in docs:
+        for r in d["results"]:
+            k = (r["case"], r["mode"])
+            if k not in keys:
+                keys.append(k)
+    head = "| case | mode | " + " | ".join(d["label"] for d in docs) + " |"
+    print(head)
+    print("|" + "---|" * (2 + len(docs)))
+    for case, mode in keys:
+        cells = []
+        base = None
+        for d in docs:
+            r = next((r for r in d["results"] if (r["case"], r["mode"]) == (case, mode)), None)
+            if r is None or r.get("returncode") != 0:
+                cells.append("-")
+                continue
+            if base is None:
+                base = r["wall_s"]
+            speed = f" ({base / r['wall_s']:.2f}x)" if base and r is not None else ""
+            v = r.get("value", r.get("plan_value"))
+            vtxt = f"{v:+.1f}" if isinstance(v, (int, float)) else "?"
+            cells.append(
+                f"{r['wall_s']:.1f} s{speed}, {r.get('enumerations', '?')} enum, v {vtxt}"
+            )
+        print(f"| {case} | {mode} | " + " | ".join(cells) + " |")
+
+
+def main():
+    date = time.strftime("%Y%m%d")
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
+    ap.add_argument("--exe", default="D:/cargo-target/release/lab-plan.exe")
+    ap.add_argument("--out-dir", default=str(ROOT / "runs" / f"search-bench-{date}"))
+    ap.add_argument("--plan-dir", default=str(ROOT / "runs" / "plan-20260926"))
+    ap.add_argument("--label")
+    ap.add_argument("--modes", default="nash,deep-nash,plan")
+    ap.add_argument("--only")
+    ap.add_argument("--threads", type=int)
+    ap.add_argument("--repeat", type=int, default=1)
+    ap.add_argument("--extra", default="")
+    ap.add_argument("--all-deep", action="store_true", help="deep-nash on every case")
+    ap.add_argument("--timeout", type=int, default=3600)
+    ap.add_argument("--table", action="store_true")
+    ap.add_argument("--labels", help="--table: these labels, in this order")
+    opts = ap.parse_args()
+    if opts.table:
+        table(opts)
+    else:
+        bench(opts)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
