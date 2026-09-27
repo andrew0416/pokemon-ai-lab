@@ -160,11 +160,17 @@ impl<const N: usize> Battle<'_, N> {
     /// `setSpecies` sets it to the raw stored Speed (no stages or modifiers, not negated by
     /// Trick Room; the value at that moment) for the rest of the action in which the Pokémon
     /// changed forme ([`Battle::raw_speed`]; Stance Change before the user's own attack can reorder, and so
-    /// re-round, its three-factor ModifyDamage chain: `stance-change-raw-speed`). A Pokémon that
-    /// entered during this stage has no snapshot and is read live (Showdown: `switchIn` leaves
-    /// `pokemon.speed` at the raw value from `setSpecies`, refreshed before the next move action;
-    /// approximated). Showdown skips the refresh when the next queued action is not a move
-    /// (a switch after a Speed change in the previous action): not modelled.
+    /// re-round, its three-factor ModifyDamage chain: `stance-change-raw-speed`,
+    /// `f-trick-room-raw-speed`). A Pokémon that switched in during this stage has the action
+    /// Speed `insertChoice`'s `updateSpeed()` gave it ([`Battle::update_speed`], B30), a dragged
+    /// one its raw Speed.
+    ///
+    /// Not modelled: Showdown refreshes every `pokemon.speed` after an action only when the
+    /// next queued action is a move (`runAction`'s gen 8 tail), so a switch that follows a Speed
+    /// change runs its events with the Speeds from before that change, where the engine's new
+    /// stage takes a fresh snapshot. No canonical state in the standard range depends on it
+    /// (the handlers of such a switch that share a priority across holders do not interact;
+    /// WORKPLAN A2), so no oracle fixture can pin either behaviour.
     pub(crate) fn event_speed(&self, slot: SlotRef) -> i32 {
         let Some(pokemon) = self.occupant(slot) else {
             return self.action_speed(slot);
