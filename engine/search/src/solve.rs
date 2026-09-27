@@ -15,10 +15,15 @@
 //! (`Line::exact == false`) unless [`Config::exact_lines`] asks for full values. Iterative
 //! deepening orders the root's choices and replies by the previous depth's results.
 
+use std::collections::HashMap;
 use std::fmt;
+use std::sync::Arc;
 use std::time::{Duration, Instant};
 
+use rayon::prelude::*;
+
 use lab_engine::eval::Evaluator;
+use lab_engine::instruction::Outcome;
 use lab_engine::rules::Ruleset;
 use lab_engine::state::{BattleResult, SideId, State};
 use lab_engine::turn::{EnumerateOptions, RollMode, Suspension, TurnError};
@@ -29,15 +34,13 @@ use crate::nash::{self, Equilibrium, Matrix};
 use crate::tt::{self, TranspositionTable};
 
 /// What a chance node continues into: the maximin tree with `depth` turns left, or a fixed
-/// plan (`Solver::evaluate_plan`) at its next entry.
+/// plan (`Solver::evaluate_plan`) at its next entry. (Children worth their own equilibrium,
+/// with only the `Config::outcome_cap` most probable outcomes, are valued in batches by
+/// `Solver::nash_cells`.)
 #[derive(Clone, Copy, Debug)]
 enum Next<'p, const N: usize> {
     Depth(u32),
     Plan(&'p [Choice<N>], usize),
-    /// The position is worth the equilibrium value of its own matrix game (one more turn,
-    /// mixed strategies, leaf evaluation below); the chance node above it keeps only its
-    /// `Config::outcome_cap` most probable outcomes.
-    Nash,
 }
 
 /// The value of a won battle (a lost one is its negative); a leaf evaluation must stay well
@@ -252,6 +255,8 @@ pub struct Solver<'e, const N: usize, E: Evaluator<N> + ?Sized> {
     /// [`Solver::nash_value`] results by position (identical children recur across replies and
     /// outcomes), [`crate::tt`].
     tt: TranspositionTable<N>,
+    /// The worker pool, built on first parallel use ([`Config::threads`]).
+    pool: Option<Arc<rayon::ThreadPool>>,
 }
 
 impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
@@ -266,6 +271,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             omitted_pairs: 0,
             stats: SearchStats::default(),
             tt: TranspositionTable::new(config.transposition, tt::DEFAULT_CAPACITY),
+            pool: None,
         }
     }
 
@@ -600,19 +606,6 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             }
             Err(e) => return Err(e.into()),
         };
-        let outcomes = match (next, self.config.outcome_cap) {
-            (Next::Nash, Some(cap)) if outcomes.len() > cap => {
-                let mut kept = outcomes;
-                kept.sort_by(|a, b| b.probability.total_cmp(&a.probability));
-                kept.truncate(cap);
-                let total: f64 = kept.iter().map(|o| o.probability).sum();
-                for o in &mut kept {
-                    o.probability /= total;
-                }
-                kept
-            }
-            _ => outcomes,
-        };
         match self.config.chance {
             Chance::Worst => {
                 let mut worst = f32::INFINITY;
@@ -674,17 +667,58 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
     }
 }
 
-/// One worker's cells `(index, value)` of the payoff matrix with its node and turn counts,
-/// the unsupported reasons it met and the pairs it dropped.
-type CellValues = (
-    Vec<(usize, f32)>,
-    u64,
-    u64,
-    Vec<String>,
-    usize,
-    u32,
-    SearchStats,
-);
+/// One cell valued by a worker's own solver: the value with that solver's node and turn
+/// counts, stats, the unsupported reasons it met, the pairs it dropped and broken plans.
+struct CellOut {
+    value: Result<f32, SearchError>,
+    nodes: u64,
+    turns: u64,
+    stats: SearchStats,
+    unsupported: Vec<String>,
+    omitted: usize,
+    broken: u32,
+}
+
+impl CellOut {
+    fn from_solver<const N: usize, E: Evaluator<N> + ?Sized>(
+        value: Result<f32, SearchError>,
+        solver: Solver<'_, N, E>,
+    ) -> CellOut {
+        CellOut {
+            value,
+            nodes: solver.nodes,
+            turns: solver.turns,
+            stats: solver.stats,
+            unsupported: solver.unsupported,
+            omitted: solver.omitted_pairs,
+            broken: solver.plan_broken,
+        }
+    }
+}
+
+/// A child position whose one-turn equilibrium a batch solves ([`Solver::nash_cells`]).
+struct ChildJob<const N: usize> {
+    state: State<N>,
+    suspension: Option<Suspension>,
+    decision: Decision,
+}
+
+/// The `cap` most probable outcomes, renormalised (all of them without a cap): the children
+/// valued by their equilibrium ([`Solver::nash_cells`]).
+fn cap_outcomes(mut outcomes: Vec<Outcome>, cap: Option<usize>) -> Vec<Outcome> {
+    match cap {
+        Some(cap) if outcomes.len() > cap => {
+            outcomes.sort_by(|a, b| b.probability.total_cmp(&a.probability));
+            outcomes.truncate(cap);
+            let total: f64 = outcomes.iter().map(|o| o.probability).sum();
+            for o in &mut outcomes {
+                o.probability /= total;
+            }
+            outcomes
+        }
+        _ => outcomes,
+    }
+}
 
 /// The root decision solved as a zero-sum matrix game over both sides' choices, each pair
 /// valued by the exact chance node below it (deeper nodes by maximin as in [`Analysis`]).
@@ -894,8 +928,66 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         })
     }
 
-    /// The payoff matrix (`ours × theirs`, row-major, exact chance values) computed by
-    /// `threads` workers on their own copies of the state; node and turn counts are summed.
+    /// The worker pool (`Config::threads`, 0 = every core), built on first use.
+    fn pool(&mut self) -> Option<Arc<rayon::ThreadPool>> {
+        let threads = self.config.worker_threads(usize::MAX);
+        if threads <= 1 {
+            return None;
+        }
+        if self.pool.is_none() {
+            let pool = rayon::ThreadPoolBuilder::new()
+                .num_threads(threads)
+                .thread_name(|i| format!("lab-search-{i}"))
+                .build()
+                .expect("a search thread pool");
+            self.pool = Some(Arc::new(pool));
+        }
+        self.pool.clone()
+    }
+
+    /// `f` over `items` on the pool (in order on this thread with one worker); every worker
+    /// split starts from `init()`. The results are in item order, so nothing downstream depends
+    /// on how the items were scheduled.
+    fn par_map<T, S, R>(
+        &mut self,
+        items: &[T],
+        init: impl Fn() -> S + Sync + Send,
+        f: impl Fn(&mut S, &T) -> R + Sync + Send,
+    ) -> Vec<R>
+    where
+        T: Sync,
+        R: Send,
+    {
+        match self.pool() {
+            Some(pool) if items.len() > 1 => {
+                pool.install(|| items.par_iter().map_init(&init, &f).collect())
+            }
+            _ => {
+                let mut s = init();
+                items.iter().map(|x| f(&mut s, x)).collect()
+            }
+        }
+    }
+
+    /// Adds a worker's counters and refusals (in the order the cells are merged).
+    fn absorb(&mut self, cell: &CellOut) {
+        self.nodes += cell.nodes;
+        self.turns += cell.turns;
+        self.omitted_pairs += cell.omitted;
+        self.plan_broken += cell.broken;
+        self.stats.add(&cell.stats);
+        for why in &cell.unsupported {
+            if !self.unsupported.contains(why) {
+                self.unsupported.push(why.clone());
+            }
+        }
+    }
+
+    /// The payoff matrix (`ours × theirs`, row-major, exact chance values), every cell valued
+    /// by its own solver on a copy of the state, on the worker pool (board S24p). Cells are
+    /// handed out one at a time (pairs differ a lot in cost: a double Protect is one outcome,
+    /// two spread moves thousands) and merged in cell order, so the values, the counters and
+    /// the order of refusal reasons do not depend on the thread count.
     #[allow(clippy::too_many_arguments)]
     fn parallel_matrix(
         &mut self,
@@ -905,77 +997,308 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         ours: &[Choice<N>],
         theirs: &[Choice<N>],
         next: Next<'_, N>,
-        threads: usize,
+        _threads: usize,
     ) -> Result<Vec<f32>, SearchError> {
-        use std::sync::atomic::{AtomicUsize, Ordering};
         let config = self.config;
         let evaluator = self.evaluator;
-        let cells = ours.len() * theirs.len();
-        // Cells are handed out one at a time: pairs differ a lot in cost (a double Protect
-        // is one outcome, two spread moves thousands), so static row chunks leave threads idle.
-        let counter = AtomicUsize::new(0);
-        let results: Vec<Result<CellValues, SearchError>> = std::thread::scope(|scope| {
-            let handles: Vec<_> = (0..threads.max(1))
-                .map(|_| {
-                    let mut local_state = state.clone();
-                    let suspension = suspension.cloned();
-                    let counter = &counter;
-                    scope.spawn(move || {
-                        let mut local = Solver::new(config, evaluator);
-                        let mut values = Vec::new();
-                        loop {
-                            let i = counter.fetch_add(1, Ordering::Relaxed);
-                            if i >= cells {
-                                break;
-                            }
-                            let (a, b) = (ours[i / theirs.len()], theirs[i % theirs.len()]);
-                            let pair = local.pair(a, b);
-                            let v = local.chance(
-                                &mut local_state,
-                                decision,
-                                suspension.as_ref(),
-                                pair,
-                                next,
-                                f32::NEG_INFINITY,
-                                f32::INFINITY,
-                            )?;
-                            values.push((i, v));
-                        }
-                        Ok((
-                            values,
-                            local.nodes,
-                            local.turns,
-                            local.unsupported,
-                            local.omitted_pairs,
-                            local.plan_broken,
-                            local.stats,
-                        ))
-                    })
-                })
-                .collect();
-            handles
-                .into_iter()
-                .map(|h| h.join().expect("a search thread panicked"))
-                .collect()
-        });
-        let mut values = vec![f32::NAN; cells];
-        for result in results {
-            let (cells, nodes, turns, reasons, omitted, broken, stats) = result?;
-            self.stats.add(&stats);
-            for (i, v) in cells {
-                values[i] = v;
+        let cells: Vec<usize> = (0..ours.len() * theirs.len()).collect();
+        let outs = self.par_map(
+            &cells,
+            || state.clone(),
+            |local_state, &i| {
+                let mut local = Solver::new(config, evaluator);
+                let (a, b) = (ours[i / theirs.len()], theirs[i % theirs.len()]);
+                let pair = local.pair(a, b);
+                let value = local.chance(
+                    local_state,
+                    decision,
+                    suspension,
+                    pair,
+                    next,
+                    f32::NEG_INFINITY,
+                    f32::INFINITY,
+                );
+                CellOut::from_solver(value, local)
+            },
+        );
+        let mut values = Vec::with_capacity(outs.len());
+        for out in outs {
+            self.absorb(&out);
+            values.push(out.value?);
+        }
+        Ok(values)
+    }
+
+    /// The values a chance node over the capped outcomes (window (-inf, inf)) gives for each
+    /// of `pairs` at `state`, with every child position's matrix game solved in one batch on
+    /// the worker pool (board S24p): the pairs are enumerated here, their capped outcomes'
+    /// children looked up in the transposition table (repeats within the batch count as hits,
+    /// as they would one after another), the cells of every child matrix run as one parallel
+    /// pool of work, and the children's RM+ solves in parallel after them. The cell values,
+    /// the counters and the table are what the pairs valued in turn would give; so is the
+    /// first error, except that a pair's enumeration error is met before the child errors of
+    /// earlier pairs, and `Config::max_turns` is checked per pair before the batch rather than
+    /// per cell inside it.
+    fn nash_cells(
+        &mut self,
+        state: &mut State<N>,
+        decision: Decision,
+        suspension: Option<&Suspension>,
+        pairs: &[[Choice<N>; 2]],
+    ) -> Result<Vec<f32>, SearchError> {
+        enum Plan {
+            Done(Result<f32, SearchError>),
+            Outcomes(Vec<(f64, usize)>),
+        }
+        let mut plans = Vec::with_capacity(pairs.len());
+        // One slot per child occurrence (a repeat within the batch points at the first).
+        let mut slots: Vec<Option<Result<f32, SearchError>>> = Vec::new();
+        let mut jobs: Vec<(usize, ChildJob<N>)> = Vec::new();
+        let mut seen: HashMap<tt::PositionKey<N>, usize> = HashMap::new();
+        for &pair in pairs {
+            if let Some(max) = self.config.max_turns {
+                if self.turns >= max {
+                    plans.push(Plan::Done(Err(SearchError::Budget)));
+                    continue;
+                }
             }
-            self.nodes += nodes;
-            self.turns += turns;
-            self.omitted_pairs += omitted;
-            self.plan_broken += broken;
-            for why in reasons {
-                if !self.unsupported.contains(&why) {
-                    self.unsupported.push(why);
+            self.turns += 1;
+            let started = Instant::now();
+            let transitions = game::transitions(
+                state,
+                self.config.ruleset,
+                self.config.enumerate_options(),
+                decision,
+                suspension,
+                pair,
+            );
+            self.stats.enumerate_seconds += started.elapsed().as_secs_f64();
+            let outcomes = match transitions {
+                Ok(outcomes) => cap_outcomes(outcomes, self.config.outcome_cap),
+                Err(TurnError::Unsupported(why)) => {
+                    self.note_unsupported(why);
+                    plans.push(Plan::Done(Ok(f32::NAN)));
+                    continue;
+                }
+                Err(e) => {
+                    plans.push(Plan::Done(Err(e.into())));
+                    continue;
+                }
+            };
+            let mut refs = Vec::with_capacity(outcomes.len());
+            for outcome in &outcomes {
+                state.apply(&outcome.instructions);
+                self.nodes += 1;
+                let slot = match game::decision(state, outcome.suspension.as_ref()) {
+                    Err(e) => {
+                        slots.push(Some(Err(e.into())));
+                        slots.len() - 1
+                    }
+                    Ok(Decision::Over(result)) => {
+                        slots.push(Some(Ok(self.terminal(result, 0))));
+                        slots.len() - 1
+                    }
+                    Ok(child_decision) => {
+                        let key = if self.tt.enabled() {
+                            Some((state.clone(), outcome.suspension.clone()))
+                        } else {
+                            None
+                        };
+                        let known = key.as_ref().and_then(|key| {
+                            self.tt
+                                .get(key)
+                                .map(|v| {
+                                    slots.push(Some(Ok(v)));
+                                    slots.len() - 1
+                                })
+                                .or_else(|| seen.get(key).copied())
+                        });
+                        match known {
+                            Some(slot) => {
+                                self.stats.tt_hits += 1;
+                                slot
+                            }
+                            None => {
+                                if let Some(key) = key {
+                                    self.stats.tt_misses += 1;
+                                    seen.insert(key, slots.len());
+                                }
+                                slots.push(None);
+                                jobs.push((
+                                    slots.len() - 1,
+                                    ChildJob {
+                                        state: state.clone(),
+                                        suspension: outcome.suspension.clone(),
+                                        decision: child_decision,
+                                    },
+                                ));
+                                slots.len() - 1
+                            }
+                        }
+                    }
+                };
+                state.reverse(&outcome.instructions);
+                refs.push((outcome.probability, slot));
+            }
+            plans.push(Plan::Outcomes(refs));
+        }
+        let values = self.solve_children(&jobs);
+        for ((slot, job), value) in jobs.into_iter().zip(values) {
+            if let Ok(v) = &value {
+                if self.tt.enabled() {
+                    self.tt.insert((job.state, job.suspension), *v);
+                }
+            }
+            slots[slot] = Some(value);
+        }
+        let child = |slot: usize| -> Result<f32, SearchError> {
+            slots[slot].clone().expect("every child slot is filled")
+        };
+        let mut out = Vec::with_capacity(plans.len());
+        for plan in plans {
+            let refs = match plan {
+                Plan::Done(value) => {
+                    out.push(value?);
+                    continue;
+                }
+                Plan::Outcomes(refs) => refs,
+            };
+            // As `chance` with the window (-inf, inf): no cutoff, the first NaN child drops
+            // the pair.
+            let value = match self.config.chance {
+                Chance::Worst => {
+                    let mut worst = f32::INFINITY;
+                    for &(_, slot) in &refs {
+                        let v = child(slot)?;
+                        if v.is_nan() {
+                            worst = f32::NAN;
+                            break;
+                        }
+                        worst = worst.min(v);
+                    }
+                    worst
+                }
+                Chance::Expect => {
+                    let mut sum = 0.0f64;
+                    let mut nan = false;
+                    for &(p, slot) in &refs {
+                        let v = child(slot)?;
+                        if v.is_nan() {
+                            nan = true;
+                            break;
+                        }
+                        sum += p * v as f64;
+                    }
+                    if nan {
+                        f32::NAN
+                    } else {
+                        sum as f32
+                    }
+                }
+            };
+            out.push(value);
+        }
+        Ok(out)
+    }
+
+    /// Each child's one-turn equilibrium value ([`Solver::nash_value`] without the table):
+    /// the cells of all their matrices in one parallel batch, then their RM+ solves in
+    /// parallel. Results in job order; a child's error is its first failing cell's.
+    fn solve_children(&mut self, jobs: &[(usize, ChildJob<N>)]) -> Vec<Result<f32, SearchError>> {
+        type Prepared<const N: usize> = Result<(Vec<Choice<N>>, Vec<Choice<N>>, u32), SearchError>;
+        let them = self.config.us.other();
+        let mut prepared: Vec<Prepared<N>> = Vec::with_capacity(jobs.len());
+        let mut tasks: Vec<(usize, usize)> = Vec::new();
+        for (j, (_, job)) in jobs.iter().enumerate() {
+            let choices = self
+                .choices(&job.state, job.decision, self.config.us)
+                .and_then(|ours| Ok((ours, self.choices(&job.state, job.decision, them)?)));
+            prepared.push(choices.map(|(ours, theirs)| {
+                tasks.extend((0..ours.len() * theirs.len()).map(|i| (j, i)));
+                let next_depth = if job.decision == Decision::Turn { 0 } else { 1 };
+                (ours, theirs, next_depth)
+            }));
+        }
+        let config = self.config;
+        let evaluator = self.evaluator;
+        let prepared_ref = &prepared;
+        let outs = self.par_map(
+            &tasks,
+            HashMap::<usize, State<N>>::new,
+            |states, &(j, i)| {
+                let job = &jobs[j].1;
+                let (ours, theirs, next_depth) = prepared_ref[j]
+                    .as_ref()
+                    .expect("tasks come from prepared jobs");
+                let state = states.entry(j).or_insert_with(|| job.state.clone());
+                let mut local = Solver::new(config, evaluator);
+                let (a, b) = (ours[i / theirs.len()], theirs[i % theirs.len()]);
+                let pair = local.pair(a, b);
+                let value = local.chance(
+                    state,
+                    job.decision,
+                    job.suspension.as_ref(),
+                    pair,
+                    Next::Depth(*next_depth),
+                    f32::NEG_INFINITY,
+                    f32::INFINITY,
+                );
+                CellOut::from_solver(value, local)
+            },
+        );
+        let mut cells: Vec<Result<Vec<f32>, SearchError>> =
+            prepared.iter().map(|_| Ok(Vec::new())).collect();
+        for (&(j, _), out) in tasks.iter().zip(outs) {
+            self.absorb(&out);
+            if let Ok(values) = &mut cells[j] {
+                match out.value {
+                    Ok(v) => values.push(v),
+                    Err(e) => cells[j] = Err(e),
                 }
             }
         }
-        Ok(values)
+        // The matrix games, solved in parallel.
+        let games: Vec<Result<Option<Matrix>, SearchError>> = prepared
+            .into_iter()
+            .zip(cells)
+            .map(|(prep, cells)| {
+                let (ours, theirs, _) = prep?;
+                let values = cells?;
+                let (ours, theirs, values, _, _) = drop_unevaluable(ours, theirs, values);
+                Ok(if ours.is_empty() || theirs.is_empty() {
+                    None
+                } else {
+                    Some(Matrix::new(ours.len(), theirs.len(), values))
+                })
+            })
+            .collect();
+        let solved = self.par_map(
+            &games,
+            || (),
+            |_, game| match game {
+                Ok(Some(matrix)) => {
+                    let started = Instant::now();
+                    let eq = nash::solve(matrix, 20_000, 0.01);
+                    Ok(Some((eq, started.elapsed().as_secs_f64())))
+                }
+                Ok(None) => Ok(None),
+                Err(e) => Err(e.clone()),
+            },
+        );
+        solved
+            .into_iter()
+            .map(|r| {
+                r.map(|solved| match solved {
+                    Some((eq, seconds)) => {
+                        self.stats.nash_solves += 1;
+                        self.stats.nash_iterations += eq.iterations as u64;
+                        self.stats.nash_seconds += seconds;
+                        eq.value
+                    }
+                    None => f32::NAN,
+                })
+            })
+            .collect()
     }
 
     fn continue_at(
@@ -989,7 +1312,6 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         match next {
             Next::Depth(depth) => self.value(state, suspension, depth, alpha, beta),
             Next::Plan(plan, index) => self.plan_value(state, suspension, plan, index, alpha, beta),
-            Next::Nash => self.nash_value(state, suspension),
         }
     }
 
@@ -1017,46 +1339,15 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         } else {
             None
         };
-        let them = self.config.us.other();
-        let ours = self.choices(state, decision, self.config.us)?;
-        let theirs = self.choices(state, decision, them)?;
-        let next_depth = if decision == Decision::Turn { 0 } else { 1 };
-        let threads = self.config.worker_threads(ours.len() * theirs.len());
-        let values = if threads > 1 {
-            self.parallel_matrix(
-                state,
-                suspension,
-                decision,
-                &ours,
-                &theirs,
-                Next::Depth(next_depth),
-                threads,
-            )?
-        } else {
-            let mut values = Vec::with_capacity(ours.len() * theirs.len());
-            for &a in &ours {
-                for &b in &theirs {
-                    let pair = self.pair(a, b);
-                    values.push(self.chance(
-                        state,
-                        decision,
-                        suspension,
-                        pair,
-                        Next::Depth(next_depth),
-                        f32::NEG_INFINITY,
-                        f32::INFINITY,
-                    )?);
-                }
-            }
-            values
+        let job = ChildJob {
+            state: state.clone(),
+            suspension: suspension.cloned(),
+            decision,
         };
-        let (ours, theirs, values, _, _) = drop_unevaluable(ours, theirs, values);
-        let value = if ours.is_empty() || theirs.is_empty() {
-            f32::NAN
-        } else {
-            let matrix = Matrix::new(ours.len(), theirs.len(), values);
-            self.solve_matrix(&matrix).value
-        };
+        let value = self
+            .solve_children(&[(0, job)])
+            .pop()
+            .expect("one job, one value")?;
         if let Some(key) = key {
             self.tt.insert(key, value);
         }
@@ -1066,7 +1357,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
     /// Two turns deep, approximately: the root matrix with leaf values orders our choices
     /// (row minimum) and their replies (per row); then the `beam` best rows are valued again
     /// against their `beam` worst columns with each child position worth its own next-turn
-    /// equilibrium ([`Next::Nash`], `Config::outcome_cap`). `state` is left unchanged.
+    /// equilibrium ([`Solver::nash_cells`], `Config::outcome_cap`). `state` is left unchanged.
     /// Depth-2 mixed analysis (WORKPLAN S21): the matrix game over both sides' beams in which
     /// each cell is the expected next-turn equilibrium value of the pair's outcomes (as
     /// [`Solver::analyse_deep`]'s children: the `Config::outcome_cap` most probable outcomes,
@@ -1105,21 +1396,12 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         let their_beam = beam_indices(&their_value, &shallow.equilibrium.cols, beam, false);
         let ours: Vec<Choice<N>> = our_beam.iter().map(|&r| shallow.ours[r]).collect();
         let theirs: Vec<Choice<N>> = their_beam.iter().map(|&c| shallow.theirs[c]).collect();
-        let mut values = Vec::with_capacity(ours.len() * theirs.len());
-        for &a in &ours {
-            for &b in &theirs {
-                let pair = self.pair(a, b);
-                values.push(self.chance(
-                    state,
-                    decision,
-                    suspension,
-                    pair,
-                    Next::Nash,
-                    f32::NEG_INFINITY,
-                    f32::INFINITY,
-                )?);
-            }
-        }
+        let pairs: Vec<[Choice<N>; 2]> = ours
+            .iter()
+            .flat_map(|&a| theirs.iter().map(move |&b| (a, b)))
+            .map(|(a, b)| self.pair(a, b))
+            .collect();
+        let values = self.nash_cells(state, decision, suspension, &pairs)?;
         let (ours, theirs, values, omitted_theirs, omitted_ours) =
             drop_unevaluable(ours, theirs, values);
         if ours.is_empty() || theirs.is_empty() {
@@ -1189,22 +1471,23 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             .collect();
         rows.sort_by(|a, b| b.1.total_cmp(&a.1));
         let beam = beam.max(1);
+        // Every beam row against its beam replies, the children solved in one batch.
+        let pairs: Vec<[Choice<N>; 2]> = rows
+            .iter()
+            .take(beam)
+            .flat_map(|(r, _, cols)| cols.iter().take(beam).map(move |&c| (*r, c)))
+            .map(|(r, c)| self.pair(ours[r], theirs[c]))
+            .collect();
+        let mut cell_values = self
+            .nash_cells(state, decision, suspension, &pairs)?
+            .into_iter();
         let mut lines = Vec::new();
         for (r, shallow, cols) in rows.iter().take(beam) {
             let a = ours[*r];
             let mut replies = Vec::new();
             for &c in cols.iter().take(beam) {
                 let b = theirs[c];
-                let pair = self.pair(a, b);
-                let v = self.chance(
-                    state,
-                    decision,
-                    suspension,
-                    pair,
-                    Next::Nash,
-                    f32::NEG_INFINITY,
-                    f32::INFINITY,
-                )?;
+                let v = cell_values.next().expect("one value per pair");
                 if !v.is_nan() {
                     replies.push((b, v));
                 }
@@ -1316,18 +1599,14 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         if self.config.child_nash && plan.len() == 1 && decision == Decision::Turn {
             let beam = self.config.reply_beam.unwrap_or(replies.len()).max(1);
             let a = plan[0];
+            let pairs: Vec<[Choice<N>; 2]> = replies
+                .iter()
+                .take(beam)
+                .map(|&(b, _)| self.pair(a, b))
+                .collect();
+            let values = self.nash_cells(state, decision, suspension, &pairs)?;
             let mut child_replies = Vec::new();
-            for &(b, _) in replies.iter().take(beam) {
-                let pair = self.pair(a, b);
-                let v = self.chance(
-                    state,
-                    decision,
-                    suspension,
-                    pair,
-                    Next::Nash,
-                    f32::NEG_INFINITY,
-                    f32::INFINITY,
-                )?;
+            for (&(b, _), v) in replies.iter().take(beam).zip(values) {
                 if !v.is_nan() {
                     child_replies.push((b, v));
                 }

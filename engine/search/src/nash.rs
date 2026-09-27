@@ -65,25 +65,32 @@ pub struct Equilibrium {
 pub fn solve(matrix: &Matrix, max_iterations: usize, tolerance: f32) -> Equilibrium {
     let (n, m) = (matrix.rows, matrix.cols);
     assert!(n > 0 && m > 0, "an empty game");
+    // The payoffs widened once (the loop below reads them 2 × iterations times); every sum
+    // runs in the same order as a cell-by-cell pass, so the result is bit-identical to it.
+    let values: Vec<f64> = matrix.values.iter().map(|&v| f64::from(v)).collect();
     let mut row_regret = vec![0.0f64; n];
     let mut col_regret = vec![0.0f64; m];
     let mut row_sum = vec![0.0f64; n];
     let mut col_sum = vec![0.0f64; m];
+    let mut rows = vec![0.0f64; n];
+    let mut cols = vec![0.0f64; m];
+    let mut row_util = vec![0.0f64; n];
+    let mut col_util = vec![0.0f64; m];
     let mut iterations = 0;
     let mut result = None;
     for t in 1..=max_iterations.max(1) {
         iterations = t;
-        let rows = strategy(&row_regret);
-        let cols = strategy(&col_regret);
+        strategy_into(&row_regret, &mut rows);
+        strategy_into(&col_regret, &mut cols);
         // Expected payoffs of each pure action against the other player's current strategy.
-        let mut row_util = vec![0.0f64; n];
-        let mut col_util = vec![0.0f64; m];
-        for r in 0..n {
-            for c in 0..m {
-                let v = f64::from(matrix.at(r, c));
-                row_util[r] += cols[c] * v;
-                col_util[c] += rows[r] * v;
+        col_util.fill(0.0);
+        for ((util, &p), row) in row_util.iter_mut().zip(&rows).zip(values.chunks_exact(m)) {
+            let mut acc = 0.0f64;
+            for ((cu, &q), &v) in col_util.iter_mut().zip(&cols).zip(row) {
+                acc += q * v;
+                *cu += p * v;
             }
+            *util = acc;
         }
         let row_value: f64 = (0..n).map(|r| rows[r] * row_util[r]).sum();
         let col_value: f64 = (0..m).map(|c| cols[c] * col_util[c]).sum();
@@ -120,12 +127,15 @@ pub fn solve(matrix: &Matrix, max_iterations: usize, tolerance: f32) -> Equilibr
     })
 }
 
-fn strategy(regret: &[f64]) -> Vec<f64> {
+/// Regret matching: the positive regrets normalised (uniform when none is positive).
+fn strategy_into(regret: &[f64], out: &mut [f64]) {
     let total: f64 = regret.iter().sum();
     if total <= 0.0 {
-        vec![1.0 / regret.len() as f64; regret.len()]
+        out.fill(1.0 / regret.len() as f64);
     } else {
-        regret.iter().map(|r| r / total).collect()
+        for (o, r) in out.iter_mut().zip(regret) {
+            *o = r / total;
+        }
     }
 }
 
@@ -138,25 +148,25 @@ fn normalized(sum: &[f64]) -> Vec<f64> {
     }
 }
 
-#[allow(clippy::needless_range_loop)]
 fn evaluate(matrix: &Matrix, rows: &[f64], cols: &[f64], iterations: usize) -> Equilibrium {
-    let (n, m) = (matrix.rows, matrix.cols);
+    let m = matrix.cols;
     let mut value = 0.0f64;
     let mut row_best = f64::NEG_INFINITY;
     let mut col_best = f64::INFINITY;
-    for r in 0..n {
+    // Column utilities accumulate row by row: each column's sum still runs over the rows in
+    // order, as a column-by-column pass would.
+    let mut col_util = vec![0.0f64; m];
+    for (&p, row) in rows.iter().zip(matrix.values.chunks_exact(m)) {
         let mut util = 0.0;
-        for c in 0..m {
-            util += cols[c] * f64::from(matrix.at(r, c));
+        for ((cu, &q), &v) in col_util.iter_mut().zip(cols).zip(row) {
+            let v = f64::from(v);
+            util += q * v;
+            *cu += p * v;
         }
-        value += rows[r] * util;
+        value += p * util;
         row_best = row_best.max(util);
     }
-    for c in 0..m {
-        let mut util = 0.0;
-        for r in 0..n {
-            util += rows[r] * f64::from(matrix.at(r, c));
-        }
+    for util in col_util {
         col_best = col_best.min(util);
     }
     Equilibrium {
@@ -190,6 +200,118 @@ mod tests {
         assert!(eq.rows[0] > 0.99, "{eq:?}");
         assert!((eq.value - 2.0).abs() < 0.01, "{eq:?}");
         assert_eq!(game.maximin(), (0, 2.0));
+    }
+
+    /// The cell-by-cell RM+ loop the solver had before it read rows as slices (lab-search
+    /// 9ff1081); `solve` must reproduce it bit for bit.
+    #[allow(clippy::needless_range_loop)]
+    fn solve_reference(matrix: &Matrix, max_iterations: usize, tolerance: f32) -> Equilibrium {
+        fn strategy(regret: &[f64]) -> Vec<f64> {
+            let total: f64 = regret.iter().sum();
+            if total <= 0.0 {
+                vec![1.0 / regret.len() as f64; regret.len()]
+            } else {
+                regret.iter().map(|r| r / total).collect()
+            }
+        }
+        fn evaluate(matrix: &Matrix, rows: &[f64], cols: &[f64], iterations: usize) -> Equilibrium {
+            let (n, m) = (matrix.rows, matrix.cols);
+            let mut value = 0.0f64;
+            let mut row_best = f64::NEG_INFINITY;
+            let mut col_best = f64::INFINITY;
+            for r in 0..n {
+                let mut util = 0.0;
+                for c in 0..m {
+                    util += cols[c] * f64::from(matrix.at(r, c));
+                }
+                value += rows[r] * util;
+                row_best = row_best.max(util);
+            }
+            for c in 0..m {
+                let mut util = 0.0;
+                for r in 0..n {
+                    util += rows[r] * f64::from(matrix.at(r, c));
+                }
+                col_best = col_best.min(util);
+            }
+            Equilibrium {
+                rows: rows.iter().map(|&p| p as f32).collect(),
+                cols: cols.iter().map(|&p| p as f32).collect(),
+                value: value as f32,
+                exploitability: ((row_best - value) + (value - col_best)).max(0.0) as f32,
+                iterations,
+            }
+        }
+        let (n, m) = (matrix.rows, matrix.cols);
+        let mut row_regret = vec![0.0f64; n];
+        let mut col_regret = vec![0.0f64; m];
+        let mut row_sum = vec![0.0f64; n];
+        let mut col_sum = vec![0.0f64; m];
+        let mut iterations = 0;
+        let mut result = None;
+        for t in 1..=max_iterations.max(1) {
+            iterations = t;
+            let rows = strategy(&row_regret);
+            let cols = strategy(&col_regret);
+            let mut row_util = vec![0.0f64; n];
+            let mut col_util = vec![0.0f64; m];
+            for r in 0..n {
+                for c in 0..m {
+                    let v = f64::from(matrix.at(r, c));
+                    row_util[r] += cols[c] * v;
+                    col_util[c] += rows[r] * v;
+                }
+            }
+            let row_value: f64 = (0..n).map(|r| rows[r] * row_util[r]).sum();
+            let col_value: f64 = (0..m).map(|c| cols[c] * col_util[c]).sum();
+            for r in 0..n {
+                row_regret[r] = (row_regret[r] + row_util[r] - row_value).max(0.0);
+            }
+            for c in 0..m {
+                col_regret[c] = (col_regret[c] + col_value - col_util[c]).max(0.0);
+            }
+            let weight = t as f64;
+            for r in 0..n {
+                row_sum[r] += weight * rows[r];
+            }
+            for c in 0..m {
+                col_sum[c] += weight * cols[c];
+            }
+            if t % 16 == 0 || t == max_iterations {
+                let eq = evaluate(matrix, &normalized(&row_sum), &normalized(&col_sum), t);
+                let done = eq.exploitability <= tolerance;
+                result = Some(eq);
+                if done {
+                    break;
+                }
+            }
+        }
+        result.unwrap_or_else(|| {
+            evaluate(
+                matrix,
+                &normalized(&row_sum),
+                &normalized(&col_sum),
+                iterations,
+            )
+        })
+    }
+
+    #[test]
+    fn solve_is_bit_identical_to_the_cell_loop() {
+        let mut x: u64 = 0x2545_f491_4f6c_dd1d;
+        let mut next = move || {
+            x ^= x >> 12;
+            x ^= x << 25;
+            x ^= x >> 27;
+            ((x.wrapping_mul(0x2545_f491_4f6c_dd1d) >> 40) as f32 / (1u64 << 24) as f32) * 400.0
+                - 200.0
+        };
+        for (n, m, iterations) in [(1, 1, 50), (3, 7, 3000), (17, 11, 5000), (40, 33, 2000)] {
+            let matrix = Matrix::new(n, m, (0..n * m).map(|_| next()).collect());
+            let a = solve(&matrix, iterations, 0.01);
+            let b = solve_reference(&matrix, iterations, 0.01);
+            assert_eq!(a, b, "{n}x{m}");
+        }
     }
 
     /// Rock-paper-scissors with a payoff twist still has value 0 with the known equilibrium

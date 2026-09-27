@@ -22,6 +22,8 @@ cli = ["scenario"]
 [dependencies]
 lab-engine = { path = "../core" }
 lab-scenario = { path = "../scenario", optional = true }
+# The worker pool of the payoff matrices and child batches (board S24p).
+rayon = "1.10"
 serde_json = { version = "1", optional = true }
 
 [dev-dependencies]
