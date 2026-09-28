@@ -49,8 +49,7 @@ use lab_scenario::{
 };
 use lab_search::game::asked_slots;
 use lab_search::{
-    decision, format_choice, format_switches, legal_choices, transitions, Choice, Decision,
-    Pruning,
+    decision, format_choice, format_switches, legal_choices, transitions, Choice, Decision, Pruning,
 };
 
 const SIDES: [SideId; 2] = [SideId::One, SideId::Two];
@@ -274,10 +273,10 @@ fn run_replay(
                 break;
             }
         };
-        let expected = match (kind, dec) {
-            ("turn", Decision::Turn) | ("replacement", Decision::Replacement) => true,
-            _ => false,
-        };
+        let expected = matches!(
+            (kind, dec),
+            ("turn", Decision::Turn) | ("replacement", Decision::Replacement)
+        );
         if !expected {
             stop = Some(format!(
                 "decision {k} (turn {turn} {kind}): the engine's position asks for {dec:?}"
@@ -298,9 +297,7 @@ fn run_replay(
                 let all = legal_choices(&state, Ruleset::CHAMPIONS_MC, dec, side, Pruning::All);
                 cands[side.index()] = all
                     .into_iter()
-                    .filter(|c| {
-                        matches(&state, &loaded, &order, dec, side, c, wanted, t == 2)
-                    })
+                    .filter(|c| matches(&state, &loaded, &order, dec, side, c, wanted, t == 2))
                     .collect();
             }
             if cands.iter().any(Vec::is_empty) {
@@ -354,6 +351,12 @@ fn run_replay(
                         }
                     };
                     let (structural, hp) = score(&canonical, &d["obs"]);
+                    if std::env::var("LAB_REPLAY_DEBUG").ok().as_deref() == Some(&k.to_string()) {
+                        eprintln!(
+                            "{strings:?} p={:.4} hp={hp} {structural:?}",
+                            path.probability
+                        );
+                    }
                     let candidate = Best {
                         structural,
                         hp,
@@ -414,7 +417,11 @@ fn run_replay(
         }));
         steps.push(Step {
             turn,
-            kind: if kind == "turn" { "Turn" } else { "Replacement" },
+            kind: if kind == "turn" {
+                "Turn"
+            } else {
+                "Replacement"
+            },
             p1: best.choices[0].clone(),
             p2: best.choices[1].clone(),
             mid_turn: best.path.mid_turn.clone(),
@@ -530,7 +537,11 @@ fn candidates(set: &Value, off: &str, ots: bool, pair: bool) -> Vec<Change> {
             nature,
         });
     };
-    let presets: &[usize] = if pair { &[2, 3, 4, 0, 1] } else { &[0, 1, 2, 3, 4, 5, 6, 7] };
+    let presets: &[usize] = if pair {
+        &[2, 3, 4, 0, 1]
+    } else {
+        &[0, 1, 2, 3, 4, 5, 6, 7]
+    };
     for &p in presets {
         push(p, base_nature.clone());
     }
@@ -571,7 +582,13 @@ fn replay_game(file: &str, options: &Options) -> Result<String, String> {
     let mut teams = [game["p1"]["team"].clone(), game["p2"]["team"].clone()];
     let offense: Vec<Vec<&'static str>> = teams
         .iter()
-        .map(|t| t.as_array().into_iter().flatten().map(attacking_stat).collect())
+        .map(|t| {
+            t.as_array()
+                .into_iter()
+                .flatten()
+                .map(attacking_stat)
+                .collect()
+        })
         .collect();
     // Stat Point fit (`--fit-sp n`): coordinate descent over the presets of the Pokémon each
     // divergence involves, on quick replays (`--fit-rolls`) that stop at the first divergence.
@@ -607,8 +624,16 @@ fn replay_game(file: &str, options: &Options) -> Result<String, String> {
                     for ca in candidates(&teams[sa][ia], offense[sa][ia], ots, true) {
                         for cb in candidates(&teams[sb][ib], offense[sb][ib], ots, true) {
                             trials.push(vec![
-                                Change { side: sa, i: ia, ..ca.clone() },
-                                Change { side: sb, i: ib, ..cb },
+                                Change {
+                                    side: sa,
+                                    i: ia,
+                                    ..ca.clone()
+                                },
+                                Change {
+                                    side: sb,
+                                    i: ib,
+                                    ..cb
+                                },
                             ]);
                         }
                     }
@@ -636,9 +661,13 @@ fn replay_game(file: &str, options: &Options) -> Result<String, String> {
                     continue;
                 }
                 fit_runs += 1;
-                let Ok(run) =
-                    run_replay(&game, &team_trial, options.fit_rolls, options.max_combos, true)
-                else {
+                let Ok(run) = run_replay(
+                    &game,
+                    &team_trial,
+                    options.fit_rolls,
+                    options.max_combos,
+                    true,
+                ) else {
                     continue;
                 };
                 let reference = best.as_ref().map_or(current.fit_key(), |b| b.0.fit_key());
@@ -976,7 +1005,7 @@ fn continue_mid(
         };
         let legal = legal_choices(state, Ruleset::CHAMPIONS_MC, mid, side, Pruning::All);
         let Some(choice) = legal.into_iter().find(|c| match c {
-            Choice::Switches(sw) => sw.iter().any(|x| *x == Some(party)),
+            Choice::Switches(sw) => sw.contains(&Some(party)),
             _ => false,
         }) else {
             return Ok(Vec::new());
@@ -1065,7 +1094,9 @@ fn score(canonical: &Value, obs: &Value) -> (Vec<String>, i64) {
         let c_status = c["status"].as_str().unwrap_or("");
         let o_status = o["status"].as_str().unwrap_or("");
         if c_status != o_status {
-            diffs.push(format!("{label} status engine {c_status:?} log {o_status:?}"));
+            diffs.push(format!(
+                "{label} status engine {c_status:?} log {o_status:?}"
+            ));
         }
         let c_slot = c["slot"].as_i64();
         let o_slot = o["slot"].as_i64();
@@ -1130,7 +1161,11 @@ fn score(canonical: &Value, obs: &Value) -> (Vec<String>, i64) {
     let strings = |v: &Value| -> Vec<String> {
         let mut k: Vec<String> = v
             .as_array()
-            .map(|a| a.iter().filter_map(|x| x.as_str().map(str::to_owned)).collect())
+            .map(|a| {
+                a.iter()
+                    .filter_map(|x| x.as_str().map(str::to_owned))
+                    .collect()
+            })
             .unwrap_or_default();
         k.sort();
         k
@@ -1138,13 +1173,17 @@ fn score(canonical: &Value, obs: &Value) -> (Vec<String>, i64) {
     let c_pseudo = keys(&field["pseudoWeather"]);
     let o_pseudo = strings(&obs["pseudoWeather"]);
     if c_pseudo != o_pseudo {
-        diffs.push(format!("pseudoWeather engine {c_pseudo:?} log {o_pseudo:?}"));
+        diffs.push(format!(
+            "pseudoWeather engine {c_pseudo:?} log {o_pseudo:?}"
+        ));
     }
     for (i, side) in ["p1", "p2"].into_iter().enumerate() {
         let c_cond = keys(&canonical["sides"][i]["conditions"]);
         let o_cond = strings(&obs["sideConditions"][side]);
         if c_cond != o_cond {
-            diffs.push(format!("{side} conditions engine {c_cond:?} log {o_cond:?}"));
+            diffs.push(format!(
+                "{side} conditions engine {c_cond:?} log {o_cond:?}"
+            ));
         }
     }
     (diffs, hp)

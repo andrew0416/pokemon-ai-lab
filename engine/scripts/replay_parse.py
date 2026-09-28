@@ -227,7 +227,7 @@ def parse_game(rid, text):
                 act = cur["actions"].get((side, slot))
                 if act is None:
                     act = {"kind": "unknown"}
-                if act.get("kind") == "move":
+                if act.get("kind") in ("move", "unknown"):
                     act = dict(act, mega=(side, slot) in cur["mega"])
                 d[side].append(act)
         d["obs"] = g.obs()
@@ -538,6 +538,28 @@ def parse_packed(packed):
     return sets
 
 
+# Abilities that print a message when their holder enters: a Pokémon that entered and never
+# showed one does not have it, so an unrevealed ability is the first of the species' others.
+ANNOUNCED = {"intimidate", "drizzle", "drought", "sandstream", "snowwarning", "electricsurge", "grassysurge",
+             "psychicsurge", "mistysurge", "pressure", "moldbreaker", "teravolt", "turboblaze", "unnerve",
+             "frisk", "airlock", "cloudnine", "neutralizinggas", "trace", "forewarn", "anticipation",
+             "download", "screencleaner", "curiousmedicine", "hospitality", "supersweetsyrup",
+             "orichalcumpulse", "hadronengine", "desolateland", "primordialsea", "deltastream",
+             "vesselofruin", "swordofruin", "tabletsofruin", "beadsofruin", "asoneglastrier",
+             "asonespectrier", "zerotohero", "commander", "costar", "embodyaspectteal",
+             "embodyaspecthearthflame", "embodyaspectwellspring", "embodyaspectcornerstone",
+             "intrepidsword", "dauntlessshield", "slowstart", "comatose", "fairyaura", "darkaura",
+             "aurabreak"}
+
+
+def silent_ability(entry):
+    abilities = [a for _, a in sorted((entry or {}).get("abilities", {}).items())]
+    for a in abilities:
+        if toid(a) not in ANNOUNCED:
+            return a
+    return abilities[0] if abilities else ""
+
+
 def species_entry(species):
     return DEX["species"].get(toid(species))
 
@@ -582,8 +604,12 @@ def build_team(g, side, ots_sets):
             source = "open team sheet (Stat Points assumed)"
         else:
             moves = [name_of("moves", x) for x in m.moves[:4]] or ["Protect"]
+            # A filler for the turns it did not act (`unknown`): a priority-0 move whose
+            # failure changes nothing, so its choice cannot jump ahead like Protect.
+            if len(moves) < 4 and "Rest" not in moves:
+                moves.append("Rest")
             item = name_of("items", m.orig_item) if m.orig_item else ""
-            ability = name_of("abilities", m.ability) if m.ability else entry.get("abilities", {}).get("0", "")
+            ability = name_of("abilities", m.ability) if m.ability else silent_ability(entry)
             nature = "Serious"
             source = "log (moves used, item/ability shown; rest assumed)"
         sp = default_sp(base, m.move_cats)
@@ -609,7 +635,7 @@ def build_team(g, side, ots_sets):
             ability = name_of("abilities", ots["ability"])
             nature = ots["nature"] or "Serious"
         else:
-            moves, item, ability, nature = ["Protect"], "", entry.get("abilities", {}).get("0", ""), "Serious"
+            moves, item, ability, nature = ["Protect", "Rest"], "", entry.get("abilities", {}).get("0", ""), "Serious"
         team.append({"name": name, "species": name_of("species", base), "item": item, "ability": ability,
                      "gender": "", "nature": nature, "evs": default_sp(base, collections.Counter()), "ivs": IVS,
                      "level": 50, "moves": moves})
