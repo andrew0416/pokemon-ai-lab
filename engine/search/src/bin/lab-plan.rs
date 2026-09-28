@@ -932,7 +932,6 @@ fn run() -> Result<(), String> {
     Ok(())
 }
 
-/// `Gardevoir, Rillaboom | bench Sableye, Milotic` from the sidecar names.
 /// A number or a comma-separated list of numbers (`4` or `4,3`).
 fn parse_list(arg: Option<&String>) -> Option<Vec<usize>> {
     let list: Option<Vec<usize>> = arg?.split(',').map(|x| x.trim().parse().ok()).collect();
@@ -956,6 +955,7 @@ fn deep_levels(
         .collect()
 }
 
+/// `Gardevoir, Rillaboom | bench Sableye, Milotic` from the sidecar names.
 fn roster(loaded: &lab_scenario::LoadedScenario, position: &Position, side: SideId) -> String {
     let s = position.state.side(side);
     let meta = &loaded.meta.sides[side.index()];
