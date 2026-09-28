@@ -151,3 +151,18 @@ def test_bad_search_arguments():
         pos.nash(rolls="bogus")
     with pytest.raises(ValueError):
         pos.maximin(side=2)
+
+
+def test_position_searches_in_singles():
+    sc = lab_engine.load_scenario(
+        ENGINE / "oracle" / "scenarios" / "ae-singles-hit.json", format="singles"
+    )
+    (_, pos), *_ = sc.positions(setup_rolls="median")
+    nash = pos.nash(threads=1)
+    assert strict_json(nash) == nash
+    assert set(nash["ours"]) <= set(pos.legal_choices(0))
+    three = pos.deep_nash(beam=[2, 2], outcomes=[2, 1], threads=1)
+    assert three["depth"] == 3
+    assert pos.maximin(threads=1)["lines"]
+    with pytest.raises(NotImplementedError):
+        sc.rollout(games=1)
