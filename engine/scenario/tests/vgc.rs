@@ -39,7 +39,8 @@ fn team_preview_picks_follow_choose_team() {
     assert_eq!(preview_order(Some("21"), 6).unwrap(), [1, 0, 2, 3, 4, 5]);
     assert_eq!(picked_team_size(DOUBLES_FORMAT), Some(6));
     assert_eq!(picked_team_size(VGC_FORMAT), Some(4));
-    assert_eq!(picked_team_size("gen9championsbssregmc"), None);
+    assert_eq!(picked_team_size("gen9championsbssregmc"), Some(3));
+    assert_eq!(picked_team_size("gen9ou"), None);
     assert!(format_ruleset(VGC_FORMAT).is_ok());
 }
 
@@ -71,14 +72,15 @@ fn vgc_scenarios_keep_four_members_at_level_50() {
     let indices: Vec<u8> = p1.iter().map(|m| m.team_index).collect();
     assert_eq!(indices, [5, 4, 0, 1]);
 
-    // The custom game still refuses a level other than 50.
+    // The custom game keeps the sets' levels (A4-t1).
     let custom = scenario.replace(VGC_FORMAT, DOUBLES_FORMAT);
-    assert!(load_scenario_str(&custom, Path::new(".")).is_err());
+    let custom = load_scenario_str(&custom, Path::new(".")).unwrap();
+    assert!(custom.state.sides[0].party.iter().any(|p| p.level != 50));
 }
 
 /// Board B31: the custom game adjusts no level, so Showdown plays a set without `level` at
-/// level 100 (same Champions stats, about twice the damage). The loader refuses such a set
-/// instead of loading it as level 50; in the VGC format (`Adjust Level = 50`) it loads.
+/// level 100 (same Champions stats, about twice the damage). Since A4-t1 the loader loads it at
+/// level 100, never as 50; in the VGC format (`Adjust Level = 50`) it is level 50.
 #[test]
 fn a_set_without_level_is_level_100_in_the_custom_game() {
     let team = r#"[{"species": "Gardevoir", "ability": "Trace", "nature": "Modest",
@@ -87,10 +89,14 @@ fn a_set_without_level_is_level_100_in_the_custom_game() {
     let scenario = |format: &str| {
         format!(r#"{{"format": "{format}", "p1": {{"team": {team}}}, "p2": {{"team": {team}}}}}"#)
     };
-    let error = load_scenario_str(&scenario(DOUBLES_FORMAT), Path::new("."))
-        .unwrap_err()
-        .to_string();
-    assert!(error.contains("level 100"), "{error}");
+    let custom = load_scenario_str(&scenario(DOUBLES_FORMAT), Path::new(".")).unwrap();
+    assert!(custom
+        .state
+        .side(SideId::One)
+        .party
+        .iter()
+        .filter(|p| !p.species.is_none())
+        .all(|p| p.level == 100));
     let loaded = load_scenario_str(&scenario(VGC_FORMAT), Path::new(".")).unwrap();
     assert!(loaded
         .state
