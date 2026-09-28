@@ -1051,6 +1051,309 @@
   "types_string: no types (Showdown `???`)": {
    "class": "unreachable",
    "why": "A Pokémon that loses its types becomes `Type::Unknown` (`???`: Burn Up, Double Shock), never two `Type::None`s; invariant."
+  },
+  "ScenarioError::Invalid: {}: expected an object": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: missing {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: expected an integer, got {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: {} is out of range": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: expected a string, got {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: expected true or false, got {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: unknown move {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: unknown item {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: unknown ability {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: type {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: status {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: the rebuilt state does not print the given canonical state: {}": {
+   "class": "input",
+   "why": "The rebuild is checked against what it was given: a canonical state that no engine state prints (a hand edit the engine cannot represent consistently) is an error, not a silent difference (A4-t4)."
+  },
+  "ScenarioError::Invalid: canonical schema {}; this engine reads {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: ended {} with winner {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: sides: expected two sides": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: requests {}; the position gives {}": {
+   "class": "unsupported",
+   "why": "A canonical `request` for a mid-turn switch (`switchFlag`: U-turn, Eject Button, ...): the canonical form does not say which Pokémon asked or why, so the position is refused (A4-t4).",
+   "test": "ae_hand_positions.rs::missing_hidden_state_is_refused"
+  },
+  "ScenarioError::Invalid: {}: duration {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: the meta has {} members": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: slotConditions is not a list": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: {} slot condition entries for {} slots": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: wish hp: expected a number": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: wish hp {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: future move {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: pokemon is not a list": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: {} Pokémon for {} members": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {} has no Pokémon named {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: {} twice": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {} {}: slot {} of {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: two Pokémon in slot {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {} {}: canMega on a Pokémon that cannot Mega Evolve": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: canMega on some eligible Pokémon but not on others": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {} {}: fainted (fnt) without an empty slot to hold": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: unknown species {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: species {} is not a species name": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: hp {}/{}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: {} move slots": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: boost {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: field {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: expected a list of names": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: {} has no {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: side {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: switch flag {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: gender {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: gimmick bits {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: expected four [id, pp, disabled] move slots": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: move slot {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: expected [active, duration, counter, time, move, hidden]": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: expected [side, index]": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: x-hidden: unknown history field {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: five stats": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: two type names": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: species {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: six Stat Points": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: x-hidden: unknown Pokémon field {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: a name twice": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: {} names for {} members": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: x-hidden sides: expected two objects": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: x-hidden: unknown field {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: a list of hazard ids": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: must list exactly the side's active hazards": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: one object per slot": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: {}: [value, turn]": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: x-hidden: unknown side field {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Invalid: x-hidden: unknown slot field {}": {
+   "class": "input",
+   "why": "A malformed or inconsistent canonical state given to `state_from_canonical` (hand-written or edited; A4-t4): a wrong shape or value, a name the battle does not have, or a combination Showdown never prints. The oracle's and the engine's own states rebuild (`ae_hand_positions.rs`)."
+  },
+  "ScenarioError::Unsupported: {}: types {} (the engine holds at most two)": {
+   "class": "unsupported",
+   "why": "A third type (Trick-or-Treat, Forest's Curse; standard in Champions) printed by `getTypes()`: the engine's `types` holds two, so a pinned or hand-written position with one is refused (A4-t4).",
+   "test": "vd_from_canonical_refusals.rs::a_third_type_is_refused"
+  },
+  "ScenarioError::Unsupported: {}; give it in \"{}\" (canonical_json_hidden / state_json(hidden=True) writes it)": {
+   "class": "unsupported",
+   "why": "Hidden state with no safe default (a lossy volatile's source or stat, a transformed Pokémon, a pending Future Sight / Doom Desire): refused unless the `x-hidden` extension gives it (A4-t4).",
+   "test": "ae_hand_positions.rs::missing_hidden_state_is_refused"
+  },
+  "ScenarioError::Unsupported: hidden state the {} extension does not carry: {}": {
+   "class": "unreachable",
+   "why": "`canonical_json_hidden` writes every hidden value that differs from the rebuild's defaults and checks the read-back equals the state (invariant; `ae_hand_positions.rs::engine_states_round_trip_exactly_with_the_extension`)."
+  },
+  "ScenarioError::Unsupported: {} without a duration (primal weather, a permanent effect)": {
+   "class": "unreachable",
+   "why": "A permanent weather or terrain: the primal weathers only, whose abilities are not standard (audit E8)."
+  },
+  "ScenarioError::Unsupported: weather {}": {
+   "class": "input",
+   "why": "A condition id the engine has no kind for: every standard Champions field, side, slot and volatile condition has one (`V11` corpus features), so this is non-standard content or a typo in a hand-written state (A4-t4)."
+  },
+  "ScenarioError::Unsupported: terrain {}": {
+   "class": "input",
+   "why": "A condition id the engine has no kind for: every standard Champions field, side, slot and volatile condition has one (`V11` corpus features), so this is non-standard content or a typo in a hand-written state (A4-t4)."
+  },
+  "ScenarioError::Unsupported: pseudo-weather {}": {
+   "class": "input",
+   "why": "A condition id the engine has no kind for: every standard Champions field, side, slot and volatile condition has one (`V11` corpus features), so this is non-standard content or a typo in a hand-written state (A4-t4)."
+  },
+  "ScenarioError::Unsupported: {}: side condition {}": {
+   "class": "input",
+   "why": "A condition id the engine has no kind for: every standard Champions field, side, slot and volatile condition has one (`V11` corpus features), so this is non-standard content or a typo in a hand-written state (A4-t4)."
+  },
+  "ScenarioError::Unsupported: {}: slot condition {}": {
+   "class": "input",
+   "why": "A condition id the engine has no kind for: every standard Champions field, side, slot and volatile condition has one (`V11` corpus features), so this is non-standard content or a typo in a hand-written state (A4-t4)."
+  },
+  "ScenarioError::Unsupported: {}: volatile {}": {
+   "class": "input",
+   "why": "A condition id the engine has no kind for: every standard Champions field, side, slot and volatile condition has one (`V11` corpus features), so this is non-standard content or a typo in a hand-written state (A4-t4)."
   }
  }
 }
