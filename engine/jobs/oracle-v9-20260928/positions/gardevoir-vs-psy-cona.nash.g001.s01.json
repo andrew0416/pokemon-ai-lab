@@ -1,0 +1,419 @@
+{
+ "description": "FF parity position (FF-parity-harness): gardevoir-vs-psy-cona, lab-parity game 1 (seed 2ea1717e6d0f4653, policy nash, extremes chance), decision 1 = turn 2 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927/matchups/gardevoir-vs-psy-cona.json. The 1 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "3521",
+  "team": "../../../../teams/rillaboom-slot-20260920/gardevoir-braverilla.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/psy-cona/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 141,
+       "item": "gardevoirite",
+       "lastMove": "hypervoice",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "focusblast": 8,
+        "hypervoice": 11,
+        "hypnosis": 20,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "competitive",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "hydropump": 8,
+        "hypnosis": 20,
+        "icebeam": 12,
+        "recover": 8
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "miracleseed",
+       "lastMove": "fakeout",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 157,
+       "item": "roseliberry",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 8,
+        "gravity": 8,
+        "quash": 16,
+        "sunnyday": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "boosts": {},
+       "hp": 93,
+       "item": "lifeorb",
+       "maxhp": 169,
+       "name": "Armarouge",
+       "pp": {
+        "darkpulse": 16,
+        "expandingforce": 12,
+        "heatwave": 12,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 133,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "terrainpulse",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "terrainpulse": 11,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 160,
+       "item": "whiteherb",
+       "maxhp": 160,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 179,
+       "item": "staraptite",
+       "maxhp": 179,
+       "name": "Staraptor",
+       "pp": {
+        "bravebird": 16,
+        "closecombat": 8,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Staraptor",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move hypervoice mega, move fakeout 2",
+   "move terrainpulse 1, move heatwave"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flashfire",
+      "boosts": {},
+      "canMega": true,
+      "hp": 175,
+      "item": "gardevoirite",
+      "maxhp": 175,
+      "name": "Gardevoir",
+      "pp": {
+       "focusblast": 8,
+       "hypervoice": 12,
+       "hypnosis": 20,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Gardevoir",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "competitive",
+      "hp": 202,
+      "item": "sitrusberry",
+      "maxhp": 202,
+      "name": "Milotic",
+      "pp": {
+       "hydropump": 8,
+       "hypnosis": 20,
+       "icebeam": 12,
+       "recover": 8
+      },
+      "slot": null,
+      "species": "Milotic",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 207,
+      "item": "miracleseed",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "uturn": 20,
+       "woodhammer": 16
+      },
+      "slot": 1,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "hp": 157,
+      "item": "roseliberry",
+      "maxhp": 157,
+      "name": "Sableye",
+      "pp": {
+       "encore": 8,
+       "gravity": 8,
+       "quash": 16,
+       "sunnyday": 8
+      },
+      "slot": null,
+      "species": "Sableye",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flashfire",
+      "boosts": {},
+      "hp": 169,
+      "item": "lifeorb",
+      "maxhp": 169,
+      "name": "Armarouge",
+      "pp": {
+       "darkpulse": 16,
+       "expandingforce": 12,
+       "heatwave": 12,
+       "protect": 8
+      },
+      "slot": 1,
+      "species": "Armarouge",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {
+       "spd": 1
+      },
+      "hp": 177,
+      "item": "",
+      "lastItem": "psychicseed",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "helpinghand": 20,
+       "terrainpulse": 12,
+       "trickroom": 8
+      },
+      "slot": 0,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 160,
+      "item": "whiteherb",
+      "maxhp": 160,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "protect": 8,
+       "rockslide": 12
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "canMega": true,
+      "hp": 179,
+      "item": "staraptite",
+      "maxhp": 179,
+      "name": "Staraptor",
+      "pp": {
+       "bravebird": 16,
+       "closecombat": 8,
+       "protect": 8,
+       "tailwind": 16
+      },
+      "slot": null,
+      "species": "Staraptor",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move hypervoice, switch 3",
+  "p2": "move terrainpulse 1, move heatwave"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": [
+   1
+  ]
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    1
+   ]
+  }
+ ]
+}

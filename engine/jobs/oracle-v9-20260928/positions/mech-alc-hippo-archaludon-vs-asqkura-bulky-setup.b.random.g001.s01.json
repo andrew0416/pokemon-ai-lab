@@ -1,0 +1,399 @@
+{
+ "description": "FF parity position (FF-parity-harness): mech-alc-hippo-archaludon-vs-asqkura-bulky-setup.b, lab-parity game 1 (seed 2ea1717e6d0f4653, policy random, extremes chance), decision 1 = turn 2 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/mech-alc-hippo-archaludon-vs-asqkura-bulky-setup.b.json. The 1 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "5634",
+  "team": "../../../../teams/library/singles/m-c/alc-hippo-archaludon/team.json"
+ },
+ "p2": {
+  "order": "5634",
+  "team": "../../../../teams/library/singles/m-c/asqkura-bulky-setup/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "chestoberry",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 8,
+        "flashcannon": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 221,
+       "item": "lifeorb",
+       "maxhp": 221,
+       "name": "Baxcalibur",
+       "pp": {
+        "earthquake": 12,
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "scaleshot": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {
+        "spe": -1
+       },
+       "hp": 187,
+       "item": "metagrossite",
+       "lastMove": "hammerarm",
+       "maxhp": 187,
+       "name": "Metagross",
+       "pp": {
+        "bulletpunch": 20,
+        "earthquake": 12,
+        "hammerarm": 11,
+        "icepunch": 16
+       },
+       "slot": 0,
+       "species": "Metagross-Mega",
+       "status": "",
+       "volatiles": {
+        "yawn": {
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 133,
+       "item": "sitrusberry",
+       "lastMove": "mysticalfire",
+       "maxhp": 201,
+       "name": "Sylveon",
+       "pp": {
+        "hypervoice": 12,
+        "mysticalfire": 11,
+        "protect": 8,
+        "yawn": 12
+       },
+       "slot": 1,
+       "species": "Sylveon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "goodasgold",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 85,
+       "item": "",
+       "maxhp": 189,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": 0,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 215,
+       "item": "leftovers",
+       "lastMove": "yawn",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "earthquake": 12,
+        "stealthrock": 20,
+        "whirlwind": 20,
+        "yawn": 11
+       },
+       "slot": 1,
+       "species": "Hippowdon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 187,
+       "item": "sitrusberry",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "aquajet": 20,
+        "encore": 8,
+        "moonblast": 16,
+        "sparklingaria": 12
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 191,
+       "item": "lumberry",
+       "maxhp": 191,
+       "name": "Volcarona",
+       "pp": {
+        "fierydance": 12,
+        "gigadrain": 12,
+        "morningsun": 8,
+        "quiverdance": 20
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move hammerarm -2 mega, move mysticalfire 1",
+   "switch 3, move yawn 1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "sandstorm",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "chestoberry",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "dracometeor": 8,
+       "flashcannon": 12,
+       "rest": 8,
+       "thunderbolt": 16
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "thermalexchange",
+      "hp": 221,
+      "item": "lifeorb",
+      "maxhp": 221,
+      "name": "Baxcalibur",
+      "pp": {
+       "earthquake": 12,
+       "iceshard": 20,
+       "iciclecrash": 12,
+       "scaleshot": 20
+      },
+      "slot": null,
+      "species": "Baxcalibur",
+      "status": ""
+     },
+     {
+      "ability": "clearbody",
+      "boosts": {},
+      "canMega": true,
+      "hp": 187,
+      "item": "metagrossite",
+      "maxhp": 187,
+      "name": "Metagross",
+      "pp": {
+       "bulletpunch": 20,
+       "earthquake": 12,
+       "hammerarm": 12,
+       "icepunch": 16
+      },
+      "slot": 0,
+      "species": "Metagross",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "pixilate",
+      "boosts": {},
+      "hp": 201,
+      "item": "sitrusberry",
+      "maxhp": 201,
+      "name": "Sylveon",
+      "pp": {
+       "hypervoice": 12,
+       "mysticalfire": 12,
+       "protect": 8,
+       "yawn": 12
+      },
+      "slot": 1,
+      "species": "Sylveon",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "goodasgold",
+      "hp": 189,
+      "item": "airballoon",
+      "maxhp": 189,
+      "name": "Gholdengo",
+      "pp": {
+       "makeitrain": 8,
+       "nastyplot": 20,
+       "recover": 8,
+       "shadowball": 16
+      },
+      "slot": null,
+      "species": "Gholdengo",
+      "status": ""
+     },
+     {
+      "ability": "sandstream",
+      "boosts": {},
+      "hp": 215,
+      "item": "leftovers",
+      "maxhp": 215,
+      "name": "Hippowdon",
+      "pp": {
+       "earthquake": 12,
+       "stealthrock": 20,
+       "whirlwind": 20,
+       "yawn": 12
+      },
+      "slot": 1,
+      "species": "Hippowdon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "torrent",
+      "hp": 187,
+      "item": "sitrusberry",
+      "maxhp": 187,
+      "name": "Primarina",
+      "pp": {
+       "aquajet": 20,
+       "encore": 8,
+       "moonblast": 16,
+       "sparklingaria": 12
+      },
+      "slot": null,
+      "species": "Primarina",
+      "status": ""
+     },
+     {
+      "ability": "flamebody",
+      "boosts": {},
+      "hp": 191,
+      "item": "lumberry",
+      "maxhp": 191,
+      "name": "Volcarona",
+      "pp": {
+       "fierydance": 12,
+       "gigadrain": 12,
+       "morningsun": 8,
+       "quiverdance": 20
+      },
+      "slot": 0,
+      "species": "Volcarona",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move earthquake, move yawn -1",
+  "p2": "switch 4, move earthquake"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    1,
+    1,
+    1,
+    0
+   ]
+  }
+ ]
+}

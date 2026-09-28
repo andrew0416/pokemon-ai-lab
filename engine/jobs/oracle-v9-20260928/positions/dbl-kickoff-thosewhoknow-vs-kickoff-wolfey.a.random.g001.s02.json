@@ -1,0 +1,597 @@
+{
+ "description": "FF parity position (FF-parity-harness): dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.a, lab-parity game 1 (seed 2ea1717e6d0f4653, policy random, extremes chance), decision 2 = turn 2 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.a.json. The 2 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-thosewhoknow/team.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-wolfey/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 195,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "flowerveil",
+       "boosts": {},
+       "canMega": true,
+       "hp": 120,
+       "item": "floettite",
+       "lastMove": "lightofruin",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "dazzlinggleam": 12,
+        "lightofruin": 7,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Floette-Eternal",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "helpinghand": 20,
+        "imprison": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 155,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "direclaw",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 15,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 150,
+       "item": "golisopite",
+       "lastMove": "ironhead",
+       "maxhp": 150,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 15,
+        "leechlife": 12,
+        "protect": 8,
+        "swordsdance": 20
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "colburberry",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "psychic": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": "fnt"
+      },
+      {
+       "ability": "drizzle",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "protect": 8,
+        "tailwind": 16,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 195,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "flowerveil",
+       "boosts": {},
+       "canMega": true,
+       "hp": 120,
+       "item": "floettite",
+       "lastMove": "lightofruin",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "dazzlinggleam": 12,
+        "lightofruin": 7,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Floette-Eternal",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "helpinghand": 20,
+        "imprison": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 155,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "direclaw",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 15,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 150,
+       "item": "golisopite",
+       "lastMove": "ironhead",
+       "maxhp": 150,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 15,
+        "leechlife": 12,
+        "protect": 8,
+        "swordsdance": 20
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "colburberry",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "psychic": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "protect": 8,
+        "tailwind": 16,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 155,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move lightofruin 2, move direclaw 2",
+   "move ironhead -2 mega, move trickroom"
+  ],
+  [
+   "",
+   "switch 3"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "adaptability",
+      "hp": 195,
+      "item": "choicescarf",
+      "maxhp": 195,
+      "name": "Basculegion",
+      "pp": {
+       "aquajet": 20,
+       "flipturn": 20,
+       "lastrespects": 12,
+       "wavecrash": 12
+      },
+      "slot": null,
+      "species": "Basculegion",
+      "status": ""
+     },
+     {
+      "ability": "flowerveil",
+      "boosts": {},
+      "canMega": true,
+      "hp": 149,
+      "item": "floettite",
+      "maxhp": 149,
+      "name": "Floette",
+      "pp": {
+       "dazzlinggleam": 12,
+       "lightofruin": 8,
+       "moonblast": 16,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Floette-Eternal",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "hp": 135,
+      "item": "focussash",
+      "maxhp": 135,
+      "name": "Indeedee",
+      "pp": {
+       "expandingforce": 12,
+       "helpinghand": 20,
+       "imprison": 12,
+       "trickroom": 8
+      },
+      "slot": null,
+      "species": "Indeedee",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "boosts": {
+       "spd": 1
+      },
+      "hp": 155,
+      "item": "",
+      "lastItem": "psychicseed",
+      "maxhp": 155,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "protect": 8,
+       "rockslide": 12
+      },
+      "slot": 1,
+      "species": "Sneasler",
+      "status": "",
+      "volatiles": {
+       "unburden": {}
+      }
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "emergencyexit",
+      "boosts": {},
+      "canMega": true,
+      "hp": 150,
+      "item": "golisopite",
+      "maxhp": 150,
+      "name": "Golisopod",
+      "pp": {
+       "ironhead": 16,
+       "leechlife": 12,
+       "protect": 8,
+       "swordsdance": 20
+      },
+      "slot": 0,
+      "species": "Golisopod",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 145,
+      "item": "colburberry",
+      "maxhp": 145,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "helpinghand": 20,
+       "psychic": 12,
+       "trickroom": 8
+      },
+      "slot": 1,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "hp": 135,
+      "item": "focussash",
+      "maxhp": 135,
+      "name": "Pelipper",
+      "pp": {
+       "hurricane": 12,
+       "protect": 8,
+       "tailwind": 16,
+       "weatherball": 12
+      },
+      "slot": null,
+      "species": "Pelipper",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "hp": 155,
+      "item": "psychicseed",
+      "maxhp": 155,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "protect": 8,
+       "rockslide": 12
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move protect, move closecombat -1",
+  "p2": "switch 4, move closecombat 2"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    1,
+    1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  }
+ ]
+}

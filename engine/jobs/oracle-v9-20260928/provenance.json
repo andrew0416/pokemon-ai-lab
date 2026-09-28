@@ -1,0 +1,269 @@
+{
+ "list": "C:/Users/admin/AppData/Local/Temp/claude/D--pokemon-ai-lab/3f3b079f-cb52-4153-bfd2-95b72d0b67db/scratchpad/vb-v9.txt",
+ "positions": [
+  {
+   "file": "gardevoir-vs-psy-cona.random.g001.s01.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-ff/gardevoir-vs-psy-cona.random.g001.s01.json"
+  },
+  {
+   "file": "gardevoir-vs-psy-cona.nash.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-ff/gardevoir-vs-psy-cona.nash.g000.s01.json"
+  },
+  {
+   "file": "balance-ddee-vs-crown-cecil9.random.g001.s06.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-ff/balance-ddee-vs-crown-cecil9.random.g001.s06.json"
+  },
+  {
+   "file": "mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.a.random.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.a.random.g000.s01.json"
+  },
+  {
+   "file": "mech-hujiko-no-mega-vs-kurotama-baxcalibur.a.nash.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/mech-hujiko-no-mega-vs-kurotama-baxcalibur.a.nash.g000.s06.json"
+  },
+  {
+   "file": "balance-ddee-vs-crown-cecil9.nash.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-ff/balance-ddee-vs-crown-cecil9.nash.g000.s07.json"
+  },
+  {
+   "file": "balance-ddee-vs-crown-cecil9.random.g001.s04.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-ff/balance-ddee-vs-crown-cecil9.random.g001.s04.json"
+  },
+  {
+   "file": "coaching-panda-vs-psy-sand-udon.random.g001.s06.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-ff/coaching-panda-vs-psy-sand-udon.random.g001.s06.json"
+  },
+  {
+   "file": "gardevoir-vs-psy-cona.nash.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-ff/gardevoir-vs-psy-cona.nash.g000.s02.json"
+  },
+  {
+   "file": "gardevoir-vs-psy-cona.nash.g001.s01.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-ff/gardevoir-vs-psy-cona.nash.g001.s01.json"
+  },
+  {
+   "file": "gardevoir-vs-psy-cona.random.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-ff/gardevoir-vs-psy-cona.random.g000.s03.json"
+  },
+  {
+   "file": "gardevoir-vs-psy-cona.random.g001.s03.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-ff/gardevoir-vs-psy-cona.random.g001.s03.json"
+  },
+  {
+   "file": "psy-sand-udon-vs-balance-ddee.random.g000.s05.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-ff/psy-sand-udon-vs-balance-ddee.random.g000.s05.json"
+  },
+  {
+   "file": "starmie-vs-psy-sand-udon.nash.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-ff/starmie-vs-psy-sand-udon.nash.g000.s02.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s02.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s03.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s04.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s07.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s08.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s09.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s09.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s10.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s10.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s12.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s12.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s15.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.nash.g000.s15.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.random.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.random.g000.s01.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.random.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.random.g000.s02.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.random.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.random.g000.s04.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.random.g000.s09.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.random.g000.s09.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.random.g001.s01.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.random.g001.s01.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.random.g001.s08.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.random.g001.s08.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.random.g001.s10.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.random.g001.s10.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.b.random.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.b.random.g000.s04.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.b.random.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.b.random.g000.s06.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.b.random.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.b.random.g000.s07.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.b.random.g000.s09.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.b.random.g000.s09.json"
+  },
+  {
+   "file": "dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.b.random.g001.s11.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.b.random.g001.s11.json"
+  },
+  {
+   "file": "dbl-kickoff-gerard-vs-kickoff-gwendolyte.b.random.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-gerard-vs-kickoff-gwendolyte.b.random.g000.s01.json"
+  },
+  {
+   "file": "dbl-kickoff-gerard-vs-kickoff-gwendolyte.b.random.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-gerard-vs-kickoff-gwendolyte.b.random.g000.s02.json"
+  },
+  {
+   "file": "dbl-kickoff-hollowedhollowed-vs-kickoff-jhinting.a.random.g001.s06.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-hollowedhollowed-vs-kickoff-jhinting.a.random.g001.s06.json"
+  },
+  {
+   "file": "dbl-kickoff-hollowedhollowed-vs-kickoff-jhinting.b.random.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-hollowedhollowed-vs-kickoff-jhinting.b.random.g000.s03.json"
+  },
+  {
+   "file": "dbl-kickoff-hollowedhollowed-vs-kickoff-jhinting.b.random.g001.s01.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-hollowedhollowed-vs-kickoff-jhinting.b.random.g001.s01.json"
+  },
+  {
+   "file": "dbl-kickoff-hollowedhollowed-vs-kickoff-jhinting.b.random.g001.s03.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-hollowedhollowed-vs-kickoff-jhinting.b.random.g001.s03.json"
+  },
+  {
+   "file": "dbl-kickoff-prongs-vs-kickoff-sableyevgc.a.nash.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-prongs-vs-kickoff-sableyevgc.a.nash.g000.s04.json"
+  },
+  {
+   "file": "dbl-kickoff-prongs-vs-kickoff-sableyevgc.a.nash.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-prongs-vs-kickoff-sableyevgc.a.nash.g000.s08.json"
+  },
+  {
+   "file": "dbl-kickoff-prongs-vs-kickoff-sableyevgc.b.random.g000.s05.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-prongs-vs-kickoff-sableyevgc.b.random.g000.s05.json"
+  },
+  {
+   "file": "dbl-kickoff-prongs-vs-kickoff-sableyevgc.b.random.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-prongs-vs-kickoff-sableyevgc.b.random.g000.s08.json"
+  },
+  {
+   "file": "dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.a.nash.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.a.nash.g000.s03.json"
+  },
+  {
+   "file": "dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.a.random.g001.s02.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.a.random.g001.s02.json"
+  },
+  {
+   "file": "dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.a.random.g001.s03.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.a.random.g001.s03.json"
+  },
+  {
+   "file": "dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.a.random.g001.s05.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.a.random.g001.s05.json"
+  },
+  {
+   "file": "dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.b.random.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.b.random.g000.s06.json"
+  },
+  {
+   "file": "dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.b.random.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.b.random.g000.s08.json"
+  },
+  {
+   "file": "mech-alc-hippo-archaludon-vs-asqkura-bulky-setup.b.random.g001.s01.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/mech-alc-hippo-archaludon-vs-asqkura-bulky-setup.b.random.g001.s01.json"
+  },
+  {
+   "file": "mech-alc-hippo-archaludon-vs-asqkura-bulky-setup.b.random.g001.s02.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/mech-alc-hippo-archaludon-vs-asqkura-bulky-setup.b.random.g001.s02.json"
+  },
+  {
+   "file": "mech-hina-psychic-sneasler-vs-hiroki-mence-theory.b.random.g001.s06.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/mech-hina-psychic-sneasler-vs-hiroki-mence-theory.b.random.g001.s06.json"
+  },
+  {
+   "file": "mech-myuto-mence-offense-vs-robin-blastoise-psychic.a.random.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/mech-myuto-mence-offense-vs-robin-blastoise-psychic.a.random.g000.s04.json"
+  },
+  {
+   "file": "mech-sarami-raichu-experiment-vs-tama-screens-revival.b.random.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/mech-sarami-raichu-experiment-vs-tama-screens-revival.b.random.g000.s01.json"
+  },
+  {
+   "file": "mech-sarami-raichu-experiment-vs-tama-screens-revival.b.random.g001.s06.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/mech-sarami-raichu-experiment-vs-tama-screens-revival.b.random.g001.s06.json"
+  },
+  {
+   "file": "mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.a.nash.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.a.nash.g000.s02.json"
+  },
+  {
+   "file": "mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.a.nash.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.a.nash.g000.s04.json"
+  },
+  {
+   "file": "mech-sarami-raichu-experiment-vs-tama-screens-revival.b.random.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2b/mech-sarami-raichu-experiment-vs-tama-screens-revival.b.random.g000.s02.json"
+  },
+  {
+   "file": "mech-sarami-raichu-experiment-vs-tama-screens-revival.b.random.g001.s13.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2b/mech-sarami-raichu-experiment-vs-tama-screens-revival.b.random.g001.s13.json"
+  },
+  {
+   "file": "mech-sarami-raichu-experiment-vs-tama-screens-revival.b.random.g001.s14.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2b/mech-sarami-raichu-experiment-vs-tama-screens-revival.b.random.g001.s14.json"
+  },
+  {
+   "file": "mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.a.nash.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2b/mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.a.nash.g000.s06.json"
+  },
+  {
+   "file": "mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.a.nash.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2b/mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.a.nash.g000.s07.json"
+  },
+  {
+   "file": "mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.a.nash.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2b/mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.a.nash.g000.s08.json"
+  },
+  {
+   "file": "mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.b.random.g000.s10.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2b/mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.b.random.g000.s10.json"
+  }
+ ]
+}
