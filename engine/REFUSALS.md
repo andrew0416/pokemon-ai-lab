@@ -200,17 +200,19 @@
 
 `engine/scenario/src`(`error.rs`·`parity.rs`·바이너리 제외)가 턴 엔진 앞에서 거부하는 곳: `LoadError`·`TeamProblem`·`SetProblem`·`SwitchInError`·`CanonicalError`의 생성 지점과 팀 프리뷰·패치·선택 문자열의 `String` 오류. 분류는 `refusals.classification.json`의 `loader`. `SwitchInError`와 `CanonicalError::Unrepresentable`은 `ScenarioError::Unsupported`로, 나머지는 `ScenarioError::Invalid`/`LoadError`로 나온다(T1).
 
-- 키 81개: input 57개, unsupported 3개, unreachable 18개, forward 3개.
+- 키 82개: input 59개, unsupported 2개, unreachable 18개, forward 3개.
 
 ### input: 입력 오류: the scenario file is malformed or asks for something Showdown would also refuse (or that the file format does not have)
 
 | 키 | 지점 | 로더 테스트 | 보드 | 이유 |
 |---|---|---|---|---|
 | `LoadError::Io` | lib.rs::read_text | — | — | A team or scenario file that cannot be read. |
-| `LoadError::Json` | lib.rs::parse_setup_turn<br>lib.rs::load_scenario_str<br>lib.rs::parse_team<br>lib.rs::resolve_team | `loader_refusals.rs::an_unknown_scenario_field_is_refused` | — | Malformed JSON, a wrong value type, or a field the loader does not know (`deny_unknown_fields` on every scenario and set shape: an unknown field could change the battle, so it is refused, not dropped). |
-| `LoadError::Unsupported: setupRolls` | lib.rs::load_scenario_str | `loader_refusals.rs::scenario_field_values_are_checked` | — | `setupRolls` other than `full` / `extremes`: the file format has no other value (the oracle's reports use those two). |
-| `LoadError::Unsupported: setupStates` | lib.rs::load_scenario_str | `loader_refusals.rs::scenario_field_values_are_checked` | — | More pinned setup states than setup turns: a file error. |
+| `LoadError::Json` | lib.rs::parse_setup_turn<br>lib.rs::load_scenario_str_as<br>lib.rs::parse_team<br>lib.rs::resolve_team | `loader_refusals.rs::an_unknown_scenario_field_is_refused` | — | Malformed JSON, a wrong value type, or a field the loader does not know (`deny_unknown_fields` on every scenario and set shape: an unknown field could change the battle, so it is refused, not dropped). |
+| `LoadError::Unsupported: format` | lib.rs::load_scenario_str_as | `ae_singles.rs::formats_and_slot_counts_must_agree` | — | A singles format given to the doubles loader or a doubles one to the singles loader (`load_scenario_file_as::<N>` must match the format's slot count; Python `format=`). |
+| `LoadError::Unsupported: setupRolls` | lib.rs::load_scenario_str_as | `loader_refusals.rs::scenario_field_values_are_checked` | — | `setupRolls` other than `full` / `extremes`: the file format has no other value (the oracle's reports use those two). |
+| `LoadError::Unsupported: setupStates` | lib.rs::load_scenario_str_as | `loader_refusals.rs::scenario_field_values_are_checked` | — | More pinned setup states than setup turns: a file error. |
 | `LoadError::Unsupported: team` | lib.rs::resolve_team | `loader_refusals.rs::scenario_field_values_are_checked` | — | A side's `team` that is neither a path nor an inline array. |
+| `LoadError::UnsupportedFormat` | lib.rs::load_scenario_str_as | `loader_refusals.rs::a_singles_format_is_refused` | — | A format other than the four Champions formats the loader knows (doubles custom game, VGC 2026 Reg M-C, singles custom game, BSS Reg M-C since II-singles-loader); other formats are other rule sets (other mods, other clauses). |
 | `SetProblem::DuplicateMove` | team.rs::build_pokemon | — | — | The same move twice in a set (the validator refuses it; move slots are addressed by move id). |
 | `SetProblem::InvalidIv` | team.rs::build_pokemon | — | — | An IV above 31 (IVs have no term in the Champions formula and are only range-checked). |
 | `SetProblem::MissingAbility` | team.rs::build_pokemon | — | — | A set without an ability: the loader asks for it (Showdown would fall back to no ability). |
@@ -268,7 +270,6 @@
 
 | 키 | 지점 | 로더 테스트 | 보드 | 이유 |
 |---|---|---|---|---|
-| `LoadError::UnsupportedFormat` | lib.rs::load_scenario_str | `loader_refusals.rs::a_singles_format_is_refused` | II-singles-loader | Only the Champions doubles custom game and VGC 2026 Reg M-C load; Champions singles (`gen9championsbssregmc`) is a format Showdown plays (board II-singles-loader, on hold: singles keeps only the structure). |
 | `SetProblem::TemporaryForme` | team.rs::build_pokemon | `loader_refusals.rs::a_temporary_forme_as_species_is_refused` | — | A temporary in-battle forme (Aegislash-Blade, Darmanitan-Zen, ...) as a set's species: the custom game (no validator) keeps it as the base species, which the state cannot tell from the forme reached in battle. Kept as an explicit limit (A4-t1): the formes are `battleOnly`, so Showdown's validator (VGC and every validated format) refuses such sets and only the unvalidated custom game reaches it; supporting it needs a per-Pokémon base species in the state. |
 | `TeamProblem::DuplicateName` | team.rs::build_picked_side | `loader_refusals.rs::a_name_twice_on_a_side_is_refused` | — | Two members of a side with the same name (a shared nickname, or one species twice in the custom game): Showdown plays it, canonical states key Pokémon by name. Kept as an explicit limit (A4-t1): `canonical.cjs` sorts `side.pokemon` with a comparator that never returns 0, so equal names have no defined canonical order and such a battle cannot be compared with the oracle. |
 

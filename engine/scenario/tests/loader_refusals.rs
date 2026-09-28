@@ -42,17 +42,29 @@ fn two(format: &str, a: serde_json::Value, b: serde_json::Value) -> serde_json::
 
 // ---- unsupported ---------------------------------------------------------------------------
 
-/// Champions singles (`gen9championsbssregmc`) is a format Showdown plays; the loader builds
-/// doubles only (board II-singles-loader).
+/// A format the loader does not know (another mod's) is refused by name; Champions singles
+/// loads with the singles loader since II-singles-loader (`ae_singles.rs`), and the doubles
+/// loader refuses it by its slot count.
 #[test]
 fn a_singles_format_is_refused() {
     let json = two(
-        "gen9championsbssregmc",
+        "gen9ou",
         set("Chansey", None, Some(50)),
         set("Machamp", None, Some(50)),
     );
     match load(&json) {
-        Err(LoadError::UnsupportedFormat(format)) => assert_eq!(format, "gen9championsbssregmc"),
+        Err(LoadError::UnsupportedFormat(format)) => assert_eq!(format, "gen9ou"),
+        other => panic!("{other:?}"),
+    }
+    let json = two(
+        lab_scenario::SINGLES_FORMAT,
+        set("Chansey", None, Some(50)),
+        set("Machamp", None, Some(50)),
+    );
+    match load(&json) {
+        Err(LoadError::Unsupported {
+            field: "format", ..
+        }) => {}
         other => panic!("{other:?}"),
     }
 }

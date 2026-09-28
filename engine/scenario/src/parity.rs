@@ -11,7 +11,7 @@ use std::collections::HashMap;
 use serde_json::Value;
 
 use lab_engine::instruction::Outcome;
-use lab_engine::Doubles;
+use lab_engine::state::State;
 
 use crate::{canonical_value, ScenarioMeta};
 
@@ -26,9 +26,9 @@ pub fn value_key(state: &Value) -> String {
 /// The engine's outcomes (instructions from `state`, which is left unchanged) as canonical
 /// state key → probability; engine states that differ only in what the canonical form leaves
 /// out merge.
-pub fn engine_distribution(
+pub fn engine_distribution<const N: usize>(
     meta: &ScenarioMeta,
-    state: &mut Doubles,
+    state: &mut State<N>,
     outcomes: &[Outcome],
 ) -> Result<Distribution, String> {
     let mut out = Distribution::new();

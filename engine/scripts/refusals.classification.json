@@ -720,10 +720,14 @@
    "why": "A team or scenario file that cannot be read."
   },
   "LoadError::UnsupportedFormat": {
-   "class": "unsupported",
-   "why": "Only the Champions doubles custom game and VGC 2026 Reg M-C load; Champions singles (`gen9championsbssregmc`) is a format Showdown plays (board II-singles-loader, on hold: singles keeps only the structure).",
-   "test": "loader_refusals.rs::a_singles_format_is_refused",
-   "board": "II-singles-loader"
+   "class": "input",
+   "why": "A format other than the four Champions formats the loader knows (doubles custom game, VGC 2026 Reg M-C, singles custom game, BSS Reg M-C since II-singles-loader); other formats are other rule sets (other mods, other clauses).",
+   "test": "loader_refusals.rs::a_singles_format_is_refused"
+  },
+  "LoadError::Unsupported: format": {
+   "class": "input",
+   "why": "A singles format given to the doubles loader or a doubles one to the singles loader (`load_scenario_file_as::<N>` must match the format's slot count; Python `format=`).",
+   "test": "ae_singles.rs::formats_and_slot_counts_must_agree"
   },
   "LoadError::Unsupported: setupStates": {
    "class": "input",

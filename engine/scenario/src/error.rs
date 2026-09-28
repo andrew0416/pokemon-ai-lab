@@ -90,10 +90,13 @@ impl fmt::Display for LoadError {
             LoadError::Json { what, error } => write!(f, "{what}: {error}"),
             LoadError::UnsupportedFormat(format) => write!(
                 f,
-                "unsupported format {format:?}: only {} (all members brought) and {} (team \
-                 preview picks 4) are loaded; order = team preview choice",
+                "unsupported format {format:?}: doubles {} (all members brought) or {} (team \
+                 preview picks 4), singles {} (all members) or {} (picks 3); order = team \
+                 preview choice",
                 crate::DOUBLES_FORMAT,
-                crate::VGC_FORMAT
+                crate::VGC_FORMAT,
+                crate::SINGLES_CUSTOM_FORMAT,
+                crate::SINGLES_FORMAT
             ),
             LoadError::Unsupported { field, reason } => {
                 write!(f, "scenario field {field:?} is not supported: {reason}")

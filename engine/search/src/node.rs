@@ -214,11 +214,11 @@ pub fn weights_by_name(named: &[(String, f32)]) -> Result<[f32; FEATURE_COUNT], 
 /// `setup` is the damage-roll mode of the setup turns. `lenient` drops the replayed branches
 /// in which a setup turn's choices are not legal instead of failing
 /// (`scenario_positions_consistent`, `lab-plan --setup-lenient`).
-pub fn scenario_nodes(
-    loaded: &LoadedScenario,
+pub fn scenario_nodes<const N: usize>(
+    loaded: &LoadedScenario<N>,
     setup: EnumerateOptions,
     lenient: bool,
-) -> Result<Vec<(f64, Node<2>)>, NodeError> {
+) -> Result<Vec<(f64, Node<N>)>, NodeError> {
     let meta = Arc::new(loaded.meta.clone());
     let ruleset = format_ruleset(&meta.format).map_err(|e| NodeError::Invalid(e.to_string()))?;
     let positions = if lenient {

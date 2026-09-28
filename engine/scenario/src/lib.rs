@@ -1,4 +1,5 @@
-//! Oracle scenario/team JSON → `lab_engine::State<2>` plus sidecar identity data.
+//! Oracle scenario/team JSON → `lab_engine::State<N>` plus sidecar identity data: doubles
+//! (`State<2>`, the default everywhere) and singles (`State<1>`, board II-singles-loader).
 //!
 //! This crate is the only place serde touches the engine. It runs once per scenario, off the
 //! search hot path; the `State` it produces holds no strings or JSON values. Names and other
@@ -6,7 +7,9 @@
 //!
 //! Scope: initial states only. A scenario is two teams, their team preview order and the
 //! decision to check, in the custom game ([`DOUBLES_FORMAT`], every member brought) or VGC
-//! ([`VGC_FORMAT`], team preview keeps 4). The loaded state is the one right after leads are placed and **before
+//! ([`VGC_FORMAT`], team preview keeps 4), or in singles: the custom game
+//! ([`SINGLES_CUSTOM_FORMAT`]) or Battle Stadium Singles ([`SINGLES_FORMAT`], team preview
+//! keeps 3), loaded with [`load_scenario_file_as`]`::<1>`. The loaded state is the one right after leads are placed and **before
 //! switch-in effects**. [`switch_in::initial_outcomes`] expands it into the weighted states
 //! after the leads' start effects (the implemented subset: Trace, Sand Stream, Grassy Surge;
 //! anything else that could act is rejected); one of those is Showdown's `before` snapshot.
@@ -40,7 +43,6 @@ use lab_engine::turn::{
     enumerate_replacements, enumerate_turn_with, resume_turn_with, EnumerateOptions, RollMode,
     TurnError,
 };
-use lab_engine::Doubles;
 
 pub use canonical::{canonical_json, canonical_value, CanonicalError};
 pub use decision::{
@@ -69,23 +71,49 @@ pub const DOUBLES_FORMAT: &str = "gen9championsdoublescustomgame";
 /// override only differs for values beyond 16 bits and Speed above 10000.)
 pub const VGC_FORMAT: &str = "gen9championsvgc2026regmc";
 
-/// How many members a supported doubles format's team preview keeps (Showdown
-/// `ruleTable.pickedTeamSize`, capped by the team size): every member in the custom game, 4 in
-/// VGC. `None` for a format the loader does not support.
+/// Champions Battle Stadium Singles Reg M-C (`[Gen 9 Champions] BSS Reg M-C`): singles under
+/// the Champions mod's Flat Rules, whose `Picked Team Size = Auto` keeps 3 members in singles and
+/// whose `Adjust Level = 50` sets every set to level 50 (as [`VGC_FORMAT`]).
+pub const SINGLES_FORMAT: &str = "gen9championsbssregmc";
+
+/// The Champions singles custom game (`[Gen 9 Champions] Custom Game`): every member brought, the
+/// sets' levels (100 when a set has none), as [`DOUBLES_FORMAT`] in doubles.
+pub const SINGLES_CUSTOM_FORMAT: &str = "gen9championscustomgame";
+
+/// How many members a supported format's team preview keeps (Showdown
+/// `ruleTable.pickedTeamSize`, capped by the team size): every member in the custom games, 4 in
+/// VGC, 3 in BSS. `None` for a format the loader does not support.
 pub fn picked_team_size(format: &str) -> Option<usize> {
     match format {
-        DOUBLES_FORMAT => Some(PARTY_SIZE),
+        DOUBLES_FORMAT | SINGLES_CUSTOM_FORMAT => Some(PARTY_SIZE),
         VGC_FORMAT => Some(4),
+        SINGLES_FORMAT => Some(3),
         _ => None,
     }
+}
+
+/// Active slots per side of a supported format: 2 in doubles, 1 in singles.
+pub fn format_slots(format: &str) -> Option<usize> {
+    match format {
+        DOUBLES_FORMAT | VGC_FORMAT => Some(2),
+        SINGLES_FORMAT | SINGLES_CUSTOM_FORMAT => Some(1),
+        _ => None,
+    }
+}
+
+/// Whether the format's validator applies Flat Rules' `Adjust Level = 50` (the oracle's
+/// `loadTeam` does too); the custom games keep the sets' levels.
+fn adjusts_level(format: &str) -> bool {
+    matches!(format, VGC_FORMAT | SINGLES_FORMAT)
 }
 
 /// Showdown's `battle.turn` at the first decision after team preview.
 const FIRST_TURN: u16 = 1;
 
+/// A loaded scenario; `N` is the format's active slots per side (2 by default: doubles).
 #[derive(Clone, Debug, PartialEq)]
-pub struct LoadedScenario {
-    pub state: Doubles,
+pub struct LoadedScenario<const N: usize = 2> {
+    pub state: State<N>,
     pub meta: ScenarioMeta,
     /// Turns played before the decision (`[p1 choice, p2 choice]` or `[p1, p2, {"p1": [...],
     /// "p2": [...]}]` with mid-turn switch choices), replayed by [`scenario_positions`] after
@@ -138,29 +166,45 @@ fn parse_setup_turn(value: serde_json::Value) -> Result<SetupTurn, LoadError> {
 /// A position the scenario's decision can be made in, with Showdown's party order per side
 /// (what `switch N` in a choice string counts).
 #[derive(Clone, Debug, PartialEq)]
-pub struct Position {
+pub struct Position<const N: usize = 2> {
     pub probability: f64,
-    pub state: Doubles,
+    pub state: State<N>,
     pub order: [PartyOrder; 2],
 }
 
 /// A scenario's decision: a turn, or the replacement of fainted Pokémon.
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Decision {
-    Turn([JointAction<2>; 2]),
-    Replacement([[Option<u8>; 2]; 2]),
+pub enum Decision<const N: usize = 2> {
+    Turn([JointAction<N>; 2]),
+    Replacement([[Option<u8>; N]; 2]),
 }
 
-/// Loads a scenario file; team paths resolve relative to its directory.
+/// Loads a doubles scenario file; team paths resolve relative to its directory.
 pub fn load_scenario_file(path: impl AsRef<Path>) -> Result<LoadedScenario, LoadError> {
+    load_scenario_file_as::<2>(path)
+}
+
+/// Loads doubles scenario JSON; team paths resolve relative to `base_dir`.
+pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, LoadError> {
+    load_scenario_str_as::<2>(json, base_dir)
+}
+
+/// [`load_scenario_file`] for a format with `N` active slots per side (`::<1>`: singles).
+pub fn load_scenario_file_as<const N: usize>(
+    path: impl AsRef<Path>,
+) -> Result<LoadedScenario<N>, LoadError> {
     let path = path.as_ref();
     let text = read_text(path)?;
     let base_dir = path.parent().unwrap_or(Path::new("."));
-    load_scenario_str(&text, base_dir)
+    load_scenario_str_as::<N>(&text, base_dir)
 }
 
-/// Loads scenario JSON; team paths resolve relative to `base_dir`.
-pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, LoadError> {
+/// [`load_scenario_str`] for a format with `N` active slots per side (`::<1>`: singles). A
+/// format with another slot count is refused (`LoadError::Unsupported` for `format`).
+pub fn load_scenario_str_as<const N: usize>(
+    json: &str,
+    base_dir: &Path,
+) -> Result<LoadedScenario<N>, LoadError> {
     let scenario: ScenarioJson =
         serde_json::from_str(strip_bom(json)).map_err(|error| LoadError::Json {
             what: "scenario".into(),
@@ -170,6 +214,17 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
     let Some(picked) = picked_team_size(&scenario.format) else {
         return Err(LoadError::UnsupportedFormat(scenario.format));
     };
+    if format_slots(&scenario.format) != Some(N) {
+        return Err(LoadError::Unsupported {
+            field: "format",
+            reason: if N == 1 {
+                "a doubles format loaded as singles (load it as doubles: State<2>, format \"doubles\")"
+            } else {
+                "a singles format loaded as doubles (load it with load_scenario_file_as::<1>, \
+                 format \"singles\")"
+            },
+        });
+    }
     let setup_turns = match scenario.setup_turns {
         Some(value) if !is_empty(Some(&value)) => {
             let turns: Vec<serde_json::Value> =
@@ -194,11 +249,11 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
         _ => None,
     };
 
-    let mut state = Doubles::default();
+    let mut state = State::<N>::default();
     let mut sides: [SideMeta; 2] = Default::default();
     for (side, spec) in [(SideId::One, &scenario.p1), (SideId::Two, &scenario.p2)] {
         let mut team = resolve_team(side, &spec.team, base_dir)?;
-        if scenario.format == VGC_FORMAT {
+        if adjusts_level(&scenario.format) {
             // `Adjust Level = 50`.
             for set in &mut team {
                 set.level = Some(50);
@@ -214,7 +269,7 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
                 }
             }
         }
-        let (built, meta) = build_picked_side::<2>(side, &team, spec.order.as_deref(), picked)?;
+        let (built, meta) = build_picked_side::<N>(side, &team, spec.order.as_deref(), picked)?;
         state.sides[side.index()] = built;
         sides[side.index()] = meta;
     }
@@ -269,12 +324,12 @@ pub fn side_must_replace<const N: usize>(state: &State<N>, side: SideId) -> bool
 
 /// Parses both sides' choice strings for the decision `state` is waiting for: replacements
 /// if either side must replace a fainted Pokémon, a turn otherwise.
-pub fn parse_decision(
-    state: &Doubles,
+pub fn parse_decision<const N: usize>(
+    state: &State<N>,
     order: &[PartyOrder; 2],
     p1: &str,
     p2: &str,
-) -> Result<Decision, String> {
+) -> Result<Decision<N>, String> {
     let replacing = [SideId::One, SideId::Two]
         .into_iter()
         .any(|side| side_must_replace(state, side));
@@ -293,14 +348,17 @@ pub fn parse_decision(
 
 /// Every outcome of `decision` from `state` (left unchanged). A turn's outcome can be
 /// suspended for a mid-turn switch (`Outcome::suspension`); see [`run_decision_mid_turn`].
-pub fn run_decision(state: &mut Doubles, decision: &Decision) -> Result<Vec<Outcome>, TurnError> {
+pub fn run_decision<const N: usize>(
+    state: &mut State<N>,
+    decision: &Decision<N>,
+) -> Result<Vec<Outcome>, TurnError> {
     run_decision_with(state, decision, EnumerateOptions::default())
 }
 
 /// [`run_decision`] with enumeration `options` (damage-roll mode).
-pub fn run_decision_with(
-    state: &mut Doubles,
-    decision: &Decision,
+pub fn run_decision_with<const N: usize>(
+    state: &mut State<N>,
+    decision: &Decision<N>,
     options: EnumerateOptions,
 ) -> Result<Vec<Outcome>, TurnError> {
     match decision {
@@ -322,10 +380,10 @@ pub fn side_must_switch<const N: usize>(state: &State<N>, side: SideId) -> bool 
 /// of each side it asks (`"switch N"` against Showdown's party order at that point), as
 /// `enumerate.cjs` does with `midTurn`. A turn asking a side that has no choice left stays
 /// suspended in the result. The outcomes' instructions run from `state`.
-pub fn run_decision_mid_turn(
-    state: &mut Doubles,
+pub fn run_decision_mid_turn<const N: usize>(
+    state: &mut State<N>,
     order: &[PartyOrder; 2],
-    decision: &Decision,
+    decision: &Decision<N>,
     mid_turn: &[Vec<String>; 2],
 ) -> Result<Vec<Outcome>, ScenarioError> {
     run_decision_mid_turn_with(
@@ -338,10 +396,10 @@ pub fn run_decision_mid_turn(
 }
 
 /// [`run_decision_mid_turn`] with enumeration `options`.
-pub fn run_decision_mid_turn_with(
-    state: &mut Doubles,
+pub fn run_decision_mid_turn_with<const N: usize>(
+    state: &mut State<N>,
     order: &[PartyOrder; 2],
-    decision: &Decision,
+    decision: &Decision<N>,
     mid_turn: &[Vec<String>; 2],
     options: EnumerateOptions,
 ) -> Result<Vec<Outcome>, ScenarioError> {
@@ -357,7 +415,7 @@ pub fn run_decision_mid_turn_with(
         paused.apply(&outcome.instructions);
         let mut order = order.clone();
         advance_order(&mut order, &outcome.instructions);
-        let mut choices = [[None; 2]; 2];
+        let mut choices = [[None; N]; 2];
         let mut next_used = used;
         let mut missing = false;
         for side in [SideId::One, SideId::Two] {
@@ -397,17 +455,19 @@ pub fn run_decision_mid_turn_with(
 /// The positions the scenario's decision is made in: every initial outcome (the leads'
 /// switch-in effects), then every outcome of the setup turns, then the patch. Positions
 /// with the same state and party order merge.
-pub fn scenario_positions(loaded: &LoadedScenario) -> Result<Vec<Position>, ScenarioError> {
+pub fn scenario_positions<const N: usize>(
+    loaded: &LoadedScenario<N>,
+) -> Result<Vec<Position<N>>, ScenarioError> {
     scenario_positions_with(loaded, EnumerateOptions::default())
 }
 
 /// [`scenario_positions`] with enumeration `options` for the setup turns (a reduced damage-roll
 /// mode keeps the position count small at the cost of exactness; the initial switch-ins and the
 /// patch are unaffected).
-pub fn scenario_positions_with(
-    loaded: &LoadedScenario,
+pub fn scenario_positions_with<const N: usize>(
+    loaded: &LoadedScenario<N>,
     options: EnumerateOptions,
-) -> Result<Vec<Position>, ScenarioError> {
+) -> Result<Vec<Position<N>>, ScenarioError> {
     scenario_positions_filtered(loaded, options, &mut |_, positions| positions)
 }
 
@@ -417,11 +477,11 @@ pub fn scenario_positions_with(
 /// probability that the setup turns produced the observations the filters encode: the
 /// likelihood the opponent models of DESIGN.md "모델 ③·② 구현" weigh believed teams by. The
 /// scenario's patch is applied after the last turn, to what survives.
-pub fn scenario_positions_filtered(
-    loaded: &LoadedScenario,
+pub fn scenario_positions_filtered<const N: usize>(
+    loaded: &LoadedScenario<N>,
     options: EnumerateOptions,
-    filter: &mut dyn FnMut(usize, Vec<Position>) -> Vec<Position>,
-) -> Result<Vec<Position>, ScenarioError> {
+    filter: &mut dyn FnMut(usize, Vec<Position<N>>) -> Vec<Position<N>>,
+) -> Result<Vec<Position<N>>, ScenarioError> {
     replay_setup_turns(loaded, options, false, filter)
 }
 
@@ -431,21 +491,21 @@ pub fn scenario_positions_filtered(
 /// the fact that they were made, so it is dropped with its probability instead of failing the
 /// replay. What remains sums to the probability that the believed teams produce the observed
 /// choices and observations. A choice illegal in every position leaves nothing, not an error.
-pub fn scenario_positions_consistent(
-    loaded: &LoadedScenario,
+pub fn scenario_positions_consistent<const N: usize>(
+    loaded: &LoadedScenario<N>,
     options: EnumerateOptions,
-    filter: &mut dyn FnMut(usize, Vec<Position>) -> Vec<Position>,
-) -> Result<Vec<Position>, ScenarioError> {
+    filter: &mut dyn FnMut(usize, Vec<Position<N>>) -> Vec<Position<N>>,
+) -> Result<Vec<Position<N>>, ScenarioError> {
     replay_setup_turns(loaded, options, true, filter)
 }
 
-fn replay_setup_turns(
-    loaded: &LoadedScenario,
+fn replay_setup_turns<const N: usize>(
+    loaded: &LoadedScenario<N>,
     options: EnumerateOptions,
     drop_illegal: bool,
-    filter: &mut dyn FnMut(usize, Vec<Position>) -> Vec<Position>,
-) -> Result<Vec<Position>, ScenarioError> {
-    let mut positions: Vec<Position> = initial_outcomes(loaded)?
+    filter: &mut dyn FnMut(usize, Vec<Position<N>>) -> Vec<Position<N>>,
+) -> Result<Vec<Position<N>>, ScenarioError> {
+    let mut positions: Vec<Position<N>> = initial_outcomes(loaded)?
         .into_iter()
         .map(|o| Position {
             order: [
@@ -506,16 +566,16 @@ fn replay_setup_turns(
 
 /// Every outcome of setup turn `n` (0-based) from each of `positions`, merged by (state, party
 /// order) in first-reached order.
-fn replay_setup_turn(
-    loaded: &LoadedScenario,
-    positions: &[Position],
+fn replay_setup_turn<const N: usize>(
+    loaded: &LoadedScenario<N>,
+    positions: &[Position<N>],
     n: usize,
     turn: &SetupTurn,
     options: EnumerateOptions,
     pin: Option<&Value>,
     drop_illegal: bool,
-) -> Result<Vec<Position>, ScenarioError> {
-    let mut next: Vec<Position> = Vec::new();
+) -> Result<Vec<Position<N>>, ScenarioError> {
+    let mut next: Vec<Position<N>> = Vec::new();
     // Equal (state, order) positions merge in first-reached order; the index finds the earlier
     // one by hash instead of scanning `next` (Opus KK: a pinned setup turn with 37,686 outcomes
     // spent 144 s in the scan).
@@ -597,11 +657,11 @@ fn replay_setup_turn(
 /// not matter), with their probabilities renormalized: a pinned outcome is part of the
 /// scenario's definition, not an observation. None matching is an error naming the first
 /// canonical fields in which the closest candidate differs.
-fn pinned(
+fn pinned<const N: usize>(
     meta: &ScenarioMeta,
-    positions: Vec<Position>,
+    positions: Vec<Position<N>>,
     pin: &Value,
-) -> Result<Vec<Position>, ScenarioError> {
+) -> Result<Vec<Position<N>>, ScenarioError> {
     let candidates = positions.len();
     let mut kept = Vec::new();
     let mut closest: Option<(usize, Vec<String>)> = None;
@@ -635,7 +695,10 @@ fn pinned(
 }
 
 /// The scenario's `turn` choices parsed for `position`.
-pub fn scenario_decision(loaded: &LoadedScenario, position: &Position) -> Result<Decision, String> {
+pub fn scenario_decision<const N: usize>(
+    loaded: &LoadedScenario<N>,
+    position: &Position<N>,
+) -> Result<Decision<N>, String> {
     let turn = loaded
         .meta
         .turn
@@ -645,7 +708,9 @@ pub fn scenario_decision(loaded: &LoadedScenario, position: &Position) -> Result
 }
 
 /// [`scenario_positions`] without the party orders.
-pub fn scenario_states(loaded: &LoadedScenario) -> Result<Vec<InitialOutcome<2>>, ScenarioError> {
+pub fn scenario_states<const N: usize>(
+    loaded: &LoadedScenario<N>,
+) -> Result<Vec<InitialOutcome<N>>, ScenarioError> {
     Ok(scenario_positions(loaded)?
         .into_iter()
         .map(|p| InitialOutcome {
@@ -657,10 +722,10 @@ pub fn scenario_states(loaded: &LoadedScenario) -> Result<Vec<InitialOutcome<2>>
 
 /// The scenario's `turn` choices as a turn decision, parsed against `state` with the initial
 /// party order (valid for scenarios without setup turns).
-pub fn scenario_choices(
-    loaded: &LoadedScenario,
-    state: &Doubles,
-) -> Result<[JointAction<2>; 2], String> {
+pub fn scenario_choices<const N: usize>(
+    loaded: &LoadedScenario<N>,
+    state: &State<N>,
+) -> Result<[JointAction<N>; 2], String> {
     let turn = loaded
         .meta
         .turn
