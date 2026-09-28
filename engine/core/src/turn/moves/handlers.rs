@@ -1770,8 +1770,8 @@ pub(super) fn volatile_crit_ratio<const N: usize>(b: &Battle<'_, N>, user: SlotR
 pub(super) fn volatile_base_power<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
-) -> Vec<Handler> {
-    let mut out = Vec::new();
+) -> crate::turn::abilities::Handlers {
+    let mut out = crate::turn::abilities::Handlers::new();
     if b.volatile(user, Volatile::Gem).active {
         out.push(Handler::of(b, user, 14, SUB_CONDITION, 5325));
     }
@@ -1978,8 +1978,8 @@ pub(super) fn volatile_modify_damage<const N: usize>(
     b: &Battle<'_, N>,
     target: SlotRef,
     mv: &ActiveMove,
-) -> Vec<Handler> {
-    let mut out = Vec::new();
+) -> crate::turn::abilities::Handlers {
+    let mut out = crate::turn::abilities::Handlers::new();
     if b.volatile(target, Volatile::GlaiveRush).active {
         out.push(Handler::of(b, target, 0, SUB_CONDITION, 2 * 4096));
     }
@@ -2006,8 +2006,8 @@ pub(super) fn target_volatile_base_power<const N: usize>(
     b: &Battle<'_, N>,
     target: SlotRef,
     mv: &ActiveMove,
-) -> Vec<Handler> {
-    let mut out = Vec::new();
+) -> crate::turn::abilities::Handlers {
+    let mut out = crate::turn::abilities::Handlers::new();
     if b.volatile(target, Volatile::Bounce).active && [moves::GUST, moves::TWISTER].contains(&mv.id)
     {
         out.push(Handler::of(b, target, 0, SUB_CONDITION, 2 * 4096));

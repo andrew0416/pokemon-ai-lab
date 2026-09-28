@@ -822,8 +822,8 @@ pub(crate) fn attack_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
     data: &MoveData,
-) -> Vec<Handler> {
-    let mut out = Vec::new();
+) -> crate::turn::abilities::Handlers {
+    let mut out = crate::turn::abilities::Handlers::new();
     let item = b.item(user);
     let physical = data.category == MoveCategory::Physical;
     let (boosted, event) = if physical {
@@ -873,7 +873,7 @@ pub(crate) fn base_power_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
     data: &MoveData,
-) -> Vec<Handler> {
+) -> crate::turn::abilities::Handlers {
     let item = b.item(user);
     let modifier = match item {
         i if i == items::MUSCLE_BAND => (data.category == MoveCategory::Physical).then_some(4505),
@@ -918,8 +918,8 @@ pub(crate) fn defense_handlers<const N: usize>(
     b: &Battle<'_, N>,
     target: SlotRef,
     defense_stat: Stat,
-) -> Vec<Handler> {
-    let mut out = Vec::new();
+) -> crate::turn::abilities::Handlers {
+    let mut out = crate::turn::abilities::Handlers::new();
     let Some(mon) = b.slot_mon(target) else {
         return out;
     };
@@ -1064,8 +1064,8 @@ pub(crate) fn accuracy_handlers<const N: usize>(
     b: &Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
-) -> Vec<Handler> {
-    let mut out = Vec::new();
+) -> crate::turn::abilities::Handlers {
+    let mut out = crate::turn::abilities::Handlers::new();
     let item = b.item(user);
     let modifier = match item {
         i if i == items::WIDE_LENS => Some(4505),
@@ -1444,7 +1444,8 @@ pub(crate) fn after_move_secondary_order<const N: usize>(
     thaws: bool,
 ) -> Vec<(usize, AfterMoveSecondaryHandler)> {
     // (priority, Speed, sub-order, target index, handler)
-    let mut handlers: Vec<(i32, i32, u32, usize, AfterMoveSecondaryHandler)> = Vec::new();
+    let mut handlers: crate::turn::Small<(i32, i32, u32, usize, AfterMoveSecondaryHandler), 8> =
+        crate::turn::Small::new();
     for (i, &t) in targets.iter().enumerate() {
         let speed = b.event_speed(t);
         let frozen = b.slot_mon(t).is_some_and(|m| m.status == Status::Freeze);
@@ -1731,8 +1732,8 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
     move_type: Type,
     type_mod: i32,
     hit_substitute: bool,
-) -> Vec<Handler> {
-    let mut out = Vec::new();
+) -> crate::turn::abilities::Handlers {
+    let mut out = crate::turn::abilities::Handlers::new();
     // The user's `metronome` condition (a condition's handler: sub-order 2; it acts whether or
     // not the item is suppressed, as its TryMove already removed it then):
     // `chainModify([dmgMod[min(numConsecutive, 5)], 4096])`.

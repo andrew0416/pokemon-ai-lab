@@ -53,7 +53,7 @@ impl<const N: usize> Battle<'_, N> {
         };
         let mut spe = boosted_stat(i32::from(mon.stats[4]), self.state.slot(slot).boosts[4]);
         // Chained ModifySpe handlers, in handler order: side conditions, then abilities.
-        let mut chain = Vec::new();
+        let mut chain: super::Small<u32, 8> = super::Small::new();
         if self.side_effect_active(slot.side, SideEffect::Tailwind) {
             chain.push(2 * MOD_ONE);
         }

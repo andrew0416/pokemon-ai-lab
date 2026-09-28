@@ -4,10 +4,12 @@
 //! replies and outcomes of one analysis and across analyses by the same solver (a rollout's
 //! decisions, several `lab-plan` modes on one position).
 //!
-//! The key is the position itself (`State` + the suspended turn, `State: Eq + Hash`, the
-//! engine's outcome-merge key), never a hash alone: a 64-bit hash would hand one position
-//! another's value on a collision (board B32). A cheaper key is board P3a/P3b (incremental
-//! hash, merge key) and only needs [`PositionKey`] replaced here.
+//! The key is the position itself (`State` + the suspended turn, the engine's outcome-merge
+//! key), never a hash alone: a 64-bit hash would hand one position another's value on a
+//! collision (board B32). The table indexes it by the engine's position hash
+//! (`lab_engine::hash::key_hash` of `State::position_hash` and the suspension, board P3b) and
+//! confirms by `Eq` (`lab_engine::hash::PositionMap`), instead of a SipHash of the whole state
+//! for every lookup and every growth of the map.
 //!
 //! The value stored for a position depends on the solver's configuration (evaluator, rolls,
 //! chance, pruning, side); a table belongs to one [`crate::Solver`], so a caller that changes
@@ -24,9 +26,7 @@
 //! beam pairs, so PP alone tells their children apart), more often in small positions (the
 //! `ability-change-fails` oracle scenario 19 in 27).
 
-use std::collections::HashMap;
-use std::hash::Hash;
-
+use lab_engine::hash::{key_hash, PositionMap};
 use lab_engine::state::State;
 use lab_engine::turn::Suspension;
 
@@ -47,16 +47,33 @@ pub type DeepTable<const N: usize> = Table<DeepKey<N>>;
 /// hundred bytes to a couple of kilobytes).
 pub const DEFAULT_CAPACITY: usize = 200_000;
 
+/// A table key: indexed by the engine's position hash (board P3b), confirmed by `Eq`.
+pub trait TableKey: Eq {
+    fn index(&self) -> u64;
+}
+
+impl<const N: usize> TableKey for PositionKey<N> {
+    fn index(&self) -> u64 {
+        key_hash(self.0.position_hash(), &self.1)
+    }
+}
+
+impl<const N: usize> TableKey for DeepKey<N> {
+    fn index(&self) -> u64 {
+        key_hash(self.1 .0.position_hash(), &(&self.0, &self.1 .1))
+    }
+}
+
 pub struct Table<K> {
-    entries: HashMap<K, f32>,
+    entries: PositionMap<K, f32>,
     capacity: usize,
     enabled: bool,
 }
 
-impl<K: Eq + Hash> Table<K> {
+impl<K: TableKey> Table<K> {
     pub fn new(enabled: bool, capacity: usize) -> Self {
         Table {
-            entries: HashMap::new(),
+            entries: PositionMap::new(),
             capacity,
             enabled,
         }
@@ -79,13 +96,13 @@ impl<K: Eq + Hash> Table<K> {
         if !self.enabled {
             return None;
         }
-        self.entries.get(key).copied()
+        self.entries.get(key.index(), key).copied()
     }
 
     /// Stores `value` for `key` unless disabled or full.
     pub fn insert(&mut self, key: K, value: f32) {
         if self.enabled && self.entries.len() < self.capacity {
-            self.entries.insert(key, value);
+            self.entries.insert(key.index(), key, value);
         }
     }
 

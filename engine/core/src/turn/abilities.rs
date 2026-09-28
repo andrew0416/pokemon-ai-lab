@@ -75,14 +75,18 @@ impl Handler {
     }
 }
 
+/// An event's modifier handlers, inline (board P4a: these lists are built for every damage,
+/// accuracy and Speed calculation and rarely hold more than a few entries).
+pub(crate) type Handlers = crate::turn::Small<Handler, 8>;
+
 /// The event's chained modifier: the handlers' factors in Showdown's order.
-pub(crate) fn chain<const N: usize>(b: &mut Battle<'_, N>, mut handlers: Vec<Handler>) -> u32 {
+pub(crate) fn chain<const N: usize>(b: &mut Battle<'_, N>, mut handlers: Handlers) -> u32 {
     handlers.retain(|h| h.modifier != MOD_ONE);
     // The first factor is exact and two factors commute: the order matters from three on.
     if handlers.len() >= 3 {
         speed_sort(b, &mut handlers);
     }
-    let modifiers: Vec<u32> = handlers.iter().map(|h| h.modifier).collect();
+    let modifiers: crate::turn::Small<u32, 8> = handlers.iter().map(|h| h.modifier).collect();
     chain_modifiers(&modifiers, 0, u32::MAX)
 }
 
@@ -93,7 +97,7 @@ fn speed_sort<const N: usize>(b: &mut Battle<'_, N>, list: &mut [Handler]) {
     let mut sorted = 0;
     while sorted < list.len() {
         let best = list[sorted..].iter().map(key).min().expect("non-empty");
-        let tied: Vec<usize> = (sorted..list.len())
+        let tied: crate::turn::Small<usize, 8> = (sorted..list.len())
             .filter(|&i| key(&list[i]) == best)
             .collect();
         for (offset, &i) in tied.iter().enumerate() {
@@ -1058,8 +1062,8 @@ pub(crate) fn base_power_handlers<const N: usize>(
     data: &MoveData,
     move_type: Type,
     base_power: i32,
-) -> Vec<Handler> {
-    let mut out = Vec::new();
+) -> crate::turn::abilities::Handlers {
+    let mut out = crate::turn::abilities::Handlers::new();
     let flag = |f: MoveFlags, modifier: u32| data.flags.contains(f).then_some(modifier);
     let ability = b.ability(user);
     let boost = match ability {
@@ -1705,7 +1709,7 @@ pub(crate) fn magician<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     id: MoveId,
-    hit_targets: Vec<SlotRef>,
+    hit_targets: super::Slots,
 ) -> Result<(), super::TurnError> {
     use crate::state::SwitchFlag;
     if b.ability(user) != abilities::MAGICIAN
@@ -2323,8 +2327,8 @@ pub(crate) fn attack_handlers<const N: usize>(
     target: SlotRef,
     data: &MoveData,
     move_type: Type,
-) -> Vec<Handler> {
-    let mut out = Vec::new();
+) -> crate::turn::abilities::Handlers {
+    let mut out = crate::turn::abilities::Handlers::new();
     let physical = data.category == MoveCategory::Physical;
     let (event, source_event) = if physical {
         ("onModifyAtkPriority", "onSourceModifyAtkPriority")
@@ -2565,8 +2569,8 @@ pub(crate) fn defense_handlers<const N: usize>(
     target: SlotRef,
     data: &MoveData,
     defense_stat: Stat,
-) -> Vec<Handler> {
-    let mut out = Vec::new();
+) -> crate::turn::abilities::Handlers {
+    let mut out = crate::turn::abilities::Handlers::new();
     let Some(defender) = b.slot_mon(target) else {
         return out;
     };
@@ -2696,8 +2700,8 @@ pub(crate) fn accuracy_handlers<const N: usize>(
     user: SlotRef,
     target: SlotRef,
     data: &MoveData,
-) -> Vec<Handler> {
-    let mut out = Vec::new();
+) -> crate::turn::abilities::Handlers {
+    let mut out = crate::turn::abilities::Handlers::new();
     let ability = b.ability(user);
     let source_modifier = match ability {
         // Hustle: physical moves 3277/4096.
@@ -2785,8 +2789,8 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
     move_type: Type,
     type_mod: i32,
     critical: bool,
-) -> Vec<Handler> {
-    let mut out = Vec::new();
+) -> crate::turn::abilities::Handlers {
+    let mut out = crate::turn::abilities::Handlers::new();
     // The user's own (priority 0): Sniper 1.5x on a critical hit, Tinted Lens 2x on a resisted
     // hit (`typeMod < 0`), Neuroforce `[5120, 4096]` on a super-effective one.
     let own = b.ability(user);

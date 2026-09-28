@@ -225,7 +225,7 @@ impl Ruleset {
 }
 
 /// The first slot that requests an activation mode an earlier slot already requested.
-fn repeated_gimmick<const N: usize>(action: &JointAction<N>) -> Option<(u8, Gimmick)> {
+pub(crate) fn repeated_gimmick<const N: usize>(action: &JointAction<N>) -> Option<(u8, Gimmick)> {
     let mut requested = GimmickSet::EMPTY;
     for (i, slot_action) in action.iter().enumerate() {
         let gimmick = slot_action.gimmick();

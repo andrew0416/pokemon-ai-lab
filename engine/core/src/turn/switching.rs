@@ -975,7 +975,8 @@ pub(crate) fn run_switch_in<const N: usize>(
     b.awaiting_run_switch = false;
     b.unstarted.clear();
     // (priority, holder, sub-order, handler)
-    let mut handlers: Vec<(i32, SlotRef, u32, SwitchInHandler)> = Vec::new();
+    let mut handlers: crate::turn::Small<(i32, SlotRef, u32, SwitchInHandler), 8> =
+        crate::turn::Small::new();
     for &slot in newcomers {
         let Some(pokemon) = b.alive(slot) else {
             continue;

@@ -28,7 +28,7 @@ use super::battle::{Battle, RunBuffers, RunStart};
 use super::branch::Chooser;
 use super::lazy::{self, Request, MAX_UNITS};
 use super::merge::Merger;
-use super::{Ending, EnumerateOptions, StageEnd, Suspension, TurnError};
+use super::{EnumerateOptions, StageEnd, Suspension, TurnError};
 
 /// Relative tolerance under which compaction takes two probabilities for equal.
 const CLOSE: f64 = 1e-12;
@@ -775,7 +775,7 @@ pub(crate) fn enumerate_expanded<const N: usize, P: Clone + Eq + Hash>(
     start: P,
     options: EnumerateOptions,
     stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<StageEnd, TurnError>,
-) -> Result<Vec<Ending<N, P>>, TurnError> {
+) -> Result<super::Endings<N, P>, TurnError> {
     let options = FactoredOptions {
         rolls: options.rolls,
         max_support: None,
@@ -791,7 +791,8 @@ pub(crate) fn enumerate_expanded<const N: usize, P: Clone + Eq + Hash>(
                 end.pokemon_mut(pokemon).hp = values[k].0;
                 p *= values[k].1;
             }
-            merged.add(&end, &ending.pending, p);
+            let hash = end.position_hash();
+            merged.add(&end, hash, &ending.pending, p);
             // Odometer over the members' values.
             let mut i = 0;
             loop {
@@ -810,7 +811,7 @@ pub(crate) fn enumerate_expanded<const N: usize, P: Clone + Eq + Hash>(
             }
         }
     }
-    Ok(super::endings(merged))
+    Ok(merged.into_chunks())
 }
 
 /// One factored outcome of a turn ([`super::enumerate_turn_factored`]): with probability

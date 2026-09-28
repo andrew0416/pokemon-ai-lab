@@ -104,8 +104,8 @@ pub(super) fn base_power_handlers<const N: usize>(
     user: SlotRef,
     target: SlotRef,
     mv: &ActiveMove,
-) -> Vec<Handler> {
-    let mut out = Vec::new();
+) -> crate::turn::abilities::Handlers {
+    let mut out = crate::turn::abilities::Handlers::new();
     let ability = b.ability(user);
     if !mv.type_changer.is_none() && ability == mv.type_changer {
         let p = priority(ability.data().event_orders, "onBasePowerPriority");
