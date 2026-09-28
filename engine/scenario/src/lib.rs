@@ -403,6 +403,23 @@ pub fn run_decision_mid_turn_with<const N: usize>(
     mid_turn: &[Vec<String>; 2],
     options: EnumerateOptions,
 ) -> Result<Vec<Outcome>, ScenarioError> {
+    mid_turn_outcomes(state, order, decision, mid_turn, options, false)
+}
+
+/// [`run_decision_mid_turn_with`]; with `drop_misfits`, an outcome whose pause the recorded
+/// mid-turn choices do not fit (another number of slots asks to switch there: two Pokémon
+/// flagged in one request where the recorded game asked them one at a time, after a Speed tie
+/// went the other way) is dropped instead of failing the turn. Only for a pinned setup turn:
+/// the pinned outcome came from a branch the choices fit, and the other branches are not the
+/// scenario's (Opus VA, V11: `pause-vs-flash.random.g000`, Eject Button + U-turn into it).
+fn mid_turn_outcomes<const N: usize>(
+    state: &mut State<N>,
+    order: &[PartyOrder; 2],
+    decision: &Decision<N>,
+    mid_turn: &[Vec<String>; 2],
+    options: EnumerateOptions,
+    drop_misfits: bool,
+) -> Result<Vec<Outcome>, ScenarioError> {
     let outcomes = run_decision_with(state, decision, options)?;
     let mut done = Vec::new();
     let mut work: Vec<(Outcome, [usize; 2])> = outcomes.into_iter().map(|o| (o, [0, 0])).collect();
@@ -418,24 +435,35 @@ pub fn run_decision_mid_turn_with<const N: usize>(
         let mut choices = [[None; N]; 2];
         let mut next_used = used;
         let mut missing = false;
+        let mut misfit = false;
         for side in [SideId::One, SideId::Two] {
             if !side_must_switch(&paused, side) {
                 continue;
             }
             match mid_turn[side.index()].get(used[side.index()]) {
                 Some(text) => {
-                    choices[side.index()] =
-                        parse_mid_turn(&paused, side, &order[side.index()], text)?;
+                    match parse_mid_turn(&paused, side, &order[side.index()], text) {
+                        Ok(c) => choices[side.index()] = c,
+                        Err(_) if drop_misfits => misfit = true,
+                        Err(e) => return Err(e.into()),
+                    }
                     next_used[side.index()] += 1;
                 }
                 None => missing = true,
             }
         }
+        if misfit {
+            continue;
+        }
         if missing {
             done.push(outcome);
             continue;
         }
-        let resumed = resume_turn_with(&mut paused, &suspension, choices, options)?;
+        let resumed = match resume_turn_with(&mut paused, &suspension, choices, options) {
+            Ok(r) => r,
+            Err(lab_engine::turn::TurnError::InvalidChoice { .. }) if drop_misfits => continue,
+            Err(e) => return Err(e.into()),
+        };
         for r in resumed {
             let mut instructions = outcome.instructions.clone();
             instructions.extend(r.instructions);
@@ -589,12 +617,13 @@ fn replay_setup_turn<const N: usize>(
             Err(e) => return Err(ScenarioError::Invalid(format!("setup turn {}: {e}", n + 1))),
         };
         let mut state = position.state.clone();
-        let outcomes = match run_decision_mid_turn_with(
+        let outcomes = match mid_turn_outcomes(
             &mut state,
             &position.order,
             &decision,
             &turn.mid_turn,
             options,
+            pin.is_some(),
         ) {
             Ok(outcomes) => outcomes,
             Err(_) if drop_illegal => continue,
