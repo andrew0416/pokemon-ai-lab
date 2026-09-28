@@ -1,0 +1,84 @@
+{
+ "description": "VD A1-t2: Rattled onAfterBoost (Intimidate's Atk drop, +1 Spe) and onDamagingHit (a Bug move, +1 Spe): p2 switches Blissey out for Gyarados (Intimidate) while Chansey X-Scissors Snorlax (Rattled); Garchomp (Honey Gather) beside it is intimidated without a Speed boost.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Rattled",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "X-Scissor"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Gyarados",
+    "item": "",
+    "ability": "Intimidate",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "turn": {
+  "p1": "move harden, move harden",
+  "p2": "switch 3, move xscissor 1"
+ }
+}

@@ -1,0 +1,72 @@
+{
+ "description": "VD A1-t2: Dragonize (onModifyType Normal -> Dragon, onBasePower x4915/4096 on the changed move): Feraligatr's Body Slam becomes a boosted Dragon move (super effective on Garchomp, 30% paralysis); its ally's Weather Ball (excluded) stays Normal.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Feraligatr",
+    "item": "",
+    "ability": "Dragonize",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Body Slam"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Dragonite",
+    "item": "",
+    "ability": "Dragonize",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spa": 32
+    },
+    "moves": [
+     "Weather Ball"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move bodyslam 1, move weatherball 1",
+  "p2": "move harden, move harden"
+ }
+}

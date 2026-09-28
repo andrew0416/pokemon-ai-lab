@@ -1,0 +1,78 @@
+{
+ "description": "VD A1-t2: Temper Flare (basePowerCallback: 150 if the user's last move failed): in the setup turn Arcanine's Temper Flare is absorbed by Heatran's Flash Fire (fails); this turn Arcanine and Talonflame both Temper Flare Snorlax, Arcanine at 150 BP, Talonflame at 75.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Arcanine",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Temper Flare",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Talonflame",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Temper Flare",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Heatran",
+    "item": "",
+    "ability": "Flash Fire",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move temperflare 1, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move temperflare 2, move temperflare 2",
+  "p2": "move harden, move harden"
+ }
+}
