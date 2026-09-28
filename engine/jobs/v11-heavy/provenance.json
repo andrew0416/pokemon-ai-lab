@@ -1,0 +1,109 @@
+{
+ "list": "runs/parity-v11-20260928/jobs/v11-heavy.txt",
+ "positions": [
+  {
+   "file": "seedlock-vs-webseed-b.random.g001.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11a-seed-lock-web/positions/seedlock-vs-webseed-b.random.g001.s01.json"
+  },
+  {
+   "file": "seedlock-vs-webseed.nash.g000.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11a-seed-lock-web/positions/seedlock-vs-webseed.nash.g000.s09.json"
+  },
+  {
+   "file": "seedlock-vs-webseed.random.g001.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11a-seed-lock-web/positions/seedlock-vs-webseed.random.g001.s06.json"
+  },
+  {
+   "file": "seedlock-vs-webseed.random.g001.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11a-seed-lock-web/positions/seedlock-vs-webseed.random.g001.s07.json"
+  },
+  {
+   "file": "rooms-vs-gravity-b.random.g003.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11b-future-rooms-pseudoweather/positions/rooms-vs-gravity-b.random.g003.s03.json"
+  },
+  {
+   "file": "guards-vs-screens-b.nash.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11c-side-slot-conditions/positions/guards-vs-screens-b.nash.g000.s02.json"
+  },
+  {
+   "file": "guards-vs-screens.nash.g000.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11c-side-slot-conditions/positions/guards-vs-screens.nash.g000.s12.json"
+  },
+  {
+   "file": "pause-vs-flash-b.random.g000.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash-b.random.g000.s05.json"
+  },
+  {
+   "file": "pause-vs-flash-b.random.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash-b.random.g000.s06.json"
+  },
+  {
+   "file": "pause-vs-flash-b.random.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash-b.random.g000.s07.json"
+  },
+  {
+   "file": "pause-vs-flash-b.random.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash-b.random.g000.s08.json"
+  },
+  {
+   "file": "pause-vs-flash-b.random.g000.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash-b.random.g000.s09.json"
+  },
+  {
+   "file": "pause-vs-flash-b.random.g000.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash-b.random.g000.s11.json"
+  },
+  {
+   "file": "pause-vs-flash-b.random.g000.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash-b.random.g000.s13.json"
+  },
+  {
+   "file": "pause-vs-flash-b.random.g001.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash-b.random.g001.s08.json"
+  },
+  {
+   "file": "pause-vs-flash-b.random.g001.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash-b.random.g001.s09.json"
+  },
+  {
+   "file": "pause-vs-flash-b.random.g002.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash-b.random.g002.s12.json"
+  },
+  {
+   "file": "pause-vs-flash-b.random.g002.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash-b.random.g002.s13.json"
+  },
+  {
+   "file": "pause-vs-flash-b.random.g002.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash-b.random.g002.s14.json"
+  },
+  {
+   "file": "pause-vs-flash-b.random.g002.s15.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash-b.random.g002.s15.json"
+  },
+  {
+   "file": "pause-vs-flash-b.random.g003.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash-b.random.g003.s09.json"
+  },
+  {
+   "file": "pause-vs-flash.nash.g000.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash.nash.g000.s00.json"
+  },
+  {
+   "file": "pause-vs-flash.random.g002.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash.random.g002.s00.json"
+  },
+  {
+   "file": "pause-vs-flash.random.g002.s17.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash.random.g002.s17.json"
+  },
+  {
+   "file": "pause-vs-flash.random.g002.s18.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash.random.g002.s18.json"
+  },
+  {
+   "file": "pause-vs-flash.random.g003.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/positions/pause-vs-flash.random.g003.s00.json"
+  }
+ ]
+}

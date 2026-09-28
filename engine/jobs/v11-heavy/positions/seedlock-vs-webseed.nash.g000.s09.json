@@ -1,0 +1,2050 @@
+{
+ "description": "FF parity position (FF-parity-harness): seedlock-vs-webseed, lab-parity game 0 (seed 4b5b2dd7bbe2b04c, policy nash, extremes chance), decision 9 = turn 7 Turn. Base scenario D:/pokemon-ai-lab/.claude/worktrees/agent-aab1b8283c1eb05bd/runs/parity-v11-20260928/V11a-seed-lock-web/matchups/seedlock-vs-webseed.json. The 9 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": "../../../../teams/v11-20260928/v11a-seed-lock.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/v11-20260928/v11a-web-seed.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "hp": 217,
+       "item": "leftovers",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 12,
+        "protect": 8,
+        "ragingfury": 12
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "sitrusberry",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "dracometeor": 8,
+        "outrage": 12,
+        "protect": 8,
+        "uproar": 12
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 172,
+       "item": "lumberry",
+       "lastMove": "protect",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dragonclaw": 16,
+        "outrage": 12,
+        "protect": 7,
+        "thrash": 12
+       },
+       "slot": 1,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "chlorophyll",
+       "boosts": {},
+       "hp": 159,
+       "item": "leftovers",
+       "lastMove": "petaldance",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "leechseed": 12,
+        "petaldance": 11,
+        "protect": 8,
+        "sleeppowder": 16
+       },
+       "slot": 0,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {
+        "lockedmove": {
+         "duration": 1,
+         "move": "petaldance",
+         "trueDuration": 2
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 175,
+       "item": "leftovers",
+       "lastMove": "leechlife",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "leechlife": 11,
+        "liquidation": 12,
+        "stickyweb": 20,
+        "wideguard": 12
+       },
+       "slot": 0,
+       "species": "Araquanid",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "insomnia",
+       "hp": 147,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Ariados",
+       "pp": {
+        "protect": 8,
+        "stickyweb": 20,
+        "suckerpunch": 8,
+        "thrash": 12
+       },
+       "slot": null,
+       "species": "Ariados",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "hp": 187,
+       "item": "sitrusberry",
+       "maxhp": 187,
+       "name": "Meganium",
+       "pp": {
+        "bodyslam": 16,
+        "leechseed": 12,
+        "petaldance": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Meganium",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 67,
+       "item": "focussash",
+       "lastMove": "uproar",
+       "maxhp": 137,
+       "name": "Whimsicott",
+       "pp": {
+        "leechseed": 12,
+        "moonblast": 16,
+        "tailwind": 16,
+        "uproar": 11
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "hp": 217,
+       "item": "leftovers",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 12,
+        "protect": 8,
+        "ragingfury": 12
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "sitrusberry",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "dracometeor": 8,
+        "outrage": 12,
+        "protect": 8,
+        "uproar": 12
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 8,
+       "item": "lumberry",
+       "lastMove": "thrash",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dragonclaw": 16,
+        "outrage": 12,
+        "protect": 7,
+        "thrash": 11
+       },
+       "slot": 1,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {
+        "lockedmove": {
+         "duration": 1,
+         "move": "thrash",
+         "trueDuration": 2
+        }
+       }
+      },
+      {
+       "ability": "chlorophyll",
+       "boosts": {},
+       "hp": 124,
+       "item": "leftovers",
+       "lastMove": "petaldance",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "leechseed": 12,
+        "petaldance": 11,
+        "protect": 8,
+        "sleeppowder": 16
+       },
+       "slot": 0,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {
+        "lockedmove": {
+         "duration": 1,
+         "move": "petaldance",
+         "trueDuration": 1
+        }
+       }
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 125,
+       "item": "leftovers",
+       "lastMove": "leechlife",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "leechlife": 10,
+        "liquidation": 12,
+        "stickyweb": 20,
+        "wideguard": 12
+       },
+       "slot": 0,
+       "species": "Araquanid",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "insomnia",
+       "hp": 147,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Ariados",
+       "pp": {
+        "protect": 8,
+        "stickyweb": 20,
+        "suckerpunch": 8,
+        "thrash": 12
+       },
+       "slot": null,
+       "species": "Ariados",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "hp": 187,
+       "item": "sitrusberry",
+       "maxhp": 187,
+       "name": "Meganium",
+       "pp": {
+        "bodyslam": 16,
+        "leechseed": 12,
+        "petaldance": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Meganium",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 137,
+       "name": "Whimsicott",
+       "pp": {
+        "leechseed": 12,
+        "moonblast": 15,
+        "tailwind": 16,
+        "uproar": 11
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "hp": 217,
+       "item": "leftovers",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 12,
+        "protect": 8,
+        "ragingfury": 12
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "sitrusberry",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "dracometeor": 8,
+        "outrage": 12,
+        "protect": 8,
+        "uproar": 12
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 8,
+       "item": "lumberry",
+       "lastMove": "thrash",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dragonclaw": 16,
+        "outrage": 12,
+        "protect": 7,
+        "thrash": 11
+       },
+       "slot": 1,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {
+        "lockedmove": {
+         "duration": 1,
+         "move": "thrash",
+         "trueDuration": 2
+        }
+       }
+      },
+      {
+       "ability": "chlorophyll",
+       "boosts": {},
+       "hp": 124,
+       "item": "leftovers",
+       "lastMove": "petaldance",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "leechseed": 12,
+        "petaldance": 11,
+        "protect": 8,
+        "sleeppowder": 16
+       },
+       "slot": 0,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {
+        "lockedmove": {
+         "duration": 1,
+         "move": "petaldance",
+         "trueDuration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 125,
+       "item": "leftovers",
+       "lastMove": "leechlife",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "leechlife": 10,
+        "liquidation": 12,
+        "stickyweb": 20,
+        "wideguard": 12
+       },
+       "slot": 0,
+       "species": "Araquanid",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "insomnia",
+       "boosts": {},
+       "hp": 147,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Ariados",
+       "pp": {
+        "protect": 8,
+        "stickyweb": 20,
+        "suckerpunch": 8,
+        "thrash": 12
+       },
+       "slot": 1,
+       "species": "Ariados",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "overgrow",
+       "hp": 187,
+       "item": "sitrusberry",
+       "maxhp": 187,
+       "name": "Meganium",
+       "pp": {
+        "bodyslam": 16,
+        "leechseed": 12,
+        "petaldance": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Meganium",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 137,
+       "name": "Whimsicott",
+       "pp": {
+        "leechseed": 12,
+        "moonblast": 15,
+        "tailwind": 16,
+        "uproar": 11
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "hp": 217,
+       "item": "leftovers",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 12,
+        "protect": 8,
+        "ragingfury": 12
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "sitrusberry",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "dracometeor": 8,
+        "outrage": 12,
+        "protect": 8,
+        "uproar": 12
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "lumberry",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dragonclaw": 16,
+        "outrage": 12,
+        "protect": 7,
+        "thrash": 11
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": "fnt"
+      },
+      {
+       "ability": "chlorophyll",
+       "boosts": {},
+       "hp": 89,
+       "item": "leftovers",
+       "lastMove": "petaldance",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "leechseed": 12,
+        "petaldance": 11,
+        "protect": 8,
+        "sleeppowder": 16
+       },
+       "slot": 0,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {
+        "confusion": {
+         "time": 2
+        }
+       }
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 70,
+       "item": "leftovers",
+       "lastMove": "leechlife",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "leechlife": 9,
+        "liquidation": 12,
+        "stickyweb": 20,
+        "wideguard": 12
+       },
+       "slot": 0,
+       "species": "Araquanid",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "insomnia",
+       "boosts": {},
+       "hp": 147,
+       "item": "focussash",
+       "lastMove": "suckerpunch",
+       "maxhp": 147,
+       "name": "Ariados",
+       "pp": {
+        "protect": 8,
+        "stickyweb": 20,
+        "suckerpunch": 7,
+        "thrash": 12
+       },
+       "slot": 1,
+       "species": "Ariados",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "overgrow",
+       "hp": 187,
+       "item": "sitrusberry",
+       "maxhp": 187,
+       "name": "Meganium",
+       "pp": {
+        "bodyslam": 16,
+        "leechseed": 12,
+        "petaldance": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Meganium",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 137,
+       "name": "Whimsicott",
+       "pp": {
+        "leechseed": 12,
+        "moonblast": 15,
+        "tailwind": 16,
+        "uproar": 11
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 217,
+       "item": "leftovers",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 12,
+        "protect": 8,
+        "ragingfury": 12
+       },
+       "slot": 1,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "sitrusberry",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "dracometeor": 8,
+        "outrage": 12,
+        "protect": 8,
+        "uproar": 12
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "lumberry",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dragonclaw": 16,
+        "outrage": 12,
+        "protect": 7,
+        "thrash": 11
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "boosts": {},
+       "hp": 89,
+       "item": "leftovers",
+       "lastMove": "petaldance",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "leechseed": 12,
+        "petaldance": 11,
+        "protect": 8,
+        "sleeppowder": 16
+       },
+       "slot": 0,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {
+        "confusion": {
+         "time": 2
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 70,
+       "item": "leftovers",
+       "lastMove": "leechlife",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "leechlife": 9,
+        "liquidation": 12,
+        "stickyweb": 20,
+        "wideguard": 12
+       },
+       "slot": 0,
+       "species": "Araquanid",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "insomnia",
+       "boosts": {},
+       "hp": 147,
+       "item": "focussash",
+       "lastMove": "suckerpunch",
+       "maxhp": 147,
+       "name": "Ariados",
+       "pp": {
+        "protect": 8,
+        "stickyweb": 20,
+        "suckerpunch": 7,
+        "thrash": 12
+       },
+       "slot": 1,
+       "species": "Ariados",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "overgrow",
+       "hp": 187,
+       "item": "sitrusberry",
+       "maxhp": 187,
+       "name": "Meganium",
+       "pp": {
+        "bodyslam": 16,
+        "leechseed": 12,
+        "petaldance": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Meganium",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 137,
+       "name": "Whimsicott",
+       "pp": {
+        "leechseed": 12,
+        "moonblast": 15,
+        "tailwind": 16,
+        "uproar": 11
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 2,
+        "def": -1
+       },
+       "hp": 145,
+       "item": "leftovers",
+       "lastMove": "drainpunch",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 11,
+        "protect": 8,
+        "ragingfury": 12
+       },
+       "slot": 1,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "sitrusberry",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "dracometeor": 8,
+        "outrage": 12,
+        "protect": 8,
+        "uproar": 12
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "lumberry",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dragonclaw": 16,
+        "outrage": 12,
+        "protect": 7,
+        "thrash": 11
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "boosts": {},
+       "hp": 86,
+       "item": "leftovers",
+       "lastMove": "petaldance",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "leechseed": 12,
+        "petaldance": 11,
+        "protect": 8,
+        "sleeppowder": 16
+       },
+       "slot": 0,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {
+        "confusion": {
+         "time": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 46,
+       "item": "leftovers",
+       "lastMove": "liquidation",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "leechlife": 9,
+        "liquidation": 11,
+        "stickyweb": 20,
+        "wideguard": 12
+       },
+       "slot": 0,
+       "species": "Araquanid",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "insomnia",
+       "boosts": {},
+       "hp": 147,
+       "item": "focussash",
+       "lastMove": "protect",
+       "maxhp": 147,
+       "name": "Ariados",
+       "pp": {
+        "protect": 7,
+        "stickyweb": 20,
+        "suckerpunch": 7,
+        "thrash": 12
+       },
+       "slot": 1,
+       "species": "Ariados",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "overgrow",
+       "hp": 187,
+       "item": "sitrusberry",
+       "maxhp": 187,
+       "name": "Meganium",
+       "pp": {
+        "bodyslam": 16,
+        "leechseed": 12,
+        "petaldance": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Meganium",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 137,
+       "name": "Whimsicott",
+       "pp": {
+        "leechseed": 12,
+        "moonblast": 15,
+        "tailwind": 16,
+        "uproar": 11
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 2,
+        "def": -1
+       },
+       "hp": 124,
+       "item": "leftovers",
+       "lastMove": "drainpunch",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 10,
+        "protect": 8,
+        "ragingfury": 12
+       },
+       "slot": 1,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "sitrusberry",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "dracometeor": 8,
+        "outrage": 12,
+        "protect": 8,
+        "uproar": 12
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "lumberry",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dragonclaw": 16,
+        "outrage": 12,
+        "protect": 7,
+        "thrash": 11
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "boosts": {},
+       "hp": 115,
+       "item": "leftovers",
+       "lastMove": "leechseed",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "leechseed": 11,
+        "petaldance": 11,
+        "protect": 8,
+        "sleeppowder": 16
+       },
+       "slot": 0,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "leechlife": 9,
+        "liquidation": 11,
+        "stickyweb": 20,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Araquanid",
+       "status": "fnt"
+      },
+      {
+       "ability": "insomnia",
+       "boosts": {},
+       "hp": 129,
+       "item": "focussash",
+       "lastMove": "suckerpunch",
+       "maxhp": 147,
+       "name": "Ariados",
+       "pp": {
+        "protect": 7,
+        "stickyweb": 20,
+        "suckerpunch": 6,
+        "thrash": 12
+       },
+       "slot": 1,
+       "species": "Ariados",
+       "status": "",
+       "volatiles": {
+        "leechseed": {}
+       }
+      },
+      {
+       "ability": "overgrow",
+       "hp": 187,
+       "item": "sitrusberry",
+       "maxhp": 187,
+       "name": "Meganium",
+       "pp": {
+        "bodyslam": 16,
+        "leechseed": 12,
+        "petaldance": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Meganium",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 137,
+       "name": "Whimsicott",
+       "pp": {
+        "leechseed": 12,
+        "moonblast": 15,
+        "tailwind": 16,
+        "uproar": 11
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 2,
+        "def": -1
+       },
+       "hp": 124,
+       "item": "leftovers",
+       "lastMove": "drainpunch",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 10,
+        "protect": 8,
+        "ragingfury": 12
+       },
+       "slot": 1,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "sitrusberry",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "dracometeor": 8,
+        "outrage": 12,
+        "protect": 8,
+        "uproar": 12
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "lumberry",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dragonclaw": 16,
+        "outrage": 12,
+        "protect": 7,
+        "thrash": 11
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "boosts": {},
+       "hp": 115,
+       "item": "leftovers",
+       "lastMove": "leechseed",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "leechseed": 11,
+        "petaldance": 11,
+        "protect": 8,
+        "sleeppowder": 16
+       },
+       "slot": 0,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "leechlife": 9,
+        "liquidation": 11,
+        "stickyweb": 20,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Araquanid",
+       "status": ""
+      },
+      {
+       "ability": "insomnia",
+       "boosts": {},
+       "hp": 129,
+       "item": "focussash",
+       "lastMove": "suckerpunch",
+       "maxhp": 147,
+       "name": "Ariados",
+       "pp": {
+        "protect": 7,
+        "stickyweb": 20,
+        "suckerpunch": 6,
+        "thrash": 12
+       },
+       "slot": 1,
+       "species": "Ariados",
+       "status": "",
+       "volatiles": {
+        "leechseed": {}
+       }
+      },
+      {
+       "ability": "overgrow",
+       "boosts": {},
+       "hp": 187,
+       "item": "sitrusberry",
+       "maxhp": 187,
+       "name": "Meganium",
+       "pp": {
+        "bodyslam": 16,
+        "leechseed": 12,
+        "petaldance": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Meganium",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 137,
+       "name": "Whimsicott",
+       "pp": {
+        "leechseed": 12,
+        "moonblast": 15,
+        "tailwind": 16,
+        "uproar": 11
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 2,
+        "def": -1
+       },
+       "hp": 137,
+       "item": "leftovers",
+       "lastMove": "ragingfury",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 10,
+        "protect": 8,
+        "ragingfury": 11
+       },
+       "slot": 1,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "sitrusberry",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "dracometeor": 8,
+        "outrage": 12,
+        "protect": 8,
+        "uproar": 12
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "lumberry",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dragonclaw": 16,
+        "outrage": 12,
+        "protect": 7,
+        "thrash": 11
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "boosts": {},
+       "hp": 144,
+       "item": "leftovers",
+       "lastMove": "petaldance",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "leechseed": 11,
+        "petaldance": 10,
+        "protect": 8,
+        "sleeppowder": 16
+       },
+       "slot": 0,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "leechlife": 9,
+        "liquidation": 11,
+        "stickyweb": 20,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Araquanid",
+       "status": ""
+      },
+      {
+       "ability": "insomnia",
+       "boosts": {},
+       "hp": 111,
+       "item": "focussash",
+       "lastMove": "protect",
+       "maxhp": 147,
+       "name": "Ariados",
+       "pp": {
+        "protect": 6,
+        "stickyweb": 20,
+        "suckerpunch": 6,
+        "thrash": 12
+       },
+       "slot": 1,
+       "species": "Ariados",
+       "status": "",
+       "volatiles": {
+        "leechseed": {},
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "overgrow",
+       "boosts": {},
+       "hp": 187,
+       "item": "sitrusberry",
+       "lastMove": "protect",
+       "maxhp": 187,
+       "name": "Meganium",
+       "pp": {
+        "bodyslam": 16,
+        "leechseed": 12,
+        "petaldance": 12,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Meganium",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 137,
+       "name": "Whimsicott",
+       "pp": {
+        "leechseed": 12,
+        "moonblast": 15,
+        "tailwind": 16,
+        "uproar": 11
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move petaldance, move protect",
+   "move leechlife 1, move uproar"
+  ],
+  [
+   "move petaldance 1, move thrash",
+   "move leechlife 1, move moonblast 2"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move petaldance 1, move thrash 1",
+   "move leechlife 2, move suckerpunch 2"
+  ],
+  [
+   "switch 4",
+   ""
+  ],
+  [
+   "move sleeppowder 1, move drainpunch 1",
+   "move liquidation 2, move protect"
+  ],
+  [
+   "move leechseed 1, move drainpunch 1",
+   "move liquidation 2, move suckerpunch 2"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move petaldance, move ragingfury",
+   "move protect, move protect"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "defiant",
+      "hp": 217,
+      "item": "leftovers",
+      "maxhp": 217,
+      "name": "Annihilape",
+      "pp": {
+       "bulkup": 20,
+       "drainpunch": 12,
+       "protect": 8,
+       "ragingfury": 12
+      },
+      "slot": null,
+      "species": "Annihilape",
+      "status": ""
+     },
+     {
+      "ability": "berserk",
+      "hp": 185,
+      "item": "sitrusberry",
+      "maxhp": 185,
+      "name": "Drampa",
+      "pp": {
+       "dracometeor": 8,
+       "outrage": 12,
+       "protect": 8,
+       "uproar": 12
+      },
+      "slot": null,
+      "species": "Drampa",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 172,
+      "item": "lumberry",
+      "maxhp": 172,
+      "name": "Salamence",
+      "pp": {
+       "dragonclaw": 16,
+       "outrage": 12,
+       "protect": 8,
+       "thrash": 12
+      },
+      "slot": 1,
+      "species": "Salamence",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "chlorophyll",
+      "boosts": {},
+      "hp": 187,
+      "item": "leftovers",
+      "maxhp": 187,
+      "name": "Venusaur",
+      "pp": {
+       "leechseed": 12,
+       "petaldance": 12,
+       "protect": 8,
+       "sleeppowder": 16
+      },
+      "slot": 0,
+      "species": "Venusaur",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "waterbubble",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 175,
+      "item": "leftovers",
+      "maxhp": 175,
+      "name": "Araquanid",
+      "pp": {
+       "leechlife": 12,
+       "liquidation": 12,
+       "stickyweb": 20,
+       "wideguard": 12
+      },
+      "slot": 0,
+      "species": "Araquanid",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "insomnia",
+      "hp": 147,
+      "item": "focussash",
+      "maxhp": 147,
+      "name": "Ariados",
+      "pp": {
+       "protect": 8,
+       "stickyweb": 20,
+       "suckerpunch": 8,
+       "thrash": 12
+      },
+      "slot": null,
+      "species": "Ariados",
+      "status": ""
+     },
+     {
+      "ability": "overgrow",
+      "hp": 187,
+      "item": "sitrusberry",
+      "maxhp": 187,
+      "name": "Meganium",
+      "pp": {
+       "bodyslam": 16,
+       "leechseed": 12,
+       "petaldance": 12,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Meganium",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 137,
+      "item": "focussash",
+      "maxhp": 137,
+      "name": "Whimsicott",
+      "pp": {
+       "leechseed": 12,
+       "moonblast": 16,
+       "tailwind": 16,
+       "uproar": 12
+      },
+      "slot": 1,
+      "species": "Whimsicott",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move petaldance, move ragingfury",
+  "p2": "move protect, move suckerpunch 2"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "fixed",
+   "roll": 15,
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    15,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "fixed",
+   "roll": 7,
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ ]
+}
