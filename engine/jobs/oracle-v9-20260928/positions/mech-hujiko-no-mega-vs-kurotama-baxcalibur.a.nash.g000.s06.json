@@ -1,0 +1,1353 @@
+{
+ "description": "FF parity position (FF-parity-harness): mech-hujiko-no-mega-vs-kurotama-baxcalibur.a, lab-parity game 0 (seed e8f0207de1655299, policy nash, extremes chance), decision 6 = turn 5 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/mech-hujiko-no-mega-vs-kurotama-baxcalibur.a.json. The 6 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": "../../../../teams/library/singles/m-c/hujiko-no-mega/team.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/library/singles/m-c/kurotama-baxcalibur/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 20
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 171,
+       "item": "sitrusberry",
+       "lastMove": "bodypress",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 11,
+        "irondefense": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": 1,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "boosts": {},
+       "hp": 87,
+       "item": "choicescarf",
+       "lastMove": "tripleaxel",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 11,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Meowscarada",
+       "status": "",
+       "types": "Ice",
+       "volatiles": {
+        "choicelock": {
+         "move": "tripleaxel"
+        }
+       }
+      },
+      {
+       "ability": "sharpness",
+       "hp": 185,
+       "item": "blackglasses",
+       "maxhp": 185,
+       "name": "Samurott",
+       "pp": {
+        "ceaselessedge": 16,
+        "sacredsword": 16,
+        "suckerpunch": 8,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Samurott-Hisui",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 191,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 8,
+        "iceshard": 20,
+        "iciclespear": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "libero",
+       "hp": 159,
+       "item": "focussash",
+       "maxhp": 159,
+       "name": "Cinderace",
+       "pp": {
+        "gunkshot": 8,
+        "highjumpkick": 12,
+        "pyroball": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "sturdy",
+       "boosts": {},
+       "hp": 146,
+       "item": "rockyhelmet",
+       "maxhp": 171,
+       "name": "Skarmory",
+       "pp": {
+        "bodypress": 12,
+        "roost": 8,
+        "stealthrock": 20,
+        "whirlwind": 20
+       },
+       "slot": 0,
+       "species": "Skarmory",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thickfat",
+       "boosts": {},
+       "hp": 87,
+       "item": "venusaurite",
+       "lastMove": "earthpower",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "earthpower": 11,
+        "gigadrain": 12,
+        "sludgebomb": 12,
+        "synthesis": 8
+       },
+       "slot": 1,
+       "species": "Venusaur-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 20
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 205,
+       "item": "sitrusberry",
+       "lastMove": "roost",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 11,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": 1,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": "fnt"
+      },
+      {
+       "ability": "sharpness",
+       "hp": 185,
+       "item": "blackglasses",
+       "maxhp": 185,
+       "name": "Samurott",
+       "pp": {
+        "ceaselessedge": 16,
+        "sacredsword": 16,
+        "suckerpunch": 8,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Samurott-Hisui",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 191,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 8,
+        "iceshard": 20,
+        "iciclespear": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "libero",
+       "hp": 159,
+       "item": "focussash",
+       "maxhp": 159,
+       "name": "Cinderace",
+       "pp": {
+        "gunkshot": 8,
+        "highjumpkick": 12,
+        "pyroball": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "sturdy",
+       "boosts": {},
+       "hp": 146,
+       "item": "rockyhelmet",
+       "lastMove": "bodypress",
+       "maxhp": 171,
+       "name": "Skarmory",
+       "pp": {
+        "bodypress": 11,
+        "roost": 8,
+        "stealthrock": 20,
+        "whirlwind": 20
+       },
+       "slot": 0,
+       "species": "Skarmory",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thickfat",
+       "hp": 0,
+       "item": "venusaurite",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "earthpower": 11,
+        "gigadrain": 12,
+        "sludgebomb": 12,
+        "synthesis": 8
+       },
+       "slot": null,
+       "species": "Venusaur-Mega",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "boosts": {},
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 20
+       },
+       "slot": 0,
+       "species": "Bellibolt",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 205,
+       "item": "sitrusberry",
+       "lastMove": "roost",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 11,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": 1,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      },
+      {
+       "ability": "sharpness",
+       "hp": 185,
+       "item": "blackglasses",
+       "maxhp": 185,
+       "name": "Samurott",
+       "pp": {
+        "ceaselessedge": 16,
+        "sacredsword": 16,
+        "suckerpunch": 8,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Samurott-Hisui",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 191,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 8,
+        "iceshard": 20,
+        "iciclespear": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "libero",
+       "boosts": {},
+       "hp": 159,
+       "item": "focussash",
+       "maxhp": 159,
+       "name": "Cinderace",
+       "pp": {
+        "gunkshot": 8,
+        "highjumpkick": 12,
+        "pyroball": 8,
+        "suckerpunch": 8
+       },
+       "slot": 1,
+       "species": "Cinderace",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sturdy",
+       "boosts": {},
+       "hp": 146,
+       "item": "rockyhelmet",
+       "lastMove": "bodypress",
+       "maxhp": 171,
+       "name": "Skarmory",
+       "pp": {
+        "bodypress": 11,
+        "roost": 8,
+        "stealthrock": 20,
+        "whirlwind": 20
+       },
+       "slot": 0,
+       "species": "Skarmory",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thickfat",
+       "hp": 0,
+       "item": "venusaurite",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "earthpower": 11,
+        "gigadrain": 12,
+        "sludgebomb": 12,
+        "synthesis": 8
+       },
+       "slot": null,
+       "species": "Venusaur-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 19
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 201,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "roost",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 11,
+        "irondefense": 16,
+        "roost": 6,
+        "uturn": 20
+       },
+       "slot": 1,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      },
+      {
+       "ability": "sharpness",
+       "boosts": {},
+       "hp": 185,
+       "item": "blackglasses",
+       "maxhp": 185,
+       "name": "Samurott",
+       "pp": {
+        "ceaselessedge": 16,
+        "sacredsword": 16,
+        "suckerpunch": 8,
+        "swordsdance": 20
+       },
+       "slot": 0,
+       "species": "Samurott-Hisui",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 191,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 8,
+        "iceshard": 20,
+        "iciclespear": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "libero",
+       "boosts": {},
+       "hp": 98,
+       "item": "focussash",
+       "lastMove": "pyroball",
+       "maxhp": 159,
+       "name": "Cinderace",
+       "pp": {
+        "gunkshot": 8,
+        "highjumpkick": 12,
+        "pyroball": 6,
+        "suckerpunch": 8
+       },
+       "slot": 1,
+       "species": "Cinderace",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sturdy",
+       "boosts": {},
+       "hp": 171,
+       "item": "rockyhelmet",
+       "lastMove": "roost",
+       "maxhp": 171,
+       "name": "Skarmory",
+       "pp": {
+        "bodypress": 11,
+        "roost": 7,
+        "stealthrock": 20,
+        "whirlwind": 20
+       },
+       "slot": 0,
+       "species": "Skarmory",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thickfat",
+       "hp": 0,
+       "item": "venusaurite",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "earthpower": 11,
+        "gigadrain": 12,
+        "sludgebomb": 12,
+        "synthesis": 8
+       },
+       "slot": null,
+       "species": "Venusaur-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 19
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 201,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "bodypress",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 10,
+        "irondefense": 16,
+        "roost": 6,
+        "uturn": 20
+       },
+       "slot": 1,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      },
+      {
+       "ability": "sharpness",
+       "hp": 0,
+       "item": "blackglasses",
+       "maxhp": 185,
+       "name": "Samurott",
+       "pp": {
+        "ceaselessedge": 16,
+        "sacredsword": 16,
+        "suckerpunch": 7,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Samurott-Hisui",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 191,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 8,
+        "iceshard": 20,
+        "iciclespear": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "libero",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 159,
+       "name": "Cinderace",
+       "pp": {
+        "gunkshot": 7,
+        "highjumpkick": 12,
+        "pyroball": 6,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": "fnt"
+      },
+      {
+       "ability": "sturdy",
+       "boosts": {},
+       "hp": 171,
+       "item": "rockyhelmet",
+       "lastMove": "bodypress",
+       "maxhp": 171,
+       "name": "Skarmory",
+       "pp": {
+        "bodypress": 10,
+        "roost": 7,
+        "stealthrock": 20,
+        "whirlwind": 20
+       },
+       "slot": 0,
+       "species": "Skarmory",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thickfat",
+       "hp": 0,
+       "item": "venusaurite",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "earthpower": 11,
+        "gigadrain": 12,
+        "sludgebomb": 12,
+        "synthesis": 8
+       },
+       "slot": null,
+       "species": "Venusaur-Mega",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "boosts": {},
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 19
+       },
+       "slot": 0,
+       "species": "Bellibolt",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 201,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "bodypress",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 10,
+        "irondefense": 16,
+        "roost": 6,
+        "uturn": 20
+       },
+       "slot": 1,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      },
+      {
+       "ability": "sharpness",
+       "hp": 0,
+       "item": "blackglasses",
+       "maxhp": 185,
+       "name": "Samurott",
+       "pp": {
+        "ceaselessedge": 16,
+        "sacredsword": 16,
+        "suckerpunch": 7,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Samurott-Hisui",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 191,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 8,
+        "iceshard": 20,
+        "iciclespear": 20
+       },
+       "slot": 1,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "libero",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 159,
+       "name": "Cinderace",
+       "pp": {
+        "gunkshot": 7,
+        "highjumpkick": 12,
+        "pyroball": 6,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "sturdy",
+       "boosts": {},
+       "hp": 171,
+       "item": "rockyhelmet",
+       "lastMove": "bodypress",
+       "maxhp": 171,
+       "name": "Skarmory",
+       "pp": {
+        "bodypress": 10,
+        "roost": 7,
+        "stealthrock": 20,
+        "whirlwind": 20
+       },
+       "slot": 0,
+       "species": "Skarmory",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thickfat",
+       "hp": 0,
+       "item": "venusaurite",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "earthpower": 11,
+        "gigadrain": 12,
+        "sludgebomb": 12,
+        "synthesis": 8
+       },
+       "slot": null,
+       "species": "Venusaur-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move tripleaxel 2, move bodypress 1",
+   "switch 4, move earthpower 1 mega"
+  ],
+  [
+   "move tripleaxel 2, move roost",
+   "move bodypress 1, move synthesis"
+  ],
+  [
+   "switch 3",
+   "switch 3"
+  ],
+  [
+   "move voltswitch 2, move roost",
+   "move roost, move pyroball 2",
+   {
+    "p1": [
+     "switch 4"
+    ],
+    "p2": []
+   }
+  ],
+  [
+   "move suckerpunch 2, move bodypress 2",
+   "move bodypress 1, move gunkshot 1"
+  ],
+  [
+   "switch 4",
+   "switch 4"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "electromorphosis",
+      "hp": 215,
+      "item": "leftovers",
+      "maxhp": 215,
+      "name": "Bellibolt",
+      "pp": {
+       "slackoff": 8,
+       "soak": 20,
+       "toxic": 12,
+       "voltswitch": 20
+      },
+      "slot": null,
+      "species": "Bellibolt",
+      "status": ""
+     },
+     {
+      "ability": "pressure",
+      "boosts": {},
+      "hp": 205,
+      "item": "sitrusberry",
+      "maxhp": 205,
+      "name": "Corviknight",
+      "pp": {
+       "bodypress": 12,
+       "irondefense": 16,
+       "roost": 8,
+       "uturn": 20
+      },
+      "slot": 1,
+      "species": "Corviknight",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "protean",
+      "boosts": {},
+      "hp": 151,
+      "item": "choicescarf",
+      "maxhp": 151,
+      "name": "Meowscarada",
+      "pp": {
+       "flowertrick": 12,
+       "knockoff": 20,
+       "tripleaxel": 12,
+       "uturn": 20
+      },
+      "slot": 0,
+      "species": "Meowscarada",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "sharpness",
+      "hp": 185,
+      "item": "blackglasses",
+      "maxhp": 185,
+      "name": "Samurott",
+      "pp": {
+       "ceaselessedge": 16,
+       "sacredsword": 16,
+       "suckerpunch": 8,
+       "swordsdance": 20
+      },
+      "slot": null,
+      "species": "Samurott-Hisui",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "thermalexchange",
+      "boosts": {},
+      "canMega": true,
+      "hp": 191,
+      "item": "baxcalibrite",
+      "maxhp": 191,
+      "name": "Baxcalibur",
+      "pp": {
+       "dragondance": 20,
+       "glaiverush": 8,
+       "iceshard": 20,
+       "iciclespear": 20
+      },
+      "slot": 0,
+      "species": "Baxcalibur",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "libero",
+      "hp": 159,
+      "item": "focussash",
+      "maxhp": 159,
+      "name": "Cinderace",
+      "pp": {
+       "gunkshot": 8,
+       "highjumpkick": 12,
+       "pyroball": 8,
+       "suckerpunch": 8
+      },
+      "slot": null,
+      "species": "Cinderace",
+      "status": ""
+     },
+     {
+      "ability": "sturdy",
+      "hp": 171,
+      "item": "rockyhelmet",
+      "maxhp": 171,
+      "name": "Skarmory",
+      "pp": {
+       "bodypress": 12,
+       "roost": 8,
+       "stealthrock": 20,
+       "whirlwind": 20
+      },
+      "slot": null,
+      "species": "Skarmory",
+      "status": ""
+     },
+     {
+      "ability": "chlorophyll",
+      "boosts": {},
+      "canMega": true,
+      "hp": 187,
+      "item": "venusaurite",
+      "maxhp": 187,
+      "name": "Venusaur",
+      "pp": {
+       "earthpower": 12,
+       "gigadrain": 12,
+       "sludgebomb": 12,
+       "synthesis": 8
+      },
+      "slot": 1,
+      "species": "Venusaur",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move voltswitch 1, move bodypress 2",
+  "p2": "move bodypress 2, move iciclespear 2"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    1,
+    0,
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  }
+ ]
+}

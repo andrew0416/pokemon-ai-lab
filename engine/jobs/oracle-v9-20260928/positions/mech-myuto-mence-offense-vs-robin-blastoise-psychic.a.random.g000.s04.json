@@ -1,0 +1,989 @@
+{
+ "description": "FF parity position (FF-parity-harness): mech-myuto-mence-offense-vs-robin-blastoise-psychic.a, lab-parity game 0 (seed e8f0207de1655299, policy random, extremes chance), decision 4 = turn 4 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/mech-myuto-mence-offense-vs-robin-blastoise-psychic.a.json. The 4 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": "../../../../teams/library/singles/m-c/myuto-mence-offense/team.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/library/singles/m-c/robin-blastoise-psychic/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 7,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "canMega": true,
+       "hp": 118,
+       "item": "garchompitez",
+       "lastMove": "earthpower",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "earthpower": 11,
+        "flamethrower": 16,
+        "surf": 16
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 155,
+       "item": "focussash",
+       "maxhp": 155,
+       "name": "Greninja",
+       "pp": {
+        "darkpulse": 16,
+        "icebeam": 12,
+        "sludgewave": 12,
+        "watershuriken": 20
+       },
+       "slot": null,
+       "species": "Greninja",
+       "status": ""
+      },
+      {
+       "ability": "disguise",
+       "hp": 143,
+       "item": "lifeorb",
+       "maxhp": 143,
+       "name": "Mimikyu",
+       "pp": {
+        "playrough": 12,
+        "shadowclaw": 16,
+        "shadowsneak": 20,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Mimikyu",
+       "status": ""
+      },
+      {
+       "ability": "technician",
+       "boosts": {},
+       "hp": 83,
+       "item": "leftovers",
+       "lastMove": "bulletpunch",
+       "maxhp": 175,
+       "name": "Scizor",
+       "pp": {
+        "bulletpunch": 19,
+        "closecombat": 8,
+        "knockoff": 20,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Scizor",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "megalauncher",
+       "boosts": {},
+       "hp": 175,
+       "item": "blastoisinite",
+       "lastMove": "darkpulse",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 20,
+        "darkpulse": 15,
+        "shellsmash": 16,
+        "terrainpulse": 12
+       },
+       "slot": 1,
+       "species": "Blastoise-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 135,
+       "item": "terrainextender",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "mysticalfire": 12,
+        "substitute": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 131,
+       "item": "lightclay",
+       "maxhp": 175,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "encore": 8,
+        "freezedry": 20,
+        "mistyterrain": 12
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 167,
+       "item": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 6,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "boosts": {
+        "spa": -2
+       },
+       "canMega": true,
+       "hp": 17,
+       "item": "garchompitez",
+       "lastMove": "dracometeor",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "earthpower": 11,
+        "flamethrower": 16,
+        "surf": 16
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 155,
+       "item": "focussash",
+       "maxhp": 155,
+       "name": "Greninja",
+       "pp": {
+        "darkpulse": 16,
+        "icebeam": 12,
+        "sludgewave": 12,
+        "watershuriken": 20
+       },
+       "slot": null,
+       "species": "Greninja",
+       "status": ""
+      },
+      {
+       "ability": "disguise",
+       "hp": 143,
+       "item": "lifeorb",
+       "maxhp": 143,
+       "name": "Mimikyu",
+       "pp": {
+        "playrough": 12,
+        "shadowclaw": 16,
+        "shadowsneak": 20,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Mimikyu",
+       "status": ""
+      },
+      {
+       "ability": "technician",
+       "boosts": {},
+       "hp": 45,
+       "item": "leftovers",
+       "lastMove": "bulletpunch",
+       "maxhp": 175,
+       "name": "Scizor",
+       "pp": {
+        "bulletpunch": 18,
+        "closecombat": 8,
+        "knockoff": 20,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Scizor",
+       "status": "",
+       "volatiles": {
+        "encore": {
+         "duration": 2,
+         "move": "bulletpunch"
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "megalauncher",
+       "boosts": {},
+       "hp": 175,
+       "item": "blastoisinite",
+       "lastMove": "aurasphere",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 19,
+        "darkpulse": 15,
+        "shellsmash": 16,
+        "terrainpulse": 12
+       },
+       "slot": 1,
+       "species": "Blastoise-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 135,
+       "item": "terrainextender",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "mysticalfire": 12,
+        "substitute": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 131,
+       "item": "lightclay",
+       "lastMove": "encore",
+       "maxhp": 175,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "encore": 7,
+        "freezedry": 20,
+        "mistyterrain": 12
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 167,
+       "item": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "mistyterrain",
+    "terrainDuration": 4,
+    "weather": "snowscape",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "canMega": true,
+       "hp": 0,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "earthpower": 11,
+        "flamethrower": 16,
+        "surf": 16
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": "fnt"
+      },
+      {
+       "ability": "protean",
+       "hp": 155,
+       "item": "focussash",
+       "maxhp": 155,
+       "name": "Greninja",
+       "pp": {
+        "darkpulse": 16,
+        "icebeam": 12,
+        "sludgewave": 12,
+        "watershuriken": 20
+       },
+       "slot": null,
+       "species": "Greninja",
+       "status": ""
+      },
+      {
+       "ability": "disguise",
+       "hp": 143,
+       "item": "lifeorb",
+       "maxhp": 143,
+       "name": "Mimikyu",
+       "pp": {
+        "playrough": 12,
+        "shadowclaw": 16,
+        "shadowsneak": 20,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Mimikyu",
+       "status": ""
+      },
+      {
+       "ability": "technician",
+       "boosts": {},
+       "hp": 34,
+       "item": "leftovers",
+       "lastMove": "bulletpunch",
+       "maxhp": 175,
+       "name": "Scizor",
+       "pp": {
+        "bulletpunch": 17,
+        "closecombat": 8,
+        "knockoff": 20,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Scizor",
+       "status": "",
+       "volatiles": {
+        "encore": {
+         "duration": 1,
+         "move": "bulletpunch"
+        }
+       }
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "megalauncher",
+       "boosts": {
+        "atk": 2,
+        "def": -1,
+        "spa": 2,
+        "spd": -1,
+        "spe": 2
+       },
+       "hp": 175,
+       "item": "blastoisinite",
+       "lastMove": "shellsmash",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 19,
+        "darkpulse": 15,
+        "shellsmash": 15,
+        "terrainpulse": 12
+       },
+       "slot": 1,
+       "species": "Blastoise-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 135,
+       "item": "terrainextender",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "mysticalfire": 12,
+        "substitute": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 131,
+       "item": "lightclay",
+       "lastMove": "mistyterrain",
+       "maxhp": 175,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "encore": 7,
+        "freezedry": 20,
+        "mistyterrain": 11
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 167,
+       "item": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "mistyterrain",
+    "terrainDuration": 4,
+    "weather": "snowscape",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "canMega": true,
+       "hp": 0,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "earthpower": 11,
+        "flamethrower": 16,
+        "surf": 16
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "protean",
+       "boosts": {},
+       "hp": 155,
+       "item": "focussash",
+       "maxhp": 155,
+       "name": "Greninja",
+       "pp": {
+        "darkpulse": 16,
+        "icebeam": 12,
+        "sludgewave": 12,
+        "watershuriken": 20
+       },
+       "slot": 0,
+       "species": "Greninja",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "disguise",
+       "hp": 143,
+       "item": "lifeorb",
+       "maxhp": 143,
+       "name": "Mimikyu",
+       "pp": {
+        "playrough": 12,
+        "shadowclaw": 16,
+        "shadowsneak": 20,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Mimikyu",
+       "status": ""
+      },
+      {
+       "ability": "technician",
+       "boosts": {},
+       "hp": 34,
+       "item": "leftovers",
+       "lastMove": "bulletpunch",
+       "maxhp": 175,
+       "name": "Scizor",
+       "pp": {
+        "bulletpunch": 17,
+        "closecombat": 8,
+        "knockoff": 20,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Scizor",
+       "status": "",
+       "volatiles": {
+        "encore": {
+         "duration": 1,
+         "move": "bulletpunch"
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "megalauncher",
+       "boosts": {
+        "atk": 2,
+        "def": -1,
+        "spa": 2,
+        "spd": -1,
+        "spe": 2
+       },
+       "hp": 175,
+       "item": "blastoisinite",
+       "lastMove": "shellsmash",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 19,
+        "darkpulse": 15,
+        "shellsmash": 15,
+        "terrainpulse": 12
+       },
+       "slot": 1,
+       "species": "Blastoise-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 135,
+       "item": "terrainextender",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "mysticalfire": 12,
+        "substitute": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 131,
+       "item": "lightclay",
+       "lastMove": "mistyterrain",
+       "maxhp": 175,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "encore": 7,
+        "freezedry": 20,
+        "mistyterrain": 11
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 167,
+       "item": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move earthpower -2, move bulletpunch -1",
+   "switch 4, move darkpulse -1 mega"
+  ],
+  [
+   "move dracometeor -2, move closecombat 2",
+   "move encore 2, move aurasphere 1"
+  ],
+  [
+   "move dracometeor -2, move bulletpunch -1",
+   "move mistyterrain, move shellsmash"
+  ],
+  [
+   "switch 4",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 8,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "roughskin",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "garchompitez",
+      "maxhp": 185,
+      "name": "Garchomp",
+      "pp": {
+       "dracometeor": 8,
+       "earthpower": 12,
+       "flamethrower": 16,
+       "surf": 16
+      },
+      "slot": 0,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "protean",
+      "hp": 155,
+      "item": "focussash",
+      "maxhp": 155,
+      "name": "Greninja",
+      "pp": {
+       "darkpulse": 16,
+       "icebeam": 12,
+       "sludgewave": 12,
+       "watershuriken": 20
+      },
+      "slot": null,
+      "species": "Greninja",
+      "status": ""
+     },
+     {
+      "ability": "disguise",
+      "hp": 143,
+      "item": "lifeorb",
+      "maxhp": 143,
+      "name": "Mimikyu",
+      "pp": {
+       "playrough": 12,
+       "shadowclaw": 16,
+       "shadowsneak": 20,
+       "swordsdance": 20
+      },
+      "slot": null,
+      "species": "Mimikyu",
+      "status": ""
+     },
+     {
+      "ability": "technician",
+      "boosts": {},
+      "hp": 175,
+      "item": "leftovers",
+      "maxhp": 175,
+      "name": "Scizor",
+      "pp": {
+       "bulletpunch": 20,
+       "closecombat": 8,
+       "knockoff": 20,
+       "swordsdance": 20
+      },
+      "slot": 1,
+      "species": "Scizor",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "raindish",
+      "boosts": {},
+      "canMega": true,
+      "hp": 175,
+      "item": "blastoisinite",
+      "maxhp": 175,
+      "name": "Blastoise",
+      "pp": {
+       "aurasphere": 20,
+       "darkpulse": 16,
+       "shellsmash": 16,
+       "terrainpulse": 12
+      },
+      "slot": 1,
+      "species": "Blastoise",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 135,
+      "item": "terrainextender",
+      "maxhp": 135,
+      "name": "Indeedee",
+      "pp": {
+       "encore": 8,
+       "expandingforce": 12,
+       "mysticalfire": 12,
+       "substitute": 12
+      },
+      "slot": 0,
+      "species": "Indeedee",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "snowwarning",
+      "hp": 175,
+      "item": "lightclay",
+      "maxhp": 175,
+      "name": "Ninetales",
+      "pp": {
+       "auroraveil": 20,
+       "encore": 8,
+       "freezedry": 20,
+       "mistyterrain": 12
+      },
+      "slot": null,
+      "species": "Ninetales-Alola",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "hp": 167,
+      "item": "psychicseed",
+      "maxhp": 167,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "swordsdance": 20,
+       "throatchop": 16
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move watershuriken 1, move bulletpunch 2",
+  "p2": "move freezedry 2, move darkpulse 1"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    0,
+    1,
+    1,
+    0,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    1,
+    15,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  }
+ ]
+}

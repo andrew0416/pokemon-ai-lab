@@ -1,0 +1,1378 @@
+{
+ "description": "FF parity position (FF-parity-harness): dbl-kickoff-hollowedhollowed-vs-kickoff-jhinting.a, lab-parity game 1 (seed 2ea1717e6d0f4653, policy random, extremes chance), decision 6 = turn 5 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/dbl-kickoff-hollowedhollowed-vs-kickoff-jhinting.a.json. The 6 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-hollowedhollowed/team.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-jhinting/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "boosts": {
+        "atk": -2
+       },
+       "canMega": true,
+       "hp": 18,
+       "item": "floettite",
+       "lastMove": "moonblast",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 15,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Floette-Eternal",
+       "status": "brn",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 162,
+       "item": "lifeorb",
+       "maxhp": 162,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "lightningrod",
+       "boosts": {
+        "atk": -2
+       },
+       "canMega": true,
+       "hp": 42,
+       "item": "raichunitey",
+       "lastMove": "focusblast",
+       "maxhp": 135,
+       "name": "Raichu",
+       "pp": {
+        "encore": 8,
+        "focusblast": 7,
+        "protect": 8,
+        "zapcannon": 8
+       },
+       "slot": 1,
+       "species": "Raichu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 135,
+       "item": "rockyhelmet",
+       "lastMove": "flareblitz",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 15,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "lightningrod",
+       "canMega": true,
+       "hp": 135,
+       "item": "raichunitey",
+       "maxhp": 135,
+       "name": "Raichu",
+       "pp": {
+        "fakeout": 12,
+        "focusblast": 8,
+        "protect": 8,
+        "zapcannon": 8
+       },
+       "slot": null,
+       "species": "Raichu",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "canMega": true,
+       "hp": 170,
+       "item": "salamencite",
+       "lastMove": "protect",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "heatwave": 12,
+        "hypervoice": 12,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "fairyaura",
+       "hp": 0,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 14,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 162,
+       "item": "lifeorb",
+       "maxhp": 162,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "lightningrod",
+       "boosts": {
+        "atk": -2
+       },
+       "hp": 42,
+       "item": "raichunitey",
+       "lastMove": "encore",
+       "maxhp": 135,
+       "name": "Raichu",
+       "pp": {
+        "encore": 7,
+        "focusblast": 7,
+        "protect": 8,
+        "zapcannon": 8
+       },
+       "slot": 1,
+       "species": "Raichu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 15,
+       "item": "rockyhelmet",
+       "lastMove": "flareblitz",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 14,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "lightningrod",
+       "hp": 135,
+       "item": "raichunitey",
+       "maxhp": 135,
+       "name": "Raichu",
+       "pp": {
+        "fakeout": 12,
+        "focusblast": 8,
+        "protect": 8,
+        "zapcannon": 8
+       },
+       "slot": null,
+       "species": "Raichu",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 170,
+       "item": "salamencite",
+       "lastMove": "protect",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "heatwave": 12,
+        "hypervoice": 12,
+        "protect": 6
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "fairyaura",
+       "hp": 0,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 14,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Mega",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {},
+       "hp": 162,
+       "item": "lifeorb",
+       "maxhp": 162,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 8,
+        "shadowball": 16
+       },
+       "slot": 0,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "lightningrod",
+       "boosts": {
+        "atk": -2
+       },
+       "hp": 42,
+       "item": "raichunitey",
+       "lastMove": "encore",
+       "maxhp": 135,
+       "name": "Raichu",
+       "pp": {
+        "encore": 7,
+        "focusblast": 7,
+        "protect": 8,
+        "zapcannon": 8
+       },
+       "slot": 1,
+       "species": "Raichu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 15,
+       "item": "rockyhelmet",
+       "lastMove": "flareblitz",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 14,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "lightningrod",
+       "hp": 135,
+       "item": "raichunitey",
+       "maxhp": 135,
+       "name": "Raichu",
+       "pp": {
+        "fakeout": 12,
+        "focusblast": 8,
+        "protect": 8,
+        "zapcannon": 8
+       },
+       "slot": null,
+       "species": "Raichu",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 170,
+       "item": "salamencite",
+       "lastMove": "protect",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "heatwave": 12,
+        "hypervoice": 12,
+        "protect": 6
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "fairyaura",
+       "hp": 0,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 14,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Mega",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {
+        "spa": 2
+       },
+       "hp": 162,
+       "item": "lifeorb",
+       "lastMove": "nastyplot",
+       "maxhp": 162,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 19,
+        "protect": 8,
+        "shadowball": 16
+       },
+       "slot": 0,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "lightningrod",
+       "boosts": {
+        "atk": -2
+       },
+       "hp": 42,
+       "item": "raichunitey",
+       "lastMove": "zapcannon",
+       "maxhp": 135,
+       "name": "Raichu",
+       "pp": {
+        "encore": 7,
+        "focusblast": 7,
+        "protect": 8,
+        "zapcannon": 7
+       },
+       "slot": 1,
+       "species": "Raichu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 15,
+       "item": "rockyhelmet",
+       "lastMove": "partingshot",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 14,
+        "partingshot": 19,
+        "throatchop": 16
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "lightningrod",
+       "hp": 135,
+       "item": "raichunitey",
+       "maxhp": 135,
+       "name": "Raichu",
+       "pp": {
+        "fakeout": 12,
+        "focusblast": 8,
+        "protect": 8,
+        "zapcannon": 8
+       },
+       "slot": null,
+       "species": "Raichu",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 170,
+       "item": "salamencite",
+       "lastMove": "protect",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "heatwave": 12,
+        "hypervoice": 12,
+        "protect": 5
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "fairyaura",
+       "hp": 0,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 14,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Mega",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 162,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 19,
+        "protect": 8,
+        "shadowball": 15
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": "fnt"
+      },
+      {
+       "ability": "lightningrod",
+       "boosts": {
+        "atk": -2
+       },
+       "hp": 4,
+       "item": "raichunitey",
+       "lastMove": "focusblast",
+       "maxhp": 135,
+       "name": "Raichu",
+       "pp": {
+        "encore": 7,
+        "focusblast": 6,
+        "protect": 8,
+        "zapcannon": 7
+       },
+       "slot": 1,
+       "species": "Raichu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 13,
+        "partingshot": 19,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": "fnt"
+      },
+      {
+       "ability": "lightningrod",
+       "hp": 135,
+       "item": "raichunitey",
+       "maxhp": 135,
+       "name": "Raichu",
+       "pp": {
+        "fakeout": 12,
+        "focusblast": 8,
+        "protect": 8,
+        "zapcannon": 8
+       },
+       "slot": null,
+       "species": "Raichu",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "heatwave": 12,
+        "hypervoice": 11,
+        "protect": 5
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 5,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "fairyaura",
+       "hp": 0,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 14,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Mega",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 162,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 19,
+        "protect": 8,
+        "shadowball": 15
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "lightningrod",
+       "boosts": {
+        "atk": -2
+       },
+       "hp": 4,
+       "item": "raichunitey",
+       "lastMove": "focusblast",
+       "maxhp": 135,
+       "name": "Raichu",
+       "pp": {
+        "encore": 7,
+        "focusblast": 6,
+        "protect": 8,
+        "zapcannon": 7
+       },
+       "slot": 1,
+       "species": "Raichu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 155,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 13,
+        "partingshot": 19,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "lightningrod",
+       "boosts": {},
+       "hp": 135,
+       "item": "raichunitey",
+       "maxhp": 135,
+       "name": "Raichu",
+       "pp": {
+        "fakeout": 12,
+        "focusblast": 8,
+        "protect": 8,
+        "zapcannon": 8
+       },
+       "slot": 1,
+       "species": "Raichu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "heatwave": 12,
+        "hypervoice": 11,
+        "protect": 5
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move moonblast -2, move focusblast -1",
+   "move protect, move flareblitz 1"
+  ],
+  [
+   "move dazzlinggleam mega, move encore -1",
+   "move protect mega, move flareblitz 1"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move nastyplot, move zapcannon -1",
+   "move protect, move partingshot -1"
+  ],
+  [
+   "move shadowball 1, move focusblast 2",
+   "move hypervoice, move flareblitz 1"
+  ],
+  [
+   "switch 4",
+   "switch 3, switch 4"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flowerveil",
+      "boosts": {
+       "atk": -2
+      },
+      "canMega": true,
+      "hp": 149,
+      "item": "floettite",
+      "maxhp": 149,
+      "name": "Floette",
+      "pp": {
+       "calmmind": 20,
+       "dazzlinggleam": 12,
+       "moonblast": 16,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Floette-Eternal",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "goodasgold",
+      "hp": 162,
+      "item": "lifeorb",
+      "maxhp": 162,
+      "name": "Gholdengo",
+      "pp": {
+       "makeitrain": 8,
+       "nastyplot": 20,
+       "protect": 8,
+       "shadowball": 16
+      },
+      "slot": null,
+      "species": "Gholdengo",
+      "status": ""
+     },
+     {
+      "ability": "lightningrod",
+      "boosts": {
+       "atk": -2
+      },
+      "canMega": true,
+      "hp": 135,
+      "item": "raichunitey",
+      "maxhp": 135,
+      "name": "Raichu",
+      "pp": {
+       "encore": 8,
+       "focusblast": 8,
+       "protect": 8,
+       "zapcannon": 8
+      },
+      "slot": 1,
+      "species": "Raichu",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 155,
+      "item": "grassyseed",
+      "maxhp": 155,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "protect": 8,
+       "rockslide": 12
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 170,
+      "item": "rockyhelmet",
+      "maxhp": 170,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "flareblitz": 16,
+       "partingshot": 20,
+       "throatchop": 16
+      },
+      "slot": 1,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "lightningrod",
+      "canMega": true,
+      "hp": 135,
+      "item": "raichunitey",
+      "maxhp": 135,
+      "name": "Raichu",
+      "pp": {
+       "fakeout": 12,
+       "focusblast": 8,
+       "protect": 8,
+       "zapcannon": 8
+      },
+      "slot": null,
+      "species": "Raichu",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 175,
+      "item": "miracleseed",
+      "maxhp": 175,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "uturn": 20,
+       "woodhammer": 16
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "canMega": true,
+      "hp": 170,
+      "item": "salamencite",
+      "maxhp": 170,
+      "name": "Salamence",
+      "pp": {
+       "dracometeor": 8,
+       "heatwave": 12,
+       "hypervoice": 12,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Salamence",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move direclaw 1, move focusblast 1",
+  "p2": "move fakeout 2, move zapcannon 2"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ ]
+}

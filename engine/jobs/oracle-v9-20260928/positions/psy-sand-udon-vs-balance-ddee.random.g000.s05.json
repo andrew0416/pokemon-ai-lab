@@ -1,0 +1,1202 @@
+{
+ "description": "FF parity position (FF-parity-harness): psy-sand-udon-vs-balance-ddee, lab-parity game 0 (seed e8f0207de1655299, policy random, extremes chance), decision 5 = turn 4 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927/matchups/psy-sand-udon-vs-balance-ddee.json. The 5 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/psy-sand-udon/team.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/balance-ddee/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "weakarmor",
+       "boosts": {},
+       "hp": 162,
+       "item": "focussash",
+       "lastMove": "expandingforce",
+       "maxhp": 162,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "aurasphere": 20,
+        "expandingforce": 11,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 66,
+       "item": "colburberry",
+       "maxhp": 175,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "protect": 8,
+        "psychic": 12
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 172,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 175,
+       "item": "whiteherb",
+       "maxhp": 175,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "feint": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "boosts": {},
+       "canMega": true,
+       "hp": 64,
+       "item": "floettite",
+       "lastMove": "moonblast",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 15,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Floette-Eternal",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "weakarmor",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 162,
+       "item": "focussash",
+       "lastMove": "expandingforce",
+       "maxhp": 162,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "aurasphere": 20,
+        "expandingforce": 11,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 66,
+       "item": "colburberry",
+       "maxhp": 175,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "protect": 8,
+        "psychic": 12
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 172,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 175,
+       "item": "whiteherb",
+       "maxhp": 175,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "feint": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "boosts": {},
+       "canMega": true,
+       "hp": 64,
+       "item": "floettite",
+       "lastMove": "moonblast",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 15,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Floette-Eternal",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "weakarmor",
+       "boosts": {
+        "atk": -2,
+        "spa": -1
+       },
+       "hp": 127,
+       "item": "focussash",
+       "lastMove": "expandingforce",
+       "maxhp": 162,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "aurasphere": 20,
+        "expandingforce": 10,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 76,
+       "item": "colburberry",
+       "lastMove": "psychic",
+       "maxhp": 175,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "protect": 8,
+        "psychic": 11
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 172,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 175,
+       "item": "whiteherb",
+       "maxhp": 175,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "feint": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "canMega": true,
+       "hp": 0,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 15,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": "fnt"
+      },
+      {
+       "ability": "intimidate",
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 19,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "weakarmor",
+       "boosts": {
+        "atk": -3,
+        "spa": -1
+       },
+       "hp": 127,
+       "item": "focussash",
+       "lastMove": "expandingforce",
+       "maxhp": 162,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "aurasphere": 20,
+        "expandingforce": 10,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "atk": -2
+       },
+       "hp": 76,
+       "item": "colburberry",
+       "lastMove": "psychic",
+       "maxhp": 175,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "protect": 8,
+        "psychic": 11
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 172,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 175,
+       "item": "whiteherb",
+       "maxhp": 175,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "feint": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "canMega": true,
+       "hp": 0,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 15,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 19,
+        "throatchop": 16
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 175,
+       "item": "miracleseed",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "weakarmor",
+       "boosts": {
+        "atk": -3,
+        "def": -1,
+        "spa": -1,
+        "spe": 2
+       },
+       "hp": 81,
+       "item": "focussash",
+       "lastMove": "expandingforce",
+       "maxhp": 162,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "aurasphere": 20,
+        "expandingforce": 10,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "atk": -3,
+        "spa": -1
+       },
+       "hp": 86,
+       "item": "colburberry",
+       "lastMove": "psychic",
+       "maxhp": 175,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "protect": 8,
+        "psychic": 10
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 172,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 175,
+       "item": "whiteherb",
+       "maxhp": 175,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "feint": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "canMega": true,
+       "hp": 0,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 15,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 170,
+       "item": "sitrusberry",
+       "lastMove": "partingshot",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 18,
+        "throatchop": 16
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 175,
+       "item": "miracleseed",
+       "lastMove": "fakeout",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move expandingforce 2, move psychic -1",
+   "move moonblast 2, move rockslide"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move expandingforce -2, move psychic -1",
+   "move calmmind, move partingshot 1",
+   {
+    "p1": [],
+    "p2": [
+     "switch 4"
+    ]
+   }
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move armorcannon 2, move psychic -1",
+   "move partingshot 2, move fakeout 1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "weakarmor",
+      "boosts": {},
+      "hp": 162,
+      "item": "focussash",
+      "maxhp": 162,
+      "name": "Armarouge",
+      "pp": {
+       "armorcannon": 8,
+       "aurasphere": 20,
+       "expandingforce": 12,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Armarouge",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 175,
+      "item": "colburberry",
+      "maxhp": 175,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "helpinghand": 20,
+       "protect": 8,
+       "psychic": 12
+      },
+      "slot": 1,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "canMega": true,
+      "hp": 172,
+      "item": "salamencite",
+      "maxhp": 172,
+      "name": "Salamence",
+      "pp": {
+       "dracometeor": 8,
+       "hypervoice": 12,
+       "protect": 8,
+       "tailwind": 16
+      },
+      "slot": null,
+      "species": "Salamence",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "hp": 175,
+      "item": "whiteherb",
+      "maxhp": 175,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "fakeout": 12,
+       "feint": 12
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flowerveil",
+      "boosts": {},
+      "canMega": true,
+      "hp": 149,
+      "item": "floettite",
+      "maxhp": 149,
+      "name": "Floette",
+      "pp": {
+       "calmmind": 20,
+       "dazzlinggleam": 12,
+       "moonblast": 16,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Floette-Eternal",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "hp": 170,
+      "item": "sitrusberry",
+      "maxhp": 170,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "flareblitz": 16,
+       "partingshot": 20,
+       "throatchop": 16
+      },
+      "slot": null,
+      "species": "Incineroar",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 175,
+      "item": "miracleseed",
+      "maxhp": 175,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "highhorsepower": 12,
+       "woodhammer": 16
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "boosts": {},
+      "hp": 155,
+      "item": "grassyseed",
+      "maxhp": 155,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "protect": 8,
+       "rockslide": 12
+      },
+      "slot": 1,
+      "species": "Sneasler",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move aurasphere -2, move psychic 2",
+  "p2": "move flareblitz 2, move woodhammer 1"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    0,
+    1,
+    0,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ ]
+}

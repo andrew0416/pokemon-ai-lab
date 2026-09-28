@@ -1,0 +1,2170 @@
+{
+ "description": "FF parity position (FF-parity-harness): mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.b, lab-parity game 0 (seed e8f0207de1655299, policy random, extremes chance), decision 10 = turn 9 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.b.json. The 10 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "5634",
+  "team": "../../../../teams/library/singles/m-c/tomoe-garchomp-golisopod/team.json"
+ },
+ "p2": {
+  "order": "5634",
+  "team": "../../../../teams/library/singles/m-c/tororo-goodra-grassy/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 204,
+       "item": "miracleseed",
+       "maxhp": 204,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 112,
+       "item": "sitrusberry",
+       "lastMove": "hydropump",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 7,
+        "thunderbolt": 16,
+        "voltswitch": 20,
+        "willowisp": 16
+       },
+       "slot": 1,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {
+        "yawn": {
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "innerfocus",
+       "boosts": {},
+       "hp": 202,
+       "item": "leftovers",
+       "lastMove": "yawn",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 16,
+        "protect": 8,
+        "wish": 8,
+        "yawn": 11
+       },
+       "slot": 0,
+       "species": "Umbreon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 8,
+        "iceshard": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 137,
+       "item": "lifeorb",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "healingwish": 12,
+        "mysticalfire": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": 1,
+        "spe": 1
+       },
+       "canMega": true,
+       "hp": 172,
+       "item": "salamencite",
+       "lastMove": "dragondance",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "dragondance": 19,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": 1,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unaware",
+       "boosts": {},
+       "hp": 211,
+       "item": "sitrusberry",
+       "lastMove": "hex",
+       "maxhp": 211,
+       "name": "Skeledirge",
+       "pp": {
+        "hex": 11,
+        "slackoff": 8,
+        "torchsong": 12,
+        "willowisp": 16
+       },
+       "slot": 0,
+       "species": "Skeledirge",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "canMega": true,
+       "hp": 171,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "suckerpunch": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "brn",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 204,
+       "item": "miracleseed",
+       "maxhp": 204,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 71,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "thunderbolt",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 7,
+        "thunderbolt": 15,
+        "voltswitch": 20,
+        "willowisp": 16
+       },
+       "slot": 1,
+       "species": "Rotom-Wash",
+       "status": "slp",
+       "statusTime": 3,
+       "volatiles": {}
+      },
+      {
+       "ability": "innerfocus",
+       "hp": 202,
+       "item": "leftovers",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 16,
+        "protect": 8,
+        "wish": 8,
+        "yawn": 11
+       },
+       "slot": null,
+       "species": "Umbreon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 8,
+        "iceshard": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 137,
+       "item": "lifeorb",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "healingwish": 12,
+        "mysticalfire": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": 1,
+        "spe": 1
+       },
+       "hp": 76,
+       "item": "salamencite",
+       "lastMove": "doubleedge",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 19,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": 1,
+       "species": "Salamence-Mega",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "unaware",
+       "boosts": {},
+       "hp": 211,
+       "item": "sitrusberry",
+       "lastMove": "willowisp",
+       "maxhp": 211,
+       "name": "Skeledirge",
+       "pp": {
+        "hex": 11,
+        "slackoff": 8,
+        "torchsong": 12,
+        "willowisp": 15
+       },
+       "slot": 0,
+       "species": "Skeledirge",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "canMega": true,
+       "hp": 171,
+       "item": "golisopite",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "brn",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 204,
+       "item": "miracleseed",
+       "maxhp": 204,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 39,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "thunderbolt",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 7,
+        "thunderbolt": 15,
+        "voltswitch": 20,
+        "willowisp": 16
+       },
+       "slot": 1,
+       "species": "Rotom-Wash",
+       "status": "slp",
+       "statusTime": 2,
+       "volatiles": {}
+      },
+      {
+       "ability": "innerfocus",
+       "hp": 202,
+       "item": "leftovers",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 16,
+        "protect": 8,
+        "wish": 8,
+        "yawn": 11
+       },
+       "slot": null,
+       "species": "Umbreon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 8,
+        "iceshard": 20
+       },
+       "slot": 1,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 137,
+       "item": "lifeorb",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "healingwish": 12,
+        "mysticalfire": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 76,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 19,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "par"
+      },
+      {
+       "ability": "unaware",
+       "boosts": {},
+       "hp": 211,
+       "item": "sitrusberry",
+       "lastMove": "willowisp",
+       "maxhp": 211,
+       "name": "Skeledirge",
+       "pp": {
+        "hex": 11,
+        "slackoff": 8,
+        "torchsong": 12,
+        "willowisp": 14
+       },
+       "slot": 0,
+       "species": "Skeledirge",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 160,
+       "item": "golisopite",
+       "lastMove": "suckerpunch",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 7
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "brn",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 204,
+       "item": "miracleseed",
+       "maxhp": 204,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 17,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "thunderbolt",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 7,
+        "thunderbolt": 15,
+        "voltswitch": 20,
+        "willowisp": 16
+       },
+       "slot": 1,
+       "species": "Rotom-Wash",
+       "status": "slp",
+       "statusTime": 1,
+       "volatiles": {}
+      },
+      {
+       "ability": "innerfocus",
+       "hp": 202,
+       "item": "leftovers",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 16,
+        "protect": 8,
+        "wish": 8,
+        "yawn": 11
+       },
+       "slot": null,
+       "species": "Umbreon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 182,
+       "item": "baxcalibrite",
+       "lastMove": "glaiverush",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 7,
+        "iceshard": 20
+       },
+       "slot": 1,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {
+        "glaiverush": {}
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 137,
+       "item": "lifeorb",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "healingwish": 12,
+        "mysticalfire": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 76,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 19,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "par"
+      },
+      {
+       "ability": "unaware",
+       "boosts": {
+        "spa": 1
+       },
+       "hp": 151,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "torchsong",
+       "maxhp": 211,
+       "name": "Skeledirge",
+       "pp": {
+        "hex": 11,
+        "slackoff": 8,
+        "torchsong": 11,
+        "willowisp": 14
+       },
+       "slot": 0,
+       "species": "Skeledirge",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 204,
+       "item": "miracleseed",
+       "maxhp": 204,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 7,
+        "thunderbolt": 15,
+        "voltswitch": 20,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": "fnt"
+      },
+      {
+       "ability": "innerfocus",
+       "hp": 202,
+       "item": "leftovers",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 16,
+        "protect": 8,
+        "wish": 8,
+        "yawn": 11
+       },
+       "slot": null,
+       "species": "Umbreon",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 182,
+       "item": "baxcalibrite",
+       "lastMove": "glaiverush",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 6,
+        "iceshard": 20
+       },
+       "slot": 1,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {
+        "glaiverush": {}
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 137,
+       "item": "lifeorb",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "healingwish": 12,
+        "mysticalfire": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 76,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 19,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "par"
+      },
+      {
+       "ability": "unaware",
+       "boosts": {
+        "spa": 2
+       },
+       "hp": 151,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "torchsong",
+       "maxhp": 211,
+       "name": "Skeledirge",
+       "pp": {
+        "hex": 11,
+        "slackoff": 8,
+        "torchsong": 10,
+        "willowisp": 14
+       },
+       "slot": 0,
+       "species": "Skeledirge",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 5,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 204,
+       "item": "miracleseed",
+       "maxhp": 204,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 7,
+        "thunderbolt": 15,
+        "voltswitch": 20,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "innerfocus",
+       "boosts": {},
+       "hp": 202,
+       "item": "leftovers",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 16,
+        "protect": 8,
+        "wish": 8,
+        "yawn": 11
+       },
+       "slot": 0,
+       "species": "Umbreon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 182,
+       "item": "baxcalibrite",
+       "lastMove": "glaiverush",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 6,
+        "iceshard": 20
+       },
+       "slot": 1,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {
+        "glaiverush": {}
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 137,
+       "item": "lifeorb",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "healingwish": 12,
+        "mysticalfire": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 76,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 19,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "par"
+      },
+      {
+       "ability": "unaware",
+       "boosts": {
+        "spa": 2
+       },
+       "hp": 151,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "torchsong",
+       "maxhp": 211,
+       "name": "Skeledirge",
+       "pp": {
+        "hex": 11,
+        "slackoff": 8,
+        "torchsong": 10,
+        "willowisp": 14
+       },
+       "slot": 0,
+       "species": "Skeledirge",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 204,
+       "item": "miracleseed",
+       "lastMove": "grassyglide",
+       "maxhp": 204,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 19,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 7,
+        "thunderbolt": 15,
+        "voltswitch": 20,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "innerfocus",
+       "boosts": {},
+       "hp": 202,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 16,
+        "protect": 7,
+        "wish": 8,
+        "yawn": 11
+       },
+       "slot": 0,
+       "species": "Umbreon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 195,
+       "item": "baxcalibrite",
+       "lastMove": "iceshard",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 6,
+        "iceshard": 19
+       },
+       "slot": 1,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 137,
+       "item": "lifeorb",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "healingwish": 12,
+        "mysticalfire": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 76,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 19,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "par"
+      },
+      {
+       "ability": "unaware",
+       "boosts": {
+        "spa": 2
+       },
+       "hp": 148,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "willowisp",
+       "maxhp": 211,
+       "name": "Skeledirge",
+       "pp": {
+        "hex": 11,
+        "slackoff": 8,
+        "torchsong": 10,
+        "willowisp": 13
+       },
+       "slot": 0,
+       "species": "Skeledirge",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 204,
+       "item": "miracleseed",
+       "lastMove": "grassyglide",
+       "maxhp": 204,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 18,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 7,
+        "thunderbolt": 15,
+        "voltswitch": 20,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "innerfocus",
+       "boosts": {},
+       "hp": 202,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 16,
+        "protect": 6,
+        "wish": 8,
+        "yawn": 11
+       },
+       "slot": 0,
+       "species": "Umbreon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 9,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 20,
+       "item": "baxcalibrite",
+       "lastMove": "iceshard",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 6,
+        "iceshard": 18
+       },
+       "slot": 1,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 137,
+       "item": "lifeorb",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "healingwish": 12,
+        "mysticalfire": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 76,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 19,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "par"
+      },
+      {
+       "ability": "unaware",
+       "boosts": {
+        "spa": 3
+       },
+       "hp": 142,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "torchsong",
+       "maxhp": 211,
+       "name": "Skeledirge",
+       "pp": {
+        "hex": 11,
+        "slackoff": 8,
+        "torchsong": 9,
+        "willowisp": 13
+       },
+       "slot": 0,
+       "species": "Skeledirge",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 83,
+       "item": "miracleseed",
+       "lastMove": "woodhammer",
+       "maxhp": 204,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 18,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 7,
+        "thunderbolt": 15,
+        "voltswitch": 20,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "innerfocus",
+       "boosts": {},
+       "hp": 175,
+       "item": "leftovers",
+       "lastMove": "foulplay",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 15,
+        "protect": 6,
+        "wish": 8,
+        "yawn": 11
+       },
+       "slot": 0,
+       "species": "Umbreon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 6,
+        "iceshard": 17
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": "fnt"
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 137,
+       "item": "lifeorb",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "healingwish": 12,
+        "mysticalfire": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 76,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 19,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "par"
+      },
+      {
+       "ability": "unaware",
+       "boosts": {
+        "spa": 4
+       },
+       "hp": 38,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "torchsong",
+       "maxhp": 211,
+       "name": "Skeledirge",
+       "pp": {
+        "hex": 11,
+        "slackoff": 8,
+        "torchsong": 8,
+        "willowisp": 13
+       },
+       "slot": 0,
+       "species": "Skeledirge",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 83,
+       "item": "miracleseed",
+       "lastMove": "woodhammer",
+       "maxhp": 204,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 18,
+        "uturn": 20,
+        "woodhammer": 15
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 7,
+        "thunderbolt": 15,
+        "voltswitch": 20,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "innerfocus",
+       "boosts": {},
+       "hp": 175,
+       "item": "leftovers",
+       "lastMove": "foulplay",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 15,
+        "protect": 6,
+        "wish": 8,
+        "yawn": 11
+       },
+       "slot": 0,
+       "species": "Umbreon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 6,
+        "iceshard": 17
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 137,
+       "item": "lifeorb",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "healingwish": 12,
+        "mysticalfire": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 76,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 19,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": 1,
+       "species": "Salamence-Mega",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "unaware",
+       "boosts": {
+        "spa": 4
+       },
+       "hp": 38,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "torchsong",
+       "maxhp": 211,
+       "name": "Skeledirge",
+       "pp": {
+        "hex": 11,
+        "slackoff": 8,
+        "torchsong": 8,
+        "willowisp": 13
+       },
+       "slot": 0,
+       "species": "Skeledirge",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move yawn -2, move hydropump -1",
+   "move hex 2, move dragondance"
+  ],
+  [
+   "switch 3, move thunderbolt 2",
+   "move willowisp 1, move doubleedge 2 mega"
+  ],
+  [
+   "move leechlife -2, move hydropump -1",
+   "move willowisp 1, switch 3"
+  ],
+  [
+   "move suckerpunch 2 mega, move willowisp 2",
+   "move torchsong 2, move glaiverush -1"
+  ],
+  [
+   "move ironhead 1, move voltswitch 1",
+   "move torchsong 1, move glaiverush 2"
+  ],
+  [
+   "switch 3, switch 4",
+   ""
+  ],
+  [
+   "move protect, move grassyglide -1",
+   "move willowisp -2, move iceshard -1"
+  ],
+  [
+   "move protect, move grassyglide 2",
+   "move torchsong -2, move iceshard -1"
+  ],
+  [
+   "move foulplay -2, move woodhammer 1",
+   "move torchsong -2, move iceshard 1"
+  ],
+  [
+   "",
+   "switch 3"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "firstimpression": 12,
+       "ironhead": 16,
+       "leechlife": 12,
+       "suckerpunch": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 204,
+      "item": "miracleseed",
+      "maxhp": 204,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "uturn": 20,
+       "woodhammer": 16
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     },
+     {
+      "ability": "levitate",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 157,
+      "item": "sitrusberry",
+      "maxhp": 157,
+      "name": "Rotom",
+      "pp": {
+       "hydropump": 8,
+       "thunderbolt": 16,
+       "voltswitch": 20,
+       "willowisp": 16
+      },
+      "slot": 1,
+      "species": "Rotom-Wash",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "innerfocus",
+      "boosts": {},
+      "hp": 202,
+      "item": "leftovers",
+      "maxhp": 202,
+      "name": "Umbreon",
+      "pp": {
+       "foulplay": 16,
+       "protect": 8,
+       "wish": 8,
+       "yawn": 12
+      },
+      "slot": 0,
+      "species": "Umbreon",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "thermalexchange",
+      "canMega": true,
+      "hp": 222,
+      "item": "baxcalibrite",
+      "maxhp": 222,
+      "name": "Baxcalibur",
+      "pp": {
+       "dragondance": 20,
+       "earthquake": 12,
+       "glaiverush": 8,
+       "iceshard": 20
+      },
+      "slot": null,
+      "species": "Baxcalibur",
+      "status": ""
+     },
+     {
+      "ability": "psychicsurge",
+      "hp": 137,
+      "item": "lifeorb",
+      "maxhp": 137,
+      "name": "Indeedee",
+      "pp": {
+       "encore": 8,
+       "expandingforce": 12,
+       "healingwish": 12,
+       "mysticalfire": 12
+      },
+      "slot": null,
+      "species": "Indeedee",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "canMega": true,
+      "hp": 172,
+      "item": "salamencite",
+      "maxhp": 172,
+      "name": "Salamence",
+      "pp": {
+       "doubleedge": 16,
+       "dragondance": 20,
+       "earthquake": 12,
+       "roost": 8
+      },
+      "slot": 1,
+      "species": "Salamence",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unaware",
+      "boosts": {},
+      "hp": 211,
+      "item": "sitrusberry",
+      "maxhp": 211,
+      "name": "Skeledirge",
+      "pp": {
+       "hex": 12,
+       "slackoff": 8,
+       "torchsong": 12,
+       "willowisp": 16
+      },
+      "slot": 0,
+      "species": "Skeledirge",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move yawn -2, move grassyglide 1",
+  "p2": "move torchsong -2, move doubleedge -1"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    12,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0
+   ]
+  }
+ ]
+}

@@ -1,0 +1,421 @@
+{
+ "description": "FF parity position (FF-parity-harness): dbl-kickoff-aveornot-vs-kickoff-balmung.a, lab-parity game 0 (seed e8f0207de1655299, policy nash, extremes chance), decision 1 = turn 2 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/dbl-kickoff-aveornot-vs-kickoff-balmung.a.json. The 1 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-aveornot/team.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-balmung/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 165,
+       "item": "leftovers",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 8,
+        "electroshot": 12,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 153,
+       "item": "charizarditey",
+       "lastMove": "weatherball",
+       "maxhp": 153,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 12,
+        "helpinghand": 20,
+        "protect": 8,
+        "weatherball": 11
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 16,
+        "weatherball": 12,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "boosts": {},
+       "hp": 155,
+       "item": "lifeorb",
+       "lastMove": "sleeppowder",
+       "maxhp": 155,
+       "name": "Venusaur",
+       "pp": {
+        "leafstorm": 8,
+        "protect": 8,
+        "sleeppowder": 15,
+        "sludgebomb": 12
+       },
+       "slot": 1,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 153,
+       "item": "charizarditey",
+       "lastMove": "protect",
+       "maxhp": 153,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 12,
+        "protect": 7,
+        "solarbeam": 12,
+        "weatherball": 12
+       },
+       "slot": 1,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "fairyaura",
+       "boosts": {},
+       "hp": 149,
+       "item": "floettite",
+       "lastMove": "protect",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "dazzlinggleam": 12,
+        "lightofruin": 8,
+        "moonblast": 16,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Floette-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "defiant",
+       "hp": 175,
+       "item": "blackglasses",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "protect": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move weatherball 1 mega, move sleeppowder 2",
+   "move protect mega, move protect"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 165,
+      "item": "leftovers",
+      "maxhp": 165,
+      "name": "Archaludon",
+      "pp": {
+       "dracometeor": 8,
+       "electroshot": 12,
+       "protect": 8,
+       "snarl": 16
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "blaze",
+      "boosts": {},
+      "canMega": true,
+      "hp": 153,
+      "item": "charizarditey",
+      "maxhp": 153,
+      "name": "Charizard",
+      "pp": {
+       "heatwave": 12,
+       "helpinghand": 20,
+       "protect": 8,
+       "weatherball": 12
+      },
+      "slot": 0,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "hp": 135,
+      "item": "focussash",
+      "maxhp": 135,
+      "name": "Pelipper",
+      "pp": {
+       "hurricane": 12,
+       "tailwind": 16,
+       "weatherball": 12,
+       "wideguard": 12
+      },
+      "slot": null,
+      "species": "Pelipper",
+      "status": ""
+     },
+     {
+      "ability": "chlorophyll",
+      "boosts": {},
+      "hp": 155,
+      "item": "lifeorb",
+      "maxhp": 155,
+      "name": "Venusaur",
+      "pp": {
+       "leafstorm": 8,
+       "protect": 8,
+       "sleeppowder": 16,
+       "sludgebomb": 12
+      },
+      "slot": 1,
+      "species": "Venusaur",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "blaze",
+      "boosts": {},
+      "canMega": true,
+      "hp": 153,
+      "item": "charizarditey",
+      "maxhp": 153,
+      "name": "Charizard",
+      "pp": {
+       "heatwave": 12,
+       "protect": 8,
+       "solarbeam": 12,
+       "weatherball": 12
+      },
+      "slot": 1,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "flowerveil",
+      "boosts": {},
+      "canMega": true,
+      "hp": 149,
+      "item": "floettite",
+      "maxhp": 149,
+      "name": "Floette",
+      "pp": {
+       "dazzlinggleam": 12,
+       "lightofruin": 8,
+       "moonblast": 16,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Floette-Eternal",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "defiant",
+      "hp": 175,
+      "item": "blackglasses",
+      "maxhp": 175,
+      "name": "Kingambit",
+      "pp": {
+       "ironhead": 16,
+       "kowtowcleave": 12,
+       "protect": 8,
+       "suckerpunch": 8
+      },
+      "slot": null,
+      "species": "Kingambit",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "hp": 135,
+      "item": "focussash",
+      "maxhp": 135,
+      "name": "Whimsicott",
+      "pp": {
+       "encore": 8,
+       "moonblast": 16,
+       "protect": 8,
+       "tailwind": 16
+      },
+      "slot": null,
+      "species": "Whimsicott",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move heatwave, move sleeppowder 2",
+  "p2": "move dazzlinggleam, move heatwave"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": [
+   1,
+   0,
+   1
+  ]
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1
+   ]
+  }
+ ]
+}

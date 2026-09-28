@@ -1,0 +1,433 @@
+{
+ "description": "FF parity position (FF-parity-harness): dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a, lab-parity game 1 (seed 2ea1717e6d0f4653, policy random, extremes chance), decision 1 = turn 2 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.a.json. The 1 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-beedrillvgc/team.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-conkledonk/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "canMega": true,
+       "hp": 56,
+       "item": "charizarditey",
+       "lastMove": "ancientpower",
+       "maxhp": 153,
+       "name": "Charizard",
+       "pp": {
+        "ancientpower": 7,
+        "heatwave": 12,
+        "protect": 8,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "hospitality",
+       "hp": 146,
+       "item": "colburberry",
+       "maxhp": 146,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "protect": 8,
+        "ragepowder": 20,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "boosts": {
+        "spa": -2
+       },
+       "hp": 122,
+       "item": "focussash",
+       "lastMove": "leafstorm",
+       "maxhp": 155,
+       "name": "Venusaur",
+       "pp": {
+        "leafstorm": 7,
+        "protect": 8,
+        "sleeppowder": 16,
+        "sludgebomb": 12
+       },
+       "slot": 1,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 153,
+       "item": "charizarditey",
+       "lastMove": "protect",
+       "maxhp": 153,
+       "name": "Charizard",
+       "pp": {
+        "ancientpower": 8,
+        "heatwave": 12,
+        "protect": 7,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 183,
+       "item": "choicescarf",
+       "lastMove": "dragonclaw",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 12,
+        "rockslide": 12,
+        "stompingtantrum": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "dragonclaw"
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "darkestlariat": 12,
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "hp": 155,
+       "item": "focussash",
+       "maxhp": 155,
+       "name": "Venusaur",
+       "pp": {
+        "leafstorm": 8,
+        "protect": 8,
+        "sleeppowder": 16,
+        "sludgebomb": 12
+       },
+       "slot": null,
+       "species": "Venusaur",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move ancientpower -2, move leafstorm -1",
+   "move protect mega, move dragonclaw 1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "blaze",
+      "boosts": {},
+      "canMega": true,
+      "hp": 153,
+      "item": "charizarditey",
+      "maxhp": 153,
+      "name": "Charizard",
+      "pp": {
+       "ancientpower": 8,
+       "heatwave": 12,
+       "protect": 8,
+       "weatherball": 12
+      },
+      "slot": 0,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "hp": 170,
+      "item": "sitrusberry",
+      "maxhp": 170,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "flareblitz": 16,
+       "partingshot": 20,
+       "throatchop": 16
+      },
+      "slot": null,
+      "species": "Incineroar",
+      "status": ""
+     },
+     {
+      "ability": "hospitality",
+      "hp": 146,
+      "item": "colburberry",
+      "maxhp": 146,
+      "name": "Sinistcha",
+      "pp": {
+       "matchagotcha": 16,
+       "protect": 8,
+       "ragepowder": 20,
+       "trickroom": 8
+      },
+      "slot": null,
+      "species": "Sinistcha",
+      "status": ""
+     },
+     {
+      "ability": "chlorophyll",
+      "boosts": {},
+      "hp": 155,
+      "item": "focussash",
+      "maxhp": 155,
+      "name": "Venusaur",
+      "pp": {
+       "leafstorm": 8,
+       "protect": 8,
+       "sleeppowder": 16,
+       "sludgebomb": 12
+      },
+      "slot": 1,
+      "species": "Venusaur",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "blaze",
+      "boosts": {},
+      "canMega": true,
+      "hp": 153,
+      "item": "charizarditey",
+      "maxhp": 153,
+      "name": "Charizard",
+      "pp": {
+       "ancientpower": 8,
+       "heatwave": 12,
+       "protect": 8,
+       "weatherball": 12
+      },
+      "slot": 0,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "roughskin",
+      "boosts": {},
+      "hp": 183,
+      "item": "choicescarf",
+      "maxhp": 183,
+      "name": "Garchomp",
+      "pp": {
+       "dragonclaw": 16,
+       "earthquake": 12,
+       "rockslide": 12,
+       "stompingtantrum": 12
+      },
+      "slot": 1,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "hp": 170,
+      "item": "sitrusberry",
+      "maxhp": 170,
+      "name": "Incineroar",
+      "pp": {
+       "darkestlariat": 12,
+       "fakeout": 12,
+       "flareblitz": 16,
+       "partingshot": 20
+      },
+      "slot": null,
+      "species": "Incineroar",
+      "status": ""
+     },
+     {
+      "ability": "chlorophyll",
+      "hp": 155,
+      "item": "focussash",
+      "maxhp": 155,
+      "name": "Venusaur",
+      "pp": {
+       "leafstorm": 8,
+       "protect": 8,
+       "sleeppowder": 16,
+       "sludgebomb": 12
+      },
+      "slot": null,
+      "species": "Venusaur",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move weatherball 1 mega, move protect",
+  "p2": "move ancientpower -2, move dragonclaw -1"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": [
+   1,
+   0,
+   1,
+   0
+  ]
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    1,
+    1,
+    1,
+    0,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1
+   ]
+  }
+ ]
+}

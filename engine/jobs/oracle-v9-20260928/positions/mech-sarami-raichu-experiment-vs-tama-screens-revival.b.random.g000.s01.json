@@ -1,0 +1,420 @@
+{
+ "description": "FF parity position (FF-parity-harness): mech-sarami-raichu-experiment-vs-tama-screens-revival.b, lab-parity game 0 (seed e8f0207de1655299, policy random, extremes chance), decision 1 = turn 2 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/mech-sarami-raichu-experiment-vs-tama-screens-revival.b.json. The 1 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "5634",
+  "team": "../../../../teams/library/singles/m-c/sarami-raichu-experiment/team.json"
+ },
+ "p2": {
+  "order": "5634",
+  "team": "../../../../teams/library/singles/m-c/tama-screens-revival/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "spa": -2
+       },
+       "hp": 197,
+       "item": "sitrusberry",
+       "lastMove": "dracometeor",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 7,
+        "roar": 20,
+        "stealthrock": 20,
+        "thunderbolt": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 151,
+       "item": "lightclay",
+       "maxhp": 151,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "encore": 8,
+        "painsplit": 20
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      },
+      {
+       "ability": "firemane",
+       "boosts": {},
+       "hp": 55,
+       "item": "pyroarite",
+       "lastMove": "overheat",
+       "maxhp": 175,
+       "name": "Pyroar",
+       "pp": {
+        "darkpulse": 16,
+        "flamethrower": 16,
+        "overheat": 7,
+        "yawn": 12
+       },
+       "slot": 0,
+       "species": "Pyroar-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sharpness",
+       "hp": 167,
+       "item": "choicescarf",
+       "maxhp": 167,
+       "name": "Samurott",
+       "pp": {
+        "ceaselessedge": 16,
+        "flipturn": 20,
+        "razorshell": 12,
+        "sacredsword": 16
+       },
+       "slot": null,
+       "species": "Samurott-Hisui",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stancechange",
+       "boosts": {},
+       "hp": 159,
+       "item": "leftovers",
+       "lastMove": "shadowball",
+       "maxhp": 159,
+       "name": "Aegislash",
+       "pp": {
+        "flashcannon": 12,
+        "kingsshield": 8,
+        "shadowball": 15,
+        "substitute": 12
+       },
+       "slot": 0,
+       "species": "Aegislash-Blade",
+       "status": "",
+       "volatiles": {
+        "encore": {
+         "duration": 3,
+         "move": "shadowball"
+        }
+       }
+      },
+      {
+       "ability": "ironfist",
+       "hp": 147,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 16,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 175,
+       "item": "sitrusberry",
+       "lastMove": "encore",
+       "maxhp": 175,
+       "name": "Primarina",
+       "pp": {
+        "encore": 7,
+        "flipturn": 20,
+        "moonblast": 16,
+        "sparklingaria": 12
+       },
+       "slot": 1,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unnerve",
+       "canMega": true,
+       "hp": 175,
+       "item": "pyroarite",
+       "maxhp": 175,
+       "name": "Pyroar",
+       "pp": {
+        "flamethrower": 16,
+        "hypervoice": 12,
+        "overheat": 8,
+        "substitute": 12
+       },
+       "slot": null,
+       "species": "Pyroar",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move overheat -2 mega, move dracometeor -1",
+   "move shadowball 1, move encore -1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "boosts": {},
+      "hp": 197,
+      "item": "sitrusberry",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "dracometeor": 8,
+       "roar": 20,
+       "stealthrock": 20,
+       "thunderbolt": 16
+      },
+      "slot": 1,
+      "species": "Archaludon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "snowwarning",
+      "hp": 151,
+      "item": "lightclay",
+      "maxhp": 151,
+      "name": "Ninetales",
+      "pp": {
+       "auroraveil": 20,
+       "blizzard": 8,
+       "encore": 8,
+       "painsplit": 20
+      },
+      "slot": null,
+      "species": "Ninetales-Alola",
+      "status": ""
+     },
+     {
+      "ability": "unnerve",
+      "boosts": {},
+      "canMega": true,
+      "hp": 175,
+      "item": "pyroarite",
+      "maxhp": 175,
+      "name": "Pyroar",
+      "pp": {
+       "darkpulse": 16,
+       "flamethrower": 16,
+       "overheat": 8,
+       "yawn": 12
+      },
+      "slot": 0,
+      "species": "Pyroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "sharpness",
+      "hp": 167,
+      "item": "choicescarf",
+      "maxhp": 167,
+      "name": "Samurott",
+      "pp": {
+       "ceaselessedge": 16,
+       "flipturn": 20,
+       "razorshell": 12,
+       "sacredsword": 16
+      },
+      "slot": null,
+      "species": "Samurott-Hisui",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stancechange",
+      "boosts": {},
+      "hp": 159,
+      "item": "leftovers",
+      "maxhp": 159,
+      "name": "Aegislash",
+      "pp": {
+       "flashcannon": 12,
+       "kingsshield": 8,
+       "shadowball": 16,
+       "substitute": 12
+      },
+      "slot": 0,
+      "species": "Aegislash",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "ironfist",
+      "hp": 147,
+      "item": "focussash",
+      "maxhp": 147,
+      "name": "Pawmot",
+      "pp": {
+       "doubleshock": 8,
+       "icepunch": 16,
+       "machpunch": 20,
+       "revivalblessing": 1
+      },
+      "slot": null,
+      "species": "Pawmot",
+      "status": ""
+     },
+     {
+      "ability": "torrent",
+      "boosts": {},
+      "hp": 175,
+      "item": "sitrusberry",
+      "maxhp": 175,
+      "name": "Primarina",
+      "pp": {
+       "encore": 8,
+       "flipturn": 20,
+       "moonblast": 16,
+       "sparklingaria": 12
+      },
+      "slot": 1,
+      "species": "Primarina",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unnerve",
+      "canMega": true,
+      "hp": 175,
+      "item": "pyroarite",
+      "maxhp": 175,
+      "name": "Pyroar",
+      "pp": {
+       "flamethrower": 16,
+       "hypervoice": 12,
+       "overheat": 8,
+       "substitute": 12
+      },
+      "slot": null,
+      "species": "Pyroar",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "switch 4, move thunderbolt 1",
+  "p2": "move shadowball 2, move moonblast -1"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": [
+   1,
+   0,
+   1
+  ]
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    1
+   ]
+  }
+ ]
+}

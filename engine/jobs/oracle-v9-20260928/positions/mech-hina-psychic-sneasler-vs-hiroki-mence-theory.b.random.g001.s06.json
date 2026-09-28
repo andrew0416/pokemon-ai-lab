@@ -1,0 +1,1368 @@
+{
+ "description": "FF parity position (FF-parity-harness): mech-hina-psychic-sneasler-vs-hiroki-mence-theory.b, lab-parity game 1 (seed 2ea1717e6d0f4653, policy random, extremes chance), decision 6 = turn 4 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/mech-hina-psychic-sneasler-vs-hiroki-mence-theory.b.json. The 6 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "5634",
+  "team": "../../../../teams/library/singles/m-c/hina-psychic-sneasler/team.json"
+ },
+ "p2": {
+  "order": "5634",
+  "team": "../../../../teams/library/singles/m-c/hiroki-mence-theory/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "roar",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "roar": 19,
+        "rocktomb": 16,
+        "stealthrock": 20,
+        "thunderwave": 20
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "weakarmor",
+       "hp": 161,
+       "item": "focussash",
+       "maxhp": 161,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "calmmind": 20,
+        "endure": 12,
+        "expandingforce": 12
+       },
+       "slot": null,
+       "species": "Armarouge",
+       "status": ""
+      },
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 207,
+       "item": "sitrusberry",
+       "lastMove": "glaiverush",
+       "maxhp": 207,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 7,
+        "iciclecrash": 12
+       },
+       "slot": 0,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {
+        "glaiverush": {}
+       }
+      },
+      {
+       "ability": "cursedbody",
+       "canMega": true,
+       "hp": 177,
+       "item": "froslassite",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "blizzard": 8,
+        "hex": 12,
+        "taunt": 20,
+        "thunderwave": 20
+       },
+       "slot": null,
+       "species": "Froslass",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 185,
+       "item": "focussash",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 12,
+        "scaleshot": 20,
+        "stealthrock": 20,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 153,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 12,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": "fnt"
+      },
+      {
+       "ability": "sharpness",
+       "hp": 167,
+       "item": "blackglasses",
+       "maxhp": 167,
+       "name": "Samurott",
+       "pp": {
+        "ceaselessedge": 16,
+        "razorshell": 11,
+        "sacredsword": 16,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Samurott-Hisui",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "roar",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "roar": 19,
+        "rocktomb": 16,
+        "stealthrock": 20,
+        "thunderwave": 20
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "weakarmor",
+       "hp": 161,
+       "item": "focussash",
+       "maxhp": 161,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "calmmind": 20,
+        "endure": 12,
+        "expandingforce": 12
+       },
+       "slot": null,
+       "species": "Armarouge",
+       "status": ""
+      },
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 207,
+       "item": "sitrusberry",
+       "lastMove": "glaiverush",
+       "maxhp": 207,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 7,
+        "iciclecrash": 12
+       },
+       "slot": 0,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {
+        "glaiverush": {}
+       }
+      },
+      {
+       "ability": "cursedbody",
+       "canMega": true,
+       "hp": 177,
+       "item": "froslassite",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "blizzard": 8,
+        "hex": 12,
+        "taunt": 20,
+        "thunderwave": 20
+       },
+       "slot": null,
+       "species": "Froslass",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 185,
+       "item": "focussash",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 12,
+        "scaleshot": 20,
+        "stealthrock": 20,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 153,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 12,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      },
+      {
+       "ability": "sharpness",
+       "boosts": {},
+       "hp": 167,
+       "item": "blackglasses",
+       "maxhp": 167,
+       "name": "Samurott",
+       "pp": {
+        "ceaselessedge": 16,
+        "razorshell": 11,
+        "sacredsword": 16,
+        "suckerpunch": 8
+       },
+       "slot": 0,
+       "species": "Samurott-Hisui",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "spikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 2
+       },
+       "hp": 82,
+       "item": "leftovers",
+       "lastMove": "thunderwave",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "roar": 19,
+        "rocktomb": 16,
+        "stealthrock": 20,
+        "thunderwave": 19
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "weakarmor",
+       "hp": 161,
+       "item": "focussash",
+       "maxhp": 161,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "calmmind": 20,
+        "endure": 12,
+        "expandingforce": 12
+       },
+       "slot": null,
+       "species": "Armarouge",
+       "status": ""
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 207,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 7,
+        "iciclecrash": 11
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": "fnt"
+      },
+      {
+       "ability": "cursedbody",
+       "canMega": true,
+       "hp": 177,
+       "item": "froslassite",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "blizzard": 8,
+        "hex": 12,
+        "taunt": 20,
+        "thunderwave": 20
+       },
+       "slot": null,
+       "species": "Froslass",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 185,
+       "item": "focussash",
+       "lastMove": "earthquake",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 11,
+        "scaleshot": 20,
+        "stealthrock": 20,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 153,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 12,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      },
+      {
+       "ability": "sharpness",
+       "boosts": {},
+       "hp": 67,
+       "item": "blackglasses",
+       "lastMove": "ceaselessedge",
+       "maxhp": 167,
+       "name": "Samurott",
+       "pp": {
+        "ceaselessedge": 15,
+        "razorshell": 11,
+        "sacredsword": 16,
+        "suckerpunch": 8
+       },
+       "slot": 0,
+       "species": "Samurott-Hisui",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "spikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 2
+       },
+       "hp": 82,
+       "item": "leftovers",
+       "lastMove": "thunderwave",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "roar": 19,
+        "rocktomb": 16,
+        "stealthrock": 20,
+        "thunderwave": 19
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "weakarmor",
+       "boosts": {},
+       "hp": 141,
+       "item": "focussash",
+       "maxhp": 161,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "calmmind": 20,
+        "endure": 12,
+        "expandingforce": 12
+       },
+       "slot": 0,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 207,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 7,
+        "iciclecrash": 11
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "cursedbody",
+       "canMega": true,
+       "hp": 177,
+       "item": "froslassite",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "blizzard": 8,
+        "hex": 12,
+        "taunt": 20,
+        "thunderwave": 20
+       },
+       "slot": null,
+       "species": "Froslass",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 185,
+       "item": "focussash",
+       "lastMove": "earthquake",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 11,
+        "scaleshot": 20,
+        "stealthrock": 20,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 153,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 12,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      },
+      {
+       "ability": "sharpness",
+       "boosts": {},
+       "hp": 67,
+       "item": "blackglasses",
+       "lastMove": "ceaselessedge",
+       "maxhp": 167,
+       "name": "Samurott",
+       "pp": {
+        "ceaselessedge": 15,
+        "razorshell": 11,
+        "sacredsword": 16,
+        "suckerpunch": 8
+       },
+       "slot": 0,
+       "species": "Samurott-Hisui",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "spikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 3
+       },
+       "hp": 40,
+       "item": "leftovers",
+       "lastMove": "thunderwave",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "roar": 19,
+        "rocktomb": 16,
+        "stealthrock": 20,
+        "thunderwave": 18
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "weakarmor",
+       "boosts": {},
+       "hp": 141,
+       "item": "focussash",
+       "lastMove": "expandingforce",
+       "maxhp": 161,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "calmmind": 20,
+        "endure": 12,
+        "expandingforce": 11
+       },
+       "slot": 0,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 207,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 7,
+        "iciclecrash": 11
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "cursedbody",
+       "canMega": true,
+       "hp": 177,
+       "item": "froslassite",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "blizzard": 8,
+        "hex": 12,
+        "taunt": 20,
+        "thunderwave": 20
+       },
+       "slot": null,
+       "species": "Froslass",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {
+        "def": -1,
+        "spe": 1
+       },
+       "hp": 112,
+       "item": "focussash",
+       "lastMove": "scaleshot",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 11,
+        "scaleshot": 19,
+        "stealthrock": 20,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 153,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 12,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      },
+      {
+       "ability": "sharpness",
+       "hp": 0,
+       "item": "blackglasses",
+       "maxhp": 167,
+       "name": "Samurott",
+       "pp": {
+        "ceaselessedge": 15,
+        "razorshell": 11,
+        "sacredsword": 16,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Samurott-Hisui",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "spikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 3
+       },
+       "hp": 40,
+       "item": "leftovers",
+       "lastMove": "thunderwave",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "roar": 19,
+        "rocktomb": 16,
+        "stealthrock": 20,
+        "thunderwave": 18
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "weakarmor",
+       "boosts": {},
+       "hp": 141,
+       "item": "focussash",
+       "lastMove": "expandingforce",
+       "maxhp": 161,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "calmmind": 20,
+        "endure": 12,
+        "expandingforce": 11
+       },
+       "slot": 0,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 207,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 7,
+        "iciclecrash": 11
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "cursedbody",
+       "canMega": true,
+       "hp": 177,
+       "item": "froslassite",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "blizzard": 8,
+        "hex": 12,
+        "taunt": 20,
+        "thunderwave": 20
+       },
+       "slot": null,
+       "species": "Froslass",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {
+        "def": -1,
+        "spe": 1
+       },
+       "hp": 112,
+       "item": "focussash",
+       "lastMove": "scaleshot",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 11,
+        "scaleshot": 19,
+        "stealthrock": 20,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 153,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 12,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      },
+      {
+       "ability": "sharpness",
+       "hp": 0,
+       "item": "blackglasses",
+       "maxhp": 167,
+       "name": "Samurott",
+       "pp": {
+        "ceaselessedge": 15,
+        "razorshell": 11,
+        "sacredsword": 16,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Samurott-Hisui",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move glaiverush 1, move roar 2",
+   "switch 4, move razorshell -1"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move iciclecrash -2, move thunderwave -1",
+   "move ceaselessedge 1, move earthquake"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move expandingforce -2, move thunderwave 1",
+   "move suckerpunch -2, move scaleshot -1"
+  ],
+  [
+   "",
+   "switch 3"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "boosts": {},
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "roar": 20,
+       "rocktomb": 16,
+       "stealthrock": 20,
+       "thunderwave": 20
+      },
+      "slot": 1,
+      "species": "Archaludon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "weakarmor",
+      "hp": 161,
+      "item": "focussash",
+      "maxhp": 161,
+      "name": "Armarouge",
+      "pp": {
+       "armorcannon": 8,
+       "calmmind": 20,
+       "endure": 12,
+       "expandingforce": 12
+      },
+      "slot": null,
+      "species": "Armarouge",
+      "status": ""
+     },
+     {
+      "ability": "thermalexchange",
+      "boosts": {},
+      "hp": 207,
+      "item": "sitrusberry",
+      "maxhp": 207,
+      "name": "Baxcalibur",
+      "pp": {
+       "dragondance": 20,
+       "earthquake": 12,
+       "glaiverush": 8,
+       "iciclecrash": 12
+      },
+      "slot": 0,
+      "species": "Baxcalibur",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cursedbody",
+      "canMega": true,
+      "hp": 177,
+      "item": "froslassite",
+      "maxhp": 177,
+      "name": "Froslass",
+      "pp": {
+       "blizzard": 8,
+       "hex": 12,
+       "taunt": 20,
+       "thunderwave": 20
+      },
+      "slot": null,
+      "species": "Froslass",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "pressure",
+      "hp": 205,
+      "item": "sitrusberry",
+      "maxhp": 205,
+      "name": "Corviknight",
+      "pp": {
+       "bulkup": 20,
+       "ironhead": 16,
+       "roost": 8,
+       "uturn": 20
+      },
+      "slot": null,
+      "species": "Corviknight",
+      "status": ""
+     },
+     {
+      "ability": "roughskin",
+      "boosts": {},
+      "hp": 185,
+      "item": "focussash",
+      "maxhp": 185,
+      "name": "Garchomp",
+      "pp": {
+       "earthquake": 12,
+       "scaleshot": 20,
+       "stealthrock": 20,
+       "swordsdance": 20
+      },
+      "slot": 0,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "protean",
+      "hp": 153,
+      "item": "choicescarf",
+      "maxhp": 153,
+      "name": "Meowscarada",
+      "pp": {
+       "flowertrick": 12,
+       "knockoff": 20,
+       "tripleaxel": 12,
+       "uturn": 20
+      },
+      "slot": null,
+      "species": "Meowscarada",
+      "status": ""
+     },
+     {
+      "ability": "sharpness",
+      "boosts": {},
+      "hp": 167,
+      "item": "blackglasses",
+      "maxhp": 167,
+      "name": "Samurott",
+      "pp": {
+       "ceaselessedge": 16,
+       "razorshell": 12,
+       "sacredsword": 16,
+       "suckerpunch": 8
+      },
+      "slot": 1,
+      "species": "Samurott-Hisui",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "switch 4, move thunderwave -1",
+  "p2": "move ironhead 2, move scaleshot 1"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  }
+ ]
+}
