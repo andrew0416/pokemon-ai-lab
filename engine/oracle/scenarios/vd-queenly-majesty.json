@@ -1,0 +1,72 @@
+{
+ "description": "VD A1-t2: Queenly Majesty (onFoeTryMove: priority > 0.1 moves at the holder or its allies fail): Talonflame's Quick Attack at Snorlax (the holder's ally) is blocked; Garchomp's Dragon Claw (priority 0) hits Tsareena.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Talonflame",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Quick Attack"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Dragon Claw"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Tsareena",
+    "item": "",
+    "ability": "Queenly Majesty",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move quickattack 2, move dragonclaw 1",
+  "p2": "move harden, move harden"
+ }
+}

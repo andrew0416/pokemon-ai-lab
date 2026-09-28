@@ -1,0 +1,69 @@
+{
+ "description": "VD II-t1 (singles): Coaching (adjacentAllies: no ally in singles, fails) and Rock Slide (allAdjacentFoes: the one foe, no spread modifier; 30% flinch after Coaching's user already moved).",
+ "format": "gen9championscustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Machamp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Coaching"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ]
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Tyranitar",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Rock Slide"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ]
+ },
+ "turn": {
+  "p1": "move coaching",
+  "p2": "move rockslide"
+ }
+}

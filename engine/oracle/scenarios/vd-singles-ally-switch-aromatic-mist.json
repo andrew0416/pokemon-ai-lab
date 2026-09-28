@@ -1,0 +1,68 @@
+{
+ "description": "VD II-t1 (singles): Ally Switch (self, fails without an ally) and Aromatic Mist (adjacentAlly, no target in singles).",
+ "format": "gen9championscustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Alakazam",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Ally Switch"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ]
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Florges",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Aromatic Mist"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ]
+ },
+ "turn": {
+  "p1": "move allyswitch",
+  "p2": "move aromaticmist"
+ }
+}

@@ -1,0 +1,68 @@
+{
+ "description": "VD II-t1 (singles, N = 1): Follow Me fails in singles (onTry: activePerHalf === 1); Quash on the foe fails too (onHit returns false in singles). Clefable Follow Mes, Sableye (Prankster) Quashes it.",
+ "format": "gen9championscustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Follow Me"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ]
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Sableye",
+    "item": "",
+    "ability": "Prankster",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Quash"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ]
+ },
+ "turn": {
+  "p1": "move followme",
+  "p2": "move quash"
+ }
+}

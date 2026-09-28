@@ -1,0 +1,101 @@
+{
+ "description": "VD A1-t2: Leppa Berry (onUpdate on a move at 0 PP, onEat +10 PP capped at max): Blissey uses its 8th and last Soft-Boiled (Champions PP 5 -> 8; 7 setup turns at full HP, each failing but spending PP); the Leppa Berry is eaten and restores it to 8.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Blissey",
+    "item": "Leppa Berry",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Soft-Boiled",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Metagross",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move softboiled, move harden",
+   "move harden, move harden"
+  ],
+  [
+   "move softboiled, move harden",
+   "move harden, move harden"
+  ],
+  [
+   "move softboiled, move harden",
+   "move harden, move harden"
+  ],
+  [
+   "move softboiled, move harden",
+   "move harden, move harden"
+  ],
+  [
+   "move softboiled, move harden",
+   "move harden, move harden"
+  ],
+  [
+   "move softboiled, move harden",
+   "move harden, move harden"
+  ],
+  [
+   "move softboiled, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move softboiled, move harden",
+  "p2": "move harden, move harden"
+ }
+}

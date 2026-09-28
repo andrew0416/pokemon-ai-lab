@@ -1,0 +1,86 @@
+{
+ "description": "VD A1-t2: Power Trip (basePowerCallback 20 + 20 per positive boost: +1 Def +1 SpD +1 Spe from the patch -> 80) and Infernal Parade (Champions BP 65, doubled on a statused target; 30% burn): Kingambit Power Trips Clefable; Gengar's Infernal Parade hits the paralyzed Tyranitar (patch; resisted) at 130.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Kingambit",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Power Trip"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Gengar",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Infernal Parade"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Tyranitar",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Kingambit": {
+    "boosts": {
+     "def": 1,
+     "spd": 1,
+     "spe": 1
+    }
+   }
+  },
+  "p2": {
+   "Tyranitar": {
+    "status": "par"
+   }
+  }
+ },
+ "turn": {
+  "p1": "move powertrip 2, move infernalparade 1",
+  "p2": "move harden, move harden"
+ }
+}

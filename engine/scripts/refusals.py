@@ -334,13 +334,18 @@ SCENARIO_SRC = ENGINE / "scenario" / "src"
 SCENARIO_TESTS = ENGINE / "scenario" / "tests"
 # Every loader file but `error.rs` (the enums and their messages), `parity.rs` (the comparison)
 # and the binaries.
-LOADER_FILES = ["lib.rs", "team.rs", "decision.rs", "switch_in.rs", "canonical.rs", "json.rs", "meta.rs"]
+LOADER_FILES = ["lib.rs", "team.rs", "decision.rs", "switch_in.rs", "canonical.rs", "json.rs", "meta.rs",
+                "from_canonical.rs"]
 LOADER_ENUMS = r"(LoadError|TeamProblem|SetProblem|SwitchInError|CanonicalError)::(\w+)"
 # Wrappers: they only carry a problem that has its own key.
 LOADER_WRAPPERS = {"LoadError::Team", "LoadError::Set"}
 # Helpers that build a variant from a message (their own bodies are skipped).
 LOADER_HELPERS = {"unrepresentable": "CanonicalError::Unrepresentable", "not_initial": "SwitchInError::NotInitial",
-                  "meta_error": "CanonicalError::Meta"}
+                  "meta_error": "CanonicalError::Meta",
+                  # from_canonical.rs (A4-t4): a pinned canonical state the engine cannot rebuild.
+                  "invalid": "ScenarioError::Invalid", "unsupported": "ScenarioError::Unsupported"}
+# Helpers whose key carries the message template (one key per distinct refusal).
+LOADER_TEMPLATED = ("Unrepresentable", "ScenarioError::Invalid", "ScenarioError::Unsupported")
 # Messages that only put context before another error (`e.context("setup turn 2")`).
 LOADER_CONTEXT = re.compile(r"^(setup turn \{\}(: \{\})?|startState)$")
 LOADER_CLASSES = {
@@ -401,7 +406,7 @@ def extract_loader():
                     continue
                 a, b = s.arg(m.end() - 1)
                 key = variant
-                if variant.endswith("Unrepresentable"):
+                if variant.endswith(LOADER_TEMPLATED):
                     lit = first_literal(code, s.literals, a, b)
                     key += f": {template(lit)}" if lit else ""
                 add(key, f"{name}::{enclosing(s.spans, m.start())}")
@@ -450,7 +455,8 @@ def render_loader(entries, classification):
     w("## 시나리오 로더 거부 (A4)")
     w("")
     w("`engine/scenario/src`(`error.rs`·`parity.rs`·바이너리 제외)가 턴 엔진 앞에서 거부하는 곳: `LoadError`·`TeamProblem`·"
-      "`SetProblem`·`SwitchInError`·`CanonicalError`의 생성 지점과 팀 프리뷰·패치·선택 문자열의 `String` 오류. "
+      "`SetProblem`·`SwitchInError`·`CanonicalError`의 생성 지점, 팀 프리뷰·패치·선택 문자열의 `String` 오류, "
+      "`from_canonical.rs`(손으로 만든·핀 국면의 canonical 재구성)의 `ScenarioError`(A4-t4). "
       "분류는 `refusals.classification.json`의 `loader`. `SwitchInError`와 `CanonicalError::Unrepresentable`은 "
       "`ScenarioError::Unsupported`로, 나머지는 `ScenarioError::Invalid`/`LoadError`로 나온다(T1).")
     w("")

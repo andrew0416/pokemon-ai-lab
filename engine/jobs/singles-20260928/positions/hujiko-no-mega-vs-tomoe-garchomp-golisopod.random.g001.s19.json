@@ -1,0 +1,2861 @@
+{
+ "description": "FF parity position (FF-parity-harness): hujiko-no-mega-vs-tomoe-garchomp-golisopod, lab-parity game 1 (seed 67fca39ab5b4bb95, policy random, extremes chance), decision 19 = turn 17 Turn. Base scenario runs/parity-singles-20260928/matchups/hujiko-no-mega-vs-tomoe-garchomp-golisopod.json. The 19 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsbssregmc",
+ "p1": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/hujiko-no-mega/team.json"
+ },
+ "p2": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/tomoe-garchomp-golisopod/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 20
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 151,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 12,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "canMega": true,
+       "hp": 185,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 16,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 187,
+       "item": "chestoberry",
+       "lastMove": "rest",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 20,
+        "moonblast": 16,
+        "rest": 7,
+        "sparklingaria": 12
+       },
+       "slot": 0,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 20
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 205,
+       "item": "sitrusberry",
+       "lastMove": "roost",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 151,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 12,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "canMega": true,
+       "hp": 185,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 16,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {
+        "spa": 1,
+        "spd": 1
+       },
+       "hp": 187,
+       "item": "chestoberry",
+       "lastMove": "calmmind",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 19,
+        "moonblast": 16,
+        "rest": 7,
+        "sparklingaria": 12
+       },
+       "slot": 0,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 20
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "protean",
+       "boosts": {},
+       "hp": 151,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 12,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Meowscarada",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "canMega": true,
+       "hp": 185,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 16,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {
+        "spa": 1,
+        "spd": 1
+       },
+       "hp": 187,
+       "item": "chestoberry",
+       "lastMove": "rest",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 19,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 12
+       },
+       "slot": 0,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 20
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "protean",
+       "boosts": {},
+       "hp": 151,
+       "item": "choicescarf",
+       "lastMove": "tripleaxel",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 11,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Meowscarada",
+       "status": "",
+       "types": "Ice",
+       "volatiles": {
+        "choicelock": {
+         "move": "tripleaxel"
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "canMega": true,
+       "hp": 185,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 16,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {
+        "spa": 2,
+        "spd": 2
+       },
+       "hp": 137,
+       "item": "chestoberry",
+       "lastMove": "calmmind",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 18,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 12
+       },
+       "slot": 0,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 20
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "protean",
+       "boosts": {},
+       "hp": 151,
+       "item": "choicescarf",
+       "lastMove": "tripleaxel",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Meowscarada",
+       "status": "",
+       "types": "Ice",
+       "volatiles": {
+        "choicelock": {
+         "move": "tripleaxel"
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "canMega": true,
+       "hp": 185,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 16,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {
+        "spa": 3,
+        "spd": 3
+       },
+       "hp": 66,
+       "item": "chestoberry",
+       "lastMove": "calmmind",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 17,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 12
+       },
+       "slot": 0,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 20
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 61,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 151,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "canMega": true,
+       "hp": 185,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 16,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {
+        "spa": 3,
+        "spd": 3
+       },
+       "hp": 66,
+       "item": "chestoberry",
+       "lastMove": "sparklingaria",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 17,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 10
+       },
+       "slot": 0,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 20
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "hp": 61,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "protean",
+       "boosts": {},
+       "hp": 151,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Meowscarada",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "canMega": true,
+       "hp": 185,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 16,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "canMega": true,
+       "hp": 164,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "suckerpunch": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 66,
+       "item": "chestoberry",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 17,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 10
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 20
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 61,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 19
+       },
+       "slot": 0,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 151,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "canMega": true,
+       "hp": 185,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 16,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 164,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "hp": 66,
+       "item": "chestoberry",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 17,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 10
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 20
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "hp": 61,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {
+        "spa": -2
+       },
+       "hp": 185,
+       "item": "garchompitez",
+       "lastMove": "dracometeor",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "flamethrower": 16,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 164,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "hp": 66,
+       "item": "chestoberry",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 17,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 10
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 20
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 61,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 19
+       },
+       "slot": 0,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {
+        "spa": -2
+       },
+       "hp": 185,
+       "item": "garchompitez",
+       "lastMove": "dracometeor",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "flamethrower": 16,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 164,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "hp": 66,
+       "item": "chestoberry",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 17,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 10
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 10,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "boosts": {},
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 20,
+        "toxic": 12,
+        "voltswitch": 20
+       },
+       "slot": 0,
+       "species": "Bellibolt",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "pressure",
+       "hp": 61,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 18
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 185,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "flamethrower": 16,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 146,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "suckerpunch": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 66,
+       "item": "chestoberry",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 17,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 10
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 11,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "boosts": {},
+       "hp": 165,
+       "item": "leftovers",
+       "lastMove": "soak",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 19,
+        "toxic": 12,
+        "voltswitch": 20
+       },
+       "slot": 0,
+       "species": "Bellibolt",
+       "status": "",
+       "volatiles": {
+        "charge": {}
+       }
+      },
+      {
+       "ability": "pressure",
+       "hp": 61,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 18
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 185,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "flamethrower": 16,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 178,
+       "item": "golisopite",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "types": "Water",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 66,
+       "item": "chestoberry",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 17,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 10
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 12,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 119,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 19,
+        "toxic": 12,
+        "voltswitch": 19
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 61,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 18
+       },
+       "slot": 0,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 185,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "flamethrower": 16,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": "fnt"
+      },
+      {
+       "ability": "torrent",
+       "hp": 66,
+       "item": "chestoberry",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 17,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 10
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 12,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 119,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 19,
+        "toxic": 12,
+        "voltswitch": 19
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 61,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 18
+       },
+       "slot": 0,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 185,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "flamethrower": 16,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "hp": 66,
+       "item": "chestoberry",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 17,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 10
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 13,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "hp": 119,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 19,
+        "toxic": 12,
+        "voltswitch": 19
+       },
+       "slot": null,
+       "species": "Bellibolt",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 18
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": "fnt"
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 185,
+       "item": "garchompitez",
+       "lastMove": "powergem",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "flamethrower": 16,
+        "powergem": 18,
+        "scorchingsands": 12
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "hp": 66,
+       "item": "chestoberry",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 17,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 10
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 13,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "boosts": {},
+       "hp": 119,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 8,
+        "soak": 19,
+        "toxic": 12,
+        "voltswitch": 19
+       },
+       "slot": 0,
+       "species": "Bellibolt",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "pressure",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 18
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 185,
+       "item": "garchompitez",
+       "lastMove": "powergem",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "flamethrower": 16,
+        "powergem": 18,
+        "scorchingsands": 12
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "hp": 66,
+       "item": "chestoberry",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 17,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 10
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 14,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "boosts": {},
+       "hp": 162,
+       "item": "leftovers",
+       "lastMove": "slackoff",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 7,
+        "soak": 19,
+        "toxic": 12,
+        "voltswitch": 19
+       },
+       "slot": 0,
+       "species": "Bellibolt",
+       "status": "",
+       "volatiles": {
+        "charge": {}
+       }
+      },
+      {
+       "ability": "pressure",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 18
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 185,
+       "item": "garchompitez",
+       "lastMove": "scorchingsands",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "flamethrower": 16,
+        "powergem": 18,
+        "scorchingsands": 11
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "hp": 66,
+       "item": "chestoberry",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 17,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 10
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 15,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "boosts": {},
+       "hp": 175,
+       "item": "leftovers",
+       "lastMove": "toxic",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 7,
+        "soak": 19,
+        "toxic": 11,
+        "voltswitch": 19
+       },
+       "slot": 0,
+       "species": "Bellibolt",
+       "status": "",
+       "volatiles": {
+        "charge": {}
+       }
+      },
+      {
+       "ability": "pressure",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 18
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 185,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "flamethrower": 16,
+        "powergem": 18,
+        "scorchingsands": 11
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 55,
+       "item": "chestoberry",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 17,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 10
+       },
+       "slot": 0,
+       "species": "Primarina",
+       "status": "tox",
+       "statusStage": 1,
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 16,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "electromorphosis",
+       "boosts": {},
+       "hp": 86,
+       "item": "leftovers",
+       "lastMove": "toxic",
+       "maxhp": 215,
+       "name": "Bellibolt",
+       "pp": {
+        "slackoff": 7,
+        "soak": 19,
+        "toxic": 10,
+        "voltswitch": 19
+       },
+       "slot": 0,
+       "species": "Bellibolt",
+       "status": "",
+       "volatiles": {
+        "charge": {}
+       }
+      },
+      {
+       "ability": "pressure",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bodypress": 12,
+        "irondefense": 16,
+        "roost": 7,
+        "uturn": 18
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 151,
+       "name": "Meowscarada",
+       "pp": {
+        "flowertrick": 12,
+        "knockoff": 20,
+        "tripleaxel": 10,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 185,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "flamethrower": 16,
+        "powergem": 18,
+        "scorchingsands": 11
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 33,
+       "item": "chestoberry",
+       "lastMove": "sparklingaria",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 17,
+        "moonblast": 16,
+        "rest": 6,
+        "sparklingaria": 9
+       },
+       "slot": 0,
+       "species": "Primarina",
+       "status": "tox",
+       "statusStage": 2,
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 17,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "switch 2",
+   "move rest"
+  ],
+  [
+   "move roost",
+   "move calmmind"
+  ],
+  [
+   "switch 2",
+   "move rest"
+  ],
+  [
+   "move tripleaxel",
+   "move calmmind"
+  ],
+  [
+   "move tripleaxel",
+   "move calmmind"
+  ],
+  [
+   "switch 2",
+   "move sparklingaria"
+  ],
+  [
+   "move uturn",
+   "switch 3",
+   {
+    "p1": [
+     "switch 2"
+    ],
+    "p2": []
+   }
+  ],
+  [
+   "switch 2",
+   "switch 2"
+  ],
+  [
+   "switch 2",
+   "move dracometeor mega"
+  ],
+  [
+   "switch 2",
+   ""
+  ],
+  [
+   "move uturn",
+   "switch 2",
+   {
+    "p1": [
+     "switch 3"
+    ],
+    "p2": []
+   }
+  ],
+  [
+   "move soak",
+   "move leechlife"
+  ],
+  [
+   "move voltswitch",
+   "move suckerpunch",
+   {
+    "p1": [
+     "switch 3"
+    ],
+    "p2": []
+   }
+  ],
+  [
+   "",
+   "switch 2"
+  ],
+  [
+   "move uturn",
+   "move powergem"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move slackoff",
+   "move scorchingsands"
+  ],
+  [
+   "move toxic",
+   "switch 3"
+  ],
+  [
+   "move toxic",
+   "move sparklingaria"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "electromorphosis",
+      "hp": 215,
+      "item": "leftovers",
+      "maxhp": 215,
+      "name": "Bellibolt",
+      "pp": {
+       "slackoff": 8,
+       "soak": 20,
+       "toxic": 12,
+       "voltswitch": 20
+      },
+      "slot": null,
+      "species": "Bellibolt",
+      "status": ""
+     },
+     {
+      "ability": "pressure",
+      "hp": 205,
+      "item": "sitrusberry",
+      "maxhp": 205,
+      "name": "Corviknight",
+      "pp": {
+       "bodypress": 12,
+       "irondefense": 16,
+       "roost": 8,
+       "uturn": 20
+      },
+      "slot": null,
+      "species": "Corviknight",
+      "status": ""
+     },
+     {
+      "ability": "protean",
+      "boosts": {},
+      "hp": 151,
+      "item": "choicescarf",
+      "maxhp": 151,
+      "name": "Meowscarada",
+      "pp": {
+       "flowertrick": 12,
+       "knockoff": 20,
+       "tripleaxel": 12,
+       "uturn": 20
+      },
+      "slot": 0,
+      "species": "Meowscarada",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "roughskin",
+      "canMega": true,
+      "hp": 185,
+      "item": "garchompitez",
+      "maxhp": 185,
+      "name": "Garchomp",
+      "pp": {
+       "dracometeor": 8,
+       "flamethrower": 16,
+       "powergem": 20,
+       "scorchingsands": 12
+      },
+      "slot": null,
+      "species": "Garchomp",
+      "status": ""
+     },
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "firstimpression": 12,
+       "ironhead": 16,
+       "leechlife": 12,
+       "suckerpunch": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "torrent",
+      "boosts": {},
+      "hp": 187,
+      "item": "chestoberry",
+      "maxhp": 187,
+      "name": "Primarina",
+      "pp": {
+       "calmmind": 20,
+       "moonblast": 16,
+       "rest": 8,
+       "sparklingaria": 12
+      },
+      "slot": 0,
+      "species": "Primarina",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move soak",
+  "p2": "move sparklingaria"
+ }
+}

@@ -1,0 +1,78 @@
+{
+ "description": "VD A1-t2: Solar Blade (onTryMove charge turn; onBasePower x0.5 in sand): Tyranitar (Sand Stream) sets sand; Gallade charges in the setup turn and hits Blissey at half power this turn.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Gallade",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Solar Blade",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Tyranitar",
+    "item": "",
+    "ability": "Sand Stream",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move solarblade 2, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move solarblade 2, move harden",
+  "p2": "move harden, move harden"
+ }
+}

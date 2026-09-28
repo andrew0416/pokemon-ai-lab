@@ -3486,8 +3486,10 @@ fn spread_move_hit<const N: usize>(
             if secondary.status != Status::None {
                 b.try_set_status(t, secondary.status);
             }
+            // `target.addVolatile(volatileStatus, source, move)`: the move is the source effect
+            // (Axe Kick's confusion lasts longer).
             if let Some(volatile) = Volatile::from_condition(secondary.volatile_status) {
-                b.add_volatile(t, volatile);
+                b.add_volatile_from(t, volatile, mv.id);
             }
             handlers::secondary_on_hit(b, user, t, mv);
             if secondary.self_boosts != NO_BOOSTS {

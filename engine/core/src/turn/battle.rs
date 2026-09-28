@@ -1735,8 +1735,15 @@ impl<'a, const N: usize> Battle<'a, N> {
                 ..VolatileState::NONE
             };
             match volatile {
-                // `this.effectState.time = this.random(2, 6)`.
-                Volatile::Confusion => new.time = 2 + self.rng.uniform(4) as u8,
+                // `const min = sourceEffect?.id === 'axekick' ? 3 : 2;`
+                // `this.effectState.time = this.random(min, 6)`.
+                Volatile::Confusion => {
+                    new.time = if source_move == crate::dex::moves::AXE_KICK {
+                        3 + self.rng.uniform(3) as u8
+                    } else {
+                        2 + self.rng.uniform(4) as u8
+                    }
+                }
                 // `trueDuration = this.random(2, 4)`, the move that locked.
                 Volatile::LockedMove => {
                     new.hidden = 2 + self.rng.uniform(2) as u8;

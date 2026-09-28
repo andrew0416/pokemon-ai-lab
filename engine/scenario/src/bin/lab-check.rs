@@ -102,8 +102,8 @@ fn engine_distribution_keyed<const N: usize>(
     Ok(out)
 }
 use lab_scenario::{
-    canonical_value, load_scenario_file, load_scenario_str, run_decision_mid_turn_with,
-    scenario_decision, scenario_positions, ScenarioError,
+    canonical_value, format_slots, load_scenario_str_as, run_decision_mid_turn_with,
+    scenario_decision, scenario_positions, LoadError, LoadedScenario, ScenarioError,
 };
 
 fn main() -> ExitCode {
@@ -432,22 +432,55 @@ fn check(scenario: &str, report_path: &str, tolerance: f64) -> Value {
         },
     };
     let oracle = report.outcomes.0;
-    let loaded = if scenario.ends_with(".gz") {
-        let base = Path::new(scenario).parent().unwrap_or(Path::new("."));
-        read_text(scenario)
-            .and_then(|text| load_scenario_str(&text, base).map_err(|e| e.to_string()))
-    } else {
-        load_scenario_file(scenario).map_err(|e| e.to_string())
+    let text = match read_text(scenario) {
+        Ok(t) => t,
+        Err(e) => return failure("engine-error", e),
     };
+    // II-t1: a singles format (`State<1>`) is checked by the same code at N = 1.
+    let slots = serde_json::from_str::<Value>(text.trim_start_matches('\u{feff}'))
+        .ok()
+        .and_then(|v| v["format"].as_str().and_then(format_slots));
+    let base = Path::new(scenario).parent().unwrap_or(Path::new("."));
+    match slots {
+        Some(1) => check_loaded(
+            load_scenario_str_as::<1>(&text, base),
+            &report.before,
+            oracle,
+            mode,
+            roll,
+            options,
+            tolerance,
+        ),
+        _ => check_loaded(
+            load_scenario_str_as::<2>(&text, base),
+            &report.before,
+            oracle,
+            mode,
+            roll,
+            options,
+            tolerance,
+        ),
+    }
+}
+
+/// [`check`] once the scenario is loaded at its slot count.
+fn check_loaded<const N: usize>(
+    loaded: Result<LoadedScenario<N>, LoadError>,
+    before: &Value,
+    oracle: Distribution,
+    mode: &str,
+    roll: Option<u64>,
+    options: EnumerateOptions,
+    tolerance: f64,
+) -> Value {
     let loaded = match loaded {
         Ok(l) => l,
-        Err(e) => return failure("engine-error", e),
+        Err(e) => return failure("engine-error", e.to_string()),
     };
     let positions = match scenario_positions(&loaded) {
         Ok(p) => p,
         Err(e) => return engine_failure("setup: ", e),
     };
-    let before = &report.before;
     let mut matching = Vec::new();
     let mut closest: Option<Vec<String>> = None;
     for position in &positions {

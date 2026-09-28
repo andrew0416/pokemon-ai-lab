@@ -1,0 +1,71 @@
+{
+ "description": "VD A1-t2: Misty Explosion (onBasePower x1.5 on Misty Terrain when the user is grounded; the user faints): Clefable (Misty Surge sets the terrain at the start) explodes at 150 BP; its ally Snorlax Protects; both foes are hit.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Misty Surge",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spa": 32
+    },
+    "moves": [
+     "Misty Explosion"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Metagross",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move mistyexplosion, move protect",
+  "p2": "move harden, move harden"
+ }
+}

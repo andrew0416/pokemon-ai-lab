@@ -1,0 +1,805 @@
+{
+ "list": "runs/parity-singles-20260928/selected.txt",
+ "positions": [
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s00.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s00.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s02.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s02.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s03.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s03.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s05.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s05.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s06.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s06.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s08.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s08.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s09.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s09.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s11.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s11.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s13.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s13.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s14.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s14.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s16.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s16.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s17.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s17.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s19.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g000.s19.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s00.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s00.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s01.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s01.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s03.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s03.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s04.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s04.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s06.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s06.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s07.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s07.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s09.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s09.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s11.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s11.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s12.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s12.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s14.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s14.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s15.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s15.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s17.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s17.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s18.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s18.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s20.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s20.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s22.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s22.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s23.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s23.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s25.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s25.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s26.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s26.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s28.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s28.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s29.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s29.json"
+  },
+  {
+   "file": "alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s31.json",
+   "from": "runs/parity-singles-20260928/positions/alc-hippo-archaludon-vs-myuto-mence-offense.random.g001.s31.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g000.s00.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g000.s00.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g000.s01.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g000.s01.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g000.s03.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g000.s03.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g000.s04.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g000.s04.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g000.s06.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g000.s06.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s01.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s01.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s02.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s02.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s04.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s04.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s05.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s05.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s07.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s07.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s08.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s08.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s10.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s10.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s12.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s12.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s13.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s13.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s15.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s15.json"
+  },
+  {
+   "file": "asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s16.json",
+   "from": "runs/parity-singles-20260928/positions/asqkura-bulky-setup-vs-robin-blastoise-psychic.random.g001.s16.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g000.s01.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g000.s01.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g000.s02.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g000.s02.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g000.s04.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g000.s04.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g000.s06.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g000.s06.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g000.s07.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g000.s07.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g000.s09.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g000.s09.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g000.s10.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g000.s10.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s00.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s00.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s02.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s02.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s03.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s03.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s05.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s05.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s06.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s06.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s08.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s08.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s09.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s09.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s11.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s11.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s13.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s13.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s14.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s14.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s16.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s16.json"
+  },
+  {
+   "file": "hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s17.json",
+   "from": "runs/parity-singles-20260928/positions/hina-psychic-sneasler-vs-sarami-raichu-experiment.random.g001.s17.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s01.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s01.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s02.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s02.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s04.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s04.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s06.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s06.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s07.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s07.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s09.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s09.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s10.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s10.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s12.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s12.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s13.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s13.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s15.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s15.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s17.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s17.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s18.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s18.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s20.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s20.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s21.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s21.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s23.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s23.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s25.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s25.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s26.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s26.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s28.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s28.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s29.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s29.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s31.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s31.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s32.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s32.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s34.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s34.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s36.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s36.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s37.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s37.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s39.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s39.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g000.s40.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g000.s40.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g001.s00.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g001.s00.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g001.s01.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g001.s01.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g001.s03.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g001.s03.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g001.s05.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g001.s05.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g001.s06.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g001.s06.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g001.s08.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g001.s08.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g001.s09.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g001.s09.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g001.s11.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g001.s11.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g001.s13.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g001.s13.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g001.s14.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g001.s14.json"
+  },
+  {
+   "file": "hiroki-mence-theory-vs-tama-screens-revival.random.g001.s16.json",
+   "from": "runs/parity-singles-20260928/positions/hiroki-mence-theory-vs-tama-screens-revival.random.g001.s16.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s00.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s00.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s02.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s02.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s03.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s03.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s05.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s05.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s07.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s07.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s08.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s08.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s10.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s10.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s11.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s11.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s13.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s13.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s14.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s14.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s16.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s16.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s18.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s18.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s19.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s19.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s21.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s21.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s22.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s22.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s24.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s24.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s26.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s26.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s27.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s27.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s29.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s29.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s30.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s30.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s32.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s32.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s33.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s33.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s35.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s35.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s37.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s37.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s38.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s38.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s40.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s40.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s41.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g000.s41.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s00.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s00.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s01.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s01.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s03.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s03.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s05.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s05.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s06.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s06.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s08.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s08.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s09.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s09.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s11.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s11.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s12.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s12.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s14.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s14.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s16.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s16.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s17.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s17.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s19.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s19.json"
+  },
+  {
+   "file": "hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s20.json",
+   "from": "runs/parity-singles-20260928/positions/hujiko-no-mega-vs-tomoe-garchomp-golisopod.random.g001.s20.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s00.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s00.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s02.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s02.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s03.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s03.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s05.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s05.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s06.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s06.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s08.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s08.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s09.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s09.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s11.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s11.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s13.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s13.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s14.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g000.s14.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s01.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s01.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s02.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s02.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s04.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s04.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s05.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s05.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s07.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s07.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s09.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s09.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s10.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s10.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s12.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s12.json"
+  },
+  {
+   "file": "kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s13.json",
+   "from": "runs/parity-singles-20260928/positions/kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s13.json"
+  },
+  {
+   "file": "masagon-lucario-salamence-vs-tororo-raichu-electric.random.g000.s00.json",
+   "from": "runs/parity-singles-20260928/positions/masagon-lucario-salamence-vs-tororo-raichu-electric.random.g000.s00.json"
+  },
+  {
+   "file": "masagon-lucario-salamence-vs-tororo-raichu-electric.random.g000.s02.json",
+   "from": "runs/parity-singles-20260928/positions/masagon-lucario-salamence-vs-tororo-raichu-electric.random.g000.s02.json"
+  },
+  {
+   "file": "masagon-lucario-salamence-vs-tororo-raichu-electric.random.g000.s03.json",
+   "from": "runs/parity-singles-20260928/positions/masagon-lucario-salamence-vs-tororo-raichu-electric.random.g000.s03.json"
+  },
+  {
+   "file": "masagon-lucario-salamence-vs-tororo-raichu-electric.random.g000.s05.json",
+   "from": "runs/parity-singles-20260928/positions/masagon-lucario-salamence-vs-tororo-raichu-electric.random.g000.s05.json"
+  },
+  {
+   "file": "masagon-lucario-salamence-vs-tororo-raichu-electric.random.g000.s06.json",
+   "from": "runs/parity-singles-20260928/positions/masagon-lucario-salamence-vs-tororo-raichu-electric.random.g000.s06.json"
+  },
+  {
+   "file": "masagon-lucario-salamence-vs-tororo-raichu-electric.random.g001.s01.json",
+   "from": "runs/parity-singles-20260928/positions/masagon-lucario-salamence-vs-tororo-raichu-electric.random.g001.s01.json"
+  },
+  {
+   "file": "masagon-lucario-salamence-vs-tororo-raichu-electric.random.g001.s02.json",
+   "from": "runs/parity-singles-20260928/positions/masagon-lucario-salamence-vs-tororo-raichu-electric.random.g001.s02.json"
+  },
+  {
+   "file": "masagon-lucario-salamence-vs-tororo-raichu-electric.random.g001.s04.json",
+   "from": "runs/parity-singles-20260928/positions/masagon-lucario-salamence-vs-tororo-raichu-electric.random.g001.s04.json"
+  },
+  {
+   "file": "masagon-lucario-salamence-vs-tororo-raichu-electric.random.g001.s06.json",
+   "from": "runs/parity-singles-20260928/positions/masagon-lucario-salamence-vs-tororo-raichu-electric.random.g001.s06.json"
+  },
+  {
+   "file": "masagon-lucario-salamence-vs-tororo-raichu-electric.random.g001.s07.json",
+   "from": "runs/parity-singles-20260928/positions/masagon-lucario-salamence-vs-tororo-raichu-electric.random.g001.s07.json"
+  },
+  {
+   "file": "masagon-lucario-salamence-vs-tororo-raichu-electric.random.g001.s09.json",
+   "from": "runs/parity-singles-20260928/positions/masagon-lucario-salamence-vs-tororo-raichu-electric.random.g001.s09.json"
+  },
+  {
+   "file": "masagon-lucario-salamence-vs-tororo-raichu-electric.random.g001.s10.json",
+   "from": "runs/parity-singles-20260928/positions/masagon-lucario-salamence-vs-tororo-raichu-electric.random.g001.s10.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s00.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s00.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s01.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s01.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s03.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s03.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s05.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s05.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s06.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s06.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s08.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s08.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s09.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s09.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s11.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s11.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s12.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s12.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s14.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s14.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s16.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s16.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s17.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s17.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s19.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s19.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s20.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g000.s20.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s01.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s01.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s03.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s03.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s04.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s04.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s06.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s06.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s07.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s07.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s09.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s09.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s10.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s10.json"
+  },
+  {
+   "file": "mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s12.json",
+   "from": "runs/parity-singles-20260928/positions/mutsu-baxcalibur-vs-yuto-rain-perish.random.g001.s12.json"
+  }
+ ]
+}

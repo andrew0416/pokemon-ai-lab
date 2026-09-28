@@ -1,0 +1,78 @@
+{
+ "description": "VD A1-t2: Sky Attack (onTryMove charge turn, accuracy 90, crit ratio 2, 30% flinch): Talonflame charged in the setup turn and strikes Blissey this turn before Blissey moves.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Talonflame",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Sky Attack",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Metagross",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move skyattack 2, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move skyattack 2, move harden",
+  "p2": "move harden, move harden"
+ }
+}

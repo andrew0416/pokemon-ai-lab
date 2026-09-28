@@ -1,0 +1,80 @@
+{
+ "description": "VD A1-t2: Gluttony (onStart/onDamage set abilityState.gluttony; pinch berries at 1/2): Snorlax (Gluttony) at 120/267 HP (patch) eats its Liechi Berry (+1 Atk) at the first Update; Garchomp (Honey Gather) at 90/258 HP (above 1/4) keeps its Liechi Berry.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "Liechi Berry",
+    "ability": "Gluttony",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Garchomp",
+    "item": "Liechi Berry",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Metagross",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p1": {
+   "Snorlax": {
+    "hp": 120
+   },
+   "Garchomp": {
+    "hp": 90
+   }
+  }
+ },
+ "turn": {
+  "p1": "move harden, move harden",
+  "p2": "move harden, move harden"
+ }
+}

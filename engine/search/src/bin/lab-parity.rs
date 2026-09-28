@@ -32,6 +32,9 @@
 //! unreachable). `--first-step 1` leaves it out, as before.
 //!
 //! Game `g` of seed `s` is deterministic given the engine and the policy.
+//!
+//! A singles scenario (`gen9championsbssregmc`, `gen9championscustomgame`; board II-t1) is played
+//! and written the same way with `State<1>`.
 
 use std::path::{Component, Path, PathBuf};
 use std::process::ExitCode;
@@ -47,8 +50,8 @@ use lab_engine::rules::Ruleset;
 use lab_engine::state::{BattleResult, SideId, State};
 use lab_engine::turn::{EnumerateOptions, RollMode, Suspension};
 use lab_scenario::{
-    advance_order, canonical_value, load_scenario_file, scenario_positions, LoadedScenario,
-    PartyOrder, Position,
+    advance_order, canonical_value, format_slots, load_scenario_file_as, scenario_positions,
+    LoadedScenario, PartyOrder, Position,
 };
 use lab_search::game::asked_slots;
 use lab_search::{
@@ -243,12 +246,67 @@ fn run() -> Result<(), String> {
         return Err("--games must be at least 1".into());
     }
 
-    let loaded = load_scenario_file(&scenario).map_err(|e| e.to_string())?;
+    // II-t1: a singles format (`State<1>`) plays and writes its positions at N = 1.
+    let text = std::fs::read_to_string(&scenario).map_err(|e| format!("{scenario}: {e}"))?;
+    let format = serde_json::from_str::<Value>(text.trim_start_matches('\u{feff}'))
+        .map_err(|e| format!("{scenario}: {e}"))?["format"]
+        .as_str()
+        .map(str::to_owned)
+        .unwrap_or_default();
+    let cli = Cli {
+        scenario,
+        out_dir,
+        name,
+        games,
+        seed,
+        threads,
+        max_turns,
+        first_step,
+        policy,
+        rolls,
+        eval,
+    };
+    match format_slots(&format) {
+        Some(1) => run_n::<1>(cli),
+        _ => run_n::<2>(cli),
+    }
+}
+
+/// The parsed command line.
+struct Cli {
+    scenario: String,
+    out_dir: PathBuf,
+    name: String,
+    games: usize,
+    seed: u64,
+    threads: usize,
+    max_turns: u16,
+    first_step: usize,
+    policy: Policy,
+    rolls: RollMode,
+    eval: String,
+}
+
+fn run_n<const N: usize>(cli: Cli) -> Result<(), String> {
+    let Cli {
+        scenario,
+        out_dir,
+        name,
+        games,
+        seed,
+        threads,
+        max_turns,
+        first_step,
+        policy,
+        rolls,
+        eval,
+    } = cli;
+    let loaded = load_scenario_file_as::<N>(&scenario).map_err(|e| e.to_string())?;
     let positions = scenario_positions(&loaded)?;
     let start_weights: Vec<f64> = positions.iter().map(|p| p.probability).collect();
     let teams = team_refs(&scenario, &out_dir)?;
 
-    let evaluator: Box<dyn Evaluator<2> + Sync> = match eval.as_str() {
+    let evaluator: Box<dyn Evaluator<N> + Sync> = match eval.as_str() {
         "heuristic" => Box::new(Heuristic),
         "material" => Box::new(Material),
         _ => return Err("--eval needs heuristic or material".into()),
@@ -375,14 +433,14 @@ fn run() -> Result<(), String> {
 }
 
 /// Both sides' choices at a decision under the policy.
-fn choose<E: Evaluator<2> + ?Sized + Sync>(
-    solver: &mut Solver<'_, 2, E>,
+fn choose<const N: usize, E: Evaluator<N> + ?Sized + Sync>(
+    solver: &mut Solver<'_, N, E>,
     policy: Policy,
     rng: &mut Rng,
-    state: &mut State<2>,
+    state: &mut State<N>,
     suspension: Option<&Suspension>,
     decision: Decision,
-) -> Result<[Choice<2>; 2], String> {
+) -> Result<[Choice<N>; 2], String> {
     match policy {
         Policy::Random => {
             let mut out = [Choice::WAIT; 2];
@@ -408,12 +466,12 @@ fn choose<E: Evaluator<2> + ?Sized + Sync>(
 }
 
 /// `choice` as the Showdown choice string for `side` at `decision`.
-fn describe(
-    state: &State<2>,
+fn describe<const N: usize>(
+    state: &State<N>,
     decision: Decision,
     side: SideId,
     order: &[PartyOrder; 2],
-    choice: &Choice<2>,
+    choice: &Choice<N>,
 ) -> String {
     match choice {
         Choice::Turn(action) => format_choice(state, side, &order[side.index()], action),
@@ -426,12 +484,12 @@ fn describe(
 }
 
 /// One outcome of the pair of choices, drawn from the Extremes distribution.
-fn step_outcome(
+fn step_outcome<const N: usize>(
     rng: &mut Rng,
-    state: &mut State<2>,
+    state: &mut State<N>,
     decision: Decision,
     suspension: Option<&Suspension>,
-    choices: [Choice<2>; 2],
+    choices: [Choice<N>; 2],
 ) -> Result<Outcome, String> {
     let options = EnumerateOptions {
         rolls: RollMode::Extremes,
@@ -453,11 +511,11 @@ fn step_outcome(
     Ok(outcomes.into_iter().nth(k).unwrap())
 }
 
-fn play(
-    loaded: &LoadedScenario,
-    positions: &[Position],
+fn play<const N: usize>(
+    loaded: &LoadedScenario<N>,
+    positions: &[Position<N>],
     start_weights: &[f64],
-    evaluator: &(dyn Evaluator<2> + Sync),
+    evaluator: &(dyn Evaluator<N> + Sync),
     options: &Options,
     index: usize,
 ) -> GameRecord {
@@ -579,8 +637,8 @@ fn play(
 }
 
 /// The scenario of the game's decision `s` (its steps before `s` as pinned setup turns).
-fn position_scenario(
-    loaded: &LoadedScenario,
+fn position_scenario<const N: usize>(
+    loaded: &LoadedScenario<N>,
     scenario: &str,
     teams: &[(String, Option<String>); 2],
     name: &str,

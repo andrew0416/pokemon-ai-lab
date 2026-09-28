@@ -1,0 +1,72 @@
+{
+ "description": "VD A1-t2: Upper Hand (onTry): Lucario's Upper Hand into Snorlax, which chose Quick Attack (priority 1 > 0.1), hits first and flinches it (100%); Gallade's Upper Hand into Blissey, which chose Harden (status), fails.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Lucario",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Upper Hand"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Gallade",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Upper Hand"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Quick Attack"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "turn": {
+  "p1": "move upperhand 1, move upperhand 2",
+  "p2": "move quickattack 1, move harden"
+ }
+}

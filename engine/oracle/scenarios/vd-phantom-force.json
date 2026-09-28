@@ -1,0 +1,79 @@
+{
+ "description": "VD A1-t2: Phantom Force (onTryMove charge turn: invulnerable; second turn breaks Protect): Gengar vanished in the setup turn; this turn it hits Metagross through its Protect, lifting it.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Gengar",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Phantom Force",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Metagross",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move phantomforce 1, move harden",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move phantomforce 1, move harden",
+  "p2": "move protect, move harden"
+ }
+}

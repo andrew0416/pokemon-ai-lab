@@ -1,0 +1,441 @@
+{
+ "description": "FF parity position (FF-parity-harness): hina-psychic-sneasler-vs-sarami-raichu-experiment, lab-parity game 0 (seed 4b5b2dd7bbe2b04c, policy random, extremes chance), decision 2 = turn 3 Turn. Base scenario runs/parity-singles-20260928/matchups/hina-psychic-sneasler-vs-sarami-raichu-experiment.json. The 2 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsbssregmc",
+ "p1": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/hina-psychic-sneasler/team.json"
+ },
+ "p2": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/sarami-raichu-experiment/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 7,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "weakarmor",
+       "hp": 161,
+       "item": "focussash",
+       "maxhp": 161,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "calmmind": 20,
+        "endure": 12,
+        "expandingforce": 12
+       },
+       "slot": null,
+       "species": "Armarouge",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 43,
+       "item": "terrainextender",
+       "lastMove": "encore",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 7,
+        "expandingforce": 12,
+        "healingwish": 12,
+        "mysticalfire": 12
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 175,
+       "item": "psychicseed",
+       "maxhp": 175,
+       "name": "Sneasler",
+       "pp": {
+        "acrobatics": 16,
+        "closecombat": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "hp": 151,
+       "item": "lightclay",
+       "maxhp": 151,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "encore": 8,
+        "painsplit": 20
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      },
+      {
+       "ability": "lightningrod",
+       "boosts": {},
+       "canMega": true,
+       "hp": 118,
+       "item": "raichunitex",
+       "lastMove": "volttackle",
+       "maxhp": 159,
+       "name": "Raichu",
+       "pp": {
+        "encore": 8,
+        "knockoff": 20,
+        "voltswitch": 20,
+        "volttackle": 15
+       },
+       "slot": 0,
+       "species": "Raichu",
+       "status": "",
+       "volatiles": {
+        "encore": {
+         "duration": 3,
+         "move": "volttackle"
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "electricseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 6,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "weakarmor",
+       "hp": 161,
+       "item": "focussash",
+       "maxhp": 161,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "calmmind": 20,
+        "endure": 12,
+        "expandingforce": 12
+       },
+       "slot": null,
+       "species": "Armarouge",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 43,
+       "item": "terrainextender",
+       "lastMove": "mysticalfire",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 7,
+        "expandingforce": 12,
+        "healingwish": 12,
+        "mysticalfire": 11
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 175,
+       "item": "psychicseed",
+       "maxhp": 175,
+       "name": "Sneasler",
+       "pp": {
+        "acrobatics": 16,
+        "closecombat": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "hp": 151,
+       "item": "lightclay",
+       "maxhp": 151,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "encore": 8,
+        "painsplit": 20
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      },
+      {
+       "ability": "lightningrod",
+       "canMega": true,
+       "hp": 118,
+       "item": "raichunitex",
+       "maxhp": 159,
+       "name": "Raichu",
+       "pp": {
+        "encore": 8,
+        "knockoff": 20,
+        "voltswitch": 20,
+        "volttackle": 15
+       },
+       "slot": null,
+       "species": "Raichu",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 141,
+       "item": "electricseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move encore",
+   "move volttackle"
+  ],
+  [
+   "move mysticalfire",
+   "switch 2"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 8,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "weakarmor",
+      "hp": 161,
+      "item": "focussash",
+      "maxhp": 161,
+      "name": "Armarouge",
+      "pp": {
+       "armorcannon": 8,
+       "calmmind": 20,
+       "endure": 12,
+       "expandingforce": 12
+      },
+      "slot": null,
+      "species": "Armarouge",
+      "status": ""
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 167,
+      "item": "terrainextender",
+      "maxhp": 167,
+      "name": "Indeedee",
+      "pp": {
+       "encore": 8,
+       "expandingforce": 12,
+       "healingwish": 12,
+       "mysticalfire": 12
+      },
+      "slot": 0,
+      "species": "Indeedee",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 175,
+      "item": "psychicseed",
+      "maxhp": 175,
+      "name": "Sneasler",
+      "pp": {
+       "acrobatics": 16,
+       "closecombat": 8,
+       "rockslide": 12,
+       "swordsdance": 20
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "snowwarning",
+      "hp": 151,
+      "item": "lightclay",
+      "maxhp": 151,
+      "name": "Ninetales",
+      "pp": {
+       "auroraveil": 20,
+       "blizzard": 8,
+       "encore": 8,
+       "painsplit": 20
+      },
+      "slot": null,
+      "species": "Ninetales-Alola",
+      "status": ""
+     },
+     {
+      "ability": "lightningrod",
+      "boosts": {},
+      "canMega": true,
+      "hp": 159,
+      "item": "raichunitex",
+      "maxhp": 159,
+      "name": "Raichu",
+      "pp": {
+       "encore": 8,
+       "knockoff": 20,
+       "voltswitch": 20,
+       "volttackle": 16
+      },
+      "slot": 0,
+      "species": "Raichu",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 187,
+      "item": "electricseed",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "swordsdance": 20,
+       "throatchop": 16
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move healingwish",
+  "p2": "switch 3"
+ }
+}

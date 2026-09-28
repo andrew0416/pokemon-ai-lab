@@ -1,0 +1,81 @@
+{
+ "description": "VD A1-t2: Illuminate (onModifyMove ignoreEvasion, onTryBoost): Starmie's Psyshock ignores Snorlax's +6 evasion (patch) while Alakazam's hits 1/3 of the time; Blissey's Sand Attack on Starmie fails (onTryBoost deletes the accuracy drop).",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Starmie",
+    "item": "",
+    "ability": "Illuminate",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spa": 32
+    },
+    "moves": [
+     "Psyshock"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Alakazam",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "spa": 32
+    },
+    "moves": [
+     "Psyshock"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Sand Attack"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "patch": {
+  "p2": {
+   "Snorlax": {
+    "boosts": {
+     "evasion": 6
+    }
+   }
+  }
+ },
+ "turn": {
+  "p1": "move psyshock 1, move psyshock 1",
+  "p2": "move harden, move sandattack 1"
+ }
+}

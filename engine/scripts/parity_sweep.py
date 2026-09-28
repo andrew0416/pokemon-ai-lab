@@ -48,7 +48,9 @@ the scenario, so the next run on the same position replays them directly.
 Output (`--out`, default `<scenario-dir>/../sweep`): `summary.json` (every position's row and the
 totals), `summary.md` (tables), `rows/<stem>.json` (one row per position; `--resume` reuses them),
 `checks/<stem>.check.json` (lab-check verdicts), and oracle reports under `reports/` (by default
-only for positions that did not match).
+only for positions that did not match). Each row keeps its position's features
+(`parity_lift.position_features`), and with both matches and mismatches the summary adds a feature
+lift table (V14).
 
 Needs LAB_ROOT (the checkout with vendor/pokemon-showdown) when run from a worktree.
 """
@@ -63,6 +65,8 @@ import subprocess
 import sys
 import threading
 import time
+
+import parity_lift
 
 HERE = pathlib.Path(__file__).resolve().parent
 ENUMERATE = HERE.parent / "oracle" / "enumerate.cjs"
@@ -354,8 +358,10 @@ def sweep_game(args, paths, out, progress):
             continue
 
         checked = []
+        oracle_reports = []
         for label, roll, report in reports:
             data = read_json(report)
+            oracle_reports.append(data)
             suffix = f".fixed{roll}" if roll is not None else ""
             verdict = run_check(args, path, report, out / "checks" / f"{stem}{suffix}.check.json")
             result = {"mode": data["mode"], "branches": data["branches"], "oracle_outcomes": data["distinctOutcomes"],
@@ -402,6 +408,8 @@ def sweep_game(args, paths, out, progress):
                 if key in first:
                     row[key] = first[key]
             row["engineMs"] = sum(c.get("engineMs") or 0 for c in checked)
+        # V14: the position's features (the reports may be deleted), for the summary's lift table.
+        row["features"] = parity_lift.position_features(scenario, oracle_reports)
         row_file.write_text(json.dumps(row, ensure_ascii=False), encoding="utf-8")
         rows.append(row)
         progress(row)
@@ -565,6 +573,11 @@ def write_summary(args, out, rows, elapsed):
             what = what.replace("|", "\\|")[:300]
             lines.append(f"| {r['scenario']} | {r['status']} | {r.get('compared_by', r.get('mode', ''))} | {what} |")
         lines.append("")
+    if counts["match"] and counts["mismatch"]:
+        result = parity_lift.lift(rows)
+        summary["lift"] = result
+        (out / "summary.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False), encoding="utf-8")
+        lines += parity_lift.markdown(result)
     failed = [r for r in rows if r["status"] in ORACLE_FAILURES]
     if failed:
         lines += ["## Oracle failures", "", "| position | status | message |", "|---|---|---|"]
