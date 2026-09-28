@@ -11,7 +11,9 @@ use crate::state::{Pokemon, PokemonRef, SideId, Slot, SlotHistory, SlotRef, Stat
 use crate::volatile::VolatileState;
 
 pub(crate) fn instructions<const N: usize>(from: &State<N>, to: &State<N>) -> Vec<Instruction> {
-    let mut out = Vec::new();
+    // Room for a typical outcome (both actives' HP, PP, slots, the turn), so the list does not
+    // grow four times on the way.
+    let mut out = Vec::with_capacity(24);
     for side in [SideId::One, SideId::Two] {
         let (a, b) = (from.side(side), to.side(side));
         for party in 0..a.party.len() as u8 {

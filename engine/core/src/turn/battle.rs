@@ -369,6 +369,13 @@ impl HistoryReaders {
         use crate::dex::moves as m;
         let redirects = |a: AbilityId| a == abilities::LIGHTNING_ROD || a == abilities::STORM_DRAIN;
         let mons = || state.sides.iter().flat_map(|side| side.party.iter());
+        // The items held in the battle that are Mega Stones (`mega_evolution` is `None` for any
+        // other): usually none to two, instead of every holder for every Pokémon (this runs for
+        // every position a staged enumeration expands).
+        let stones: super::Small<ItemId, 12> = mons()
+            .map(|holder| holder.item)
+            .filter(|item| !item.data().mega_stone.is_empty())
+            .collect();
         mons().any(|mon| {
             let own = mon.transformed.map(|base| base.moves);
             mon.moves
@@ -377,8 +384,8 @@ impl HistoryReaders {
                 .any(|s| matches!(s.id, m::FOLLOW_ME | m::RAGE_POWDER | m::SPOTLIGHT))
                 || redirects(mon.ability)
                 || redirects(mon.base_ability)
-                || mons().any(|holder| {
-                    crate::gimmick::mega_evolution(mon.untransformed_species(), holder.item)
+                || stones.iter().any(|&stone| {
+                    crate::gimmick::mega_evolution(mon.untransformed_species(), stone)
                         .is_some_and(|mega| mega.data().abilities.iter().any(|&a| redirects(a)))
                 })
         })
