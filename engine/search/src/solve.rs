@@ -360,9 +360,12 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             let mut best = f32::NEG_INFINITY;
             let mut new_lines = Vec::with_capacity(ours.len());
             let threads = self.config.worker_threads(ours.len());
-            if self.config.exact_lines && threads > 1 {
+            if self.config.exact_lines {
                 // Every row is valued in full, so the rows are independent: the payoff matrix
-                // in parallel, then each line is its row's minimum.
+                // (in parallel with more than one thread; every cell by a fresh solver, so the
+                // node counts and, among equal replies, the first in `theirs` order do not
+                // depend on the thread count: board S24-t4), then each line is its row's
+                // minimum. `max_turns` bounds the whole matrix.
                 let values = self.parallel_matrix(
                     state,
                     suspension,
@@ -372,6 +375,9 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                     Next::Depth(next_depth),
                     threads,
                 )?;
+                if self.config.max_turns.is_some_and(|max| self.turns > max) {
+                    return Err(SearchError::Budget);
+                }
                 for (r, &a) in ours.iter().enumerate() {
                     let row = &values[r * theirs.len()..(r + 1) * theirs.len()];
                     let (c, &worst) = row.iter().enumerate().fold((0, &f32::INFINITY), |m, x| {
@@ -397,11 +403,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                 continue;
             }
             for &a in &ours {
-                let alpha = if self.config.exact_lines {
-                    f32::NEG_INFINITY
-                } else {
-                    best
-                };
+                let alpha = best;
                 let mut worst = f32::INFINITY;
                 let mut reply = None;
                 let mut cut = false;
