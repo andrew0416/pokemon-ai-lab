@@ -225,7 +225,7 @@ pub(crate) fn slot_condition_switch_in<const N: usize>(b: &mut Battle<'_, N>, sl
         return;
     };
     let mon = b.mon(pokemon);
-    if mon.hp < mon.max_hp || mon.status != Status::None {
+    if mon.status != Status::None || !mon.hp_full() {
         let max_hp = f64::from(mon.max_hp);
         // `target.heal(target.maxhp)`: `pokemon.heal`, which Heal Block does not stop.
         b.heal_unblocked(slot, max_hp);
@@ -623,7 +623,7 @@ fn imprisoned<const N: usize>(state: &State<N>, slot: SlotRef, id: MoveId) -> bo
         state.slot(foe).volatiles.has(Volatile::Imprison)
             && state
                 .active(foe)
-                .is_some_and(|m| m.hp > 0 && m.moves.iter().any(|s| s.id == id))
+                .is_some_and(|m| m.is_alive() && m.moves.iter().any(|s| s.id == id))
     })
 }
 
@@ -814,7 +814,7 @@ pub(crate) fn octolock_residual<const N: usize>(b: &mut Battle<'_, N>, slot: Slo
     let source = decode_pokemon(lock.counter);
     let source_slot = Battle::<N>::slots(source.side)
         .find(|&s| b.occupant(s) == Some(source))
-        .filter(|&s| b.mon(source).hp > 0 && b.active_since_turn_start(s));
+        .filter(|&s| b.mon(source).is_alive() && b.active_since_turn_start(s));
     let Some(source_slot) = source_slot else {
         b.delete_volatile(slot, Volatile::Octolock);
         return;
@@ -1203,7 +1203,8 @@ pub(crate) fn partially_trapped_residual<const N: usize>(b: &mut Battle<'_, N>, 
     }
     let source = decode_pokemon(trap.counter);
     let source_slot = Battle::<N>::slots(source.side).find(|&s| b.occupant(s) == Some(source));
-    let holds = source_slot.is_some_and(|s| b.mon(source).hp > 0 && b.active_since_turn_start(s));
+    let holds =
+        source_slot.is_some_and(|s| b.mon(source).is_alive() && b.active_since_turn_start(s));
     if !holds {
         b.delete_volatile(slot, Volatile::PartiallyTrapped);
         return;

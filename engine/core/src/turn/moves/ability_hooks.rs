@@ -512,7 +512,7 @@ pub(super) fn on_damaging_hit<const N: usize>(
     let attacker_statusable = b
         .alive(attacker)
         .is_some_and(|p| b.mon(p).status == Status::None);
-    let holder_fainted = b.slot_mon(holder).is_none_or(|m| m.hp == 0);
+    let holder_fainted = b.slot_mon(holder).is_none_or(|m| !m.is_alive());
     match ability {
         // `if (this.checkMoveMakesContact(...)) if (this.randomChance(3, 10))
         // source.trySetStatus(status, target);`
@@ -590,8 +590,10 @@ pub(super) fn on_damaging_hit<const N: usize>(
         a if a == abilities::COTTON_DOWN => {
             let mut drop = NO_BOOSTS;
             drop[4] = -1;
+            // A future move's user hitting from the bench is not active (`AbsentUser` refuses
+            // the hit when an occupant left its position for it).
             for other in b.all_alive() {
-                if other != holder {
+                if other != holder && b.absent_user != Some(other) {
                     b.boost_by(other, &drop, Some(holder), BoostEffect::Ability(a));
                 }
             }
@@ -680,7 +682,9 @@ pub(super) fn on_damaging_hit<const N: usize>(
         }
         // Innards Out: a holder the hit fainted: `damage += move.totalDamage` (earlier hits;
         // smart-target moves are refused), then `this.damage(damage, source, target)`.
-        a if a == abilities::INNARDS_OUT && holder_fainted => {
+        // A future move's user hitting from the bench takes nothing (`spreadDamage`:
+        // `!target.isActive`).
+        a if a == abilities::INNARDS_OUT && holder_fainted && b.absent_user != Some(attacker) => {
             b.damage(
                 attacker,
                 f64::from(damage + total_before),

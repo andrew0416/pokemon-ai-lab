@@ -145,19 +145,21 @@ fn item_wants_eating<const N: usize>(b: &Battle<'_, N>, slot: SlotRef) -> bool {
     };
     // The effective item: a suppressed berry (Magic Room, Klutz) is never eaten by `onUpdate`.
     let item = b.item(slot);
-    let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
-    // `pokemon.hp <= pokemon.maxhp / 2` and `/ 4`, in integers.
-    let half = 2 * hp <= max_hp;
+    let max_hp = i32::from(mon.max_hp);
+    // `pokemon.hp <= pokemon.maxhp / 2` and `/ 4`, in integers; read only for a berry that
+    // checks them (a lazy HP splits at the threshold).
+    let half = || mon.hp_scaled_le(2, max_hp);
     // Gluttony's `abilityState.gluttony` is set on switch-in and on damage: always set here.
-    let pinch = 4 * hp <= max_hp || (half && b.ability(slot) == abilities::GLUTTONY);
+    let pinch =
+        || mon.hp_scaled_le(4, max_hp) || (b.ability(slot) == abilities::GLUTTONY && half());
     if item == items::SITRUS_BERRY || item == items::ORAN_BERRY {
-        half
+        half()
     } else if FIGY_BERRIES.iter().any(|&(i, _)| i == item)
         || STAT_BERRIES.iter().any(|&(i, _)| i == item)
         || item == items::LANSAT_BERRY
         || item == items::STARF_BERRY
     {
-        pinch
+        pinch()
     } else if item == items::LUM_BERRY || item == items::MIRACLE_BERRY {
         // `pokemon.status || pokemon.volatiles['confusion']` (Miracle Berry: the same, without
         // Lum's `onAfterSetStatus`).

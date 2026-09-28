@@ -243,7 +243,7 @@ pub(crate) fn illusion_before_switch_in<const N: usize>(
     let side = b.state.side(slot.side);
     let later = (0..side.party.len()).any(|party| {
         let member = &side.party[party];
-        if party == usize::from(pokemon.party) || member.species.is_none() || member.hp <= 0 {
+        if party == usize::from(pokemon.party) || member.species.is_none() || !member.is_alive() {
             return false;
         }
         match side
@@ -1559,7 +1559,7 @@ pub(crate) fn symbiosis<const N: usize>(b: &mut Battle<'_, N>, receiver: SlotRef
 pub(crate) fn rivalry_problem<const N: usize>(state: &State<N>) -> Option<String> {
     let rivalry = State::<N>::slot_refs()
         .filter_map(|s| state.active(s))
-        .any(|m| m.hp > 0 && m.ability == abilities::RIVALRY);
+        .any(|m| m.is_alive() && m.ability == abilities::RIVALRY);
     if !rivalry {
         return None;
     }
@@ -1818,7 +1818,7 @@ pub(crate) fn harvest<const N: usize>(b: &mut Battle<'_, N>, pokemon: PokemonRef
     use crate::instruction::Instruction;
     let mon = b.mon(pokemon);
     let (item, last) = (mon.item, mon.last_item);
-    if mon.hp <= 0 || !item.is_none() || last.is_none() || !last.data().is_berry {
+    if !mon.is_alive() || !item.is_none() || last.is_none() || !last.data().is_berry {
         return;
     }
     let sun = b.effective_weather() == Weather::Sun;
@@ -1922,9 +1922,9 @@ pub(crate) fn after_move_secondary<const N: usize>(
     if target == user || total_damage == 0 {
         return;
     }
-    let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
+    let max_hp = i32::from(mon.max_hp);
     // `target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2`.
-    if 2 * hp <= max_hp && 2 * (hp + damage) > max_hp {
+    if mon.hp_scaled_le(2, max_hp) && !mon.hp_scaled_le(2, max_hp - 2 * damage) {
         let mut boosts = NO_BOOSTS;
         if ability == abilities::ANGER_SHELL {
             boosts = [1, -1, 1, -1, 1, 0, 0];
@@ -2119,7 +2119,7 @@ pub fn trapped<const N: usize>(state: &State<N>, slot: SlotRef) -> bool {
     // The foes' abilities as they act (a suppressed Shadow Tag traps nobody).
     let foe_traps = State::<N>::slot_refs().any(|s| {
         s.side != slot.side
-            && state.active(s).is_some_and(|m| m.hp > 0)
+            && state.active(s).is_some_and(|m| m.is_alive())
             && [
                 abilities::SHADOW_TAG,
                 abilities::ARENA_TRAP,
@@ -2298,7 +2298,7 @@ pub(crate) fn reacts_to_suppressor_end(ability: AbilityId) -> bool {
 pub(crate) fn paradox_suppressor_problem<const N: usize>(state: &State<N>) -> Option<String> {
     let actives: Vec<&Pokemon> = State::<N>::slot_refs()
         .filter_map(|s| state.active(s))
-        .filter(|m| m.hp > 0)
+        .filter(|m| m.is_alive())
         .collect();
     let paradox = actives.iter().any(|m| reacts_to_suppressor_end(m.ability));
     let suppressor = actives.iter().any(|m| m.ability.data().suppress_weather);
@@ -2361,7 +2361,8 @@ pub(crate) fn attack_handlers<const N: usize>(
         a if a == abilities::SWARM => Some(Type::Bug),
         _ => None,
     };
-    let pinch = 3 * i32::from(attacker.hp) <= i32::from(attacker.max_hp);
+    // Read only for a holder whose type matches (a lazy HP splits at the threshold).
+    let pinch = || attacker.hp_scaled_le(3, i32::from(attacker.max_hp));
     // Solar Power: `onModifySpA` 1.5x in harsh sunlight (`effectiveWeather`).
     if !physical && ability == abilities::SOLAR_POWER && b.weather_for(user) == Weather::Sun {
         let p = priority(ability.data().event_orders, event);
@@ -2369,7 +2370,7 @@ pub(crate) fn attack_handlers<const N: usize>(
     }
     // Guts: `if (pokemon.status) return this.chainModify(1.5)` (Attack only).
     let guts = ability == abilities::GUTS && physical && attacker.status != Status::None;
-    if (pinch_type == Some(move_type) && pinch) || guts {
+    if (pinch_type == Some(move_type) && pinch()) || guts {
         let p = priority(ability.data().event_orders, event);
         out.push(Handler::of(b, user, p, SUB_ABILITY, MOD_ONE_POINT_FIVE));
     }
@@ -2471,9 +2472,9 @@ fn own_attack_modifier<const N: usize>(
         a if a == abilities::DRAGONS_MAW => typed(Type::Dragon, MOD_ONE_POINT_FIVE),
         a if a == abilities::ROCKY_PAYLOAD => typed(Type::Rock, MOD_ONE_POINT_FIVE),
         a if a == abilities::FIRE_MANE => typed(Type::Fire, MOD_ONE_POINT_FIVE),
-        a if a == abilities::DEFEATIST => {
-            (2 * i32::from(attacker.hp) <= i32::from(attacker.max_hp)).then_some(MOD_HALF)
-        }
+        a if a == abilities::DEFEATIST => attacker
+            .hp_scaled_le(2, i32::from(attacker.max_hp))
+            .then_some(MOD_HALF),
         a if a == abilities::STAKEOUT => b
             .state
             .slot(target)
@@ -2804,7 +2805,6 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
     };
     // `move.flags['contact']` after ModifyMove (Punching Glove).
     let contact = super::items::makes_contact(b, user, data);
-    let full_hp = defender.hp >= defender.max_hp;
     let ability = ability_for_move(b, target, user, data);
     let modifier = match ability {
         a if a == abilities::PUNK_ROCK => data.flags.contains(MoveFlags::SOUND).then_some(MOD_HALF),
@@ -2815,7 +2815,7 @@ pub(crate) fn modify_damage_handlers<const N: usize>(
             (type_mod > 0).then_some(MOD_THREE_QUARTERS)
         }
         a if a == abilities::MULTISCALE || a == abilities::SHADOW_SHIELD => {
-            full_hp.then_some(MOD_HALF)
+            defender.hp_full().then_some(MOD_HALF)
         }
         // `mod = 1; Fire: mod *= 2; contact: mod /= 2; chainModify(mod)`.
         a if a == abilities::FLUFFY => match (move_type == Type::Fire, contact) {

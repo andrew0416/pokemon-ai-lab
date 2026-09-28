@@ -28,11 +28,19 @@ fn any_fixture(name: &str) -> Value {
 }
 
 /// (scenario, text the refusal must contain, board task).
-const REFUSED: &[(&str, &str, &str)] = &[(
-    "uu-future-sight-absent-user-unnerve",
-    "hitting after its user left the field, whose position holds Tyranitar with Unnerve",
-    "R5c-future-move-absent-user-occupant",
-)];
+const REFUSED: &[(&str, &str, &str)] = &[
+    (
+        "ab-future-sight-absent-user-two-occupants",
+        "hitting after its user left the field, whose position holds Tyranitar with Unnerve",
+        "R5c-future-move-absent-user-occupant",
+    ),
+    (
+        "ab-future-sight-absent-user-cotton-down-displaced",
+        "hitting after its user left the field, on a target with Cotton Down while Umbreon is out of \
+         its position",
+        "R5c-future-move-absent-user-occupant",
+    ),
+];
 
 /// Each repro still reaches its refusal from the oracle fixture's position (the scenario is
 /// the one the fixture was made from).

@@ -623,7 +623,7 @@ pub(crate) fn stage_end_check<const N: usize>(b: &Battle<'_, N>) -> Result<(), T
     // engine only runs within the stage (the Update after the action always comes first).
     for &pokemon in &b.umbrella_inactive {
         let mon = b.mon(pokemon);
-        if mon.hp > 0 && mon.item == items::UTILITY_UMBRELLA {
+        if mon.is_alive() && mon.item == items::UTILITY_UMBRELLA {
             return Err(b.unsupported(format!(
                 "{}: Utility Umbrella's `inactive` item state past the end of a stage (its \
                  onUpdate has not run)",
@@ -633,7 +633,7 @@ pub(crate) fn stage_end_check<const N: usize>(b: &Battle<'_, N>) -> Result<(), T
     }
     for &(pokemon, _) in &b.mirror_herb {
         let mon = b.mon(pokemon);
-        if mon.hp > 0 && mon.item == items::MIRROR_HERB {
+        if mon.is_alive() && mon.item == items::MIRROR_HERB {
             return Err(b.unsupported(format!(
                 "{}: Mirror Herb keeps copied boosts past the end of a stage (its effectState \
                  persists until the next trigger)",
@@ -801,10 +801,13 @@ pub(crate) fn custap<const N: usize>(
         return None;
     }
     let mon = b.mon(pokemon);
-    let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
+    let max_hp = i32::from(mon.max_hp);
     // `abilityState.gluttony` is set on switch-in: always set here (see `update.rs`).
-    let pinch = 4 * hp <= max_hp || (2 * hp <= max_hp && b.ability(slot) == abilities::GLUTTONY);
-    (current <= 0 && pinch && super::update::eat_item(b, slot)).then_some(1)
+    let pinch = || {
+        mon.hp_scaled_le(4, max_hp)
+            || (b.ability(slot) == abilities::GLUTTONY && mon.hp_scaled_le(2, max_hp))
+    };
+    (current <= 0 && pinch() && super::update::eat_item(b, slot)).then_some(1)
 }
 
 // ---- Choice items ---------------------------------------------------------------------------
@@ -1127,8 +1130,10 @@ pub(crate) fn berry_juice<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) 
     let Some(mon) = b.slot_mon(slot) else {
         return;
     };
-    let half = 2 * i32::from(mon.hp) <= i32::from(mon.max_hp);
-    if b.item(slot) != items::BERRY_JUICE || !half || b.volatile(slot, Volatile::HealBlock).active {
+    if b.item(slot) != items::BERRY_JUICE
+        || !mon.hp_scaled_le(2, i32::from(mon.max_hp))
+        || b.volatile(slot, Volatile::HealBlock).active
+    {
         return;
     }
     if b.use_item(slot) {
@@ -1218,17 +1223,21 @@ pub(crate) fn on_damage<const N: usize>(
     let Some(mon) = b.slot_mon(target) else {
         return amount;
     };
-    let hp = i32::from(mon.hp);
-    if source != DamageSource::Move || amount < hp {
+    // `damage >= target.hp`, read only for a holder (a lazy HP splits at the threshold).
+    let item = b.item(target);
+    if source != DamageSource::Move
+        || (item != items::FOCUS_SASH && item != items::FOCUS_BAND)
+        || !mon.hp_le(amount)
+    {
         return amount;
     }
-    let survives = match b.item(target) {
-        i if i == items::FOCUS_SASH => mon.hp == mon.max_hp && b.use_item(target),
+    let survives = match item {
+        i if i == items::FOCUS_SASH => mon.hp_full() && b.use_item(target),
         i if i == items::FOCUS_BAND => b.rng.chance(1, 10),
         _ => false,
     };
     if survives {
-        hp - 1
+        i32::from(b.mon(b.occupant(target).expect("occupied")).hp_value()) - 1
     } else {
         amount
     }
@@ -1380,8 +1389,10 @@ pub(crate) fn on_damaging_hit<const N: usize>(
             } else {
                 MoveCategory::Special
             };
+            // `source.isActive`: not a future move's user hitting from the bench.
             if category == wanted
                 && b.alive(user).is_some()
+                && b.absent_user != Some(user)
                 && b.ability(user) != abilities::MAGIC_GUARD
                 && super::update::eat_item(b, target)
             {
@@ -1677,9 +1688,9 @@ pub(crate) fn on_residual<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, 
         }
         // Micle Berry: eaten at 1/4 HP (1/2 with Gluttony); `onEat` adds `micleberry`.
         i if i == items::MICLE_BERRY => {
-            let hp = i32::from(mon.hp);
             let max = i32::from(mon.max_hp);
-            let pinch = 4 * hp <= max || (2 * hp <= max && b.ability(slot) == abilities::GLUTTONY);
+            let pinch = mon.hp_scaled_le(4, max)
+                || (b.ability(slot) == abilities::GLUTTONY && mon.hp_scaled_le(2, max));
             if pinch {
                 super::update::eat_item(b, slot);
             }

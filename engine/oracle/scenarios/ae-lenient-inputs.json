@@ -1,0 +1,13 @@
+{
+ "description": "A4-t2: inputs Showdown reads more leniently than the loader did. p1's team preview \"2x,1\" is parseInt'ed to 2, 1 (Tauros leads); Tauros's gender \"X\" is ignored (`genders[set.gender] || species.gender`), so it is male as its species, and its Attract infatuates the female Chansey.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"order": "2x,1", "team": [
+  {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Protect", "Tackle"], "level": 50},
+  {"species": "Tauros", "gender": "X", "item": "", "ability": "Intimidate", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Attract", "Protect"], "level": 50}
+ ]},
+ "p2": {"team": [
+  {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden", "Protect"], "level": 50},
+  {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Harden", "Protect"], "level": 50}
+ ]},
+ "turn": {"p1": "move attract 1, move protect", "p2": "move harden, move protect"}
+}

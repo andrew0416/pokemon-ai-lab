@@ -264,7 +264,7 @@ fn beat_up_powers<const N: usize>(b: &Battle<'_, N>, user: SlotRef) -> [u8; 6] {
             side: user.side,
             party,
         };
-        if Some(pokemon) == user_pokemon || (mon.hp > 0 && mon.status == Status::None) {
+        if Some(pokemon) == user_pokemon || (mon.is_alive() && mon.status == Status::None) {
             out[hits] = 5 + set_species(mon).data().base_stats[1] / 10;
             hits += 1;
         }
@@ -429,11 +429,11 @@ pub(super) fn on_try<const N: usize>(
         // Clangorous Soul: `if (source.hp <= (source.maxhp * 33 / 100) || source.maxhp === 1)
         // return false;` Fillet Away: `source.hp <= source.maxhp / 2`.
         moves::CLANGOROUS_SOUL | moves::FILLET_AWAY => b.slot_mon(user).is_some_and(|m| {
-            let (hp, max_hp) = (i32::from(m.hp), i32::from(m.max_hp));
+            let max_hp = i32::from(m.max_hp);
             let enough = if mv.id == moves::CLANGOROUS_SOUL {
-                hp * 100 > max_hp * 33
+                !m.hp_scaled_le(100, max_hp * 33)
             } else {
-                hp * 2 > max_hp
+                !m.hp_scaled_le(2, max_hp)
             };
             enough && max_hp != 1
         }),
@@ -457,7 +457,7 @@ pub(super) fn on_try<const N: usize>(
         // (`hasAbility`: the user's own ability as it acts, never suppressed by its own move).
         moves::REST => b.slot_mon(user).is_some_and(|m| {
             m.status != Status::Sleep
-                && m.hp != m.max_hp
+                && !m.hp_full()
                 && ![
                     abilities::COMATOSE,
                     abilities::INSOMNIA,
@@ -514,7 +514,7 @@ pub(super) fn on_try_immunity<const N: usize>(
         moves::LEECH_SEED => !b.has_type(target, Type::Grass),
         // Endeavor: `return pokemon.hp < target.hp;`
         moves::ENDEAVOR => {
-            let hp = |s: SlotRef| b.slot_mon(s).map_or(0, |m| m.hp);
+            let hp = |s: SlotRef| b.slot_mon(s).map_or(0, |m| m.hp_value());
             hp(user) < hp(target)
         }
         // Worry Seed: `if (target.ability === 'truant' || target.ability === 'insomnia') return
@@ -597,7 +597,7 @@ pub(super) fn damage_callback<const N: usize>(
     target: SlotRef,
     mv: &ActiveMove,
 ) -> Option<i32> {
-    let hp = |b: &Battle<'_, N>, s: SlotRef| b.slot_mon(s).map_or(0, |m| i32::from(m.hp));
+    let hp = |b: &Battle<'_, N>, s: SlotRef| b.slot_mon(s).map_or(0, |m| i32::from(m.hp_value()));
     match mv.id {
         // Endeavor: `return target.getUndynamaxedHP() - pokemon.hp;`
         moves::ENDEAVOR => Some(hp(b, target) - hp(b, user)),
@@ -858,7 +858,7 @@ pub(super) fn on_try_hit<const N: usize>(
         moves::HEALING_WISH => super::super::residual::bench(b, user.side).next().is_some(),
         // Revival Blessing: `if (!source.side.pokemon.filter(ally => ally.fainted).length)
         // return false;`
-        moves::REVIVAL_BLESSING => b.state.side(user.side).party.iter().any(|p| p.hp == 0),
+        moves::REVIVAL_BLESSING => b.state.side(user.side).party.iter().any(|p| !p.is_alive()),
         // Psychic Fangs, Brick Break, Raging Bull: the target's side loses Reflect, Light Screen
         // and Aurora Veil before the damage (returns nothing).
         moves::PSYCHIC_FANGS | moves::BRICK_BREAK | moves::RAGING_BULL => {
@@ -917,8 +917,8 @@ pub(super) fn on_try_hit<const N: usize>(
         // the max HP or less (`source.hp <= source.maxhp / 4 || source.maxhp === 1`); Champions
         // `spreadMoveHit` fails the move on any falsy TryHit result.
         moves::SUBSTITUTE => b.slot_mon(target).is_some_and(|m| {
-            let (hp, max_hp) = (i32::from(m.hp), i32::from(m.max_hp));
-            !b.has_substitute(target) && 4 * hp > max_hp && max_hp != 1
+            let max_hp = i32::from(m.max_hp);
+            !b.has_substitute(target) && max_hp != 1 && !m.hp_scaled_le(4, max_hp)
         }),
         // Uproar: `for (const [i, allyActive] of activeTeam.entries()) { if (allyActive?.status
         // === 'slp') allyActive.cureStatus(); ... foeActive ... }` (both sides' actives; returns
@@ -943,13 +943,13 @@ pub(super) fn on_try_hit<const N: usize>(
         // (`!this.canSwitch(source.side)`) or the user is `commanded`, with a substitute already
         // up, or at `Math.ceil(source.maxhp / 2)` HP or less.
         moves::SHED_TAIL => b.slot_mon(target).is_some_and(|m| {
-            let (hp, max_hp) = (i32::from(m.hp), i32::from(m.max_hp));
+            let max_hp = i32::from(m.max_hp);
             super::super::residual::bench(b, target.side)
                 .next()
                 .is_some()
                 && !b.volatile(target, Volatile::Commanded).active
                 && !b.has_substitute(target)
-                && hp > (max_hp + 1) / 2
+                && !m.hp_le((max_hp + 1) / 2)
         }),
         // Role Play: `if (target.ability === source.ability) return false; if
         // (target.getAbility().flags['failroleplay'] || source.getAbility().flags['cantsuppress'])
@@ -1454,7 +1454,7 @@ pub(super) fn base_power_callback<const N: usize>(
     let b: &Battle<'_, N> = b;
     let hp = |s: SlotRef| {
         b.slot_mon(s)
-            .map_or((0, 1), |m| (i32::from(m.hp), i32::from(m.max_hp)))
+            .map_or((0, 1), |m| (i32::from(m.hp_value()), i32::from(m.max_hp)))
     };
     let positive_boosts = |s: SlotRef| -> i32 {
         b.state
@@ -1705,7 +1705,7 @@ pub(super) fn on_base_power<const N: usize>(
             Some(2 * 4096)
         }
         // Brine: `if (target.hp * 2 <= target.maxhp) return this.chainModify(2);`
-        moves::BRINE if target_mon.is_some_and(|m| 2 * i32::from(m.hp) <= i32::from(m.max_hp)) => {
+        moves::BRINE if target_mon.is_some_and(|m| m.hp_scaled_le(2, i32::from(m.max_hp))) => {
             Some(2 * 4096)
         }
         // Venoshock: `if (target.status === 'psn' || target.status === 'tox')` double.
@@ -2366,8 +2366,8 @@ pub(super) fn on_hit<const N: usize>(
             let Some(mon) = b.slot_mon(target) else {
                 return Ok(Some(HitResult::Failure));
             };
-            let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
-            if hp * 2 <= max_hp || b.state.slot(target).boosts[0] >= 6 || max_hp == 1 {
+            let max_hp = i32::from(mon.max_hp);
+            if b.state.slot(target).boosts[0] >= 6 || max_hp == 1 || mon.hp_scaled_le(2, max_hp) {
                 HitResult::Failure
             } else {
                 b.direct_damage(target, max_hp / 2);
@@ -2556,7 +2556,9 @@ pub(super) fn on_hit<const N: usize>(
         // Pain Split: both take the average of their HP (`Math.floor((targetHP + pokemon.hp) / 2)
         // || 1`) through `sethp` (capped at the max HP, no Damage/Heal events).
         moves::PAIN_SPLIT => {
-            let hp = |b: &Battle<'_, N>, s: SlotRef| b.slot_mon(s).map_or(0, |m| i32::from(m.hp));
+            let hp = |b: &Battle<'_, N>, s: SlotRef| {
+                b.slot_mon(s).map_or(0, |m| i32::from(m.hp_value()))
+            };
             let average = ((hp(b, target) + hp(b, user)) / 2).max(1);
             set_hp(b, target, average);
             set_hp(b, user, average);
@@ -3816,7 +3818,7 @@ fn set_hp<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, hp: i32) {
         return;
     };
     let mon = b.mon(pokemon);
-    let (old, new) = (mon.hp, hp.clamp(1, i32::from(mon.max_hp)) as i16);
+    let (old, new) = (mon.hp_value(), hp.clamp(1, i32::from(mon.max_hp)) as i16);
     if new < old {
         b.apply(Instruction::Damage {
             target: pokemon,
@@ -3927,7 +3929,7 @@ fn party_cure<const N: usize>(
             }
         }
         let mon = b.mon(pokemon);
-        if mon.hp > 0 && mon.status != Status::None {
+        if mon.is_alive() && mon.status != Status::None {
             b.cure_status(pokemon);
             cured = true;
         }

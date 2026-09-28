@@ -494,8 +494,8 @@ def check_batch(args, corpus, entries, out, done):
     """Board P5: every report of `entries` through one `lab-check --batch - --jobs n` process that
     reads the gzipped corpus files itself (no temporary files, no process per report). `done(row)`
     is called for each position once all its reports are in; a position's `seconds` is the sum of
-    its reports' `engineMs` (lab-check's time for reading, parsing and the engine). There is no
-    per-report timeout here (`--per-report` has one)."""
+    its reports' `engineMs` (lab-check's time for reading, parsing and the engine). `--timeout`
+    bounds each report (`lab-check --batch --timeout`, board P5-t1: a `check-timeout` verdict)."""
     pending = {}
     jobs = []
     for n, entry in enumerate(entries):
@@ -503,7 +503,8 @@ def check_batch(args, corpus, entries, out, done):
         for k, rep in enumerate(entry["reports"]):
             jobs.append({"id": f"{n}:{k}", "scenario": str(corpus / entry["scenario"]).replace(os.sep, "/"),
                          "report": str(corpus / rep["file"]).replace(os.sep, "/")})
-    proc = subprocess.Popen([args.check, "--batch", "-", "--jobs", str(args.jobs)], stdin=subprocess.PIPE,
+    proc = subprocess.Popen([args.check, "--batch", "-", "--jobs", str(args.jobs), "--timeout", str(args.timeout)],
+                            stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8",
                             errors="replace", bufsize=1)
 
@@ -752,7 +753,7 @@ def main():
     c.add_argument("--out", type=pathlib.Path)
     c.add_argument("--only", help="glob on position ids (<set>/<stem>)")
     c.add_argument("--limit", type=int, help="only the first N positions")
-    c.add_argument("--timeout", type=int, default=1800, help="seconds per lab-check run (--per-report only)")
+    c.add_argument("--timeout", type=int, default=1800, help="seconds per report (a check-timeout verdict)")
     c.add_argument("--per-report", action="store_true",
                    help="one lab-check process per report on decompressed copies (the way before P5)")
     c.add_argument("--resume", action="store_true", help="reuse <out>/rows of positions already checked")

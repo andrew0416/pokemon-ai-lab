@@ -50,7 +50,7 @@ pub fn legal_joint_actions<const N: usize>(
 
 /// The base choices of one slot (no gimmicks; the ruleset adds those).
 fn slot_candidates<const N: usize>(state: &State<N>, slot: SlotRef) -> Vec<SlotAction> {
-    let Some(mon) = state.active(slot).filter(|p| p.hp > 0) else {
+    let Some(mon) = state.active(slot).filter(|p| p.is_alive()) else {
         return vec![SlotAction::Pass];
     };
     // A commanding Tatsugiri (Commander) can only pass.
@@ -122,7 +122,7 @@ fn slot_candidates<const N: usize>(state: &State<N>, slot: SlotRef) -> Vec<SlotA
     for party in 0..s.party.len() as u8 {
         let member = &s.party[party as usize];
         let active = s.slots.iter().any(|x| x.party_index == Some(party));
-        if member.hp > 0 && !member.species.is_none() && !active {
+        if member.is_alive() && !member.species.is_none() && !active {
             out.push(SlotAction::Switch { party_index: party });
         }
     }

@@ -11,8 +11,9 @@ deep-nash at depth 2 or 3, fixed plans, opponent models ② and ③, self-play r
 The logic is in `engine/search/src/node.rs` and `engine/search/src/api.rs` (`lab_search::node`,
 `lab_search::api`, feature `scenario`, unit-tested with `cargo test -p lab-search`); `src/lib.rs`
 only converts arguments, errors and results.
-Doubles only for now: every `format` argument is `"doubles"` (`"singles"` raises
-`NotImplementedError` until the loader builds `State<1>`).
+Doubles (`format="doubles"`, the default: `State<2>`) and singles (`format="singles"`:
+`State<1>`, board PY1); a scenario file of the other kind raises `ValueError`. The position
+searches take either; `Scenario.believed` and `Scenario.rollout` are doubles only.
 
 ## Build and install
 
@@ -70,7 +71,7 @@ pos.winner()                            # 'p2' after 3 turns
 
 | Name | Description |
 |---|---|
-| `load_scenario(source, format="doubles", base_dir=None) -> Scenario` | An oracle scenario (`engine/oracle/scenarios/*.json` format): a path (str or `os.PathLike`; team paths relative to the file) or the JSON text (a str starting with `{`; team paths relative to `base_dir`, default the current directory). Formats: `gen9championsdoublescustomgame` and `gen9championsvgc2026regmc` (team preview keeps 4). File errors raise `OSError`, bad scenarios `ValueError`. |
+| `load_scenario(source, format="doubles", base_dir=None) -> Scenario` | An oracle scenario (`engine/oracle/scenarios/*.json` format): a path (str or `os.PathLike`; team paths relative to the file) or the JSON text (a str starting with `{`; team paths relative to `base_dir`, default the current directory). Formats: doubles `gen9championsdoublescustomgame` and `gen9championsvgc2026regmc` (team preview keeps 4); singles (`format="singles"`) `gen9championscustomgame` and `gen9championsbssregmc` (team preview keeps 3). File errors raise `OSError`, bad scenarios `ValueError`. |
 | `nash(matrix, iterations=20000, tol=0.01) -> Equilibrium` | Regret matching plus on a zero-sum payoff matrix (rows maximize), the solver behind `lab-plan --solve nash`. |
 | `version() -> str`, `slots(format) -> int` | Crate version; active slots per side (`"doubles"` 2, `"singles"` 1). |
 | `FEATURE_NAMES: list[str]`, `HEURISTIC_WEIGHTS: list[float]` | The evaluation features and the heuristic's weights (same order). |
@@ -81,9 +82,10 @@ pos.winner()                            # 'p2' after 3 turns
 | Member | Description |
 |---|---|
 | `positions(setup_rolls="full", lenient=False) -> list[tuple[float, Position]]` | The positions the scenario's decision is made in, with probabilities: every outcome of the leads' switch-ins and of the `setupTurns` (replayed with `setup_rolls`; `full` is exact, `median`/`extremes`/`quartiles` approximate), then the `patch`. `lenient=True` drops replayed branches in which a setup turn's choices are illegal (`lab-plan --setup-lenient`). |
-| `description`, `format` (`"doubles"`), `showdown_format` | Metadata. |
+| `description`, `format` (`"doubles"` / `"singles"`), `showdown_format` | Metadata. |
 | `turn -> (p1, p2) or None`, `mid_turn -> (list, list)`, `setup_turns -> list[(p1, p2)]` | The scenario's choice strings. |
 | `names(side) -> list[str]` | Display names in team preview (party) order. |
+| `from_canonical(state) -> Position` | A position built from canonical JSON (a dict or the text; `x-hidden` optional), the teams supplying what the canonical form leaves out (`lab_scenario::state_from_canonical`). Hidden state takes the defaults listed in `engine/scenario/src/from_canonical.rs`; what has none (a transformed Pokémon, a pending future move, volatiles whose source or payload is not canonical such as Leech Seed or Protosynthesis, a mid-turn switch) raises `Unsupported` unless `x-hidden` gives it. Genders left to chance stay undecided (use `Position.from_canonical`). The rebuilt state must print the given canonical state, else `ValueError`. |
 
 ### `Position`
 
@@ -95,11 +97,13 @@ suspended turn.
 |---|---|
 | `decision() -> str` | `"turn"`, `"replace"` (fainted Pokémon to replace before the next turn), `"mid_turn_switch"` (a turn suspended by U-turn, Eject Button, ...), `"finished"`. |
 | `winner() -> str or None` | `"p1"`, `"p2"`, `"tie"`, or `None` while the battle goes on. |
-| `turn`, `format` | Showdown's turn counter (1 at the first decision); `"doubles"`. |
+| `turn`, `format` | Showdown's turn counter (1 at the first decision); `"doubles"` / `"singles"`. |
 | `legal_choices(side, pruning="all") -> list[str]` | Showdown choice strings: `"move hypervoice, move protect"`, `"move 2 -1 mega"`, `"move knockoff 1, switch 3"`, `"switch 3"`. Targets: positive = foe slot, negative = ally slot. `switch N` counts `switch_order(side)`. A side the decision does not ask has the one choice `""`; a finished battle has none. `pruning="sensible"` drops damaging moves aimed at the ally (lab-plan's default). Moves the engine does not implement are left out (naming one raises `Unsupported`). |
 | `enumerate(p1, p2, rolls="full") -> list[tuple[float, Position]]` | The exact outcome distribution of the two choice strings at this decision (the one the position asks for), one entry per distinct end state, probabilities summing to 1. `rolls`: `full` (exact: all 16 damage rolls), `extremes` (min/max at 1/2), `quartiles`, `median` (one roll), `pessimistic-p1` / `pessimistic-p2` (min roll for that side's attacks, max against it); everything else (accuracy, crits, secondary effects, Speed ties) stays exact. A turn with two spread moves can have millions of exact outcomes; use `extremes` or `median` there. A turn that stops for a mid-turn switch yields `"mid_turn_switch"` positions; answer them with `enumerate`/`sample` again (`"switch 3"` for the asked side, `""` for the other). |
 | `sample(p1, p2, seed) -> Position` | One outcome drawn with exact chance (every damage roll; the rolls mode does not apply). The same seed gives the same position. |
-| `state_json() -> str` | The state in the oracle's canonical JSON (schema 1): the exact string `canonicalKey` of `engine/oracle/canonical.cjs` gives for the same Showdown position. |
+| `state_json(hidden=False) -> str` | The state in the oracle's canonical JSON (schema 1): the exact string `canonicalKey` of `engine/oracle/canonical.cjs` gives for the same Showdown position. `hidden=True` appends one member, `"x-hidden"`, with the engine state the canonical form leaves out (party order, hazard order, volatile payloads, slot history, ...) where it differs from the defaults; the rest of the string is unchanged, and `from_canonical` of it gives back this exact position. |
+| `from_canonical(state) -> Position` | Another position of the same battle from canonical JSON (a dict or the text; see `Scenario.from_canonical`), this position supplying the set data and genders. Edit `state_json(hidden=True)` and put it back to change a position by hand. |
+| `with_patch(patch) -> Position` | This position with an oracle `patch` applied (the scenario files' `patch`: `p1`/`p2` per name `hp`, `status`, `statusTime`, `boosts`, `item`; `sides` conditions; `field` weather, terrain, `pseudoWeather`). |
 | `evaluate(side=0, weights=None) -> float` | The heuristic evaluation (`lab_engine::eval::Heuristic`, `lab-plan --eval heuristic`) from `side`'s point of view in HP-bar units (100 = one full bar). `weights`: a dict by feature name (unnamed features keep the heuristic weight) or a full list in `FEATURE_NAMES` order. It scores material even after the battle ended; check `winner()`. |
 | `features() -> list[float]` | The evaluation features, p1's counts minus p2's. |
 | `party(side) -> list[dict]` | Per member in party order: `name`, `species` (current forme), `hp`, `max_hp`, `status` (Showdown id: `""`, `brn`, `frz`, `par`, `psn`, `tox`, `slp`, `fnt`), `item`, `ability` (ids), `moves` (`[(id, pp)]`), `slot` (active slot or `None`). |
@@ -142,9 +146,8 @@ refused in some cell; those columns, then rows, were dropped), `omitted_ours`,
 
 ## What is not exposed yet
 
-- Singles: the loader builds doubles states only; `Position` dispatches through an enum so a
-  singles variant can be added without changing the Python API.
-- Building a position without a scenario file (teams + state by hand), and editing a position.
+- Building a position without any scenario file (teams given directly): `from_canonical` and
+  `with_patch` edit positions of a loaded scenario's battle.
 - `lab-plan --dump-children` (evaluator fitting rows) and `--before` (picking a start by an
   oracle report); the evaluators by name (`material`, `file:<weights.json>`): pass `weights`.
 - Raw instruction lists (`Outcome::instructions`) and the `Suspension` internals.

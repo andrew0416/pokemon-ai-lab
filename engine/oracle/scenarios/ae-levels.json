@@ -1,0 +1,13 @@
+{
+ "description": "A4-t1: levels other than 50 in the custom game. Machamp (level 30) and Chansey (no level: Showdown plays it at 100) use Seismic Toss (damage = level); Garchomp (level 100) uses Dragon Claw on Machamp (the level-100 damage formula); Wishiwashi (level 10) cannot School (`pokemon.level < 20`) and Protects.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {"team": [
+  {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Seismic Toss", "Protect"], "level": 30},
+  {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Seismic Toss", "Protect"]}
+ ]},
+ "p2": {"team": [
+  {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Adamant", "evs": {"atk": 32}, "moves": ["Dragon Claw", "Protect"], "level": 100},
+  {"species": "Wishiwashi", "item": "", "ability": "Schooling", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Protect", "Tackle"], "level": 10}
+ ]},
+ "turn": {"p1": "move seismictoss 1, move seismictoss 1", "p2": "move dragonclaw 1, move protect"}
+}

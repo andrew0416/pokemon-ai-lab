@@ -84,8 +84,13 @@ pub(crate) fn run_mega_evo<const N: usize>(
     let new = mon.forme_as(mega);
     // A new ability that cures the Pokémon's status (a sleeping Mewtwo becoming Mewtwo-Mega-Y
     // with Insomnia) does so at the Update after this action (`abilities::on_update`).
-    let hp = mon.hp;
-    let new_hp = new.hp_after(old.max_hp, hp);
+    // Only a change of the max HP reads the HP (a lazy HP is expanded then).
+    let (hp, new_hp) = if new.max_hp == old.max_hp {
+        (0, 0)
+    } else {
+        let hp = mon.hp_value();
+        (hp, new.hp_after(old.max_hp, hp))
+    };
     // setAbility → the old ability's `End` (Flash Fire drops its volatile).
     end_ability(b, slot, old.ability)?;
     b.apply(Instruction::SetForme {

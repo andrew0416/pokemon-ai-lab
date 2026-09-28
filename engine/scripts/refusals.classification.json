@@ -15,7 +15,7 @@
  "proposed_boards": {
   "R21-copycat-called-moves": "Copycat calling a two-turn move (the caller becomes locked into the charge), a move that locks its user (lockedmove) or one that queues its own action (Mirror Coat's beforeTurnCallback, Chilly Reception's priorityChargeCallback) — shares moves::call_move with R14.",
   "R22-forced-eat-ignored-item": "Teatime / Stuff Cheeks (eatItem(true)) for a holder that ignores its item (Klutz, Magic Room): the Eat event is skipped, the berry still goes and EatItem still runs; eat_item_forced also never ran EatItem (Cheek Pouch, Cud Chew, Ripen): confirmed by the oracle and fixed in B35 (`oo-teatime-cheek-pouch`, `oo-teatime-cud-chew`, `oo-teatime-ripen`).",
-  "R5c-future-move-absent-user-occupant": "A future move whose user left the field while the position the engine seats it in holds a Pokémon with onAny/onAlly/onFoe ability or item handlers (Unnerve, Ruin abilities, Battery, Soul-Heart, Opportunist, ...) or a target with Innards Out / Cotton Down / Gulp Missile / Rowap Berry: needs an attacker that is not in any slot (or a narrower, per-event refusal) — repro uu-future-sight-absent-user-unnerve (full: 6)."
+  "R5c-future-move-absent-user-occupant": "A future move whose user left the field when every position of its side not holding the target holds a Pokémon whose ability or item acts for other Pokémon in an event the hit can run (onAny/onAlly/onFoe handlers other than switch-in, trapping, TryMove, redirection, side-hit, AfterMove, AfterMega; No Guard, Unaware, Damp and Friend Guard on a foe target exempt; Unnerve, Ruin abilities, Battery, Soul-Heart, Opportunist, ...) or suppresses abilities or the weather, or a target with Cotton Down while an occupant is out of its position: needs an attacker that is not in any slot — repros ab-future-sight-absent-user-two-occupants, ab-future-sight-absent-user-cotton-down-displaced (full). Narrowed by AB (wave 16): an empty or harmless position is chosen; Innards Out, Gulp Missile and Rowap Berry skip the inactive user (uu-future-sight-absent-user-unnerve now exact)."
  },
  "fixed": {
   "Instruct repeating {} (its lastMoveTargetLoc is not kept)": {
@@ -705,8 +705,8 @@
    "reachable": "yes",
    "kind": "mechanic",
    "board": "R5c-future-move-absent-user-occupant",
-   "repro": "uu-future-sight-absent-user-unnerve",
-   "why": "The benched user of a future move stands in for the hit in a position of its side (`moves::AbsentUser`); a hit whose outcome the displaced occupant could change is refused: an occupant with ability or item handlers acting for other Pokémon (`onAny*`, `onAlly*`, `onFoe*`: Unnerve against the target's berry, the Ruin abilities, Battery, ...) or suppressing abilities or the weather, and a target whose handlers act on an active source or on every active Pokémon (Innards Out, Cotton Down, Gulp Missile, Rowap Berry). The prefix rule is conservative (Friend Guard or Shadow Tag change nothing here)."
+   "repro": "ab-future-sight-absent-user-two-occupants",
+   "why": "The benched user of a future move stands in for the hit in a position of its side (`moves::AbsentUser`): an empty one, else one whose occupant nothing in the hit asks for (`moves::occupant_matters`). Refused when every such occupant has ability or item handlers acting for other Pokémon (`onAny*`, `onAlly*`, `onFoe*`) in an event a future hit can run (Unnerve against the target's berry, the Ruin abilities, Battery, Opportunist, ...) or suppresses abilities or the weather, and when the target's Cotton Down would reach the displaced occupant (repro ab-future-sight-absent-user-cotton-down-displaced). The target handlers that act on the source (Innards Out, Gulp Missile, Rowap Berry) skip the inactive user as Showdown does."
   }
  },
  "loader": {
@@ -720,10 +720,14 @@
    "why": "A team or scenario file that cannot be read."
   },
   "LoadError::UnsupportedFormat": {
-   "class": "unsupported",
-   "why": "Only the Champions doubles custom game and VGC 2026 Reg M-C load; Champions singles (`gen9championsbssregmc`) is a format Showdown plays (board II-singles-loader, on hold: singles keeps only the structure).",
-   "test": "loader_refusals.rs::a_singles_format_is_refused",
-   "board": "II-singles-loader"
+   "class": "input",
+   "why": "A format other than the four Champions formats the loader knows (doubles custom game, VGC 2026 Reg M-C, singles custom game, BSS Reg M-C since II-singles-loader); other formats are other rule sets (other mods, other clauses).",
+   "test": "loader_refusals.rs::a_singles_format_is_refused"
+  },
+  "LoadError::Unsupported: format": {
+   "class": "input",
+   "why": "A singles format given to the doubles loader or a doubles one to the singles loader (`load_scenario_file_as::<N>` must match the format's slot count; Python `format=`).",
+   "test": "ae_singles.rs::formats_and_slot_counts_must_agree"
   },
   "LoadError::Unsupported: setupStates": {
    "class": "input",
@@ -762,7 +766,7 @@
   },
   "SetProblem::TemporaryForme": {
    "class": "unsupported",
-   "why": "A temporary in-battle forme (Aegislash-Blade, Darmanitan-Zen, ...) as a set's species: the custom game (no validator) keeps it as the base species, which the state cannot tell from the forme reached in battle. VGC's validator refuses such sets, so only the custom game reaches it.",
+   "why": "A temporary in-battle forme (Aegislash-Blade, Darmanitan-Zen, ...) as a set's species: the custom game (no validator) keeps it as the base species, which the state cannot tell from the forme reached in battle. Kept as an explicit limit (A4-t1): the formes are `battleOnly`, so Showdown's validator (VGC and every validated format) refuses such sets and only the unvalidated custom game reaches it; supporting it needs a per-Pokémon base species in the state.",
    "test": "loader_refusals.rs::a_temporary_forme_as_species_is_refused"
   },
   "SetProblem::UnknownItem": {
@@ -785,18 +789,9 @@
    "class": "input",
    "why": "A nature name that does not exist."
   },
-  "SetProblem::UnsupportedLevel": {
-   "class": "unsupported",
-   "why": "A level other than 50 in the custom game (a set without `level` is 100 there, board B31): Showdown plays it, the engine's stat formula is the level-50 one. VGC's `Adjust Level = 50` never reaches it.",
-   "test": "loader_refusals.rs::a_level_other_than_50_is_refused"
-  },
   "SetProblem::InvalidIv": {
    "class": "input",
    "why": "An IV above 31 (IVs have no term in the Champions formula and are only range-checked)."
-  },
-  "SetProblem::UnknownGender": {
-   "class": "input",
-   "why": "A gender other than M, F or N. Showdown ignores an unknown one (`genders[set.gender]` falls back to the species'); the loader is stricter on garbage input."
   },
   "SetProblem::UnknownTeraType": {
    "class": "input",
@@ -836,12 +831,12 @@
   },
   "TeamProblem::DuplicateName": {
    "class": "unsupported",
-   "why": "Two members of a side with the same name (a shared nickname, or one species twice in the custom game): Showdown plays it, canonical states key Pokémon by name.",
+   "why": "Two members of a side with the same name (a shared nickname, or one species twice in the custom game): Showdown plays it, canonical states key Pokémon by name. Kept as an explicit limit (A4-t1): `canonical.cjs` sorts `side.pokemon` with a comparator that never returns 0, so equal names have no defined canonical order and such a battle cannot be compared with the oracle.",
    "test": "loader_refusals.rs::a_name_twice_on_a_side_is_refused"
   },
   "picked_order: {} is not a team position": {
    "class": "input",
-   "why": "Team preview choice with a non-number (Showdown's `parseInt` gives NaN and refuses it; it would read `2x` as 2, which the loader refuses)."
+   "why": "Team preview choice with no leading number (Showdown's `parseInt` gives NaN and refuses it). Since A4-t2 the loader reads a position as `parseInt` does (`2x` is 2, `0x2` is 2, leading whitespace and a sign allowed)."
   },
   "picked_order: no Pokémon in slot {}": {
    "class": "input",
@@ -991,7 +986,11 @@
   },
   "SwitchInError::Unsupported": {
    "class": "forward",
-   "why": "Carries the turn engine's refusal during the start (`enumerate_start`); those keys are in the turn engine's list above. (A non-`Unsupported` `TurnError` there is an invariant and is carried the same way.)"
+   "why": "Carries the turn engine's refusal during the start (`enumerate_start`); those keys are in the turn engine's list above."
+  },
+  "SwitchInError::Turn": {
+   "class": "unreachable",
+   "why": "A non-`Unsupported` `TurnError` from `enumerate_start` (the battle over, a replacement pending, ...): the loader's fresh start never has one; it is `ScenarioError::Invalid`, not a missing mechanic (A4-t3)."
   },
   "SwitchInError::NotInitial": {
    "class": "unreachable",

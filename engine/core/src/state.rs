@@ -155,6 +155,27 @@ pub struct Pokemon {
     pub gimmicks: GimmickSet,
     /// Dynamaxing produces [`DynamaxState::Gigantamax`] instead of plain Dynamax.
     pub gigantamax_factor: bool,
+    /// Marks the HP as a lazy unit of the factored enumeration (P1b, DESIGN.md "Full 모드의 HP
+    /// 인수분해"): `hp` is then the smallest of several possible values and the turn code reads it
+    /// through the lazy-aware accessors of `turn/lazy.rs`. Not part of the state's identity
+    /// (equality and hashing ignore it); always unset outside an enumeration.
+    pub lazy: LazyTag,
+}
+
+/// See [`Pokemon::lazy`]: 0 = an ordinary HP, `k > 0` = lazy unit `k - 1` of the running group.
+#[derive(Clone, Copy, Debug, Default)]
+pub struct LazyTag(pub(crate) u8);
+
+impl PartialEq for LazyTag {
+    fn eq(&self, _: &LazyTag) -> bool {
+        true
+    }
+}
+
+impl Eq for LazyTag {}
+
+impl std::hash::Hash for LazyTag {
+    fn hash<H: std::hash::Hasher>(&self, _: &mut H) {}
 }
 
 impl Pokemon {
