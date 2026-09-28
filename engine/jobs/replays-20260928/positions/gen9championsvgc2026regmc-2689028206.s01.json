@@ -1,0 +1,618 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689028206 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689028206), decision 1 = turn 2 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Flash Fire",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Head Smash",
+     "Rest"
+    ],
+    "name": "Arcanine",
+    "nature": "Serious",
+    "species": "Arcanine-Hisui"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "High Horsepower",
+     "Wood Hammer",
+     "Fake Out",
+     "Grassy Glide"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Snow Cloak",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Froslassite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Aurora Veil",
+     "Blizzard",
+     "Shadow Ball",
+     "Rest"
+    ],
+    "name": "Froslass",
+    "nature": "Serious",
+    "species": "Froslass"
+   },
+   {
+    "ability": "Defiant",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Iron Head",
+     "Sucker Punch",
+     "Rest"
+    ],
+    "name": "Kingambit",
+    "nature": "Serious",
+    "species": "Kingambit"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Snow Cloak",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Froslassite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Will-O-Wisp",
+     "Blizzard",
+     "Aurora Veil",
+     "Rest"
+    ],
+    "name": "Froslass",
+    "nature": "Serious",
+    "species": "Froslass"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Grassy Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Dire Claw",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Ice Body",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Dance",
+     "High Horsepower",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Baxcalibur",
+    "nature": "Serious",
+    "species": "Baxcalibur"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 0,
+     "def": 2,
+     "hp": 32,
+     "spa": 0,
+     "spd": 32,
+     "spe": 0
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wood Hammer",
+     "Grassy Glide",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Arcanine",
+       "pp": {
+        "headsmash": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "snowcloak",
+       "boosts": {},
+       "canMega": true,
+       "hp": 177,
+       "item": "froslassite",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": 0,
+       "species": "Froslass",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "lifeorb",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 195,
+       "item": "sitrusberry",
+       "lastMove": "highhorsepower",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "highhorsepower": 11,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "brn",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "icebody",
+       "hp": 222,
+       "item": "leftovers",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "highhorsepower": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 177,
+       "item": "froslassite",
+       "lastMove": "willowisp",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "rest": 8,
+        "willowisp": 15
+       },
+       "slot": 0,
+       "species": "Froslass-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 135,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "fakeout",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "direclaw": 16,
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "switch 3, move highhorsepower 2",
+   "move willowisp 2 mega, move fakeout 1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flashfire",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Arcanine",
+      "pp": {
+       "headsmash": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Arcanine-Hisui",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "snowcloak",
+      "canMega": true,
+      "hp": 177,
+      "item": "froslassite",
+      "maxhp": 177,
+      "name": "Froslass",
+      "pp": {
+       "auroraveil": 20,
+       "blizzard": 8,
+       "rest": 8,
+       "shadowball": 16
+      },
+      "slot": null,
+      "species": "Froslass",
+      "status": ""
+     },
+     {
+      "ability": "defiant",
+      "hp": 207,
+      "item": "lifeorb",
+      "maxhp": 207,
+      "name": "Kingambit",
+      "pp": {
+       "ironhead": 16,
+       "rest": 8,
+       "suckerpunch": 8
+      },
+      "slot": null,
+      "species": "Kingambit",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 207,
+      "item": "sitrusberry",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "highhorsepower": 12,
+       "woodhammer": 16
+      },
+      "slot": 1,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "icebody",
+      "hp": 222,
+      "item": "leftovers",
+      "maxhp": 222,
+      "name": "Baxcalibur",
+      "pp": {
+       "dragondance": 20,
+       "highhorsepower": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Baxcalibur",
+      "status": ""
+     },
+     {
+      "ability": "snowcloak",
+      "boosts": {},
+      "canMega": true,
+      "hp": 177,
+      "item": "froslassite",
+      "maxhp": 177,
+      "name": "Froslass",
+      "pp": {
+       "auroraveil": 20,
+       "blizzard": 8,
+       "rest": 8,
+       "willowisp": 16
+      },
+      "slot": 0,
+      "species": "Froslass",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "grassyglide": 20,
+       "rest": 8,
+       "woodhammer": 16
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "boosts": {
+       "def": 1
+      },
+      "hp": 187,
+      "item": "",
+      "lastItem": "grassyseed",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "direclaw": 16,
+       "fakeout": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Sneasler",
+      "status": "",
+      "volatiles": {
+       "unburden": {}
+      }
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move auroraveil mega, move woodhammer 2",
+  "p2": "move blizzard, move direclaw 1"
+ }
+}

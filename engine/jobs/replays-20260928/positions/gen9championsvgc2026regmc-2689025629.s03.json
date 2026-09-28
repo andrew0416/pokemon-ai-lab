@@ -1,0 +1,1008 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689025629 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689025629), decision 3 = turn 4 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Disguise",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Taunt",
+     "Play Rough",
+     "Rest"
+    ],
+    "name": "boo",
+    "nature": "Serious",
+    "species": "Mimikyu"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Darkest Lariat",
+     "Parting Shot",
+     "Fake Out",
+     "Rest"
+    ],
+    "name": "wolfe dih",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Magma Armor",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Cameruptite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Eruption",
+     "Earth Power",
+     "Protect",
+     "Rest"
+    ],
+    "name": "BIG HUMP",
+    "nature": "Serious",
+    "species": "Camerupt"
+   },
+   {
+    "ability": "Guts",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Mach Punch",
+     "Rest"
+    ],
+    "name": "The Durr",
+    "nature": "Serious",
+    "species": "Conkeldurr"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Flash Fire",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Chandelurite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Shadow Ball",
+     "Rest"
+    ],
+    "name": "Chandelure",
+    "nature": "Serious",
+    "species": "Chandelure"
+   },
+   {
+    "ability": "Aroma Veil",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Decorate",
+     "Dazzling Gleam",
+     "Protect",
+     "Light Screen"
+    ],
+    "name": "Alcremie",
+    "nature": "Serious",
+    "species": "Alcremie"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rock Slide",
+     "Close Combat",
+     "Rest"
+    ],
+    "name": "Tauros",
+    "nature": "Serious",
+    "species": "Tauros-Paldea-Combat"
+   },
+   {
+    "ability": "Thermal Exchange",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Baxcalibur",
+    "nature": "Serious",
+    "species": "Baxcalibur"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "magmaarmor",
+       "canMega": true,
+       "hp": 177,
+       "item": "cameruptite",
+       "maxhp": 177,
+       "name": "BIG HUMP",
+       "pp": {
+        "earthpower": 12,
+        "eruption": 8,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Camerupt",
+       "status": ""
+      },
+      {
+       "ability": "guts",
+       "hp": 212,
+       "item": "lifeorb",
+       "maxhp": 212,
+       "name": "The Durr",
+       "pp": {
+        "machpunch": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Conkeldurr",
+       "status": ""
+      },
+      {
+       "ability": "disguise",
+       "boosts": {},
+       "hp": 162,
+       "item": "",
+       "lastMove": "trickroom",
+       "maxhp": 162,
+       "name": "boo",
+       "pp": {
+        "playrough": 12,
+        "rest": 8,
+        "taunt": 20,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Mimikyu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "darkestlariat",
+       "maxhp": 202,
+       "name": "wolfe dih",
+       "pp": {
+        "darkestlariat": 11,
+        "fakeout": 12,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "aromaveil",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 172,
+       "item": "sitrusberry",
+       "lastMove": "decorate",
+       "maxhp": 172,
+       "name": "Alcremie",
+       "pp": {
+        "dazzlinggleam": 12,
+        "decorate": 15,
+        "lightscreen": 20,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Alcremie",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 222,
+       "item": "",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "infiltrator",
+       "boosts": {
+        "atk": 1,
+        "spa": 2
+       },
+       "hp": 167,
+       "item": "chandelurite",
+       "lastMove": "protect",
+       "maxhp": 167,
+       "name": "Chandelure",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": 0,
+       "species": "Chandelure-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "hp": 182,
+       "item": "leftovers",
+       "maxhp": 182,
+       "name": "Tauros",
+       "pp": {
+        "closecombat": 8,
+        "protect": 8,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Tauros-Paldea-Combat",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "magmaarmor",
+       "canMega": true,
+       "hp": 177,
+       "item": "cameruptite",
+       "maxhp": 177,
+       "name": "BIG HUMP",
+       "pp": {
+        "earthpower": 12,
+        "eruption": 8,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Camerupt",
+       "status": ""
+      },
+      {
+       "ability": "guts",
+       "hp": 212,
+       "item": "lifeorb",
+       "maxhp": 212,
+       "name": "The Durr",
+       "pp": {
+        "machpunch": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Conkeldurr",
+       "status": ""
+      },
+      {
+       "ability": "disguise",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 142,
+       "item": "",
+       "lastMove": "taunt",
+       "maxhp": 162,
+       "name": "boo",
+       "pp": {
+        "playrough": 12,
+        "rest": 8,
+        "taunt": 19,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Mimikyu-Busted",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 151,
+       "item": "",
+       "lastMove": "darkestlariat",
+       "maxhp": 202,
+       "name": "wolfe dih",
+       "pp": {
+        "darkestlariat": 10,
+        "fakeout": 12,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "aromaveil",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 172,
+       "item": "sitrusberry",
+       "lastMove": "dazzlinggleam",
+       "maxhp": 172,
+       "name": "Alcremie",
+       "pp": {
+        "dazzlinggleam": 11,
+        "decorate": 15,
+        "lightscreen": 20,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Alcremie",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 222,
+       "item": "",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "infiltrator",
+       "hp": 167,
+       "item": "chandelurite",
+       "maxhp": 167,
+       "name": "Chandelure",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Chandelure-Mega",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 167,
+       "item": "leftovers",
+       "maxhp": 182,
+       "name": "Tauros",
+       "pp": {
+        "closecombat": 8,
+        "protect": 8,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Tauros-Paldea-Combat",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "magmaarmor",
+       "boosts": {},
+       "canMega": true,
+       "hp": 177,
+       "item": "cameruptite",
+       "maxhp": 177,
+       "name": "BIG HUMP",
+       "pp": {
+        "earthpower": 12,
+        "eruption": 8,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Camerupt",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "guts",
+       "hp": 212,
+       "item": "lifeorb",
+       "maxhp": 212,
+       "name": "The Durr",
+       "pp": {
+        "machpunch": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Conkeldurr",
+       "status": ""
+      },
+      {
+       "ability": "disguise",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 142,
+       "item": "",
+       "lastMove": "playrough",
+       "maxhp": 162,
+       "name": "boo",
+       "pp": {
+        "playrough": 11,
+        "rest": 8,
+        "taunt": 19,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Mimikyu-Busted",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 151,
+       "item": "",
+       "maxhp": 202,
+       "name": "wolfe dih",
+       "pp": {
+        "darkestlariat": 10,
+        "fakeout": 12,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "aromaveil",
+       "boosts": {
+        "atk": -2,
+        "spa": -1
+       },
+       "hp": 172,
+       "item": "sitrusberry",
+       "lastMove": "decorate",
+       "maxhp": 172,
+       "name": "Alcremie",
+       "pp": {
+        "dazzlinggleam": 11,
+        "decorate": 14,
+        "lightscreen": 20,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Alcremie",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 222,
+       "item": "",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "infiltrator",
+       "hp": 167,
+       "item": "chandelurite",
+       "maxhp": 167,
+       "name": "Chandelure",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Chandelure-Mega",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": 2,
+        "spa": 2
+       },
+       "hp": 178,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 182,
+       "name": "Tauros",
+       "pp": {
+        "closecombat": 8,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Tauros-Paldea-Combat",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move trickroom, move darkestlariat 1",
+   "move protect mega, move decorate -1"
+  ],
+  [
+   "move taunt 2, move darkestlariat 1",
+   "switch 3, move dazzlinggleam"
+  ],
+  [
+   "move playrough 1, move partingshot 2",
+   "move protect, move decorate -1",
+   {
+    "p1": [
+     "switch 3"
+    ],
+    "p2": []
+   }
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "magmaarmor",
+      "canMega": true,
+      "hp": 177,
+      "item": "cameruptite",
+      "maxhp": 177,
+      "name": "BIG HUMP",
+      "pp": {
+       "earthpower": 12,
+       "eruption": 8,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Camerupt",
+      "status": ""
+     },
+     {
+      "ability": "guts",
+      "hp": 212,
+      "item": "lifeorb",
+      "maxhp": 212,
+      "name": "The Durr",
+      "pp": {
+       "machpunch": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Conkeldurr",
+      "status": ""
+     },
+     {
+      "ability": "disguise",
+      "boosts": {},
+      "hp": 162,
+      "item": "",
+      "maxhp": 162,
+      "name": "boo",
+      "pp": {
+       "playrough": 12,
+       "rest": 8,
+       "taunt": 20,
+       "trickroom": 8
+      },
+      "slot": 0,
+      "species": "Mimikyu",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "wolfe dih",
+      "pp": {
+       "darkestlariat": 12,
+       "fakeout": 12,
+       "partingshot": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "aromaveil",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 172,
+      "item": "sitrusberry",
+      "maxhp": 172,
+      "name": "Alcremie",
+      "pp": {
+       "dazzlinggleam": 12,
+       "decorate": 16,
+       "lightscreen": 20,
+       "protect": 8
+      },
+      "slot": 1,
+      "species": "Alcremie",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "thermalexchange",
+      "hp": 222,
+      "item": "",
+      "maxhp": 222,
+      "name": "Baxcalibur",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Baxcalibur",
+      "status": ""
+     },
+     {
+      "ability": "flashfire",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 167,
+      "item": "chandelurite",
+      "maxhp": 167,
+      "name": "Chandelure",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "shadowball": 16
+      },
+      "slot": 0,
+      "species": "Chandelure",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "hp": 182,
+      "item": "leftovers",
+      "maxhp": 182,
+      "name": "Tauros",
+      "pp": {
+       "closecombat": 8,
+       "protect": 8,
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": null,
+      "species": "Tauros-Paldea-Combat",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move playrough 1, move eruption mega",
+  "p2": "switch 3, move protect"
+ }
+}

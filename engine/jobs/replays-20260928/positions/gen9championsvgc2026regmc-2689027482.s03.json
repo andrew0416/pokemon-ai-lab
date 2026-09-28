@@ -1,0 +1,993 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689027482 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689027482), decision 3 = turn 3 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Poison Touch",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rock Tomb",
+     "Close Combat",
+     "Fake Out",
+     "Dire Claw"
+    ],
+    "name": "Sneasler",
+    "nature": "Adamant",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Thermal Exchange",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Baxcalibrite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Glaive Rush",
+     "Icicle Crash",
+     "Rest"
+    ],
+    "name": "Baxcalibur",
+    "nature": "Serious",
+    "species": "Baxcalibur"
+   },
+   {
+    "ability": "Flash Fire",
+    "evs": {
+     "atk": 0,
+     "def": 2,
+     "hp": 32,
+     "spa": 0,
+     "spd": 32,
+     "spe": 0
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Bitter Blade",
+     "Shadow Sneak",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Ceruledge",
+    "nature": "Careful",
+    "species": "Ceruledge"
+   },
+   {
+    "ability": "Marvel Scale",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hypnosis",
+     "Muddy Water",
+     "Rest"
+    ],
+    "name": "Milotic",
+    "nature": "Serious",
+    "species": "Milotic"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Snow Cloak",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Calm Mind",
+     "Rest"
+    ],
+    "name": "Glaceon",
+    "nature": "Serious",
+    "species": "Glaceon"
+   },
+   {
+    "ability": "Snow Cloak",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Froslassite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Aurora Veil",
+     "Will-O-Wisp",
+     "Blizzard",
+     "Hex"
+    ],
+    "name": "Froslass",
+    "nature": "Serious",
+    "species": "Froslass"
+   },
+   {
+    "ability": "Snow Cloak",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Moonblast",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Ninetales",
+    "nature": "Modest",
+    "species": "Ninetales-Alola"
+   },
+   {
+    "ability": "Volt Absorb",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leppa Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Revival Blessing",
+     "Double Shock",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Pawmot",
+    "nature": "Serious",
+    "species": "Pawmot"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 222,
+       "item": "baxcalibrite",
+       "lastMove": "protect",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "glaiverush": 8,
+        "iciclecrash": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "flashfire",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Ceruledge",
+       "pp": {
+        "bitterblade": 12,
+        "protect": 8,
+        "rest": 8,
+        "shadowsneak": 20
+       },
+       "slot": null,
+       "species": "Ceruledge",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "hypnosis": 20,
+        "muddywater": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "poisontouch",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "lastMove": "rocktomb",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "rocktomb": 15
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 4
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {
+        "spe": -1
+       },
+       "hp": 107,
+       "item": "froslassite",
+       "lastMove": "auroraveil",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 8,
+        "hex": 12,
+        "willowisp": 16
+       },
+       "slot": 1,
+       "species": "Froslass-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowcloak",
+       "boosts": {
+        "spa": 1,
+        "spd": 1
+       },
+       "hp": 172,
+       "item": "",
+       "lastMove": "calmmind",
+       "maxhp": 172,
+       "name": "Glaceon",
+       "pp": {
+        "calmmind": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Glaceon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowcloak",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "moonblast": 16,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      },
+      {
+       "ability": "voltabsorb",
+       "hp": 177,
+       "item": "leppaberry",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "protect": 8,
+        "rest": 8,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 222,
+       "item": "baxcalibrite",
+       "lastMove": "glaiverush",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "glaiverush": 7,
+        "iciclecrash": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {
+        "glaiverush": {}
+       }
+      },
+      {
+       "ability": "flashfire",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Ceruledge",
+       "pp": {
+        "bitterblade": 12,
+        "protect": 8,
+        "rest": 8,
+        "shadowsneak": 20
+       },
+       "slot": null,
+       "species": "Ceruledge",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "hypnosis": 20,
+        "muddywater": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "poisontouch",
+       "boosts": {
+        "def": -1,
+        "spd": -1
+       },
+       "hp": 176,
+       "item": "",
+       "lastMove": "closecombat",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "fakeout": 12,
+        "rocktomb": 15
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "brn",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {
+        "spe": -1
+       },
+       "hp": 107,
+       "item": "froslassite",
+       "lastMove": "willowisp",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 8,
+        "hex": 12,
+        "willowisp": 15
+       },
+       "slot": 1,
+       "species": "Froslass-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowcloak",
+       "hp": 0,
+       "item": "",
+       "maxhp": 172,
+       "name": "Glaceon",
+       "pp": {
+        "calmmind": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Glaceon",
+       "status": "fnt"
+      },
+      {
+       "ability": "snowcloak",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "moonblast": 16,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      },
+      {
+       "ability": "voltabsorb",
+       "hp": 177,
+       "item": "leppaberry",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "protect": 8,
+        "rest": 8,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 222,
+       "item": "baxcalibrite",
+       "lastMove": "glaiverush",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "glaiverush": 7,
+        "iciclecrash": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {
+        "glaiverush": {}
+       }
+      },
+      {
+       "ability": "flashfire",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Ceruledge",
+       "pp": {
+        "bitterblade": 12,
+        "protect": 8,
+        "rest": 8,
+        "shadowsneak": 20
+       },
+       "slot": null,
+       "species": "Ceruledge",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "hypnosis": 20,
+        "muddywater": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "poisontouch",
+       "boosts": {
+        "def": -1,
+        "spd": -1
+       },
+       "hp": 176,
+       "item": "",
+       "lastMove": "closecombat",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "fakeout": 12,
+        "rocktomb": 15
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "brn",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {
+        "spe": -1
+       },
+       "hp": 107,
+       "item": "froslassite",
+       "lastMove": "willowisp",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 8,
+        "hex": 12,
+        "willowisp": 15
+       },
+       "slot": 1,
+       "species": "Froslass-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowcloak",
+       "hp": 0,
+       "item": "",
+       "maxhp": 172,
+       "name": "Glaceon",
+       "pp": {
+        "calmmind": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Glaceon",
+       "status": ""
+      },
+      {
+       "ability": "snowcloak",
+       "boosts": {},
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "moonblast": 16,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "voltabsorb",
+       "hp": 177,
+       "item": "leppaberry",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "protect": 8,
+        "rest": 8,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move rocktomb 2, move protect mega",
+   "move calmmind, move auroraveil mega"
+  ],
+  [
+   "move closecombat 1, move glaiverush 1",
+   "move calmmind, move willowisp 1"
+  ],
+  [
+   "",
+   "switch 3"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "thermalexchange",
+      "boosts": {},
+      "canMega": true,
+      "hp": 222,
+      "item": "baxcalibrite",
+      "maxhp": 222,
+      "name": "Baxcalibur",
+      "pp": {
+       "glaiverush": 8,
+       "iciclecrash": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Baxcalibur",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "flashfire",
+      "hp": 182,
+      "item": "",
+      "maxhp": 182,
+      "name": "Ceruledge",
+      "pp": {
+       "bitterblade": 12,
+       "protect": 8,
+       "rest": 8,
+       "shadowsneak": 20
+      },
+      "slot": null,
+      "species": "Ceruledge",
+      "status": ""
+     },
+     {
+      "ability": "marvelscale",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Milotic",
+      "pp": {
+       "hypnosis": 20,
+       "muddywater": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Milotic",
+      "status": ""
+     },
+     {
+      "ability": "poisontouch",
+      "boosts": {},
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "fakeout": 12,
+       "rocktomb": 16
+      },
+      "slot": 0,
+      "species": "Sneasler",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "snowcloak",
+      "boosts": {},
+      "canMega": true,
+      "hp": 177,
+      "item": "froslassite",
+      "maxhp": 177,
+      "name": "Froslass",
+      "pp": {
+       "auroraveil": 20,
+       "blizzard": 8,
+       "hex": 12,
+       "willowisp": 16
+      },
+      "slot": 1,
+      "species": "Froslass",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "snowcloak",
+      "boosts": {},
+      "hp": 172,
+      "item": "",
+      "maxhp": 172,
+      "name": "Glaceon",
+      "pp": {
+       "calmmind": 20,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Glaceon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "snowcloak",
+      "hp": 180,
+      "item": "",
+      "maxhp": 180,
+      "name": "Ninetales",
+      "pp": {
+       "moonblast": 16,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Ninetales-Alola",
+      "status": ""
+     },
+     {
+      "ability": "voltabsorb",
+      "hp": 177,
+      "item": "leppaberry",
+      "maxhp": 177,
+      "name": "Pawmot",
+      "pp": {
+       "doubleshock": 8,
+       "protect": 8,
+       "rest": 8,
+       "revivalblessing": 1
+      },
+      "slot": null,
+      "species": "Pawmot",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "switch 3, move protect",
+  "p2": "move moonblast 2, move blizzard"
+ }
+}

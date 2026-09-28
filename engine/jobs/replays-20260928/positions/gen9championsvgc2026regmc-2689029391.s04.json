@@ -1,0 +1,1148 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689029391 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029391), decision 4 = turn 4 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Shield Dust",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Sleep Powder",
+     "Rage Powder",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Vivillon",
+    "nature": "Serious",
+    "species": "Vivillon-River"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Dragon Pulse",
+     "Electro Shot",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Weather Ball",
+     "Perish Song",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Helping Hand",
+     "Thunderbolt",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Final Gambit",
+     "Rest"
+    ],
+    "name": "Staraptor",
+    "nature": "Serious",
+    "species": "Staraptor"
+   },
+   {
+    "ability": "Magma Armor",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Cameruptite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Earth Power",
+     "Rest"
+    ],
+    "name": "Camerupt",
+    "nature": "Serious",
+    "species": "Camerupt"
+   },
+   {
+    "ability": "Defiant",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Low Kick",
+     "Rest"
+    ],
+    "name": "Suckerrr",
+    "nature": "Serious",
+    "species": "Kingambit"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "electroshot": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "blaze",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "perishsong": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      },
+      {
+       "ability": "shielddust",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 187,
+       "item": "focussash",
+       "lastMove": "sleeppowder",
+       "maxhp": 187,
+       "name": "Vivillon",
+       "pp": {
+        "protect": 8,
+        "ragepowder": 20,
+        "rest": 8,
+        "sleeppowder": 15
+       },
+       "slot": 0,
+       "species": "Vivillon-River",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "magmaarmor",
+       "canMega": true,
+       "hp": 177,
+       "item": "cameruptite",
+       "maxhp": 177,
+       "name": "Camerupt",
+       "pp": {
+        "earthpower": 12,
+        "heatwave": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Camerupt",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "helpinghand": 20,
+        "rest": 8,
+        "thunderbolt": 16,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "slp",
+       "statusTime": 2,
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 192,
+       "item": "",
+       "lastMove": "finalgambit",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "finalgambit": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Staraptor",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Suckerrr",
+       "pp": {
+        "lowkick": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "dragonpulse",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "electroshot": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "blaze",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "perishsong": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      },
+      {
+       "ability": "shielddust",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "ragepowder",
+       "maxhp": 187,
+       "name": "Vivillon",
+       "pp": {
+        "protect": 8,
+        "ragepowder": 19,
+        "rest": 8,
+        "sleeppowder": 15
+       },
+       "slot": 0,
+       "species": "Vivillon-River",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "magmaarmor",
+       "canMega": true,
+       "hp": 177,
+       "item": "cameruptite",
+       "maxhp": 177,
+       "name": "Camerupt",
+       "pp": {
+        "earthpower": 12,
+        "heatwave": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Camerupt",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 133,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "helpinghand": 20,
+        "rest": 8,
+        "thunderbolt": 16,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "slp",
+       "statusTime": 1,
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "finalgambit": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor",
+       "status": "fnt"
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Suckerrr",
+       "pp": {
+        "lowkick": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "dragonpulse",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "electroshot": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "blaze",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "perishsong": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      },
+      {
+       "ability": "shielddust",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "ragepowder",
+       "maxhp": 187,
+       "name": "Vivillon",
+       "pp": {
+        "protect": 8,
+        "ragepowder": 19,
+        "rest": 8,
+        "sleeppowder": 15
+       },
+       "slot": 0,
+       "species": "Vivillon-River",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "magmaarmor",
+       "boosts": {},
+       "canMega": true,
+       "hp": 177,
+       "item": "cameruptite",
+       "maxhp": 177,
+       "name": "Camerupt",
+       "pp": {
+        "earthpower": 12,
+        "heatwave": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Camerupt",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 133,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "helpinghand": 20,
+        "rest": 8,
+        "thunderbolt": 16,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "slp",
+       "statusTime": 1,
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "finalgambit": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Suckerrr",
+       "pp": {
+        "lowkick": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "electroshot": 12,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "blaze",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "perishsong": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      },
+      {
+       "ability": "shielddust",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "protect",
+       "maxhp": 187,
+       "name": "Vivillon",
+       "pp": {
+        "protect": 7,
+        "ragepowder": 19,
+        "rest": 8,
+        "sleeppowder": 15
+       },
+       "slot": 0,
+       "species": "Vivillon-River",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sheerforce",
+       "boosts": {},
+       "hp": 177,
+       "item": "cameruptite",
+       "lastMove": "heatwave",
+       "maxhp": 177,
+       "name": "Camerupt",
+       "pp": {
+        "earthpower": 12,
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Camerupt-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 133,
+       "item": "",
+       "lastMove": "helpinghand",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "helpinghand": 19,
+        "rest": 8,
+        "thunderbolt": 16,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "finalgambit": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Suckerrr",
+       "pp": {
+        "lowkick": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move sleeppowder 1, move protect",
+   "move trickroom, move finalgambit 2"
+  ],
+  [
+   "move ragepowder, move dragonpulse 1",
+   "move trickroom, move finalgambit 1"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move protect, move protect",
+   "move helpinghand -2, move heatwave mega"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "dragonpulse": 12,
+       "electroshot": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Archaludon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "blaze",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Incineroar",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "perishsong": 8,
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": null,
+      "species": "Politoed",
+      "status": ""
+     },
+     {
+      "ability": "shielddust",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 187,
+      "item": "focussash",
+      "maxhp": 187,
+      "name": "Vivillon",
+      "pp": {
+       "protect": 8,
+       "ragepowder": 20,
+       "rest": 8,
+       "sleeppowder": 16
+      },
+      "slot": 0,
+      "species": "Vivillon-River",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "magmaarmor",
+      "canMega": true,
+      "hp": 177,
+      "item": "cameruptite",
+      "maxhp": 177,
+      "name": "Camerupt",
+      "pp": {
+       "earthpower": 12,
+       "heatwave": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Camerupt",
+      "status": ""
+     },
+     {
+      "ability": "cudchew",
+      "boosts": {},
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "helpinghand": 20,
+       "rest": 8,
+       "thunderbolt": 16,
+       "trickroom": 8
+      },
+      "slot": 0,
+      "species": "Farigiraf",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 192,
+      "item": "",
+      "maxhp": 192,
+      "name": "Staraptor",
+      "pp": {
+       "finalgambit": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Staraptor",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "defiant",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Suckerrr",
+      "pp": {
+       "lowkick": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Kingambit",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move ragepowder, switch 3",
+  "p2": "move thunderbolt 1, move earthpower 1"
+ }
+}

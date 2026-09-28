@@ -1,0 +1,629 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689039123 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689039123), decision 1 = turn 1 Replacement. Teams rebuilt from the log and open team sheets with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Charizardite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Hurricane",
+     "Weather Ball",
+     "Protect"
+    ],
+    "name": "Charizard",
+    "nature": "Timid",
+    "species": "Charizard"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Leech Life",
+     "Drill Run",
+     "Iron Head",
+     "Protect"
+    ],
+    "name": "Golisopod",
+    "nature": "Adamant",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Light Clay",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Light Screen",
+     "Reflect",
+     "Parting Shot",
+     "Spirit Break"
+    ],
+    "name": "Grimmsnarl",
+    "nature": "Sassy",
+    "species": "Grimmsnarl"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "Mystic Water",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Muddy Water",
+     "Ice Beam",
+     "Weather Ball",
+     "Protect"
+    ],
+    "name": "Politoed",
+    "nature": "Modest",
+    "species": "Politoed"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Normal Gem",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Double Team",
+     "Foul Play",
+     "Shadow Claw"
+    ],
+    "name": "Yoruichi",
+    "nature": "Adamant",
+    "species": "Liepard"
+   },
+   {
+    "ability": "Speed Boost",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Psych Up",
+     "Stored Power",
+     "Protect"
+    ],
+    "name": "Soi fon",
+    "nature": "Naive",
+    "species": "Espathra"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Moonblast",
+     "Tickle",
+     "Trick Room"
+    ],
+    "name": "Orihime",
+    "nature": "Quiet",
+    "species": "Whimsicott"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Staraptite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Roost",
+     "Brave Bird",
+     "Protect"
+    ],
+    "name": "Ichigo",
+    "nature": "Adamant",
+    "species": "Staraptor"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 185,
+       "item": "charizarditey",
+       "lastMove": "heatwave",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "hurricane": 12,
+        "protect": 8,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 160,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "lightclay",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "partingshot": 20,
+        "reflect": 20,
+        "spiritbreak": 16
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "mysticwater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "muddywater": 12,
+        "protect": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 192,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Ichigo",
+       "pp": {
+        "bravebird": 16,
+        "closecombat": 8,
+        "protect": 8,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Staraptor",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "focussash",
+       "maxhp": 167,
+       "name": "Orihime",
+       "pp": {
+        "moonblast": 16,
+        "tailwind": 16,
+        "tickle": 20,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      },
+      {
+       "ability": "speedboost",
+       "boosts": {
+        "spe": 1
+       },
+       "hp": 202,
+       "item": "sitrusberry",
+       "lastMove": "protect",
+       "maxhp": 202,
+       "name": "Soi fon",
+       "pp": {
+        "protect": 7,
+        "psychup": 12,
+        "storedpower": 12,
+        "trickroom": 8
+       },
+       "slot": 1,
+       "species": "Espathra",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "normalgem",
+       "maxhp": 171,
+       "name": "Yoruichi",
+       "pp": {
+        "doubleteam": 16,
+        "fakeout": 11,
+        "foulplay": 16,
+        "shadowclaw": 16
+       },
+       "slot": null,
+       "species": "Liepard",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move heatwave mega, move leechlife -1",
+   "move fakeout 2, move protect"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "blaze",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "charizarditey",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "heatwave": 12,
+       "hurricane": 12,
+       "protect": 8,
+       "weatherball": 12
+      },
+      "slot": 0,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "boosts": {},
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "drillrun": 12,
+       "ironhead": 16,
+       "leechlife": 12,
+       "protect": 8
+      },
+      "slot": 1,
+      "species": "Golisopod",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "hp": 202,
+      "item": "lightclay",
+      "maxhp": 202,
+      "name": "Grimmsnarl",
+      "pp": {
+       "lightscreen": 20,
+       "partingshot": 20,
+       "reflect": 20,
+       "spiritbreak": 16
+      },
+      "slot": null,
+      "species": "Grimmsnarl",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "hp": 197,
+      "item": "mysticwater",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "icebeam": 12,
+       "muddywater": 12,
+       "protect": 8,
+       "weatherball": 12
+      },
+      "slot": null,
+      "species": "Politoed",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "intimidate",
+      "canMega": true,
+      "hp": 192,
+      "item": "staraptite",
+      "maxhp": 192,
+      "name": "Ichigo",
+      "pp": {
+       "bravebird": 16,
+       "closecombat": 8,
+       "protect": 8,
+       "roost": 8
+      },
+      "slot": null,
+      "species": "Staraptor",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "hp": 167,
+      "item": "focussash",
+      "maxhp": 167,
+      "name": "Orihime",
+      "pp": {
+       "moonblast": 16,
+       "tailwind": 16,
+       "tickle": 20,
+       "trickroom": 8
+      },
+      "slot": null,
+      "species": "Whimsicott",
+      "status": ""
+     },
+     {
+      "ability": "speedboost",
+      "boosts": {},
+      "hp": 202,
+      "item": "sitrusberry",
+      "maxhp": 202,
+      "name": "Soi fon",
+      "pp": {
+       "protect": 8,
+       "psychup": 12,
+       "storedpower": 12,
+       "trickroom": 8
+      },
+      "slot": 1,
+      "species": "Espathra",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "boosts": {},
+      "hp": 171,
+      "item": "normalgem",
+      "maxhp": 171,
+      "name": "Yoruichi",
+      "pp": {
+       "doubleteam": 16,
+       "fakeout": 12,
+       "foulplay": 16,
+       "shadowclaw": 16
+      },
+      "slot": 0,
+      "species": "Liepard",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "",
+  "p2": "switch 3"
+ }
+}

@@ -1,0 +1,953 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689027072 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689027072), decision 3 = turn 3 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Limber",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Hawluchanite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Detect",
+     "Entrainment",
+     "Rest"
+    ],
+    "name": "Pet Shop",
+    "nature": "Serious",
+    "species": "Hawlucha"
+   },
+   {
+    "ability": "Snow Warning",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Sheer Cold",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Ice Feam",
+    "nature": "Serious",
+    "species": "Vanilluxe"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "BamBam",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Torrent",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Mista",
+    "nature": "Serious",
+    "species": "Inteleon"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Cute Charm",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Calm Mind",
+     "Rest"
+    ],
+    "name": "Sylveon",
+    "nature": "Serious",
+    "species": "Sylveon"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Taunt",
+     "Flare Blitz",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Pressure",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Absolite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Shadow Claw",
+     "Rest"
+    ],
+    "name": "Absol",
+    "nature": "Serious",
+    "species": "Absol"
+   },
+   {
+    "ability": "Marvel Scale",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Grassy Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Milotic",
+    "nature": "Serious",
+    "species": "Milotic"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "BamBam",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 178,
+       "item": "",
+       "lastMove": "sheercold",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "sheercold": 7
+       },
+       "slot": 1,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": ""
+      },
+      {
+       "ability": "limber",
+       "boosts": {
+        "atk": -1
+       },
+       "canMega": true,
+       "hp": 185,
+       "item": "hawluchanite",
+       "lastMove": "detect",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "detect": 7,
+        "entrainment": 16,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Hawlucha",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "canMega": true,
+       "hp": 172,
+       "item": "absolitez",
+       "maxhp": 172,
+       "name": "Absol",
+       "pp": {
+        "rest": 8,
+        "shadowclaw": 16
+       },
+       "slot": null,
+       "species": "Absol",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "flareblitz": 16,
+        "rest": 8,
+        "taunt": 20
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "grassyseed",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "boosts": {
+        "spa": 1,
+        "spd": 1
+       },
+       "hp": 202,
+       "item": "",
+       "lastMove": "calmmind",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "calmmind": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Sylveon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "BamBam",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 178,
+       "item": "",
+       "lastMove": "sheercold",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "sheercold": 6
+       },
+       "slot": 1,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 185,
+       "item": "hawluchanite",
+       "lastMove": "entrainment",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "detect": 7,
+        "entrainment": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Hawlucha-Mega",
+       "status": "",
+       "volatiles": {
+        "taunt": {
+         "duration": 3
+        }
+       }
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "canMega": true,
+       "hp": 172,
+       "item": "absolitez",
+       "maxhp": 172,
+       "name": "Absol",
+       "pp": {
+        "rest": 8,
+        "shadowclaw": 16
+       },
+       "slot": null,
+       "species": "Absol",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "taunt",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "flareblitz": 16,
+        "rest": 8,
+        "taunt": 19
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "grassyseed",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 0,
+       "item": "",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "calmmind": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sylveon",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "BamBam",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 178,
+       "item": "",
+       "lastMove": "sheercold",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "sheercold": 6
+       },
+       "slot": 1,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 185,
+       "item": "hawluchanite",
+       "lastMove": "entrainment",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "detect": 7,
+        "entrainment": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Hawlucha-Mega",
+       "status": "",
+       "volatiles": {
+        "taunt": {
+         "duration": 3
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "canMega": true,
+       "hp": 172,
+       "item": "absolitez",
+       "maxhp": 172,
+       "name": "Absol",
+       "pp": {
+        "rest": 8,
+        "shadowclaw": 16
+       },
+       "slot": 0,
+       "species": "Absol",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "taunt",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "flareblitz": 16,
+        "rest": 8,
+        "taunt": 19
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "grassyseed",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 0,
+       "item": "",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "calmmind": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sylveon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move detect, move sheercold 1",
+   "move calmmind, move fakeout 1"
+  ],
+  [
+   "move entrainment -2 mega, move sheercold 1",
+   "move calmmind, move taunt 1"
+  ],
+  [
+   "",
+   "switch 3"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "snowscape",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "grassysurge",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "BamBam",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     },
+     {
+      "ability": "snowwarning",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 178,
+      "item": "",
+      "maxhp": 178,
+      "name": "Ice Feam",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "sheercold": 8
+      },
+      "slot": 1,
+      "species": "Vanilluxe",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "torrent",
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Mista",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Inteleon",
+      "status": ""
+     },
+     {
+      "ability": "limber",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 185,
+      "item": "hawluchanite",
+      "maxhp": 185,
+      "name": "Pet Shop",
+      "pp": {
+       "detect": 8,
+       "entrainment": 16,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Hawlucha",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "pressure",
+      "canMega": true,
+      "hp": 172,
+      "item": "absolitez",
+      "maxhp": 172,
+      "name": "Absol",
+      "pp": {
+       "rest": 8,
+       "shadowclaw": 16
+      },
+      "slot": null,
+      "species": "Absol",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "flareblitz": 16,
+       "rest": 8,
+       "taunt": 20
+      },
+      "slot": 1,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "marvelscale",
+      "hp": 202,
+      "item": "grassyseed",
+      "maxhp": 202,
+      "name": "Milotic",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Milotic",
+      "status": ""
+     },
+     {
+      "ability": "cutecharm",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Sylveon",
+      "pp": {
+       "calmmind": 20,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Sylveon",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "switch 3, move protect",
+  "p2": "move shadowclaw 2 mega, move flareblitz 1"
+ }
+}

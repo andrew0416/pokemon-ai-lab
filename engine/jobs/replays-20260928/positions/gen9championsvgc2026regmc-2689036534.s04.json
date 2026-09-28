@@ -1,0 +1,1110 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689036534 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689036534), decision 4 = turn 3 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Electric Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 2,
+     "spa": 0,
+     "spd": 0,
+     "spe": 32
+    },
+    "gender": "F",
+    "item": "Air Balloon",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Pincurchin",
+    "nature": "Serious",
+    "species": "Pincurchin"
+   },
+   {
+    "ability": "Flame Body",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Electric Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Acrobatics",
+     "Rest"
+    ],
+    "name": "Talonflame",
+    "nature": "Serious",
+    "species": "Talonflame"
+   },
+   {
+    "ability": "Punk Rock",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Overdrive",
+     "Rest"
+    ],
+    "name": "Toxtricity",
+    "nature": "Serious",
+    "species": "Toxtricity-Low-Key"
+   },
+   {
+    "ability": "Levitate",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Flash Cannon",
+     "Rest"
+    ],
+    "name": "Hydreigon",
+    "nature": "Serious",
+    "species": "Hydreigon"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Cute Charm",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hyper Beam",
+     "Rest"
+    ],
+    "name": "Sylveon",
+    "nature": "Serious",
+    "species": "Sylveon"
+   },
+   {
+    "ability": "Defiant",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Kowtow Cleave",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Kingambit",
+    "nature": "Serious",
+    "species": "Kingambit"
+   },
+   {
+    "ability": "Unnerve",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 2,
+     "spa": 0,
+     "spd": 0,
+     "spe": 32
+    },
+    "gender": "M",
+    "item": "Aerodactylite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rock Slide",
+     "Rest"
+    ],
+    "name": "Aerodactyl",
+    "nature": "Serious",
+    "species": "Aerodactyl"
+   },
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Heat Wave",
+     "Weather Ball",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 199,
+       "item": "",
+       "maxhp": 199,
+       "name": "Hydreigon",
+       "pp": {
+        "flashcannon": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hydreigon",
+       "status": ""
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 125,
+       "name": "Pincurchin",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Pincurchin",
+       "status": "fnt"
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 185,
+       "item": "",
+       "lastItem": "electricseed",
+       "lastMove": "tailwind",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "acrobatics": 16,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Talonflame",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "punkrock",
+       "hp": 182,
+       "item": "lifeorb",
+       "maxhp": 182,
+       "name": "Toxtricity",
+       "pp": {
+        "overdrive": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Toxtricity-Low-Key",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "unnerve",
+       "boosts": {},
+       "canMega": true,
+       "hp": 157,
+       "item": "aerodactylite",
+       "maxhp": 157,
+       "name": "Aerodactyl",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Aerodactyl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 12,
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "hyperbeam",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "hyperbeam": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Sylveon",
+       "status": "",
+       "volatiles": {
+        "mustrecharge": {
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 199,
+       "item": "",
+       "maxhp": 199,
+       "name": "Hydreigon",
+       "pp": {
+        "flashcannon": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hydreigon",
+       "status": ""
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 125,
+       "name": "Pincurchin",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Pincurchin",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 185,
+       "item": "",
+       "lastItem": "electricseed",
+       "lastMove": "tailwind",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "acrobatics": 16,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Talonflame",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "punkrock",
+       "boosts": {},
+       "hp": 182,
+       "item": "lifeorb",
+       "maxhp": 182,
+       "name": "Toxtricity",
+       "pp": {
+        "overdrive": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Toxtricity-Low-Key",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "unnerve",
+       "boosts": {},
+       "canMega": true,
+       "hp": 157,
+       "item": "aerodactylite",
+       "maxhp": 157,
+       "name": "Aerodactyl",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Aerodactyl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 12,
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "hyperbeam",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "hyperbeam": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Sylveon",
+       "status": "",
+       "volatiles": {
+        "mustrecharge": {
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 199,
+       "item": "",
+       "maxhp": 199,
+       "name": "Hydreigon",
+       "pp": {
+        "flashcannon": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hydreigon",
+       "status": ""
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 125,
+       "name": "Pincurchin",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Pincurchin",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "lastItem": "electricseed",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "acrobatics": 15,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Talonflame",
+       "status": "fnt"
+      },
+      {
+       "ability": "punkrock",
+       "boosts": {},
+       "hp": 97,
+       "item": "lifeorb",
+       "lastMove": "overdrive",
+       "maxhp": 182,
+       "name": "Toxtricity",
+       "pp": {
+        "overdrive": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Toxtricity-Low-Key",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "aerodactylite",
+       "maxhp": 157,
+       "name": "Aerodactyl",
+       "pp": {
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Aerodactyl-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 12,
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "boosts": {},
+       "hp": 8,
+       "item": "",
+       "lastMove": "hyperbeam",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "hyperbeam": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Sylveon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 199,
+       "item": "",
+       "maxhp": 199,
+       "name": "Hydreigon",
+       "pp": {
+        "flashcannon": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Hydreigon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 125,
+       "name": "Pincurchin",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Pincurchin",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "lastItem": "electricseed",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "acrobatics": 15,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Talonflame",
+       "status": ""
+      },
+      {
+       "ability": "punkrock",
+       "boosts": {},
+       "hp": 97,
+       "item": "lifeorb",
+       "lastMove": "overdrive",
+       "maxhp": 182,
+       "name": "Toxtricity",
+       "pp": {
+        "overdrive": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Toxtricity-Low-Key",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "aerodactylite",
+       "maxhp": 157,
+       "name": "Aerodactyl",
+       "pp": {
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Aerodactyl-Mega",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 12,
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 207,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cutecharm",
+       "boosts": {},
+       "hp": 8,
+       "item": "",
+       "lastMove": "hyperbeam",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "hyperbeam": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Sylveon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move rest, move tailwind",
+   "move hyperbeam 1, switch 3"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move overdrive, move acrobatics 1",
+   "move recharge, move rockslide mega"
+  ],
+  [
+   "switch 4",
+   "switch 3"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "electricterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "levitate",
+      "hp": 199,
+      "item": "",
+      "maxhp": 199,
+      "name": "Hydreigon",
+      "pp": {
+       "flashcannon": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Hydreigon",
+      "status": ""
+     },
+     {
+      "ability": "electricsurge",
+      "boosts": {},
+      "hp": 125,
+      "item": "airballoon",
+      "maxhp": 125,
+      "name": "Pincurchin",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Pincurchin",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "flamebody",
+      "boosts": {
+       "def": 1
+      },
+      "hp": 185,
+      "item": "",
+      "lastItem": "electricseed",
+      "maxhp": 185,
+      "name": "Talonflame",
+      "pp": {
+       "acrobatics": 16,
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": 1,
+      "species": "Talonflame",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "punkrock",
+      "hp": 182,
+      "item": "lifeorb",
+      "maxhp": 182,
+      "name": "Toxtricity",
+      "pp": {
+       "overdrive": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Toxtricity-Low-Key",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "unnerve",
+      "canMega": true,
+      "hp": 157,
+      "item": "aerodactylite",
+      "maxhp": 157,
+      "name": "Aerodactyl",
+      "pp": {
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": null,
+      "species": "Aerodactyl",
+      "status": ""
+     },
+     {
+      "ability": "blaze",
+      "hp": 185,
+      "item": "",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "heatwave": 12,
+       "protect": 8,
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": null,
+      "species": "Charizard",
+      "status": ""
+     },
+     {
+      "ability": "defiant",
+      "boosts": {},
+      "hp": 207,
+      "item": "focussash",
+      "maxhp": 207,
+      "name": "Kingambit",
+      "pp": {
+       "kowtowcleave": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Kingambit",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cutecharm",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Sylveon",
+      "pp": {
+       "hyperbeam": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Sylveon",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move overdrive, move flashcannon 1",
+  "p2": "move hyperbeam -2, move kowtowcleave 1"
+ }
+}

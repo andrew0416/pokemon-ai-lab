@@ -1,0 +1,2565 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689044022 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044022), decision 12 = turn 9 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Rough Skin",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Earthquake",
+     "Dragon Tail",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Staraptite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Dual Wingbeat",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Staraptor",
+    "nature": "Serious",
+    "species": "Staraptor"
+   },
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Tailwind",
+     "Grass Knot",
+     "Rest"
+    ],
+    "name": "Whimsicott",
+    "nature": "Serious",
+    "species": "Whimsicott"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Levitate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Eelektrossite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Coil",
+     "Supercell Slam",
+     "Drain Punch",
+     "Rest"
+    ],
+    "name": "Eelektross",
+    "nature": "Serious",
+    "species": "Eelektross"
+   },
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Follow Me",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Rest"
+    ],
+    "name": "Whimsicott",
+    "nature": "Serious",
+    "species": "Whimsicott"
+   },
+   {
+    "ability": "Rough Skin",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rock Slide",
+     "Protect",
+     "Dragon Claw",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 215,
+       "item": "",
+       "lastMove": "earthquake",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragontail": 12,
+        "earthquake": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "def": 1,
+        "spd": 1
+       },
+       "hp": 192,
+       "item": "staraptite",
+       "lastMove": "closecombat",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "closecombat": 7,
+        "dualwingbeat": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Staraptor-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {
+        "accuracy": 1,
+        "def": 1
+       },
+       "canMega": true,
+       "hp": 192,
+       "item": "eelektrossite",
+       "lastMove": "coil",
+       "maxhp": 192,
+       "name": "Eelektross",
+       "pp": {
+        "coil": 19,
+        "drainpunch": 12,
+        "rest": 8,
+        "supercellslam": 16
+       },
+       "slot": 0,
+       "species": "Eelektross",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "hp": 215,
+       "item": "lifeorb",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "protect": 8,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": "fnt"
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 215,
+       "item": "",
+       "lastMove": "earthquake",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragontail": 12,
+        "earthquake": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "def": 1,
+        "spd": 1
+       },
+       "hp": 192,
+       "item": "staraptite",
+       "lastMove": "closecombat",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "closecombat": 7,
+        "dualwingbeat": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Staraptor-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {
+        "accuracy": 1,
+        "def": 1
+       },
+       "canMega": true,
+       "hp": 192,
+       "item": "eelektrossite",
+       "lastMove": "coil",
+       "maxhp": 192,
+       "name": "Eelektross",
+       "pp": {
+        "coil": 19,
+        "drainpunch": 12,
+        "rest": 8,
+        "supercellslam": 16
+       },
+       "slot": 0,
+       "species": "Eelektross",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "hp": 215,
+       "item": "lifeorb",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "protect": 8,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 215,
+       "item": "",
+       "lastMove": "dragontail",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragontail": 11,
+        "earthquake": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "def": 1,
+        "spd": 1
+       },
+       "hp": 60,
+       "item": "staraptite",
+       "lastMove": "dualwingbeat",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "closecombat": 7,
+        "dualwingbeat": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Staraptor-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "eelevate",
+       "hp": 150,
+       "item": "eelektrossite",
+       "maxhp": 192,
+       "name": "Eelektross",
+       "pp": {
+        "coil": 19,
+        "drainpunch": 12,
+        "rest": 8,
+        "supercellslam": 15
+       },
+       "slot": null,
+       "species": "Eelektross-Mega",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 215,
+       "item": "lifeorb",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "protect": 8,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 215,
+       "item": "",
+       "lastMove": "dragontail",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragontail": 11,
+        "earthquake": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "def": 1,
+        "spd": 1
+       },
+       "hp": 60,
+       "item": "staraptite",
+       "lastMove": "dualwingbeat",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "closecombat": 7,
+        "dualwingbeat": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Staraptor-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "eelevate",
+       "boosts": {},
+       "hp": 150,
+       "item": "eelektrossite",
+       "maxhp": 192,
+       "name": "Eelektross",
+       "pp": {
+        "coil": 19,
+        "drainpunch": 12,
+        "rest": 8,
+        "supercellslam": 15
+       },
+       "slot": 1,
+       "species": "Eelektross-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 215,
+       "item": "lifeorb",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "protect": 8,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 143,
+       "item": "",
+       "lastMove": "earthquake",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragontail": 11,
+        "earthquake": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "def": 1,
+        "spd": 1
+       },
+       "hp": 60,
+       "item": "staraptite",
+       "lastMove": "protect",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "closecombat": 7,
+        "dualwingbeat": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Staraptor-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "eelevate",
+       "boosts": {},
+       "hp": 151,
+       "item": "eelektrossite",
+       "lastMove": "drainpunch",
+       "maxhp": 192,
+       "name": "Eelektross",
+       "pp": {
+        "coil": 19,
+        "drainpunch": 11,
+        "rest": 8,
+        "supercellslam": 15
+       },
+       "slot": 1,
+       "species": "Eelektross-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 115,
+       "item": "lifeorb",
+       "lastMove": "rockslide",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "protect": 8,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 143,
+       "item": "",
+       "lastMove": "dragontail",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragontail": 10,
+        "earthquake": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "closecombat": 7,
+        "dualwingbeat": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "eelevate",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 151,
+       "item": "eelektrossite",
+       "lastMove": "supercellslam",
+       "maxhp": 192,
+       "name": "Eelektross",
+       "pp": {
+        "coil": 19,
+        "drainpunch": 11,
+        "rest": 8,
+        "supercellslam": 14
+       },
+       "slot": 1,
+       "species": "Eelektross-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 115,
+       "item": "lifeorb",
+       "lastMove": "protect",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 143,
+       "item": "",
+       "lastMove": "dragontail",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragontail": 10,
+        "earthquake": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "closecombat": 7,
+        "dualwingbeat": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "eelevate",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 151,
+       "item": "eelektrossite",
+       "lastMove": "supercellslam",
+       "maxhp": 192,
+       "name": "Eelektross",
+       "pp": {
+        "coil": 19,
+        "drainpunch": 11,
+        "rest": 8,
+        "supercellslam": 14
+       },
+       "slot": 1,
+       "species": "Eelektross-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 115,
+       "item": "lifeorb",
+       "lastMove": "protect",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": "fnt"
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragontail": 10,
+        "earthquake": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": "fnt"
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "closecombat": 7,
+        "dualwingbeat": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "eelevate",
+       "boosts": {
+        "atk": 2
+       },
+       "hp": 151,
+       "item": "eelektrossite",
+       "lastMove": "supercellslam",
+       "maxhp": 192,
+       "name": "Eelektross",
+       "pp": {
+        "coil": 19,
+        "drainpunch": 11,
+        "rest": 8,
+        "supercellslam": 13
+       },
+       "slot": 1,
+       "species": "Eelektross-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 68,
+       "item": "lifeorb",
+       "lastMove": "dragonclaw",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": "fnt"
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragontail": 10,
+        "earthquake": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "closecombat": 7,
+        "dualwingbeat": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": 0,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "eelevate",
+       "boosts": {
+        "atk": 2
+       },
+       "hp": 151,
+       "item": "eelektrossite",
+       "lastMove": "supercellslam",
+       "maxhp": 192,
+       "name": "Eelektross",
+       "pp": {
+        "coil": 19,
+        "drainpunch": 11,
+        "rest": 8,
+        "supercellslam": 13
+       },
+       "slot": 1,
+       "species": "Eelektross-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 68,
+       "item": "lifeorb",
+       "lastMove": "dragonclaw",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": "fnt"
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragontail": 10,
+        "earthquake": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "closecombat": 7,
+        "dualwingbeat": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "grassknot": 20,
+        "protect": 7,
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": 0,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "eelevate",
+       "boosts": {
+        "atk": 2
+       },
+       "hp": 151,
+       "item": "eelektrossite",
+       "lastMove": "drainpunch",
+       "maxhp": 192,
+       "name": "Eelektross",
+       "pp": {
+        "coil": 19,
+        "drainpunch": 10,
+        "rest": 8,
+        "supercellslam": 13
+       },
+       "slot": 1,
+       "species": "Eelektross-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 68,
+       "item": "lifeorb",
+       "lastMove": "protect",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "protect": 6,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": "fnt"
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragontail": 10,
+        "earthquake": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "closecombat": 7,
+        "dualwingbeat": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 11,
+       "item": "",
+       "lastMove": "tailwind",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "grassknot": 20,
+        "protect": 7,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 0,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "eelevate",
+       "boosts": {
+        "atk": 2
+       },
+       "hp": 181,
+       "item": "eelektrossite",
+       "lastMove": "drainpunch",
+       "maxhp": 192,
+       "name": "Eelektross",
+       "pp": {
+        "coil": 19,
+        "drainpunch": 9,
+        "rest": 8,
+        "supercellslam": 13
+       },
+       "slot": 1,
+       "species": "Eelektross-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 47,
+       "item": "lifeorb",
+       "lastMove": "rockslide",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "protect": 6,
+        "rest": 8,
+        "rockslide": 10
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": "fnt"
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragontail": 10,
+        "earthquake": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "closecombat": 7,
+        "dualwingbeat": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 11,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "grassknot": 20,
+        "protect": 6,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 0,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "eelevate",
+       "boosts": {
+        "atk": 2
+       },
+       "hp": 181,
+       "item": "eelektrossite",
+       "lastMove": "drainpunch",
+       "maxhp": 192,
+       "name": "Eelektross",
+       "pp": {
+        "coil": 19,
+        "drainpunch": 8,
+        "rest": 8,
+        "supercellslam": 13
+       },
+       "slot": 1,
+       "species": "Eelektross-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 47,
+       "item": "lifeorb",
+       "lastMove": "protect",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "protect": 5,
+        "rest": 8,
+        "rockslide": 10
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move earthquake, move closecombat 2 mega",
+   "move coil, move followme"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move dragontail 1, move dualwingbeat 2",
+   "move supercellslam 2 mega, move tailwind"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move earthquake, move protect",
+   "move rockslide, move drainpunch 1"
+  ],
+  [
+   "move dragontail 1, move closecombat -1",
+   "move protect, move supercellslam 2"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move earthquake, move rest",
+   "move dragonclaw 1, move supercellslam 2"
+  ],
+  [
+   "switch 4, pass",
+   ""
+  ],
+  [
+   "move protect, pass",
+   "move protect, move drainpunch 1"
+  ],
+  [
+   "move tailwind, pass",
+   "move rockslide, move drainpunch 1"
+  ],
+  [
+   "move protect, pass",
+   "move protect, move drainpunch 1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "blaze",
+      "hp": 185,
+      "item": "",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Charizard",
+      "status": ""
+     },
+     {
+      "ability": "roughskin",
+      "boosts": {},
+      "hp": 215,
+      "item": "",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "dragontail": 12,
+       "earthquake": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "canMega": true,
+      "hp": 192,
+      "item": "staraptite",
+      "maxhp": 192,
+      "name": "Staraptor",
+      "pp": {
+       "closecombat": 8,
+       "dualwingbeat": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Staraptor",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Whimsicott",
+      "pp": {
+       "grassknot": 20,
+       "protect": 8,
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": null,
+      "species": "Whimsicott",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "levitate",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 192,
+      "item": "eelektrossite",
+      "maxhp": 192,
+      "name": "Eelektross",
+      "pp": {
+       "coil": 20,
+       "drainpunch": 12,
+       "rest": 8,
+       "supercellslam": 16
+      },
+      "slot": 0,
+      "species": "Eelektross",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "roughskin",
+      "hp": 215,
+      "item": "lifeorb",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "dragonclaw": 16,
+       "protect": 8,
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": null,
+      "species": "Garchomp",
+      "status": ""
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Whimsicott",
+      "pp": {
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": null,
+      "species": "Whimsicott",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move grassknot 1, pass",
+  "p2": "move rockslide, move coil"
+ }
+}

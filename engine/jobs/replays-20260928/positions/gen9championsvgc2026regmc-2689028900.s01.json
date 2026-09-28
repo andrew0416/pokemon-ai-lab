@@ -1,0 +1,623 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689028900 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689028900), decision 1 = turn 2 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "midTurn": {
+  "p1": [],
+  "p2": [
+   "switch 3"
+  ]
+ },
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Tailwind",
+     "Hurricane",
+     "Rest"
+    ],
+    "name": "Pelipper",
+    "nature": "Serious",
+    "species": "Pelipper"
+   },
+   {
+    "ability": "Poison Point",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Liquidation",
+     "Gunk Shot",
+     "Rest"
+    ],
+    "name": "Overqwil",
+    "nature": "Serious",
+    "species": "Overqwil"
+   },
+   {
+    "ability": "Inner Focus",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Dragoninite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hurricane",
+     "Rest"
+    ],
+    "name": "Dragonite",
+    "nature": "Serious",
+    "species": "Dragonite"
+   },
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Nuzzle",
+     "Encore",
+     "Rest"
+    ],
+    "name": "Raichu",
+    "nature": "Serious",
+    "species": "Raichu"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Parting Shot",
+     "Protect",
+     "Flare Blitz"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Staraptite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Protect",
+     "Close Combat",
+     "Rest"
+    ],
+    "name": "Staraptor",
+    "nature": "Serious",
+    "species": "Staraptor"
+   },
+   {
+    "ability": "Stance Change",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Poltergeist",
+     "King's Shield",
+     "Rest"
+    ],
+    "name": "Aegislash",
+    "nature": "Serious",
+    "species": "Aegislash"
+   },
+   {
+    "ability": "Overgrow",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Leaf Storm",
+     "Rest"
+    ],
+    "name": "Serperior",
+    "nature": "Serious",
+    "species": "Serperior"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "innerfocus",
+       "boosts": {},
+       "canMega": true,
+       "hp": 198,
+       "item": "dragoninite",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "hurricane": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Dragonite",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "poisonpoint",
+       "hp": 192,
+       "item": "lifeorb",
+       "maxhp": 192,
+       "name": "Overqwil",
+       "pp": {
+        "gunkshot": 8,
+        "liquidation": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Overqwil",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {
+        "atk": -2
+       },
+       "hp": 167,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "protect": 7,
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "static",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "encore": 8,
+        "nuzzle": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Raichu",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stancechange",
+       "hp": 167,
+       "item": "lifeorb",
+       "maxhp": 167,
+       "name": "Aegislash",
+       "pp": {
+        "kingsshield": 8,
+        "poltergeist": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Aegislash",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "overgrow",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Serperior",
+       "pp": {
+        "leafstorm": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Serperior",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "boosts": {},
+       "hp": 192,
+       "item": "staraptite",
+       "lastMove": "tailwind",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "closecombat": 8,
+        "protect": 8,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Staraptor-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move protect, switch 3",
+   "move fakeout 1, move tailwind mega"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "innerfocus",
+      "canMega": true,
+      "hp": 198,
+      "item": "dragoninite",
+      "maxhp": 198,
+      "name": "Dragonite",
+      "pp": {
+       "hurricane": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Dragonite",
+      "status": ""
+     },
+     {
+      "ability": "poisonpoint",
+      "boosts": {
+       "atk": -2
+      },
+      "hp": 192,
+      "item": "lifeorb",
+      "maxhp": 192,
+      "name": "Overqwil",
+      "pp": {
+       "gunkshot": 8,
+       "liquidation": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Overqwil",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {
+       "atk": -2
+      },
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Pelipper",
+      "pp": {
+       "hurricane": 12,
+       "protect": 8,
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": 0,
+      "species": "Pelipper",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "static",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Raichu",
+      "pp": {
+       "encore": 8,
+       "nuzzle": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Raichu",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stancechange",
+      "hp": 167,
+      "item": "lifeorb",
+      "maxhp": 167,
+      "name": "Aegislash",
+      "pp": {
+       "kingsshield": 8,
+       "poltergeist": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Aegislash",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "flareblitz": 16,
+       "partingshot": 20,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "overgrow",
+      "hp": 182,
+      "item": "",
+      "maxhp": 182,
+      "name": "Serperior",
+      "pp": {
+       "leafstorm": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Serperior",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "canMega": true,
+      "hp": 192,
+      "item": "staraptite",
+      "maxhp": 192,
+      "name": "Staraptor",
+      "pp": {
+       "closecombat": 8,
+       "protect": 8,
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": 1,
+      "species": "Staraptor",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move tailwind, move hurricane 2 mega",
+  "p2": "move partingshot 2, move protect"
+ }
+}

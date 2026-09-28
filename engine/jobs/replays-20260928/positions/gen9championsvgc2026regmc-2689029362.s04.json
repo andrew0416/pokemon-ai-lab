@@ -1,0 +1,1096 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689029362 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029362), decision 4 = turn 3 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Weather Ball",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 2,
+     "spa": 32,
+     "spd": 0,
+     "spe": 32
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Electro Shot",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Iron Head",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Flame Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Bug Buzz",
+     "Rest"
+    ],
+    "name": "Mothra",
+    "nature": "Serious",
+    "species": "Volcarona"
+   },
+   {
+    "ability": "Cute Charm",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hyper Voice",
+     "Hyper Beam",
+     "Rest"
+    ],
+    "name": "Lacey",
+    "nature": "Serious",
+    "species": "Sylveon"
+   },
+   {
+    "ability": "Swift Swim",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Muddy Water",
+     "Shadow Ball",
+     "Rest"
+    ],
+    "name": "Old Chum",
+    "nature": "Serious",
+    "species": "Basculegion-F"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Salamencite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Double-Edge",
+     "Rest"
+    ],
+    "name": "Blue Eyes",
+    "nature": "Serious",
+    "species": "Salamence"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": "fnt"
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 115,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 202,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Blue Eyes",
+       "pp": {
+        "doubleedge": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "hypervoice",
+       "maxhp": 202,
+       "name": "Lacey",
+       "pp": {
+        "hyperbeam": 8,
+        "hypervoice": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sylveon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 192,
+       "name": "Mothra",
+       "pp": {
+        "bugbuzz": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": "fnt"
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Old Chum",
+       "pp": {
+        "muddywater": 12,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Basculegion-F",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 115,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 202,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Blue Eyes",
+       "pp": {
+        "doubleedge": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "hypervoice",
+       "maxhp": 202,
+       "name": "Lacey",
+       "pp": {
+        "hyperbeam": 8,
+        "hypervoice": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sylveon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 192,
+       "name": "Mothra",
+       "pp": {
+        "bugbuzz": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Old Chum",
+       "pp": {
+        "muddywater": 12,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": 0,
+       "species": "Basculegion-F",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": "fnt"
+      },
+      {
+       "ability": "cudchew",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 115,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 202,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Blue Eyes",
+       "pp": {
+        "doubleedge": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "hyperbeam",
+       "maxhp": 202,
+       "name": "Lacey",
+       "pp": {
+        "hyperbeam": 7,
+        "hypervoice": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sylveon",
+       "status": "",
+       "volatiles": {
+        "mustrecharge": {
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 192,
+       "name": "Mothra",
+       "pp": {
+        "bugbuzz": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 227,
+       "item": "",
+       "lastMove": "muddywater",
+       "maxhp": 227,
+       "name": "Old Chum",
+       "pp": {
+        "muddywater": 11,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": 0,
+       "species": "Basculegion-F",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 115,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 202,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Blue Eyes",
+       "pp": {
+        "doubleedge": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "hyperbeam",
+       "maxhp": 202,
+       "name": "Lacey",
+       "pp": {
+        "hyperbeam": 7,
+        "hypervoice": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sylveon",
+       "status": "",
+       "volatiles": {
+        "mustrecharge": {
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 192,
+       "name": "Mothra",
+       "pp": {
+        "bugbuzz": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 227,
+       "item": "",
+       "lastMove": "muddywater",
+       "maxhp": 227,
+       "name": "Old Chum",
+       "pp": {
+        "muddywater": 11,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": 0,
+       "species": "Basculegion-F",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move rest, move weatherball 1",
+   "move bugbuzz 1, move hypervoice"
+  ],
+  [
+   "switch 3",
+   "switch 3"
+  ],
+  [
+   "move electroshot 1, move protect",
+   "move muddywater, move hyperbeam 1"
+  ],
+  [
+   "switch 4",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Archaludon",
+      "pp": {
+       "electroshot": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "cudchew",
+      "boosts": {},
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Farigiraf",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "ironhead": 16,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {},
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": 1,
+      "species": "Politoed",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "intimidate",
+      "canMega": true,
+      "hp": 202,
+      "item": "salamencite",
+      "maxhp": 202,
+      "name": "Blue Eyes",
+      "pp": {
+       "doubleedge": 16,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Salamence",
+      "status": ""
+     },
+     {
+      "ability": "cutecharm",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Lacey",
+      "pp": {
+       "hyperbeam": 8,
+       "hypervoice": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Sylveon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "flamebody",
+      "boosts": {},
+      "hp": 192,
+      "item": "lifeorb",
+      "maxhp": 192,
+      "name": "Mothra",
+      "pp": {
+       "bugbuzz": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Volcarona",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "swiftswim",
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Old Chum",
+      "pp": {
+       "muddywater": 12,
+       "rest": 8,
+       "shadowball": 16
+      },
+      "slot": null,
+      "species": "Basculegion-F",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move ironhead 2 mega, move weatherball 2",
+  "p2": "move muddywater, move recharge"
+ }
+}
