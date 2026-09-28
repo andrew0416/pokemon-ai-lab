@@ -41,3 +41,12 @@ fn gulp_missile_ignores_a_future_move_user_on_the_bench() {
 fn cotton_down_skips_a_future_move_user_on_the_bench() {
     assert_exact_parity("ab-future-sight-absent-user-cotton-down");
 }
+
+/// Board R5-t1: Clefable, hit by Future Sight from the bench at the end of turn 3, uses Metal
+/// Burst on turn 4: Showdown splices the `attackedBy` entry of an inactive source at `endTurn`
+/// (its `slot`, the benched user's `getSlot()`, is never read), the engine clears
+/// `lastDamagedBy` at `endTurn`: the move fails either way.
+#[test]
+fn metal_burst_after_a_future_move_from_the_bench_fails() {
+    assert_exact_parity("ab-future-sight-absent-user-metal-burst");
+}
