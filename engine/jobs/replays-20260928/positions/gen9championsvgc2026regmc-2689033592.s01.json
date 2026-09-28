@@ -1,0 +1,623 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689033592 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689033592), decision 1 = turn 2 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 0,
+     "def": 2,
+     "hp": 32,
+     "spa": 0,
+     "spd": 32,
+     "spe": 0
+    },
+    "gender": "M",
+    "item": "Staraptite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Blaze Kick",
+     "Rest"
+    ],
+    "name": "Staraptor",
+    "nature": "Careful",
+    "species": "Staraptor"
+   },
+   {
+    "ability": "Competitive",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Scald",
+     "Rest"
+    ],
+    "name": "Milotic",
+    "nature": "Serious",
+    "species": "Milotic"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Charm",
+     "Rest"
+    ],
+    "name": "Whimsicott",
+    "nature": "Serious",
+    "species": "Whimsicott"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Psychic",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Drill Run",
+     "Leech Life",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Reflect",
+     "Spirit Break",
+     "Parting Shot",
+     "Rest"
+    ],
+    "name": "Grimmsnarl",
+    "nature": "Serious",
+    "species": "Grimmsnarl"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Pulse",
+     "Electro Shot",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "competitive",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": -1,
+        "spd": -1
+       },
+       "hp": 187,
+       "item": "focussash",
+       "lastMove": "closecombat",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "def": 1,
+        "spd": 1
+       },
+       "hp": 192,
+       "item": "staraptite",
+       "lastMove": "closecombat",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "blazekick": 12,
+        "closecombat": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Staraptor-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "charm": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "electroshot": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 25,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "trickroom",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "psychic": 12,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 182,
+       "item": "golisopite",
+       "lastMove": "protect",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "leechlife": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "partingshot": 20,
+        "reflect": 20,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move closecombat 1, move closecombat 1 mega",
+   "move trickroom, move protect mega"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "competitive",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Milotic",
+      "pp": {
+       "rest": 8,
+       "scald": 16
+      },
+      "slot": null,
+      "species": "Milotic",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "boosts": {},
+      "hp": 187,
+      "item": "focussash",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Sneasler",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "canMega": true,
+      "hp": 192,
+      "item": "staraptite",
+      "maxhp": 192,
+      "name": "Staraptor",
+      "pp": {
+       "blazekick": 12,
+       "closecombat": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Staraptor",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Whimsicott",
+      "pp": {
+       "charm": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Whimsicott",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "dragonpulse": 12,
+       "electroshot": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "cudchew",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 227,
+      "item": "sitrusberry",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "psychic": 12,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": 0,
+      "species": "Farigiraf",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "drillrun": 12,
+       "leechlife": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Golisopod",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Grimmsnarl",
+      "pp": {
+       "partingshot": 20,
+       "reflect": 20,
+       "rest": 8,
+       "spiritbreak": 16
+      },
+      "slot": null,
+      "species": "Grimmsnarl",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move protect, move blazekick 2",
+  "p2": "move psychic 1, move drillrun 1"
+ }
+}

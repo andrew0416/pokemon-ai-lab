@@ -1,0 +1,603 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689032684 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689032684), decision 1 = turn 2 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Torrent",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Earthquake",
+     "Protect",
+     "Rest"
+    ],
+    "name": "moist",
+    "nature": "Serious",
+    "species": "Swampert"
+   },
+   {
+    "ability": "Keen Eye",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Meowsticite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Nasty Plot",
+     "Psychic",
+     "Rest"
+    ],
+    "name": "baby ♥",
+    "nature": "Serious",
+    "species": "Meowstic-F"
+   },
+   {
+    "ability": "Keen Eye",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "angy",
+    "nature": "Serious",
+    "species": "Toucannon"
+   },
+   {
+    "ability": "Corrosion",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 2,
+     "spd": 0,
+     "spe": 32
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Rest"
+    ],
+    "name": "sassy ♥",
+    "nature": "Serious",
+    "species": "Salazzle"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Good as Gold",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Shadow Ball",
+     "Rest"
+    ],
+    "name": "Gholdengo",
+    "nature": "Serious",
+    "species": "Gholdengo"
+   },
+   {
+    "ability": "Sand Rush",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rock Slide",
+     "Rest"
+    ],
+    "name": "Excadrill",
+    "nature": "Serious",
+    "species": "Excadrill"
+   },
+   {
+    "ability": "Hospitality",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Matcha Gotcha",
+     "Protect",
+     "Shadow Ball",
+     "Rest"
+    ],
+    "name": "Sinistcha",
+    "nature": "Serious",
+    "species": "Sinistcha"
+   },
+   {
+    "ability": "Marvel Scale",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Scald",
+     "Rest"
+    ],
+    "name": "Milotic",
+    "nature": "Serious",
+    "species": "Milotic"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "keeneye",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "angy",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Toucannon",
+       "status": ""
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "canMega": true,
+       "hp": 181,
+       "item": "meowsticite",
+       "lastMove": "protect",
+       "maxhp": 181,
+       "name": "baby ♥",
+       "pp": {
+        "nastyplot": 20,
+        "protect": 7,
+        "psychic": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Meowstic-F",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "earthquake",
+       "maxhp": 207,
+       "name": "moist",
+       "pp": {
+        "earthquake": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Swampert",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "corrosion",
+       "hp": 175,
+       "item": "",
+       "maxhp": 175,
+       "name": "sassy ♥",
+       "pp": {
+        "heatwave": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salazzle",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "boosts": {},
+       "hp": 217,
+       "item": "focussash",
+       "lastMove": "protect",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Excadrill",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {},
+       "hp": 66,
+       "item": "",
+       "lastMove": "shadowball",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "rest": 8,
+        "shadowball": 15
+       },
+       "slot": 0,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "hospitality",
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "protect": 8,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move earthquake, move protect",
+   "move shadowball 2, move protect"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "keeneye",
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "angy",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Toucannon",
+      "status": ""
+     },
+     {
+      "ability": "keeneye",
+      "boosts": {},
+      "canMega": true,
+      "hp": 181,
+      "item": "meowsticite",
+      "maxhp": 181,
+      "name": "baby ♥",
+      "pp": {
+       "nastyplot": 20,
+       "protect": 8,
+       "psychic": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Meowstic-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "torrent",
+      "boosts": {},
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "moist",
+      "pp": {
+       "earthquake": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Swampert",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "corrosion",
+      "hp": 175,
+      "item": "",
+      "maxhp": 175,
+      "name": "sassy ♥",
+      "pp": {
+       "heatwave": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Salazzle",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "sandrush",
+      "boosts": {},
+      "hp": 217,
+      "item": "focussash",
+      "maxhp": 217,
+      "name": "Excadrill",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": 1,
+      "species": "Excadrill",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "goodasgold",
+      "boosts": {},
+      "hp": 194,
+      "item": "",
+      "maxhp": 194,
+      "name": "Gholdengo",
+      "pp": {
+       "rest": 8,
+       "shadowball": 16
+      },
+      "slot": 0,
+      "species": "Gholdengo",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "marvelscale",
+      "hp": 202,
+      "item": "sitrusberry",
+      "maxhp": 202,
+      "name": "Milotic",
+      "pp": {
+       "rest": 8,
+       "scald": 16
+      },
+      "slot": null,
+      "species": "Milotic",
+      "status": ""
+     },
+     {
+      "ability": "hospitality",
+      "hp": 178,
+      "item": "",
+      "maxhp": 178,
+      "name": "Sinistcha",
+      "pp": {
+       "matchagotcha": 16,
+       "protect": 8,
+       "rest": 8,
+       "shadowball": 16
+      },
+      "slot": null,
+      "species": "Sinistcha",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move earthquake, switch 3",
+  "p2": "move shadowball 2, move rockslide"
+ }
+}

@@ -1,0 +1,957 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689026869 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689026869), decision 3 = turn 3 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "midTurn": {
+  "p1": [
+   "switch 3"
+  ],
+  "p2": []
+ },
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Psychic",
+     "Grass Knot",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 0,
+     "def": 17,
+     "hp": 32,
+     "spa": 0,
+     "spd": 17,
+     "spe": 0
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Leech Life",
+     "Drill Run",
+     "Iron Head",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Ice Beam",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Helping Hand",
+     "Follow Me",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Psychic Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Salamencite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Salamence",
+    "nature": "Serious",
+    "species": "Salamence"
+   },
+   {
+    "ability": "Swift Swim",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Last Respects",
+     "Rest"
+    ],
+    "name": "Basculegion",
+    "nature": "Serious",
+    "species": "Basculegion"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 78,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "trickroom",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 12,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 182,
+       "item": "",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "lastrespects": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 7,
+       "item": "",
+       "lastMove": "helpinghand",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 202,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": -1
+       },
+       "hp": 187,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "closecombat",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 134,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 182,
+       "item": "",
+       "lastMove": "drillrun",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "ironhead": 16,
+        "leechlife": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "lastrespects": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "helpinghand": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": "fnt"
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 202,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 134,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 182,
+       "item": "",
+       "lastMove": "drillrun",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "ironhead": 16,
+        "leechlife": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "lastrespects": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "helpinghand": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "canMega": true,
+       "hp": 202,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move trickroom, move leechlife 1",
+   "move helpinghand -2, move closecombat 1"
+  ],
+  [
+   "move psychic 2, move drillrun 1",
+   "move followme, move closecombat -1"
+  ],
+  [
+   "",
+   "switch 3, switch 4"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "blaze",
+      "hp": 185,
+      "item": "",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Charizard",
+      "status": ""
+     },
+     {
+      "ability": "cudchew",
+      "boosts": {},
+      "hp": 227,
+      "item": "sitrusberry",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "grassknot": 20,
+       "psychic": 12,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": 0,
+      "species": "Farigiraf",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "boosts": {},
+      "hp": 182,
+      "item": "",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "drillrun": 12,
+       "ironhead": 16,
+       "leechlife": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Golisopod",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "icebeam": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Politoed",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "swiftswim",
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Basculegion",
+      "pp": {
+       "lastrespects": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Basculegion",
+      "status": ""
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "helpinghand": 20,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "canMega": true,
+      "hp": 202,
+      "item": "salamencite",
+      "maxhp": 202,
+      "name": "Salamence",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Salamence",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "boosts": {
+       "spd": 1
+      },
+      "hp": 187,
+      "item": "",
+      "lastItem": "psychicseed",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Sneasler",
+      "status": "",
+      "volatiles": {
+       "unburden": {}
+      }
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move grassknot 2, move ironhead 1",
+  "p2": "move rest mega, move lastrespects 2"
+ }
+}

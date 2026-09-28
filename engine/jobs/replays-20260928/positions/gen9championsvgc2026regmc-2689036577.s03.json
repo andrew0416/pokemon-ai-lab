@@ -1,0 +1,965 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689036577 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689036577), decision 3 = turn 3 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Trace",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Gardevoirite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hyper Voice",
+     "Calm Mind",
+     "Protect",
+     "Expanding Force"
+    ],
+    "name": "Gardevoir",
+    "nature": "Serious",
+    "species": "Gardevoir"
+   },
+   {
+    "ability": "Flash Fire",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Swords Dance",
+     "Rest"
+    ],
+    "name": "Ceruledge",
+    "nature": "Serious",
+    "species": "Ceruledge"
+   },
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Colbur Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Mystical Fire",
+     "Follow Me",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Psychic Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Psychic",
+     "Grass Knot",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Drill Run",
+     "Iron Head",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Snarl",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "boosts": {
+        "atk": 2
+       },
+       "hp": 182,
+       "item": "focussash",
+       "lastMove": "swordsdance",
+       "maxhp": 182,
+       "name": "Ceruledge",
+       "pp": {
+        "rest": 8,
+        "swordsdance": 19
+       },
+       "slot": 1,
+       "species": "Ceruledge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 175,
+       "item": "gardevoirite",
+       "lastMove": "hypervoice",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "calmmind": 20,
+        "expandingforce": 12,
+        "hypervoice": 11,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 177,
+       "item": "colburberry",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "mysticalfire": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 168,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "trickroom",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 12,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 182,
+       "item": "golisopite",
+       "lastMove": "protect",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 182,
+       "name": "Ceruledge",
+       "pp": {
+        "rest": 8,
+        "swordsdance": 19
+       },
+       "slot": null,
+       "species": "Ceruledge",
+       "status": "fnt"
+      },
+      {
+       "ability": "pixilate",
+       "boosts": {
+        "spa": 1,
+        "spd": 1
+       },
+       "hp": 175,
+       "item": "gardevoirite",
+       "lastMove": "calmmind",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "calmmind": 19,
+        "expandingforce": 12,
+        "hypervoice": 11,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 177,
+       "item": "colburberry",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "mysticalfire": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 224,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 182,
+       "item": "golisopite",
+       "lastMove": "drillrun",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "ironhead": 16,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 5,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 182,
+       "name": "Ceruledge",
+       "pp": {
+        "rest": 8,
+        "swordsdance": 19
+       },
+       "slot": null,
+       "species": "Ceruledge",
+       "status": ""
+      },
+      {
+       "ability": "pixilate",
+       "boosts": {
+        "spa": 1,
+        "spd": 1
+       },
+       "hp": 175,
+       "item": "gardevoirite",
+       "lastMove": "calmmind",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "calmmind": 19,
+        "expandingforce": 12,
+        "hypervoice": 11,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 177,
+       "item": "colburberry",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "mysticalfire": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 224,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 182,
+       "item": "golisopite",
+       "lastMove": "drillrun",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "ironhead": 16,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move hypervoice mega, move swordsdance",
+   "move trickroom, move protect mega"
+  ],
+  [
+   "move calmmind, move swordsdance",
+   "move psychic 2, move drillrun 2"
+  ],
+  [
+   "switch 3",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flashfire",
+      "boosts": {},
+      "hp": 182,
+      "item": "focussash",
+      "maxhp": 182,
+      "name": "Ceruledge",
+      "pp": {
+       "rest": 8,
+       "swordsdance": 20
+      },
+      "slot": 1,
+      "species": "Ceruledge",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cudchew",
+      "boosts": {},
+      "canMega": true,
+      "hp": 175,
+      "item": "gardevoirite",
+      "maxhp": 175,
+      "name": "Gardevoir",
+      "pp": {
+       "calmmind": 20,
+       "expandingforce": 12,
+       "hypervoice": 12,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Gardevoir",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "hp": 177,
+      "item": "colburberry",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "mysticalfire": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Indeedee-F",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "hp": 187,
+      "item": "psychicseed",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "snarl": 16
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "cudchew",
+      "boosts": {},
+      "hp": 227,
+      "item": "sitrusberry",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "grassknot": 20,
+       "psychic": 12,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": 0,
+      "species": "Farigiraf",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "boosts": {},
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "drillrun": 12,
+       "ironhead": 16,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Golisopod",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Politoed",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move protect, move mysticalfire 2",
+  "p2": "move grassknot 1, move ironhead 1"
+ }
+}

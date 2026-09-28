@@ -1,0 +1,943 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689045027 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689045027), decision 3 = turn 3 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Sand Stream",
+    "evs": {
+     "atk": 2,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 32
+    },
+    "gender": "F",
+    "item": "Tyranitarite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rock Slide",
+     "Knock Off",
+     "Rest"
+    ],
+    "name": "Tyranitar",
+    "nature": "Serious",
+    "species": "Tyranitar"
+   },
+   {
+    "ability": "Sand Rush",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "High Horsepower",
+     "Rest"
+    ],
+    "name": "Excadrill",
+    "nature": "Serious",
+    "species": "Excadrill"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Grassy Glide",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Salamence",
+    "nature": "Serious",
+    "species": "Salamence"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Raichunite X",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Raichu",
+    "nature": "Serious",
+    "species": "Raichu"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Icy Wind",
+     "Weather Ball",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Opportunist",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Espathra",
+    "nature": "Serious",
+    "species": "Espathra"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Electro Shot",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "boosts": {},
+       "hp": 217,
+       "item": "focussash",
+       "lastMove": "protect",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "highhorsepower": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Excadrill",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "canMega": true,
+       "hp": 207,
+       "item": "tyranitarite",
+       "lastMove": "protect",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "knockoff": 20,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Tyranitar",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "opportunist",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Espathra",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Espathra",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 197,
+       "item": "sitrusberry",
+       "lastMove": "icywind",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icywind": 15,
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "static",
+       "boosts": {},
+       "canMega": true,
+       "hp": 167,
+       "item": "raichunitex",
+       "lastMove": "fakeout",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "fakeout": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Raichu",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "boosts": {},
+       "hp": 217,
+       "item": "focussash",
+       "lastMove": "highhorsepower",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "highhorsepower": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Excadrill",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 207,
+       "item": "tyranitarite",
+       "lastMove": "rockslide",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "knockoff": 20,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": 0,
+       "species": "Tyranitar-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 187,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "opportunist",
+       "hp": 0,
+       "item": "",
+       "maxhp": 202,
+       "name": "Espathra",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Espathra",
+       "status": "fnt"
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "sitrusberry",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icywind": 15,
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      },
+      {
+       "ability": "static",
+       "canMega": true,
+       "hp": 167,
+       "item": "raichunitex",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "fakeout": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Raichu",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 5
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "boosts": {},
+       "hp": 217,
+       "item": "focussash",
+       "lastMove": "highhorsepower",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "highhorsepower": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Excadrill",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 207,
+       "item": "tyranitarite",
+       "lastMove": "rockslide",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "knockoff": 20,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": 0,
+       "species": "Tyranitar-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 187,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "opportunist",
+       "hp": 0,
+       "item": "",
+       "maxhp": 202,
+       "name": "Espathra",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Espathra",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 197,
+       "item": "sitrusberry",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icywind": 15,
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "static",
+       "canMega": true,
+       "hp": 167,
+       "item": "raichunitex",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "fakeout": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Raichu",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move protect, move protect",
+   "move fakeout 2, move icywind"
+  ],
+  [
+   "move rockslide mega, move highhorsepower 1",
+   "switch 3, switch 4"
+  ],
+  [
+   "",
+   "switch 4"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "sandrush",
+      "boosts": {},
+      "hp": 217,
+      "item": "focussash",
+      "maxhp": 217,
+      "name": "Excadrill",
+      "pp": {
+       "highhorsepower": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Excadrill",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "grassyglide": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Salamence",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Salamence",
+      "status": ""
+     },
+     {
+      "ability": "sandstream",
+      "boosts": {},
+      "canMega": true,
+      "hp": 207,
+      "item": "tyranitarite",
+      "maxhp": 207,
+      "name": "Tyranitar",
+      "pp": {
+       "knockoff": 20,
+       "protect": 8,
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": 0,
+      "species": "Tyranitar",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "electroshot": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "opportunist",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Espathra",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Espathra",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {},
+      "hp": 197,
+      "item": "sitrusberry",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "icywind": 16,
+       "protect": 8,
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": 1,
+      "species": "Politoed",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "static",
+      "boosts": {},
+      "canMega": true,
+      "hp": 167,
+      "item": "raichunitex",
+      "maxhp": 167,
+      "name": "Raichu",
+      "pp": {
+       "fakeout": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Raichu",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move knockoff 2, move highhorsepower 2",
+  "p2": "move weatherball 2, move electroshot 1"
+ }
+}

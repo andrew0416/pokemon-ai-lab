@@ -1,0 +1,609 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689027955 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689027955), decision 1 = turn 2 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Pressure",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Absolite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Night Slash",
+     "Shadow Claw",
+     "X-Scissor",
+     "Rest"
+    ],
+    "name": "Absol",
+    "nature": "Serious",
+    "species": "Absol"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Encore",
+     "Helping Hand",
+     "Moonblast"
+    ],
+    "name": "Whimsicott",
+    "nature": "Serious",
+    "species": "Whimsicott"
+   },
+   {
+    "ability": "Torrent",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Inteleon",
+    "nature": "Serious",
+    "species": "Inteleon"
+   },
+   {
+    "ability": "Volt Absorb",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Pawmot",
+    "nature": "Serious",
+    "species": "Pawmot"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Toxic Debris",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Sludge Bomb",
+     "Spiky Shield",
+     "Rest"
+    ],
+    "name": "Glimmora",
+    "nature": "Serious",
+    "species": "Glimmora"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Staraptite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Rest"
+    ],
+    "name": "Staraptor",
+    "nature": "Serious",
+    "species": "Staraptor"
+   },
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Tailwind",
+     "Rest"
+    ],
+    "name": "Whimsicott",
+    "nature": "Serious",
+    "species": "Whimsicott"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      },
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "sharpness",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 172,
+       "item": "absolitez",
+       "lastMove": "nightslash",
+       "maxhp": 172,
+       "name": "Absol",
+       "pp": {
+        "nightslash": 19,
+        "rest": 8,
+        "shadowclaw": 16,
+        "xscissor": 16
+       },
+       "slot": 0,
+       "species": "Absol-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Inteleon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": ""
+      },
+      {
+       "ability": "voltabsorb",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "tailwind",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "helpinghand": 20,
+        "moonblast": 16,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "toxicdebris",
+       "boosts": {},
+       "hp": 102,
+       "item": "",
+       "lastMove": "sludgebomb",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "rest": 8,
+        "sludgebomb": 11,
+        "spikyshield": 8
+       },
+       "slot": 0,
+       "species": "Glimmora",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "boosts": {},
+       "hp": 192,
+       "item": "staraptite",
+       "lastMove": "closecombat",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "closecombat": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Staraptor-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move nightslash 1 mega, move tailwind",
+   "move sludgebomb 2, move closecombat 1 mega"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "pressure",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 172,
+      "item": "absolitez",
+      "maxhp": 172,
+      "name": "Absol",
+      "pp": {
+       "nightslash": 20,
+       "rest": 8,
+       "shadowclaw": 16,
+       "xscissor": 16
+      },
+      "slot": 0,
+      "species": "Absol",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "torrent",
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Inteleon",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Inteleon",
+      "status": ""
+     },
+     {
+      "ability": "voltabsorb",
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Pawmot",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Pawmot",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 167,
+      "item": "focussash",
+      "maxhp": 167,
+      "name": "Whimsicott",
+      "pp": {
+       "encore": 8,
+       "helpinghand": 20,
+       "moonblast": 16,
+       "tailwind": 16
+      },
+      "slot": 1,
+      "species": "Whimsicott",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "blaze",
+      "hp": 185,
+      "item": "",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "heatwave": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Charizard",
+      "status": ""
+     },
+     {
+      "ability": "toxicdebris",
+      "boosts": {},
+      "hp": 190,
+      "item": "",
+      "maxhp": 190,
+      "name": "Glimmora",
+      "pp": {
+       "rest": 8,
+       "sludgebomb": 12,
+       "spikyshield": 8
+      },
+      "slot": 0,
+      "species": "Glimmora",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "canMega": true,
+      "hp": 192,
+      "item": "staraptite",
+      "maxhp": 192,
+      "name": "Staraptor",
+      "pp": {
+       "closecombat": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Staraptor",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Whimsicott",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": null,
+      "species": "Whimsicott",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move nightslash 1, move encore 2",
+  "p2": "move spikyshield, move closecombat 1"
+ }
+}

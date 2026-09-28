@@ -1,0 +1,1627 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689046372 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689046372), decision 7 = turn 5 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Charizardite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hurricane",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Muddy Water",
+     "Ice Beam",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Pulse",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Drill Run",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Pickpocket",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Knock Off",
+     "Rest"
+    ],
+    "name": "Weavile",
+    "nature": "Serious",
+    "species": "Weavile"
+   },
+   {
+    "ability": "Infiltrator",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Super Fang",
+     "Rest"
+    ],
+    "name": "Noivern",
+    "nature": "Serious",
+    "species": "Noivern"
+   },
+   {
+    "ability": "Swift Swim",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 2,
+     "spa": 0,
+     "spd": 0,
+     "spe": 32
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Last Respects",
+     "Wave Crash",
+     "Rest"
+    ],
+    "name": "Basculegion",
+    "nature": "Serious",
+    "species": "Basculegion"
+   },
+   {
+    "ability": "Steadfast",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Lucarionite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Aura Sphere",
+     "Flash Cannon",
+     "Rest"
+    ],
+    "name": "Lucario",
+    "nature": "Serious",
+    "species": "Lucario"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 143,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "lastMove": "muddywater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "muddywater": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Basculegion",
+       "pp": {
+        "lastrespects": 12,
+        "rest": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "steadfast",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "aurasphere": 20,
+        "flashcannon": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "infiltrator",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 170,
+       "item": "",
+       "lastMove": "tailwind",
+       "maxhp": 192,
+       "name": "Noivern",
+       "pp": {
+        "rest": 8,
+        "superfang": 12,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Noivern",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "pickpocket",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 117,
+       "item": "lifeorb",
+       "lastMove": "fakeout",
+       "maxhp": 177,
+       "name": "Weavile",
+       "pp": {
+        "fakeout": 11,
+        "knockoff": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Weavile",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 143,
+       "item": "charizarditey",
+       "lastMove": "hurricane",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 99,
+       "item": "",
+       "lastMove": "icebeam",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "muddywater": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Basculegion",
+       "pp": {
+        "lastrespects": 12,
+        "rest": 8,
+        "wavecrash": 12
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "steadfast",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "aurasphere": 20,
+        "flashcannon": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "infiltrator",
+       "hp": 0,
+       "item": "",
+       "maxhp": 192,
+       "name": "Noivern",
+       "pp": {
+        "rest": 8,
+        "superfang": 11,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Noivern",
+       "status": "fnt"
+      },
+      {
+       "ability": "pickpocket",
+       "hp": 117,
+       "item": "lifeorb",
+       "maxhp": 177,
+       "name": "Weavile",
+       "pp": {
+        "fakeout": 11,
+        "knockoff": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Weavile",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 143,
+       "item": "charizarditey",
+       "lastMove": "hurricane",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 99,
+       "item": "",
+       "lastMove": "icebeam",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "muddywater": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Basculegion",
+       "pp": {
+        "lastrespects": 12,
+        "rest": 8,
+        "wavecrash": 12
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "steadfast",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "aurasphere": 20,
+        "flashcannon": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "infiltrator",
+       "hp": 0,
+       "item": "",
+       "maxhp": 192,
+       "name": "Noivern",
+       "pp": {
+        "rest": 8,
+        "superfang": 11,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Noivern",
+       "status": ""
+      },
+      {
+       "ability": "pickpocket",
+       "boosts": {},
+       "hp": 117,
+       "item": "lifeorb",
+       "maxhp": 177,
+       "name": "Weavile",
+       "pp": {
+        "fakeout": 11,
+        "knockoff": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Weavile",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 91,
+       "item": "charizarditey",
+       "lastMove": "hurricane",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "muddywater": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "lastMove": "lastrespects",
+       "maxhp": 197,
+       "name": "Basculegion",
+       "pp": {
+        "lastrespects": 11,
+        "rest": 8,
+        "wavecrash": 12
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "steadfast",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "aurasphere": 20,
+        "flashcannon": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "infiltrator",
+       "hp": 0,
+       "item": "",
+       "maxhp": 192,
+       "name": "Noivern",
+       "pp": {
+        "rest": 8,
+        "superfang": 11,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Noivern",
+       "status": ""
+      },
+      {
+       "ability": "pickpocket",
+       "boosts": {},
+       "hp": 100,
+       "item": "lifeorb",
+       "lastMove": "fakeout",
+       "maxhp": 177,
+       "name": "Weavile",
+       "pp": {
+        "fakeout": 10,
+        "knockoff": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Weavile",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 91,
+       "item": "charizarditey",
+       "lastMove": "hurricane",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "muddywater": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "lastMove": "lastrespects",
+       "maxhp": 197,
+       "name": "Basculegion",
+       "pp": {
+        "lastrespects": 11,
+        "rest": 8,
+        "wavecrash": 12
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "steadfast",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "aurasphere": 20,
+        "flashcannon": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "infiltrator",
+       "hp": 0,
+       "item": "",
+       "maxhp": 192,
+       "name": "Noivern",
+       "pp": {
+        "rest": 8,
+        "superfang": 11,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Noivern",
+       "status": ""
+      },
+      {
+       "ability": "pickpocket",
+       "boosts": {},
+       "hp": 100,
+       "item": "lifeorb",
+       "lastMove": "fakeout",
+       "maxhp": 177,
+       "name": "Weavile",
+       "pp": {
+        "fakeout": 10,
+        "knockoff": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Weavile",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 106,
+       "item": "",
+       "lastMove": "dragonpulse",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": "fnt"
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "muddywater": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 61,
+       "item": "",
+       "lastMove": "wavecrash",
+       "maxhp": 197,
+       "name": "Basculegion",
+       "pp": {
+        "lastrespects": 11,
+        "rest": 8,
+        "wavecrash": 11
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "steadfast",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "aurasphere": 20,
+        "flashcannon": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "infiltrator",
+       "hp": 0,
+       "item": "",
+       "maxhp": 192,
+       "name": "Noivern",
+       "pp": {
+        "rest": 8,
+        "superfang": 11,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Noivern",
+       "status": ""
+      },
+      {
+       "ability": "pickpocket",
+       "boosts": {},
+       "hp": 83,
+       "item": "lifeorb",
+       "lastMove": "knockoff",
+       "maxhp": 177,
+       "name": "Weavile",
+       "pp": {
+        "fakeout": 10,
+        "knockoff": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Weavile",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 106,
+       "item": "",
+       "lastMove": "dragonpulse",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "muddywater": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 61,
+       "item": "",
+       "lastMove": "wavecrash",
+       "maxhp": 197,
+       "name": "Basculegion",
+       "pp": {
+        "lastrespects": 11,
+        "rest": 8,
+        "wavecrash": 11
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "steadfast",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "aurasphere": 20,
+        "flashcannon": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "infiltrator",
+       "hp": 0,
+       "item": "",
+       "maxhp": 192,
+       "name": "Noivern",
+       "pp": {
+        "rest": 8,
+        "superfang": 11,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Noivern",
+       "status": ""
+      },
+      {
+       "ability": "pickpocket",
+       "boosts": {},
+       "hp": 83,
+       "item": "lifeorb",
+       "lastMove": "knockoff",
+       "maxhp": 177,
+       "name": "Weavile",
+       "pp": {
+        "fakeout": 10,
+        "knockoff": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Weavile",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move hurricane -2 mega, move muddywater",
+   "move fakeout 1, move tailwind"
+  ],
+  [
+   "move hurricane 1, move icebeam 2",
+   "switch 3, move superfang 2"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move hurricane -2, move muddywater",
+   "move lastrespects 2, move fakeout 1"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move hurricane -2, move dragonpulse 1",
+   "move wavecrash 1, move knockoff 2"
+  ],
+  [
+   "switch 4",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "dragonpulse": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "blaze",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "charizarditey",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "hurricane": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "hp": 182,
+      "item": "",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "drillrun": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {},
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "icebeam": 12,
+       "muddywater": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Politoed",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "swiftswim",
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Basculegion",
+      "pp": {
+       "lastrespects": 12,
+       "rest": 8,
+       "wavecrash": 12
+      },
+      "slot": null,
+      "species": "Basculegion",
+      "status": ""
+     },
+     {
+      "ability": "steadfast",
+      "canMega": true,
+      "hp": 177,
+      "item": "lucarionitez",
+      "maxhp": 177,
+      "name": "Lucario",
+      "pp": {
+       "aurasphere": 20,
+       "flashcannon": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Lucario",
+      "status": ""
+     },
+     {
+      "ability": "infiltrator",
+      "boosts": {},
+      "hp": 192,
+      "item": "",
+      "maxhp": 192,
+      "name": "Noivern",
+      "pp": {
+       "rest": 8,
+       "superfang": 12,
+       "tailwind": 16
+      },
+      "slot": 1,
+      "species": "Noivern",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "pickpocket",
+      "boosts": {},
+      "hp": 177,
+      "item": "lifeorb",
+      "maxhp": 177,
+      "name": "Weavile",
+      "pp": {
+       "fakeout": 12,
+       "knockoff": 20,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Weavile",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move drillrun 2, move dragonpulse 1",
+  "p2": "move lastrespects 1, move knockoff 1"
+ }
+}

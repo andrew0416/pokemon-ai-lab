@@ -1,0 +1,427 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689042736 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689042736), decision 0 = turn 1 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Flame Body",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Quick Guard",
+     "Brave Bird",
+     "Rest"
+    ],
+    "name": "Talonflame",
+    "nature": "Serious",
+    "species": "Talonflame"
+   },
+   {
+    "ability": "Levitate",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Chople Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Taunt",
+     "Rest"
+    ],
+    "name": "Hydreigon",
+    "nature": "Serious",
+    "species": "Hydreigon"
+   },
+   {
+    "ability": "Swift Swim",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Last Respects",
+     "Rest"
+    ],
+    "name": "Basculegion",
+    "nature": "Serious",
+    "species": "Basculegion"
+   },
+   {
+    "ability": "Steadfast",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Lucarionite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Aura Sphere",
+     "Flash Cannon",
+     "Rest"
+    ],
+    "name": "Lucario",
+    "nature": "Serious",
+    "species": "Lucario"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Psychic",
+     "Follow Me",
+     "Helping Hand",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Psychic Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Acrobatics",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Pressure",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Absolite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Shadow Claw",
+     "Rest"
+    ],
+    "name": "Absol",
+    "nature": "Serious",
+    "species": "Absol"
+   },
+   {
+    "ability": "Oblivious",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Mamoswine",
+    "nature": "Serious",
+    "species": "Mamoswine"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [],
+ "setupTurns": [],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "swiftswim",
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Basculegion",
+      "pp": {
+       "lastrespects": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Basculegion",
+      "status": ""
+     },
+     {
+      "ability": "levitate",
+      "boosts": {},
+      "hp": 199,
+      "item": "chopleberry",
+      "maxhp": 199,
+      "name": "Hydreigon",
+      "pp": {
+       "rest": 8,
+       "taunt": 20
+      },
+      "slot": 1,
+      "species": "Hydreigon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "steadfast",
+      "canMega": true,
+      "hp": 177,
+      "item": "lucarionitez",
+      "maxhp": 177,
+      "name": "Lucario",
+      "pp": {
+       "aurasphere": 20,
+       "flashcannon": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Lucario",
+      "status": ""
+     },
+     {
+      "ability": "flamebody",
+      "boosts": {},
+      "hp": 185,
+      "item": "lifeorb",
+      "maxhp": 185,
+      "name": "Talonflame",
+      "pp": {
+       "bravebird": 16,
+       "quickguard": 16,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Talonflame",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "pressure",
+      "canMega": true,
+      "hp": 172,
+      "item": "absolitez",
+      "maxhp": 172,
+      "name": "Absol",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "shadowclaw": 16
+      },
+      "slot": null,
+      "species": "Absol",
+      "status": ""
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "helpinghand": 20,
+       "psychic": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "oblivious",
+      "hp": 217,
+      "item": "",
+      "maxhp": 217,
+      "name": "Mamoswine",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Mamoswine",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "boosts": {
+       "spd": 1
+      },
+      "hp": 187,
+      "item": "",
+      "lastItem": "psychicseed",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "acrobatics": 16,
+       "closecombat": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Sneasler",
+      "status": "",
+      "volatiles": {
+       "unburden": {}
+      }
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move quickguard, move taunt 1",
+  "p2": "move psychic 1, move closecombat 2"
+ }
+}

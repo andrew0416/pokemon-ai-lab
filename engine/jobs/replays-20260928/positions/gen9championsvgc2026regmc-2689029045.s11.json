@@ -1,0 +1,2413 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689029045 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029045), decision 11 = turn 9 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Imprison",
+     "Psyshock",
+     "Helping Hand"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 0,
+     "def": 17,
+     "hp": 32,
+     "spa": 0,
+     "spd": 17,
+     "spe": 0
+    },
+    "gender": "M",
+    "item": "Ampharosite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Thunderbolt",
+     "Protect",
+     "Dragon Cheer",
+     "Rest"
+    ],
+    "name": "Ampharos",
+    "nature": "Serious",
+    "species": "Ampharos"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Electro Shot",
+     "Draco Meteor",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Psychic",
+     "Grass Knot",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Drill Run",
+     "Leech Life",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Hurricane",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "moldbreaker",
+       "boosts": {},
+       "hp": 63,
+       "item": "ampharosite",
+       "lastMove": "thunderbolt",
+       "maxhp": 197,
+       "name": "Ampharos",
+       "pp": {
+        "dragoncheer": 16,
+        "protect": 8,
+        "rest": 8,
+        "thunderbolt": 15
+       },
+       "slot": 1,
+       "species": "Ampharos-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 8,
+        "electroshot": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "helpinghand": 20,
+        "imprison": 12,
+        "psyshock": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "trickroom",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 12,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 79,
+       "item": "golisopite",
+       "lastMove": "drillrun",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "leechlife": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod-Mega",
+       "status": "par",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "moldbreaker",
+       "hp": 63,
+       "item": "ampharosite",
+       "maxhp": 197,
+       "name": "Ampharos",
+       "pp": {
+        "dragoncheer": 16,
+        "protect": 8,
+        "rest": 8,
+        "thunderbolt": 15
+       },
+       "slot": null,
+       "species": "Ampharos-Mega",
+       "status": ""
+      },
+      {
+       "ability": "stamina",
+       "boosts": {
+        "spa": 1
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 8,
+        "electroshot": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "helpinghand": 20,
+        "imprison": 12,
+        "psyshock": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 69,
+       "item": "golisopite",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "leechlife": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod-Mega",
+       "status": "par",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "moldbreaker",
+       "boosts": {},
+       "hp": 63,
+       "item": "ampharosite",
+       "maxhp": 197,
+       "name": "Ampharos",
+       "pp": {
+        "dragoncheer": 16,
+        "protect": 8,
+        "rest": 8,
+        "thunderbolt": 15
+       },
+       "slot": 1,
+       "species": "Ampharos-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "stamina",
+       "boosts": {
+        "spa": 1
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 8,
+        "electroshot": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "helpinghand": 20,
+        "imprison": 12,
+        "psyshock": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 69,
+       "item": "golisopite",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "leechlife": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod-Mega",
+       "status": "par",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "moldbreaker",
+       "boosts": {},
+       "hp": 63,
+       "item": "ampharosite",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Ampharos",
+       "pp": {
+        "dragoncheer": 16,
+        "protect": 7,
+        "rest": 8,
+        "thunderbolt": 15
+       },
+       "slot": 1,
+       "species": "Ampharos-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "stamina",
+       "boosts": {
+        "spa": 2
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 8,
+        "electroshot": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "helpinghand": 20,
+        "imprison": 12,
+        "psyshock": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 10,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "leechlife": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "moldbreaker",
+       "boosts": {},
+       "hp": 63,
+       "item": "ampharosite",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Ampharos",
+       "pp": {
+        "dragoncheer": 16,
+        "protect": 7,
+        "rest": 8,
+        "thunderbolt": 15
+       },
+       "slot": 1,
+       "species": "Ampharos-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "stamina",
+       "boosts": {
+        "spa": 2
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 8,
+        "electroshot": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "helpinghand": 20,
+        "imprison": 12,
+        "psyshock": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 10,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "leechlife": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 1
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "moldbreaker",
+       "boosts": {},
+       "hp": 5,
+       "item": "ampharosite",
+       "lastMove": "dragoncheer",
+       "maxhp": 197,
+       "name": "Ampharos",
+       "pp": {
+        "dragoncheer": 15,
+        "protect": 7,
+        "rest": 8,
+        "thunderbolt": 15
+       },
+       "slot": 1,
+       "species": "Ampharos-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "dracometeor",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 7,
+        "electroshot": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "dragoncheer": {}
+       }
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "helpinghand": 20,
+        "imprison": 12,
+        "psyshock": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": "fnt"
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 9,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "leechlife": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 1
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "moldbreaker",
+       "boosts": {},
+       "hp": 5,
+       "item": "ampharosite",
+       "lastMove": "dragoncheer",
+       "maxhp": 197,
+       "name": "Ampharos",
+       "pp": {
+        "dragoncheer": 15,
+        "protect": 7,
+        "rest": 8,
+        "thunderbolt": 15
+       },
+       "slot": 1,
+       "species": "Ampharos-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "dracometeor",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 7,
+        "electroshot": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "dragoncheer": {}
+       }
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "helpinghand": 20,
+        "imprison": 12,
+        "psyshock": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 9,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "leechlife": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "moldbreaker",
+       "hp": 5,
+       "item": "ampharosite",
+       "maxhp": 197,
+       "name": "Ampharos",
+       "pp": {
+        "dragoncheer": 15,
+        "protect": 7,
+        "rest": 8,
+        "thunderbolt": 15
+       },
+       "slot": null,
+       "species": "Ampharos-Mega",
+       "status": ""
+      },
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "dracometeor",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 6,
+        "electroshot": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "dragoncheer": {}
+       }
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {
+        "spd": -1
+       },
+       "hp": 181,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "helpinghand": 20,
+        "imprison": 12,
+        "psyshock": 12,
+        "trickroom": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 185,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 8,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "leechlife": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "moldbreaker",
+       "hp": 5,
+       "item": "ampharosite",
+       "maxhp": 197,
+       "name": "Ampharos",
+       "pp": {
+        "dragoncheer": 15,
+        "protect": 7,
+        "rest": 8,
+        "thunderbolt": 15
+       },
+       "slot": null,
+       "species": "Ampharos-Mega",
+       "status": ""
+      },
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 2,
+        "spa": -2
+       },
+       "hp": 136,
+       "item": "leftovers",
+       "lastMove": "dracometeor",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 5,
+        "electroshot": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "dragoncheer": {}
+       }
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {
+        "spd": -1
+       },
+       "hp": 181,
+       "item": "sitrusberry",
+       "lastMove": "trickroom",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "helpinghand": 20,
+        "imprison": 12,
+        "psyshock": 12,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 41,
+       "item": "",
+       "lastMove": "hurricane",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "grassknot",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 19,
+        "psychic": 8,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "leechlife": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "moldbreaker",
+       "hp": 5,
+       "item": "ampharosite",
+       "maxhp": 197,
+       "name": "Ampharos",
+       "pp": {
+        "dragoncheer": 15,
+        "protect": 7,
+        "rest": 8,
+        "thunderbolt": 15
+       },
+       "slot": null,
+       "species": "Ampharos-Mega",
+       "status": ""
+      },
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 2,
+        "spa": -2
+       },
+       "hp": 148,
+       "item": "leftovers",
+       "lastMove": "dracometeor",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 4,
+        "electroshot": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "dragoncheer": {}
+       }
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {
+        "spd": -1
+       },
+       "hp": 134,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "imprison",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "helpinghand": 20,
+        "imprison": 11,
+        "psyshock": 12,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {
+        "imprison": {}
+       }
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 41,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "grassknot",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 18,
+        "psychic": 8,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "leechlife": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "moldbreaker",
+       "hp": 5,
+       "item": "ampharosite",
+       "maxhp": 197,
+       "name": "Ampharos",
+       "pp": {
+        "dragoncheer": 15,
+        "protect": 7,
+        "rest": 8,
+        "thunderbolt": 15
+       },
+       "slot": null,
+       "species": "Ampharos-Mega",
+       "status": ""
+      },
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 3,
+        "spa": -1
+       },
+       "hp": 146,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 4,
+        "electroshot": 9,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "dragoncheer": {},
+        "electroshot": {},
+        "twoturnmove": {
+         "duration": 1,
+         "move": "electroshot"
+        }
+       }
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {
+        "spd": -1
+       },
+       "hp": 190,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "psyshock",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "helpinghand": 20,
+        "imprison": 11,
+        "psyshock": 11,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {
+        "imprison": {}
+       }
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": "fnt"
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "grassknot",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 17,
+        "psychic": 8,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "leechlife": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "switch 3, move thunderbolt 2 mega",
+   "move trickroom, move drillrun 2 mega"
+  ],
+  [
+   "move electroshot 2, switch 4",
+   "move psychic 2, move leechlife 2"
+  ],
+  [
+   "switch 4",
+   ""
+  ],
+  [
+   "move electroshot 2, move protect",
+   "move psychic 2, move leechlife 2"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move dracometeor 2, move dragoncheer -1",
+   "move psychic 2, move rest"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move dracometeor 2, switch 3",
+   "move psychic 2, move protect"
+  ],
+  [
+   "move dracometeor 2, move trickroom",
+   "move grassknot 1, move hurricane 1"
+  ],
+  [
+   "move dracometeor 2, move imprison",
+   "move grassknot 2, move protect"
+  ],
+  [
+   "move electroshot 1, move psyshock 2",
+   "move grassknot 1, move hurricane -1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "static",
+      "boosts": {},
+      "canMega": true,
+      "hp": 197,
+      "item": "ampharosite",
+      "maxhp": 197,
+      "name": "Ampharos",
+      "pp": {
+       "dragoncheer": 16,
+       "protect": 8,
+       "rest": 8,
+       "thunderbolt": 16
+      },
+      "slot": 1,
+      "species": "Ampharos",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "dracometeor": 8,
+       "electroshot": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "cudchew",
+      "boosts": {},
+      "hp": 227,
+      "item": "sitrusberry",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "helpinghand": 20,
+       "imprison": 12,
+       "psyshock": 12,
+       "trickroom": 8
+      },
+      "slot": 0,
+      "species": "Farigiraf",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Politoed",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "blaze",
+      "hp": 185,
+      "item": "",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "hurricane": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Charizard",
+      "status": ""
+     },
+     {
+      "ability": "cudchew",
+      "boosts": {},
+      "hp": 227,
+      "item": "sitrusberry",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "grassknot": 20,
+       "psychic": 12,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": 0,
+      "species": "Farigiraf",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "boosts": {},
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "drillrun": 12,
+       "leechlife": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Golisopod",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move electroshot 1, move helpinghand -1",
+  "p2": "move grassknot 2, pass"
+ }
+}

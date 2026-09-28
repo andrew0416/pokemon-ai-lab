@@ -1,0 +1,1261 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689043712 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689043712), decision 5 = turn 4 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Raichunite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Zap Cannon",
+     "Focus Blast",
+     "Rest"
+    ],
+    "name": "Raichu",
+    "nature": "Serious",
+    "species": "Raichu"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Wood Hammer",
+     "High Horsepower",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Guts",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Conkeldurr",
+    "nature": "Serious",
+    "species": "Conkeldurr"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Limber",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Hawluchanite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Entrainment",
+     "Rest"
+    ],
+    "name": "Pet Shop",
+    "nature": "Serious",
+    "species": "Hawlucha"
+   },
+   {
+    "ability": "Snow Warning",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Blizzard",
+     "Sheer Cold",
+     "Rest"
+    ],
+    "name": "Ice Feam",
+    "nature": "Serious",
+    "species": "Vanilluxe"
+   },
+   {
+    "ability": "Cute Charm",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Follow Me",
+     "Rest"
+    ],
+    "name": "Cosmo",
+    "nature": "Serious",
+    "species": "Clefable"
+   },
+   {
+    "ability": "Flame Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Silky",
+    "nature": "Serious",
+    "species": "Volcarona"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "guts",
+       "hp": 212,
+       "item": "",
+       "maxhp": 212,
+       "name": "Conkeldurr",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Conkeldurr",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "boosts": {},
+       "hp": 167,
+       "item": "raichunitey",
+       "lastMove": "zapcannon",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 8,
+        "rest": 8,
+        "zapcannon": 7
+       },
+       "slot": 0,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "highhorsepower": 12,
+        "rest": 8,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cutecharm",
+       "boosts": {},
+       "hp": 96,
+       "item": "leftovers",
+       "maxhp": 202,
+       "name": "Cosmo",
+       "pp": {
+        "followme": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Clefable",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 178,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "blizzard": 8,
+        "protect": 7,
+        "rest": 8,
+        "sheercold": 8
+       },
+       "slot": 1,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "limber",
+       "canMega": true,
+       "hp": 185,
+       "item": "hawluchanite",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "entrainment": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hawlucha",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "guts",
+       "hp": 212,
+       "item": "",
+       "maxhp": 212,
+       "name": "Conkeldurr",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Conkeldurr",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "boosts": {},
+       "hp": 101,
+       "item": "raichunitey",
+       "lastMove": "focusblast",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 7,
+        "rest": 8,
+        "zapcannon": 7
+       },
+       "slot": 0,
+       "species": "Raichu-Mega-Y",
+       "status": "frz",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 44,
+       "item": "",
+       "lastMove": "woodhammer",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "highhorsepower": 12,
+        "rest": 8,
+        "woodhammer": 15
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cutecharm",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 202,
+       "name": "Cosmo",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Clefable",
+       "status": "fnt"
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 178,
+       "item": "",
+       "lastMove": "blizzard",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "blizzard": 7,
+        "protect": 7,
+        "rest": 8,
+        "sheercold": 8
+       },
+       "slot": 1,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "limber",
+       "canMega": true,
+       "hp": 185,
+       "item": "hawluchanite",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "entrainment": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hawlucha",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "guts",
+       "hp": 212,
+       "item": "",
+       "maxhp": 212,
+       "name": "Conkeldurr",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Conkeldurr",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "boosts": {},
+       "hp": 101,
+       "item": "raichunitey",
+       "lastMove": "focusblast",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 7,
+        "rest": 8,
+        "zapcannon": 7
+       },
+       "slot": 0,
+       "species": "Raichu-Mega-Y",
+       "status": "frz",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 44,
+       "item": "",
+       "lastMove": "woodhammer",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "highhorsepower": 12,
+        "rest": 8,
+        "woodhammer": 15
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cutecharm",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 202,
+       "name": "Cosmo",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Clefable",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 178,
+       "item": "",
+       "lastMove": "blizzard",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "blizzard": 7,
+        "protect": 7,
+        "rest": 8,
+        "sheercold": 8
+       },
+       "slot": 1,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "limber",
+       "boosts": {},
+       "canMega": true,
+       "hp": 185,
+       "item": "hawluchanite",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "entrainment": 16,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Hawlucha",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "snowscape",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "guts",
+       "hp": 212,
+       "item": "",
+       "maxhp": 212,
+       "name": "Conkeldurr",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Conkeldurr",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "hp": 0,
+       "item": "raichunitey",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 7,
+        "rest": 8,
+        "zapcannon": 7
+       },
+       "slot": null,
+       "species": "Raichu-Mega-Y",
+       "status": "fnt"
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 56,
+       "item": "",
+       "lastMove": "highhorsepower",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "highhorsepower": 11,
+        "rest": 8,
+        "woodhammer": 15
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cutecharm",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 202,
+       "name": "Cosmo",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Clefable",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "boosts": {},
+       "hp": 146,
+       "item": "",
+       "lastMove": "sheercold",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "blizzard": 7,
+        "protect": 7,
+        "rest": 8,
+        "sheercold": 7
+       },
+       "slot": 1,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "noguard",
+       "boosts": {},
+       "hp": 185,
+       "item": "hawluchanite",
+       "lastMove": "entrainment",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "entrainment": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Hawlucha-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "snowscape",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "guts",
+       "hp": 212,
+       "item": "",
+       "maxhp": 212,
+       "name": "Conkeldurr",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Conkeldurr",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "noguard",
+       "hp": 0,
+       "item": "raichunitey",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 7,
+        "rest": 8,
+        "zapcannon": 7
+       },
+       "slot": null,
+       "species": "Raichu-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 56,
+       "item": "",
+       "lastMove": "highhorsepower",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "highhorsepower": 11,
+        "rest": 8,
+        "woodhammer": 15
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cutecharm",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 202,
+       "name": "Cosmo",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Clefable",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "boosts": {},
+       "hp": 146,
+       "item": "",
+       "lastMove": "sheercold",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "blizzard": 7,
+        "protect": 7,
+        "rest": 8,
+        "sheercold": 7
+       },
+       "slot": 1,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "noguard",
+       "boosts": {},
+       "hp": 185,
+       "item": "hawluchanite",
+       "lastMove": "entrainment",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "entrainment": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Hawlucha-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move zapcannon 1 mega, move fakeout 2",
+   "switch 3, move protect"
+  ],
+  [
+   "move focusblast 1, move woodhammer 1",
+   "move followme, move blizzard"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move zapcannon -2, move highhorsepower 2",
+   "move entrainment -2 mega, move sheercold 1"
+  ],
+  [
+   "switch 3",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "snowscape",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "guts",
+      "hp": 212,
+      "item": "",
+      "maxhp": 212,
+      "name": "Conkeldurr",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Conkeldurr",
+      "status": ""
+     },
+     {
+      "ability": "cudchew",
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Farigiraf",
+      "status": ""
+     },
+     {
+      "ability": "static",
+      "boosts": {},
+      "canMega": true,
+      "hp": 167,
+      "item": "raichunitey",
+      "maxhp": 167,
+      "name": "Raichu",
+      "pp": {
+       "focusblast": 8,
+       "rest": 8,
+       "zapcannon": 8
+      },
+      "slot": 0,
+      "species": "Raichu",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "highhorsepower": 12,
+       "rest": 8,
+       "woodhammer": 16
+      },
+      "slot": 1,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "cutecharm",
+      "hp": 202,
+      "item": "leftovers",
+      "maxhp": 202,
+      "name": "Cosmo",
+      "pp": {
+       "followme": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Clefable",
+      "status": ""
+     },
+     {
+      "ability": "snowwarning",
+      "boosts": {},
+      "hp": 178,
+      "item": "",
+      "maxhp": 178,
+      "name": "Ice Feam",
+      "pp": {
+       "blizzard": 8,
+       "protect": 8,
+       "rest": 8,
+       "sheercold": 8
+      },
+      "slot": 1,
+      "species": "Vanilluxe",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "limber",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "hawluchanite",
+      "maxhp": 185,
+      "name": "Pet Shop",
+      "pp": {
+       "entrainment": 16,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Hawlucha",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "flamebody",
+      "hp": 192,
+      "item": "",
+      "maxhp": 192,
+      "name": "Silky",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Volcarona",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move rest, move highhorsepower 2",
+  "p2": "switch 4, move sheercold 1"
+ }
+}

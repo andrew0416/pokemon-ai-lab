@@ -1,0 +1,758 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689035818 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689035818), decision 2 = turn 2 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "First Impression",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Psychic Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Eject Button",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Cursed Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Gengar",
+    "nature": "Serious",
+    "species": "Gengar"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Contrary",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Malamarite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Malamar",
+    "nature": "Serious",
+    "species": "Malamar"
+   },
+   {
+    "ability": "Unnerve",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rock Slide",
+     "Dual Wingbeat",
+     "Rest"
+    ],
+    "name": "Aerodactyl",
+    "nature": "Serious",
+    "species": "Aerodactyl"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Psychic Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Hyper Cutter",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Mawile",
+    "nature": "Serious",
+    "species": "Mawile"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cursedbody",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Gengar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gengar",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 151,
+       "item": "golisopite",
+       "lastMove": "firstimpression",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 177,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 135,
+       "item": "",
+       "lastItem": "ejectbutton",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "unnerve",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "lastMove": "rockslide",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "dualwingbeat": 12,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": 1,
+       "species": "Aerodactyl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "malamarite",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Malamar-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "hypercutter",
+       "hp": 157,
+       "item": "",
+       "maxhp": 157,
+       "name": "Mawile",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Mawile",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cursedbody",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Gengar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gengar",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 151,
+       "item": "golisopite",
+       "lastMove": "firstimpression",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 177,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 135,
+       "item": "",
+       "lastItem": "ejectbutton",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "unnerve",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "lastMove": "rockslide",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "dualwingbeat": 12,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": 1,
+       "species": "Aerodactyl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "malamarite",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Malamar-Mega",
+       "status": ""
+      },
+      {
+       "ability": "hypercutter",
+       "hp": 157,
+       "item": "",
+       "maxhp": 157,
+       "name": "Mawile",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Mawile",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 187,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move firstimpression 1 mega, switch 3",
+   "move rest mega, move rockslide",
+   {
+    "p1": [
+     "switch 3"
+    ],
+    "p2": []
+   }
+  ],
+  [
+   "",
+   "switch 3"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "cursedbody",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Gengar",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Gengar",
+      "status": ""
+     },
+     {
+      "ability": "emergencyexit",
+      "boosts": {},
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "firstimpression": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Golisopod",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {
+       "spd": 1
+      },
+      "hp": 177,
+      "item": "",
+      "lastItem": "psychicseed",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": 1,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 207,
+      "item": "ejectbutton",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "unnerve",
+      "boosts": {},
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Aerodactyl",
+      "pp": {
+       "dualwingbeat": 12,
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": 1,
+      "species": "Aerodactyl",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "contrary",
+      "boosts": {},
+      "canMega": true,
+      "hp": 193,
+      "item": "malamarite",
+      "maxhp": 193,
+      "name": "Malamar",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Malamar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "hypercutter",
+      "hp": 157,
+      "item": "",
+      "maxhp": 157,
+      "name": "Mawile",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Mawile",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "hp": 187,
+      "item": "psychicseed",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move protect, move trickroom",
+  "p2": "move closecombat 1, move dualwingbeat 1"
+ }
+}

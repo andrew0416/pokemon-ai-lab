@@ -1,0 +1,1821 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689051691 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689051691), decision 8 = turn 5 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Flame Body",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Rest"
+    ],
+    "name": "Talonflame",
+    "nature": "Serious",
+    "species": "Talonflame"
+   },
+   {
+    "ability": "Snow Warning",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Freeze-Dry",
+     "Icy Wind",
+     "Dazzling Gleam",
+     "Rest"
+    ],
+    "name": "Ninetales",
+    "nature": "Serious",
+    "species": "Ninetales-Alola"
+   },
+   {
+    "ability": "Synchronize",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Power Gem",
+     "Rest"
+    ],
+    "name": "Espeon",
+    "nature": "Serious",
+    "species": "Espeon"
+   },
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 2,
+     "hp": 32,
+     "spa": 0,
+     "spd": 32,
+     "spe": 0
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Expanding Force",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Flame Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Rest"
+    ],
+    "name": "Silky",
+    "nature": "Serious",
+    "species": "Volcarona"
+   },
+   {
+    "ability": "Torrent",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Snipe Shot",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Mista",
+    "nature": "Serious",
+    "species": "Inteleon"
+   },
+   {
+    "ability": "Ice Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Aurora Veil",
+     "Blizzard",
+     "Rest"
+    ],
+    "name": "Ice Feam",
+    "nature": "Serious",
+    "species": "Vanilluxe"
+   },
+   {
+    "ability": "Limber",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Hawluchanite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rock Slide",
+     "Rest"
+    ],
+    "name": "Pet Shop",
+    "nature": "Serious",
+    "species": "Hawlucha"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "hp": 172,
+       "item": "",
+       "maxhp": 172,
+       "name": "Espeon",
+       "pp": {
+        "powergem": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Espeon",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 180,
+       "item": "sitrusberry",
+       "lastMove": "freezedry",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "dazzlinggleam": 12,
+        "freezedry": 19,
+        "icywind": 16,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Talonflame",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "icebody",
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Vanilluxe",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 27,
+       "item": "",
+       "lastMove": "snipeshot",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": 1,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "limber",
+       "canMega": true,
+       "hp": 185,
+       "item": "hawluchanite",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Hawlucha",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 192,
+       "item": "",
+       "lastMove": "tailwind",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 0,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 172,
+       "item": "",
+       "maxhp": 172,
+       "name": "Espeon",
+       "pp": {
+        "powergem": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Espeon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 180,
+       "item": "sitrusberry",
+       "lastMove": "freezedry",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "dazzlinggleam": 12,
+        "freezedry": 19,
+        "icywind": 16,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Talonflame",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "icebody",
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Vanilluxe",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 27,
+       "item": "",
+       "lastMove": "snipeshot",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": 1,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "limber",
+       "canMega": true,
+       "hp": 185,
+       "item": "hawluchanite",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Hawlucha",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 192,
+       "item": "",
+       "lastMove": "tailwind",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 0,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 172,
+       "item": "",
+       "lastMove": "powergem",
+       "maxhp": 172,
+       "name": "Espeon",
+       "pp": {
+        "powergem": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Espeon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 180,
+       "item": "sitrusberry",
+       "lastMove": "freezedry",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "dazzlinggleam": 12,
+        "freezedry": 18,
+        "icywind": 16,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Talonflame",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "icebody",
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Vanilluxe",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 27,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": 1,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "limber",
+       "canMega": true,
+       "hp": 185,
+       "item": "hawluchanite",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Hawlucha",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 172,
+       "item": "",
+       "lastMove": "powergem",
+       "maxhp": 172,
+       "name": "Espeon",
+       "pp": {
+        "powergem": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Espeon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 180,
+       "item": "sitrusberry",
+       "lastMove": "freezedry",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "dazzlinggleam": 12,
+        "freezedry": 18,
+        "icywind": 16,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Talonflame",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "icebody",
+       "boosts": {},
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 27,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": 1,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "limber",
+       "canMega": true,
+       "hp": 185,
+       "item": "hawluchanite",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Hawlucha",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "snowscape",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "hp": 0,
+       "item": "",
+       "maxhp": 172,
+       "name": "Espeon",
+       "pp": {
+        "powergem": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Espeon",
+       "status": "fnt"
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "sitrusberry",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "dazzlinggleam": 12,
+        "freezedry": 18,
+        "icywind": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Talonflame",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 4
+      },
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "icebody",
+       "boosts": {},
+       "hp": 178,
+       "item": "",
+       "lastMove": "auroraveil",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 27,
+       "item": "",
+       "lastMove": "snipeshot",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "snipeshot": 14
+       },
+       "slot": 1,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "limber",
+       "canMega": true,
+       "hp": 185,
+       "item": "hawluchanite",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Hawlucha",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "snowscape",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "hp": 0,
+       "item": "",
+       "maxhp": 172,
+       "name": "Espeon",
+       "pp": {
+        "powergem": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Espeon",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 180,
+       "item": "sitrusberry",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "dazzlinggleam": 12,
+        "freezedry": 18,
+        "icywind": 16,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Talonflame",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 4
+      },
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "icebody",
+       "boosts": {},
+       "hp": 178,
+       "item": "",
+       "lastMove": "auroraveil",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 27,
+       "item": "",
+       "lastMove": "snipeshot",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "snipeshot": 14
+       },
+       "slot": 1,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "limber",
+       "canMega": true,
+       "hp": 185,
+       "item": "hawluchanite",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Hawlucha",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "snowscape",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "hp": 0,
+       "item": "",
+       "maxhp": 172,
+       "name": "Espeon",
+       "pp": {
+        "powergem": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Espeon",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 10,
+       "item": "",
+       "lastMove": "expandingforce",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 148,
+       "item": "sitrusberry",
+       "lastMove": "icywind",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "dazzlinggleam": 12,
+        "freezedry": 18,
+        "icywind": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Talonflame",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "icebody",
+       "boosts": {
+        "spe": -1
+       },
+       "hp": 92,
+       "item": "",
+       "lastMove": "blizzard",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "snipeshot": 13
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": "fnt"
+      },
+      {
+       "ability": "limber",
+       "canMega": true,
+       "hp": 185,
+       "item": "hawluchanite",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Hawlucha",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "snowscape",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "hp": 0,
+       "item": "",
+       "maxhp": 172,
+       "name": "Espeon",
+       "pp": {
+        "powergem": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Espeon",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 10,
+       "item": "",
+       "lastMove": "expandingforce",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 148,
+       "item": "sitrusberry",
+       "lastMove": "icywind",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "dazzlinggleam": 12,
+        "freezedry": 18,
+        "icywind": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Talonflame",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "icebody",
+       "boosts": {
+        "spe": -1
+       },
+       "hp": 92,
+       "item": "",
+       "lastMove": "blizzard",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "snipeshot": 13
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": ""
+      },
+      {
+       "ability": "limber",
+       "boosts": {},
+       "canMega": true,
+       "hp": 185,
+       "item": "hawluchanite",
+       "maxhp": 185,
+       "name": "Pet Shop",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Hawlucha",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move tailwind, move freezedry 2",
+   "move tailwind, move snipeshot 1"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move powergem 1, move freezedry 2",
+   "move tailwind, move protect"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move powergem -2, switch 4",
+   "move auroraveil, move snipeshot 1"
+  ],
+  [
+   "switch 4",
+   ""
+  ],
+  [
+   "move icywind, move expandingforce 1",
+   "move blizzard, move snipeshot 2"
+  ],
+  [
+   "",
+   "switch 4"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "snowscape",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "synchronize",
+      "hp": 172,
+      "item": "",
+      "maxhp": 172,
+      "name": "Espeon",
+      "pp": {
+       "powergem": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Espeon",
+      "status": ""
+     },
+     {
+      "ability": "psychicsurge",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Indeedee",
+      "pp": {
+       "expandingforce": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Indeedee",
+      "status": ""
+     },
+     {
+      "ability": "snowwarning",
+      "boosts": {},
+      "hp": 180,
+      "item": "sitrusberry",
+      "maxhp": 180,
+      "name": "Ninetales",
+      "pp": {
+       "dazzlinggleam": 12,
+       "freezedry": 20,
+       "icywind": 16,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Ninetales-Alola",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "flamebody",
+      "boosts": {},
+      "hp": 185,
+      "item": "",
+      "maxhp": 185,
+      "name": "Talonflame",
+      "pp": {
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": 0,
+      "species": "Talonflame",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "icebody",
+      "hp": 178,
+      "item": "",
+      "maxhp": 178,
+      "name": "Ice Feam",
+      "pp": {
+       "auroraveil": 20,
+       "blizzard": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Vanilluxe",
+      "status": ""
+     },
+     {
+      "ability": "torrent",
+      "boosts": {},
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Mista",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "snipeshot": 16
+      },
+      "slot": 1,
+      "species": "Inteleon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "limber",
+      "canMega": true,
+      "hp": 185,
+      "item": "hawluchanite",
+      "maxhp": 185,
+      "name": "Pet Shop",
+      "pp": {
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": null,
+      "species": "Hawlucha",
+      "status": ""
+     },
+     {
+      "ability": "flamebody",
+      "boosts": {},
+      "hp": 192,
+      "item": "",
+      "maxhp": 192,
+      "name": "Silky",
+      "pp": {
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": 0,
+      "species": "Volcarona",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move dazzlinggleam, move expandingforce -1",
+  "p2": "move blizzard, move rockslide mega"
+ }
+}

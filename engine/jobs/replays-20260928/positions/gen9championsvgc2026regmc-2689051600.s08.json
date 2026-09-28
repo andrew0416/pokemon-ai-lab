@@ -1,0 +1,1827 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689051600 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689051600), decision 8 = turn 6 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Water Bubble",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Entrainment",
+     "Liquidation",
+     "Rest"
+    ],
+    "name": "Araquanid",
+    "nature": "Serious",
+    "species": "Araquanid"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Gyaradosite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Crunch",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Gyarados",
+    "nature": "Serious",
+    "species": "Gyarados"
+   },
+   {
+    "ability": "Sand Veil",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rock Slide",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   },
+   {
+    "ability": "Speed Boost",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Lumina Crash",
+     "Rest"
+    ],
+    "name": "Espathra",
+    "nature": "Serious",
+    "species": "Espathra"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Staraptite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Brave Bird",
+     "Rest"
+    ],
+    "name": "Staraptor",
+    "nature": "Serious",
+    "species": "Staraptor"
+   },
+   {
+    "ability": "Good as Gold",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Power Gem",
+     "Rest"
+    ],
+    "name": "Gholdengo",
+    "nature": "Serious",
+    "species": "Gholdengo"
+   },
+   {
+    "ability": "Rough Skin",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Poison Jab",
+     "Rock Tomb",
+     "Dragon Claw",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Moonblast",
+     "Fake Tears",
+     "Rest"
+    ],
+    "name": "Whimsicott",
+    "nature": "Serious",
+    "species": "Whimsicott"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 19,
+       "item": "",
+       "lastMove": "entrainment",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "entrainment": 15,
+        "liquidation": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Araquanid",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "speedboost",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Espathra",
+       "pp": {
+        "luminacrash": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Espathra",
+       "status": ""
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "waterbubble",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 128,
+       "item": "gyaradosite",
+       "lastMove": "crunch",
+       "maxhp": 202,
+       "name": "Gyarados",
+       "pp": {
+        "crunch": 15,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gyarados-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "poisonjab": 20,
+        "rest": 8,
+        "rocktomb": 16
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "powergem": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": "fnt"
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 141,
+       "item": "staraptite",
+       "lastMove": "bravebird",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "bravebird": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Staraptor-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "faketears": 20,
+        "moonblast": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 19,
+       "item": "",
+       "lastMove": "entrainment",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "entrainment": 15,
+        "liquidation": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Araquanid",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "speedboost",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Espathra",
+       "pp": {
+        "luminacrash": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Espathra",
+       "status": ""
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "waterbubble",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 128,
+       "item": "gyaradosite",
+       "lastMove": "crunch",
+       "maxhp": 202,
+       "name": "Gyarados",
+       "pp": {
+        "crunch": 15,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gyarados-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "poisonjab": 20,
+        "rest": 8,
+        "rocktomb": 16
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "powergem": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 141,
+       "item": "staraptite",
+       "lastMove": "bravebird",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "bravebird": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Staraptor-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "faketears": 20,
+        "moonblast": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 19,
+       "item": "",
+       "lastMove": "liquidation",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "entrainment": 15,
+        "liquidation": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Araquanid",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "speedboost",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Espathra",
+       "pp": {
+        "luminacrash": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Espathra",
+       "status": ""
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "waterbubble",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 128,
+       "item": "gyaradosite",
+       "lastMove": "protect",
+       "maxhp": 202,
+       "name": "Gyarados",
+       "pp": {
+        "crunch": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gyarados-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 215,
+       "item": "",
+       "lastMove": "poisonjab",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "poisonjab": 19,
+        "rest": 8,
+        "rocktomb": 16
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "powergem": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 75,
+       "item": "staraptite",
+       "lastMove": "bravebird",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "bravebird": 14,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Staraptor-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "faketears": 20,
+        "moonblast": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "hp": 0,
+       "item": "",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "entrainment": 15,
+        "liquidation": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Araquanid",
+       "status": "fnt"
+      },
+      {
+       "ability": "speedboost",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Espathra",
+       "pp": {
+        "luminacrash": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Espathra",
+       "status": ""
+      },
+      {
+       "ability": "sandveil",
+       "boosts": {
+        "spe": -1
+       },
+       "hp": 195,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "moldbreaker",
+       "hp": 128,
+       "item": "gyaradosite",
+       "maxhp": 202,
+       "name": "Gyarados",
+       "pp": {
+        "crunch": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gyarados-Mega",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 215,
+       "item": "",
+       "lastMove": "rocktomb",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "poisonjab": 19,
+        "rest": 8,
+        "rocktomb": 15
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "powergem": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 69,
+       "item": "staraptite",
+       "lastMove": "bravebird",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "bravebird": 13,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Staraptor-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "faketears": 20,
+        "moonblast": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "hp": 0,
+       "item": "",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "entrainment": 15,
+        "liquidation": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Araquanid",
+       "status": ""
+      },
+      {
+       "ability": "speedboost",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Espathra",
+       "pp": {
+        "luminacrash": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Espathra",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandveil",
+       "boosts": {
+        "spe": -1
+       },
+       "hp": 195,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "moldbreaker",
+       "hp": 128,
+       "item": "gyaradosite",
+       "maxhp": 202,
+       "name": "Gyarados",
+       "pp": {
+        "crunch": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gyarados-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 215,
+       "item": "",
+       "lastMove": "rocktomb",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "poisonjab": 19,
+        "rest": 8,
+        "rocktomb": 15
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "powergem": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 69,
+       "item": "staraptite",
+       "lastMove": "bravebird",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "bravebird": 13,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Staraptor-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "faketears": 20,
+        "moonblast": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "hp": 0,
+       "item": "",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "entrainment": 15,
+        "liquidation": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Araquanid",
+       "status": ""
+      },
+      {
+       "ability": "speedboost",
+       "boosts": {
+        "spe": 1
+       },
+       "hp": 202,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 202,
+       "name": "Espathra",
+       "pp": {
+        "luminacrash": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Espathra",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "sandveil",
+       "boosts": {
+        "spe": -1
+       },
+       "hp": 195,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "moldbreaker",
+       "hp": 128,
+       "item": "gyaradosite",
+       "maxhp": 202,
+       "name": "Gyarados",
+       "pp": {
+        "crunch": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gyarados-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 215,
+       "item": "",
+       "lastMove": "dragonclaw",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "poisonjab": 19,
+        "rest": 8,
+        "rocktomb": 15
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "powergem": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 69,
+       "item": "staraptite",
+       "lastMove": "bravebird",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "bravebird": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Staraptor-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "faketears": 20,
+        "moonblast": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "hp": 0,
+       "item": "",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "entrainment": 15,
+        "liquidation": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Araquanid",
+       "status": ""
+      },
+      {
+       "ability": "speedboost",
+       "boosts": {
+        "spe": 2
+       },
+       "hp": 202,
+       "item": "",
+       "lastMove": "luminacrash",
+       "maxhp": 202,
+       "name": "Espathra",
+       "pp": {
+        "luminacrash": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Espathra",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandveil",
+       "hp": 195,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "moldbreaker",
+       "boosts": {},
+       "hp": 128,
+       "item": "gyaradosite",
+       "maxhp": 202,
+       "name": "Gyarados",
+       "pp": {
+        "crunch": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gyarados-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "poisonjab": 19,
+        "rest": 8,
+        "rocktomb": 15
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "powergem": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "bravebird": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "faketears": 20,
+        "moonblast": 16,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "waterbubble",
+       "hp": 0,
+       "item": "",
+       "maxhp": 175,
+       "name": "Araquanid",
+       "pp": {
+        "entrainment": 15,
+        "liquidation": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Araquanid",
+       "status": ""
+      },
+      {
+       "ability": "speedboost",
+       "boosts": {
+        "spe": 2
+       },
+       "hp": 202,
+       "item": "",
+       "lastMove": "luminacrash",
+       "maxhp": 202,
+       "name": "Espathra",
+       "pp": {
+        "luminacrash": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Espathra",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandveil",
+       "hp": 195,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "moldbreaker",
+       "boosts": {},
+       "hp": 128,
+       "item": "gyaradosite",
+       "maxhp": 202,
+       "name": "Gyarados",
+       "pp": {
+        "crunch": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gyarados-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "poisonjab": 19,
+        "rest": 8,
+        "rocktomb": 15
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "powergem": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "bravebird": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "faketears": 20,
+        "moonblast": 16,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move entrainment -2, move crunch 2 mega",
+   "move bravebird 1 mega, move powergem 2"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move liquidation 1, move protect",
+   "move bravebird 2, move poisonjab 2"
+  ],
+  [
+   "move entrainment -2, switch 3",
+   "move bravebird 1, move rocktomb 2"
+  ],
+  [
+   "switch 4",
+   ""
+  ],
+  [
+   "move protect, move protect",
+   "move bravebird 2, move dragonclaw 2"
+  ],
+  [
+   "move luminacrash 1, switch 3",
+   "move bravebird -2, switch 4"
+  ],
+  [
+   "",
+   "switch 4"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "waterbubble",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 175,
+      "item": "",
+      "maxhp": 175,
+      "name": "Araquanid",
+      "pp": {
+       "entrainment": 16,
+       "liquidation": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Araquanid",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "speedboost",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Espathra",
+      "pp": {
+       "luminacrash": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Espathra",
+      "status": ""
+     },
+     {
+      "ability": "sandveil",
+      "hp": 215,
+      "item": "",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": null,
+      "species": "Garchomp",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 202,
+      "item": "gyaradosite",
+      "maxhp": 202,
+      "name": "Gyarados",
+      "pp": {
+       "crunch": 16,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Gyarados",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "roughskin",
+      "hp": 215,
+      "item": "",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "dragonclaw": 16,
+       "poisonjab": 20,
+       "rest": 8,
+       "rocktomb": 16
+      },
+      "slot": null,
+      "species": "Garchomp",
+      "status": ""
+     },
+     {
+      "ability": "goodasgold",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 194,
+      "item": "lifeorb",
+      "maxhp": 194,
+      "name": "Gholdengo",
+      "pp": {
+       "powergem": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Gholdengo",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 192,
+      "item": "staraptite",
+      "maxhp": 192,
+      "name": "Staraptor",
+      "pp": {
+       "bravebird": 16,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Staraptor",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Whimsicott",
+      "pp": {
+       "faketears": 20,
+       "moonblast": 16,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Whimsicott",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move protect, move crunch -1",
+  "p2": "move dragonclaw 2, move moonblast 2"
+ }
+}

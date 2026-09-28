@@ -1,0 +1,1099 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689025365 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689025365), decision 4 = turn 4 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Expanding Force",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Darkest Lariat",
+     "Parting Shot",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Good as Gold",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Gholdengo",
+    "nature": "Serious",
+    "species": "Gholdengo"
+   },
+   {
+    "ability": "Sand Veil",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 32,
+     "hp": 32,
+     "spa": 0,
+     "spd": 2,
+     "spe": 0
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Helping Hand",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Bold",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Inner Focus",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Alakazite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Alakazam",
+    "nature": "Serious",
+    "species": "Alakazam"
+   },
+   {
+    "ability": "Snow Warning",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Ninetales",
+    "nature": "Serious",
+    "species": "Ninetales-Alola"
+   },
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Torch Song",
+     "Rest"
+    ],
+    "name": "Skeledirge",
+    "nature": "Serious",
+    "species": "Skeledirge"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "expandingforce",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 194,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "darkestlariat",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "darkestlariat": 11,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "innerfocus",
+       "canMega": true,
+       "hp": 162,
+       "item": "alakazite",
+       "maxhp": 162,
+       "name": "Alakazam",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Alakazam",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 9,
+       "item": "",
+       "lastMove": "trickroom",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 20,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 81,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "blaze",
+       "hp": 211,
+       "item": "sitrusberry",
+       "maxhp": 211,
+       "name": "Skeledirge",
+       "pp": {
+        "rest": 8,
+        "torchsong": 12
+       },
+       "slot": null,
+       "species": "Skeledirge",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "expandingforce",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "expandingforce": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 194,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "partingshot",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "darkestlariat": 11,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "innerfocus",
+       "canMega": true,
+       "hp": 162,
+       "item": "alakazite",
+       "maxhp": 162,
+       "name": "Alakazam",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Alakazam",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": "fnt"
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 0,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": "fnt"
+      },
+      {
+       "ability": "blaze",
+       "hp": 211,
+       "item": "sitrusberry",
+       "maxhp": 211,
+       "name": "Skeledirge",
+       "pp": {
+        "rest": 8,
+        "torchsong": 12
+       },
+       "slot": null,
+       "species": "Skeledirge",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "expandingforce",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "expandingforce": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 194,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "partingshot",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "darkestlariat": 11,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "innerfocus",
+       "boosts": {},
+       "canMega": true,
+       "hp": 162,
+       "item": "alakazite",
+       "maxhp": 162,
+       "name": "Alakazam",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Alakazam",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 0,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 211,
+       "item": "sitrusberry",
+       "maxhp": 211,
+       "name": "Skeledirge",
+       "pp": {
+        "rest": 8,
+        "torchsong": 12
+       },
+       "slot": 1,
+       "species": "Skeledirge",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "snowscape",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 159,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "expandingforce",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "expandingforce": 9,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 194,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "darkestlariat",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "darkestlariat": 10,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "innerfocus",
+       "boosts": {},
+       "canMega": true,
+       "hp": 162,
+       "item": "alakazite",
+       "lastMove": "protect",
+       "maxhp": 162,
+       "name": "Alakazam",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Alakazam",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 0,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {
+        "spa": 1
+       },
+       "hp": 130,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "torchsong",
+       "maxhp": 211,
+       "name": "Skeledirge",
+       "pp": {
+        "rest": 8,
+        "torchsong": 11
+       },
+       "slot": 1,
+       "species": "Skeledirge",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move expandingforce 1, move darkestlariat 1",
+   "move trickroom, switch 3"
+  ],
+  [
+   "move expandingforce 2, move partingshot 1",
+   "move helpinghand -2, move rest"
+  ],
+  [
+   "",
+   "switch 3, switch 4"
+  ],
+  [
+   "move expandingforce 2, move darkestlariat 1",
+   "move protect, move torchsong 1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "cudchew",
+      "boosts": {},
+      "hp": 227,
+      "item": "sitrusberry",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "expandingforce": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Farigiraf",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "sandveil",
+      "hp": 215,
+      "item": "",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Garchomp",
+      "status": ""
+     },
+     {
+      "ability": "goodasgold",
+      "hp": 194,
+      "item": "",
+      "maxhp": 194,
+      "name": "Gholdengo",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Gholdengo",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "darkestlariat": 12,
+       "partingshot": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "innerfocus",
+      "boosts": {},
+      "canMega": true,
+      "hp": 162,
+      "item": "alakazite",
+      "maxhp": 162,
+      "name": "Alakazam",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Alakazam",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "helpinghand": 20,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": 0,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "snowwarning",
+      "hp": 180,
+      "item": "",
+      "maxhp": 180,
+      "name": "Ninetales",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Ninetales-Alola",
+      "status": ""
+     },
+     {
+      "ability": "blaze",
+      "hp": 211,
+      "item": "sitrusberry",
+      "maxhp": 211,
+      "name": "Skeledirge",
+      "pp": {
+       "rest": 8,
+       "torchsong": 12
+      },
+      "slot": null,
+      "species": "Skeledirge",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move expandingforce 1, move darkestlariat 1",
+  "p2": "move rest mega, move torchsong 2"
+ }
+}

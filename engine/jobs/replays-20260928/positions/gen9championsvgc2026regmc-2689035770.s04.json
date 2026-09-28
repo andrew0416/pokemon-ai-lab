@@ -1,0 +1,1071 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689035770 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689035770), decision 4 = turn 3 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Iron Fist",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 2,
+     "spa": 0,
+     "spd": 0,
+     "spe": 32
+    },
+    "gender": "",
+    "item": "Golurkite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Headlong Rush",
+     "Rest"
+    ],
+    "name": "Golurk",
+    "nature": "Jolly",
+    "species": "Golurk"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Cute Charm",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Sylveon",
+    "nature": "Serious",
+    "species": "Sylveon"
+   },
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Moxie",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "High Horsepower",
+     "Rest"
+    ],
+    "name": "Krookodile",
+    "nature": "Serious",
+    "species": "Krookodile"
+   },
+   {
+    "ability": "Keen Eye",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Rest"
+    ],
+    "name": "Sableye",
+    "nature": "Serious",
+    "species": "Sableye"
+   },
+   {
+    "ability": "Torrent",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hyper Voice",
+     "Rest"
+    ],
+    "name": "Primarina",
+    "nature": "Serious",
+    "species": "Primarina"
+   },
+   {
+    "ability": "Toxic Debris",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Glimmora",
+    "nature": "Serious",
+    "species": "Glimmora"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "unseenfist",
+       "boosts": {
+        "def": -1,
+        "spd": -1
+       },
+       "hp": 166,
+       "item": "golurkite",
+       "lastMove": "headlongrush",
+       "maxhp": 166,
+       "name": "Golurk",
+       "pp": {
+        "headlongrush": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golurk-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": "fnt"
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sylveon",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 190,
+       "item": "",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "moxie",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 202,
+       "item": "",
+       "lastMove": "highhorsepower",
+       "maxhp": 202,
+       "name": "Krookodile",
+       "pp": {
+        "highhorsepower": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Krookodile",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      },
+      {
+       "ability": "keeneye",
+       "hp": 0,
+       "item": "",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "unseenfist",
+       "boosts": {
+        "def": -1,
+        "spd": -1
+       },
+       "hp": 166,
+       "item": "golurkite",
+       "lastMove": "headlongrush",
+       "maxhp": 166,
+       "name": "Golurk",
+       "pp": {
+        "headlongrush": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golurk-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sylveon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 190,
+       "item": "",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "moxie",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 202,
+       "item": "",
+       "lastMove": "highhorsepower",
+       "maxhp": 202,
+       "name": "Krookodile",
+       "pp": {
+        "highhorsepower": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Krookodile",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "keeneye",
+       "hp": 0,
+       "item": "",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "unseenfist",
+       "boosts": {
+        "def": -2,
+        "spd": -2
+       },
+       "hp": 166,
+       "item": "golurkite",
+       "lastMove": "headlongrush",
+       "maxhp": 166,
+       "name": "Golurk",
+       "pp": {
+        "headlongrush": 6,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golurk-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 0,
+       "item": "",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sylveon",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 190,
+       "item": "",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "moxie",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 33,
+       "item": "",
+       "lastMove": "highhorsepower",
+       "maxhp": 202,
+       "name": "Krookodile",
+       "pp": {
+        "highhorsepower": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Krookodile",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "lastMove": "hypervoice",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "hypervoice": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "keeneye",
+       "hp": 0,
+       "item": "",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unseenfist",
+       "boosts": {
+        "def": -2,
+        "spd": -2
+       },
+       "hp": 166,
+       "item": "golurkite",
+       "lastMove": "headlongrush",
+       "maxhp": 166,
+       "name": "Golurk",
+       "pp": {
+        "headlongrush": 6,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golurk-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 0,
+       "item": "",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sylveon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 190,
+       "item": "",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "moxie",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 33,
+       "item": "",
+       "lastMove": "highhorsepower",
+       "maxhp": 202,
+       "name": "Krookodile",
+       "pp": {
+        "highhorsepower": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Krookodile",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "lastMove": "hypervoice",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "hypervoice": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "keeneye",
+       "hp": 0,
+       "item": "",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move headlongrush 2 mega, move rest",
+   "move highhorsepower 2, move fakeout 2"
+  ],
+  [
+   "switch 3",
+   "switch 3"
+  ],
+  [
+   "move headlongrush 1, move rest",
+   "move highhorsepower 2, move hypervoice"
+  ],
+  [
+   "switch 4",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "cudchew",
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Farigiraf",
+      "status": ""
+     },
+     {
+      "ability": "ironfist",
+      "boosts": {},
+      "canMega": true,
+      "hp": 166,
+      "item": "golurkite",
+      "maxhp": 166,
+      "name": "Golurk",
+      "pp": {
+       "headlongrush": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Golurk",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "boosts": {},
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Sneasler",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cutecharm",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Sylveon",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sylveon",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "toxicdebris",
+      "hp": 190,
+      "item": "",
+      "maxhp": 190,
+      "name": "Glimmora",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Glimmora",
+      "status": ""
+     },
+     {
+      "ability": "moxie",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Krookodile",
+      "pp": {
+       "highhorsepower": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Krookodile",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "torrent",
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Primarina",
+      "pp": {
+       "hypervoice": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Primarina",
+      "status": ""
+     },
+     {
+      "ability": "keeneye",
+      "boosts": {},
+      "hp": 157,
+      "item": "",
+      "maxhp": 157,
+      "name": "Sableye",
+      "pp": {
+       "fakeout": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Sableye",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move headlongrush -2, move rest",
+  "p2": "move highhorsepower 2, move hypervoice"
+ }
+}

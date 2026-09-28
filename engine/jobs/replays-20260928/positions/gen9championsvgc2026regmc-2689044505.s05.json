@@ -1,0 +1,1309 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689044505 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044505), decision 5 = turn 4 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Leaf Guard",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Power Whip",
+     "Rest"
+    ],
+    "name": "Tsareena",
+    "nature": "Serious",
+    "species": "Tsareena"
+   },
+   {
+    "ability": "Flame Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Taunt",
+     "Air Slash",
+     "Tailwind",
+     "Rest"
+    ],
+    "name": "Talonflame",
+    "nature": "Serious",
+    "species": "Talonflame"
+   },
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Raichunite X",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Raichu",
+    "nature": "Serious",
+    "species": "Raichu"
+   },
+   {
+    "ability": "Volt Absorb",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 2,
+     "spa": 32,
+     "spd": 0,
+     "spe": 32
+    },
+    "gender": "F",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rising Voltage",
+     "Rest"
+    ],
+    "name": "Jolteon",
+    "nature": "Serious",
+    "species": "Jolteon"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Torrent",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Snipe Shot",
+     "Rest"
+    ],
+    "name": "Mista",
+    "nature": "Serious",
+    "species": "Inteleon"
+   },
+   {
+    "ability": "Flame Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Mental Herb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Fiery Dance",
+     "Rest"
+    ],
+    "name": "Silky",
+    "nature": "Serious",
+    "species": "Volcarona"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Rest"
+    ],
+    "name": "BamBam",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Cute Charm",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Clefable",
+    "nature": "Serious",
+    "species": "Clefable"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "voltabsorb",
+       "hp": 142,
+       "item": "lifeorb",
+       "maxhp": 142,
+       "name": "Jolteon",
+       "pp": {
+        "rest": 8,
+        "risingvoltage": 20
+       },
+       "slot": null,
+       "species": "Jolteon",
+       "status": ""
+      },
+      {
+       "ability": "static",
+       "canMega": true,
+       "hp": 167,
+       "item": "raichunitex",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Raichu",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 185,
+       "item": "focussash",
+       "lastMove": "taunt",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "airslash": 16,
+        "rest": 8,
+        "tailwind": 16,
+        "taunt": 19
+       },
+       "slot": 1,
+       "species": "Talonflame",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "leafguard",
+       "boosts": {},
+       "hp": 179,
+       "item": "",
+       "lastMove": "powerwhip",
+       "maxhp": 179,
+       "name": "Tsareena",
+       "pp": {
+        "powerwhip": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Tsareena",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "BamBam",
+       "pp": {
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Clefable",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Clefable",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 177,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "snipeshot": 16
+       },
+       "slot": 0,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 192,
+       "item": "",
+       "lastItem": "mentalherb",
+       "lastMove": "tailwind",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "fierydance": 12,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "voltabsorb",
+       "hp": 142,
+       "item": "lifeorb",
+       "maxhp": 142,
+       "name": "Jolteon",
+       "pp": {
+        "rest": 8,
+        "risingvoltage": 20
+       },
+       "slot": null,
+       "species": "Jolteon",
+       "status": ""
+      },
+      {
+       "ability": "static",
+       "canMega": true,
+       "hp": 167,
+       "item": "raichunitex",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Raichu",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "airslash",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "airslash": 15,
+        "rest": 8,
+        "tailwind": 16,
+        "taunt": 19
+       },
+       "slot": 1,
+       "species": "Talonflame",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "leafguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 179,
+       "name": "Tsareena",
+       "pp": {
+        "powerwhip": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Tsareena",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "BamBam",
+       "pp": {
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Clefable",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Clefable",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 177,
+       "item": "",
+       "lastMove": "snipeshot",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": 0,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "spa": 1
+       },
+       "hp": 106,
+       "item": "",
+       "lastItem": "mentalherb",
+       "lastMove": "fierydance",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "fierydance": 11,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "voltabsorb",
+       "hp": 142,
+       "item": "lifeorb",
+       "maxhp": 142,
+       "name": "Jolteon",
+       "pp": {
+        "rest": 8,
+        "risingvoltage": 20
+       },
+       "slot": null,
+       "species": "Jolteon",
+       "status": ""
+      },
+      {
+       "ability": "static",
+       "boosts": {},
+       "canMega": true,
+       "hp": 167,
+       "item": "raichunitex",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Raichu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "airslash",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "airslash": 15,
+        "rest": 8,
+        "tailwind": 16,
+        "taunt": 19
+       },
+       "slot": 1,
+       "species": "Talonflame",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "leafguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 179,
+       "name": "Tsareena",
+       "pp": {
+        "powerwhip": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Tsareena",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "BamBam",
+       "pp": {
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Clefable",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Clefable",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 177,
+       "item": "",
+       "lastMove": "snipeshot",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": 0,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "spa": 1
+       },
+       "hp": 106,
+       "item": "",
+       "lastItem": "mentalherb",
+       "lastMove": "fierydance",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "fierydance": 11,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "voltabsorb",
+       "hp": 142,
+       "item": "lifeorb",
+       "maxhp": 142,
+       "name": "Jolteon",
+       "pp": {
+        "rest": 8,
+        "risingvoltage": 20
+       },
+       "slot": null,
+       "species": "Jolteon",
+       "status": ""
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 0,
+       "item": "raichunitex",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Raichu-Mega-X",
+       "status": "fnt"
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "tailwind",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "airslash": 15,
+        "rest": 8,
+        "tailwind": 15,
+        "taunt": 19
+       },
+       "slot": 1,
+       "species": "Talonflame",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "leafguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 179,
+       "name": "Tsareena",
+       "pp": {
+        "powerwhip": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Tsareena",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "BamBam",
+       "pp": {
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Clefable",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Clefable",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 177,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 6,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": 0,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "spa": 2
+       },
+       "hp": 106,
+       "item": "",
+       "lastItem": "mentalherb",
+       "lastMove": "fierydance",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "fierydance": 10,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "voltabsorb",
+       "boosts": {},
+       "hp": 142,
+       "item": "lifeorb",
+       "maxhp": 142,
+       "name": "Jolteon",
+       "pp": {
+        "rest": 8,
+        "risingvoltage": 20
+       },
+       "slot": 0,
+       "species": "Jolteon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 0,
+       "item": "raichunitex",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Raichu-Mega-X",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "tailwind",
+       "maxhp": 185,
+       "name": "Talonflame",
+       "pp": {
+        "airslash": 15,
+        "rest": 8,
+        "tailwind": 15,
+        "taunt": 19
+       },
+       "slot": 1,
+       "species": "Talonflame",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "leafguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 179,
+       "name": "Tsareena",
+       "pp": {
+        "powerwhip": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Tsareena",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "BamBam",
+       "pp": {
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Clefable",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Clefable",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 177,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 6,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": 0,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "spa": 2
+       },
+       "hp": 106,
+       "item": "",
+       "lastItem": "mentalherb",
+       "lastMove": "fierydance",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "fierydance": 10,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move powerwhip 1, move taunt 2",
+   "move protect, move tailwind"
+  ],
+  [
+   "move powerwhip -2, move airslash 2",
+   "move snipeshot 2, move fierydance 1"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move rest mega, move tailwind",
+   "move protect, move fierydance 1"
+  ],
+  [
+   "switch 4",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "voltabsorb",
+      "hp": 142,
+      "item": "lifeorb",
+      "maxhp": 142,
+      "name": "Jolteon",
+      "pp": {
+       "rest": 8,
+       "risingvoltage": 20
+      },
+      "slot": null,
+      "species": "Jolteon",
+      "status": ""
+     },
+     {
+      "ability": "static",
+      "canMega": true,
+      "hp": 167,
+      "item": "raichunitex",
+      "maxhp": 167,
+      "name": "Raichu",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Raichu",
+      "status": ""
+     },
+     {
+      "ability": "flamebody",
+      "boosts": {},
+      "hp": 185,
+      "item": "focussash",
+      "maxhp": 185,
+      "name": "Talonflame",
+      "pp": {
+       "airslash": 16,
+       "rest": 8,
+       "tailwind": 16,
+       "taunt": 20
+      },
+      "slot": 1,
+      "species": "Talonflame",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "leafguard",
+      "boosts": {},
+      "hp": 179,
+      "item": "",
+      "maxhp": 179,
+      "name": "Tsareena",
+      "pp": {
+       "powerwhip": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Tsareena",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "grassysurge",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "BamBam",
+      "pp": {
+       "fakeout": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     },
+     {
+      "ability": "cutecharm",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Clefable",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Clefable",
+      "status": ""
+     },
+     {
+      "ability": "torrent",
+      "boosts": {},
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Mista",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "snipeshot": 16
+      },
+      "slot": 0,
+      "species": "Inteleon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "flamebody",
+      "boosts": {},
+      "hp": 192,
+      "item": "mentalherb",
+      "maxhp": 192,
+      "name": "Silky",
+      "pp": {
+       "fierydance": 12,
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": 1,
+      "species": "Volcarona",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move risingvoltage 2, move airslash 1",
+  "p2": "move snipeshot 1, move tailwind"
+ }
+}

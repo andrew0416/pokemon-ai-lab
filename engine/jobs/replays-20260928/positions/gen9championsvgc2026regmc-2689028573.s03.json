@@ -1,0 +1,936 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689028573 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689028573), decision 3 = turn 3 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Torrent",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Snipe Shot",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Mista",
+    "nature": "Serious",
+    "species": "Inteleon"
+   },
+   {
+    "ability": "Snow Warning",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Blizzard",
+     "Rest"
+    ],
+    "name": "Ice Feam",
+    "nature": "Serious",
+    "species": "Vanilluxe"
+   },
+   {
+    "ability": "Overgrow",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "BamBam",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Cute Charm",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Clefable",
+    "nature": "Serious",
+    "species": "Clefable"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Steadfast",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Lucarionite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Calm Mind",
+     "Rest"
+    ],
+    "name": "Lucario",
+    "nature": "Serious",
+    "species": "Lucario"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wide Guard",
+     "Weather Ball",
+     "Rest"
+    ],
+    "name": "Pelipper",
+    "nature": "Serious",
+    "species": "Pelipper"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Grassy Glide",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Keen Eye",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Sableye",
+    "nature": "Serious",
+    "species": "Sableye"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "overgrow",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "BamBam",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Clefable",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Clefable",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 178,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "blizzard": 8,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 177,
+       "item": "",
+       "lastMove": "snipeshot",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": 0,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "auraguard",
+       "hp": 0,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "calmmind": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario-Mega-Z",
+       "status": "fnt"
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "wideguard",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 12,
+        "wideguard": 11
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "leftovers",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "keeneye",
+       "hp": 157,
+       "item": "",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 5,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "overgrow",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "BamBam",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Clefable",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Clefable",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 178,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "blizzard": 8,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 177,
+       "item": "",
+       "lastMove": "snipeshot",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": 0,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "auraguard",
+       "hp": 0,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "calmmind": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "wideguard",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 12,
+        "wideguard": 11
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "leftovers",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "keeneye",
+       "hp": 157,
+       "item": "",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "overgrow",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "BamBam",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Clefable",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Clefable",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 80,
+       "item": "",
+       "lastMove": "blizzard",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "blizzard": 7,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 177,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 177,
+       "name": "Mista",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": 0,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "auraguard",
+       "hp": 0,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "calmmind": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 82,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 11,
+        "wideguard": 11
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 63,
+       "item": "leftovers",
+       "lastMove": "grassyglide",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "keeneye",
+       "hp": 157,
+       "item": "",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move snipeshot 1, move protect",
+   "move calmmind mega, move wideguard"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move protect, move blizzard",
+   "move grassyglide 1, move weatherball 2"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "overgrow",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "BamBam",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     },
+     {
+      "ability": "cutecharm",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Clefable",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Clefable",
+      "status": ""
+     },
+     {
+      "ability": "snowwarning",
+      "boosts": {},
+      "hp": 178,
+      "item": "",
+      "maxhp": 178,
+      "name": "Ice Feam",
+      "pp": {
+       "blizzard": 8,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Vanilluxe",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "torrent",
+      "boosts": {},
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Mista",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "snipeshot": 16
+      },
+      "slot": 0,
+      "species": "Inteleon",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "steadfast",
+      "boosts": {},
+      "canMega": true,
+      "hp": 177,
+      "item": "lucarionitez",
+      "maxhp": 177,
+      "name": "Lucario",
+      "pp": {
+       "calmmind": 20,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Lucario",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {},
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Pelipper",
+      "pp": {
+       "rest": 8,
+       "weatherball": 12,
+       "wideguard": 12
+      },
+      "slot": 1,
+      "species": "Pelipper",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 207,
+      "item": "leftovers",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "grassyglide": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     },
+     {
+      "ability": "keeneye",
+      "hp": 157,
+      "item": "",
+      "maxhp": 157,
+      "name": "Sableye",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sableye",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "switch 3, move blizzard",
+  "p2": "move grassyglide 2, move weatherball 1"
+ }
+}

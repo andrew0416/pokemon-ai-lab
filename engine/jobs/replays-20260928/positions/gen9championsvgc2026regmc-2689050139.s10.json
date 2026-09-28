@@ -1,0 +1,2143 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689050139 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689050139), decision 10 = turn 7 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Rough Skin",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Earthquake",
+     "Rock Slide",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Staraptite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Staraptor",
+    "nature": "Serious",
+    "species": "Staraptor"
+   },
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Moonblast",
+     "Rest"
+    ],
+    "name": "Whimsicott",
+    "nature": "Serious",
+    "species": "Whimsicott"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Parting Shot",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Raichunite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Zap Cannon",
+     "Protect",
+     "Focus Blast",
+     "Rest"
+    ],
+    "name": "Raichu",
+    "nature": "Serious",
+    "species": "Raichu"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Grassy Glide",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Flame Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Struggle Bug",
+     "Overheat",
+     "Rest"
+    ],
+    "name": "Volcarona",
+    "nature": "Serious",
+    "species": "Volcarona"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 200,
+       "item": "sitrusberry",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 12,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "lifeorb",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "moonblast": 16,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 177,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "noguard",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 167,
+       "item": "raichunitey",
+       "lastMove": "zapcannon",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 8,
+        "protect": 8,
+        "rest": 8,
+        "zapcannon": 7
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8,
+        "strugglebug": 20
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 200,
+       "item": "sitrusberry",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 12,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "lifeorb",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "moonblast": 16,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 177,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "noguard",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 167,
+       "item": "raichunitey",
+       "lastMove": "zapcannon",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 8,
+        "protect": 8,
+        "rest": 8,
+        "zapcannon": 7
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8,
+        "strugglebug": 20
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 185,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 213,
+       "item": "sitrusberry",
+       "lastMove": "earthquake",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 11,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "lifeorb",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "moonblast": 16,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 177,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 167,
+       "item": "raichunitey",
+       "lastMove": "protect",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 8,
+        "protect": 7,
+        "rest": 8,
+        "zapcannon": 7
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 201,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8,
+        "strugglebug": 20
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": "fnt"
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 215,
+       "item": "sitrusberry",
+       "lastMove": "earthquake",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 10,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "lifeorb",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "moonblast": 16,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 117,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "noguard",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 75,
+       "item": "raichunitey",
+       "lastMove": "zapcannon",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 8,
+        "protect": 7,
+        "rest": 8,
+        "zapcannon": 6
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 201,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8,
+        "strugglebug": 20
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 215,
+       "item": "sitrusberry",
+       "lastMove": "earthquake",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 10,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 167,
+       "item": "lifeorb",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "moonblast": 16,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 117,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "noguard",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 75,
+       "item": "raichunitey",
+       "lastMove": "zapcannon",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 8,
+        "protect": 7,
+        "rest": 8,
+        "zapcannon": 6
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 201,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8,
+        "strugglebug": 20
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 121,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "earthquake",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 10,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 167,
+       "item": "lifeorb",
+       "lastMove": "protect",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "moonblast": 16,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 104,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 10,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "noguard",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 85,
+       "item": "raichunitey",
+       "lastMove": "focusblast",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 7,
+        "protect": 7,
+        "rest": 8,
+        "zapcannon": 6
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 201,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8,
+        "strugglebug": 20
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {
+        "atk": -1,
+        "spa": -1
+       },
+       "hp": 134,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "earthquake",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 9,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 55,
+       "item": "lifeorb",
+       "lastMove": "moonblast",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "moonblast": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "par",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 36,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 10,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "hp": 0,
+       "item": "raichunitey",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 7,
+        "protect": 7,
+        "rest": 8,
+        "zapcannon": 5
+       },
+       "slot": null,
+       "species": "Raichu-Mega-Y",
+       "status": "fnt"
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 95,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8,
+        "strugglebug": 20
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {
+        "atk": -1,
+        "spa": -1
+       },
+       "hp": 134,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "earthquake",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 9,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 55,
+       "item": "lifeorb",
+       "lastMove": "moonblast",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "moonblast": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "par",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 36,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 10,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "hp": 0,
+       "item": "raichunitey",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 7,
+        "protect": 7,
+        "rest": 8,
+        "zapcannon": 5
+       },
+       "slot": null,
+       "species": "Raichu-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 95,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8,
+        "strugglebug": 20
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {
+        "atk": -1,
+        "spa": -2
+       },
+       "hp": 44,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "rockslide",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 9,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "moonblast": 14,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": "fnt"
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 36,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 10,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "hp": 0,
+       "item": "raichunitey",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 7,
+        "protect": 7,
+        "rest": 8,
+        "zapcannon": 5
+       },
+       "slot": null,
+       "species": "Raichu-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": "fnt"
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 84,
+       "item": "",
+       "lastMove": "strugglebug",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8,
+        "strugglebug": 19
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {
+        "atk": -1,
+        "spa": -2
+       },
+       "hp": 44,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "rockslide",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthquake": 9,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "moonblast": 14,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": "fnt"
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 36,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 10,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "noguard",
+       "hp": 0,
+       "item": "raichunitey",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 7,
+        "protect": 7,
+        "rest": 8,
+        "zapcannon": 5
+       },
+       "slot": null,
+       "species": "Raichu-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 84,
+       "item": "",
+       "lastMove": "strugglebug",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8,
+        "strugglebug": 19
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move earthquake, move rest mega",
+   "move fakeout 1, move zapcannon 2 mega"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move earthquake, move protect",
+   "switch 3, move protect"
+  ],
+  [
+   "move earthquake, move rest",
+   "switch 3, move zapcannon 2"
+  ],
+  [
+   "switch 4",
+   ""
+  ],
+  [
+   "move rest, move protect",
+   "move fakeout 1, move focusblast 1"
+  ],
+  [
+   "move earthquake, move moonblast 1",
+   "move partingshot 1, move zapcannon 2",
+   {
+    "p1": [],
+    "p2": [
+     "switch 3"
+    ]
+   }
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move rockslide, move moonblast 1",
+   "move grassyglide 1, move strugglebug"
+  ],
+  [
+   "",
+   "switch 3"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "blaze",
+      "hp": 185,
+      "item": "",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Charizard",
+      "status": ""
+     },
+     {
+      "ability": "roughskin",
+      "boosts": {},
+      "hp": 215,
+      "item": "sitrusberry",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "earthquake": 12,
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": 0,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "canMega": true,
+      "hp": 192,
+      "item": "staraptite",
+      "maxhp": 192,
+      "name": "Staraptor",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Staraptor",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "hp": 167,
+      "item": "lifeorb",
+      "maxhp": 167,
+      "name": "Whimsicott",
+      "pp": {
+       "moonblast": 16,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Whimsicott",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "blaze",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "partingshot": 20,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "static",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 167,
+      "item": "raichunitey",
+      "maxhp": 167,
+      "name": "Raichu",
+      "pp": {
+       "focusblast": 8,
+       "protect": 8,
+       "rest": 8,
+       "zapcannon": 8
+      },
+      "slot": 1,
+      "species": "Raichu",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "grassyglide": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     },
+     {
+      "ability": "flamebody",
+      "hp": 192,
+      "item": "",
+      "maxhp": 192,
+      "name": "Volcarona",
+      "pp": {
+       "overheat": 8,
+       "rest": 8,
+       "strugglebug": 20
+      },
+      "slot": null,
+      "species": "Volcarona",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move earthquake, pass",
+  "p2": "move fakeout 1, move overheat 1"
+ }
+}
