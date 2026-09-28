@@ -172,7 +172,7 @@
    "board": "R1-trace-seeking",
    "why": "`check_state`, `mega_target` and `switch_in_problem` refuse an ability `ability_supported_on_field` rejects; every standard ability is supported on the field (E1), Trace too since R1 (its seeking `onUpdate` is `switching::trace_update`), so neither a Trace Mega (Alakazam-Mega, both Meowstic Megas) nor a Trace that never started is refused."
   },
-  "check_side: -> mega::mega_target(mon)": {
+  "check_slot: -> mega::mega_target(mon)": {
    "reachable": "no",
    "kind": "forward",
    "board": "R1-trace-seeking",
@@ -275,7 +275,7 @@
    "board": "R14-called-multi-hit",
    "why": "Copycat's and Sleep Talk's called multi-hit moves suspend between their hits (the caller waits in `CallerFrame`; fixed: `rr-copycat-multihit`, `nn-copycat-bullet-seed`); only Mirror Move, which calls from `onTryHit` and is not standard (E8), is still refused."
   },
-  "check_side: -> why": {
+  "check_slot: -> why": {
    "reachable": "no",
    "kind": "forward",
    "board": "R14-called-multi-hit",

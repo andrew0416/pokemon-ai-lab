@@ -152,7 +152,7 @@
 
 | 키 | 지점 | 이유 | 보드 |
 |---|---|---|---|
-| `{} activation (effects not implemented)` | mod.rs::check_side | The M-C ruleset allows only Mega Evolution; other gimmicks are rejected before (`ActionError`). | R20-generic-guards |
+| `{} activation (effects not implemented)` | mod.rs::check_slot | The M-C ruleset allows only Mega Evolution; other gimmicks are rejected before (`ActionError`). | R20-generic-guards |
 | `{}: Dynamax` | support.rs::check_state (producer) | The M-C ruleset forbids Dynamax. | R20-generic-guards |
 
 ### shape: the battle shape (doubles only)
@@ -165,8 +165,8 @@
 
 | 키 | 지점 | 이유 | 보드 |
 |---|---|---|---|
-| `check_side: -> mega::mega_target(mon)` | mod.rs::check_side | Forwards `mega_target` for a Mega choice; none of its messages is reachable: `{}: ability {} ({})` (every Mega ability is supported, E1; Trace since R1), `{} holding {} has no Mega Evolution` and `{}: species callbacks {}`. | R1-trace-seeking |
-| `check_side: -> why` | mod.rs::check_side | Forwards `move_unsupported` (Struggle, the chosen move: E1) and `sleep_talk_problem`, whose remaining messages are unreachable (`Sleep Talk could call {}`: E1; an unchecked onAfterMove: E12). The multi-hit one is fixed (`rr-sleep-talk-multihit`). | R14-called-multi-hit |
+| `check_slot: -> mega::mega_target(mon)` | mod.rs::check_slot | Forwards `mega_target` for a Mega choice; none of its messages is reachable: `{}: ability {} ({})` (every Mega ability is supported, E1; Trace since R1), `{} holding {} has no Mega Evolution` and `{}: species callbacks {}`. | R1-trace-seeking |
+| `check_slot: -> why` | mod.rs::check_slot | Forwards `move_unsupported` (Struggle, the chosen move: E1) and `sleep_talk_problem`, whose remaining messages are unreachable (`Sleep Talk could call {}`: E1; an unchecked onAfterMove: E12). The multi-hit one is fixed (`rr-sleep-talk-multihit`). | R14-called-multi-hit |
 | `check_turn: -> support::check_state(state)` | mod.rs::check_turn | Forwards `check_state`: its Rivalry gender check is unreachable since R13b (the initial distribution decides the genders a Rivalry holder could read); its `{}: ability {} ({})` is not since R1 (Trace on the field is supported). | R13-attract-gender |
 | `enumerate_start: -> why` | mod.rs::enumerate_start | Forwards `switching_problem_at_start`: no standard item, species or ability has an unimplemented switch-in handler (E1, E2). | R20-generic-guards |
 | `run_mega_evo: -> why` | mega.rs::run_mega_evo | Shadowed: `check_side` runs the same `mega_target` on the chosen Pokémon, and nothing changes its species or item between the choice and the Mega action (Mega Stones cannot be taken). | R20-generic-guards |
@@ -176,7 +176,7 @@
 
 | 보드 | 도달 가능 | 도달 불가능 |
 |---|---|---|
-| R1-trace-seeking | — | `check_side: -> mega::mega_target(mon)`<br>`Trace next to No Ability`<br>`Trace copying {} (cantsuppress: setAbility fails and Trace keeps seeking)`<br>`Trace copying {} ({})`<br>`{}: ability {} ({})` |
+| R1-trace-seeking | — | `check_slot: -> mega::mega_target(mon)`<br>`Trace next to No Ability`<br>`Trace copying {} (cantsuppress: setAbility fails and Trace keeps seeking)`<br>`Trace copying {} ({})`<br>`{}: ability {} ({})` |
 | R5-future-move-edges | — | `{}: a multi-hit future move` |
 | R5c-future-move-absent-user-occupant | `{} of {} hitting after its user left the field, {}` | — |
 | R8-encore-edges | — | `Transform by an encored Pokémon (the encored move leaves the move slots)` |
@@ -184,7 +184,7 @@
 | R11-item-restart | — | `Pickup restoring {} (its Start / End for a new holder)` |
 | R12-syrup-bomb-source | — | `Syrup Bomb's residual with its source neither active nor fainted in place` |
 | R13-attract-gender | `switch_in_as: -> why` | `Skill Swap: {}`<br>`Attract between {} and {} with an undecided gender (give the sets a gender)`<br>`check_turn: -> support::check_state(state)`<br>`{} with {} of undecided gender (give the set a gender)`<br>`{}: Rivalry next to a Pokémon of undecided gender`<br>`Rivalry next to {} of undecided gender (give the set a gender)` |
-| R14-called-multi-hit | — | `check_side: -> why`<br>`{} called by {}: a multi-hit called move`<br>`Sleep Talk calling {} (its onAfterMove, unchecked for a called move)` |
+| R14-called-multi-hit | — | `check_slot: -> why`<br>`{} called by {}: a multi-hit called move`<br>`Sleep Talk calling {} (its onAfterMove, unchecked for a called move)` |
 | R18-baton-pass-volatiles | — | `Baton Pass passing the {} volatile` |
 | R19-transformed-off-field | — | `Transform copying {} ({})`<br>`{}: transformed off the field` |
 | R20-generic-guards | — | `{} restarting after Neutralizing Gas at 0 HP`<br>`Gluttony restarting after Neutralizing Gas (its abilityState.gluttony = false)`<br>`Cud Chew eating {}`<br>`two Dancers with the same Speed (Showdown orders them by abilityState.effectOrder)`<br>`{} gaining {} ({})`<br>`an ability stealing {} ({})`<br>`Zygarde-Complete fainting (Power Construct's formeRegression to the set's forme)`<br>`Shields Down on {}: the core colour (the set's species) is not in the state`<br>`Power Construct on {}`<br>`Power Construct making a Zygarde holding {} able to Mega Evolve`<br>`{}: Utility Umbrella's `inactive` item state past the end of a stage (its onUpdate has not run)`<br>`{}: Mirror Herb keeps copied boosts past the end of a stage (its effectState persists until the next trigger)`<br>`run_mega_evo: -> why`<br>`enumerate_start: -> why`<br>`a switch request for {} slot {} (Eject Pack) during {}`<br>`{} activation (effects not implemented)`<br>`Mirror Move calling {}`<br>`Nature Power calling {}`<br>`{} moving {} ({})`<br>`Order Up from a commanded Dondozo whose Tatsugiri is gone (the source of `commanded` is not in the state)`<br>`Relic Song: Meloetta changing forme after fainting`<br>`{} eating {}`<br>`Fling feeding {}`<br>`Ally Switch in triples`<br>`Trick moving {} ({})`<br>`Dancer copying {}: a multi-hit move`<br>`{} bounced: a multi-hit move`<br>`{}: damageCallback of {}`<br>`ability {} starting ({})`<br>`{}: onWeatherChange`<br>`ability {} ending ({})`<br>`{} eaten by force`<br>`field effect #{} (value {})`<br>`field effect #{} without a duration`<br>`side effect #{}`<br>`{} with {}`<br>`{}: item {} ({})`<br>`{}: species callbacks`<br>`{}: Dynamax`<br>`{}: substitute volatile {} with {} HP`<br>`move {}: {}`<br>`callbacks {} are not implemented`<br>`volatile {}`<br>`side condition {}`<br>`field effect {}`<br>`secondary volatile {}`<br>`multi-hit range`<br>`a special mechanic`<br>`stalling move`<br>`two-turn move`<br>`slot condition`<br>`self effect`<br>`status move with base power`<br>`Sleep Talk could call {}`<br>`{} holding {} has no Mega Evolution`<br>`{}: species callbacks {}`<br>`{}: item {} switch-in handler {}`<br>`{}: species switch-in handler {}`<br>`{}: ability {} switch-in handler ({})`<br>`{}: ability {} switch-in handler {}`<br>`{}: Protosynthesis / Flower Gift next to Air Lock / Cloud Nine (the suppressor's End WeatherChange)`<br>`{}: Symbiosis holding {} ({})`<br>`Protosynthesis / Flower Gift next to Air Lock / Cloud Nine (the suppressor's End WeatherChange)` |
