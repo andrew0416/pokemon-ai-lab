@@ -234,7 +234,7 @@ impl<const N: usize> Battle<'_, N> {
             // Gale Wings: `move.type === 'Flying' && pokemon.hp === pokemon.maxhp`.
             a if a == abilities::GALE_WINGS
                 && data.move_type == Type::Flying
-                && self.slot_mon(slot).is_some_and(|m| m.hp == m.max_hp) =>
+                && self.slot_mon(slot).is_some_and(|m| m.hp_full()) =>
             {
                 priority += 1;
             }

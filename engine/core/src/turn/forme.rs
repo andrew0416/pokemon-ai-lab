@@ -89,7 +89,7 @@ pub(crate) fn gulp_missile_catch<const N: usize>(b: &mut Battle<'_, N>, user: Sl
     if b.ability(user) != abilities::GULP_MISSILE || mon.species != species::CRAMORANT {
         return;
     }
-    let forme = if 2 * i32::from(mon.hp) <= i32::from(mon.max_hp) {
+    let forme = if mon.hp_scaled_le(2, i32::from(mon.max_hp)) {
         species::CRAMORANT_GORGING
     } else {
         species::CRAMORANT_GULPING
@@ -175,8 +175,14 @@ pub(crate) fn forme_change<const N: usize>(
         ability,
         base_ability,
     };
-    let hp = mon.hp;
-    let new_hp = new.hp_after(old.max_hp, hp);
+    // `updateMaxHp` keeps the HP lost: only a change of the max HP reads the HP (a lazy HP is
+    // expanded then).
+    let (hp, new_hp) = if new.max_hp == old.max_hp {
+        (0, 0)
+    } else {
+        let hp = mon.hp_value();
+        (hp, new.hp_after(old.max_hp, hp))
+    };
     if new != old {
         b.apply(Instruction::SetForme {
             target: pokemon,
@@ -483,7 +489,7 @@ fn schooling<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
         return;
     }
     // `pokemon.hp > pokemon.maxhp / 4`.
-    let school = 4 * i32::from(mon.hp) > i32::from(mon.max_hp);
+    let school = !mon.hp_scaled_le(4, i32::from(mon.max_hp));
     if school && mon.species == species::WISHIWASHI {
         forme_change(b, slot, species::WISHIWASHI_SCHOOL, Change::Temporary);
     } else if !school && mon.species == species::WISHIWASHI_SCHOOL {
@@ -505,7 +511,7 @@ fn shields_down<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> Result<
         return Ok(());
     }
     // `pokemon.hp > pokemon.maxhp / 2`.
-    let meteor = 2 * i32::from(mon.hp) > i32::from(mon.max_hp);
+    let meteor = !mon.hp_scaled_le(2, i32::from(mon.max_hp));
     if meteor && mon.species != species::MINIOR_METEOR {
         if mon.species != species::MINIOR {
             return Err(b.unsupported(format!(
@@ -560,20 +566,18 @@ fn hunger_switch<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
 /// the `battleOnly` forme) and `clearVolatile` (the volatiles go, `setSpecies(baseSpecies)`)
 /// give the same as [`revert_on_leave`].
 fn zen_mode<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
-    let Some((forme, hp, max_hp, transformed)) = b
-        .alive(slot)
-        .map(|p| b.mon(p))
-        .map(|m| (m.species, m.hp, m.max_hp, m.transformed.is_some()))
-    else {
+    let Some(pokemon) = b.alive(slot) else {
         return;
     };
+    let (forme, transformed) = (b.mon(pokemon).species, b.mon(pokemon).transformed.is_some());
     // `pokemon.baseSpecies.baseSpecies !== 'Darmanitan' || pokemon.transformed`.
     if forme.data().base_species != species::DARMANITAN || transformed {
         return;
     }
     let zen = [species::DARMANITAN_ZEN, species::DARMANITAN_GALAR_ZEN].contains(&forme);
     // `pokemon.hp <= pokemon.maxhp / 2`.
-    let low = 2 * i32::from(hp) <= i32::from(max_hp);
+    let mon = b.mon(pokemon);
+    let low = mon.hp_scaled_le(2, i32::from(mon.max_hp));
     if low && !zen {
         // `condition.onStart`: `pokemon.species.name.includes('Galar')`.
         let galar = forme == species::DARMANITAN_GALAR;
@@ -640,11 +644,10 @@ pub(crate) fn residual<const N: usize>(
 /// change sets makes a fainting Zygarde-Complete go back to its set's forme, which the state
 /// does not keep: that faint is refused in `Battle::faint_messages`.
 fn power_construct<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> Result<(), TurnError> {
-    let Some((forme, hp, max_hp, item)) = b
+    let Some((pokemon, forme, item)) = b
         .alive(slot)
-        .map(|p| b.mon(p))
-        .filter(|m| m.transformed.is_none())
-        .map(|m| (m.species, m.hp, m.max_hp, m.item))
+        .filter(|&p| b.mon(p).transformed.is_none())
+        .map(|p| (p, b.mon(p).species, b.mon(p).item))
     else {
         // `pokemon.transformed` returns too.
         return Ok(());
@@ -655,7 +658,8 @@ fn power_construct<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) -> Resu
         return Ok(());
     }
     // `if (... || pokemon.hp > pokemon.maxhp / 2) return;`
-    if 2 * i32::from(hp) > i32::from(max_hp) {
+    let mon = b.mon(pokemon);
+    if !mon.hp_scaled_le(2, i32::from(mon.max_hp)) {
         return Ok(());
     }
     if forme != species::ZYGARDE && forme != species::ZYGARDE_10 {

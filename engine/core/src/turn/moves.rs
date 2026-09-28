@@ -29,6 +29,7 @@ use super::abilities::{Handler, SUB_FIELD_CONDITION, SUB_ITEM, SUB_MOVE, SUB_SID
 use super::battle::{ActiveMoveRef, Battle, BoostEffect, DamageSource};
 use super::conditions;
 use super::items as item_events;
+use super::lazy::HpMark;
 use super::order::{boosted_stat, modify};
 use super::support::{side_effect_of, type_boost_item};
 use super::TurnError;
@@ -1986,7 +1987,7 @@ fn use_move_tail<const N: usize>(
     // `if (pokemon && pokemon !== target && move.category !== 'Status')`, then the user's
     // Emergency Exit if the handlers took its HP (`originalHp`, taken just before them) to half.
     let checks_user = user != main_target && mv.data.category != MoveCategory::Status;
-    let hp_before = b.slot_mon(user).map_or(0, |m| m.hp);
+    let hp_before = b.slot_mon(user).map(|m| m.hp_mark());
     if !result {
         // MoveFail: High Jump Kick's crash.
         handlers::on_move_fail(b, user, mv);
@@ -3169,11 +3170,16 @@ fn hit_loop_rest<const N: usize>(
             let Some(pokemon) = b.alive(t) else {
                 continue;
             };
+            // `emergency_exit` does nothing unless the holder acts: checked first, so only a
+            // holder's HP is read.
+            if !super::switching::emergency_exit_acts(b, t) {
+                continue;
+            }
             let current = if mv.spread || smart { damage } else { total };
             let mon = b.mon(pokemon);
-            let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
+            let max_hp = i32::from(mon.max_hp);
             let hurt = b.slot_history(t).hurt_this_turn.map_or(0, i32::from);
-            if 2 * hp <= max_hp && 2 * (hurt + current) > max_hp {
+            if mon.hp_scaled_le(2, max_hp) && 2 * (hurt + current) > max_hp {
                 super::switching::emergency_exit(b, t);
             }
         }
@@ -3277,7 +3283,7 @@ fn spread_move_hit<const N: usize>(
         }
         if let Some(heal) = handlers::move_heal(mv) {
             let target_mon = b.occupant(t).map(|p| b.mon(p));
-            let full = target_mon.is_none_or(|m| m.hp >= m.max_hp);
+            let full = target_mon.is_none_or(|m| m.hp_full());
             if full {
                 results[i] = Hit::Failed;
                 continue;
@@ -3531,7 +3537,7 @@ fn spread_move_hit<const N: usize>(
         })
         .collect();
     // `pokemonOriginalHP`: the user's HP before DamagingHit and AfterHit.
-    let user_hp_before = b.alive(user).map(|p| b.mon(p).hp);
+    let user_hp_before = b.alive(user).map(|p| b.mon(p).hp_mark());
     if !damaged.is_empty() {
         damaging_hit(b, user, mv, &damaged, total_before)?;
     }
@@ -3647,7 +3653,7 @@ fn apply_recoil_damage<const N: usize>(
     let Some(pokemon) = b.alive(user) else {
         return;
     };
-    let (hp_before, max_hp) = (b.mon(pokemon).hp, b.mon(pokemon).max_hp);
+    let (hp_before, max_hp) = (Some(b.mon(pokemon).hp_mark()), b.mon(pokemon).max_hp);
     if mv.data.struggle_recoil {
         let amount = (f64::from(max_hp) / 4.0).round().max(1.0) as i32;
         b.direct_damage(user, amount);
@@ -3677,13 +3683,25 @@ fn apply_recoil_damage<const N: usize>(
 /// Eject Button and Eject Pack see ([`Battle::any_active_switch_flag_true`]); the fainted
 /// Pokémon keeps the flag, and Showdown asks for its replacement mid-turn
 /// ([`crate::state::Slot::must_switch_out`]; oracle `dd-emergency-exit-recoil-eject-pack`).
-fn user_emergency_exit<const N: usize>(b: &mut Battle<'_, N>, user: SlotRef, hp_before: i16) {
+fn user_emergency_exit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    hp_before: Option<HpMark>,
+) {
     let Some(pokemon) = b.occupant(user) else {
         return;
     };
+    // `emergency_exit` does nothing unless the holder acts: checked first, so only a holder's
+    // HP is read. No Pokémon in the slot before: `hpBefore` was 0, never above half.
+    let Some(hp_before) = hp_before else {
+        return;
+    };
+    if !super::switching::emergency_exit_acts(b, user) {
+        return;
+    }
     let mon = b.mon(pokemon);
-    let (hp, max_hp) = (i32::from(mon.hp), i32::from(mon.max_hp));
-    if 2 * hp <= max_hp && 2 * i32::from(hp_before) > max_hp {
+    let max_hp = i32::from(mon.max_hp);
+    if mon.hp_scaled_le(2, max_hp) && !hp_before.hp_scaled_le(2, max_hp) {
         super::switching::emergency_exit(b, user);
     }
 }

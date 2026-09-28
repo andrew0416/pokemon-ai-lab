@@ -824,7 +824,7 @@ pub(crate) fn bench<'b, const N: usize>(
 ) -> impl Iterator<Item = u8> + 'b {
     let s = b.state.side(side);
     (0..s.party.len() as u8).filter(move |&i| {
-        s.party[i as usize].hp > 0 && !s.slots.iter().any(|slot| slot.party_index == Some(i))
+        s.party[i as usize].is_alive() && !s.slots.iter().any(|slot| slot.party_index == Some(i))
     })
 }
 

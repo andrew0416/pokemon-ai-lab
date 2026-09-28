@@ -293,6 +293,15 @@ pub struct HistoryReaders {
     /// Beat Up (`side.pokemon` order: `Side::party_order`), which only comes from a party's
     /// moves (Transform copies a Pokémon in the battle; Metronome and Assist are `Past`).
     pub party_order: bool,
+    /// `hurtThisTurn` (the HP left after the latest damage; P1b) of every Pokémon: Assurance
+    /// reads any target's. Also set when Emergency Exit or Wimp Out is in the battle and an
+    /// ability can move to another Pokémon ([`HistoryReaders::hurt_of_holders`] is not enough
+    /// then). Moves are only copied from Pokémon in the battle and abilities only move between
+    /// them, or come with a Mega forme a Mega Stone in the battle gives.
+    pub hurt_this_turn: bool,
+    /// `hurtThisTurn` of the Pokémon whose ability is Emergency Exit or Wimp Out (their own,
+    /// read right after a hit to them): recorded only for a current holder.
+    pub hurt_of_holders: bool,
 }
 
 impl HistoryReaders {
@@ -346,7 +355,65 @@ impl HistoryReaders {
             }
         }
         readers.ability_order = Self::redirector_possible(state);
+        let (everyone, holders) = Self::hurt_readers(state);
+        readers.hurt_this_turn = everyone;
+        readers.hurt_of_holders = holders;
         readers
+    }
+
+    /// Who needs `hurtThisTurn` recorded ([`HistoryReaders::hurt_this_turn`],
+    /// [`HistoryReaders::hurt_of_holders`]).
+    fn hurt_readers<const N: usize>(state: &State<N>) -> (bool, bool) {
+        use crate::dex::moves as m;
+        let exits = |a: AbilityId| a == abilities::EMERGENCY_EXIT || a == abilities::WIMP_OUT;
+        let moves_ability = |a: AbilityId| {
+            [
+                abilities::TRACE,
+                abilities::RECEIVER,
+                abilities::POWER_OF_ALCHEMY,
+                abilities::WANDERING_SPIRIT,
+                abilities::IMPOSTER,
+            ]
+            .contains(&a)
+        };
+        let mons = || state.sides.iter().flat_map(|side| side.party.iter());
+        let known = |mon: &crate::state::Pokemon| {
+            let own = mon.transformed.map(|base| base.moves);
+            mon.moves
+                .iter()
+                .chain(own.iter().flatten())
+                .map(|s| s.id)
+                .collect::<Vec<_>>()
+        };
+        let mega_abilities = |mon: &crate::state::Pokemon| {
+            mons()
+                .filter_map(|holder| {
+                    crate::gimmick::mega_evolution(mon.untransformed_species(), holder.item)
+                })
+                .flat_map(|mega| mega.data().abilities.iter().copied())
+                .collect::<Vec<_>>()
+        };
+        let assurance = mons().any(|mon| known(mon).contains(&m::ASSURANCE));
+        let holders = mons().any(|mon| {
+            exits(mon.ability)
+                || exits(mon.base_ability)
+                || mega_abilities(mon).into_iter().any(exits)
+        });
+        let transfer = mons().any(|mon| {
+            known(mon).iter().any(|id| {
+                [
+                    m::SKILL_SWAP,
+                    m::ROLE_PLAY,
+                    m::DOODLE,
+                    m::ENTRAINMENT,
+                    m::TRANSFORM,
+                ]
+                .contains(id)
+            }) || moves_ability(mon.ability)
+                || moves_ability(mon.base_ability)
+                || mega_abilities(mon).into_iter().any(moves_ability)
+        });
+        (assurance || (holders && transfer), holders)
     }
 
     /// Whether a `RedirectTarget` handler of the same priority can be on two Pokémon
@@ -491,6 +558,16 @@ impl<'a, const N: usize> Battle<'a, N> {
     }
 
     pub fn apply(&mut self, instruction: Instruction) {
+        // A lazy HP unit (P1b) moves all its values together: every value must stay in range.
+        match instruction {
+            Instruction::Damage { target, amount } => {
+                super::lazy::check_shift(self.state.pokemon(target), -i32::from(amount))
+            }
+            Instruction::Heal { target, amount } => {
+                super::lazy::check_shift(self.state.pokemon(target), i32::from(amount))
+            }
+            _ => {}
+        }
         self.state.apply_one(&instruction);
         self.log.push(instruction);
     }
@@ -508,7 +585,7 @@ impl<'a, const N: usize> Battle<'a, N> {
 
     /// The occupant of `slot` if it still has HP.
     pub fn alive(&self, slot: SlotRef) -> Option<PokemonRef> {
-        self.occupant(slot).filter(|&p| self.mon(p).hp > 0)
+        self.occupant(slot).filter(|&p| self.mon(p).is_alive())
     }
 
     pub fn slot_mon(&self, slot: SlotRef) -> Option<&Pokemon> {
@@ -788,10 +865,10 @@ impl<'a, const N: usize> Battle<'a, N> {
         // Endure (`onDamagePriority: -10`): a move's damage leaves at least 1 HP; Sturdy and
         // Focus Sash then see damage below the HP and keep quiet.
         if source == DamageSource::Move
-            && amount >= i32::from(mon.hp)
             && self.volatile(target, Volatile::Endure).active
+            && mon.hp_le(amount)
         {
-            amount = i32::from(mon.hp) - 1;
+            amount = i32::from(mon.hp_value()) - 1;
         }
         // False Swipe, Hold Back (the move's own `onDamage`, priority -20: after Endure, before
         // Sturdy): `if (damage >= target.hp) return target.hp - 1;` for the move's damage to its
@@ -800,15 +877,15 @@ impl<'a, const N: usize> Battle<'a, N> {
             [crate::dex::moves::FALSE_SWIPE, crate::dex::moves::HOLD_BACK].contains(&m.id)
                 && m.user != target
         });
-        if source == DamageSource::Move && holds_back && amount >= i32::from(mon.hp) {
-            amount = i32::from(mon.hp) - 1;
+        if source == DamageSource::Move && holds_back && mon.hp_le(amount) {
+            amount = i32::from(mon.hp_value()) - 1;
         }
         if source == DamageSource::Move
-            && mon.hp == mon.max_hp
-            && amount >= i32::from(mon.hp)
             && self.ability_unless_broken(target) == abilities::STURDY
+            && mon.hp_full()
+            && mon.hp_le(amount)
         {
-            amount = i32::from(mon.hp) - 1;
+            amount = i32::from(mon.hp_value()) - 1;
         }
         let amount = super::items::on_damage(self, target, amount, source);
         // A move's damage has the move's user as its source (Destiny Bond).
@@ -843,16 +920,23 @@ impl<'a, const N: usize> Battle<'a, N> {
         amount: i32,
         attacker: Option<PokemonRef>,
     ) -> i32 {
-        let hp = i32::from(self.mon(pokemon).hp);
-        if amount <= 0 || hp == 0 {
+        let mon = self.mon(pokemon);
+        if amount <= 0 || !mon.is_alive() {
             return 0;
         }
-        let dealt = amount.min(hp);
+        // `amount.min(hp)`: the Pokémon faints when the damage reaches its HP (a lazy HP splits
+        // there, and the fainting values are expanded: their damage is their HP).
+        let faints = mon.hp_le(amount);
+        let dealt = if faints {
+            i32::from(mon.hp_value())
+        } else {
+            amount
+        };
         self.apply(Instruction::Damage {
             target: pokemon,
             amount: dealt as i16,
         });
-        if dealt == hp {
+        if faints {
             self.queue_faint(pokemon, slot, attacker);
         }
         dealt
@@ -880,10 +964,16 @@ impl<'a, const N: usize> Battle<'a, N> {
         }
         let amount = amount.trunc() as i32;
         let mon = self.mon(pokemon);
-        if amount <= 0 || mon.hp >= mon.max_hp {
+        if amount <= 0 || mon.hp_full() {
             return 0;
         }
-        let healed = amount.min(i32::from(mon.max_hp - mon.hp));
+        // `amount.min(max_hp - hp)`: capped for an HP within `amount` of the max.
+        let max_hp = i32::from(mon.max_hp);
+        let healed = if mon.hp_le(max_hp - amount) {
+            amount
+        } else {
+            max_hp - i32::from(mon.hp_value())
+        };
         self.apply(Instruction::Heal {
             target: pokemon,
             amount: healed as i16,
@@ -1142,7 +1232,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             .side(side)
             .party
             .iter()
-            .filter(|p| p.hp > 0)
+            .filter(|p| p.is_alive())
             .count()
     }
 
@@ -1456,7 +1546,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         let Some(pokemon) = self.alive(slot) else {
             return;
         };
-        let hp = i32::from(self.mon(pokemon).hp);
+        let hp = i32::from(self.mon(pokemon).hp_value());
         self.lose_hp(slot, pokemon, hp, None);
     }
 
@@ -1475,7 +1565,7 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// (this.status === 'slp' && this.removeVolatile('nightmare'))`).
     pub fn cure_status(&mut self, pokemon: PokemonRef) {
         let old = self.mon(pokemon).status;
-        if self.mon(pokemon).hp == 0 || old == Status::None {
+        if !self.mon(pokemon).is_alive() || old == Status::None {
             return;
         }
         if old == Status::Sleep {
@@ -1823,7 +1913,8 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// processed one has left its slot.
     pub fn has_pokemon_left(&self, side: SideId) -> bool {
         let s = self.state.side(side);
-        s.party.iter().any(|m| m.hp > 0) || s.slots.iter().any(|slot| slot.party_index.is_some())
+        s.party.iter().any(|m| m.is_alive())
+            || s.slots.iter().any(|slot| slot.party_index.is_some())
     }
 
     /// Showdown `battle.boost(boost, target, source, effect)` with its events (WORKPLAN F16):
@@ -2137,7 +2228,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             .active_move
             .is_some_and(|m| m.id == crate::dex::moves::KNOCK_OFF);
         self.ability_unless_broken(slot) == abilities::STICKY_HOLD
-            && mon.hp > 0
+            && mon.is_alive()
             && mon.item != items::STICKY_BARB
             && (source.is_some_and(|s| s != slot) || knock_off)
     }
@@ -2213,7 +2304,7 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// `fainted = false` (the side's `totalFainted` stays).
     pub fn revive(&mut self, pokemon: PokemonRef) {
         let mon = self.mon(pokemon);
-        if mon.hp > 0 {
+        if mon.is_alive() {
             return;
         }
         let (old, half) = (mon.status, mon.max_hp / 2);

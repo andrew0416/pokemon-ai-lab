@@ -512,7 +512,7 @@ pub(super) fn on_damaging_hit<const N: usize>(
     let attacker_statusable = b
         .alive(attacker)
         .is_some_and(|p| b.mon(p).status == Status::None);
-    let holder_fainted = b.slot_mon(holder).is_none_or(|m| m.hp == 0);
+    let holder_fainted = b.slot_mon(holder).is_none_or(|m| !m.is_alive());
     match ability {
         // `if (this.checkMoveMakesContact(...)) if (this.randomChance(3, 10))
         // source.trySetStatus(status, target);`

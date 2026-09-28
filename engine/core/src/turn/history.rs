@@ -36,13 +36,22 @@ impl<const N: usize> Battle<'_, N> {
     }
 
     /// `spreadDamage`: `if (targetDamage !== 0) target.hurtThisTurn = target.hp` (the HP left
-    /// after the damage, possibly 0). Not for `directDamage`.
+    /// after the damage, possibly 0). Not for `directDamage`. Recorded only in a battle with a
+    /// reader (F18, P1b): otherwise positions that differ only in it merge, and a lazy HP is not
+    /// read.
     pub(crate) fn record_hurt(&mut self, slot: SlotRef) {
         let Some(pokemon) = self.occupant(slot) else {
             return;
         };
+        let readers = self.history_readers;
+        let ability = self.mon(pokemon).ability;
+        let holder = ability == crate::dex::abilities::EMERGENCY_EXIT
+            || ability == crate::dex::abilities::WIMP_OUT;
+        if !readers.hurt_this_turn && !(readers.hurt_of_holders && holder) {
+            return;
+        }
         let mut history = self.slot_history(slot);
-        history.hurt_this_turn = Some(self.mon(pokemon).hp);
+        history.hurt_this_turn = Some(self.mon(pokemon).hp_value());
         self.set_slot_history(slot, history);
     }
 
