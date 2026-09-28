@@ -64,8 +64,6 @@ pub enum SetProblem {
     DuplicateMove(String),
     NoMoves,
     TooManyMoves(usize),
-    /// The Champions stat formula in `lab_engine::stats` is the level-50 one.
-    UnsupportedLevel(u8),
     StatPoints(StatPointError),
     InvalidIv {
         stat: &'static str,
@@ -141,13 +139,6 @@ impl fmt::Display for SetProblem {
             SetProblem::DuplicateMove(s) => write!(f, "move {s:?} appears twice"),
             SetProblem::NoMoves => write!(f, "no moves"),
             SetProblem::TooManyMoves(n) => write!(f, "{n} moves (at most 4)"),
-            SetProblem::UnsupportedLevel(level) => {
-                write!(
-                    f,
-                    "level {level}: the engine plays at level 50 (in the custom game a set \
-                     without \"level\" is level 100 in Showdown; write \"level\": 50)"
-                )
-            }
             SetProblem::StatPoints(StatPointError::PerStat { stat, value }) => {
                 write!(f, "{value} SP in {stat:?} (at most 32 per stat)")
             }

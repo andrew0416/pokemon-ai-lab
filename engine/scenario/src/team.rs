@@ -11,6 +11,8 @@ use crate::meta::{MemberMeta, SideMeta};
 
 /// Showdown truncates set names to 20 characters (`set.name.substr(0, 20)`).
 const MAX_NAME_CHARS: usize = 20;
+/// The level of a set without one when no format decides it (`state_from_teams`); the scenario
+/// loader fills it from the format first (VGC: `Adjust Level = 50`; the custom game: 100).
 const LEVEL: u8 = 50;
 
 /// The display name Showdown gives a set: the nickname, or, when there is none or it equals
@@ -55,10 +57,15 @@ pub fn build_pokemon(set: &TeamSet) -> Result<(Pokemon, MemberMeta), SetProblem>
         }
     };
 
-    let level = set.level.unwrap_or(LEVEL);
-    if level != LEVEL {
-        return Err(SetProblem::UnsupportedLevel(level));
-    }
+    // Any level (board A4-t1): the Champions stats do not depend on it (no `Level Clause
+    // Mod`), and what does (the damage formula, confusion, Seismic Toss / Night Shade, Psywave,
+    // OHKO moves, Shell Side Arm, Schooling) reads `Pokemon::level`. Showdown's
+    // `set.adjustLevel || set.level || 100` makes 0 a level 100; levels above 255 do not fit
+    // the set's `u8` and fail as JSON (Showdown allows up to 9999 in the custom game).
+    let level = match set.level.unwrap_or(LEVEL) {
+        0 => 100,
+        level => level,
+    };
     if let Some(ivs) = set.ivs {
         const NAMES: [&str; 6] = ["hp", "atk", "def", "spa", "spd", "spe"];
         let ivs = ivs.to_array();

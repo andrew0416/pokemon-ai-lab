@@ -57,35 +57,11 @@ fn a_singles_format_is_refused() {
     }
 }
 
-/// The custom game plays a set without `level` at level 100 (board B31) and any level a set
-/// gives; the engine's stats are the level-50 ones.
-#[test]
-fn a_level_other_than_50_is_refused() {
-    for level in [None, Some(100), Some(1)] {
-        let json = two(
-            lab_scenario::DOUBLES_FORMAT,
-            set("Chansey", None, level),
-            set("Machamp", None, Some(50)),
-        );
-        match load(&json) {
-            Err(LoadError::Set {
-                problem: SetProblem::UnsupportedLevel(l),
-                ..
-            }) => assert_eq!(l, level.unwrap_or(100)),
-            other => panic!("{level:?}: {other:?}"),
-        }
-    }
-    // VGC's `Adjust Level = 50` makes every set level 50.
-    let json = two(
-        lab_scenario::VGC_FORMAT,
-        set("Chansey", None, Some(100)),
-        set("Machamp", None, None),
-    );
-    load(&json).unwrap();
-}
-
 /// A temporary in-battle forme as a set's species (Showdown without a validator keeps it as the
-/// base species; the engine's state cannot tell it from the forme reached in battle).
+/// base species; the engine's state cannot tell it from the forme reached in battle). Decided in
+/// A4-t1 to stay refused: these formes are `battleOnly` in the dex, so Showdown's validator (every
+/// rated format, VGC included) refuses such a set, and only the unvalidated custom game plays it;
+/// supporting it needs a per-Pokémon base species in the state.
 #[test]
 fn a_temporary_forme_as_species_is_refused() {
     let json = two(
@@ -103,7 +79,10 @@ fn a_temporary_forme_as_species_is_refused() {
 }
 
 /// Two members of a side with the same name (a nickname, or a species written twice in the
-/// custom game): Showdown plays it, canonical states key Pokémon by name.
+/// custom game): Showdown plays it, canonical states key Pokémon by name. Decided in A4-t1 to
+/// stay refused: the oracle's `canonical.cjs` sorts `side.pokemon` by name with a comparator that
+/// never returns 0, so two equal names have no defined canonical order and no position of such a
+/// battle can be compared with Showdown.
 #[test]
 fn a_name_twice_on_a_side_is_refused() {
     let json = two(
@@ -121,6 +100,44 @@ fn a_name_twice_on_a_side_is_refused() {
 }
 
 // ---- no longer refused -----------------------------------------------------------------------
+
+/// Levels (board A4-t1): the custom game plays every level a set gives, a set without one at
+/// level 100 (`set.level || 100`, board B31) and level 0 as 100 too; VGC's `Adjust Level = 50`
+/// makes every set level 50. The oracle fixture `ae-levels` checks the level-dependent damage
+/// (Seismic Toss at levels 30 and 100, Dragon Claw from level 100) and Schooling's level floor.
+#[test]
+fn levels_load_as_showdown_plays_them() {
+    for (level, expected) in [
+        (None, 100),
+        (Some(100), 100),
+        (Some(1), 1),
+        (Some(0), 100),
+        (Some(77), 77),
+    ] {
+        let json = two(
+            lab_scenario::DOUBLES_FORMAT,
+            set("Chansey", None, level),
+            set("Machamp", None, Some(50)),
+        );
+        let loaded = load(&json).unwrap();
+        assert_eq!(loaded.state.sides[0].party[0].level, expected, "{level:?}");
+        assert_eq!(loaded.state.sides[0].party[1].level, 50);
+    }
+    let json = two(
+        lab_scenario::VGC_FORMAT,
+        set("Chansey", None, Some(100)),
+        set("Machamp", None, None),
+    );
+    let loaded = load(&json).unwrap();
+    assert!(loaded.state.sides[0].party[..2]
+        .iter()
+        .all(|m| m.level == 50));
+}
+
+#[test]
+fn levels_match_the_oracle() {
+    common::assert_exact_parity("ae-levels");
+}
 
 /// Bracketed team preview choices (`team [1,2,3,4]`, Showdown `Side.chooseTeam`): brackets
 /// stripped, always split on commas, not cut, then filled; a list longer than the picked size

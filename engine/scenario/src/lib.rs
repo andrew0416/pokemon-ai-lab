@@ -56,7 +56,8 @@ pub use switch_in::{
 };
 pub use team::{build_picked_side, build_pokemon, build_side, picked_order, preview_order};
 
-/// The oracle's doubles format: Champions mechanics, every member brought, level 50.
+/// The oracle's doubles format: Champions mechanics, every member brought, the sets' levels (100
+/// when a set has none).
 pub const DOUBLES_FORMAT: &str = "gen9championsdoublescustomgame";
 
 /// Champions VGC 2026 Reg M-C (`[Gen 9 Champions] VGC 2026 Reg M-C`): the same battle
@@ -204,9 +205,9 @@ pub fn load_scenario_str(json: &str, base_dir: &Path) -> Result<LoadedScenario, 
             }
         } else {
             // The custom game adjusts nothing: Showdown plays a set without `level` at level
-            // 100 (the Champions stats stay the same, damage about doubles), so such a set
-            // must not load silently as level 50 (board B31). It is refused like any other
-            // level-100 set; the file has to say `"level": 50`.
+            // 100 (`set.level || 100`; the Champions stats stay the same, damage about
+            // doubles), so such a set loads as level 100, never silently as 50 (board B31;
+            // levels load since A4-t1).
             for set in &mut team {
                 if set.level.is_none() {
                     set.level = Some(100);

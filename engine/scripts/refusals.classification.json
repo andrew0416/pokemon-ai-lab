@@ -762,7 +762,7 @@
   },
   "SetProblem::TemporaryForme": {
    "class": "unsupported",
-   "why": "A temporary in-battle forme (Aegislash-Blade, Darmanitan-Zen, ...) as a set's species: the custom game (no validator) keeps it as the base species, which the state cannot tell from the forme reached in battle. VGC's validator refuses such sets, so only the custom game reaches it.",
+   "why": "A temporary in-battle forme (Aegislash-Blade, Darmanitan-Zen, ...) as a set's species: the custom game (no validator) keeps it as the base species, which the state cannot tell from the forme reached in battle. Kept as an explicit limit (A4-t1): the formes are `battleOnly`, so Showdown's validator (VGC and every validated format) refuses such sets and only the unvalidated custom game reaches it; supporting it needs a per-Pokémon base species in the state.",
    "test": "loader_refusals.rs::a_temporary_forme_as_species_is_refused"
   },
   "SetProblem::UnknownItem": {
@@ -784,11 +784,6 @@
   "SetProblem::UnknownNature": {
    "class": "input",
    "why": "A nature name that does not exist."
-  },
-  "SetProblem::UnsupportedLevel": {
-   "class": "unsupported",
-   "why": "A level other than 50 in the custom game (a set without `level` is 100 there, board B31): Showdown plays it, the engine's stat formula is the level-50 one. VGC's `Adjust Level = 50` never reaches it.",
-   "test": "loader_refusals.rs::a_level_other_than_50_is_refused"
   },
   "SetProblem::InvalidIv": {
    "class": "input",
@@ -836,7 +831,7 @@
   },
   "TeamProblem::DuplicateName": {
    "class": "unsupported",
-   "why": "Two members of a side with the same name (a shared nickname, or one species twice in the custom game): Showdown plays it, canonical states key Pokémon by name.",
+   "why": "Two members of a side with the same name (a shared nickname, or one species twice in the custom game): Showdown plays it, canonical states key Pokémon by name. Kept as an explicit limit (A4-t1): `canonical.cjs` sorts `side.pokemon` with a comparator that never returns 0, so equal names have no defined canonical order and such a battle cannot be compared with the oracle.",
    "test": "loader_refusals.rs::a_name_twice_on_a_side_is_refused"
   },
   "picked_order: {} is not a team position": {

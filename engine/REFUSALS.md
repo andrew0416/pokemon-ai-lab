@@ -200,7 +200,7 @@
 
 `engine/scenario/src`(`error.rs`·`parity.rs`·바이너리 제외)가 턴 엔진 앞에서 거부하는 곳: `LoadError`·`TeamProblem`·`SetProblem`·`SwitchInError`·`CanonicalError`의 생성 지점과 팀 프리뷰·패치·선택 문자열의 `String` 오류. 분류는 `refusals.classification.json`의 `loader`. `SwitchInError`와 `CanonicalError::Unrepresentable`은 `ScenarioError::Unsupported`로, 나머지는 `ScenarioError::Invalid`/`LoadError`로 나온다(T1).
 
-- 키 83개: input 58개, unsupported 4개, unreachable 18개, forward 3개.
+- 키 82개: input 58개, unsupported 3개, unreachable 18개, forward 3개.
 
 ### input: 입력 오류: the scenario file is malformed or asks for something Showdown would also refuse (or that the file format does not have)
 
@@ -270,9 +270,8 @@
 | 키 | 지점 | 로더 테스트 | 보드 | 이유 |
 |---|---|---|---|---|
 | `LoadError::UnsupportedFormat` | lib.rs::load_scenario_str | `loader_refusals.rs::a_singles_format_is_refused` | II-singles-loader | Only the Champions doubles custom game and VGC 2026 Reg M-C load; Champions singles (`gen9championsbssregmc`) is a format Showdown plays (board II-singles-loader, on hold: singles keeps only the structure). |
-| `SetProblem::TemporaryForme` | team.rs::build_pokemon | `loader_refusals.rs::a_temporary_forme_as_species_is_refused` | — | A temporary in-battle forme (Aegislash-Blade, Darmanitan-Zen, ...) as a set's species: the custom game (no validator) keeps it as the base species, which the state cannot tell from the forme reached in battle. VGC's validator refuses such sets, so only the custom game reaches it. |
-| `SetProblem::UnsupportedLevel` | team.rs::build_pokemon | `loader_refusals.rs::a_level_other_than_50_is_refused` | — | A level other than 50 in the custom game (a set without `level` is 100 there, board B31): Showdown plays it, the engine's stat formula is the level-50 one. VGC's `Adjust Level = 50` never reaches it. |
-| `TeamProblem::DuplicateName` | team.rs::build_picked_side | `loader_refusals.rs::a_name_twice_on_a_side_is_refused` | — | Two members of a side with the same name (a shared nickname, or one species twice in the custom game): Showdown plays it, canonical states key Pokémon by name. |
+| `SetProblem::TemporaryForme` | team.rs::build_pokemon | `loader_refusals.rs::a_temporary_forme_as_species_is_refused` | — | A temporary in-battle forme (Aegislash-Blade, Darmanitan-Zen, ...) as a set's species: the custom game (no validator) keeps it as the base species, which the state cannot tell from the forme reached in battle. Kept as an explicit limit (A4-t1): the formes are `battleOnly`, so Showdown's validator (VGC and every validated format) refuses such sets and only the unvalidated custom game reaches it; supporting it needs a per-Pokémon base species in the state. |
+| `TeamProblem::DuplicateName` | team.rs::build_picked_side | `loader_refusals.rs::a_name_twice_on_a_side_is_refused` | — | Two members of a side with the same name (a shared nickname, or one species twice in the custom game): Showdown plays it, canonical states key Pokémon by name. Kept as an explicit limit (A4-t1): `canonical.cjs` sorts `side.pokemon` with a comparator that never returns 0, so equal names have no defined canonical order and such a battle cannot be compared with the oracle. |
 
 ### unreachable: 도달 불가: no input produces it (an invariant of the loader or the engine, the ruleset, or content outside the standard range)
 
