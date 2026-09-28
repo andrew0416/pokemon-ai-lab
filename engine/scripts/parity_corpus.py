@@ -45,7 +45,8 @@ position with several reports is `mismatch` if any report mismatches and `match`
 match (parity_sweep.FIXED_PRECEDENCE). The exit code is 0 only if every checked position
 matches and (unless --only or --limit restricts the run) no position of the corpus is left
 without reports by a pending or failed build. Excluded positions (the sweeps' oracle failures)
-are listed in the summary, not counted as failures.
+are listed in the summary, not counted as failures. With both matches and mismatches the summary
+adds a feature lift table (V14, `parity_lift.py`).
 
 `build` needs LAB_ROOT (the checkout with vendor/pokemon-showdown) when run from a worktree.
 """
@@ -645,6 +646,12 @@ def write_check_summary(args, corpus, index, out, rows, exe, skipped, elapsed):
         "finished": datetime.datetime.now().isoformat(timespec="seconds"),
         "rows": sorted(rows, key=lambda r: r["id"]),
     }
+    # V14: which features the mismatched positions share (lift over the matched ones).
+    lift = None
+    if counts["mismatch"] and counts["match"]:
+        import parity_lift
+        lift = parity_lift.corpus_lift(corpus, rows)
+        summary["lift"] = lift
     write_json(out / "summary.json", summary)
     slowest = sorted(rows, key=lambda r: -r["seconds"])[:10]
     lines = [
@@ -680,6 +687,9 @@ def write_check_summary(args, corpus, index, out, rows, exe, skipped, elapsed):
                 what = "; ".join(x.get("differences", [])[:3]) or x.get("error", "")
                 lines.append(f"| {r['id']} | {x['status']} | {x['label']} | {what.replace('|', '/')[:300]} |")
         lines.append("")
+    if lift:
+        import parity_lift
+        lines += parity_lift.markdown(lift)
     (out / "summary.md").write_text("\n".join(lines), encoding="utf-8")
     return summary
 
