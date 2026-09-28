@@ -32,16 +32,24 @@
 //! DESIGN.md "모델 ③·② 구현".
 //!                 [--threads n] [--plan "<turn 1> / <turn 2> / ..."]
 //!                 [--child-nash [--beam b] [--outcomes k]]
-//!                 [--stats] [--no-transposition] [--no-dominance] [--full-children] [--lazy]
+//!                 [--stats] [--no-transposition] [--no-dominance] [--full-children] [--lazy] [--split]
 //!
 //! `--stats` adds a line with the search's work (transposition-table hits, matrix games and
 //! their RM+ time, enumeration time summed over threads). `--no-transposition` and
 //! `--no-dominance` turn off the child-equilibrium table (S24a) and the dominance reduction of
 //! child matrix games (S24d), `--full-children` values every cell of every child game instead
 //! of double oracle over lazily valued cells (S24d), to check that they change nothing but the
-//! time (within the equilibrium solver's tolerance). `--lazy` solves `--solve nash`'s root the
+//! time (within the equilibrium solver's tolerance). `--split` values each replacement /
+//! mid-turn child cell row by row on the pool instead of as one unit (S24-t2; same values,
+//! more enumerations; off by default). `--lazy` solves `--solve nash`'s root the
 //! same way (double oracle): a fraction of the pairs, the equilibrium within tolerance, but no
 //! full matrix, so the pure maximin is only over the rows valued in full.
+//!
+//! `--solve deep-nash` takes per-depth lists (board S24c): `--beam 4,3 --outcomes 4,2` is a
+//! depth-3 analysis whose root level keeps beams of 4 and 4 outcomes per pair and whose children
+//! are themselves depth-2 analyses with beams of 3 and 2 outcomes, the grandchildren worth their
+//! one-turn equilibrium. The depth is one more than the longer list; the shorter list repeats
+//! its last entry (`--outcomes` defaults to 4 at every level). Other modes take one number.
 //!
 //! `--plan` values a fixed sequence of our turn choices (Showdown choice strings parsed
 //! against the starting position; a turn whose choice is no longer legal falls back to
@@ -111,6 +119,8 @@ fn run() -> Result<(), String> {
     let mut pessimistic = false;
     let mut show_stats = false;
     let mut lazy_root = false;
+    let mut beams: Vec<usize> = Vec::new();
+    let mut outcome_list: Vec<usize> = Vec::new();
     let mut config = Config::new(Ruleset::CHAMPIONS_MC, us);
     let mut i = 0;
     while i < args.len() {
@@ -285,28 +295,27 @@ fn run() -> Result<(), String> {
             "--no-transposition" => config.transposition = false,
             "--no-dominance" => config.dominance = false,
             "--full-children" => config.double_oracle = false,
+            "--split" => config.split_heavy_cells = true,
             "--lazy" => lazy_root = true,
             "--beam" => {
                 i += 1;
-                config.reply_beam = Some(
-                    args.get(i)
-                        .and_then(|s| s.parse().ok())
-                        .ok_or("--beam needs a number")?,
-                );
+                beams = parse_list(args.get(i)).ok_or("--beam needs a number or a list a,b")?;
+                config.reply_beam = Some(beams[0]);
             }
             "--outcomes" => {
                 i += 1;
-                config.outcome_cap = Some(
-                    args.get(i)
-                        .and_then(|s| s.parse().ok())
-                        .ok_or("--outcomes needs a number")?,
-                );
+                outcome_list =
+                    parse_list(args.get(i)).ok_or("--outcomes needs a number or a list a,b")?;
+                config.outcome_cap = Some(outcome_list[0]);
             }
             "--all-targets" => config.pruning = Pruning::All,
             other if scenario.is_none() => scenario = Some(other.to_owned()),
             other => return Err(format!("unexpected argument {other}")),
         }
         i += 1;
+    }
+    if (beams.len() > 1 || outcome_list.len() > 1) && solve != "deep-nash" {
+        return Err("per-depth --beam/--outcomes lists (a,b) are for --solve deep-nash".into());
     }
     config.us = us;
     if pessimistic {
@@ -575,16 +584,34 @@ fn run() -> Result<(), String> {
     }
     if solve == "deep-nash" {
         // Depth-2 mixed equilibrium (S21): both sides' beams, cells worth the children's
-        // next-turn equilibrium, solved as a matrix game.
-        let beam = config.reply_beam.unwrap_or(4);
+        // next-turn equilibrium, solved as a matrix game; with per-depth lists (S24c) the
+        // children are deep analyses themselves.
+        let levels = deep_levels(&beams, &outcome_list, config.outcome_cap);
         let deep = solver
-            .analyse_deep_mixed(&mut state, None, beam)
+            .analyse_deep_mixed_levels(&mut state, None, &levels)
             .map_err(|e| e.to_string())?;
         if state != position.state {
             return Err("the solver changed the position (bug)".into());
         }
+        let depth_note = if levels.len() > 1 {
+            format!(
+                " depth {} (levels beam/outcomes {})",
+                levels.len() + 1,
+                levels
+                    .iter()
+                    .map(|l| format!(
+                        "{}/{}",
+                        l.beam,
+                        l.outcomes.map_or("all".to_owned(), |k| k.to_string())
+                    ))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )
+        } else {
+            String::new()
+        };
         println!(
-            "decision {:?}, deep-nash: beams {} x {} (+ shallow support >= {:.0}%), outcomes {:?}, chance {:?}, rolls {:?}, eval {eval}: {} nodes, {} enumerations, {:.2} s",
+            "decision {:?}, deep-nash{depth_note}: beams {} x {} (+ shallow support >= {:.0}%), outcomes {:?}, chance {:?}, rolls {:?}, eval {eval}: {} nodes, {} enumerations, {:.2} s",
             deep.decision,
             deep.beam,
             deep.beam,
@@ -906,6 +933,29 @@ fn run() -> Result<(), String> {
         }
     }
     Ok(())
+}
+
+/// A number or a comma-separated list of numbers (`4` or `4,3`).
+fn parse_list(arg: Option<&String>) -> Option<Vec<usize>> {
+    let list: Option<Vec<usize>> = arg?.split(',').map(|x| x.trim().parse().ok()).collect();
+    list.filter(|l| !l.is_empty())
+}
+
+/// The levels of `--solve deep-nash` from the `--beam` and `--outcomes` lists (S24c): one
+/// level per entry of the longer list, the shorter repeating its last entry; no `--beam` is
+/// 4, no `--outcomes` the config's cap.
+fn deep_levels(
+    beams: &[usize],
+    outcomes: &[usize],
+    default_cap: Option<usize>,
+) -> Vec<lab_search::DeepLevel> {
+    let n = beams.len().max(outcomes.len()).max(1);
+    (0..n)
+        .map(|i| lab_search::DeepLevel {
+            beam: beams.get(i).or(beams.last()).copied().unwrap_or(4),
+            outcomes: outcomes.get(i).or(outcomes.last()).copied().or(default_cap),
+        })
+        .collect()
 }
 
 /// `Gardevoir, Rillaboom | bench Sableye, Milotic` from the sidecar names.

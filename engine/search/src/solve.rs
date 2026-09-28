@@ -31,7 +31,7 @@ use lab_engine::turn::{EnumerateOptions, RollMode, Suspension, TurnError};
 use crate::choice::Choice;
 use crate::game::{self, Decision, Pruning};
 use crate::nash::{self, Equilibrium, Matrix};
-use crate::tt::{self, TranspositionTable};
+use crate::tt::{self, DeepTable, TranspositionTable};
 
 /// What a chance node continues into: the maximin tree with `depth` turns left, or a fixed
 /// plan (`Solver::evaluate_plan`) at its next entry. (Children worth their own equilibrium,
@@ -104,6 +104,11 @@ pub struct Config {
     /// board S24d): the value within the solver's tolerance from a fraction of the cells.
     /// Off: every cell of every child is valued (`lab-plan --full-children`).
     pub double_oracle: bool,
+    /// Split the cells of replacement and mid-turn child games (each a whole maximin turn)
+    /// into rows on the pool (board S24-t2; `lab-plan --split`). Off by default: measured on
+    /// the bench (runs/search-bench-20260927) the lagging cutoff costs 9–16% more
+    /// enumerations and the wall time did not improve at 1–6 threads (same values).
+    pub split_heavy_cells: bool,
 }
 
 impl Config {
@@ -129,6 +134,7 @@ impl Config {
             transposition: true,
             dominance: true,
             double_oracle: true,
+            split_heavy_cells: false,
         }
     }
 
@@ -224,6 +230,12 @@ pub struct SearchStats {
     pub nash_seconds: f64,
     /// Time inside `game::transitions` (turn enumeration).
     pub enumerate_seconds: f64,
+    /// Depth 3 and beyond (board S24c): deep child analyses answered by the deep table.
+    pub deep_tt_hits: u64,
+    /// Deep child analyses run (and stored).
+    pub deep_tt_misses: u64,
+    /// Replacement / mid-turn child cells valued row by row (board S24-t2).
+    pub split_cells: u64,
 }
 
 impl SearchStats {
@@ -234,6 +246,9 @@ impl SearchStats {
         self.nash_iterations += other.nash_iterations;
         self.nash_seconds += other.nash_seconds;
         self.enumerate_seconds += other.enumerate_seconds;
+        self.deep_tt_hits += other.deep_tt_hits;
+        self.deep_tt_misses += other.deep_tt_misses;
+        self.split_cells += other.split_cells;
     }
 }
 
@@ -248,7 +263,22 @@ impl fmt::Display for SearchStats {
             self.nash_iterations,
             self.nash_seconds,
             self.enumerate_seconds
-        )
+        )?;
+        if self.deep_tt_hits + self.deep_tt_misses > 0 {
+            write!(
+                f,
+                "; deep children {} hits / {} analysed",
+                self.deep_tt_hits, self.deep_tt_misses
+            )?;
+        }
+        if self.split_cells > 0 {
+            write!(
+                f,
+                "; {} replacement cells split into rows",
+                self.split_cells
+            )?;
+        }
+        Ok(())
     }
 }
 
@@ -267,6 +297,8 @@ pub struct Solver<'e, const N: usize, E: Evaluator<N> + ?Sized> {
     /// [`Solver::nash_value`] results by position (identical children recur across replies and
     /// outcomes), [`crate::tt`].
     tt: TranspositionTable<N>,
+    /// Deep child values by position and levels (depth 3 and beyond, board S24c).
+    deep_tt: DeepTable<N>,
     /// The worker pool, built on first parallel use ([`Config::threads`]).
     pool: Option<Arc<rayon::ThreadPool>>,
 }
@@ -283,6 +315,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             omitted_pairs: 0,
             stats: SearchStats::default(),
             tt: TranspositionTable::new(config.transposition, tt::DEFAULT_CAPACITY),
+            deep_tt: DeepTable::new(config.transposition, tt::DEFAULT_CAPACITY),
             pool: None,
         }
     }
@@ -290,6 +323,11 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
     /// Positions in the transposition table.
     pub fn tt_len(&self) -> usize {
         self.tt.len()
+    }
+
+    /// Deep child values in the deep table (depth 3 and beyond).
+    pub fn deep_tt_len(&self) -> usize {
+        self.deep_tt.len()
     }
 
     /// The work counters since the last analysis started.
@@ -717,6 +755,29 @@ struct ChildJob<const N: usize> {
     decision: Decision,
 }
 
+/// One outcome of a split heavy cell ([`Solver::child_cells`], board S24-t2): its value, or
+/// the row group valuing its turn, or the error met there.
+enum SplitValue {
+    Fixed(f32),
+    Group(usize),
+    Error(SearchError),
+}
+
+/// The turn after a heavy cell's outcome, valued by maximin one row (our choice) per pool
+/// item: the best row so far is the cutoff of the next round's rows.
+struct RowGroup<const N: usize> {
+    state: State<N>,
+    suspension: Option<Suspension>,
+    ours: Vec<Choice<N>>,
+    theirs: Vec<Choice<N>>,
+    /// The rows handed out so far.
+    next_row: usize,
+    /// The best row value so far (`-inf`: none evaluable yet).
+    best: f32,
+    /// The first error in row order.
+    error: Option<(usize, SearchError)>,
+}
+
 /// The `cap` most probable outcomes, renormalised (all of them without a cap): the children
 /// valued by their equilibrium ([`Solver::nash_cells`]).
 fn cap_outcomes(mut outcomes: Vec<Outcome>, cap: Option<usize>) -> Vec<Outcome> {
@@ -1017,6 +1078,9 @@ pub struct DeepMixedAnalysis<const N: usize> {
     pub shallow: MixedAnalysis<N>,
     pub beam: usize,
     pub outcome_cap: Option<usize>,
+    /// Every level (the first is `beam` and `outcome_cap`); the analysis looks
+    /// `levels.len() + 1` turns ahead.
+    pub levels: Vec<DeepLevel>,
     pub nodes: u64,
     pub turns: u64,
     pub elapsed: Duration,
@@ -1074,6 +1138,63 @@ fn beam_indices(value: &[f32], support: &[f32], beam: usize, descending: bool) -
     keep
 }
 
+/// Both sides' beams of a deep level from its shallow game (board S21): each side's `beam`
+/// best choices by expected value against the other side's shallow equilibrium strategy plus
+/// its own shallow support ([`beam_indices`]), in the shallow game's order. Cells a lazy
+/// shallow game never valued have probability 0 on the other side and are skipped.
+#[allow(clippy::type_complexity)]
+fn deep_beams<const N: usize>(
+    shallow: &MixedAnalysis<N>,
+    beam: usize,
+) -> (Vec<Choice<N>>, Vec<Choice<N>>) {
+    let (n, m) = (shallow.ours.len(), shallow.theirs.len());
+    let eq = &shallow.equilibrium;
+    let our_value: Vec<f32> = (0..n)
+        .map(|r| {
+            (0..m)
+                .filter(|&c| eq.cols[c] > 0.0)
+                .map(|c| eq.cols[c] * shallow.matrix.at(r, c))
+                .sum()
+        })
+        .collect();
+    let their_value: Vec<f32> = (0..m)
+        .map(|c| {
+            (0..n)
+                .filter(|&r| eq.rows[r] > 0.0)
+                .map(|r| eq.rows[r] * shallow.matrix.at(r, c))
+                .sum()
+        })
+        .collect();
+    let our_beam = beam_indices(&our_value, &eq.rows, beam, true);
+    let their_beam = beam_indices(&their_value, &eq.cols, beam, false);
+    (
+        our_beam.iter().map(|&r| shallow.ours[r]).collect(),
+        their_beam.iter().map(|&c| shallow.theirs[c]).collect(),
+    )
+}
+
+/// How many deep levels a decision inside the tree uses (board S24c): a turn one, a
+/// replacement or mid-turn switch none (a one-turn equilibrium already looks through it to the
+/// next turn). The one place the depth budget is counted, so a cost budget (a turn 1, a
+/// replacement a fraction, as PokaiTrainer grows its subgames) can replace the per-level
+/// lists later without touching the recursion.
+fn level_cost(decision: Decision) -> usize {
+    match decision {
+        Decision::Turn => 1,
+        Decision::MidTurn | Decision::Replacement | Decision::Over(_) => 0,
+    }
+}
+
+/// One level of a deep mixed analysis ([`Solver::analyse_deep_mixed_levels`], board S24c):
+/// how many choices of each side's shallow ranking enter the level's matrix (besides the
+/// shallow support, [`MIXED_SUPPORT`]) and how many of a pair's most probable outcomes are
+/// followed (renormalised; `None`: every outcome).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct DeepLevel {
+    pub beam: usize,
+    pub outcomes: Option<usize>,
+}
+
 impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
     /// [`Solver::analyse_mixed`] by double oracle over lazily valued cells (`lab-plan --solve
     /// nash --lazy`, `lab-rollout --lazy`; board S24d): the same equilibrium within the
@@ -1089,8 +1210,19 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         state: &mut State<N>,
         suspension: Option<&Suspension>,
     ) -> Result<MixedAnalysis<N>, SearchError> {
-        let started = Instant::now();
         self.reset_counters();
+        self.mixed_lazy_at(state, suspension, self.config.depth)
+    }
+
+    /// [`Solver::analyse_mixed_lazy`] at `depth` without resetting the counters (also the
+    /// shallow game of a deep child, board S24c).
+    fn mixed_lazy_at(
+        &mut self,
+        state: &mut State<N>,
+        suspension: Option<&Suspension>,
+        depth: u32,
+    ) -> Result<MixedAnalysis<N>, SearchError> {
+        let started = Instant::now();
         let decision = game::decision(state, suspension)?;
         if matches!(decision, Decision::Over(_)) {
             return Err(SearchError::Turn(TurnError::BattleOver));
@@ -1098,7 +1230,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         let them = self.config.us.other();
         let ours = self.choices(state, decision, self.config.us)?;
         let theirs = self.choices(state, decision, them)?;
-        let depth = self.config.depth.max(1);
+        let depth = depth.max(1);
         let next_depth = if decision == Decision::Turn {
             depth - 1
         } else {
@@ -1210,8 +1342,19 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         state: &mut State<N>,
         suspension: Option<&Suspension>,
     ) -> Result<MixedAnalysis<N>, SearchError> {
-        let started = Instant::now();
         self.reset_counters();
+        self.mixed_at(state, suspension, self.config.depth)
+    }
+
+    /// [`Solver::analyse_mixed`] at `depth` without resetting the counters (also the shallow
+    /// game of a deep child, board S24c).
+    fn mixed_at(
+        &mut self,
+        state: &mut State<N>,
+        suspension: Option<&Suspension>,
+        depth: u32,
+    ) -> Result<MixedAnalysis<N>, SearchError> {
+        let started = Instant::now();
         let decision = game::decision(state, suspension)?;
         if matches!(decision, Decision::Over(_)) {
             return Err(SearchError::Turn(TurnError::BattleOver));
@@ -1219,7 +1362,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         let them = self.config.us.other();
         let ours = self.choices(state, decision, self.config.us)?;
         let theirs = self.choices(state, decision, them)?;
-        let depth = self.config.depth.max(1);
+        let depth = depth.max(1);
         let next_depth = if decision == Decision::Turn {
             depth - 1
         } else {
@@ -1391,12 +1534,19 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
     /// first error, except that a pair's enumeration error is met before the child errors of
     /// earlier pairs, and `Config::max_turns` is checked per pair before the batch rather than
     /// per cell inside it.
+    ///
+    /// `cap` is the outcome cap of the pairs' chance nodes. With `rest` non-empty (depth 3
+    /// and beyond, board S24c) each child is worth its own deep mixed analysis over the
+    /// levels `rest` ([`Solver::deep_child`], one child after another, each on the pool
+    /// inside) instead of its one-turn equilibrium.
     fn nash_cells(
         &mut self,
         state: &mut State<N>,
         decision: Decision,
         suspension: Option<&Suspension>,
         pairs: &[[Choice<N>; 2]],
+        cap: Option<usize>,
+        rest: &[DeepLevel],
     ) -> Result<Vec<f32>, SearchError> {
         enum Plan {
             Done(Result<f32, SearchError>),
@@ -1426,7 +1576,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             );
             self.stats.enumerate_seconds += started.elapsed().as_secs_f64();
             let outcomes = match transitions {
-                Ok(outcomes) => cap_outcomes(outcomes, self.config.outcome_cap),
+                Ok(outcomes) => cap_outcomes(outcomes, cap),
                 Err(TurnError::Unsupported(why)) => {
                     self.note_unsupported(why);
                     plans.push(Plan::Done(Ok(f32::NAN)));
@@ -1448,6 +1598,11 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                     }
                     Ok(Decision::Over(result)) => {
                         slots.push(Some(Ok(self.terminal(result, 0))));
+                        slots.len() - 1
+                    }
+                    Ok(_) if !rest.is_empty() => {
+                        let value = self.deep_child(state, outcome.suspension.as_ref(), rest);
+                        slots.push(Some(value));
                         slots.len() - 1
                     }
                     Ok(child_decision) => {
@@ -1656,6 +1811,16 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
 
     /// Values child cells `(job, cell)` on the pool, merging the workers' counters in task
     /// order.
+    ///
+    /// A cell of a replacement or mid-turn child (a child game with `next_depth` 1) is a whole
+    /// maximin turn after the switch, often a thousand times a turn cell's work: as one pool
+    /// item it left one worker busy long after the others ran dry (sand-owen deep-nash: 42 of
+    /// 3,937 cells, 88% of the batch's CPU, the largest 16.5 s). Such cells are split (board
+    /// S24-t2): their pair is enumerated here, and each outcome's next turn is valued row by
+    /// row on the pool ([`RowGroup`]), in rounds of 1, 2, 4, ... rows whose cutoff is the best
+    /// row of the earlier rounds (alpha-beta with a lagging alpha). The values are those of
+    /// the unsplit cells bit for bit; the node and turn counts depend on the round sizes only,
+    /// never on the thread count.
     fn child_cells(
         &mut self,
         jobs: &[(usize, ChildJob<N>)],
@@ -1664,33 +1829,305 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
     ) -> Vec<Result<f32, SearchError>> {
         let config = self.config;
         let evaluator = self.evaluator;
-        let outs = self.par_map(tasks, HashMap::<usize, State<N>>::new, |states, &(j, i)| {
-            let job = &jobs[j].1;
+        // Split the heavy cells: their outcomes, and a row group for each outcome's turn.
+        let mut results: Vec<Option<Result<f32, SearchError>>> = vec![None; tasks.len()];
+        let mut splits: Vec<(usize, Vec<(f64, SplitValue)>)> = Vec::new();
+        let mut groups: Vec<RowGroup<N>> = Vec::new();
+        let mut light: Vec<usize> = Vec::new();
+        for (t, &(j, i)) in tasks.iter().enumerate() {
             let game = games[j].as_ref().expect("tasks come from prepared games");
-            let state = states.entry(j).or_insert_with(|| job.state.clone());
-            let mut local = Solver::new(config, evaluator);
-            let (a, b) = (
+            if game.next_depth == 0 || !self.config.split_heavy_cells {
+                light.push(t);
+                continue;
+            }
+            let job = &jobs[j].1;
+            let pair = self.pair(
                 game.ours[i / game.theirs.len()],
                 game.theirs[i % game.theirs.len()],
             );
-            let pair = local.pair(a, b);
-            let value = local.chance(
-                state,
-                job.decision,
-                job.suspension.as_ref(),
-                pair,
-                Next::Depth(game.next_depth),
-                f32::NEG_INFINITY,
-                f32::INFINITY,
+            match self.split_cell(job, pair, game.next_depth, &mut groups) {
+                Ok(Some(outcomes)) => {
+                    self.stats.split_cells += 1;
+                    splits.push((t, outcomes));
+                }
+                Ok(None) => results[t] = Some(Ok(f32::NAN)),
+                Err(e) => results[t] = Some(Err(e)),
+            }
+        }
+        // Rounds: every light cell and the first row of every group, then 2, 4, ... more rows
+        // of every group with the cutoff of the rows valued so far.
+        enum Item {
+            Light(usize),
+            Row(usize, usize, f32),
+        }
+        let mut round = 0u32;
+        loop {
+            let mut items: Vec<Item> = Vec::new();
+            if round == 0 {
+                items.extend(light.iter().map(|&t| Item::Light(t)));
+            }
+            for (g, group) in groups.iter_mut().enumerate() {
+                if group.error.is_some() {
+                    continue;
+                }
+                let take = (1usize << round.min(20)).min(group.ours.len() - group.next_row);
+                for r in group.next_row..group.next_row + take {
+                    items.push(Item::Row(g, r, group.best));
+                }
+                group.next_row += take;
+            }
+            if items.is_empty() {
+                break;
+            }
+            let groups_ref = &groups;
+            let outs = self.par_map(
+                &items,
+                HashMap::<(bool, usize), State<N>>::new,
+                |states, item| match *item {
+                    Item::Light(t) => {
+                        let (j, i) = tasks[t];
+                        let job = &jobs[j].1;
+                        let game = games[j].as_ref().expect("tasks come from prepared games");
+                        let state = states
+                            .entry((false, j))
+                            .or_insert_with(|| job.state.clone());
+                        let mut local = Solver::new(config, evaluator);
+                        let (a, b) = (
+                            game.ours[i / game.theirs.len()],
+                            game.theirs[i % game.theirs.len()],
+                        );
+                        let pair = local.pair(a, b);
+                        let value = local.chance(
+                            state,
+                            job.decision,
+                            job.suspension.as_ref(),
+                            pair,
+                            Next::Depth(game.next_depth),
+                            f32::NEG_INFINITY,
+                            f32::INFINITY,
+                        );
+                        CellOut::from_solver(value, local)
+                    }
+                    Item::Row(g, r, lo) => {
+                        let group = &groups_ref[g];
+                        let state = states
+                            .entry((true, g))
+                            .or_insert_with(|| group.state.clone());
+                        let mut local = Solver::new(config, evaluator);
+                        let value = local.row_min(state, group, r, lo);
+                        CellOut::from_solver(value, local)
+                    }
+                },
             );
-            CellOut::from_solver(value, local)
-        });
-        outs.into_iter()
-            .map(|out| {
+            for (item, out) in items.iter().zip(outs) {
                 self.absorb(&out);
-                out.value
-            })
+                match *item {
+                    Item::Light(t) => results[t] = Some(out.value),
+                    Item::Row(g, r, _) => {
+                        let group = &mut groups[g];
+                        match out.value {
+                            // The first error in row order is the group's.
+                            Err(e) => {
+                                if group.error.as_ref().is_none_or(|(at, _)| r < *at) {
+                                    group.error = Some((r, e));
+                                }
+                            }
+                            // No evaluable reply: the row does not count (as in `value`).
+                            Ok(v) if v == f32::INFINITY => {}
+                            Ok(v) => group.best = group.best.max(v),
+                        }
+                    }
+                }
+            }
+            round += 1;
+        }
+        // Each split cell: its outcomes' values combined as `chance` does over (-inf, inf).
+        for (t, outcomes) in splits {
+            let value = |v: &SplitValue| -> Result<f32, SearchError> {
+                match v {
+                    SplitValue::Fixed(v) => Ok(*v),
+                    SplitValue::Error(e) => Err(e.clone()),
+                    SplitValue::Group(g) => {
+                        let group = &groups[*g];
+                        match &group.error {
+                            Some((_, e)) => Err(e.clone()),
+                            None if group.best == f32::NEG_INFINITY => Ok(f32::NAN),
+                            None => Ok(group.best),
+                        }
+                    }
+                }
+            };
+            let combined = match self.config.chance {
+                Chance::Worst => {
+                    let mut worst = f32::INFINITY;
+                    let mut out = Ok(f32::NAN);
+                    for (_, v) in &outcomes {
+                        match value(v) {
+                            Err(e) => {
+                                out = Err(e);
+                                break;
+                            }
+                            Ok(v) if v.is_nan() => {
+                                out = Ok(f32::NAN);
+                                break;
+                            }
+                            Ok(v) => {
+                                worst = worst.min(v);
+                                out = Ok(worst);
+                            }
+                        }
+                    }
+                    if outcomes.is_empty() {
+                        Ok(f32::INFINITY)
+                    } else {
+                        out
+                    }
+                }
+                Chance::Expect => {
+                    let mut sum = 0.0f64;
+                    let mut out = None;
+                    for (p, v) in &outcomes {
+                        match value(v) {
+                            Err(e) => {
+                                out = Some(Err(e));
+                                break;
+                            }
+                            Ok(v) if v.is_nan() => {
+                                out = Some(Ok(f32::NAN));
+                                break;
+                            }
+                            Ok(v) => sum += p * v as f64,
+                        }
+                    }
+                    out.unwrap_or(Ok(sum as f32))
+                }
+            };
+            results[t] = Some(combined);
+        }
+        results
+            .into_iter()
+            .map(|r| r.expect("every child cell is valued"))
             .collect()
+    }
+
+    /// Enumerates a heavy cell's pair (the job's replacement or mid-turn decision) and makes a
+    /// [`RowGroup`] for each outcome whose next decision is a turn (a battle over is its
+    /// terminal value, anything else is valued whole here). `None`: the engine refused the
+    /// pair (noted; the cell is NaN).
+    #[allow(clippy::type_complexity)]
+    fn split_cell(
+        &mut self,
+        job: &ChildJob<N>,
+        pair: [Choice<N>; 2],
+        depth: u32,
+        groups: &mut Vec<RowGroup<N>>,
+    ) -> Result<Option<Vec<(f64, SplitValue)>>, SearchError> {
+        if let Some(max) = self.config.max_turns {
+            if self.turns >= max {
+                return Err(SearchError::Budget);
+            }
+        }
+        self.turns += 1;
+        let mut state = job.state.clone();
+        let started = Instant::now();
+        let transitions = game::transitions(
+            &mut state,
+            self.config.ruleset,
+            self.config.enumerate_options(),
+            job.decision,
+            job.suspension.as_ref(),
+            pair,
+        );
+        self.stats.enumerate_seconds += started.elapsed().as_secs_f64();
+        let outcomes = match transitions {
+            Ok(outcomes) => outcomes,
+            Err(TurnError::Unsupported(why)) => {
+                self.note_unsupported(why);
+                return Ok(None);
+            }
+            Err(e) => return Err(e.into()),
+        };
+        let them = self.config.us.other();
+        let mut out = Vec::with_capacity(outcomes.len());
+        for outcome in &outcomes {
+            state.apply(&outcome.instructions);
+            // `value`'s entry at the outcome.
+            self.nodes += 1;
+            let value = match game::decision(&state, outcome.suspension.as_ref()) {
+                Err(e) => Err(e.into()),
+                Ok(Decision::Over(result)) => Ok(SplitValue::Fixed(self.terminal(result, depth))),
+                Ok(Decision::Turn) if depth == 1 => {
+                    match (
+                        self.choices(&state, Decision::Turn, self.config.us),
+                        self.choices(&state, Decision::Turn, them),
+                    ) {
+                        (Ok(ours), Ok(theirs)) => {
+                            groups.push(RowGroup {
+                                state: state.clone(),
+                                suspension: outcome.suspension.clone(),
+                                ours,
+                                theirs,
+                                next_row: 0,
+                                best: f32::NEG_INFINITY,
+                                error: None,
+                            });
+                            Ok(SplitValue::Group(groups.len() - 1))
+                        }
+                        (Err(e), _) | (_, Err(e)) => Err(e),
+                    }
+                }
+                Ok(_) => {
+                    // Rare (a replacement after a replacement, a deeper tree): whole, here.
+                    self.nodes -= 1;
+                    self.value(
+                        &mut state,
+                        outcome.suspension.as_ref(),
+                        depth,
+                        f32::NEG_INFINITY,
+                        f32::INFINITY,
+                    )
+                    .map(SplitValue::Fixed)
+                }
+            };
+            state.reverse(&outcome.instructions);
+            // An error counts where `chance` would meet it: after the earlier outcomes.
+            out.push((outcome.probability, value.unwrap_or_else(SplitValue::Error)));
+        }
+        Ok(Some(out))
+    }
+
+    /// One row of a [`RowGroup`]'s turn: the minimum over their replies of our choice `r`,
+    /// stopping once it is at most `lo` (as `value` with alpha `lo`); `f32::INFINITY` when no
+    /// reply is evaluable.
+    fn row_min(
+        &mut self,
+        state: &mut State<N>,
+        group: &RowGroup<N>,
+        r: usize,
+        lo: f32,
+    ) -> Result<f32, SearchError> {
+        let a = group.ours[r];
+        let mut worst = f32::INFINITY;
+        for &b in &group.theirs {
+            let pair = self.pair(a, b);
+            let v = self.chance(
+                state,
+                Decision::Turn,
+                group.suspension.as_ref(),
+                pair,
+                Next::Depth(0),
+                lo,
+                worst,
+            )?;
+            if v.is_nan() {
+                continue;
+            }
+            worst = worst.min(v);
+            if worst <= lo {
+                break;
+            }
+        }
+        Ok(worst)
     }
 
     fn continue_at(
@@ -1765,35 +2202,56 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         suspension: Option<&Suspension>,
         beam: usize,
     ) -> Result<DeepMixedAnalysis<N>, SearchError> {
+        let level = DeepLevel {
+            beam,
+            outcomes: self.config.outcome_cap,
+        };
+        self.analyse_deep_mixed_levels(state, suspension, &[level])
+    }
+
+    /// Deep mixed analysis over `levels.len() + 1` turns (board S24c; `lab-plan --solve
+    /// deep-nash --beam 4,3 --outcomes 4,2`): the root as [`Solver::analyse_deep_mixed`] with
+    /// the first level's beam and outcome cap, but each child position worth its own deep
+    /// mixed analysis over the remaining levels (`Solver::deep_child`: its shallow game, both
+    /// sides' beams, the beam pairs' capped outcomes valued one level further down) and the
+    /// last level's children worth their one-turn equilibrium ([`Solver::nash_value`]). One
+    /// level is [`Solver::analyse_deep_mixed`] itself.
+    ///
+    /// A level is a turn: inside the tree a replacement or mid-turn switch decision does not
+    /// use one (its children continue with the same levels, as a one-turn equilibrium already
+    /// looks through a replacement to the next turn). The root always uses its level, as
+    /// [`Solver::analyse_deep_mixed`] always did. Child values are cached by position and
+    /// levels ([`crate::tt::DeepTable`]). The root keeps its full shallow game (its strategies
+    /// are reported); a child's shallow game is solved by double oracle with
+    /// [`Config::double_oracle`] (the beams only need the value of every choice against the
+    /// other side's restricted strategy, which the restricted rows and columns give exactly).
+    /// `state` is left unchanged.
+    pub fn analyse_deep_mixed_levels(
+        &mut self,
+        state: &mut State<N>,
+        suspension: Option<&Suspension>,
+        levels: &[DeepLevel],
+    ) -> Result<DeepMixedAnalysis<N>, SearchError> {
         let started = Instant::now();
+        let first = *levels.first().ok_or_else(|| {
+            SearchError::Unsupported(vec!["a deep analysis needs at least one level".into()])
+        })?;
         let shallow = self.analyse_mixed(state, suspension)?;
         let decision = shallow.decision;
-        let (n, m) = (shallow.ours.len(), shallow.theirs.len());
-        // Expected values against the other side's shallow equilibrium strategy.
-        let our_value: Vec<f32> = (0..n)
-            .map(|r| {
-                (0..m)
-                    .map(|c| shallow.equilibrium.cols[c] * shallow.matrix.at(r, c))
-                    .sum()
-            })
-            .collect();
-        let their_value: Vec<f32> = (0..m)
-            .map(|c| {
-                (0..n)
-                    .map(|r| shallow.equilibrium.rows[r] * shallow.matrix.at(r, c))
-                    .sum()
-            })
-            .collect();
-        let our_beam = beam_indices(&our_value, &shallow.equilibrium.rows, beam, true);
-        let their_beam = beam_indices(&their_value, &shallow.equilibrium.cols, beam, false);
-        let ours: Vec<Choice<N>> = our_beam.iter().map(|&r| shallow.ours[r]).collect();
-        let theirs: Vec<Choice<N>> = their_beam.iter().map(|&c| shallow.theirs[c]).collect();
+        let (ours, theirs) = deep_beams(&shallow, first.beam);
         let pairs: Vec<[Choice<N>; 2]> = ours
             .iter()
             .flat_map(|&a| theirs.iter().map(move |&b| (a, b)))
             .map(|(a, b)| self.pair(a, b))
             .collect();
-        let values = self.nash_cells(state, decision, suspension, &pairs)?;
+        let values = self.nash_cells(
+            state,
+            decision,
+            suspension,
+            &pairs,
+            first.outcomes,
+            &levels[1..],
+        )?;
         let (ours, theirs, values, omitted_theirs, omitted_ours) =
             drop_unevaluable(ours, theirs, values);
         if ours.is_empty() || theirs.is_empty() {
@@ -1810,8 +2268,9 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             equilibrium,
             maximin,
             shallow,
-            beam: beam.max(1),
-            outcome_cap: self.config.outcome_cap,
+            beam: first.beam.max(1),
+            outcome_cap: first.outcomes,
+            levels: levels.to_vec(),
             nodes: self.nodes,
             turns: self.turns,
             elapsed: started.elapsed(),
@@ -1819,6 +2278,80 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             omitted_theirs,
             omitted_ours,
         })
+    }
+
+    /// A child's deep value over `levels` (non-empty; board S24c): its shallow one-turn game
+    /// (double oracle with [`Config::double_oracle`]), both sides' beams of `levels[0]`, the
+    /// beam pairs' `levels[0].outcomes` most probable outcomes valued by the next level (the
+    /// same levels after a replacement or mid-turn decision), the equilibrium value of that
+    /// matrix. NaN when nothing is evaluable. Cached by position and levels.
+    fn deep_child(
+        &mut self,
+        state: &mut State<N>,
+        suspension: Option<&Suspension>,
+        levels: &[DeepLevel],
+    ) -> Result<f32, SearchError> {
+        let key = if self.deep_tt.enabled() {
+            let key = (
+                levels.iter().map(|l| (l.beam, l.outcomes)).collect(),
+                (state.clone(), suspension.cloned()),
+            );
+            if let Some(v) = self.deep_tt.get(&key) {
+                self.stats.deep_tt_hits += 1;
+                return Ok(v);
+            }
+            Some(key)
+        } else {
+            None
+        };
+        self.stats.deep_tt_misses += 1;
+        let shallow = if self.config.double_oracle {
+            self.mixed_lazy_at(state, suspension, 1)
+        } else {
+            self.mixed_at(state, suspension, 1)
+        };
+        let shallow = match shallow {
+            Ok(shallow) => shallow,
+            // Nothing evaluable here (the reasons are already noted): the pair above drops.
+            Err(SearchError::Unsupported(_)) => return Ok(f32::NAN),
+            Err(e) => return Err(e),
+        };
+        let decision = shallow.decision;
+        let (ours, theirs) = deep_beams(&shallow, levels[0].beam);
+        let pairs: Vec<[Choice<N>; 2]> = ours
+            .iter()
+            .flat_map(|&a| theirs.iter().map(move |&b| (a, b)))
+            .map(|(a, b)| self.pair(a, b))
+            .collect();
+        let rest = &levels[level_cost(decision).min(levels.len())..];
+        let values = self.nash_cells(
+            state,
+            decision,
+            suspension,
+            &pairs,
+            levels[0].outcomes,
+            rest,
+        )?;
+        let (ours, theirs, values, _, _) = drop_unevaluable(ours, theirs, values);
+        let value = if ours.is_empty() || theirs.is_empty() {
+            f32::NAN
+        } else {
+            let matrix = Matrix::new(ours.len(), theirs.len(), values);
+            let started = Instant::now();
+            let eq = if self.config.dominance {
+                nash::solve_reduced(&matrix, 20_000, 0.01)
+            } else {
+                nash::solve(&matrix, 20_000, 0.01)
+            };
+            self.stats.nash_solves += 1;
+            self.stats.nash_iterations += eq.iterations as u64;
+            self.stats.nash_seconds += started.elapsed().as_secs_f64();
+            eq.value
+        };
+        if let Some(key) = key {
+            self.deep_tt.insert(key, value);
+        }
+        Ok(value)
     }
 
     pub fn analyse_deep(
@@ -1871,7 +2404,14 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             .map(|(r, c)| self.pair(ours[r], theirs[c]))
             .collect();
         let mut cell_values = self
-            .nash_cells(state, decision, suspension, &pairs)?
+            .nash_cells(
+                state,
+                decision,
+                suspension,
+                &pairs,
+                self.config.outcome_cap,
+                &[],
+            )?
             .into_iter();
         let mut lines = Vec::new();
         for (r, shallow, cols) in rows.iter().take(beam) {
@@ -1996,7 +2536,14 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                 .take(beam)
                 .map(|&(b, _)| self.pair(a, b))
                 .collect();
-            let values = self.nash_cells(state, decision, suspension, &pairs)?;
+            let values = self.nash_cells(
+                state,
+                decision,
+                suspension,
+                &pairs,
+                self.config.outcome_cap,
+                &[],
+            )?;
             let mut child_replies = Vec::new();
             for (&(b, _), v) in replies.iter().take(beam).zip(values) {
                 if !v.is_nan() {
