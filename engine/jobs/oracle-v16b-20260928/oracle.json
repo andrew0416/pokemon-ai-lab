@@ -1,0 +1,10 @@
+{
+ "branch": "opus-vb",
+ "shards": 32,
+ "node_heap_mb": 11000,
+ "checks": [
+  "factored"
+ ],
+ "check_minutes": 60,
+ "hash_keys": true
+}
