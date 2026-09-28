@@ -104,6 +104,10 @@ pub struct Config {
     /// board S24d): the value within the solver's tolerance from a fraction of the cells.
     /// Off: every cell of every child is valued (`lab-plan --full-children`).
     pub double_oracle: bool,
+    /// Split the cells of replacement and mid-turn child games (each a whole maximin turn)
+    /// into rows on the pool (board S24-t2); off only to check that it changes nothing but
+    /// the time and the node counts.
+    pub split_heavy_cells: bool,
 }
 
 impl Config {
@@ -129,6 +133,7 @@ impl Config {
             transposition: true,
             dominance: true,
             double_oracle: true,
+            split_heavy_cells: true,
         }
     }
 
@@ -228,6 +233,8 @@ pub struct SearchStats {
     pub deep_tt_hits: u64,
     /// Deep child analyses run (and stored).
     pub deep_tt_misses: u64,
+    /// Replacement / mid-turn child cells valued row by row (board S24-t2).
+    pub split_cells: u64,
 }
 
 impl SearchStats {
@@ -240,6 +247,7 @@ impl SearchStats {
         self.enumerate_seconds += other.enumerate_seconds;
         self.deep_tt_hits += other.deep_tt_hits;
         self.deep_tt_misses += other.deep_tt_misses;
+        self.split_cells += other.split_cells;
     }
 }
 
@@ -260,6 +268,13 @@ impl fmt::Display for SearchStats {
                 f,
                 "; deep children {} hits / {} analysed",
                 self.deep_tt_hits, self.deep_tt_misses
+            )?;
+        }
+        if self.split_cells > 0 {
+            write!(
+                f,
+                "; {} replacement cells split into rows",
+                self.split_cells
             )?;
         }
         Ok(())
@@ -735,6 +750,29 @@ struct ChildJob<const N: usize> {
     state: State<N>,
     suspension: Option<Suspension>,
     decision: Decision,
+}
+
+/// One outcome of a split heavy cell ([`Solver::child_cells`], board S24-t2): its value, or
+/// the row group valuing its turn, or the error met there.
+enum SplitValue {
+    Fixed(f32),
+    Group(usize),
+    Error(SearchError),
+}
+
+/// The turn after a heavy cell's outcome, valued by maximin one row (our choice) per pool
+/// item: the best row so far is the cutoff of the next round's rows.
+struct RowGroup<const N: usize> {
+    state: State<N>,
+    suspension: Option<Suspension>,
+    ours: Vec<Choice<N>>,
+    theirs: Vec<Choice<N>>,
+    /// The rows handed out so far.
+    next_row: usize,
+    /// The best row value so far (`-inf`: none evaluable yet).
+    best: f32,
+    /// The first error in row order.
+    error: Option<(usize, SearchError)>,
 }
 
 /// The `cap` most probable outcomes, renormalised (all of them without a cap): the children
@@ -1770,6 +1808,16 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
 
     /// Values child cells `(job, cell)` on the pool, merging the workers' counters in task
     /// order.
+    ///
+    /// A cell of a replacement or mid-turn child (a child game with `next_depth` 1) is a whole
+    /// maximin turn after the switch, often a thousand times a turn cell's work: as one pool
+    /// item it left one worker busy long after the others ran dry (sand-owen deep-nash: 42 of
+    /// 3,937 cells, 88% of the batch's CPU, the largest 16.5 s). Such cells are split (board
+    /// S24-t2): their pair is enumerated here, and each outcome's next turn is valued row by
+    /// row on the pool ([`RowGroup`]), in rounds of 1, 2, 4, ... rows whose cutoff is the best
+    /// row of the earlier rounds (alpha-beta with a lagging alpha). The values are those of
+    /// the unsplit cells bit for bit; the node and turn counts depend on the round sizes only,
+    /// never on the thread count.
     fn child_cells(
         &mut self,
         jobs: &[(usize, ChildJob<N>)],
@@ -1778,33 +1826,305 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
     ) -> Vec<Result<f32, SearchError>> {
         let config = self.config;
         let evaluator = self.evaluator;
-        let outs = self.par_map(tasks, HashMap::<usize, State<N>>::new, |states, &(j, i)| {
-            let job = &jobs[j].1;
+        // Split the heavy cells: their outcomes, and a row group for each outcome's turn.
+        let mut results: Vec<Option<Result<f32, SearchError>>> = vec![None; tasks.len()];
+        let mut splits: Vec<(usize, Vec<(f64, SplitValue)>)> = Vec::new();
+        let mut groups: Vec<RowGroup<N>> = Vec::new();
+        let mut light: Vec<usize> = Vec::new();
+        for (t, &(j, i)) in tasks.iter().enumerate() {
             let game = games[j].as_ref().expect("tasks come from prepared games");
-            let state = states.entry(j).or_insert_with(|| job.state.clone());
-            let mut local = Solver::new(config, evaluator);
-            let (a, b) = (
+            if game.next_depth == 0 || !self.config.split_heavy_cells {
+                light.push(t);
+                continue;
+            }
+            let job = &jobs[j].1;
+            let pair = self.pair(
                 game.ours[i / game.theirs.len()],
                 game.theirs[i % game.theirs.len()],
             );
-            let pair = local.pair(a, b);
-            let value = local.chance(
-                state,
-                job.decision,
-                job.suspension.as_ref(),
-                pair,
-                Next::Depth(game.next_depth),
-                f32::NEG_INFINITY,
-                f32::INFINITY,
+            match self.split_cell(job, pair, game.next_depth, &mut groups) {
+                Ok(Some(outcomes)) => {
+                    self.stats.split_cells += 1;
+                    splits.push((t, outcomes));
+                }
+                Ok(None) => results[t] = Some(Ok(f32::NAN)),
+                Err(e) => results[t] = Some(Err(e)),
+            }
+        }
+        // Rounds: every light cell and the first row of every group, then 2, 4, ... more rows
+        // of every group with the cutoff of the rows valued so far.
+        enum Item {
+            Light(usize),
+            Row(usize, usize, f32),
+        }
+        let mut round = 0u32;
+        loop {
+            let mut items: Vec<Item> = Vec::new();
+            if round == 0 {
+                items.extend(light.iter().map(|&t| Item::Light(t)));
+            }
+            for (g, group) in groups.iter_mut().enumerate() {
+                if group.error.is_some() {
+                    continue;
+                }
+                let take = (1usize << round.min(20)).min(group.ours.len() - group.next_row);
+                for r in group.next_row..group.next_row + take {
+                    items.push(Item::Row(g, r, group.best));
+                }
+                group.next_row += take;
+            }
+            if items.is_empty() {
+                break;
+            }
+            let groups_ref = &groups;
+            let outs = self.par_map(
+                &items,
+                HashMap::<(bool, usize), State<N>>::new,
+                |states, item| match *item {
+                    Item::Light(t) => {
+                        let (j, i) = tasks[t];
+                        let job = &jobs[j].1;
+                        let game = games[j].as_ref().expect("tasks come from prepared games");
+                        let state = states
+                            .entry((false, j))
+                            .or_insert_with(|| job.state.clone());
+                        let mut local = Solver::new(config, evaluator);
+                        let (a, b) = (
+                            game.ours[i / game.theirs.len()],
+                            game.theirs[i % game.theirs.len()],
+                        );
+                        let pair = local.pair(a, b);
+                        let value = local.chance(
+                            state,
+                            job.decision,
+                            job.suspension.as_ref(),
+                            pair,
+                            Next::Depth(game.next_depth),
+                            f32::NEG_INFINITY,
+                            f32::INFINITY,
+                        );
+                        CellOut::from_solver(value, local)
+                    }
+                    Item::Row(g, r, lo) => {
+                        let group = &groups_ref[g];
+                        let state = states
+                            .entry((true, g))
+                            .or_insert_with(|| group.state.clone());
+                        let mut local = Solver::new(config, evaluator);
+                        let value = local.row_min(state, group, r, lo);
+                        CellOut::from_solver(value, local)
+                    }
+                },
             );
-            CellOut::from_solver(value, local)
-        });
-        outs.into_iter()
-            .map(|out| {
+            for (item, out) in items.iter().zip(outs) {
                 self.absorb(&out);
-                out.value
-            })
+                match *item {
+                    Item::Light(t) => results[t] = Some(out.value),
+                    Item::Row(g, r, _) => {
+                        let group = &mut groups[g];
+                        match out.value {
+                            // The first error in row order is the group's.
+                            Err(e) => {
+                                if group.error.as_ref().is_none_or(|(at, _)| r < *at) {
+                                    group.error = Some((r, e));
+                                }
+                            }
+                            // No evaluable reply: the row does not count (as in `value`).
+                            Ok(v) if v == f32::INFINITY => {}
+                            Ok(v) => group.best = group.best.max(v),
+                        }
+                    }
+                }
+            }
+            round += 1;
+        }
+        // Each split cell: its outcomes' values combined as `chance` does over (-inf, inf).
+        for (t, outcomes) in splits {
+            let value = |v: &SplitValue| -> Result<f32, SearchError> {
+                match v {
+                    SplitValue::Fixed(v) => Ok(*v),
+                    SplitValue::Error(e) => Err(e.clone()),
+                    SplitValue::Group(g) => {
+                        let group = &groups[*g];
+                        match &group.error {
+                            Some((_, e)) => Err(e.clone()),
+                            None if group.best == f32::NEG_INFINITY => Ok(f32::NAN),
+                            None => Ok(group.best),
+                        }
+                    }
+                }
+            };
+            let combined = match self.config.chance {
+                Chance::Worst => {
+                    let mut worst = f32::INFINITY;
+                    let mut out = Ok(f32::NAN);
+                    for (_, v) in &outcomes {
+                        match value(v) {
+                            Err(e) => {
+                                out = Err(e);
+                                break;
+                            }
+                            Ok(v) if v.is_nan() => {
+                                out = Ok(f32::NAN);
+                                break;
+                            }
+                            Ok(v) => {
+                                worst = worst.min(v);
+                                out = Ok(worst);
+                            }
+                        }
+                    }
+                    if outcomes.is_empty() {
+                        Ok(f32::INFINITY)
+                    } else {
+                        out
+                    }
+                }
+                Chance::Expect => {
+                    let mut sum = 0.0f64;
+                    let mut out = None;
+                    for (p, v) in &outcomes {
+                        match value(v) {
+                            Err(e) => {
+                                out = Some(Err(e));
+                                break;
+                            }
+                            Ok(v) if v.is_nan() => {
+                                out = Some(Ok(f32::NAN));
+                                break;
+                            }
+                            Ok(v) => sum += p * v as f64,
+                        }
+                    }
+                    out.unwrap_or(Ok(sum as f32))
+                }
+            };
+            results[t] = Some(combined);
+        }
+        results
+            .into_iter()
+            .map(|r| r.expect("every child cell is valued"))
             .collect()
+    }
+
+    /// Enumerates a heavy cell's pair (the job's replacement or mid-turn decision) and makes a
+    /// [`RowGroup`] for each outcome whose next decision is a turn (a battle over is its
+    /// terminal value, anything else is valued whole here). `None`: the engine refused the
+    /// pair (noted; the cell is NaN).
+    #[allow(clippy::type_complexity)]
+    fn split_cell(
+        &mut self,
+        job: &ChildJob<N>,
+        pair: [Choice<N>; 2],
+        depth: u32,
+        groups: &mut Vec<RowGroup<N>>,
+    ) -> Result<Option<Vec<(f64, SplitValue)>>, SearchError> {
+        if let Some(max) = self.config.max_turns {
+            if self.turns >= max {
+                return Err(SearchError::Budget);
+            }
+        }
+        self.turns += 1;
+        let mut state = job.state.clone();
+        let started = Instant::now();
+        let transitions = game::transitions(
+            &mut state,
+            self.config.ruleset,
+            self.config.enumerate_options(),
+            job.decision,
+            job.suspension.as_ref(),
+            pair,
+        );
+        self.stats.enumerate_seconds += started.elapsed().as_secs_f64();
+        let outcomes = match transitions {
+            Ok(outcomes) => outcomes,
+            Err(TurnError::Unsupported(why)) => {
+                self.note_unsupported(why);
+                return Ok(None);
+            }
+            Err(e) => return Err(e.into()),
+        };
+        let them = self.config.us.other();
+        let mut out = Vec::with_capacity(outcomes.len());
+        for outcome in &outcomes {
+            state.apply(&outcome.instructions);
+            // `value`'s entry at the outcome.
+            self.nodes += 1;
+            let value = match game::decision(&state, outcome.suspension.as_ref()) {
+                Err(e) => Err(e.into()),
+                Ok(Decision::Over(result)) => Ok(SplitValue::Fixed(self.terminal(result, depth))),
+                Ok(Decision::Turn) if depth == 1 => {
+                    match (
+                        self.choices(&state, Decision::Turn, self.config.us),
+                        self.choices(&state, Decision::Turn, them),
+                    ) {
+                        (Ok(ours), Ok(theirs)) => {
+                            groups.push(RowGroup {
+                                state: state.clone(),
+                                suspension: outcome.suspension.clone(),
+                                ours,
+                                theirs,
+                                next_row: 0,
+                                best: f32::NEG_INFINITY,
+                                error: None,
+                            });
+                            Ok(SplitValue::Group(groups.len() - 1))
+                        }
+                        (Err(e), _) | (_, Err(e)) => Err(e),
+                    }
+                }
+                Ok(_) => {
+                    // Rare (a replacement after a replacement, a deeper tree): whole, here.
+                    self.nodes -= 1;
+                    self.value(
+                        &mut state,
+                        outcome.suspension.as_ref(),
+                        depth,
+                        f32::NEG_INFINITY,
+                        f32::INFINITY,
+                    )
+                    .map(SplitValue::Fixed)
+                }
+            };
+            state.reverse(&outcome.instructions);
+            // An error counts where `chance` would meet it: after the earlier outcomes.
+            out.push((outcome.probability, value.unwrap_or_else(SplitValue::Error)));
+        }
+        Ok(Some(out))
+    }
+
+    /// One row of a [`RowGroup`]'s turn: the minimum over their replies of our choice `r`,
+    /// stopping once it is at most `lo` (as `value` with alpha `lo`); `f32::INFINITY` when no
+    /// reply is evaluable.
+    fn row_min(
+        &mut self,
+        state: &mut State<N>,
+        group: &RowGroup<N>,
+        r: usize,
+        lo: f32,
+    ) -> Result<f32, SearchError> {
+        let a = group.ours[r];
+        let mut worst = f32::INFINITY;
+        for &b in &group.theirs {
+            let pair = self.pair(a, b);
+            let v = self.chance(
+                state,
+                Decision::Turn,
+                group.suspension.as_ref(),
+                pair,
+                Next::Depth(0),
+                lo,
+                worst,
+            )?;
+            if v.is_nan() {
+                continue;
+            }
+            worst = worst.min(v);
+            if worst <= lo {
+                break;
+            }
+        }
+        Ok(worst)
     }
 
     fn continue_at(
