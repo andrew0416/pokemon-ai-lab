@@ -161,3 +161,40 @@ fn a_locked_move_is_written_with_a_target() {
     }
     assert!(locked > 0);
 }
+
+/// Geomancy's second turn (`va-geomancy-charge-lock`, charged in the setup turn): a two-turn lock
+/// on a move aimed at no location is written with target 1 as well (`move geomancy 1`); without
+/// it Showdown refused the choice (`Can't move: Geomancy needs a target`, V11f lab-parity
+/// positions with Geomancy and Razor Wind). The text parses back to the same choice.
+#[test]
+fn an_untargeted_two_turn_lock_is_written_with_a_target() {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../oracle/scenarios/va-geomancy-charge-lock.json");
+    let loaded = load_scenario_file(path).unwrap();
+    let slot = SlotRef {
+        side: SideId::One,
+        slot: 0,
+    };
+    let ruleset = Ruleset::CHAMPIONS_MC;
+    let mut locked = 0;
+    for position in scenario_positions(&loaded).unwrap() {
+        let state = &position.state;
+        if !matches!(locked_move(state, slot), Some(Locked::TwoTurn { .. })) {
+            continue;
+        }
+        locked += 1;
+        for choice in legal_choices(state, ruleset, Decision::Turn, SideId::One, Pruning::All) {
+            let Choice::Turn(action) = choice else {
+                panic!("{choice:?}")
+            };
+            let text = format_choice(state, SideId::One, &position.order[0], &action);
+            assert!(text.starts_with("move geomancy 1, "), "{text}");
+            let parsed = parse_choice(state, SideId::One, &position.order[0], &text).unwrap();
+            assert_eq!(
+                normalize_turn_choice(state, ruleset, SideId::One, parsed),
+                action
+            );
+        }
+    }
+    assert!(locked > 0);
+}

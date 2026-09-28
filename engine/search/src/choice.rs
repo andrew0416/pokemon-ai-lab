@@ -74,13 +74,15 @@ fn format_slot_action<const N: usize>(
             // locked Pokémon's request (`getMoves(lockedMove)`) gives none, so it counts as
             // `normal`: in doubles the choice needs a target, which the lock then ignores
             // (`lastMoveTargetLoc`). A locked move aimed at no location (Outrage, Petal Dance,
-            // Thrash, Raging Fury, Uproar, the recharge turn) is written with target 1, as the
-            // hand-written fixtures do (`outrage-lock`, `hyper-beam-recharge`).
+            // Thrash, Raging Fury, Uproar, the recharge turn, and the second turn of a two-turn
+            // move that targets no location: Geomancy, Razor Wind) is written with target 1, as
+            // the hand-written fixtures do (`outrage-lock`, `hyper-beam-recharge`,
+            // `va-geomancy-charge-lock`).
             let locked_untargeted = N >= 2
                 && target == 0
                 && matches!(
                     locked_move(state, slot),
-                    Some(Locked::Move(_) | Locked::Recharge)
+                    Some(Locked::Move(_) | Locked::Recharge | Locked::TwoTurn { .. })
                 );
             let mut text = if index == RECHARGE_INDEX {
                 "move recharge".to_owned()

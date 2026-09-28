@@ -1,0 +1,80 @@
+{
+ "description": "V11f (Opus VA): Geomancy's second turn. Xerneas charged Geomancy in the setup turn; the lock's choice is written `move geomancy 1` (Showdown's request gives a locked move no target type, so doubles asks for one; Geomancy targets itself and ignores it). Past content (Geomancy, Xerneas), allowed by the engine.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Xerneas",
+    "item": "",
+    "ability": "Fairy Aura",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Geomancy",
+     "Moonblast"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Clefable",
+    "item": "",
+    "ability": "Magic Guard",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Moonblast"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Harden"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Chansey",
+    "item": "",
+    "ability": "Natural Cure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Harden"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move geomancy, move protect",
+   "move harden, move harden"
+  ]
+ ],
+ "turn": {
+  "p1": "move geomancy 1, move moonblast 1",
+  "p2": "move harden, move harden"
+ }
+}

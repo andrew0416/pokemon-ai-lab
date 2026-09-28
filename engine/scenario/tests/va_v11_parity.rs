@@ -25,3 +25,10 @@ fn gem_and_flinch_in_a_paused_turn() {
 fn revival_blessing_and_guards_in_a_paused_turn() {
     common::assert_exact_parity("va-revival-blessing-guards-pause");
 }
+
+/// V11f (Past content the engine implements): Geomancy's second turn from a lock, the choice
+/// written with the target Showdown requires and ignores.
+#[test]
+fn geomancy_second_turn() {
+    common::assert_exact_parity("va-geomancy-charge-lock");
+}
