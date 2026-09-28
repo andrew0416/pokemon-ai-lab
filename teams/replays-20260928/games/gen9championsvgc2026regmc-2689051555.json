@@ -259,6 +259,9 @@
    {
     "name": "Gengar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cursed Body"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -267,6 +270,7 @@
    {
     "name": "Incineroar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -275,6 +279,11 @@
    {
     "name": "Kommo-o",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Bulletproof",
+     "Soundproof",
+     "Overcoat"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -283,6 +292,7 @@
    {
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -293,6 +303,7 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -301,6 +312,11 @@
    {
     "name": "Basculegion",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Swift Swim",
+     "Adaptability",
+     "Mold Breaker"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -309,6 +325,7 @@
    {
     "name": "Salamence",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -317,6 +334,11 @@
    {
     "name": "Pawmot",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Volt Absorb",
+     "Natural Cure",
+     "Iron Fist"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

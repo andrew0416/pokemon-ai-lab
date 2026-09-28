@@ -259,6 +259,7 @@
    {
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -267,6 +268,7 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -275,6 +277,11 @@
    {
     "name": "Farigiraf",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cud Chew",
+     "Armor Tail",
+     "Sap Sipper"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -283,6 +290,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -293,6 +303,11 @@
    {
     "name": "Scizor",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Swarm",
+     "Technician",
+     "Light Metal"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -301,6 +316,10 @@
    {
     "name": "Umbreon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Synchronize",
+     "Inner Focus"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -309,6 +328,11 @@
    {
     "name": "Annihilape",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Vital Spirit",
+     "Inner Focus",
+     "Defiant"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -317,6 +341,7 @@
    {
     "name": "Goodra",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,

@@ -256,6 +256,11 @@
    {
     "name": "Grimmsnarl",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Frisk",
+     "Pickpocket"
+    ],
     "item_shown": false,
     "item_inferred": "lightclay (a screen, weather or terrain it set lasted past 5 turns)",
     "ability_shown": false,
@@ -264,6 +269,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -272,6 +278,11 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Stamina",
+     "Sturdy",
+     "Stalwart"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -280,6 +291,10 @@
    {
     "name": "Sinistcha",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Hospitality",
+     "Heatproof"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -290,6 +305,11 @@
    {
     "name": "Whimsicott",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Infiltrator",
+     "Chlorophyll"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -298,6 +318,7 @@
    {
     "name": "Staraptor",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,

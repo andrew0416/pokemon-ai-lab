@@ -255,6 +255,10 @@
    {
     "name": "Raichu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -263,6 +267,7 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -271,6 +276,11 @@
    {
     "name": "Farigiraf",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cud Chew",
+     "Armor Tail",
+     "Sap Sipper"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -279,6 +289,11 @@
    {
     "name": "Conkeldurr",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Guts",
+     "Sheer Force",
+     "Iron Fist"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -289,6 +304,11 @@
    {
     "name": "Pet Shop",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Limber",
+     "Unburden",
+     "Mold Breaker"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -297,6 +317,7 @@
    {
     "name": "Ice Feam",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -305,6 +326,11 @@
    {
     "name": "Cosmo",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cute Charm",
+     "Magic Guard",
+     "Unaware"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -313,6 +339,10 @@
    {
     "name": "Silky",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flame Body",
+     "Swarm"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

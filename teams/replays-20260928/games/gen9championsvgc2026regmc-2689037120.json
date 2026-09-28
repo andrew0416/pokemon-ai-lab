@@ -252,6 +252,10 @@
    {
     "name": "Cinderace",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Libero"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -260,6 +264,7 @@
    {
     "name": "Gardevoir",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -268,6 +273,11 @@
    {
     "name": "Mamoswine",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Oblivious",
+     "Snow Cloak",
+     "Thick Fat"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -282,14 +292,20 @@
    {
     "name": "Gholdengo",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
-    "ability_shown": false,
+    "ability_shown": true,
     "moves_shown": 2
    },
    {
     "name": "Milotic",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Marvel Scale",
+     "Competitive",
+     "Cute Charm"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -298,6 +314,10 @@
    {
     "name": "Raichu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

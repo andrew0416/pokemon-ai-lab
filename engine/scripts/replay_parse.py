@@ -357,6 +357,12 @@ def parse_game(rid, text):
                         t = ident(args[2]) if len(args) > 2 and args[2] else None
                         if t and t[1] is not None:
                             target = {"side": t[0], "slot": t[1]}
+                        elif t:
+                            # `p2: Name` ([notarget]): the target had fainted; its slot at the
+                            # start of the turn is the one chosen.
+                            starts = cur["start_active"][t[0]]
+                            if t[2] in starts:
+                                target = {"side": t[0], "slot": starts.index(t[2])}
                         if key in cur["encored"]:
                             # Champions Encore replaces the pending action: the printed move
                             # is the Encored one, not the one chosen.
@@ -524,6 +530,7 @@ def parse_game(rid, text):
                 if m:
                     if "Trace" in tag:
                         reveal_ability(m, "Trace")
+                        reveal_ability(of_mon(g, args[2:]), args[1])  # what it copied
                     elif tag.startswith("ability:"):
                         pass
                     elif not tag:
@@ -699,7 +706,7 @@ def build_team(g, side, ots_sets):
             moves = [name_of("moves", x) for x in m.moves[:4]] or ["Protect"]
             # A filler for the turns it did not act (`unknown`): a priority-0 move whose
             # failure changes nothing, so its choice cannot jump ahead like Protect.
-            if len(moves) < 4 and "Rest" not in moves:
+            if len(moves) < 4 and "Rest" not in moves and "Last Resort" not in moves:
                 moves.append("Rest")
             item = name_of("items", m.orig_item) if m.orig_item else ""
             ability = name_of("abilities", m.ability) if m.ability else silent_ability(entry)

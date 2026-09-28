@@ -259,6 +259,9 @@
    {
     "name": "Gengar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cursed Body"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -267,6 +270,10 @@
    {
     "name": "Swampert",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Torrent",
+     "Damp"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -275,6 +282,7 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -283,6 +291,10 @@
    {
     "name": "Volcarona",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flame Body",
+     "Swarm"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -293,6 +305,10 @@
    {
     "name": "Metagross",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Clear Body",
+     "Light Metal"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -301,6 +317,11 @@
    {
     "name": "Sneasler",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Pressure",
+     "Unburden",
+     "Poison Touch"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -309,6 +330,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -317,6 +339,11 @@
    {
     "name": "Arcanine",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Intimidate",
+     "Flash Fire",
+     "Rock Head"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

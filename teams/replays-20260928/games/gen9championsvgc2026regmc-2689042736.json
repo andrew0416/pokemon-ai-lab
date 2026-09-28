@@ -256,6 +256,10 @@
    {
     "name": "Talonflame",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flame Body",
+     "Gale Wings"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -264,6 +268,9 @@
    {
     "name": "Hydreigon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Levitate"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -272,6 +279,11 @@
    {
     "name": "Basculegion",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Swift Swim",
+     "Adaptability",
+     "Mold Breaker"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -280,6 +292,11 @@
    {
     "name": "Lucario",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Steadfast",
+     "Inner Focus",
+     "Justified"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -290,6 +307,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -298,6 +316,11 @@
    {
     "name": "Sneasler",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Pressure",
+     "Unburden",
+     "Poison Touch"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -306,6 +329,7 @@
    {
     "name": "Absol",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -510,7 +534,10 @@
     {
      "kind": "move",
      "move": "psychic",
-     "target": null,
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
      "flags": [
       "[notarget]"
      ],

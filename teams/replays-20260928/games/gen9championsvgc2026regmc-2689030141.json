@@ -258,6 +258,11 @@
    {
     "name": "Manectric",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod",
+     "Minus"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -266,6 +271,7 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -274,6 +280,11 @@
    {
     "name": "Goodra",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Sap Sipper",
+     "Shell Armor",
+     "Gooey"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -282,6 +293,11 @@
    {
     "name": "Sneasler",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Pressure",
+     "Unburden",
+     "Poison Touch"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -292,6 +308,10 @@
    {
     "name": "Raichu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -300,6 +320,11 @@
    {
     "name": "Toxapex",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Merciless",
+     "Limber",
+     "Regenerator"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -308,6 +333,11 @@
    {
     "name": "Sneasler",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Pressure",
+     "Unburden",
+     "Poison Touch"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -316,6 +346,11 @@
    {
     "name": "Kingambit",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Defiant",
+     "Supreme Overlord",
+     "Pressure"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,

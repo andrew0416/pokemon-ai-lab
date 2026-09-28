@@ -254,6 +254,11 @@
    {
     "name": "Tsareena",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Leaf Guard",
+     "Queenly Majesty",
+     "Sweet Veil"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -262,6 +267,10 @@
    {
     "name": "Talonflame",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flame Body",
+     "Gale Wings"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -270,6 +279,10 @@
    {
     "name": "Raichu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -278,6 +291,10 @@
    {
     "name": "Jolteon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Volt Absorb",
+     "Quick Feet"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -288,6 +305,10 @@
    {
     "name": "Mista",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Torrent",
+     "Sniper"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -296,6 +317,10 @@
    {
     "name": "Silky",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flame Body",
+     "Swarm"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -304,6 +329,7 @@
    {
     "name": "BamBam",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,

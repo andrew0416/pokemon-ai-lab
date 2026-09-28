@@ -255,6 +255,10 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Solar Power"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -263,6 +267,11 @@
    {
     "name": "Farigiraf",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cud Chew",
+     "Armor Tail",
+     "Sap Sipper"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -271,6 +280,7 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -279,6 +289,11 @@
    {
     "name": "Grimmsnarl",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Frisk",
+     "Pickpocket"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -289,6 +304,9 @@
    {
     "name": "Gengar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cursed Body"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -297,6 +315,11 @@
    {
     "name": "Vivillon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Shield Dust",
+     "Compound Eyes",
+     "Friend Guard"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -305,6 +328,7 @@
    {
     "name": "Incineroar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -313,6 +337,11 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Stamina",
+     "Sturdy",
+     "Stalwart"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -441,7 +470,8 @@
       "status": "slp",
       "slot": 0,
       "boosts": {},
-      "item": "charizarditey"
+      "item": "charizarditey",
+      "statusTime": 3
      },
      {
       "side": "p1",
@@ -539,7 +569,8 @@
       "status": "slp",
       "slot": 0,
       "boosts": {},
-      "item": "charizarditey"
+      "item": "charizarditey",
+      "statusTime": 2
      },
      {
       "side": "p1",
@@ -550,7 +581,8 @@
       "hint": "",
       "status": "slp",
       "slot": 1,
-      "boosts": {}
+      "boosts": {},
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -633,7 +665,8 @@
       "boosts": {
        "atk": -1
       },
-      "item": "charizarditey"
+      "item": "charizarditey",
+      "statusTime": 1
      },
      {
       "side": "p1",
@@ -646,7 +679,8 @@
       "slot": 1,
       "boosts": {
        "atk": -1
-      }
+      },
+      "statusTime": 1
      },
      {
       "side": "p2",

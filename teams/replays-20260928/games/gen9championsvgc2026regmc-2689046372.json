@@ -256,6 +256,10 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Solar Power"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -264,6 +268,7 @@
    {
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -272,6 +277,7 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -280,6 +286,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -290,6 +299,10 @@
    {
     "name": "Weavile",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Pressure",
+     "Pickpocket"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -298,6 +311,11 @@
    {
     "name": "Noivern",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Frisk",
+     "Infiltrator",
+     "Telepathy"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -306,6 +324,11 @@
    {
     "name": "Basculegion",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Swift Swim",
+     "Adaptability",
+     "Mold Breaker"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -314,6 +337,11 @@
    {
     "name": "Lucario",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Steadfast",
+     "Inner Focus",
+     "Justified"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,

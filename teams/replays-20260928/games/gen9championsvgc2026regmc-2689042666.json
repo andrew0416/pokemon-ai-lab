@@ -251,6 +251,7 @@
    {
     "name": "Torkoal",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -259,6 +260,7 @@
    {
     "name": "Greninja",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -277,6 +279,11 @@
    {
     "name": "Sableye",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Keen Eye",
+     "Stall",
+     "Prankster"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -285,6 +292,11 @@
    {
     "name": "Gallade",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Steadfast",
+     "Sharpness",
+     "Justified"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -293,6 +305,11 @@
    {
     "name": "Kingambit",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Defiant",
+     "Supreme Overlord",
+     "Pressure"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

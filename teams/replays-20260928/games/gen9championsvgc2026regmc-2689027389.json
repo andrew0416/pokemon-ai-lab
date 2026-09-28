@@ -257,6 +257,7 @@
    {
     "name": "Velos",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -265,6 +266,9 @@
    {
     "name": "Chrysus",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Good as Gold"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -273,6 +277,11 @@
    {
     "name": "Midas",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Intimidate",
+     "Flash Fire",
+     "Rock Head"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -287,6 +296,11 @@
    {
     "name": "Arcanine",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Intimidate",
+     "Flash Fire",
+     "Rock Head"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -295,6 +309,10 @@
    {
     "name": "Floette",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flower Veil",
+     "Symbiosis"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -303,6 +321,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -311,6 +330,10 @@
    {
     "name": "Armarouge",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flash Fire",
+     "Weak Armor"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

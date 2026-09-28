@@ -261,6 +261,11 @@
    {
     "name": "Annihilape",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Vital Spirit",
+     "Inner Focus",
+     "Defiant"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -269,6 +274,11 @@
    {
     "name": "Maushold",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Friend Guard",
+     "Cheek Pouch",
+     "Technician"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -277,6 +287,11 @@
    {
     "name": "Milotic",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Marvel Scale",
+     "Competitive",
+     "Cute Charm"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -285,6 +300,7 @@
    {
     "name": "Ninetales",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": "lightclay (a screen, weather or terrain it set lasted past 5 turns)",
     "ability_shown": true,
@@ -295,6 +311,10 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Solar Power"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -303,6 +323,11 @@
    {
     "name": "Farigiraf",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cud Chew",
+     "Armor Tail",
+     "Sap Sipper"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -311,6 +336,11 @@
    {
     "name": "Grimmsnarl",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Frisk",
+     "Pickpocket"
+    ],
     "item_shown": false,
     "item_inferred": "lightclay (a screen, weather or terrain it set lasted past 5 turns)",
     "ability_shown": false,
@@ -319,6 +349,7 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -1205,7 +1236,8 @@
       "hint": "",
       "status": "slp",
       "slot": 1,
-      "boosts": {}
+      "boosts": {},
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -1367,7 +1399,8 @@
       "pct": 78,
       "hint": "",
       "status": "slp",
-      "slot": null
+      "slot": null,
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -1500,7 +1533,8 @@
        "accuracy": -1,
        "def": 1
       },
-      "item": "leftovers"
+      "item": "leftovers",
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -1521,7 +1555,8 @@
       "pct": 78,
       "hint": "",
       "status": "slp",
-      "slot": null
+      "slot": null,
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -1656,7 +1691,8 @@
        "accuracy": -1,
        "def": 1
       },
-      "item": "leftovers"
+      "item": "leftovers",
+      "statusTime": 1
      },
      {
       "side": "p2",
@@ -1677,7 +1713,8 @@
       "pct": 78,
       "hint": "",
       "status": "slp",
-      "slot": null
+      "slot": null,
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -1690,7 +1727,8 @@
       "slot": 0,
       "boosts": {
        "accuracy": -1
-      }
+      },
+      "statusTime": 2
      }
     ],
     "weather": "",
@@ -1839,7 +1877,8 @@
       "pct": 78,
       "hint": "",
       "status": "slp",
-      "slot": null
+      "slot": null,
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -1852,7 +1891,8 @@
       "slot": 0,
       "boosts": {
        "accuracy": -1
-      }
+      },
+      "statusTime": 1
      }
     ],
     "weather": "",
@@ -2008,7 +2048,8 @@
       "pct": 78,
       "hint": "",
       "status": "slp",
-      "slot": null
+      "slot": null,
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -2157,7 +2198,8 @@
        "accuracy": -1,
        "def": 4
       },
-      "item": "leftovers"
+      "item": "leftovers",
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -2178,7 +2220,8 @@
       "pct": 78,
       "hint": "",
       "status": "slp",
-      "slot": null
+      "slot": null,
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -2313,7 +2356,8 @@
        "accuracy": -1,
        "def": 5
       },
-      "item": "leftovers"
+      "item": "leftovers",
+      "statusTime": 1
      },
      {
       "side": "p2",
@@ -2334,7 +2378,8 @@
       "pct": 78,
       "hint": "",
       "status": "slp",
-      "slot": null
+      "slot": null,
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -2347,7 +2392,8 @@
       "slot": 0,
       "boosts": {
        "accuracy": -1
-      }
+      },
+      "statusTime": 2
      }
     ],
     "weather": "",
@@ -2494,7 +2540,8 @@
       "pct": 78,
       "hint": "",
       "status": "slp",
-      "slot": null
+      "slot": null,
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -2507,7 +2554,8 @@
       "slot": 0,
       "boosts": {
        "accuracy": -1
-      }
+      },
+      "statusTime": 1
      }
     ],
     "weather": "",
@@ -2664,7 +2712,8 @@
       "pct": 78,
       "hint": "",
       "status": "slp",
-      "slot": null
+      "slot": null,
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -2823,7 +2872,8 @@
       "pct": 78,
       "hint": "",
       "status": "slp",
-      "slot": null
+      "slot": null,
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -2836,7 +2886,8 @@
       "slot": 0,
       "boosts": {
        "accuracy": -2
-      }
+      },
+      "statusTime": 1
      }
     ],
     "weather": "",
@@ -2983,7 +3034,8 @@
       "hint": "",
       "status": "slp",
       "slot": 1,
-      "boosts": {}
+      "boosts": {},
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -3142,7 +3194,8 @@
       "status": "slp",
       "slot": 1,
       "boosts": {},
-      "item": ""
+      "item": "",
+      "statusTime": 1
      },
      {
       "side": "p2",
@@ -3275,7 +3328,8 @@
       "status": "slp",
       "slot": 1,
       "boosts": {},
-      "item": ""
+      "item": "",
+      "statusTime": 1
      },
      {
       "side": "p2",

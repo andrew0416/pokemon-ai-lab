@@ -257,6 +257,7 @@
    {
     "name": "Cinderace",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -265,6 +266,7 @@
    {
     "name": "Gardevoir",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -273,6 +275,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -281,6 +284,11 @@
    {
     "name": "Mamoswine",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Oblivious",
+     "Snow Cloak",
+     "Thick Fat"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -291,6 +299,7 @@
    {
     "name": "Tyranitar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -299,14 +308,16 @@
    {
     "name": "Steelix",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
-    "ability_shown": false,
+    "ability_shown": true,
     "moves_shown": 0
    },
    {
     "name": "Dogrino",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -315,6 +326,11 @@
    {
     "name": "Alakazam",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Synchronize",
+     "Inner Focus",
+     "Magic Guard"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

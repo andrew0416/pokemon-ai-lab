@@ -258,6 +258,11 @@
    {
     "name": "Vivillon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Shield Dust",
+     "Compound Eyes",
+     "Friend Guard"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -266,6 +271,7 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -274,6 +280,7 @@
    {
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -288,6 +295,11 @@
    {
     "name": "Farigiraf",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cud Chew",
+     "Armor Tail",
+     "Sap Sipper"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -296,6 +308,7 @@
    {
     "name": "Staraptor",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -304,6 +317,11 @@
    {
     "name": "Camerupt",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Magma Armor",
+     "Solid Rock",
+     "Anger Point"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -312,6 +330,11 @@
    {
     "name": "Suckerrr",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Defiant",
+     "Supreme Overlord",
+     "Pressure"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -461,7 +484,8 @@
       "hint": "",
       "status": "slp",
       "slot": 0,
-      "boosts": {}
+      "boosts": {},
+      "statusTime": 1
      },
      {
       "side": "p2",

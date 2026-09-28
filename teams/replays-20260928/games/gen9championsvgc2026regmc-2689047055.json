@@ -254,6 +254,11 @@
    {
     "name": "Benched",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Marvel Scale",
+     "Competitive",
+     "Cute Charm"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -262,6 +267,7 @@
    {
     "name": "Incineroar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -270,6 +276,10 @@
    {
     "name": "Raichu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -284,6 +294,11 @@
    {
     "name": "Farigiraf",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cud Chew",
+     "Armor Tail",
+     "Sap Sipper"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -292,6 +307,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -300,6 +318,11 @@
    {
     "name": "Grimmsnarl",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Frisk",
+     "Pickpocket"
+    ],
     "item_shown": false,
     "item_inferred": "lightclay (a screen, weather or terrain it set lasted past 5 turns)",
     "ability_shown": false,
@@ -308,6 +331,7 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -708,7 +732,8 @@
       "slot": 0,
       "boosts": {
        "atk": -2
-      }
+      },
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -839,7 +864,8 @@
       "boosts": {
        "atk": -3,
        "spa": -1
-      }
+      },
+      "statusTime": 1
      },
      {
       "side": "p2",
@@ -1134,7 +1160,8 @@
       "boosts": {
        "atk": -3,
        "spa": -1
-      }
+      },
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -1272,7 +1299,8 @@
       "boosts": {
        "atk": -3,
        "spa": -1
-      }
+      },
+      "statusTime": 1
      },
      {
       "side": "p2",

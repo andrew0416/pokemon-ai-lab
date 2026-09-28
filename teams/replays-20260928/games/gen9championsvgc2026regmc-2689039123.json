@@ -266,6 +266,7 @@
    {
     "name": "Charizard",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -274,6 +275,7 @@
    {
     "name": "Golisopod",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -282,6 +284,7 @@
    {
     "name": "Grimmsnarl",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -296,6 +299,7 @@
    {
     "name": "Yoruichi",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -304,6 +308,7 @@
    {
     "name": "Soi fon",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -312,6 +317,7 @@
    {
     "name": "Orihime",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -320,6 +326,7 @@
    {
     "name": "Ichigo",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,

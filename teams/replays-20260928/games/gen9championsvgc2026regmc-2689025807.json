@@ -259,6 +259,11 @@
    {
     "name": "puff",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Infiltrator",
+     "Chlorophyll"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -267,6 +272,7 @@
    {
     "name": "fluff",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -275,6 +281,11 @@
    {
     "name": "rough",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Curious Medicine",
+     "Own Tempo",
+     "Regenerator"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -283,6 +294,7 @@
    {
     "name": "tough",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -293,6 +305,7 @@
    {
     "name": "Pelipper",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -301,6 +314,10 @@
    {
     "name": "Dragonite",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Inner Focus",
+     "Multiscale"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -309,6 +326,11 @@
    {
     "name": "Scizor",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Swarm",
+     "Technician",
+     "Light Metal"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -317,6 +339,10 @@
    {
     "name": "Swampert",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Torrent",
+     "Damp"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,

@@ -223,7 +223,7 @@
     "name": "Milotic",
     "species": "Milotic",
     "item": "Sitrus Berry",
-    "ability": "Marvel Scale",
+    "ability": "Competitive",
     "gender": "F",
     "nature": "Serious",
     "evs": {
@@ -256,6 +256,10 @@
    {
     "name": "moist",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Torrent",
+     "Damp"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -264,6 +268,11 @@
    {
     "name": "baby ♥",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Keen Eye",
+     "Infiltrator",
+     "Competitive"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -272,6 +281,11 @@
    {
     "name": "angy",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Keen Eye",
+     "Skill Link",
+     "Sheer Force"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -280,6 +294,10 @@
    {
     "name": "sassy ♥",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Corrosion",
+     "Oblivious"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -290,6 +308,9 @@
    {
     "name": "Gholdengo",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Good as Gold"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -298,6 +319,11 @@
    {
     "name": "Excadrill",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Sand Rush",
+     "Sand Force",
+     "Mold Breaker"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -306,6 +332,7 @@
    {
     "name": "Sinistcha",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -314,9 +341,10 @@
    {
     "name": "Milotic",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
-    "ability_shown": false,
+    "ability_shown": true,
     "moves_shown": 1
    }
   ]
