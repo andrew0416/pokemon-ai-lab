@@ -10,6 +10,12 @@
 //! result (entries, their order and the order in which probabilities add up) is the same as the
 //! map's.
 //!
+//! The entries live in chunks of [`CHUNK`] that never move once written (board P4b): a growing
+//! `Vec` of ~5 KB states moved every stored state on each doubling (and on Windows, past the
+//! heap's large-block threshold, reallocated them through the virtual memory manager), and the
+//! enumeration then moved every frontier state out of it once more. The enumeration works on
+//! the chunks in place ([`Chunks`]).
+//!
 //! The key's hash is [`crate::hash::key_hash`] of the state's [`State::position_hash`], which
 //! the caller keeps incrementally while a run applies its instructions (board P3a), and the
 //! remaining turn: the state itself is not hashed here.
@@ -29,10 +35,18 @@ pub(super) fn set_verify(on: bool) {
     VERIFY.store(on, Ordering::Relaxed);
 }
 
+/// Entries per chunk of a [`Merger`].
+const CHUNK: usize = 8;
+
+/// Merged positions `(state, rest, probability, position hash)` in first-reached order, in
+/// chunks whose entries never move (iterate them in place: `chunks.iter_mut().flatten()`).
+pub(super) type Chunks<const N: usize, Q> = Vec<Vec<(State<N>, Q, f64, u64)>>;
+
 /// Positions `(state, rest, probability)` merged by `(state, rest)` in first-reached order,
 /// each kept with its state's [`State::position_hash`].
 pub(super) struct Merger<const N: usize, Q> {
-    entries: Vec<(State<N>, Q, f64, u64)>,
+    chunks: Chunks<N, Q>,
+    len: usize,
     /// Open addressing with linear probing: `(hash, index into entries)`, [`Merger::EMPTY`] for
     /// a free slot. The length is a power of two and at least twice the entry count.
     table: Vec<(u64, u32)>,
@@ -44,13 +58,14 @@ impl<const N: usize, Q: Hash + Eq + Clone> Merger<N, Q> {
 
     pub(super) fn new() -> Self {
         Merger {
-            entries: Vec::new(),
+            chunks: Vec::new(),
+            len: 0,
             table: vec![(0, Self::EMPTY); Self::INITIAL],
         }
     }
 
     pub(super) fn len(&self) -> usize {
-        self.entries.len()
+        self.len
     }
 
     /// Adds `probability` to the entry equal to `(state, rest)`, or appends one with clones of
@@ -73,7 +88,8 @@ impl<const N: usize, Q: Hash + Eq + Clone> Merger<N, Q> {
                 break;
             }
             if h == hash {
-                let entry = &mut self.entries[e as usize];
+                let e = e as usize;
+                let entry = &mut self.chunks[e / CHUNK][e % CHUNK];
                 if entry.3 == state_hash && entry.0 == *state && entry.1 == *rest {
                     entry.2 += probability;
                     return;
@@ -81,11 +97,15 @@ impl<const N: usize, Q: Hash + Eq + Clone> Merger<N, Q> {
             }
             i = (i + 1) & mask;
         }
-        let index = u32::try_from(self.entries.len()).expect("fewer than 2^32 positions");
+        let index = u32::try_from(self.len).expect("fewer than 2^32 positions");
         self.table[i] = (hash, index);
-        self.entries
-            .push((state.clone(), rest.clone(), probability, state_hash));
-        if self.entries.len() * 2 > self.table.len() {
+        if self.len.is_multiple_of(CHUNK) {
+            self.chunks.push(Vec::with_capacity(CHUNK));
+        }
+        let chunk = self.chunks.last_mut().expect("a chunk with room");
+        chunk.push((state.clone(), rest.clone(), probability, state_hash));
+        self.len += 1;
+        if self.len * 2 > self.table.len() {
             self.grow();
         }
     }
@@ -107,8 +127,8 @@ impl<const N: usize, Q: Hash + Eq + Clone> Merger<N, Q> {
     }
 
     /// The merged entries in first-reached order, each with its state's position hash.
-    pub(super) fn into_entries(self) -> Vec<(State<N>, Q, f64, u64)> {
-        self.entries
+    pub(super) fn into_chunks(self) -> Chunks<N, Q> {
+        self.chunks
     }
 }
 
@@ -131,7 +151,7 @@ mod tests {
         for (k, s) in states.iter().enumerate() {
             merger.add(s, s.position_hash(), &((k % 3 == 0) as u32), 0.25);
         }
-        let entries = merger.into_entries();
+        let entries: Vec<_> = merger.into_chunks().into_iter().flatten().collect();
         let mut expected: Vec<(u16, u32, f64)> = Vec::new();
         for (k, s) in states.iter().enumerate() {
             let rest = (k % 3 == 0) as u32;

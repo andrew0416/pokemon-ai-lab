@@ -792,27 +792,24 @@ enum StageEnd {
     Suspended,
 }
 
-/// A final position of a staged enumeration: the end state, the remaining work if the turn
-/// suspended there, and the probability.
-struct Ending<const N: usize, P> {
-    end: State<N>,
-    pending: Option<P>,
-    probability: f64,
-}
+/// The final positions of a staged enumeration in first-reached order: the end state, the
+/// remaining work if the turn suspended there, the probability (and the position hash).
+type Endings<const N: usize, P> = merge::Chunks<N, Option<P>>;
 
 /// The outcomes of `endings` from `start`; `suspend` wraps the remaining work of a suspended
-/// one.
+/// one. The end states are read where they are (board P4b).
 fn outcomes<const N: usize, P>(
     start: &State<N>,
-    endings: Vec<Ending<N, P>>,
+    mut endings: Endings<N, P>,
     suspend: impl Fn(P) -> Suspension,
 ) -> Vec<Outcome> {
     endings
-        .into_iter()
-        .map(|ending| Outcome {
-            probability: ending.probability,
-            instructions: diff::instructions(start, &ending.end),
-            suspension: ending.pending.map(&suspend),
+        .iter_mut()
+        .flatten()
+        .map(|(end, pending, probability, _)| Outcome {
+            probability: *probability,
+            instructions: diff::instructions(start, end),
+            suspension: pending.take().map(&suspend),
         })
         .collect()
 }
@@ -822,15 +819,17 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
     start: P,
     options: EnumerateOptions,
     mut stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<StageEnd, TurnError>,
-) -> Result<Vec<Ending<N, P>>, TurnError> {
+) -> Result<Endings<N, P>, TurnError> {
     // The turn runs in stages (one action, or the end of turn). After every stage identical
     // (state, remaining turn) pairs merge, so the work grows with the number of distinct
     // intermediate positions, not with the number of random paths. Within a stage every
     // random path is enumerated by replay.
     // Each position carries its `State::position_hash`; a run's instructions keep the hash of
     // the state they lead to (`Battle::hash_delta`), so merging hashes no state (board P3a).
-    let mut frontier: Vec<(State<N>, P, f64, u64)> =
-        vec![(state.clone(), start, 1.0, state.position_hash())];
+    // The positions stay where the merge stored them: every run works on them in place (its
+    // instructions are reversed after it; board P4b).
+    let mut frontier: merge::Chunks<N, P> =
+        vec![vec![(state.clone(), start, 1.0, state.position_hash())]];
     // Both merge in first-reached order, which keeps the output order deterministic.
     let mut finished: Merger<N, Option<P>> = Merger::new();
     // The runs' log and Speed snapshot buffers, handed from run to run.
@@ -839,7 +838,8 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
         let mut next: Merger<N, P> = Merger::new();
         let stage_started = std::time::Instant::now();
         let mut runs = 0usize;
-        for (mut work, pending, probability, work_hash) in frontier {
+        for (work, pending, probability, work_hash) in frontier.iter_mut().flatten() {
+            let (probability, work_hash) = (*probability, *work_hash);
             let mut chooser = Chooser::with_rolls(options.rolls);
             // Every run starts from `work` (a run's instructions are reversed after it), so the
             // context `Battle::new` derives is the same for all of them: the first run derives
@@ -849,13 +849,13 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
             loop {
                 runs += 1;
                 chooser.begin_run();
-                after.clone_from(&pending);
+                after.clone_from(pending);
                 let result = {
                     let mut b = match &start {
-                        Some(start) => Battle::replay(&mut work, &mut chooser, start, buffers),
+                        Some(start) => Battle::replay(work, &mut chooser, start, buffers),
                         None => {
                             buffers.clear_log();
-                            Battle::recycle(&mut work, &mut chooser, buffers)
+                            Battle::recycle(work, &mut chooser, buffers)
                         }
                     };
                     if start.is_none() {
@@ -869,10 +869,10 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
                 let p = probability * chooser.probability();
                 let hash = work_hash.wrapping_add(buffers.hash_delta);
                 match end {
-                    StageEnd::Continue => next.add(&work, hash, &after, p),
+                    StageEnd::Continue => next.add(work, hash, &after, p),
                     StageEnd::Finished | StageEnd::Suspended => {
                         let kept = (end == StageEnd::Suspended).then(|| after.clone());
-                        finished.add(&work, hash, &kept, p);
+                        finished.add(work, hash, &kept, p);
                     }
                 }
                 work.reverse(&buffers.log);
@@ -890,24 +890,9 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
                 stage_started.elapsed().as_secs_f64() * 1000.0
             );
         }
-        frontier = next.into_entries();
+        frontier = next.into_chunks();
     }
-    Ok(endings(finished))
-}
-
-/// The merged end positions as [`Ending`]s, in first-reached order.
-fn endings<const N: usize, P: Hash + Eq + Clone>(
-    finished: Merger<N, Option<P>>,
-) -> Vec<Ending<N, P>> {
-    finished
-        .into_entries()
-        .into_iter()
-        .map(|(end, pending, probability, _)| Ending {
-            end,
-            pending,
-            probability,
-        })
-        .collect()
+    Ok(finished.into_chunks())
 }
 
 /// Monte Carlo counterpart of [`enumerate_stages`].
@@ -917,7 +902,7 @@ fn sample_stages<const N: usize, P: Clone + Eq + Hash>(
     seed: u64,
     start: P,
     mut stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<StageEnd, TurnError>,
-) -> Result<Vec<Ending<N, P>>, TurnError> {
+) -> Result<Endings<N, P>, TurnError> {
     let mut chooser = Chooser::sampler(seed);
     let mut finished: Merger<N, Option<P>> = Merger::new();
     let weight = 1.0 / samples as f64;
@@ -952,15 +937,11 @@ fn sample_stages<const N: usize, P: Clone + Eq + Hash>(
         let kept = (end == StageEnd::Suspended).then_some(pending);
         if samples == 1 {
             // A single path (what `lab-rollout` asks for every turn): nothing to merge.
-            let ending = Ending {
-                end: state.clone(),
-                pending: kept,
-                probability: weight,
-            };
+            let ending = (state.clone(), kept, weight, 0);
             state.reverse(&buffers.log);
             #[cfg(debug_assertions)]
             debug_assert_eq!(*state, begin);
-            return Ok(vec![ending]);
+            return Ok(vec![vec![ending]]);
         }
         finished.add(
             state,
@@ -972,7 +953,7 @@ fn sample_stages<const N: usize, P: Clone + Eq + Hash>(
     }
     #[cfg(debug_assertions)]
     debug_assert_eq!(*state, begin);
-    Ok(endings(finished))
+    Ok(finished.into_chunks())
 }
 
 /// Validates the choices and that everything in play is implemented. Returns the choices as
