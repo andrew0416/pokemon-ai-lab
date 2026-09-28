@@ -1,0 +1,369 @@
+{
+ "description": "FF parity position (FF-parity-harness): roll-vs-shield-b, lab-parity game 3 (seed 557b083f51a140d8, policy random, extremes chance), decision 1 = turn 1 Replacement. Base scenario D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/matchups/roll-vs-shield-b.json. The 1 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "3412",
+  "team": "../../../../teams/v11-20260928/v11f-roll.json"
+ },
+ "p2": {
+  "order": "3412",
+  "team": "../../../../teams/v11-20260928/v11f-shield.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "innerfocus",
+       "hp": 0,
+       "item": "sitrusberry",
+       "maxhp": 157,
+       "name": "Glalie",
+       "pp": {
+        "defensecurl": 20,
+        "freezedry": 20,
+        "iceball": 20,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Glalie",
+       "status": "fnt"
+      },
+      {
+       "ability": "serenegrace",
+       "hp": 207,
+       "item": "leftovers",
+       "maxhp": 207,
+       "name": "Jirachi",
+       "pp": {
+        "doomdesire": 8,
+        "luckychant": 20,
+        "mist": 20,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Jirachi",
+       "status": ""
+      },
+      {
+       "ability": "thickfat",
+       "hp": 202,
+       "item": "leftovers",
+       "maxhp": 202,
+       "name": "Miltank",
+       "pp": {
+        "bodyslam": 16,
+        "defensecurl": 20,
+        "milkdrink": 8,
+        "rollout": 20
+       },
+       "slot": null,
+       "species": "Miltank",
+       "status": ""
+      },
+      {
+       "ability": "truant",
+       "boosts": {},
+       "hp": 205,
+       "item": "sitrusberry",
+       "lastMove": "doubleedge",
+       "maxhp": 257,
+       "name": "Slaking",
+       "pp": {
+        "doubleedge": 15,
+        "laserfocus": 20,
+        "protect": 8,
+        "slackoff": 8
+       },
+       "slot": 1,
+       "species": "Slaking",
+       "status": "",
+       "volatiles": {
+        "truant": {}
+       }
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "leftovers",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "foresight": 20,
+        "healblock": 16,
+        "obstruct": 8,
+        "spiritbreak": 16
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "hp": 172,
+       "item": "sitrusberry",
+       "maxhp": 172,
+       "name": "Scovillain",
+       "pp": {
+        "burningbulwark": 12,
+        "craftyshield": 12,
+        "flamethrower": 16,
+        "gigadrain": 12
+       },
+       "slot": null,
+       "species": "Scovillain",
+       "status": ""
+      },
+      {
+       "ability": "insomnia",
+       "boosts": {},
+       "hp": 167,
+       "item": "leftovers",
+       "maxhp": 167,
+       "name": "Spidops",
+       "pp": {
+        "lunge": 16,
+        "protect": 8,
+        "silktrap": 12,
+        "spotlight": 16
+       },
+       "slot": 0,
+       "species": "Spidops",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "shellarmor",
+       "boosts": {},
+       "hp": 167,
+       "item": "whiteherb",
+       "lastMove": "matblock",
+       "maxhp": 167,
+       "name": "Turtonator",
+       "pp": {
+        "dragonpulse": 12,
+        "flamethrower": 16,
+        "matblock": 11,
+        "shelltrap": 12
+       },
+       "slot": 1,
+       "species": "Turtonator",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "switch 4, move doubleedge -1",
+   "switch 4, move matblock"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "innerfocus",
+      "hp": 157,
+      "item": "sitrusberry",
+      "maxhp": 157,
+      "name": "Glalie",
+      "pp": {
+       "defensecurl": 20,
+       "freezedry": 20,
+       "iceball": 20,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Glalie",
+      "status": ""
+     },
+     {
+      "ability": "serenegrace",
+      "boosts": {},
+      "hp": 207,
+      "item": "leftovers",
+      "maxhp": 207,
+      "name": "Jirachi",
+      "pp": {
+       "doomdesire": 8,
+       "luckychant": 20,
+       "mist": 20,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Jirachi",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "thickfat",
+      "hp": 202,
+      "item": "leftovers",
+      "maxhp": 202,
+      "name": "Miltank",
+      "pp": {
+       "bodyslam": 16,
+       "defensecurl": 20,
+       "milkdrink": 8,
+       "rollout": 20
+      },
+      "slot": null,
+      "species": "Miltank",
+      "status": ""
+     },
+     {
+      "ability": "truant",
+      "boosts": {},
+      "hp": 257,
+      "item": "sitrusberry",
+      "maxhp": 257,
+      "name": "Slaking",
+      "pp": {
+       "doubleedge": 16,
+       "laserfocus": 20,
+       "protect": 8,
+       "slackoff": 8
+      },
+      "slot": 1,
+      "species": "Slaking",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "prankster",
+      "hp": 202,
+      "item": "leftovers",
+      "maxhp": 202,
+      "name": "Grimmsnarl",
+      "pp": {
+       "foresight": 20,
+       "healblock": 16,
+       "obstruct": 8,
+       "spiritbreak": 16
+      },
+      "slot": null,
+      "species": "Grimmsnarl",
+      "status": ""
+     },
+     {
+      "ability": "chlorophyll",
+      "boosts": {},
+      "hp": 172,
+      "item": "sitrusberry",
+      "maxhp": 172,
+      "name": "Scovillain",
+      "pp": {
+       "burningbulwark": 12,
+       "craftyshield": 12,
+       "flamethrower": 16,
+       "gigadrain": 12
+      },
+      "slot": 0,
+      "species": "Scovillain",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "insomnia",
+      "hp": 167,
+      "item": "leftovers",
+      "maxhp": 167,
+      "name": "Spidops",
+      "pp": {
+       "lunge": 16,
+       "protect": 8,
+       "silktrap": 12,
+       "spotlight": 16
+      },
+      "slot": null,
+      "species": "Spidops",
+      "status": ""
+     },
+     {
+      "ability": "shellarmor",
+      "boosts": {},
+      "hp": 167,
+      "item": "whiteherb",
+      "maxhp": 167,
+      "name": "Turtonator",
+      "pp": {
+       "dragonpulse": 12,
+       "flamethrower": 16,
+       "matblock": 12,
+       "shelltrap": 12
+      },
+      "slot": 1,
+      "species": "Turtonator",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "switch 3",
+  "p2": ""
+ }
+}

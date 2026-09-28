@@ -1,0 +1,981 @@
+{
+ "list": "runs/parity-v11-20260928/jobs/v11-f2.txt",
+ "positions": [
+  {
+   "file": "command-vs-paradox.nash.g000.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.nash.g000.s13.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g000.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g000.s00.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g000.s01.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g000.s02.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g000.s03.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g000.s04.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g000.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g000.s05.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g000.s06.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g000.s07.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g000.s08.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g001.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g001.s00.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g001.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g001.s01.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g001.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g001.s02.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g001.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g001.s03.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g001.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g001.s04.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g001.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g001.s05.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g001.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g001.s06.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g001.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g001.s07.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g001.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g001.s08.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g001.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g001.s09.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g001.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g001.s10.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g001.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g001.s11.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g001.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g001.s12.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g001.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g001.s13.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g001.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g001.s14.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g002.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g002.s00.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g002.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g002.s01.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g002.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g002.s02.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g002.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g002.s03.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g002.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g002.s04.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g003.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g003.s00.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g003.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g003.s01.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g003.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g003.s02.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g003.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g003.s03.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g003.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g003.s04.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g003.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g003.s05.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g003.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g003.s06.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g003.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g003.s07.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g003.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g003.s08.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g003.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g003.s09.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g003.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g003.s10.json"
+  },
+  {
+   "file": "command-vs-paradox.random.g003.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.random.g003.s11.json"
+  },
+  {
+   "file": "roll-vs-shield-b.nash.g000.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.nash.g000.s00.json"
+  },
+  {
+   "file": "roll-vs-shield-b.nash.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.nash.g000.s01.json"
+  },
+  {
+   "file": "roll-vs-shield-b.nash.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.nash.g000.s02.json"
+  },
+  {
+   "file": "roll-vs-shield-b.nash.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.nash.g000.s03.json"
+  },
+  {
+   "file": "roll-vs-shield-b.nash.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.nash.g000.s04.json"
+  },
+  {
+   "file": "roll-vs-shield-b.nash.g000.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.nash.g000.s05.json"
+  },
+  {
+   "file": "roll-vs-shield-b.nash.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.nash.g000.s06.json"
+  },
+  {
+   "file": "roll-vs-shield-b.nash.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.nash.g000.s07.json"
+  },
+  {
+   "file": "roll-vs-shield-b.nash.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.nash.g000.s08.json"
+  },
+  {
+   "file": "roll-vs-shield-b.nash.g000.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.nash.g000.s09.json"
+  },
+  {
+   "file": "roll-vs-shield-b.nash.g000.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.nash.g000.s10.json"
+  },
+  {
+   "file": "roll-vs-shield-b.nash.g000.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.nash.g000.s11.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s00.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s01.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s02.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s03.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s04.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s05.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s06.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s07.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s08.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s09.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s10.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s11.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s12.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s13.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s14.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s15.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s15.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s16.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s16.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s17.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s17.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s18.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s18.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s19.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s19.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s20.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s20.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s21.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s21.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s22.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s22.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s23.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s23.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s24.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s24.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s25.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s25.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s26.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s26.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s27.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s27.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s28.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s28.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s29.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s29.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s30.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s30.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s31.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s31.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g000.s32.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g000.s32.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g001.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g001.s00.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g001.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g001.s01.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g001.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g001.s02.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g001.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g001.s03.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g001.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g001.s04.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g001.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g001.s05.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g001.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g001.s06.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g001.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g001.s07.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g001.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g001.s08.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g001.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g001.s09.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g001.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g001.s10.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g001.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g001.s11.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g001.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g001.s12.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g001.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g001.s13.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g001.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g001.s14.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g002.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g002.s00.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g002.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g002.s01.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g002.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g002.s02.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g002.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g002.s03.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g002.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g002.s04.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g002.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g002.s05.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g002.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g002.s06.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g002.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g002.s07.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g002.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g002.s08.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g002.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g002.s09.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g002.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g002.s10.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g002.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g002.s11.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g002.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g002.s12.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g002.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g002.s13.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g002.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g002.s14.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s00.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s01.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s02.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s03.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s04.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s05.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s06.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s07.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s08.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s09.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s10.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s11.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s12.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s13.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s14.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s15.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s15.json"
+  },
+  {
+   "file": "roll-vs-shield-b.random.g003.s16.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield-b.random.g003.s16.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s00.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s01.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s02.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s03.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s04.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s05.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s06.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s07.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s08.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s09.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s10.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s11.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s12.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s13.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s14.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s15.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s15.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s16.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s16.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s17.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s17.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s18.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s18.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s19.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s19.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s20.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s20.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s21.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s21.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s22.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s22.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s23.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s23.json"
+  },
+  {
+   "file": "roll-vs-shield.nash.g000.s24.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.nash.g000.s24.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s00.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s01.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s02.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s03.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s04.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s05.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s06.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s07.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s08.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s09.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s10.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s11.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s12.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s13.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s14.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s15.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s15.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s16.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s16.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s17.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s17.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s18.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s18.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s19.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s19.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s20.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s20.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s21.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s21.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s22.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s22.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s23.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s23.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s24.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s24.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s25.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s25.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s26.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s26.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s27.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s27.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s28.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s28.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s29.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s29.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s30.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s30.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s31.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s31.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s32.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s32.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s33.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s33.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s34.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s34.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s35.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s35.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s36.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s36.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s37.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s37.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s38.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s38.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s39.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s39.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s40.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s40.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s41.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s41.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s42.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s42.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g000.s43.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g000.s43.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s00.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s01.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s02.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s03.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s04.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s05.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s06.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s07.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s08.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s09.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s10.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s11.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s12.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s13.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s14.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s15.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s15.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g001.s16.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g001.s16.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g002.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g002.s00.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g002.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g002.s01.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g002.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g002.s02.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g002.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g002.s03.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g002.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g002.s04.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g002.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g002.s05.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g002.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g002.s06.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g002.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g002.s07.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g002.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g002.s08.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g002.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g002.s09.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g003.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g003.s00.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g003.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g003.s01.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g003.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g003.s02.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g003.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g003.s03.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g003.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g003.s04.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g003.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g003.s05.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g003.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g003.s06.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g003.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g003.s07.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g003.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g003.s08.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g003.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g003.s09.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g003.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g003.s10.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g003.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g003.s11.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g003.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g003.s12.json"
+  },
+  {
+   "file": "roll-vs-shield.random.g003.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/roll-vs-shield.random.g003.s13.json"
+  }
+ ]
+}

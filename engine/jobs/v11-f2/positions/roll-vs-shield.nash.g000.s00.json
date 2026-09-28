@@ -1,0 +1,190 @@
+{
+ "description": "FF parity position (FF-parity-harness): roll-vs-shield, lab-parity game 0 (seed 4b5b2dd7bbe2b04c, policy nash, extremes chance), decision 0 = turn 1 Turn. Base scenario D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/matchups/roll-vs-shield.json. The 0 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": "../../../../teams/v11-20260928/v11f-roll.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/v11-20260928/v11f-shield.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [],
+ "setupTurns": [],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "innerfocus",
+      "boosts": {},
+      "hp": 157,
+      "item": "sitrusberry",
+      "maxhp": 157,
+      "name": "Glalie",
+      "pp": {
+       "defensecurl": 20,
+       "freezedry": 20,
+       "iceball": 20,
+       "protect": 8
+      },
+      "slot": 1,
+      "species": "Glalie",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "serenegrace",
+      "hp": 207,
+      "item": "leftovers",
+      "maxhp": 207,
+      "name": "Jirachi",
+      "pp": {
+       "doomdesire": 8,
+       "luckychant": 20,
+       "mist": 20,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Jirachi",
+      "status": ""
+     },
+     {
+      "ability": "thickfat",
+      "boosts": {},
+      "hp": 202,
+      "item": "leftovers",
+      "maxhp": 202,
+      "name": "Miltank",
+      "pp": {
+       "bodyslam": 16,
+       "defensecurl": 20,
+       "milkdrink": 8,
+       "rollout": 20
+      },
+      "slot": 0,
+      "species": "Miltank",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "truant",
+      "hp": 257,
+      "item": "sitrusberry",
+      "maxhp": 257,
+      "name": "Slaking",
+      "pp": {
+       "doubleedge": 16,
+       "laserfocus": 20,
+       "protect": 8,
+       "slackoff": 8
+      },
+      "slot": null,
+      "species": "Slaking",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "prankster",
+      "boosts": {},
+      "hp": 202,
+      "item": "leftovers",
+      "maxhp": 202,
+      "name": "Grimmsnarl",
+      "pp": {
+       "foresight": 20,
+       "healblock": 16,
+       "obstruct": 8,
+       "spiritbreak": 16
+      },
+      "slot": 0,
+      "species": "Grimmsnarl",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "chlorophyll",
+      "hp": 172,
+      "item": "sitrusberry",
+      "maxhp": 172,
+      "name": "Scovillain",
+      "pp": {
+       "burningbulwark": 12,
+       "craftyshield": 12,
+       "flamethrower": 16,
+       "gigadrain": 12
+      },
+      "slot": null,
+      "species": "Scovillain",
+      "status": ""
+     },
+     {
+      "ability": "insomnia",
+      "boosts": {},
+      "hp": 167,
+      "item": "leftovers",
+      "maxhp": 167,
+      "name": "Spidops",
+      "pp": {
+       "lunge": 16,
+       "protect": 8,
+       "silktrap": 12,
+       "spotlight": 16
+      },
+      "slot": 1,
+      "species": "Spidops",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "shellarmor",
+      "hp": 167,
+      "item": "whiteherb",
+      "maxhp": 167,
+      "name": "Turtonator",
+      "pp": {
+       "dragonpulse": 12,
+       "flamethrower": 16,
+       "matblock": 12,
+       "shelltrap": 12
+      },
+      "slot": null,
+      "species": "Turtonator",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move bodyslam 2, move freezedry 2",
+  "p2": "move obstruct, move lunge 1"
+ }
+}
