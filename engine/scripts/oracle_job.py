@@ -472,6 +472,12 @@ def summary(results_dir: str) -> None:
     text = "\n".join(lines) + "\n"
     print(text)
     print("::notice title=oracle summary::" + ", ".join(f"{k} {v}" for k, v in sorted(count.items())))
+    # The whole table as annotations too (readable without a token; at most 10 notices a step).
+    compact = [";".join(str(v if v is not None else "") for v in [r.get("job")] + row_of(r)) for r in rows]
+    per = max(1, -(-len(compact) // 9))
+    for i in range(0, len(compact), per):
+        body = "%0A".join(compact[i:i + per])
+        print(f"::notice title=oracle table {i // per + 1} ({';'.join(['job'] + COLUMNS)})::{body}")
     s = os.environ.get("GITHUB_STEP_SUMMARY")
     if s:
         with open(s, "a", encoding="utf-8") as f:
