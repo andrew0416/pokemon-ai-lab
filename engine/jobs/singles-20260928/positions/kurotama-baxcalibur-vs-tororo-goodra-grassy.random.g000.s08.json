@@ -1,0 +1,1290 @@
+{
+ "description": "FF parity position (FF-parity-harness): kurotama-baxcalibur-vs-tororo-goodra-grassy, lab-parity game 0 (seed 4b5b2dd7bbe2b04c, policy random, extremes chance), decision 8 = turn 7 Replacement. Base scenario runs/parity-singles-20260928/matchups/kurotama-baxcalibur-vs-tororo-goodra-grassy.json. The 8 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsbssregmc",
+ "p1": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/kurotama-baxcalibur/team.json"
+ },
+ "p2": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/tororo-goodra-grassy/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 2,
+        "spe": 1
+       },
+       "hp": 135,
+       "item": "baxcalibrite",
+       "lastMove": "dragondance",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 19,
+        "glaiverush": 8,
+        "iceshard": 20,
+        "iciclespear": 20
+       },
+       "slot": 0,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "libero",
+       "hp": 159,
+       "item": "focussash",
+       "maxhp": 159,
+       "name": "Cinderace",
+       "pp": {
+        "gunkshot": 8,
+        "highjumpkick": 12,
+        "pyroball": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "hp": 187,
+       "item": "venusaurite",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "earthpower": 12,
+        "gigadrain": 12,
+        "sludgebomb": 12,
+        "synthesis": 8
+       },
+       "slot": null,
+       "species": "Venusaur",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 8,
+        "iceshard": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "gooey",
+       "boosts": {},
+       "hp": 186,
+       "item": "leftovers",
+       "lastMove": "flamethrower",
+       "maxhp": 186,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 15,
+        "flashcannon": 12,
+        "icebeam": 12,
+        "thunderbolt": 16
+       },
+       "slot": 0,
+       "species": "Goodra-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "drumbeating": 12,
+        "endeavor": 8,
+        "grassyglide": 20,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 3,
+        "spe": 2
+       },
+       "hp": 107,
+       "item": "baxcalibrite",
+       "lastMove": "dragondance",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 18,
+        "glaiverush": 8,
+        "iceshard": 20,
+        "iciclespear": 20
+       },
+       "slot": 0,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "libero",
+       "hp": 159,
+       "item": "focussash",
+       "maxhp": 159,
+       "name": "Cinderace",
+       "pp": {
+        "gunkshot": 8,
+        "highjumpkick": 12,
+        "pyroball": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "hp": 187,
+       "item": "venusaurite",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "earthpower": 12,
+        "gigadrain": 12,
+        "sludgebomb": 12,
+        "synthesis": 8
+       },
+       "slot": null,
+       "species": "Venusaur",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 8,
+        "iceshard": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "gooey",
+       "boosts": {},
+       "hp": 186,
+       "item": "leftovers",
+       "lastMove": "thunderbolt",
+       "maxhp": 186,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 15,
+        "flashcannon": 12,
+        "icebeam": 12,
+        "thunderbolt": 15
+       },
+       "slot": 0,
+       "species": "Goodra-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "drumbeating": 12,
+        "endeavor": 8,
+        "grassyglide": 20,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 3,
+        "spe": 2
+       },
+       "hp": 107,
+       "item": "baxcalibrite",
+       "lastMove": "iciclespear",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 18,
+        "glaiverush": 8,
+        "iceshard": 20,
+        "iciclespear": 19
+       },
+       "slot": 0,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "libero",
+       "hp": 159,
+       "item": "focussash",
+       "maxhp": 159,
+       "name": "Cinderace",
+       "pp": {
+        "gunkshot": 8,
+        "highjumpkick": 12,
+        "pyroball": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "hp": 187,
+       "item": "venusaurite",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "earthpower": 12,
+        "gigadrain": 12,
+        "sludgebomb": 12,
+        "synthesis": 8
+       },
+       "slot": null,
+       "species": "Venusaur",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "canMega": true,
+       "hp": 78,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 8,
+        "iceshard": 20
+       },
+       "slot": 0,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "gooey",
+       "hp": 186,
+       "item": "leftovers",
+       "maxhp": 186,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 15,
+        "flashcannon": 12,
+        "icebeam": 12,
+        "thunderbolt": 15
+       },
+       "slot": null,
+       "species": "Goodra-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "drumbeating": 12,
+        "endeavor": 8,
+        "grassyglide": 20,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 3,
+        "spe": 1
+       },
+       "hp": 107,
+       "item": "baxcalibrite",
+       "lastMove": "glaiverush",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 18,
+        "glaiverush": 7,
+        "iceshard": 20,
+        "iciclespear": 19
+       },
+       "slot": 0,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {
+        "glaiverush": {}
+       }
+      },
+      {
+       "ability": "libero",
+       "hp": 159,
+       "item": "focussash",
+       "maxhp": 159,
+       "name": "Cinderace",
+       "pp": {
+        "gunkshot": 8,
+        "highjumpkick": 12,
+        "pyroball": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "hp": 187,
+       "item": "venusaurite",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "earthpower": 12,
+        "gigadrain": 12,
+        "sludgebomb": 12,
+        "synthesis": 8
+       },
+       "slot": null,
+       "species": "Venusaur",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 78,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 8,
+        "iceshard": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "gooey",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 186,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 15,
+        "flashcannon": 12,
+        "icebeam": 12,
+        "thunderbolt": 15
+       },
+       "slot": null,
+       "species": "Goodra-Hisui",
+       "status": "fnt"
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "drumbeating": 12,
+        "endeavor": 8,
+        "grassyglide": 20,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 3,
+        "spe": 1
+       },
+       "hp": 107,
+       "item": "baxcalibrite",
+       "lastMove": "glaiverush",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 18,
+        "glaiverush": 7,
+        "iceshard": 20,
+        "iciclespear": 19
+       },
+       "slot": 0,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {
+        "glaiverush": {}
+       }
+      },
+      {
+       "ability": "libero",
+       "hp": 159,
+       "item": "focussash",
+       "maxhp": 159,
+       "name": "Cinderace",
+       "pp": {
+        "gunkshot": 8,
+        "highjumpkick": 12,
+        "pyroball": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "hp": 187,
+       "item": "venusaurite",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "earthpower": 12,
+        "gigadrain": 12,
+        "sludgebomb": 12,
+        "synthesis": 8
+       },
+       "slot": null,
+       "species": "Venusaur",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "canMega": true,
+       "hp": 78,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 8,
+        "iceshard": 20
+       },
+       "slot": 0,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "gooey",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 186,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 15,
+        "flashcannon": 12,
+        "icebeam": 12,
+        "thunderbolt": 15
+       },
+       "slot": null,
+       "species": "Goodra-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "drumbeating": 12,
+        "endeavor": 8,
+        "grassyglide": 20,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 107,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 18,
+        "glaiverush": 7,
+        "iceshard": 20,
+        "iciclespear": 19
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "libero",
+       "hp": 159,
+       "item": "focussash",
+       "maxhp": 159,
+       "name": "Cinderace",
+       "pp": {
+        "gunkshot": 8,
+        "highjumpkick": 12,
+        "pyroball": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "boosts": {},
+       "hp": 77,
+       "item": "venusaurite",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "earthpower": 12,
+        "gigadrain": 12,
+        "sludgebomb": 12,
+        "synthesis": 8
+       },
+       "slot": 0,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 78,
+       "item": "baxcalibrite",
+       "lastMove": "iceshard",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 8,
+        "iceshard": 19
+       },
+       "slot": 0,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "gooey",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 186,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 15,
+        "flashcannon": 12,
+        "icebeam": 12,
+        "thunderbolt": 15
+       },
+       "slot": null,
+       "species": "Goodra-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "drumbeating": 12,
+        "endeavor": 8,
+        "grassyglide": 20,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 107,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 18,
+        "glaiverush": 7,
+        "iceshard": 20,
+        "iciclespear": 19
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "libero",
+       "hp": 159,
+       "item": "focussash",
+       "maxhp": 159,
+       "name": "Cinderace",
+       "pp": {
+        "gunkshot": 8,
+        "highjumpkick": 12,
+        "pyroball": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "boosts": {},
+       "hp": 88,
+       "item": "venusaurite",
+       "lastMove": "gigadrain",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "earthpower": 12,
+        "gigadrain": 11,
+        "sludgebomb": 12,
+        "synthesis": 8
+       },
+       "slot": 0,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 1,
+        "spe": 1
+       },
+       "hp": 57,
+       "item": "baxcalibrite",
+       "lastMove": "dragondance",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 19,
+        "earthquake": 12,
+        "glaiverush": 8,
+        "iceshard": 19
+       },
+       "slot": 0,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "gooey",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 186,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 15,
+        "flashcannon": 12,
+        "icebeam": 12,
+        "thunderbolt": 15
+       },
+       "slot": null,
+       "species": "Goodra-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "drumbeating": 12,
+        "endeavor": 8,
+        "grassyglide": 20,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 107,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 18,
+        "glaiverush": 7,
+        "iceshard": 20,
+        "iciclespear": 19
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "libero",
+       "hp": 159,
+       "item": "focussash",
+       "maxhp": 159,
+       "name": "Cinderace",
+       "pp": {
+        "gunkshot": 8,
+        "highjumpkick": 12,
+        "pyroball": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "hp": 0,
+       "item": "venusaurite",
+       "maxhp": 187,
+       "name": "Venusaur",
+       "pp": {
+        "earthpower": 12,
+        "gigadrain": 11,
+        "sludgebomb": 12,
+        "synthesis": 8
+       },
+       "slot": null,
+       "species": "Venusaur",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 1,
+        "spe": 1
+       },
+       "hp": 57,
+       "item": "baxcalibrite",
+       "lastMove": "iceshard",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 19,
+        "earthquake": 12,
+        "glaiverush": 8,
+        "iceshard": 18
+       },
+       "slot": 0,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "gooey",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 186,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 15,
+        "flashcannon": 12,
+        "icebeam": 12,
+        "thunderbolt": 15
+       },
+       "slot": null,
+       "species": "Goodra-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "drumbeating": 12,
+        "endeavor": 8,
+        "grassyglide": 20,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move dragondance mega",
+   "move flamethrower"
+  ],
+  [
+   "move dragondance",
+   "move thunderbolt"
+  ],
+  [
+   "move iciclespear",
+   "switch 3"
+  ],
+  [
+   "move glaiverush",
+   "switch 3"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "switch 2",
+   "move iceshard mega"
+  ],
+  [
+   "move gigadrain",
+   "move dragondance"
+  ],
+  [
+   "move gigadrain",
+   "move iceshard"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "thermalexchange",
+      "boosts": {},
+      "canMega": true,
+      "hp": 191,
+      "item": "baxcalibrite",
+      "maxhp": 191,
+      "name": "Baxcalibur",
+      "pp": {
+       "dragondance": 20,
+       "glaiverush": 8,
+       "iceshard": 20,
+       "iciclespear": 20
+      },
+      "slot": 0,
+      "species": "Baxcalibur",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "libero",
+      "hp": 159,
+      "item": "focussash",
+      "maxhp": 159,
+      "name": "Cinderace",
+      "pp": {
+       "gunkshot": 8,
+       "highjumpkick": 12,
+       "pyroball": 8,
+       "suckerpunch": 8
+      },
+      "slot": null,
+      "species": "Cinderace",
+      "status": ""
+     },
+     {
+      "ability": "chlorophyll",
+      "canMega": true,
+      "hp": 187,
+      "item": "venusaurite",
+      "maxhp": 187,
+      "name": "Venusaur",
+      "pp": {
+       "earthpower": 12,
+       "gigadrain": 12,
+       "sludgebomb": 12,
+       "synthesis": 8
+      },
+      "slot": null,
+      "species": "Venusaur",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "thermalexchange",
+      "canMega": true,
+      "hp": 222,
+      "item": "baxcalibrite",
+      "maxhp": 222,
+      "name": "Baxcalibur",
+      "pp": {
+       "dragondance": 20,
+       "earthquake": 12,
+       "glaiverush": 8,
+       "iceshard": 20
+      },
+      "slot": null,
+      "species": "Baxcalibur",
+      "status": ""
+     },
+     {
+      "ability": "gooey",
+      "boosts": {},
+      "hp": 186,
+      "item": "leftovers",
+      "maxhp": 186,
+      "name": "Goodra",
+      "pp": {
+       "flamethrower": 16,
+       "flashcannon": 12,
+       "icebeam": 12,
+       "thunderbolt": 16
+      },
+      "slot": 0,
+      "species": "Goodra-Hisui",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 207,
+      "item": "focussash",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "drumbeating": 12,
+       "endeavor": 8,
+       "grassyglide": 20,
+       "uturn": 20
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "switch 2",
+  "p2": ""
+ }
+}

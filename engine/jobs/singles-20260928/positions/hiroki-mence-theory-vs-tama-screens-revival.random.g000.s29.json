@@ -1,0 +1,4380 @@
+{
+ "description": "FF parity position (FF-parity-harness): hiroki-mence-theory-vs-tama-screens-revival, lab-parity game 0 (seed 4b5b2dd7bbe2b04c, policy random, extremes chance), decision 29 = turn 28 Turn. Base scenario runs/parity-singles-20260928/matchups/hiroki-mence-theory-vs-tama-screens-revival.json. The 29 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsbssregmc",
+ "p1": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/hiroki-mence-theory/team.json"
+ },
+ "p2": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/tama-screens-revival/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "hp": 157,
+       "item": "leftovers",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 8,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 177,
+       "item": "salamencite",
+       "lastMove": "earthquake",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "dragondance": 20,
+        "earthquake": 11,
+        "roost": 8
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 190,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 20,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "hp": 147,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 16,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1
+       },
+       "canMega": true,
+       "hp": 191,
+       "item": "salamencite",
+       "lastMove": "bodyslam",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": 0,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "hp": 157,
+       "item": "leftovers",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 8,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 177,
+       "item": "salamencite",
+       "lastMove": "earthquake",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "dragondance": 20,
+        "earthquake": 10,
+        "roost": 8
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 190,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 20,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "hp": 147,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 16,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 191,
+       "item": "salamencite",
+       "lastMove": "roost",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "hp": 157,
+       "item": "leftovers",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 8,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 202,
+       "item": "salamencite",
+       "lastMove": "roost",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "dragondance": 20,
+        "earthquake": 10,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 190,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 20,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "boosts": {},
+       "hp": 147,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 16,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": 0,
+       "species": "Pawmot",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 191,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "hp": 157,
+       "item": "leftovers",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 8,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 187,
+       "item": "salamencite",
+       "lastMove": "doubleedge",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 20,
+        "earthquake": 10,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "boosts": {},
+       "hp": 144,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 20,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": 0,
+       "species": "Glimmora",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "ironfist",
+       "hp": 147,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 16,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 191,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "hp": 157,
+       "item": "leftovers",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 8,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 187,
+       "item": "salamencite",
+       "lastMove": "earthquake",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 20,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 144,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 20,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "boosts": {},
+       "hp": 43,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 16,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": 0,
+       "species": "Pawmot",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 191,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 148,
+       "item": "leftovers",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 8,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 16
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "frz",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 187,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 20,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 144,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 20,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "boosts": {},
+       "hp": 43,
+       "item": "focussash",
+       "lastMove": "icepunch",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": 0,
+       "species": "Pawmot",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 191,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 157,
+       "item": "leftovers",
+       "lastMove": "hydropump",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 7,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 16
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 187,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 20,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 144,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 20,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "hp": 43,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 191,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 157,
+       "item": "leftovers",
+       "lastMove": "hydropump",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 6,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 16
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 187,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 20,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 144,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 20,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "hp": 43,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 158,
+       "item": "salamencite",
+       "lastMove": "earthquake",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 11,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 157,
+       "item": "leftovers",
+       "lastMove": "willowisp",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 6,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 15
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 187,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 20,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 144,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 20,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "hp": 43,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 147,
+       "item": "salamencite",
+       "lastMove": "earthquake",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 10,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "brn",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 10,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "hp": 157,
+       "item": "leftovers",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 6,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 15
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 187,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 20,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 144,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 20,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "hp": 43,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 180,
+       "item": "salamencite",
+       "lastMove": "roost",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 10,
+        "roost": 6
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "brn",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 11,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "hp": 157,
+       "item": "leftovers",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 6,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 15
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 153,
+       "item": "salamencite",
+       "lastMove": "doubleedge",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 20,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 144,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 20,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "hp": 43,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 67,
+       "item": "salamencite",
+       "lastMove": "earthquake",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 9,
+        "roost": 6
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "brn",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 12,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 157,
+       "item": "leftovers",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 6,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 15
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 20,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 144,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 20,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "hp": 43,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 56,
+       "item": "salamencite",
+       "lastMove": "earthquake",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 6
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "brn",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 13,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "levitate",
+       "hp": 157,
+       "item": "leftovers",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 6,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 15
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 20,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "boosts": {},
+       "hp": 144,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 20,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": 0,
+       "species": "Glimmora",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "ironfist",
+       "hp": 43,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 56,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 6
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "brn"
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 14,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "hp": 157,
+       "item": "leftovers",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 6,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 15
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 20,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 144,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 20,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "boosts": {},
+       "hp": 43,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": 0,
+       "species": "Pawmot",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 56,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 6
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "brn"
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 15,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "hp": 157,
+       "item": "leftovers",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 6,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 15
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": 1,
+        "spe": 1
+       },
+       "hp": 153,
+       "item": "salamencite",
+       "lastMove": "dragondance",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 19,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "boosts": {},
+       "hp": 144,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 20,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": 0,
+       "species": "Glimmora",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "ironfist",
+       "hp": 43,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 56,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 6
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "brn"
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 16,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "levitate",
+       "hp": 157,
+       "item": "leftovers",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 6,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 15
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 19,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 7
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "boosts": {},
+       "hp": 144,
+       "item": "lightclay",
+       "lastMove": "lightscreen",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 19,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": 0,
+       "species": "Glimmora",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "ironfist",
+       "hp": 43,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 56,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 6
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "brn"
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 17,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "hp": 205,
+       "item": "sitrusberry",
+       "lastMove": "roost",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "levitate",
+       "hp": 157,
+       "item": "leftovers",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 6,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 15
+       },
+       "slot": null,
+       "species": "Rotom-Wash",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 19,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 6
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 144,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 19,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "boosts": {},
+       "hp": 43,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": 0,
+       "species": "Pawmot",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 56,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 6
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "brn"
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 18,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 157,
+       "item": "leftovers",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 6,
+        "substitute": 12,
+        "thunderbolt": 16,
+        "willowisp": 15
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 19,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 5
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "boosts": {},
+       "hp": 144,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 19,
+        "memento": 12,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": 0,
+       "species": "Glimmora",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "ironfist",
+       "hp": 43,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 56,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 6
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "brn"
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 19,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -2,
+        "spa": -2
+       },
+       "hp": 157,
+       "item": "leftovers",
+       "lastMove": "thunderbolt",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 6,
+        "substitute": 12,
+        "thunderbolt": 15,
+        "willowisp": 15
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 19,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 4
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 19,
+        "memento": 11,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": "fnt"
+      },
+      {
+       "ability": "ironfist",
+       "hp": 43,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 56,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 6
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "brn"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 19,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -2,
+        "spa": -2
+       },
+       "hp": 157,
+       "item": "leftovers",
+       "lastMove": "thunderbolt",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 6,
+        "substitute": 12,
+        "thunderbolt": 15,
+        "willowisp": 15
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 19,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 4
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 19,
+        "memento": 11,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "boosts": {},
+       "hp": 43,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 8,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": 0,
+       "species": "Pawmot",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 56,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 6
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "brn"
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 20,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -2,
+        "spa": -2
+       },
+       "hp": 81,
+       "item": "leftovers",
+       "lastMove": "hydropump",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 5,
+        "substitute": 12,
+        "thunderbolt": 15,
+        "willowisp": 15
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 19,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 19,
+        "memento": 11,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "boosts": {},
+       "hp": 16,
+       "item": "focussash",
+       "lastMove": "doubleshock",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 7,
+        "icepunch": 15,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": 0,
+       "species": "Pawmot",
+       "status": "",
+       "types": "???/Fighting",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 56,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 6
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "brn"
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 21,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -2,
+        "spa": -2
+       },
+       "hp": 72,
+       "item": "leftovers",
+       "lastMove": "willowisp",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 5,
+        "substitute": 12,
+        "thunderbolt": 15,
+        "willowisp": 14
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 19,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 19,
+        "memento": 11,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "boosts": {},
+       "hp": 7,
+       "item": "focussash",
+       "lastMove": "icepunch",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 7,
+        "icepunch": 14,
+        "machpunch": 20,
+        "revivalblessing": 1
+       },
+       "slot": 0,
+       "species": "Pawmot",
+       "status": "brn",
+       "types": "???/Fighting",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 56,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 6
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "brn"
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 22,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -2,
+        "spa": -2
+       },
+       "hp": 66,
+       "item": "leftovers",
+       "lastMove": "thunderbolt",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 5,
+        "substitute": 12,
+        "thunderbolt": 14,
+        "willowisp": 14
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 19,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 19,
+        "memento": 11,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 7,
+        "icepunch": 14,
+        "machpunch": 19,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": "fnt"
+      },
+      {
+       "ability": "aerilate",
+       "hp": 56,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 6
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "brn"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 22,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -2,
+        "spa": -2
+       },
+       "hp": 66,
+       "item": "leftovers",
+       "lastMove": "thunderbolt",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 5,
+        "substitute": 12,
+        "thunderbolt": 14,
+        "willowisp": 14
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 19,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 19,
+        "memento": 11,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 7,
+        "icepunch": 14,
+        "machpunch": 19,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 56,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 6
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "brn",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 23,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -2,
+        "spa": -2
+       },
+       "hp": 36,
+       "item": "leftovers",
+       "lastMove": "substitute",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 5,
+        "substitute": 11,
+        "thunderbolt": 14,
+        "willowisp": 14
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {
+        "substitute": {
+         "hp": 39
+        }
+       }
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 19,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 19,
+        "memento": 11,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 7,
+        "icepunch": 14,
+        "machpunch": 19,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 141,
+       "item": "salamencite",
+       "lastMove": "roost",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 5
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "brn",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 24,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -2,
+        "spa": -2
+       },
+       "hp": 45,
+       "item": "leftovers",
+       "lastMove": "willowisp",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 5,
+        "substitute": 11,
+        "thunderbolt": 14,
+        "willowisp": 13
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {
+        "substitute": {
+         "hp": 39
+        }
+       }
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 19,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 19,
+        "memento": 11,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 7,
+        "icepunch": 14,
+        "machpunch": 19,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 180,
+       "item": "salamencite",
+       "lastMove": "roost",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 15,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 4
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "brn",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 25,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -2,
+        "spa": -2
+       },
+       "hp": 54,
+       "item": "leftovers",
+       "lastMove": "willowisp",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 5,
+        "substitute": 11,
+        "thunderbolt": 14,
+        "willowisp": 12
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {
+        "substitute": {
+         "hp": 24
+        }
+       }
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 19,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 19,
+        "memento": 11,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 7,
+        "icepunch": 14,
+        "machpunch": 19,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 169,
+       "item": "salamencite",
+       "lastMove": "bodyslam",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 14,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 4
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "brn",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 26,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -2,
+        "spa": -2
+       },
+       "hp": 63,
+       "item": "leftovers",
+       "lastMove": "substitute",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 5,
+        "substitute": 10,
+        "thunderbolt": 14,
+        "willowisp": 12
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {
+        "substitute": {
+         "hp": 24
+        }
+       }
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 19,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 19,
+        "memento": 11,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 7,
+        "icepunch": 14,
+        "machpunch": 19,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 180,
+       "item": "salamencite",
+       "lastMove": "roost",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 14,
+        "dragondance": 20,
+        "earthquake": 8,
+        "roost": 3
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "brn",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 27,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "toxicspikes": {
+       "layers": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "sitrusberry",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "ironhead": 16,
+        "roost": 7,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -2,
+        "spa": -2
+       },
+       "hp": 72,
+       "item": "leftovers",
+       "lastMove": "thunderbolt",
+       "maxhp": 157,
+       "name": "Rotom",
+       "pp": {
+        "hydropump": 5,
+        "substitute": 10,
+        "thunderbolt": 13,
+        "willowisp": 12
+       },
+       "slot": 0,
+       "species": "Rotom-Wash",
+       "status": "",
+       "volatiles": {
+        "substitute": {
+         "hp": 24
+        }
+       }
+      },
+      {
+       "ability": "aerilate",
+       "hp": 153,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "dragondance": 19,
+        "earthquake": 9,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toxicdebris",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "lightscreen": 19,
+        "memento": 11,
+        "mortalspin": 16,
+        "reflect": 20
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "doubleshock": 7,
+        "icepunch": 14,
+        "machpunch": 19,
+        "revivalblessing": 1
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 100,
+       "item": "salamencite",
+       "lastMove": "earthquake",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 14,
+        "dragondance": 20,
+        "earthquake": 7,
+        "roost": 3
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "brn",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 28,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move earthquake mega",
+   "move bodyslam"
+  ],
+  [
+   "move earthquake",
+   "move roost mega"
+  ],
+  [
+   "move roost",
+   "switch 3"
+  ],
+  [
+   "move doubleedge",
+   "switch 2"
+  ],
+  [
+   "move earthquake",
+   "switch 2"
+  ],
+  [
+   "switch 2",
+   "move icepunch"
+  ],
+  [
+   "move hydropump",
+   "switch 3"
+  ],
+  [
+   "move hydropump",
+   "move earthquake"
+  ],
+  [
+   "move willowisp",
+   "move earthquake"
+  ],
+  [
+   "switch 2",
+   "move roost"
+  ],
+  [
+   "move doubleedge",
+   "move earthquake"
+  ],
+  [
+   "switch 2",
+   "move earthquake"
+  ],
+  [
+   "switch 3",
+   "switch 2"
+  ],
+  [
+   "switch 2",
+   "switch 3"
+  ],
+  [
+   "move dragondance",
+   "switch 3"
+  ],
+  [
+   "switch 2",
+   "move lightscreen"
+  ],
+  [
+   "move roost",
+   "switch 3"
+  ],
+  [
+   "switch 3",
+   "switch 3"
+  ],
+  [
+   "move thunderbolt",
+   "move memento"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move hydropump",
+   "move doubleshock"
+  ],
+  [
+   "move willowisp",
+   "move icepunch"
+  ],
+  [
+   "move thunderbolt",
+   "move machpunch"
+  ],
+  [
+   "",
+   "switch 2"
+  ],
+  [
+   "move substitute",
+   "move roost"
+  ],
+  [
+   "move willowisp",
+   "move roost"
+  ],
+  [
+   "move willowisp",
+   "move bodyslam"
+  ],
+  [
+   "move substitute",
+   "move roost"
+  ],
+  [
+   "move thunderbolt",
+   "move earthquake"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "pressure",
+      "hp": 205,
+      "item": "sitrusberry",
+      "maxhp": 205,
+      "name": "Corviknight",
+      "pp": {
+       "bulkup": 20,
+       "ironhead": 16,
+       "roost": 8,
+       "uturn": 20
+      },
+      "slot": null,
+      "species": "Corviknight",
+      "status": ""
+     },
+     {
+      "ability": "levitate",
+      "hp": 157,
+      "item": "leftovers",
+      "maxhp": 157,
+      "name": "Rotom",
+      "pp": {
+       "hydropump": 8,
+       "substitute": 12,
+       "thunderbolt": 16,
+       "willowisp": 16
+      },
+      "slot": null,
+      "species": "Rotom-Wash",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 202,
+      "item": "salamencite",
+      "maxhp": 202,
+      "name": "Salamence",
+      "pp": {
+       "doubleedge": 16,
+       "dragondance": 20,
+       "earthquake": 12,
+       "roost": 8
+      },
+      "slot": 0,
+      "species": "Salamence",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "toxicdebris",
+      "hp": 190,
+      "item": "lightclay",
+      "maxhp": 190,
+      "name": "Glimmora",
+      "pp": {
+       "lightscreen": 20,
+       "memento": 12,
+       "mortalspin": 16,
+       "reflect": 20
+      },
+      "slot": null,
+      "species": "Glimmora",
+      "status": ""
+     },
+     {
+      "ability": "ironfist",
+      "hp": 147,
+      "item": "focussash",
+      "maxhp": 147,
+      "name": "Pawmot",
+      "pp": {
+       "doubleshock": 8,
+       "icepunch": 16,
+       "machpunch": 20,
+       "revivalblessing": 1
+      },
+      "slot": null,
+      "species": "Pawmot",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 191,
+      "item": "salamencite",
+      "maxhp": 191,
+      "name": "Salamence",
+      "pp": {
+       "bodyslam": 16,
+       "dragondance": 20,
+       "earthquake": 12,
+       "roost": 8
+      },
+      "slot": 0,
+      "species": "Salamence",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "switch 2",
+  "p2": "move roost"
+ }
+}

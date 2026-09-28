@@ -1,0 +1,1017 @@
+{
+ "description": "FF parity position (FF-parity-harness): alc-hippo-archaludon-vs-myuto-mence-offense, lab-parity game 0 (seed 4b5b2dd7bbe2b04c, policy random, extremes chance), decision 6 = turn 7 Turn. Base scenario runs/parity-singles-20260928/matchups/alc-hippo-archaludon-vs-myuto-mence-offense.json. The 6 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsbssregmc",
+ "p1": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/alc-hippo-archaludon/team.json"
+ },
+ "p2": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/myuto-mence-offense/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "chestoberry",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 8,
+        "flashcannon": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 215,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "earthquake": 12,
+        "protect": 7,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": 0,
+       "species": "Hippowdon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 197,
+       "item": "salamencite",
+       "maxhp": 197,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 16,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "canMega": true,
+       "hp": 185,
+       "item": "garchompitez",
+       "lastMove": "dracometeor",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "earthpower": 12,
+        "flamethrower": 16,
+        "surf": 16
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "disguise",
+       "hp": 143,
+       "item": "lifeorb",
+       "maxhp": 143,
+       "name": "Mimikyu",
+       "pp": {
+        "playrough": 12,
+        "shadowclaw": 16,
+        "shadowsneak": 20,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Mimikyu",
+       "status": ""
+      },
+      {
+       "ability": "technician",
+       "hp": 175,
+       "item": "leftovers",
+       "maxhp": 175,
+       "name": "Scizor",
+       "pp": {
+        "bulletpunch": 20,
+        "closecombat": 8,
+        "knockoff": 20,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Scizor",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "chestoberry",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 8,
+        "flashcannon": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 170,
+       "item": "leftovers",
+       "lastMove": "yawn",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "earthquake": 12,
+        "protect": 7,
+        "stealthrock": 20,
+        "yawn": 11
+       },
+       "slot": 0,
+       "species": "Hippowdon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 197,
+       "item": "salamencite",
+       "maxhp": 197,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 16,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 174,
+       "item": "garchompitez",
+       "lastMove": "flamethrower",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "earthpower": 12,
+        "flamethrower": 15,
+        "surf": 16
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {
+        "yawn": {
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "disguise",
+       "hp": 143,
+       "item": "lifeorb",
+       "maxhp": 143,
+       "name": "Mimikyu",
+       "pp": {
+        "playrough": 12,
+        "shadowclaw": 16,
+        "shadowsneak": 20,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Mimikyu",
+       "status": ""
+      },
+      {
+       "ability": "technician",
+       "hp": 175,
+       "item": "leftovers",
+       "maxhp": 175,
+       "name": "Scizor",
+       "pp": {
+        "bulletpunch": 20,
+        "closecombat": 8,
+        "knockoff": 20,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Scizor",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "chestoberry",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 8,
+        "flashcannon": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 183,
+       "item": "leftovers",
+       "lastMove": "stealthrock",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "earthquake": 12,
+        "protect": 7,
+        "stealthrock": 19,
+        "yawn": 11
+       },
+       "slot": 0,
+       "species": "Hippowdon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 197,
+       "item": "salamencite",
+       "maxhp": 197,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 16,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "stealthrock": {}
+     },
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 174,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "earthpower": 12,
+        "flamethrower": 15,
+        "surf": 16
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "disguise",
+       "boosts": {},
+       "hp": 135,
+       "item": "lifeorb",
+       "maxhp": 143,
+       "name": "Mimikyu",
+       "pp": {
+        "playrough": 12,
+        "shadowclaw": 16,
+        "shadowsneak": 20,
+        "swordsdance": 20
+       },
+       "slot": 0,
+       "species": "Mimikyu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "technician",
+       "hp": 175,
+       "item": "leftovers",
+       "maxhp": 175,
+       "name": "Scizor",
+       "pp": {
+        "bulletpunch": 20,
+        "closecombat": 8,
+        "knockoff": 20,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Scizor",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "chestoberry",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 8,
+        "flashcannon": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 196,
+       "item": "leftovers",
+       "lastMove": "earthquake",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "earthquake": 11,
+        "protect": 7,
+        "stealthrock": 19,
+        "yawn": 11
+       },
+       "slot": 0,
+       "species": "Hippowdon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 197,
+       "item": "salamencite",
+       "maxhp": 197,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 16,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "stealthrock": {}
+     },
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 174,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "earthpower": 12,
+        "flamethrower": 15,
+        "surf": 16
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "disguise",
+       "hp": 135,
+       "item": "lifeorb",
+       "maxhp": 143,
+       "name": "Mimikyu",
+       "pp": {
+        "playrough": 12,
+        "shadowclaw": 16,
+        "shadowsneak": 20,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Mimikyu",
+       "status": ""
+      },
+      {
+       "ability": "technician",
+       "boosts": {},
+       "hp": 101,
+       "item": "leftovers",
+       "maxhp": 175,
+       "name": "Scizor",
+       "pp": {
+        "bulletpunch": 20,
+        "closecombat": 8,
+        "knockoff": 20,
+        "swordsdance": 20
+       },
+       "slot": 0,
+       "species": "Scizor",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "chestoberry",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 8,
+        "flashcannon": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 209,
+       "item": "leftovers",
+       "lastMove": "yawn",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "earthquake": 11,
+        "protect": 7,
+        "stealthrock": 19,
+        "yawn": 10
+       },
+       "slot": 0,
+       "species": "Hippowdon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 197,
+       "item": "salamencite",
+       "maxhp": 197,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 16,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "stealthrock": {}
+     },
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 174,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "earthpower": 12,
+        "flamethrower": 15,
+        "surf": 16
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "disguise",
+       "boosts": {},
+       "hp": 118,
+       "item": "lifeorb",
+       "maxhp": 143,
+       "name": "Mimikyu",
+       "pp": {
+        "playrough": 12,
+        "shadowclaw": 16,
+        "shadowsneak": 20,
+        "swordsdance": 20
+       },
+       "slot": 0,
+       "species": "Mimikyu",
+       "status": "",
+       "volatiles": {
+        "yawn": {
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "technician",
+       "hp": 101,
+       "item": "leftovers",
+       "maxhp": 175,
+       "name": "Scizor",
+       "pp": {
+        "bulletpunch": 20,
+        "closecombat": 8,
+        "knockoff": 20,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Scizor",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "chestoberry",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 8,
+        "flashcannon": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "hp": 209,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "earthquake": 11,
+        "protect": 7,
+        "stealthrock": 19,
+        "yawn": 10
+       },
+       "slot": null,
+       "species": "Hippowdon",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "canMega": true,
+       "hp": 166,
+       "item": "salamencite",
+       "maxhp": 197,
+       "name": "Salamence",
+       "pp": {
+        "bodyslam": 16,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 8
+       },
+       "slot": 0,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "stealthrock": {}
+     },
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 174,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "earthpower": 12,
+        "flamethrower": 15,
+        "surf": 16
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "disguise",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 104,
+       "item": "lifeorb",
+       "lastMove": "shadowsneak",
+       "maxhp": 143,
+       "name": "Mimikyu",
+       "pp": {
+        "playrough": 12,
+        "shadowclaw": 16,
+        "shadowsneak": 19,
+        "swordsdance": 20
+       },
+       "slot": 0,
+       "species": "Mimikyu",
+       "status": "slp",
+       "statusTime": 2,
+       "volatiles": {}
+      },
+      {
+       "ability": "technician",
+       "hp": 101,
+       "item": "leftovers",
+       "maxhp": 175,
+       "name": "Scizor",
+       "pp": {
+        "bulletpunch": 20,
+        "closecombat": 8,
+        "knockoff": 20,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Scizor",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move protect",
+   "move dracometeor"
+  ],
+  [
+   "move yawn",
+   "move flamethrower mega"
+  ],
+  [
+   "move stealthrock",
+   "switch 3"
+  ],
+  [
+   "move earthquake",
+   "switch 2"
+  ],
+  [
+   "move yawn",
+   "switch 2"
+  ],
+  [
+   "switch 2",
+   "move shadowsneak"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "sandstorm",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "chestoberry",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "dracometeor": 8,
+       "flashcannon": 12,
+       "rest": 8,
+       "thunderbolt": 16
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "sandstream",
+      "boosts": {},
+      "hp": 215,
+      "item": "leftovers",
+      "maxhp": 215,
+      "name": "Hippowdon",
+      "pp": {
+       "earthquake": 12,
+       "protect": 8,
+       "stealthrock": 20,
+       "yawn": 12
+      },
+      "slot": 0,
+      "species": "Hippowdon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "canMega": true,
+      "hp": 197,
+      "item": "salamencite",
+      "maxhp": 197,
+      "name": "Salamence",
+      "pp": {
+       "bodyslam": 16,
+       "dragondance": 20,
+       "earthquake": 12,
+       "roost": 8
+      },
+      "slot": null,
+      "species": "Salamence",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "roughskin",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "garchompitez",
+      "maxhp": 185,
+      "name": "Garchomp",
+      "pp": {
+       "dracometeor": 8,
+       "earthpower": 12,
+       "flamethrower": 16,
+       "surf": 16
+      },
+      "slot": 0,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "disguise",
+      "hp": 143,
+      "item": "lifeorb",
+      "maxhp": 143,
+      "name": "Mimikyu",
+      "pp": {
+       "playrough": 12,
+       "shadowclaw": 16,
+       "shadowsneak": 20,
+       "swordsdance": 20
+      },
+      "slot": null,
+      "species": "Mimikyu",
+      "status": ""
+     },
+     {
+      "ability": "technician",
+      "hp": 175,
+      "item": "leftovers",
+      "maxhp": 175,
+      "name": "Scizor",
+      "pp": {
+       "bulletpunch": 20,
+       "closecombat": 8,
+       "knockoff": 20,
+       "swordsdance": 20
+      },
+      "slot": null,
+      "species": "Scizor",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move bodyslam",
+  "p2": "switch 3"
+ }
+}

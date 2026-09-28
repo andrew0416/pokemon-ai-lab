@@ -1,0 +1,1882 @@
+{
+ "description": "FF parity position (FF-parity-harness): asqkura-bulky-setup-vs-robin-blastoise-psychic, lab-parity game 1 (seed 67fca39ab5b4bb95, policy random, extremes chance), decision 12 = turn 11 Replacement. Base scenario runs/parity-singles-20260928/matchups/asqkura-bulky-setup-vs-robin-blastoise-psychic.json. The 12 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsbssregmc",
+ "p1": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/asqkura-bulky-setup/team.json"
+ },
+ "p2": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/robin-blastoise-psychic/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 7,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 221,
+       "item": "baxcalibrite",
+       "maxhp": 221,
+       "name": "Baxcalibur",
+       "pp": {
+        "earthquake": 12,
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 189,
+       "item": "airballoon",
+       "maxhp": 189,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 191,
+       "item": "salamencite",
+       "lastMove": "roost",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {
+        "encore": {
+         "duration": 3,
+         "move": "roost"
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "raindish",
+       "canMega": true,
+       "hp": 175,
+       "item": "blastoisinite",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 20,
+        "darkpulse": 16,
+        "shellsmash": 16,
+        "terrainpulse": 12
+       },
+       "slot": null,
+       "species": "Blastoise",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 135,
+       "item": "terrainextender",
+       "lastMove": "encore",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 7,
+        "expandingforce": 12,
+        "mysticalfire": 12,
+        "substitute": 12
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 167,
+       "item": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 6,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 221,
+       "item": "baxcalibrite",
+       "maxhp": 221,
+       "name": "Baxcalibur",
+       "pp": {
+        "earthquake": 12,
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "swordsdance": 20
+       },
+       "slot": 0,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 189,
+       "item": "airballoon",
+       "maxhp": 189,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 191,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "raindish",
+       "canMega": true,
+       "hp": 175,
+       "item": "blastoisinite",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 20,
+        "darkpulse": 16,
+        "shellsmash": 16,
+        "terrainpulse": 12
+       },
+       "slot": null,
+       "species": "Blastoise",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 102,
+       "item": "terrainextender",
+       "lastMove": "substitute",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 7,
+        "expandingforce": 12,
+        "mysticalfire": 12,
+        "substitute": 11
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {
+        "substitute": {
+         "hp": 33
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "hp": 167,
+       "item": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 5,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 221,
+       "item": "baxcalibrite",
+       "maxhp": 221,
+       "name": "Baxcalibur",
+       "pp": {
+        "earthquake": 12,
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 189,
+       "item": "airballoon",
+       "maxhp": 189,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 191,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "raindish",
+       "canMega": true,
+       "hp": 175,
+       "item": "blastoisinite",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 20,
+        "darkpulse": 16,
+        "shellsmash": 16,
+        "terrainpulse": 12
+       },
+       "slot": null,
+       "species": "Blastoise",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 102,
+       "item": "terrainextender",
+       "lastMove": "encore",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 6,
+        "expandingforce": 12,
+        "mysticalfire": 12,
+        "substitute": 11
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {
+        "substitute": {
+         "hp": 33
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "hp": 167,
+       "item": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 221,
+       "item": "baxcalibrite",
+       "maxhp": 221,
+       "name": "Baxcalibur",
+       "pp": {
+        "earthquake": 12,
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 189,
+       "item": "airballoon",
+       "maxhp": 189,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": 1,
+        "spe": 1
+       },
+       "hp": 191,
+       "item": "salamencite",
+       "lastMove": "dragondance",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "dragondance": 19,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "raindish",
+       "canMega": true,
+       "hp": 175,
+       "item": "blastoisinite",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 20,
+        "darkpulse": 16,
+        "shellsmash": 16,
+        "terrainpulse": 12
+       },
+       "slot": null,
+       "species": "Blastoise",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 102,
+       "item": "terrainextender",
+       "lastMove": "substitute",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 6,
+        "expandingforce": 12,
+        "mysticalfire": 12,
+        "substitute": 10
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {
+        "substitute": {
+         "hp": 33
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "hp": 167,
+       "item": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 221,
+       "item": "baxcalibrite",
+       "maxhp": 221,
+       "name": "Baxcalibur",
+       "pp": {
+        "earthquake": 12,
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 189,
+       "item": "airballoon",
+       "maxhp": 189,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": 1,
+        "spe": 1
+       },
+       "hp": 191,
+       "item": "salamencite",
+       "lastMove": "earthquake",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "dragondance": 19,
+        "earthquake": 11,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "raindish",
+       "canMega": true,
+       "hp": 175,
+       "item": "blastoisinite",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 20,
+        "darkpulse": 16,
+        "shellsmash": 16,
+        "terrainpulse": 12
+       },
+       "slot": null,
+       "species": "Blastoise",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 69,
+       "item": "terrainextender",
+       "lastMove": "substitute",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 6,
+        "expandingforce": 12,
+        "mysticalfire": 12,
+        "substitute": 9
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {
+        "substitute": {
+         "hp": 33
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "hp": 167,
+       "item": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 221,
+       "item": "baxcalibrite",
+       "maxhp": 221,
+       "name": "Baxcalibur",
+       "pp": {
+        "earthquake": 12,
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 189,
+       "item": "airballoon",
+       "maxhp": 189,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": 2,
+        "spe": 2
+       },
+       "hp": 49,
+       "item": "salamencite",
+       "lastMove": "dragondance",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "dragondance": 18,
+        "earthquake": 11,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "raindish",
+       "canMega": true,
+       "hp": 175,
+       "item": "blastoisinite",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 20,
+        "darkpulse": 16,
+        "shellsmash": 16,
+        "terrainpulse": 12
+       },
+       "slot": null,
+       "species": "Blastoise",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 69,
+       "item": "terrainextender",
+       "lastMove": "expandingforce",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 6,
+        "expandingforce": 11,
+        "mysticalfire": 12,
+        "substitute": 9
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {
+        "substitute": {
+         "hp": 33
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "hp": 167,
+       "item": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 221,
+       "item": "baxcalibrite",
+       "maxhp": 221,
+       "name": "Baxcalibur",
+       "pp": {
+        "earthquake": 12,
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 189,
+       "item": "airballoon",
+       "maxhp": 189,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 18,
+        "earthquake": 11,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "raindish",
+       "canMega": true,
+       "hp": 175,
+       "item": "blastoisinite",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 20,
+        "darkpulse": 16,
+        "shellsmash": 16,
+        "terrainpulse": 12
+       },
+       "slot": null,
+       "species": "Blastoise",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 69,
+       "item": "terrainextender",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 6,
+        "expandingforce": 11,
+        "mysticalfire": 12,
+        "substitute": 9
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 221,
+       "item": "baxcalibrite",
+       "maxhp": 221,
+       "name": "Baxcalibur",
+       "pp": {
+        "earthquake": 12,
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "swordsdance": 20
+       },
+       "slot": 0,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 189,
+       "item": "airballoon",
+       "maxhp": 189,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 18,
+        "earthquake": 11,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "raindish",
+       "canMega": true,
+       "hp": 175,
+       "item": "blastoisinite",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 20,
+        "darkpulse": 16,
+        "shellsmash": 16,
+        "terrainpulse": 12
+       },
+       "slot": null,
+       "species": "Blastoise",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 69,
+       "item": "terrainextender",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 6,
+        "expandingforce": 11,
+        "mysticalfire": 12,
+        "substitute": 9
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 2
+       },
+       "hp": 221,
+       "item": "baxcalibrite",
+       "lastMove": "swordsdance",
+       "maxhp": 221,
+       "name": "Baxcalibur",
+       "pp": {
+        "earthquake": 12,
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "swordsdance": 19
+       },
+       "slot": 0,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 189,
+       "item": "airballoon",
+       "maxhp": 189,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 18,
+        "earthquake": 11,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "raindish",
+       "boosts": {},
+       "canMega": true,
+       "hp": 175,
+       "item": "blastoisinite",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 20,
+        "darkpulse": 16,
+        "shellsmash": 16,
+        "terrainpulse": 12
+       },
+       "slot": 0,
+       "species": "Blastoise",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 69,
+       "item": "terrainextender",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 6,
+        "expandingforce": 11,
+        "mysticalfire": 12,
+        "substitute": 9
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 4
+       },
+       "hp": 168,
+       "item": "baxcalibrite",
+       "lastMove": "swordsdance",
+       "maxhp": 221,
+       "name": "Baxcalibur",
+       "pp": {
+        "earthquake": 12,
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "swordsdance": 18
+       },
+       "slot": 0,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 189,
+       "item": "airballoon",
+       "maxhp": 189,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 18,
+        "earthquake": 11,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "megalauncher",
+       "boosts": {},
+       "hp": 175,
+       "item": "blastoisinite",
+       "lastMove": "terrainpulse",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 20,
+        "darkpulse": 16,
+        "shellsmash": 16,
+        "terrainpulse": 11
+       },
+       "slot": 0,
+       "species": "Blastoise-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 69,
+       "item": "terrainextender",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 6,
+        "expandingforce": 11,
+        "mysticalfire": 12,
+        "substitute": 9
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 10,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 4
+       },
+       "hp": 115,
+       "item": "baxcalibrite",
+       "lastMove": "iciclecrash",
+       "maxhp": 221,
+       "name": "Baxcalibur",
+       "pp": {
+        "earthquake": 12,
+        "iceshard": 20,
+        "iciclecrash": 11,
+        "swordsdance": 18
+       },
+       "slot": 0,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 189,
+       "item": "airballoon",
+       "maxhp": 189,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 18,
+        "earthquake": 11,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "megalauncher",
+       "boosts": {},
+       "hp": 65,
+       "item": "blastoisinite",
+       "lastMove": "terrainpulse",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 20,
+        "darkpulse": 16,
+        "shellsmash": 16,
+        "terrainpulse": 10
+       },
+       "slot": 0,
+       "species": "Blastoise-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 69,
+       "item": "terrainextender",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 6,
+        "expandingforce": 11,
+        "mysticalfire": 12,
+        "substitute": 9
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 11,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 7,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 4
+       },
+       "hp": 115,
+       "item": "baxcalibrite",
+       "lastMove": "iciclecrash",
+       "maxhp": 221,
+       "name": "Baxcalibur",
+       "pp": {
+        "earthquake": 12,
+        "iceshard": 20,
+        "iciclecrash": 10,
+        "swordsdance": 18
+       },
+       "slot": 0,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 189,
+       "item": "airballoon",
+       "maxhp": 189,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 18,
+        "earthquake": 11,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "megalauncher",
+       "hp": 65,
+       "item": "blastoisinite",
+       "maxhp": 175,
+       "name": "Blastoise",
+       "pp": {
+        "aurasphere": 20,
+        "darkpulse": 16,
+        "shellsmash": 16,
+        "terrainpulse": 10
+       },
+       "slot": null,
+       "species": "Blastoise-Mega",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "terrainextender",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 6,
+        "expandingforce": 11,
+        "mysticalfire": 12,
+        "substitute": 9
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 167,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 11,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move roost mega",
+   "move encore"
+  ],
+  [
+   "switch 2",
+   "move substitute"
+  ],
+  [
+   "switch 2",
+   "move encore"
+  ],
+  [
+   "move dragondance",
+   "move substitute"
+  ],
+  [
+   "move earthquake",
+   "move substitute"
+  ],
+  [
+   "move dragondance",
+   "move expandingforce"
+  ],
+  [
+   "move doubleedge",
+   "switch 3"
+  ],
+  [
+   "switch 2",
+   "switch 3"
+  ],
+  [
+   "move swordsdance",
+   "switch 2"
+  ],
+  [
+   "move swordsdance",
+   "move terrainpulse mega"
+  ],
+  [
+   "move iciclecrash",
+   "move terrainpulse"
+  ],
+  [
+   "move iciclecrash",
+   "switch 2"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 8,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "thermalexchange",
+      "canMega": true,
+      "hp": 221,
+      "item": "baxcalibrite",
+      "maxhp": 221,
+      "name": "Baxcalibur",
+      "pp": {
+       "earthquake": 12,
+       "iceshard": 20,
+       "iciclecrash": 12,
+       "swordsdance": 20
+      },
+      "slot": null,
+      "species": "Baxcalibur",
+      "status": ""
+     },
+     {
+      "ability": "goodasgold",
+      "hp": 189,
+      "item": "airballoon",
+      "maxhp": 189,
+      "name": "Gholdengo",
+      "pp": {
+       "makeitrain": 8,
+       "nastyplot": 20,
+       "recover": 8,
+       "shadowball": 16
+      },
+      "slot": null,
+      "species": "Gholdengo",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "canMega": true,
+      "hp": 191,
+      "item": "salamencite",
+      "maxhp": 191,
+      "name": "Salamence",
+      "pp": {
+       "doubleedge": 16,
+       "dragondance": 20,
+       "earthquake": 12,
+       "roost": 8
+      },
+      "slot": 0,
+      "species": "Salamence",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "raindish",
+      "canMega": true,
+      "hp": 175,
+      "item": "blastoisinite",
+      "maxhp": 175,
+      "name": "Blastoise",
+      "pp": {
+       "aurasphere": 20,
+       "darkpulse": 16,
+       "shellsmash": 16,
+       "terrainpulse": 12
+      },
+      "slot": null,
+      "species": "Blastoise",
+      "status": ""
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 135,
+      "item": "terrainextender",
+      "maxhp": 135,
+      "name": "Indeedee",
+      "pp": {
+       "encore": 8,
+       "expandingforce": 12,
+       "mysticalfire": 12,
+       "substitute": 12
+      },
+      "slot": 0,
+      "species": "Indeedee",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 167,
+      "item": "psychicseed",
+      "maxhp": 167,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "swordsdance": 20,
+       "throatchop": 16
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "",
+  "p2": "switch 2"
+ }
+}

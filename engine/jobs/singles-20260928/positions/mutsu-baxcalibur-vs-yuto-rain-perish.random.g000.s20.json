@@ -1,0 +1,2958 @@
+{
+ "description": "FF parity position (FF-parity-harness): mutsu-baxcalibur-vs-yuto-rain-perish, lab-parity game 0 (seed 4b5b2dd7bbe2b04c, policy random, extremes chance), decision 20 = turn 18 Turn. Base scenario runs/parity-singles-20260928/matchups/mutsu-baxcalibur-vs-yuto-rain-perish.json. The 20 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsbssregmc",
+ "p1": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/mutsu-baxcalibur/team.json"
+ },
+ "p2": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/yuto-rain-perish/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 138,
+       "item": "baxcalibrite",
+       "lastMove": "iciclecrash",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 8,
+        "iceshard": 20,
+        "iciclecrash": 11
+       },
+       "slot": 0,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "blaze",
+       "hp": 157,
+       "item": "charizarditey",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 16,
+        "roost": 8,
+        "solarbeam": 12,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "hp": 191,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Empoleon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 12,
+        "flashcannon": 12
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 159,
+       "item": "lifeorb",
+       "lastMove": "wavecrash",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 12,
+        "liquidation": 12
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 111,
+       "item": "baxcalibrite",
+       "lastMove": "iciclecrash",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 8,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": 0,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "blaze",
+       "hp": 157,
+       "item": "charizarditey",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 16,
+        "roost": 8,
+        "solarbeam": 12,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "hp": 191,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Empoleon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 12,
+        "flashcannon": 12
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 140,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "canMega": true,
+       "hp": 137,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 12,
+        "liquidation": 12
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 111,
+       "item": "baxcalibrite",
+       "lastMove": "glaiverush",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 7,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": 0,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {
+        "glaiverush": {}
+       }
+      },
+      {
+       "ability": "blaze",
+       "hp": 157,
+       "item": "charizarditey",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 16,
+        "roost": 8,
+        "solarbeam": 12,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "hp": 191,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Empoleon",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 12,
+        "flashcannon": 12
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": "fnt"
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 137,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 12,
+        "liquidation": 12
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 111,
+       "item": "baxcalibrite",
+       "lastMove": "glaiverush",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 7,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": 0,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {
+        "glaiverush": {}
+       }
+      },
+      {
+       "ability": "blaze",
+       "hp": 157,
+       "item": "charizarditey",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 16,
+        "roost": 8,
+        "solarbeam": 12,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "hp": 191,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Empoleon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 12,
+        "flashcannon": 12
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "canMega": true,
+       "hp": 137,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 12,
+        "liquidation": 12
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 111,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 7,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 127,
+       "item": "charizarditey",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 16,
+        "roost": 8,
+        "solarbeam": 12,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "competitive",
+       "hp": 191,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Empoleon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 12,
+        "flashcannon": 12
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 152,
+       "item": "golisopite",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 11,
+        "liquidation": 12
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 111,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 7,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 127,
+       "item": "charizarditey",
+       "lastMove": "weatherball",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 16,
+        "roost": 8,
+        "solarbeam": 12,
+        "weatherball": 11
+       },
+       "slot": 0,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "competitive",
+       "hp": 191,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Empoleon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 192,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 12,
+        "flashcannon": 12
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 152,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 11,
+        "liquidation": 12
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 111,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 7,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 85,
+       "item": "charizarditey",
+       "lastMove": "weatherball",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 16,
+        "roost": 8,
+        "solarbeam": 12,
+        "weatherball": 10
+       },
+       "slot": 0,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "competitive",
+       "hp": 191,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Empoleon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 2
+       },
+       "hp": 184,
+       "item": "leftovers",
+       "lastMove": "flashcannon",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 12,
+        "flashcannon": 11
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 152,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 11,
+        "liquidation": 12
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 111,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 7,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 85,
+       "item": "charizarditey",
+       "lastMove": "airslash",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 15,
+        "roost": 8,
+        "solarbeam": 12,
+        "weatherball": 10
+       },
+       "slot": 0,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "competitive",
+       "hp": 191,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Empoleon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 3
+       },
+       "hp": 159,
+       "item": "leftovers",
+       "lastMove": "flashcannon",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 12,
+        "flashcannon": 11
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 152,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 11,
+        "liquidation": 12
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 111,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 7,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": 0,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "blaze",
+       "hp": 85,
+       "item": "charizarditey",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 15,
+        "roost": 8,
+        "solarbeam": 12,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "hp": 191,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Empoleon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 3,
+        "spa": 1
+       },
+       "hp": 171,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 11,
+        "flashcannon": 11
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "electroshot": {},
+        "twoturnmove": {
+         "duration": 1,
+         "move": "electroshot"
+        }
+       }
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 152,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 11,
+        "liquidation": 12
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 6,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "blaze",
+       "hp": 85,
+       "item": "charizarditey",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 15,
+        "roost": 8,
+        "solarbeam": 12,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "hp": 191,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Empoleon",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 4,
+        "spa": 1
+       },
+       "hp": 138,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 11,
+        "flashcannon": 11
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 152,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 11,
+        "liquidation": 12
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 6,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 85,
+       "item": "charizarditey",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 15,
+        "roost": 8,
+        "solarbeam": 12,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "boosts": {},
+       "hp": 191,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": 0,
+       "species": "Empoleon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 4,
+        "spa": 1
+       },
+       "hp": 138,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 11,
+        "flashcannon": 11
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 152,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 11,
+        "liquidation": 12
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 10,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 6,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 85,
+       "item": "charizarditey",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 15,
+        "roost": 8,
+        "solarbeam": 12,
+        "weatherball": 10
+       },
+       "slot": 0,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "competitive",
+       "hp": 191,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Empoleon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 138,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 11,
+        "flashcannon": 11
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 152,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 11,
+        "liquidation": 12
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 11,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 6,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 157,
+       "item": "charizarditey",
+       "lastMove": "roost",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 15,
+        "roost": 7,
+        "solarbeam": 12,
+        "weatherball": 10
+       },
+       "slot": 0,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "competitive",
+       "hp": 191,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Empoleon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 150,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 11,
+        "flashcannon": 11
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 152,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 11,
+        "liquidation": 12
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 12,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 6,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 157,
+       "item": "charizarditey",
+       "lastMove": "airslash",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 14,
+        "roost": 7,
+        "solarbeam": 12,
+        "weatherball": 10
+       },
+       "slot": 0,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "competitive",
+       "hp": 191,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Empoleon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 150,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 11,
+        "flashcannon": 11
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 98,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 11,
+        "liquidation": 12
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 13,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 6,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 157,
+       "item": "charizarditey",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 14,
+        "roost": 7,
+        "solarbeam": 12,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "boosts": {},
+       "hp": 141,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 20,
+        "yawn": 12
+       },
+       "slot": 0,
+       "species": "Empoleon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 150,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 11,
+        "flashcannon": 11
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 123,
+       "item": "golisopite",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 10,
+        "liquidation": 12
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 14,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 6,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 157,
+       "item": "charizarditey",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 14,
+        "roost": 7,
+        "solarbeam": 12,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "boosts": {},
+       "hp": 141,
+       "item": "sitrusberry",
+       "lastMove": "stealthrock",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 19,
+        "yawn": 12
+       },
+       "slot": 0,
+       "species": "Empoleon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "stealthrock": {}
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 162,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 11,
+        "flashcannon": 11
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 123,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 10,
+        "liquidation": 12
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 15,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 6,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 157,
+       "item": "charizarditey",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 14,
+        "roost": 7,
+        "solarbeam": 12,
+        "weatherball": 10
+       },
+       "slot": 0,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "competitive",
+       "hp": 141,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 19,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Empoleon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "stealthrock": {}
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 162,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 11,
+        "flashcannon": 11
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 101,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 10,
+        "liquidation": 12
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 16,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 6,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 14,
+        "roost": 7,
+        "solarbeam": 11,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": "fnt"
+      },
+      {
+       "ability": "competitive",
+       "hp": 141,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 19,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Empoleon",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "stealthrock": {}
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 162,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 11,
+        "flashcannon": 11
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 101,
+       "item": "golisopite",
+       "lastMove": "liquidation",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 10,
+        "liquidation": 11
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 16,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 6,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 14,
+        "roost": 7,
+        "solarbeam": 11,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "boosts": {},
+       "hp": 141,
+       "item": "sitrusberry",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 12,
+        "stealthrock": 19,
+        "yawn": 12
+       },
+       "slot": 0,
+       "species": "Empoleon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "stealthrock": {}
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 162,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 11,
+        "flashcannon": 11
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 101,
+       "item": "golisopite",
+       "lastMove": "liquidation",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 10,
+        "liquidation": 11
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 17,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 191,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "glaiverush": 6,
+        "iceshard": 20,
+        "iciclecrash": 10
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 157,
+       "name": "Charizard",
+       "pp": {
+        "airslash": 14,
+        "roost": 7,
+        "solarbeam": 11,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "boosts": {},
+       "hp": 99,
+       "item": "sitrusberry",
+       "lastMove": "icebeam",
+       "maxhp": 191,
+       "name": "Empoleon",
+       "pp": {
+        "flipturn": 20,
+        "icebeam": 11,
+        "stealthrock": 19,
+        "yawn": 12
+       },
+       "slot": 0,
+       "species": "Empoleon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "stealthrock": {}
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 162,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "aurasphere": 20,
+        "dracometeor": 8,
+        "electroshot": 11,
+        "flashcannon": 11
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 19,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 106,
+       "item": "golisopite",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "firstimpression": 12,
+        "leechlife": 9,
+        "liquidation": 11
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 18,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move iciclecrash mega",
+   "move wavecrash"
+  ],
+  [
+   "move iciclecrash",
+   "move flipturn",
+   {
+    "p1": [],
+    "p2": [
+     "switch 3"
+    ]
+   }
+  ],
+  [
+   "move glaiverush",
+   "switch 3"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "switch 2",
+   "move leechlife mega"
+  ],
+  [
+   "move weatherball",
+   "switch 2"
+  ],
+  [
+   "move weatherball",
+   "move flashcannon"
+  ],
+  [
+   "move airslash",
+   "move flashcannon"
+  ],
+  [
+   "switch 2",
+   "move electroshot"
+  ],
+  [
+   "move glaiverush",
+   "move electroshot"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "switch 2",
+   "switch 2"
+  ],
+  [
+   "move roost",
+   "switch 2"
+  ],
+  [
+   "move airslash",
+   "switch 2"
+  ],
+  [
+   "switch 2",
+   "move leechlife"
+  ],
+  [
+   "move stealthrock",
+   "switch 2"
+  ],
+  [
+   "switch 2",
+   "switch 2"
+  ],
+  [
+   "move solarbeam",
+   "move liquidation"
+  ],
+  [
+   "switch 2",
+   ""
+  ],
+  [
+   "move icebeam",
+   "move leechlife"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "thermalexchange",
+      "boosts": {},
+      "canMega": true,
+      "hp": 191,
+      "item": "baxcalibrite",
+      "maxhp": 191,
+      "name": "Baxcalibur",
+      "pp": {
+       "dragondance": 20,
+       "glaiverush": 8,
+       "iceshard": 20,
+       "iciclecrash": 12
+      },
+      "slot": 0,
+      "species": "Baxcalibur",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "blaze",
+      "canMega": true,
+      "hp": 157,
+      "item": "charizarditey",
+      "maxhp": 157,
+      "name": "Charizard",
+      "pp": {
+       "airslash": 16,
+       "roost": 8,
+       "solarbeam": 12,
+       "weatherball": 12
+      },
+      "slot": null,
+      "species": "Charizard",
+      "status": ""
+     },
+     {
+      "ability": "competitive",
+      "hp": 191,
+      "item": "sitrusberry",
+      "maxhp": 191,
+      "name": "Empoleon",
+      "pp": {
+       "flipturn": 20,
+       "icebeam": 12,
+       "stealthrock": 20,
+       "yawn": 12
+      },
+      "slot": null,
+      "species": "Empoleon",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "aurasphere": 20,
+       "dracometeor": 8,
+       "electroshot": 12,
+       "flashcannon": 12
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "swiftswim",
+      "boosts": {},
+      "hp": 195,
+      "item": "lifeorb",
+      "maxhp": 195,
+      "name": "Basculegion",
+      "pp": {
+       "aquajet": 20,
+       "flipturn": 20,
+       "lastrespects": 12,
+       "wavecrash": 12
+      },
+      "slot": 0,
+      "species": "Basculegion",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "drillrun": 12,
+       "firstimpression": 12,
+       "leechlife": 12,
+       "liquidation": 12
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move flipturn",
+  "p2": "move drillrun"
+ }
+}

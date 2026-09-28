@@ -1,0 +1,1174 @@
+{
+ "description": "FF parity position (FF-parity-harness): masagon-lucario-salamence-vs-tororo-raichu-electric, lab-parity game 1 (seed 67fca39ab5b4bb95, policy random, extremes chance), decision 7 = turn 7 Turn. Base scenario runs/parity-singles-20260928/matchups/masagon-lucario-salamence-vs-tororo-raichu-electric.json. The 7 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsbssregmc",
+ "p1": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/masagon-lucario-salamence/team.json"
+ },
+ "p2": {
+  "order": "123",
+  "team": "../../../../teams/library/singles/m-c/tororo-raichu-electric/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "goodasgold",
+       "hp": 191,
+       "item": "airballoon",
+       "maxhp": 191,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "hp": 215,
+       "item": "sitrusberry",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "earthquake": 12,
+        "stealthrock": 20,
+        "whirlwind": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Hippowdon",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 191,
+       "item": "salamencite",
+       "lastMove": "roost",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {
+        "encore": {
+         "duration": 3,
+         "move": "roost"
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 195,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "lightningrod",
+       "boosts": {
+        "atk": -1
+       },
+       "canMega": true,
+       "hp": 167,
+       "item": "raichunitex",
+       "lastMove": "encore",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "encore": 7,
+        "reflect": 20,
+        "risingvoltage": 20,
+        "voltswitch": 20
+       },
+       "slot": 0,
+       "species": "Raichu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 183,
+       "item": "electricseed",
+       "maxhp": 183,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "goodasgold",
+       "hp": 191,
+       "item": "airballoon",
+       "maxhp": 191,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 215,
+       "item": "sitrusberry",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "earthquake": 12,
+        "stealthrock": 20,
+        "whirlwind": 20,
+        "yawn": 12
+       },
+       "slot": 0,
+       "species": "Hippowdon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 191,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "reflect": {
+       "duration": 4
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 195,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "lightningrod",
+       "boosts": {
+        "atk": -1
+       },
+       "canMega": true,
+       "hp": 157,
+       "item": "raichunitex",
+       "lastMove": "reflect",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "encore": 7,
+        "reflect": 19,
+        "risingvoltage": 20,
+        "voltswitch": 20
+       },
+       "slot": 0,
+       "species": "Raichu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 183,
+       "item": "electricseed",
+       "maxhp": 183,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "goodasgold",
+       "hp": 191,
+       "item": "airballoon",
+       "maxhp": 191,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "hp": 215,
+       "item": "sitrusberry",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "earthquake": 12,
+        "stealthrock": 20,
+        "whirlwind": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Hippowdon",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 180,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "dragondance": 20,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "reflect": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 195,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "lightningrod",
+       "boosts": {
+        "atk": -1
+       },
+       "canMega": true,
+       "hp": 147,
+       "item": "raichunitex",
+       "lastMove": "encore",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "encore": 6,
+        "reflect": 19,
+        "risingvoltage": 20,
+        "voltswitch": 20
+       },
+       "slot": 0,
+       "species": "Raichu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 183,
+       "item": "electricseed",
+       "maxhp": 183,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 4,
+    "weather": "sandstorm",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "goodasgold",
+       "hp": 191,
+       "item": "airballoon",
+       "maxhp": 191,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "hp": 215,
+       "item": "sitrusberry",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "earthquake": 12,
+        "stealthrock": 20,
+        "whirlwind": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Hippowdon",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": 1,
+        "spe": 1
+       },
+       "hp": 96,
+       "item": "salamencite",
+       "lastMove": "dragondance",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "dragondance": 19,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "reflect": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 195,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 147,
+       "item": "raichunitex",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "encore": 6,
+        "reflect": 19,
+        "risingvoltage": 20,
+        "voltswitch": 19
+       },
+       "slot": null,
+       "species": "Raichu-Mega-X",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 172,
+       "item": "",
+       "lastItem": "electricseed",
+       "maxhp": 183,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 3,
+    "weather": "sandstorm",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "goodasgold",
+       "hp": 191,
+       "item": "airballoon",
+       "maxhp": 191,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "hp": 215,
+       "item": "sitrusberry",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "earthquake": 12,
+        "stealthrock": 20,
+        "whirlwind": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Hippowdon",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": 2,
+        "spe": 2
+       },
+       "hp": 13,
+       "item": "salamencite",
+       "lastMove": "dragondance",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "dragondance": 18,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "reflect": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 195,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 147,
+       "item": "raichunitex",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "encore": 6,
+        "reflect": 19,
+        "risingvoltage": 20,
+        "voltswitch": 19
+       },
+       "slot": null,
+       "species": "Raichu-Mega-X",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 161,
+       "item": "",
+       "lastItem": "electricseed",
+       "lastMove": "direclaw",
+       "maxhp": 183,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 15,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "goodasgold",
+       "hp": 191,
+       "item": "airballoon",
+       "maxhp": 191,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "hp": 215,
+       "item": "sitrusberry",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "earthquake": 12,
+        "stealthrock": 20,
+        "whirlwind": 20,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Hippowdon",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 18,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": "fnt"
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 147,
+       "item": "raichunitex",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "encore": 6,
+        "reflect": 19,
+        "risingvoltage": 20,
+        "voltswitch": 19
+       },
+       "slot": null,
+       "species": "Raichu-Mega-X",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 161,
+       "item": "",
+       "lastItem": "electricseed",
+       "maxhp": 183,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 15,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 2,
+    "weather": "sandstorm",
+    "weatherDuration": 5
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "goodasgold",
+       "hp": 191,
+       "item": "airballoon",
+       "maxhp": 191,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "recover": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 215,
+       "item": "sitrusberry",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "earthquake": 12,
+        "stealthrock": 20,
+        "whirlwind": 20,
+        "yawn": 12
+       },
+       "slot": 0,
+       "species": "Hippowdon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 191,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "dragondance": 18,
+        "earthquake": 12,
+        "roost": 7
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "electricsurge",
+       "boosts": {},
+       "hp": 147,
+       "item": "raichunitex",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "encore": 6,
+        "reflect": 19,
+        "risingvoltage": 20,
+        "voltswitch": 19
+       },
+       "slot": 0,
+       "species": "Raichu-Mega-X",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 161,
+       "item": "",
+       "lastItem": "electricseed",
+       "maxhp": 183,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 15,
+        "swordsdance": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move roost mega",
+   "move encore"
+  ],
+  [
+   "switch 2",
+   "move reflect"
+  ],
+  [
+   "switch 2",
+   "move encore"
+  ],
+  [
+   "move dragondance",
+   "move voltswitch mega",
+   {
+    "p1": [],
+    "p2": [
+     "switch 2"
+    ]
+   }
+  ],
+  [
+   "move dragondance",
+   "move direclaw"
+  ],
+  [
+   "move doubleedge",
+   "switch 3"
+  ],
+  [
+   "switch 2",
+   "switch 2"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "goodasgold",
+      "hp": 191,
+      "item": "airballoon",
+      "maxhp": 191,
+      "name": "Gholdengo",
+      "pp": {
+       "makeitrain": 8,
+       "nastyplot": 20,
+       "recover": 8,
+       "shadowball": 16
+      },
+      "slot": null,
+      "species": "Gholdengo",
+      "status": ""
+     },
+     {
+      "ability": "sandstream",
+      "hp": 215,
+      "item": "sitrusberry",
+      "maxhp": 215,
+      "name": "Hippowdon",
+      "pp": {
+       "earthquake": 12,
+       "stealthrock": 20,
+       "whirlwind": 20,
+       "yawn": 12
+      },
+      "slot": null,
+      "species": "Hippowdon",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "canMega": true,
+      "hp": 191,
+      "item": "salamencite",
+      "maxhp": 191,
+      "name": "Salamence",
+      "pp": {
+       "doubleedge": 16,
+       "dragondance": 20,
+       "earthquake": 12,
+       "roost": 8
+      },
+      "slot": 0,
+      "species": "Salamence",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "adaptability",
+      "hp": 195,
+      "item": "choicescarf",
+      "maxhp": 195,
+      "name": "Basculegion",
+      "pp": {
+       "aquajet": 20,
+       "flipturn": 20,
+       "lastrespects": 12,
+       "wavecrash": 12
+      },
+      "slot": null,
+      "species": "Basculegion",
+      "status": ""
+     },
+     {
+      "ability": "lightningrod",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 167,
+      "item": "raichunitex",
+      "maxhp": 167,
+      "name": "Raichu",
+      "pp": {
+       "encore": 8,
+       "reflect": 20,
+       "risingvoltage": 20,
+       "voltswitch": 20
+      },
+      "slot": 0,
+      "species": "Raichu",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 183,
+      "item": "electricseed",
+      "maxhp": 183,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "swordsdance": 20,
+       "throatchop": 16
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move stealthrock",
+  "p2": "switch 3"
+ }
+}
