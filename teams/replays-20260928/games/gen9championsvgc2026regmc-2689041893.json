@@ -740,12 +740,8 @@
      "mega": true
     },
     {
-     "kind": "move",
-     "move": "electroshot",
-     "target": null,
-     "flags": [
-      "[still]"
-     ],
+     "kind": "unknown",
+     "why": "encored this turn",
      "mega": false
     }
    ],
@@ -865,13 +861,8 @@
    ],
    "p2": [
     {
-     "kind": "move",
-     "move": "drillrun",
-     "target": {
-      "side": "p1",
-      "slot": 1
-     },
-     "flags": [],
+     "kind": "unknown",
+     "why": "encored this turn",
      "mega": false
     },
     {

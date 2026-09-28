@@ -38,7 +38,7 @@
    {
     "name": "Armarouge",
     "species": "Armarouge",
-    "item": "",
+    "item": "Focus Sash",
     "ability": "Flash Fire",
     "gender": "F",
     "nature": "Serious",
@@ -132,7 +132,7 @@
    {
     "name": "Indeedee",
     "species": "Indeedee",
-    "item": "",
+    "item": "Choice Scarf",
     "ability": "Psychic Surge",
     "gender": "M",
     "nature": "Serious",
@@ -266,7 +266,7 @@
    {
     "name": "Armarouge",
     "source": "log (moves used, item/ability shown; rest assumed)",
-    "item_shown": false,
+    "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
     "moves_shown": 2
@@ -292,7 +292,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
-    "item_shown": false,
+    "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
     "moves_shown": 2

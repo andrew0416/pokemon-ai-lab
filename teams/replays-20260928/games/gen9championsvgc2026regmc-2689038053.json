@@ -650,12 +650,8 @@
      "mega": false
     },
     {
-     "kind": "move",
-     "move": "fakeout",
-     "target": null,
-     "flags": [
-      "[still]"
-     ],
+     "kind": "unknown",
+     "why": "encored this turn",
      "mega": false
     }
    ],

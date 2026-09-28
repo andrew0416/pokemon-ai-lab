@@ -527,13 +527,8 @@
      "mega": false
     },
     {
-     "kind": "move",
-     "move": "closecombat",
-     "target": {
-      "side": "p1",
-      "slot": 0
-     },
-     "flags": [],
+     "kind": "unknown",
+     "why": "encored this turn",
      "mega": false
     }
    ],

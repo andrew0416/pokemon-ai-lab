@@ -282,7 +282,7 @@
   "decisions": 5,
   "stop": null,
   "turns": 5,
-  "unknown_actions": 3,
+  "unknown_actions": 4,
   "mid_switches": 1
  },
  {
@@ -777,7 +777,7 @@
   "decisions": 9,
   "stop": null,
   "turns": 7,
-  "unknown_actions": 2,
+  "unknown_actions": 4,
   "mid_switches": 0
  },
  {
@@ -840,7 +840,7 @@
   "decisions": 11,
   "stop": null,
   "turns": 7,
-  "unknown_actions": 4,
+  "unknown_actions": 5,
   "mid_switches": 1
  },
  {
@@ -921,7 +921,7 @@
   "decisions": 13,
   "stop": null,
   "turns": 11,
-  "unknown_actions": 4,
+  "unknown_actions": 5,
   "mid_switches": 3
  },
  {
@@ -1291,7 +1291,7 @@
   "stop": null,
   "turns": 6,
   "unknown_actions": 3,
-  "mid_switches": 0
+  "mid_switches": 1
  },
  {
   "id": "gen9championsvgc2026regmc-2689032325",
@@ -1467,7 +1467,7 @@
   "decisions": 13,
   "stop": null,
   "turns": 10,
-  "unknown_actions": 2,
+  "unknown_actions": 3,
   "mid_switches": 0
  },
  {
@@ -1485,7 +1485,7 @@
   "decisions": 12,
   "stop": null,
   "turns": 9,
-  "unknown_actions": 2,
+  "unknown_actions": 3,
   "mid_switches": 1
  },
  {
@@ -1581,14 +1581,14 @@
  {
   "id": "gen9championsvgc2026regmc-2689027554",
   "ots": false,
-  "decisions": 2,
+  "decisions": 1,
   "stop": {
-   "turn": 3,
-   "reason": "Illusion (|replace|)"
+   "turn": 2,
+   "reason": "Illusion (one name in both slots)"
   },
-  "turns": 2,
+  "turns": 1,
   "unknown_actions": 0,
-  "mid_switches": 1
+  "mid_switches": 0
  },
  {
   "id": "gen9championsvgc2026regmc-2689027955",
@@ -1596,7 +1596,7 @@
   "decisions": 10,
   "stop": null,
   "turns": 8,
-  "unknown_actions": 3,
+  "unknown_actions": 4,
   "mid_switches": 0
  },
  {
@@ -1614,8 +1614,8 @@
   "decisions": 18,
   "stop": null,
   "turns": 14,
-  "unknown_actions": 4,
-  "mid_switches": 0
+  "unknown_actions": 5,
+  "mid_switches": 1
  },
  {
   "id": "gen9championsvgc2026regmc-2689028361",

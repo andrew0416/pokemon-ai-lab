@@ -1389,15 +1389,8 @@
      "mega": false
     },
     {
-     "kind": "move",
-     "move": "dazzlinggleam",
-     "target": {
-      "side": "p2",
-      "slot": 0
-     },
-     "flags": [
-      "[spread] p2a,p2b"
-     ],
+     "kind": "unknown",
+     "why": "encored this turn",
      "mega": false
     }
    ],

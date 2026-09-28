@@ -8,7 +8,7 @@ Source: 200 public replays of `gen9championsvgc2026regmc` (replay.pokemonshowdow
 observation after each. **The sets are not the players' sets.** Open team sheets (4 games) give species,
 item, ability, moves and nature; otherwise only what the log revealed (moves used, items and abilities
 shown), filled with assumptions: unrevealed ability = the species' first one that does not announce
-itself on entry, unrevealed item = none (Light Clay when a screen outlasted 5 turns), a filler Rest for
+itself on entry, unrevealed item = none (Light Clay, Damp Rock etc. or Terrain Extender when a screen, weather or terrain it set outlasted 5 turns; the original items of a Trick are the swapped ones), a filler Rest for
 turns a Pokémon did not act, unseen brought members from team preview with a placeholder set, and
 **Stat Points always assumed** (HP 32 / attack 32 / Speed 2, then fitted per game by `lab-replay
 --fit-sp` against the log; the fitted spreads are in the positions and in the run's `checks/`).

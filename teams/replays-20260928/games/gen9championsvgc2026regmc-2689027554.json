@@ -37,7 +37,7 @@
    {
     "name": "cotton bro bro",
     "species": "Whimsicott",
-    "item": "",
+    "item": "Choice Scarf",
     "ability": "Prankster",
     "gender": "M",
     "nature": "Serious",
@@ -61,7 +61,6 @@
     "moves": [
      "Trick",
      "Shadow Ball",
-     "Encore",
      "Rest"
     ]
    },
@@ -160,7 +159,7 @@
    {
     "name": "Grimmsnarl",
     "species": "Grimmsnarl",
-    "item": "",
+    "item": "Light Clay",
     "ability": "Prankster",
     "gender": "M",
     "nature": "Serious",
@@ -241,7 +240,7 @@
     },
     "level": 50,
     "moves": [
-     "Tailwind",
+     "Protect",
      "Rest"
     ]
    }
@@ -261,10 +260,10 @@
    {
     "name": "cotton bro bro",
     "source": "log (moves used, item/ability shown; rest assumed)",
-    "item_shown": false,
+    "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
-    "moves_shown": 3
+    "moves_shown": 2
    },
    {
     "name": "Zoroark-Hisui",
@@ -287,7 +286,7 @@
    {
     "name": "Grimmsnarl",
     "source": "log (moves used, item/ability shown; rest assumed)",
-    "item_shown": false,
+    "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
     "moves_shown": 2
@@ -306,7 +305,7 @@
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
-    "moves_shown": 1
+    "moves_shown": 0
    }
   ]
  },
@@ -481,144 +480,10 @@
      ]
     }
    }
-  },
-  {
-   "kind": "turn",
-   "turn": 2,
-   "p1": [
-    {
-     "kind": "switch",
-     "name": "cotton bro bro"
-    },
-    {
-     "kind": "move",
-     "move": "shadowball",
-     "target": {
-      "side": "p2",
-      "slot": 0
-     },
-     "flags": [],
-     "mega": false
-    }
-   ],
-   "p2": [
-    {
-     "kind": "move",
-     "move": "electroshot",
-     "target": null,
-     "flags": [
-      "[still]"
-     ],
-     "mega": false
-    },
-    {
-     "kind": "move",
-     "move": "partingshot",
-     "target": {
-      "side": "p1",
-      "slot": 0
-     },
-     "flags": [],
-     "mega": false
-    }
-   ],
-   "mid": {
-    "p1": [],
-    "p2": [
-     "Pelipper"
-    ]
-   },
-   "obs": {
-    "mons": [
-     {
-      "side": "p1",
-      "name": "cotton bro bro",
-      "species": "Whimsicott",
-      "fainted": false,
-      "pct": 54,
-      "hint": "",
-      "status": "",
-      "slot": 0,
-      "boosts": {
-       "atk": -1,
-       "spa": -1
-      },
-      "item": "lightclay"
-     },
-     {
-      "side": "p1",
-      "name": "肥仔",
-      "species": "Gengar-Mega",
-      "fainted": false,
-      "pct": 100,
-      "hint": "",
-      "status": "",
-      "slot": null,
-      "item": "gengarite"
-     },
-     {
-      "side": "p2",
-      "name": "Archaludon",
-      "species": "Archaludon",
-      "fainted": false,
-      "pct": 84,
-      "hint": "",
-      "status": "",
-      "slot": 0,
-      "boosts": {
-       "def": 1,
-       "spa": 1,
-       "spd": -1
-      },
-      "item": "leftovers"
-     },
-     {
-      "side": "p2",
-      "name": "Garchomp",
-      "species": "Garchomp",
-      "fainted": false,
-      "pct": 100,
-      "hint": "",
-      "status": "",
-      "slot": null
-     },
-     {
-      "side": "p2",
-      "name": "Grimmsnarl",
-      "species": "Grimmsnarl",
-      "fainted": false,
-      "pct": 100,
-      "hint": "",
-      "status": "",
-      "slot": null,
-      "item": "choicescarf"
-     },
-     {
-      "side": "p2",
-      "name": "Pelipper",
-      "species": "Pelipper",
-      "fainted": false,
-      "pct": 100,
-      "hint": "",
-      "status": "",
-      "slot": 1,
-      "boosts": {}
-     }
-    ],
-    "weather": "raindance",
-    "terrain": "",
-    "pseudoWeather": [],
-    "sideConditions": {
-     "p1": [],
-     "p2": [
-      "lightscreen"
-     ]
-    }
-   }
   }
  ],
  "stop": {
-  "turn": 3,
-  "reason": "Illusion (|replace|)"
+  "turn": 2,
+  "reason": "Illusion (one name in both slots)"
  }
 }

@@ -257,7 +257,7 @@
     "name": "Grimmsnarl",
     "source": "log (moves used, item/ability shown; rest assumed)",
     "item_shown": false,
-    "item_inferred": "Light Clay (a screen lasted past 5 turns)",
+    "item_inferred": "lightclay (a screen, weather or terrain it set lasted past 5 turns)",
     "ability_shown": false,
     "moves_shown": 3
    },

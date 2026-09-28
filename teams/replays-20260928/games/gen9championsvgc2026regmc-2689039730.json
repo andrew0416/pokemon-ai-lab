@@ -165,7 +165,7 @@
    {
     "name": "Politoed",
     "species": "Politoed",
-    "item": "",
+    "item": "Damp Rock",
     "ability": "Drizzle",
     "gender": "F",
     "nature": "Serious",
@@ -302,7 +302,7 @@
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
     "item_shown": false,
-    "item_inferred": null,
+    "item_inferred": "damprock (a screen, weather or terrain it set lasted past 5 turns)",
     "ability_shown": true,
     "moves_shown": 1
    },

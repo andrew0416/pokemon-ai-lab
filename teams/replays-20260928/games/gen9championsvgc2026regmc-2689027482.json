@@ -1245,7 +1245,9 @@
    ],
    "mid": {
     "p1": [],
-    "p2": []
+    "p2": [
+     "Froslass"
+    ]
    },
    "obs": {
     "mons": [
@@ -1286,8 +1288,8 @@
       "side": "p2",
       "name": "Froslass",
       "species": "Froslass-Mega",
-      "fainted": true,
-      "pct": 0,
+      "fainted": false,
+      "pct": 49,
       "hint": "",
       "status": "",
       "slot": null,
@@ -1420,8 +1422,8 @@
       "side": "p2",
       "name": "Froslass",
       "species": "Froslass-Mega",
-      "fainted": true,
-      "pct": 0,
+      "fainted": false,
+      "pct": 29,
       "hint": "",
       "status": "",
       "slot": 0,
@@ -1493,7 +1495,8 @@
    ],
    "p2": [
     {
-     "kind": "none"
+     "kind": "unknown",
+     "mega": false
     },
     {
      "kind": "move",

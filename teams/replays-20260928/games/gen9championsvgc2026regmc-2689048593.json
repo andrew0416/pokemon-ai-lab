@@ -895,13 +895,8 @@
    ],
    "p2": [
     {
-     "kind": "move",
-     "move": "kowtowcleave",
-     "target": {
-      "side": "p1",
-      "slot": 0
-     },
-     "flags": [],
+     "kind": "unknown",
+     "why": "encored this turn",
      "mega": false
     },
     {

@@ -205,11 +205,13 @@ def parse_game(rid, text):
     section = None  # "turn" | "replace"
     moved_this_turn = False
     last_user = [None]
+    last_target = [None]
     screens = {}
+    field_timers = {}
 
     def begin_turn(n):
         nonlocal cur, section, moved_this_turn
-        cur = {"kind": "turn", "turn": n, "actions": {}, "mid": {"p1": [], "p2": []}, "mega": set(),
+        cur = {"kind": "turn", "turn": n, "actions": {}, "mid": {"p1": [], "p2": []}, "mega": set(), "encored": set(),
                "start_active": {s: list(g.active[s]) for s in ("p1", "p2")},
                "start_fainted": {s: [g.active[s][i] is None or g.mons[(s, g.active[s][i])].fainted for i in (0, 1)]
                                  for s in ("p1", "p2")}}
@@ -268,6 +270,8 @@ def parse_game(rid, text):
                 side, slot, name = who
                 m = g.mon(who, args[1])
                 old = g.active[side][slot]
+                if g.active[side][1 - slot] == name and cmd == "switch":
+                    stop = stop or {"turn": turn_no, "reason": "Illusion (one name in both slots)"}
                 passed = {}
                 if old is not None and old != name:
                     om = g.mons[(side, old)]
@@ -325,6 +329,8 @@ def parse_game(rid, text):
                 who = ident(args[0])
                 m = g.mon(who)
                 last_user[0] = m
+                t = ident(args[2]) if len(args) > 2 and args[2] else None
+                last_target[0] = g.mon(t) if t else None
                 move = args[1]
                 tag = from_tag(args[3:])
                 if m and tag is None and not m.transformed and toid(move) not in ("struggle", "recharge"):
@@ -343,8 +349,13 @@ def parse_game(rid, text):
                         t = ident(args[2]) if len(args) > 2 and args[2] else None
                         if t and t[1] is not None:
                             target = {"side": t[0], "slot": t[1]}
-                        cur["actions"][key] = {"kind": "move", "move": toid(move), "target": target,
-                                               "flags": [a for a in args[3:] if a]}
+                        if key in cur["encored"]:
+                            # Champions Encore replaces the pending action: the printed move
+                            # is the Encored one, not the one chosen.
+                            cur["actions"][key] = {"kind": "unknown", "why": "encored this turn"}
+                        else:
+                            cur["actions"][key] = {"kind": "move", "move": toid(move), "target": target,
+                                                   "flags": [a for a in args[3:] if a]}
             elif cmd == "cant":
                 if section == "turn":
                     moved_this_turn = True
@@ -352,6 +363,11 @@ def parse_game(rid, text):
                 who = ident(args[0])
                 m = g.mon(who)
                 apply_hp(m, args[1])
+                if m is not None and "[from] move: Revival Blessing" in args[2:]:
+                    # The player picked the fainted Pokémon to revive: a mid-turn choice.
+                    m.fainted = False
+                    if section == "turn" and cur is not None:
+                        cur["mid"][who[0]].append(m.name)
                 tag = from_tag(args[2:])
                 if tag and tag.startswith("item:"):
                     holder = of_mon(g, args[2:]) or m
@@ -428,8 +444,13 @@ def parse_game(rid, text):
                 w = args[0]
                 if w == "none":
                     g.weather = ""
+                    field_timers.pop("weather", None)
                 else:
                     g.weather = toid(w)
+                    if "[upkeep]" not in args[1:]:
+                        setter = of_mon(g, args[1:]) or last_user[0]
+                        field_timers["weather"] = (turn_no, section != "turn", setter,
+                                                   ROCKS.get(g.weather))
                 tag = from_tag(args[1:])
                 if tag and tag.startswith("ability:"):
                     reveal_ability(of_mon(g, args[1:]), tag[8:].strip())
@@ -437,6 +458,11 @@ def parse_game(rid, text):
                 eff = toid(args[0].replace("move:", ""))
                 if eff.endswith("terrain"):
                     g.terrain = eff if cmd == "-fieldstart" else ""
+                    if cmd == "-fieldstart":
+                        setter = of_mon(g, args[1:]) or last_user[0]
+                        field_timers["terrain"] = (turn_no, section != "turn", setter, "terrainextender")
+                    else:
+                        field_timers.pop("terrain", None)
                 else:
                     (g.pseudo.add if cmd == "-fieldstart" else g.pseudo.discard)(eff)
                 tag = from_tag(args[1:])
@@ -467,6 +493,11 @@ def parse_game(rid, text):
                     if "Frisk" in tag or tag == "":
                         reveal_item(m, args[1], "item")
                     else:
+                        # Trick / Switcheroo: what one side receives is what the other held.
+                        if "Trick" in tag or "Switcheroo" in tag:
+                            other = last_target[0] if m is last_user[0] else last_user[0]
+                            if other is not None and other is not m and other.orig_item is None:
+                                other.orig_item = toid(args[1])
                         m.item_changed = True
                         m.item = toid(args[1])
             elif cmd == "-ability":
@@ -480,6 +511,10 @@ def parse_game(rid, text):
                     elif not tag:
                         reveal_ability(m, args[1])
             elif cmd in ("-activate", "-immune", "-block", "-fail", "-start", "-end"):
+                if cmd == "-start" and len(args) > 1 and "Encore" in args[1] and section == "turn" and cur is not None:
+                    w = ident(args[0])
+                    if w and w[1] is not None:
+                        cur["encored"].add((w[0], w[1]))
                 tag = None
                 for a in args[1:]:
                     if a.startswith("ability: "):
@@ -503,6 +538,11 @@ def parse_game(rid, text):
                 turn_no = n
                 # A screen still up 5 turns after it went up (5 turns without Light Clay):
                 # its setter holds Light Clay unless it showed another item.
+                # Weather / terrain past its 5 turns: its setter holds the extending item.
+                for key, (t0, between, setter, item) in list(field_timers.items()):
+                    if item and setter is not None and setter.orig_item is None                             and n - t0 >= (6 if between else 5):
+                        setter.orig_item = item
+                        setter.item_inferred = True
                 for (_, eff), (t0, setter) in list(screens.items()):
                     if n - t0 >= 5 and setter is not None and setter.orig_item is None:
                         setter.orig_item = "lightclay"
@@ -581,6 +621,7 @@ def silent_ability(entry):
 
 
 SCREENS = {"reflect", "lightscreen", "auroraveil"}
+ROCKS = {"raindance": "damprock", "sunnyday": "heatrock", "sandstorm": "smoothrock", "snowscape": "icyrock"}
 
 
 def species_entry(species):
@@ -639,7 +680,7 @@ def build_team(g, side, ots_sets):
         team.append({"name": n, "species": name_of("species", base), "item": item, "ability": ability,
                      "gender": m.gender, "nature": nature, "evs": sp, "ivs": IVS, "level": 50, "moves": moves})
         prov.append({"name": n, "source": source, "item_shown": (m.orig_item is not None and not m.item_inferred) or bool(ots),
-                     "item_inferred": "Light Clay (a screen lasted past 5 turns)" if m.item_inferred else None,
+                     "item_inferred": f"{m.orig_item} (a screen, weather or terrain it set lasted past 5 turns)" if m.item_inferred else None,
                      "ability_shown": m.ability is not None or bool(ots), "moves_shown": len(m.moves)})
     # Unseen brought members: from the unseen preview species.
     for sp_name in g.preview[side]:

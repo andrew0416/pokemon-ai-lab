@@ -39,7 +39,7 @@
    {
     "name": "Malamar",
     "species": "Malamar",
-    "item": "",
+    "item": "Sitrus Berry",
     "ability": "Contrary",
     "gender": "F",
     "nature": "Serious",
@@ -70,7 +70,7 @@
    {
     "name": "Arboliva",
     "species": "Arboliva",
-    "item": "",
+    "item": "Terrain Extender",
     "ability": "Seed Sower",
     "gender": "M",
     "nature": "Serious",
@@ -137,7 +137,7 @@
    {
     "name": "Indeedee",
     "species": "Indeedee",
-    "item": "",
+    "item": "Choice Scarf",
     "ability": "Psychic Surge",
     "gender": "M",
     "nature": "Serious",
@@ -271,7 +271,7 @@
    {
     "name": "Malamar",
     "source": "log (moves used, item/ability shown; rest assumed)",
-    "item_shown": false,
+    "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
     "moves_shown": 3
@@ -280,7 +280,7 @@
     "name": "Arboliva",
     "source": "log (moves used, item/ability shown; rest assumed)",
     "item_shown": false,
-    "item_inferred": null,
+    "item_inferred": "terrainextender (a screen, weather or terrain it set lasted past 5 turns)",
     "ability_shown": true,
     "moves_shown": 3
    },
@@ -297,7 +297,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
-    "item_shown": false,
+    "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
     "moves_shown": 4

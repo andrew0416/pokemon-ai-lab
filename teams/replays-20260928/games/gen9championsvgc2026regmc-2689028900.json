@@ -1302,13 +1302,8 @@
    ],
    "p2": [
     {
-     "kind": "move",
-     "move": "kingsshield",
-     "target": {
-      "side": "p2",
-      "slot": 0
-     },
-     "flags": [],
+     "kind": "unknown",
+     "why": "encored this turn",
      "mega": false
     },
     {

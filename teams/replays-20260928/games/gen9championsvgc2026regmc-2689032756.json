@@ -1255,7 +1255,9 @@
     }
    ],
    "mid": {
-    "p1": [],
+    "p1": [
+     "Salamence"
+    ],
     "p2": []
    },
    "obs": {
@@ -1287,8 +1289,8 @@
       "side": "p1",
       "name": "Salamence",
       "species": "Salamence-Mega",
-      "fainted": true,
-      "pct": 0,
+      "fainted": false,
+      "pct": 49,
       "hint": "",
       "status": "",
       "slot": null,
@@ -1411,8 +1413,8 @@
       "side": "p1",
       "name": "Salamence",
       "species": "Salamence-Mega",
-      "fainted": true,
-      "pct": 0,
+      "fainted": false,
+      "pct": 49,
       "hint": "",
       "status": "",
       "slot": 0,
@@ -1493,7 +1495,16 @@
    "turn": 6,
    "p1": [
     {
-     "kind": "none"
+     "kind": "move",
+     "move": "hypervoice",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p2a,p2b"
+     ],
+     "mega": false
     },
     {
      "kind": "none"
