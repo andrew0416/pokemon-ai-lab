@@ -32,7 +32,16 @@ pub fn legal_joint_actions<const N: usize>(
     // switching to the same party member. The joint actions come out in the same order as
     // `check_side` over `Ruleset::joint_actions` (slot 0 fastest; a slot's failing candidates
     // are skipped, which keeps the others' relative order).
-    let checked: [Vec<(SlotAction, SlotAction)>; N] = std::array::from_fn(|i| {
+    //
+    // Duplicates (two candidates the turn runs the same way) are dropped per slot, keeping the
+    // first (board P2b: the quadratic de-duplication of the joint actions was 30 %): a joint
+    // action's first occurrence in the slot-0-fastest order is the combination of its slots'
+    // first occurrences, so the order of the distinct joint actions is that of the combinations
+    // of the per-slot distinct actions. The cross-slot rules read the normalized actions,
+    // which carry the candidates' gimmicks and switch targets (a normalization only rewrites a
+    // move choice without a gimmick into the locked move or Struggle), so every candidate
+    // with the same normalized action passes or fails them alike.
+    let checked: [Vec<SlotAction>; N] = std::array::from_fn(|i| {
         let slot = SlotRef {
             side,
             slot: i as u8,
@@ -42,7 +51,10 @@ pub fn legal_joint_actions<const N: usize>(
         let mut check = |action: SlotAction| {
             if ruleset.validate_slot_action(state, slot, action).is_ok() {
                 if let Ok(normalized) = check_slot(state, side, i as u8, action) {
-                    out.push((action, normalized));
+                    debug_assert_eq!(normalized.gimmick(), action.gimmick());
+                    if !out.contains(&normalized) {
+                        out.push(normalized);
+                    }
                 }
             }
         };
@@ -60,16 +72,15 @@ pub fn legal_joint_actions<const N: usize>(
         }
         out
     });
-    let mut out: Vec<JointAction<N>> = Vec::new();
     if checked.iter().any(Vec::is_empty) {
-        return out;
+        return Vec::new();
     }
+    let mut out: Vec<JointAction<N>> = Vec::with_capacity(checked.iter().map(Vec::len).product());
     let mut cursor = [0usize; N];
     loop {
-        let raw: JointAction<N> = std::array::from_fn(|i| checked[i][cursor[i]].0);
-        let normalized: JointAction<N> = std::array::from_fn(|i| checked[i][cursor[i]].1);
-        if repeated_gimmick(&raw).is_none() && !switches_twice(&raw) && !out.contains(&normalized) {
-            out.push(normalized);
+        let action: JointAction<N> = std::array::from_fn(|i| checked[i][cursor[i]]);
+        if repeated_gimmick(&action).is_none() && !switches_twice(&action) {
+            out.push(action);
         }
         let mut i = 0;
         loop {
