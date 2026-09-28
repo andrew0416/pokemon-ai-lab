@@ -1,0 +1,126 @@
+[
+  {
+    "name": "",
+    "species": "Lopunny",
+    "item": "Focus Sash",
+    "ability": "Cute Charm",
+    "gender": "F",
+    "nature": "Jolly",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Bounce",
+      "Fake Out",
+      "Drain Punch",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Sceptile",
+    "item": "Sitrus Berry",
+    "ability": "Overgrow",
+    "gender": "M",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Solar Blade",
+      "Dig",
+      "Focus Punch",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Gengar",
+    "item": "Leftovers",
+    "ability": "Cursed Body",
+    "gender": "M",
+    "nature": "Timid",
+    "evs": {
+      "hp": 2,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Curse",
+      "Phantom Force",
+      "Destiny Bond",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Machamp",
+    "item": "Sitrus Berry",
+    "ability": "No Guard",
+    "gender": "M",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Counter",
+      "Dynamic Punch",
+      "Stone Edge",
+      "Protect"
+    ]
+  }
+]

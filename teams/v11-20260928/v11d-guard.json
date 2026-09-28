@@ -1,0 +1,126 @@
+[
+  {
+    "name": "",
+    "species": "Aegislash",
+    "item": "Leftovers",
+    "ability": "Stance Change",
+    "gender": "",
+    "nature": "Quiet",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "King's Shield",
+      "Shadow Ball",
+      "Iron Head",
+      "Ally Switch"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Toxapex",
+    "item": "Rocky Helmet",
+    "ability": "Regenerator",
+    "gender": "",
+    "nature": "Bold",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 32,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Baneful Bunker",
+      "Scald",
+      "Knock Off",
+      "Endure"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Chesnaught",
+    "item": "Sitrus Berry",
+    "ability": "Bulletproof",
+    "gender": "",
+    "nature": "Impish",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 32,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Spiky Shield",
+      "Wood Hammer",
+      "Drain Punch",
+      "Rage Powder"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Slowking",
+    "item": "Leftovers",
+    "ability": "Regenerator",
+    "gender": "",
+    "nature": "Sassy",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 2,
+      "spa": 0,
+      "spd": 32,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Chilly Reception",
+      "Ally Switch",
+      "Scald",
+      "Psychic"
+    ]
+  }
+]
