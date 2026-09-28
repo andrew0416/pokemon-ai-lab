@@ -327,10 +327,22 @@ def emit(r: dict) -> None:
 # ---- run -------------------------------------------------------------------------------------
 
 def run(job: str, name: str, shard: str) -> None:
+    res = run_position(job, name, shard)
+    emit(res)
+    if any(c.get("status") != "match" for c in res.get("checks", {}).values()):
+        sys.exit(1)
+
+
+def run_position(job: str, name: str, shard: str = "", out: pathlib.Path | None = None,
+                 overrides: dict | None = None) -> dict:
+    """One position (or shard): oracle, then the lab-check runs; writes <out>/<name>.result.json
+    (out defaults to the job's out/; overrides replace oracle.json keys, e.g. for local runs by
+    oracle_local.py) and returns the result."""
     p = params(job)
+    p.update(overrides or {})
     scenario = job_dir(job) / "positions" / f"{name}.json"
-    out = job_dir(job) / "out"
-    out.mkdir(exist_ok=True)
+    out = out or job_dir(job) / "out"
+    out.mkdir(parents=True, exist_ok=True)
     tag = ""
     if shard:
         i, k = shard.split("/")
@@ -378,9 +390,7 @@ def run(job: str, name: str, shard: str) -> None:
             res["checks"] = run_checks(p, scenario, report, stem, res["outcomes"])
         gzip_file(report)
     json.dump(res, open(stem.with_name(stem.name + ".result.json"), "w", encoding="utf-8"), indent=1)
-    emit(res)
-    if any(c.get("status") != "match" for c in res.get("checks", {}).values()):
-        sys.exit(1)
+    return res
 
 
 # ---- merge (sharded positions) ---------------------------------------------------------------
