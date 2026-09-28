@@ -340,10 +340,6 @@ fn unknown_names_and_invalid_sets_are_rejected_with_context() {
             SetProblem::DuplicateMove("hypnosis".into()),
         ),
         (
-            r#"{"species": "Gardevoir", "ability": "Trace", "nature": "Modest", "moves": ["Hypnosis"], "gender": "X"}"#,
-            SetProblem::UnknownGender("X".into()),
-        ),
-        (
             r#"{"species": "Gardevoir", "ability": "Trace", "nature": "Modest", "moves": ["Hypnosis"], "ivs": {"spe": 32}}"#,
             SetProblem::InvalidIv {
                 stat: "spe",

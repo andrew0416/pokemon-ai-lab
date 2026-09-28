@@ -789,10 +789,6 @@
    "class": "input",
    "why": "An IV above 31 (IVs have no term in the Champions formula and are only range-checked)."
   },
-  "SetProblem::UnknownGender": {
-   "class": "input",
-   "why": "A gender other than M, F or N. Showdown ignores an unknown one (`genders[set.gender]` falls back to the species'); the loader is stricter on garbage input."
-  },
   "SetProblem::UnknownTeraType": {
    "class": "input",
    "why": "A Tera type that is not a type (kept as sidecar data only; Tera is off under M-C)."
@@ -836,7 +832,7 @@
   },
   "picked_order: {} is not a team position": {
    "class": "input",
-   "why": "Team preview choice with a non-number (Showdown's `parseInt` gives NaN and refuses it; it would read `2x` as 2, which the loader refuses)."
+   "why": "Team preview choice with no leading number (Showdown's `parseInt` gives NaN and refuses it). Since A4-t2 the loader reads a position as `parseInt` does (`2x` is 2, `0x2` is 2, leading whitespace and a sign allowed)."
   },
   "picked_order: no Pokémon in slot {}": {
    "class": "input",

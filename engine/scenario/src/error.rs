@@ -69,7 +69,6 @@ pub enum SetProblem {
         stat: &'static str,
         value: u8,
     },
-    UnknownGender(String),
     UnknownTeraType(String),
     /// A temporary in-battle forme as the set's species (`lab_engine::turn::temporary_forme_base`):
     /// Showdown would keep it as the base species, which the engine's state cannot tell apart
@@ -148,7 +147,6 @@ impl fmt::Display for SetProblem {
             SetProblem::InvalidIv { stat, value } => {
                 write!(f, "IV {value} in {stat} (at most 31)")
             }
-            SetProblem::UnknownGender(s) => write!(f, "unknown gender {s:?} (M, F or N)"),
             SetProblem::UnknownTeraType(s) => write!(f, "unknown Tera type {s:?}"),
             SetProblem::TemporaryForme(s) => {
                 write!(

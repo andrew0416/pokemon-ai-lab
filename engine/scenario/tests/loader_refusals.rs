@@ -217,3 +217,59 @@ fn a_bad_patch_is_invalid() {
         other => panic!("{other:?}"),
     }
 }
+
+/// Board A4-t2: an unknown gender is ignored as Showdown ignores it (`genders[set.gender] ||
+/// species.gender || sample(['M', 'F'])`), and a team preview position is read with `parseInt`
+/// (`"2x"` is 2). The oracle fixture `ae-lenient-inputs` plays both (Tauros "X" is male, as its
+/// species, and infatuates the female Chansey; `"2x,1"` leads with Tauros).
+#[test]
+fn lenient_inputs_read_as_showdown_reads_them() {
+    use lab_engine::dex::Gender;
+    use lab_scenario::team::js_parse_int;
+
+    for (gender, expected) in [
+        ("X", Gender::Male),
+        ("m", Gender::Male),
+        ("N", Gender::Genderless),
+    ] {
+        let mut tauros = set("Tauros", None, Some(50));
+        tauros["gender"] = gender.into();
+        let json = two(
+            lab_scenario::DOUBLES_FORMAT,
+            tauros,
+            set("Machamp", None, Some(50)),
+        );
+        let loaded = load(&json).unwrap();
+        assert_eq!(loaded.state.sides[0].party[0].gender, expected, "{gender}");
+    }
+    // Chansey is always female; an unknown gender cannot change that.
+    let mut chansey = set("Chansey", None, Some(50));
+    chansey["gender"] = "?".into();
+    let json = two(
+        lab_scenario::DOUBLES_FORMAT,
+        chansey,
+        set("Machamp", None, Some(50)),
+    );
+    assert_eq!(
+        load(&json).unwrap().state.sides[0].party[0].gender,
+        Gender::Female
+    );
+
+    for (text, value) in [
+        ("2x", Some(2)),
+        (" 3", Some(3)),
+        ("+1", Some(1)),
+        ("-1", Some(-1)),
+        ("0x2", Some(2)),
+        ("2.9", Some(2)),
+        ("x", None),
+        ("", None),
+    ] {
+        assert_eq!(js_parse_int(text), value, "{text:?}");
+    }
+    assert_eq!(picked_order(Some("2x,1"), 2, 2).unwrap(), [1, 0]);
+    assert_eq!(picked_order(Some("[2x, 1]"), 6, 4).unwrap(), [1, 0, 2, 3]);
+    assert!(picked_order(Some("x,1"), 2, 2).is_err());
+    assert!(picked_order(Some("-1"), 2, 2).is_err());
+    common::assert_exact_parity("ae-lenient-inputs");
+}

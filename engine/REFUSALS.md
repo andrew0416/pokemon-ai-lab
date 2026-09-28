@@ -200,7 +200,7 @@
 
 `engine/scenario/src`(`error.rs`·`parity.rs`·바이너리 제외)가 턴 엔진 앞에서 거부하는 곳: `LoadError`·`TeamProblem`·`SetProblem`·`SwitchInError`·`CanonicalError`의 생성 지점과 팀 프리뷰·패치·선택 문자열의 `String` 오류. 분류는 `refusals.classification.json`의 `loader`. `SwitchInError`와 `CanonicalError::Unrepresentable`은 `ScenarioError::Unsupported`로, 나머지는 `ScenarioError::Invalid`/`LoadError`로 나온다(T1).
 
-- 키 82개: input 58개, unsupported 3개, unreachable 18개, forward 3개.
+- 키 81개: input 57개, unsupported 3개, unreachable 18개, forward 3개.
 
 ### input: 입력 오류: the scenario file is malformed or asks for something Showdown would also refuse (or that the file format does not have)
 
@@ -219,7 +219,6 @@
 | `SetProblem::StatPoints` | team.rs::build_pokemon | — | — | More than 32 SP in a stat or 66 in total: not a Champions set (Showdown's `evs` are SP here). |
 | `SetProblem::TooManyMoves` | team.rs::build_pokemon | — | — | More than four moves. |
 | `SetProblem::UnknownAbility` | team.rs::build_pokemon | — | — | An ability name the dex does not have. |
-| `SetProblem::UnknownGender` | team.rs::build_pokemon | — | — | A gender other than M, F or N. Showdown ignores an unknown one (`genders[set.gender]` falls back to the species'); the loader is stricter on garbage input. |
 | `SetProblem::UnknownItem` | team.rs::build_pokemon | — | — | An item name the dex does not have. |
 | `SetProblem::UnknownMove` | team.rs::build_pokemon | — | — | A move name the dex does not have. |
 | `SetProblem::UnknownNature` | team.rs::build_pokemon | — | — | A nature name that does not exist. |
@@ -256,7 +255,7 @@
 | `picked_order: no Pokémon in slot {}` | team.rs::picked_order | — | — | Team preview choice beyond the team (Showdown: `You do not have a Pokémon in slot N`). |
 | `picked_order: the Pokémon in slot {} can only switch in once` | team.rs::picked_order | — | — | Team preview choice naming a member twice (Showdown's own message). |
 | `picked_order: you must choose exactly {} Pokémon` | team.rs::picked_order | `loader_refusals.rs::bracketed_team_preview_follows_choose_team` | — | A bracketed team preview choice with more members than the format keeps (Showdown: `You must choose exactly N Pokémon`). Bracketed choices themselves load since A4 (`vv-bracketed-preview`). |
-| `picked_order: {} is not a team position` | team.rs::picked_order | — | — | Team preview choice with a non-number (Showdown's `parseInt` gives NaN and refuses it; it would read `2x` as 2, which the loader refuses). |
+| `picked_order: {} is not a team position` | team.rs::picked_order | — | — | Team preview choice with no leading number (Showdown's `parseInt` gives NaN and refuses it). Since A4-t2 the loader reads a position as `parseInt` does (`2x` is 2, `0x2` is 2, leading whitespace and a sign allowed). |
 | `pinned: none of {} position(s) has the pinned canonical state{}` | lib.rs::pinned | — | — | A pinned `startState` / `setupStates` entry no replayed position has: a wrong pin, or the engine diverging from the game the pin came from (the parity pipeline reports it as `setup:`; not a refusal of a legal battle). |
 | `replay_setup_turn: setup turn {}: the turn pauses for a mid-turn switch that has no choice; give it in the setup turn's third element (`midTurn`)` | lib.rs::replay_setup_turn | — | — | A setup turn left waiting for a mid-turn switch nobody gave (board B29): the file must give it; `scenario_positions_consistent` drops such outcomes instead. |
 | `scenario_choices: the scenario has no turn` | lib.rs::scenario_choices | — | — | A scenario without `turn` asked for its choices. |
