@@ -44,3 +44,8 @@ required-features = ["cli"]
 name = "lab-parity"
 path = "src/bin/lab-parity.rs"
 required-features = ["cli"]
+
+[[bin]]
+name = "lab-replay"
+path = "src/bin/lab-replay.rs"
+required-features = ["cli"]
