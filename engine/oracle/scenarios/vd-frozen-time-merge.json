@@ -1,0 +1,119 @@
+{
+ "description": "VD V15 (a canonical gap): Metagross (no PP left: Struggle, last move Struggle; patched frozen, time 3) either stays frozen (time 3 -> 2) or thaws (1/4) and Struggles into Protect (no PP, no damage, no recoil, last move still Struggle); Blissey's slower Ice Beam at its ally can then freeze it again (10%, a fresh time 3). Both paths end frozen with different remaining times (2 vs 3) and otherwise equal states, and canonical writes statusTime only for sleep, so they merge into one outcome.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Shuckle",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Metagross",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Recover"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden",
+     "Ice Beam"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move harden, move harden",
+   "move recover, move harden"
+  ],
+  [
+   "move harden, move harden",
+   "move recover, move harden"
+  ],
+  [
+   "move harden, move harden",
+   "move recover, move harden"
+  ],
+  [
+   "move harden, move harden",
+   "move recover, move harden"
+  ],
+  [
+   "move harden, move harden",
+   "move recover, move harden"
+  ],
+  [
+   "move harden, move harden",
+   "move recover, move harden"
+  ],
+  [
+   "move harden, move harden",
+   "move recover, move harden"
+  ],
+  [
+   "move harden, move harden",
+   "move recover, move harden"
+  ],
+  [
+   "move harden, move harden",
+   "move 1, move harden"
+  ]
+ ],
+ "patch": {
+  "p2": {
+   "Metagross": {
+    "status": "frz",
+    "statusTime": 3
+   }
+  }
+ },
+ "turn": {
+  "p1": "move protect, move protect",
+  "p2": "move 1, move icebeam -1"
+ }
+}
