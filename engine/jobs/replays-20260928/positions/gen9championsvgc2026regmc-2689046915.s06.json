@@ -1,0 +1,1455 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689046915 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689046915), decision 6 = turn 5 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Keen Eye",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Meowsticite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Expanding Force",
+     "Rest"
+    ],
+    "name": "Meowstic",
+    "nature": "Serious",
+    "species": "Meowstic-F"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Weather Ball",
+     "Rest"
+    ],
+    "name": "Pelipper",
+    "nature": "Serious",
+    "species": "Pelipper"
+   },
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Expanding Force",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Snow Warning",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Sheer Cold",
+     "Blizzard",
+     "Aurora Veil",
+     "Protect"
+    ],
+    "name": "Ice Feam",
+    "nature": "Serious",
+    "species": "Vanilluxe"
+   },
+   {
+    "ability": "Flame Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Quiver Dance",
+     "Fiery Dance",
+     "Giga Drain"
+    ],
+    "name": "Silky",
+    "nature": "Serious",
+    "species": "Volcarona"
+   },
+   {
+    "ability": "Torrent",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Inteleon",
+    "nature": "Serious",
+    "species": "Inteleon"
+   },
+   {
+    "ability": "Overgrow",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   }
+  ]
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": "fnt"
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "keeneye",
+       "canMega": true,
+       "hp": 181,
+       "item": "meowsticite",
+       "maxhp": 181,
+       "name": "Meowstic",
+       "pp": {
+        "expandingforce": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Meowstic-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 178,
+       "item": "",
+       "lastMove": "sheercold",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "protect": 8,
+        "sheercold": 7
+       },
+       "slot": 0,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Inteleon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 192,
+       "item": "",
+       "lastMove": "tailwind",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "fierydance": 12,
+        "gigadrain": 12,
+        "quiverdance": 20,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "canMega": true,
+       "hp": 181,
+       "item": "meowsticite",
+       "maxhp": 181,
+       "name": "Meowstic",
+       "pp": {
+        "expandingforce": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Meowstic-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 178,
+       "item": "",
+       "lastMove": "sheercold",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "protect": 8,
+        "sheercold": 7
+       },
+       "slot": 0,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Inteleon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 192,
+       "item": "",
+       "lastMove": "tailwind",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "fierydance": 12,
+        "gigadrain": 12,
+        "quiverdance": 20,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 89,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 120,
+       "item": "meowsticite",
+       "lastMove": "expandingforce",
+       "maxhp": 181,
+       "name": "Meowstic",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Meowstic-F-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 67,
+       "item": "",
+       "lastMove": "blizzard",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 7,
+        "protect": 8,
+        "sheercold": 7
+       },
+       "slot": 0,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Inteleon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "spa": 1,
+        "spd": 1,
+        "spe": 1
+       },
+       "hp": 123,
+       "item": "",
+       "lastMove": "quiverdance",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "fierydance": 12,
+        "gigadrain": 12,
+        "quiverdance": 19,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 89,
+       "item": "",
+       "lastMove": "expandingforce",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "trace",
+       "hp": 0,
+       "item": "meowsticite",
+       "maxhp": 181,
+       "name": "Meowstic",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Meowstic-F-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "drizzle",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 4
+      },
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 7,
+       "item": "",
+       "lastMove": "auroraveil",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 7,
+        "protect": 8,
+        "sheercold": 7
+       },
+       "slot": 0,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Inteleon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "spa": 2,
+        "spd": 1,
+        "spe": 1
+       },
+       "hp": 79,
+       "item": "",
+       "lastMove": "fierydance",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "fierydance": 11,
+        "gigadrain": 12,
+        "quiverdance": 19,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "raindance",
+    "weatherDuration": 5
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 89,
+       "item": "",
+       "lastMove": "expandingforce",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "trace",
+       "hp": 0,
+       "item": "meowsticite",
+       "maxhp": 181,
+       "name": "Meowstic",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Meowstic-F-Mega",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 4
+      },
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 7,
+       "item": "",
+       "lastMove": "auroraveil",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 7,
+        "protect": 8,
+        "sheercold": 7
+       },
+       "slot": 0,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Inteleon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "spa": 2,
+        "spd": 1,
+        "spe": 1
+       },
+       "hp": 79,
+       "item": "",
+       "lastMove": "fierydance",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "fierydance": 11,
+        "gigadrain": 12,
+        "quiverdance": 19,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": "fnt"
+      },
+      {
+       "ability": "trace",
+       "hp": 0,
+       "item": "meowsticite",
+       "maxhp": 181,
+       "name": "Meowstic",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Meowstic-F-Mega",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 7,
+       "item": "",
+       "lastMove": "sheercold",
+       "maxhp": 178,
+       "name": "Ice Feam",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 7,
+        "protect": 8,
+        "sheercold": 6
+       },
+       "slot": 0,
+       "species": "Vanilluxe",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Inteleon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "spa": 2,
+        "spd": 1,
+        "spe": 1
+       },
+       "hp": 16,
+       "item": "",
+       "lastMove": "gigadrain",
+       "maxhp": 192,
+       "name": "Silky",
+       "pp": {
+        "fierydance": 11,
+        "gigadrain": 11,
+        "quiverdance": 19,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move rest, switch 3",
+   "move sheercold 1, move tailwind"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move expandingforce 2 mega, switch 4",
+   "move blizzard, move quiverdance"
+  ],
+  [
+   "move expandingforce -2, move expandingforce 2",
+   "move auroraveil, move fierydance 1"
+  ],
+  [
+   "switch 4",
+   ""
+  ],
+  [
+   "move weatherball 2, move expandingforce -1",
+   "move sheercold 1, move gigadrain 2"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "snowscape",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "boosts": {},
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Archaludon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Indeedee",
+      "pp": {
+       "expandingforce": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Indeedee",
+      "status": ""
+     },
+     {
+      "ability": "keeneye",
+      "boosts": {},
+      "canMega": true,
+      "hp": 181,
+      "item": "meowsticite",
+      "maxhp": 181,
+      "name": "Meowstic",
+      "pp": {
+       "expandingforce": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Meowstic-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Pelipper",
+      "pp": {
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": null,
+      "species": "Pelipper",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "snowwarning",
+      "boosts": {},
+      "hp": 178,
+      "item": "",
+      "maxhp": 178,
+      "name": "Ice Feam",
+      "pp": {
+       "auroraveil": 20,
+       "blizzard": 8,
+       "protect": 8,
+       "sheercold": 8
+      },
+      "slot": 0,
+      "species": "Vanilluxe",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "torrent",
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Inteleon",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Inteleon",
+      "status": ""
+     },
+     {
+      "ability": "overgrow",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     },
+     {
+      "ability": "flamebody",
+      "boosts": {},
+      "hp": 192,
+      "item": "",
+      "maxhp": 192,
+      "name": "Silky",
+      "pp": {
+       "fierydance": 12,
+       "gigadrain": 12,
+       "quiverdance": 20,
+       "tailwind": 16
+      },
+      "slot": 1,
+      "species": "Volcarona",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move weatherball -2, pass",
+  "p2": "move protect, move gigadrain 1"
+ }
+}

@@ -1,0 +1,1273 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689033776 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689033776), decision 5 = turn 4 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Toxic Debris",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Sludge Bomb",
+     "Rest"
+    ],
+    "name": "Glimmora",
+    "nature": "Serious",
+    "species": "Glimmora"
+   },
+   {
+    "ability": "Swift Swim",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wave Crash",
+     "Rest"
+    ],
+    "name": "Basculegion",
+    "nature": "Serious",
+    "species": "Basculegion"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dual Wingbeat",
+     "Rest"
+    ],
+    "name": "Staraptor",
+    "nature": "Serious",
+    "species": "Staraptor"
+   },
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Charizardite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Snow Warning",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Aurora Veil",
+     "Blizzard",
+     "Rest"
+    ],
+    "name": "Ninetales",
+    "nature": "Serious",
+    "species": "Ninetales-Alola"
+   },
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Synchronize",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Gardevoirite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Expanding Force",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Gardevoir",
+    "nature": "Serious",
+    "species": "Gardevoir"
+   },
+   {
+    "ability": "White Smoke",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Torkoal",
+    "nature": "Serious",
+    "species": "Torkoal"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 169,
+       "item": "",
+       "lastMove": "wavecrash",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "rest": 8,
+        "wavecrash": 11
+       },
+       "slot": 1,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "blaze",
+       "canMega": true,
+       "hp": 185,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "toxicdebris",
+       "boosts": {},
+       "hp": 190,
+       "item": "",
+       "lastMove": "sludgebomb",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "rest": 8,
+        "sludgebomb": 11
+       },
+       "slot": 0,
+       "species": "Glimmora",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "dualwingbeat": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 4
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "canMega": true,
+       "hp": 175,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gardevoir",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": "fnt"
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 180,
+       "item": "",
+       "lastMove": "auroraveil",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "whitesmoke",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 169,
+       "item": "",
+       "lastMove": "wavecrash",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "rest": 8,
+        "wavecrash": 11
+       },
+       "slot": 1,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "blaze",
+       "canMega": true,
+       "hp": 185,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "toxicdebris",
+       "boosts": {},
+       "hp": 190,
+       "item": "",
+       "lastMove": "sludgebomb",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "rest": 8,
+        "sludgebomb": 11
+       },
+       "slot": 0,
+       "species": "Glimmora",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "dualwingbeat": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 4
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "canMega": true,
+       "hp": 175,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gardevoir",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 180,
+       "item": "",
+       "lastMove": "auroraveil",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "whitesmoke",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "rest": 8,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": "fnt"
+      },
+      {
+       "ability": "blaze",
+       "canMega": true,
+       "hp": 185,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "toxicdebris",
+       "hp": 0,
+       "item": "",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "rest": 8,
+        "sludgebomb": 11
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": "fnt"
+      },
+      {
+       "ability": "intimidate",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "dualwingbeat": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Staraptor",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 175,
+       "item": "gardevoirite",
+       "lastMove": "expandingforce",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 180,
+       "item": "",
+       "lastMove": "blizzard",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "whitesmoke",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "rest": 8,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "canMega": true,
+       "hp": 185,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toxicdebris",
+       "hp": 0,
+       "item": "",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "rest": 8,
+        "sludgebomb": 11
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "dualwingbeat": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Staraptor",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 175,
+       "item": "gardevoirite",
+       "lastMove": "expandingforce",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 180,
+       "item": "",
+       "lastMove": "blizzard",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "whitesmoke",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "rest": 8,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 185,
+       "item": "charizarditey",
+       "lastMove": "protect",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "toxicdebris",
+       "hp": 0,
+       "item": "",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "rest": 8,
+        "sludgebomb": 11
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 16,
+       "item": "",
+       "lastMove": "dualwingbeat",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "dualwingbeat": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Staraptor",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 175,
+       "item": "gardevoirite",
+       "lastMove": "protect",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 180,
+       "item": "",
+       "lastMove": "blizzard",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 6,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "whitesmoke",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move sludgebomb 2, move wavecrash 2",
+   "move auroraveil, move rest"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move sludgebomb -2, move wavecrash 1",
+   "move blizzard, move expandingforce 2 mega"
+  ],
+  [
+   "switch 4, switch 3",
+   ""
+  ],
+  [
+   "move protect mega, move dualwingbeat 2",
+   "move blizzard, move protect"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "snowscape",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "swiftswim",
+      "boosts": {},
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Basculegion",
+      "pp": {
+       "rest": 8,
+       "wavecrash": 12
+      },
+      "slot": 1,
+      "species": "Basculegion",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "blaze",
+      "canMega": true,
+      "hp": 185,
+      "item": "charizarditey",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Charizard",
+      "status": ""
+     },
+     {
+      "ability": "toxicdebris",
+      "boosts": {},
+      "hp": 190,
+      "item": "",
+      "maxhp": 190,
+      "name": "Glimmora",
+      "pp": {
+       "rest": 8,
+       "sludgebomb": 12
+      },
+      "slot": 0,
+      "species": "Glimmora",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "hp": 192,
+      "item": "",
+      "maxhp": 192,
+      "name": "Staraptor",
+      "pp": {
+       "dualwingbeat": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Staraptor",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "synchronize",
+      "canMega": true,
+      "hp": 175,
+      "item": "gardevoirite",
+      "maxhp": 175,
+      "name": "Gardevoir",
+      "pp": {
+       "expandingforce": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Gardevoir",
+      "status": ""
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "snowwarning",
+      "boosts": {},
+      "hp": 180,
+      "item": "",
+      "maxhp": 180,
+      "name": "Ninetales",
+      "pp": {
+       "auroraveil": 20,
+       "blizzard": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Ninetales-Alola",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "whitesmoke",
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Torkoal",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Torkoal",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move protect, move dualwingbeat 1",
+  "p2": "move blizzard, move expandingforce 2"
+ }
+}

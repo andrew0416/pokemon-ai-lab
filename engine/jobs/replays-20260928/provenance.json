@@ -1,0 +1,1005 @@
+{
+ "list": "runs/parity-replays-20260928/pack/list-1.txt",
+ "positions": [
+  {
+   "file": "gen9championsvgc2026regmc-2689029743.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029743.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689029743.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029743.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689029743.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029743.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689029743.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029743.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689029743.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029743.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689029743.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029743.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689029743.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029743.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689029743.s07.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029743.s07.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032015.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032015.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032015.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032015.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032015.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032015.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032015.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032015.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032015.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032015.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032015.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032015.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032015.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032015.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032015.s07.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032015.s07.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689039123.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689039123.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689039123.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689039123.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689039123.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689039123.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689039123.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689039123.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689039123.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689039123.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689039123.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689039123.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049205.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049205.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049205.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049205.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049205.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049205.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049205.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049205.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049205.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049205.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049205.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049205.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049205.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049205.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049205.s07.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049205.s07.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049205.s08.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049205.s08.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049205.s09.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049205.s09.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689023725.s08.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689023725.s08.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689024450.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689024450.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689024905.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689024905.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689025365.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689025365.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689025613.s11.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689025613.s11.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689025629.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689025629.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689025807.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689025807.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689026016.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689026016.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689026287.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689026287.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689026292.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689026292.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689026418.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689026418.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689026869.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689026869.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689026876.s12.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689026876.s12.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689026991.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689026991.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027072.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027072.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027251.s07.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027251.s07.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027389.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027389.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027482.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027482.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027554.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027554.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027680.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027680.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027896.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027896.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027929.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027929.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027955.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027955.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689028206.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689028206.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689028361.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689028361.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689028573.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689028573.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689028587.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689028587.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689028599.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689028599.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689028900.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689028900.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689029045.s11.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029045.s11.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689029070.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029070.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689029158.s10.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029158.s10.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689029212.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029212.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689029362.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029362.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689029391.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029391.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689029525.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029525.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689029948.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689029948.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689030141.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689030141.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689030153.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689030153.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689030412.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689030412.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689030716.s10.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689030716.s10.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689030818.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689030818.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689030883.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689030883.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689031123.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689031123.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689031290.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689031290.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689031700.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689031700.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689031766.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689031766.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689031984.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689031984.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032217.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032217.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032303.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032303.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032325.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032325.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032654.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032654.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032684.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032684.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032686.s08.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032686.s08.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032756.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032756.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689032994.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689032994.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689033285.s09.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689033285.s09.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689033592.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689033592.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689033664.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689033664.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689033776.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689033776.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689034150.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689034150.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689034540.s08.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689034540.s08.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689034563.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689034563.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689034614.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689034614.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689034756.s07.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689034756.s07.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689035196.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689035196.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689035241.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689035241.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689035484.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689035484.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689035770.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689035770.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689035782.s09.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689035782.s09.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689035818.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689035818.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689035962.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689035962.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689036108.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689036108.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689036146.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689036146.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689036534.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689036534.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689036572.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689036572.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689036577.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689036577.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689036728.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689036728.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689036956.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689036956.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689037012.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689037012.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689037120.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689037120.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689037191.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689037191.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689037253.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689037253.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689037304.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689037304.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689037487.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689037487.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689037632.s13.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689037632.s13.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689037834.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689037834.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689037839.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689037839.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689037907.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689037907.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689038025.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689038025.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689038053.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689038053.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689038182.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689038182.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689038403.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689038403.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689038662.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689038662.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689038895.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689038895.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689038915.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689038915.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689039143.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689039143.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689039377.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689039377.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689039730.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689039730.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689039929.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689039929.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689040000.s09.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689040000.s09.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689040513.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689040513.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689040676.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689040676.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689040708.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689040708.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689040830.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689040830.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689041240.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689041240.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689041342.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689041342.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689041515.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689041515.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689041688.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689041688.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689041893.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689041893.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689042086.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689042086.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689042164.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689042164.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689042375.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689042375.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689042506.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689042506.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689042666.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689042666.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689042698.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689042698.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689042736.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689042736.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689042889.s07.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689042889.s07.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689042892.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689042892.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689043129.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689043129.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689043327.s07.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689043327.s07.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689043333.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689043333.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689043533.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689043533.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689043712.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689043712.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689043972.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689043972.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689044022.s12.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689044022.s12.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689044110.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689044110.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689044167.s07.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689044167.s07.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689044254.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689044254.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689044279.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689044279.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689044316.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689044316.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689044367.s09.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689044367.s09.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689044505.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689044505.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689044769.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689044769.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689044809.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689044809.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689044888.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689044888.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689045027.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689045027.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689045222.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689045222.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689045255.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689045255.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689045473.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689045473.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689045618.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689045618.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689045639.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689045639.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689045701.s08.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689045701.s08.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689046149.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689046149.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689046218.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689046218.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689046372.s07.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689046372.s07.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689046530.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689046530.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689046674.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689046674.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689046756.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689046756.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689046769.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689046769.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689046915.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689046915.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689047055.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689047055.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689047197.s13.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689047197.s13.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689047716.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689047716.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689047723.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689047723.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689047727.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689047727.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689047732.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689047732.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689047810.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689047810.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689047966.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689047966.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689048313.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689048313.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689048593.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689048593.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689048598.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689048598.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689048645.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689048645.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689048647.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689048647.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689048666.s11.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689048666.s11.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049007.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049007.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049039.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049039.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049130.s07.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049130.s07.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049178.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049178.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049318.s13.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049318.s13.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049523.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049523.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049688.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049688.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049718.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049718.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689049795.s10.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689049795.s10.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689050087.s09.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689050087.s09.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689050139.s10.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689050139.s10.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689050140.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689050140.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689050149.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689050149.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689050259.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689050259.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689050297.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689050297.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689050520.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689050520.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689050529.s08.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689050529.s08.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689050772.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689050772.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689050776.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689050776.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689051543.s02.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689051543.s02.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689051555.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689051555.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689051561.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689051561.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689051571.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689051571.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689051600.s08.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689051600.s08.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689051691.s08.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689051691.s08.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689051901.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689051901.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689052047.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689052047.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689052141.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689052141.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689023725.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689023725.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689024450.s06.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689024450.s06.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689024905.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689024905.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689025365.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689025365.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689025613.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689025613.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689025629.s11.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689025629.s11.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689025807.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689025807.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689026016.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689026016.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689026287.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689026287.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689026292.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689026292.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689026418.s04.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689026418.s04.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689026869.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689026869.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689026876.s05.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689026876.s05.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689026991.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689026991.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027072.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027072.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027251.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027251.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027389.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027389.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027482.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027482.s03.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027680.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027680.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027896.s00.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027896.s00.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027929.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027929.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689027955.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689027955.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689028206.s08.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689028206.s08.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689028361.s01.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689028361.s01.json"
+  },
+  {
+   "file": "gen9championsvgc2026regmc-2689028573.s03.json",
+   "from": "runs/parity-replays-20260928/positions/gen9championsvgc2026regmc-2689028573.s03.json"
+  }
+ ]
+}

@@ -1,0 +1,1118 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689045473 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689045473), decision 4 = turn 4 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Nuzzle",
+     "Rest"
+    ],
+    "name": "Pikachu",
+    "nature": "Serious",
+    "species": "Pikachu"
+   },
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Raichunite X",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rising Voltage",
+     "Protect",
+     "Fake Out",
+     "Rest"
+    ],
+    "name": "Raichu",
+    "nature": "Serious",
+    "species": "Raichu"
+   },
+   {
+    "ability": "Hunger Switch",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Aura Wheel",
+     "Knock Off",
+     "Rest"
+    ],
+    "name": "Morpeko",
+    "nature": "Serious",
+    "species": "Morpeko"
+   },
+   {
+    "ability": "Cheek Pouch",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Nuzzle",
+     "Rest"
+    ],
+    "name": "Dedenne",
+    "nature": "Serious",
+    "species": "Dedenne"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Rocky Helmet",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wood Hammer",
+     "Grassy Glide",
+     "U-turn",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Keen Eye",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rain Dance",
+     "Disable",
+     "Encore",
+     "Rest"
+    ],
+    "name": "Sableye",
+    "nature": "Serious",
+    "species": "Sableye"
+   },
+   {
+    "ability": "Clear Body",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "Metagrossite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Steel Roller",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Metagross",
+    "nature": "Serious",
+    "species": "Metagross"
+   },
+   {
+    "ability": "Cute Charm",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Fairy Feather",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Sylveon",
+    "nature": "Serious",
+    "species": "Sylveon"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 4,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cheekpouch",
+       "hp": 174,
+       "item": "",
+       "maxhp": 174,
+       "name": "Dedenne",
+       "pp": {
+        "nuzzle": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Dedenne",
+       "status": ""
+      },
+      {
+       "ability": "hungerswitch",
+       "hp": 165,
+       "item": "",
+       "maxhp": 165,
+       "name": "Morpeko",
+       "pp": {
+        "aurawheel": 12,
+        "knockoff": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Morpeko",
+       "status": ""
+      },
+      {
+       "ability": "static",
+       "boosts": {},
+       "hp": 142,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 142,
+       "name": "Pikachu",
+       "pp": {
+        "fakeout": 11,
+        "nuzzle": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Pikachu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "electricsurge",
+       "boosts": {},
+       "hp": 167,
+       "item": "raichunitex",
+       "lastMove": "risingvoltage",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "fakeout": 12,
+        "protect": 8,
+        "rest": 8,
+        "risingvoltage": 19
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-X",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "clearbody",
+       "canMega": true,
+       "hp": 187,
+       "item": "metagrossite",
+       "maxhp": 187,
+       "name": "Metagross",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "steelroller": 8
+       },
+       "slot": null,
+       "species": "Metagross",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 125,
+       "item": "rockyhelmet",
+       "lastMove": "grassyglide",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 19,
+        "rest": 8,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "hp": 52,
+       "item": "",
+       "lastMove": "raindance",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "disable": 20,
+        "encore": 8,
+        "raindance": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 202,
+       "item": "fairyfeather",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sylveon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 3,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cheekpouch",
+       "hp": 174,
+       "item": "",
+       "maxhp": 174,
+       "name": "Dedenne",
+       "pp": {
+        "nuzzle": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Dedenne",
+       "status": ""
+      },
+      {
+       "ability": "hungerswitch",
+       "hp": 165,
+       "item": "",
+       "maxhp": 165,
+       "name": "Morpeko",
+       "pp": {
+        "aurawheel": 12,
+        "knockoff": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Morpeko",
+       "status": ""
+      },
+      {
+       "ability": "static",
+       "boosts": {},
+       "hp": 142,
+       "item": "",
+       "lastMove": "nuzzle",
+       "maxhp": 142,
+       "name": "Pikachu",
+       "pp": {
+        "fakeout": 11,
+        "nuzzle": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Pikachu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "electricsurge",
+       "boosts": {},
+       "hp": 167,
+       "item": "raichunitex",
+       "lastMove": "protect",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "fakeout": 12,
+        "protect": 7,
+        "rest": 8,
+        "risingvoltage": 19
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-X",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "clearbody",
+       "boosts": {},
+       "canMega": true,
+       "hp": 174,
+       "item": "metagrossite",
+       "maxhp": 187,
+       "name": "Metagross",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "steelroller": 8
+       },
+       "slot": 0,
+       "species": "Metagross",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 125,
+       "item": "rockyhelmet",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 19,
+        "rest": 8,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "hp": 52,
+       "item": "",
+       "lastMove": "disable",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "disable": 19,
+        "encore": 8,
+        "raindance": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 202,
+       "item": "fairyfeather",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sylveon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cheekpouch",
+       "hp": 174,
+       "item": "",
+       "maxhp": 174,
+       "name": "Dedenne",
+       "pp": {
+        "nuzzle": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Dedenne",
+       "status": ""
+      },
+      {
+       "ability": "hungerswitch",
+       "boosts": {},
+       "hp": 165,
+       "item": "",
+       "maxhp": 165,
+       "name": "Morpeko",
+       "pp": {
+        "aurawheel": 12,
+        "knockoff": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Morpeko-Hangry",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "static",
+       "hp": 0,
+       "item": "",
+       "maxhp": 142,
+       "name": "Pikachu",
+       "pp": {
+        "fakeout": 11,
+        "nuzzle": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Pikachu",
+       "status": "fnt"
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 167,
+       "item": "raichunitex",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "fakeout": 12,
+        "protect": 7,
+        "rest": 8,
+        "risingvoltage": 19
+       },
+       "slot": null,
+       "species": "Raichu-Mega-X",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 174,
+       "item": "metagrossite",
+       "lastMove": "steelroller",
+       "maxhp": 187,
+       "name": "Metagross",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "steelroller": 7
+       },
+       "slot": 0,
+       "species": "Metagross-Mega",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 125,
+       "item": "rockyhelmet",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 19,
+        "rest": 8,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "hp": 21,
+       "item": "",
+       "lastMove": "encore",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "disable": 19,
+        "encore": 7,
+        "raindance": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 202,
+       "item": "fairyfeather",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sylveon",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 5,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cheekpouch",
+       "hp": 174,
+       "item": "",
+       "maxhp": 174,
+       "name": "Dedenne",
+       "pp": {
+        "nuzzle": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Dedenne",
+       "status": ""
+      },
+      {
+       "ability": "hungerswitch",
+       "boosts": {},
+       "hp": 165,
+       "item": "",
+       "maxhp": 165,
+       "name": "Morpeko",
+       "pp": {
+        "aurawheel": 12,
+        "knockoff": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Morpeko-Hangry",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "static",
+       "hp": 0,
+       "item": "",
+       "maxhp": 142,
+       "name": "Pikachu",
+       "pp": {
+        "fakeout": 11,
+        "nuzzle": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Pikachu",
+       "status": ""
+      },
+      {
+       "ability": "electricsurge",
+       "boosts": {},
+       "hp": 167,
+       "item": "raichunitex",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "fakeout": 12,
+        "protect": 7,
+        "rest": 8,
+        "risingvoltage": 19
+       },
+       "slot": 0,
+       "species": "Raichu-Mega-X",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 174,
+       "item": "metagrossite",
+       "lastMove": "steelroller",
+       "maxhp": 187,
+       "name": "Metagross",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "steelroller": 7
+       },
+       "slot": 0,
+       "species": "Metagross-Mega",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 125,
+       "item": "rockyhelmet",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 19,
+        "rest": 8,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "hp": 21,
+       "item": "",
+       "lastMove": "encore",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "disable": 19,
+        "encore": 7,
+        "raindance": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 202,
+       "item": "fairyfeather",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sylveon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move fakeout 2, move risingvoltage 1 mega",
+   "move grassyglide -2, move raindance"
+  ],
+  [
+   "move nuzzle 1, move protect",
+   "switch 3, move disable 2"
+  ],
+  [
+   "move nuzzle 2, switch 3",
+   "move steelroller 1 mega, move encore 2"
+  ],
+  [
+   "switch 3",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "cheekpouch",
+      "hp": 174,
+      "item": "",
+      "maxhp": 174,
+      "name": "Dedenne",
+      "pp": {
+       "nuzzle": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Dedenne",
+      "status": ""
+     },
+     {
+      "ability": "hungerswitch",
+      "hp": 165,
+      "item": "",
+      "maxhp": 165,
+      "name": "Morpeko",
+      "pp": {
+       "aurawheel": 12,
+       "knockoff": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Morpeko",
+      "status": ""
+     },
+     {
+      "ability": "static",
+      "boosts": {},
+      "hp": 142,
+      "item": "",
+      "maxhp": 142,
+      "name": "Pikachu",
+      "pp": {
+       "fakeout": 12,
+       "nuzzle": 20,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Pikachu",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "static",
+      "boosts": {},
+      "canMega": true,
+      "hp": 167,
+      "item": "raichunitex",
+      "maxhp": 167,
+      "name": "Raichu",
+      "pp": {
+       "fakeout": 12,
+       "protect": 8,
+       "rest": 8,
+       "risingvoltage": 20
+      },
+      "slot": 1,
+      "species": "Raichu",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "clearbody",
+      "canMega": true,
+      "hp": 187,
+      "item": "metagrossite",
+      "maxhp": 187,
+      "name": "Metagross",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "steelroller": 8
+      },
+      "slot": null,
+      "species": "Metagross",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 207,
+      "item": "rockyhelmet",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "grassyglide": 20,
+       "rest": 8,
+       "uturn": 20,
+       "woodhammer": 16
+      },
+      "slot": 0,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "keeneye",
+      "boosts": {},
+      "hp": 157,
+      "item": "",
+      "maxhp": 157,
+      "name": "Sableye",
+      "pp": {
+       "disable": 20,
+       "encore": 8,
+       "raindance": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Sableye",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cutecharm",
+      "hp": 202,
+      "item": "fairyfeather",
+      "maxhp": 202,
+      "name": "Sylveon",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sylveon",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move risingvoltage 2, move aurawheel 1",
+  "p2": "move protect, switch 3"
+ }
+}

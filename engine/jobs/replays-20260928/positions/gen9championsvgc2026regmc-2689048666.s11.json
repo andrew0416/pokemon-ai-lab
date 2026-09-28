@@ -1,0 +1,2408 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689048666 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689048666), decision 11 = turn 8 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Marvel Scale",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Muddy Water",
+     "Coil",
+     "Hypnosis",
+     "Rest"
+    ],
+    "name": "Milotic",
+    "nature": "Serious",
+    "species": "Milotic"
+   },
+   {
+    "ability": "Good as Gold",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Gholdengo",
+    "nature": "Serious",
+    "species": "Gholdengo"
+   },
+   {
+    "ability": "Snow Warning",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Light Clay",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Aurora Veil",
+     "Rest"
+    ],
+    "name": "Ninetales",
+    "nature": "Serious",
+    "species": "Ninetales-Alola"
+   },
+   {
+    "ability": "Thermal Exchange",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Baxcalibrite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Dance",
+     "High Horsepower",
+     "Rest"
+    ],
+    "name": "Baxcalibur",
+    "nature": "Serious",
+    "species": "Baxcalibur"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Sand Rush",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Earthquake",
+     "Protect",
+     "Rock Slide",
+     "Rest"
+    ],
+    "name": "Excadrill",
+    "nature": "Serious",
+    "species": "Excadrill"
+   },
+   {
+    "ability": "Good as Gold",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Make It Rain",
+     "Rest"
+    ],
+    "name": "Gholdengo",
+    "nature": "Serious",
+    "species": "Gholdengo"
+   },
+   {
+    "ability": "Sand Stream",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Tyranitarite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rock Slide",
+     "Rest"
+    ],
+    "name": "Tyranitar",
+    "nature": "Serious",
+    "species": "Tyranitar"
+   },
+   {
+    "ability": "Marvel Scale",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Haze",
+     "Protect",
+     "Scald",
+     "Rest"
+    ],
+    "name": "Milotic",
+    "nature": "Serious",
+    "species": "Milotic"
+   }
+  ]
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "highhorsepower": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": "fnt"
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 131,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "muddywater",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 20,
+        "hypnosis": 20,
+        "muddywater": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 55,
+       "item": "",
+       "lastMove": "earthquake",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "earthquake": 11,
+        "protect": 8,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Excadrill",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {},
+       "hp": 194,
+       "item": "lifeorb",
+       "lastMove": "protect",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 20,
+        "protect": 8,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "canMega": true,
+       "hp": 207,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 5
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "highhorsepower": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 131,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "muddywater",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 20,
+        "hypnosis": 20,
+        "muddywater": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 180,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 55,
+       "item": "",
+       "lastMove": "earthquake",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "earthquake": 11,
+        "protect": 8,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Excadrill",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {},
+       "hp": 194,
+       "item": "lifeorb",
+       "lastMove": "protect",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 20,
+        "protect": 8,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "canMega": true,
+       "hp": 207,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 7
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "highhorsepower": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 131,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "muddywater",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 20,
+        "hypnosis": 20,
+        "muddywater": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 55,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "earthquake": 11,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Excadrill",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {
+        "spa": -2
+       },
+       "hp": 123,
+       "item": "lifeorb",
+       "lastMove": "makeitrain",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 7,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 20,
+        "protect": 8,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "canMega": true,
+       "hp": 207,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 7
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "highhorsepower": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 131,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "muddywater",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 20,
+        "hypnosis": 20,
+        "muddywater": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 55,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "earthquake": 11,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Excadrill",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {
+        "spa": -2
+       },
+       "hp": 123,
+       "item": "lifeorb",
+       "lastMove": "makeitrain",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 7,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 20,
+        "protect": 8,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "canMega": true,
+       "hp": 207,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 6
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 1,
+        "spe": 1
+       },
+       "hp": 190,
+       "item": "baxcalibrite",
+       "lastMove": "dragondance",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 19,
+        "highhorsepower": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 115,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "muddywater",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 20,
+        "hypnosis": 20,
+        "muddywater": 9,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "earthquake": 11,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": "fnt"
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {
+        "accuracy": -1,
+        "spa": -4
+       },
+       "hp": 52,
+       "item": "lifeorb",
+       "lastMove": "makeitrain",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 6,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 20,
+        "protect": 8,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "canMega": true,
+       "hp": 207,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 5
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 6
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 1,
+        "spe": 1
+       },
+       "hp": 190,
+       "item": "baxcalibrite",
+       "lastMove": "dragondance",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 19,
+        "highhorsepower": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 115,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "muddywater",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 20,
+        "hypnosis": 20,
+        "muddywater": 9,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "earthquake": 11,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {
+        "accuracy": -1,
+        "spa": -4
+       },
+       "hp": 52,
+       "item": "lifeorb",
+       "lastMove": "makeitrain",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 6,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 20,
+        "protect": 8,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "canMega": true,
+       "hp": 207,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Tyranitar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 5
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 1,
+        "spe": 1
+       },
+       "hp": 177,
+       "item": "baxcalibrite",
+       "lastMove": "highhorsepower",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 19,
+        "highhorsepower": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 103,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "muddywater",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 20,
+        "hypnosis": 20,
+        "muddywater": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "earthquake": 11,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 52,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 6,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 20,
+        "protect": 8,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Tyranitar-Mega",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 5
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": 1,
+        "spe": 1
+       },
+       "hp": 177,
+       "item": "baxcalibrite",
+       "lastMove": "highhorsepower",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 19,
+        "highhorsepower": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 103,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "muddywater",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 20,
+        "hypnosis": 20,
+        "muddywater": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "earthquake": 11,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {},
+       "hp": 52,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 6,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 20,
+        "protect": 8,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Tyranitar-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 4
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 164,
+       "item": "baxcalibrite",
+       "lastMove": "highhorsepower",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 19,
+        "highhorsepower": 10,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 1,
+        "atk": 1,
+        "def": 1
+       },
+       "hp": 91,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "coil",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 19,
+        "hypnosis": 20,
+        "muddywater": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "earthquake": 11,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 6,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": "fnt"
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 158,
+       "item": "sitrusberry",
+       "lastMove": "haze",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 19,
+        "protect": 8,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Tyranitar-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 151,
+       "item": "baxcalibrite",
+       "lastMove": "highhorsepower",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 19,
+        "highhorsepower": 9,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 1,
+        "atk": 1,
+        "def": 1
+       },
+       "hp": 79,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "hypnosis",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 19,
+        "hypnosis": 19,
+        "muddywater": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "earthquake": 11,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 6,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": "fnt"
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 146,
+       "item": "sitrusberry",
+       "lastMove": "protect",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 19,
+        "protect": 7,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Tyranitar-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "hp": 87,
+       "item": "baxcalibrite",
+       "lastMove": "highhorsepower",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 19,
+        "highhorsepower": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 1,
+        "atk": 1,
+        "def": 1
+       },
+       "hp": 67,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "hypnosis",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 19,
+        "hypnosis": 18,
+        "muddywater": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "earthquake": 11,
+        "protect": 7,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 6,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": "fnt"
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 102,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "scald",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 19,
+        "protect": 7,
+        "rest": 8,
+        "scald": 15
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "slp",
+       "statusTime": 3,
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Tyranitar-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move muddywater, move rest",
+   "move earthquake, move protect"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move muddywater, move auroraveil",
+   "move protect, move makeitrain"
+  ],
+  [
+   "switch 4",
+   ""
+  ],
+  [
+   "move muddywater, move dragondance mega",
+   "move rockslide, move makeitrain"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move muddywater, move highhorsepower 1",
+   "move rockslide mega, switch 4"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move coil, move highhorsepower 1",
+   "move makeitrain, move haze"
+  ],
+  [
+   "move hypnosis 2, move highhorsepower 2",
+   "pass, move protect"
+  ],
+  [
+   "move hypnosis 2, move highhorsepower 2",
+   "pass, move scald 2"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "thermalexchange",
+      "canMega": true,
+      "hp": 222,
+      "item": "baxcalibrite",
+      "maxhp": 222,
+      "name": "Baxcalibur",
+      "pp": {
+       "dragondance": 20,
+       "highhorsepower": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Baxcalibur",
+      "status": ""
+     },
+     {
+      "ability": "goodasgold",
+      "boosts": {},
+      "hp": 194,
+      "item": "",
+      "maxhp": 194,
+      "name": "Gholdengo",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Gholdengo",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "marvelscale",
+      "boosts": {},
+      "hp": 202,
+      "item": "sitrusberry",
+      "maxhp": 202,
+      "name": "Milotic",
+      "pp": {
+       "coil": 20,
+       "hypnosis": 20,
+       "muddywater": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Milotic",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "snowwarning",
+      "hp": 180,
+      "item": "lightclay",
+      "maxhp": 180,
+      "name": "Ninetales",
+      "pp": {
+       "auroraveil": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Ninetales-Alola",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "sandrush",
+      "boosts": {},
+      "hp": 217,
+      "item": "",
+      "maxhp": 217,
+      "name": "Excadrill",
+      "pp": {
+       "earthquake": 12,
+       "protect": 8,
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": 0,
+      "species": "Excadrill",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "goodasgold",
+      "boosts": {},
+      "hp": 194,
+      "item": "lifeorb",
+      "maxhp": 194,
+      "name": "Gholdengo",
+      "pp": {
+       "makeitrain": 8,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Gholdengo",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "marvelscale",
+      "hp": 202,
+      "item": "sitrusberry",
+      "maxhp": 202,
+      "name": "Milotic",
+      "pp": {
+       "haze": 20,
+       "protect": 8,
+       "rest": 8,
+       "scald": 16
+      },
+      "slot": null,
+      "species": "Milotic",
+      "status": ""
+     },
+     {
+      "ability": "sandstream",
+      "canMega": true,
+      "hp": 207,
+      "item": "tyranitarite",
+      "maxhp": 207,
+      "name": "Tyranitar",
+      "pp": {
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": null,
+      "species": "Tyranitar",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move muddywater, move highhorsepower 2",
+  "p2": "pass, move haze"
+ }
+}

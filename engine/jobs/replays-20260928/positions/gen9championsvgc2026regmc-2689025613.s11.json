@@ -1,0 +1,2423 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689025613 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689025613), decision 11 = turn 9 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Swift Swim",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wave Crash",
+     "Last Respects",
+     "Aqua Jet",
+     "Rest"
+    ],
+    "name": "Basculegion",
+    "nature": "Serious",
+    "species": "Basculegion"
+   },
+   {
+    "ability": "Snow Warning",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Freeze-Dry",
+     "Rest"
+    ],
+    "name": "Ninetales",
+    "nature": "Serious",
+    "species": "Ninetales-Alola"
+   },
+   {
+    "ability": "Inner Focus",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Dragoninite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Pulse",
+     "Rest"
+    ],
+    "name": "Dragonite",
+    "nature": "Serious",
+    "species": "Dragonite"
+   },
+   {
+    "ability": "Snow Cloak",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Frost Breath",
+     "Shadow Ball",
+     "Rest"
+    ],
+    "name": "Froslass",
+    "nature": "Serious",
+    "species": "Froslass"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Follow Me",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Light Clay",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Reflect",
+     "Light Screen",
+     "Spirit Break",
+     "Rest"
+    ],
+    "name": "Grimmsnarl",
+    "nature": "Serious",
+    "species": "Grimmsnarl"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Iron Head",
+     "Leech Life",
+     "Brick Break",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Regenerator",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Cheer",
+     "Fickle Beam",
+     "Rest"
+    ],
+    "name": "Hydrapple",
+    "nature": "Serious",
+    "species": "Hydrapple"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 197,
+       "item": "sitrusberry",
+       "lastMove": "wavecrash",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 12,
+        "rest": 8,
+        "wavecrash": 11
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "innerfocus",
+       "canMega": true,
+       "hp": 198,
+       "item": "dragoninite",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Dragonite",
+       "status": ""
+      },
+      {
+       "ability": "snowcloak",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "frostbreath": 12,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Froslass",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 180,
+       "item": "",
+       "lastMove": "freezedry",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "freezedry": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "reflect": {
+       "duration": 7
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "brickbreak": 16,
+        "ironhead": 16,
+        "leechlife": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 202,
+       "item": "lightclay",
+       "lastMove": "reflect",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": 1,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "regenerator",
+       "hp": 213,
+       "item": "",
+       "maxhp": 213,
+       "name": "Hydrapple",
+       "pp": {
+        "dragoncheer": 16,
+        "ficklebeam": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hydrapple",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 43,
+       "item": "",
+       "lastMove": "trickroom",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 183,
+       "item": "sitrusberry",
+       "lastMove": "wavecrash",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 12,
+        "rest": 8,
+        "wavecrash": 10
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "innerfocus",
+       "canMega": true,
+       "hp": 198,
+       "item": "dragoninite",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Dragonite",
+       "status": ""
+      },
+      {
+       "ability": "snowcloak",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "frostbreath": 12,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Froslass",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 180,
+       "item": "",
+       "lastMove": "freezedry",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "freezedry": 18,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 7
+      },
+      "reflect": {
+       "duration": 6
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "brickbreak": 16,
+        "ironhead": 16,
+        "leechlife": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 157,
+       "item": "lightclay",
+       "lastMove": "lightscreen",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 19,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": 1,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "regenerator",
+       "hp": 213,
+       "item": "",
+       "maxhp": 213,
+       "name": "Hydrapple",
+       "pp": {
+        "dragoncheer": 16,
+        "ficklebeam": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hydrapple",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 183,
+       "item": "sitrusberry",
+       "lastMove": "wavecrash",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 12,
+        "rest": 8,
+        "wavecrash": 10
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "innerfocus",
+       "canMega": true,
+       "hp": 198,
+       "item": "dragoninite",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Dragonite",
+       "status": ""
+      },
+      {
+       "ability": "snowcloak",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "frostbreath": 12,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Froslass",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 180,
+       "item": "",
+       "lastMove": "freezedry",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "freezedry": 18,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 7
+      },
+      "reflect": {
+       "duration": 6
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "brickbreak": 16,
+        "ironhead": 16,
+        "leechlife": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 157,
+       "item": "lightclay",
+       "lastMove": "lightscreen",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 19,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": 1,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "regenerator",
+       "hp": 213,
+       "item": "",
+       "maxhp": 213,
+       "name": "Hydrapple",
+       "pp": {
+        "dragoncheer": 16,
+        "ficklebeam": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hydrapple",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "snowscape",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 177,
+       "item": "sitrusberry",
+       "lastMove": "wavecrash",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 12,
+        "rest": 8,
+        "wavecrash": 9
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "innerfocus",
+       "boosts": {},
+       "canMega": true,
+       "hp": 95,
+       "item": "dragoninite",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Dragonite",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowcloak",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "frostbreath": 12,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Froslass",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "freezedry": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 6
+      },
+      "reflect": {
+       "duration": 5
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 182,
+       "item": "golisopite",
+       "lastMove": "ironhead",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "brickbreak": 16,
+        "ironhead": 15,
+        "leechlife": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 157,
+       "item": "lightclay",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 19,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "regenerator",
+       "boosts": {},
+       "hp": 196,
+       "item": "",
+       "maxhp": 213,
+       "name": "Hydrapple",
+       "pp": {
+        "dragoncheer": 16,
+        "ficklebeam": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Hydrapple",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 1
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 1,
+    "weather": "snowscape",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 158,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "lastrespects",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 11,
+        "rest": 8,
+        "wavecrash": 9
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "multiscale",
+       "boosts": {},
+       "hp": 95,
+       "item": "dragoninite",
+       "lastMove": "dragonpulse",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Dragonite-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowcloak",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "frostbreath": 12,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Froslass",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "freezedry": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 5
+      },
+      "reflect": {
+       "duration": 4
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 182,
+       "item": "golisopite",
+       "lastMove": "ironhead",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "brickbreak": 16,
+        "ironhead": 14,
+        "leechlife": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {
+        "dragoncheer": {}
+       }
+      },
+      {
+       "ability": "prankster",
+       "hp": 157,
+       "item": "lightclay",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 19,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "regenerator",
+       "boosts": {},
+       "hp": 32,
+       "item": "",
+       "lastMove": "dragoncheer",
+       "maxhp": 213,
+       "name": "Hydrapple",
+       "pp": {
+        "dragoncheer": 15,
+        "ficklebeam": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Hydrapple",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 61,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "lastrespects",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 10,
+        "rest": 8,
+        "wavecrash": 9
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "multiscale",
+       "boosts": {},
+       "hp": 7,
+       "item": "dragoninite",
+       "lastMove": "dragonpulse",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 10,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Dragonite-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowcloak",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "frostbreath": 12,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Froslass",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "freezedry": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 4
+      },
+      "reflect": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 156,
+       "item": "golisopite",
+       "lastMove": "ironhead",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "brickbreak": 16,
+        "ironhead": 13,
+        "leechlife": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {
+        "dragoncheer": {}
+       }
+      },
+      {
+       "ability": "prankster",
+       "hp": 157,
+       "item": "lightclay",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 19,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "regenerator",
+       "hp": 0,
+       "item": "",
+       "maxhp": 213,
+       "name": "Hydrapple",
+       "pp": {
+        "dragoncheer": 15,
+        "ficklebeam": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hydrapple",
+       "status": "fnt"
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 61,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "lastrespects",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 10,
+        "rest": 8,
+        "wavecrash": 9
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "multiscale",
+       "boosts": {},
+       "hp": 7,
+       "item": "dragoninite",
+       "lastMove": "dragonpulse",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 10,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Dragonite-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowcloak",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "frostbreath": 12,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Froslass",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "freezedry": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 4
+      },
+      "reflect": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 156,
+       "item": "golisopite",
+       "lastMove": "ironhead",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "brickbreak": 16,
+        "ironhead": 13,
+        "leechlife": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {
+        "dragoncheer": {}
+       }
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 157,
+       "item": "lightclay",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 19,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": 1,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "regenerator",
+       "hp": 0,
+       "item": "",
+       "maxhp": 213,
+       "name": "Hydrapple",
+       "pp": {
+        "dragoncheer": 15,
+        "ficklebeam": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hydrapple",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 19,
+        "lastrespects": 10,
+        "rest": 8,
+        "wavecrash": 9
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": "fnt"
+      },
+      {
+       "ability": "multiscale",
+       "hp": 0,
+       "item": "dragoninite",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 9,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Dragonite-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "snowcloak",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "frostbreath": 12,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Froslass",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "freezedry": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 3
+      },
+      "reflect": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 127,
+       "item": "golisopite",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "brickbreak": 16,
+        "ironhead": 13,
+        "leechlife": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {
+        "dragoncheer": {}
+       }
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 123,
+       "item": "lightclay",
+       "lastMove": "spiritbreak",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 19,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 15
+       },
+       "slot": 1,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "regenerator",
+       "hp": 0,
+       "item": "",
+       "maxhp": 213,
+       "name": "Hydrapple",
+       "pp": {
+        "dragoncheer": 15,
+        "ficklebeam": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hydrapple",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 5
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 19,
+        "lastrespects": 10,
+        "rest": 8,
+        "wavecrash": 9
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "multiscale",
+       "hp": 0,
+       "item": "dragoninite",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 9,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Dragonite-Mega",
+       "status": ""
+      },
+      {
+       "ability": "snowcloak",
+       "boosts": {},
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "frostbreath": 12,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": 0,
+       "species": "Froslass",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "freezedry": 18,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 3
+      },
+      "reflect": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 127,
+       "item": "golisopite",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "brickbreak": 16,
+        "ironhead": 13,
+        "leechlife": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {
+        "dragoncheer": {}
+       }
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 123,
+       "item": "lightclay",
+       "lastMove": "spiritbreak",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 19,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 15
+       },
+       "slot": 1,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "regenerator",
+       "hp": 0,
+       "item": "",
+       "maxhp": 213,
+       "name": "Hydrapple",
+       "pp": {
+        "dragoncheer": 15,
+        "ficklebeam": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hydrapple",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 19,
+        "lastrespects": 10,
+        "rest": 8,
+        "wavecrash": 9
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "multiscale",
+       "hp": 0,
+       "item": "dragoninite",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 9,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Dragonite-Mega",
+       "status": ""
+      },
+      {
+       "ability": "snowcloak",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 111,
+       "item": "",
+       "lastMove": "frostbreath",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "frostbreath": 11,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": 0,
+       "species": "Froslass",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 0,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "freezedry": 17,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": "fnt"
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 2
+      },
+      "reflect": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 112,
+       "item": "golisopite",
+       "lastMove": "ironhead",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "brickbreak": 16,
+        "ironhead": 12,
+        "leechlife": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {
+        "dragoncheer": {}
+       }
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 41,
+       "item": "lightclay",
+       "lastMove": "spiritbreak",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 19,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 14
+       },
+       "slot": 1,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "regenerator",
+       "hp": 0,
+       "item": "",
+       "maxhp": 213,
+       "name": "Hydrapple",
+       "pp": {
+        "dragoncheer": 15,
+        "ficklebeam": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hydrapple",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 19,
+        "lastrespects": 10,
+        "rest": 8,
+        "wavecrash": 9
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "multiscale",
+       "hp": 0,
+       "item": "dragoninite",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 9,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Dragonite-Mega",
+       "status": ""
+      },
+      {
+       "ability": "snowcloak",
+       "boosts": {
+        "spa": -2
+       },
+       "hp": 24,
+       "item": "",
+       "lastMove": "shadowball",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "frostbreath": 11,
+        "rest": 8,
+        "shadowball": 15
+       },
+       "slot": 0,
+       "species": "Froslass",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 0,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "freezedry": 17,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": "fnt"
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "toughclaws",
+       "boosts": {
+        "spd": -1
+       },
+       "hp": 89,
+       "item": "golisopite",
+       "lastMove": "brickbreak",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "brickbreak": 15,
+        "ironhead": 12,
+        "leechlife": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {
+        "dragoncheer": {}
+       }
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 41,
+       "item": "lightclay",
+       "lastMove": "spiritbreak",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 19,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 13
+       },
+       "slot": 1,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "regenerator",
+       "hp": 0,
+       "item": "",
+       "maxhp": 213,
+       "name": "Hydrapple",
+       "pp": {
+        "dragoncheer": 15,
+        "ficklebeam": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hydrapple",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move wavecrash 1, move freezedry 1",
+   "move trickroom, move reflect"
+  ],
+  [
+   "move wavecrash 1, move freezedry 2",
+   "move followme, move lightscreen"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move wavecrash 2, switch 3",
+   "move ironhead 2 mega, switch 4"
+  ],
+  [
+   "move lastrespects 2, move dragonpulse 2 mega",
+   "move ironhead 1, move dragoncheer -1"
+  ],
+  [
+   "move lastrespects 2, move dragonpulse 1",
+   "move ironhead 2, move ficklebeam 1"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move aquajet 2, move dragonpulse 1",
+   "move leechlife 1, move spiritbreak 2"
+  ],
+  [
+   "switch 4, switch 3",
+   ""
+  ],
+  [
+   "move frostbreath 2, move freezedry 1",
+   "move ironhead 2, move spiritbreak 1"
+  ],
+  [
+   "move shadowball 1, pass",
+   "move brickbreak 1, move spiritbreak 1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "snowscape",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "swiftswim",
+      "boosts": {},
+      "hp": 227,
+      "item": "sitrusberry",
+      "maxhp": 227,
+      "name": "Basculegion",
+      "pp": {
+       "aquajet": 20,
+       "lastrespects": 12,
+       "rest": 8,
+       "wavecrash": 12
+      },
+      "slot": 0,
+      "species": "Basculegion",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "innerfocus",
+      "canMega": true,
+      "hp": 198,
+      "item": "dragoninite",
+      "maxhp": 198,
+      "name": "Dragonite",
+      "pp": {
+       "dragonpulse": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Dragonite",
+      "status": ""
+     },
+     {
+      "ability": "snowcloak",
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Froslass",
+      "pp": {
+       "frostbreath": 12,
+       "rest": 8,
+       "shadowball": 16
+      },
+      "slot": null,
+      "species": "Froslass",
+      "status": ""
+     },
+     {
+      "ability": "snowwarning",
+      "boosts": {},
+      "hp": 180,
+      "item": "",
+      "maxhp": 180,
+      "name": "Ninetales",
+      "pp": {
+       "freezedry": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Ninetales-Alola",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "brickbreak": 16,
+       "ironhead": 16,
+       "leechlife": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "boosts": {},
+      "hp": 202,
+      "item": "lightclay",
+      "maxhp": 202,
+      "name": "Grimmsnarl",
+      "pp": {
+       "lightscreen": 20,
+       "reflect": 20,
+       "rest": 8,
+       "spiritbreak": 16
+      },
+      "slot": 1,
+      "species": "Grimmsnarl",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "regenerator",
+      "hp": 213,
+      "item": "",
+      "maxhp": 213,
+      "name": "Hydrapple",
+      "pp": {
+       "dragoncheer": 16,
+       "ficklebeam": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Hydrapple",
+      "status": ""
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": 0,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move frostbreath 2, pass",
+  "p2": "move ironhead 1, move lightscreen"
+ }
+}

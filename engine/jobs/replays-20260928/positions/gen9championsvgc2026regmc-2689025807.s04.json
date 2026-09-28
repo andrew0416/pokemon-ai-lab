@@ -1,0 +1,1152 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689025807 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689025807), decision 4 = turn 5 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Sunny Day",
+     "Protect",
+     "Rest"
+    ],
+    "name": "puff",
+    "nature": "Serious",
+    "species": "Whimsicott"
+   },
+   {
+    "ability": "Libero",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "U-turn",
+     "Pyro Ball",
+     "Rest"
+    ],
+    "name": "fluff",
+    "nature": "Serious",
+    "species": "Cinderace"
+   },
+   {
+    "ability": "Own Tempo",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 2,
+     "spd": 0,
+     "spe": 32
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Ice Beam",
+     "Future Sight",
+     "Rest"
+    ],
+    "name": "rough",
+    "nature": "Serious",
+    "species": "Slowking-Galar"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Scraftinite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Detect",
+     "Drain Punch",
+     "Rest"
+    ],
+    "name": "tough",
+    "nature": "Serious",
+    "species": "Scrafty"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 32,
+     "hp": 32,
+     "spa": 0,
+     "spd": 2,
+     "spe": 0
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Weather Ball",
+     "Rest"
+    ],
+    "name": "Pelipper",
+    "nature": "Serious",
+    "species": "Pelipper"
+   },
+   {
+    "ability": "Inner Focus",
+    "evs": {
+     "atk": 0,
+     "def": 32,
+     "hp": 32,
+     "spa": 0,
+     "spd": 2,
+     "spe": 0
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hurricane",
+     "Draco Meteor",
+     "Rest"
+    ],
+    "name": "Dragonite",
+    "nature": "Bold",
+    "species": "Dragonite"
+   },
+   {
+    "ability": "Swarm",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "White Herb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "U-turn",
+     "Bullet Punch",
+     "Rest"
+    ],
+    "name": "Scizor",
+    "nature": "Serious",
+    "species": "Scizor"
+   },
+   {
+    "ability": "Torrent",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Swampertite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wave Crash",
+     "Ice Punch",
+     "High Horsepower",
+     "Rest"
+    ],
+    "name": "Swampert",
+    "nature": "Serious",
+    "species": "Swampert"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "libero",
+       "hp": 187,
+       "item": "focussash",
+       "maxhp": 187,
+       "name": "fluff",
+       "pp": {
+        "pyroball": 8,
+        "rest": 8,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 7,
+       "item": "",
+       "lastMove": "sunnyday",
+       "maxhp": 167,
+       "name": "puff",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "sunnyday": 7
+       },
+       "slot": 0,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 202,
+       "item": "leftovers",
+       "maxhp": 202,
+       "name": "rough",
+       "pp": {
+        "futuresight": 12,
+        "icebeam": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Slowking-Galar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 172,
+       "item": "scraftinite",
+       "maxhp": 172,
+       "name": "tough",
+       "pp": {
+        "detect": 8,
+        "drainpunch": 12,
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Scrafty",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "innerfocus",
+       "boosts": {},
+       "hp": 189,
+       "item": "leftovers",
+       "lastMove": "hurricane",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "dracometeor": 8,
+        "hurricane": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Dragonite",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "swarm",
+       "hp": 177,
+       "item": "whiteherb",
+       "maxhp": 177,
+       "name": "Scizor",
+       "pp": {
+        "bulletpunch": 20,
+        "rest": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Scizor",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "canMega": true,
+       "hp": 207,
+       "item": "swampertite",
+       "maxhp": 207,
+       "name": "Swampert",
+       "pp": {
+        "highhorsepower": 12,
+        "icepunch": 16,
+        "rest": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Swampert",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "libero",
+       "hp": 187,
+       "item": "focussash",
+       "maxhp": 187,
+       "name": "fluff",
+       "pp": {
+        "pyroball": 8,
+        "rest": 8,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 7,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 167,
+       "name": "puff",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "sunnyday": 7
+       },
+       "slot": 0,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 202,
+       "item": "leftovers",
+       "lastMove": "icebeam",
+       "maxhp": 202,
+       "name": "rough",
+       "pp": {
+        "futuresight": 12,
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Slowking-Galar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 172,
+       "item": "scraftinite",
+       "maxhp": 172,
+       "name": "tough",
+       "pp": {
+        "detect": 8,
+        "drainpunch": 12,
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Scrafty",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "innerfocus",
+       "hp": 189,
+       "item": "leftovers",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "dracometeor": 8,
+        "hurricane": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Dragonite",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "swarm",
+       "boosts": {},
+       "hp": 142,
+       "item": "whiteherb",
+       "maxhp": 177,
+       "name": "Scizor",
+       "pp": {
+        "bulletpunch": 20,
+        "rest": 8,
+        "uturn": 20
+       },
+       "slot": 1,
+       "species": "Scizor",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "canMega": true,
+       "hp": 207,
+       "item": "swampertite",
+       "maxhp": 207,
+       "name": "Swampert",
+       "pp": {
+        "highhorsepower": 12,
+        "icepunch": 16,
+        "rest": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Swampert",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "libero",
+       "hp": 187,
+       "item": "focussash",
+       "maxhp": 187,
+       "name": "fluff",
+       "pp": {
+        "pyroball": 8,
+        "rest": 8,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 7,
+       "item": "",
+       "maxhp": 167,
+       "name": "puff",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "sunnyday": 7
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 202,
+       "item": "leftovers",
+       "lastMove": "futuresight",
+       "maxhp": 202,
+       "name": "rough",
+       "pp": {
+        "futuresight": 11,
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Slowking-Galar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "canMega": true,
+       "hp": 90,
+       "item": "scraftinite",
+       "maxhp": 172,
+       "name": "tough",
+       "pp": {
+        "detect": 8,
+        "drainpunch": 12,
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Scrafty",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "innerfocus",
+       "boosts": {},
+       "hp": 198,
+       "item": "leftovers",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "dracometeor": 8,
+        "hurricane": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Dragonite",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "swarm",
+       "hp": 142,
+       "item": "",
+       "lastItem": "whiteherb",
+       "maxhp": 177,
+       "name": "Scizor",
+       "pp": {
+        "bulletpunch": 20,
+        "rest": 8,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Scizor",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "canMega": true,
+       "hp": 207,
+       "item": "swampertite",
+       "maxhp": 207,
+       "name": "Swampert",
+       "pp": {
+        "highhorsepower": 12,
+        "icepunch": 16,
+        "rest": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Swampert",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {
+       "futuremove": {
+        "move": "futuresight"
+       }
+      }
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "libero",
+       "hp": 187,
+       "item": "focussash",
+       "maxhp": 187,
+       "name": "fluff",
+       "pp": {
+        "pyroball": 8,
+        "rest": 8,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 7,
+       "item": "",
+       "maxhp": 167,
+       "name": "puff",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "sunnyday": 7
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 126,
+       "item": "leftovers",
+       "lastMove": "futuresight",
+       "maxhp": 202,
+       "name": "rough",
+       "pp": {
+        "futuresight": 10,
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Slowking-Galar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 90,
+       "item": "scraftinite",
+       "lastMove": "fakeout",
+       "maxhp": 172,
+       "name": "tough",
+       "pp": {
+        "detect": 8,
+        "drainpunch": 12,
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Scrafty-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "innerfocus",
+       "boosts": {},
+       "hp": 198,
+       "item": "leftovers",
+       "lastMove": "hurricane",
+       "maxhp": 198,
+       "name": "Dragonite",
+       "pp": {
+        "dracometeor": 8,
+        "hurricane": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Dragonite",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 139,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "swarm",
+       "hp": 142,
+       "item": "",
+       "lastItem": "whiteherb",
+       "maxhp": 177,
+       "name": "Scizor",
+       "pp": {
+        "bulletpunch": 20,
+        "rest": 8,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Scizor",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "canMega": true,
+       "hp": 207,
+       "item": "swampertite",
+       "maxhp": 207,
+       "name": "Swampert",
+       "pp": {
+        "highhorsepower": 12,
+        "icepunch": 16,
+        "rest": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Swampert",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {
+       "futuremove": {
+        "move": "futuresight"
+       }
+      },
+      {
+       "futuremove": {
+        "move": "futuresight"
+       }
+      }
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move sunnyday, move uturn 2",
+   "move weatherball 1, move hurricane 1",
+   {
+    "p1": [
+     "switch 3"
+    ],
+    "p2": []
+   }
+  ],
+  [
+   "move protect, move icebeam 2",
+   "move weatherball 1, switch 3"
+  ],
+  [
+   "switch 4, move futuresight 2",
+   "switch 3, move uturn 1",
+   {
+    "p1": [],
+    "p2": [
+     "switch 3"
+    ]
+   }
+  ],
+  [
+   "move fakeout 2 mega, move futuresight 1",
+   "move hurricane 2, move weatherball -1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "libero",
+      "boosts": {},
+      "hp": 187,
+      "item": "focussash",
+      "maxhp": 187,
+      "name": "fluff",
+      "pp": {
+       "pyroball": 8,
+       "rest": 8,
+       "uturn": 20
+      },
+      "slot": 1,
+      "species": "Cinderace",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "boosts": {},
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "puff",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "sunnyday": 8
+      },
+      "slot": 0,
+      "species": "Whimsicott",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "owntempo",
+      "hp": 202,
+      "item": "leftovers",
+      "maxhp": 202,
+      "name": "rough",
+      "pp": {
+       "futuresight": 12,
+       "icebeam": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Slowking-Galar",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "canMega": true,
+      "hp": 172,
+      "item": "scraftinite",
+      "maxhp": 172,
+      "name": "tough",
+      "pp": {
+       "detect": 8,
+       "drainpunch": 12,
+       "fakeout": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Scrafty",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "innerfocus",
+      "boosts": {},
+      "hp": 198,
+      "item": "leftovers",
+      "maxhp": 198,
+      "name": "Dragonite",
+      "pp": {
+       "dracometeor": 8,
+       "hurricane": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Dragonite",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {},
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Pelipper",
+      "pp": {
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": 0,
+      "species": "Pelipper",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "swarm",
+      "hp": 177,
+      "item": "whiteherb",
+      "maxhp": 177,
+      "name": "Scizor",
+      "pp": {
+       "bulletpunch": 20,
+       "rest": 8,
+       "uturn": 20
+      },
+      "slot": null,
+      "species": "Scizor",
+      "status": ""
+     },
+     {
+      "ability": "torrent",
+      "canMega": true,
+      "hp": 207,
+      "item": "swampertite",
+      "maxhp": 207,
+      "name": "Swampert",
+      "pp": {
+       "highhorsepower": 12,
+       "icepunch": 16,
+       "rest": 8,
+       "wavecrash": 12
+      },
+      "slot": null,
+      "species": "Swampert",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move detect, move icebeam 2",
+  "p2": "switch 3, move weatherball 2"
+ }
+}

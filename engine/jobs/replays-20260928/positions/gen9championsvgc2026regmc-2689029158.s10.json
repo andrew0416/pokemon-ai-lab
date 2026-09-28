@@ -1,0 +1,2208 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689029158 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029158), decision 10 = turn 8 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Sand Veil",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Garchompite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   },
+   {
+    "ability": "Contrary",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Foul Play",
+     "Superpower",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Malamar",
+    "nature": "Serious",
+    "species": "Malamar"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Tears",
+     "Dazzling Gleam",
+     "Rest"
+    ],
+    "name": "Whimsicott",
+    "nature": "Serious",
+    "species": "Whimsicott"
+   },
+   {
+    "ability": "Hospitality",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Matcha Gotcha",
+     "Rest"
+    ],
+    "name": "Sinistcha",
+    "nature": "Serious",
+    "species": "Sinistcha-Masterpiece"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Flower Veil",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Light of Ruin",
+     "Rest"
+    ],
+    "name": "Floette",
+    "nature": "Serious",
+    "species": "Floette-Eternal"
+   },
+   {
+    "ability": "Steadfast",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Lucarionite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Flash Cannon",
+     "Calm Mind",
+     "Rest"
+    ],
+    "name": "Lucario",
+    "nature": "Serious",
+    "species": "Lucario"
+   },
+   {
+    "ability": "Keen Eye",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Roseli Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Will-O-Wisp",
+     "Encore",
+     "Rest"
+    ],
+    "name": "Sableye",
+    "nature": "Serious",
+    "species": "Sableye"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Weather Ball",
+     "Wide Guard",
+     "Rest"
+    ],
+    "name": "Pelipper",
+    "nature": "Serious",
+    "species": "Pelipper"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": "fnt"
+      },
+      {
+       "ability": "contrary",
+       "boosts": {},
+       "hp": 193,
+       "item": "",
+       "lastMove": "foulplay",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "foulplay": 15,
+        "protect": 8,
+        "rest": 8,
+        "superpower": 8
+       },
+       "slot": 1,
+       "species": "Malamar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "hospitality",
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Sinistcha-Masterpiece",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "dazzlinggleam": 12,
+        "faketears": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "boosts": {},
+       "hp": 43,
+       "item": "",
+       "lastMove": "lightofruin",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "lightofruin": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Floette-Eternal",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "steadfast",
+       "boosts": {},
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "lastMove": "protect",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "calmmind": 20,
+        "flashcannon": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Lucario",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "drizzle",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 12,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "keeneye",
+       "hp": 157,
+       "item": "roseliberry",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 8,
+        "fakeout": 12,
+        "rest": 8,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "boosts": {},
+       "hp": 193,
+       "item": "",
+       "lastMove": "foulplay",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "foulplay": 15,
+        "protect": 8,
+        "rest": 8,
+        "superpower": 8
+       },
+       "slot": 1,
+       "species": "Malamar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "hospitality",
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Sinistcha-Masterpiece",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "dazzlinggleam": 12,
+        "faketears": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "boosts": {},
+       "hp": 43,
+       "item": "",
+       "lastMove": "lightofruin",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "lightofruin": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Floette-Eternal",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "steadfast",
+       "boosts": {},
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "lastMove": "protect",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "calmmind": 20,
+        "flashcannon": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Lucario",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "drizzle",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 12,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "keeneye",
+       "hp": 157,
+       "item": "roseliberry",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 8,
+        "fakeout": 12,
+        "rest": 8,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "spd": 2
+       },
+       "hp": 43,
+       "item": "",
+       "lastMove": "superpower",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "foulplay": 15,
+        "protect": 8,
+        "rest": 8,
+        "superpower": 7
+       },
+       "slot": 1,
+       "species": "Malamar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "hospitality",
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Sinistcha-Masterpiece",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "faketears",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "dazzlinggleam": 12,
+        "faketears": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "lightofruin": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": "fnt"
+      },
+      {
+       "ability": "steadfast",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "calmmind": 20,
+        "flashcannon": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 12,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "hp": 157,
+       "item": "roseliberry",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 8,
+        "fakeout": 12,
+        "rest": 8,
+        "willowisp": 16
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 5
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "spd": 2
+       },
+       "hp": 43,
+       "item": "",
+       "lastMove": "superpower",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "foulplay": 15,
+        "protect": 8,
+        "rest": 8,
+        "superpower": 7
+       },
+       "slot": 1,
+       "species": "Malamar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "hospitality",
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Sinistcha-Masterpiece",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "faketears",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "dazzlinggleam": 12,
+        "faketears": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "lightofruin": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "steadfast",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "calmmind": 20,
+        "flashcannon": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 12,
+        "wideguard": 12
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "hp": 157,
+       "item": "roseliberry",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 8,
+        "fakeout": 12,
+        "rest": 8,
+        "willowisp": 16
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "atk": 1,
+        "def": 1,
+        "spd": 2
+       },
+       "hp": 43,
+       "item": "",
+       "lastMove": "superpower",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "foulplay": 15,
+        "protect": 8,
+        "rest": 8,
+        "superpower": 6
+       },
+       "slot": 1,
+       "species": "Malamar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "hospitality",
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Sinistcha-Masterpiece",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 82,
+       "item": "",
+       "lastMove": "faketears",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "dazzlinggleam": 12,
+        "faketears": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "lightofruin": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "steadfast",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "calmmind": 20,
+        "flashcannon": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 139,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 11,
+        "wideguard": 12
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "hp": 157,
+       "item": "roseliberry",
+       "lastMove": "fakeout",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 8,
+        "fakeout": 11,
+        "rest": 8,
+        "willowisp": 16
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "boosts": {
+        "atk": 1,
+        "def": 1,
+        "spd": 2
+       },
+       "hp": 91,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "foulplay": 15,
+        "protect": 7,
+        "rest": 8,
+        "superpower": 6
+       },
+       "slot": 1,
+       "species": "Malamar",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "hospitality",
+       "boosts": {},
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Sinistcha-Masterpiece",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 82,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "dazzlinggleam": 12,
+        "faketears": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "lightofruin": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "steadfast",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "calmmind": 20,
+        "flashcannon": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 139,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 10,
+        "wideguard": 12
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "hp": 157,
+       "item": "roseliberry",
+       "lastMove": "willowisp",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 8,
+        "fakeout": 11,
+        "rest": 8,
+        "willowisp": 15
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "hp": 91,
+       "item": "",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "foulplay": 15,
+        "protect": 7,
+        "rest": 8,
+        "superpower": 6
+       },
+       "slot": null,
+       "species": "Malamar",
+       "status": ""
+      },
+      {
+       "ability": "hospitality",
+       "boosts": {},
+       "hp": 178,
+       "item": "",
+       "lastMove": "trickroom",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Sinistcha-Masterpiece",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 72,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "dazzlinggleam": 12,
+        "faketears": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "brn",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "lightofruin": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "steadfast",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "calmmind": 20,
+        "flashcannon": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 139,
+       "item": "",
+       "lastMove": "wideguard",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 10,
+        "wideguard": 11
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "hp": 157,
+       "item": "roseliberry",
+       "lastMove": "willowisp",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 8,
+        "fakeout": 11,
+        "rest": 8,
+        "willowisp": 14
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "boosts": {},
+       "hp": 91,
+       "item": "",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "foulplay": 15,
+        "protect": 7,
+        "rest": 8,
+        "superpower": 6
+       },
+       "slot": 0,
+       "species": "Malamar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "hospitality",
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Sinistcha-Masterpiece",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 62,
+       "item": "",
+       "lastMove": "dazzlinggleam",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "dazzlinggleam": 11,
+        "faketears": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "brn",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "lightofruin": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "steadfast",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "calmmind": 20,
+        "flashcannon": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 139,
+       "item": "",
+       "lastMove": "wideguard",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 10,
+        "wideguard": 10
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 9,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "hp": 157,
+       "item": "roseliberry",
+       "lastMove": "willowisp",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 8,
+        "fakeout": 11,
+        "rest": 8,
+        "willowisp": 13
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "foulplay": 15,
+        "protect": 7,
+        "rest": 8,
+        "superpower": 6
+       },
+       "slot": null,
+       "species": "Malamar",
+       "status": "fnt"
+      },
+      {
+       "ability": "hospitality",
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Sinistcha-Masterpiece",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 52,
+       "item": "",
+       "lastMove": "dazzlinggleam",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "dazzlinggleam": 10,
+        "faketears": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "brn",
+       "volatiles": {
+        "encore": {
+         "duration": 2,
+         "move": "dazzlinggleam"
+        }
+       }
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "lightofruin": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "steadfast",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "calmmind": 20,
+        "flashcannon": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 87,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 9,
+        "wideguard": 10
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "hp": 106,
+       "item": "",
+       "lastItem": "roseliberry",
+       "lastMove": "encore",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 7,
+        "fakeout": 11,
+        "rest": 8,
+        "willowisp": 13
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "hp": 0,
+       "item": "",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "foulplay": 15,
+        "protect": 7,
+        "rest": 8,
+        "superpower": 6
+       },
+       "slot": null,
+       "species": "Malamar",
+       "status": ""
+      },
+      {
+       "ability": "hospitality",
+       "boosts": {},
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Sinistcha-Masterpiece",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 93,
+       "item": "",
+       "lastMove": "dazzlinggleam",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "dazzlinggleam": 10,
+        "faketears": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "brn",
+       "volatiles": {
+        "encore": {
+         "duration": 2,
+         "move": "dazzlinggleam"
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "lightofruin": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Floette-Eternal",
+       "status": ""
+      },
+      {
+       "ability": "steadfast",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionitez",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "calmmind": 20,
+        "flashcannon": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 87,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "weatherball": 9,
+        "wideguard": 10
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "hp": 106,
+       "item": "",
+       "lastItem": "roseliberry",
+       "lastMove": "encore",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 7,
+        "fakeout": 11,
+        "rest": 8,
+        "willowisp": 13
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move rest mega, move foulplay 1",
+   "move lightofruin 1, move protect"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move faketears -2, move superpower 2",
+   "move lightofruin 2, switch 3"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move faketears -2, move superpower 1",
+   "move weatherball 1, move fakeout 1"
+  ],
+  [
+   "switch 4, move protect",
+   "move weatherball 2, move willowisp 2"
+  ],
+  [
+   "move trickroom, switch 4",
+   "move wideguard, move willowisp 2"
+  ],
+  [
+   "switch 4, move dazzlinggleam",
+   "move wideguard, move willowisp 1"
+  ],
+  [
+   "move superpower 1, move dazzlinggleam",
+   "move weatherball 1, move encore 2"
+  ],
+  [
+   "switch 4",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "sandveil",
+      "boosts": {},
+      "canMega": true,
+      "hp": 215,
+      "item": "garchompitez",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "contrary",
+      "boosts": {},
+      "hp": 193,
+      "item": "",
+      "maxhp": 193,
+      "name": "Malamar",
+      "pp": {
+       "foulplay": 16,
+       "protect": 8,
+       "rest": 8,
+       "superpower": 8
+      },
+      "slot": 1,
+      "species": "Malamar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "hospitality",
+      "hp": 178,
+      "item": "",
+      "maxhp": 178,
+      "name": "Sinistcha",
+      "pp": {
+       "matchagotcha": 16,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": null,
+      "species": "Sinistcha-Masterpiece",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Whimsicott",
+      "pp": {
+       "dazzlinggleam": 12,
+       "faketears": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Whimsicott",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flowerveil",
+      "boosts": {},
+      "hp": 181,
+      "item": "",
+      "maxhp": 181,
+      "name": "Floette",
+      "pp": {
+       "lightofruin": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Floette-Eternal",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "steadfast",
+      "boosts": {},
+      "canMega": true,
+      "hp": 177,
+      "item": "lucarionitez",
+      "maxhp": 177,
+      "name": "Lucario",
+      "pp": {
+       "calmmind": 20,
+       "flashcannon": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Lucario",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Pelipper",
+      "pp": {
+       "rest": 8,
+       "weatherball": 12,
+       "wideguard": 12
+      },
+      "slot": null,
+      "species": "Pelipper",
+      "status": ""
+     },
+     {
+      "ability": "keeneye",
+      "hp": 157,
+      "item": "roseliberry",
+      "maxhp": 157,
+      "name": "Sableye",
+      "pp": {
+       "encore": 8,
+       "fakeout": 12,
+       "rest": 8,
+       "willowisp": 16
+      },
+      "slot": null,
+      "species": "Sableye",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move matchagotcha, move dazzlinggleam",
+  "p2": "move wideguard, switch 3"
+ }
+}

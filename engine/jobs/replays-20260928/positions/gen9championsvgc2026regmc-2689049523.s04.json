@@ -1,0 +1,1131 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689049523 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049523), decision 4 = turn 3 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Swarm",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Beedrillite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "U-turn",
+     "Rest"
+    ],
+    "name": "PotentialMon",
+    "nature": "Serious",
+    "species": "Beedrill"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Electro Shot",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Kind Bridge",
+    "nature": "Modest",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Wet chud",
+    "nature": "Serious",
+    "species": "Pelipper"
+   },
+   {
+    "ability": "Swarm",
+    "evs": {
+     "atk": 0,
+     "def": 32,
+     "hp": 32,
+     "spa": 0,
+     "spd": 2,
+     "spe": 0
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "X-Scissor",
+     "Rest"
+    ],
+    "name": "Sukuna",
+    "nature": "Serious",
+    "species": "Kleavor"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Keen Eye",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Meowsticite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Expanding Force",
+     "Rest"
+    ],
+    "name": "Meowstic",
+    "nature": "Serious",
+    "species": "Meowstic-F"
+   },
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Expanding Force",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Psychic Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Rock Slide",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Bulletproof",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Aura Sphere",
+     "Rest"
+    ],
+    "name": "Kommo-o",
+    "nature": "Serious",
+    "species": "Kommo-o"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1,
+        "spa": 1
+       },
+       "hp": 131,
+       "item": "",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Kind Bridge",
+       "pp": {
+        "electroshot": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "adaptability",
+       "hp": 172,
+       "item": "beedrillite",
+       "maxhp": 172,
+       "name": "PotentialMon",
+       "pp": {
+        "rest": 8,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Beedrill-Mega",
+       "status": ""
+      },
+      {
+       "ability": "swarm",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Sukuna",
+       "pp": {
+        "rest": 8,
+        "xscissor": 16
+       },
+       "slot": null,
+       "species": "Kleavor",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 31,
+       "item": "",
+       "maxhp": 167,
+       "name": "Wet chud",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": "fnt"
+      },
+      {
+       "ability": "bulletproof",
+       "hp": 182,
+       "item": "leftovers",
+       "maxhp": 182,
+       "name": "Kommo-o",
+       "pp": {
+        "aurasphere": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Kommo-o",
+       "status": ""
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "canMega": true,
+       "hp": 181,
+       "item": "meowsticite",
+       "lastMove": "protect",
+       "maxhp": 181,
+       "name": "Meowstic",
+       "pp": {
+        "expandingforce": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Meowstic-F",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1,
+        "spa": 1
+       },
+       "hp": 131,
+       "item": "",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Kind Bridge",
+       "pp": {
+        "electroshot": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "adaptability",
+       "hp": 172,
+       "item": "beedrillite",
+       "maxhp": 172,
+       "name": "PotentialMon",
+       "pp": {
+        "rest": 8,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Beedrill-Mega",
+       "status": ""
+      },
+      {
+       "ability": "swarm",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Sukuna",
+       "pp": {
+        "rest": 8,
+        "xscissor": 16
+       },
+       "slot": null,
+       "species": "Kleavor",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 31,
+       "item": "",
+       "maxhp": 167,
+       "name": "Wet chud",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "bulletproof",
+       "hp": 182,
+       "item": "leftovers",
+       "maxhp": 182,
+       "name": "Kommo-o",
+       "pp": {
+        "aurasphere": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Kommo-o",
+       "status": ""
+      },
+      {
+       "ability": "keeneye",
+       "boosts": {},
+       "canMega": true,
+       "hp": 181,
+       "item": "meowsticite",
+       "lastMove": "protect",
+       "maxhp": 181,
+       "name": "Meowstic",
+       "pp": {
+        "expandingforce": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Meowstic-F",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 187,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1,
+        "spa": 1
+       },
+       "hp": 131,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Kind Bridge",
+       "pp": {
+        "electroshot": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "adaptability",
+       "hp": 172,
+       "item": "beedrillite",
+       "maxhp": 172,
+       "name": "PotentialMon",
+       "pp": {
+        "rest": 8,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Beedrill-Mega",
+       "status": ""
+      },
+      {
+       "ability": "swarm",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Sukuna",
+       "pp": {
+        "rest": 8,
+        "xscissor": 16
+       },
+       "slot": null,
+       "species": "Kleavor",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Wet chud",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "bulletproof",
+       "hp": 182,
+       "item": "leftovers",
+       "maxhp": 182,
+       "name": "Kommo-o",
+       "pp": {
+        "aurasphere": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Kommo-o",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 181,
+       "item": "meowsticite",
+       "lastMove": "expandingforce",
+       "maxhp": 181,
+       "name": "Meowstic",
+       "pp": {
+        "expandingforce": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Meowstic-F-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 187,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "closecombat",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1,
+        "spa": 1
+       },
+       "hp": 131,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Kind Bridge",
+       "pp": {
+        "electroshot": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 172,
+       "item": "beedrillite",
+       "maxhp": 172,
+       "name": "PotentialMon",
+       "pp": {
+        "rest": 8,
+        "uturn": 19
+       },
+       "slot": 0,
+       "species": "Beedrill-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "swarm",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Sukuna",
+       "pp": {
+        "rest": 8,
+        "xscissor": 16
+       },
+       "slot": null,
+       "species": "Kleavor",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Wet chud",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "bulletproof",
+       "hp": 182,
+       "item": "leftovers",
+       "maxhp": 182,
+       "name": "Kommo-o",
+       "pp": {
+        "aurasphere": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Kommo-o",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 181,
+       "item": "meowsticite",
+       "lastMove": "expandingforce",
+       "maxhp": 181,
+       "name": "Meowstic",
+       "pp": {
+        "expandingforce": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Meowstic-F-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 187,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "closecombat",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "rest": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move uturn 2 mega, move electroshot 2",
+   "move protect, move expandingforce 1",
+   {
+    "p1": [
+     "switch 3"
+    ],
+    "p2": []
+   }
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move rest, move protect",
+   "move expandingforce 1 mega, move closecombat 2"
+  ],
+  [
+   "switch 3",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "boosts": {},
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Kind Bridge",
+      "pp": {
+       "electroshot": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Archaludon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "swarm",
+      "boosts": {},
+      "canMega": true,
+      "hp": 172,
+      "item": "beedrillite",
+      "maxhp": 172,
+      "name": "PotentialMon",
+      "pp": {
+       "rest": 8,
+       "uturn": 20
+      },
+      "slot": 0,
+      "species": "Beedrill",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "swarm",
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Sukuna",
+      "pp": {
+       "rest": 8,
+       "xscissor": 16
+      },
+      "slot": null,
+      "species": "Kleavor",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Wet chud",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Pelipper",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 167,
+      "item": "focussash",
+      "maxhp": 167,
+      "name": "Indeedee",
+      "pp": {
+       "expandingforce": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Indeedee",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "bulletproof",
+      "hp": 182,
+      "item": "leftovers",
+      "maxhp": 182,
+      "name": "Kommo-o",
+      "pp": {
+       "aurasphere": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Kommo-o",
+      "status": ""
+     },
+     {
+      "ability": "keeneye",
+      "boosts": {},
+      "canMega": true,
+      "hp": 181,
+      "item": "meowsticite",
+      "maxhp": 181,
+      "name": "Meowstic",
+      "pp": {
+       "expandingforce": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Meowstic-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 187,
+      "item": "psychicseed",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move rest, move electroshot 2",
+  "p2": "move expandingforce 2, move rockslide"
+ }
+}
