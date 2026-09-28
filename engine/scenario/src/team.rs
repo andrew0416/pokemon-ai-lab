@@ -127,6 +127,7 @@ pub fn build_pokemon(set: &TeamSet) -> Result<(Pokemon, MemberMeta), SetProblem>
         illusion: false,
         gimmicks: structural_gimmicks(species, item),
         gigantamax_factor: false,
+        lazy: Default::default(),
     };
     let meta = MemberMeta {
         name: display_name(set),

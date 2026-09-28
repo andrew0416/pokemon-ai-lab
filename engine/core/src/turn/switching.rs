@@ -26,6 +26,7 @@ use crate::volatile::Volatile;
 
 use super::abilities::{SUB_ABILITY, SUB_ITEM, SUB_SIDE_CONDITION, SUB_SLOT_CONDITION};
 use super::battle::{Battle, BoostEffect};
+use super::lazy::HpMark;
 use super::moves::{set_terrain, set_weather};
 use super::order::boosted_stat;
 use super::support::{ability_supported_on_field, item_supported_on_field};
@@ -789,7 +790,7 @@ fn switch_in_as<const N: usize>(
     // whether only its substitute passes (Shed Tail).
     let mut passed: Option<(crate::state::Slot, bool)> = None;
     if let Some(outgoing) = b.occupant(slot) {
-        if b.mon(outgoing).hp > 0 {
+        if b.mon(outgoing).is_alive() {
             if !skip_before_switch_out {
                 super::update::update_event(b)?;
             }
@@ -1652,18 +1653,14 @@ pub(crate) fn emergency_exit_acts<const N: usize>(b: &Battle<'_, N>, target: Slo
 pub(crate) fn crossed_half<const N: usize>(
     b: &Battle<'_, N>,
     slot: SlotRef,
-    hp_before: i16,
+    hp_before: HpMark,
 ) -> bool {
     let Some(pokemon) = b.alive(slot) else {
         return false;
     };
     let mon = b.mon(pokemon);
-    let (hp, max_hp, before) = (
-        i32::from(mon.hp),
-        i32::from(mon.max_hp),
-        i32::from(hp_before),
-    );
-    2 * hp <= max_hp && 2 * before > max_hp
+    let max_hp = i32::from(mon.max_hp);
+    mon.hp_scaled_le(2, max_hp) && !hp_before.hp_scaled_le(2, max_hp)
 }
 
 /// Emergency Exit for a Pokémon whose HP crossed half since `hp_before` (a `runSwitch` newcomer
@@ -1671,9 +1668,11 @@ pub(crate) fn crossed_half<const N: usize>(
 pub(crate) fn emergency_exit_check<const N: usize>(
     b: &mut Battle<'_, N>,
     slot: SlotRef,
-    hp_before: i16,
+    hp_before: HpMark,
 ) {
-    if crossed_half(b, slot, hp_before) {
+    // `emergency_exit` does nothing unless the holder acts: checked first, so only a holder's
+    // HP is read (a lazy HP splits at the thresholds).
+    if emergency_exit_acts(b, slot) && crossed_half(b, slot, hp_before) {
         emergency_exit(b, slot);
     }
 }
@@ -1682,9 +1681,9 @@ pub(crate) fn emergency_exit_check<const N: usize>(
 pub(crate) fn emergency_exit_would_trigger<const N: usize>(
     b: &Battle<'_, N>,
     slot: SlotRef,
-    hp_before: i16,
+    hp_before: HpMark,
 ) -> bool {
-    crossed_half(b, slot, hp_before) && emergency_exit_acts(b, slot)
+    emergency_exit_acts(b, slot) && crossed_half(b, slot, hp_before)
 }
 
 #[cfg(test)]

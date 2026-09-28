@@ -22,8 +22,10 @@ pub mod coverage;
 mod diff;
 mod field_events;
 mod forme;
+mod frontier;
 mod history;
 mod items;
+mod lazy;
 pub mod legal;
 pub mod lock;
 mod mega;
@@ -51,9 +53,11 @@ use crate::volatile::Volatile;
 
 use battle::{Battle, RunBuffers, RunStart};
 use branch::Chooser;
+use lazy::HpMark;
 use merge::Merger;
 
 pub use branch::RollMode;
+pub use frontier::{FactoredOutcome, FactoredScope};
 use order::{
     ORDER_BEFORE_TURN, ORDER_BEFORE_TURN_MOVE, ORDER_MEGA, ORDER_MOVE, ORDER_PRIORITY_CHARGE,
     ORDER_SWITCH,
@@ -135,6 +139,37 @@ pub fn enumerate_turn_with<const N: usize>(
     Ok(outcomes(state, endings, Suspension))
 }
 
+/// [`enumerate_turn_with`] with the outcomes factored (WORKPLAN P1b; DESIGN.md "Full 모드의 HP
+/// 인수분해"): each outcome lists the party members whose HP takes one of several values
+/// independently of the others, instead of one outcome per combination. The same distribution;
+/// for a turn whose flat outcome list is too large to hold (two spread moves under
+/// [`RollMode::Full`]).
+pub fn enumerate_turn_factored<const N: usize>(
+    state: &mut State<N>,
+    ruleset: Ruleset,
+    choices: [JointAction<N>; 2],
+    options: EnumerateOptions,
+) -> Result<Vec<FactoredOutcome>, TurnError> {
+    let choices = check_turn(state, ruleset, &choices)?;
+    let start = Pending::new(initial_queue(state, &choices));
+    let endings = frontier::enumerate_factored(state, start, options, run_stage)?;
+    Ok(frontier::factored_outcomes(state, endings, Suspension))
+}
+
+/// [`resume_turn_with`] with the outcomes factored ([`enumerate_turn_factored`]).
+pub fn resume_turn_factored<const N: usize>(
+    state: &mut State<N>,
+    suspension: &Suspension,
+    choices: [[Option<u8>; N]; 2],
+    options: EnumerateOptions,
+) -> Result<Vec<FactoredOutcome>, TurnError> {
+    let switches = check_mid_turn_switches(state, &choices)?;
+    let mut start = suspension.0.clone();
+    start.switches = switches;
+    let endings = frontier::enumerate_factored(state, start, options, run_stage)?;
+    Ok(frontier::factored_outcomes(state, endings, Suspension))
+}
+
 /// Continues a turn that stopped for a mid-turn switch decision (`Outcome::suspension`):
 /// `choices[side][slot]` is the party index switching into each slot whose
 /// [`Slot::switch_flag`] is set (as many as the side has bench members; `None` elsewhere).
@@ -178,7 +213,7 @@ fn check_mid_turn_switches<const N: usize>(
         let s = state.side(side);
         let bench: Vec<u8> = (0..s.party.len() as u8)
             .filter(|&i| {
-                s.party[i as usize].hp > 0
+                s.party[i as usize].is_alive()
                     && !s.slots.iter().any(|slot| slot.party_index == Some(i))
             })
             .collect();
@@ -188,7 +223,7 @@ fn check_mid_turn_switches<const N: usize>(
             s.slot_conditions[i][crate::field::SlotCondition::RevivalBlessing as usize].is_active()
         };
         let fainted: Vec<u8> = (0..s.party.len() as u8)
-            .filter(|&i| s.party[i as usize].hp == 0)
+            .filter(|&i| !s.party[i as usize].is_alive())
             .collect();
         let required = flagged
             .iter()
@@ -387,7 +422,7 @@ fn check_replacements<const N: usize>(
         let s = state.side(side);
         let bench: Vec<u8> = (0..s.party.len() as u8)
             .filter(|&i| {
-                s.party[i as usize].hp > 0
+                s.party[i as usize].is_alive()
                     && !s.slots.iter().any(|slot| slot.party_index == Some(i))
             })
             .collect();
@@ -471,7 +506,7 @@ fn run_replacements<const N: usize>(
             tied[b.rng.uniform(tied.len())]
         };
         let (slot, party_index, _) = switches.remove(pick);
-        let hp_before = b.state.side(slot.side).party[usize::from(party_index)].hp;
+        let hp_before = b.state.side(slot.side).party[usize::from(party_index)].hp_mark();
         switching::switch_in(b, slot, party_index, true)?;
         newcomers.push(Newcomer::queued(b, slot, hp_before));
     }
@@ -506,14 +541,14 @@ fn run_replacements<const N: usize>(
 struct Newcomer {
     slot: SlotRef,
     /// Its HP before the switch-in (entry hazards), for Emergency Exit.
-    hp_before: i16,
+    hp_before: HpMark,
     /// Its queued `runSwitch` action's Speed: `insertChoice` stores `getActionSpeed()` then.
     speed: i32,
 }
 
 impl Newcomer {
     /// A newcomer whose `runSwitch` action was just queued.
-    fn queued<const N: usize>(b: &Battle<'_, N>, slot: SlotRef, hp_before: i16) -> Newcomer {
+    fn queued<const N: usize>(b: &Battle<'_, N>, slot: SlotRef, hp_before: HpMark) -> Newcomer {
         Newcomer {
             slot,
             hp_before,
@@ -644,7 +679,7 @@ pub fn side_must_replace<const N: usize>(state: &State<N>, side: SideId) -> bool
     let s = state.side(side);
     let empty = s.slots.iter().any(|slot| slot.party_index.is_none());
     let bench = (0..s.party.len() as u8).any(|i| {
-        s.party[i as usize].hp > 0 && !s.slots.iter().any(|slot| slot.party_index == Some(i))
+        s.party[i as usize].is_alive() && !s.slots.iter().any(|slot| slot.party_index == Some(i))
     });
     empty && bench
 }
@@ -742,13 +777,13 @@ fn run_mid_turn_switches<const N: usize>(
                 // `switchIn` into its own position: `queue.cancelAction(oldActive)` drops the
                 // revived Pokémon's queued actions.
                 b.queue.retain(|a| a.pokemon != party);
-                let hp_before = b.mon(party).hp;
+                let hp_before = b.mon(party).hp_mark();
                 switching::switch_in(b, held, party_index, false)?;
                 newcomers.push(Newcomer::queued(b, held, hp_before));
             }
             continue;
         }
-        let hp_before = b.state.side(slot.side).party[usize::from(party_index)].hp;
+        let hp_before = b.state.side(slot.side).party[usize::from(party_index)].hp_mark();
         // The request set `skipBeforeSwitchOutEventFlag`: no BeforeSwitchOut and no Update
         // before the flagged Pokémon leaves.
         switching::instaswitch_in(b, slot, party_index, true)?;
@@ -809,6 +844,9 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
     options: EnumerateOptions,
     mut stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<StageEnd, TurnError>,
 ) -> Result<Vec<Ending<N, P>>, TurnError> {
+    if frontier::factored_active() {
+        return frontier::enumerate_expanded(state, start, options, stage);
+    }
     // The turn runs in stages (one action, or the end of turn). After every stage identical
     // (state, remaining turn) pairs merge, so the work grows with the number of distinct
     // intermediate positions, not with the number of random paths. Within a stage every
@@ -1000,7 +1038,7 @@ pub(crate) fn check_side<const N: usize>(
             slot: i as u8,
             reason,
         };
-        let occupant = state.active(slot).filter(|p| p.hp > 0);
+        let occupant = state.active(slot).filter(|p| p.is_alive());
         // A commanding Tatsugiri (Commander) passes: Showdown's `getChoiceIndex` skips it and
         // `choosePass` accepts it, whatever it is locked into.
         if occupant.is_some() && state.slot(slot).volatiles.has(Volatile::Commanding) {
@@ -1052,7 +1090,7 @@ pub(crate) fn check_side<const N: usize>(
                     .slots
                     .iter()
                     .any(|s| s.party_index == Some(party_index));
-                if target.hp <= 0 || active || switching_in.contains(&party_index) {
+                if !target.is_alive() || active || switching_in.contains(&party_index) {
                     return Err(invalid(format!("cannot switch to party {party_index}")));
                 }
                 switching_in.push(party_index);
@@ -1524,7 +1562,7 @@ fn run_stage_inner<const N: usize>(
                 }
                 ActionKind::Switch { party_index } => {
                     let hp_before =
-                        b.state.side(action.slot.side).party[usize::from(party_index)].hp;
+                        b.state.side(action.slot.side).party[usize::from(party_index)].hp_mark();
                     switching::run_switch(b, action.slot, party_index)?;
                     // Its own `runSwitch` ran: the only newcomer, its Speed unused.
                     newcomers.push(Newcomer {
@@ -1554,10 +1592,10 @@ fn run_stage_inner<const N: usize>(
         b.queue_done = true;
         // `residualPokemon`: every active Pokémon's HP before the residual damage, for
         // Emergency Exit.
-        let before: Vec<(SlotRef, i16)> = b
+        let before: Vec<(SlotRef, HpMark)> = b
             .all_alive()
             .into_iter()
-            .map(|slot| (slot, b.slot_mon(slot).expect("alive").hp))
+            .map(|slot| (slot, b.slot_mon(slot).expect("alive").hp_mark()))
             .collect();
         residual::residual(b)?;
         pending.residual_done = true;
