@@ -293,10 +293,15 @@ pub struct HistoryReaders {
     /// Beat Up (`side.pokemon` order: `Side::party_order`), which only comes from a party's
     /// moves (Transform copies a Pokémon in the battle; Metronome and Assist are `Past`).
     pub party_order: bool,
-    /// Assurance, Emergency Exit and Wimp Out (`hurtThisTurn`: the HP left after the latest
-    /// damage; P1b). Moves are only copied from Pokémon in the battle and abilities only move
-    /// between them, or come with a Mega forme a Mega Stone in the battle gives.
+    /// `hurtThisTurn` (the HP left after the latest damage; P1b) of every Pokémon: Assurance
+    /// reads any target's. Also set when Emergency Exit or Wimp Out is in the battle and an
+    /// ability can move to another Pokémon ([`HistoryReaders::hurt_of_holders`] is not enough
+    /// then). Moves are only copied from Pokémon in the battle and abilities only move between
+    /// them, or come with a Mega forme a Mega Stone in the battle gives.
     pub hurt_this_turn: bool,
+    /// `hurtThisTurn` of the Pokémon whose ability is Emergency Exit or Wimp Out (their own,
+    /// read right after a hit to them): recorded only for a current holder.
+    pub hurt_of_holders: bool,
 }
 
 impl HistoryReaders {
@@ -350,28 +355,65 @@ impl HistoryReaders {
             }
         }
         readers.ability_order = Self::redirector_possible(state);
-        readers.hurt_this_turn = Self::hurt_reader_possible(state);
+        let (everyone, holders) = Self::hurt_readers(state);
+        readers.hurt_this_turn = everyone;
+        readers.hurt_of_holders = holders;
         readers
     }
 
-    /// Whether anything in the battle can read `hurtThisTurn`
-    /// ([`HistoryReaders::hurt_this_turn`]).
-    fn hurt_reader_possible<const N: usize>(state: &State<N>) -> bool {
-        let reads = |a: AbilityId| a == abilities::EMERGENCY_EXIT || a == abilities::WIMP_OUT;
+    /// Who needs `hurtThisTurn` recorded ([`HistoryReaders::hurt_this_turn`],
+    /// [`HistoryReaders::hurt_of_holders`]).
+    fn hurt_readers<const N: usize>(state: &State<N>) -> (bool, bool) {
+        use crate::dex::moves as m;
+        let exits = |a: AbilityId| a == abilities::EMERGENCY_EXIT || a == abilities::WIMP_OUT;
+        let moves_ability = |a: AbilityId| {
+            [
+                abilities::TRACE,
+                abilities::RECEIVER,
+                abilities::POWER_OF_ALCHEMY,
+                abilities::WANDERING_SPIRIT,
+                abilities::IMPOSTER,
+            ]
+            .contains(&a)
+        };
         let mons = || state.sides.iter().flat_map(|side| side.party.iter());
-        mons().any(|mon| {
+        let known = |mon: &crate::state::Pokemon| {
             let own = mon.transformed.map(|base| base.moves);
             mon.moves
                 .iter()
                 .chain(own.iter().flatten())
-                .any(|s| s.id == crate::dex::moves::ASSURANCE)
-                || reads(mon.ability)
-                || reads(mon.base_ability)
-                || mons().any(|holder| {
+                .map(|s| s.id)
+                .collect::<Vec<_>>()
+        };
+        let mega_abilities = |mon: &crate::state::Pokemon| {
+            mons()
+                .filter_map(|holder| {
                     crate::gimmick::mega_evolution(mon.untransformed_species(), holder.item)
-                        .is_some_and(|mega| mega.data().abilities.iter().any(|&a| reads(a)))
                 })
-        })
+                .flat_map(|mega| mega.data().abilities.iter().copied())
+                .collect::<Vec<_>>()
+        };
+        let assurance = mons().any(|mon| known(mon).contains(&m::ASSURANCE));
+        let holders = mons().any(|mon| {
+            exits(mon.ability)
+                || exits(mon.base_ability)
+                || mega_abilities(mon).into_iter().any(exits)
+        });
+        let transfer = mons().any(|mon| {
+            known(mon).iter().any(|id| {
+                [
+                    m::SKILL_SWAP,
+                    m::ROLE_PLAY,
+                    m::DOODLE,
+                    m::ENTRAINMENT,
+                    m::TRANSFORM,
+                ]
+                .contains(id)
+            }) || moves_ability(mon.ability)
+                || moves_ability(mon.base_ability)
+                || mega_abilities(mon).into_iter().any(moves_ability)
+        });
+        (assurance || (holders && transfer), holders)
     }
 
     /// Whether a `RedirectTarget` handler of the same priority can be on two Pokémon
