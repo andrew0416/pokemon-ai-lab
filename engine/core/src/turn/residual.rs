@@ -96,8 +96,8 @@ pub(crate) fn residual<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), Turn
     Ok(())
 }
 
-fn collect<const N: usize>(b: &Battle<'_, N>) -> Vec<Handler> {
-    let mut out = Vec::new();
+fn collect<const N: usize>(b: &Battle<'_, N>) -> super::Small<Handler, 16> {
+    let mut out = super::Small::new();
     let field = |order, sub_order, kind| Handler {
         order,
         speed: 0,
@@ -740,7 +740,7 @@ pub(crate) fn sort_by_speed<const N: usize>(b: &mut Battle<'_, N>, list: &mut [(
             .map(|&(_, s)| s)
             .max()
             .expect("non-empty");
-        let tied: Vec<usize> = (sorted..list.len())
+        let tied: super::Small<usize, 16> = (sorted..list.len())
             .filter(|&i| list[i].1 == best)
             .collect();
         for (offset, &i) in tied.iter().enumerate() {

@@ -53,6 +53,13 @@ use battle::{Battle, RunBuffers, RunStart};
 use branch::Chooser;
 use merge::Merger;
 
+/// A short list kept inline up to `K` entries (board P4a: the turn code's small per-event
+/// lists were a large share of its heap allocations).
+pub(crate) type Small<T, const K: usize> = smallvec::SmallVec<[T; K]>;
+
+/// Target and position lists (at most both sides' active slots), inline.
+pub(crate) type Slots = Small<SlotRef, 6>;
+
 pub use branch::RollMode;
 use order::{
     ORDER_BEFORE_TURN, ORDER_BEFORE_TURN_MOVE, ORDER_MEGA, ORDER_MOVE, ORDER_PRIORITY_CHARGE,

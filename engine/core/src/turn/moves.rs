@@ -32,6 +32,7 @@ use super::items as item_events;
 use super::order::{boosted_stat, modify};
 use super::support::{side_effect_of, type_boost_item};
 use super::TurnError;
+use super::{Slots, Small};
 
 /// The move being used, with what is decided when it is used. It is part of a suspended
 /// multi-hit move's progress (`MoveProgress`), so it is comparable: `data` is implied by `id`
@@ -223,7 +224,7 @@ pub(crate) struct MoveProgress {
     pokemon: PokemonRef,
     mv: ActiveMove,
     /// Targets still standing (Showdown keeps hitting until every target fainted).
-    targets: Vec<SlotRef>,
+    targets: Slots,
     main_target: SlotRef,
     /// Hits to make and hits made so far.
     hits: u8,
@@ -235,7 +236,7 @@ pub(crate) struct MoveProgress {
     /// The last hit's targets it did not fail on (Showdown's `targetsCopy` after
     /// `spreadMoveHit`, with the substitute's targets) and what the hit did to each. Read for
     /// `gotAttacked` and Emergency Exit once the hits are done.
-    last_hit: Vec<(SlotRef, LastHit)>,
+    last_hit: Small<(SlotRef, LastHit), 6>,
     /// `ActiveMoveRef::ignore_ability` of the move in flight (Mold Breaker moves).
     ignore_ability: bool,
     /// `ActiveMoveRef::infiltrates` of the move in flight (Infiltrator).
@@ -264,19 +265,22 @@ pub(crate) struct CallerFrame {
     /// The caller's hit loop after its hit (`mv` is the calling move).
     progress: MoveProgress,
     /// That hit's results.
-    results: Vec<Hit>,
+    results: Small<Hit, 6>,
     /// The caller's main target (`use_move` sets it as the suspension passes).
     main_target: SlotRef,
 }
 
-/// How far a move got: finished, or suspended before its next hit.
+/// How far a move got: finished, or suspended before its next hit. The suspension is kept inline
+/// (its target lists are, board P4a): a move returns it once, a box would allocate per hit.
+#[allow(clippy::large_enum_variant)]
 pub(crate) enum MoveStep {
     Done,
     Suspended(MoveProgress),
 }
 
 /// A hit loop's result within `use_move`: finished (whether it succeeded, and the HP its
-/// hits took), or suspended before its next hit.
+/// hits took), or suspended before its next hit (inline, as [`MoveStep`]).
+#[allow(clippy::large_enum_variant)]
 enum HitOutcome {
     Finished { ok: bool, total_damage: i32 },
     Suspended(MoveProgress),
@@ -528,7 +532,9 @@ pub(crate) fn future_move_hit<const N: usize>(
         parental_bond: false,
     });
     b.move_self_switch = false;
-    if let HitOutcome::Suspended(_) = try_spread_move_hit(b, user, &mut mv, vec![slot], false)? {
+    if let HitOutcome::Suspended(_) =
+        try_spread_move_hit(b, user, &mut mv, smallvec::smallvec![slot], false)?
+    {
         return Err(b.unsupported(format!("{}: a multi-hit future move", data.name)));
     }
     if let Some(absent) = absent {
@@ -604,7 +610,7 @@ impl AbsentUser {
         if b.item(target) == items::ROWAP_BERRY {
             return refuse(b, "on a target holding Rowap Berry".into());
         }
-        let candidates: Vec<SlotRef> = Battle::<N>::slots(source.side)
+        let candidates: Slots = Battle::<N>::slots(source.side)
             .filter(|&s| s != target)
             .collect();
         let Some(&slot) = candidates
@@ -1419,7 +1425,7 @@ fn get_random_target<const N: usize>(
     Some(foes[i])
 }
 
-fn adjacent_allies<const N: usize>(b: &Battle<'_, N>, user: SlotRef) -> Vec<SlotRef> {
+fn adjacent_allies<const N: usize>(b: &Battle<'_, N>, user: SlotRef) -> Slots {
     // With at most two slots per side every other ally is adjacent.
     b.alive_slots(user.side)
         .into_iter()
@@ -1434,25 +1440,25 @@ fn get_move_targets<const N: usize>(
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
-) -> Result<Vec<SlotRef>, TurnError> {
+) -> Result<Slots, TurnError> {
     Ok(match mv.target {
         MoveTarget::All | MoveTarget::FoeSide | MoveTarget::AllySide | MoveTarget::AllyTeam => {
-            Vec::new()
+            Small::new()
         }
         MoveTarget::AllAdjacent => {
             let mut t = adjacent_allies(b, user);
             t.extend(b.alive_slots(user.side.other()));
             t
         }
-        MoveTarget::AllAdjacentFoes => b.alive_slots(user.side.other()).to_vec(),
+        MoveTarget::AllAdjacentFoes => b.alive_slots(user.side.other()).into_iter().collect(),
         // `alliesAndSelf()`: every active Pokémon on the user's side that has not fainted.
-        MoveTarget::Allies => b.alive_slots(user.side).to_vec(),
+        MoveTarget::Allies => b.alive_slots(user.side).into_iter().collect(),
         _ => {
             let mut t = target;
             if b.alive(t).is_none() && t.side != user.side {
                 match get_random_target(b, user, mv.target) {
                     Some(r) => t = r,
-                    None => return Ok(Vec::new()),
+                    None => return Ok(Small::new()),
                 }
             }
             let mut smart = mv.data.smart_target;
@@ -1464,12 +1470,12 @@ fn get_move_targets<const N: usize>(
             let targets = if smart {
                 smart_targets(b, user, t)
             } else {
-                vec![t]
+                smallvec::smallvec![t]
             };
             // `if (target.fainted && !move.flags['futuremove'])`: a future move may still be aimed
             // at the position of a fainted ally.
             if b.alive(targets[0]).is_none() && !mv.data.flags.contains(MoveFlags::FUTUREMOVE) {
-                return Ok(Vec::new());
+                return Ok(Small::new());
             }
             targets
         }
@@ -1480,18 +1486,14 @@ fn get_move_targets<const N: usize>(
 /// (`target.adjacentAllies()[0]`: the other active Pokémon of its side with HP), in that order;
 /// only the target when that ally is missing, fainted or the user itself, only the ally when the
 /// target has no HP (`move.smartTarget = false` in both cases: one target left).
-fn smart_targets<const N: usize>(
-    b: &Battle<'_, N>,
-    user: SlotRef,
-    target: SlotRef,
-) -> Vec<SlotRef> {
+fn smart_targets<const N: usize>(b: &Battle<'_, N>, user: SlotRef, target: SlotRef) -> Slots {
     let ally = Battle::<N>::slots(target.side)
         .find(|&s| s != target && b.alive(s).is_some())
         .filter(|&s| s != user);
     match ally {
-        None => vec![target],
-        Some(ally) if b.alive(target).is_none() => vec![ally],
-        Some(ally) => vec![target, ally],
+        None => smallvec::smallvec![target],
+        Some(ally) if b.alive(target).is_none() => smallvec::smallvec![ally],
+        Some(ally) => smallvec::smallvec![target, ally],
     }
 }
 
@@ -1532,7 +1534,7 @@ fn foe_redirect_target<const N: usize>(
 ) -> Option<(SlotRef, i8)> {
     // (priority, speed, holder), in Showdown's handler collection order: the user's side
     // (`onAny`), then each foe's `onFoe` volatiles and `onAny` ability.
-    let mut handlers: Vec<(i8, i32, SlotRef)> = Vec::new();
+    let mut handlers: crate::turn::Small<(i8, i32, SlotRef), 8> = crate::turn::Small::new();
     // `breakable`: a Mold Breaker move ignores these handlers too.
     let absorbs = |b: &Battle<'_, N>, s: SlotRef| {
         b.alive(s).is_some() && absorbing_type(b.ability_unless_broken(s)) == Some(mv.move_type)
@@ -1692,7 +1694,7 @@ fn use_move<const N: usize>(
         MoveTarget::All | MoveTarget::FoeSide | MoveTarget::AllySide | MoveTarget::AllyTeam
     );
     let targets = if field_move {
-        Vec::new()
+        Slots::new()
     } else {
         get_move_targets(b, user, mv, target)?
     };
@@ -2159,7 +2161,7 @@ fn try_spread_move_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &mut ActiveMove,
-    mut targets: Vec<SlotRef>,
+    mut targets: Slots,
     will_act: bool,
 ) -> Result<HitOutcome, TurnError> {
     // Dragon Darts' `move.smartTarget` (its two smart targets from `get_move_targets`): `if
@@ -2254,7 +2256,7 @@ fn try_spread_move_hit<const N: usize>(
     //    (a failure for the move) unless its state lets the move through, No Guard is in play,
     //    or the move is Toxic from a Poison type.
     let before = targets.len();
-    targets.retain(|&t| !handlers::invulnerable(b, user, mv, t));
+    targets.retain(|&mut t| !handlers::invulnerable(b, user, mv, t));
     smart &= targets.len() == before;
     if targets.is_empty() {
         return Ok(HitOutcome::Finished {
@@ -2267,7 +2269,7 @@ fn try_spread_move_hit<const N: usize>(
     //    `trySpreadMoveHit`: when no target is left and none of them failed (every one was a
     //    `NOT_FAIL` drop: Protect, the guards), `pokemon.moveThisTurnResult = null` — Stomping
     //    Tantrum and Temper Flare do not double after a move that Protect blocked.
-    let mut kept = Vec::with_capacity(targets.len());
+    let mut kept = Small::with_capacity(targets.len());
     let mut at_least_one_failure = false;
     let before = targets.len();
     for t in targets {
@@ -2292,7 +2294,7 @@ fn try_spread_move_hit<const N: usize>(
     }
     // 2. Type immunity.
     let before = targets.len();
-    targets.retain(|&t| !type_immune(b, mv, t));
+    targets.retain(|&mut t| !type_immune(b, mv, t));
     smart &= targets.len() == before;
     if targets.is_empty() {
         return Ok(HitOutcome::Finished {
@@ -2303,7 +2305,7 @@ fn try_spread_move_hit<const N: usize>(
     // 3. Move-specific immunities: powder, the move's `onTryImmunity`, Prankster vs Dark.
     handlers::try_immunity_problem(b, user, mv, &targets)?;
     let before = targets.len();
-    targets.retain(|&t| {
+    targets.retain(|&mut t| {
         let powder = mv.data.flags.contains(MoveFlags::POWDER)
             && t != user
             && b.natural_immune(t, TypeImmunities::POWDER);
@@ -2320,7 +2322,7 @@ fn try_spread_move_hit<const N: usize>(
         });
     }
     // 4. Accuracy.
-    let mut hit = Vec::with_capacity(targets.len());
+    let mut hit = Small::with_capacity(targets.len());
     for &t in &targets {
         if accuracy_check(b, user, mv, t) {
             hit.push(t);
@@ -2367,7 +2369,7 @@ fn try_spread_move_hit<const N: usize>(
         hit: 0,
         total_damage: 0,
         any_ok: false,
-        last_hit: Vec::new(),
+        last_hit: Small::new(),
         ignore_ability: b.active_move.is_some_and(|a| a.ignore_ability),
         infiltrates: b.active_move.is_some_and(|a| a.infiltrates),
         raw_speed: Vec::new(),
@@ -2384,7 +2386,7 @@ fn target_bit<const N: usize>(slot: SlotRef) -> u8 {
 }
 
 /// The slots in a [`ActiveMove::hit_targets`] bit set, side one first, in slot order.
-fn hit_target_slots<const N: usize>(bits: u8) -> Vec<SlotRef> {
+fn hit_target_slots<const N: usize>(bits: u8) -> Slots {
     [SideId::One, SideId::Two]
         .into_iter()
         .flat_map(Battle::<N>::slots)
@@ -2880,8 +2882,8 @@ fn hit_loop<const N: usize>(
     // Champions `hitStepMoveHitLoop` with `move.smartTarget` and two targets: `targetsCopy =
     // [targets[hit - 1]]`, each dart strikes one of them.
     let smart = progress.smart;
-    let hit_targets: Vec<SlotRef> = if smart {
-        vec![progress.targets[usize::from(hit - 1)]]
+    let hit_targets: Slots = if smart {
+        smallvec::smallvec![progress.targets[usize::from(hit - 1)]]
     } else {
         targets.clone()
     };
@@ -2896,7 +2898,7 @@ fn hit_loop<const N: usize>(
             ended_by_miss = true;
         }
     }
-    let mut results = Vec::new();
+    let mut results = Small::new();
     if !ended_by_miss {
         // `move.totalDamage` so far only reaches the hit's handlers through Innards Out, which
         // adds it only without `smartTarget`.
@@ -2907,7 +2909,7 @@ fn hit_loop<const N: usize>(
             .iter()
             .map(|r| if let Hit::Damage(d) = r { *d } else { 0 })
             .sum::<i32>();
-        let this_hit: Vec<(SlotRef, LastHit)> = hit_targets
+        let this_hit: Small<(SlotRef, LastHit), 6> = hit_targets
             .iter()
             .zip(&results)
             .filter_map(|(&t, r)| match r {
@@ -2949,7 +2951,7 @@ fn hit_loop_rest<const N: usize>(
     user: SlotRef,
     mv: &ActiveMove,
     mut progress: MoveProgress,
-    results: Vec<Hit>,
+    results: Small<Hit, 6>,
     ended_by_miss: bool,
 ) -> Result<HitOutcome, TurnError> {
     let smart = progress.smart;
@@ -2960,7 +2962,7 @@ fn hit_loop_rest<const N: usize>(
         // processed).
         super::update::update_event(b)?;
         let mut targets = progress.targets.clone();
-        targets.retain(|&t| b.alive(t).is_some());
+        targets.retain(|&mut t| b.alive(t).is_some());
         let single = progress.targets.len() == 1;
         let user_standing = b.alive(user).is_some();
         // `if (!pokemon.hp && targets.length === 1) break;` — a fainted user stops a
@@ -3041,7 +3043,7 @@ fn hit_loop_rest<const N: usize>(
             Some(&(_, LastHit::Damage(d))) => d,
             _ => 0,
         };
-        let last_hit: Vec<(SlotRef, i32)> = if smart {
+        let last_hit: Small<(SlotRef, i32), 6> = if smart {
             progress.targets.iter().map(|&t| (t, dart(t))).collect()
         } else if ended_by_miss {
             progress.targets.iter().map(|&t| (t, 0)).collect()
@@ -3054,7 +3056,7 @@ fn hit_loop_rest<const N: usize>(
                 .map(|(&t, r)| (t, if let Hit::Damage(d) = r { *d } else { 0 }))
                 .collect()
         };
-        let slots: Vec<SlotRef> = last_hit.iter().map(|&(t, _)| t).collect();
+        let slots: Slots = last_hit.iter().map(|&(t, _)| t).collect();
         let order = item_events::after_move_secondary_order(b, &slots, mv.data.thaws_target);
         for (i, handler) in order {
             let (t, damage) = last_hit[i];
@@ -3100,8 +3102,8 @@ fn hit_loop_rest<const N: usize>(
         // With `smartTarget` the loop's `damage` array has lost the first target's entry
         // (`damage = [damage[hit - 1]]` each hit): only the second target is checked, with its own
         // dart's damage (`targets.length` is 2, so not the total).
-        let damages: Vec<(SlotRef, i32)> = if smart {
-            vec![(progress.targets[1], dart(progress.targets[1]))]
+        let damages: Small<(SlotRef, i32), 6> = if smart {
+            smallvec::smallvec![(progress.targets[1], dart(progress.targets[1]))]
         } else if ended_by_miss {
             progress
                 .targets
@@ -3151,7 +3153,7 @@ fn spread_move_hit<const N: usize>(
     targets: &[SlotRef],
     total_before: i32,
     hit: u8,
-) -> Result<Vec<Hit>, TurnError> {
+) -> Result<Small<Hit, 6>, TurnError> {
     let data = mv.data;
     // `getMoveHitData(move).typeMod` is (re)computed by this hit's `getDamage`.
     b.hit_type_mod = [[None; N]; 2];
@@ -3159,7 +3161,7 @@ fn spread_move_hit<const N: usize>(
     // 0. `tryPrimaryHitEvent` for every target first: a substitute takes the hit
     //    (`hit_substitute`). Aura Break's `onAnyTryPrimaryHit` (priority 0, before the
     //    substitute's -1) only sets a flag `get_damage` reads.
-    let mut shielded = Vec::with_capacity(targets.len());
+    let mut shielded = Small::<_, 6>::with_capacity(targets.len());
     for &t in targets {
         // Gulp Missile's `onSourceTryPrimaryHit` (the user's, priority 0: before the
         // substitute's -1): Surf fills Cramorant's throat.
@@ -3175,7 +3177,7 @@ fn spread_move_hit<const N: usize>(
         });
     }
     // getSpreadDamage: every other target's damage is decided before any is dealt.
-    let mut planned = Vec::with_capacity(targets.len());
+    let mut planned = Small::<_, 6>::with_capacity(targets.len());
     for (&t, shield) in targets.iter().zip(&shielded) {
         planned.push(match shield {
             Some(_) => None,
@@ -3183,7 +3185,7 @@ fn spread_move_hit<const N: usize>(
         });
     }
     // spreadDamage.
-    let mut results = Vec::with_capacity(targets.len());
+    let mut results = Small::with_capacity(targets.len());
     for ((&t, plan), shield) in targets.iter().zip(&planned).zip(&shielded) {
         let Some(plan) = plan else {
             results.push(shield.expect("a shielded target has its result"));
@@ -3480,7 +3482,7 @@ fn spread_move_hit<const N: usize>(
         }
     }
     // DamagingHit for every damaged target, then AfterHit (only while the user stands).
-    let damaged: Vec<(SlotRef, i32)> = targets
+    let damaged: Small<(SlotRef, i32), 6> = targets
         .iter()
         .zip(&results)
         .filter_map(|(&t, r)| match r {
@@ -3701,7 +3703,7 @@ fn damaging_hit<const N: usize>(
     for &(target, damage) in damaged {
         handlers::counter_damaging_hit(b, user, mv, target, damage);
     }
-    let mut handlers: Vec<(u32, usize, Kind)> = Vec::new();
+    let mut handlers: crate::turn::Small<(u32, usize, Kind), 8> = crate::turn::Small::new();
     for (index, &(target, _)) in damaged.iter().enumerate() {
         let Some(pokemon) = b.occupant(target) else {
             continue;
