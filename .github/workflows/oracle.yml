@@ -56,7 +56,14 @@ jobs:
             else
               changed=$(git show --name-only --format= "${{ github.sha }}")
             fi
-            jobs=$(echo "$changed" | grep -E '^engine/jobs/[^/]+/oracle\.json$' | while read f; do [ -f "$f" ] && basename "$(dirname "$f")"; done | sort -u | tr '\n' ' ')
+            # A job runs only on the branch it was packed on (oracle.json "branch"): merging a
+            # branch that carries jobs into another must not run them again.
+            jobs=$(echo "$changed" | grep -E '^engine/jobs/[^/]+/oracle\.json$' | while read f; do
+              [ -f "$f" ] || continue
+              b=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1])).get('branch',''))" "$f")
+              if [ "$b" = "${{ github.ref_name }}" ]; then basename "$(dirname "$f")"; else echo "skip $(dirname "$f") (packed on '$b')" >&2; fi
+            done | sort -u | tr '
+' ' ')
           fi
           echo "jobs: $jobs"
           python3 engine/scripts/oracle_job.py matrix $jobs >> "$GITHUB_OUTPUT"
