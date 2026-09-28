@@ -1,0 +1,827 @@
+{
+ "id": "gen9championsvgc2026regmc-2689037120",
+ "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689037120",
+ "format": "gen9championsvgc2026regmc",
+ "ots": false,
+ "p1": {
+  "team": [
+   {
+    "name": "Cinderace",
+    "species": "Cinderace",
+    "item": "",
+    "ability": "Blaze",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Pyro Ball",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Gardevoir",
+    "species": "Gardevoir",
+    "item": "Gardevoirite",
+    "ability": "Trace",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hyper Voice",
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Mamoswine",
+    "species": "Mamoswine",
+    "item": "Focus Sash",
+    "ability": "Oblivious",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Raichu-Alola",
+    "species": "Raichu-Alola",
+    "item": "",
+    "ability": "Surge Surfer",
+    "gender": "",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Gholdengo",
+    "species": "Gholdengo",
+    "item": "Life Orb",
+    "ability": "Good as Gold",
+    "gender": "",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Make It Rain",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Milotic",
+    "species": "Milotic",
+    "item": "Sitrus Berry",
+    "ability": "Marvel Scale",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Muddy Water",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Raichu",
+    "species": "Raichu",
+    "item": "",
+    "ability": "Static",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Rillaboom",
+    "species": "Rillaboom",
+    "item": "",
+    "ability": "Overgrow",
+    "gender": "",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "provenance": {
+  "p1": [
+   {
+    "name": "Cinderace",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   },
+   {
+    "name": "Gardevoir",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   },
+   {
+    "name": "Mamoswine",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 0
+   },
+   {
+    "name": "Raichu-Alola",
+    "source": "unseen preview member (placeholder set)"
+   }
+  ],
+  "p2": [
+   {
+    "name": "Gholdengo",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Milotic",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   },
+   {
+    "name": "Raichu",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 0
+   },
+   {
+    "name": "Rillaboom",
+    "source": "unseen preview member (placeholder set)"
+   }
+  ]
+ },
+ "startObs": {
+  "mons": [
+   {
+    "side": "p1",
+    "name": "Cinderace",
+    "species": "Cinderace",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p1",
+    "name": "Gardevoir",
+    "species": "Gardevoir",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Gholdengo",
+    "species": "Gholdengo",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Milotic",
+    "species": "Milotic",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   }
+  ],
+  "weather": "",
+  "terrain": "",
+  "pseudoWeather": [],
+  "sideConditions": {
+   "p1": [],
+   "p2": []
+  }
+ },
+ "decisions": [
+  {
+   "kind": "turn",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "pyroball",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "hypervoice",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p2b"
+     ],
+     "mega": true
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "muddywater",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Cinderace",
+      "species": "Cinderace",
+      "fainted": false,
+      "pct": 33,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Gardevoir",
+      "species": "Gardevoir-Mega",
+      "fainted": false,
+      "pct": 80,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "gardevoirite"
+     },
+     {
+      "side": "p2",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Milotic",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 67,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "pyroball",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "hypervoice",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Raichu"
+    },
+    {
+     "kind": "move",
+     "move": "muddywater",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Cinderace",
+      "species": "Cinderace",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Gardevoir",
+      "species": "Gardevoir-Mega",
+      "fainted": false,
+      "pct": 63,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "gardevoirite"
+     },
+     {
+      "side": "p2",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Milotic",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Raichu",
+      "species": "Raichu",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Mamoswine"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Gholdengo"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Cinderace",
+      "species": "Cinderace",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Gardevoir",
+      "species": "Gardevoir-Mega",
+      "fainted": false,
+      "pct": 63,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "gardevoirite"
+     },
+     {
+      "side": "p1",
+      "name": "Mamoswine",
+      "species": "Mamoswine",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Milotic",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Raichu",
+      "species": "Raichu",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "makeitrain",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p1a"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "muddywater",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Cinderace",
+      "species": "Cinderace",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Gardevoir",
+      "species": "Gardevoir-Mega",
+      "fainted": false,
+      "pct": 63,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "gardevoirite"
+     },
+     {
+      "side": "p1",
+      "name": "Mamoswine",
+      "species": "Mamoswine",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": false,
+      "pct": 90,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spa": -2
+      },
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Milotic",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Raichu",
+      "species": "Raichu",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  }
+ ],
+ "stop": null
+}

@@ -1,0 +1,1386 @@
+{
+ "id": "gen9championsvgc2026regmc-2689049718",
+ "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049718",
+ "format": "gen9championsvgc2026regmc",
+ "ots": false,
+ "p1": {
+  "team": [
+   {
+    "name": "Raichu",
+    "species": "Raichu",
+    "item": "Raichunite Y",
+    "ability": "Static",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Zap Cannon",
+     "Focus Blast",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Arcanine",
+    "species": "Arcanine-Hisui",
+    "item": "",
+    "ability": "Flash Fire",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Head Smash",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Sneasler",
+    "species": "Sneasler",
+    "item": "Grassy Seed",
+    "ability": "Unburden",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Close Combat",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Rillaboom",
+    "species": "Rillaboom",
+    "item": "",
+    "ability": "Grassy Surge",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "High Horsepower",
+     "Wood Hammer",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Farigiraf",
+    "species": "Farigiraf",
+    "item": "Sitrus Berry",
+    "ability": "Cud Chew",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Grass Knot",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Golisopod",
+    "species": "Golisopod",
+    "item": "Golisopite",
+    "ability": "Emergency Exit",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Drill Run",
+     "Iron Head",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Archaludon",
+    "species": "Archaludon",
+    "item": "Leftovers",
+    "ability": "Stamina",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Pulse",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Politoed",
+    "species": "Politoed",
+    "item": "",
+    "ability": "Drizzle",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "provenance": {
+  "p1": [
+   {
+    "name": "Raichu",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Arcanine",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   },
+   {
+    "name": "Sneasler",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Rillaboom",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 3
+   }
+  ],
+  "p2": [
+   {
+    "name": "Farigiraf",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Golisopod",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 3
+   },
+   {
+    "name": "Archaludon",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 1
+   },
+   {
+    "name": "Politoed",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 1
+   }
+  ]
+ },
+ "startObs": {
+  "mons": [
+   {
+    "side": "p1",
+    "name": "Arcanine",
+    "species": "Arcanine-Hisui",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p1",
+    "name": "Raichu",
+    "species": "Raichu",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Farigiraf",
+    "species": "Farigiraf",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Golisopod",
+    "species": "Golisopod",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   }
+  ],
+  "weather": "",
+  "terrain": "",
+  "pseudoWeather": [],
+  "sideConditions": {
+   "p1": [],
+   "p2": []
+  }
+ },
+ "decisions": [
+  {
+   "kind": "turn",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "zapcannon",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": true
+    },
+    {
+     "kind": "move",
+     "move": "headsmash",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "trickroom",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": true
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "raichunitey"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 4,
+      "hint": "",
+      "status": "par",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "golisopite"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [
+     "trickroom"
+    ],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "zapcannon",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "grassknot",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "drillrun",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "raichunitey"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "golisopite"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [
+     "trickroom"
+    ],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Sneasler"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Archaludon"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "raichunitey"
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "golisopite"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [
+     "trickroom"
+    ],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Rillaboom"
+    },
+    {
+     "kind": "move",
+     "move": "fakeout",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "dragonpulse",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "raichunitey"
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 59,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "golisopite"
+     }
+    ],
+    "weather": "",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [
+     "trickroom"
+    ],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "fakeout",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "closecombat",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "dragonpulse",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "raichunitey"
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 17,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spd": -1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 23,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod-Mega",
+      "fainted": false,
+      "pct": 99,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "golisopite"
+     }
+    ],
+    "weather": "",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [
+     "trickroom"
+    ],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "highhorsepower",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "ironhead",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "raichunitey"
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spd": -1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "golisopite"
+     }
+    ],
+    "weather": "",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Raichu"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Politoed"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "raichunitey"
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "golisopite"
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 6,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "woodhammer",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "focusblast",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "drillrun",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "raichunitey"
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod-Mega",
+      "fainted": false,
+      "pct": 67,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "golisopite"
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  }
+ ],
+ "stop": null
+}

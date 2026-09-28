@@ -1,0 +1,1152 @@
+{
+ "id": "gen9championsvgc2026regmc-2689032303",
+ "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689032303",
+ "format": "gen9championsvgc2026regmc",
+ "ots": false,
+ "p1": {
+  "team": [
+   {
+    "name": "Pelipper",
+    "species": "Pelipper",
+    "item": "",
+    "ability": "Drizzle",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Tailwind",
+     "Weather Ball",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Dragonite",
+    "species": "Dragonite",
+    "item": "Dragoninite",
+    "ability": "Inner Focus",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Thunder",
+     "Hurricane",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Vivillon",
+    "species": "Vivillon",
+    "item": "",
+    "ability": "Shield Dust",
+    "gender": "",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Raichu",
+    "species": "Raichu",
+    "item": "",
+    "ability": "Static",
+    "gender": "",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Incineroar",
+    "species": "Incineroar",
+    "item": "",
+    "ability": "Intimidate",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Samurott",
+    "species": "Samurott-Hisui",
+    "item": "",
+    "ability": "Torrent",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Aqua Cutter",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Staraptor",
+    "species": "Staraptor",
+    "item": "Staraptite",
+    "ability": "Intimidate",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Aegislash",
+    "species": "Aegislash",
+    "item": "Life Orb",
+    "ability": "Stance Change",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Shadow Sneak",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "provenance": {
+  "p1": [
+   {
+    "name": "Pelipper",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 3
+   },
+   {
+    "name": "Dragonite",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 3
+   },
+   {
+    "name": "Vivillon",
+    "source": "unseen preview member (placeholder set)"
+   },
+   {
+    "name": "Raichu",
+    "source": "unseen preview member (placeholder set)"
+   }
+  ],
+  "p2": [
+   {
+    "name": "Incineroar",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   },
+   {
+    "name": "Samurott",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   },
+   {
+    "name": "Staraptor",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 0
+   },
+   {
+    "name": "Aegislash",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   }
+  ]
+ },
+ "startObs": {
+  "mons": [
+   {
+    "side": "p1",
+    "name": "Dragonite",
+    "species": "Dragonite",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p1",
+    "name": "Pelipper",
+    "species": "Pelipper",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {
+     "atk": -1
+    }
+   },
+   {
+    "side": "p2",
+    "name": "Incineroar",
+    "species": "Incineroar",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Samurott",
+    "species": "Samurott-Hisui",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   }
+  ],
+  "weather": "raindance",
+  "terrain": "",
+  "pseudoWeather": [],
+  "sideConditions": {
+   "p1": [],
+   "p2": []
+  }
+ },
+ "decisions": [
+  {
+   "kind": "turn",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": true
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "fakeout",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "aquacutter",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Samurott",
+      "species": "Samurott-Hisui",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "tailwind",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "thunder",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "aquacutter",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 74,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Samurott",
+      "species": "Samurott-Hisui",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "tailwind"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Staraptor"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 74,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -2
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Samurott",
+      "species": "Samurott-Hisui",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Staraptor",
+      "species": "Staraptor",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "tailwind"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "weatherball",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "hurricane",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": true
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 74,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -2
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Samurott",
+      "species": "Samurott-Hisui",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Staraptor",
+      "species": "Staraptor-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "staraptite"
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "tailwind"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Aegislash"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 74,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -2
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Aegislash",
+      "species": "Aegislash",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Samurott",
+      "species": "Samurott-Hisui",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Staraptor",
+      "species": "Staraptor-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "staraptite"
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "tailwind"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "weatherball",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "thunder",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 74,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -2
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Aegislash",
+      "species": "Aegislash",
+      "fainted": false,
+      "pct": 13,
+      "hint": "",
+      "status": "par",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Samurott",
+      "species": "Samurott-Hisui",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Staraptor",
+      "species": "Staraptor-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "staraptite"
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "tailwind"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "hurricane",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "move",
+     "move": "shadowsneak",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -2
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Aegislash",
+      "species": "Aegislash-Blade",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Samurott",
+      "species": "Samurott-Hisui",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Staraptor",
+      "species": "Staraptor-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "staraptite"
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "tailwind"
+     ],
+     "p2": []
+    }
+   }
+  }
+ ],
+ "stop": null
+}

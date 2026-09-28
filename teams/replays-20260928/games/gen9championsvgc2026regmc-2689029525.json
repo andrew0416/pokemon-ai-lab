@@ -1,0 +1,1288 @@
+{
+ "id": "gen9championsvgc2026regmc-2689029525",
+ "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029525",
+ "format": "gen9championsvgc2026regmc",
+ "ots": false,
+ "p1": {
+  "team": [
+   {
+    "name": "Corviknight",
+    "species": "Corviknight",
+    "item": "",
+    "ability": "Mirror Armor",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Bulk Up",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Aegislash",
+    "species": "Aegislash",
+    "item": "Occa Berry",
+    "ability": "Stance Change",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wide Guard",
+     "King's Shield",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Ninetales",
+    "species": "Ninetales-Alola",
+    "item": "",
+    "ability": "Snow Warning",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Blizzard",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Samurott",
+    "species": "Samurott-Hisui",
+    "item": "Life Orb",
+    "ability": "Torrent",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Sacred Sword",
+     "Sucker Punch",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Charizard",
+    "species": "Charizard",
+    "item": "Charizardite Y",
+    "ability": "Blaze",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Hurricane",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Archaludon",
+    "species": "Archaludon",
+    "item": "Leftovers",
+    "ability": "Stamina",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Electro Shot",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Golisopod",
+    "species": "Golisopod",
+    "item": "",
+    "ability": "Emergency Exit",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Politoed",
+    "species": "Politoed",
+    "item": "",
+    "ability": "Drizzle",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "provenance": {
+  "p1": [
+   {
+    "name": "Corviknight",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   },
+   {
+    "name": "Aegislash",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Ninetales",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 1
+   },
+   {
+    "name": "Samurott",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   }
+  ],
+  "p2": [
+   {
+    "name": "Charizard",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Archaludon",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 1
+   },
+   {
+    "name": "Golisopod",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 0
+   },
+   {
+    "name": "Politoed",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 0
+   }
+  ]
+ },
+ "startObs": {
+  "mons": [
+   {
+    "side": "p1",
+    "name": "Aegislash",
+    "species": "Aegislash",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p1",
+    "name": "Corviknight",
+    "species": "Corviknight",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Archaludon",
+    "species": "Archaludon",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Charizard",
+    "species": "Charizard",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   }
+  ],
+  "weather": "",
+  "terrain": "",
+  "pseudoWeather": [],
+  "sideConditions": {
+   "p1": [],
+   "p2": []
+  }
+ },
+ "decisions": [
+  {
+   "kind": "turn",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "bulkup",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "wideguard",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "heatwave",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] "
+     ],
+     "mega": true
+    },
+    {
+     "kind": "move",
+     "move": "electroshot",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Aegislash",
+      "species": "Aegislash",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Corviknight",
+      "species": "Corviknight",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 1,
+       "def": 1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "charizarditey"
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "kingsshield",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "heatwave",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "electroshot",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[from] lockedmove"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Aegislash",
+      "species": "Aegislash",
+      "fainted": false,
+      "pct": 49,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Corviknight",
+      "species": "Corviknight",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 1,
+       "def": 1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "charizarditey"
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Ninetales"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Aegislash",
+      "species": "Aegislash",
+      "fainted": false,
+      "pct": 49,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Corviknight",
+      "species": "Corviknight",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Ninetales",
+      "species": "Ninetales-Alola",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "charizarditey"
+     }
+    ],
+    "weather": "snowscape",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "blizzard",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p2a,p2b"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "heatwave",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p1b"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "electroshot",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Aegislash",
+      "species": "Aegislash",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Corviknight",
+      "species": "Corviknight",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Ninetales",
+      "species": "Ninetales-Alola",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 66,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1,
+       "spa": 2
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": false,
+      "pct": 67,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "charizarditey"
+     }
+    ],
+    "weather": "snowscape",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Samurott"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Aegislash",
+      "species": "Aegislash",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Corviknight",
+      "species": "Corviknight",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Ninetales",
+      "species": "Ninetales-Alola",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Samurott",
+      "species": "Samurott-Hisui",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 66,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1,
+       "spa": 2
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": false,
+      "pct": 67,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "charizarditey"
+     }
+    ],
+    "weather": "snowscape",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "sacredsword",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "heatwave",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Aegislash",
+      "species": "Aegislash",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Corviknight",
+      "species": "Corviknight",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Ninetales",
+      "species": "Ninetales-Alola",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Samurott",
+      "species": "Samurott-Hisui",
+      "fainted": false,
+      "pct": 60,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1,
+       "spa": 2
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": false,
+      "pct": 67,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "charizarditey"
+     }
+    ],
+    "weather": "snowscape",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Golisopod"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Aegislash",
+      "species": "Aegislash",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Corviknight",
+      "species": "Corviknight",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Ninetales",
+      "species": "Ninetales-Alola",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Samurott",
+      "species": "Samurott-Hisui",
+      "fainted": false,
+      "pct": 60,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": false,
+      "pct": 67,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "charizarditey"
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "snowscape",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "move",
+     "move": "suckerpunch",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "hurricane",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Politoed"
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Aegislash",
+      "species": "Aegislash",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Corviknight",
+      "species": "Corviknight",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Ninetales",
+      "species": "Ninetales-Alola",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Samurott",
+      "species": "Samurott-Hisui",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": false,
+      "pct": 4,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "charizarditey"
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  }
+ ],
+ "stop": null
+}

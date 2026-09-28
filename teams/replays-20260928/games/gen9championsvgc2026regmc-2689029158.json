@@ -1,0 +1,2106 @@
+{
+ "id": "gen9championsvgc2026regmc-2689029158",
+ "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029158",
+ "format": "gen9championsvgc2026regmc",
+ "ots": false,
+ "p1": {
+  "team": [
+   {
+    "name": "Garchomp",
+    "species": "Garchomp",
+    "item": "Garchompite Z",
+    "ability": "Sand Veil",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Malamar",
+    "species": "Malamar",
+    "item": "",
+    "ability": "Contrary",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Foul Play",
+     "Superpower",
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Whimsicott",
+    "species": "Whimsicott",
+    "item": "",
+    "ability": "Prankster",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Tears",
+     "Dazzling Gleam",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Sinistcha",
+    "species": "Sinistcha-Masterpiece",
+    "item": "",
+    "ability": "Hospitality",
+    "gender": "",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Matcha Gotcha",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Floette",
+    "species": "Floette-Eternal",
+    "item": "",
+    "ability": "Flower Veil",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Light of Ruin",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Lucario",
+    "species": "Lucario",
+    "item": "Lucarionite Z",
+    "ability": "Steadfast",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Flash Cannon",
+     "Calm Mind",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Sableye",
+    "species": "Sableye",
+    "item": "Roseli Berry",
+    "ability": "Keen Eye",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Will-O-Wisp",
+     "Encore",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Pelipper",
+    "species": "Pelipper",
+    "item": "",
+    "ability": "Drizzle",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Weather Ball",
+     "Wide Guard",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "provenance": {
+  "p1": [
+   {
+    "name": "Garchomp",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 0
+   },
+   {
+    "name": "Malamar",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 3
+   },
+   {
+    "name": "Whimsicott",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Sinistcha",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   }
+  ],
+  "p2": [
+   {
+    "name": "Floette",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   },
+   {
+    "name": "Lucario",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 3
+   },
+   {
+    "name": "Sableye",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 3
+   },
+   {
+    "name": "Pelipper",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   }
+  ]
+ },
+ "startObs": {
+  "mons": [
+   {
+    "side": "p1",
+    "name": "Garchomp",
+    "species": "Garchomp",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p1",
+    "name": "Malamar",
+    "species": "Malamar",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Floette",
+    "species": "Floette-Eternal",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Lucario",
+    "species": "Lucario",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   }
+  ],
+  "weather": "",
+  "terrain": "",
+  "pseudoWeather": [],
+  "sideConditions": {
+   "p1": [],
+   "p2": []
+  }
+ },
+ "decisions": [
+  {
+   "kind": "turn",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": true
+    },
+    {
+     "kind": "move",
+     "move": "foulplay",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "lightofruin",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Malamar",
+      "species": "Malamar",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Eternal",
+      "fainted": false,
+      "pct": 21,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Lucario",
+      "species": "Lucario",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Whimsicott"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Malamar",
+      "species": "Malamar",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Whimsicott",
+      "species": "Whimsicott",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Eternal",
+      "fainted": false,
+      "pct": 21,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Lucario",
+      "species": "Lucario",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "faketears",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "superpower",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "lightofruin",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Sableye"
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Malamar",
+      "species": "Malamar",
+      "fainted": false,
+      "pct": 32,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spd": 2
+      }
+     },
+     {
+      "side": "p1",
+      "name": "Whimsicott",
+      "species": "Whimsicott",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Eternal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Lucario",
+      "species": "Lucario",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Sableye",
+      "species": "Sableye",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Pelipper"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Malamar",
+      "species": "Malamar",
+      "fainted": false,
+      "pct": 32,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spd": 2
+      }
+     },
+     {
+      "side": "p1",
+      "name": "Whimsicott",
+      "species": "Whimsicott",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Eternal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Lucario",
+      "species": "Lucario",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Sableye",
+      "species": "Sableye",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "superpower",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "weatherball",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "fakeout",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Malamar",
+      "species": "Malamar",
+      "fainted": false,
+      "pct": 8,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": 1,
+       "def": 1,
+       "spd": 2
+      }
+     },
+     {
+      "side": "p1",
+      "name": "Whimsicott",
+      "species": "Whimsicott",
+      "fainted": false,
+      "pct": 90,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Eternal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Lucario",
+      "species": "Lucario",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 89,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Sableye",
+      "species": "Sableye",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Sinistcha"
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "weatherball",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "willowisp",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Malamar",
+      "species": "Malamar",
+      "fainted": false,
+      "pct": 32,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": 1,
+       "def": 1,
+       "spd": 2
+      }
+     },
+     {
+      "side": "p1",
+      "name": "Sinistcha",
+      "species": "Sinistcha-Masterpiece",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Whimsicott",
+      "species": "Whimsicott",
+      "fainted": false,
+      "pct": 90,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Eternal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Lucario",
+      "species": "Lucario",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 89,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Sableye",
+      "species": "Sableye",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "trickroom",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Whimsicott"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "wideguard",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "willowisp",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Malamar",
+      "species": "Malamar",
+      "fainted": false,
+      "pct": 32,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Sinistcha",
+      "species": "Sinistcha-Masterpiece",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Whimsicott",
+      "species": "Whimsicott",
+      "fainted": false,
+      "pct": 84,
+      "hint": "",
+      "status": "brn",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Eternal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Lucario",
+      "species": "Lucario",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 89,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Sableye",
+      "species": "Sableye",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [
+     "trickroom"
+    ],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 6,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Malamar"
+    },
+    {
+     "kind": "move",
+     "move": "dazzlinggleam",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] "
+     ],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "wideguard",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "willowisp",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Malamar",
+      "species": "Malamar",
+      "fainted": false,
+      "pct": 32,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Sinistcha",
+      "species": "Sinistcha-Masterpiece",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Whimsicott",
+      "species": "Whimsicott",
+      "fainted": false,
+      "pct": 78,
+      "hint": "",
+      "status": "brn",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Eternal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Lucario",
+      "species": "Lucario",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 89,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Sableye",
+      "species": "Sableye",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [
+     "trickroom"
+    ],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 7,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "superpower",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dazzlinggleam",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p2a,p2b"
+     ],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "weatherball",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "encore",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Malamar",
+      "species": "Malamar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 1,
+       "def": 1
+      }
+     },
+     {
+      "side": "p1",
+      "name": "Sinistcha",
+      "species": "Sinistcha-Masterpiece",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Whimsicott",
+      "species": "Whimsicott",
+      "fainted": false,
+      "pct": 72,
+      "hint": "",
+      "status": "brn",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Eternal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Lucario",
+      "species": "Lucario",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 52,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Sableye",
+      "species": "Sableye",
+      "fainted": false,
+      "pct": 84,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [
+     "trickroom"
+    ],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 7,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Sinistcha"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Malamar",
+      "species": "Malamar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Sinistcha",
+      "species": "Sinistcha-Masterpiece",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Whimsicott",
+      "species": "Whimsicott",
+      "fainted": false,
+      "pct": 97,
+      "hint": "",
+      "status": "brn",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Eternal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Lucario",
+      "species": "Lucario",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 52,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Sableye",
+      "species": "Sableye",
+      "fainted": false,
+      "pct": 84,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [
+     "trickroom"
+    ],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 8,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "matchagotcha",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] "
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dazzlinggleam",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] "
+     ],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "wideguard",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Lucario"
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Malamar",
+      "species": "Malamar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Sinistcha",
+      "species": "Sinistcha-Masterpiece",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Whimsicott",
+      "species": "Whimsicott",
+      "fainted": false,
+      "pct": 91,
+      "hint": "",
+      "status": "brn",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Eternal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Lucario",
+      "species": "Lucario",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 52,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Sableye",
+      "species": "Sableye",
+      "fainted": false,
+      "pct": 84,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [
+     "trickroom"
+    ],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 9,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "matchagotcha",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] "
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dazzlinggleam",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] "
+     ],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "wideguard",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "flashcannon",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": true
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Malamar",
+      "species": "Malamar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Sinistcha",
+      "species": "Sinistcha-Masterpiece",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Whimsicott",
+      "species": "Whimsicott",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Eternal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Lucario",
+      "species": "Lucario-Mega-Z",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "lucarionitez"
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 52,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Sableye",
+      "species": "Sableye",
+      "fainted": false,
+      "pct": 84,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 10,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "trickroom",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "wideguard",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "calmmind",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Malamar",
+      "species": "Malamar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Sinistcha",
+      "species": "Sinistcha-Masterpiece",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Whimsicott",
+      "species": "Whimsicott",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Eternal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Lucario",
+      "species": "Lucario-Mega-Z",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 1,
+       "spd": 1
+      },
+      "item": "lucarionitez"
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": false,
+      "pct": 52,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Sableye",
+      "species": "Sableye",
+      "fainted": false,
+      "pct": 84,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [
+     "trickroom"
+    ],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  }
+ ],
+ "stop": null
+}

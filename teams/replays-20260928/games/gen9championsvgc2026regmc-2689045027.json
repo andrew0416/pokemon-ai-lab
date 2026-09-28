@@ -1,0 +1,1656 @@
+{
+ "id": "gen9championsvgc2026regmc-2689045027",
+ "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689045027",
+ "format": "gen9championsvgc2026regmc",
+ "ots": false,
+ "p1": {
+  "team": [
+   {
+    "name": "Tyranitar",
+    "species": "Tyranitar",
+    "item": "Tyranitarite",
+    "ability": "Sand Stream",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rock Slide",
+     "Knock Off",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Excadrill",
+    "species": "Excadrill",
+    "item": "Focus Sash",
+    "ability": "Sand Rush",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "High Horsepower",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Rillaboom",
+    "species": "Rillaboom",
+    "item": "",
+    "ability": "Grassy Surge",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Grassy Glide",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Salamence",
+    "species": "Salamence",
+    "item": "",
+    "ability": "Intimidate",
+    "gender": "",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Raichu",
+    "species": "Raichu",
+    "item": "Raichunite X",
+    "ability": "Static",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Politoed",
+    "species": "Politoed",
+    "item": "Sitrus Berry",
+    "ability": "Drizzle",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Icy Wind",
+     "Weather Ball",
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Espathra",
+    "species": "Espathra",
+    "item": "",
+    "ability": "Opportunist",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Archaludon",
+    "species": "Archaludon",
+    "item": "Leftovers",
+    "ability": "Stamina",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Electro Shot",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "provenance": {
+  "p1": [
+   {
+    "name": "Tyranitar",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 3
+   },
+   {
+    "name": "Excadrill",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Rillaboom",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 1
+   },
+   {
+    "name": "Salamence",
+    "source": "unseen preview member (placeholder set)"
+   }
+  ],
+  "p2": [
+   {
+    "name": "Raichu",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Politoed",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 3
+   },
+   {
+    "name": "Espathra",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 0
+   },
+   {
+    "name": "Archaludon",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 1
+   }
+  ]
+ },
+ "startObs": {
+  "mons": [
+   {
+    "side": "p1",
+    "name": "Excadrill",
+    "species": "Excadrill",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p1",
+    "name": "Tyranitar",
+    "species": "Tyranitar",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Politoed",
+    "species": "Politoed",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Raichu",
+    "species": "Raichu",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   }
+  ],
+  "weather": "raindance",
+  "terrain": "",
+  "pseudoWeather": [],
+  "sideConditions": {
+   "p1": [],
+   "p2": []
+  }
+ },
+ "decisions": [
+  {
+   "kind": "turn",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "fakeout",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "icywind",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] "
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Excadrill",
+      "species": "Excadrill",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Tyranitar",
+      "species": "Tyranitar",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Raichu",
+      "species": "Raichu",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "rockslide",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p2a,p2b"
+     ],
+     "mega": true
+    },
+    {
+     "kind": "move",
+     "move": "highhorsepower",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Espathra"
+    },
+    {
+     "kind": "switch",
+     "name": "Archaludon"
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Excadrill",
+      "species": "Excadrill",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Tyranitar",
+      "species": "Tyranitar-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "tyranitarite"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 94,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Espathra",
+      "species": "Espathra",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Raichu",
+      "species": "Raichu",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "sandstorm",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Politoed"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Excadrill",
+      "species": "Excadrill",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Tyranitar",
+      "species": "Tyranitar-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "tyranitarite"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 94,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Espathra",
+      "species": "Espathra",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Raichu",
+      "species": "Raichu",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "knockoff",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "highhorsepower",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "weatherball",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "electroshot",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Excadrill",
+      "species": "Excadrill",
+      "fainted": false,
+      "pct": 1,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Tyranitar",
+      "species": "Tyranitar-Mega",
+      "fainted": false,
+      "pct": 54,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "tyranitarite"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 22,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 3,
+       "spa": 1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Espathra",
+      "species": "Espathra",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Raichu",
+      "species": "Raichu",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Rillaboom"
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "icywind",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "electroshot",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Excadrill",
+      "species": "Excadrill",
+      "fainted": false,
+      "pct": 6,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 30,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spe": -1
+      }
+     },
+     {
+      "side": "p1",
+      "name": "Tyranitar",
+      "species": "Tyranitar-Mega",
+      "fainted": false,
+      "pct": 54,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "tyranitarite"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 28,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 3,
+       "spa": 2
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Espathra",
+      "species": "Espathra",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Raichu",
+      "species": "Raichu",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "grassyglide",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "highhorsepower",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Excadrill",
+      "species": "Excadrill",
+      "fainted": false,
+      "pct": 12,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 36,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spe": -1
+      }
+     },
+     {
+      "side": "p1",
+      "name": "Tyranitar",
+      "species": "Tyranitar-Mega",
+      "fainted": false,
+      "pct": 54,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "tyranitarite"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 3,
+       "spa": 2
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Espathra",
+      "species": "Espathra",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Raichu",
+      "species": "Raichu",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Raichu"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Excadrill",
+      "species": "Excadrill",
+      "fainted": false,
+      "pct": 12,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 36,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spe": -1
+      }
+     },
+     {
+      "side": "p1",
+      "name": "Tyranitar",
+      "species": "Tyranitar-Mega",
+      "fainted": false,
+      "pct": 54,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "tyranitarite"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Espathra",
+      "species": "Espathra",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Raichu",
+      "species": "Raichu",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 6,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Tyranitar"
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "icywind",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "fakeout",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": true
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Excadrill",
+      "species": "Excadrill",
+      "fainted": false,
+      "pct": 12,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 36,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Tyranitar",
+      "species": "Tyranitar-Mega",
+      "fainted": false,
+      "pct": 45,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spe": -1
+      },
+      "item": "tyranitarite"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Espathra",
+      "species": "Espathra",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 93,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Raichu",
+      "species": "Raichu-Mega-X",
+      "fainted": false,
+      "pct": 94,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "raichunitex"
+     }
+    ],
+    "weather": "sandstorm",
+    "terrain": "electricterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 7,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "rockslide",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p2a"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "highhorsepower",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "icywind",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Excadrill",
+      "species": "Excadrill",
+      "fainted": false,
+      "pct": 12,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 36,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Tyranitar",
+      "species": "Tyranitar-Mega",
+      "fainted": false,
+      "pct": 39,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spe": -2
+      },
+      "item": "tyranitarite"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Espathra",
+      "species": "Espathra",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 50,
+      "hint": "g",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Raichu",
+      "species": "Raichu-Mega-X",
+      "fainted": false,
+      "pct": 88,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "raichunitex"
+     }
+    ],
+    "weather": "sandstorm",
+    "terrain": "electricterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 8,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "knockoff",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "highhorsepower",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "icywind",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Excadrill",
+      "species": "Excadrill",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 36,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Tyranitar",
+      "species": "Tyranitar-Mega",
+      "fainted": false,
+      "pct": 32,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spe": -3
+      },
+      "item": "tyranitarite"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Espathra",
+      "species": "Espathra",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Raichu",
+      "species": "Raichu-Mega-X",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "raichunitex"
+     }
+    ],
+    "weather": "sandstorm",
+    "terrain": "electricterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  }
+ ],
+ "stop": null
+}

@@ -1,0 +1,2101 @@
+{
+ "id": "gen9championsvgc2026regmc-2689047055",
+ "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689047055",
+ "format": "gen9championsvgc2026regmc",
+ "ots": false,
+ "p1": {
+  "team": [
+   {
+    "name": "Benched",
+    "species": "Milotic",
+    "item": "Leftovers",
+    "ability": "Marvel Scale",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Coil",
+     "Hypnosis",
+     "Muddy Water",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Incineroar",
+    "species": "Incineroar",
+    "item": "",
+    "ability": "Intimidate",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Parting Shot",
+     "Flare Blitz",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Raichu",
+    "species": "Raichu",
+    "item": "Raichunite Y",
+    "ability": "Static",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Zap Cannon",
+     "Focus Blast",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Farigiraf",
+    "species": "Farigiraf",
+    "item": "",
+    "ability": "Cud Chew",
+    "gender": "",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Farigiraf",
+    "species": "Farigiraf",
+    "item": "Sitrus Berry",
+    "ability": "Cud Chew",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Grass Knot",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Golisopod",
+    "species": "Golisopod",
+    "item": "",
+    "ability": "Emergency Exit",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Drill Run",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Grimmsnarl",
+    "species": "Grimmsnarl",
+    "item": "Light Clay",
+    "ability": "Prankster",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Reflect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Archaludon",
+    "species": "Archaludon",
+    "item": "Leftovers",
+    "ability": "Stamina",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "provenance": {
+  "p1": [
+   {
+    "name": "Benched",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 3
+   },
+   {
+    "name": "Incineroar",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   },
+   {
+    "name": "Raichu",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Farigiraf",
+    "source": "unseen preview member (placeholder set)"
+   }
+  ],
+  "p2": [
+   {
+    "name": "Farigiraf",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   },
+   {
+    "name": "Golisopod",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   },
+   {
+    "name": "Grimmsnarl",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": "Light Clay (a screen lasted past 5 turns)",
+    "ability_shown": false,
+    "moves_shown": 1
+   },
+   {
+    "name": "Archaludon",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 1
+   }
+  ]
+ },
+ "startObs": {
+  "mons": [
+   {
+    "side": "p1",
+    "name": "Benched",
+    "species": "Milotic",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p1",
+    "name": "Incineroar",
+    "species": "Incineroar",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Farigiraf",
+    "species": "Farigiraf",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {
+     "atk": -1
+    }
+   },
+   {
+    "side": "p2",
+    "name": "Golisopod",
+    "species": "Golisopod",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {
+     "atk": -1
+    }
+   }
+  ],
+  "weather": "",
+  "terrain": "",
+  "pseudoWeather": [],
+  "sideConditions": {
+   "p1": [],
+   "p2": []
+  }
+ },
+ "decisions": [
+  {
+   "kind": "turn",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "coil",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "partingshot",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "grassknot",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "drillrun",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [
+     "Raichu"
+    ],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benched",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 74,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "accuracy": 1,
+       "atk": 1,
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu",
+      "fainted": false,
+      "pct": 41,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -2,
+       "spa": -1
+      }
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "hypnosis",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Incineroar"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "grassknot",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benched",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 45,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "accuracy": 1,
+       "atk": 1,
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu",
+      "fainted": false,
+      "pct": 41,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -2
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "slp",
+      "slot": 1,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      }
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "hypnosis",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "flareblitz",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Grimmsnarl"
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benched",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 51,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "accuracy": 1,
+       "atk": 1,
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 82,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu",
+      "fainted": false,
+      "pct": 41,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "slp",
+      "slot": 0,
+      "boosts": {
+       "atk": -2
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "slp",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Grimmsnarl",
+      "species": "Grimmsnarl",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "hypnosis",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "partingshot",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "reflect",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [
+     "Raichu"
+    ],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benched",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 57,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "accuracy": 1,
+       "atk": 1,
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 82,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu",
+      "fainted": false,
+      "pct": 41,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "slp",
+      "slot": 0,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "slp",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Grimmsnarl",
+      "species": "Grimmsnarl",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "slp",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "reflect"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "muddywater",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p2a,p2b"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "zapcannon",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": true
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "grassknot",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Archaludon"
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benched",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 39,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "accuracy": 1,
+       "atk": 1,
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 82,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 41,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "raichunitey"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 58,
+      "hint": "",
+      "status": "par",
+      "slot": 1,
+      "boosts": {
+       "accuracy": -1,
+       "def": 2
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 74,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "slp",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Grimmsnarl",
+      "species": "Grimmsnarl",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "slp",
+      "slot": null
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "reflect"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 6,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "hypnosis",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "focusblast",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benched",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 45,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "accuracy": 1,
+       "atk": 1,
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 82,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 41,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "raichunitey"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 64,
+      "hint": "",
+      "status": "par",
+      "slot": 1,
+      "boosts": {
+       "accuracy": -1,
+       "def": 2
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 74,
+      "hint": "",
+      "status": "slp",
+      "slot": 0,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "slp",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Grimmsnarl",
+      "species": "Grimmsnarl",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "slp",
+      "slot": null
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "reflect"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 7,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "muddywater",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p2a,p2b"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "focusblast",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Golisopod"
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benched",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 51,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "accuracy": 1,
+       "atk": 1,
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 82,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 41,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "raichunitey"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 64,
+      "hint": "",
+      "status": "par",
+      "slot": null,
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 51,
+      "hint": "",
+      "status": "slp",
+      "slot": 0,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 59,
+      "hint": "",
+      "status": "slp",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Grimmsnarl",
+      "species": "Grimmsnarl",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "slp",
+      "slot": null
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "reflect"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 8,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "muddywater",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "zapcannon",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "grassknot",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benched",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 36,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "accuracy": 1,
+       "atk": 1,
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 82,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 41,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "raichunitey"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 64,
+      "hint": "",
+      "status": "par",
+      "slot": null,
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 44,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Grimmsnarl",
+      "species": "Grimmsnarl",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "slp",
+      "slot": null
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "reflect"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 8,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Archaludon"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benched",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 36,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "accuracy": 1,
+       "atk": 1,
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 82,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 41,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "raichunitey"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 64,
+      "hint": "",
+      "status": "par",
+      "slot": 1,
+      "boosts": {},
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 44,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Grimmsnarl",
+      "species": "Grimmsnarl",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "slp",
+      "slot": null
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "reflect"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 9,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "hypnosis",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "focusblast",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benched",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 42,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "accuracy": 1,
+       "atk": 1,
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 82,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 41,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "raichunitey"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 44,
+      "hint": "",
+      "status": "slp",
+      "slot": 0,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Grimmsnarl",
+      "species": "Grimmsnarl",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "slp",
+      "slot": null
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "reflect"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 9,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Grimmsnarl"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benched",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 42,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "accuracy": 1,
+       "atk": 1,
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 82,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 41,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "raichunitey"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 44,
+      "hint": "",
+      "status": "slp",
+      "slot": 0,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Grimmsnarl",
+      "species": "Grimmsnarl",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "slp",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "reflect"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 10,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "muddywater",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "zapcannon",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benched",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 48,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "accuracy": 1,
+       "atk": 1,
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 82,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 41,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "raichunitey"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 10,
+      "hint": "",
+      "status": "slp",
+      "slot": 0,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Grimmsnarl",
+      "species": "Grimmsnarl",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "reflect"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 11,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "zapcannon",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benched",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 48,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "accuracy": 1,
+       "atk": 1,
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 82,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Raichu",
+      "species": "Raichu-Mega-Y",
+      "fainted": false,
+      "pct": 41,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "raichunitey"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Grimmsnarl",
+      "species": "Grimmsnarl",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "reflect"
+     ]
+    }
+   }
+  }
+ ],
+ "stop": null
+}

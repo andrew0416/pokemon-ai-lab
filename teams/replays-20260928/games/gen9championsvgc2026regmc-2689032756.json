@@ -1,0 +1,1629 @@
+{
+ "id": "gen9championsvgc2026regmc-2689032756",
+ "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689032756",
+ "format": "gen9championsvgc2026regmc",
+ "ots": false,
+ "p1": {
+  "team": [
+   {
+    "name": "Pawmot",
+    "species": "Pawmot",
+    "item": "Focus Sash",
+    "ability": "Volt Absorb",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Double Shock",
+     "Revival Blessing",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Basculegion",
+    "species": "Basculegion-F",
+    "item": "",
+    "ability": "Swift Swim",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Soak",
+     "Shadow Ball",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Volcarona",
+    "species": "Volcarona",
+    "item": "Sitrus Berry",
+    "ability": "Flame Body",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rage Powder",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Salamence",
+    "species": "Salamence",
+    "item": "Salamencite",
+    "ability": "Intimidate",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hyper Voice",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Charizard",
+    "species": "Charizard",
+    "item": "Charizardite Y",
+    "ability": "Blaze",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Weather Ball",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Farigiraf",
+    "species": "Farigiraf",
+    "item": "",
+    "ability": "Cud Chew",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Archaludon",
+    "species": "Archaludon",
+    "item": "Leftovers",
+    "ability": "Stamina",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Pulse",
+     "Electro Shot",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Politoed",
+    "species": "Politoed",
+    "item": "",
+    "ability": "Drizzle",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Ice Beam",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "provenance": {
+  "p1": [
+   {
+    "name": "Pawmot",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Basculegion",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Volcarona",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   },
+   {
+    "name": "Salamence",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 1
+   }
+  ],
+  "p2": [
+   {
+    "name": "Charizard",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   },
+   {
+    "name": "Farigiraf",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 0
+   },
+   {
+    "name": "Archaludon",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   },
+   {
+    "name": "Politoed",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 1
+   }
+  ]
+ },
+ "startObs": {
+  "mons": [
+   {
+    "side": "p1",
+    "name": "Basculegion",
+    "species": "Basculegion-F",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p1",
+    "name": "Pawmot",
+    "species": "Pawmot",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Charizard",
+    "species": "Charizard",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Farigiraf",
+    "species": "Farigiraf",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   }
+  ],
+  "weather": "",
+  "terrain": "",
+  "pseudoWeather": [],
+  "sideConditions": {
+   "p1": [],
+   "p2": []
+  }
+ },
+ "decisions": [
+  {
+   "kind": "turn",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "doubleshock",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "soak",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "weatherball",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": true
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Basculegion",
+      "species": "Basculegion-F",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Pawmot",
+      "species": "Pawmot",
+      "fainted": false,
+      "pct": 1,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "charizarditey"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Archaludon"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Basculegion",
+      "species": "Basculegion-F",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Pawmot",
+      "species": "Pawmot",
+      "fainted": false,
+      "pct": 1,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "charizarditey"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Volcarona"
+    },
+    {
+     "kind": "move",
+     "move": "soak",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "weatherball",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dragonpulse",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Basculegion",
+      "species": "Basculegion-F",
+      "fainted": false,
+      "pct": 74,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Pawmot",
+      "species": "Pawmot",
+      "fainted": false,
+      "pct": 1,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": false,
+      "pct": 43,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "charizarditey"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "ragepowder",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Salamence"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "weatherball",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dragonpulse",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Basculegion",
+      "species": "Basculegion-F",
+      "fainted": false,
+      "pct": 74,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Pawmot",
+      "species": "Pawmot",
+      "fainted": false,
+      "pct": 1,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Salamence",
+      "species": "Salamence",
+      "fainted": false,
+      "pct": 44,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "charizarditey"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Pawmot"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Basculegion",
+      "species": "Basculegion-F",
+      "fainted": false,
+      "pct": 74,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Pawmot",
+      "species": "Pawmot",
+      "fainted": false,
+      "pct": 1,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Salamence",
+      "species": "Salamence",
+      "fainted": false,
+      "pct": 44,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "charizarditey"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "doubleshock",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "hypervoice",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p2a,p2b"
+     ],
+     "mega": true
+    }
+   ],
+   "p2": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dragonpulse",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Basculegion",
+      "species": "Basculegion-F",
+      "fainted": false,
+      "pct": 74,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Pawmot",
+      "species": "Pawmot",
+      "fainted": false,
+      "pct": 1,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "salamencite"
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 71,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1,
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "charizarditey"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Basculegion"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Politoed"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Basculegion",
+      "species": "Basculegion-F",
+      "fainted": false,
+      "pct": 74,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Pawmot",
+      "species": "Pawmot",
+      "fainted": false,
+      "pct": 1,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "salamencite"
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 71,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1,
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "charizarditey"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "revivalblessing",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "shadowball",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "icebeam",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "electroshot",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Basculegion",
+      "species": "Basculegion-F",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Pawmot",
+      "species": "Pawmot",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "salamencite"
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 30,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1,
+       "def": 2,
+       "spa": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "charizarditey"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Salamence"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Basculegion",
+      "species": "Basculegion-F",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Pawmot",
+      "species": "Pawmot",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "salamencite"
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 30,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1,
+       "def": 2,
+       "spa": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "charizarditey"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 6,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "icebeam",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Basculegion",
+      "species": "Basculegion-F",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Pawmot",
+      "species": "Pawmot",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "salamencite"
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1,
+       "def": 2,
+       "spa": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "charizarditey"
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 60,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  }
+ ],
+ "stop": null
+}

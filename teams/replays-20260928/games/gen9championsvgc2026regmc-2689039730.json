@@ -1,0 +1,2145 @@
+{
+ "id": "gen9championsvgc2026regmc-2689039730",
+ "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689039730",
+ "format": "gen9championsvgc2026regmc",
+ "ots": false,
+ "p1": {
+  "team": [
+   {
+    "name": "Dragonite",
+    "species": "Dragonite",
+    "item": "Dragoninite",
+    "ability": "Inner Focus",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Thunder",
+     "Protect",
+     "Dragon Pulse",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Klefki",
+    "species": "Klefki",
+    "item": "",
+    "ability": "Prankster",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Light Screen",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Gholdengo",
+    "species": "Gholdengo",
+    "item": "Life Orb",
+    "ability": "Good as Gold",
+    "gender": "",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Nasty Plot",
+     "Shadow Ball",
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Sneasler",
+    "species": "Sneasler",
+    "item": "",
+    "ability": "Pressure",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Protect",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Farigiraf",
+    "species": "Farigiraf",
+    "item": "",
+    "ability": "Cud Chew",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Helping Hand",
+     "Psychic",
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Politoed",
+    "species": "Politoed",
+    "item": "",
+    "ability": "Drizzle",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Icy Wind",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Archaludon",
+    "species": "Archaludon",
+    "item": "",
+    "ability": "Stamina",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Pulse",
+     "Protect",
+     "Electro Shot",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Greninja",
+    "species": "Greninja",
+    "item": "Greninjite",
+    "ability": "Torrent",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Weather Ball",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "provenance": {
+  "p1": [
+   {
+    "name": "Dragonite",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 3
+   },
+   {
+    "name": "Klefki",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   },
+   {
+    "name": "Gholdengo",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 3
+   },
+   {
+    "name": "Sneasler",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   }
+  ],
+  "p2": [
+   {
+    "name": "Farigiraf",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 3
+   },
+   {
+    "name": "Politoed",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 1
+   },
+   {
+    "name": "Archaludon",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 3
+   },
+   {
+    "name": "Greninja",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   }
+  ]
+ },
+ "startObs": {
+  "mons": [
+   {
+    "side": "p1",
+    "name": "Dragonite",
+    "species": "Dragonite",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p1",
+    "name": "Klefki",
+    "species": "Klefki",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Farigiraf",
+    "species": "Farigiraf",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Politoed",
+    "species": "Politoed",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   }
+  ],
+  "weather": "raindance",
+  "terrain": "",
+  "pseudoWeather": [],
+  "sideConditions": {
+   "p1": [],
+   "p2": []
+  }
+ },
+ "decisions": [
+  {
+   "kind": "turn",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "thunder",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": true
+    },
+    {
+     "kind": "move",
+     "move": "lightscreen",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "helpinghand",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "icywind",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 85,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spe": -1
+      },
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Klefki",
+      "species": "Klefki",
+      "fainted": false,
+      "pct": 95,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spe": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 34,
+      "hint": "",
+      "status": "par",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "lightscreen"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "thunder",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Gholdengo"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "psychic",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Archaludon"
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spe": -1
+      },
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Klefki",
+      "species": "Klefki",
+      "fainted": false,
+      "pct": 95,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 81,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 34,
+      "hint": "",
+      "status": "par",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "lightscreen"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Klefki"
+    },
+    {
+     "kind": "move",
+     "move": "nastyplot",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dragonpulse",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 2
+      }
+     },
+     {
+      "side": "p1",
+      "name": "Klefki",
+      "species": "Klefki",
+      "fainted": false,
+      "pct": 95,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 81,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 34,
+      "hint": "",
+      "status": "par",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "lightscreen"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Sneasler"
+    },
+    {
+     "kind": "move",
+     "move": "shadowball",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 2
+      }
+     },
+     {
+      "side": "p1",
+      "name": "Klefki",
+      "species": "Klefki",
+      "fainted": false,
+      "pct": 95,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 81,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 34,
+      "hint": "",
+      "status": "par",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "lightscreen"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "closecombat",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "shadowball",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Politoed"
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": false,
+      "pct": 90,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 2
+      },
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "Klefki",
+      "species": "Klefki",
+      "fainted": false,
+      "pct": 95,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 81,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Greninja"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": false,
+      "pct": 90,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 2
+      },
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "Klefki",
+      "species": "Klefki",
+      "fainted": false,
+      "pct": 95,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 81,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Greninja",
+      "species": "Greninja",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 6,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Klefki"
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "psychic",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "weatherball",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": true
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": false,
+      "pct": 90,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 2
+      },
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "Klefki",
+      "species": "Klefki",
+      "fainted": false,
+      "pct": 78,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 81,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Greninja",
+      "species": "Greninja-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "greninjite"
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 7,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "lightscreen",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "shadowball",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "helpinghand",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "weatherball",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 2
+      },
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "Klefki",
+      "species": "Klefki",
+      "fainted": false,
+      "pct": 78,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 81,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Greninja",
+      "species": "Greninja-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "greninjite"
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "lightscreen"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 7,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Dragonite"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Archaludon"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "Klefki",
+      "species": "Klefki",
+      "fainted": false,
+      "pct": 78,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 81,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Greninja",
+      "species": "Greninja-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "greninjite"
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "lightscreen"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 8,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Sneasler"
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "helpinghand",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "electroshot",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "Klefki",
+      "species": "Klefki",
+      "fainted": false,
+      "pct": 78,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 81,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Greninja",
+      "species": "Greninja-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "greninjite"
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "lightscreen"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 9,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dragonpulse",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "psychic",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dragonpulse",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "Klefki",
+      "species": "Klefki",
+      "fainted": false,
+      "pct": 78,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 40,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1,
+       "spa": 1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Greninja",
+      "species": "Greninja-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "greninjite"
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "lightscreen"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 9,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Klefki"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "Klefki",
+      "species": "Klefki",
+      "fainted": false,
+      "pct": 78,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 40,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1,
+       "spa": 1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Greninja",
+      "species": "Greninja-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "greninjite"
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "lightscreen"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 10,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "closecombat",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "lightscreen",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "psychic",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Dragonite",
+      "species": "Dragonite-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "dragoninite"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "Klefki",
+      "species": "Klefki",
+      "fainted": false,
+      "pct": 78,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 40,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1,
+       "spa": 1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Greninja",
+      "species": "Greninja-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "greninjite"
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "lightscreen"
+     ],
+     "p2": []
+    }
+   }
+  }
+ ],
+ "stop": null
+}

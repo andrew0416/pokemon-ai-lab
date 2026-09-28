@@ -1,0 +1,1435 @@
+{
+ "id": "gen9championsvgc2026regmc-2689032015",
+ "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689032015",
+ "format": "gen9championsvgc2026regmc",
+ "ots": true,
+ "p1": {
+  "team": [
+   {
+    "name": "Garchomp",
+    "species": "Garchomp",
+    "item": "Garchompite Z",
+    "ability": "Rough Skin",
+    "gender": "F",
+    "nature": "Modest",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Pulse",
+     "Power Gem",
+     "Earth Power",
+     "Protect"
+    ]
+   },
+   {
+    "name": "Volcarona",
+    "species": "Volcarona",
+    "item": "Rocky Helmet",
+    "ability": "Flame Body",
+    "gender": "M",
+    "nature": "Timid",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Overheat",
+     "Struggle Bug",
+     "Rage Powder",
+     "Tailwind"
+    ]
+   },
+   {
+    "name": "Rillaboom",
+    "species": "Rillaboom",
+    "item": "Miracle Seed",
+    "ability": "Grassy Surge",
+    "gender": "M",
+    "nature": "Modest",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wood Hammer",
+     "Grassy Glide",
+     "Fake Out",
+     "U-turn"
+    ]
+   },
+   {
+    "name": "Gholdengo",
+    "species": "Gholdengo",
+    "item": "Life Orb",
+    "ability": "Good as Gold",
+    "gender": "",
+    "nature": "Timid",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Make It Rain",
+     "Shadow Ball",
+     "Nasty Plot",
+     "Protect"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Pelipper",
+    "species": "Pelipper",
+    "item": "Choice Scarf",
+    "ability": "Drizzle",
+    "gender": "M",
+    "nature": "Timid",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Rain Dance",
+     "Hurricane",
+     "Weather Ball"
+    ]
+   },
+   {
+    "name": "Basculegion",
+    "species": "Basculegion",
+    "item": "Life Orb",
+    "ability": "Swift Swim",
+    "gender": "M",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wave Crash",
+     "Last Respects",
+     "Aqua Jet",
+     "Protect"
+    ]
+   },
+   {
+    "name": "Golisopod",
+    "species": "Golisopod",
+    "item": "Golisopite",
+    "ability": "Emergency Exit",
+    "gender": "M",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Swords Dance",
+     "Leech Life",
+     "Liquidation",
+     "Aqua Jet"
+    ]
+   },
+   {
+    "name": "Archaludon",
+    "species": "Archaludon",
+    "item": "Leftovers",
+    "ability": "Stamina",
+    "gender": "F",
+    "nature": "Calm",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Electro Shot",
+     "Aura Sphere",
+     "Dragon Pulse",
+     "Protect"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "provenance": {
+  "p1": [
+   {
+    "name": "Garchomp",
+    "source": "open team sheet (Stat Points assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   },
+   {
+    "name": "Volcarona",
+    "source": "open team sheet (Stat Points assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 0
+   },
+   {
+    "name": "Rillaboom",
+    "source": "open team sheet (Stat Points assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   },
+   {
+    "name": "Gholdengo",
+    "source": "open team sheet (Stat Points assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 1
+   }
+  ],
+  "p2": [
+   {
+    "name": "Pelipper",
+    "source": "open team sheet (Stat Points assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 0
+   },
+   {
+    "name": "Basculegion",
+    "source": "open team sheet (Stat Points assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 1
+   },
+   {
+    "name": "Golisopod",
+    "source": "open team sheet (Stat Points assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 3
+   },
+   {
+    "name": "Archaludon",
+    "source": "open team sheet (Stat Points assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   }
+  ]
+ },
+ "startObs": {
+  "mons": [
+   {
+    "side": "p1",
+    "name": "Garchomp",
+    "species": "Garchomp",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p1",
+    "name": "Volcarona",
+    "species": "Volcarona",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Basculegion",
+    "species": "Basculegion",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Pelipper",
+    "species": "Pelipper",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   }
+  ],
+  "weather": "raindance",
+  "terrain": "",
+  "pseudoWeather": [],
+  "sideConditions": {
+   "p1": [],
+   "p2": []
+  }
+ },
+ "decisions": [
+  {
+   "kind": "turn",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "powergem",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": true
+    },
+    {
+     "kind": "switch",
+     "name": "Rillaboom"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "wavecrash",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": false,
+      "pct": 31,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Basculegion",
+      "species": "Basculegion",
+      "fainted": false,
+      "pct": 75,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Golisopod"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": false,
+      "pct": 31,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Basculegion",
+      "species": "Basculegion",
+      "fainted": false,
+      "pct": 75,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Volcarona"
+    },
+    {
+     "kind": "move",
+     "move": "grassyglide",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "swordsdance",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": true
+    },
+    {
+     "kind": "switch",
+     "name": "Archaludon"
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": false,
+      "pct": 31,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Basculegion",
+      "species": "Basculegion",
+      "fainted": false,
+      "pct": 75,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 2
+      },
+      "item": "golisopite"
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "woodhammer",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "aquajet",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "electroshot",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": false,
+      "pct": 31,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 72,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "rockyhelmet"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1,
+       "spa": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Basculegion",
+      "species": "Basculegion",
+      "fainted": false,
+      "pct": 75,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod-Mega",
+      "fainted": false,
+      "pct": 77,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 2
+      },
+      "item": "golisopite"
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Gholdengo"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": false,
+      "pct": 31,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 72,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "rockyhelmet"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1,
+       "spa": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Basculegion",
+      "species": "Basculegion",
+      "fainted": false,
+      "pct": 75,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod-Mega",
+      "fainted": false,
+      "pct": 77,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 2
+      },
+      "item": "golisopite"
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "nastyplot",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "woodhammer",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "leechlife",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "electroshot",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": false,
+      "pct": 31,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": false,
+      "pct": 37,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spa": 2
+      }
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "rockyhelmet"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1,
+       "spa": 2
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Basculegion",
+      "species": "Basculegion",
+      "fainted": false,
+      "pct": 75,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 2
+      },
+      "item": "golisopite"
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Garchomp"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": false,
+      "pct": 31,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": false,
+      "pct": 37,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spa": 2
+      }
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "rockyhelmet"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1,
+       "spa": 2
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Basculegion",
+      "species": "Basculegion",
+      "fainted": false,
+      "pct": 75,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 2
+      },
+      "item": "golisopite"
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "earthpower",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "aquajet",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dragonpulse",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp-Mega-Z",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "garchompitez"
+     },
+     {
+      "side": "p1",
+      "name": "Gholdengo",
+      "species": "Gholdengo",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spa": 2
+      }
+     },
+     {
+      "side": "p1",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Volcarona",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "rockyhelmet"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 42,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 2,
+       "spa": 2
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Basculegion",
+      "species": "Basculegion",
+      "fainted": false,
+      "pct": 75,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 2
+      },
+      "item": "golisopite"
+     },
+     {
+      "side": "p2",
+      "name": "Pelipper",
+      "species": "Pelipper",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  }
+ ],
+ "stop": null
+}

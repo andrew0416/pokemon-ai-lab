@@ -1,0 +1,1815 @@
+[
+ {
+  "id": "gen9championsvgc2026regmc-2689052047",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 4,
+  "mid_switches": 2
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689052141",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 1,
+  "mid_switches": 2
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689051555",
+  "ots": false,
+  "decisions": 14,
+  "stop": null,
+  "turns": 12,
+  "unknown_actions": 3,
+  "mid_switches": 4
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689050772",
+  "ots": false,
+  "decisions": 12,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 4,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689051600",
+  "ots": false,
+  "decisions": 12,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689051691",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689051823",
+  "ots": false,
+  "decisions": 0,
+  "stop": null,
+  "skipped": "no turn 1 / leads not found"
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689051901",
+  "ots": false,
+  "decisions": 1,
+  "stop": null,
+  "turns": 1,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689051571",
+  "ots": false,
+  "decisions": 5,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689051543",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689051561",
+  "ots": false,
+  "decisions": 5,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689050776",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 4,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689050529",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 0,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689050520",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689050139",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 5,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689050149",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689050297",
+  "ots": false,
+  "decisions": 4,
+  "stop": null,
+  "turns": 2,
+  "unknown_actions": 0,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689050087",
+  "ots": false,
+  "decisions": 12,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689049795",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 3,
+  "mid_switches": 3
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689050140",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 4,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689049688",
+  "ots": false,
+  "decisions": 13,
+  "stop": null,
+  "turns": 10,
+  "unknown_actions": 5,
+  "mid_switches": 2
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689049718",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689050259",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689049523",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 4,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689049007",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689049130",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689049318",
+  "ots": false,
+  "decisions": 16,
+  "stop": null,
+  "turns": 13,
+  "unknown_actions": 4,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689048666",
+  "ots": false,
+  "decisions": 13,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689049178",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689049039",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689048647",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689048593",
+  "ots": false,
+  "decisions": 5,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 3,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689049205",
+  "ots": true,
+  "decisions": 10,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689048598",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689047732",
+  "ots": false,
+  "decisions": 12,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689048645",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689048313",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689047727",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 3,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689047810",
+  "ots": false,
+  "decisions": 6,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689047716",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 1,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689047723",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 0,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689047197",
+  "ots": false,
+  "decisions": 16,
+  "stop": null,
+  "turns": 12,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689047966",
+  "ots": false,
+  "decisions": 3,
+  "stop": null,
+  "turns": 2,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689047055",
+  "ots": false,
+  "decisions": 13,
+  "stop": null,
+  "turns": 11,
+  "unknown_actions": 12,
+  "mid_switches": 2
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689046756",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689046915",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689046769",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 0,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689046674",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689045027",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689046530",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 3,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689046372",
+  "ots": false,
+  "decisions": 12,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689046149",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 5,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689045701",
+  "ots": false,
+  "decisions": 13,
+  "stop": null,
+  "turns": 10,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689045639",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689046218",
+  "ots": false,
+  "decisions": 1,
+  "stop": null,
+  "turns": 1,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689043972",
+  "ots": false,
+  "decisions": 27,
+  "stop": null,
+  "turns": 24,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689045473",
+  "ots": false,
+  "decisions": 12,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 3,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689045222",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 4,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689045618",
+  "ots": false,
+  "decisions": 17,
+  "stop": null,
+  "turns": 14,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689045255",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 3,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689044316",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 1,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689044809",
+  "ots": false,
+  "decisions": 6,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 0,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689044769",
+  "ots": false,
+  "decisions": 12,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 4,
+  "mid_switches": 2
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689044888",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 7,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689044505",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689044022",
+  "ots": false,
+  "decisions": 13,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689044254",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689044167",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689042736",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689044367",
+  "ots": false,
+  "decisions": 13,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689044279",
+  "ots": false,
+  "decisions": 6,
+  "stop": null,
+  "turns": 3,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689044110",
+  "ots": false,
+  "decisions": 6,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689043712",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689043533",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689043327",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689043333",
+  "ots": false,
+  "decisions": 3,
+  "stop": null,
+  "turns": 2,
+  "unknown_actions": 0,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689043129",
+  "ots": false,
+  "decisions": 1,
+  "stop": null,
+  "turns": 1,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689042892",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689042698",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 5,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689042375",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689042889",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 3,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689042666",
+  "ots": false,
+  "decisions": 3,
+  "stop": null,
+  "turns": 2,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689042086",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 4,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689042164",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689042449",
+  "ots": false,
+  "decisions": 0,
+  "stop": null,
+  "turns": 0,
+  "unknown_actions": 0,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689042506",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689041893",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689041240",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689041688",
+  "ots": false,
+  "decisions": 6,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 0,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689041515",
+  "ots": false,
+  "decisions": 4,
+  "stop": null,
+  "turns": 3,
+  "unknown_actions": 0,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689041342",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689040830",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689040676",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 5,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689040708",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 4,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689040513",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689040000",
+  "ots": false,
+  "decisions": 13,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689039730",
+  "ots": false,
+  "decisions": 13,
+  "stop": null,
+  "turns": 10,
+  "unknown_actions": 0,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689039929",
+  "ots": false,
+  "decisions": 4,
+  "stop": null,
+  "turns": 2,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689039377",
+  "ots": false,
+  "decisions": 13,
+  "stop": null,
+  "turns": 10,
+  "unknown_actions": 6,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689038403",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689039143",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689038915",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689038053",
+  "ots": false,
+  "decisions": 13,
+  "stop": null,
+  "turns": 11,
+  "unknown_actions": 4,
+  "mid_switches": 3
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689039123",
+  "ots": true,
+  "decisions": 6,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689038895",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689037834",
+  "ots": false,
+  "decisions": 14,
+  "stop": null,
+  "turns": 11,
+  "unknown_actions": 2,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689038025",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689037632",
+  "ots": false,
+  "decisions": 22,
+  "stop": null,
+  "turns": 19,
+  "unknown_actions": 12,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689038662",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689038182",
+  "ots": false,
+  "decisions": 5,
+  "stop": null,
+  "turns": 3,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689037839",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 2,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689037907",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689036956",
+  "ots": false,
+  "decisions": 14,
+  "stop": null,
+  "turns": 11,
+  "unknown_actions": 5,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689037191",
+  "ots": false,
+  "decisions": 12,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 6,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689037304",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 6,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689037487",
+  "ots": false,
+  "decisions": 2,
+  "stop": null,
+  "turns": 2,
+  "unknown_actions": 0,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689037253",
+  "ots": false,
+  "decisions": 12,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689037120",
+  "ots": false,
+  "decisions": 4,
+  "stop": null,
+  "turns": 3,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689036577",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689037012",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689036534",
+  "ots": false,
+  "decisions": 16,
+  "stop": null,
+  "turns": 13,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689036728",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689036572",
+  "ots": false,
+  "decisions": 6,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689035962",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 2,
+  "mid_switches": 2
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689035782",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689036108",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689036146",
+  "ots": false,
+  "decisions": 3,
+  "stop": null,
+  "turns": 2,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689035241",
+  "ots": false,
+  "decisions": 12,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689035770",
+  "ots": false,
+  "decisions": 5,
+  "stop": null,
+  "turns": 3,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689035818",
+  "ots": false,
+  "decisions": 3,
+  "stop": null,
+  "turns": 2,
+  "unknown_actions": 1,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689035484",
+  "ots": false,
+  "decisions": 5,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689034614",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689034756",
+  "ots": false,
+  "decisions": 12,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 5,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689035196",
+  "ots": false,
+  "decisions": 1,
+  "stop": null,
+  "turns": 1,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689034540",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689034563",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 4,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689033776",
+  "ots": false,
+  "decisions": 6,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689034150",
+  "ots": false,
+  "decisions": 3,
+  "stop": null,
+  "turns": 2,
+  "unknown_actions": 0,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689033592",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689033285",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 1,
+  "mid_switches": 2
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689033664",
+  "ots": false,
+  "decisions": 6,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689032994",
+  "ots": false,
+  "decisions": 15,
+  "stop": null,
+  "turns": 12,
+  "unknown_actions": 7,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689032684",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689032756",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689032325",
+  "ots": false,
+  "decisions": 12,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689032686",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689032654",
+  "ots": false,
+  "decisions": 1,
+  "stop": {
+   "turn": 2,
+   "reason": "Ally Switch (|swap|)"
+  },
+  "turns": 1,
+  "unknown_actions": 0,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689032303",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689032217",
+  "ots": false,
+  "decisions": 5,
+  "stop": null,
+  "turns": 3,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689031766",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689031984",
+  "ots": false,
+  "decisions": 6,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689031700",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 6,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689032015",
+  "ots": true,
+  "decisions": 8,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689031849",
+  "ots": false,
+  "decisions": 0,
+  "stop": {
+   "turn": 1,
+   "reason": "Illusion (|replace|)"
+  },
+  "turns": 0,
+  "unknown_actions": 0,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689030818",
+  "ots": false,
+  "decisions": 18,
+  "stop": null,
+  "turns": 15,
+  "unknown_actions": 5,
+  "mid_switches": 5
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689030716",
+  "ots": false,
+  "decisions": 14,
+  "stop": null,
+  "turns": 11,
+  "unknown_actions": 6,
+  "mid_switches": 2
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689031290",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 7,
+  "unknown_actions": 4,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689030883",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 10,
+  "unknown_actions": 3,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689030141",
+  "ots": false,
+  "decisions": 17,
+  "stop": null,
+  "turns": 13,
+  "unknown_actions": 4,
+  "mid_switches": 2
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689031123",
+  "ots": false,
+  "decisions": 2,
+  "stop": null,
+  "turns": 2,
+  "unknown_actions": 0,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689029743",
+  "ots": true,
+  "decisions": 8,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689030412",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689029158",
+  "ots": false,
+  "decisions": 13,
+  "stop": null,
+  "turns": 10,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689029948",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 0,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689028900",
+  "ots": false,
+  "decisions": 12,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 2,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689030153",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689029391",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689029045",
+  "ots": false,
+  "decisions": 16,
+  "stop": null,
+  "turns": 12,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689029525",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689029070",
+  "ots": false,
+  "decisions": 9,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689029362",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689029212",
+  "ots": false,
+  "decisions": 5,
+  "stop": null,
+  "turns": 3,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689028206",
+  "ots": false,
+  "decisions": 14,
+  "stop": null,
+  "turns": 10,
+  "unknown_actions": 6,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689028599",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689028587",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689027554",
+  "ots": false,
+  "decisions": 2,
+  "stop": {
+   "turn": 3,
+   "reason": "Illusion (|replace|)"
+  },
+  "turns": 2,
+  "unknown_actions": 0,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689027955",
+  "ots": false,
+  "decisions": 10,
+  "stop": null,
+  "turns": 8,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689028573",
+  "ots": false,
+  "decisions": 5,
+  "stop": null,
+  "turns": 3,
+  "unknown_actions": 0,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689027482",
+  "ots": false,
+  "decisions": 18,
+  "stop": null,
+  "turns": 14,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689028361",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689027251",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 6,
+  "unknown_actions": 3,
+  "mid_switches": 5
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689027896",
+  "ots": false,
+  "decisions": 7,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689027389",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 3,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689027929",
+  "ots": false,
+  "decisions": 2,
+  "stop": null,
+  "turns": 2,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689025807",
+  "ots": false,
+  "decisions": 13,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 4,
+  "mid_switches": 2
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689026292",
+  "ots": false,
+  "decisions": 4,
+  "stop": {
+   "turn": 4,
+   "reason": "Ally Switch (|swap|)"
+  },
+  "turns": 3,
+  "unknown_actions": 0,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689027680",
+  "ots": false,
+  "decisions": 2,
+  "stop": null,
+  "turns": 2,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689027072",
+  "ots": false,
+  "decisions": 6,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689026876",
+  "ots": false,
+  "decisions": 15,
+  "stop": null,
+  "turns": 11,
+  "unknown_actions": 5,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689026991",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 5,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689024450",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689026869",
+  "ots": false,
+  "decisions": 5,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 4,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689026287",
+  "ots": false,
+  "decisions": 5,
+  "stop": {
+   "turn": 4,
+   "reason": "Transform"
+  },
+  "turns": 3,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689025629",
+  "ots": false,
+  "decisions": 14,
+  "stop": null,
+  "turns": 11,
+  "unknown_actions": 6,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689024905",
+  "ots": false,
+  "decisions": 17,
+  "stop": null,
+  "turns": 14,
+  "unknown_actions": 8,
+  "mid_switches": 4
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689026418",
+  "ots": false,
+  "decisions": 8,
+  "stop": null,
+  "turns": 5,
+  "unknown_actions": 4,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689025613",
+  "ots": false,
+  "decisions": 12,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 1,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689026016",
+  "ots": false,
+  "decisions": 11,
+  "stop": null,
+  "turns": 9,
+  "unknown_actions": 6,
+  "mid_switches": 1
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689023725",
+  "ots": false,
+  "decisions": 14,
+  "stop": null,
+  "turns": 11,
+  "unknown_actions": 9,
+  "mid_switches": 0
+ },
+ {
+  "id": "gen9championsvgc2026regmc-2689025365",
+  "ots": false,
+  "decisions": 5,
+  "stop": null,
+  "turns": 4,
+  "unknown_actions": 2,
+  "mid_switches": 0
+ }
+]

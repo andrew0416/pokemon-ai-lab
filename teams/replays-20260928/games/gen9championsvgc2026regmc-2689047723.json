@@ -1,0 +1,1313 @@
+{
+ "id": "gen9championsvgc2026regmc-2689047723",
+ "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689047723",
+ "format": "gen9championsvgc2026regmc",
+ "ots": false,
+ "p1": {
+  "team": [
+   {
+    "name": "Nala",
+    "species": "Pyroar",
+    "item": "Pyroarite",
+    "ability": "Unnerve",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Benjamin",
+    "species": "Torkoal",
+    "item": "Leftovers",
+    "ability": "Drought",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Helping Hand",
+     "Rest"
+    ]
+   },
+   {
+    "name": "absolutely vile",
+    "species": "Venusaur",
+    "item": "",
+    "ability": "Overgrow",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Solar Beam",
+     "Leaf Storm",
+     "Rest"
+    ]
+   },
+   {
+    "name": "willy wonka",
+    "species": "Whimsicott",
+    "item": "",
+    "ability": "Prankster",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Moonblast",
+     "Sunny Day",
+     "Protect",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Politoed",
+    "species": "Politoed",
+    "item": "",
+    "ability": "Drizzle",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Muddy Water",
+     "Ice Beam",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Archaludon",
+    "species": "Archaludon",
+    "item": "Leftovers",
+    "ability": "Stamina",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Snarl",
+     "Protect",
+     "Electro Shot",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Golisopod",
+    "species": "Golisopod",
+    "item": "",
+    "ability": "Emergency Exit",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Grimmsnarl",
+    "species": "Grimmsnarl",
+    "item": "",
+    "ability": "Prankster",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Light Screen",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "provenance": {
+  "p1": [
+   {
+    "name": "Nala",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 1
+   },
+   {
+    "name": "Benjamin",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 1
+   },
+   {
+    "name": "absolutely vile",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "willy wonka",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 3
+   }
+  ],
+  "p2": [
+   {
+    "name": "Politoed",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   },
+   {
+    "name": "Archaludon",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 3
+   },
+   {
+    "name": "Golisopod",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 0
+   },
+   {
+    "name": "Grimmsnarl",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   }
+  ]
+ },
+ "startObs": {
+  "mons": [
+   {
+    "side": "p1",
+    "name": "Benjamin",
+    "species": "Torkoal",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p1",
+    "name": "Nala",
+    "species": "Pyroar",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Archaludon",
+    "species": "Archaludon",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Politoed",
+    "species": "Politoed",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   }
+  ],
+  "weather": "sunnyday",
+  "terrain": "",
+  "pseudoWeather": [],
+  "sideConditions": {
+   "p1": [],
+   "p2": []
+  }
+ },
+ "decisions": [
+  {
+   "kind": "turn",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "heatwave",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p2a"
+     ],
+     "mega": true
+    },
+    {
+     "kind": "move",
+     "move": "helpinghand",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "muddywater",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "snarl",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benjamin",
+      "species": "Torkoal",
+      "fainted": false,
+      "pct": 45,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "accuracy": -1,
+       "spa": -1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Nala",
+      "species": "Pyroar-Mega",
+      "fainted": false,
+      "pct": 42,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spa": -1
+      },
+      "item": "pyroarite"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 39,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "heatwave",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p2a,p2b"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "helpinghand",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "muddywater",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "snarl",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benjamin",
+      "species": "Torkoal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "accuracy": -1,
+       "spa": -2
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Nala",
+      "species": "Pyroar-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spa": -2
+      },
+      "item": "pyroarite"
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 32,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 2,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "absolutely vile"
+    },
+    {
+     "kind": "switch",
+     "name": "willy wonka"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benjamin",
+      "species": "Torkoal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Nala",
+      "species": "Pyroar-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "pyroarite"
+     },
+     {
+      "side": "p1",
+      "name": "absolutely vile",
+      "species": "Venusaur",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "willy wonka",
+      "species": "Whimsicott",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 32,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 2,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "solarbeam",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "moonblast",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Golisopod"
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": [
+     "Politoed"
+    ]
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benjamin",
+      "species": "Torkoal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Nala",
+      "species": "Pyroar-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "pyroarite"
+     },
+     {
+      "side": "p1",
+      "name": "absolutely vile",
+      "species": "Venusaur",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "willy wonka",
+      "species": "Whimsicott",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 38,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 35,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 2,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "solarbeam",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "sunnyday",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "icebeam",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "electroshot",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benjamin",
+      "species": "Torkoal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Nala",
+      "species": "Pyroar-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "pyroarite"
+     },
+     {
+      "side": "p1",
+      "name": "absolutely vile",
+      "species": "Venusaur",
+      "fainted": false,
+      "pct": 37,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "willy wonka",
+      "species": "Whimsicott",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 31,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 2,
+       "spa": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 35,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 2,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "solarbeam",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Grimmsnarl"
+    },
+    {
+     "kind": "move",
+     "move": "electroshot",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[from] lockedmove"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benjamin",
+      "species": "Torkoal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Nala",
+      "species": "Pyroar-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "pyroarite"
+     },
+     {
+      "side": "p1",
+      "name": "absolutely vile",
+      "species": "Venusaur",
+      "fainted": false,
+      "pct": 7,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "willy wonka",
+      "species": "Whimsicott",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 38,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 2,
+       "spa": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 35,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Grimmsnarl",
+      "species": "Grimmsnarl",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 2,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 6,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "leafstorm",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [
+      "[miss]"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "sunnyday",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "lightscreen",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "snarl",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Benjamin",
+      "species": "Torkoal",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "leftovers"
+     },
+     {
+      "side": "p1",
+      "name": "Nala",
+      "species": "Pyroar-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "pyroarite"
+     },
+     {
+      "side": "p1",
+      "name": "absolutely vile",
+      "species": "Venusaur",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "willy wonka",
+      "species": "Whimsicott",
+      "fainted": false,
+      "pct": 87,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Archaludon",
+      "species": "Archaludon",
+      "fainted": false,
+      "pct": 44,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "def": 2,
+       "spa": 1
+      },
+      "item": "leftovers"
+     },
+     {
+      "side": "p2",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 35,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Grimmsnarl",
+      "species": "Grimmsnarl",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 2,
+      "hint": "",
+      "status": "",
+      "slot": null
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "lightscreen"
+     ]
+    }
+   }
+  }
+ ],
+ "stop": null
+}

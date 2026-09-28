@@ -1,0 +1,1374 @@
+{
+ "id": "gen9championsvgc2026regmc-2689042889",
+ "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689042889",
+ "format": "gen9championsvgc2026regmc",
+ "ots": false,
+ "p1": {
+  "team": [
+   {
+    "name": "Charizard",
+    "species": "Charizard",
+    "item": "Charizardite Y",
+    "ability": "Blaze",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hurricane",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Politoed",
+    "species": "Politoed",
+    "item": "",
+    "ability": "Drizzle",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Weather Ball",
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Farigiraf",
+    "species": "Farigiraf",
+    "item": "",
+    "ability": "Cud Chew",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Golisopod",
+    "species": "Golisopod",
+    "item": "",
+    "ability": "Emergency Exit",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Incineroar",
+    "species": "Incineroar",
+    "item": "Sitrus Berry",
+    "ability": "Intimidate",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Parting Shot",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Floette",
+    "species": "Floette-Eternal",
+    "item": "Floettite",
+    "ability": "Flower Veil",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Calm Mind",
+     "Dazzling Gleam",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Sneasler",
+    "species": "Sneasler",
+    "item": "White Herb",
+    "ability": "Unburden",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rock Tomb",
+     "Close Combat",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Gholdengo",
+    "species": "Gholdengo",
+    "item": "",
+    "ability": "Good as Gold",
+    "gender": "",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "provenance": {
+  "p1": [
+   {
+    "name": "Charizard",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   },
+   {
+    "name": "Politoed",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   },
+   {
+    "name": "Farigiraf",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 0
+   },
+   {
+    "name": "Golisopod",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   }
+  ],
+  "p2": [
+   {
+    "name": "Incineroar",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   },
+   {
+    "name": "Floette",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Sneasler",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Gholdengo",
+    "source": "unseen preview member (placeholder set)"
+   }
+  ]
+ },
+ "startObs": {
+  "mons": [
+   {
+    "side": "p1",
+    "name": "Charizard",
+    "species": "Charizard",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {
+     "atk": -1
+    }
+   },
+   {
+    "side": "p1",
+    "name": "Politoed",
+    "species": "Politoed",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {
+     "atk": -1
+    }
+   },
+   {
+    "side": "p2",
+    "name": "Floette",
+    "species": "Floette-Eternal",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Incineroar",
+    "species": "Incineroar",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   }
+  ],
+  "weather": "raindance",
+  "terrain": "",
+  "pseudoWeather": [],
+  "sideConditions": {
+   "p1": [],
+   "p2": []
+  }
+ },
+ "decisions": [
+  {
+   "kind": "turn",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "hurricane",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "fakeout",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "calmmind",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": true
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Charizard",
+      "species": "Charizard",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p1",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 87,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 1,
+       "spd": 1
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p2",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 57,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "raindance",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "hurricane",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": true
+    },
+    {
+     "kind": "move",
+     "move": "weatherball",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "partingshot",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "calmmind",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": [
+     "Sneasler"
+    ]
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "charizarditey"
+     },
+     {
+      "side": "p1",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 87,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -2,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 2,
+       "spd": 2
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p2",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 10,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "rocktomb",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dazzlinggleam",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "charizarditey"
+     },
+     {
+      "side": "p1",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 87,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -2,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 2,
+       "spd": 2
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p2",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 10,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Farigiraf"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "charizarditey"
+     },
+     {
+      "side": "p1",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": false,
+      "pct": 87,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -2,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 2,
+       "spd": 2
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p2",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 10,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "closecombat",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dazzlinggleam",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "charizarditey"
+     },
+     {
+      "side": "p1",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -2,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 2,
+       "spd": 2
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p2",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 10,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Golisopod"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "charizarditey"
+     },
+     {
+      "side": "p1",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -2,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 2,
+       "spd": 2
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p2",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 10,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "closecombat",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dazzlinggleam",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "charizarditey"
+     },
+     {
+      "side": "p1",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -2,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 2,
+       "spd": 2
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p2",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 10,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 6,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": null,
+     "flags": [
+      "[still]"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "closecombat",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dazzlinggleam",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Charizard",
+      "species": "Charizard-Mega-Y",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "charizarditey"
+     },
+     {
+      "side": "p1",
+      "name": "Farigiraf",
+      "species": "Farigiraf",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Golisopod",
+      "species": "Golisopod",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "Politoed",
+      "species": "Politoed",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -2,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spa": 2,
+       "spd": 2
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p2",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 10,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "def": -1,
+       "spd": -1
+      },
+      "item": ""
+     }
+    ],
+    "weather": "sunnyday",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  }
+ ],
+ "stop": null
+}

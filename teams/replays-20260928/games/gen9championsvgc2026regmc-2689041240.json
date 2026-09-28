@@ -1,0 +1,1601 @@
+{
+ "id": "gen9championsvgc2026regmc-2689041240",
+ "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689041240",
+ "format": "gen9championsvgc2026regmc",
+ "ots": false,
+ "p1": {
+  "team": [
+   {
+    "name": "Dragapult",
+    "species": "Dragapult",
+    "item": "Life Orb",
+    "ability": "Clear Body",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Draco Meteor",
+     "Will-O-Wisp",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Armarouge",
+    "species": "Armarouge",
+    "item": "",
+    "ability": "Flash Fire",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wide Guard",
+     "Expanding Force",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Milotic",
+    "species": "Milotic",
+    "item": "Psychic Seed",
+    "ability": "Competitive",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Coil",
+     "Muddy Water",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Staraptor",
+    "species": "Staraptor",
+    "item": "Staraptite",
+    "ability": "Intimidate",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Indeedee",
+    "species": "Indeedee",
+    "item": "",
+    "ability": "Psychic Surge",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick",
+     "Expanding Force",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Sneasler",
+    "species": "Sneasler",
+    "item": "Psychic Seed",
+    "ability": "Unburden",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Dire Claw",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Kingambit",
+    "species": "Kingambit",
+    "item": "Focus Sash",
+    "ability": "Defiant",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Kowtow Cleave",
+     "Sucker Punch",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Salamence",
+    "species": "Salamence",
+    "item": "Salamencite",
+    "ability": "Intimidate",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Hyper Voice",
+     "Round",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "provenance": {
+  "p1": [
+   {
+    "name": "Dragapult",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Armarouge",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Milotic",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   },
+   {
+    "name": "Staraptor",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 1
+   }
+  ],
+  "p2": [
+   {
+    "name": "Indeedee",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   },
+   {
+    "name": "Sneasler",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Kingambit",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   },
+   {
+    "name": "Salamence",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 3
+   }
+  ]
+ },
+ "startObs": {
+  "mons": [
+   {
+    "side": "p1",
+    "name": "Armarouge",
+    "species": "Armarouge",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p1",
+    "name": "Dragapult",
+    "species": "Dragapult",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Indeedee",
+    "species": "Indeedee",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Sneasler",
+    "species": "Sneasler",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {
+     "spd": 1
+    },
+    "item": ""
+   }
+  ],
+  "weather": "",
+  "terrain": "psychicterrain",
+  "pseudoWeather": [],
+  "sideConditions": {
+   "p1": [],
+   "p2": []
+  }
+ },
+ "decisions": [
+  {
+   "kind": "turn",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "dracometeor",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "wideguard",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "trick",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Armarouge",
+      "species": "Armarouge",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "choicescarf"
+     },
+     {
+      "side": "p1",
+      "name": "Dragapult",
+      "species": "Dragapult",
+      "fainted": false,
+      "pct": 90,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spa": -2
+      },
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Indeedee",
+      "species": "Indeedee",
+      "fainted": false,
+      "pct": 1,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spd": 1
+      },
+      "item": ""
+     }
+    ],
+    "weather": "",
+    "terrain": "psychicterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "willowisp",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [
+      "[miss]"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "expandingforce",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p2b"
+     ],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Kingambit"
+    },
+    {
+     "kind": "move",
+     "move": "direclaw",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Armarouge",
+      "species": "Armarouge",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "choicescarf"
+     },
+     {
+      "side": "p1",
+      "name": "Dragapult",
+      "species": "Dragapult",
+      "fainted": false,
+      "pct": 90,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spa": -2
+      },
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Indeedee",
+      "species": "Indeedee",
+      "fainted": false,
+      "pct": 1,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Kingambit",
+      "species": "Kingambit",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spd": 1
+      },
+      "item": ""
+     }
+    ],
+    "weather": "",
+    "terrain": "psychicterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Indeedee"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Armarouge",
+      "species": "Armarouge",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "choicescarf"
+     },
+     {
+      "side": "p1",
+      "name": "Dragapult",
+      "species": "Dragapult",
+      "fainted": false,
+      "pct": 90,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spa": -2
+      },
+      "item": "lifeorb"
+     },
+     {
+      "side": "p2",
+      "name": "Indeedee",
+      "species": "Indeedee",
+      "fainted": false,
+      "pct": 1,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Kingambit",
+      "species": "Kingambit",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     }
+    ],
+    "weather": "",
+    "terrain": "psychicterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "willowisp",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Milotic"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "kowtowcleave",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "expandingforce",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Armarouge",
+      "species": "Armarouge",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "choicescarf"
+     },
+     {
+      "side": "p1",
+      "name": "Dragapult",
+      "species": "Dragapult",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "spa": -2
+      },
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "Milotic",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 78,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "spd": 1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Indeedee",
+      "species": "Indeedee",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Kingambit",
+      "species": "Kingambit",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     }
+    ],
+    "weather": "",
+    "terrain": "psychicterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Staraptor"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Salamence"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Armarouge",
+      "species": "Armarouge",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "choicescarf"
+     },
+     {
+      "side": "p1",
+      "name": "Dragapult",
+      "species": "Dragapult",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "Milotic",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 78,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1,
+       "spa": 2,
+       "spd": 1
+      },
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Staraptor",
+      "species": "Staraptor",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Indeedee",
+      "species": "Indeedee",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Kingambit",
+      "species": "Kingambit",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     }
+    ],
+    "weather": "",
+    "terrain": "psychicterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "closecombat",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": true
+    },
+    {
+     "kind": "move",
+     "move": "coil",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "kowtowcleave",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Armarouge",
+      "species": "Armarouge",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "choicescarf"
+     },
+     {
+      "side": "p1",
+      "name": "Dragapult",
+      "species": "Dragapult",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "Milotic",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 32,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "accuracy": 1,
+       "def": 1,
+       "spa": 2,
+       "spd": 1
+      },
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Staraptor",
+      "species": "Staraptor-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1,
+       "def": 1,
+       "spd": 1
+      },
+      "item": "staraptite"
+     },
+     {
+      "side": "p2",
+      "name": "Indeedee",
+      "species": "Indeedee",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Kingambit",
+      "species": "Kingambit",
+      "fainted": false,
+      "pct": 1,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     }
+    ],
+    "weather": "",
+    "terrain": "psychicterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "muddywater",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p2a,p2b"
+     ],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "suckerpunch",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "hypervoice",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": true
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Armarouge",
+      "species": "Armarouge",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "choicescarf"
+     },
+     {
+      "side": "p1",
+      "name": "Dragapult",
+      "species": "Dragapult",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "Milotic",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 14,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "accuracy": 1,
+       "def": 1,
+       "spa": 2,
+       "spd": 1
+      },
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Staraptor",
+      "species": "Staraptor-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1,
+       "def": 1,
+       "spd": 1
+      },
+      "item": "staraptite"
+     },
+     {
+      "side": "p2",
+      "name": "Indeedee",
+      "species": "Indeedee",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Kingambit",
+      "species": "Kingambit",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": false,
+      "pct": 73,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "accuracy": -1,
+       "atk": -1
+      },
+      "item": "salamencite"
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Armarouge"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Armarouge",
+      "species": "Armarouge",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "choicescarf"
+     },
+     {
+      "side": "p1",
+      "name": "Dragapult",
+      "species": "Dragapult",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "Milotic",
+      "species": "Milotic",
+      "fainted": false,
+      "pct": 14,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "accuracy": 1,
+       "def": 1,
+       "spa": 2,
+       "spd": 1
+      },
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Staraptor",
+      "species": "Staraptor-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "staraptite"
+     },
+     {
+      "side": "p2",
+      "name": "Indeedee",
+      "species": "Indeedee",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Kingambit",
+      "species": "Kingambit",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": false,
+      "pct": 73,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "accuracy": -1,
+       "atk": -1
+      },
+      "item": "salamencite"
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 6,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "wideguard",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "move",
+     "move": "round",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Armarouge",
+      "species": "Armarouge",
+      "fainted": false,
+      "pct": 47,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "choicescarf"
+     },
+     {
+      "side": "p1",
+      "name": "Dragapult",
+      "species": "Dragapult",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "Milotic",
+      "species": "Milotic",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "accuracy": 1,
+       "def": 1,
+       "spa": 2,
+       "spd": 1
+      },
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "Staraptor",
+      "species": "Staraptor-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "staraptite"
+     },
+     {
+      "side": "p2",
+      "name": "Indeedee",
+      "species": "Indeedee",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Kingambit",
+      "species": "Kingambit",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": false,
+      "pct": 73,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "accuracy": -1,
+       "atk": -1
+      },
+      "item": "salamencite"
+     },
+     {
+      "side": "p2",
+      "name": "Sneasler",
+      "species": "Sneasler",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  }
+ ],
+ "stop": null
+}

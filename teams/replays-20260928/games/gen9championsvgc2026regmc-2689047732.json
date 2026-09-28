@@ -1,0 +1,2030 @@
+{
+ "id": "gen9championsvgc2026regmc-2689047732",
+ "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689047732",
+ "format": "gen9championsvgc2026regmc",
+ "ots": false,
+ "p1": {
+  "team": [
+   {
+    "name": "always misses",
+    "species": "Volcarona",
+    "item": "Grassy Seed",
+    "ability": "Flame Body",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Tailwind",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Floette",
+    "species": "Floette-Eternal",
+    "item": "Floettite",
+    "ability": "Flower Veil",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Dazzling Gleam",
+     "Calm Mind",
+     "Draining Kiss"
+    ]
+   },
+   {
+    "name": "Garchomp",
+    "species": "Garchomp",
+    "item": "",
+    "ability": "Sand Veil",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Stomping Tantrum",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Incineroar",
+    "species": "Incineroar",
+    "item": "Sitrus Berry",
+    "ability": "Intimidate",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Flare Blitz",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Salamence",
+    "species": "Salamence",
+    "item": "Salamencite",
+    "ability": "Intimidate",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Hyper Voice",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Rillaboom",
+    "species": "Rillaboom",
+    "item": "",
+    "ability": "Grassy Surge",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Grassy Glide",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Arcanine",
+    "species": "Arcanine-Hisui",
+    "item": "",
+    "ability": "Flash Fire",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Head Smash",
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Sylveon",
+    "species": "Sylveon",
+    "item": "",
+    "ability": "Cute Charm",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hyper Voice",
+     "Detect",
+     "Quick Attack",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "provenance": {
+  "p1": [
+   {
+    "name": "always misses",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Floette",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 4
+   },
+   {
+    "name": "Garchomp",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   },
+   {
+    "name": "Incineroar",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   }
+  ],
+  "p2": [
+   {
+    "name": "Salamence",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   },
+   {
+    "name": "Rillaboom",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 2
+   },
+   {
+    "name": "Arcanine",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Sylveon",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 3
+   }
+  ]
+ },
+ "startObs": {
+  "mons": [
+   {
+    "side": "p1",
+    "name": "Floette",
+    "species": "Floette-Eternal",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {
+     "atk": -1
+    }
+   },
+   {
+    "side": "p1",
+    "name": "always misses",
+    "species": "Volcarona",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {
+     "atk": -1,
+     "def": 1
+    },
+    "item": ""
+   },
+   {
+    "side": "p2",
+    "name": "Rillaboom",
+    "species": "Rillaboom",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Salamence",
+    "species": "Salamence",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   }
+  ],
+  "weather": "",
+  "terrain": "grassyterrain",
+  "pseudoWeather": [],
+  "sideConditions": {
+   "p1": [],
+   "p2": []
+  }
+ },
+ "decisions": [
+  {
+   "kind": "turn",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "tailwind",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": true
+    },
+    {
+     "kind": "move",
+     "move": "fakeout",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Floette",
+      "species": "Floette-Eternal",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p1",
+      "name": "always misses",
+      "species": "Volcarona",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1,
+       "def": 1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "salamencite"
+     }
+    ],
+    "weather": "",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "tailwind"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "tailwind",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dazzlinggleam",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p2a,p2b"
+     ],
+     "mega": true
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "hypervoice",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Arcanine"
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 80,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p1",
+      "name": "always misses",
+      "species": "Volcarona",
+      "fainted": false,
+      "pct": 35,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1,
+       "def": 1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": false,
+      "pct": 74,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": false,
+      "pct": 12,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "salamencite"
+     }
+    ],
+    "weather": "",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "tailwind"
+     ],
+     "p2": [
+      "tailwind"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Sylveon"
+    },
+    {
+     "kind": "move",
+     "move": "headsmash",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 86,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p1",
+      "name": "always misses",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1,
+       "def": 1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": false,
+      "pct": 80,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": false,
+      "pct": 12,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "salamencite"
+     },
+     {
+      "side": "p2",
+      "name": "Sylveon",
+      "species": "Sylveon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "tailwind"
+     ],
+     "p2": [
+      "tailwind"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Garchomp"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 86,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "always misses",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": false,
+      "pct": 80,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": false,
+      "pct": 12,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "salamencite"
+     },
+     {
+      "side": "p2",
+      "name": "Sylveon",
+      "species": "Sylveon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "tailwind"
+     ],
+     "p2": [
+      "tailwind"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "stompingtantrum",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "calmmind",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "hypervoice",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 58,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1,
+       "spa": 1,
+       "spd": 1
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "always misses",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": false,
+      "pct": 86,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": false,
+      "pct": 12,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "salamencite"
+     },
+     {
+      "side": "p2",
+      "name": "Sylveon",
+      "species": "Sylveon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     }
+    ],
+    "weather": "",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "tailwind"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "Incineroar"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 58,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1,
+       "spa": 1,
+       "spd": 1
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "always misses",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": false,
+      "pct": 86,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": false,
+      "pct": 12,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "salamencite"
+     },
+     {
+      "side": "p2",
+      "name": "Sylveon",
+      "species": "Sylveon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     }
+    ],
+    "weather": "",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [
+      "tailwind"
+     ],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "fakeout",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "drainingkiss",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "detect",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Rillaboom"
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 64,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1,
+       "spa": 1,
+       "spd": 1
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "always misses",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": false,
+      "pct": 86,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 93,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": false,
+      "pct": 12,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "salamencite"
+     },
+     {
+      "side": "p2",
+      "name": "Sylveon",
+      "species": "Sylveon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 6,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "hypervoice",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "fakeout",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 64,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1,
+       "spa": 1,
+       "spd": 1
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 62,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "always misses",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": false,
+      "pct": 86,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 93,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": false,
+      "pct": 12,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "salamencite"
+     },
+     {
+      "side": "p2",
+      "name": "Sylveon",
+      "species": "Sylveon",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 7,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "flareblitz",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "drainingkiss",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "hypervoice",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "Salamence"
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 66,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1,
+       "spa": 1,
+       "spd": 1
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 2,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "always misses",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": false,
+      "pct": 86,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 93,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "salamencite"
+     },
+     {
+      "side": "p2",
+      "name": "Sylveon",
+      "species": "Sylveon",
+      "fainted": false,
+      "pct": 56,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 7,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "Rillaboom"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 66,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1,
+       "spa": 1,
+       "spd": 1
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 2,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "always misses",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": false,
+      "pct": 86,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 93,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "salamencite"
+     },
+     {
+      "side": "p2",
+      "name": "Sylveon",
+      "species": "Sylveon",
+      "fainted": false,
+      "pct": 56,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     }
+    ],
+    "weather": "",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 8,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "quickattack",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "fakeout",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 58,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1,
+       "spa": 1,
+       "spd": 1
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "always misses",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": false,
+      "pct": 86,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 99,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "salamencite"
+     },
+     {
+      "side": "p2",
+      "name": "Sylveon",
+      "species": "Sylveon",
+      "fainted": false,
+      "pct": 62,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     }
+    ],
+    "weather": "",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 9,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "move",
+     "move": "drainingkiss",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "hypervoice",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "grassyglide",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "Floette",
+      "species": "Floette-Mega",
+      "fainted": false,
+      "pct": 13,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1,
+       "spa": 1,
+       "spd": 1
+      },
+      "item": "floettite"
+     },
+     {
+      "side": "p1",
+      "name": "Garchomp",
+      "species": "Garchomp",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "Incineroar",
+      "species": "Incineroar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": ""
+     },
+     {
+      "side": "p1",
+      "name": "always misses",
+      "species": "Volcarona",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Arcanine",
+      "species": "Arcanine-Hisui",
+      "fainted": false,
+      "pct": 86,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Rillaboom",
+      "species": "Rillaboom",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Salamence",
+      "species": "Salamence-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "salamencite"
+     },
+     {
+      "side": "p2",
+      "name": "Sylveon",
+      "species": "Sylveon",
+      "fainted": false,
+      "pct": 25,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     }
+    ],
+    "weather": "",
+    "terrain": "grassyterrain",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  }
+ ],
+ "stop": null
+}

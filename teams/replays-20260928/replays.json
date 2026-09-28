@@ -1,0 +1,1807 @@
+{
+ "collected": "2026-09-28T06:39:29+00:00",
+ "format": "gen9championsvgc2026regmc",
+ "api": "https://replay.pokemonshowdown.com/search.json?format=gen9championsvgc2026regmc[&page=<n>]",
+ "replays": [
+  {
+   "id": "gen9championsvgc2026regmc-2689052047",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689052047",
+   "uploadtime": 1790577565,
+   "uploaded": "2026-09-28T06:39:25+00:00",
+   "rating": 1225,
+   "log": "replays/gen9championsvgc2026regmc-2689052047.log",
+   "fetched": "2026-09-28T06:39:32+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689052141",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689052141",
+   "uploadtime": 1790577537,
+   "uploaded": "2026-09-28T06:38:57+00:00",
+   "rating": 1073,
+   "log": "replays/gen9championsvgc2026regmc-2689052141.log",
+   "fetched": "2026-09-28T06:39:34+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689051555",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689051555",
+   "uploadtime": 1790577518,
+   "uploaded": "2026-09-28T06:38:38+00:00",
+   "rating": 1454,
+   "log": "replays/gen9championsvgc2026regmc-2689051555.log",
+   "fetched": "2026-09-28T06:39:36+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689050772",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689050772",
+   "uploadtime": 1790577513,
+   "uploaded": "2026-09-28T06:38:33+00:00",
+   "rating": null,
+   "log": "replays/gen9championsvgc2026regmc-2689050772.log",
+   "fetched": "2026-09-28T06:39:38+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689051600",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689051600",
+   "uploadtime": 1790577475,
+   "uploaded": "2026-09-28T06:37:55+00:00",
+   "rating": 1000,
+   "log": "replays/gen9championsvgc2026regmc-2689051600.log",
+   "fetched": "2026-09-28T06:39:40+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689051691",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689051691",
+   "uploadtime": 1790577410,
+   "uploaded": "2026-09-28T06:36:50+00:00",
+   "rating": 1149,
+   "log": "replays/gen9championsvgc2026regmc-2689051691.log",
+   "fetched": "2026-09-28T06:39:42+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689051823",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689051823",
+   "uploadtime": 1790577371,
+   "uploaded": "2026-09-28T06:36:11+00:00",
+   "rating": 1057,
+   "log": "replays/gen9championsvgc2026regmc-2689051823.log",
+   "fetched": "2026-09-28T06:39:44+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689051901",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689051901",
+   "uploadtime": 1790577364,
+   "uploaded": "2026-09-28T06:36:04+00:00",
+   "rating": 1002,
+   "log": "replays/gen9championsvgc2026regmc-2689051901.log",
+   "fetched": "2026-09-28T06:39:46+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689051571",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689051571",
+   "uploadtime": 1790577350,
+   "uploaded": "2026-09-28T06:35:50+00:00",
+   "rating": 1085,
+   "log": "replays/gen9championsvgc2026regmc-2689051571.log",
+   "fetched": "2026-09-28T06:39:48+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689051543",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689051543",
+   "uploadtime": 1790577307,
+   "uploaded": "2026-09-28T06:35:07+00:00",
+   "rating": 1081,
+   "log": "replays/gen9championsvgc2026regmc-2689051543.log",
+   "fetched": "2026-09-28T06:39:50+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689051561",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689051561",
+   "uploadtime": 1790577297,
+   "uploaded": "2026-09-28T06:34:57+00:00",
+   "rating": 1275,
+   "log": "replays/gen9championsvgc2026regmc-2689051561.log",
+   "fetched": "2026-09-28T06:39:52+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689050776",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689050776",
+   "uploadtime": 1790577274,
+   "uploaded": "2026-09-28T06:34:34+00:00",
+   "rating": 1049,
+   "log": "replays/gen9championsvgc2026regmc-2689050776.log",
+   "fetched": "2026-09-28T06:39:53+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689050529",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689050529",
+   "uploadtime": 1790577273,
+   "uploaded": "2026-09-28T06:34:33+00:00",
+   "rating": 1323,
+   "log": "replays/gen9championsvgc2026regmc-2689050529.log",
+   "fetched": "2026-09-28T06:39:55+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689050520",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689050520",
+   "uploadtime": 1790577210,
+   "uploaded": "2026-09-28T06:33:30+00:00",
+   "rating": 1175,
+   "log": "replays/gen9championsvgc2026regmc-2689050520.log",
+   "fetched": "2026-09-28T06:39:57+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689050139",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689050139",
+   "uploadtime": 1790577193,
+   "uploaded": "2026-09-28T06:33:13+00:00",
+   "rating": 1012,
+   "log": "replays/gen9championsvgc2026regmc-2689050139.log",
+   "fetched": "2026-09-28T06:39:59+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689050149",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689050149",
+   "uploadtime": 1790577118,
+   "uploaded": "2026-09-28T06:31:58+00:00",
+   "rating": 1000,
+   "log": "replays/gen9championsvgc2026regmc-2689050149.log",
+   "fetched": "2026-09-28T06:40:01+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689050297",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689050297",
+   "uploadtime": 1790577114,
+   "uploaded": "2026-09-28T06:31:54+00:00",
+   "rating": 1098,
+   "log": "replays/gen9championsvgc2026regmc-2689050297.log",
+   "fetched": "2026-09-28T06:40:03+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689050087",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689050087",
+   "uploadtime": 1790577113,
+   "uploaded": "2026-09-28T06:31:53+00:00",
+   "rating": 1216,
+   "log": "replays/gen9championsvgc2026regmc-2689050087.log",
+   "fetched": "2026-09-28T06:40:05+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689049795",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049795",
+   "uploadtime": 1790577113,
+   "uploaded": "2026-09-28T06:31:53+00:00",
+   "rating": 1013,
+   "log": "replays/gen9championsvgc2026regmc-2689049795.log",
+   "fetched": "2026-09-28T06:40:07+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689050140",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689050140",
+   "uploadtime": 1790577107,
+   "uploaded": "2026-09-28T06:31:47+00:00",
+   "rating": 1113,
+   "log": "replays/gen9championsvgc2026regmc-2689050140.log",
+   "fetched": "2026-09-28T06:40:09+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689049688",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049688",
+   "uploadtime": 1790577068,
+   "uploaded": "2026-09-28T06:31:08+00:00",
+   "rating": 1054,
+   "log": "replays/gen9championsvgc2026regmc-2689049688.log",
+   "fetched": "2026-09-28T06:40:10+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689049718",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049718",
+   "uploadtime": 1790577040,
+   "uploaded": "2026-09-28T06:30:40+00:00",
+   "rating": 1250,
+   "log": "replays/gen9championsvgc2026regmc-2689049718.log",
+   "fetched": "2026-09-28T06:40:12+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689050259",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689050259",
+   "uploadtime": 1790577025,
+   "uploaded": "2026-09-28T06:30:25+00:00",
+   "rating": 1084,
+   "log": "replays/gen9championsvgc2026regmc-2689050259.log",
+   "fetched": "2026-09-28T06:40:14+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689049523",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049523",
+   "uploadtime": 1790577000,
+   "uploaded": "2026-09-28T06:30:00+00:00",
+   "rating": 1050,
+   "log": "replays/gen9championsvgc2026regmc-2689049523.log",
+   "fetched": "2026-09-28T06:40:16+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689049007",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049007",
+   "uploadtime": 1790576965,
+   "uploaded": "2026-09-28T06:29:25+00:00",
+   "rating": 1291,
+   "log": "replays/gen9championsvgc2026regmc-2689049007.log",
+   "fetched": "2026-09-28T06:40:18+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689049130",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049130",
+   "uploadtime": 1790576915,
+   "uploaded": "2026-09-28T06:28:35+00:00",
+   "rating": 1082,
+   "log": "replays/gen9championsvgc2026regmc-2689049130.log",
+   "fetched": "2026-09-28T06:40:20+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689049318",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049318",
+   "uploadtime": 1790576908,
+   "uploaded": "2026-09-28T06:28:28+00:00",
+   "rating": 1108,
+   "log": "replays/gen9championsvgc2026regmc-2689049318.log",
+   "fetched": "2026-09-28T06:40:22+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689048666",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689048666",
+   "uploadtime": 1790576873,
+   "uploaded": "2026-09-28T06:27:53+00:00",
+   "rating": 1027,
+   "log": "replays/gen9championsvgc2026regmc-2689048666.log",
+   "fetched": "2026-09-28T06:40:24+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689049178",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049178",
+   "uploadtime": 1790576856,
+   "uploaded": "2026-09-28T06:27:36+00:00",
+   "rating": 1206,
+   "log": "replays/gen9championsvgc2026regmc-2689049178.log",
+   "fetched": "2026-09-28T06:40:26+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689049039",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049039",
+   "uploadtime": 1790576847,
+   "uploaded": "2026-09-28T06:27:27+00:00",
+   "rating": 1094,
+   "log": "replays/gen9championsvgc2026regmc-2689049039.log",
+   "fetched": "2026-09-28T06:40:28+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689048647",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689048647",
+   "uploadtime": 1790576775,
+   "uploaded": "2026-09-28T06:26:15+00:00",
+   "rating": 1303,
+   "log": "replays/gen9championsvgc2026regmc-2689048647.log",
+   "fetched": "2026-09-28T06:40:30+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689048593",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689048593",
+   "uploadtime": 1790576728,
+   "uploaded": "2026-09-28T06:25:28+00:00",
+   "rating": 1053,
+   "log": "replays/gen9championsvgc2026regmc-2689048593.log",
+   "fetched": "2026-09-28T06:40:33+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689049205",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049205",
+   "uploadtime": 1790576699,
+   "uploaded": "2026-09-28T06:24:59+00:00",
+   "rating": 1134,
+   "log": "replays/gen9championsvgc2026regmc-2689049205.log",
+   "fetched": "2026-09-28T06:40:35+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689048598",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689048598",
+   "uploadtime": 1790576674,
+   "uploaded": "2026-09-28T06:24:34+00:00",
+   "rating": 1105,
+   "log": "replays/gen9championsvgc2026regmc-2689048598.log",
+   "fetched": "2026-09-28T06:40:36+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689047732",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689047732",
+   "uploadtime": 1790576666,
+   "uploaded": "2026-09-28T06:24:26+00:00",
+   "rating": 1177,
+   "log": "replays/gen9championsvgc2026regmc-2689047732.log",
+   "fetched": "2026-09-28T06:40:39+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689048645",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689048645",
+   "uploadtime": 1790576664,
+   "uploaded": "2026-09-28T06:24:24+00:00",
+   "rating": 1182,
+   "log": "replays/gen9championsvgc2026regmc-2689048645.log",
+   "fetched": "2026-09-28T06:40:41+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689048313",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689048313",
+   "uploadtime": 1790576628,
+   "uploaded": "2026-09-28T06:23:48+00:00",
+   "rating": 1313,
+   "log": "replays/gen9championsvgc2026regmc-2689048313.log",
+   "fetched": "2026-09-28T06:40:42+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689047727",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689047727",
+   "uploadtime": 1790576568,
+   "uploaded": "2026-09-28T06:22:48+00:00",
+   "rating": 1005,
+   "log": "replays/gen9championsvgc2026regmc-2689047727.log",
+   "fetched": "2026-09-28T06:40:44+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689047810",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689047810",
+   "uploadtime": 1790576547,
+   "uploaded": "2026-09-28T06:22:27+00:00",
+   "rating": 1082,
+   "log": "replays/gen9championsvgc2026regmc-2689047810.log",
+   "fetched": "2026-09-28T06:40:46+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689047716",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689047716",
+   "uploadtime": 1790576538,
+   "uploaded": "2026-09-28T06:22:18+00:00",
+   "rating": 1404,
+   "log": "replays/gen9championsvgc2026regmc-2689047716.log",
+   "fetched": "2026-09-28T06:40:48+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689047723",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689047723",
+   "uploadtime": 1790576536,
+   "uploaded": "2026-09-28T06:22:16+00:00",
+   "rating": 1122,
+   "log": "replays/gen9championsvgc2026regmc-2689047723.log",
+   "fetched": "2026-09-28T06:40:50+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689047197",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689047197",
+   "uploadtime": 1790576530,
+   "uploaded": "2026-09-28T06:22:10+00:00",
+   "rating": 1129,
+   "log": "replays/gen9championsvgc2026regmc-2689047197.log",
+   "fetched": "2026-09-28T06:40:52+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689047966",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689047966",
+   "uploadtime": 1790576486,
+   "uploaded": "2026-09-28T06:21:26+00:00",
+   "rating": 1032,
+   "log": "replays/gen9championsvgc2026regmc-2689047966.log",
+   "fetched": "2026-09-28T06:40:54+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689047055",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689047055",
+   "uploadtime": 1790576462,
+   "uploaded": "2026-09-28T06:21:02+00:00",
+   "rating": 1336,
+   "log": "replays/gen9championsvgc2026regmc-2689047055.log",
+   "fetched": "2026-09-28T06:40:56+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689046756",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689046756",
+   "uploadtime": 1790576350,
+   "uploaded": "2026-09-28T06:19:10+00:00",
+   "rating": 1177,
+   "log": "replays/gen9championsvgc2026regmc-2689046756.log",
+   "fetched": "2026-09-28T06:40:58+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689046915",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689046915",
+   "uploadtime": 1790576335,
+   "uploaded": "2026-09-28T06:18:55+00:00",
+   "rating": 1065,
+   "log": "replays/gen9championsvgc2026regmc-2689046915.log",
+   "fetched": "2026-09-28T06:41:00+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689046769",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689046769",
+   "uploadtime": 1790576326,
+   "uploaded": "2026-09-28T06:18:46+00:00",
+   "rating": 1110,
+   "log": "replays/gen9championsvgc2026regmc-2689046769.log",
+   "fetched": "2026-09-28T06:41:02+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689046674",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689046674",
+   "uploadtime": 1790576309,
+   "uploaded": "2026-09-28T06:18:29+00:00",
+   "rating": 1062,
+   "log": "replays/gen9championsvgc2026regmc-2689046674.log",
+   "fetched": "2026-09-28T06:41:04+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689045027",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689045027",
+   "uploadtime": 1790576238,
+   "uploaded": "2026-09-28T06:17:18+00:00",
+   "rating": 1305,
+   "log": "replays/gen9championsvgc2026regmc-2689045027.log",
+   "fetched": "2026-09-28T06:41:06+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689046530",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689046530",
+   "uploadtime": 1790576237,
+   "uploaded": "2026-09-28T06:17:17+00:00",
+   "rating": 1307,
+   "log": "replays/gen9championsvgc2026regmc-2689046530.log",
+   "fetched": "2026-09-28T06:41:08+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689046372",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689046372",
+   "uploadtime": 1790576208,
+   "uploaded": "2026-09-28T06:16:48+00:00",
+   "rating": 1149,
+   "log": "replays/gen9championsvgc2026regmc-2689046372.log",
+   "fetched": "2026-09-28T06:41:12+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689046149",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689046149",
+   "uploadtime": 1790576176,
+   "uploaded": "2026-09-28T06:16:16+00:00",
+   "rating": 1102,
+   "log": "replays/gen9championsvgc2026regmc-2689046149.log",
+   "fetched": "2026-09-28T06:41:14+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689045701",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689045701",
+   "uploadtime": 1790576169,
+   "uploaded": "2026-09-28T06:16:09+00:00",
+   "rating": 1357,
+   "log": "replays/gen9championsvgc2026regmc-2689045701.log",
+   "fetched": "2026-09-28T06:41:16+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689045639",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689045639",
+   "uploadtime": 1790576100,
+   "uploaded": "2026-09-28T06:15:00+00:00",
+   "rating": 1167,
+   "log": "replays/gen9championsvgc2026regmc-2689045639.log",
+   "fetched": "2026-09-28T06:41:18+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689046218",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689046218",
+   "uploadtime": 1790576071,
+   "uploaded": "2026-09-28T06:14:31+00:00",
+   "rating": 1052,
+   "log": "replays/gen9championsvgc2026regmc-2689046218.log",
+   "fetched": "2026-09-28T06:41:20+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689043972",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689043972",
+   "uploadtime": 1790576066,
+   "uploaded": "2026-09-28T06:14:26+00:00",
+   "rating": 1116,
+   "log": "replays/gen9championsvgc2026regmc-2689043972.log",
+   "fetched": "2026-09-28T06:41:22+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689045473",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689045473",
+   "uploadtime": 1790576057,
+   "uploaded": "2026-09-28T06:14:17+00:00",
+   "rating": 1077,
+   "log": "replays/gen9championsvgc2026regmc-2689045473.log",
+   "fetched": "2026-09-28T06:41:24+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689045222",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689045222",
+   "uploadtime": 1790576039,
+   "uploaded": "2026-09-28T06:13:59+00:00",
+   "rating": 1329,
+   "log": "replays/gen9championsvgc2026regmc-2689045222.log",
+   "fetched": "2026-09-28T06:41:26+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689045618",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689045618",
+   "uploadtime": 1790576013,
+   "uploaded": "2026-09-28T06:13:33+00:00",
+   "rating": 1182,
+   "log": "replays/gen9championsvgc2026regmc-2689045618.log",
+   "fetched": "2026-09-28T06:41:28+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689045255",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689045255",
+   "uploadtime": 1790575969,
+   "uploaded": "2026-09-28T06:12:49+00:00",
+   "rating": 1041,
+   "log": "replays/gen9championsvgc2026regmc-2689045255.log",
+   "fetched": "2026-09-28T06:41:30+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689044316",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044316",
+   "uploadtime": 1790575849,
+   "uploaded": "2026-09-28T06:10:49+00:00",
+   "rating": 1360,
+   "log": "replays/gen9championsvgc2026regmc-2689044316.log",
+   "fetched": "2026-09-28T06:41:32+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689044809",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044809",
+   "uploadtime": 1790575847,
+   "uploaded": "2026-09-28T06:10:47+00:00",
+   "rating": 1156,
+   "log": "replays/gen9championsvgc2026regmc-2689044809.log",
+   "fetched": "2026-09-28T06:41:34+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689044769",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044769",
+   "uploadtime": 1790575836,
+   "uploaded": "2026-09-28T06:10:36+00:00",
+   "rating": 1194,
+   "log": "replays/gen9championsvgc2026regmc-2689044769.log",
+   "fetched": "2026-09-28T06:41:36+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689044888",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044888",
+   "uploadtime": 1790575835,
+   "uploaded": "2026-09-28T06:10:35+00:00",
+   "rating": 1117,
+   "log": "replays/gen9championsvgc2026regmc-2689044888.log",
+   "fetched": "2026-09-28T06:41:38+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689044505",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044505",
+   "uploadtime": 1790575753,
+   "uploaded": "2026-09-28T06:09:13+00:00",
+   "rating": 1103,
+   "log": "replays/gen9championsvgc2026regmc-2689044505.log",
+   "fetched": "2026-09-28T06:41:40+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689044022",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044022",
+   "uploadtime": 1790575747,
+   "uploaded": "2026-09-28T06:09:07+00:00",
+   "rating": 1055,
+   "log": "replays/gen9championsvgc2026regmc-2689044022.log",
+   "fetched": "2026-09-28T06:41:42+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689044254",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044254",
+   "uploadtime": 1790575740,
+   "uploaded": "2026-09-28T06:09:00+00:00",
+   "rating": 1351,
+   "log": "replays/gen9championsvgc2026regmc-2689044254.log",
+   "fetched": "2026-09-28T06:41:43+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689044167",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044167",
+   "uploadtime": 1790575728,
+   "uploaded": "2026-09-28T06:08:48+00:00",
+   "rating": 1104,
+   "log": "replays/gen9championsvgc2026regmc-2689044167.log",
+   "fetched": "2026-09-28T06:41:45+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689042736",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689042736",
+   "uploadtime": 1790575695,
+   "uploaded": "2026-09-28T06:08:15+00:00",
+   "rating": 1043,
+   "log": "replays/gen9championsvgc2026regmc-2689042736.log",
+   "fetched": "2026-09-28T06:41:55+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689044367",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044367",
+   "uploadtime": 1790575667,
+   "uploaded": "2026-09-28T06:07:47+00:00",
+   "rating": 1177,
+   "log": "replays/gen9championsvgc2026regmc-2689044367.log",
+   "fetched": "2026-09-28T06:41:56+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689044279",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044279",
+   "uploadtime": 1790575657,
+   "uploaded": "2026-09-28T06:07:37+00:00",
+   "rating": 1362,
+   "log": "replays/gen9championsvgc2026regmc-2689044279.log",
+   "fetched": "2026-09-28T06:41:58+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689044110",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044110",
+   "uploadtime": 1790575630,
+   "uploaded": "2026-09-28T06:07:10+00:00",
+   "rating": 1211,
+   "log": "replays/gen9championsvgc2026regmc-2689044110.log",
+   "fetched": "2026-09-28T06:42:05+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689043712",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689043712",
+   "uploadtime": 1790575561,
+   "uploaded": "2026-09-28T06:06:01+00:00",
+   "rating": 1134,
+   "log": "replays/gen9championsvgc2026regmc-2689043712.log",
+   "fetched": "2026-09-28T06:42:06+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689043533",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689043533",
+   "uploadtime": 1790575516,
+   "uploaded": "2026-09-28T06:05:16+00:00",
+   "rating": 1373,
+   "log": "replays/gen9championsvgc2026regmc-2689043533.log",
+   "fetched": "2026-09-28T06:42:08+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689043327",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689043327",
+   "uploadtime": 1790575452,
+   "uploaded": "2026-09-28T06:04:12+00:00",
+   "rating": 1092,
+   "log": "replays/gen9championsvgc2026regmc-2689043327.log",
+   "fetched": "2026-09-28T06:42:10+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689043333",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689043333",
+   "uploadtime": 1790575380,
+   "uploaded": "2026-09-28T06:03:00+00:00",
+   "rating": 1076,
+   "log": "replays/gen9championsvgc2026regmc-2689043333.log",
+   "fetched": "2026-09-28T06:42:12+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689043129",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689043129",
+   "uploadtime": 1790575343,
+   "uploaded": "2026-09-28T06:02:23+00:00",
+   "rating": 1033,
+   "log": "replays/gen9championsvgc2026regmc-2689043129.log",
+   "fetched": "2026-09-28T06:42:14+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689042892",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689042892",
+   "uploadtime": 1790575341,
+   "uploaded": "2026-09-28T06:02:21+00:00",
+   "rating": 1395,
+   "log": "replays/gen9championsvgc2026regmc-2689042892.log",
+   "fetched": "2026-09-28T06:42:16+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689042698",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689042698",
+   "uploadtime": 1790575337,
+   "uploaded": "2026-09-28T06:02:17+00:00",
+   "rating": 1135,
+   "log": "replays/gen9championsvgc2026regmc-2689042698.log",
+   "fetched": "2026-09-28T06:42:19+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689042375",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689042375",
+   "uploadtime": 1790575335,
+   "uploaded": "2026-09-28T06:02:15+00:00",
+   "rating": 1367,
+   "log": "replays/gen9championsvgc2026regmc-2689042375.log",
+   "fetched": "2026-09-28T06:42:20+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689042889",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689042889",
+   "uploadtime": 1790575333,
+   "uploaded": "2026-09-28T06:02:13+00:00",
+   "rating": 1213,
+   "log": "replays/gen9championsvgc2026regmc-2689042889.log",
+   "fetched": "2026-09-28T06:42:22+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689042666",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689042666",
+   "uploadtime": 1790575267,
+   "uploaded": "2026-09-28T06:01:07+00:00",
+   "rating": 1138,
+   "log": "replays/gen9championsvgc2026regmc-2689042666.log",
+   "fetched": "2026-09-28T06:42:28+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689042086",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689042086",
+   "uploadtime": 1790575257,
+   "uploaded": "2026-09-28T06:00:57+00:00",
+   "rating": 1301,
+   "log": "replays/gen9championsvgc2026regmc-2689042086.log",
+   "fetched": "2026-09-28T06:42:29+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689042164",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689042164",
+   "uploadtime": 1790575239,
+   "uploaded": "2026-09-28T06:00:39+00:00",
+   "rating": 1193,
+   "log": "replays/gen9championsvgc2026regmc-2689042164.log",
+   "fetched": "2026-09-28T06:42:40+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689042449",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689042449",
+   "uploadtime": 1790575216,
+   "uploaded": "2026-09-28T06:00:16+00:00",
+   "rating": 1028,
+   "log": "replays/gen9championsvgc2026regmc-2689042449.log",
+   "fetched": "2026-09-28T06:42:41+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689042506",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689042506",
+   "uploadtime": 1790575194,
+   "uploaded": "2026-09-28T05:59:54+00:00",
+   "rating": 1233,
+   "log": "replays/gen9championsvgc2026regmc-2689042506.log",
+   "fetched": "2026-09-28T06:42:43+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689041893",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689041893",
+   "uploadtime": 1790575188,
+   "uploaded": "2026-09-28T05:59:48+00:00",
+   "rating": 1328,
+   "log": "replays/gen9championsvgc2026regmc-2689041893.log",
+   "fetched": "2026-09-28T06:42:45+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689041240",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689041240",
+   "uploadtime": 1790575172,
+   "uploaded": "2026-09-28T05:59:32+00:00",
+   "rating": 1276,
+   "log": "replays/gen9championsvgc2026regmc-2689041240.log",
+   "fetched": "2026-09-28T06:42:47+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689041688",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689041688",
+   "uploadtime": 1790575044,
+   "uploaded": "2026-09-28T05:57:24+00:00",
+   "rating": 1153,
+   "log": "replays/gen9championsvgc2026regmc-2689041688.log",
+   "fetched": "2026-09-28T06:42:49+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689041515",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689041515",
+   "uploadtime": 1790575015,
+   "uploaded": "2026-09-28T05:56:55+00:00",
+   "rating": 1141,
+   "log": "replays/gen9championsvgc2026regmc-2689041515.log",
+   "fetched": "2026-09-28T06:42:51+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689041342",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689041342",
+   "uploadtime": 1790575015,
+   "uploaded": "2026-09-28T05:56:55+00:00",
+   "rating": 1287,
+   "log": "replays/gen9championsvgc2026regmc-2689041342.log",
+   "fetched": "2026-09-28T06:42:53+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689040830",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689040830",
+   "uploadtime": 1790574980,
+   "uploaded": "2026-09-28T05:56:20+00:00",
+   "rating": 1166,
+   "log": "replays/gen9championsvgc2026regmc-2689040830.log",
+   "fetched": "2026-09-28T06:43:01+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689040676",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689040676",
+   "uploadtime": 1790574935,
+   "uploaded": "2026-09-28T05:55:35+00:00",
+   "rating": 1135,
+   "log": "replays/gen9championsvgc2026regmc-2689040676.log",
+   "fetched": "2026-09-28T06:43:02+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689040708",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689040708",
+   "uploadtime": 1790574883,
+   "uploaded": "2026-09-28T05:54:43+00:00",
+   "rating": 1036,
+   "log": "replays/gen9championsvgc2026regmc-2689040708.log",
+   "fetched": "2026-09-28T06:43:05+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689040513",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689040513",
+   "uploadtime": 1790574850,
+   "uploaded": "2026-09-28T05:54:10+00:00",
+   "rating": 1045,
+   "log": "replays/gen9championsvgc2026regmc-2689040513.log",
+   "fetched": "2026-09-28T06:43:06+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689040000",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689040000",
+   "uploadtime": 1790574751,
+   "uploaded": "2026-09-28T05:52:31+00:00",
+   "rating": 1375,
+   "log": "replays/gen9championsvgc2026regmc-2689040000.log",
+   "fetched": "2026-09-28T06:43:16+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689039730",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689039730",
+   "uploadtime": 1790574724,
+   "uploaded": "2026-09-28T05:52:04+00:00",
+   "rating": 1087,
+   "log": "replays/gen9championsvgc2026regmc-2689039730.log",
+   "fetched": "2026-09-28T06:43:18+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689039929",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689039929",
+   "uploadtime": 1790574604,
+   "uploaded": "2026-09-28T05:50:04+00:00",
+   "rating": 1092,
+   "log": "replays/gen9championsvgc2026regmc-2689039929.log",
+   "fetched": "2026-09-28T06:43:21+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689039377",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689039377",
+   "uploadtime": 1790574552,
+   "uploaded": "2026-09-28T05:49:12+00:00",
+   "rating": 1274,
+   "log": "replays/gen9championsvgc2026regmc-2689039377.log",
+   "fetched": "2026-09-28T06:43:22+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689038403",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689038403",
+   "uploadtime": 1790574473,
+   "uploaded": "2026-09-28T05:47:53+00:00",
+   "rating": 1072,
+   "log": "replays/gen9championsvgc2026regmc-2689038403.log",
+   "fetched": "2026-09-28T06:43:23+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689039143",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689039143",
+   "uploadtime": 1790574467,
+   "uploaded": "2026-09-28T05:47:47+00:00",
+   "rating": 1387,
+   "log": "replays/gen9championsvgc2026regmc-2689039143.log",
+   "fetched": "2026-09-28T06:43:26+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689038915",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689038915",
+   "uploadtime": 1790574455,
+   "uploaded": "2026-09-28T05:47:35+00:00",
+   "rating": 1051,
+   "log": "replays/gen9championsvgc2026regmc-2689038915.log",
+   "fetched": "2026-09-28T06:43:28+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689038053",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689038053",
+   "uploadtime": 1790574405,
+   "uploaded": "2026-09-28T05:46:45+00:00",
+   "rating": 1068,
+   "log": "replays/gen9championsvgc2026regmc-2689038053.log",
+   "fetched": "2026-09-28T06:43:29+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689039123",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689039123",
+   "uploadtime": 1790574372,
+   "uploaded": "2026-09-28T05:46:12+00:00",
+   "rating": 1042,
+   "log": "replays/gen9championsvgc2026regmc-2689039123.log",
+   "fetched": "2026-09-28T06:43:34+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689038895",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689038895",
+   "uploadtime": 1790574364,
+   "uploaded": "2026-09-28T05:46:04+00:00",
+   "rating": 1131,
+   "log": "replays/gen9championsvgc2026regmc-2689038895.log",
+   "fetched": "2026-09-28T06:43:35+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689037834",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689037834",
+   "uploadtime": 1790574361,
+   "uploaded": "2026-09-28T05:46:01+00:00",
+   "rating": 1327,
+   "log": "replays/gen9championsvgc2026regmc-2689037834.log",
+   "fetched": "2026-09-28T06:43:37+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689038025",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689038025",
+   "uploadtime": 1790574354,
+   "uploaded": "2026-09-28T05:45:54+00:00",
+   "rating": 1251,
+   "log": "replays/gen9championsvgc2026regmc-2689038025.log",
+   "fetched": "2026-09-28T06:43:38+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689037632",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689037632",
+   "uploadtime": 1790574315,
+   "uploaded": "2026-09-28T05:45:15+00:00",
+   "rating": 1298,
+   "log": "replays/gen9championsvgc2026regmc-2689037632.log",
+   "fetched": "2026-09-28T06:43:40+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689038662",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689038662",
+   "uploadtime": 1790574268,
+   "uploaded": "2026-09-28T05:44:28+00:00",
+   "rating": 1076,
+   "log": "replays/gen9championsvgc2026regmc-2689038662.log",
+   "fetched": "2026-09-28T06:43:44+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689038182",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689038182",
+   "uploadtime": 1790574206,
+   "uploaded": "2026-09-28T05:43:26+00:00",
+   "rating": 1000,
+   "log": "replays/gen9championsvgc2026regmc-2689038182.log",
+   "fetched": "2026-09-28T06:43:45+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689037839",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689037839",
+   "uploadtime": 1790574157,
+   "uploaded": "2026-09-28T05:42:37+00:00",
+   "rating": 1064,
+   "log": "replays/gen9championsvgc2026regmc-2689037839.log",
+   "fetched": "2026-09-28T06:43:47+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689037907",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689037907",
+   "uploadtime": 1790574151,
+   "uploaded": "2026-09-28T05:42:31+00:00",
+   "rating": 1094,
+   "log": "replays/gen9championsvgc2026regmc-2689037907.log",
+   "fetched": "2026-09-28T06:43:49+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689036956",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689036956",
+   "uploadtime": 1790574129,
+   "uploaded": "2026-09-28T05:42:09+00:00",
+   "rating": 1209,
+   "log": "replays/gen9championsvgc2026regmc-2689036956.log",
+   "fetched": "2026-09-28T06:43:51+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689037191",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689037191",
+   "uploadtime": 1790574044,
+   "uploaded": "2026-09-28T05:40:44+00:00",
+   "rating": 1321,
+   "log": "replays/gen9championsvgc2026regmc-2689037191.log",
+   "fetched": "2026-09-28T06:43:52+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689037304",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689037304",
+   "uploadtime": 1790574028,
+   "uploaded": "2026-09-28T05:40:28+00:00",
+   "rating": 1040,
+   "log": "replays/gen9championsvgc2026regmc-2689037304.log",
+   "fetched": "2026-09-28T06:44:01+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689037487",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689037487",
+   "uploadtime": 1790573983,
+   "uploaded": "2026-09-28T05:39:43+00:00",
+   "rating": 1051,
+   "log": "replays/gen9championsvgc2026regmc-2689037487.log",
+   "fetched": "2026-09-28T06:44:02+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689037253",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689037253",
+   "uploadtime": 1790573969,
+   "uploaded": "2026-09-28T05:39:29+00:00",
+   "rating": 1120,
+   "log": "replays/gen9championsvgc2026regmc-2689037253.log",
+   "fetched": "2026-09-28T06:44:04+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689037120",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689037120",
+   "uploadtime": 1790573942,
+   "uploaded": "2026-09-28T05:39:02+00:00",
+   "rating": 1144,
+   "log": "replays/gen9championsvgc2026regmc-2689037120.log",
+   "fetched": "2026-09-28T06:44:06+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689036577",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689036577",
+   "uploadtime": 1790573902,
+   "uploaded": "2026-09-28T05:38:22+00:00",
+   "rating": 1317,
+   "log": "replays/gen9championsvgc2026regmc-2689036577.log",
+   "fetched": "2026-09-28T06:44:08+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689037012",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689037012",
+   "uploadtime": 1790573900,
+   "uploaded": "2026-09-28T05:38:20+00:00",
+   "rating": 1408,
+   "log": "replays/gen9championsvgc2026regmc-2689037012.log",
+   "fetched": "2026-09-28T06:44:10+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689036534",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689036534",
+   "uploadtime": 1790573816,
+   "uploaded": "2026-09-28T05:36:56+00:00",
+   "rating": 1043,
+   "log": "replays/gen9championsvgc2026regmc-2689036534.log",
+   "fetched": "2026-09-28T06:44:11+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689036728",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689036728",
+   "uploadtime": 1790573812,
+   "uploaded": "2026-09-28T05:36:52+00:00",
+   "rating": 1162,
+   "log": "replays/gen9championsvgc2026regmc-2689036728.log",
+   "fetched": "2026-09-28T06:44:13+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689036572",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689036572",
+   "uploadtime": 1790573794,
+   "uploaded": "2026-09-28T05:36:34+00:00",
+   "rating": 1339,
+   "log": "replays/gen9championsvgc2026regmc-2689036572.log",
+   "fetched": "2026-09-28T06:44:15+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689035962",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689035962",
+   "uploadtime": 1790573752,
+   "uploaded": "2026-09-28T05:35:52+00:00",
+   "rating": 1262,
+   "log": "replays/gen9championsvgc2026regmc-2689035962.log",
+   "fetched": "2026-09-28T06:44:16+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689035782",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689035782",
+   "uploadtime": 1790573735,
+   "uploaded": "2026-09-28T05:35:35+00:00",
+   "rating": 1040,
+   "log": "replays/gen9championsvgc2026regmc-2689035782.log",
+   "fetched": "2026-09-28T06:44:18+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689036108",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689036108",
+   "uploadtime": 1790573690,
+   "uploaded": "2026-09-28T05:34:50+00:00",
+   "rating": 1190,
+   "log": "replays/gen9championsvgc2026regmc-2689036108.log",
+   "fetched": "2026-09-28T06:44:21+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689036146",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689036146",
+   "uploadtime": 1790573650,
+   "uploaded": "2026-09-28T05:34:10+00:00",
+   "rating": 1336,
+   "log": "replays/gen9championsvgc2026regmc-2689036146.log",
+   "fetched": "2026-09-28T06:44:22+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689035241",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689035241",
+   "uploadtime": 1790573645,
+   "uploaded": "2026-09-28T05:34:05+00:00",
+   "rating": 1309,
+   "log": "replays/gen9championsvgc2026regmc-2689035241.log",
+   "fetched": "2026-09-28T06:44:24+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689035770",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689035770",
+   "uploadtime": 1790573632,
+   "uploaded": "2026-09-28T05:33:52+00:00",
+   "rating": 1007,
+   "log": "replays/gen9championsvgc2026regmc-2689035770.log",
+   "fetched": "2026-09-28T06:44:26+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689035818",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689035818",
+   "uploadtime": 1790573572,
+   "uploaded": "2026-09-28T05:32:52+00:00",
+   "rating": 1049,
+   "log": "replays/gen9championsvgc2026regmc-2689035818.log",
+   "fetched": "2026-09-28T06:44:27+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689035484",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689035484",
+   "uploadtime": 1790573538,
+   "uploaded": "2026-09-28T05:32:18+00:00",
+   "rating": 1130,
+   "log": "replays/gen9championsvgc2026regmc-2689035484.log",
+   "fetched": "2026-09-28T06:44:29+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689034614",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689034614",
+   "uploadtime": 1790573452,
+   "uploaded": "2026-09-28T05:30:52+00:00",
+   "rating": 1021,
+   "log": "replays/gen9championsvgc2026regmc-2689034614.log",
+   "fetched": "2026-09-28T06:44:31+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689034756",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689034756",
+   "uploadtime": 1790573394,
+   "uploaded": "2026-09-28T05:29:54+00:00",
+   "rating": 1167,
+   "log": "replays/gen9championsvgc2026regmc-2689034756.log",
+   "fetched": "2026-09-28T06:44:35+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689035196",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689035196",
+   "uploadtime": 1790573391,
+   "uploaded": "2026-09-28T05:29:51+00:00",
+   "rating": 1049,
+   "log": "replays/gen9championsvgc2026regmc-2689035196.log",
+   "fetched": "2026-09-28T06:44:36+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689034540",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689034540",
+   "uploadtime": 1790573370,
+   "uploaded": "2026-09-28T05:29:30+00:00",
+   "rating": 1293,
+   "log": "replays/gen9championsvgc2026regmc-2689034540.log",
+   "fetched": "2026-09-28T06:44:38+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689034563",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689034563",
+   "uploadtime": 1790573337,
+   "uploaded": "2026-09-28T05:28:57+00:00",
+   "rating": 1332,
+   "log": "replays/gen9championsvgc2026regmc-2689034563.log",
+   "fetched": "2026-09-28T06:44:40+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689033776",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689033776",
+   "uploadtime": 1790573181,
+   "uploaded": "2026-09-28T05:26:21+00:00",
+   "rating": 1035,
+   "log": "replays/gen9championsvgc2026regmc-2689033776.log",
+   "fetched": "2026-09-28T06:44:42+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689034150",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689034150",
+   "uploadtime": 1790573173,
+   "uploaded": "2026-09-28T05:26:13+00:00",
+   "rating": 1401,
+   "log": "replays/gen9championsvgc2026regmc-2689034150.log",
+   "fetched": "2026-09-28T06:44:43+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689033592",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689033592",
+   "uploadtime": 1790573169,
+   "uploaded": "2026-09-28T05:26:09+00:00",
+   "rating": 1314,
+   "log": "replays/gen9championsvgc2026regmc-2689033592.log",
+   "fetched": "2026-09-28T06:44:46+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689033285",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689033285",
+   "uploadtime": 1790573104,
+   "uploaded": "2026-09-28T05:25:04+00:00",
+   "rating": 1138,
+   "log": "replays/gen9championsvgc2026regmc-2689033285.log",
+   "fetched": "2026-09-28T06:44:47+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689033664",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689033664",
+   "uploadtime": 1790573077,
+   "uploaded": "2026-09-28T05:24:37+00:00",
+   "rating": 1239,
+   "log": "replays/gen9championsvgc2026regmc-2689033664.log",
+   "fetched": "2026-09-28T06:44:49+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689032994",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689032994",
+   "uploadtime": 1790573018,
+   "uploaded": "2026-09-28T05:23:38+00:00",
+   "rating": 1200,
+   "log": "replays/gen9championsvgc2026regmc-2689032994.log",
+   "fetched": "2026-09-28T06:44:51+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689032684",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689032684",
+   "uploadtime": 1790572986,
+   "uploaded": "2026-09-28T05:23:06+00:00",
+   "rating": 1049,
+   "log": "replays/gen9championsvgc2026regmc-2689032684.log",
+   "fetched": "2026-09-28T06:44:54+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689032756",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689032756",
+   "uploadtime": 1790572959,
+   "uploaded": "2026-09-28T05:22:39+00:00",
+   "rating": 1363,
+   "log": "replays/gen9championsvgc2026regmc-2689032756.log",
+   "fetched": "2026-09-28T06:44:57+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689032325",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689032325",
+   "uploadtime": 1790572948,
+   "uploaded": "2026-09-28T05:22:28+00:00",
+   "rating": 1329,
+   "log": "replays/gen9championsvgc2026regmc-2689032325.log",
+   "fetched": "2026-09-28T06:44:58+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689032686",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689032686",
+   "uploadtime": 1790572923,
+   "uploaded": "2026-09-28T05:22:03+00:00",
+   "rating": 1247,
+   "log": "replays/gen9championsvgc2026regmc-2689032686.log",
+   "fetched": "2026-09-28T06:45:00+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689032654",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689032654",
+   "uploadtime": 1790572863,
+   "uploaded": "2026-09-28T05:21:03+00:00",
+   "rating": 1088,
+   "log": "replays/gen9championsvgc2026regmc-2689032654.log",
+   "fetched": "2026-09-28T06:45:02+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689032303",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689032303",
+   "uploadtime": 1790572860,
+   "uploaded": "2026-09-28T05:21:00+00:00",
+   "rating": null,
+   "log": "replays/gen9championsvgc2026regmc-2689032303.log",
+   "fetched": "2026-09-28T06:45:04+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689032217",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689032217",
+   "uploadtime": 1790572735,
+   "uploaded": "2026-09-28T05:18:55+00:00",
+   "rating": 1254,
+   "log": "replays/gen9championsvgc2026regmc-2689032217.log",
+   "fetched": "2026-09-28T06:45:06+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689031766",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689031766",
+   "uploadtime": 1790572721,
+   "uploaded": "2026-09-28T05:18:41+00:00",
+   "rating": 1205,
+   "log": "replays/gen9championsvgc2026regmc-2689031766.log",
+   "fetched": "2026-09-28T06:45:08+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689031984",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689031984",
+   "uploadtime": 1790572720,
+   "uploaded": "2026-09-28T05:18:40+00:00",
+   "rating": 1339,
+   "log": "replays/gen9championsvgc2026regmc-2689031984.log",
+   "fetched": "2026-09-28T06:45:10+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689031700",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689031700",
+   "uploadtime": 1790572719,
+   "uploaded": "2026-09-28T05:18:39+00:00",
+   "rating": 1000,
+   "log": "replays/gen9championsvgc2026regmc-2689031700.log",
+   "fetched": "2026-09-28T06:45:11+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689032015",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689032015",
+   "uploadtime": 1790572715,
+   "uploaded": "2026-09-28T05:18:35+00:00",
+   "rating": null,
+   "log": "replays/gen9championsvgc2026regmc-2689032015.log",
+   "fetched": "2026-09-28T06:45:13+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689031849",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689031849",
+   "uploadtime": 1790572715,
+   "uploaded": "2026-09-28T05:18:35+00:00",
+   "rating": 1073,
+   "log": "replays/gen9championsvgc2026regmc-2689031849.log",
+   "fetched": "2026-09-28T06:45:15+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689030818",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689030818",
+   "uploadtime": 1790572639,
+   "uploaded": "2026-09-28T05:17:19+00:00",
+   "rating": 1297,
+   "log": "replays/gen9championsvgc2026regmc-2689030818.log",
+   "fetched": "2026-09-28T06:45:18+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689030716",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689030716",
+   "uploadtime": 1790572636,
+   "uploaded": "2026-09-28T05:17:16+00:00",
+   "rating": null,
+   "log": "replays/gen9championsvgc2026regmc-2689030716.log",
+   "fetched": "2026-09-28T06:45:19+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689031290",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689031290",
+   "uploadtime": 1790572613,
+   "uploaded": "2026-09-28T05:16:53+00:00",
+   "rating": 1321,
+   "log": "replays/gen9championsvgc2026regmc-2689031290.log",
+   "fetched": "2026-09-28T06:45:21+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689030883",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689030883",
+   "uploadtime": 1790572552,
+   "uploaded": "2026-09-28T05:15:52+00:00",
+   "rating": 1327,
+   "log": "replays/gen9championsvgc2026regmc-2689030883.log",
+   "fetched": "2026-09-28T06:45:23+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689030141",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689030141",
+   "uploadtime": 1790572534,
+   "uploaded": "2026-09-28T05:15:34+00:00",
+   "rating": 1022,
+   "log": "replays/gen9championsvgc2026regmc-2689030141.log",
+   "fetched": "2026-09-28T06:45:25+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689031123",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689031123",
+   "uploadtime": 1790572437,
+   "uploaded": "2026-09-28T05:13:57+00:00",
+   "rating": 1254,
+   "log": "replays/gen9championsvgc2026regmc-2689031123.log",
+   "fetched": "2026-09-28T06:45:26+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689029743",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029743",
+   "uploadtime": 1790572417,
+   "uploaded": "2026-09-28T05:13:37+00:00",
+   "rating": null,
+   "log": "replays/gen9championsvgc2026regmc-2689029743.log",
+   "fetched": "2026-09-28T06:45:28+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689030412",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689030412",
+   "uploadtime": 1790572358,
+   "uploaded": "2026-09-28T05:12:38+00:00",
+   "rating": 1190,
+   "log": "replays/gen9championsvgc2026regmc-2689030412.log",
+   "fetched": "2026-09-28T06:45:31+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689029158",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029158",
+   "uploadtime": 1790572296,
+   "uploaded": "2026-09-28T05:11:36+00:00",
+   "rating": 1029,
+   "log": "replays/gen9championsvgc2026regmc-2689029158.log",
+   "fetched": "2026-09-28T06:45:32+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689029948",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029948",
+   "uploadtime": 1790572288,
+   "uploaded": "2026-09-28T05:11:28+00:00",
+   "rating": 1243,
+   "log": "replays/gen9championsvgc2026regmc-2689029948.log",
+   "fetched": "2026-09-28T06:45:34+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689028900",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689028900",
+   "uploadtime": 1790572261,
+   "uploaded": "2026-09-28T05:11:01+00:00",
+   "rating": null,
+   "log": "replays/gen9championsvgc2026regmc-2689028900.log",
+   "fetched": "2026-09-28T06:45:36+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689030153",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689030153",
+   "uploadtime": 1790572259,
+   "uploaded": "2026-09-28T05:10:59+00:00",
+   "rating": 1047,
+   "log": "replays/gen9championsvgc2026regmc-2689030153.log",
+   "fetched": "2026-09-28T06:45:38+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689029391",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029391",
+   "uploadtime": 1790572162,
+   "uploaded": "2026-09-28T05:09:22+00:00",
+   "rating": 1433,
+   "log": "replays/gen9championsvgc2026regmc-2689029391.log",
+   "fetched": "2026-09-28T06:45:40+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689029045",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029045",
+   "uploadtime": 1790572145,
+   "uploaded": "2026-09-28T05:09:05+00:00",
+   "rating": 1368,
+   "log": "replays/gen9championsvgc2026regmc-2689029045.log",
+   "fetched": "2026-09-28T06:45:43+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689029525",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029525",
+   "uploadtime": 1790572127,
+   "uploaded": "2026-09-28T05:08:47+00:00",
+   "rating": 1072,
+   "log": "replays/gen9championsvgc2026regmc-2689029525.log",
+   "fetched": "2026-09-28T06:45:45+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689029070",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029070",
+   "uploadtime": 1790572104,
+   "uploaded": "2026-09-28T05:08:24+00:00",
+   "rating": 1281,
+   "log": "replays/gen9championsvgc2026regmc-2689029070.log",
+   "fetched": "2026-09-28T06:45:46+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689029362",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029362",
+   "uploadtime": 1790572085,
+   "uploaded": "2026-09-28T05:08:05+00:00",
+   "rating": 1301,
+   "log": "replays/gen9championsvgc2026regmc-2689029362.log",
+   "fetched": "2026-09-28T06:45:48+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689029212",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029212",
+   "uploadtime": 1790572023,
+   "uploaded": "2026-09-28T05:07:03+00:00",
+   "rating": 1032,
+   "log": "replays/gen9championsvgc2026regmc-2689029212.log",
+   "fetched": "2026-09-28T06:45:55+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689028206",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689028206",
+   "uploadtime": 1790572021,
+   "uploaded": "2026-09-28T05:07:01+00:00",
+   "rating": 1488,
+   "log": "replays/gen9championsvgc2026regmc-2689028206.log",
+   "fetched": "2026-09-28T06:45:56+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689028599",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689028599",
+   "uploadtime": 1790571990,
+   "uploaded": "2026-09-28T05:06:30+00:00",
+   "rating": 1110,
+   "log": "replays/gen9championsvgc2026regmc-2689028599.log",
+   "fetched": "2026-09-28T06:45:58+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689028587",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689028587",
+   "uploadtime": 1790571951,
+   "uploaded": "2026-09-28T05:05:51+00:00",
+   "rating": 1318,
+   "log": "replays/gen9championsvgc2026regmc-2689028587.log",
+   "fetched": "2026-09-28T06:46:00+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689027554",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689027554",
+   "uploadtime": 1790571922,
+   "uploaded": "2026-09-28T05:05:22+00:00",
+   "rating": 1439,
+   "log": "replays/gen9championsvgc2026regmc-2689027554.log",
+   "fetched": "2026-09-28T06:46:07+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689027955",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689027955",
+   "uploadtime": 1790571913,
+   "uploaded": "2026-09-28T05:05:13+00:00",
+   "rating": 1049,
+   "log": "replays/gen9championsvgc2026regmc-2689027955.log",
+   "fetched": "2026-09-28T06:46:08+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689028573",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689028573",
+   "uploadtime": 1790571904,
+   "uploaded": "2026-09-28T05:05:04+00:00",
+   "rating": 1055,
+   "log": "replays/gen9championsvgc2026regmc-2689028573.log",
+   "fetched": "2026-09-28T06:46:10+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689027482",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689027482",
+   "uploadtime": 1790571889,
+   "uploaded": "2026-09-28T05:04:49+00:00",
+   "rating": 1247,
+   "log": "replays/gen9championsvgc2026regmc-2689027482.log",
+   "fetched": "2026-09-28T06:46:11+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689028361",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689028361",
+   "uploadtime": 1790571880,
+   "uploaded": "2026-09-28T05:04:40+00:00",
+   "rating": 1349,
+   "log": "replays/gen9championsvgc2026regmc-2689028361.log",
+   "fetched": "2026-09-28T06:46:14+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689027251",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689027251",
+   "uploadtime": 1790571803,
+   "uploaded": "2026-09-28T05:03:23+00:00",
+   "rating": 1159,
+   "log": "replays/gen9championsvgc2026regmc-2689027251.log",
+   "fetched": "2026-09-28T06:46:15+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689027896",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689027896",
+   "uploadtime": 1790571759,
+   "uploaded": "2026-09-28T05:02:39+00:00",
+   "rating": 1141,
+   "log": "replays/gen9championsvgc2026regmc-2689027896.log",
+   "fetched": "2026-09-28T06:46:17+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689027389",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689027389",
+   "uploadtime": 1790571725,
+   "uploaded": "2026-09-28T05:02:05+00:00",
+   "rating": 1290,
+   "log": "replays/gen9championsvgc2026regmc-2689027389.log",
+   "fetched": "2026-09-28T06:46:23+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689027929",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689027929",
+   "uploadtime": 1790571720,
+   "uploaded": "2026-09-28T05:02:00+00:00",
+   "rating": 1296,
+   "log": "replays/gen9championsvgc2026regmc-2689027929.log",
+   "fetched": "2026-09-28T06:46:24+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689025807",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689025807",
+   "uploadtime": 1790571669,
+   "uploaded": "2026-09-28T05:01:09+00:00",
+   "rating": null,
+   "log": "replays/gen9championsvgc2026regmc-2689025807.log",
+   "fetched": "2026-09-28T06:46:26+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689026292",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689026292",
+   "uploadtime": 1790571661,
+   "uploaded": "2026-09-28T05:01:01+00:00",
+   "rating": 1267,
+   "log": "replays/gen9championsvgc2026regmc-2689026292.log",
+   "fetched": "2026-09-28T06:46:28+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689027680",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689027680",
+   "uploadtime": 1790571649,
+   "uploaded": "2026-09-28T05:00:49+00:00",
+   "rating": 1296,
+   "log": "replays/gen9championsvgc2026regmc-2689027680.log",
+   "fetched": "2026-09-28T06:46:31+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689027072",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689027072",
+   "uploadtime": 1790571638,
+   "uploaded": "2026-09-28T05:00:38+00:00",
+   "rating": 1039,
+   "log": "replays/gen9championsvgc2026regmc-2689027072.log",
+   "fetched": "2026-09-28T06:46:32+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689026876",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689026876",
+   "uploadtime": 1790571630,
+   "uploaded": "2026-09-28T05:00:30+00:00",
+   "rating": 1397,
+   "log": "replays/gen9championsvgc2026regmc-2689026876.log",
+   "fetched": "2026-09-28T06:46:33+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689026991",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689026991",
+   "uploadtime": 1790571625,
+   "uploaded": "2026-09-28T05:00:25+00:00",
+   "rating": 1034,
+   "log": "replays/gen9championsvgc2026regmc-2689026991.log",
+   "fetched": "2026-09-28T06:46:40+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689024450",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689024450",
+   "uploadtime": 1790571579,
+   "uploaded": "2026-09-28T04:59:39+00:00",
+   "rating": 1402,
+   "log": "replays/gen9championsvgc2026regmc-2689024450.log",
+   "fetched": "2026-09-28T06:46:42+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689026869",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689026869",
+   "uploadtime": 1790571567,
+   "uploaded": "2026-09-28T04:59:27+00:00",
+   "rating": 1198,
+   "log": "replays/gen9championsvgc2026regmc-2689026869.log",
+   "fetched": "2026-09-28T06:46:48+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689026287",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689026287",
+   "uploadtime": 1790571555,
+   "uploaded": "2026-09-28T04:59:15+00:00",
+   "rating": 1095,
+   "log": "replays/gen9championsvgc2026regmc-2689026287.log",
+   "fetched": "2026-09-28T06:46:49+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689025629",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689025629",
+   "uploadtime": 1790571555,
+   "uploaded": "2026-09-28T04:59:15+00:00",
+   "rating": null,
+   "log": "replays/gen9championsvgc2026regmc-2689025629.log",
+   "fetched": "2026-09-28T06:46:51+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689024905",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689024905",
+   "uploadtime": 1790571454,
+   "uploaded": "2026-09-28T04:57:34+00:00",
+   "rating": 1059,
+   "log": "replays/gen9championsvgc2026regmc-2689024905.log",
+   "fetched": "2026-09-28T06:46:57+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689026418",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689026418",
+   "uploadtime": 1790571451,
+   "uploaded": "2026-09-28T04:57:31+00:00",
+   "rating": 1138,
+   "log": "replays/gen9championsvgc2026regmc-2689026418.log",
+   "fetched": "2026-09-28T06:46:58+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689025613",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689025613",
+   "uploadtime": 1790571411,
+   "uploaded": "2026-09-28T04:56:51+00:00",
+   "rating": 1031,
+   "log": "replays/gen9championsvgc2026regmc-2689025613.log",
+   "fetched": "2026-09-28T06:47:00+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689026016",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689026016",
+   "uploadtime": 1790571389,
+   "uploaded": "2026-09-28T04:56:29+00:00",
+   "rating": 1386,
+   "log": "replays/gen9championsvgc2026regmc-2689026016.log",
+   "fetched": "2026-09-28T06:47:01+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689023725",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689023725",
+   "uploadtime": 1790571282,
+   "uploaded": "2026-09-28T04:54:42+00:00",
+   "rating": 1040,
+   "log": "replays/gen9championsvgc2026regmc-2689023725.log",
+   "fetched": "2026-09-28T06:47:03+00:00"
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689025365",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689025365",
+   "uploadtime": 1790571247,
+   "uploaded": "2026-09-28T04:54:07+00:00",
+   "rating": 1112,
+   "log": "replays/gen9championsvgc2026regmc-2689025365.log",
+   "fetched": "2026-09-28T06:47:05+00:00"
+  }
+ ]
+}

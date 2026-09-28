@@ -1,0 +1,2199 @@
+{
+ "id": "gen9championsvgc2026regmc-2689025629",
+ "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689025629",
+ "format": "gen9championsvgc2026regmc",
+ "ots": false,
+ "p1": {
+  "team": [
+   {
+    "name": "boo",
+    "species": "Mimikyu",
+    "item": "",
+    "ability": "Disguise",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Taunt",
+     "Play Rough",
+     "Rest"
+    ]
+   },
+   {
+    "name": "wolfe dih",
+    "species": "Incineroar",
+    "item": "",
+    "ability": "Intimidate",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Darkest Lariat",
+     "Parting Shot",
+     "Fake Out",
+     "Rest"
+    ]
+   },
+   {
+    "name": "BIG HUMP",
+    "species": "Camerupt",
+    "item": "Cameruptite",
+    "ability": "Magma Armor",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Eruption",
+     "Earth Power",
+     "Protect",
+     "Rest"
+    ]
+   },
+   {
+    "name": "The Durr",
+    "species": "Conkeldurr",
+    "item": "Life Orb",
+    "ability": "Guts",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Mach Punch",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "name": "Chandelure",
+    "species": "Chandelure",
+    "item": "Chandelurite",
+    "ability": "Flash Fire",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Shadow Ball",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Alcremie",
+    "species": "Alcremie",
+    "item": "Sitrus Berry",
+    "ability": "Aroma Veil",
+    "gender": "F",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Decorate",
+     "Dazzling Gleam",
+     "Protect",
+     "Light Screen"
+    ]
+   },
+   {
+    "name": "Tauros",
+    "species": "Tauros-Paldea-Combat",
+    "item": "Leftovers",
+    "ability": "Intimidate",
+    "gender": "M",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rock Slide",
+     "Close Combat",
+     "Rest"
+    ]
+   },
+   {
+    "name": "Baxcalibur",
+    "species": "Baxcalibur",
+    "item": "",
+    "ability": "Thermal Exchange",
+    "gender": "",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ]
+   }
+  ],
+  "order": "1234"
+ },
+ "provenance": {
+  "p1": [
+   {
+    "name": "boo",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 3
+   },
+   {
+    "name": "wolfe dih",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": false,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 3
+   },
+   {
+    "name": "BIG HUMP",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 3
+   },
+   {
+    "name": "The Durr",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 1
+   }
+  ],
+  "p2": [
+   {
+    "name": "Chandelure",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": false,
+    "moves_shown": 2
+   },
+   {
+    "name": "Alcremie",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 4
+   },
+   {
+    "name": "Tauros",
+    "source": "log (moves used, item/ability shown; rest assumed)",
+    "item_shown": true,
+    "item_inferred": null,
+    "ability_shown": true,
+    "moves_shown": 3
+   },
+   {
+    "name": "Baxcalibur",
+    "source": "unseen preview member (placeholder set)"
+   }
+  ]
+ },
+ "startObs": {
+  "mons": [
+   {
+    "side": "p1",
+    "name": "boo",
+    "species": "Mimikyu",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {}
+   },
+   {
+    "side": "p1",
+    "name": "wolfe dih",
+    "species": "Incineroar",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {}
+   },
+   {
+    "side": "p2",
+    "name": "Alcremie",
+    "species": "Alcremie",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 1,
+    "boosts": {
+     "atk": -1
+    }
+   },
+   {
+    "side": "p2",
+    "name": "Chandelure",
+    "species": "Chandelure",
+    "fainted": false,
+    "pct": 100,
+    "hint": "",
+    "status": "",
+    "slot": 0,
+    "boosts": {
+     "atk": -1
+    }
+   }
+  ],
+  "weather": "",
+  "terrain": "",
+  "pseudoWeather": [],
+  "sideConditions": {
+   "p1": [],
+   "p2": []
+  }
+ },
+ "decisions": [
+  {
+   "kind": "turn",
+   "turn": 1,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "trickroom",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "darkestlariat",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": true
+    },
+    {
+     "kind": "move",
+     "move": "decorate",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "boo",
+      "species": "Mimikyu",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "wolfe dih",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Alcremie",
+      "species": "Alcremie",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Chandelure",
+      "species": "Chandelure-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 1,
+       "spa": 2
+      },
+      "item": "chandelurite"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [
+     "trickroom"
+    ],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 2,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "taunt",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "darkestlariat",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Tauros"
+    },
+    {
+     "kind": "move",
+     "move": "dazzlinggleam",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "boo",
+      "species": "Mimikyu-Busted",
+      "fainted": false,
+      "pct": 87,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p1",
+      "name": "wolfe dih",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 76,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Alcremie",
+      "species": "Alcremie",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Chandelure",
+      "species": "Chandelure-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "chandelurite"
+     },
+     {
+      "side": "p2",
+      "name": "Tauros",
+      "species": "Tauros-Paldea-Combat",
+      "fainted": false,
+      "pct": 90,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "leftovers"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [
+     "trickroom"
+    ],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 3,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "playrough",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "partingshot",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "decorate",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [
+     "BIG HUMP"
+    ],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "BIG HUMP",
+      "species": "Camerupt",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "boo",
+      "species": "Mimikyu-Busted",
+      "fainted": false,
+      "pct": 87,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p1",
+      "name": "wolfe dih",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 76,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Alcremie",
+      "species": "Alcremie",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -2,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Chandelure",
+      "species": "Chandelure-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "chandelurite"
+     },
+     {
+      "side": "p2",
+      "name": "Tauros",
+      "species": "Tauros-Paldea-Combat",
+      "fainted": false,
+      "pct": 96,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 2,
+       "spa": 2
+      },
+      "item": "leftovers"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [
+     "trickroom"
+    ],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 4,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "playrough",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [
+      "[miss]"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "eruption",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p2a"
+     ],
+     "mega": true
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Chandelure"
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "BIG HUMP",
+      "species": "Camerupt-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "cameruptite"
+     },
+     {
+      "side": "p1",
+      "name": "boo",
+      "species": "Mimikyu-Busted",
+      "fainted": false,
+      "pct": 87,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p1",
+      "name": "wolfe dih",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 76,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Alcremie",
+      "species": "Alcremie",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -2,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Chandelure",
+      "species": "Chandelure-Mega",
+      "fainted": false,
+      "pct": 61,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "chandelurite"
+     },
+     {
+      "side": "p2",
+      "name": "Tauros",
+      "species": "Tauros-Paldea-Combat",
+      "fainted": false,
+      "pct": 96,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "leftovers"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [
+     "trickroom"
+    ],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 5,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "playrough",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "eruption",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p2b"
+     ],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "lightscreen",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "BIG HUMP",
+      "species": "Camerupt-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "cameruptite"
+     },
+     {
+      "side": "p1",
+      "name": "boo",
+      "species": "Mimikyu-Busted",
+      "fainted": false,
+      "pct": 87,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p1",
+      "name": "wolfe dih",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 76,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Alcremie",
+      "species": "Alcremie",
+      "fainted": false,
+      "pct": 54,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -2,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Chandelure",
+      "species": "Chandelure-Mega",
+      "fainted": false,
+      "pct": 61,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "chandelurite"
+     },
+     {
+      "side": "p2",
+      "name": "Tauros",
+      "species": "Tauros-Paldea-Combat",
+      "fainted": false,
+      "pct": 96,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "leftovers"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "lightscreen"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 6,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "wolfe dih"
+    },
+    {
+     "kind": "move",
+     "move": "earthpower",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "shadowball",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "decorate",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "BIG HUMP",
+      "species": "Camerupt-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "cameruptite"
+     },
+     {
+      "side": "p1",
+      "name": "boo",
+      "species": "Mimikyu",
+      "fainted": false,
+      "pct": 87,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "wolfe dih",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p2",
+      "name": "Alcremie",
+      "species": "Alcremie",
+      "fainted": false,
+      "pct": 54,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Chandelure",
+      "species": "Chandelure-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 1,
+       "spa": 2
+      },
+      "item": "chandelurite"
+     },
+     {
+      "side": "p2",
+      "name": "Tauros",
+      "species": "Tauros-Paldea-Combat",
+      "fainted": false,
+      "pct": 96,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "leftovers"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "lightscreen"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 6,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "switch",
+     "name": "Tauros"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "BIG HUMP",
+      "species": "Camerupt-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "cameruptite"
+     },
+     {
+      "side": "p1",
+      "name": "boo",
+      "species": "Mimikyu",
+      "fainted": false,
+      "pct": 87,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "wolfe dih",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Alcremie",
+      "species": "Alcremie",
+      "fainted": false,
+      "pct": 54,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Chandelure",
+      "species": "Chandelure-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "chandelurite"
+     },
+     {
+      "side": "p2",
+      "name": "Tauros",
+      "species": "Tauros-Paldea-Combat",
+      "fainted": false,
+      "pct": 96,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {},
+      "item": "leftovers"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "lightscreen"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 7,
+   "p1": [
+    {
+     "kind": "move",
+     "move": "fakeout",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "eruption",
+     "target": {
+      "side": "p2",
+      "slot": 1
+     },
+     "flags": [
+      "[spread] p2a,p2b"
+     ],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "decorate",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "BIG HUMP",
+      "species": "Camerupt-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "cameruptite"
+     },
+     {
+      "side": "p1",
+      "name": "boo",
+      "species": "Mimikyu",
+      "fainted": false,
+      "pct": 87,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "wolfe dih",
+      "species": "Incineroar",
+      "fainted": false,
+      "pct": 46,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Alcremie",
+      "species": "Alcremie",
+      "fainted": false,
+      "pct": 49,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Chandelure",
+      "species": "Chandelure-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "chandelurite"
+     },
+     {
+      "side": "p2",
+      "name": "Tauros",
+      "species": "Tauros-Paldea-Combat",
+      "fainted": false,
+      "pct": 31,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 2,
+       "spa": 2
+      },
+      "item": "leftovers"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "lightscreen"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 8,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "protect",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "rockslide",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dazzlinggleam",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "BIG HUMP",
+      "species": "Camerupt-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "cameruptite"
+     },
+     {
+      "side": "p1",
+      "name": "boo",
+      "species": "Mimikyu",
+      "fainted": false,
+      "pct": 87,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p1",
+      "name": "wolfe dih",
+      "species": "Incineroar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": -1
+      }
+     },
+     {
+      "side": "p2",
+      "name": "Alcremie",
+      "species": "Alcremie",
+      "fainted": false,
+      "pct": 49,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Chandelure",
+      "species": "Chandelure-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "chandelurite"
+     },
+     {
+      "side": "p2",
+      "name": "Tauros",
+      "species": "Tauros-Paldea-Combat",
+      "fainted": false,
+      "pct": 37,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 2,
+       "spa": 2
+      },
+      "item": "leftovers"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "lightscreen"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 8,
+   "p1": [
+    {
+     "kind": "switch",
+     "name": "boo"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "BIG HUMP",
+      "species": "Camerupt-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -1
+      },
+      "item": "cameruptite"
+     },
+     {
+      "side": "p1",
+      "name": "boo",
+      "species": "Mimikyu-Busted",
+      "fainted": false,
+      "pct": 87,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "wolfe dih",
+      "species": "Incineroar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Alcremie",
+      "species": "Alcremie",
+      "fainted": false,
+      "pct": 49,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Chandelure",
+      "species": "Chandelure-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "chandelurite"
+     },
+     {
+      "side": "p2",
+      "name": "Tauros",
+      "species": "Tauros-Paldea-Combat",
+      "fainted": false,
+      "pct": 37,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 2,
+       "spa": 2
+      },
+      "item": "leftovers"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": [
+      "lightscreen"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 9,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "switch",
+     "name": "The Durr"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "rockslide",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dazzlinggleam",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "BIG HUMP",
+      "species": "Camerupt-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "cameruptite"
+     },
+     {
+      "side": "p1",
+      "name": "The Durr",
+      "species": "Conkeldurr",
+      "fainted": false,
+      "pct": 44,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "boo",
+      "species": "Mimikyu-Busted",
+      "fainted": false,
+      "pct": 23,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "wolfe dih",
+      "species": "Incineroar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Alcremie",
+      "species": "Alcremie",
+      "fainted": false,
+      "pct": 49,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Chandelure",
+      "species": "Chandelure-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "chandelurite"
+     },
+     {
+      "side": "p2",
+      "name": "Tauros",
+      "species": "Tauros-Paldea-Combat",
+      "fainted": false,
+      "pct": 43,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 2,
+       "spa": 2
+      },
+      "item": "leftovers"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 10,
+   "p1": [
+    {
+     "kind": "unknown",
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "machpunch",
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "rockslide",
+     "target": {
+      "side": "p1",
+      "slot": 0
+     },
+     "flags": [
+      "[spread] p1a,p1b"
+     ],
+     "mega": false
+    },
+    {
+     "kind": "move",
+     "move": "dazzlinggleam",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "BIG HUMP",
+      "species": "Camerupt-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "cameruptite"
+     },
+     {
+      "side": "p1",
+      "name": "The Durr",
+      "species": "Conkeldurr",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "boo",
+      "species": "Mimikyu-Busted",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "wolfe dih",
+      "species": "Incineroar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Alcremie",
+      "species": "Alcremie",
+      "fainted": false,
+      "pct": 49,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Chandelure",
+      "species": "Chandelure-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "chandelurite"
+     },
+     {
+      "side": "p2",
+      "name": "Tauros",
+      "species": "Tauros-Paldea-Combat",
+      "fainted": false,
+      "pct": 17,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 2,
+       "spa": 2
+      },
+      "item": "leftovers"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "replacement",
+   "turn": 10,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "switch",
+     "name": "BIG HUMP"
+    }
+   ],
+   "p2": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "none"
+    }
+   ],
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "BIG HUMP",
+      "species": "Camerupt-Mega",
+      "fainted": false,
+      "pct": 100,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "cameruptite"
+     },
+     {
+      "side": "p1",
+      "name": "The Durr",
+      "species": "Conkeldurr",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "boo",
+      "species": "Mimikyu-Busted",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "wolfe dih",
+      "species": "Incineroar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Alcremie",
+      "species": "Alcremie",
+      "fainted": false,
+      "pct": 49,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Chandelure",
+      "species": "Chandelure-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "chandelurite"
+     },
+     {
+      "side": "p2",
+      "name": "Tauros",
+      "species": "Tauros-Paldea-Combat",
+      "fainted": false,
+      "pct": 17,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 2,
+       "spa": 2
+      },
+      "item": "leftovers"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  },
+  {
+   "kind": "turn",
+   "turn": 11,
+   "p1": [
+    {
+     "kind": "none"
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "p2": [
+    {
+     "kind": "move",
+     "move": "closecombat",
+     "target": {
+      "side": "p1",
+      "slot": 1
+     },
+     "flags": [],
+     "mega": false
+    },
+    {
+     "kind": "unknown",
+     "mega": false
+    }
+   ],
+   "mid": {
+    "p1": [],
+    "p2": []
+   },
+   "obs": {
+    "mons": [
+     {
+      "side": "p1",
+      "name": "BIG HUMP",
+      "species": "Camerupt-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {},
+      "item": "cameruptite"
+     },
+     {
+      "side": "p1",
+      "name": "The Durr",
+      "species": "Conkeldurr",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "lifeorb"
+     },
+     {
+      "side": "p1",
+      "name": "boo",
+      "species": "Mimikyu-Busted",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {}
+     },
+     {
+      "side": "p1",
+      "name": "wolfe dih",
+      "species": "Incineroar",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null
+     },
+     {
+      "side": "p2",
+      "name": "Alcremie",
+      "species": "Alcremie",
+      "fainted": false,
+      "pct": 49,
+      "hint": "",
+      "status": "",
+      "slot": 1,
+      "boosts": {
+       "atk": -3,
+       "spa": -1
+      },
+      "item": ""
+     },
+     {
+      "side": "p2",
+      "name": "Chandelure",
+      "species": "Chandelure-Mega",
+      "fainted": true,
+      "pct": 0,
+      "hint": "",
+      "status": "",
+      "slot": null,
+      "item": "chandelurite"
+     },
+     {
+      "side": "p2",
+      "name": "Tauros",
+      "species": "Tauros-Paldea-Combat",
+      "fainted": false,
+      "pct": 17,
+      "hint": "",
+      "status": "",
+      "slot": 0,
+      "boosts": {
+       "atk": 2,
+       "def": -1,
+       "spa": 2,
+       "spd": -1
+      },
+      "item": "leftovers"
+     }
+    ],
+    "weather": "",
+    "terrain": "",
+    "pseudoWeather": [],
+    "sideConditions": {
+     "p1": [],
+     "p2": []
+    }
+   }
+  }
+ ],
+ "stop": null
+}
