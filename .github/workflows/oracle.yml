@@ -1,0 +1,221 @@
+# Showdown oracle (engine/oracle/enumerate.cjs) on GitHub Actions for positions too heavy for the
+# local machine, checked against lab-check on the runner (VB, 2026-09-28).
+# A job is a directory engine/jobs/<job>/ with oracle.json (parameters) and positions/*.json
+# (pinned scenarios); format and keys: engine/scripts/oracle_job.py. Any lane can add one: pushing
+# a changed engine/jobs/<job>/oracle.json runs that job. One runner per position (or per shard).
+# Results without a token: the run's annotations (one ::notice per position) and job summaries;
+# with a token: artifacts oracle-<job>-<position>* (report .json.gz, logs, verdicts) and
+# oracle-summary-<run> (summary.md, summary.json).
+# Free runners: 6 hours per job, 20 jobs at a time (public repository: no minute limit).
+name: oracle
+
+on:
+  push:
+    paths:
+      - "engine/jobs/*/oracle.json"
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "engine/jobs/ 아래 디렉터리 이름 (oracle.json + positions/)"
+        required: true
+      only:
+        description: "국면 이름 부분 문자열 필터 (비우면 oracle.json 의 only)"
+        default: ""
+
+env:
+  CARGO_TERM_COLOR: always
+  PYTHONUTF8: "1"
+  SHOWDOWN_COMMIT: 9e317a6
+  NODE_VERSION: "22"
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.list.outputs.matrix }}
+      merge: ${{ steps.list.outputs.merge }}
+      has_merge: ${{ steps.list.outputs.has_merge }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - id: list
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            jobs="${{ inputs.job }}"
+            if [ -n "${{ inputs.only }}" ]; then
+              python3 - <<EOF
+          import json; p = "engine/jobs/${{ inputs.job }}/oracle.json"
+          d = json.load(open(p)); d["only"] = "${{ inputs.only }}"; json.dump(d, open(p, "w"))
+          EOF
+            fi
+          else
+            before="${{ github.event.before }}"
+            if git cat-file -e "$before" 2>/dev/null; then
+              changed=$(git diff --name-only "$before" "${{ github.sha }}")
+            else
+              changed=$(git show --name-only --format= "${{ github.sha }}")
+            fi
+            jobs=$(echo "$changed" | grep -E '^engine/jobs/[^/]+/oracle\.json$' | while read f; do [ -f "$f" ] && basename "$(dirname "$f")"; done | sort -u | tr '\n' ' ')
+          fi
+          echo "jobs: $jobs"
+          python3 engine/scripts/oracle_job.py matrix $jobs >> "$GITHUB_OUTPUT"
+          cat "$GITHUB_OUTPUT"
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - id: showdown
+        uses: actions/cache/restore@v4
+        with:
+          path: vendor/pokemon-showdown
+          key: showdown-${{ env.SHOWDOWN_COMMIT }}-node${{ env.NODE_VERSION }}-v1
+      - name: build Showdown ${{ env.SHOWDOWN_COMMIT }}
+        if: steps.showdown.outputs.cache-hit != 'true'
+        run: |
+          git clone --filter=blob:none https://github.com/smogon/pokemon-showdown.git vendor/pokemon-showdown
+          cd vendor/pokemon-showdown
+          git checkout --detach "$SHOWDOWN_COMMIT"
+          npm ci
+          node build
+      - name: check Showdown
+        run: |
+          git -C vendor/pokemon-showdown rev-parse HEAD
+          test -d vendor/pokemon-showdown/data/mods/champions
+          node -e "const {Dex}=require('./vendor/pokemon-showdown/dist/sim'); console.log(Dex.formats.get('gen9championsvgc2026regmc').name)"
+      - if: steps.showdown.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: vendor/pokemon-showdown
+          key: showdown-${{ env.SHOWDOWN_COMMIT }}-node${{ env.NODE_VERSION }}-v1
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: engine
+          shared-key: oracle-release
+      - name: build lab-check (release)
+        working-directory: engine
+        run: cargo build --release -p lab-scenario --bin lab-check
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oracle-bin
+          path: engine/target/release/lab-check
+          retention-days: 3
+
+  oracle:
+    needs: [prepare, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: actions/cache/restore@v4
+        with:
+          path: vendor/pokemon-showdown
+          key: showdown-${{ env.SHOWDOWN_COMMIT }}-node${{ env.NODE_VERSION }}-v1
+          fail-on-cache-miss: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: oracle-bin
+          path: bin
+      - name: machine
+        run: |
+          chmod +x bin/lab-check
+          git rev-parse HEAD; nproc; free -g; node --version
+      - name: oracle ${{ matrix.position }} ${{ matrix.shard }}
+        env:
+          LAB_CHECK: ${{ github.workspace }}/bin/lab-check
+          LAB_ROOT: ${{ github.workspace }}
+        run: |
+          if [ -n "${{ matrix.shard }}" ]; then
+            python3 engine/scripts/oracle_job.py run "${{ matrix.job }}" "${{ matrix.position }}" --shard "${{ matrix.shard }}"
+          else
+            python3 engine/scripts/oracle_job.py run "${{ matrix.job }}" "${{ matrix.position }}"
+          fi
+      - name: artifact name
+        if: always()
+        id: name
+        run: echo "tag=$(echo '${{ matrix.shard }}' | sed 's#/#of#')" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: oracle-${{ matrix.job }}-${{ matrix.position }}${{ matrix.shard && '-s' || '' }}${{ steps.name.outputs.tag }}
+          path: engine/jobs/${{ matrix.job }}/out/**
+          if-no-files-found: warn
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: result-${{ matrix.job }}-${{ matrix.position }}${{ matrix.shard && '-s' || '' }}${{ steps.name.outputs.tag }}
+          path: engine/jobs/${{ matrix.job }}/out/*.result.json
+          if-no-files-found: ignore
+          retention-days: 30
+
+  merge:
+    needs: [prepare, build, oracle]
+    if: always() && needs.prepare.outputs.has_merge == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix: ${{ fromJSON(needs.prepare.outputs.merge) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: oracle-bin
+          path: bin
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: oracle-${{ matrix.job }}-${{ matrix.position }}-s*
+          path: shards
+      - name: merge ${{ matrix.position }} (${{ matrix.shards }} shards)
+        env:
+          LAB_CHECK: ${{ github.workspace }}/bin/lab-check
+        run: |
+          chmod +x bin/lab-check
+          python3 engine/scripts/oracle_job.py merge "${{ matrix.job }}" "${{ matrix.position }}" shards
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: oracle-${{ matrix.job }}-${{ matrix.position }}-merged
+          path: engine/jobs/${{ matrix.job }}/out/**
+          if-no-files-found: warn
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: result-${{ matrix.job }}-${{ matrix.position }}-merged
+          path: engine/jobs/${{ matrix.job }}/out/*.result.json
+          if-no-files-found: ignore
+          retention-days: 30
+
+  summary:
+    needs: [oracle, merge]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: result-*
+          path: results
+      - name: table
+        run: |
+          mkdir -p results
+          python3 engine/scripts/oracle_job.py summary results
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oracle-summary-${{ github.run_number }}
+          path: results

@@ -11,7 +11,8 @@
 //                                    [--samples N] [--max-branches N] [--keep-nominal-draws] [--out file]
 //                                    [--collapse-secondaries] [--traces]
 //                                    [--setup-walks N] [--setup-max-branches N] [--estimate N]
-//                                    [--staged] [--setup-staged-max-branches N]
+//                                    [--staged] [--setup-staged-max-branches N] [--lean]
+//                                    [--shard I/N]
 //
 // Modes:
 //   full      every branch with its exact probability (the parity reference)
@@ -30,6 +31,27 @@
 // --staged: the turn is enumerated one action at a time, identical states merging between actions
 // (same distribution, far fewer runs on heavy turns; see enumerateStaged). The report has
 // `staged: {stages, maxFrontier, merged}`.
+//
+// --lean: the outcomes carry only p, branches and state (no log, no trace), and a staged run keeps
+// each outcome as its canonical key instead of the state object and its log (memory on turns with
+// millions of outcomes). A report with many outcomes (or --lean) is written outcome by outcome:
+// one JSON string of the whole report would pass V8's string length limit (VB, GitHub Actions
+// oracle runs, .github/workflows/oracle.yml). lab-check reads only p and state.
+//
+// --shard I/N (with --staged): one of N disjoint parts of the staged enumeration, for N machines.
+// Every shard runs the same stages until the frontier (the distinct states waiting for their next
+// action) first holds at least 4N states; from there shard I keeps the frontier entries whose
+// index is I mod N (the enumeration is deterministic, so every shard sees the same frontier in the
+// same order). Outcomes that ended before the split belong to shard 0. The shards' outcome lists
+// together are the whole distribution: concatenate them and add the probabilities of equal
+// canonical states (lab-check adds them when it reads a report; engine/scripts/oracle_job.py
+// merge). States the shards reach separately after the split are not merged across shards, so the
+// total work is larger than one run's. A turn whose frontier never reaches 4N states is not split:
+// shard 0 has everything, the others nothing (`staged.shard.split` is null).
+// Splitting by fixed damage roll (--mode fixed --roll K for K = 0..15) is NOT a partition of the
+// full distribution: fixed mode gives every damage roll of the turn the same index, while the full
+// distribution rolls each hit independently (16^hits combinations), so the 16 fixed reports do not
+// add up to the full one on any turn with more than one damage roll.
 //
 // --estimate N: instead of enumerating, N uniform random walks through the decision tree of the
 // given mode estimate how many branches the enumeration would run (Knuth's estimator: the mean of
@@ -77,6 +99,12 @@ function parseArgs(argv) {
 		else if (a === '--setup-staged-max-branches') args.setupStagedMaxBranches = Number(argv[++i]);
 		else if (a === '--estimate') args.estimate = Number(argv[++i]);
 		else if (a === '--staged') args.staged = true;
+		else if (a === '--lean') args.lean = true;
+		else if (a === '--shard') {
+			const m = /^(\d+)\/(\d+)$/.exec(argv[++i] || '');
+			if (!m || Number(m[1]) >= Number(m[2])) throw new Error('--shard needs I/N with 0 <= I < N');
+			args.shard = {index: Number(m[1]), count: Number(m[2])};
+		}
 		else if (!args.file) args.file = a;
 		else throw new Error(`unexpected argument ${a}`);
 	}
@@ -887,6 +915,7 @@ function enumerateStaged(scenario, snapshot, opts) {
 	let stages = 0;
 	let maxFrontier = 1;
 	let merged = 0;
+	const shard = opts.shard ? {index: opts.shard.index, count: opts.shard.count, split: null} : null;
 	const logStart = JSON.parse(snapshot).log.length;
 	let frontier = [{snapshot, p: 1, prefix: [], used: {p1: 0, p2: 0}, start: true}];
 	while (frontier.length) {
@@ -920,6 +949,8 @@ function enumerateStaged(scenario, snapshot, opts) {
 					if (found) {
 						found.p += p;
 						found.branches++;
+					} else if (opts.lean) {
+						outcomes.set(key, {p, branches: 1, key});
 					} else {
 						const outcome = {p, branches: 1, state, log: turnLog(battle.log.slice(logStart))};
 						if (opts.traces) {
@@ -935,12 +966,19 @@ function enumerateStaged(scenario, snapshot, opts) {
 		}
 		frontier = [...next.values()];
 		maxFrontier = Math.max(maxFrontier, frontier.length);
+		if (shard && !shard.split && frontier.length >= 4 * shard.count) {
+			shard.split = {stage: stages, frontier: frontier.length, outcomesBefore: outcomes.size};
+			frontier = frontier.filter((_, i) => i % shard.count === shard.index);
+			if (shard.index !== 0) outcomes.clear();
+		}
 		if (process.env.LAB_ORACLE_PROGRESS) {
 			console.error(`staged: stage ${stages}, frontier ${frontier.length}, ${branches} runs, ${merged} merged, ` +
 				`${outcomes.size} outcomes, ${Math.round((Date.now() - started) / 1000)} s`);
 		}
 	}
-	return {branches, maxDepth, approximate, outcomes, fullEstimate, staged: {stages, maxFrontier, merged}};
+	if (shard && !shard.split && shard.index !== 0) outcomes.clear();
+	const staged = shard ? {stages, maxFrontier, merged, shard} : {stages, maxFrontier, merged};
+	return {branches, maxDepth, approximate, outcomes, fullEstimate, staged};
 }
 
 function monteCarlo(scenario, snapshot, samples) {
@@ -1007,13 +1045,14 @@ function main() {
 		return;
 	}
 	if (args.staged && args.mode === 'mc') throw new Error('--staged goes with an enumerating mode');
+	if (args.shard && !args.staged) throw new Error('--shard goes with --staged');
 	const result = args.mode === 'mc' ?
 		monteCarlo(scenario, snapshot, args.samples) :
 		args.staged ? enumerateStaged(scenario, snapshot, args) : enumerate(scenario, snapshot, args);
 	const elapsedMs = Number(process.hrtime.bigint() - started) / 1e6;
 	const outcomes = [...result.outcomes.values()]
 		.sort((a, b) => b.p - a.p)
-		.map(o => (o.trace ?
+		.map(o => (args.lean ? (o.key !== undefined ? o : {p: o.p, branches: o.branches, state: o.state}) : o.trace ?
 			{p: o.p, branches: o.branches, state: o.state, log: o.log, trace: o.trace} :
 			{p: o.p, branches: o.branches, state: o.state, log: o.log}));
 	const total = outcomes.reduce((s, o) => s + o.p, 0);
@@ -1043,11 +1082,41 @@ function main() {
 		report.setupTraces = traces.setup;
 		report.setupSearch = traces.search;
 	}
-	const text = JSON.stringify(report, null, 1);
-	if (args.out) fs.writeFileSync(args.out, text);
-	else process.stdout.write(text + '\n');
+	if (args.out && (args.lean || outcomes.length > STREAM_OUTCOMES)) writeStreaming(args.out, report);
+	else {
+		const text = JSON.stringify(report, null, 1);
+		if (args.out) fs.writeFileSync(args.out, text);
+		else process.stdout.write(text + '\n');
+	}
 	console.error(`${args.mode}${args.mode === 'fixed' ? ` ${args.roll}` : ''}: ${result.branches} branches -> ${outcomes.length} outcomes, ` +
 		`total p=${total.toFixed(12)}, ${Math.round(elapsedMs)} ms`);
+}
+
+// Reports with more outcomes than this are written outcome by outcome (see --lean).
+const STREAM_OUTCOMES = 50000;
+
+// The report as JSON with the outcomes one per line; a lean staged outcome's `key` is its
+// canonical state's JSON already (canonicalKey), written as `state` without parsing it back.
+function writeStreaming(file, report) {
+	const marker = '"__OUTCOMES__"';
+	const head = JSON.stringify({...report, outcomes: '__OUTCOMES__'}, null, 1);
+	const at = head.indexOf(marker);
+	const fd = fs.openSync(file, 'w');
+	fs.writeSync(fd, head.slice(0, at) + '[');
+	let chunk = [];
+	const flush = () => {
+		if (chunk.length) fs.writeSync(fd, chunk.join(''));
+		chunk = [];
+	};
+	report.outcomes.forEach((o, i) => {
+		const text = o.key !== undefined ?
+			`{"p":${JSON.stringify(o.p)},"branches":${o.branches},"state":${o.key}}` : JSON.stringify(o);
+		chunk.push((i ? ',\n' : '\n') + text);
+		if (chunk.length >= 2000) flush();
+	});
+	flush();
+	fs.writeSync(fd, '\n]' + head.slice(at + marker.length) + '\n');
+	fs.closeSync(fd);
 }
 
 function sourceCommit() {

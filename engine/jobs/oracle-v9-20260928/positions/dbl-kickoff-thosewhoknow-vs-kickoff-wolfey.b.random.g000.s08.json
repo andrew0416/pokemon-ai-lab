@@ -1,0 +1,1825 @@
+{
+ "description": "FF parity position (FF-parity-harness): dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.b, lab-parity game 0 (seed e8f0207de1655299, policy random, extremes chance), decision 8 = turn 6 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/dbl-kickoff-thosewhoknow-vs-kickoff-wolfey.b.json. The 8 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "5634",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-thosewhoknow/team.json"
+ },
+ "p2": {
+  "order": "5634",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-wolfey/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 195,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "multiscale",
+       "boosts": {},
+       "hp": 166,
+       "item": "dragoninite",
+       "lastMove": "dragonpulse",
+       "maxhp": 166,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 11,
+        "heatwave": 12,
+        "protect": 8,
+        "thunderbolt": 16
+       },
+       "slot": 0,
+       "species": "Dragonite-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 111,
+       "item": "lifeorb",
+       "lastMove": "earthquake",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "earthquake": 11,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "helpinghand": 20,
+        "imprison": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 81,
+       "item": "choicescarf",
+       "lastMove": "lastrespects",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 11,
+        "wavecrash": 12
+       },
+       "slot": 1,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "lastrespects"
+        }
+       }
+      },
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 29,
+       "item": "gardevoirite",
+       "lastMove": "trickroom",
+       "maxhp": 143,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "hypervoice": 12,
+        "protect": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "protect": 8,
+        "tailwind": 16,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 195,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "multiscale",
+       "boosts": {},
+       "hp": 166,
+       "item": "dragoninite",
+       "lastMove": "dragonpulse",
+       "maxhp": 166,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 10,
+        "heatwave": 12,
+        "protect": 8,
+        "thunderbolt": 16
+       },
+       "slot": 0,
+       "species": "Dragonite-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 93,
+       "item": "lifeorb",
+       "lastMove": "dragonclaw",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "helpinghand": 20,
+        "imprison": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 11,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": "fnt"
+      },
+      {
+       "ability": "pixilate",
+       "hp": 29,
+       "item": "gardevoirite",
+       "maxhp": 143,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "hypervoice": 12,
+        "protect": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 60,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "protect": 8,
+        "tailwind": 16,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 195,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "multiscale",
+       "boosts": {},
+       "hp": 166,
+       "item": "dragoninite",
+       "lastMove": "dragonpulse",
+       "maxhp": 166,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 10,
+        "heatwave": 12,
+        "protect": 8,
+        "thunderbolt": 16
+       },
+       "slot": 0,
+       "species": "Dragonite-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 93,
+       "item": "lifeorb",
+       "lastMove": "dragonclaw",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "helpinghand": 20,
+        "imprison": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 11,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "pixilate",
+       "hp": 29,
+       "item": "gardevoirite",
+       "maxhp": 143,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "hypervoice": 12,
+        "protect": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 60,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "protect": 8,
+        "tailwind": 16,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {},
+       "hp": 155,
+       "item": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 195,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "multiscale",
+       "boosts": {},
+       "hp": 166,
+       "item": "dragoninite",
+       "lastMove": "thunderbolt",
+       "maxhp": 166,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 10,
+        "heatwave": 12,
+        "protect": 8,
+        "thunderbolt": 15
+       },
+       "slot": 0,
+       "species": "Dragonite-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "hp": 93,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "helpinghand": 20,
+        "imprison": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 11,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "pixilate",
+       "hp": 29,
+       "item": "gardevoirite",
+       "maxhp": 143,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "hypervoice": 12,
+        "protect": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 60,
+       "item": "focussash",
+       "lastMove": "hurricane",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 11,
+        "protect": 8,
+        "tailwind": 16,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": -1
+       },
+       "hp": 106,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "closecombat",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 195,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 12
+       },
+       "slot": 1,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "multiscale",
+       "boosts": {},
+       "hp": 166,
+       "item": "dragoninite",
+       "lastMove": "thunderbolt",
+       "maxhp": 166,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 10,
+        "heatwave": 12,
+        "protect": 8,
+        "thunderbolt": 15
+       },
+       "slot": 0,
+       "species": "Dragonite-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "hp": 93,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "helpinghand": 20,
+        "imprison": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 11,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "pixilate",
+       "hp": 29,
+       "item": "gardevoirite",
+       "maxhp": 143,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "hypervoice": 12,
+        "protect": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 60,
+       "item": "focussash",
+       "lastMove": "hurricane",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 11,
+        "protect": 8,
+        "tailwind": 16,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": -1
+       },
+       "hp": 106,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "closecombat",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 1
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 195,
+       "item": "choicescarf",
+       "lastMove": "wavecrash",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 11
+       },
+       "slot": 1,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "wavecrash"
+        }
+       }
+      },
+      {
+       "ability": "multiscale",
+       "boosts": {},
+       "hp": 166,
+       "item": "dragoninite",
+       "lastMove": "protect",
+       "maxhp": 166,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 10,
+        "heatwave": 12,
+        "protect": 7,
+        "thunderbolt": 15
+       },
+       "slot": 0,
+       "species": "Dragonite-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "roughskin",
+       "hp": 93,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "helpinghand": 20,
+        "imprison": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 11,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 29,
+       "item": "gardevoirite",
+       "maxhp": 143,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "hypervoice": 12,
+        "protect": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 60,
+       "item": "focussash",
+       "lastMove": "protect",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "tailwind": 16,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "hp": 106,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "raindance",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 160,
+       "item": "choicescarf",
+       "lastMove": "wavecrash",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 10
+       },
+       "slot": 1,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "wavecrash"
+        }
+       }
+      },
+      {
+       "ability": "multiscale",
+       "boosts": {},
+       "hp": 166,
+       "item": "dragoninite",
+       "lastMove": "dragonpulse",
+       "maxhp": 166,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 9,
+        "heatwave": 12,
+        "protect": 7,
+        "thunderbolt": 15
+       },
+       "slot": 0,
+       "species": "Dragonite-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "hp": 93,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "helpinghand": 20,
+        "imprison": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 11,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 29,
+       "item": "gardevoirite",
+       "lastMove": "protect",
+       "maxhp": 143,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "hypervoice": 12,
+        "protect": 7,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "drizzle",
+       "hp": 60,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "tailwind": 16,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "raindance",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 160,
+       "item": "choicescarf",
+       "lastMove": "wavecrash",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 12,
+        "wavecrash": 10
+       },
+       "slot": 1,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "wavecrash"
+        }
+       }
+      },
+      {
+       "ability": "multiscale",
+       "boosts": {},
+       "hp": 166,
+       "item": "dragoninite",
+       "lastMove": "dragonpulse",
+       "maxhp": 166,
+       "name": "Dragonite",
+       "pp": {
+        "dragonpulse": 9,
+        "heatwave": 12,
+        "protect": 7,
+        "thunderbolt": 15
+       },
+       "slot": 0,
+       "species": "Dragonite-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "hp": 93,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "helpinghand": 20,
+        "imprison": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 0,
+       "item": "choicescarf",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "flipturn": 20,
+        "lastrespects": 11,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 29,
+       "item": "gardevoirite",
+       "lastMove": "protect",
+       "maxhp": 143,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "hypervoice": 12,
+        "protect": 7,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 60,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "tailwind": 16,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move dragonpulse 1 mega, move earthquake",
+   "move trickroom mega, move lastrespects 2"
+  ],
+  [
+   "move dragonpulse 2, move dragonclaw 1",
+   "switch 4, move lastrespects 1"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move thunderbolt 2, switch 3",
+   "move hurricane 2, move closecombat 2"
+  ],
+  [
+   "switch 4",
+   ""
+  ],
+  [
+   "move protect, move wavecrash -1",
+   "move protect, switch 4"
+  ],
+  [
+   "move dragonpulse 2, move wavecrash 1",
+   "switch 4, move protect"
+  ],
+  [
+   "",
+   "switch 4"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "adaptability",
+      "hp": 195,
+      "item": "choicescarf",
+      "maxhp": 195,
+      "name": "Basculegion",
+      "pp": {
+       "aquajet": 20,
+       "flipturn": 20,
+       "lastrespects": 12,
+       "wavecrash": 12
+      },
+      "slot": null,
+      "species": "Basculegion",
+      "status": ""
+     },
+     {
+      "ability": "innerfocus",
+      "boosts": {},
+      "canMega": true,
+      "hp": 166,
+      "item": "dragoninite",
+      "maxhp": 166,
+      "name": "Dragonite",
+      "pp": {
+       "dragonpulse": 12,
+       "heatwave": 12,
+       "protect": 8,
+       "thunderbolt": 16
+      },
+      "slot": 0,
+      "species": "Dragonite",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "roughskin",
+      "boosts": {},
+      "hp": 183,
+      "item": "lifeorb",
+      "maxhp": 183,
+      "name": "Garchomp",
+      "pp": {
+       "dragonclaw": 16,
+       "earthquake": 12,
+       "protect": 8,
+       "rockslide": 12
+      },
+      "slot": 1,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "hp": 135,
+      "item": "focussash",
+      "maxhp": 135,
+      "name": "Indeedee",
+      "pp": {
+       "expandingforce": 12,
+       "helpinghand": 20,
+       "imprison": 12,
+       "trickroom": 8
+      },
+      "slot": null,
+      "species": "Indeedee",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "adaptability",
+      "boosts": {},
+      "hp": 195,
+      "item": "choicescarf",
+      "maxhp": 195,
+      "name": "Basculegion",
+      "pp": {
+       "aquajet": 20,
+       "flipturn": 20,
+       "lastrespects": 12,
+       "wavecrash": 12
+      },
+      "slot": 1,
+      "species": "Basculegion",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "roughskin",
+      "boosts": {},
+      "canMega": true,
+      "hp": 143,
+      "item": "gardevoirite",
+      "maxhp": 143,
+      "name": "Gardevoir",
+      "pp": {
+       "expandingforce": 12,
+       "hypervoice": 12,
+       "protect": 8,
+       "trickroom": 8
+      },
+      "slot": 0,
+      "species": "Gardevoir",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "hp": 135,
+      "item": "focussash",
+      "maxhp": 135,
+      "name": "Pelipper",
+      "pp": {
+       "hurricane": 12,
+       "protect": 8,
+       "tailwind": 16,
+       "weatherball": 12
+      },
+      "slot": null,
+      "species": "Pelipper",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "hp": 155,
+      "item": "psychicseed",
+      "maxhp": 155,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "protect": 8,
+       "rockslide": 12
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move thunderbolt -2, move wavecrash -1",
+  "p2": "move weatherball -2, move expandingforce -1"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": [
+   1,
+   0,
+   0,
+   1,
+   0
+  ]
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0
+   ]
+  }
+ ]
+}

@@ -1,0 +1,608 @@
+{
+ "description": "FF parity position (FF-parity-harness): mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.a, lab-parity game 0 (seed e8f0207de1655299, policy nash, extremes chance), decision 2 = turn 2 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/mech-tomoe-garchomp-golisopod-vs-tororo-goodra-grassy.a.json. The 2 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": "../../../../teams/library/singles/m-c/tomoe-garchomp-golisopod/team.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/library/singles/m-c/tororo-goodra-grassy/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 15,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": "fnt"
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 187,
+       "item": "chestoberry",
+       "lastMove": "moonblast",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 20,
+        "moonblast": 15,
+        "rest": 8,
+        "sparklingaria": 12
+       },
+       "slot": 0,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 204,
+       "item": "miracleseed",
+       "maxhp": 204,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 8,
+        "iceshard": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "gooey",
+       "boosts": {},
+       "hp": 186,
+       "item": "leftovers",
+       "lastMove": "flashcannon",
+       "maxhp": 186,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 16,
+        "flashcannon": 11,
+        "icebeam": 12,
+        "thunderbolt": 16
+       },
+       "slot": 0,
+       "species": "Goodra-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 137,
+       "item": "lifeorb",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "healingwish": 12,
+        "mysticalfire": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "drumbeating": 12,
+        "endeavor": 7,
+        "grassyglide": 20,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 0,
+       "item": "garchompitez",
+       "maxhp": 185,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 15,
+        "powergem": 20,
+        "scorchingsands": 12
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 187,
+       "item": "chestoberry",
+       "lastMove": "moonblast",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "calmmind": 20,
+        "moonblast": 15,
+        "rest": 8,
+        "sparklingaria": 12
+       },
+       "slot": 0,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 204,
+       "item": "miracleseed",
+       "maxhp": 204,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "dragondance": 20,
+        "earthquake": 12,
+        "glaiverush": 8,
+        "iceshard": 20
+       },
+       "slot": 1,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "gooey",
+       "boosts": {},
+       "hp": 186,
+       "item": "leftovers",
+       "lastMove": "flashcannon",
+       "maxhp": 186,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 16,
+        "flashcannon": 11,
+        "icebeam": 12,
+        "thunderbolt": 16
+       },
+       "slot": 0,
+       "species": "Goodra-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 137,
+       "item": "lifeorb",
+       "maxhp": 137,
+       "name": "Indeedee",
+       "pp": {
+        "encore": 8,
+        "expandingforce": 12,
+        "healingwish": 12,
+        "mysticalfire": 12
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "drumbeating": 12,
+        "endeavor": 7,
+        "grassyglide": 20,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move moonblast 2, move flamethrower 2 mega",
+   "move flashcannon 2, move endeavor 2"
+  ],
+  [
+   "switch 4",
+   "switch 3"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "roughskin",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "garchompitez",
+      "maxhp": 185,
+      "name": "Garchomp",
+      "pp": {
+       "dracometeor": 8,
+       "flamethrower": 16,
+       "powergem": 20,
+       "scorchingsands": 12
+      },
+      "slot": 1,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "firstimpression": 12,
+       "ironhead": 16,
+       "leechlife": 12,
+       "suckerpunch": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "torrent",
+      "boosts": {},
+      "hp": 187,
+      "item": "chestoberry",
+      "maxhp": 187,
+      "name": "Primarina",
+      "pp": {
+       "calmmind": 20,
+       "moonblast": 16,
+       "rest": 8,
+       "sparklingaria": 12
+      },
+      "slot": 0,
+      "species": "Primarina",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 204,
+      "item": "miracleseed",
+      "maxhp": 204,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "uturn": 20,
+       "woodhammer": 16
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "thermalexchange",
+      "canMega": true,
+      "hp": 222,
+      "item": "baxcalibrite",
+      "maxhp": 222,
+      "name": "Baxcalibur",
+      "pp": {
+       "dragondance": 20,
+       "earthquake": 12,
+       "glaiverush": 8,
+       "iceshard": 20
+      },
+      "slot": null,
+      "species": "Baxcalibur",
+      "status": ""
+     },
+     {
+      "ability": "gooey",
+      "boosts": {},
+      "hp": 186,
+      "item": "leftovers",
+      "maxhp": 186,
+      "name": "Goodra",
+      "pp": {
+       "flamethrower": 16,
+       "flashcannon": 12,
+       "icebeam": 12,
+       "thunderbolt": 16
+      },
+      "slot": 0,
+      "species": "Goodra-Hisui",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "hp": 137,
+      "item": "lifeorb",
+      "maxhp": 137,
+      "name": "Indeedee",
+      "pp": {
+       "encore": 8,
+       "expandingforce": 12,
+       "healingwish": 12,
+       "mysticalfire": 12
+      },
+      "slot": null,
+      "species": "Indeedee",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 207,
+      "item": "focussash",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "drumbeating": 12,
+       "endeavor": 8,
+       "grassyglide": 20,
+       "uturn": 20
+      },
+      "slot": 1,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move moonblast 2, move woodhammer 2",
+  "p2": "move icebeam 2, switch 4"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": [
+   1,
+   0,
+   1,
+   0,
+   0
+  ]
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0
+   ]
+  }
+ ]
+}

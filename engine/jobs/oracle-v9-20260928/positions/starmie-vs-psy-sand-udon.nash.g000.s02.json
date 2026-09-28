@@ -1,0 +1,594 @@
+{
+ "description": "FF parity position (FF-parity-harness): starmie-vs-psy-sand-udon, lab-parity game 0 (seed e8f0207de1655299, policy nash, extremes chance), decision 2 = turn 3 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927/matchups/starmie-vs-psy-sand-udon.json. The 2 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "3521",
+  "team": "../../../../teams/rillaboom-slot-20260920/starmie-braverilla.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/psy-sand-udon/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "competitive",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "hydropump": 8,
+        "hypnosis": 20,
+        "icebeam": 12,
+        "recover": 8
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "miracleseed",
+       "lastMove": "fakeout",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 157,
+       "item": "roseliberry",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 8,
+        "gravity": 8,
+        "quash": 16,
+        "sunnyday": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      },
+      {
+       "ability": "hugepower",
+       "boosts": {},
+       "hp": 137,
+       "item": "starminite",
+       "lastMove": "liquidation",
+       "maxhp": 137,
+       "name": "Starmie",
+       "pp": {
+        "gravity": 8,
+        "icespinner": 16,
+        "liquidation": 11,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Starmie-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "weakarmor",
+       "boosts": {},
+       "hp": 162,
+       "item": "focussash",
+       "lastMove": "protect",
+       "maxhp": 162,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "aurasphere": 20,
+        "expandingforce": 12,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 175,
+       "item": "colburberry",
+       "lastMove": "protect",
+       "maxhp": 175,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "protect": 7,
+        "psychic": 12
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 172,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 175,
+       "item": "whiteherb",
+       "maxhp": 175,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "feint": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "competitive",
+       "boosts": {},
+       "hp": 174,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "hydropump": 8,
+        "hypnosis": 20,
+        "icebeam": 12,
+        "recover": 8
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "miracleseed",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 157,
+       "item": "roseliberry",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "encore": 8,
+        "gravity": 8,
+        "quash": 16,
+        "sunnyday": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      },
+      {
+       "ability": "hugepower",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 137,
+       "item": "starminite",
+       "lastMove": "liquidation",
+       "maxhp": 137,
+       "name": "Starmie",
+       "pp": {
+        "gravity": 8,
+        "icespinner": 16,
+        "liquidation": 10,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Starmie-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "weakarmor",
+       "hp": 162,
+       "item": "focussash",
+       "maxhp": 162,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "aurasphere": 20,
+        "expandingforce": 12,
+        "protect": 7
+       },
+       "slot": null,
+       "species": "Armarouge",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 175,
+       "item": "colburberry",
+       "lastMove": "psychic",
+       "maxhp": 175,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "protect": 7,
+        "psychic": 11
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "canMega": true,
+       "hp": 124,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": 0,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 175,
+       "item": "whiteherb",
+       "maxhp": 175,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "feint": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move liquidation 1 mega, move fakeout 1",
+   "move protect, move protect"
+  ],
+  [
+   "move liquidation 1, switch 3",
+   "switch 3, move psychic 2"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "competitive",
+      "hp": 202,
+      "item": "sitrusberry",
+      "maxhp": 202,
+      "name": "Milotic",
+      "pp": {
+       "hydropump": 8,
+       "hypnosis": 20,
+       "icebeam": 12,
+       "recover": 8
+      },
+      "slot": null,
+      "species": "Milotic",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 207,
+      "item": "miracleseed",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "uturn": 20,
+       "woodhammer": 16
+      },
+      "slot": 1,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "hp": 157,
+      "item": "roseliberry",
+      "maxhp": 157,
+      "name": "Sableye",
+      "pp": {
+       "encore": 8,
+       "gravity": 8,
+       "quash": 16,
+       "sunnyday": 8
+      },
+      "slot": null,
+      "species": "Sableye",
+      "status": ""
+     },
+     {
+      "ability": "naturalcure",
+      "boosts": {},
+      "canMega": true,
+      "hp": 137,
+      "item": "starminite",
+      "maxhp": 137,
+      "name": "Starmie",
+      "pp": {
+       "gravity": 8,
+       "icespinner": 16,
+       "liquidation": 12,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Starmie",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "weakarmor",
+      "boosts": {},
+      "hp": 162,
+      "item": "focussash",
+      "maxhp": 162,
+      "name": "Armarouge",
+      "pp": {
+       "armorcannon": 8,
+       "aurasphere": 20,
+       "expandingforce": 12,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Armarouge",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 175,
+      "item": "colburberry",
+      "maxhp": 175,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "helpinghand": 20,
+       "protect": 8,
+       "psychic": 12
+      },
+      "slot": 1,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "canMega": true,
+      "hp": 172,
+      "item": "salamencite",
+      "maxhp": 172,
+      "name": "Salamence",
+      "pp": {
+       "dracometeor": 8,
+       "hypervoice": 12,
+       "protect": 8,
+       "tailwind": 16
+      },
+      "slot": null,
+      "species": "Salamence",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "hp": 175,
+      "item": "whiteherb",
+      "maxhp": 175,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "fakeout": 12,
+       "feint": 12
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move liquidation 1, move recover",
+  "p2": "move hypervoice mega, move followme"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    15,
+    1,
+    1,
+    13,
+    1
+   ]
+  }
+ ]
+}

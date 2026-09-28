@@ -5,7 +5,8 @@
 //! distributions exactly (the comparator of the fixture tests, `lab_scenario::parity`).
 //!
 //! Usage: lab-check <scenario.json> <oracle-report.json> [--out verdict.json] [--tolerance p]
-//!        lab-check --batch <jobs.jsonl | -> [--jobs n] [--tolerance p] [--timeout s]
+//!                  [--hash-keys]
+//!        lab-check --batch <jobs.jsonl | -> [--jobs n] [--tolerance p] [--timeout s] [--hash-keys]
 //!
 //! Prints one JSON verdict (also written to `--out`). `status` is one of
 //! - `match`: same canonical outcomes, probabilities within the tolerance (default 1e-9);
@@ -21,6 +22,13 @@
 //!   `parity_corpus.py --per-report` gives a lab-check process it had to kill).
 //!
 //! Either file may be gzipped (a path ending in `.gz`; the parity corpus's files are).
+//!
+//! The report is read as a stream and its outcomes are folded into the distribution one at a
+//! time (reports of the heaviest turns hold millions of outcomes, GBs of JSON). `--hash-keys`
+//! (VB, GitHub Actions oracle runs) keys both distributions by a 128-bit hash of the canonical
+//! key instead of the key itself: the memory of a turn with millions of outcomes, at the cost of
+//! the field differences of a mismatch (not computed; the counts and TV are). Two different
+//! canonical states with the same hash would merge; at 128 bits that is not expected.
 //!
 //! `--batch` (board P5) checks many pairs in one process: each input line is a JSON object
 //! `{"scenario": path, "report": path, ...}` (from a file, or stdin with `-`), and each result is
@@ -39,16 +47,60 @@
 use std::io::{BufRead, Read, Write};
 use std::path::Path;
 use std::process::ExitCode;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Mutex;
 use std::time::Instant;
 
 use serde::Deserialize;
 use serde_json::{json, Value};
 
+use lab_engine::instruction::Outcome;
+use lab_engine::state::State;
 use lab_engine::turn::{EnumerateOptions, RollMode};
 use lab_scenario::parity::{
     compare, engine_distribution, first_differences, json_diff, value_key, Distribution,
 };
+use lab_scenario::ScenarioMeta;
+
+/// `--hash-keys`: distributions keyed by a hash of the canonical key.
+static HASH_KEYS: AtomicBool = AtomicBool::new(false);
+
+/// The distribution key of a canonical state: [`value_key`], or its 128-bit hash (hex) under
+/// `--hash-keys`.
+fn key_of(state: &Value) -> String {
+    let key = value_key(state);
+    if !HASH_KEYS.load(Ordering::Relaxed) {
+        return key;
+    }
+    use std::hash::{DefaultHasher, Hasher};
+    let half = |salt: u8| {
+        let mut h = DefaultHasher::new();
+        h.write_u8(salt);
+        h.write(key.as_bytes());
+        h.finish()
+    };
+    format!("{:016x}{:016x}", half(1), half(2))
+}
+
+/// [`engine_distribution`] keyed by [`key_of`] (the same when the keys are not hashed).
+fn engine_distribution_keyed<const N: usize>(
+    meta: &ScenarioMeta,
+    state: &mut State<N>,
+    outcomes: &[Outcome],
+) -> Result<Distribution, String> {
+    if !HASH_KEYS.load(Ordering::Relaxed) {
+        return engine_distribution(meta, state, outcomes);
+    }
+    let mut out = Distribution::new();
+    for outcome in outcomes {
+        state.apply(&outcome.instructions);
+        let value = canonical_value(state, meta);
+        state.reverse(&outcome.instructions);
+        let value = value.map_err(|e| e.to_string())?;
+        *out.entry(key_of(&value)).or_insert(0.0) += outcome.probability;
+    }
+    Ok(out)
+}
 use lab_scenario::{
     canonical_value, load_scenario_file, load_scenario_str, run_decision_mid_turn_with,
     scenario_decision, scenario_positions, ScenarioError,
@@ -95,6 +147,7 @@ fn main() -> ExitCode {
                     }
                 }
             }
+            "--hash-keys" => HASH_KEYS.store(true, Ordering::Relaxed),
             "--tolerance" => {
                 i += 1;
                 match args.get(i).and_then(|s| s.parse().ok()) {
@@ -304,7 +357,46 @@ struct Report {
     roll: Option<u64>,
     #[serde(default)]
     before: Value,
-    outcomes: Vec<ReportOutcome>,
+    outcomes: FoldedOutcomes,
+}
+
+/// A report's outcomes folded into canonical key → probability while they are parsed (one
+/// outcome's JSON tree at a time).
+struct FoldedOutcomes(Distribution);
+
+impl<'de> Deserialize<'de> for FoldedOutcomes {
+    fn deserialize<D: serde::Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
+        struct Fold;
+        impl<'de> serde::de::Visitor<'de> for Fold {
+            type Value = FoldedOutcomes;
+            fn expecting(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+                f.write_str("an array of outcomes")
+            }
+            fn visit_seq<A: serde::de::SeqAccess<'de>>(
+                self,
+                mut seq: A,
+            ) -> Result<FoldedOutcomes, A::Error> {
+                let mut dist = Distribution::new();
+                while let Some(o) = seq.next_element::<ReportOutcome>()? {
+                    *dist.entry(key_of(&o.state)).or_insert(0.0) += o.p;
+                }
+                Ok(FoldedOutcomes(dist))
+            }
+        }
+        d.deserialize_seq(Fold)
+    }
+}
+
+/// A report parsed from its file as a stream (gunzipped when the path ends in `.gz`).
+fn read_report(path: &str) -> Result<Report, String> {
+    let file = std::fs::File::open(path).map_err(|e| format!("{path}: {e}"))?;
+    let reader: Box<dyn Read> = if path.ends_with(".gz") {
+        Box::new(flate2::read::GzDecoder::new(std::io::BufReader::new(file)))
+    } else {
+        Box::new(file)
+    };
+    let reader = std::io::BufReader::with_capacity(1 << 20, reader);
+    serde_json::from_reader(reader).map_err(|e| format!("{path}: {e}"))
 }
 
 #[derive(Deserialize)]
@@ -314,9 +406,7 @@ struct ReportOutcome {
 }
 
 fn check(scenario: &str, report_path: &str, tolerance: f64) -> Value {
-    let report: Report = match read_text(report_path)
-        .and_then(|t| serde_json::from_str(&t).map_err(|e| format!("{report_path}: {e}")))
-    {
+    let report: Report = match read_report(report_path) {
         Ok(r) => r,
         Err(e) => return failure("engine-error", e),
     };
@@ -341,10 +431,7 @@ fn check(scenario: &str, report_path: &str, tolerance: f64) -> Value {
             other => return failure("engine-error", format!("report mode {other:?}")),
         },
     };
-    let mut oracle = Distribution::new();
-    for o in &report.outcomes {
-        *oracle.entry(value_key(&o.state)).or_insert(0.0) += o.p;
-    }
+    let oracle = report.outcomes.0;
     let loaded = if scenario.ends_with(".gz") {
         let base = Path::new(scenario).parent().unwrap_or(Path::new("."));
         read_text(scenario)
@@ -401,7 +488,7 @@ fn check(scenario: &str, report_path: &str, tolerance: f64) -> Value {
             Ok(o) => o,
             Err(e) => return engine_failure("", e),
         };
-        match engine_distribution(&loaded.meta, &mut state, &outcomes) {
+        match engine_distribution_keyed(&loaded.meta, &mut state, &outcomes) {
             Ok(d) => distributions.push(d),
             Err(e) => return failure("engine-error", format!("canonical: {e}")),
         }
@@ -418,7 +505,15 @@ fn check(scenario: &str, report_path: &str, tolerance: f64) -> Value {
     } else {
         "mismatch"
     };
-    let mut differences = first_differences(&comparison, engine, &oracle, 8);
+    let hashed = HASH_KEYS.load(Ordering::Relaxed);
+    let mut differences = if hashed {
+        Vec::new()
+    } else {
+        first_differences(&comparison, engine, &oracle, 8)
+    };
+    if hashed && !comparison.exact(tolerance) {
+        differences.push("hash-keys: field differences not computed".to_owned());
+    }
     if differences.is_empty() && !comparison.exact(tolerance) {
         differences.push(format!(
             "probability: largest difference {:e} over shared outcomes",
@@ -437,5 +532,6 @@ fn check(scenario: &str, report_path: &str, tolerance: f64) -> Value {
         "tv": comparison.tv,
         "variants": matching.len(),
         "differences": differences,
+        "hashKeys": hashed,
     })
 }
