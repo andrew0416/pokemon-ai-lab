@@ -2,6 +2,8 @@ name: engine
 
 on:
   push:
+    # 에이전트 브랜치(opus-*, worktree-agent-*)의 푸시는 러너를 쓰지 않는다: 게이트는 병합 뒤 lab-engine에서 돈다.
+    branches: [lab-engine, main]
     paths:
       - "engine/**"
       - ".github/workflows/engine.yml"

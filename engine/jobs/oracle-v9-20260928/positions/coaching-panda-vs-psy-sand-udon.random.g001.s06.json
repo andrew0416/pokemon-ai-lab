@@ -1,0 +1,1372 @@
+{
+ "description": "FF parity position (FF-parity-harness): coaching-panda-vs-psy-sand-udon, lab-parity game 1 (seed 2ea1717e6d0f4653, policy random, extremes chance), decision 6 = turn 5 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927/matchups/coaching-panda-vs-psy-sand-udon.json. The 6 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/coaching-panda/team.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/psy-sand-udon/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "protect": 8,
+        "scaleshot": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 182,
+       "item": "blackglasses",
+       "lastMove": "kowtowcleave",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 11,
+        "protect": 8,
+        "suckerpunch": 8,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 189,
+       "item": "miracleseed",
+       "lastMove": "grassyglide",
+       "maxhp": 189,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 19,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "focussash",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "coaching": 12,
+        "direclaw": 16,
+        "fakeout": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "weakarmor",
+       "boosts": {
+        "def": -2,
+        "spd": -1,
+        "spe": 2
+       },
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "armorcannon",
+       "maxhp": 162,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 7,
+        "aurasphere": 20,
+        "expandingforce": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 82,
+       "item": "colburberry",
+       "lastMove": "psychic",
+       "maxhp": 175,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "protect": 8,
+        "psychic": 11
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 172,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 175,
+       "item": "whiteherb",
+       "maxhp": 175,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "feint": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "protect": 8,
+        "scaleshot": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 152,
+       "item": "blackglasses",
+       "lastMove": "suckerpunch",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 11,
+        "protect": 8,
+        "suckerpunch": 7,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 189,
+       "item": "miracleseed",
+       "lastMove": "grassyglide",
+       "maxhp": 189,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 18,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "focussash",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "coaching": 12,
+        "direclaw": 16,
+        "fakeout": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "weakarmor",
+       "boosts": {
+        "def": -2,
+        "spd": -1,
+        "spe": 2
+       },
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "protect",
+       "maxhp": 162,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 7,
+        "aurasphere": 20,
+        "expandingforce": 12,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 82,
+       "item": "colburberry",
+       "lastMove": "psychic",
+       "maxhp": 175,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "protect": 8,
+        "psychic": 10
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 172,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 175,
+       "item": "whiteherb",
+       "maxhp": 175,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "feint": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "protect": 8,
+        "scaleshot": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 0,
+       "item": "blackglasses",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 11,
+        "protect": 8,
+        "suckerpunch": 7,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": "fnt"
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 189,
+       "item": "miracleseed",
+       "lastMove": "grassyglide",
+       "maxhp": 189,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 17,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "focussash",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "coaching": 12,
+        "direclaw": 16,
+        "fakeout": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "weakarmor",
+       "boosts": {
+        "def": -3,
+        "spd": -2,
+        "spe": 2
+       },
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "armorcannon",
+       "maxhp": 162,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 6,
+        "aurasphere": 20,
+        "expandingforce": 12,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 6,
+       "item": "colburberry",
+       "lastMove": "followme",
+       "maxhp": 175,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "helpinghand": 20,
+        "protect": 8,
+        "psychic": 10
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 172,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 175,
+       "item": "whiteherb",
+       "maxhp": 175,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "feint": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "protect": 8,
+        "scaleshot": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 0,
+       "item": "blackglasses",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 11,
+        "protect": 8,
+        "suckerpunch": 7,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 189,
+       "item": "miracleseed",
+       "lastMove": "grassyglide",
+       "maxhp": 189,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 17,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {},
+       "hp": 155,
+       "item": "focussash",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "coaching": 12,
+        "direclaw": 16,
+        "fakeout": 12
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "weakarmor",
+       "boosts": {
+        "def": -3,
+        "spd": -2,
+        "spe": 2
+       },
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "armorcannon",
+       "maxhp": 162,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 6,
+        "aurasphere": 20,
+        "expandingforce": 12,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 6,
+       "item": "colburberry",
+       "lastMove": "followme",
+       "maxhp": 175,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "helpinghand": 20,
+        "protect": 8,
+        "psychic": 10
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 172,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 175,
+       "item": "whiteherb",
+       "maxhp": 175,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "feint": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "protect": 8,
+        "scaleshot": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 0,
+       "item": "blackglasses",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 11,
+        "protect": 8,
+        "suckerpunch": 7,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 189,
+       "item": "miracleseed",
+       "lastMove": "highhorsepower",
+       "maxhp": 189,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 17,
+        "highhorsepower": 11,
+        "woodhammer": 16
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "atk": -1,
+        "def": -1,
+        "spd": -1
+       },
+       "hp": 155,
+       "item": "focussash",
+       "lastMove": "closecombat",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "coaching": 12,
+        "direclaw": 16,
+        "fakeout": 12
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "weakarmor",
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 162,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 6,
+        "aurasphere": 20,
+        "expandingforce": 12,
+        "protect": 7
+       },
+       "slot": null,
+       "species": "Armarouge",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "colburberry",
+       "maxhp": 175,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "helpinghand": 20,
+        "protect": 8,
+        "psychic": 10
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": "fnt"
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "canMega": true,
+       "hp": 172,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": 0,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 175,
+       "item": "whiteherb",
+       "maxhp": 175,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "feint": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "iceshard": 20,
+        "iciclecrash": 12,
+        "protect": 8,
+        "scaleshot": 20
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 0,
+       "item": "blackglasses",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 11,
+        "protect": 8,
+        "suckerpunch": 7,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 189,
+       "item": "miracleseed",
+       "lastMove": "highhorsepower",
+       "maxhp": 189,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 17,
+        "highhorsepower": 11,
+        "woodhammer": 16
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "atk": -1,
+        "def": -1,
+        "spd": -1
+       },
+       "hp": 155,
+       "item": "focussash",
+       "lastMove": "closecombat",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "coaching": 12,
+        "direclaw": 16,
+        "fakeout": 12
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "weakarmor",
+       "boosts": {},
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 162,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 6,
+        "aurasphere": 20,
+        "expandingforce": 12,
+        "protect": 7
+       },
+       "slot": 1,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "colburberry",
+       "maxhp": 175,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "helpinghand": 20,
+        "protect": 8,
+        "psychic": 10
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "canMega": true,
+       "hp": 172,
+       "item": "salamencite",
+       "maxhp": 172,
+       "name": "Salamence",
+       "pp": {
+        "dracometeor": 8,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": 0,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 175,
+       "item": "whiteherb",
+       "maxhp": 175,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "feint": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move grassyglide -2, move kowtowcleave 1",
+   "move armorcannon -2, move psychic 2"
+  ],
+  [
+   "move grassyglide -2, move suckerpunch 1",
+   "move protect, move psychic -1"
+  ],
+  [
+   "move grassyglide 2, move kowtowcleave 2",
+   "move armorcannon 2, move followme"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move highhorsepower 1, move closecombat 2",
+   "switch 3, move psychic -1"
+  ],
+  [
+   "",
+   "switch 3"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "thermalexchange",
+      "canMega": true,
+      "hp": 222,
+      "item": "baxcalibrite",
+      "maxhp": 222,
+      "name": "Baxcalibur",
+      "pp": {
+       "iceshard": 20,
+       "iciclecrash": 12,
+       "protect": 8,
+       "scaleshot": 20
+      },
+      "slot": null,
+      "species": "Baxcalibur",
+      "status": ""
+     },
+     {
+      "ability": "defiant",
+      "boosts": {},
+      "hp": 207,
+      "item": "blackglasses",
+      "maxhp": 207,
+      "name": "Kingambit",
+      "pp": {
+       "kowtowcleave": 12,
+       "protect": 8,
+       "suckerpunch": 8,
+       "swordsdance": 20
+      },
+      "slot": 1,
+      "species": "Kingambit",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 189,
+      "item": "miracleseed",
+      "maxhp": 189,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "highhorsepower": 12,
+       "woodhammer": 16
+      },
+      "slot": 0,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 155,
+      "item": "focussash",
+      "maxhp": 155,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "coaching": 12,
+       "direclaw": 16,
+       "fakeout": 12
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "weakarmor",
+      "boosts": {},
+      "hp": 162,
+      "item": "focussash",
+      "maxhp": 162,
+      "name": "Armarouge",
+      "pp": {
+       "armorcannon": 8,
+       "aurasphere": 20,
+       "expandingforce": 12,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Armarouge",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 175,
+      "item": "colburberry",
+      "maxhp": 175,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "helpinghand": 20,
+       "protect": 8,
+       "psychic": 12
+      },
+      "slot": 1,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "canMega": true,
+      "hp": 172,
+      "item": "salamencite",
+      "maxhp": 172,
+      "name": "Salamence",
+      "pp": {
+       "dracometeor": 8,
+       "hypervoice": 12,
+       "protect": 8,
+       "tailwind": 16
+      },
+      "slot": null,
+      "species": "Salamence",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "hp": 175,
+      "item": "whiteherb",
+      "maxhp": 175,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "fakeout": 12,
+       "feint": 12
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move grassyglide -2, move direclaw -1",
+  "p2": "move dracometeor 1 mega, move expandingforce 2"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  }
+ ]
+}

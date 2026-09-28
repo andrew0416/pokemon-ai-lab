@@ -1,0 +1,17 @@
+{
+ "list": "C:/Users/admin/AppData/Local/Temp/claude/D--pokemon-ai-lab/3f3b079f-cb52-4153-bfd2-95b72d0b67db/scratchpad/vb-v16b.txt",
+ "positions": [
+  {
+   "file": "dbl-psy-lello-vs-psy-nihat.b.random.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-psy-lello-vs-psy-nihat.b.random.g000.s04.json"
+  },
+  {
+   "file": "dbl-kickoff-aveornot-vs-kickoff-balmung.a.nash.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/runs/parity-20260927c/positions-v2/dbl-kickoff-aveornot-vs-kickoff-balmung.a.nash.g000.s01.json"
+  },
+  {
+   "file": "spread-damage.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-vb/engine/oracle/scenarios/spread-damage.json"
+  }
+ ]
+}

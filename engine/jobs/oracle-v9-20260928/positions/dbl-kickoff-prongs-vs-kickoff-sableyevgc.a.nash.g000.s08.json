@@ -1,0 +1,1817 @@
+{
+ "description": "FF parity position (FF-parity-harness): dbl-kickoff-prongs-vs-kickoff-sableyevgc.a, lab-parity game 0 (seed e8f0207de1655299, policy nash, extremes chance), decision 8 = turn 7 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/dbl-kickoff-prongs-vs-kickoff-sableyevgc.a.json. The 8 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-prongs/team.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-sableyevgc/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "shadowtag",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 77,
+       "item": "gengarite",
+       "lastMove": "shadowball",
+       "maxhp": 135,
+       "name": "Gengar",
+       "pp": {
+        "disable": 20,
+        "perishsong": 8,
+        "protect": 8,
+        "shadowball": 15
+       },
+       "slot": 0,
+       "species": "Gengar-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 170,
+       "item": "lumberry",
+       "lastMove": "protect",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "protect": 7,
+        "throatchop": 16
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "torrent",
+       "hp": 155,
+       "item": "leftovers",
+       "maxhp": 155,
+       "name": "Primarina",
+       "pp": {
+        "flipturn": 20,
+        "moonblast": 16,
+        "perishsong": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 125,
+       "item": "sitrusberry",
+       "maxhp": 125,
+       "name": "Sableye",
+       "pp": {
+        "detect": 8,
+        "disable": 20,
+        "encore": 8,
+        "fakeout": 12
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 170,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 8,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 175,
+       "item": "sitrusberry",
+       "lastMove": "fakeout",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 67,
+       "item": "salamencite",
+       "lastMove": "hypervoice",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 11,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "shadowtag",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 85,
+       "item": "gengarite",
+       "lastMove": "shadowball",
+       "maxhp": 135,
+       "name": "Gengar",
+       "pp": {
+        "disable": 20,
+        "perishsong": 8,
+        "protect": 8,
+        "shadowball": 14
+       },
+       "slot": 0,
+       "species": "Gengar-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 154,
+       "item": "lumberry",
+       "lastMove": "throatchop",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "protect": 7,
+        "throatchop": 15
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 155,
+       "item": "leftovers",
+       "maxhp": 155,
+       "name": "Primarina",
+       "pp": {
+        "flipturn": 20,
+        "moonblast": 16,
+        "perishsong": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 125,
+       "item": "sitrusberry",
+       "maxhp": 125,
+       "name": "Sableye",
+       "pp": {
+        "detect": 8,
+        "disable": 20,
+        "encore": 8,
+        "fakeout": 12
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {},
+       "hp": 131,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 8,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {
+        "throatchop": {
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "sitrusberry",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "uturn": 19,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 67,
+       "item": "salamencite",
+       "lastMove": "protect",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 11,
+        "protect": 7,
+        "tailwind": 16
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "shadowtag",
+       "hp": 0,
+       "item": "gengarite",
+       "maxhp": 135,
+       "name": "Gengar",
+       "pp": {
+        "disable": 20,
+        "perishsong": 8,
+        "protect": 8,
+        "shadowball": 13
+       },
+       "slot": null,
+       "species": "Gengar-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 164,
+       "item": "lumberry",
+       "lastMove": "throatchop",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "protect": 7,
+        "throatchop": 14
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 155,
+       "item": "leftovers",
+       "maxhp": 155,
+       "name": "Primarina",
+       "pp": {
+        "flipturn": 20,
+        "moonblast": 16,
+        "perishsong": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 125,
+       "item": "sitrusberry",
+       "maxhp": 125,
+       "name": "Sableye",
+       "pp": {
+        "detect": 8,
+        "disable": 20,
+        "encore": 8,
+        "fakeout": 12
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {},
+       "hp": 92,
+       "item": "focussash",
+       "lastMove": "flareblitz",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 8,
+        "flareblitz": 15,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "sitrusberry",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "uturn": 19,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 11,
+        "protect": 6,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "shadowtag",
+       "hp": 0,
+       "item": "gengarite",
+       "maxhp": 135,
+       "name": "Gengar",
+       "pp": {
+        "disable": 20,
+        "perishsong": 8,
+        "protect": 8,
+        "shadowball": 13
+       },
+       "slot": null,
+       "species": "Gengar-Mega",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 164,
+       "item": "lumberry",
+       "lastMove": "throatchop",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "protect": 7,
+        "throatchop": 14
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 155,
+       "item": "leftovers",
+       "maxhp": 155,
+       "name": "Primarina",
+       "pp": {
+        "flipturn": 20,
+        "moonblast": 16,
+        "perishsong": 8,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 125,
+       "item": "sitrusberry",
+       "maxhp": 125,
+       "name": "Sableye",
+       "pp": {
+        "detect": 8,
+        "disable": 20,
+        "encore": 8,
+        "fakeout": 12
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {},
+       "hp": 92,
+       "item": "focussash",
+       "lastMove": "flareblitz",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 8,
+        "flareblitz": 15,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "sitrusberry",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "uturn": 19,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 11,
+        "protect": 6,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 155,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "shadowtag",
+       "hp": 0,
+       "item": "gengarite",
+       "maxhp": 135,
+       "name": "Gengar",
+       "pp": {
+        "disable": 20,
+        "perishsong": 8,
+        "protect": 8,
+        "shadowball": 13
+       },
+       "slot": null,
+       "species": "Gengar-Mega",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 170,
+       "item": "lumberry",
+       "lastMove": "protect",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "protect": 6,
+        "throatchop": 14
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 155,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 155,
+       "name": "Primarina",
+       "pp": {
+        "flipturn": 20,
+        "moonblast": 16,
+        "perishsong": 8,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "prankster",
+       "hp": 125,
+       "item": "sitrusberry",
+       "maxhp": 125,
+       "name": "Sableye",
+       "pp": {
+        "detect": 8,
+        "disable": 20,
+        "encore": 8,
+        "fakeout": 12
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {},
+       "hp": 102,
+       "item": "focussash",
+       "lastMove": "extremespeed",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 7,
+        "flareblitz": 15,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "sitrusberry",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "uturn": 19,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 11,
+        "protect": 6,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 155,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "direclaw",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 15,
+        "fakeout": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "shadowtag",
+       "hp": 0,
+       "item": "gengarite",
+       "maxhp": 135,
+       "name": "Gengar",
+       "pp": {
+        "disable": 20,
+        "perishsong": 8,
+        "protect": 8,
+        "shadowball": 13
+       },
+       "slot": null,
+       "species": "Gengar-Mega",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 170,
+       "item": "lumberry",
+       "lastMove": "protect",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "protect": 5,
+        "throatchop": 14
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 9,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "torrent",
+       "hp": 155,
+       "item": "leftovers",
+       "maxhp": 155,
+       "name": "Primarina",
+       "pp": {
+        "flipturn": 20,
+        "moonblast": 16,
+        "perishsong": 8,
+        "protect": 7
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 43,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 125,
+       "name": "Sableye",
+       "pp": {
+        "detect": 8,
+        "disable": 20,
+        "encore": 8,
+        "fakeout": 12
+       },
+       "slot": 0,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {},
+       "hp": 112,
+       "item": "focussash",
+       "lastMove": "headsmash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 7,
+        "flareblitz": 15,
+        "headsmash": 7,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 175,
+       "item": "sitrusberry",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "uturn": 19,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 11,
+        "protect": 6,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 155,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "closecombat",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 15,
+        "fakeout": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "shadowtag",
+       "hp": 0,
+       "item": "gengarite",
+       "maxhp": 135,
+       "name": "Gengar",
+       "pp": {
+        "disable": 20,
+        "perishsong": 8,
+        "protect": 8,
+        "shadowball": 13
+       },
+       "slot": null,
+       "species": "Gengar-Mega",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 170,
+       "item": "lumberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "protect": 5,
+        "throatchop": 14
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 155,
+       "item": "leftovers",
+       "maxhp": 155,
+       "name": "Primarina",
+       "pp": {
+        "flipturn": 20,
+        "moonblast": 16,
+        "perishsong": 8,
+        "protect": 7
+       },
+       "slot": 1,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 125,
+       "name": "Sableye",
+       "pp": {
+        "detect": 8,
+        "disable": 20,
+        "encore": 8,
+        "fakeout": 11
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {},
+       "hp": 122,
+       "item": "focussash",
+       "lastMove": "flareblitz",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 7,
+        "flareblitz": 14,
+        "headsmash": 7,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 171,
+       "item": "sitrusberry",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "uturn": 19,
+        "woodhammer": 16
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 11,
+        "protect": 6,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 15,
+        "fakeout": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "shadowtag",
+       "hp": 0,
+       "item": "gengarite",
+       "maxhp": 135,
+       "name": "Gengar",
+       "pp": {
+        "disable": 20,
+        "perishsong": 8,
+        "protect": 8,
+        "shadowball": 13
+       },
+       "slot": null,
+       "species": "Gengar-Mega",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 170,
+       "item": "lumberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "protect": 5,
+        "throatchop": 14
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 155,
+       "item": "leftovers",
+       "maxhp": 155,
+       "name": "Primarina",
+       "pp": {
+        "flipturn": 20,
+        "moonblast": 16,
+        "perishsong": 8,
+        "protect": 7
+       },
+       "slot": 1,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 125,
+       "name": "Sableye",
+       "pp": {
+        "detect": 8,
+        "disable": 20,
+        "encore": 8,
+        "fakeout": 11
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 122,
+       "item": "focussash",
+       "lastMove": "flareblitz",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 7,
+        "flareblitz": 14,
+        "headsmash": 7,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 171,
+       "item": "sitrusberry",
+       "maxhp": 175,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "uturn": 19,
+        "woodhammer": 16
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 11,
+        "protect": 6,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 15,
+        "fakeout": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move shadowball 1 mega, move protect",
+   "move hypervoice mega, move fakeout 2"
+  ],
+  [
+   "move shadowball 1, move throatchop 2",
+   "move protect, move uturn 2",
+   {
+    "p1": [],
+    "p2": [
+     "switch 4"
+    ]
+   }
+  ],
+  [
+   "move shadowball 1, move throatchop 2",
+   "move protect, move flareblitz 1"
+  ],
+  [
+   "switch 4",
+   "switch 3"
+  ],
+  [
+   "move protect, move protect",
+   "move direclaw 1, move extremespeed 1"
+  ],
+  [
+   "switch 3, move protect",
+   "move closecombat 2, move headsmash 1"
+  ],
+  [
+   "move fakeout 1, switch 3",
+   "switch 4, move flareblitz 1"
+  ],
+  [
+   "switch 3",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "cursedbody",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 135,
+      "item": "gengarite",
+      "maxhp": 135,
+      "name": "Gengar",
+      "pp": {
+       "disable": 20,
+       "perishsong": 8,
+       "protect": 8,
+       "shadowball": 16
+      },
+      "slot": 0,
+      "species": "Gengar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 170,
+      "item": "lumberry",
+      "maxhp": 170,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "partingshot": 20,
+       "protect": 8,
+       "throatchop": 16
+      },
+      "slot": 1,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "torrent",
+      "hp": 155,
+      "item": "leftovers",
+      "maxhp": 155,
+      "name": "Primarina",
+      "pp": {
+       "flipturn": 20,
+       "moonblast": 16,
+       "perishsong": 8,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Primarina",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "hp": 125,
+      "item": "sitrusberry",
+      "maxhp": 125,
+      "name": "Sableye",
+      "pp": {
+       "detect": 8,
+       "disable": 20,
+       "encore": 8,
+       "fakeout": 12
+      },
+      "slot": null,
+      "species": "Sableye",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "rockhead",
+      "hp": 170,
+      "item": "focussash",
+      "maxhp": 170,
+      "name": "Arcanine",
+      "pp": {
+       "extremespeed": 8,
+       "flareblitz": 16,
+       "headsmash": 8,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Arcanine-Hisui",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 175,
+      "item": "sitrusberry",
+      "maxhp": 175,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "uturn": 20,
+       "woodhammer": 16
+      },
+      "slot": 1,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 170,
+      "item": "salamencite",
+      "maxhp": 170,
+      "name": "Salamence",
+      "pp": {
+       "doubleedge": 16,
+       "hypervoice": 12,
+       "protect": 8,
+       "tailwind": 16
+      },
+      "slot": 0,
+      "species": "Salamence",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 155,
+      "item": "grassyseed",
+      "maxhp": 155,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "fakeout": 12,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move fakeout 1, move flipturn 2",
+  "p2": "move fakeout 1, move headsmash 1"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    1,
+    0,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    13,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    1,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    12,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0
+   ]
+  }
+ ]
+}

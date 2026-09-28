@@ -1,0 +1,1164 @@
+{
+ "description": "FF parity position (FF-parity-harness): dbl-kickoff-prongs-vs-kickoff-sableyevgc.b, lab-parity game 0 (seed e8f0207de1655299, policy random, extremes chance), decision 5 = turn 5 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/dbl-kickoff-prongs-vs-kickoff-sableyevgc.b.json. The 5 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "5634",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-prongs/team.json"
+ },
+ "p2": {
+  "order": "5634",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-sableyevgc/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 121,
+       "item": "kasibberry",
+       "lastMove": "encore",
+       "maxhp": 185,
+       "name": "Annihilape",
+       "pp": {
+        "drainpunch": 12,
+        "encore": 7,
+        "protect": 8,
+        "ragefist": 12
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 155,
+       "item": "leftovers",
+       "maxhp": 155,
+       "name": "Primarina",
+       "pp": {
+        "flipturn": 20,
+        "moonblast": 16,
+        "perishsong": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 125,
+       "item": "sitrusberry",
+       "maxhp": 125,
+       "name": "Sableye",
+       "pp": {
+        "detect": 8,
+        "disable": 20,
+        "encore": 8,
+        "fakeout": 12
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      },
+      {
+       "ability": "moldbreaker",
+       "boosts": {},
+       "hp": 160,
+       "item": "occaberry",
+       "lastMove": "protect",
+       "maxhp": 160,
+       "name": "Tinkaton",
+       "pp": {
+        "encore": 8,
+        "fakeout": 12,
+        "gigatonhammer": 8,
+        "protect": 7
+       },
+       "slot": 1,
+       "species": "Tinkaton",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 170,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 8,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 195,
+       "item": "mysticwater",
+       "lastMove": "aquajet",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 19,
+        "lastrespects": 12,
+        "protect": 8,
+        "wavecrash": 12
+       },
+       "slot": 1,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {
+        "encore": {
+         "duration": 3,
+         "move": "aquajet"
+        }
+       }
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 175,
+       "item": "chopleberry",
+       "lastMove": "lowkick",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "lowkick": 19,
+        "suckerpunch": 8
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 88,
+       "item": "kasibberry",
+       "lastMove": "drainpunch",
+       "maxhp": 185,
+       "name": "Annihilape",
+       "pp": {
+        "drainpunch": 11,
+        "encore": 7,
+        "protect": 8,
+        "ragefist": 12
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 155,
+       "item": "leftovers",
+       "maxhp": 155,
+       "name": "Primarina",
+       "pp": {
+        "flipturn": 20,
+        "moonblast": 16,
+        "perishsong": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 125,
+       "item": "sitrusberry",
+       "maxhp": 125,
+       "name": "Sableye",
+       "pp": {
+        "detect": 8,
+        "disable": 20,
+        "encore": 8,
+        "fakeout": 12
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      },
+      {
+       "ability": "moldbreaker",
+       "boosts": {},
+       "hp": 160,
+       "item": "occaberry",
+       "lastMove": "encore",
+       "maxhp": 160,
+       "name": "Tinkaton",
+       "pp": {
+        "encore": 7,
+        "fakeout": 12,
+        "gigatonhammer": 8,
+        "protect": 7
+       },
+       "slot": 1,
+       "species": "Tinkaton",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 170,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 8,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 195,
+       "item": "mysticwater",
+       "lastMove": "aquajet",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 18,
+        "lastrespects": 12,
+        "protect": 8,
+        "wavecrash": 12
+       },
+       "slot": 1,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {
+        "encore": {
+         "duration": 2,
+         "move": "aquajet"
+        }
+       }
+      },
+      {
+       "ability": "defiant",
+       "hp": 175,
+       "item": "chopleberry",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "lowkick": 19,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {},
+       "hp": 113,
+       "item": "grassyseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "fakeout": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 88,
+       "item": "kasibberry",
+       "lastMove": "protect",
+       "maxhp": 185,
+       "name": "Annihilape",
+       "pp": {
+        "drainpunch": 11,
+        "encore": 7,
+        "protect": 7,
+        "ragefist": 12
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "torrent",
+       "hp": 155,
+       "item": "leftovers",
+       "maxhp": 155,
+       "name": "Primarina",
+       "pp": {
+        "flipturn": 20,
+        "moonblast": 16,
+        "perishsong": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 125,
+       "item": "sitrusberry",
+       "maxhp": 125,
+       "name": "Sableye",
+       "pp": {
+        "detect": 8,
+        "disable": 20,
+        "encore": 8,
+        "fakeout": 12
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      },
+      {
+       "ability": "moldbreaker",
+       "boosts": {},
+       "hp": 160,
+       "item": "occaberry",
+       "lastMove": "protect",
+       "maxhp": 160,
+       "name": "Tinkaton",
+       "pp": {
+        "encore": 7,
+        "fakeout": 12,
+        "gigatonhammer": 8,
+        "protect": 6
+       },
+       "slot": 1,
+       "species": "Tinkaton",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {},
+       "hp": 125,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 8,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "adaptability",
+       "hp": 195,
+       "item": "mysticwater",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 18,
+        "lastrespects": 12,
+        "protect": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 175,
+       "item": "chopleberry",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "lowkick": 19,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {},
+       "hp": 113,
+       "item": "grassyseed",
+       "lastMove": "direclaw",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 15,
+        "fakeout": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 88,
+       "item": "kasibberry",
+       "lastMove": "ragefist",
+       "maxhp": 185,
+       "name": "Annihilape",
+       "pp": {
+        "drainpunch": 11,
+        "encore": 7,
+        "protect": 7,
+        "ragefist": 11
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 155,
+       "item": "leftovers",
+       "maxhp": 155,
+       "name": "Primarina",
+       "pp": {
+        "flipturn": 20,
+        "moonblast": 16,
+        "perishsong": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 125,
+       "item": "sitrusberry",
+       "maxhp": 125,
+       "name": "Sableye",
+       "pp": {
+        "detect": 8,
+        "disable": 20,
+        "encore": 8,
+        "fakeout": 12
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "moldbreaker",
+       "hp": 160,
+       "item": "occaberry",
+       "maxhp": 160,
+       "name": "Tinkaton",
+       "pp": {
+        "encore": 7,
+        "fakeout": 12,
+        "gigatonhammer": 8,
+        "protect": 6
+       },
+       "slot": null,
+       "species": "Tinkaton",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 8,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": "fnt"
+      },
+      {
+       "ability": "adaptability",
+       "hp": 195,
+       "item": "mysticwater",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 18,
+        "lastrespects": 12,
+        "protect": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 175,
+       "item": "chopleberry",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "lowkick": 19,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {},
+       "hp": 113,
+       "item": "grassyseed",
+       "lastMove": "direclaw",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 14,
+        "fakeout": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 88,
+       "item": "kasibberry",
+       "lastMove": "ragefist",
+       "maxhp": 185,
+       "name": "Annihilape",
+       "pp": {
+        "drainpunch": 11,
+        "encore": 7,
+        "protect": 7,
+        "ragefist": 11
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 155,
+       "item": "leftovers",
+       "maxhp": 155,
+       "name": "Primarina",
+       "pp": {
+        "flipturn": 20,
+        "moonblast": 16,
+        "perishsong": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 125,
+       "item": "sitrusberry",
+       "maxhp": 125,
+       "name": "Sableye",
+       "pp": {
+        "detect": 8,
+        "disable": 20,
+        "encore": 8,
+        "fakeout": 12
+       },
+       "slot": 1,
+       "species": "Sableye",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "moldbreaker",
+       "hp": 160,
+       "item": "occaberry",
+       "maxhp": 160,
+       "name": "Tinkaton",
+       "pp": {
+        "encore": 7,
+        "fakeout": 12,
+        "gigatonhammer": 8,
+        "protect": 6
+       },
+       "slot": null,
+       "species": "Tinkaton",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 8,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 195,
+       "item": "mysticwater",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 18,
+        "lastrespects": 12,
+        "protect": 8,
+        "wavecrash": 12
+       },
+       "slot": 1,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "hp": 175,
+       "item": "chopleberry",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "lowkick": 19,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {},
+       "hp": 113,
+       "item": "grassyseed",
+       "lastMove": "direclaw",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 14,
+        "fakeout": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move encore 2, move protect",
+   "move lowkick 1, move aquajet 1"
+  ],
+  [
+   "move drainpunch 1, move encore 2",
+   "switch 3, move aquajet 1"
+  ],
+  [
+   "move protect, move protect",
+   "move direclaw -2, switch 4"
+  ],
+  [
+   "move ragefist 2, switch 3",
+   "move direclaw -2, move headsmash 2"
+  ],
+  [
+   "",
+   "switch 4"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "defiant",
+      "boosts": {},
+      "hp": 185,
+      "item": "kasibberry",
+      "maxhp": 185,
+      "name": "Annihilape",
+      "pp": {
+       "drainpunch": 12,
+       "encore": 8,
+       "protect": 8,
+       "ragefist": 12
+      },
+      "slot": 0,
+      "species": "Annihilape",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "torrent",
+      "hp": 155,
+      "item": "leftovers",
+      "maxhp": 155,
+      "name": "Primarina",
+      "pp": {
+       "flipturn": 20,
+       "moonblast": 16,
+       "perishsong": 8,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Primarina",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "hp": 125,
+      "item": "sitrusberry",
+      "maxhp": 125,
+      "name": "Sableye",
+      "pp": {
+       "detect": 8,
+       "disable": 20,
+       "encore": 8,
+       "fakeout": 12
+      },
+      "slot": null,
+      "species": "Sableye",
+      "status": ""
+     },
+     {
+      "ability": "moldbreaker",
+      "boosts": {},
+      "hp": 160,
+      "item": "occaberry",
+      "maxhp": 160,
+      "name": "Tinkaton",
+      "pp": {
+       "encore": 8,
+       "fakeout": 12,
+       "gigatonhammer": 8,
+       "protect": 8
+      },
+      "slot": 1,
+      "species": "Tinkaton",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "rockhead",
+      "hp": 170,
+      "item": "focussash",
+      "maxhp": 170,
+      "name": "Arcanine",
+      "pp": {
+       "extremespeed": 8,
+       "flareblitz": 16,
+       "headsmash": 8,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Arcanine-Hisui",
+      "status": ""
+     },
+     {
+      "ability": "adaptability",
+      "boosts": {},
+      "hp": 195,
+      "item": "mysticwater",
+      "maxhp": 195,
+      "name": "Basculegion",
+      "pp": {
+       "aquajet": 20,
+       "lastrespects": 12,
+       "protect": 8,
+       "wavecrash": 12
+      },
+      "slot": 1,
+      "species": "Basculegion",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "defiant",
+      "boosts": {},
+      "hp": 175,
+      "item": "chopleberry",
+      "maxhp": 175,
+      "name": "Kingambit",
+      "pp": {
+       "ironhead": 16,
+       "kowtowcleave": 12,
+       "lowkick": 20,
+       "suckerpunch": 8
+      },
+      "slot": 0,
+      "species": "Kingambit",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 155,
+      "item": "grassyseed",
+      "maxhp": 155,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "fakeout": 12,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move drainpunch 1, move detect",
+  "p2": "switch 3, move protect"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    13,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  }
+ ]
+}

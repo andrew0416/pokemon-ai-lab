@@ -1,0 +1,987 @@
+{
+ "description": "FF parity position (FF-parity-harness): dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.b, lab-parity game 0 (seed e8f0207de1655299, policy random, extremes chance), decision 4 = turn 3 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/dbl-kickoff-beedrillvgc-vs-kickoff-conkledonk.b.json. The 4 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "5634",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-beedrillvgc/team.json"
+ },
+ "p2": {
+  "order": "5634",
+  "team": "../../../../teams/library/doubles/m-c/kickoff-conkledonk/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "fairyaura",
+       "boosts": {},
+       "hp": 13,
+       "item": "floettite",
+       "lastMove": "moonblast",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 15,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Floette-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 177,
+       "item": "choicescarf",
+       "lastMove": "earthquake",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "earthquake": 11,
+        "rockslide": 12,
+        "stompingtantrum": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "earthquake"
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "hospitality",
+       "hp": 146,
+       "item": "colburberry",
+       "maxhp": 146,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "protect": 8,
+        "ragepowder": 20,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "darkestlariat": 12,
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 38,
+       "item": "lifeorb",
+       "lastMove": "kowtowcleave",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 11,
+        "protect": 8,
+        "suckerpunch": 8,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "regenerator",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 125,
+       "name": "Toxapex",
+       "pp": {
+        "banefulbunker": 8,
+        "infestation": 19,
+        "toxic": 12,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Toxapex",
+       "status": "fnt"
+      },
+      {
+       "ability": "chlorophyll",
+       "hp": 155,
+       "item": "focussash",
+       "maxhp": 155,
+       "name": "Venusaur",
+       "pp": {
+        "leafstorm": 8,
+        "protect": 8,
+        "sleeppowder": 16,
+        "sludgebomb": 12
+       },
+       "slot": null,
+       "species": "Venusaur",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "fairyaura",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 13,
+       "item": "floettite",
+       "lastMove": "moonblast",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 15,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Floette-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 177,
+       "item": "choicescarf",
+       "lastMove": "earthquake",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "earthquake": 11,
+        "rockslide": 12,
+        "stompingtantrum": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "earthquake"
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "hospitality",
+       "hp": 146,
+       "item": "colburberry",
+       "maxhp": 146,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "protect": 8,
+        "ragepowder": 20,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "darkestlariat": 12,
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 38,
+       "item": "lifeorb",
+       "lastMove": "kowtowcleave",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 11,
+        "protect": 8,
+        "suckerpunch": 8,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "regenerator",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 125,
+       "name": "Toxapex",
+       "pp": {
+        "banefulbunker": 8,
+        "infestation": 19,
+        "toxic": 12,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Toxapex",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "hp": 155,
+       "item": "focussash",
+       "maxhp": 155,
+       "name": "Venusaur",
+       "pp": {
+        "leafstorm": 8,
+        "protect": 8,
+        "sleeppowder": 16,
+        "sludgebomb": 12
+       },
+       "slot": null,
+       "species": "Venusaur",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "fairyaura",
+       "hp": 0,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 15,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 110,
+       "item": "choicescarf",
+       "lastMove": "earthquake",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "earthquake": 10,
+        "rockslide": 12,
+        "stompingtantrum": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "earthquake"
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "hospitality",
+       "hp": 146,
+       "item": "colburberry",
+       "maxhp": 146,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "protect": 8,
+        "ragepowder": 20,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 99,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "darkestlariat",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "darkestlariat": 11,
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 11,
+        "protect": 8,
+        "suckerpunch": 8,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": "fnt"
+      },
+      {
+       "ability": "regenerator",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 125,
+       "name": "Toxapex",
+       "pp": {
+        "banefulbunker": 8,
+        "infestation": 19,
+        "toxic": 12,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Toxapex",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "hp": 155,
+       "item": "focussash",
+       "maxhp": 155,
+       "name": "Venusaur",
+       "pp": {
+        "leafstorm": 8,
+        "protect": 8,
+        "sleeppowder": 16,
+        "sludgebomb": 12
+       },
+       "slot": null,
+       "species": "Venusaur",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "fairyaura",
+       "hp": 0,
+       "item": "floettite",
+       "maxhp": 149,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "moonblast": 15,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Floette-Mega",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 110,
+       "item": "choicescarf",
+       "lastMove": "earthquake",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "earthquake": 10,
+        "rockslide": 12,
+        "stompingtantrum": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "earthquake"
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 170,
+       "item": "sitrusberry",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "hospitality",
+       "hp": 146,
+       "item": "colburberry",
+       "maxhp": 146,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "protect": 8,
+        "ragepowder": 20,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 99,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "darkestlariat",
+       "maxhp": 170,
+       "name": "Incineroar",
+       "pp": {
+        "darkestlariat": 11,
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 11,
+        "protect": 8,
+        "suckerpunch": 8,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "regenerator",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 125,
+       "name": "Toxapex",
+       "pp": {
+        "banefulbunker": 8,
+        "infestation": 19,
+        "toxic": 12,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Toxapex",
+       "status": ""
+      },
+      {
+       "ability": "chlorophyll",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 155,
+       "item": "focussash",
+       "maxhp": 155,
+       "name": "Venusaur",
+       "pp": {
+        "leafstorm": 8,
+        "protect": 8,
+        "sleeppowder": 16,
+        "sludgebomb": 12
+       },
+       "slot": 1,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move moonblast 1 mega, move earthquake",
+   "move infestation 2, move kowtowcleave 1"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move moonblast -2, move earthquake",
+   "move darkestlariat 1, move kowtowcleave 2"
+  ],
+  [
+   "switch 4",
+   "switch 4"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flowerveil",
+      "boosts": {},
+      "canMega": true,
+      "hp": 149,
+      "item": "floettite",
+      "maxhp": 149,
+      "name": "Floette",
+      "pp": {
+       "calmmind": 20,
+       "dazzlinggleam": 12,
+       "moonblast": 16,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Floette-Eternal",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "roughskin",
+      "boosts": {},
+      "hp": 183,
+      "item": "choicescarf",
+      "maxhp": 183,
+      "name": "Garchomp",
+      "pp": {
+       "dragonclaw": 16,
+       "earthquake": 12,
+       "rockslide": 12,
+       "stompingtantrum": 12
+      },
+      "slot": 1,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "hp": 170,
+      "item": "sitrusberry",
+      "maxhp": 170,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "flareblitz": 16,
+       "partingshot": 20,
+       "throatchop": 16
+      },
+      "slot": null,
+      "species": "Incineroar",
+      "status": ""
+     },
+     {
+      "ability": "hospitality",
+      "hp": 146,
+      "item": "colburberry",
+      "maxhp": 146,
+      "name": "Sinistcha",
+      "pp": {
+       "matchagotcha": 16,
+       "protect": 8,
+       "ragepowder": 20,
+       "trickroom": 8
+      },
+      "slot": null,
+      "species": "Sinistcha",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "intimidate",
+      "hp": 170,
+      "item": "sitrusberry",
+      "maxhp": 170,
+      "name": "Incineroar",
+      "pp": {
+       "darkestlariat": 12,
+       "fakeout": 12,
+       "flareblitz": 16,
+       "partingshot": 20
+      },
+      "slot": null,
+      "species": "Incineroar",
+      "status": ""
+     },
+     {
+      "ability": "defiant",
+      "boosts": {},
+      "hp": 175,
+      "item": "lifeorb",
+      "maxhp": 175,
+      "name": "Kingambit",
+      "pp": {
+       "kowtowcleave": 12,
+       "protect": 8,
+       "suckerpunch": 8,
+       "swordsdance": 20
+      },
+      "slot": 1,
+      "species": "Kingambit",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "regenerator",
+      "boosts": {},
+      "hp": 125,
+      "item": "leftovers",
+      "maxhp": 125,
+      "name": "Toxapex",
+      "pp": {
+       "banefulbunker": 8,
+       "infestation": 20,
+       "toxic": 12,
+       "wideguard": 12
+      },
+      "slot": 0,
+      "species": "Toxapex",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "chlorophyll",
+      "hp": 155,
+      "item": "focussash",
+      "maxhp": 155,
+      "name": "Venusaur",
+      "pp": {
+       "leafstorm": 8,
+       "protect": 8,
+       "sleeppowder": 16,
+       "sludgebomb": 12
+      },
+      "slot": null,
+      "species": "Venusaur",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move flareblitz -2, switch 3",
+  "p2": "move flareblitz 2, move sleeppowder -1"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    1,
+    0,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0
+   ]
+  }
+ ]
+}
