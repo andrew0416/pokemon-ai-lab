@@ -11,6 +11,8 @@ use crate::meta::{MemberMeta, SideMeta};
 
 /// Showdown truncates set names to 20 characters (`set.name.substr(0, 20)`).
 const MAX_NAME_CHARS: usize = 20;
+/// The level of a set without one when no format decides it (`state_from_teams`); the scenario
+/// loader fills it from the format first (VGC: `Adjust Level = 50`; the custom game: 100).
 const LEVEL: u8 = 50;
 
 /// The display name Showdown gives a set: the nickname, or, when there is none or it equals
@@ -55,10 +57,15 @@ pub fn build_pokemon(set: &TeamSet) -> Result<(Pokemon, MemberMeta), SetProblem>
         }
     };
 
-    let level = set.level.unwrap_or(LEVEL);
-    if level != LEVEL {
-        return Err(SetProblem::UnsupportedLevel(level));
-    }
+    // Any level (board A4-t1): the Champions stats do not depend on it (no `Level Clause
+    // Mod`), and what does (the damage formula, confusion, Seismic Toss / Night Shade, Psywave,
+    // OHKO moves, Shell Side Arm, Schooling) reads `Pokemon::level`. Showdown's
+    // `set.adjustLevel || set.level || 100` makes 0 a level 100; levels above 255 do not fit
+    // the set's `u8` and fail as JSON (Showdown allows up to 9999 in the custom game).
+    let level = match set.level.unwrap_or(LEVEL) {
+        0 => 100,
+        level => level,
+    };
     if let Some(ivs) = set.ivs {
         const NAMES: [&str; 6] = ["hp", "atk", "def", "spa", "spd", "spe"];
         let ivs = ivs.to_array();
@@ -69,12 +76,13 @@ pub fn build_pokemon(set: &TeamSet) -> Result<(Pokemon, MemberMeta), SetProblem>
             });
         }
     }
+    // `genders[set.gender] || species.gender || sample(['M', 'F'])` with `genders = {M, F, N}`:
+    // anything else (a lowercase letter, a typo) is ignored, as Showdown does (board A4-t2).
     let gender = match set.gender.as_deref() {
-        None | Some("") => Gender::Random,
         Some("M") => Gender::Male,
         Some("F") => Gender::Female,
         Some("N") => Gender::Genderless,
-        Some(other) => return Err(SetProblem::UnknownGender(other.to_owned())),
+        _ => Gender::Random,
     };
     let tera_type = match set.tera_type.as_deref() {
         None | Some("") => Type::None,
@@ -133,6 +141,8 @@ pub fn build_pokemon(set: &TeamSet) -> Result<(Pokemon, MemberMeta), SetProblem>
         team_index: 0,
         gender,
         tera_type,
+        species,
+        ability,
     };
     Ok((pokemon, meta))
 }
@@ -183,13 +193,14 @@ pub fn picked_order(
         };
         let keep = if bracketed { parts.len() } else { picked };
         for part in parts.into_iter().take(keep) {
-            let pos: usize = part
-                .trim()
-                .parse()
-                .map_err(|_| format!("{part:?} is not a team position"))?;
-            if pos == 0 || pos > team_len {
+            // `parseInt(datum)`: leading digits after whitespace and a sign (`"2x"` is 2, board
+            // A4-t2); none at all is NaN, which Showdown refuses.
+            let pos =
+                js_parse_int(&part).ok_or_else(|| format!("{part:?} is not a team position"))?;
+            if pos < 1 || pos > team_len as i64 {
                 return Err(format!("no Pokémon in slot {pos}"));
             }
+            let pos = pos as usize;
             if positions.contains(&(pos - 1)) {
                 return Err(format!("the Pokémon in slot {pos} can only switch in once"));
             }
@@ -209,6 +220,34 @@ pub fn picked_order(
         return Err(format!("you must choose exactly {picked} Pokémon"));
     }
     Ok(positions)
+}
+
+/// JavaScript's `parseInt(text)` (radix unspecified) for the values a team position can take:
+/// leading whitespace, an optional sign, then decimal digits, or hexadecimal ones after `0x`; the
+/// rest of the string is ignored. `None` for NaN (no digit); saturates far outside `i64`.
+pub fn js_parse_int(text: &str) -> Option<i64> {
+    // parseInt skips `StrWhiteSpaceChar`s: Unicode white space and the byte order mark.
+    let text = text.trim_start_matches(|c: char| c.is_whitespace() || c == '\u{feff}');
+    let (negative, text) = match text.as_bytes().first() {
+        Some(b'-') => (true, &text[1..]),
+        Some(b'+') => (false, &text[1..]),
+        _ => (false, text),
+    };
+    let (radix, text) = match text.get(..2) {
+        Some("0x") | Some("0X") => (16, &text[2..]),
+        _ => (10, text),
+    };
+    let digits: Vec<i64> = text
+        .chars()
+        .map_while(|c| c.to_digit(radix).map(i64::from))
+        .collect();
+    if digits.is_empty() {
+        return None;
+    }
+    let value = digits.into_iter().fold(0i64, |acc, d| {
+        acc.saturating_mul(i64::from(radix)).saturating_add(d)
+    });
+    Some(if negative { -value } else { value })
 }
 
 /// Builds a side that brings every member: party in team preview order, the first `N`

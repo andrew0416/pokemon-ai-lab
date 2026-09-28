@@ -7,7 +7,7 @@
 //! to map party indices to names, plus set data the hot state does not carry (nature and
 //! SP are in `Pokemon` since forme changes recalculate stats from them).
 
-use lab_engine::dex::{Gender, Type};
+use lab_engine::dex::{AbilityId, Gender, SpeciesId, Type};
 
 use crate::json::TurnJson;
 
@@ -22,6 +22,11 @@ pub struct MemberMeta {
     /// `Type::None` when not given. Not an eligibility: Tera is locked under Champions M-C
     /// and `Pokemon` has no Tera field yet.
     pub tera_type: Type,
+    /// The set's species and ability as loaded (before any forme change, Transform or ability
+    /// change in battle): what [`crate::from_canonical`] derives a member's stats and base
+    /// ability from.
+    pub species: SpeciesId,
+    pub ability: AbilityId,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]

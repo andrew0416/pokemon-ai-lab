@@ -165,11 +165,14 @@ fn patches_and_setup_turns_load() {
         load_scenario_str(&with(r#", "patch": {"field": {"gravityx": 1}}"#), &base).unwrap_err();
     assert!(matches!(err, LoadError::Json { .. }), "{err}");
 
-    // VGC loads (O104, `tests/vgc.rs`); a singles format does not.
+    // VGC loads (O104, `tests/vgc.rs`); a singles format only as singles (`tests/ae_singles.rs`).
     let bss = with("").replace(DOUBLES_FORMAT, "gen9championsbssregmc");
     assert!(matches!(
         load_scenario_str(&bss, &base),
-        Err(LoadError::UnsupportedFormat(_))
+        Err(LoadError::Unsupported {
+            field: "format",
+            ..
+        })
     ));
 }
 
@@ -338,14 +341,6 @@ fn unknown_names_and_invalid_sets_are_rejected_with_context() {
         (
             r#"{"species": "Gardevoir", "ability": "Trace", "nature": "Modest", "moves": ["Hypnosis", "Protect", "hypnosis"]}"#,
             SetProblem::DuplicateMove("hypnosis".into()),
-        ),
-        (
-            r#"{"species": "Gardevoir", "ability": "Trace", "nature": "Modest", "moves": ["Hypnosis"], "level": 100}"#,
-            SetProblem::UnsupportedLevel(100),
-        ),
-        (
-            r#"{"species": "Gardevoir", "ability": "Trace", "nature": "Modest", "moves": ["Hypnosis"], "gender": "X"}"#,
-            SetProblem::UnknownGender("X".into()),
         ),
         (
             r#"{"species": "Gardevoir", "ability": "Trace", "nature": "Modest", "moves": ["Hypnosis"], "ivs": {"spe": 32}}"#,

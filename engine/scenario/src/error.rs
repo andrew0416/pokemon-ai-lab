@@ -64,14 +64,11 @@ pub enum SetProblem {
     DuplicateMove(String),
     NoMoves,
     TooManyMoves(usize),
-    /// The Champions stat formula in `lab_engine::stats` is the level-50 one.
-    UnsupportedLevel(u8),
     StatPoints(StatPointError),
     InvalidIv {
         stat: &'static str,
         value: u8,
     },
-    UnknownGender(String),
     UnknownTeraType(String),
     /// A temporary in-battle forme as the set's species (`lab_engine::turn::temporary_forme_base`):
     /// Showdown would keep it as the base species, which the engine's state cannot tell apart
@@ -93,10 +90,13 @@ impl fmt::Display for LoadError {
             LoadError::Json { what, error } => write!(f, "{what}: {error}"),
             LoadError::UnsupportedFormat(format) => write!(
                 f,
-                "unsupported format {format:?}: only {} (all members brought) and {} (team \
-                 preview picks 4) are loaded; order = team preview choice",
+                "unsupported format {format:?}: doubles {} (all members brought) or {} (team \
+                 preview picks 4), singles {} (all members) or {} (picks 3); order = team \
+                 preview choice",
                 crate::DOUBLES_FORMAT,
-                crate::VGC_FORMAT
+                crate::VGC_FORMAT,
+                crate::SINGLES_CUSTOM_FORMAT,
+                crate::SINGLES_FORMAT
             ),
             LoadError::Unsupported { field, reason } => {
                 write!(f, "scenario field {field:?} is not supported: {reason}")
@@ -141,13 +141,6 @@ impl fmt::Display for SetProblem {
             SetProblem::DuplicateMove(s) => write!(f, "move {s:?} appears twice"),
             SetProblem::NoMoves => write!(f, "no moves"),
             SetProblem::TooManyMoves(n) => write!(f, "{n} moves (at most 4)"),
-            SetProblem::UnsupportedLevel(level) => {
-                write!(
-                    f,
-                    "level {level}: the engine plays at level 50 (in the custom game a set \
-                     without \"level\" is level 100 in Showdown; write \"level\": 50)"
-                )
-            }
             SetProblem::StatPoints(StatPointError::PerStat { stat, value }) => {
                 write!(f, "{value} SP in {stat:?} (at most 32 per stat)")
             }
@@ -157,7 +150,6 @@ impl fmt::Display for SetProblem {
             SetProblem::InvalidIv { stat, value } => {
                 write!(f, "IV {value} in {stat} (at most 31)")
             }
-            SetProblem::UnknownGender(s) => write!(f, "unknown gender {s:?} (M, F or N)"),
             SetProblem::UnknownTeraType(s) => write!(f, "unknown Tera type {s:?}"),
             SetProblem::TemporaryForme(s) => {
                 write!(
@@ -266,7 +258,9 @@ impl From<TurnError> for ScenarioError {
 impl From<SwitchInError> for ScenarioError {
     fn from(e: SwitchInError) -> Self {
         match e {
-            SwitchInError::NotInitial { .. } => ScenarioError::Invalid(e.to_string()),
+            SwitchInError::NotInitial { .. } | SwitchInError::Turn(_) => {
+                ScenarioError::Invalid(e.to_string())
+            }
             SwitchInError::UnsupportedSlotCount(_)
             | SwitchInError::UnsupportedAbility { .. }
             | SwitchInError::UnsupportedItem { .. }

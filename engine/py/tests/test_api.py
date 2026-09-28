@@ -211,7 +211,7 @@ def test_errors():
         pos.legal_choices(2)
     with pytest.raises(OSError):
         lab_engine.load_scenario(SCENARIOS / "no-such-scenario.json")
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(ValueError, match="doubles format"):
         lab_engine.load_scenario(SCENARIOS / "hypnosis-gravity.json", format="singles")
 
     # Metronome is not implemented: left out of the legal choices, Unsupported when named.

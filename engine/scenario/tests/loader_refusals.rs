@@ -42,50 +42,38 @@ fn two(format: &str, a: serde_json::Value, b: serde_json::Value) -> serde_json::
 
 // ---- unsupported ---------------------------------------------------------------------------
 
-/// Champions singles (`gen9championsbssregmc`) is a format Showdown plays; the loader builds
-/// doubles only (board II-singles-loader).
+/// A format the loader does not know (another mod's) is refused by name; Champions singles
+/// loads with the singles loader since II-singles-loader (`ae_singles.rs`), and the doubles
+/// loader refuses it by its slot count.
 #[test]
 fn a_singles_format_is_refused() {
     let json = two(
-        "gen9championsbssregmc",
+        "gen9ou",
         set("Chansey", None, Some(50)),
         set("Machamp", None, Some(50)),
     );
     match load(&json) {
-        Err(LoadError::UnsupportedFormat(format)) => assert_eq!(format, "gen9championsbssregmc"),
+        Err(LoadError::UnsupportedFormat(format)) => assert_eq!(format, "gen9ou"),
+        other => panic!("{other:?}"),
+    }
+    let json = two(
+        lab_scenario::SINGLES_FORMAT,
+        set("Chansey", None, Some(50)),
+        set("Machamp", None, Some(50)),
+    );
+    match load(&json) {
+        Err(LoadError::Unsupported {
+            field: "format", ..
+        }) => {}
         other => panic!("{other:?}"),
     }
 }
 
-/// The custom game plays a set without `level` at level 100 (board B31) and any level a set
-/// gives; the engine's stats are the level-50 ones.
-#[test]
-fn a_level_other_than_50_is_refused() {
-    for level in [None, Some(100), Some(1)] {
-        let json = two(
-            lab_scenario::DOUBLES_FORMAT,
-            set("Chansey", None, level),
-            set("Machamp", None, Some(50)),
-        );
-        match load(&json) {
-            Err(LoadError::Set {
-                problem: SetProblem::UnsupportedLevel(l),
-                ..
-            }) => assert_eq!(l, level.unwrap_or(100)),
-            other => panic!("{level:?}: {other:?}"),
-        }
-    }
-    // VGC's `Adjust Level = 50` makes every set level 50.
-    let json = two(
-        lab_scenario::VGC_FORMAT,
-        set("Chansey", None, Some(100)),
-        set("Machamp", None, None),
-    );
-    load(&json).unwrap();
-}
-
 /// A temporary in-battle forme as a set's species (Showdown without a validator keeps it as the
-/// base species; the engine's state cannot tell it from the forme reached in battle).
+/// base species; the engine's state cannot tell it from the forme reached in battle). Decided in
+/// A4-t1 to stay refused: these formes are `battleOnly` in the dex, so Showdown's validator (every
+/// rated format, VGC included) refuses such a set, and only the unvalidated custom game plays it;
+/// supporting it needs a per-Pokémon base species in the state.
 #[test]
 fn a_temporary_forme_as_species_is_refused() {
     let json = two(
@@ -103,7 +91,10 @@ fn a_temporary_forme_as_species_is_refused() {
 }
 
 /// Two members of a side with the same name (a nickname, or a species written twice in the
-/// custom game): Showdown plays it, canonical states key Pokémon by name.
+/// custom game): Showdown plays it, canonical states key Pokémon by name. Decided in A4-t1 to
+/// stay refused: the oracle's `canonical.cjs` sorts `side.pokemon` by name with a comparator that
+/// never returns 0, so two equal names have no defined canonical order and no position of such a
+/// battle can be compared with Showdown.
 #[test]
 fn a_name_twice_on_a_side_is_refused() {
     let json = two(
@@ -121,6 +112,44 @@ fn a_name_twice_on_a_side_is_refused() {
 }
 
 // ---- no longer refused -----------------------------------------------------------------------
+
+/// Levels (board A4-t1): the custom game plays every level a set gives, a set without one at
+/// level 100 (`set.level || 100`, board B31) and level 0 as 100 too; VGC's `Adjust Level = 50`
+/// makes every set level 50. The oracle fixture `ae-levels` checks the level-dependent damage
+/// (Seismic Toss at levels 30 and 100, Dragon Claw from level 100) and Schooling's level floor.
+#[test]
+fn levels_load_as_showdown_plays_them() {
+    for (level, expected) in [
+        (None, 100),
+        (Some(100), 100),
+        (Some(1), 1),
+        (Some(0), 100),
+        (Some(77), 77),
+    ] {
+        let json = two(
+            lab_scenario::DOUBLES_FORMAT,
+            set("Chansey", None, level),
+            set("Machamp", None, Some(50)),
+        );
+        let loaded = load(&json).unwrap();
+        assert_eq!(loaded.state.sides[0].party[0].level, expected, "{level:?}");
+        assert_eq!(loaded.state.sides[0].party[1].level, 50);
+    }
+    let json = two(
+        lab_scenario::VGC_FORMAT,
+        set("Chansey", None, Some(100)),
+        set("Machamp", None, None),
+    );
+    let loaded = load(&json).unwrap();
+    assert!(loaded.state.sides[0].party[..2]
+        .iter()
+        .all(|m| m.level == 50));
+}
+
+#[test]
+fn levels_match_the_oracle() {
+    common::assert_exact_parity("ae-levels");
+}
 
 /// Bracketed team preview choices (`team [1,2,3,4]`, Showdown `Side.chooseTeam`): brackets
 /// stripped, always split on commas, not cut, then filled; a list longer than the picked size
@@ -199,4 +228,60 @@ fn a_bad_patch_is_invalid() {
         Err(ScenarioError::Invalid(why)) => assert!(why.contains("not supported"), "{why}"),
         other => panic!("{other:?}"),
     }
+}
+
+/// Board A4-t2: an unknown gender is ignored as Showdown ignores it (`genders[set.gender] ||
+/// species.gender || sample(['M', 'F'])`), and a team preview position is read with `parseInt`
+/// (`"2x"` is 2). The oracle fixture `ae-lenient-inputs` plays both (Tauros "X" is male, as its
+/// species, and infatuates the female Chansey; `"2x,1"` leads with Tauros).
+#[test]
+fn lenient_inputs_read_as_showdown_reads_them() {
+    use lab_engine::dex::Gender;
+    use lab_scenario::team::js_parse_int;
+
+    for (gender, expected) in [
+        ("X", Gender::Male),
+        ("m", Gender::Male),
+        ("N", Gender::Genderless),
+    ] {
+        let mut tauros = set("Tauros", None, Some(50));
+        tauros["gender"] = gender.into();
+        let json = two(
+            lab_scenario::DOUBLES_FORMAT,
+            tauros,
+            set("Machamp", None, Some(50)),
+        );
+        let loaded = load(&json).unwrap();
+        assert_eq!(loaded.state.sides[0].party[0].gender, expected, "{gender}");
+    }
+    // Chansey is always female; an unknown gender cannot change that.
+    let mut chansey = set("Chansey", None, Some(50));
+    chansey["gender"] = "?".into();
+    let json = two(
+        lab_scenario::DOUBLES_FORMAT,
+        chansey,
+        set("Machamp", None, Some(50)),
+    );
+    assert_eq!(
+        load(&json).unwrap().state.sides[0].party[0].gender,
+        Gender::Female
+    );
+
+    for (text, value) in [
+        ("2x", Some(2)),
+        (" 3", Some(3)),
+        ("+1", Some(1)),
+        ("-1", Some(-1)),
+        ("0x2", Some(2)),
+        ("2.9", Some(2)),
+        ("x", None),
+        ("", None),
+    ] {
+        assert_eq!(js_parse_int(text), value, "{text:?}");
+    }
+    assert_eq!(picked_order(Some("2x,1"), 2, 2).unwrap(), [1, 0]);
+    assert_eq!(picked_order(Some("[2x, 1]"), 6, 4).unwrap(), [1, 0, 2, 3]);
+    assert!(picked_order(Some("x,1"), 2, 2).is_err());
+    assert!(picked_order(Some("-1"), 2, 2).is_err());
+    common::assert_exact_parity("ae-lenient-inputs");
 }

@@ -635,8 +635,8 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // Opus U. Gastro Acid: `onTryHit` in `handlers::on_try_hit` (a `cantsuppress` ability fails,
     // an Ability Shield `null`s it); its condition's `onStart` in `conditions::volatile_start`
     // (Ability Shield) and `abilities::gastro_acid_start` (the ability's `End`); the suppression
-    // is `abilities::ignoring_ability`. `condition.onCopy` only acts through Baton Pass, which
-    // is not supported.
+    // is `abilities::ignoring_ability`. `condition.onCopy` (Baton Pass passing the volatile:
+    // it ends on a `cantsuppress` ability) is in `switching::copy_volatile_from`.
     (
         moves::GASTRO_ACID,
         &["condition.onCopy", "condition.onStart", "onTryHit"],
@@ -988,8 +988,9 @@ pub(crate) const MOVES_WITH_HANDLERS: &[(MoveId, &[&str])] = &[
     // `onAfterHit` and Bestow `onHit` (`handlers::pass_item`); False Swipe and Hold Back
     // `onDamage` (`Battle::damage`, priority -20); Power Trick and Power Shift (the stored-stat
     // swap in `conditions::volatile_start`, `Battle::remove_volatile` and the `onRestart` in
-    // `Battle::add_volatile_from`; `onCopy` is Baton Pass's, refused); Power Split, Guard Split
-    // and Acupressure `onHit`.
+    // `Battle::add_volatile_from`; `onCopy`, Baton Pass passing the volatile, swaps the
+    // newcomer's stored Attack and Defense in `switching::copy_volatile_from`); Power Split,
+    // Guard Split and Acupressure `onHit`.
     (
         moves::AQUA_RING,
         &["condition.onResidual", "condition.onStart"],

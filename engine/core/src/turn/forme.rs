@@ -126,7 +126,8 @@ pub(crate) fn gulp_missile_spit<const N: usize>(
     let Some(source) = b.alive(attacker) else {
         return;
     };
-    if semi_invulnerable || !full {
+    // `!source.isActive`: a future move's user hitting from the bench (no spit, no forme change).
+    if semi_invulnerable || !full || b.absent_user == Some(attacker) {
         return;
     }
     let max_hp = f64::from(b.mon(source).max_hp);
@@ -474,8 +475,11 @@ fn schooling<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     let Some(mon) = b.alive(slot).map(|p| b.mon(p)) else {
         return;
     };
-    // `pokemon.transformed` returns too.
-    if mon.species.data().base_species != species::WISHIWASHI || mon.transformed.is_some() {
+    // `pokemon.level < 20` and `pokemon.transformed` return too.
+    if mon.species.data().base_species != species::WISHIWASHI
+        || mon.level < 20
+        || mon.transformed.is_some()
+    {
         return;
     }
     // `pokemon.hp > pokemon.maxhp / 4`.
