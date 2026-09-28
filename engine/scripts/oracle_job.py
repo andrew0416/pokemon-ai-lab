@@ -24,6 +24,9 @@ oracle.json keys (all optional; defaults in DEFAULTS):
     shard_overrides   {"<position name>": N}              per-position shards
     only              ""                                  substring filter on position names
     node_heap_mb      14000                               node --max-old-space-size
+    hash_keys         "auto"                              lab-check --hash-keys: true, false, or
+                                                          "auto" (when the report has more than
+                                                          200,000 outcome lines)
 
 Commands:
 
@@ -67,6 +70,7 @@ DEFAULTS = {
     "shard_overrides": {},
     "only": "",
     "node_heap_mb": 14000,
+    "hash_keys": "auto",
 }
 
 
@@ -222,8 +226,10 @@ def lab_check_exe() -> str:
     return str(ROOT / "engine" / "target" / "release" / ("lab-check.exe" if os.name == "nt" else "lab-check"))
 
 
-def run_checks(p: dict, scenario: pathlib.Path, report: pathlib.Path, stem: pathlib.Path) -> dict:
+def run_checks(p: dict, scenario: pathlib.Path, report: pathlib.Path, stem: pathlib.Path,
+               outcome_lines: int) -> dict:
     checks = {}
+    hashed = p["hash_keys"] is True or (p["hash_keys"] == "auto" and (outcome_lines or 0) > 200_000)
     for kind in p["checks"]:
         env = dict(os.environ)
         if kind == "factored":
@@ -232,9 +238,10 @@ def run_checks(p: dict, scenario: pathlib.Path, report: pathlib.Path, stem: path
             env.pop("LAB_ENGINE_FACTORED", None)
         verdict = stem.with_name(stem.name + f".check-{kind}.json")
         with open(stem.with_name(stem.name + f".check-{kind}.log"), "w") as log:
-            r = run_limited([lab_check_exe(), str(scenario), str(report), "--out", str(verdict)],
+            r = run_limited([lab_check_exe(), str(scenario), str(report), "--out", str(verdict)]
+                            + (["--hash-keys"] if hashed else []),
                             p["check_minutes"] * 60, subprocess.DEVNULL, log, env=env)
-        entry = {"s": r["s"], "peak_mb": r["peak_mb"]}
+        entry = {"s": r["s"], "peak_mb": r["peak_mb"], "hash_keys": hashed}
         if r["killed"]:
             entry["status"] = "check-timeout"
         elif verdict.exists():
@@ -366,7 +373,7 @@ def run(job: str, name: str, shard: str) -> None:
                     "shard_info": (h.get("staged") or {}).get("shard"),
                     "report_mb": round(report.stat().st_size / 2**20, 1)})
         if not shard:
-            res["checks"] = run_checks(p, scenario, report, stem)
+            res["checks"] = run_checks(p, scenario, report, stem, res["outcomes"])
         gzip_file(report)
     json.dump(res, open(stem.with_name(stem.name + ".result.json"), "w", encoding="utf-8"), indent=1)
     emit(res)
@@ -432,7 +439,7 @@ def merge(job: str, name: str, shard_dir: str) -> None:
     res.update({"oracle": "fit", "runs": meta["branches"], "outcome_lines": total_lines,
                 "total_p": meta["totalProbability"], "report_mb": round(merged.stat().st_size / 2**20, 1)})
     scenario = job_dir(job) / "positions" / f"{name}.json"
-    res["checks"] = run_checks(p, scenario, merged, out / f"{name}.merged")
+    res["checks"] = run_checks(p, scenario, merged, out / f"{name}.merged", total_lines)
     res["outcomes"] = next((c.get("oracleOutcomes") for c in res["checks"].values()
                             if c.get("oracleOutcomes") is not None), None)
     gzip_file(merged)
