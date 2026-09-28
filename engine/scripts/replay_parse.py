@@ -97,6 +97,7 @@ class Mon:
         self.item = None  # None unknown, "" none/gone, else id
         self.orig_item = None
         self.item_changed = False
+        self.item_inferred = False
         self.ability = None
         self.mega = False
         self.moves = []
@@ -203,6 +204,8 @@ def parse_game(rid, text):
     cur = None  # current decision being filled
     section = None  # "turn" | "replace"
     moved_this_turn = False
+    last_user = [None]
+    screens = {}
 
     def begin_turn(n):
         nonlocal cur, section, moved_this_turn
@@ -265,13 +268,18 @@ def parse_game(rid, text):
                 side, slot, name = who
                 m = g.mon(who, args[1])
                 old = g.active[side][slot]
+                passed = {}
                 if old is not None and old != name:
                     om = g.mons[(side, old)]
                     om.slot = None
+                    # Baton Pass hands the boosts over (Showdown prints no boost lines for it).
+                    if any("Baton Pass" in x for x in args[3:]):
+                        passed = dict(om.boosts)
                     om.boosts = {}
                     if not om.mega:
                         om.species = om.base_species if not om.mega else om.species
                 m.slot = slot
+                m.boosts = passed
                 m.species = details_species(args[1])
                 g.active[side][slot] = name
                 apply_hp(m, args[2])
@@ -316,6 +324,7 @@ def parse_game(rid, text):
             elif cmd == "move":
                 who = ident(args[0])
                 m = g.mon(who)
+                last_user[0] = m
                 move = args[1]
                 tag = from_tag(args[3:])
                 if m and tag is None and not m.transformed and toid(move) not in ("struggle", "recharge"):
@@ -437,6 +446,11 @@ def parse_game(rid, text):
                 side = args[0][:2]
                 eff = toid(args[1].replace("move:", ""))
                 (g.sideconds[side].add if cmd == "-sidestart" else g.sideconds[side].discard)(eff)
+                if eff in SCREENS:
+                    if cmd == "-sidestart":
+                        screens[(side, eff)] = (turn_no, last_user[0])
+                    else:
+                        screens.pop((side, eff), None)
             elif cmd == "-enditem":
                 m = g.mon(ident(args[0]))
                 tag = from_tag(args[2:])
@@ -487,6 +501,12 @@ def parse_game(rid, text):
                 if n == 1:
                     start_obs = g.obs()
                 turn_no = n
+                # A screen still up 5 turns after it went up (5 turns without Light Clay):
+                # its setter holds Light Clay unless it showed another item.
+                for (_, eff), (t0, setter) in list(screens.items()):
+                    if n - t0 >= 5 and setter is not None and setter.orig_item is None:
+                        setter.orig_item = "lightclay"
+                        setter.item_inferred = True
                 if stop:
                     break
                 begin_turn(n)
@@ -560,6 +580,9 @@ def silent_ability(entry):
     return abilities[0] if abilities else ""
 
 
+SCREENS = {"reflect", "lightscreen", "auroraveil"}
+
+
 def species_entry(species):
     return DEX["species"].get(toid(species))
 
@@ -615,7 +638,8 @@ def build_team(g, side, ots_sets):
         sp = default_sp(base, m.move_cats)
         team.append({"name": n, "species": name_of("species", base), "item": item, "ability": ability,
                      "gender": m.gender, "nature": nature, "evs": sp, "ivs": IVS, "level": 50, "moves": moves})
-        prov.append({"name": n, "source": source, "item_shown": m.orig_item is not None or bool(ots),
+        prov.append({"name": n, "source": source, "item_shown": (m.orig_item is not None and not m.item_inferred) or bool(ots),
+                     "item_inferred": "Light Clay (a screen lasted past 5 turns)" if m.item_inferred else None,
                      "ability_shown": m.ability is not None or bool(ots), "moves_shown": len(m.moves)})
     # Unseen brought members: from the unseen preview species.
     for sp_name in g.preview[side]:
