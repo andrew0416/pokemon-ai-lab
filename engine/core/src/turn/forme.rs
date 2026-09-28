@@ -475,8 +475,11 @@ fn schooling<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef) {
     let Some(mon) = b.alive(slot).map(|p| b.mon(p)) else {
         return;
     };
-    // `pokemon.transformed` returns too.
-    if mon.species.data().base_species != species::WISHIWASHI || mon.transformed.is_some() {
+    // `pokemon.level < 20` and `pokemon.transformed` return too.
+    if mon.species.data().base_species != species::WISHIWASHI
+        || mon.level < 20
+        || mon.transformed.is_some()
+    {
         return;
     }
     // `pokemon.hp > pokemon.maxhp / 4`.

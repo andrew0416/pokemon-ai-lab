@@ -4,22 +4,28 @@
 //! matrix game. The logic lives in `lab_search::node` (pure Rust, unit-tested there); this file
 //! only converts arguments, errors and results. `engine/py/README.md` documents the API.
 //!
-//! Doubles only for now: `format` arguments take `"doubles"`, and positions dispatch through
-//! [`AnyNode`] so a `Singles` variant (`Node<1>`) can be added without changing the Python API.
+//! Doubles and singles: `format` arguments take `"doubles"` (`Node<2>`) or `"singles"`
+//! (`Node<1>`, board PY1); scenarios and positions dispatch through [`AnyLoaded`] and
+//! [`AnyNode`].
 
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::Arc;
 
 use pyo3::create_exception;
-use pyo3::exceptions::{PyException, PyNotImplementedError, PyOSError, PyValueError};
+use pyo3::exceptions::{PyException, PyOSError, PyValueError};
 use pyo3::prelude::*;
 
 // `::` 필수: `#[pymodule] fn lab_engine`이 같은 이름의 모듈을 만들어 의존 크레이트를 가린다.
 use ::lab_engine::eval::{Heuristic, FEATURE_COUNT, FEATURE_NAMES};
 use ::lab_engine::state::{BattleResult, SideId};
 use ::lab_engine::turn::EnumerateOptions;
-use lab_scenario::{load_scenario_file, load_scenario_str, LoadError, LoadedScenario};
+use lab_scenario::canonical::format_ruleset;
+use lab_scenario::{
+    apply_patch, canonical_json_hidden, load_scenario_file_as, load_scenario_str_as,
+    state_from_canonical, LoadError, LoadedScenario, PatchJson, ScenarioError, ScenarioMeta,
+    SetupTurn,
+};
 use lab_search::nash::{self as rm, Matrix};
 use lab_search::node::{
     decision_name, parse_pruning, parse_rolls, scenario_nodes, weights_by_name, NashTurn as RsNash,
@@ -47,6 +53,43 @@ fn py_err(e: NodeError) -> PyErr {
     }
 }
 
+fn scenario_err(e: ScenarioError) -> PyErr {
+    match e {
+        ScenarioError::Unsupported(why) => Unsupported::new_err(why),
+        ScenarioError::Invalid(why) => PyValueError::new_err(why),
+    }
+}
+
+/// A JSON argument: a dict (or any `json.dumps`-able value) or the JSON text itself.
+fn json_arg(value: &Bound<'_, PyAny>) -> PyResult<serde_json::Value> {
+    let text = match value.extract::<String>() {
+        Ok(text) => text,
+        Err(_) => value
+            .py()
+            .import("json")?
+            .call_method1("dumps", (value,))?
+            .extract::<String>()?,
+    };
+    serde_json::from_str(&text).map_err(|e| PyValueError::new_err(format!("bad JSON: {e}")))
+}
+
+/// A position rebuilt from canonical JSON on `base` (a state of the same battle).
+fn node_from_canonical<const N: usize>(
+    base: &::lab_engine::state::State<N>,
+    meta: &Arc<ScenarioMeta>,
+    value: &serde_json::Value,
+) -> PyResult<Node<N>> {
+    let rebuilt = state_from_canonical(base, meta, value).map_err(scenario_err)?;
+    let ruleset = format_ruleset(&meta.format).map_err(|e| PyValueError::new_err(e.to_string()))?;
+    Ok(Node {
+        state: rebuilt.state,
+        order: rebuilt.order,
+        suspension: None,
+        meta: Arc::clone(meta),
+        ruleset,
+    })
+}
+
 fn load_err(e: LoadError) -> PyErr {
     match e {
         LoadError::Io { .. } => PyOSError::new_err(e.to_string()),
@@ -54,15 +97,13 @@ fn load_err(e: LoadError) -> PyErr {
     }
 }
 
-/// The `format` argument: the only one the loader supports is `"doubles"`.
-fn check_format(format: &str) -> PyResult<()> {
+/// The `format` argument: `"doubles"` or `"singles"`; returns the active slots per side.
+fn check_format(format: &str) -> PyResult<usize> {
     match format {
-        "doubles" => Ok(()),
-        "singles" => Err(PyNotImplementedError::new_err(
-            "singles scenarios are not supported yet (the loader builds doubles states only)",
-        )),
+        "doubles" => Ok(2),
+        "singles" => Ok(1),
         other => Err(PyValueError::new_err(format!(
-            "unknown format {other:?}: \"doubles\" (\"singles\" later)"
+            "unknown format {other:?}: \"doubles\" or \"singles\""
         ))),
     }
 }
@@ -123,10 +164,13 @@ fn side_name(side: SideId) -> &'static str {
     }
 }
 
-/// A position of any supported format (doubles today).
+/// A position of any supported format (one per Python object: boxing the larger variant gains
+/// nothing).
 #[derive(Clone)]
+#[allow(clippy::large_enum_variant)]
 enum AnyNode {
     Doubles(Node<2>),
+    Singles(Node<1>),
 }
 
 impl From<Node<2>> for AnyNode {
@@ -135,11 +179,18 @@ impl From<Node<2>> for AnyNode {
     }
 }
 
+impl From<Node<1>> for AnyNode {
+    fn from(node: Node<1>) -> Self {
+        AnyNode::Singles(node)
+    }
+}
+
 /// Runs `$body` with `$n` bound to the concrete `Node<N>` inside an [`AnyNode`].
 macro_rules! with_node {
     ($any:expr, $n:ident => $body:expr) => {
         match $any {
             AnyNode::Doubles($n) => $body,
+            AnyNode::Singles($n) => $body,
         }
     };
 }
@@ -148,6 +199,44 @@ impl AnyNode {
     fn format(&self) -> &'static str {
         match self {
             AnyNode::Doubles(_) => "doubles",
+            AnyNode::Singles(_) => "singles",
+        }
+    }
+}
+
+/// A loaded scenario of any supported format.
+enum AnyLoaded {
+    Doubles(Arc<LoadedScenario<2>>),
+    Singles(Arc<LoadedScenario<1>>),
+}
+
+/// Runs `$body` with `$l` bound to the concrete `Arc<LoadedScenario<N>>`.
+macro_rules! with_loaded {
+    ($any:expr, $l:ident => $body:expr) => {
+        match $any {
+            AnyLoaded::Doubles($l) => $body,
+            AnyLoaded::Singles($l) => $body,
+        }
+    };
+}
+
+impl AnyLoaded {
+    fn meta(&self) -> &ScenarioMeta {
+        with_loaded!(self, l => &l.meta)
+    }
+
+    fn mid_turn(&self) -> &[Vec<String>; 2] {
+        with_loaded!(self, l => &l.mid_turn)
+    }
+
+    fn setup_turns(&self) -> &[SetupTurn] {
+        with_loaded!(self, l => &l.setup_turns)
+    }
+
+    fn format(&self) -> &'static str {
+        match self {
+            AnyLoaded::Doubles(_) => "doubles",
+            AnyLoaded::Singles(_) => "singles",
         }
     }
 }
@@ -178,19 +267,30 @@ fn load_scenario(
     format: &str,
     base_dir: Option<PathBuf>,
 ) -> PyResult<Scenario> {
-    check_format(format)?;
-    let loaded = match source.extract::<String>() {
-        Ok(text) if looks_like_json(&text) => {
-            let base = base_dir.unwrap_or_else(|| PathBuf::from("."));
-            load_scenario_str(&text, &base)
-        }
-        Ok(path) => load_scenario_file(path),
-        Err(_) => load_scenario_file(source.extract::<PathBuf>()?),
+    let slots = check_format(format)?;
+    enum Source {
+        Text(String, PathBuf),
+        Path(PathBuf),
     }
-    .map_err(load_err)?;
-    Ok(Scenario {
-        loaded: Arc::new(loaded),
-    })
+    let source = match source.extract::<String>() {
+        Ok(text) if looks_like_json(&text) => {
+            Source::Text(text, base_dir.unwrap_or_else(|| PathBuf::from(".")))
+        }
+        Ok(path) => Source::Path(PathBuf::from(path)),
+        Err(_) => Source::Path(source.extract::<PathBuf>()?),
+    };
+    fn load<const N: usize>(source: &Source) -> Result<LoadedScenario<N>, LoadError> {
+        match source {
+            Source::Text(text, base) => load_scenario_str_as::<N>(text, base),
+            Source::Path(path) => load_scenario_file_as::<N>(path),
+        }
+    }
+    let loaded = if slots == 1 {
+        AnyLoaded::Singles(Arc::new(load::<1>(&source).map_err(load_err)?))
+    } else {
+        AnyLoaded::Doubles(Arc::new(load::<2>(&source).map_err(load_err)?))
+    };
+    Ok(Scenario { loaded })
 }
 
 /// Scenario JSON text rather than a path: an object, after an optional byte order mark.
@@ -234,7 +334,7 @@ fn nash(
 /// to check. `positions()` gives the positions its decision is made in.
 #[pyclass(frozen, module = "lab_engine")]
 struct Scenario {
-    loaded: Arc<LoadedScenario>,
+    loaded: AnyLoaded,
 }
 
 #[pymethods]
@@ -242,26 +342,27 @@ impl Scenario {
     /// The scenario's `description`.
     #[getter]
     fn description(&self) -> &str {
-        &self.loaded.meta.description
+        &self.loaded.meta().description
     }
 
-    /// `"doubles"`.
+    /// `"doubles"` or `"singles"`.
     #[getter]
     fn format(&self) -> &'static str {
-        "doubles"
+        self.loaded.format()
     }
 
-    /// The Showdown format id (`gen9championsdoublescustomgame`, `gen9championsvgc2026regmc`).
+    /// The Showdown format id (`gen9championsdoublescustomgame`, `gen9championsvgc2026regmc`,
+    /// `gen9championscustomgame`, `gen9championsbssregmc`).
     #[getter]
     fn showdown_format(&self) -> &str {
-        &self.loaded.meta.format
+        &self.loaded.meta().format
     }
 
     /// The scenario's `turn` choices `(p1, p2)`, if any.
     #[getter]
     fn turn(&self) -> Option<(String, String)> {
         self.loaded
-            .meta
+            .meta()
             .turn
             .as_ref()
             .map(|t| (t.p1.clone(), t.p2.clone()))
@@ -271,8 +372,8 @@ impl Scenario {
     #[getter]
     fn mid_turn(&self) -> (Vec<String>, Vec<String>) {
         (
-            self.loaded.mid_turn[0].clone(),
-            self.loaded.mid_turn[1].clone(),
+            self.loaded.mid_turn()[0].clone(),
+            self.loaded.mid_turn()[1].clone(),
         )
     }
 
@@ -280,7 +381,7 @@ impl Scenario {
     #[getter]
     fn setup_turns(&self) -> Vec<(String, String)> {
         self.loaded
-            .setup_turns
+            .setup_turns()
             .iter()
             .map(|t| (t.p1.clone(), t.p2.clone()))
             .collect()
@@ -289,7 +390,7 @@ impl Scenario {
     /// `side`'s display names in party (team preview) order.
     fn names(&self, side: SideArg) -> PyResult<Vec<String>> {
         let side = side.side()?;
-        Ok(self.loaded.meta.sides[side.index()]
+        Ok(self.loaded.meta().sides[side.index()]
             .members
             .iter()
             .map(|m| m.name.clone())
@@ -309,19 +410,40 @@ impl Scenario {
         lenient: bool,
     ) -> PyResult<Vec<(f64, Position)>> {
         let rolls = parse_rolls(setup_rolls, None).map_err(py_err)?;
-        let loaded = Arc::clone(&self.loaded);
-        let nodes = py
-            .detach(move || scenario_nodes(&loaded, EnumerateOptions { rolls }, lenient))
-            .map_err(py_err)?;
-        Ok(nodes
-            .into_iter()
-            .map(|(p, node)| (p, Position { node: node.into() }))
-            .collect())
+        let options = EnumerateOptions { rolls };
+        with_loaded!(&self.loaded, loaded => {
+            let loaded = Arc::clone(loaded);
+            let nodes = py
+                .detach(move || scenario_nodes(&loaded, options, lenient))
+                .map_err(py_err)?;
+            Ok(nodes
+                .into_iter()
+                .map(|(p, node)| (p, Position { node: node.into() }))
+                .collect())
+        })
+    }
+
+    /// A position built from canonical JSON (schema 1; a dict or the JSON text), as
+    /// `Position.state_json()` writes it, with or without its `x-hidden` member: the scenario's
+    /// teams supply what the canonical form leaves out (level, nature, Stat Points, move
+    /// order). Hidden state the canonical form does not carry takes the defaults
+    /// `engine/scenario/src/from_canonical.rs` lists; what has none (a transformed Pokémon, a
+    /// pending future move, volatiles such as Leech Seed whose source is not canonical, a
+    /// mid-turn switch) raises `Unsupported` unless `x-hidden` gives it. Genders the teams leave
+    /// to chance stay undecided (`Position.from_canonical` on a position keeps its genders).
+    #[allow(clippy::wrong_self_convention)] // the Python API name
+    fn from_canonical(&self, state: &Bound<'_, PyAny>) -> PyResult<Position> {
+        let value = json_arg(state)?;
+        let meta = Arc::new(self.loaded.meta().clone());
+        with_loaded!(&self.loaded, loaded => {
+            let node = node_from_canonical(&loaded.state, &meta, &value)?;
+            Ok(Position { node: node.into() })
+        })
     }
 
     fn __repr__(&self) -> String {
         let names = |side: usize| -> String {
-            self.loaded.meta.sides[side]
+            self.loaded.meta().sides[side]
                 .members
                 .iter()
                 .map(|m| m.name.as_str())
@@ -330,7 +452,7 @@ impl Scenario {
         };
         format!(
             "<Scenario {} ({}) p1: {} | p2: {}>",
-            self.loaded.meta.format,
+            self.loaded.meta().format,
             self.format(),
             names(0),
             names(1)
@@ -420,8 +542,48 @@ impl Position {
     }
 
     /// The state as the oracle's canonical JSON (schema 1, `engine/oracle/canonical.cjs`).
-    fn state_json(&self) -> PyResult<String> {
-        with_node!(&self.node, n => n.state_json().map_err(py_err))
+    /// `hidden=True` appends the engine's `x-hidden` member: the state the canonical form
+    /// leaves out (party order, hazard order, volatile payloads, ...), so that
+    /// `from_canonical` gives back this exact position; the rest of the string is unchanged.
+    #[pyo3(signature = (hidden = false))]
+    fn state_json(&self, hidden: bool) -> PyResult<String> {
+        if !hidden {
+            return with_node!(&self.node, n => n.state_json().map_err(py_err));
+        }
+        with_node!(&self.node, n => {
+            canonical_json_hidden(&n.state, &n.meta, Some(&n.order)).map_err(scenario_err)
+        })
+    }
+
+    /// Another position of the same battle built from canonical JSON (a dict or the JSON
+    /// text, `x-hidden` optional; see `Scenario.from_canonical`): this position supplies the
+    /// set data, genders included. Edit `state_json(hidden=True)` and put it back to change a
+    /// position by hand. A suspended turn is not carried.
+    #[allow(clippy::wrong_self_convention)] // the Python API name
+    fn from_canonical(&self, state: &Bound<'_, PyAny>) -> PyResult<Position> {
+        let value = json_arg(state)?;
+        with_node!(&self.node, n => {
+            let node = node_from_canonical(&n.state, &n.meta, &value)?;
+            Ok(Position { node: node.into() })
+        })
+    }
+
+    /// This position with an oracle `patch` applied (the scenario files' `patch` format:
+    /// `{"p1": {name: {"hp", "status", "statusTime", "boosts", "item"}}, "p2": ..., "sides":
+    /// {"p1": {"tailwind": 3}}, "field": {"weather", "weatherDuration", "terrain",
+    /// "terrainDuration", "pseudoWeather": {"trickroom": 5}}}`; a dict or the JSON text).
+    fn with_patch(&self, patch: &Bound<'_, PyAny>) -> PyResult<Position> {
+        let value = json_arg(patch)?;
+        let patch: PatchJson = serde_json::from_value(value)
+            .map_err(|e| PyValueError::new_err(format!("patch: {e}")))?;
+        with_node!(&self.node, n => {
+            if n.suspension.is_some() {
+                return Err(PyValueError::new_err("a suspended turn cannot be patched"));
+            }
+            let mut node = n.clone();
+            apply_patch(&mut node.state, &node.meta, &patch).map_err(PyValueError::new_err)?;
+            Ok(Position { node: node.into() })
+        })
     }
 
     /// The heuristic evaluation from `side`'s point of view (HP-bar units, 100 = one full
@@ -543,6 +705,8 @@ impl Position {
     fn __eq__(&self, other: &Bound<'_, Position>) -> bool {
         match (&self.node, &other.get().node) {
             (AnyNode::Doubles(a), AnyNode::Doubles(b)) => a == b,
+            (AnyNode::Singles(a), AnyNode::Singles(b)) => a == b,
+            _ => false,
         }
     }
 

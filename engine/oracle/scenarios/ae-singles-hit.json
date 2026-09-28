@@ -1,0 +1,16 @@
+{
+ "description": "II singles loader: Battle Stadium Singles (3 of 4 picked, Adjust Level = 50). p1 leads Garchomp (team preview \"213\") into p2's Snorlax: Dragon Claw against Tackle, every damage roll and critical hit.",
+ "format": "gen9championsbssregmc",
+ "p1": {"order": "213", "team": [
+  {"species": "Machamp", "item": "", "ability": "Guts", "nature": "Serious", "evs": {"hp": 32}, "moves": ["Close Combat", "Protect"], "level": 50},
+  {"species": "Garchomp", "item": "", "ability": "Rough Skin", "nature": "Jolly", "evs": {"atk": 32, "spe": 32}, "moves": ["Dragon Claw", "Protect"], "level": 50},
+  {"species": "Chansey", "item": "", "ability": "Natural Cure", "nature": "Bold", "evs": {"hp": 32, "def": 32}, "moves": ["Seismic Toss", "Protect"], "level": 50},
+  {"species": "Tauros", "item": "", "ability": "Intimidate", "nature": "Jolly", "evs": {"atk": 32}, "moves": ["Tackle"], "level": 50}
+ ]},
+ "p2": {"order": "1", "team": [
+  {"species": "Snorlax", "item": "", "ability": "Thick Fat", "nature": "Adamant", "evs": {"hp": 32, "atk": 32}, "moves": ["Tackle", "Protect"], "level": 50},
+  {"species": "Corviknight", "item": "", "ability": "Pressure", "nature": "Impish", "evs": {"hp": 32}, "moves": ["Brave Bird", "Roost"], "level": 50},
+  {"species": "Gengar", "item": "", "ability": "Cursed Body", "nature": "Timid", "evs": {"spa": 32}, "moves": ["Shadow Ball", "Protect"], "level": 50}
+ ]},
+ "turn": {"p1": "move dragonclaw", "p2": "move tackle"}
+}

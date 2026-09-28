@@ -200,17 +200,19 @@
 
 `engine/scenario/src`(`error.rs`·`parity.rs`·바이너리 제외)가 턴 엔진 앞에서 거부하는 곳: `LoadError`·`TeamProblem`·`SetProblem`·`SwitchInError`·`CanonicalError`의 생성 지점과 팀 프리뷰·패치·선택 문자열의 `String` 오류. 분류는 `refusals.classification.json`의 `loader`. `SwitchInError`와 `CanonicalError::Unrepresentable`은 `ScenarioError::Unsupported`로, 나머지는 `ScenarioError::Invalid`/`LoadError`로 나온다(T1).
 
-- 키 84개: input 58개, unsupported 4개, unreachable 19개, forward 3개.
+- 키 83개: input 59개, unsupported 2개, unreachable 19개, forward 3개.
 
 ### input: 입력 오류: the scenario file is malformed or asks for something Showdown would also refuse (or that the file format does not have)
 
 | 키 | 지점 | 로더 테스트 | 보드 | 이유 |
 |---|---|---|---|---|
 | `LoadError::Io` | lib.rs::read_text | — | — | A team or scenario file that cannot be read. |
-| `LoadError::Json` | lib.rs::parse_setup_turn<br>lib.rs::load_scenario_str<br>lib.rs::parse_team<br>lib.rs::resolve_team | `loader_refusals.rs::an_unknown_scenario_field_is_refused` | — | Malformed JSON, a wrong value type, or a field the loader does not know (`deny_unknown_fields` on every scenario and set shape: an unknown field could change the battle, so it is refused, not dropped). |
-| `LoadError::Unsupported: setupRolls` | lib.rs::load_scenario_str | `loader_refusals.rs::scenario_field_values_are_checked` | — | `setupRolls` other than `full` / `extremes`: the file format has no other value (the oracle's reports use those two). |
-| `LoadError::Unsupported: setupStates` | lib.rs::load_scenario_str | `loader_refusals.rs::scenario_field_values_are_checked` | — | More pinned setup states than setup turns: a file error. |
+| `LoadError::Json` | lib.rs::parse_setup_turn<br>lib.rs::load_scenario_str_as<br>lib.rs::parse_team<br>lib.rs::resolve_team | `loader_refusals.rs::an_unknown_scenario_field_is_refused` | — | Malformed JSON, a wrong value type, or a field the loader does not know (`deny_unknown_fields` on every scenario and set shape: an unknown field could change the battle, so it is refused, not dropped). |
+| `LoadError::Unsupported: format` | lib.rs::load_scenario_str_as | `ae_singles.rs::formats_and_slot_counts_must_agree` | — | A singles format given to the doubles loader or a doubles one to the singles loader (`load_scenario_file_as::<N>` must match the format's slot count; Python `format=`). |
+| `LoadError::Unsupported: setupRolls` | lib.rs::load_scenario_str_as | `loader_refusals.rs::scenario_field_values_are_checked` | — | `setupRolls` other than `full` / `extremes`: the file format has no other value (the oracle's reports use those two). |
+| `LoadError::Unsupported: setupStates` | lib.rs::load_scenario_str_as | `loader_refusals.rs::scenario_field_values_are_checked` | — | More pinned setup states than setup turns: a file error. |
 | `LoadError::Unsupported: team` | lib.rs::resolve_team | `loader_refusals.rs::scenario_field_values_are_checked` | — | A side's `team` that is neither a path nor an inline array. |
+| `LoadError::UnsupportedFormat` | lib.rs::load_scenario_str_as | `loader_refusals.rs::a_singles_format_is_refused` | — | A format other than the four Champions formats the loader knows (doubles custom game, VGC 2026 Reg M-C, singles custom game, BSS Reg M-C since II-singles-loader); other formats are other rule sets (other mods, other clauses). |
 | `SetProblem::DuplicateMove` | team.rs::build_pokemon | — | — | The same move twice in a set (the validator refuses it; move slots are addressed by move id). |
 | `SetProblem::InvalidIv` | team.rs::build_pokemon | — | — | An IV above 31 (IVs have no term in the Champions formula and are only range-checked). |
 | `SetProblem::MissingAbility` | team.rs::build_pokemon | — | — | A set without an ability: the loader asks for it (Showdown would fall back to no ability). |
@@ -219,7 +221,6 @@
 | `SetProblem::StatPoints` | team.rs::build_pokemon | — | — | More than 32 SP in a stat or 66 in total: not a Champions set (Showdown's `evs` are SP here). |
 | `SetProblem::TooManyMoves` | team.rs::build_pokemon | — | — | More than four moves. |
 | `SetProblem::UnknownAbility` | team.rs::build_pokemon | — | — | An ability name the dex does not have. |
-| `SetProblem::UnknownGender` | team.rs::build_pokemon | — | — | A gender other than M, F or N. Showdown ignores an unknown one (`genders[set.gender]` falls back to the species'); the loader is stricter on garbage input. |
 | `SetProblem::UnknownItem` | team.rs::build_pokemon | — | — | An item name the dex does not have. |
 | `SetProblem::UnknownMove` | team.rs::build_pokemon | — | — | A move name the dex does not have. |
 | `SetProblem::UnknownNature` | team.rs::build_pokemon | — | — | A nature name that does not exist. |
@@ -256,7 +257,7 @@
 | `picked_order: no Pokémon in slot {}` | team.rs::picked_order | — | — | Team preview choice beyond the team (Showdown: `You do not have a Pokémon in slot N`). |
 | `picked_order: the Pokémon in slot {} can only switch in once` | team.rs::picked_order | — | — | Team preview choice naming a member twice (Showdown's own message). |
 | `picked_order: you must choose exactly {} Pokémon` | team.rs::picked_order | `loader_refusals.rs::bracketed_team_preview_follows_choose_team` | — | A bracketed team preview choice with more members than the format keeps (Showdown: `You must choose exactly N Pokémon`). Bracketed choices themselves load since A4 (`vv-bracketed-preview`). |
-| `picked_order: {} is not a team position` | team.rs::picked_order | — | — | Team preview choice with a non-number (Showdown's `parseInt` gives NaN and refuses it; it would read `2x` as 2, which the loader refuses). |
+| `picked_order: {} is not a team position` | team.rs::picked_order | — | — | Team preview choice with no leading number (Showdown's `parseInt` gives NaN and refuses it). Since A4-t2 the loader reads a position as `parseInt` does (`2x` is 2, `0x2` is 2, leading whitespace and a sign allowed). |
 | `pinned: none of {} position(s) has the pinned canonical state{}` | lib.rs::pinned | — | — | A pinned `startState` / `setupStates` entry no replayed position has: a wrong pin, or the engine diverging from the game the pin came from (the parity pipeline reports it as `setup:`; not a refusal of a legal battle). |
 | `replay_setup_turn: setup turn {}: the turn pauses for a mid-turn switch that has no choice; give it in the setup turn's third element (`midTurn`)` | lib.rs::replay_setup_turn | — | — | A setup turn left waiting for a mid-turn switch nobody gave (board B29): the file must give it; `scenario_positions_consistent` drops such outcomes instead. |
 | `scenario_choices: the scenario has no turn` | lib.rs::scenario_choices | — | — | A scenario without `turn` asked for its choices. |
@@ -269,10 +270,8 @@
 
 | 키 | 지점 | 로더 테스트 | 보드 | 이유 |
 |---|---|---|---|---|
-| `LoadError::UnsupportedFormat` | lib.rs::load_scenario_str | `loader_refusals.rs::a_singles_format_is_refused` | II-singles-loader | Only the Champions doubles custom game and VGC 2026 Reg M-C load; Champions singles (`gen9championsbssregmc`) is a format Showdown plays (board II-singles-loader, on hold: singles keeps only the structure). |
-| `SetProblem::TemporaryForme` | team.rs::build_pokemon | `loader_refusals.rs::a_temporary_forme_as_species_is_refused` | — | A temporary in-battle forme (Aegislash-Blade, Darmanitan-Zen, ...) as a set's species: the custom game (no validator) keeps it as the base species, which the state cannot tell from the forme reached in battle. VGC's validator refuses such sets, so only the custom game reaches it. |
-| `SetProblem::UnsupportedLevel` | team.rs::build_pokemon | `loader_refusals.rs::a_level_other_than_50_is_refused` | — | A level other than 50 in the custom game (a set without `level` is 100 there, board B31): Showdown plays it, the engine's stat formula is the level-50 one. VGC's `Adjust Level = 50` never reaches it. |
-| `TeamProblem::DuplicateName` | team.rs::build_picked_side | `loader_refusals.rs::a_name_twice_on_a_side_is_refused` | — | Two members of a side with the same name (a shared nickname, or one species twice in the custom game): Showdown plays it, canonical states key Pokémon by name. |
+| `SetProblem::TemporaryForme` | team.rs::build_pokemon | `loader_refusals.rs::a_temporary_forme_as_species_is_refused` | — | A temporary in-battle forme (Aegislash-Blade, Darmanitan-Zen, ...) as a set's species: the custom game (no validator) keeps it as the base species, which the state cannot tell from the forme reached in battle. Kept as an explicit limit (A4-t1): the formes are `battleOnly`, so Showdown's validator (VGC and every validated format) refuses such sets and only the unvalidated custom game reaches it; supporting it needs a per-Pokémon base species in the state. |
+| `TeamProblem::DuplicateName` | team.rs::build_picked_side | `loader_refusals.rs::a_name_twice_on_a_side_is_refused` | — | Two members of a side with the same name (a shared nickname, or one species twice in the custom game): Showdown plays it, canonical states key Pokémon by name. Kept as an explicit limit (A4-t1): `canonical.cjs` sorts `side.pokemon` with a comparator that never returns 0, so equal names have no defined canonical order and such a battle cannot be compared with the oracle. |
 
 ### unreachable: 도달 불가: no input produces it (an invariant of the loader or the engine, the ruleset, or content outside the standard range)
 

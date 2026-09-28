@@ -334,7 +334,9 @@ fn gender_readers<const N: usize>(state: &State<N>) -> bool {
 }
 
 /// [`expand_switch_ins`] for a loaded scenario.
-pub fn initial_outcomes(loaded: &LoadedScenario) -> Result<Vec<InitialOutcome<2>>, SwitchInError> {
+pub fn initial_outcomes<const N: usize>(
+    loaded: &LoadedScenario<N>,
+) -> Result<Vec<InitialOutcome<N>>, SwitchInError> {
     expand_switch_ins(&loaded.state)
 }
 
