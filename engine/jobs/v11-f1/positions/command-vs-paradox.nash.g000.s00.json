@@ -1,0 +1,206 @@
+{
+ "description": "FF parity position (FF-parity-harness): command-vs-paradox, lab-parity game 0 (seed 4b5b2dd7bbe2b04c, policy nash, extremes chance), decision 0 = turn 1 Turn. Base scenario D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/matchups/command-vs-paradox.json. The 0 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": "../../../../teams/v11-20260928/v11f-command.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/v11-20260928/v11f-paradox.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [],
+ "setupTurns": [],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "zenmode",
+      "hp": 182,
+      "item": "lifeorb",
+      "maxhp": 182,
+      "name": "Darmanitan",
+      "pp": {
+       "flareblitz": 16,
+       "protect": 8,
+       "rockslide": 12,
+       "uturn": 20
+      },
+      "slot": null,
+      "species": "Darmanitan",
+      "status": ""
+     },
+     {
+      "ability": "unaware",
+      "boosts": {
+       "atk": 2,
+       "def": 2,
+       "spa": 2,
+       "spd": 2,
+       "spe": 2
+      },
+      "hp": 257,
+      "item": "leftovers",
+      "maxhp": 257,
+      "name": "Dondozo",
+      "pp": {
+       "earthquake": 12,
+       "protect": 8,
+       "wavecrash": 12,
+       "yawn": 12
+      },
+      "slot": 1,
+      "species": "Dondozo",
+      "status": "",
+      "volatiles": {
+       "commanded": {}
+      }
+     },
+     {
+      "ability": "commander",
+      "boosts": {},
+      "hp": 175,
+      "item": "sitrusberry",
+      "maxhp": 175,
+      "name": "Tatsugiri",
+      "pp": {
+       "dracometeor": 8,
+       "icywind": 16,
+       "muddywater": 12,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Tatsugiri",
+      "status": "",
+      "volatiles": {
+       "commanding": {}
+      }
+     },
+     {
+      "ability": "drought",
+      "hp": 177,
+      "item": "heatrock",
+      "maxhp": 177,
+      "name": "Torkoal",
+      "pp": {
+       "earthpower": 12,
+       "heatwave": 12,
+       "protect": 8,
+       "yawn": 12
+      },
+      "slot": null,
+      "species": "Torkoal",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "protosynthesis",
+      "hp": 132,
+      "item": "leftovers",
+      "maxhp": 132,
+      "name": "Flutter Mane",
+      "pp": {
+       "moonblast": 16,
+       "mysticalfire": 12,
+       "protect": 8,
+       "shadowball": 16
+      },
+      "slot": null,
+      "species": "Flutter Mane",
+      "status": ""
+     },
+     {
+      "ability": "protosynthesis",
+      "boosts": {},
+      "hp": 192,
+      "item": "",
+      "lastItem": "boosterenergy",
+      "maxhp": 192,
+      "name": "Great Tusk",
+      "pp": {
+       "headlongrush": 8,
+       "icespinner": 16,
+       "protect": 8,
+       "rapidspin": 20
+      },
+      "slot": 0,
+      "species": "Great Tusk",
+      "status": "",
+      "volatiles": {
+       "protosynthesis": {}
+      }
+     },
+     {
+      "ability": "quarkdrive",
+      "boosts": {},
+      "hp": 261,
+      "item": "",
+      "lastItem": "boosterenergy",
+      "maxhp": 261,
+      "name": "Iron Hands",
+      "pp": {
+       "drainpunch": 12,
+       "fakeout": 12,
+       "protect": 8,
+       "wildcharge": 16
+      },
+      "slot": 1,
+      "species": "Iron Hands",
+      "status": "",
+      "volatiles": {
+       "quarkdrive": {}
+      }
+     },
+     {
+      "ability": "electricsurge",
+      "hp": 155,
+      "item": "micleberry",
+      "maxhp": 155,
+      "name": "Pincurchin",
+      "pp": {
+       "protect": 8,
+       "risingvoltage": 20,
+       "spikes": 20,
+       "suckerpunch": 8
+      },
+      "slot": null,
+      "species": "Pincurchin",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "pass, move protect",
+  "p2": "move headlongrush 2, move fakeout 2"
+ }
+}

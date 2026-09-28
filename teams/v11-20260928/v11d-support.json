@@ -1,0 +1,126 @@
+[
+  {
+    "name": "",
+    "species": "Primarina",
+    "item": "Sitrus Berry",
+    "ability": "Liquid Voice",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Sparkling Aria",
+      "Moonblast",
+      "Endure",
+      "Helping Hand"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Indeedee-F",
+    "item": "Leftovers",
+    "ability": "Own Tempo",
+    "gender": "F",
+    "nature": "Bold",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 32,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Follow Me",
+      "Ally Switch",
+      "Psychic",
+      "Helping Hand"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Tauros",
+    "item": "Sitrus Berry",
+    "ability": "Intimidate",
+    "gender": "M",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Hyper Beam",
+      "Rock Slide",
+      "Taunt",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Houndoom",
+    "item": "Focus Sash",
+    "ability": "Flash Fire",
+    "gender": "M",
+    "nature": "Timid",
+    "evs": {
+      "hp": 2,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Will-O-Wisp",
+      "Destiny Bond",
+      "Imprison",
+      "Fire Blast"
+    ]
+  }
+]

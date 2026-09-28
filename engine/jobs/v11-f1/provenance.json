@@ -1,0 +1,981 @@
+{
+ "list": "runs/parity-v11-20260928/jobs/v11-f1.txt",
+ "positions": [
+  {
+   "file": "charge-vs-eye-b.nash.g000.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s00.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s01.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s02.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s03.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s04.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s05.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s06.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s07.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s08.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s09.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s10.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s11.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s12.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s13.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s14.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s15.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s15.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s16.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s16.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s17.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s17.json"
+  },
+  {
+   "file": "charge-vs-eye-b.nash.g000.s18.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.nash.g000.s18.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s00.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s01.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s02.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s03.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s04.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s05.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s06.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s07.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s08.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s09.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s10.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s11.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s12.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s13.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s14.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s15.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s15.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s16.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s16.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s17.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s17.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s18.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s18.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s19.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s19.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s20.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s20.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g000.s21.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g000.s21.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s00.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s01.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s02.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s03.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s04.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s05.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s06.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s07.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s08.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s09.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s10.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s11.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s12.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s13.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s14.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s15.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s15.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s16.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s16.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s17.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s17.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s18.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s18.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s19.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s19.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s20.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s20.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s21.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s21.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s22.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s22.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s23.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s23.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s24.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s24.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s25.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s25.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s26.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s26.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s27.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s27.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s28.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s28.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g001.s29.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g001.s29.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g002.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g002.s00.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g002.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g002.s01.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g002.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g002.s02.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g002.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g002.s03.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g002.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g002.s04.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g002.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g002.s05.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g002.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g002.s06.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g002.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g002.s07.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s00.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s01.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s02.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s03.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s04.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s05.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s06.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s07.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s08.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s09.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s10.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s11.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s12.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s13.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s14.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s15.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s15.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s16.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s16.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s17.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s17.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s18.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s18.json"
+  },
+  {
+   "file": "charge-vs-eye-b.random.g003.s19.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye-b.random.g003.s19.json"
+  },
+  {
+   "file": "charge-vs-eye.nash.g000.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.nash.g000.s00.json"
+  },
+  {
+   "file": "charge-vs-eye.nash.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.nash.g000.s01.json"
+  },
+  {
+   "file": "charge-vs-eye.nash.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.nash.g000.s02.json"
+  },
+  {
+   "file": "charge-vs-eye.nash.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.nash.g000.s03.json"
+  },
+  {
+   "file": "charge-vs-eye.nash.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.nash.g000.s04.json"
+  },
+  {
+   "file": "charge-vs-eye.nash.g000.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.nash.g000.s05.json"
+  },
+  {
+   "file": "charge-vs-eye.nash.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.nash.g000.s06.json"
+  },
+  {
+   "file": "charge-vs-eye.nash.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.nash.g000.s07.json"
+  },
+  {
+   "file": "charge-vs-eye.nash.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.nash.g000.s08.json"
+  },
+  {
+   "file": "charge-vs-eye.nash.g000.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.nash.g000.s09.json"
+  },
+  {
+   "file": "charge-vs-eye.nash.g000.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.nash.g000.s10.json"
+  },
+  {
+   "file": "charge-vs-eye.nash.g000.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.nash.g000.s11.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s00.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s01.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s02.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s03.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s04.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s05.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s06.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s07.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s08.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s09.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s10.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s11.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s12.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s13.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s14.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s15.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s15.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s16.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s16.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g000.s17.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g000.s17.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g001.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g001.s00.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g001.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g001.s01.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g001.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g001.s02.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g001.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g001.s03.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g001.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g001.s04.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g001.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g001.s05.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g001.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g001.s06.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g001.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g001.s07.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g001.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g001.s08.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g001.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g001.s09.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g001.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g001.s10.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g001.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g001.s11.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g001.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g001.s12.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g001.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g001.s13.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s00.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s01.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s02.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s03.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s04.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s05.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s06.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s07.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s08.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s09.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s10.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s11.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s12.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s13.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s14.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g002.s15.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g002.s15.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g003.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g003.s00.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g003.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g003.s01.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g003.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g003.s02.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g003.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g003.s03.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g003.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g003.s04.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g003.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g003.s05.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g003.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g003.s06.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g003.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g003.s07.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g003.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g003.s08.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g003.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g003.s09.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g003.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g003.s10.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g003.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g003.s11.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g003.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g003.s12.json"
+  },
+  {
+   "file": "charge-vs-eye.random.g003.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/charge-vs-eye.random.g003.s13.json"
+  },
+  {
+   "file": "command-vs-paradox-b.nash.g000.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.nash.g000.s00.json"
+  },
+  {
+   "file": "command-vs-paradox-b.nash.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.nash.g000.s01.json"
+  },
+  {
+   "file": "command-vs-paradox-b.nash.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.nash.g000.s02.json"
+  },
+  {
+   "file": "command-vs-paradox-b.nash.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.nash.g000.s03.json"
+  },
+  {
+   "file": "command-vs-paradox-b.nash.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.nash.g000.s04.json"
+  },
+  {
+   "file": "command-vs-paradox-b.nash.g000.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.nash.g000.s05.json"
+  },
+  {
+   "file": "command-vs-paradox-b.nash.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.nash.g000.s06.json"
+  },
+  {
+   "file": "command-vs-paradox-b.nash.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.nash.g000.s07.json"
+  },
+  {
+   "file": "command-vs-paradox-b.nash.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.nash.g000.s08.json"
+  },
+  {
+   "file": "command-vs-paradox-b.nash.g000.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.nash.g000.s09.json"
+  },
+  {
+   "file": "command-vs-paradox-b.nash.g000.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.nash.g000.s10.json"
+  },
+  {
+   "file": "command-vs-paradox-b.nash.g000.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.nash.g000.s11.json"
+  },
+  {
+   "file": "command-vs-paradox-b.nash.g000.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.nash.g000.s12.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g000.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g000.s00.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g000.s01.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g000.s02.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g000.s03.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g000.s04.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g000.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g000.s05.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g000.s06.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s00.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s01.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s02.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s03.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s04.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s05.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s06.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s07.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s08.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s09.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s10.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s11.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s12.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s13.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s13.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s14.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s14.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g001.s15.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g001.s15.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g002.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g002.s00.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g002.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g002.s01.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g002.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g002.s02.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g002.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g002.s03.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g002.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g002.s04.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g002.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g002.s05.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g002.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g002.s06.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g002.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g002.s07.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g002.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g002.s08.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g002.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g002.s09.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g003.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g003.s00.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g003.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g003.s01.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g003.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g003.s02.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g003.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g003.s03.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g003.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g003.s04.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g003.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g003.s05.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g003.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g003.s06.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g003.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g003.s07.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g003.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g003.s08.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g003.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g003.s09.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g003.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g003.s10.json"
+  },
+  {
+   "file": "command-vs-paradox-b.random.g003.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox-b.random.g003.s11.json"
+  },
+  {
+   "file": "command-vs-paradox.nash.g000.s00.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.nash.g000.s00.json"
+  },
+  {
+   "file": "command-vs-paradox.nash.g000.s01.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.nash.g000.s01.json"
+  },
+  {
+   "file": "command-vs-paradox.nash.g000.s02.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.nash.g000.s02.json"
+  },
+  {
+   "file": "command-vs-paradox.nash.g000.s03.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.nash.g000.s03.json"
+  },
+  {
+   "file": "command-vs-paradox.nash.g000.s04.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.nash.g000.s04.json"
+  },
+  {
+   "file": "command-vs-paradox.nash.g000.s05.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.nash.g000.s05.json"
+  },
+  {
+   "file": "command-vs-paradox.nash.g000.s06.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.nash.g000.s06.json"
+  },
+  {
+   "file": "command-vs-paradox.nash.g000.s07.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.nash.g000.s07.json"
+  },
+  {
+   "file": "command-vs-paradox.nash.g000.s08.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.nash.g000.s08.json"
+  },
+  {
+   "file": "command-vs-paradox.nash.g000.s09.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.nash.g000.s09.json"
+  },
+  {
+   "file": "command-vs-paradox.nash.g000.s10.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.nash.g000.s10.json"
+  },
+  {
+   "file": "command-vs-paradox.nash.g000.s11.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.nash.g000.s11.json"
+  },
+  {
+   "file": "command-vs-paradox.nash.g000.s12.json",
+   "from": "D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/positions/command-vs-paradox.nash.g000.s12.json"
+  }
+ ]
+}

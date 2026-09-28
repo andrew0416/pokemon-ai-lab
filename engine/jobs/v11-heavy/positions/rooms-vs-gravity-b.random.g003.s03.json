@@ -1,0 +1,817 @@
+{
+ "description": "FF parity position (FF-parity-harness): rooms-vs-gravity-b, lab-parity game 3 (seed 557b083f51a140d8, policy random, extremes chance), decision 3 = turn 4 Turn. Base scenario D:/pokemon-ai-lab/.claude/worktrees/agent-aab1b8283c1eb05bd/runs/parity-v11-20260928/V11b-future-rooms-pseudoweather/matchups/rooms-vs-gravity-b.json. The 3 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "3412",
+  "team": "../../../../teams/v11-20260928/v11b-rooms.json"
+ },
+ "p2": {
+  "order": "3412",
+  "team": "../../../../teams/v11-20260928/v11b-gravity.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "fairylock": {
+      "duration": 1
+     },
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "magicbounce",
+       "hp": 164,
+       "item": "lifeorb",
+       "maxhp": 164,
+       "name": "Hatterene",
+       "pp": {
+        "dazzlinggleam": 12,
+        "futuresight": 12,
+        "magicroom": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Hatterene",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 105,
+       "item": "leftovers",
+       "lastMove": "fairylock",
+       "maxhp": 164,
+       "name": "Klefki",
+       "pp": {
+        "dazzlinggleam": 12,
+        "fairylock": 11,
+        "magicroom": 12,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Klefki",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "magicguard",
+       "hp": 217,
+       "item": "sitrusberry",
+       "maxhp": 217,
+       "name": "Reuniclus",
+       "pp": {
+        "futuresight": 12,
+        "protect": 8,
+        "psychic": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Reuniclus",
+       "status": ""
+      },
+      {
+       "ability": "regenerator",
+       "boosts": {},
+       "hp": 202,
+       "item": "rockyhelmet",
+       "lastMove": "trickroom",
+       "maxhp": 202,
+       "name": "Slowbro",
+       "pp": {
+        "futuresight": 12,
+        "scald": 16,
+        "trickroom": 7,
+        "wonderroom": 12
+       },
+       "slot": 0,
+       "species": "Slowbro",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "magicguard",
+       "boosts": {},
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Clefable",
+       "pp": {
+        "followme": 20,
+        "gravity": 8,
+        "magicroom": 12,
+        "moonblast": 16
+       },
+       "slot": 0,
+       "species": "Clefable",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "guts",
+       "boosts": {},
+       "hp": 212,
+       "item": "choicescarf",
+       "lastMove": "drainpunch",
+       "maxhp": 212,
+       "name": "Conkeldurr",
+       "pp": {
+        "drainpunch": 11,
+        "knockoff": 20,
+        "machpunch": 20,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Conkeldurr",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "drainpunch"
+        }
+       }
+      },
+      {
+       "ability": "filter",
+       "hp": 117,
+       "item": "focussash",
+       "maxhp": 117,
+       "name": "Mr. Mime",
+       "pp": {
+        "magicroom": 12,
+        "psychic": 12,
+        "trickroom": 8,
+        "wonderroom": 12
+       },
+       "slot": null,
+       "species": "Mr. Mime",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "hp": 223,
+       "item": "leftovers",
+       "maxhp": 223,
+       "name": "Musharna",
+       "pp": {
+        "futuresight": 12,
+        "gravity": 8,
+        "moonblast": 16,
+        "wonderroom": 12
+       },
+       "slot": null,
+       "species": "Musharna",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "magicbounce",
+       "hp": 164,
+       "item": "lifeorb",
+       "maxhp": 164,
+       "name": "Hatterene",
+       "pp": {
+        "dazzlinggleam": 12,
+        "futuresight": 12,
+        "magicroom": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Hatterene",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 115,
+       "item": "leftovers",
+       "lastMove": "dazzlinggleam",
+       "maxhp": 164,
+       "name": "Klefki",
+       "pp": {
+        "dazzlinggleam": 11,
+        "fairylock": 11,
+        "magicroom": 12,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Klefki",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "magicguard",
+       "hp": 217,
+       "item": "sitrusberry",
+       "maxhp": 217,
+       "name": "Reuniclus",
+       "pp": {
+        "futuresight": 12,
+        "protect": 8,
+        "psychic": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Reuniclus",
+       "status": ""
+      },
+      {
+       "ability": "regenerator",
+       "boosts": {},
+       "hp": 127,
+       "item": "rockyhelmet",
+       "lastMove": "scald",
+       "maxhp": 202,
+       "name": "Slowbro",
+       "pp": {
+        "futuresight": 12,
+        "scald": 15,
+        "trickroom": 7,
+        "wonderroom": 12
+       },
+       "slot": 0,
+       "species": "Slowbro",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "magicguard",
+       "boosts": {},
+       "hp": 132,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "moonblast",
+       "maxhp": 202,
+       "name": "Clefable",
+       "pp": {
+        "followme": 20,
+        "gravity": 8,
+        "magicroom": 12,
+        "moonblast": 15
+       },
+       "slot": 0,
+       "species": "Clefable",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "guts",
+       "boosts": {},
+       "hp": 160,
+       "item": "choicescarf",
+       "lastMove": "drainpunch",
+       "maxhp": 212,
+       "name": "Conkeldurr",
+       "pp": {
+        "drainpunch": 10,
+        "knockoff": 20,
+        "machpunch": 20,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Conkeldurr",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "drainpunch"
+        }
+       }
+      },
+      {
+       "ability": "filter",
+       "hp": 117,
+       "item": "focussash",
+       "maxhp": 117,
+       "name": "Mr. Mime",
+       "pp": {
+        "magicroom": 12,
+        "psychic": 12,
+        "trickroom": 8,
+        "wonderroom": 12
+       },
+       "slot": null,
+       "species": "Mr. Mime",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "hp": 223,
+       "item": "leftovers",
+       "maxhp": 223,
+       "name": "Musharna",
+       "pp": {
+        "futuresight": 12,
+        "gravity": 8,
+        "moonblast": 16,
+        "wonderroom": 12
+       },
+       "slot": null,
+       "species": "Musharna",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "magicroom": {
+      "duration": 4
+     },
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "magicbounce",
+       "hp": 164,
+       "item": "lifeorb",
+       "maxhp": 164,
+       "name": "Hatterene",
+       "pp": {
+        "dazzlinggleam": 12,
+        "futuresight": 12,
+        "magicroom": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Hatterene",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 115,
+       "item": "leftovers",
+       "maxhp": 164,
+       "name": "Klefki",
+       "pp": {
+        "dazzlinggleam": 11,
+        "fairylock": 11,
+        "magicroom": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Klefki",
+       "status": ""
+      },
+      {
+       "ability": "magicguard",
+       "boosts": {},
+       "hp": 217,
+       "item": "sitrusberry",
+       "maxhp": 217,
+       "name": "Reuniclus",
+       "pp": {
+        "futuresight": 12,
+        "protect": 8,
+        "psychic": 12,
+        "trickroom": 8
+       },
+       "slot": 1,
+       "species": "Reuniclus",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "regenerator",
+       "boosts": {},
+       "hp": 102,
+       "item": "rockyhelmet",
+       "lastMove": "futuresight",
+       "maxhp": 202,
+       "name": "Slowbro",
+       "pp": {
+        "futuresight": 11,
+        "scald": 15,
+        "trickroom": 7,
+        "wonderroom": 12
+       },
+       "slot": 0,
+       "species": "Slowbro",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "magicguard",
+       "boosts": {},
+       "hp": 132,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "magicroom",
+       "maxhp": 202,
+       "name": "Clefable",
+       "pp": {
+        "followme": 20,
+        "gravity": 8,
+        "magicroom": 11,
+        "moonblast": 15
+       },
+       "slot": 0,
+       "species": "Clefable",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "guts",
+       "boosts": {},
+       "hp": 173,
+       "item": "choicescarf",
+       "lastMove": "drainpunch",
+       "maxhp": 212,
+       "name": "Conkeldurr",
+       "pp": {
+        "drainpunch": 9,
+        "knockoff": 20,
+        "machpunch": 20,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Conkeldurr",
+       "status": "",
+       "volatiles": {
+        "choicelock": {
+         "move": "drainpunch"
+        }
+       }
+      },
+      {
+       "ability": "filter",
+       "hp": 117,
+       "item": "focussash",
+       "maxhp": 117,
+       "name": "Mr. Mime",
+       "pp": {
+        "magicroom": 12,
+        "psychic": 12,
+        "trickroom": 8,
+        "wonderroom": 12
+       },
+       "slot": null,
+       "species": "Mr. Mime",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "hp": 223,
+       "item": "leftovers",
+       "maxhp": 223,
+       "name": "Musharna",
+       "pp": {
+        "futuresight": 12,
+        "gravity": 8,
+        "moonblast": 16,
+        "wonderroom": 12
+       },
+       "slot": null,
+       "species": "Musharna",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {
+       "futuremove": {
+        "move": "futuresight"
+       }
+      },
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move trickroom, move fairylock",
+   "switch 4, move drainpunch 2"
+  ],
+  [
+   "move scald 1, move dazzlinggleam",
+   "move moonblast 1, move drainpunch -1"
+  ],
+  [
+   "move futuresight 1, switch 3",
+   "move magicroom, move drainpunch 1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "magicbounce",
+      "hp": 164,
+      "item": "lifeorb",
+      "maxhp": 164,
+      "name": "Hatterene",
+      "pp": {
+       "dazzlinggleam": 12,
+       "futuresight": 12,
+       "magicroom": 12,
+       "trickroom": 8
+      },
+      "slot": null,
+      "species": "Hatterene",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "boosts": {},
+      "hp": 164,
+      "item": "leftovers",
+      "maxhp": 164,
+      "name": "Klefki",
+      "pp": {
+       "dazzlinggleam": 12,
+       "fairylock": 12,
+       "magicroom": 12,
+       "protect": 8
+      },
+      "slot": 1,
+      "species": "Klefki",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "magicguard",
+      "hp": 217,
+      "item": "sitrusberry",
+      "maxhp": 217,
+      "name": "Reuniclus",
+      "pp": {
+       "futuresight": 12,
+       "protect": 8,
+       "psychic": 12,
+       "trickroom": 8
+      },
+      "slot": null,
+      "species": "Reuniclus",
+      "status": ""
+     },
+     {
+      "ability": "regenerator",
+      "boosts": {},
+      "hp": 202,
+      "item": "rockyhelmet",
+      "maxhp": 202,
+      "name": "Slowbro",
+      "pp": {
+       "futuresight": 12,
+       "scald": 16,
+       "trickroom": 8,
+       "wonderroom": 12
+      },
+      "slot": 0,
+      "species": "Slowbro",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "magicguard",
+      "hp": 202,
+      "item": "sitrusberry",
+      "maxhp": 202,
+      "name": "Clefable",
+      "pp": {
+       "followme": 20,
+       "gravity": 8,
+       "magicroom": 12,
+       "moonblast": 16
+      },
+      "slot": null,
+      "species": "Clefable",
+      "status": ""
+     },
+     {
+      "ability": "guts",
+      "boosts": {},
+      "hp": 212,
+      "item": "choicescarf",
+      "maxhp": 212,
+      "name": "Conkeldurr",
+      "pp": {
+       "drainpunch": 12,
+       "knockoff": 20,
+       "machpunch": 20,
+       "rockslide": 12
+      },
+      "slot": 1,
+      "species": "Conkeldurr",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "filter",
+      "boosts": {},
+      "hp": 117,
+      "item": "focussash",
+      "maxhp": 117,
+      "name": "Mr. Mime",
+      "pp": {
+       "magicroom": 12,
+       "psychic": 12,
+       "trickroom": 8,
+       "wonderroom": 12
+      },
+      "slot": 0,
+      "species": "Mr. Mime",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "synchronize",
+      "hp": 223,
+      "item": "leftovers",
+      "maxhp": 223,
+      "name": "Musharna",
+      "pp": {
+       "futuresight": 12,
+       "gravity": 8,
+       "moonblast": 16,
+       "wonderroom": 12
+      },
+      "slot": null,
+      "species": "Musharna",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move scald 1, move psychic -1",
+  "p2": "move magicroom, move rockslide"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ ]
+}

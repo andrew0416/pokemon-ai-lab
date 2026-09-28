@@ -1,0 +1,126 @@
+[
+  {
+    "name": "",
+    "species": "Musharna",
+    "item": "Leftovers",
+    "ability": "Synchronize",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 2,
+      "spa": 32,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Gravity",
+      "Wonder Room",
+      "Future Sight",
+      "Moonblast"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Clefable",
+    "item": "Sitrus Berry",
+    "ability": "Magic Guard",
+    "gender": "",
+    "nature": "Calm",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 2,
+      "spa": 0,
+      "spd": 32,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Gravity",
+      "Moonblast",
+      "Follow Me",
+      "Magic Room"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Mr. Mime",
+    "item": "Focus Sash",
+    "ability": "Filter",
+    "gender": "",
+    "nature": "Timid",
+    "evs": {
+      "hp": 2,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Magic Room",
+      "Wonder Room",
+      "Trick Room",
+      "Psychic"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Conkeldurr",
+    "item": "Choice Scarf",
+    "ability": "Guts",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Mach Punch",
+      "Drain Punch",
+      "Knock Off",
+      "Rock Slide"
+    ]
+  }
+]

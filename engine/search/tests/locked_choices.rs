@@ -104,9 +104,10 @@ fn the_scenarios_own_choice_is_among_the_legal_choices() {
             "{} not in the legal choices",
             format_choice(state, SideId::One, &position.order[0], &normalized)
         );
+        // Showdown wants a target on a locked move in doubles (see `format_choice`).
         assert_eq!(
             format_choice(state, SideId::One, &position.order[0], &normalized),
-            "move recharge, move protect"
+            "move recharge 1, move protect"
         );
         // An unlocked side is left as parsed.
         let theirs = parse_choice(
@@ -121,4 +122,79 @@ fn the_scenarios_own_choice_is_among_the_legal_choices() {
             theirs
         );
     }
+}
+
+/// A Pokémon locked into Outrage (`outrage-lock`, Outrage in the setup turn): its choice is
+/// written with target 1 (`move outrage 1`), since Showdown's choice parser rejects a named
+/// locked move without a target in doubles (`Can't move: Outrage needs a target`; V11a found it
+/// as lab-parity positions after a Raging Fury lock that the oracle refused). The text parses
+/// back to the same normalized choice.
+#[test]
+fn a_locked_move_is_written_with_a_target() {
+    let path =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../oracle/scenarios/outrage-lock.json");
+    let loaded = load_scenario_file(path).unwrap();
+    let slot = SlotRef {
+        side: SideId::One,
+        slot: 0,
+    };
+    let ruleset = Ruleset::CHAMPIONS_MC;
+    let mut locked = 0;
+    for position in scenario_positions(&loaded).unwrap() {
+        let state = &position.state;
+        if !matches!(locked_move(state, slot), Some(Locked::Move(_))) {
+            continue;
+        }
+        locked += 1;
+        for choice in legal_choices(state, ruleset, Decision::Turn, SideId::One, Pruning::All) {
+            let Choice::Turn(action) = choice else {
+                panic!("{choice:?}")
+            };
+            let text = format_choice(state, SideId::One, &position.order[0], &action);
+            assert!(text.starts_with("move outrage 1, "), "{text}");
+            let parsed = parse_choice(state, SideId::One, &position.order[0], &text).unwrap();
+            assert_eq!(
+                normalize_turn_choice(state, ruleset, SideId::One, parsed),
+                action
+            );
+        }
+    }
+    assert!(locked > 0);
+}
+
+/// Geomancy's second turn (`va-geomancy-charge-lock`, charged in the setup turn): a two-turn lock
+/// on a move aimed at no location is written with target 1 as well (`move geomancy 1`); without
+/// it Showdown refused the choice (`Can't move: Geomancy needs a target`, V11f lab-parity
+/// positions with Geomancy and Razor Wind). The text parses back to the same choice.
+#[test]
+fn an_untargeted_two_turn_lock_is_written_with_a_target() {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../oracle/scenarios/va-geomancy-charge-lock.json");
+    let loaded = load_scenario_file(path).unwrap();
+    let slot = SlotRef {
+        side: SideId::One,
+        slot: 0,
+    };
+    let ruleset = Ruleset::CHAMPIONS_MC;
+    let mut locked = 0;
+    for position in scenario_positions(&loaded).unwrap() {
+        let state = &position.state;
+        if !matches!(locked_move(state, slot), Some(Locked::TwoTurn { .. })) {
+            continue;
+        }
+        locked += 1;
+        for choice in legal_choices(state, ruleset, Decision::Turn, SideId::One, Pruning::All) {
+            let Choice::Turn(action) = choice else {
+                panic!("{choice:?}")
+            };
+            let text = format_choice(state, SideId::One, &position.order[0], &action);
+            assert!(text.starts_with("move geomancy 1, "), "{text}");
+            let parsed = parse_choice(state, SideId::One, &position.order[0], &text).unwrap();
+            assert_eq!(
+                normalize_turn_choice(state, ruleset, SideId::One, parsed),
+                action
+            );
+        }
+    }
+    assert!(locked > 0);
 }

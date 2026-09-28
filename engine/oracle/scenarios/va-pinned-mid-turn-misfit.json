@@ -1,0 +1,662 @@
+{
+ "description": "V11 (Opus VA): a pinned setup turn whose recorded mid-turn switches do not fit every branch. Turn 1 of lab-parity game pause-vs-flash.random.g000 (teams/v11-20260928 v11e-pause vs v11e-flash, seed 4b5b2dd7bbe2b04c): Lopunny U-turns its Eject Button ally Pawmot while Pawmot Volt Switches; the two tie on Speed. In the recorded branch Pawmot moved first, so p1 was asked twice for one switch ('switch 3', then 'switch 4'); where Lopunny moves first, Champions' Eject Button leaves U-turn's switch flag set and one request asks both slots, which these choices do not fit. The replay drops those branches because the turn is pinned (they are not the scenario's). Decision: the replacement after turn 1.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "name": "",
+    "species": "Lopunny",
+    "item": "Normal Gem",
+    "ability": "Limber",
+    "gender": "F",
+    "nature": "Jolly",
+    "evs": {
+     "hp": 2,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 32
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Quick Guard",
+     "Mud-Slap",
+     "U-turn"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Pawmot",
+    "item": "Eject Button",
+    "ability": "Volt Absorb",
+    "gender": "M",
+    "nature": "Jolly",
+    "evs": {
+     "hp": 2,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 32
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Revival Blessing",
+     "Volt Switch",
+     "Nuzzle",
+     "Protect"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Arcanine",
+    "item": "Sitrus Berry",
+    "ability": "Flash Fire",
+    "gender": "M",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 32,
+     "atk": 32,
+     "def": 0,
+     "spa": 0,
+     "spd": 2,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Flare Blitz",
+     "Extreme Speed",
+     "Will-O-Wisp",
+     "Protect"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Serperior",
+    "item": "Leftovers",
+    "ability": "Overgrow",
+    "gender": "F",
+    "nature": "Timid",
+    "evs": {
+     "hp": 2,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 32
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Coil",
+     "Solar Beam",
+     "Leaf Blade",
+     "Protect"
+    ]
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "name": "",
+    "species": "Houndoom",
+    "item": "Eject Button",
+    "ability": "Flash Fire",
+    "gender": "M",
+    "nature": "Timid",
+    "evs": {
+     "hp": 2,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 0,
+     "spe": 32
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Dark Pulse",
+     "Will-O-Wisp",
+     "Protect"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Chandelure",
+    "item": "Sitrus Berry",
+    "ability": "Flash Fire",
+    "gender": "F",
+    "nature": "Modest",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 0,
+     "spa": 32,
+     "spd": 2,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Shadow Ball",
+     "Solar Beam",
+     "Protect"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Garganacl",
+    "item": "Leftovers",
+    "ability": "Purifying Salt",
+    "gender": "M",
+    "nature": "Careful",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 2,
+     "spa": 0,
+     "spd": 32,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wide Guard",
+     "Salt Cure",
+     "Rock Slide",
+     "Protect"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Corviknight",
+    "item": "Leftovers",
+    "ability": "Pressure",
+    "gender": "F",
+    "nature": "Impish",
+    "evs": {
+     "hp": 32,
+     "atk": 0,
+     "def": 32,
+     "spa": 0,
+     "spd": 2,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Defog",
+     "Brave Bird",
+     "U-turn",
+     "Roost"
+    ]
+   }
+  ]
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "boosts": {},
+       "hp": 177,
+       "item": "sitrusberry",
+       "maxhp": 197,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 8,
+        "flareblitz": 16,
+        "protect": 8,
+        "willowisp": 16
+       },
+       "slot": 1,
+       "species": "Arcanine",
+       "status": "",
+       "volatiles": {
+        "flashfire": {}
+       }
+      },
+      {
+       "ability": "limber",
+       "hp": 142,
+       "item": "normalgem",
+       "maxhp": 142,
+       "name": "Lopunny",
+       "pp": {
+        "fakeout": 12,
+        "mudslap": 12,
+        "quickguard": 16,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Lopunny",
+       "status": ""
+      },
+      {
+       "ability": "voltabsorb",
+       "hp": 147,
+       "item": "ejectbutton",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "nuzzle": 20,
+        "protect": 8,
+        "revivalblessing": 1,
+        "voltswitch": 19
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 152,
+       "name": "Serperior",
+       "pp": {
+        "coil": 20,
+        "leafblade": 16,
+        "protect": 8,
+        "solarbeam": 12
+       },
+       "slot": null,
+       "species": "Serperior",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "boosts": {},
+       "hp": 131,
+       "item": "sitrusberry",
+       "lastMove": "heatwave",
+       "maxhp": 167,
+       "name": "Chandelure",
+       "pp": {
+        "heatwave": 11,
+        "protect": 8,
+        "shadowball": 16,
+        "solarbeam": 12
+       },
+       "slot": 1,
+       "species": "Chandelure",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "leftovers",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bravebird": 16,
+        "defog": 16,
+        "roost": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "purifyingsalt",
+       "hp": 207,
+       "item": "leftovers",
+       "maxhp": 207,
+       "name": "Garganacl",
+       "pp": {
+        "protect": 8,
+        "rockslide": 12,
+        "saltcure": 16,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Garganacl",
+       "status": ""
+      },
+      {
+       "ability": "flashfire",
+       "boosts": {},
+       "hp": 152,
+       "item": "ejectbutton",
+       "lastMove": "darkpulse",
+       "maxhp": 152,
+       "name": "Houndoom",
+       "pp": {
+        "darkpulse": 15,
+        "heatwave": 12,
+        "protect": 8,
+        "willowisp": 16
+       },
+       "slot": 0,
+       "species": "Houndoom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move uturn -2, move voltswitch 2",
+   "move darkpulse 1, move heatwave",
+   {
+    "p1": [
+     "switch 3",
+     "switch 4"
+    ],
+    "p2": []
+   }
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flashfire",
+      "hp": 197,
+      "item": "sitrusberry",
+      "maxhp": 197,
+      "name": "Arcanine",
+      "pp": {
+       "extremespeed": 8,
+       "flareblitz": 16,
+       "protect": 8,
+       "willowisp": 16
+      },
+      "slot": null,
+      "species": "Arcanine",
+      "status": ""
+     },
+     {
+      "ability": "limber",
+      "boosts": {},
+      "hp": 142,
+      "item": "normalgem",
+      "maxhp": 142,
+      "name": "Lopunny",
+      "pp": {
+       "fakeout": 12,
+       "mudslap": 12,
+       "quickguard": 16,
+       "uturn": 20
+      },
+      "slot": 0,
+      "species": "Lopunny",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "voltabsorb",
+      "boosts": {},
+      "hp": 147,
+      "item": "ejectbutton",
+      "maxhp": 147,
+      "name": "Pawmot",
+      "pp": {
+       "nuzzle": 20,
+       "protect": 8,
+       "revivalblessing": 1,
+       "voltswitch": 20
+      },
+      "slot": 1,
+      "species": "Pawmot",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "overgrow",
+      "hp": 152,
+      "item": "leftovers",
+      "maxhp": 152,
+      "name": "Serperior",
+      "pp": {
+       "coil": 20,
+       "leafblade": 16,
+       "protect": 8,
+       "solarbeam": 12
+      },
+      "slot": null,
+      "species": "Serperior",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flashfire",
+      "boosts": {},
+      "hp": 167,
+      "item": "sitrusberry",
+      "maxhp": 167,
+      "name": "Chandelure",
+      "pp": {
+       "heatwave": 12,
+       "protect": 8,
+       "shadowball": 16,
+       "solarbeam": 12
+      },
+      "slot": 1,
+      "species": "Chandelure",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "pressure",
+      "hp": 205,
+      "item": "leftovers",
+      "maxhp": 205,
+      "name": "Corviknight",
+      "pp": {
+       "bravebird": 16,
+       "defog": 16,
+       "roost": 8,
+       "uturn": 20
+      },
+      "slot": null,
+      "species": "Corviknight",
+      "status": ""
+     },
+     {
+      "ability": "purifyingsalt",
+      "hp": 207,
+      "item": "leftovers",
+      "maxhp": 207,
+      "name": "Garganacl",
+      "pp": {
+       "protect": 8,
+       "rockslide": 12,
+       "saltcure": 16,
+       "wideguard": 12
+      },
+      "slot": null,
+      "species": "Garganacl",
+      "status": ""
+     },
+     {
+      "ability": "flashfire",
+      "boosts": {},
+      "hp": 152,
+      "item": "ejectbutton",
+      "maxhp": 152,
+      "name": "Houndoom",
+      "pp": {
+       "darkpulse": 16,
+       "heatwave": 12,
+       "protect": 8,
+       "willowisp": 16
+      },
+      "slot": 0,
+      "species": "Houndoom",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "switch 4",
+  "p2": ""
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": [
+   1,
+   0,
+   1
+  ]
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1
+   ]
+  }
+ ]
+}

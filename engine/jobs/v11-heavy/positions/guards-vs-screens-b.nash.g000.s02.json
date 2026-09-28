@@ -1,0 +1,607 @@
+{
+ "description": "FF parity position (FF-parity-harness): guards-vs-screens-b, lab-parity game 0 (seed 4b5b2dd7bbe2b04c, policy nash, extremes chance), decision 2 = turn 3 Turn. Base scenario D:/pokemon-ai-lab/.claude/worktrees/agent-aab1b8283c1eb05bd/runs/parity-v11-20260928/V11c-side-slot-conditions/matchups/guards-vs-screens-b.json. The 2 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "3412",
+  "team": "../../../../teams/v11-20260928/v11c-guards.json"
+ },
+ "p2": {
+  "order": "3412",
+  "team": "../../../../teams/v11-20260928/v11c-screens.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 175,
+       "item": "leftovers",
+       "lastMove": "moonblast",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "healingwish": 12,
+        "hypervoice": 12,
+        "moonblast": 15,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Gardevoir",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "sitrusberry",
+       "maxhp": 155,
+       "name": "Hawlucha",
+       "pp": {
+        "bravebird": 16,
+        "closecombat": 8,
+        "protect": 8,
+        "quickguard": 16
+       },
+       "slot": null,
+       "species": "Hawlucha",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 181,
+       "item": "lightclay",
+       "lastMove": "fakeout",
+       "maxhp": 181,
+       "name": "Meowstic",
+       "pp": {
+        "fakeout": 11,
+        "lightscreen": 20,
+        "reflect": 20,
+        "safeguard": 20
+       },
+       "slot": 0,
+       "species": "Meowstic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "voltabsorb",
+       "hp": 147,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "nuzzle": 20,
+        "protect": 8,
+        "revivalblessing": 1,
+        "voltswitch": 20
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "purifyingsalt",
+       "boosts": {},
+       "hp": 207,
+       "item": "leftovers",
+       "lastMove": "wideguard",
+       "maxhp": 207,
+       "name": "Garganacl",
+       "pp": {
+        "protect": 8,
+        "rockslide": 12,
+        "saltcure": 16,
+        "wideguard": 11
+       },
+       "slot": 1,
+       "species": "Garganacl",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 56,
+       "item": "lightclay",
+       "maxhp": 150,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 196,
+       "item": "",
+       "lastItem": "ejectbutton",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "galewings",
+       "hp": 155,
+       "item": "sharpbeak",
+       "maxhp": 155,
+       "name": "Talonflame",
+       "pp": {
+        "bravebird": 16,
+        "quickguard": 16,
+        "tailwind": 16,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Talonflame",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 7
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 141,
+       "item": "leftovers",
+       "lastMove": "moonblast",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "healingwish": 12,
+        "hypervoice": 12,
+        "moonblast": 14,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Gardevoir",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "sitrusberry",
+       "maxhp": 155,
+       "name": "Hawlucha",
+       "pp": {
+        "bravebird": 16,
+        "closecombat": 8,
+        "protect": 8,
+        "quickguard": 16
+       },
+       "slot": null,
+       "species": "Hawlucha",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 159,
+       "item": "lightclay",
+       "lastMove": "lightscreen",
+       "maxhp": 181,
+       "name": "Meowstic",
+       "pp": {
+        "fakeout": 11,
+        "lightscreen": 19,
+        "reflect": 20,
+        "safeguard": 20
+       },
+       "slot": 0,
+       "species": "Meowstic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "voltabsorb",
+       "hp": 147,
+       "item": "focussash",
+       "maxhp": 147,
+       "name": "Pawmot",
+       "pp": {
+        "nuzzle": 20,
+        "protect": 8,
+        "revivalblessing": 1,
+        "voltswitch": 20
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "purifyingsalt",
+       "boosts": {},
+       "hp": 207,
+       "item": "leftovers",
+       "lastMove": "rockslide",
+       "maxhp": 207,
+       "name": "Garganacl",
+       "pp": {
+        "protect": 8,
+        "rockslide": 11,
+        "saltcure": 16,
+        "wideguard": 11
+       },
+       "slot": 1,
+       "species": "Garganacl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 65,
+       "item": "lightclay",
+       "lastMove": "protect",
+       "maxhp": 150,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "moonblast": 16,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 196,
+       "item": "",
+       "lastItem": "ejectbutton",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "galewings",
+       "hp": 155,
+       "item": "sharpbeak",
+       "maxhp": 155,
+       "name": "Talonflame",
+       "pp": {
+        "bravebird": 16,
+        "quickguard": 16,
+        "tailwind": 16,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Talonflame",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move fakeout 1, move moonblast 1",
+   "switch 4, move wideguard",
+   {
+    "p1": [],
+    "p2": [
+     "switch 3"
+    ]
+   }
+  ],
+  [
+   "move lightscreen, move moonblast 1",
+   "move protect, move rockslide"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "synchronize",
+      "boosts": {},
+      "hp": 175,
+      "item": "leftovers",
+      "maxhp": 175,
+      "name": "Gardevoir",
+      "pp": {
+       "healingwish": 12,
+       "hypervoice": 12,
+       "moonblast": 16,
+       "protect": 8
+      },
+      "slot": 1,
+      "species": "Gardevoir",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 155,
+      "item": "sitrusberry",
+      "maxhp": 155,
+      "name": "Hawlucha",
+      "pp": {
+       "bravebird": 16,
+       "closecombat": 8,
+       "protect": 8,
+       "quickguard": 16
+      },
+      "slot": null,
+      "species": "Hawlucha",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "boosts": {},
+      "hp": 181,
+      "item": "lightclay",
+      "maxhp": 181,
+      "name": "Meowstic",
+      "pp": {
+       "fakeout": 12,
+       "lightscreen": 20,
+       "reflect": 20,
+       "safeguard": 20
+      },
+      "slot": 0,
+      "species": "Meowstic",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "voltabsorb",
+      "hp": 147,
+      "item": "focussash",
+      "maxhp": 147,
+      "name": "Pawmot",
+      "pp": {
+       "nuzzle": 20,
+       "protect": 8,
+       "revivalblessing": 1,
+       "voltswitch": 20
+      },
+      "slot": null,
+      "species": "Pawmot",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "purifyingsalt",
+      "boosts": {},
+      "hp": 207,
+      "item": "leftovers",
+      "maxhp": 207,
+      "name": "Garganacl",
+      "pp": {
+       "protect": 8,
+       "rockslide": 12,
+       "saltcure": 16,
+       "wideguard": 12
+      },
+      "slot": 1,
+      "species": "Garganacl",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "snowwarning",
+      "hp": 150,
+      "item": "lightclay",
+      "maxhp": 150,
+      "name": "Ninetales",
+      "pp": {
+       "auroraveil": 20,
+       "blizzard": 8,
+       "moonblast": 16,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Ninetales-Alola",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 207,
+      "item": "ejectbutton",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "uturn": 20,
+       "woodhammer": 16
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     },
+     {
+      "ability": "galewings",
+      "boosts": {},
+      "hp": 155,
+      "item": "sharpbeak",
+      "maxhp": 155,
+      "name": "Talonflame",
+      "pp": {
+       "bravebird": 16,
+       "quickguard": 16,
+       "tailwind": 16,
+       "willowisp": 16
+      },
+      "slot": 0,
+      "species": "Talonflame",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move reflect, move moonblast 1",
+  "p2": "move blizzard, move rockslide"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    0,
+    1
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ ]
+}

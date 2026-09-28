@@ -1,0 +1,198 @@
+{
+ "description": "FF parity position (FF-parity-harness): pause-vs-flash, lab-parity game 2 (seed 623e0dbf37ef5243, policy random, extremes chance), decision 0 = turn 1 Turn. Base scenario D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11d-remaining-volatiles/matchups/pause-vs-flash.json. The 0 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "midTurn": {
+  "p1": [
+   "switch 4"
+  ],
+  "p2": [
+   "switch 4"
+  ]
+ },
+ "p1": {
+  "order": "1234",
+  "team": "../../../../teams/v11-20260928/v11e-pause.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/v11-20260928/v11e-flash.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [],
+ "setupTurns": [],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flashfire",
+      "hp": 197,
+      "item": "sitrusberry",
+      "maxhp": 197,
+      "name": "Arcanine",
+      "pp": {
+       "extremespeed": 8,
+       "flareblitz": 16,
+       "protect": 8,
+       "willowisp": 16
+      },
+      "slot": null,
+      "species": "Arcanine",
+      "status": ""
+     },
+     {
+      "ability": "limber",
+      "boosts": {},
+      "hp": 142,
+      "item": "normalgem",
+      "maxhp": 142,
+      "name": "Lopunny",
+      "pp": {
+       "fakeout": 12,
+       "mudslap": 12,
+       "quickguard": 16,
+       "uturn": 20
+      },
+      "slot": 0,
+      "species": "Lopunny",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "voltabsorb",
+      "boosts": {},
+      "hp": 147,
+      "item": "ejectbutton",
+      "maxhp": 147,
+      "name": "Pawmot",
+      "pp": {
+       "nuzzle": 20,
+       "protect": 8,
+       "revivalblessing": 1,
+       "voltswitch": 20
+      },
+      "slot": 1,
+      "species": "Pawmot",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "overgrow",
+      "hp": 152,
+      "item": "leftovers",
+      "maxhp": 152,
+      "name": "Serperior",
+      "pp": {
+       "coil": 20,
+       "leafblade": 16,
+       "protect": 8,
+       "solarbeam": 12
+      },
+      "slot": null,
+      "species": "Serperior",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flashfire",
+      "boosts": {},
+      "hp": 167,
+      "item": "sitrusberry",
+      "maxhp": 167,
+      "name": "Chandelure",
+      "pp": {
+       "heatwave": 12,
+       "protect": 8,
+       "shadowball": 16,
+       "solarbeam": 12
+      },
+      "slot": 1,
+      "species": "Chandelure",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "pressure",
+      "hp": 205,
+      "item": "leftovers",
+      "maxhp": 205,
+      "name": "Corviknight",
+      "pp": {
+       "bravebird": 16,
+       "defog": 16,
+       "roost": 8,
+       "uturn": 20
+      },
+      "slot": null,
+      "species": "Corviknight",
+      "status": ""
+     },
+     {
+      "ability": "purifyingsalt",
+      "hp": 207,
+      "item": "leftovers",
+      "maxhp": 207,
+      "name": "Garganacl",
+      "pp": {
+       "protect": 8,
+       "rockslide": 12,
+       "saltcure": 16,
+       "wideguard": 12
+      },
+      "slot": null,
+      "species": "Garganacl",
+      "status": ""
+     },
+     {
+      "ability": "flashfire",
+      "boosts": {},
+      "hp": 152,
+      "item": "ejectbutton",
+      "maxhp": 152,
+      "name": "Houndoom",
+      "pp": {
+       "darkpulse": 16,
+       "heatwave": 12,
+       "protect": 8,
+       "willowisp": 16
+      },
+      "slot": 0,
+      "species": "Houndoom",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move fakeout 1, move voltswitch -1",
+  "p2": "move willowisp 1, move shadowball 2"
+ }
+}

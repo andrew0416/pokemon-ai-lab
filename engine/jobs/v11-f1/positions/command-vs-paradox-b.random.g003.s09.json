@@ -1,0 +1,1859 @@
+{
+ "description": "FF parity position (FF-parity-harness): command-vs-paradox-b, lab-parity game 3 (seed 557b083f51a140d8, policy random, extremes chance), decision 9 = turn 7 Turn. Base scenario D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/matchups/command-vs-paradox-b.json. The 9 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "3412",
+  "team": "../../../../teams/v11-20260928/v11f-command.json"
+ },
+ "p2": {
+  "order": "3412",
+  "team": "../../../../teams/v11-20260928/v11f-paradox.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 4,
+    "weather": "sunnyday",
+    "weatherDuration": 7
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "zenmode",
+       "boosts": {},
+       "hp": 113,
+       "item": "lifeorb",
+       "lastMove": "flareblitz",
+       "maxhp": 182,
+       "name": "Darmanitan",
+       "pp": {
+        "flareblitz": 15,
+        "protect": 8,
+        "rockslide": 12,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Darmanitan",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unaware",
+       "hp": 257,
+       "item": "leftovers",
+       "maxhp": 257,
+       "name": "Dondozo",
+       "pp": {
+        "earthquake": 12,
+        "protect": 8,
+        "wavecrash": 12,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Dondozo",
+       "status": ""
+      },
+      {
+       "ability": "commander",
+       "hp": 175,
+       "item": "sitrusberry",
+       "maxhp": 175,
+       "name": "Tatsugiri",
+       "pp": {
+        "dracometeor": 8,
+        "icywind": 16,
+        "muddywater": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Tatsugiri",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 177,
+       "item": "heatrock",
+       "lastMove": "yawn",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "earthpower": 12,
+        "heatwave": 12,
+        "protect": 8,
+        "yawn": 11
+       },
+       "slot": 1,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "protosynthesis",
+       "hp": 132,
+       "item": "leftovers",
+       "maxhp": 132,
+       "name": "Flutter Mane",
+       "pp": {
+        "moonblast": 16,
+        "mysticalfire": 12,
+        "protect": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Flutter Mane",
+       "status": ""
+      },
+      {
+       "ability": "protosynthesis",
+       "hp": 192,
+       "item": "boosterenergy",
+       "maxhp": 192,
+       "name": "Great Tusk",
+       "pp": {
+        "headlongrush": 8,
+        "icespinner": 16,
+        "protect": 8,
+        "rapidspin": 20
+       },
+       "slot": null,
+       "species": "Great Tusk",
+       "status": ""
+      },
+      {
+       "ability": "quarkdrive",
+       "boosts": {},
+       "hp": 261,
+       "item": "boosterenergy",
+       "maxhp": 261,
+       "name": "Iron Hands",
+       "pp": {
+        "drainpunch": 12,
+        "fakeout": 12,
+        "protect": 8,
+        "wildcharge": 16
+       },
+       "slot": 0,
+       "species": "Iron Hands",
+       "status": "",
+       "volatiles": {
+        "quarkdrive": {}
+       }
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 0,
+       "item": "micleberry",
+       "maxhp": 155,
+       "name": "Pincurchin",
+       "pp": {
+        "protect": 8,
+        "risingvoltage": 20,
+        "spikes": 20,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Pincurchin",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 4,
+    "weather": "sunnyday",
+    "weatherDuration": 7
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "zenmode",
+       "boosts": {},
+       "hp": 113,
+       "item": "lifeorb",
+       "lastMove": "flareblitz",
+       "maxhp": 182,
+       "name": "Darmanitan",
+       "pp": {
+        "flareblitz": 15,
+        "protect": 8,
+        "rockslide": 12,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Darmanitan",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unaware",
+       "hp": 257,
+       "item": "leftovers",
+       "maxhp": 257,
+       "name": "Dondozo",
+       "pp": {
+        "earthquake": 12,
+        "protect": 8,
+        "wavecrash": 12,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Dondozo",
+       "status": ""
+      },
+      {
+       "ability": "commander",
+       "hp": 175,
+       "item": "sitrusberry",
+       "maxhp": 175,
+       "name": "Tatsugiri",
+       "pp": {
+        "dracometeor": 8,
+        "icywind": 16,
+        "muddywater": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Tatsugiri",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 177,
+       "item": "heatrock",
+       "lastMove": "yawn",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "earthpower": 12,
+        "heatwave": 12,
+        "protect": 8,
+        "yawn": 11
+       },
+       "slot": 1,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "protosynthesis",
+       "boosts": {},
+       "hp": 132,
+       "item": "leftovers",
+       "maxhp": 132,
+       "name": "Flutter Mane",
+       "pp": {
+        "moonblast": 16,
+        "mysticalfire": 12,
+        "protect": 8,
+        "shadowball": 16
+       },
+       "slot": 1,
+       "species": "Flutter Mane",
+       "status": "",
+       "volatiles": {
+        "protosynthesis": {}
+       }
+      },
+      {
+       "ability": "protosynthesis",
+       "hp": 192,
+       "item": "boosterenergy",
+       "maxhp": 192,
+       "name": "Great Tusk",
+       "pp": {
+        "headlongrush": 8,
+        "icespinner": 16,
+        "protect": 8,
+        "rapidspin": 20
+       },
+       "slot": null,
+       "species": "Great Tusk",
+       "status": ""
+      },
+      {
+       "ability": "quarkdrive",
+       "boosts": {},
+       "hp": 261,
+       "item": "boosterenergy",
+       "maxhp": 261,
+       "name": "Iron Hands",
+       "pp": {
+        "drainpunch": 12,
+        "fakeout": 12,
+        "protect": 8,
+        "wildcharge": 16
+       },
+       "slot": 0,
+       "species": "Iron Hands",
+       "status": "",
+       "volatiles": {
+        "quarkdrive": {}
+       }
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 0,
+       "item": "micleberry",
+       "maxhp": 155,
+       "name": "Pincurchin",
+       "pp": {
+        "protect": 8,
+        "risingvoltage": 20,
+        "spikes": 20,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Pincurchin",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 3,
+    "weather": "sunnyday",
+    "weatherDuration": 6
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "zenmode",
+       "boosts": {},
+       "hp": 51,
+       "item": "lifeorb",
+       "lastMove": "flareblitz",
+       "maxhp": 182,
+       "name": "Darmanitan",
+       "pp": {
+        "flareblitz": 14,
+        "protect": 8,
+        "rockslide": 12,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Darmanitan-Zen",
+       "status": "",
+       "volatiles": {
+        "zenmode": {}
+       }
+      },
+      {
+       "ability": "unaware",
+       "hp": 257,
+       "item": "leftovers",
+       "maxhp": 257,
+       "name": "Dondozo",
+       "pp": {
+        "earthquake": 12,
+        "protect": 8,
+        "wavecrash": 12,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Dondozo",
+       "status": ""
+      },
+      {
+       "ability": "commander",
+       "hp": 175,
+       "item": "sitrusberry",
+       "maxhp": 175,
+       "name": "Tatsugiri",
+       "pp": {
+        "dracometeor": 8,
+        "icywind": 16,
+        "muddywater": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Tatsugiri",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 177,
+       "item": "heatrock",
+       "lastMove": "protect",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "earthpower": 12,
+        "heatwave": 12,
+        "protect": 7,
+        "yawn": 11
+       },
+       "slot": 1,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "protosynthesis",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 132,
+       "name": "Flutter Mane",
+       "pp": {
+        "moonblast": 16,
+        "mysticalfire": 12,
+        "protect": 8,
+        "shadowball": 15
+       },
+       "slot": null,
+       "species": "Flutter Mane",
+       "status": "fnt"
+      },
+      {
+       "ability": "protosynthesis",
+       "boosts": {},
+       "hp": 75,
+       "item": "boosterenergy",
+       "maxhp": 192,
+       "name": "Great Tusk",
+       "pp": {
+        "headlongrush": 8,
+        "icespinner": 16,
+        "protect": 8,
+        "rapidspin": 20
+       },
+       "slot": 0,
+       "species": "Great Tusk",
+       "status": "",
+       "volatiles": {
+        "protosynthesis": {}
+       }
+      },
+      {
+       "ability": "quarkdrive",
+       "hp": 261,
+       "item": "boosterenergy",
+       "maxhp": 261,
+       "name": "Iron Hands",
+       "pp": {
+        "drainpunch": 12,
+        "fakeout": 12,
+        "protect": 8,
+        "wildcharge": 16
+       },
+       "slot": null,
+       "species": "Iron Hands",
+       "status": ""
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 0,
+       "item": "micleberry",
+       "maxhp": 155,
+       "name": "Pincurchin",
+       "pp": {
+        "protect": 8,
+        "risingvoltage": 20,
+        "spikes": 20,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Pincurchin",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 3,
+    "weather": "sunnyday",
+    "weatherDuration": 6
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "zenmode",
+       "boosts": {},
+       "hp": 51,
+       "item": "lifeorb",
+       "lastMove": "flareblitz",
+       "maxhp": 182,
+       "name": "Darmanitan",
+       "pp": {
+        "flareblitz": 14,
+        "protect": 8,
+        "rockslide": 12,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Darmanitan-Zen",
+       "status": "",
+       "volatiles": {
+        "zenmode": {}
+       }
+      },
+      {
+       "ability": "unaware",
+       "hp": 257,
+       "item": "leftovers",
+       "maxhp": 257,
+       "name": "Dondozo",
+       "pp": {
+        "earthquake": 12,
+        "protect": 8,
+        "wavecrash": 12,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Dondozo",
+       "status": ""
+      },
+      {
+       "ability": "commander",
+       "hp": 175,
+       "item": "sitrusberry",
+       "maxhp": 175,
+       "name": "Tatsugiri",
+       "pp": {
+        "dracometeor": 8,
+        "icywind": 16,
+        "muddywater": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Tatsugiri",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 177,
+       "item": "heatrock",
+       "lastMove": "protect",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "earthpower": 12,
+        "heatwave": 12,
+        "protect": 7,
+        "yawn": 11
+       },
+       "slot": 1,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "protosynthesis",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 132,
+       "name": "Flutter Mane",
+       "pp": {
+        "moonblast": 16,
+        "mysticalfire": 12,
+        "protect": 8,
+        "shadowball": 15
+       },
+       "slot": null,
+       "species": "Flutter Mane",
+       "status": ""
+      },
+      {
+       "ability": "protosynthesis",
+       "boosts": {},
+       "hp": 75,
+       "item": "boosterenergy",
+       "maxhp": 192,
+       "name": "Great Tusk",
+       "pp": {
+        "headlongrush": 8,
+        "icespinner": 16,
+        "protect": 8,
+        "rapidspin": 20
+       },
+       "slot": 0,
+       "species": "Great Tusk",
+       "status": "",
+       "volatiles": {
+        "protosynthesis": {}
+       }
+      },
+      {
+       "ability": "quarkdrive",
+       "boosts": {},
+       "hp": 261,
+       "item": "boosterenergy",
+       "maxhp": 261,
+       "name": "Iron Hands",
+       "pp": {
+        "drainpunch": 12,
+        "fakeout": 12,
+        "protect": 8,
+        "wildcharge": 16
+       },
+       "slot": 1,
+       "species": "Iron Hands",
+       "status": "",
+       "volatiles": {
+        "quarkdrive": {}
+       }
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 0,
+       "item": "micleberry",
+       "maxhp": 155,
+       "name": "Pincurchin",
+       "pp": {
+        "protect": 8,
+        "risingvoltage": 20,
+        "spikes": 20,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Pincurchin",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 2,
+    "weather": "sunnyday",
+    "weatherDuration": 5
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "zenmode",
+       "hp": 51,
+       "item": "lifeorb",
+       "maxhp": 182,
+       "name": "Darmanitan",
+       "pp": {
+        "flareblitz": 14,
+        "protect": 8,
+        "rockslide": 12,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Darmanitan",
+       "status": ""
+      },
+      {
+       "ability": "unaware",
+       "hp": 257,
+       "item": "leftovers",
+       "maxhp": 257,
+       "name": "Dondozo",
+       "pp": {
+        "earthquake": 12,
+        "protect": 8,
+        "wavecrash": 12,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Dondozo",
+       "status": ""
+      },
+      {
+       "ability": "commander",
+       "boosts": {},
+       "hp": 175,
+       "item": "sitrusberry",
+       "maxhp": 175,
+       "name": "Tatsugiri",
+       "pp": {
+        "dracometeor": 8,
+        "icywind": 16,
+        "muddywater": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Tatsugiri",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 177,
+       "item": "heatrock",
+       "lastMove": "protect",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "earthpower": 12,
+        "heatwave": 12,
+        "protect": 6,
+        "yawn": 11
+       },
+       "slot": 1,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 9,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "protosynthesis",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 132,
+       "name": "Flutter Mane",
+       "pp": {
+        "moonblast": 16,
+        "mysticalfire": 12,
+        "protect": 8,
+        "shadowball": 15
+       },
+       "slot": null,
+       "species": "Flutter Mane",
+       "status": ""
+      },
+      {
+       "ability": "protosynthesis",
+       "boosts": {
+        "def": -1,
+        "spd": -1
+       },
+       "hp": 75,
+       "item": "boosterenergy",
+       "lastMove": "headlongrush",
+       "maxhp": 192,
+       "name": "Great Tusk",
+       "pp": {
+        "headlongrush": 7,
+        "icespinner": 16,
+        "protect": 8,
+        "rapidspin": 20
+       },
+       "slot": 0,
+       "species": "Great Tusk",
+       "status": "",
+       "volatiles": {
+        "protosynthesis": {}
+       }
+      },
+      {
+       "ability": "quarkdrive",
+       "hp": 0,
+       "item": "boosterenergy",
+       "maxhp": 261,
+       "name": "Iron Hands",
+       "pp": {
+        "drainpunch": 12,
+        "fakeout": 12,
+        "protect": 8,
+        "wildcharge": 16
+       },
+       "slot": null,
+       "species": "Iron Hands",
+       "status": "fnt"
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 0,
+       "item": "micleberry",
+       "maxhp": 155,
+       "name": "Pincurchin",
+       "pp": {
+        "protect": 8,
+        "risingvoltage": 20,
+        "spikes": 20,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Pincurchin",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 1,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "zenmode",
+       "hp": 51,
+       "item": "lifeorb",
+       "maxhp": 182,
+       "name": "Darmanitan",
+       "pp": {
+        "flareblitz": 14,
+        "protect": 8,
+        "rockslide": 12,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Darmanitan",
+       "status": ""
+      },
+      {
+       "ability": "unaware",
+       "hp": 257,
+       "item": "leftovers",
+       "maxhp": 257,
+       "name": "Dondozo",
+       "pp": {
+        "earthquake": 12,
+        "protect": 8,
+        "wavecrash": 12,
+        "yawn": 12
+       },
+       "slot": null,
+       "species": "Dondozo",
+       "status": ""
+      },
+      {
+       "ability": "commander",
+       "boosts": {},
+       "hp": 175,
+       "item": "sitrusberry",
+       "lastMove": "dracometeor",
+       "maxhp": 175,
+       "name": "Tatsugiri",
+       "pp": {
+        "dracometeor": 7,
+        "icywind": 16,
+        "muddywater": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Tatsugiri",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "heatrock",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "earthpower": 12,
+        "heatwave": 12,
+        "protect": 6,
+        "yawn": 11
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "protosynthesis",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 132,
+       "name": "Flutter Mane",
+       "pp": {
+        "moonblast": 16,
+        "mysticalfire": 12,
+        "protect": 8,
+        "shadowball": 15
+       },
+       "slot": null,
+       "species": "Flutter Mane",
+       "status": ""
+      },
+      {
+       "ability": "protosynthesis",
+       "boosts": {
+        "def": -2,
+        "spd": -2
+       },
+       "hp": 75,
+       "item": "boosterenergy",
+       "lastMove": "headlongrush",
+       "maxhp": 192,
+       "name": "Great Tusk",
+       "pp": {
+        "headlongrush": 6,
+        "icespinner": 16,
+        "protect": 8,
+        "rapidspin": 20
+       },
+       "slot": 0,
+       "species": "Great Tusk",
+       "status": "",
+       "volatiles": {
+        "protosynthesis": {}
+       }
+      },
+      {
+       "ability": "quarkdrive",
+       "hp": 0,
+       "item": "boosterenergy",
+       "maxhp": 261,
+       "name": "Iron Hands",
+       "pp": {
+        "drainpunch": 12,
+        "fakeout": 12,
+        "protect": 8,
+        "wildcharge": 16
+       },
+       "slot": null,
+       "species": "Iron Hands",
+       "status": "fnt"
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 0,
+       "item": "micleberry",
+       "maxhp": 155,
+       "name": "Pincurchin",
+       "pp": {
+        "protect": 8,
+        "risingvoltage": 20,
+        "spikes": 20,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Pincurchin",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 1,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "zenmode",
+       "hp": 51,
+       "item": "lifeorb",
+       "maxhp": 182,
+       "name": "Darmanitan",
+       "pp": {
+        "flareblitz": 14,
+        "protect": 8,
+        "rockslide": 12,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Darmanitan",
+       "status": ""
+      },
+      {
+       "ability": "unaware",
+       "boosts": {
+        "atk": 2,
+        "def": 2,
+        "spa": 2,
+        "spd": 2,
+        "spe": 2
+       },
+       "hp": 257,
+       "item": "leftovers",
+       "maxhp": 257,
+       "name": "Dondozo",
+       "pp": {
+        "earthquake": 12,
+        "protect": 8,
+        "wavecrash": 12,
+        "yawn": 12
+       },
+       "slot": 1,
+       "species": "Dondozo",
+       "status": "",
+       "volatiles": {
+        "commanded": {}
+       }
+      },
+      {
+       "ability": "commander",
+       "boosts": {},
+       "hp": 175,
+       "item": "sitrusberry",
+       "lastMove": "dracometeor",
+       "maxhp": 175,
+       "name": "Tatsugiri",
+       "pp": {
+        "dracometeor": 7,
+        "icywind": 16,
+        "muddywater": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Tatsugiri",
+       "status": "",
+       "volatiles": {
+        "commanding": {}
+       }
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "heatrock",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "earthpower": 12,
+        "heatwave": 12,
+        "protect": 6,
+        "yawn": 11
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "protosynthesis",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 132,
+       "name": "Flutter Mane",
+       "pp": {
+        "moonblast": 16,
+        "mysticalfire": 12,
+        "protect": 8,
+        "shadowball": 15
+       },
+       "slot": null,
+       "species": "Flutter Mane",
+       "status": ""
+      },
+      {
+       "ability": "protosynthesis",
+       "boosts": {
+        "def": -2,
+        "spd": -2
+       },
+       "hp": 75,
+       "item": "boosterenergy",
+       "lastMove": "headlongrush",
+       "maxhp": 192,
+       "name": "Great Tusk",
+       "pp": {
+        "headlongrush": 6,
+        "icespinner": 16,
+        "protect": 8,
+        "rapidspin": 20
+       },
+       "slot": 0,
+       "species": "Great Tusk",
+       "status": "",
+       "volatiles": {
+        "protosynthesis": {}
+       }
+      },
+      {
+       "ability": "quarkdrive",
+       "hp": 0,
+       "item": "boosterenergy",
+       "maxhp": 261,
+       "name": "Iron Hands",
+       "pp": {
+        "drainpunch": 12,
+        "fakeout": 12,
+        "protect": 8,
+        "wildcharge": 16
+       },
+       "slot": null,
+       "species": "Iron Hands",
+       "status": "fnt"
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 0,
+       "item": "micleberry",
+       "maxhp": 155,
+       "name": "Pincurchin",
+       "pp": {
+        "protect": 8,
+        "risingvoltage": 20,
+        "spikes": 20,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Pincurchin",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "zenmode",
+       "hp": 51,
+       "item": "lifeorb",
+       "maxhp": 182,
+       "name": "Darmanitan",
+       "pp": {
+        "flareblitz": 14,
+        "protect": 8,
+        "rockslide": 12,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Darmanitan",
+       "status": ""
+      },
+      {
+       "ability": "unaware",
+       "boosts": {
+        "atk": 2,
+        "def": 2,
+        "spa": 2,
+        "spd": 2,
+        "spe": 2
+       },
+       "hp": 257,
+       "item": "leftovers",
+       "lastMove": "earthquake",
+       "maxhp": 257,
+       "name": "Dondozo",
+       "pp": {
+        "earthquake": 11,
+        "protect": 8,
+        "wavecrash": 12,
+        "yawn": 12
+       },
+       "slot": 1,
+       "species": "Dondozo",
+       "status": "",
+       "volatiles": {
+        "commanded": {}
+       }
+      },
+      {
+       "ability": "commander",
+       "boosts": {},
+       "hp": 175,
+       "item": "sitrusberry",
+       "lastMove": "dracometeor",
+       "maxhp": 175,
+       "name": "Tatsugiri",
+       "pp": {
+        "dracometeor": 7,
+        "icywind": 16,
+        "muddywater": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Tatsugiri",
+       "status": "",
+       "volatiles": {
+        "commanding": {}
+       }
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "heatrock",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "earthpower": 12,
+        "heatwave": 12,
+        "protect": 6,
+        "yawn": 11
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "protosynthesis",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 132,
+       "name": "Flutter Mane",
+       "pp": {
+        "moonblast": 16,
+        "mysticalfire": 12,
+        "protect": 8,
+        "shadowball": 15
+       },
+       "slot": null,
+       "species": "Flutter Mane",
+       "status": ""
+      },
+      {
+       "ability": "protosynthesis",
+       "boosts": {
+        "def": -2,
+        "spd": -2
+       },
+       "hp": 8,
+       "item": "boosterenergy",
+       "lastMove": "headlongrush",
+       "maxhp": 192,
+       "name": "Great Tusk",
+       "pp": {
+        "headlongrush": 5,
+        "icespinner": 16,
+        "protect": 8,
+        "rapidspin": 20
+       },
+       "slot": 0,
+       "species": "Great Tusk",
+       "status": "",
+       "volatiles": {
+        "protosynthesis": {}
+       }
+      },
+      {
+       "ability": "quarkdrive",
+       "hp": 0,
+       "item": "boosterenergy",
+       "maxhp": 261,
+       "name": "Iron Hands",
+       "pp": {
+        "drainpunch": 12,
+        "fakeout": 12,
+        "protect": 8,
+        "wildcharge": 16
+       },
+       "slot": null,
+       "species": "Iron Hands",
+       "status": "fnt"
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 0,
+       "item": "micleberry",
+       "maxhp": 155,
+       "name": "Pincurchin",
+       "pp": {
+        "protect": 8,
+        "risingvoltage": 20,
+        "spikes": 20,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Pincurchin",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "zenmode",
+       "hp": 51,
+       "item": "lifeorb",
+       "maxhp": 182,
+       "name": "Darmanitan",
+       "pp": {
+        "flareblitz": 14,
+        "protect": 8,
+        "rockslide": 12,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Darmanitan",
+       "status": ""
+      },
+      {
+       "ability": "unaware",
+       "boosts": {
+        "atk": 2,
+        "def": 2,
+        "spa": 2,
+        "spd": 2,
+        "spe": 2
+       },
+       "hp": 257,
+       "item": "leftovers",
+       "lastMove": "yawn",
+       "maxhp": 257,
+       "name": "Dondozo",
+       "pp": {
+        "earthquake": 11,
+        "protect": 8,
+        "wavecrash": 12,
+        "yawn": 11
+       },
+       "slot": 1,
+       "species": "Dondozo",
+       "status": "",
+       "volatiles": {
+        "commanded": {}
+       }
+      },
+      {
+       "ability": "commander",
+       "boosts": {},
+       "hp": 175,
+       "item": "sitrusberry",
+       "lastMove": "dracometeor",
+       "maxhp": 175,
+       "name": "Tatsugiri",
+       "pp": {
+        "dracometeor": 7,
+        "icywind": 16,
+        "muddywater": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Tatsugiri",
+       "status": "",
+       "volatiles": {
+        "commanding": {}
+       }
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "heatrock",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "earthpower": 12,
+        "heatwave": 12,
+        "protect": 6,
+        "yawn": 11
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "protosynthesis",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 132,
+       "name": "Flutter Mane",
+       "pp": {
+        "moonblast": 16,
+        "mysticalfire": 12,
+        "protect": 8,
+        "shadowball": 15
+       },
+       "slot": null,
+       "species": "Flutter Mane",
+       "status": ""
+      },
+      {
+       "ability": "protosynthesis",
+       "boosts": {
+        "def": -2,
+        "spd": -2
+       },
+       "hp": 8,
+       "item": "boosterenergy",
+       "lastMove": "icespinner",
+       "maxhp": 192,
+       "name": "Great Tusk",
+       "pp": {
+        "headlongrush": 5,
+        "icespinner": 15,
+        "protect": 8,
+        "rapidspin": 20
+       },
+       "slot": 0,
+       "species": "Great Tusk",
+       "status": "",
+       "volatiles": {
+        "protosynthesis": {}
+       }
+      },
+      {
+       "ability": "quarkdrive",
+       "hp": 0,
+       "item": "boosterenergy",
+       "maxhp": 261,
+       "name": "Iron Hands",
+       "pp": {
+        "drainpunch": 12,
+        "fakeout": 12,
+        "protect": 8,
+        "wildcharge": 16
+       },
+       "slot": null,
+       "species": "Iron Hands",
+       "status": "fnt"
+      },
+      {
+       "ability": "electricsurge",
+       "hp": 0,
+       "item": "micleberry",
+       "maxhp": 155,
+       "name": "Pincurchin",
+       "pp": {
+        "protect": 8,
+        "risingvoltage": 20,
+        "spikes": 20,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Pincurchin",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move flareblitz 2, move yawn -1",
+   "switch 4, move suckerpunch -1"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move flareblitz 2, move protect",
+   "switch 3, move shadowball -1"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "switch 3, move protect",
+   "move headlongrush -2, move drainpunch 2"
+  ],
+  [
+   "move dracometeor -2, move earthpower 2",
+   "move headlongrush 2, pass"
+  ],
+  [
+   "switch 4",
+   ""
+  ],
+  [
+   "pass, move earthquake",
+   "move headlongrush -2, pass"
+  ],
+  [
+   "pass, move yawn -1",
+   "move icespinner 1, pass"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "electricterrain",
+   "terrainDuration": 5,
+   "weather": "sunnyday",
+   "weatherDuration": 8
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "zenmode",
+      "boosts": {},
+      "hp": 182,
+      "item": "lifeorb",
+      "maxhp": 182,
+      "name": "Darmanitan",
+      "pp": {
+       "flareblitz": 16,
+       "protect": 8,
+       "rockslide": 12,
+       "uturn": 20
+      },
+      "slot": 0,
+      "species": "Darmanitan",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unaware",
+      "hp": 257,
+      "item": "leftovers",
+      "maxhp": 257,
+      "name": "Dondozo",
+      "pp": {
+       "earthquake": 12,
+       "protect": 8,
+       "wavecrash": 12,
+       "yawn": 12
+      },
+      "slot": null,
+      "species": "Dondozo",
+      "status": ""
+     },
+     {
+      "ability": "commander",
+      "hp": 175,
+      "item": "sitrusberry",
+      "maxhp": 175,
+      "name": "Tatsugiri",
+      "pp": {
+       "dracometeor": 8,
+       "icywind": 16,
+       "muddywater": 12,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Tatsugiri",
+      "status": ""
+     },
+     {
+      "ability": "drought",
+      "boosts": {},
+      "hp": 177,
+      "item": "heatrock",
+      "maxhp": 177,
+      "name": "Torkoal",
+      "pp": {
+       "earthpower": 12,
+       "heatwave": 12,
+       "protect": 8,
+       "yawn": 12
+      },
+      "slot": 1,
+      "species": "Torkoal",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "protosynthesis",
+      "boosts": {},
+      "hp": 132,
+      "item": "leftovers",
+      "maxhp": 132,
+      "name": "Flutter Mane",
+      "pp": {
+       "moonblast": 16,
+       "mysticalfire": 12,
+       "protect": 8,
+       "shadowball": 16
+      },
+      "slot": 0,
+      "species": "Flutter Mane",
+      "status": "",
+      "volatiles": {
+       "protosynthesis": {}
+      }
+     },
+     {
+      "ability": "protosynthesis",
+      "hp": 192,
+      "item": "boosterenergy",
+      "maxhp": 192,
+      "name": "Great Tusk",
+      "pp": {
+       "headlongrush": 8,
+       "icespinner": 16,
+       "protect": 8,
+       "rapidspin": 20
+      },
+      "slot": null,
+      "species": "Great Tusk",
+      "status": ""
+     },
+     {
+      "ability": "quarkdrive",
+      "hp": 261,
+      "item": "boosterenergy",
+      "maxhp": 261,
+      "name": "Iron Hands",
+      "pp": {
+       "drainpunch": 12,
+       "fakeout": 12,
+       "protect": 8,
+       "wildcharge": 16
+      },
+      "slot": null,
+      "species": "Iron Hands",
+      "status": ""
+     },
+     {
+      "ability": "electricsurge",
+      "boosts": {},
+      "hp": 155,
+      "item": "micleberry",
+      "maxhp": 155,
+      "name": "Pincurchin",
+      "pp": {
+       "protect": 8,
+       "risingvoltage": 20,
+       "spikes": 20,
+       "suckerpunch": 8
+      },
+      "slot": 1,
+      "species": "Pincurchin",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "pass, move yawn 1",
+  "p2": "move rapidspin 2, pass"
+ }
+}

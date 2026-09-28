@@ -1,0 +1,126 @@
+[
+  {
+    "name": "",
+    "species": "Golurk",
+    "item": "Metronome",
+    "ability": "Iron Fist",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Phantom Force",
+      "Fly",
+      "Dig",
+      "Focus Punch"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Milotic",
+    "item": "Leftovers",
+    "ability": "Competitive",
+    "gender": "F",
+    "nature": "Bold",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 32,
+      "spa": 2,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Dive",
+      "Mirror Coat",
+      "Aqua Ring",
+      "Attract"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Aurorus",
+    "item": "Sitrus Berry",
+    "ability": "Snow Warning",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Meteor Beam",
+      "Freeze-Dry",
+      "Smack Down",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Toucannon",
+    "item": "Leftovers",
+    "ability": "Skill Link",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Beak Blast",
+      "Sky Attack",
+      "Roost",
+      "Endure"
+    ]
+  }
+]

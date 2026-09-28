@@ -1,0 +1,32 @@
+{
+ "created": "2026-09-28",
+ "author": "Opus ZZ (board V11a-V11d, wave 16 L4 corpus-unseen)",
+ "purpose": "Synthetic mechanic test teams for engine parity (lab-parity -> parity_sweep.py -> lab-check): each team concentrates moves, abilities and items whose effects never appeared in runs/parity-corpus-20260927 (features.md), so that self-play games reach positions where they are live. Engine verification only.",
+ "derived_from": "none: hand-built, not derived from any library team or published sheet. No public team was changed.",
+ "status": "not a real or recommended team; never use as party or matchup evidence. Species, abilities, items and moves are all Champions-standard (engine/data/champions.json, isNonstandard null), but learnsets and gender/ability legality were NOT validated (the oracle does not run the team validator); SP spreads (max 32 per stat, total at most 66) and natures are arbitrary, IVs 31, level 50.",
+ "format": "used under gen9championsvgc2026regmc (team preview keeps 4 of these 4-member teams, order 1234 or 3412)",
+ "teams": {
+  "v11a-seed-lock.json": "V11a: Leech Seed, Petal Dance, Outrage, Thrash, Uproar, Raging Fury, Sleep Powder (Uproar vs sleep), Lum Berry (lock-end confusion)",
+  "v11a-web-seed.json": "V11a: Sticky Web (two setters), Leech Seed (Prankster), Uproar, Petal Dance, Thrash",
+  "v11b-rooms.json": "V11b: Trick Room, Magic Room, Wonder Room, Fairy Lock (Prankster), Future Sight (three users)",
+  "v11b-gravity.json": "V11b: Gravity (two users), Magic Room, Wonder Room, Trick Room, Future Sight, Choice Scarf and berries under Magic Room",
+  "v11c-guards.json": "V11c: Quick Guard, Safeguard, Light Screen, Reflect (Light Clay), Healing Wish, Revival Blessing, Volt Switch",
+  "v11c-screens.json": "V11c: Aurora Veil (Snow Warning, Light Clay), Wide Guard, Quick Guard, Tailwind, priority (Gale Wings, Grassy Glide, Fake Out), U-turn and Eject Button for mid-turn pauses, Salt Cure, Will-O-Wisp",
+  "v11d-charge.json": "V11d: Phantom Force, Fly, Dig, Focus Punch, Metronome item, Dive, Mirror Coat, Aqua Ring, Attract, Meteor Beam, Smack Down, Beak Blast, Sky Attack, Roost, Endure",
+  "v11d-invuln.json": "V11d: Bounce, Cute Charm, Fake Out, Solar Blade, Dig, Focus Punch, Curse (Ghost), Phantom Force, Destiny Bond, Counter, No Guard, Dynamic Punch",
+  "v11d-status.json": "V11d: Stockpile / Spit Up / Swallow, Gastro Acid, Electrify, Magnet Rise, Curse (non-Ghost), Minimize, Normal Gem, Octolock, Fling (Iron Ball)",
+  "v11d-trap.json": "V11d: No Retreat, Focus Energy, Syrup Bomb, Dragon Cheer, Power Shift, Mean Look, Torment, Lock-On, Power Trick, Ingrain",
+  "v11d-guard.json": "V11d: King's Shield (Stance Change), Ally Switch, Baneful Bunker, Endure, Spiky Shield, Rage Powder, Chilly Reception",
+  "v11d-support.json": "V11d: Sparkling Aria, Helping Hand, Follow Me, Ally Switch, Hyper Beam (recharge), Taunt, Will-O-Wisp, Destiny Bond, Imprison",
+  "v11e-pause.json": "V11c/V11d gaps (Opus VA): Fake Out with Normal Gem, Quick Guard, Mud-Slap (accuracy-), U-turn; Revival Blessing, Volt Switch, Eject Button; Flash Fire Arcanine; Coil (accuracy+), Solar Beam charge. Explicit genders.",
+  "v11e-flash.json": "V11c/V11d gaps (Opus VA): Flash Fire Houndoom and Chandelure with Fire moves both ways, Eject Button, Solar Beam, Wide Guard, Salt Cure, Defog (evasion-), U-turn. Explicit genders.",
+  "v11f-roll.json": "V11 Past content (Opus VA): Rollout, Ice Ball, Defense Curl, Doom Desire, Lucky Chant, Mist, Truant, Laser Focus. NOT Champions-standard (isNonstandard Past); engine code check only.",
+  "v11f-shield.json": "V11 Past content (Opus VA): Obstruct, Foresight, Heal Block, Silk Trap, Spotlight, Burning Bulwark, Crafty Shield, Shell Trap, Mat Block. NOT Champions-standard.",
+  "v11f-charge.json": "V11 Past content (Opus VA): Geomancy, Razor Wind, Freeze Shock, Ice Burn, Skull Bash, Shadow Force with Power Herb, Spotlight, Heal Block. NOT Champions-standard.",
+  "v11f-eye.json": "V11 Past content (Opus VA): Hypnosis + Nightmare, Miracle Eye, Laser Focus, Micle Berry, Mat Block, Spiky Shield, Crafty Shield, Lucky Chant. NOT Champions-standard.",
+  "v11f-command.json": "V11 Past content (Opus VA): Commander (Tatsugiri + Dondozo leads), Zen Mode with Life Orb, Drought for Protosynthesis. NOT Champions-standard.",
+  "v11f-paradox.json": "V11 Past content (Opus VA): Protosynthesis / Quark Drive with Booster Energy and by sun / Electric Surge, Micle Berry. NOT Champions-standard."
+ },
+ "generator": "runs/parity-v11-20260928/tools/mk.py with tools/v11a.py ... v11d.py (runs/ is gitignored; the team JSON files here are the record)",
+ "status_v11e_v11f": "v11e-*: Champions-standard species, moves, abilities and items (checked against engine/data/champions.json), learnsets not validated. v11f-*: deliberately Past-tagged content that the engine implements (engine/REFUSALS.md E8), used only to check that code against Showdown's Champions mod in customgame; never a Champions team. Generator: runs/parity-v11-20260928/tools/v11e.py, v11f.py (Opus VA)."
+}

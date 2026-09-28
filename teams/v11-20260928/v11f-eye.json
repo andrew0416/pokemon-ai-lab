@@ -1,0 +1,126 @@
+[
+  {
+    "name": "",
+    "species": "Gengar",
+    "item": "Focus Sash",
+    "ability": "Cursed Body",
+    "gender": "M",
+    "nature": "Timid",
+    "evs": {
+      "hp": 2,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Hypnosis",
+      "Nightmare",
+      "Shadow Ball",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Medicham",
+    "item": "Micle Berry",
+    "ability": "Pure Power",
+    "gender": "M",
+    "nature": "Jolly",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Miracle Eye",
+      "Laser Focus",
+      "High Jump Kick",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Chesnaught",
+    "item": "Sitrus Berry",
+    "ability": "Bulletproof",
+    "gender": "M",
+    "nature": "Impish",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 32,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Mat Block",
+      "Spiky Shield",
+      "Wood Hammer",
+      "Drain Punch"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Florges",
+    "item": "Leftovers",
+    "ability": "Flower Veil",
+    "gender": "",
+    "nature": "Calm",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 2,
+      "spa": 0,
+      "spd": 32,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Crafty Shield",
+      "Moonblast",
+      "Lucky Chant",
+      "Protect"
+    ]
+  }
+]
