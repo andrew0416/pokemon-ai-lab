@@ -1,0 +1,1013 @@
+{
+ "description": "FF parity position (FF-parity-harness): dbl-psy-lello-vs-psy-nihat.b, lab-parity game 0 (seed e8f0207de1655299, policy random, extremes chance), decision 4 = turn 4 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/dbl-psy-lello-vs-psy-nihat.b.json. The 4 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "5634",
+  "team": "../../../../teams/library/doubles/m-c/psy-lello/team.json"
+ },
+ "p2": {
+  "order": "5634",
+  "team": "../../../../teams/library/doubles/m-c/psy-nihat/team.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 170,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "boosts": {},
+       "hp": 123,
+       "item": "leftovers",
+       "lastMove": "scald",
+       "maxhp": 170,
+       "name": "Milotic",
+       "pp": {
+        "icywind": 16,
+        "protect": 8,
+        "recover": 8,
+        "scald": 15
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "canMega": true,
+       "hp": 121,
+       "item": "salamencite",
+       "lastMove": "dragonpulse",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "dragonpulse": 11,
+        "heatwave": 12,
+        "hypervoice": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 160,
+       "item": "focussash",
+       "lastMove": "protect",
+       "maxhp": 160,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "expandingforce": 12,
+        "protect": 7,
+        "trickroom": 8
+       },
+       "slot": 1,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 150,
+       "item": "golisopite",
+       "maxhp": 150,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "leechlife": 12,
+        "liquidation": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 135,
+       "item": "sitrusberry",
+       "lastMove": "weatherball",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 16,
+        "weatherball": 11,
+        "wideguard": 12
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "canMega": true,
+       "hp": 175,
+       "item": "swampertite",
+       "maxhp": 175,
+       "name": "Swampert",
+       "pp": {
+        "highhorsepower": 12,
+        "icepunch": 16,
+        "protect": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Swampert",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 170,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "boosts": {},
+       "hp": 133,
+       "item": "leftovers",
+       "lastMove": "icywind",
+       "maxhp": 170,
+       "name": "Milotic",
+       "pp": {
+        "icywind": 15,
+        "protect": 8,
+        "recover": 8,
+        "scald": 15
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "canMega": true,
+       "hp": 121,
+       "item": "salamencite",
+       "lastMove": "dragonpulse",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "dragonpulse": 10,
+        "heatwave": 12,
+        "hypervoice": 12,
+        "protect": 8
+       },
+       "slot": 0,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "boosts": {
+        "atk": -1,
+        "spe": -1
+       },
+       "hp": 149,
+       "item": "focussash",
+       "lastMove": "expandingforce",
+       "maxhp": 160,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "expandingforce": 11,
+        "protect": 7,
+        "trickroom": 8
+       },
+       "slot": 1,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 150,
+       "item": "golisopite",
+       "maxhp": 150,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "leechlife": 12,
+        "liquidation": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 135,
+       "item": "sitrusberry",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 16,
+        "weatherball": 11,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {
+        "spe": -1
+       },
+       "canMega": true,
+       "hp": 29,
+       "item": "swampertite",
+       "maxhp": 175,
+       "name": "Swampert",
+       "pp": {
+        "highhorsepower": 12,
+        "icepunch": 16,
+        "protect": 8,
+        "wavecrash": 12
+       },
+       "slot": 0,
+       "species": "Swampert",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 170,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "competitive",
+       "boosts": {},
+       "hp": 143,
+       "item": "leftovers",
+       "lastMove": "scald",
+       "maxhp": 170,
+       "name": "Milotic",
+       "pp": {
+        "icywind": 15,
+        "protect": 8,
+        "recover": 8,
+        "scald": 14
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "dragonpulse": 10,
+        "heatwave": 12,
+        "hypervoice": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "hp": 149,
+       "item": "focussash",
+       "maxhp": 160,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "expandingforce": 11,
+        "protect": 7,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Armarouge",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 150,
+       "item": "golisopite",
+       "maxhp": 150,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "leechlife": 12,
+        "liquidation": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 135,
+       "item": "sitrusberry",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 16,
+        "weatherball": 11,
+        "wideguard": 12
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "swiftswim",
+       "boosts": {
+        "spe": -1
+       },
+       "hp": 29,
+       "item": "swampertite",
+       "lastMove": "icepunch",
+       "maxhp": 175,
+       "name": "Swampert",
+       "pp": {
+        "highhorsepower": 12,
+        "icepunch": 15,
+        "protect": 8,
+        "wavecrash": 12
+       },
+       "slot": 0,
+       "species": "Swampert-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {},
+       "hp": 170,
+       "item": "focussash",
+       "maxhp": 170,
+       "name": "Arcanine",
+       "pp": {
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": 0,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "competitive",
+       "boosts": {},
+       "hp": 143,
+       "item": "leftovers",
+       "lastMove": "scald",
+       "maxhp": 170,
+       "name": "Milotic",
+       "pp": {
+        "icywind": 15,
+        "protect": 8,
+        "recover": 8,
+        "scald": 14
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 170,
+       "name": "Salamence",
+       "pp": {
+        "dragonpulse": 10,
+        "heatwave": 12,
+        "hypervoice": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 155,
+       "item": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "direclaw": 16,
+        "protect": 8,
+        "rockslide": 12
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "hp": 149,
+       "item": "focussash",
+       "maxhp": 160,
+       "name": "Armarouge",
+       "pp": {
+        "armorcannon": 8,
+        "expandingforce": 11,
+        "protect": 7,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Armarouge",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 150,
+       "item": "golisopite",
+       "maxhp": 150,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "leechlife": 12,
+        "liquidation": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 135,
+       "item": "sitrusberry",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 16,
+        "weatherball": 11,
+        "wideguard": 12
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "swiftswim",
+       "boosts": {
+        "spe": -1
+       },
+       "hp": 29,
+       "item": "swampertite",
+       "lastMove": "icepunch",
+       "maxhp": 175,
+       "name": "Swampert",
+       "pp": {
+        "highhorsepower": 12,
+        "icepunch": 15,
+        "protect": 8,
+        "wavecrash": 12
+       },
+       "slot": 0,
+       "species": "Swampert-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move dragonpulse -2, move scald -1",
+   "move weatherball -2, move protect"
+  ],
+  [
+   "move dragonpulse 1, move icywind",
+   "switch 3, move expandingforce -1"
+  ],
+  [
+   "move hypervoice, move scald -1",
+   "move icepunch 1 mega, switch 3"
+  ],
+  [
+   "switch 4",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "rockhead",
+      "hp": 170,
+      "item": "focussash",
+      "maxhp": 170,
+      "name": "Arcanine",
+      "pp": {
+       "flareblitz": 16,
+       "headsmash": 8,
+       "protect": 8,
+       "rockslide": 12
+      },
+      "slot": null,
+      "species": "Arcanine-Hisui",
+      "status": ""
+     },
+     {
+      "ability": "competitive",
+      "boosts": {},
+      "hp": 170,
+      "item": "leftovers",
+      "maxhp": 170,
+      "name": "Milotic",
+      "pp": {
+       "icywind": 16,
+       "protect": 8,
+       "recover": 8,
+       "scald": 16
+      },
+      "slot": 1,
+      "species": "Milotic",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "canMega": true,
+      "hp": 170,
+      "item": "salamencite",
+      "maxhp": 170,
+      "name": "Salamence",
+      "pp": {
+       "dragonpulse": 12,
+       "heatwave": 12,
+       "hypervoice": 12,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Salamence",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 155,
+      "item": "psychicseed",
+      "maxhp": 155,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "protect": 8,
+       "rockslide": 12
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flashfire",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 160,
+      "item": "focussash",
+      "maxhp": 160,
+      "name": "Armarouge",
+      "pp": {
+       "armorcannon": 8,
+       "expandingforce": 12,
+       "protect": 8,
+       "trickroom": 8
+      },
+      "slot": 1,
+      "species": "Armarouge",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 150,
+      "item": "golisopite",
+      "maxhp": 150,
+      "name": "Golisopod",
+      "pp": {
+       "ironhead": 16,
+       "leechlife": 12,
+       "liquidation": 12,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 135,
+      "item": "sitrusberry",
+      "maxhp": 135,
+      "name": "Pelipper",
+      "pp": {
+       "hurricane": 12,
+       "tailwind": 16,
+       "weatherball": 12,
+       "wideguard": 12
+      },
+      "slot": 0,
+      "species": "Pelipper",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "torrent",
+      "canMega": true,
+      "hp": 175,
+      "item": "swampertite",
+      "maxhp": 175,
+      "name": "Swampert",
+      "pp": {
+       "highhorsepower": 12,
+       "icepunch": 16,
+       "protect": 8,
+       "wavecrash": 12
+      },
+      "slot": null,
+      "species": "Swampert",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move rockslide, move icywind",
+  "p2": "move icepunch 1, move hurricane 1"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": [
+   1,
+   0,
+   1,
+   0
+  ]
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  }
+ ]
+}

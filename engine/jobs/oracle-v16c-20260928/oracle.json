@@ -1,0 +1,6 @@
+{
+ "branch": "opus-vb",
+ "shards": 32,
+ "node_heap_mb": 8000,
+ "check_minutes": 60
+}

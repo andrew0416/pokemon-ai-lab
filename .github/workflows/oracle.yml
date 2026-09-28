@@ -65,10 +65,14 @@ jobs:
             done | sort -u | tr '\n' ' ')
           fi
           echo "jobs: $jobs"
+          # no job for this branch (e.g. a merge that only carries other branches' jobs): nothing to run
+          if [ -z "$(echo $jobs)" ]; then echo "no oracle job to run"; exit 0; fi
           python3 engine/scripts/oracle_job.py matrix $jobs >> "$GITHUB_OUTPUT"
           cat "$GITHUB_OUTPUT"
 
   build:
+    needs: prepare
+    if: needs.prepare.outputs.matrix != ''
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -208,8 +212,8 @@ jobs:
           retention-days: 30
 
   summary:
-    needs: [oracle, merge]
-    if: always()
+    needs: [prepare, oracle, merge]
+    if: always() && needs.prepare.outputs.matrix != ''
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
