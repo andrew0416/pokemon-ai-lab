@@ -312,6 +312,9 @@ def row_of(r: dict) -> list:
 def emit(r: dict) -> None:
     row = row_of(r)
     line = " | ".join(f"{c}={v}" for c, v in zip(COLUMNS, row) if v not in ("", None))
+    if r.get("oracle") != "fit" and r.get("message"):
+        # the last progress lines (stage, frontier, runs) of a run that did not finish
+        line += " | last=" + r["message"][-300:]
     print(f"::notice title=oracle {r['position']}{(' ' + r['shard']) if r.get('shard') else ''}::{line}")
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary:
