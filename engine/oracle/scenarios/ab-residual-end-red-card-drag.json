@@ -1,0 +1,110 @@
+{
+ "description": "Board R5-t2: Slowking's Future Sight (turn 1) hits Clefable (Red Card, poisoned, patched to 60 HP) at the end of turn 3; where it survives, Red Card flags Slowking. Poison then knocks out Gourgeist (1 HP) and, on the low rolls, Clefable too, ending the battle inside the residual (fieldEvent returns). Showdown's runAction still runs the phazing step: Umbreon's partner Slowking is replaced by Tyranitar where the card went off.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Slowking",
+    "item": "",
+    "ability": "Own Tempo",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Future Sight",
+     "Slack Off"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Tyranitar",
+    "item": "",
+    "ability": "Unnerve",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Rock Slide"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Clefable",
+    "item": "Red Card",
+    "ability": "Cute Charm",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Gourgeist",
+    "item": "",
+    "ability": "Insomnia",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Trick-or-Treat"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "move futuresight 1, move calmmind",
+   "move calmmind, move protect"
+  ],
+  [
+   "move slackoff, move calmmind",
+   "move calmmind, move trickortreat 2"
+  ]
+ ],
+ "turn": {
+  "p1": "move slackoff, move calmmind",
+  "p2": "move calmmind, move trickortreat 2"
+ },
+ "patch": {
+  "p2": {
+   "Clefable": {
+    "hp": 60,
+    "status": "psn"
+   },
+   "Gourgeist": {
+    "hp": 1,
+    "status": "psn"
+   }
+  }
+ }
+}

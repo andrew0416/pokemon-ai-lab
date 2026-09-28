@@ -86,6 +86,11 @@ pub(crate) fn residual<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), Turn
         // holder has already fainted (skipped) or whose effect's duration ran out (`End`, then
         // `continue`): a faint queued by an `End` (Perish Song) waits for the next handler.
         if run(b, handler)? && b.faint_messages(true)? {
+            // `fieldEvent` returns once the battle has ended, but `runAction` still runs its
+            // phazing step: a Red Card the future move set off drags its user out after the win
+            // (board R5-t2, oracle `ab-residual-end-red-card-drag`); its `faintMessages()`
+            // returns at once.
+            super::drag_outs(b)?;
             return Ok(());
         }
     }
