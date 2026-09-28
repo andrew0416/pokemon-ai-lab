@@ -65,6 +65,8 @@ MODES = {
     # Depth 3 (S24c): children are depth-2 analyses (beams 3, 2 outcomes), grandchildren
     # one-turn equilibria. Not in the default modes (minutes per position); runs on every case.
     "deep-nash3": lambda plan: ["--solve", "deep-nash", "--beam", "4,3", "--outcomes", "4,2"],
+    # Depth 3 with the beams reduced where 4,3 / 4,2 took over 30 minutes (S24c).
+    "deep-nash3-small": lambda plan: ["--solve", "deep-nash", "--beam", "3,2", "--outcomes", "3,1"],
 }
 
 # deep-nash only where its cost fits the budget (fixed with the baseline: coaching-panda's

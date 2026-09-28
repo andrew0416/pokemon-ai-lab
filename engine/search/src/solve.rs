@@ -105,8 +105,9 @@ pub struct Config {
     /// Off: every cell of every child is valued (`lab-plan --full-children`).
     pub double_oracle: bool,
     /// Split the cells of replacement and mid-turn child games (each a whole maximin turn)
-    /// into rows on the pool (board S24-t2); off only to check that it changes nothing but
-    /// the time and the node counts.
+    /// into rows on the pool (board S24-t2; `lab-plan --split`). Off by default: measured on
+    /// the bench (runs/search-bench-20260927) the lagging cutoff costs 9–16% more
+    /// enumerations and the wall time did not improve at 1–6 threads (same values).
     pub split_heavy_cells: bool,
 }
 
@@ -133,7 +134,7 @@ impl Config {
             transposition: true,
             dominance: true,
             double_oracle: true,
-            split_heavy_cells: true,
+            split_heavy_cells: false,
         }
     }
 

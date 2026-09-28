@@ -32,14 +32,16 @@
 //! DESIGN.md "모델 ③·② 구현".
 //!                 [--threads n] [--plan "<turn 1> / <turn 2> / ..."]
 //!                 [--child-nash [--beam b] [--outcomes k]]
-//!                 [--stats] [--no-transposition] [--no-dominance] [--full-children] [--lazy]
+//!                 [--stats] [--no-transposition] [--no-dominance] [--full-children] [--lazy] [--split]
 //!
 //! `--stats` adds a line with the search's work (transposition-table hits, matrix games and
 //! their RM+ time, enumeration time summed over threads). `--no-transposition` and
 //! `--no-dominance` turn off the child-equilibrium table (S24a) and the dominance reduction of
 //! child matrix games (S24d), `--full-children` values every cell of every child game instead
 //! of double oracle over lazily valued cells (S24d), to check that they change nothing but the
-//! time (within the equilibrium solver's tolerance). `--lazy` solves `--solve nash`'s root the
+//! time (within the equilibrium solver's tolerance). `--split` values each replacement /
+//! mid-turn child cell row by row on the pool instead of as one unit (S24-t2; same values,
+//! more enumerations; off by default). `--lazy` solves `--solve nash`'s root the
 //! same way (double oracle): a fraction of the pairs, the equilibrium within tolerance, but no
 //! full matrix, so the pure maximin is only over the rows valued in full.
 //!
@@ -293,6 +295,7 @@ fn run() -> Result<(), String> {
             "--no-transposition" => config.transposition = false,
             "--no-dominance" => config.dominance = false,
             "--full-children" => config.double_oracle = false,
+            "--split" => config.split_heavy_cells = true,
             "--lazy" => lazy_root = true,
             "--beam" => {
                 i += 1;
