@@ -1,0 +1,71 @@
+{
+ "description": "VD II-t1 (singles): Helping Hand (adjacentAlly) has no target in singles; After You on the foe fails (onHit: activePerHalf === 1). Then the foes' Close Combat hits Snorlax without a boost.",
+ "format": "gen9championscustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Togekiss",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Helping Hand",
+     "After You"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ]
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Lucario",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "After You",
+     "Close Combat"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ]
+ },
+ "turn": {
+  "p1": "move helpinghand",
+  "p2": "move closecombat"
+ }
+}

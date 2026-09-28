@@ -1,0 +1,70 @@
+{
+ "description": "VD II-t1 (singles): Dragon Darts (smart target) hits the one foe twice; Beat Up counts the healthy party members (two). Extremes (four damage rolls).",
+ "format": "gen9championscustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Dragapult",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Dragon Darts"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ]
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Kingambit",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32,
+     "atk": 32
+    },
+    "moves": [
+     "Beat Up"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Blissey",
+    "item": "",
+    "ability": "Honey Gather",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Harden"
+    ],
+    "level": 50
+   }
+  ]
+ },
+ "turn": {
+  "p1": "move dragondarts",
+  "p2": "move beatup"
+ }
+}
