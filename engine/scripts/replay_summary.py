@@ -9,13 +9,15 @@ Usage:
       the pinned positions (<run-dir>/positions) as list files <run-dir>/pack/list-<k>.txt for
       `oracle_job.py pack` (a workflow matrix holds at most 256 runners).
   python engine/scripts/replay_summary.py ingest <run-dir> <actions-run-id>... [--repo owner/name]
-      reads the oracle workflow runs' summary table annotations (no token; a few API requests)
+      reads the oracle workflow runs' summary table annotations (a few API requests; GITHUB_TOKEN
+      from the environment when set)
       and writes one parity_sweep-style row per position to <run-dir>/rows/, the totals to
       <run-dir>/oracle.json, and <run-dir>/sources.json in parity_corpus.py's format.
 """
 import argparse
 import collections
 import json
+import os
 import pathlib
 import re
 import sys
@@ -113,8 +115,11 @@ def lists(run, chunk):
 
 
 def api(url):
-    req = urllib.request.Request(url, headers={"Accept": "application/vnd.github+json",
-                                               "User-Agent": "pokemon-ai-lab replay_summary.py"})
+    headers = {"Accept": "application/vnd.github+json", "User-Agent": "pokemon-ai-lab replay_summary.py"}
+    token = os.environ.get("GITHUB_TOKEN")  # optional (5,000 requests/h instead of 60); never printed
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req, timeout=60) as r:
         return json.loads(r.read().decode("utf-8"))
 
