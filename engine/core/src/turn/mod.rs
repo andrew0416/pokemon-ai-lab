@@ -57,7 +57,7 @@ use lazy::HpMark;
 use merge::Merger;
 
 pub use branch::RollMode;
-pub use frontier::{FactoredOutcome, FactoredScope};
+pub use frontier::{Factored, FactoredOptions, FactoredOutcome, FactoredScope};
 use order::{
     ORDER_BEFORE_TURN, ORDER_BEFORE_TURN_MOVE, ORDER_MEGA, ORDER_MOVE, ORDER_PRIORITY_CHARGE,
     ORDER_SWITCH,
@@ -150,10 +150,29 @@ pub fn enumerate_turn_factored<const N: usize>(
     choices: [JointAction<N>; 2],
     options: EnumerateOptions,
 ) -> Result<Vec<FactoredOutcome>, TurnError> {
+    let options = FactoredOptions {
+        rolls: options.rolls,
+        max_support: None,
+    };
+    Ok(enumerate_turn_factored_with(state, ruleset, choices, options)?.outcomes)
+}
+
+/// [`enumerate_turn_factored`] with [`FactoredOptions`]: with `max_support`, each member's HP
+/// distribution is cut to that many values after every stage (WORKPLAN P1c), and
+/// [`Factored::tv_bound`] bounds the total variation distance from the exact distribution.
+pub fn enumerate_turn_factored_with<const N: usize>(
+    state: &mut State<N>,
+    ruleset: Ruleset,
+    choices: [JointAction<N>; 2],
+    options: FactoredOptions,
+) -> Result<Factored, TurnError> {
     let choices = check_turn(state, ruleset, &choices)?;
     let start = Pending::new(initial_queue(state, &choices));
-    let endings = frontier::enumerate_factored(state, start, options, run_stage)?;
-    Ok(frontier::factored_outcomes(state, endings, Suspension))
+    let (endings, tv_bound) = frontier::enumerate_factored(state, start, options, run_stage)?;
+    Ok(Factored {
+        outcomes: frontier::factored_outcomes(state, endings, Suspension),
+        tv_bound,
+    })
 }
 
 /// [`resume_turn_with`] with the outcomes factored ([`enumerate_turn_factored`]).
@@ -166,7 +185,11 @@ pub fn resume_turn_factored<const N: usize>(
     let switches = check_mid_turn_switches(state, &choices)?;
     let mut start = suspension.0.clone();
     start.switches = switches;
-    let endings = frontier::enumerate_factored(state, start, options, run_stage)?;
+    let options = FactoredOptions {
+        rolls: options.rolls,
+        max_support: None,
+    };
+    let (endings, _) = frontier::enumerate_factored(state, start, options, run_stage)?;
     Ok(frontier::factored_outcomes(state, endings, Suspension))
 }
 

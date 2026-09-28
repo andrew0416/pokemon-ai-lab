@@ -13,7 +13,8 @@ use common::{assert_exact_parity, assert_extremes_parity, assert_fixed_parity, e
 use lab_engine::rules::Ruleset;
 use lab_engine::state::{PokemonRef, SideId};
 use lab_engine::turn::{
-    enumerate_turn_factored, sample_turn, EnumerateOptions, FactoredScope, RollMode,
+    enumerate_turn_factored, enumerate_turn_factored_with, sample_turn, EnumerateOptions,
+    FactoredOptions, FactoredScope, RollMode,
 };
 use lab_engine::Doubles;
 use lab_scenario::{
@@ -251,4 +252,86 @@ fn spread_damage_full_matches_sampling() {
             );
         }
     }
+}
+
+/// Canonical end state → probability of factored outcomes (expanded).
+fn expanded(
+    loaded: &LoadedScenario,
+    state: &mut Doubles,
+    outcomes: &[lab_engine::turn::FactoredOutcome],
+) -> HashMap<String, f64> {
+    let mut out = HashMap::new();
+    for o in outcomes.iter().flat_map(|o| o.expand()) {
+        state.apply(&o.instructions);
+        *out.entry(canonical_json(state, &loaded.meta).unwrap())
+            .or_insert(0.0) += o.probability;
+        state.reverse(&o.instructions);
+    }
+    out
+}
+
+/// P1c: with `max_support`, every member keeps at most that many HP values, the probabilities
+/// still sum to 1, and the reported bound holds for the actual total variation distance from
+/// the exact distribution (`spread-damage` under Quartiles, whose exact distribution expands).
+#[test]
+fn max_support_bounds_the_distance_from_the_exact_distribution() {
+    let (loaded, positions) = spread_damage();
+    let position = &positions[0];
+    let Decision::Turn(choices) = scenario_decision(&loaded, position).unwrap() else {
+        panic!("a turn");
+    };
+    let mut state: Doubles = position.state.clone();
+    let run = |state: &mut Doubles, max_support| {
+        enumerate_turn_factored_with(
+            state,
+            Ruleset::CHAMPIONS_MC,
+            choices,
+            FactoredOptions {
+                rolls: RollMode::Quartiles,
+                max_support,
+            },
+        )
+        .unwrap()
+    };
+    let exact = run(&mut state, None);
+    assert_eq!(exact.tv_bound, 0.0);
+    let exact_dist = expanded(&loaded, &mut state, &exact.outcomes);
+    for k in [1, 2, 3, 5] {
+        let approx = run(&mut state, Some(k));
+        for o in &approx.outcomes {
+            assert!(o.hp.iter().all(|(_, values)| values.len() <= k));
+        }
+        let dist = expanded(&loaded, &mut state, &approx.outcomes);
+        let total: f64 = dist.values().sum();
+        assert!((total - 1.0).abs() < 1e-9, "k {k}: total {total}");
+        let mut tv = 0.0;
+        for (key, p) in &exact_dist {
+            tv += (p - dist.get(key).copied().unwrap_or(0.0)).abs() / 2.0;
+        }
+        for (key, q) in &dist {
+            if !exact_dist.contains_key(key) {
+                tv += q / 2.0;
+            }
+        }
+        assert!(
+            tv <= approx.tv_bound + 1e-9,
+            "k {k}: TV {tv} above the bound {}",
+            approx.tv_bound
+        );
+        assert!(approx.tv_bound > 0.0, "k {k}: something was merged");
+    }
+    // Full: 32 values per member keep the bound small.
+    let full = enumerate_turn_factored_with(
+        &mut state,
+        Ruleset::CHAMPIONS_MC,
+        choices,
+        FactoredOptions {
+            rolls: RollMode::Full,
+            max_support: Some(32),
+        },
+    )
+    .unwrap();
+    let total: f64 = full.outcomes.iter().map(|o| o.probability).sum();
+    assert!((total - 1.0).abs() < 1e-9);
+    assert!(full.tv_bound < 0.05, "bound {}", full.tv_bound);
 }

@@ -245,7 +245,7 @@ py/               pyo3 바인딩 (abi3, Python 3.12+)
 
 ### 근사 모드(P1c)
 
-- `RollMode`와 별개인 옵션 `max_support`: 압축 뒤 단위 분포의 지지 크기가 상한을 넘으면 인접한 HP 값을 구간으로 묶어 구간의 확률 가중 중앙값 하나로 옮긴다. 옮긴 질량 × 성분 가중치의 합이 전체 결과 분포 TV의 상한이며, 누적해 보고한다. PokaiEngine은 32분기 상한에서 질량 99.5%를 덮는다고 보고했다. 이것을 비교 목표로 둔다.
+- `RollMode`와 별개인 옵션 `FactoredOptions::max_support`(`enumerate_turn_factored_with`, `lab-turn --factored --max-support K`): 매 단계의 압축 뒤, 성분 안 단위 분포의 값이 K개를 넘으면 확률이 큰 K개를 남기고 나머지 값의 확률은 가장 가까운 남은 값으로 옮긴다(HP 구간 병합; 옮긴 질량을 최소로 하는 선택). 옮긴 질량 × 성분 가중치의 합이 결과 분포 TV의 상한이다(곱 분포의 TV ≤ 인수별 TV의 합, 뒤 단계는 TV를 늘리지 않음). `Factored::tv_bound`로 보고한다. 실제 TV ≤ 상한은 `spread-damage` Quartiles에서 K=1,2,3,5로 확인(`scenario/tests/factored.rs`). PokaiEngine은 32분기 상한에서 질량 99.5%를 덮는다고 보고했다. `spread-damage` Full은 K=32에서 TV 상한 3.4%, K=64에서 0.34%(상한은 단계마다 누적하는 합이라 보수적이다).
 
 ### 한계
 

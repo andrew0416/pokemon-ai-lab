@@ -17,6 +17,9 @@
 //! outcomes are expanded and the report is the usual one; otherwise the report lists the factored
 //! outcomes (`factored`: `p`, the canonical state at each listed member's smallest HP, and `hp`:
 //! `"p1: Name" → [[hp, p], ...]`). A turn suspended by a mid-turn switch is not resumed.
+//! `--max-support K` (with `--factored`, WORKPLAN P1c) keeps at most K HP values per member after
+//! every stage, the rest merged into the nearest kept value: approximate, and the report's
+//! `factored.tvBound` bounds the total variation distance from the exact distribution.
 //!
 //! `--mc` samples the turn instead of enumerating it (`mode: "mc"`), for turns whose exact
 //! distribution is too large; compare such reports with `oracle/marginals.cjs`.
@@ -33,7 +36,9 @@ use serde_json::{json, Value};
 
 use lab_engine::rules::Ruleset;
 use lab_engine::state::SideId;
-use lab_engine::turn::{enumerate_turn_factored, sample_turn, EnumerateOptions, RollMode};
+use lab_engine::turn::{
+    enumerate_turn_factored_with, sample_turn, EnumerateOptions, FactoredOptions, RollMode,
+};
 use lab_scenario::{
     canonical_json, load_scenario_file, run_decision_mid_turn_with, scenario_decision,
     scenario_positions, Decision,
@@ -60,6 +65,7 @@ fn run() -> Result<(), String> {
     let mut options = EnumerateOptions::default();
     let mut factored = false;
     let mut expand_limit: f64 = 2_000_000.0;
+    let mut max_support: Option<usize> = None;
     let mut i = 0;
     while i < args.len() {
         match args[i].as_str() {
@@ -89,6 +95,15 @@ fn run() -> Result<(), String> {
                 );
             }
             "--factored" => factored = true,
+            "--max-support" => {
+                i += 1;
+                max_support = Some(
+                    args.get(i)
+                        .and_then(|s| s.parse().ok())
+                        .filter(|&k: &usize| k > 0)
+                        .ok_or("--max-support needs a positive count")?,
+                );
+            }
             "--expand-limit" => {
                 i += 1;
                 expand_limit = args
@@ -185,9 +200,17 @@ fn run() -> Result<(), String> {
     // Sampling leaves a turn suspended by a mid-turn switch as it is (no `midTurn` replay).
     let outcomes = match (samples, &decision) {
         (None, Decision::Turn(choices)) if factored => {
-            let factored =
-                enumerate_turn_factored(&mut state, Ruleset::CHAMPIONS_MC, *choices, options)
-                    .map_err(|e| e.to_string())?;
+            let result = enumerate_turn_factored_with(
+                &mut state,
+                Ruleset::CHAMPIONS_MC,
+                *choices,
+                FactoredOptions {
+                    rolls: options.rolls,
+                    max_support,
+                },
+            )
+            .map_err(|e| e.to_string())?;
+            let (factored, tv_bound) = (result.outcomes, result.tv_bound);
             let flat: f64 = factored.iter().map(|o| o.flat_count()).sum();
             let elapsed = started.elapsed();
             let largest = factored
@@ -197,7 +220,9 @@ fn run() -> Result<(), String> {
                 .unwrap_or(1);
             let suspended = factored.iter().filter(|o| o.suspension.is_some()).count();
             eprintln!(
-                "engine: {} factored outcomes standing for {flat} flat ones (largest HP distribution {largest} values, {suspended} suspended), {:.3} ms",
+                "engine: {} factored outcomes standing for {flat} flat ones (largest HP \
+                 distribution {largest} values, {suspended} suspended, TV bound {tv_bound:.3e}), \
+                 {:.3} ms",
                 factored.len(),
                 elapsed.as_secs_f64() * 1000.0
             );
@@ -206,6 +231,8 @@ fn run() -> Result<(), String> {
                 "flatCount": flat,
                 "largestHpDistribution": largest,
                 "suspended": suspended,
+                "maxSupport": max_support,
+                "tvBound": tv_bound,
                 "enumerateMs": elapsed.as_secs_f64() * 1000.0,
             }));
             if flat > expand_limit {

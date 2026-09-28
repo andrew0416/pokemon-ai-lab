@@ -419,13 +419,91 @@ fn clear_tags<const N: usize>(state: &mut State<N>, lazy: &[(u8, Rc<Dist>)]) {
     }
 }
 
-/// [`super::enumerate_stages`] with factored positions.
+/// The approximation of [`FactoredOptions::max_support`] (WORKPLAN P1c): a member's HP
+/// distribution with more values than `max_support` keeps its `max_support` most probable values,
+/// and each other value's probability moves to the nearest kept value (the lower one on a tie).
+/// The moved probability, times the component's weight, bounds the total variation distance this
+/// adds to the turn's outcome distribution (for a product, the distance is at most the sum over
+/// its factors; later stages cannot increase it), so the sum over every step is a bound for the
+/// whole enumeration.
+struct Approx {
+    max_support: Option<usize>,
+    tv_bound: f64,
+}
+
+impl Approx {
+    fn cap(&mut self, component: &mut Component) {
+        let Some(k) = self.max_support else {
+            return;
+        };
+        let k = k.max(1);
+        for hp in &mut component.hps {
+            if hp.dist.points.len() <= k {
+                continue;
+            }
+            let mut order: Vec<usize> = (0..hp.dist.points.len()).collect();
+            // Most probable first; ties to the lower value (a stable sort keeps index order).
+            order.sort_by(|&a, &b| hp.dist.points[b].1.total_cmp(&hp.dist.points[a].1));
+            let mut kept: Vec<usize> = order[..k].to_vec();
+            kept.sort_unstable();
+            let mut moved = 0.0;
+            let mut weights: Vec<(i16, f64)> = Vec::with_capacity(hp.dist.points.len());
+            for (i, &(offset, p)) in hp.dist.points.iter().enumerate() {
+                let nearest = kept
+                    .iter()
+                    .map(|&j| hp.dist.points[j].0)
+                    .min_by_key(|&o| ((o - offset).abs(), o))
+                    .expect("k >= 1");
+                if !kept.contains(&i) {
+                    moved += p;
+                }
+                weights.push((hp.base + nearest, p));
+            }
+            let (base, dist) = Dist::from_weights(weights);
+            *hp = UnitHp {
+                base,
+                dist: Rc::new(dist),
+            };
+            self.tv_bound += component.weight * moved;
+        }
+    }
+}
+
+/// Options of the factored enumeration ([`super::enumerate_turn_factored_with`]).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub struct FactoredOptions {
+    /// Which damage rolls to branch on ([`EnumerateOptions::rolls`]).
+    pub rolls: super::RollMode,
+    /// At most this many HP values per member and component, the rest merged into the nearest
+    /// kept value after every stage (P1c: approximate, with [`Factored::tv_bound`]); `None` is
+    /// exact.
+    pub max_support: Option<usize>,
+}
+
+/// The factored outcomes of a turn and the bound on their total variation distance from the
+/// exact distribution (0 without [`FactoredOptions::max_support`], and for [`super::RollMode`]s
+/// other than `Full` only relative to that mode's distribution).
+#[derive(Clone, Debug)]
+pub struct Factored {
+    pub outcomes: Vec<FactoredOutcome>,
+    pub tv_bound: f64,
+}
+
+/// [`super::enumerate_stages`] with factored positions; also returns the approximation's TV
+/// bound.
 pub(crate) fn enumerate_factored<const N: usize, P: Clone + Eq + Hash>(
     state: &State<N>,
     start: P,
-    options: EnumerateOptions,
+    options: FactoredOptions,
     mut stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<StageEnd, TurnError>,
-) -> Result<Vec<FactoredEnding<N, P>>, TurnError> {
+) -> Result<(Vec<FactoredEnding<N, P>>, f64), TurnError> {
+    let mut approx = Approx {
+        max_support: options.max_support,
+        tv_bound: 0.0,
+    };
+    let options = EnumerateOptions {
+        rolls: options.rolls,
+    };
     let stats_on = std::env::var_os("LAB_ENGINE_STATS").is_some();
     let mut frontier = vec![Group {
         state: state.clone(),
@@ -454,7 +532,7 @@ pub(crate) fn enumerate_factored<const N: usize, P: Clone + Eq + Hash>(
             stack.extend(parts.into_iter().rev());
         }
         let reached = next.components();
-        frontier = groups(next);
+        frontier = groups(next, &mut approx);
         if stats_on {
             eprintln!(
                 "lab-engine: factored stage {} groups ({} splits, {} expansions), {} runs -> {} \
@@ -472,7 +550,8 @@ pub(crate) fn enumerate_factored<const N: usize, P: Clone + Eq + Hash>(
     }
     let mut out = Vec::new();
     for entry in finished.entries {
-        for component in compact(entry.components) {
+        for mut component in compact(entry.components) {
+            approx.cap(&mut component);
             let mut end = entry.key.clone();
             let mut hp = Vec::new();
             for (&unit, unit_hp) in entry.units.iter().zip(&component.hps) {
@@ -498,14 +577,18 @@ pub(crate) fn enumerate_factored<const N: usize, P: Clone + Eq + Hash>(
             });
         }
     }
-    Ok(out)
+    Ok((out, approx.tv_bound))
 }
 
-/// The compacted components of `positions` as the next stage's groups.
-fn groups<const N: usize, P: Clone>(positions: Positions<N, P>) -> Vec<Group<N, P>> {
+/// The compacted (and capped) components of `positions` as the next stage's groups.
+fn groups<const N: usize, P: Clone>(
+    positions: Positions<N, P>,
+    approx: &mut Approx,
+) -> Vec<Group<N, P>> {
     let mut out = Vec::new();
     for entry in positions.entries {
-        for component in compact(entry.components) {
+        for mut component in compact(entry.components) {
+            approx.cap(&mut component);
             let mut state = entry.key.clone();
             let mut lazy = Vec::new();
             for (&unit, hp) in entry.units.iter().zip(&component.hps) {
@@ -693,7 +776,11 @@ pub(crate) fn enumerate_expanded<const N: usize, P: Clone + Eq + Hash>(
     options: EnumerateOptions,
     stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<StageEnd, TurnError>,
 ) -> Result<Vec<Ending<N, P>>, TurnError> {
-    let factored = enumerate_factored(state, start, options, stage)?;
+    let options = FactoredOptions {
+        rolls: options.rolls,
+        max_support: None,
+    };
+    let (factored, _) = enumerate_factored(state, start, options, stage)?;
     let mut merged: Merger<N, Option<P>> = Merger::new();
     for ending in factored {
         let mut end = ending.state;
