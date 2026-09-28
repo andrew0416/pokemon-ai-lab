@@ -1,0 +1,126 @@
+[
+  {
+    "name": "",
+    "species": "Lopunny",
+    "item": "Normal Gem",
+    "ability": "Limber",
+    "gender": "F",
+    "nature": "Jolly",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Fake Out",
+      "Quick Guard",
+      "Mud-Slap",
+      "U-turn"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Pawmot",
+    "item": "Eject Button",
+    "ability": "Volt Absorb",
+    "gender": "M",
+    "nature": "Jolly",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Revival Blessing",
+      "Volt Switch",
+      "Nuzzle",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Arcanine",
+    "item": "Sitrus Berry",
+    "ability": "Flash Fire",
+    "gender": "M",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Flare Blitz",
+      "Extreme Speed",
+      "Will-O-Wisp",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Serperior",
+    "item": "Leftovers",
+    "ability": "Overgrow",
+    "gender": "F",
+    "nature": "Timid",
+    "evs": {
+      "hp": 2,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Coil",
+      "Solar Beam",
+      "Leaf Blade",
+      "Protect"
+    ]
+  }
+]

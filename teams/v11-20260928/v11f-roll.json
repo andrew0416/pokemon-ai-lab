@@ -1,0 +1,126 @@
+[
+  {
+    "name": "",
+    "species": "Miltank",
+    "item": "Leftovers",
+    "ability": "Thick Fat",
+    "gender": "",
+    "nature": "Impish",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 32,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Rollout",
+      "Defense Curl",
+      "Milk Drink",
+      "Body Slam"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Glalie",
+    "item": "Sitrus Berry",
+    "ability": "Inner Focus",
+    "gender": "M",
+    "nature": "Jolly",
+    "evs": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Ice Ball",
+      "Defense Curl",
+      "Freeze-Dry",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Jirachi",
+    "item": "Leftovers",
+    "ability": "Serene Grace",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 2,
+      "spa": 32,
+      "spd": 0,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Doom Desire",
+      "Lucky Chant",
+      "Mist",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Slaking",
+    "item": "Sitrus Berry",
+    "ability": "Truant",
+    "gender": "M",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Double-Edge",
+      "Laser Focus",
+      "Slack Off",
+      "Protect"
+    ]
+  }
+]

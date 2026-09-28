@@ -1,0 +1,126 @@
+[
+  {
+    "name": "",
+    "species": "Xerneas",
+    "item": "Leftovers",
+    "ability": "Fairy Aura",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Geomancy",
+      "Moonblast",
+      "Razor Wind",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Kyurem-Black",
+    "item": "Sitrus Berry",
+    "ability": "Teravolt",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Freeze Shock",
+      "Ice Burn",
+      "Skull Bash",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Giratina",
+    "item": "Power Herb",
+    "ability": "Pressure",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+      "hp": 32,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Shadow Force",
+      "Skull Bash",
+      "Will-O-Wisp",
+      "Protect"
+    ]
+  },
+  {
+    "name": "",
+    "species": "Clefable",
+    "item": "Leftovers",
+    "ability": "Magic Guard",
+    "gender": "F",
+    "nature": "Calm",
+    "evs": {
+      "hp": 32,
+      "atk": 0,
+      "def": 2,
+      "spa": 0,
+      "spd": 32,
+      "spe": 0
+    },
+    "ivs": {
+      "hp": 31,
+      "atk": 31,
+      "def": 31,
+      "spa": 31,
+      "spd": 31,
+      "spe": 31
+    },
+    "level": 50,
+    "moves": [
+      "Moonblast",
+      "Spotlight",
+      "Heal Block",
+      "Protect"
+    ]
+  }
+]
