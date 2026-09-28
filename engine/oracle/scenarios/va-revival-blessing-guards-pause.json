@@ -1,0 +1,131 @@
+{
+ "description": "V11 (Opus VA): the Revival Blessing slot condition and the Wide Guard / Quick Guard side conditions in a paused state. Setup: Hawlucha's Memento faints it and Garganacl replaces it. Turn: Garganacl's Wide Guard and Lopunny's Quick Guard (+3) go up, then Pawmot's Revival Blessing pauses the turn for the choice of a fainted member, so the outcome shows `revivalblessing` in Pawmot's slot and both guards.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Pawmot",
+    "item": "",
+    "ability": "Volt Absorb",
+    "nature": "Serious",
+    "gender": "M",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Revival Blessing",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Hawlucha",
+    "item": "",
+    "ability": "Limber",
+    "nature": "Serious",
+    "gender": "M",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Memento",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Garganacl",
+    "item": "",
+    "ability": "Purifying Salt",
+    "nature": "Serious",
+    "gender": "M",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Wide Guard",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Arcanine",
+    "item": "",
+    "ability": "Flash Fire",
+    "nature": "Serious",
+    "gender": "M",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Lopunny",
+    "item": "",
+    "ability": "Limber",
+    "nature": "Serious",
+    "gender": "F",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Quick Guard",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Corviknight",
+    "item": "",
+    "ability": "Pressure",
+    "nature": "Serious",
+    "gender": "F",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Roost",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Houndoom",
+    "item": "",
+    "ability": "Flash Fire",
+    "nature": "Serious",
+    "gender": "M",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "setupTurns": [
+  [
+   "move protect, move memento 1",
+   "move quickguard, move roost"
+  ],
+  [
+   "switch 3",
+   ""
+  ]
+ ],
+ "turn": {
+  "p1": "move revivalblessing, move wideguard",
+  "p2": "move quickguard, move roost"
+ }
+}

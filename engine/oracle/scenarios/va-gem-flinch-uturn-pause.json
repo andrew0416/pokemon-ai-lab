@@ -1,0 +1,99 @@
+{
+ "description": "V11 (Opus VA): the `gem` and `flinch` volatiles in a paused state. Lopunny's Fake Out (Normal Gem) flinches Garganacl; Corviknight's U-turn then pauses the turn for its switch, so the outcome shows Lopunny's gem volatile (duration 1) and Garganacl's flinch before the turn ends.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "species": "Lopunny",
+    "item": "Normal Gem",
+    "ability": "Limber",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Fake Out",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Pawmot",
+    "item": "",
+    "ability": "Volt Absorb",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Arcanine",
+    "item": "",
+    "ability": "Flash Fire",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Garganacl",
+    "item": "",
+    "ability": "Purifying Salt",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Salt Cure"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Corviknight",
+    "item": "",
+    "ability": "Pressure",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "U-turn",
+     "Roost"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Houndoom",
+    "item": "",
+    "ability": "Flash Fire",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "123"
+ },
+ "turn": {
+  "p1": "move fakeout 1, move protect",
+  "p2": "move saltcure 1, move uturn 1"
+ }
+}
