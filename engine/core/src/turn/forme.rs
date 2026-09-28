@@ -126,7 +126,8 @@ pub(crate) fn gulp_missile_spit<const N: usize>(
     let Some(source) = b.alive(attacker) else {
         return;
     };
-    if semi_invulnerable || !full {
+    // `!source.isActive`: a future move's user hitting from the bench (no spit, no forme change).
+    if semi_invulnerable || !full || b.absent_user == Some(attacker) {
         return;
     }
     let max_hp = f64::from(b.mon(source).max_hp);

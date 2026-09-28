@@ -11,7 +11,7 @@
 
 | 키 | 지점 | 종류 | 재현 시나리오 | 오라클 결과 수 | 보드 | 이유 |
 |---|---|---|---|---|---|---|
-| `{} of {} hitting after its user left the field, {}` | moves.rs::place | mechanic | `uu-future-sight-absent-user-unnerve` | full: 6 | R5c-future-move-absent-user-occupant | The benched user of a future move stands in for the hit in a position of its side (`moves::AbsentUser`); a hit whose outcome the displaced occupant could change is refused: an occupant with ability or item handlers acting for other Pokémon (`onAny*`, `onAlly*`, `onFoe*`: Unnerve against the target's berry, the Ruin abilities, Battery, ...) or suppressing abilities or the weather, and a target whose handlers act on an active source or on every active Pokémon (Innards Out, Cotton Down, Gulp Missile, Rowap Berry). The prefix rule is conservative (Friend Guard or Shadow Tag change nothing here). |
+| `{} of {} hitting after its user left the field, {}` | moves.rs::place | mechanic | `ab-future-sight-absent-user-two-occupants` | full: 6 | R5c-future-move-absent-user-occupant | The benched user of a future move stands in for the hit in a position of its side (`moves::AbsentUser`): an empty one, else one whose occupant nothing in the hit asks for (`moves::occupant_matters`). Refused when every such occupant has ability or item handlers acting for other Pokémon (`onAny*`, `onAlly*`, `onFoe*`) in an event a future hit can run (Unnerve against the target's berry, the Ruin abilities, Battery, Opportunist, ...) or suppresses abilities or the weather, and when the target's Cotton Down would reach the displaced occupant (repro ab-future-sight-absent-user-cotton-down-displaced). The target handlers that act on the source (Innards Out, Gulp Missile, Rowap Berry) skip the inactive user as Showdown does. |
 | `switch_in_as: -> why` | switching.rs::switch_in_as | forward | `rr-rivalry-switch-in-undecided-gender` | full: 1 | R13-attract-gender | Forwards `switch_in_problem`: reachable only through its Rivalry gender message; the others are E1, E2, E3, E8. |
 
 ## 고친 거부 (소스에서 사라짐)
@@ -194,13 +194,13 @@
 
 - **R21-copycat-called-moves**: Copycat calling a two-turn move (the caller becomes locked into the charge), a move that locks its user (lockedmove) or one that queues its own action (Mirror Coat's beforeTurnCallback, Chilly Reception's priorityChargeCallback) — shares moves::call_move with R14.
 - **R22-forced-eat-ignored-item**: Teatime / Stuff Cheeks (eatItem(true)) for a holder that ignores its item (Klutz, Magic Room): the Eat event is skipped, the berry still goes and EatItem still runs; eat_item_forced also never ran EatItem (Cheek Pouch, Cud Chew, Ripen): confirmed by the oracle and fixed in B35 (`oo-teatime-cheek-pouch`, `oo-teatime-cud-chew`, `oo-teatime-ripen`).
-- **R5c-future-move-absent-user-occupant**: A future move whose user left the field while the position the engine seats it in holds a Pokémon with onAny/onAlly/onFoe ability or item handlers (Unnerve, Ruin abilities, Battery, Soul-Heart, Opportunist, ...) or a target with Innards Out / Cotton Down / Gulp Missile / Rowap Berry: needs an attacker that is not in any slot (or a narrower, per-event refusal) — repro uu-future-sight-absent-user-unnerve (full: 6).
+- **R5c-future-move-absent-user-occupant**: A future move whose user left the field when every position of its side not holding the target holds a Pokémon whose ability or item acts for other Pokémon in an event the hit can run (onAny/onAlly/onFoe handlers other than switch-in, trapping, TryMove, redirection, side-hit, AfterMove, AfterMega; No Guard, Unaware, Damp and Friend Guard on a foe target exempt; Unnerve, Ruin abilities, Battery, Soul-Heart, Opportunist, ...) or suppresses abilities or the weather, or a target with Cotton Down while an occupant is out of its position: needs an attacker that is not in any slot — repros ab-future-sight-absent-user-two-occupants, ab-future-sight-absent-user-cotton-down-displaced (full). Narrowed by AB (wave 16): an empty or harmless position is chosen; Innards Out, Gulp Missile and Rowap Berry skip the inactive user (uu-future-sight-absent-user-unnerve now exact).
 
 ## 시나리오 로더 거부 (A4)
 
 `engine/scenario/src`(`error.rs`·`parity.rs`·바이너리 제외)가 턴 엔진 앞에서 거부하는 곳: `LoadError`·`TeamProblem`·`SetProblem`·`SwitchInError`·`CanonicalError`의 생성 지점과 팀 프리뷰·패치·선택 문자열의 `String` 오류. 분류는 `refusals.classification.json`의 `loader`. `SwitchInError`와 `CanonicalError::Unrepresentable`은 `ScenarioError::Unsupported`로, 나머지는 `ScenarioError::Invalid`/`LoadError`로 나온다(T1).
 
-- 키 83개: input 58개, unsupported 4개, unreachable 18개, forward 3개.
+- 키 84개: input 58개, unsupported 4개, unreachable 19개, forward 3개.
 
 ### input: 입력 오류: the scenario file is malformed or asks for something Showdown would also refuse (or that the file format does not have)
 
@@ -290,6 +290,7 @@
 | `CanonicalError::Unrepresentable: {} with a duration` | canonical.rs::side_json | — | — | Hazards are set `PERMANENT` (invariant). |
 | `CanonicalError::Unrepresentable: {} without a duration` | canonical.rs::timed | — | — | A permanent weather or terrain: the primal weathers only (audit E8). |
 | `SwitchInError::NotInitial` | switch_in.rs::validate | — | — | The loader always builds a fresh state (leads placed, nothing started); only a hand-built state reaches it. |
+| `SwitchInError::Turn` | switch_in.rs::start_error | — | — | A non-`Unsupported` `TurnError` from `enumerate_start` (the battle over, a replacement pending, ...): the loader's fresh start never has one; it is `ScenarioError::Invalid`, not a missing mechanic (A4-t3). |
 | `SwitchInError::UnsupportedAbility` | switch_in.rs::validate | — | — | No standard ability is refused at switch-in (COVERAGE.md: 등장 효과만 미지원 0; audit E1). |
 | `SwitchInError::UnsupportedItem` | switch_in.rs::validate | — | — | No standard item is refused at switch-in (COVERAGE.md: 등장 효과만 미지원 0; audit E1). |
 | `SwitchInError::UnsupportedSlotCount` | switch_in.rs::validate | — | — | Only `State<1>` and `State<2>` exist; the loader builds `State<2>` (shape). |
@@ -302,7 +303,7 @@
 | 키 | 지점 | 로더 테스트 | 보드 | 이유 |
 |---|---|---|---|---|
 | `CanonicalError::Unrepresentable: {} {}: {}` | canonical.rs::side_json | — | — | Carries a Pokémon's message (`pokemon: ...`, `types_string: ...`). |
-| `SwitchInError::Unsupported` | switch_in.rs::expand_switch_ins | — | — | Carries the turn engine's refusal during the start (`enumerate_start`); those keys are in the turn engine's list above. (A non-`Unsupported` `TurnError` there is an invariant and is carried the same way.) |
+| `SwitchInError::Unsupported` | switch_in.rs::start_error | — | — | Carries the turn engine's refusal during the start (`enumerate_start`); those keys are in the turn engine's list above. |
 | `TeamProblem::Order` | team.rs::build_picked_side | — | — | Carries a team preview message of `picked_order` (keys `picked_order: ...`). |
 
 ## 근거 (자동 검사)

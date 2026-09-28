@@ -265,7 +265,6 @@ def extract(producers):
         patterns = [
             r"\.unsupported\(",
             r"TurnError::Unsupported\(",
-            r"\brefused\s*\.\s*get_or_insert_with\(",
         ]
         for pattern in patterns:
             for m in re.finditer(pattern, code):

@@ -117,6 +117,8 @@ function findPokemon(side, name) {
 
 function applyPatch(battle, patch) {
 	if (!patch) return;
+	// The turn counter at the decision (endTurn ties the battle past turn 1000).
+	if (patch.turn !== undefined) battle.turn = patch.turn;
 	for (const sideId of ['p1', 'p2']) {
 		const side = battle[sideId];
 		for (const [name, p] of Object.entries(patch[sideId] || {})) {

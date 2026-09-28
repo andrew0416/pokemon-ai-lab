@@ -81,16 +81,18 @@ fn run(name: &str, threads: usize, chance: Chance) -> Vec<String> {
     exact.exact_lines = true;
     exact.depth = 2;
     let mut solver = Solver::new(exact, &evaluator);
-    // With one thread the exact lines run the alpha-beta loop (a reply's value above the
-    // row's current minimum is only a bound, so the node counts and, among equal replies, the
-    // one reported differ); with more the full matrix. The line values agree.
+    // The exact lines value the full matrix whatever the thread count (board S24-t4): the
+    // values, the reported replies (the first minimum) and the node counts agree.
     let analysis = solver.analyse(&mut state, None).unwrap();
     let lines: Vec<_> = analysis
         .lines
         .iter()
-        .map(|l| (l.ours, l.value, l.exact))
+        .map(|l| (l.ours, l.value, l.exact, l.reply))
         .collect();
-    out.push(format!("maximin {lines:?}"));
+    out.push(format!(
+        "maximin {lines:?} {} {}",
+        analysis.nodes, analysis.turns
+    ));
     assert_eq!(state, original, "{name}: the solver changed the position");
     out
 }

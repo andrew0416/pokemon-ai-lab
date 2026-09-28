@@ -86,6 +86,11 @@ pub(crate) fn residual<const N: usize>(b: &mut Battle<'_, N>) -> Result<(), Turn
         // holder has already fainted (skipped) or whose effect's duration ran out (`End`, then
         // `continue`): a faint queued by an `End` (Perish Song) waits for the next handler.
         if run(b, handler)? && b.faint_messages(true)? {
+            // `fieldEvent` returns once the battle has ended, but `runAction` still runs its
+            // phazing step: a Red Card the future move set off drags its user out after the win
+            // (board R5-t2, oracle `ab-residual-end-red-card-drag`); its `faintMessages()`
+            // returns at once.
+            super::drag_outs(b)?;
             return Ok(());
         }
     }
@@ -792,8 +797,19 @@ pub(crate) fn end_turn<const N: usize>(b: &mut Battle<'_, N>) {
             old: turn,
             new: turn + 1,
         });
+        // `maybeTriggerEndlessBattleClause`: "the turn limit is not a part of Endless Battle
+        // Clause": `if (this.turn > 1000) this.tie()`, whatever is left on either side.
+        if turn + 1 > TURN_LIMIT && !b.state.result.is_over() {
+            b.apply(Instruction::SetResult {
+                old: b.state.result,
+                new: crate::state::BattleResult::Tie,
+            });
+        }
     }
 }
+
+/// Showdown's last turn: `endTurn` ties the battle once `battle.turn` passes it.
+pub const TURN_LIMIT: u16 = 1000;
 
 /// A side has an empty active slot and a healthy Pokémon on the bench.
 pub(crate) fn needs_replacement<const N: usize>(b: &Battle<'_, N>, side: SideId) -> bool {

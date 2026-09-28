@@ -52,6 +52,10 @@ pub enum SwitchInError {
     /// The turn engine refused something during the start (Trace without a traceable foe,
     /// next to No Ability or holding Ability Shield, a copied ability it cannot start, ...).
     Unsupported { what: String },
+    /// The turn engine rejected the start for a reason that is not a missing mechanic (the
+    /// battle is over, a replacement is pending, ...): an invariant the loader keeps, not
+    /// something to implement (board A4-t3).
+    Turn(TurnError),
 }
 
 impl fmt::Display for SwitchInError {
@@ -95,6 +99,7 @@ impl fmt::Display for SwitchInError {
                 species.data().name
             ),
             SwitchInError::Unsupported { what } => write!(f, "not implemented: {what}"),
+            SwitchInError::Turn(e) => write!(f, "the start was rejected: {e}"),
         }
     }
 }
@@ -235,12 +240,7 @@ pub fn expand_switch_ins<const N: usize>(
     let mut out = Vec::new();
     for decided in decide_genders(state) {
         let mut work = decided.state.clone();
-        let outcomes = enumerate_start(&mut work).map_err(|e| match e {
-            TurnError::Unsupported(what) => SwitchInError::Unsupported { what },
-            other => SwitchInError::Unsupported {
-                what: other.to_string(),
-            },
-        })?;
+        let outcomes = enumerate_start(&mut work).map_err(start_error)?;
         debug_assert_eq!(work, decided.state);
         out.extend(outcomes.into_iter().map(|o| {
             let mut end = decided.state.clone();
@@ -252,6 +252,15 @@ pub fn expand_switch_ins<const N: usize>(
         }));
     }
     Ok(out)
+}
+
+/// The start's turn error as a switch-in error: only the turn engine's `Unsupported` is a
+/// missing mechanic; any other rejection keeps its kind (board A4-t3).
+fn start_error(e: TurnError) -> SwitchInError {
+    match e {
+        TurnError::Unsupported(what) => SwitchInError::Unsupported { what },
+        other => SwitchInError::Turn(other),
+    }
 }
 
 /// Board R13b: Showdown's Pokemon constructor gives a set without a gender and a species without
@@ -327,4 +336,31 @@ fn gender_readers<const N: usize>(state: &State<N>) -> bool {
 /// [`expand_switch_ins`] for a loaded scenario.
 pub fn initial_outcomes(loaded: &LoadedScenario) -> Result<Vec<InitialOutcome<2>>, SwitchInError> {
     expand_switch_ins(&loaded.state)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Only `TurnError::Unsupported` becomes `SwitchInError::Unsupported`; the others keep
+    /// their kind, and the scenario error of one is `Invalid`, not `Unsupported` (board A4-t3).
+    #[test]
+    fn a_start_error_keeps_its_kind() {
+        assert_eq!(
+            start_error(TurnError::Unsupported("x".into())),
+            SwitchInError::Unsupported { what: "x".into() }
+        );
+        for other in [
+            TurnError::BattleOver,
+            TurnError::ReplacementPending(SideId::Two),
+        ] {
+            let e = start_error(other.clone());
+            assert_eq!(e, SwitchInError::Turn(other));
+            assert!(!crate::ScenarioError::from(e).is_unsupported());
+        }
+        assert!(
+            crate::ScenarioError::from(start_error(TurnError::Unsupported("x".into())))
+                .is_unsupported()
+        );
+    }
 }

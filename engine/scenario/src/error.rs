@@ -266,7 +266,9 @@ impl From<TurnError> for ScenarioError {
 impl From<SwitchInError> for ScenarioError {
     fn from(e: SwitchInError) -> Self {
         match e {
-            SwitchInError::NotInitial { .. } => ScenarioError::Invalid(e.to_string()),
+            SwitchInError::NotInitial { .. } | SwitchInError::Turn(_) => {
+                ScenarioError::Invalid(e.to_string())
+            }
             SwitchInError::UnsupportedSlotCount(_)
             | SwitchInError::UnsupportedAbility { .. }
             | SwitchInError::UnsupportedItem { .. }

@@ -553,17 +553,19 @@ pub(crate) fn future_move_hit<const N: usize>(
 /// keeps `data.source`, the Pokémon itself, and `trySpreadMoveHit` runs with it inactive). It
 /// attacks with its stored stats and no stages, volatiles, ability or item (`ignoringAbility()`
 /// and `ignoringItem()` are true for an inactive Pokémon from Gen 5), and nothing the hit does
-/// to it lands (`spreadDamage` skips an inactive target; the handlers that act on the source
-/// check `source.isActive`). The engine seats it in a position of its side for the hit only: a
-/// fresh slot, its ability and item cleared; afterwards the position, ability, item and the
-/// rest of the Pokémon are restored as they were.
+/// to it lands (`spreadDamage` and `boost` skip an inactive target; the handlers that act on the
+/// source check `source.isActive`: Gulp Missile, Rowap Berry). The engine seats it in a position
+/// of its side for the hit only (`Battle::absent_user`): a fresh slot, its ability and item
+/// cleared; afterwards the position, ability, item and the rest of the Pokémon are restored as
+/// they were.
 ///
-/// The position is an empty one if the side has one, else one not holding the target; its
-/// occupant is out of the field meanwhile, so a hit whose outcome it could change is refused:
-/// an occupant with ability or item handlers that act for other Pokémon (`onAny*`, `onAlly*`,
-/// `onFoe*`) or that suppresses abilities or the weather, and a target whose handlers act on an
-/// active source or on every active Pokémon (Innards Out, Cotton Down, Gulp Missile, Rowap
-/// Berry).
+/// The position is an empty one if the side has one, else one not holding the target whose
+/// occupant nothing in the hit would ask for (board R5c). That occupant is out of the field
+/// meanwhile while Showdown keeps it active (an ally of the inactive user: `findEventHandlers`
+/// runs the `onAlly`/`onAny`/`onFoe` handlers of `target.alliesAndSelf()` and `target.foes()`
+/// even for an inactive target when the source is active, and the reverse), so the hit is
+/// refused when every such occupant [`occupant_matters`], and when the target's Cotton Down
+/// (every active Pokémon but the target) would have reached a displaced occupant.
 pub(crate) struct AbsentUser {
     slot: SlotRef,
     source: PokemonRef,
@@ -571,6 +573,67 @@ pub(crate) struct AbsentUser {
     saved_slot: crate::state::Slot,
     /// The user itself before (ability and item cleared, anything the hit changed).
     saved_mon: crate::state::Pokemon,
+}
+
+/// Handler events of an out-of-field occupant's ability or item that a future move's hit never
+/// runs (`trySpreadMoveHit` has no `TryMove`, target redirection or side hit; nothing switches
+/// in, mega evolves, traps or ends a move): an occupant whose other-Pokémon handlers are all
+/// among these can leave the field for the hit.
+const EVENTS_NOT_IN_A_FUTURE_HIT: &[&str] = &[
+    "SwitchIn",
+    "AfterMega",
+    "AfterTerastallization",
+    "AfterMove",
+    "TrapPokemon",
+    "MaybeTrapPokemon",
+    "TryMove",
+    "RedirectTarget",
+    "TryHitSide",
+];
+
+/// Whether moving the (active) `occupant` of a position of the future move user's side out of
+/// the field for the hit on `target` could change it: its ability suppresses abilities or the
+/// weather, or its ability or item has an `onAny*`/`onAlly*`/`onFoe*` handler for an event the
+/// hit can run. Three handlers never act here: No Guard's `onAnyAccuracy`/`onAnyInvulnerability`
+/// (only for moves by or at its holder), Unaware's `onAnyModifyBoost` (only when its holder is
+/// the active Pokémon or target) and Damp's `onAnyDamage` (only Aftermath's, a contact
+/// reaction; future moves make no contact); Friend Guard's `onAnyModifyDamage` acts only on a
+/// target that is its holder's ally. Returns the ability or item name that matters.
+fn occupant_matters<const N: usize>(
+    b: &Battle<'_, N>,
+    occupant: PokemonRef,
+    target: SlotRef,
+) -> Option<&'static str> {
+    let mon = b.mon(occupant);
+    let ability = mon.ability.data();
+    if ability.suppress_weather || mon.ability == abilities::NEUTRALIZING_GAS {
+        return Some(ability.name);
+    }
+    let ability_exempt = |event: &str| match mon.ability {
+        a if a == abilities::NO_GUARD => ["Accuracy", "Invulnerability"].contains(&event),
+        a if a == abilities::UNAWARE => event == "ModifyBoost",
+        a if a == abilities::DAMP => event == "Damage",
+        a if a == abilities::FRIEND_GUARD => {
+            event == "ModifyDamage" && target.side != occupant.side
+        }
+        _ => false,
+    };
+    let acts = |handlers: &[&str], exempt: &dyn Fn(&str) -> bool| {
+        handlers.iter().any(|h| {
+            let event = ["onAny", "onAlly", "onFoe"]
+                .iter()
+                .find_map(|prefix| h.strip_prefix(prefix));
+            event.is_some_and(|e| !EVENTS_NOT_IN_A_FUTURE_HIT.contains(&e) && !exempt(e))
+        })
+    };
+    if acts(ability.handlers, &ability_exempt) {
+        return Some(ability.name);
+    }
+    let item = mon.item.data();
+    if acts(item.handlers, &|_| false) {
+        return Some(item.name);
+    }
+    None
 }
 
 impl AbsentUser {
@@ -588,61 +651,40 @@ impl AbsentUser {
                 name(b, source)
             )))
         };
-        let target_ability = b.ability(target);
-        if [
-            abilities::INNARDS_OUT,
-            abilities::COTTON_DOWN,
-            abilities::GULP_MISSILE,
-        ]
-        .contains(&target_ability)
-        {
-            return refuse(
-                b,
-                format!("on a target with {}", target_ability.data().name),
-            );
-        }
-        if b.item(target) == items::ROWAP_BERRY {
-            return refuse(b, "on a target holding Rowap Berry".into());
-        }
         let candidates: Vec<SlotRef> = Battle::<N>::slots(source.side)
             .filter(|&s| s != target)
             .collect();
-        let Some(&slot) = candidates
+        // An empty position, else one whose Pokémon has fainted (not replaced yet).
+        let empty = candidates
             .iter()
-            .find(|&&s| b.occupant(s).is_none())
-            .or_else(|| candidates.first())
-        else {
-            return refuse(b, "with no position of its side free of the target".into());
+            .copied()
+            .find(|&s| b.occupant(s).is_none())
+            .or_else(|| candidates.iter().copied().find(|&s| b.alive(s).is_none()));
+        let harmless = || {
+            candidates.iter().copied().find(|&s| {
+                b.alive(s)
+                    .is_some_and(|occupant| occupant_matters(b, occupant, target).is_none())
+            })
         };
-        if let Some(occupant) = b.alive(slot) {
-            let mon = b.mon(occupant);
-            let acts_for_others = |handlers: &[&str]| {
-                handlers.iter().any(|h| {
-                    h.starts_with("onAny") || h.starts_with("onAlly") || h.starts_with("onFoe")
-                })
+        let Some(slot) = empty.or_else(harmless) else {
+            let Some(&first) = candidates.first() else {
+                return refuse(b, "with no position of its side free of the target".into());
             };
-            let ability = mon.ability.data();
-            let item = mon.item.data();
-            if acts_for_others(ability.handlers)
-                || ability.suppress_weather
-                || mon.ability == abilities::NEUTRALIZING_GAS
-            {
+            let occupant = b.alive(first).expect("no empty position");
+            let what = occupant_matters(b, occupant, target).expect("no harmless occupant");
+            return refuse(
+                b,
+                format!("whose position holds {} with {what}", name(b, occupant)),
+            );
+        };
+        // Cotton Down boosts every active Pokémon but its holder: a displaced occupant too.
+        if b.ability(target) == abilities::COTTON_DOWN {
+            if let Some(occupant) = b.alive(slot) {
                 return refuse(
                     b,
                     format!(
-                        "whose position holds {} with {}",
-                        name(b, occupant),
-                        ability.name
-                    ),
-                );
-            }
-            if acts_for_others(item.handlers) {
-                return refuse(
-                    b,
-                    format!(
-                        "whose position holds {} with {}",
-                        name(b, occupant),
-                        item.name
+                        "on a target with Cotton Down while {} is out of its position",
+                        name(b, occupant)
                     ),
                 );
             }

@@ -30,6 +30,8 @@ pub struct PatchJson {
     pub sides: BTreeMap<String, BTreeMap<String, Option<u8>>>,
     #[serde(default)]
     pub field: FieldPatch,
+    /// `battle.turn` at the decision (the turn limit: Showdown ties past turn 1000).
+    pub turn: Option<u16>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, PartialEq)]
@@ -131,6 +133,9 @@ pub fn apply_patch<const N: usize>(
                 turns: duration.unwrap_or(natural),
             };
         }
+    }
+    if let Some(turn) = patch.turn {
+        state.turn = turn;
     }
     patch_field(state, &patch.field)
 }
