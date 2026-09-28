@@ -1,0 +1,376 @@
+{
+ "description": "FF parity position (FF-parity-harness): charge-vs-eye, lab-parity game 0 (seed 4b5b2dd7bbe2b04c, policy random, extremes chance), decision 1 = turn 1 Replacement. Base scenario D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/matchups/charge-vs-eye.json. The 1 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": "../../../../teams/v11-20260928/v11f-charge.json"
+ },
+ "p2": {
+  "order": "1234",
+  "team": "../../../../teams/v11-20260928/v11f-eye.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "magicguard",
+       "hp": 202,
+       "item": "leftovers",
+       "maxhp": 202,
+       "name": "Clefable",
+       "pp": {
+        "healblock": 16,
+        "moonblast": 16,
+        "protect": 8,
+        "spotlight": 16
+       },
+       "slot": null,
+       "species": "Clefable",
+       "status": ""
+      },
+      {
+       "ability": "pressure",
+       "hp": 257,
+       "item": "powerherb",
+       "maxhp": 257,
+       "name": "Giratina",
+       "pp": {
+        "protect": 8,
+        "shadowforce": 8,
+        "skullbash": 12,
+        "willowisp": 16
+       },
+       "slot": null,
+       "species": "Giratina",
+       "status": ""
+      },
+      {
+       "ability": "teravolt",
+       "boosts": {},
+       "hp": 232,
+       "item": "sitrusberry",
+       "lastMove": "iceburn",
+       "maxhp": 232,
+       "name": "Kyurem",
+       "pp": {
+        "freezeshock": 8,
+        "iceburn": 7,
+        "protect": 8,
+        "skullbash": 12
+       },
+       "slot": 1,
+       "species": "Kyurem-Black",
+       "status": "",
+       "volatiles": {
+        "iceburn": {},
+        "twoturnmove": {
+         "duration": 1,
+         "move": "iceburn"
+        }
+       }
+      },
+      {
+       "ability": "fairyaura",
+       "boosts": {},
+       "hp": 233,
+       "item": "leftovers",
+       "lastMove": "moonblast",
+       "maxhp": 233,
+       "name": "Xerneas",
+       "pp": {
+        "geomancy": 12,
+        "moonblast": 15,
+        "protect": 8,
+        "razorwind": 12
+       },
+       "slot": 0,
+       "species": "Xerneas",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "bulletproof",
+       "hp": 195,
+       "item": "sitrusberry",
+       "maxhp": 195,
+       "name": "Chesnaught",
+       "pp": {
+        "drainpunch": 12,
+        "matblock": 12,
+        "spikyshield": 8,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Chesnaught",
+       "status": ""
+      },
+      {
+       "ability": "flowerveil",
+       "hp": 185,
+       "item": "leftovers",
+       "maxhp": 185,
+       "name": "Florges",
+       "pp": {
+        "craftyshield": 12,
+        "luckychant": 20,
+        "moonblast": 16,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Florges",
+       "status": ""
+      },
+      {
+       "ability": "cursedbody",
+       "boosts": {},
+       "hp": 137,
+       "item": "focussash",
+       "lastMove": "nightmare",
+       "maxhp": 137,
+       "name": "Gengar",
+       "pp": {
+        "hypnosis": 20,
+        "nightmare": 15,
+        "protect": 8,
+        "shadowball": 16
+       },
+       "slot": 0,
+       "species": "Gengar",
+       "status": "",
+       "volatiles": {
+        "miracleeye": {}
+       }
+      },
+      {
+       "ability": "purepower",
+       "hp": 0,
+       "item": "micleberry",
+       "maxhp": 137,
+       "name": "Medicham",
+       "pp": {
+        "highjumpkick": 12,
+        "laserfocus": 20,
+        "miracleeye": 19,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Medicham",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move moonblast 2, move iceburn 1",
+   "move nightmare -2, move miracleeye -1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "magicguard",
+      "hp": 202,
+      "item": "leftovers",
+      "maxhp": 202,
+      "name": "Clefable",
+      "pp": {
+       "healblock": 16,
+       "moonblast": 16,
+       "protect": 8,
+       "spotlight": 16
+      },
+      "slot": null,
+      "species": "Clefable",
+      "status": ""
+     },
+     {
+      "ability": "pressure",
+      "hp": 257,
+      "item": "powerherb",
+      "maxhp": 257,
+      "name": "Giratina",
+      "pp": {
+       "protect": 8,
+       "shadowforce": 8,
+       "skullbash": 12,
+       "willowisp": 16
+      },
+      "slot": null,
+      "species": "Giratina",
+      "status": ""
+     },
+     {
+      "ability": "teravolt",
+      "boosts": {},
+      "hp": 232,
+      "item": "sitrusberry",
+      "maxhp": 232,
+      "name": "Kyurem",
+      "pp": {
+       "freezeshock": 8,
+       "iceburn": 8,
+       "protect": 8,
+       "skullbash": 12
+      },
+      "slot": 1,
+      "species": "Kyurem-Black",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "fairyaura",
+      "boosts": {},
+      "hp": 233,
+      "item": "leftovers",
+      "maxhp": 233,
+      "name": "Xerneas",
+      "pp": {
+       "geomancy": 12,
+       "moonblast": 16,
+       "protect": 8,
+       "razorwind": 12
+      },
+      "slot": 0,
+      "species": "Xerneas",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "bulletproof",
+      "hp": 195,
+      "item": "sitrusberry",
+      "maxhp": 195,
+      "name": "Chesnaught",
+      "pp": {
+       "drainpunch": 12,
+       "matblock": 12,
+       "spikyshield": 8,
+       "woodhammer": 16
+      },
+      "slot": null,
+      "species": "Chesnaught",
+      "status": ""
+     },
+     {
+      "ability": "flowerveil",
+      "hp": 185,
+      "item": "leftovers",
+      "maxhp": 185,
+      "name": "Florges",
+      "pp": {
+       "craftyshield": 12,
+       "luckychant": 20,
+       "moonblast": 16,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Florges",
+      "status": ""
+     },
+     {
+      "ability": "cursedbody",
+      "boosts": {},
+      "hp": 137,
+      "item": "focussash",
+      "maxhp": 137,
+      "name": "Gengar",
+      "pp": {
+       "hypnosis": 20,
+       "nightmare": 16,
+       "protect": 8,
+       "shadowball": 16
+      },
+      "slot": 0,
+      "species": "Gengar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "purepower",
+      "boosts": {},
+      "hp": 137,
+      "item": "micleberry",
+      "maxhp": 137,
+      "name": "Medicham",
+      "pp": {
+       "highjumpkick": 12,
+       "laserfocus": 20,
+       "miracleeye": 20,
+       "protect": 8
+      },
+      "slot": 1,
+      "species": "Medicham",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "",
+  "p2": "switch 4"
+ }
+}

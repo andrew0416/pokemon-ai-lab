@@ -1,0 +1,190 @@
+{
+ "description": "FF parity position (FF-parity-harness): charge-vs-eye-b, lab-parity game 0 (seed 4b5b2dd7bbe2b04c, policy random, extremes chance), decision 0 = turn 1 Turn. Base scenario D:/pokemon-ai-lab/.claude/worktrees/opus-va/runs/parity-v11-20260928/V11f-past-content/matchups/charge-vs-eye-b.json. The 0 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "3412",
+  "team": "../../../../teams/v11-20260928/v11f-charge.json"
+ },
+ "p2": {
+  "order": "3412",
+  "team": "../../../../teams/v11-20260928/v11f-eye.json"
+ },
+ "setupRolls": "extremes",
+ "setupStates": [],
+ "setupTurns": [],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "magicguard",
+      "boosts": {},
+      "hp": 202,
+      "item": "leftovers",
+      "maxhp": 202,
+      "name": "Clefable",
+      "pp": {
+       "healblock": 16,
+       "moonblast": 16,
+       "protect": 8,
+       "spotlight": 16
+      },
+      "slot": 1,
+      "species": "Clefable",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "pressure",
+      "boosts": {},
+      "hp": 257,
+      "item": "powerherb",
+      "maxhp": 257,
+      "name": "Giratina",
+      "pp": {
+       "protect": 8,
+       "shadowforce": 8,
+       "skullbash": 12,
+       "willowisp": 16
+      },
+      "slot": 0,
+      "species": "Giratina",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "teravolt",
+      "hp": 232,
+      "item": "sitrusberry",
+      "maxhp": 232,
+      "name": "Kyurem",
+      "pp": {
+       "freezeshock": 8,
+       "iceburn": 8,
+       "protect": 8,
+       "skullbash": 12
+      },
+      "slot": null,
+      "species": "Kyurem-Black",
+      "status": ""
+     },
+     {
+      "ability": "fairyaura",
+      "hp": 233,
+      "item": "leftovers",
+      "maxhp": 233,
+      "name": "Xerneas",
+      "pp": {
+       "geomancy": 12,
+       "moonblast": 16,
+       "protect": 8,
+       "razorwind": 12
+      },
+      "slot": null,
+      "species": "Xerneas",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "bulletproof",
+      "boosts": {},
+      "hp": 195,
+      "item": "sitrusberry",
+      "maxhp": 195,
+      "name": "Chesnaught",
+      "pp": {
+       "drainpunch": 12,
+       "matblock": 12,
+       "spikyshield": 8,
+       "woodhammer": 16
+      },
+      "slot": 0,
+      "species": "Chesnaught",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "flowerveil",
+      "boosts": {},
+      "hp": 185,
+      "item": "leftovers",
+      "maxhp": 185,
+      "name": "Florges",
+      "pp": {
+       "craftyshield": 12,
+       "luckychant": 20,
+       "moonblast": 16,
+       "protect": 8
+      },
+      "slot": 1,
+      "species": "Florges",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cursedbody",
+      "hp": 137,
+      "item": "focussash",
+      "maxhp": 137,
+      "name": "Gengar",
+      "pp": {
+       "hypnosis": 20,
+       "nightmare": 16,
+       "protect": 8,
+       "shadowball": 16
+      },
+      "slot": null,
+      "species": "Gengar",
+      "status": ""
+     },
+     {
+      "ability": "purepower",
+      "hp": 137,
+      "item": "micleberry",
+      "maxhp": 137,
+      "name": "Medicham",
+      "pp": {
+       "highjumpkick": 12,
+       "laserfocus": 20,
+       "miracleeye": 20,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Medicham",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move willowisp 1, move spotlight -1",
+  "p2": "move woodhammer -2, move craftyshield"
+ }
+}
